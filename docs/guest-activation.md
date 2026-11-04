@@ -3,8 +3,9 @@
 Explicit controllers now prepare and apply guest-storage mounting and locked
 service identities. They require the installed managed host; neither controller
 is included in the published recovery SD or host roots. Stage the complete
-trusted checkout on NVMe or RAM first. Automatic boot integration, guest
-per-directory enrollment and supervision remain work in progress. No physical
+trusted checkout on NVMe or RAM first. [Guest enrollment](guest-enrollment.md) now publishes the private directory
+and protected assets. Automatic boot integration and production supervision
+remain work in progress. No physical
 activation or KVM guest has been demonstrated.
 
 ## Mount the installation's guest filesystem

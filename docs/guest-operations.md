@@ -32,8 +32,9 @@ on fixed builder storage, never use SD for routine guest work.
 [Explicit activation controllers](guest-activation.md) now prepare and apply the
 p5 mount and locked service accounts. They are not installed in current images
 or invoked automatically. The mount controller grants root-directory traversal
-only after validating the mounted device; private per-guest directories and
-KVM device access still require enrollment. The account helper recreates fixed,
+only after validating the mounted device.
+[Explicit enrollment](guest-enrollment.md) now publishes protected per-guest
+directories and working disks; KVM device access and runtime integration remain. The account helper recreates fixed,
 locked identities in RAM `/etc` without administration or disk memberships.
 Neither procedure has been reproduced on hardware.
 
@@ -57,7 +58,9 @@ provided by the console or supervisor; input descriptors never occupy them.
 
 Locking coordinates cooperating launchers. A privileged process or a process
 with write permission that ignores locks can still alter bytes in place.
-Protect immutable inputs against those writers and never copy, hash or back up
+Metadata checks cannot detect every in-place write, including one that leaves
+observed timestamps unchanged. Protect immutable inputs against those writers
+and never copy, hash or back up
 a running guest disk as though it were a consistent checkpoint. Record the new
 disk hash only after a clean shutdown and review before the next launch.
 
@@ -75,7 +78,7 @@ Upstream references: [QEMU 7.2 invocation and file backends](https://gitlab.com/
 
 Package the explicit activation controllers and exercise them on the board.
 Integrate boot activation, supervised launch/shutdown, bounded logs/resource
-limits, guest enrollment and isolated network policy. Implement consistent off-device backup and restore for stopped guest
+limits, stopped-guest checkpoints and isolated network policy. Implement consistent off-device backup and restore for stopped guest
 disks and host state, then test restoration and failed-boot recovery. No
 snapshot or successful packaging run counts as a backup restoration. Preserve
 all [hardware acceptance gates](hardware-validation.md), including the actual

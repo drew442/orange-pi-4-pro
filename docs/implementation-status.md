@@ -92,9 +92,11 @@ no larger card or live inventory was required to produce the diagnostic image.
   QEMU file-backend checks pass. [Explicit activation](guest-activation.md) adds
   guarded p5 mounting and locked RAM accounts; actual private-loop interruption/
   retry/idempotence and ARM sysusers checks pass. **No guest boot or KVM execution.**
-  Packaging/boot integration, enrollment, supervision and guest networking remain open.
-- 501 Python cases across both suites and all shell regressions pass; the 497-case
-  discovery suite passes on Jammy with no skips (two privileged skips locally). Actual
+  [Enrollment](guest-enrollment.md) publishes protected assets and a private disk;
+  actual pinned ARM copy/UID permission checks and systemd unit parsing pass.
+  Packaging/boot integration, checkpoints, controlled shutdown and networking remain open.
+- 532 Python cases across both suites and all shell regressions pass; the 528-case
+  discovery suite passes on Jammy with no skips (21 privileged skips locally). Actual
   files/build checks are distinct from hardware gates. Independent Sol high
   reviews and routing outcomes: [implementation evidence](implementation-evidence.md).
 

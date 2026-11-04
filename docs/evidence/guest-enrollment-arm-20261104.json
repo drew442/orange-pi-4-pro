@@ -1,0 +1,115 @@
+{
+  "ARM_checks": {
+    "actual_fixture_inputs": {
+      "disk": {
+        "bytes": 134217728,
+        "sha256": "0f78f07743e41fec6655b44792284980536f5cd62d08fdcaea0025bb222c6278"
+      },
+      "initrd": {
+        "bytes": 973641,
+        "sha256": "62a07e1a5a7c38c5677a4c3750fc479c2636fe9e611aed67c89d3b9623a2c725"
+      },
+      "kernel": {
+        "bytes": 5251080,
+        "sha256": "1294959bcaa5a5ad3791913e33cffb8f0893708396aac8be9837c03a0e1f9377"
+      }
+    },
+    "architecture": "aarch64",
+    "different_uid_refused": "passed",
+    "enrollment": {
+      "bytes_attempted_staged": 140442449,
+      "directory_may_be_published": true,
+      "durable": true,
+      "operation": "a733-guest-enrollment-v1",
+      "plan_sha256": "38ab14f21fb57c11d496f9dfc3de274f32040557d60247a74d3f27543c0a9ea1",
+      "published": true,
+      "schema": 1,
+      "staging_retained": false,
+      "success": true
+    },
+    "existing_guest_refused": "passed",
+    "guest_execution": "not performed",
+    "guest_uid_disk_write": "passed",
+    "guest_uid_kernel_manifest_and_directory_refusals": "passed",
+    "live_policy": "RAM/NVMe/mounted UUID boundaries mocked only inside disposable file fixture",
+    "prepare_no_output": true,
+    "published_ownership_and_full_hashes": "passed",
+    "source_inputs_unchanged": "passed",
+    "systemd_unit_verify": {
+      "diagnostics": "",
+      "returncode": 0,
+      "unit": "[Unit]\nDescription=A733 guest fixture\nAfter=local-fs.target\n\n[Service]\nType=exec\nUser=a733-vm-fixture\nGroup=a733-vm-fixture\nSupplementaryGroups=103\nExecStart=/usr/bin/python3 -I -B /source/scripts/launch-kvm-guest.py --kernel /run/a733-guests/fixture/Image --kernel-sha256 1294959bcaa5a5ad3791913e33cffb8f0893708396aac8be9837c03a0e1f9377 --initrd /run/a733-guests/fixture/initramfs.cpio.gz --initrd-sha256 62a07e1a5a7c38c5677a4c3750fc479c2636fe9e611aed67c89d3b9623a2c725 --disk /run/a733-guests/fixture/disk.raw --disk-sha256 0f78f07743e41fec6655b44792284980536f5cd62d08fdcaea0025bb222c6278 --memory-mib 128 --cpus 1\nRestart=no\nUMask=0077\nNoNewPrivileges=yes\nCapabilityBoundingSet=\nRestrictSUIDSGID=yes\nLimitCORE=0\nMemoryMax=256M\nMemorySwapMax=0\nTasksMax=256\nStandardInput=null\nStandardOutput=journal\nStandardError=journal\nKillMode=control-group\nKillSignal=SIGTERM\nTimeoutStopSec=30\nSendSIGKILL=no\n"
+    }
+  },
+  "binfmt": {
+    "bytes": 5628704,
+    "interpreter": "/usr/libexec/qemu-binfmt/aarch64-binfmt-P",
+    "limit": "Hashes configured interpreter pathname; kernel-held binfmt interpreter FD is not independently inspectable.",
+    "registration": "enabled\ninterpreter /usr/libexec/qemu-binfmt/aarch64-binfmt-P\nflags: PF\noffset 0\nmagic 7f454c460201010000000000000000000200b700\nmask ffffffffffffff00fffffffffffffffffeffffff\n",
+    "resolved_interpreter": "/usr/bin/qemu-aarch64-static",
+    "sha256": "92c4aeb8dd898de7152c184370ab22f09ae7c5b7279fd300081c76cee3f78a80"
+  },
+  "builder_staging_storage": {
+    "fstype": "ext4",
+    "maj:min": "252:0"
+  },
+  "classification": "ARM enrollment and unit file checks; no physical NVMe, systemd boot or KVM proof",
+  "limits": [
+    "RAM/NVMe mount and UUID policy boundaries mocked only inside disposable file fixture.",
+    "Memory sample and CPU count belong to native builder, not A733 hardware.",
+    "Unit parsed but not started; stop sends SIGTERM and does not prove guest graceful shutdown.",
+    "No guest VM, KVM, board boot, production enrollment or hardware acceptance."
+  ],
+  "resources": {
+    "elapsed": "0:29.95",
+    "exit_status": 0,
+    "maximum_resident_set_kib": 190928
+  },
+  "rootfs": {
+    "bytes": 169852145,
+    "sha256": "1967e76c0c831c1c0bab432e7116457d4372c15b413090c054f8958b72dcb392"
+  },
+  "source_commit": "54346ac34223e4f6920c478ee558bcb9074fcefe",
+  "trusted_sources": {
+    "configs/guest_config.py": {
+      "bytes": 5775,
+      "sha256": "0ffbbfab27398d7d37cbe68035751940be46074e69f58d34f4f077ea9c427861"
+    },
+    "configs/guest_identity.py": {
+      "bytes": 1997,
+      "sha256": "d7d126f015e64c7d2f26a6cad8686b90c7892c00ea9ab552e4fc36b9254d5e84"
+    },
+    "configs/host-management.py": {
+      "bytes": 22716,
+      "sha256": "3db7519f67986e4a1276a95666593b9d9a98355669926d8d3ddcf5fc319c4a54"
+    },
+    "configs/host_config.py": {
+      "bytes": 2873,
+      "sha256": "520140d56402ab803b8c137981cef5182c5e263a44ec8446ce836b6a7d160a22"
+    },
+    "configs/package_state.py": {
+      "bytes": 13113,
+      "sha256": "809630ebba9d927b6ad5034899a88a8a8fcf3401f94ff6f223f92f6fbfa9c6eb"
+    },
+    "scripts/enroll-guest.py": {
+      "bytes": 23192,
+      "sha256": "12a86d338eb44526610c5b0ea33512de59c6a05282ba1aa863bb76b59db087af"
+    },
+    "scripts/guest-accounts.py": {
+      "bytes": 12769,
+      "sha256": "641ab5ae4c67e7fbc426dd6332823c34a3099d589c23e7bf647555bd1c1599c1"
+    },
+    "scripts/guest-storage.py": {
+      "bytes": 8915,
+      "sha256": "64cd02b2e01fe8f58b0c425f6bfb2ae8849ab2b3b7f4022e4d712604a396ed44"
+    },
+    "scripts/launch-kvm-guest.py": {
+      "bytes": 9719,
+      "sha256": "197f1bba532b23a5e751284dc62653a8cd0284aafbe4259f5ca4648134640e28"
+    }
+  },
+  "verifier_source": {
+    "bytes": 11173,
+    "sha256": "5a7b6d6e75b5b1b265808ac9f74a665902df2c826957c01831c801a23aa37f12"
+  }
+}

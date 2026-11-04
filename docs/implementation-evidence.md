@@ -406,6 +406,40 @@ was needed. Raw logs are outside Git under the builder's
 `guest-activation-artifacts-20261104/logs/`. Packaging, boot integration, guest
 enrollment/supervision, backup/restore and every physical acceptance gate remain.
 
+## 2026-11-04: guest enrollment and unit preparation
+
+Source `54346ac` adds no-overwrite guest enrollment and pure configuration/unit
+rendering. Sol medium workers owned disjoint enrollment and profile modules;
+root added the directory-placement entrypoint while preserving regular-file
+launcher checks, and wrote/executed the ARM integration harness. Independent
+Sol high review accepted the source guards, permissions, publication signal
+handling, inode-owned cleanup and preparation unit scope. The unit has no
+automatic restart or graceful-stop claim and embeds the initial disk pin.
+
+[Actual ARM evidence](evidence/guest-enrollment-arm-20261104.json) records all
+140,442,449 bytes of the pinned kernel/initramfs/raw fixture copied and read
+back with actual ownership. UID 60001 could write its disk but could not modify
+kernel data, read the manifest, rename assets or create directory entries; a
+different UID was refused. Source seeds remained unchanged. Actual systemd 252
+parsed the unit without diagnostics; no service, VM or KVM guest was started.
+The disposable fixture mocked live mounted-NVMe/UUID boundaries and used the
+builder's memory/CPU data, not board measurements.
+
+The first full Jammy test run exposed an older timing-dependent mutation test:
+a same-size overwrite in one filesystem clock tick could keep observed
+timestamps equal; unexpected successful preparation then leaked a test-held
+lock into the next subcase. Test fix `6859dbe` sets a distinct initial timestamp
+and always closes an unexpected prepared guest. Independent review accepted
+this as deterministic coverage of observable metadata changes. Production
+behavior is unchanged; concurrent in-place writers must still be excluded.
+
+The final 528 discovery cases pass on Jammy with no skips, plus four diagnostic
+cases and shell regressions. Local discovery had 21 privileged skips. Post-job
+checks found no enrollment fixture or host-visible guest mount. No compilation,
+package install, physical enrollment, board boot, actual KVM or SD-write test
+was performed. Raw failed/final suite logs and ARM results are retained under
+the builder's `guest-enrollment-artifacts-20261104/logs/`.
+
 Children used fresh focused contexts, exclusive write scopes and no delegation.
 At most two children were active. Input/output token counts, cache accounting,
 account prices and exact reviewer repair time were not exposed; monetary cost
