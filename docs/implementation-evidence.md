@@ -206,6 +206,35 @@ restore/cross-version compatibility, board management/KVM health and all physica
 release criteria remain open. The five-field selector and existing immutable
 boot images are unchanged; this work does not deploy a new bootstrap.
 
+## Offline recovery software checks
+
+[Recovery evidence](evidence/host-recovery-loop-20261104.json) records source
+`11d3318` on Jammy. A fresh sparse 250 GB loop disk has real GPT roles/kernel
+partitions, a trusted 4 GiB root and an actual 8 GiB journaled ext4 state. Full
+state hashes before/after preparation match. Recovery archives a malformed
+selector, publishes verified A and unmounts state; offline reads confirm A and
+the exact original corrupt bytes. Complete root and GPT checks plus boot/guest
+and state sentinels match. Independent post-process inspection finds no owned
+workspace or backing. The run takes 1:28.36 with 36,784 KiB peak process RSS.
+NVMe/RAM entry and interactive authorization are fixtures; it is clean-state
+selector recovery, not crash-journal replay or physical failed-boot acceptance.
+
+Independent Sol high review found that accepting arbitrary ext4 journal
+references could make a writable mount access another device. The coordinator
+restricted state to the pinned recipe's internal journal inode 8, zero external
+journal device/UUID and no journal-device feature. Independent rejection cases
+and the real native filesystem validate that contract. The shared signal-safe
+publisher was factored without changing existing accounting. An actual recovery
+SIGINT regression preserves publication flags and attempts owned-state cleanup.
+The conservative state-write receipt is emitted before mounting because replay
+may change state even on a failed mount. No raw root writes are issued.
+
+All 397 discovery cases pass on Jammy without skips, with four separate
+diagnostic cases and shell regressions. The diagnostic config hash still
+matches its pinned record and enables namespaces. New-controller ARM execution,
+packaged recovery, dirty-journal transactions, real boot, state/guest backup
+restoration and all physical release gates remain open.
+
 ## Routing calibration
 
 | Work | Explicit model / effort | Outcome / repair |
@@ -265,6 +294,9 @@ boot images are unchanged; this work does not deploy a new bootstrap.
 | Selection policy | Sol / medium | Activation/cancellation pre/post states with strict unchanged staging defaults; 20 focused fixtures |
 | Selection transaction | Sol / medium | Read-only whole-root authentication, held-directory publication and durable history; interruption repair integrated with coordinator caller fix |
 | Selection/signal review | Sol / high | Independently reproduced helper/caller Ctrl-C gaps, verified both fixes and 59 focused cases; private ext4 harness reviewed before coordinator run |
+| Offline recovery policy | Sol / medium | Fixed RAM environment, all-node idle/GPT/UUID and internal-state contract; coordinator added external-journal rejection from independent review |
+| Offline recovery transaction | Sol / medium | Full root/state read-only preflight, journal-first repair of missing/malformed selection, conservative mount/publication/cleanup receipts; 20 fixtures |
+| Offline recovery review | Sol / high | External-journal device-safety blocker found and fixed; controller/shared publisher and fresh-GPT native harness reviewed; physical acceptance unchanged |
 | Slot metadata extraction | Luna / low | Source mapping established; coordinator clarified fresh per-boot RAM overlay semantics and authenticated actual archive metadata separately |
 
 Children used fresh focused contexts, exclusive write scopes and no delegation.

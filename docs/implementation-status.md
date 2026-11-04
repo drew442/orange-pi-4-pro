@@ -49,8 +49,10 @@ no larger card or live inventory was required to produce the diagnostic image.
   4 GiB retry/readback pass; selected/boot/guest sentinels stay unchanged.
   [Explicit selection](host-root-selection.md) adds durable journals, activation
   and cancellation; real ext4 interruption/readback checks pass. Live NVMe/TTY
-  policy uses fixtures. Checkout-only tools; packaging, booted rollback,
-  offline failed-boot recovery and all physical update tests remain open.
+  policy uses fixtures. [RAM recovery](host-recovery.md) archives malformed
+  selectors and selects a retained root; native 250 GB GPT/8 GiB state checks
+  pass. Checkout-only tools; ARM packaging, crash-journal replay, booted rollback
+  and all physical update/recovery tests remain open.
 - [Management preparation](host-management.md): exact Ethernet MAC DHCPv4,
   selected-IP key-only SSH, NVMe host-key creation and RAM configuration.
   ARM key/sshd/PAM-account/unit checks pass; no SSH connection or systemd boot.
@@ -84,7 +86,7 @@ no larger card or live inventory was required to produce the diagnostic image.
 - [Guest fixture](guest-fixture.md): separate virt-profile kernel/initramfs and
   disposable disk built and hashed; launcher requires KVM with no TCG fallback.
   **No guest boot or KVM execution.** Guest networking/management remain open.
-- 371 Python cases across both suites and all shell regressions pass; the 367-case
+- 401 Python cases across both suites and all shell regressions pass; the 397-case
   discovery suite passes on Jammy with no skips (two privileged skips locally). Actual
   files/build checks are distinct from hardware gates. Independent Sol high
   reviews and routing outcomes: [implementation evidence](implementation-evidence.md).
@@ -100,8 +102,8 @@ no larger card or live inventory was required to produce the diagnostic image.
    actual per-installation candidate and validate board payload acquisition. Validate
    the writer/locking/readback/interruption protocol on authorized hardware. The preparation runtime
    has exercised software probes; board boot/DHCP/DNS/TLS remain unproven.
-3. Complete offline failed-boot recovery and validate serial/manual rollback.
-   Package the maintenance tools and test staging/selection on hardware;
+3. Package and exercise maintenance/recovery tools on ARM and the board.
+   Validate dirty-journal recovery, serial/manual rollback and backup restoration;
    cross-version updates/state compatibility remain unproven. Finish
    guest storage/networking, backup/restore and operational procedures.
 4. Full clean-build reproducibility remains open: U-Boot emits a random

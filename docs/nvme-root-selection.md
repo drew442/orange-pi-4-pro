@@ -56,7 +56,9 @@ rename and directory fsync. Its caller must authorize the target directory and
 serialize writers. It is used for fresh staging. The [guarded inactive-slot
 writer](host-updates.md#stage-the-inactive-slot) does not call it: activation
 is provided separately by the [explicit selection controller](host-root-selection.md).
-Offline failed-boot recovery and hardware rollback remain open.
+The separate [RAM recovery controller](host-recovery.md) handles missing or
+malformed selectors when the installed host cannot run. Physical failed-boot
+recovery and hardware rollback remain open.
 Fault fixtures show pre-rename failure retains the old record; post-rename
 directory-sync failure reports the new record published with durability
 uncertain. These are file/fault fixtures, not power-cut or hardware evidence.

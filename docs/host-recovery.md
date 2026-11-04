@@ -104,3 +104,41 @@ verify the selected marker, NVMe-backed state, management reachability and actua
 KVM guest execution. Missing NVMe, both roots failing authentication, corrupt
 state requiring repair, backup restoration and interrupted SPI recovery remain
 separate required recovery paths. All physical release gates remain open.
+
+## Native software evidence
+
+[Recovery evidence](evidence/host-recovery-loop-20261104.json) records a newly
+created 250,000,000,000-byte sparse GPT loop disk with five real kernel
+partitions, an authenticated 4 GiB A root and actual 8 GiB journaled ext4 state.
+The state began clean and unmounted with a malformed selector. A full independent
+state hash before and after preparation matched. Recovery archived the exact
+bad bytes, published verified A and unmounted state. Offline filesystem readback
+confirmed the selector and journal; the root hash, GPT, boot/guest sentinels and
+unrelated state sentinel remained unchanged.
+
+The test explicitly replaces NVMe/RAM entry policy and TTY authorization. Real
+GPT bytes, partition sysfs geometry, internal-journal superblock checks, mount
+ownership, read-only claims, full hashes and archive/publication execute.
+Cleanup removed its private mounts, loop and backing file, independently checked
+from the builder afterward. The run took 1:28.36 with 36,784 KiB peak process RSS.
+It does not exercise dirty-journal transactions after a crash, physical failed
+boot, backup restore, or KVM. The new tool remains untested on ARM and unpackaged.
+
+Verified command on the Jammy builder:
+
+```sh
+sudo /usr/bin/python3.10 -I -B \
+  /var/lib/a733-recovery-work-20261104/tests/verify_host_recovery_loop.py \
+  /var/lib/a733-update-final-20261104/candidate-A \
+  --manifest-sha256 51f8dfa7f0f66b005b9bfd08dc5f29fcf25f0791e5e844ab6af22de94aa9a44c
+```
+
+The harness accepts no device argument and requires 12 GiB free on supported
+fixed builder storage. Formatting is confined to its newly created and
+identity/geometry-checked loop p4. It uses a private mount namespace and private
+`/run`, retains unresolved cleanup resources, and does not alter builder mounts.
+The pinned diagnostic configuration hash was rechecked with
+`CONFIG_NAMESPACES=y`; that is configuration evidence, not an A733 boot result.
+Separate tests inject actual SIGINT after publication and verify conservative
+receipts plus owned-state cleanup. All 397 discovery cases pass on Jammy with
+no skips, plus four diagnostic cases and the shell regressions.

@@ -1,0 +1,175 @@
+{
+  "classification": "fresh sparse-GPT loop recovery only; NVMe/RAM entry policy and TTY are fixtures; no boot or physical failed-host recovery proof",
+  "report": {
+    "success": true,
+    "selection_write_attempted": true,
+    "selection_published": true,
+    "publication_durable": true,
+    "journal_visible": true,
+    "journal_durable": true,
+    "root_switched": false,
+    "block_writes_performed": false,
+    "classification": "offline selection metadata recovery only; no boot, health, KVM or physical recovery proof",
+    "state_write_attempted": true,
+    "state_may_be_modified": true,
+    "state_unmounted": true,
+    "operation": "offline-root-selection-recovery",
+    "plan_sha256": "6f2e1decab6598b135576ba31998b83c9f1d93bf79db823848176562889ddf1c",
+    "target": {
+      "requested_path": "/dev/loop7p2",
+      "canonical_path": "/dev/loop7p2",
+      "major_minor": "259:1",
+      "model": "PRIVATE GPT LOOP",
+      "serial": "NO-PHYSICAL-TARGET",
+      "size_bytes": 4294967296,
+      "logical_sector_bytes": 512,
+      "physical_sector_bytes": 512,
+      "partition_number": 2,
+      "partition_uuid": "88d1e000-56e1-4dfa-b2c0-94d69ec59166"
+    },
+    "manifest": {
+      "path": "/var/lib/a733-update-final-20261104/candidate-A/manifest.json",
+      "slot": "A",
+      "root": {
+        "bytes": 4294967296,
+        "sha256": "6157897213b918c82241a6ff74920c2d5b92eb45cb30bc0333d8d97a58be733e"
+      },
+      "manifest_sha256": "51f8dfa7f0f66b005b9bfd08dc5f29fcf25f0791e5e844ab6af22de94aa9a44c",
+      "identity": {
+        "device": 64512,
+        "inode": 655833,
+        "bytes": 7023,
+        "mtime_ns": 1793810477434644267,
+        "ctime_ns": 1793810477434644267
+      }
+    },
+    "expected_root": {
+      "bytes": 4294967296,
+      "sha256": "6157897213b918c82241a6ff74920c2d5b92eb45cb30bc0333d8d97a58be733e"
+    },
+    "proposed_selector": {
+      "SCHEMA": "1",
+      "SLOT": "A",
+      "ROOT_UUID": "a7330000-0000-4000-8000-00000000000a",
+      "ROOT_MARKER_SHA256": "3a391301604aa248b15daa58fc0fa94cfeb355431dcec1c81fed6fbdc122cb3e",
+      "KERNEL_RELEASE": "6.6.98-a733-diag"
+    },
+    "state_mountpoint": "/run/a733-recovery-state",
+    "before_selector_hex": "62726f6b656e2073656c6563746f7200ff0a",
+    "before_selector_valid": false,
+    "journal_name": "recovery-6f2e1decab6598b135576ba31998b83c9f1d93bf79db823848176562889ddf1c.json",
+    "selected_after": {
+      "SCHEMA": "1",
+      "SLOT": "A",
+      "ROOT_UUID": "a7330000-0000-4000-8000-00000000000a",
+      "ROOT_MARKER_SHA256": "3a391301604aa248b15daa58fc0fa94cfeb355431dcec1c81fed6fbdc122cb3e",
+      "KERNEL_RELEASE": "6.6.98-a733-diag"
+    }
+  },
+  "logical_disk_bytes": 250000000000,
+  "root_bytes": 4294967296,
+  "state_bytes": 8589934592,
+  "full_state_prepare_unchanged": true,
+  "retained_root_unchanged": true,
+  "gpt_and_boot_guest_sentinels_unchanged": true,
+  "unrelated_state_sentinel_unchanged": true,
+  "offline_selected_slot": "A",
+  "broken_selector_preserved_in_durable_journal": true,
+  "raw_block_opens": [
+    {
+      "major_minor": "259:1",
+      "exclusive": true
+    },
+    {
+      "major_minor": "259:3",
+      "exclusive": true
+    },
+    {
+      "major_minor": "259:1",
+      "exclusive": true
+    },
+    {
+      "major_minor": "259:3",
+      "exclusive": true
+    },
+    {
+      "major_minor": "7:7",
+      "exclusive": false
+    },
+    {
+      "major_minor": "259:1",
+      "exclusive": true
+    },
+    {
+      "major_minor": "259:3",
+      "exclusive": true
+    },
+    {
+      "major_minor": "259:1",
+      "exclusive": true
+    },
+    {
+      "major_minor": "259:3",
+      "exclusive": true
+    }
+  ],
+  "sources": {
+    "scripts/recover-host-root.py": {
+      "bytes": 21526,
+      "sha256": "64ed3b156338a7ba51de646260883f353090e16be1f36c44815f4327df7f3a40"
+    },
+    "scripts/host-recovery-target.py": {
+      "bytes": 9770,
+      "sha256": "9901e568384fd7d4e5722e22eac84e936640f05e8fee4900b06d2b2b987e960b"
+    },
+    "scripts/select-host-root.py": {
+      "bytes": 19847,
+      "sha256": "39810e44ed03c406d3548c7526a7edd00d5dcb7163e5e421b0f3e9fe32c56d49"
+    },
+    "tests/verify_host_recovery_loop.py": {
+      "bytes": 16526,
+      "sha256": "76582739ed8f9d4ba60bfb60b0bb61e711611dc7895c7508c50cebc399df9ee0"
+    }
+  },
+  "cleanup": "owned state/private-run mounts unmounted, loop detached and workspace deleted",
+  "source_commit": "11d33188941b3cbaec9579e32f1a1e0a62edc74d",
+  "builder": "drew@build.drewnet.online Ubuntu 22.04.5 amd64 Python 3.10.12",
+  "resources": {
+    "private_workspaces_remaining": [],
+    "private_loop_backings_remaining": {},
+    "final_available_disk_bytes": 19612168192,
+    "final_available_memory_bytes": 7839690752,
+    "diagnostic_config": {
+      "bytes": 212080,
+      "sha256": "8a29d9c36e52db7e8a7d6ff757dc69e660f4273c99e5f00c5dbc5a9b7e060675",
+      "CONFIG_NAMESPACES": "y"
+    },
+    "compilation": "none; initial two-job policy unchanged",
+    "elapsed": "1:28.36",
+    "maximum_process_resident_set_kib": 36784,
+    "exit_status": 0
+  },
+  "validation": {
+    "local_discovery_cases": 397,
+    "local_privileged_skips": 2,
+    "jammy_discovery_cases": 397,
+    "jammy_privileged_skips": 0,
+    "separate_diagnostic_cases": 4,
+    "all_shell_regressions": "passed",
+    "toml_parse": "passed",
+    "bash_syntax": "passed",
+    "independent_review": "Sol high; external-journal blocker fixed; policy/controller/shared publisher/harness reviewed"
+  },
+  "review_repairs": [
+    "Initial state superblock policy allowed external journal references. Recovery now requires internal inode 8, zero journal device and UUID, and no JOURNAL_DEV incompat feature before writable mounting. This is independently tested and matches the native mke2fs fixture.",
+    "Shared signal-safe publication was factored without changing accounting; actual recovery SIGINT regression preserves publication flags and attempts owned-state unmount.",
+    "State may be modified is emitted before RW mount and retained on mount/cleanup failures; raw block writes false does not imply state bytes unchanged."
+  ],
+  "limitations": [
+    "NVMe class/identity and RAM-kernel entry guard plus interactive TTY authorization are explicit fixtures. Actual GPT bytes, partition sysfs geometry, state superblock/internal journal checks, mount ownership, raw descriptors/hashes and publication execute.",
+    "State starts clean and unmounted with a malformed selector; no crash-induced dirty-journal transaction replay or physical power-cut recovery was tested.",
+    "Same-version authenticated root A and newly formatted state lack real installation identity/configuration; this is not a deployable host image.",
+    "No ARM execution of the new controller, actual failed-host boot, running-root switch, KVM guest, hardware acceptance, physical SD/NVMe/SPI write or recovery-card deployment.",
+    "Complete trusted source checkout staged by git archive reuses prior pinned root candidates. No immutable-builder/vendor-stack clean rebuild claim; tools are not yet packaged into the recovery SD."
+  ]
+}

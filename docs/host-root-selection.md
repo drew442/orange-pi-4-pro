@@ -11,8 +11,9 @@ rollback has been performed.
 running root. After a successful boot, the same operation can select a retained
 old root using its old trusted release manifest. `cancel-pending` selects the
 currently running read-only root when another slot is pending and no reboot
-has occurred. It cannot recover a host that failed to boot. Offline failed-boot
-recovery and hardware rollback validation remain open.
+has occurred. It cannot run when the installed host failed to boot; use the
+separate [RAM recovery controller](host-recovery.md). Packaged recovery and
+hardware rollback validation remain open.
 
 ## Preconditions and commands
 
@@ -139,4 +140,5 @@ including the helper-return boundary; independent review verified conservative
 receipts and restored masks. The 367-case suite passes on Jammy without skips,
 plus four separate diagnostic cases and shell regressions. ARM execution of
 this new controller, actual host health, packaged recovery and all physical
-acceptance remain open.
+acceptance remain open. The later offline controller has separate
+[software recovery evidence](host-recovery.md#native-software-evidence).

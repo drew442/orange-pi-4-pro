@@ -190,8 +190,10 @@ not establish application/state compatibility across releases.
 
 A healthy running host can select a retained old slot with its old trusted
 manifest, and can cancel a pending selection before reboot. These paths do not
-provide offline failed-boot recovery. There is no automatic fallback policy; do
-not advertise unattended updates. Required disposable-data tests include
+provide offline failed-boot recovery. Use the separate [RAM recovery
+controller](host-recovery.md) when the installed host cannot run. Its native
+software checks are distinct from physical recovery acceptance. There is no
+automatic fallback policy; do not advertise unattended updates. Required disposable-data tests include
 interruption during inactive-slot writes, before and after selector publication,
 manual A→B→A rollback, failed health checks, missing NVMe, and state-backup
 restoration. File fixtures and builder loop tests cannot establish power-loss
