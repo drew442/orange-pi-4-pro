@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "classification": "interim ARM64 userspace prototype; no boot integration or hardware acceptance",
+  "packages_installed": 220,
+  "cached_package_records": 220,
+  "package_cache_integrity": "all hashes passed; every installed version retained",
+  "files": {
+    "rootfs.tar.gz": {
+      "bytes": 169852145,
+      "sha256": "1967e76c0c831c1c0bab432e7116457d4372c15b413090c054f8958b72dcb392"
+    },
+    "installed-packages.tsv": {
+      "bytes": 6671,
+      "sha256": "f2abf03d0d6e7fd506560689093220514cbf1acc678f7560562026d6ca6564a6"
+    },
+    "package-cache.tsv": {
+      "bytes": 28638,
+      "sha256": "f2f613e79d9c1abc1689e19cfe81b624d9d2ac3beeb322fd5788980d919f7d86"
+    },
+    "source-lock.tsv": {
+      "bytes": 617,
+      "sha256": "f954217efc96ea0958e37c435179e23ab50ff8ae11a97d5c63966c1b242b75b1"
+    },
+    "InRelease": {
+      "bytes": 151075,
+      "sha256": "77737fa4b34f2693e982cc9ee35736816c35a7778fc2d326cc1bbf5b301fe1aa"
+    },
+    "debian-archive-keyring.gpg": {
+      "bytes": 55918,
+      "sha256": "506b815cbb32d9b6066b4a2aa524071e071761e7e7f68c3ac74f3061ba852017"
+    }
+  }
+}

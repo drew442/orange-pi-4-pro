@@ -1,0 +1,15 @@
+# Interim userspace only; no board kernel, firmware or bootloader.
+qemu-system-arm
+qemu-utils
+openssh-server
+python3
+iproute2
+util-linux
+nvme-cli
+ca-certificates
+systemd-sysv
+systemd-resolved
+udev
+curl
+kmod
+e2fsprogs

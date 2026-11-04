@@ -71,7 +71,7 @@ def prepare(args):
     block = {"driver": "raw", "node-name": "guest-disk",
              "file": {"driver": "file", "filename": inputs["disk"]["path"]}}
     argv = [shutil.which("qemu-system-aarch64") or "qemu-system-aarch64",
-            "-machine", "virt", "-accel", "kvm", "-cpu", "host",
+            "-machine", "virt,gic-version=host", "-accel", "kvm", "-cpu", "host",
             "-m", str(args.memory_mib), "-smp", str(args.cpus),
             "-nodefaults", "-nographic", "-serial", "stdio", "-monitor", "none",
             "-kernel", inputs["kernel"]["path"], "-initrd", inputs["initrd"]["path"],

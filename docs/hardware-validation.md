@@ -41,7 +41,7 @@ prevent EL2 use. `/dev/kvm` and successful capability ioctls alone do not prove
 guest CPU execution. A later pinned ARM64 guest fixture must boot using:
 
 ```text
-qemu-system-aarch64 -machine virt -accel kvm -cpu host ...
+qemu-system-aarch64 -machine virt,gic-version=host -accel kvm -cpu host ...
 ```
 
 The fixture must supply explicit hashed kernel and disk inputs, record guest
@@ -60,6 +60,13 @@ file, never a physical drive. It is mutable: after a clean shutdown, preserve it
 new reviewed checkpoint hash for the next launch. No guest fixture or successful
 guest run exists yet. Restricted user-mode networking has no inbound listeners;
 network acceptance still needs a defined tested fixture/service.
+
+The helper selects the host's GIC version for KVM, as supported by
+[QEMU 7.2's virt machine](https://gitlab.com/qemu-project/qemu/-/blob/v7.2.0/docs/system/arm/virt.rst).
+The guest fixture needs a separate kernel configuration with PL011 console,
+generic PCI host, virtio PCI/block/network, initramfs and devtmpfs support.
+The pinned A733 host configuration omits these guest drivers. QEMU supplies the
+virtual machine's DTB; the board DTB belongs to the physical host boot chain.
 
 ## SD write checks
 

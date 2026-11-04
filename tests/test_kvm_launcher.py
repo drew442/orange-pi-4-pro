@@ -36,7 +36,7 @@ class LauncherTests(unittest.TestCase):
     def test_kvm_only_and_explicit_limits(self):
         result = launcher.prepare(self.args)
         argv = result["argv"]
-        for flag, value in (("-machine", "virt"), ("-accel", "kvm"),
+        for flag, value in (("-machine", "virt,gic-version=host"), ("-accel", "kvm"),
                             ("-cpu", "host"), ("-m", "256"), ("-smp", "1"),
                             ("-monitor", "none"), ("-serial", "stdio")):
             self.assertEqual(argv[argv.index(flag) + 1], value)

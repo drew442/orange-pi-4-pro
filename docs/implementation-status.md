@@ -34,6 +34,10 @@ neither a larger card nor live inventory is a prerequisite to the first image.
 - Independent Sol high boot/disk-selection reviews completed; reported size,
   fallback, toolchain, tree-discovery and geometry issues fixed with checks.
   Details and routing calibration: [implementation evidence](implementation-evidence.md).
+- [Interim ARM64 userspace](host-userspace.md) built: QEMU 7.2.22, OpenSSH and
+  storage tools, 220 version/hash-locked cached packages. Approximately 531 MiB
+  unpacked / 169,852,145-byte tar. Identities scrubbed, services disabled; no boot,
+  read-only root/state integration, installation or guest execution established.
 
 ## Open gates and next actions
 
@@ -41,7 +45,8 @@ neither a larger card nor live inventory is a prerequisite to the first image.
    and obtain explicit exact-target authorization before flashing. SPI/NVMe have
    not been written; no destructive operation is authorized for an unknown target.
 2. Capture full serial boot and inventory using the guide; investigate EL2/NVMe.
-   Minimal interim Debian userspace recipe is in progress while hardware awaits.
+   Integrate the userspace prototype and build a separate virt guest fixture while
+   hardware awaits. The A733 host config lacks the required guest virtio/PL011 drivers.
 3. Full reproducibility remains open: U-Boot generates a random 128-byte debug
    challenge; two fresh U-Boot builds differ there plus checksums. Preserve that
    generated source next time; review its security role before any deterministic

@@ -112,6 +112,8 @@ pass locally and on Jammy.
 | NVMe review | Sol / high | Tree/sector findings integrated and tested |
 | KVM launch preparation | Sol / medium | 13 host tests accepted; KVM-only argv/non-root/hash checks; no guest run |
 | License extraction | Luna / low | Located notices and missing opaque-firmware terms; coordinator verified U-Boot notice path after incomplete extraction |
+| Host userspace implementation | Sol / medium | Signed snapshot recipe; mount/cleanup findings fixed at same tier; actual build passed |
+| Host userspace review | Sol / high | Private namespace and debootstrap lifecycle fixes independently checked before root run |
 
 Children used fresh focused contexts, exclusive write scopes and no delegation.
 At most two children were active. Input/output token counts, cache accounting,
