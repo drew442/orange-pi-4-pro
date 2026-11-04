@@ -5,6 +5,10 @@ This milestone provides a physical-console diagnostic RAM root for the Orange Pi
 enumerated NVMe and reported 12 GiB DRAM. It entered EL1; KVM was unavailable.
 The 2 GB figure is SD capacity. Firmware writes and recovery remain unproven.
 
+The [separate EL2 experiment](el2-diagnostic.md) provides the next candidate and
+concrete reflash/readback/recovery commands for the already identified card.
+This page retains the original booted baseline and its artifact pins.
+
 ## Current verified artifact
 
 Built 2026-11-04 on the prepared Jammy host; independent review and file-only
@@ -185,9 +189,10 @@ another disk if needed and unmount every card partition before writing.
 **Flashing is gated on your explicit authorization of that exact target after
 reviewing its identity, capacity, mounts and the artifact checksum.** No erase,
 physical write or SPI programming has been authorized for an unidentified device.
-The device-specific write and readback commands will be supplied against that
-report and the completed candidate; they have not been run yet. The diagnostic
-image itself does not install to NVMe or program SPI.
+For the operator's already identified diagnostic card, the
+[EL2 test and baseline recovery guide](el2-diagnostic.md) provides concrete write
+and readback commands. The coordinator has not executed physical writes. The
+diagnostic image itself does not install to NVMe or program SPI.
 
 ## Serial console and first boot
 

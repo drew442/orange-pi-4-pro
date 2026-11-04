@@ -1,0 +1,22 @@
+diff --git a/arch/arm/lib/bootm.c b/arch/arm/lib/bootm.c
+--- a/arch/arm/lib/bootm.c
++++ b/arch/arm/lib/bootm.c
+@@ -352,7 +352,8 @@ static void boot_jump_linux(bootm_headers_t *images, int flag)
+ 	char *s;
+ 	unsigned long r2;
+ 	int fake = (flag & BOOTM_STATE_OS_FAKE_GO);
+-	u32 ARM_SVC_RUNNSOS = 0x8000ff04;
++	/* A733 EL2 diagnostic only: use the existing monitor hyper service. */
++	u32 ARM_SVC_HYPER = 0x8000ff40;
+ 	//phys_size_t fdt_size;
+ 
+ 	kernel_entry = (void (*)(int, int, uint))images->ep;
+@@ -415,7 +416,7 @@ static void boot_jump_linux(bootm_headers_t *images, int flag)
+ 		if (sunxi_probe_secure_monitor() && (sunxi_get_force_32bit_os() == 0)) {
+ 			debug("u-boot: Calling sunxi_smc_call_atf(): kernel_entry = 0x%lx, dtb_addr = 0x%lx\n",
+ 				(ulong)kernel_entry, (ulong)r2);
+-			sunxi_smc_call_atf(ARM_SVC_RUNNSOS, (ulong)kernel_entry, (ulong)r2,  1);
++			sunxi_smc_call_atf(ARM_SVC_HYPER, (ulong)kernel_entry, (ulong)r2,  1);
+ 		} else {
+ 			debug("u-boot: Calling kernel_entry()\n");
+ 			kernel_entry(0, machid, r2);

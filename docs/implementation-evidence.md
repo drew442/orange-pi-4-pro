@@ -810,3 +810,39 @@ Both full 128 MiB files compare byte for byte, SHA-256
 Readback includes explicit ext4 metadata, content and e2fsck. The complete
 kernel/fixture recipe has not been rerun after this change; existing published
 fixture pins remain unchanged. No guest or physical storage test is implied.
+
+## Physical first boot and separate EL2 diagnostic
+
+The operator supplied full serial/read-only logs and NVMe sysfs/fdisk output.
+Luna low extracted the bounded inventory; the coordinator checked the decisive
+boot messages and preserved log lengths/hashes in the
+[physical evidence record](evidence/board-diagnostic-20261104.json).
+The board reaches the RAM shell with 12 GiB/eight CPUs and the actual SD/NVMe.
+BL31 SPSR `0x3c5`, Linux EL1 entry and unavailable HYP prove a real blocker.
+No heatsink removal/chip markings are needed. The user authorized discarding
+this exact NVMe's existing data; no NVMe erase or SPI programming was performed.
+
+Sol high traced normal U-Boot `bootm` and disassembled the actual locked monitor,
+including its hypervisor service, HCE setup and PSCI secondary-entry derivation.
+The existing monitor service `0x8000ff40` provides a narrow EL2 experiment without
+changing firmware/kernel/DTB. Sol medium implemented a separate recipe; independent
+Sol high review found an initial unused-variable build error and SCM metadata
+mismatch, both corrected. Fresh assembly also exposed filesystem metadata drift;
+the final recipe clones the authenticated booted raw image and overlays only the
+equal-sized boot package. All other bytes compare identical.
+
+The actual final Jammy build took 40 seconds with two compilation jobs. Full
+manifest hashes, gzip expansion, MBR/boot blobs, legacy ext4, boot script CRCs,
+actual TOC1 component payloads and copied immutable pins pass the reusable
+`verify-el2-diagnostic.py`. Coordinator inspected the final compiled handoff;
+independent review checked matching object/linked calls. Monitor/SCP match locked
+vendor binaries. No board boot is implied. [Candidate evidence](evidence/el2-diagnostic-20261104.json)
+records hashes, source/patch provenance, tests and limitations.
+
+Jammy discovery passes 719 tests without skips; all four diagnostic assembly cases
+and five shell regressions pass. Three manifest-boundary tests reject symlink,
+FIFO and directory input. The [reviewed operator guide](el2-diagnostic.md) supplies
+exact downloads, authorized-card guards, write/readback, full-card evidence,
+serial expectations and baseline recovery before any installation. Source/model
+account token/cache/pricing totals were not exposed; monetary savings remain
+unknown. Hardware EL2, KVM guest execution and full release gates remain open.

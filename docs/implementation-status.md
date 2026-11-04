@@ -1,159 +1,102 @@
 # Implementation status
 
-Updated 2026-11-04. Replace stale entries; keep this file short.
+Updated 2026-11-04. Replace stale entries; detailed evidence lives in linked files.
 
 ## Current milestone
 
-The small headless diagnostic image booted to its RAM shell on the A733.
-[Physical evidence](board-diagnostic-20261104.md) identifies RAM/SD/NVMe.
-**BL31 enters EL1; KVM reports HYP unavailable.** Prepare a separately reviewed
-EL2 diagnostic variant before NVMe installation. Vendor images exceed the actual 2 GB SD capacity;
-no larger card or live inventory was required to produce the diagnostic image.
+The 256 MiB diagnostic booted to its RAM shell on the A733. Its BL31 handoff
+enters **EL1**, and KVM reports HYP unavailable. A separately built and reviewed
+[EL2 diagnostic](el2-diagnostic.md) is ready for the next physical boot; **its
+hardware behavior is untested**. NVMe installation cannot resolve EL1 entry.
 
-## Decisions and evidence
+## Decisions and physical evidence
 
-- Target: Orange Pi 4 Pro **A733**, 2 GB **SD**, nominal 250 GB NVMe. Diagnostic reports 12 GiB
-  LPDDR5, eight CPUs, 1,977,614,336-byte SD and 256,060,514,304-byte NVMe.
-  Heatsinks stay attached; diagnostic identity replaces chip markings.
-- Prefer SPI-to-NVMe with SD removed; immutable SD fallback, minimal host and
-  real KVM guest remain mandatory. First diagnostic boot/NVMe enumeration are
-  observed; KVM, installed boot and release acceptance remain open.
-- [Pinned diagnostic inputs](../configs/diagnostic-sources.lock.json): vendor
-  build `a95129bf`, kernel `2ac08e8c` (6.6.98), U-Boot `b791be84` (2018.07).
-  Full commits, toolchain hashes and 26 opaque input hashes are retained.
-  Vendor KVM was disabled; diagnostic configuration enables it. Actual EL1 boot
-  blocks KVM. Pinned monitor supports a hypervisor service; separate experiment
-  changes only the U-Boot handoff, preserving firmware/kernel/DTB.
-- [Jammy builder](build-host-assessment.md): actual kernel/U-Boot builds,
-  ARM64 chroot and file-backed loop checks passed. Two compilation jobs;
-  GCC 11 kernel / Linaro 7.4.1 U-Boot. Latest idle sample has
-  over 7.3 GB available RAM and 15 GB free disk; 4 GiB swap is configured.
-- **Diagnostic candidate built, independently verified and operator-booted:**
-  268,435,456 bytes, SHA-256
-  `b05086afaab3d2f9da6c33b8e457f3552cce2899c08824d371615008bf66d9fd`;
-  compressed 16,188,652 bytes. [Manifest](evidence/diagnostic-20261104.json),
-  [download/flashing/serial guide](diagnostic-image.md). Local files are under
-  ignored `out/diagnostic-20261104/`; builder `.../orange-pi-4-pro-build/artifacts/`.
-- [Interim ARM64 userspace](host-userspace.md): QEMU 7.2.22, OpenSSH and storage
-  tools; 220 version/hash-locked cached packages, approximately 531 MiB unpacked
-  / 169,852,145-byte tar. Buildroot/release-base decision follows board baseline.
-- [Managed A/B roots](host-payload.md): 4 GiB each, about 143 MB compressed,
-  matching modules, read-only ext4 feature/no journal. Full hashes, contents
-  and gzip expansions passed. New-root writable-loop checks deny read-write
-  remounts and writes; no systemd or board boot.
-  [Current tool-bearing roots](guest-tools-package.md) include the complete
-  39-file maintenance/guest tree at `/usr/lib/a733-tools`. Exact raw/compressed
-  and ownership/mode readback passes; portable archive clean-repeat is identical.
-  Packaged ARM workflows pass at the installed path without a checkout.
-  The published recovery SD and full-disk fixture retain earlier components.
-- [Package-state isolation](host-package-state.md): eight version-owned views
-  bind read-only from the selected root; 77.3 MB of caches pruned in private
-  staging. Native A→B→A tests and ARM64 binfmt queries on both actual roots
-  match all 220 package rows and 1,122 BOM entries; no physical update/rollback.
-- [State](host-state.md), [NVMe selector](nvme-root-selection.md) and
-  [handoff](host-handoff.md): 8 GiB journaled fixture with fresh installation
-  identities; generic bootstrap fixes state UUID and ABI while root choice
-  lives on recovered NVMe state. Selected-root-only resolution, ownership,
-  GPT-role and cleanup fixtures pass. Physical selection/rollback remain open.
-- [Root updates](host-updates.md): authenticated A/B file preparation and guarded
-  inactive-slot staging CLI. Private loop interruption at 8 MiB and complete
-  4 GiB retry/readback pass; selected/boot/guest sentinels stay unchanged.
-  [Explicit selection](host-root-selection.md) adds durable journals, activation
-  and cancellation; real ext4 interruption/readback checks pass. Live NVMe/TTY
-  policy uses fixtures. [RAM recovery](host-recovery.md) archives malformed
-  selectors and selects a retained root; native 250 GB GPT/8 GiB state checks
-  pass. The earlier [maintenance subset](maintenance-tools.md) is included in
-  the published preparation SD. ARM imports/CLI, full 4 GiB authentication,
-  debugfs and queued-SIGINT publication checks pass. Crash-journal replay, booted rollback and all
-  physical update/recovery tests remain open.
-- [Management preparation](host-management.md): exact Ethernet MAC DHCPv4,
-  selected-IP key-only SSH, NVMe host-key creation and RAM configuration.
-  ARM key/sshd/PAM-account/unit checks pass; no SSH connection or systemd boot.
-  Test credentials/network settings make the current state nondeployable.
-- [Complete SD host bootstrap](host-sd-bootstrap.md): 256 MiB raw /
-  17,271,977 bytes compressed. Independent inspection and byte-identical
-  clean-checkout assembly passed. It references fixture NVMe state.
-- [Integrated NVMe preparation](nvme-provisioning.md): 250,000,000,000-byte
-  sparse disk file combines GPT, boot, A/B, state and journaled guest storage.
-  Full logical hash and independent readback passed. Clean-checkout assembly
-  and independent readback passed with fresh disk/PARTUUID/boot/guest identities.
-  Published full-disk payloads remain frozen pre-package-ABI fixtures. New
-  component sets are verified separately; a new full-disk per-installation
-  candidate and physical installation await real inputs.
-- [Installer preparation](installer-preparation.md): pinned ARM Python/storage/TLS
-  client runtime and 256 MiB SD candidate built; 26.9 MB compressed initramfs.
-  Private ARM file-tool/CA/NSS probes, SD inspection and byte-identical clean
-  repeat pass. Real board networking and installation remain open.
-- [Guarded NVMe writer](nvme-installation.md): authenticated prepare/apply,
-  exact-target TTY authorization, exclusive access, complete write/readback and
-  conservative interruption reports implemented. Private native loop and ARM
-  software checks pass; no production NVMe apply or physical acceptance.
-- [Compressed delivery](nvme-distribution.md): verified 630,156,553-byte gzip
-  expands to the full 250 GB fixture. Deterministic gzip recipe
-  preserves fixture eligibility; verified HTTPS acquisition checks encoded and
-  full expanded contents without raw staging. Updated installer and packaged
-  ARM loopback TLS probes pass; clean-checkout packaging is byte-identical.
-  Full-size native HTTPS acquisition/readback/expansion passed without raw
-  staging; the fixture remains writer-ineligible.
-  Board networking and real per-installation delivery remain untested.
-- [Guest fixture](guest-fixture.md): separate virt-profile kernel/initramfs and
-  disposable disk built and hashed; launcher requires KVM with no TCG fallback.
-  [Guest launch guards](guest-operations.md) retain authenticated descriptors,
-  lock disks and enforce same-NVMe guest placement before hashing. Real ARM
-  QEMU file-backend checks pass. [Explicit activation](guest-activation.md) adds
-  guarded p5 mounting and locked RAM accounts; actual private-loop interruption/
-  retry/idempotence and ARM sysusers checks pass. **No guest boot or KVM execution.**
-  [Enrollment](guest-enrollment.md) publishes protected assets and a private disk;
-  actual pinned ARM copy/UID permission checks and systemd unit parsing pass.
-  [Checkpoints](guest-checkpoints.md) add pinned stopped-disk records and exact
-  history; ARM interruption/no-op/new-pin file checks pass.
-  [Backup artifacts](guest-backups.md) preserve all assets and history through a
-  streamed, authenticated archive. Actual ARM sender/native receiver full-file
-  checks pass on the same builder. [Fresh-destination restoration](guest-restoration.md)
-  adds provenance, UUID rebinding and exact copy/readback; actual ARM file checks
-  pass. [Pinned HTTPS delivery](guest-restore-delivery.md) avoids local archive
-  staging; real ARM loopback TLS and native index checks pass. Off-device retention,
-  full-capacity resource checks, actual board networking,
-  restored KVM boot and physical recovery remain open. Actual clean shutdown,
-  restart and automatic boot integration remain open.
-  [Optional loopback TCP networking](guest-networking.md) preserves restricted
-  usernet; actual ARM backend/CGI and packaged configuration checks pass without
-  a guest CPU. Updated fixture/package are separate from existing root images;
-  actual guest traffic and rollback with networking remain untested.
-- 697 Python cases across both suites and all shell regressions pass; the 693-case
-  discovery suite passes on Jammy with no skips (94 privileged skips locally). Actual
-  files/build checks are distinct from hardware gates. Independent Sol high
-  reviews and routing outcomes: [implementation evidence](implementation-evidence.md).
+- Preserve A733, actual 2 GB SD and nominal 250 GB NVMe requirements. Prefer
+  SPI-to-NVMe with SD removed; otherwise immutable SD with zero routine writes.
+  Actual KVM guest execution remains mandatory.
+- [Physical logs](board-diagnostic-20261104.md): 12 GiB LPDDR5, eight CPUs;
+  SU02G SD 1,977,614,336 bytes, CID `035344535530324780716f216e00a8f5`;
+  NVMe 256,060,514,304 bytes, model `SPCC M.2 PCIe SSD`, serial
+  `134807190FC700149277`, firmware `EDFM20.0`. Use actual NVMe geometry.
+- Heatsinks remain attached. Diagnostic outputs supply component identities;
+  chip markings are unnecessary. Power rating/thermal endurance remain open.
+- User explicitly authorized discarding that exact NVMe's data. Revalidate its
+  identity/idle state immediately before the concrete installation; do not ask
+  again for matching-device erase permission. No coordinator NVMe erase or SPI
+  programming has occurred. SPI programming remains unauthorized.
+- SD is unmounted in Linux; one write-counter snapshot is zero, but `ro=0`.
+  Firmware audit, offline full-card hash comparisons and cycle/workload evidence
+  remain necessary. A single Linux snapshot does not prove zero routine writes.
+- Wired MAC `10:f4:ae:90:5e:57`, 1 Gbps link; DHCP has no lease/IPv4 route.
+  Administration public key and DHCP/static management choice requested.
 
-## Open gates and next actions
+## Builds and host-only verification
 
-1. Build and independently review the narrow EL2 diagnostic U-Boot variant;
-   verify emitted service `0x8000ff40`, unchanged firmware/kernel/DTB, image fit
-   and hashes. Obtain a full board boot log: SPSR `0x3c9`, eight CPUs at EL2,
-   KVM initialization and `/dev/kvm`; then prove actual KVM guest execution.
-   The user authorized erasing NVMe serial `134807190FC700149277`, model
-   `SPCC M.2 PCIe SSD`, size 256,060,514,304 bytes. Revalidate before writing;
-   no erase/SPI action has occurred. SPI programming remains unauthorized.
-2. Supply the administration public key. Wired MAC is `10:f4:ae:90:5e:57`;
-   link is up but DHCP has no lease/IPv4 route. Validate real
-   management activation and trusted host-key verification. Deliver the
-   actual per-installation candidate and validate board payload acquisition. Validate
-   the writer/locking/readback/interruption protocol on authorized hardware. The preparation runtime
-   has exercised software probes; board boot/DHCP/DNS/TLS remain unproven.
-3. Exercise the packaged maintenance/recovery tools on the board.
-   Validate dirty-journal recovery, serial/manual rollback and backup restoration;
-   cross-version updates/state compatibility remain unproven. Finish
-   guest storage/networking, backup/restore and operational procedures.
-4. Full clean-build reproducibility remains open: U-Boot emits a random
-   128-byte debug challenge; builds differ there plus checksums. Exact generated
-   source/binary/log evidence passed review and a
-   [validation build](evidence/diagnostic-provenance-20261104.json). Review its
-   role before deterministic changes. Clean builder/package acquisition and
-   opaque-firmware/source/license audits remain.
+- [Source locks](../configs/diagnostic-sources.lock.json): vendor build
+  `a95129bf`, kernel `2ac08e8c` (6.6.98), U-Boot `b791be84` (2018.07), pinned
+  toolchains/packages and 26 opaque firmware/tool inputs. Compatible boot0,
+  monitor, SCP, kernel and DTB remain together.
+- [Booted baseline](diagnostic-image.md): 268,435,456-byte raw image, SHA-256
+  `b05086afaab3d2f9da6c33b8e457f3552cce2899c08824d371615008bf66d9fd`.
+  Vendor images do not fit; no larger card or prior live inventory was required.
+- [EL2 candidate evidence](evidence/el2-diagnostic-20261104.json): 268,435,456
+  bytes, SHA-256 `08fff0a88c509ee484c2450c58d42629fd90eedb8cd4c57513f98f4f78611b58`;
+  gzip 16,188,653 bytes. Only the equal-size boot package is replaced; all outside
+  bytes match the authenticated baseline, including the complete filesystem.
+  Emitted monitor call is `0x8000ff40`; expected SPSR is `0x3c9`. Packed monitor/
+  SCP and copied kernel/DTB/initramfs/boot0 hashes pass; physical EL2 is unproven.
+- [Jammy builder](build-host-assessment.md): actual builds with two compilation
+  jobs, GCC 11 kernel/Linaro 7.4.1 U-Boot; 4 GiB swap. Latest sample during guest
+  fixture rebuild: over 10 GB free disk and 7.4 GB available RAM.
+- [Minimal interim ARM64 userspace](host-userspace.md): 220 version/hash-locked
+  packages, QEMU 7.2.22, OpenSSH/storage tools; approximately 531 MiB unpacked.
+  Final Buildroot/release-base decision follows working hardware KVM baseline.
+- [Read-only A/B roots](host-payload.md), [package-state isolation](host-package-state.md),
+  [NVMe state](host-state.md), [selection](nvme-root-selection.md) and
+  [handoff](host-handoff.md) pass file-backed and packaged ARM checks. Current
+  [complete maintenance/guest tree](guest-tools-package.md) has 39 files at
+  `/usr/lib/a733-tools`; newer networking package/fixture are separate artifacts.
+  [Management](host-management.md) has ARM sshd/key/unit checks; no real SSH login.
+- [Updates](host-updates.md), [selection journals](host-root-selection.md) and
+  [RAM recovery](host-recovery.md) pass private-loop interruption/readback tests.
+  Physical update, dirty-journal recovery and rollback remain untested.
+- [Host SD bootstrap](host-sd-bootstrap.md), [preparation runtime](installer-preparation.md),
+  [NVMe assembly](nvme-provisioning.md), [guarded writer](nvme-installation.md) and
+  [authenticated compressed delivery](nvme-distribution.md) have actual file/ARM/
+  loop/HTTPS checks. Published full-disk images remain **nondeployable fixtures**
+  with earlier package ABI/test identities and 250,000,000,000-byte geometry.
+  Build a fresh per-installation image using actual capacity/key/network inputs.
+- [Guest fixture](guest-fixture.md), [KVM-only launch](guest-operations.md),
+  [activation](guest-activation.md), [enrollment](guest-enrollment.md),
+  [checkpoints](guest-checkpoints.md), [backup](guest-backups.md),
+  [restore](guest-restoration.md), [HTTPS restore](guest-restore-delivery.md) and
+  [isolated networking](guest-networking.md) pass host/packaged ARM checks.
+  **No guest has booted.** No acceleration fallback is permitted. The new fixed
+  seed passes actual Jammy root/drew byte-identical builds; its complete fixture
+  rebuild is in progress. Earlier artifact pins remain unchanged.
+- Jammy: 719 discovery cases without skips, four diagnostic assembly cases and
+  all five shell regressions pass. Independent Sol high reviews cover boot,
+  installation/selection and rollback changes. [Detailed implementation evidence](implementation-evidence.md)
+  separates builds, software probes and physical results.
+
+## Next actions and open gates
+
+1. Boot the [reviewed EL2 candidate](el2-diagnostic.md); return full serial capture,
+   image readback and before/after whole-SD hashes. Require SPSR `0x3c9`, eight
+   CPUs at EL2, KVM initialization and `/dev/kvm`, then actual KVM guest execution.
+2. Resolve management addressing and administration key; produce actual-geometry
+   installation inputs and reviewed recovery artifacts. Validate real board
+   boot/DHCP or static addressing/DNS/TLS, guarded NVMe write/readback and boot.
+3. Prove installed NVMe operation, SD policy, repeated boots/workload, interrupted
+   updates, manual rollback, dirty-journal recovery and off-device restore. SPI
+   needs chip identification, backup and proven recovery before authorization.
+4. Full clean-build reproducibility remains open: vendor U-Boot generates a
+   random 128-byte challenge, retained with exact provenance. Clean package/source
+   acquisition and opaque firmware/source/license audit remain release gates.
 
 ## Completion rule
 
-[Hardware acceptance](hardware-validation.md) remains incomplete: actual
-KVM guest, installed NVMe boot, 10 cold/10 warm cycles, 24-hour workload, zero SD
+[Release acceptance](hardware-validation.md) remains incomplete: actual KVM guest,
+installed NVMe boot, 10 cold/10 warm cycles, 24-hour workload, zero routine SD
 writes, interruption/rollback/recovery/restore and independently reproduced
 deployment. Build success, model review and emulation cannot satisfy these gates.

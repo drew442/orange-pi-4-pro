@@ -1,0 +1,165 @@
+{
+  "schema": 1,
+  "classification": "experimental EL2 SD diagnostic; physical boot and KVM UNTESTED",
+  "builder": "drew@build.drewnet.online; Ubuntu22.04.5 amd64",
+  "private_build": "/var/lib/a733-el2-work-20261104/out/el2-diagnostic-20261104-03",
+  "download_directory": "/home/drew/orange-pi-4-pro-build/el2-diagnostic-20261104",
+  "local_directory": "out/el2-diagnostic-20261104",
+  "build_start_utc": "2026-11-04T21:58:22Z",
+  "build_end_utc": "2026-11-04T21:59:02Z",
+  "compilation_jobs": 2,
+  "baseline": "diagnostic-20261104.json",
+  "full_manifest_sha256": "749d5ba0e95a516edfc4bf671b51d2533fb0588bc0d3abcdce090d1a081b3a32",
+  "handoff": {
+    "baseline_service": "0x8000ff04",
+    "baseline_spsr": "0x3c5",
+    "expected_service": "0x8000ff40",
+    "expected_spsr": "0x3c9",
+    "arguments": "processed kernel_entry, DTB, 1; normal bootm initrd/cleanup preserved"
+  },
+  "uboot_version_provenance": {
+    "scm_suffix": "-gb791be8-dirty",
+    "source_date_epoch": 1772630733,
+    "compiled_timestamp_utc": "2026-03-04 13:25:33",
+    "basis": "matched pinned baseline image version string"
+  },
+  "raw_image_provenance": {
+    "method": "Authenticated baseline raw image copied; boot package region only replaced",
+    "baseline_sha256": "b05086afaab3d2f9da6c33b8e457f3552cce2899c08824d371615008bf66d9fd",
+    "output_sha256": "08fff0a88c509ee484c2450c58d42629fd90eedb8cd4c57513f98f4f78611b58",
+    "image_bytes": 268435456,
+    "package_offset": 16793600,
+    "package_bytes": 1392640,
+    "package_sha256": "b20c3d1133aee6474416bc9846b0bf94d5439aa12d7f7555b44607105ddab3b6",
+    "outside_package_byte_comparison": "identical",
+    "preserved": "All bytes outside package, including boot0, boot script and complete filesystem"
+  },
+  "files": {
+    "a733-el2-diagnostic.img": {
+      "bytes": 268435456,
+      "sha256": "08fff0a88c509ee484c2450c58d42629fd90eedb8cd4c57513f98f4f78611b58"
+    },
+    "a733-el2-diagnostic.img.gz": {
+      "bytes": 16188653,
+      "sha256": "3e07a434284097314000c00f0245581eee5c4bdc000f434cbf7c071bdb0fe96e"
+    },
+    "boot_package.fex": {
+      "bytes": 1392640,
+      "sha256": "b20c3d1133aee6474416bc9846b0bf94d5439aa12d7f7555b44607105ddab3b6"
+    },
+    "uboot.elf": {
+      "bytes": 8150760,
+      "sha256": "0b863828e360b5e9a7709bd8431cb42a8855ee1982d768642a8484c833b2f6ec"
+    },
+    "uboot-bootm.o": {
+      "bytes": 43760,
+      "sha256": "ae55eed67d2cbaa60a965a779f2db88509b22fc96de6cddbe51614d831de8e17"
+    },
+    "uboot-bootm.disassembly.txt": {
+      "bytes": 10231,
+      "sha256": "41adb3f78aae83d743e357ba036b0c5185c1e280caf96b540cddd5d87c0a7c50"
+    },
+    "build-recipe.tar.gz": {
+      "bytes": 129973,
+      "sha256": "9bac99dcbd420a1e05fedabdad04f751304a91b0bb338ca7c3f5ac406d8c9509"
+    },
+    "uboot.config": {
+      "bytes": 35703,
+      "sha256": "253f9c77878c20e9146bfb35d5d80819f5314dd30ec489e5551f02e518002bb9"
+    },
+    "Image": {
+      "bytes": 27283464,
+      "sha256": "9df974c55fa61a77e8fe812652780dad471527eb9615c27838f481887d4c50e7"
+    },
+    "board.dtb": {
+      "bytes": 209320,
+      "sha256": "4d7d964a54668cf5dc12cd4bf7e72a625c79883541272aeba1a91adbbedb86ed"
+    },
+    "uInitrd": {
+      "bytes": 3650459,
+      "sha256": "79cdfcedf8903953696ec67e76c4089fc979240903d918628f5272c82b09f3f9"
+    },
+    "boot0_sdcard.fex": {
+      "bytes": 245760,
+      "sha256": "9213f1c56ef932930d43b5751e8937bea0e9ae7460ec16187cc1b0dffdb75345"
+    }
+  },
+  "sources": {
+    "build/el2-diagnostic.sh": {
+      "bytes": 19469,
+      "sha256": "148cd9df3abc62867141ddca7abce154627b0c0c927531987d110fad4f847b4e"
+    },
+    "build/patches/uboot-a733-el2-handoff.patch": {
+      "bytes": 1031,
+      "sha256": "be261e0fb43845bbc999a5d3a7f22147eac9c93154a951b04cb2f9573aa8d1bf"
+    },
+    "scripts/verify-el2-diagnostic.py": {
+      "bytes": 6729,
+      "sha256": "422eae6bb287d7d4983abb333d5a269448d9be43de86c889e056932cdc3720f1"
+    },
+    "tests/test_el2_diagnostic.py": {
+      "bytes": 13235,
+      "sha256": "344020cc9db9c2022a88dfdf77966b242e910769463bbc123053fd54576fbbf7"
+    },
+    "tests/test_el2_verifier.py": {
+      "bytes": 1653,
+      "sha256": "a69f031b9b3e5410ab4852effc4de91844e0ad87713267f27c4b727ea9dab401"
+    }
+  },
+  "verification": {
+    "host_artifact_verification": "passed",
+    "image_bytes": 268435456,
+    "image_sha256": "08fff0a88c509ee484c2450c58d42629fd90eedb8cd4c57513f98f4f78611b58",
+    "hardware_acceptance": "UNTESTED",
+    "packed_components": {
+      "u-boot": {
+        "offset": 2048,
+        "bytes": 1196032,
+        "sha256": "6d31463d533159427db010ce168ac42b37c84a00574d010ce9b781d7d35bee28"
+      },
+      "monitor": {
+        "offset": 1198080,
+        "bytes": 78609,
+        "sha256": "8af16b86ae8e2eff634a3ebca76a8cdf3c10b3540387573d46c3d785545b2632"
+      },
+      "scp": {
+        "offset": 1276928,
+        "bytes": 105912,
+        "sha256": "07e6b97628101963e7944e012948c4bdf721f914bad347acd7dfbde89db42749"
+      }
+    },
+    "outside_boot_package": "byte-identical to pinned baseline",
+    "gzip_expansion": "byte-identical to raw image"
+  },
+  "compiled_call_site": {
+    "object": "boot_jump_linux.isra.1 +0x96..0x9e: r3=1,r2=DTB(r5),r1=entry(r6),r0=[literal+0xd0]=0x8000ff40; branch __sunxi_smc_call",
+    "linked": "0x4a00159a..0x4a0015a2, literal 0x4a0015d4; unchanged from reviewed -02 call sequence",
+    "inspected_by": "coordinator (-03 object) and independent Sol high (-02 object+linked ELF; same source patch)"
+  },
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "outcome": "No code blockers after actual-build unused-variable correction, SCM metadata correction, baseline-image overlay and nonregular manifest rejection."
+  },
+  "checks": {
+    "jammy_python_discovery": {
+      "passed": 719,
+      "skips": 0,
+      "seconds": 32.197
+    },
+    "diagnostic_assembly": {
+      "passed": 4,
+      "seconds": 6.818
+    },
+    "shell_regressions": "All five tests/test-*.sh passed",
+    "el2_specific_tests": 15,
+    "manifest_input_tests": 3
+  },
+  "limitations": [
+    "No physical boot of this candidate.",
+    "No KVM guest execution.",
+    "No NVMe erase or SPI programming.",
+    "Vendor U-Boot random challenge retained; no whole-build bit reproducibility claim.",
+    "License/source audit for opaque firmware remains a release gate."
+  ]
+}
