@@ -3,7 +3,6 @@ import contextlib
 import copy
 import hashlib
 import importlib.util
-import io
 import json
 import os
 from pathlib import Path
@@ -183,10 +182,12 @@ class CandidateTests(unittest.TestCase):
         self.assert_clean()
 
     def test_input_mutation_detected_even_if_original_bytes_read(self):
-        snapshot = io.BytesIO()
+        original = self.image.stat()
         def mutate():
             self.image.write_bytes(self.content)
-        with self.assertRaisesRegex(ValueError, 'changed'):
+            # Some filesystems give consecutive writes the same timestamp.
+            os.utime(self.image, ns=(original.st_atime_ns, original.st_mtime_ns + 10**9))
+        with tempfile.TemporaryFile() as snapshot, self.assertRaisesRegex(ValueError, 'changed'):
             UPDATE.capture_root(self.image, UPDATE.record(self.content), snapshot, after_chunk=mutate)
 
     def test_snapshot_reauthenticated_before_inspect(self):

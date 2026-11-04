@@ -10,7 +10,7 @@ interruption testing remain release gates.
 ## Prepare a compatible root candidate
 
 Use the trusted checkout staged under the root-owned `0700` directory
-`/var/lib/a733-update-work-20261104` on the Jammy builder. Existing build-workspace
+`/var/lib/a733-update-final-20261104` on the Jammy builder. Existing build-workspace
 ancestors include a group-writable directory and are deliberately unsuitable
 for this preparer’s private output. Obtain the payload-manifest
 SHA-256 through the trusted release/build record; a hash supplied alongside an
@@ -20,15 +20,19 @@ free in the output filesystem even when sparse capture uses less disk.
 
 ```sh
 sudo -i
-cd /var/lib/a733-update-work-20261104
+cd /var/lib/a733-update-final-20261104
 payload=/home/drew/orange-pi-4-pro-build/package-state-work-20261104/out/host-payload-package-state-20261104-01
 manifest_sha256=51f8dfa7f0f66b005b9bfd08dc5f29fcf25f0791e5e844ab6af22de94aa9a44c
 /usr/bin/python3.10 -I -B scripts/prepare-host-update.py \
   "$payload/root-B.ext4" \
-  /var/lib/a733-update-work-20261104/candidate-B \
+  /var/lib/a733-update-final-20261104/candidate-B \
   --slot B --payload-manifest "$payload/manifest.json" \
   --manifest-sha256 "$manifest_sha256" --storage-kind external
 ```
+
+The commands above describe the recorded B preparation. Choose a new output
+name for a repeat; existing directories are deliberately refused. The same
+command with `root-A.ext4`, `--slot A` and `candidate-A` prepares A.
 
 The new private directory contains the captured `root.ext4`, the exact trusted
 `manifest.json`, a proposed `selected.conf`, and a `candidate.json` receipt.
@@ -52,6 +56,36 @@ follow [renameat2](https://man7.org/linux/man-pages/man2/rename.2.html) and
 [fsync](https://man7.org/linux/man-pages/man2/fsync.2.html). A receipt is evidence
 of preparation, not an authorization token or a substitute for rechecking bytes
 before writing.
+
+## Verified builder checks
+
+Both actual 4 GiB package-state roots were captured from producer commit
+`8cd3947f575681fab59268b59f8175fbd194bd84`. Each took about 18 seconds and
+30 MiB peak memory. An independent file verifier matched the complete source
+and captured hashes, original selectors, exact trusted manifests, receipt
+bindings and private permissions. The roots represent the same userspace
+version; this does not test cross-version updates or state compatibility.
+[Evidence and hashes](evidence/host-update-candidates-20261104.json) distinguish
+these checks from hardware acceptance.
+
+Run from the trusted checkout as root, with the preceding `payload` and
+`manifest_sha256` variables set:
+
+```sh
+/usr/bin/python3.10 -I -B tests/verify_host_update_candidates.py \
+  /var/lib/a733-update-final-20261104 "$payload" \
+  /home/drew/orange-pi-4-pro-build/package-state-work-20261104/out \
+  --manifest-sha256 "$manifest_sha256"
+```
+
+The verifier expects `candidate-A` and `candidate-B`, plus the independently
+prepared `package-selection-A.conf` and `package-selection-B.conf` in the
+reference directory. It imports no producer code and performs regular-file
+reads only. Run without Python optimization; `-O` is refused. The shared
+filesystem metadata reader now bounds output while reading, caps the root
+marker at 64 KiB, and limits each extraction to 30 seconds plus up to five
+seconds for child cleanup. This preparation-code change does not rebuild or
+deploy previously recorded bootstrap images.
 
 ## Required installation and activation protocol
 

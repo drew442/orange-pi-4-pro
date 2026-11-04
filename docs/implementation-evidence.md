@@ -125,6 +125,27 @@ physical storage writes occurred. The resolver is deliberately conservative abou
 blank partitions and remains preparation, with root/state mounting and management
 configuration open. The packaging helper has six nonprivileged regressions.
 
+## Update candidate preparation
+
+[Candidate evidence](evidence/host-update-candidates-20261104.json) records clean-checkout
+preparation of both actual 4 GiB package-state roots using source commit
+`8cd3947f575681fab59268b59f8175fbd194bd84`. Independent readback matches both
+original full hashes, exact trusted manifests and previously prepared selectors;
+receipts and `0700`/`0400` metadata match. Each capture took about 18 seconds
+with about 30 MiB peak RSS. The 286-case suite passes on Jammy without skips,
+plus four local diagnostic cases and all shell regressions. A Jammy test repair
+removed timestamp-granularity dependence; the isolated discovery invocation
+explicitly supplies the trusted repository import path. No production code
+changed after the captured producer commit. The test verifier and final test
+source hashes are recorded separately.
+
+Independent Sol high review caught unbounded debugfs stdout accumulation in
+the shared metadata reader. Byte caps now apply during reads, with a deadline,
+child cleanup and duplicate-key rejection before JSON parsing. Oversize, hang,
+EOF-then-hang, cleanup-swap and actual regular-file ext4 checks pass. These are
+file-only preparation checks, not installed update, rollback, power-cut or
+hardware evidence. New code does not imply a rebuilt/deployed bootstrap.
+
 ## Routing calibration
 
 | Work | Explicit model / effort | Outcome / repair |
@@ -176,6 +197,8 @@ configuration open. The packaging helper has six nonprivileged regressions.
 | Package-state/install review | Sol / high | Installer provenance Path error and ambient dpkg database override found and fixed; exact mount/ABI negative fixtures and two private-loop harnesses reviewed |
 | Package VFS/ARM probes | Sol / medium | Native tiny A1→B2→A1 plus actual ARM default-path queries and independent 1,122-entry metadata readback; coordinator executed and verified cleanup |
 | Package guide updates | Luna / low | Coordinator requested one correction to preserve commands/references and correct state RW semantics, then corrected remaining scope wording |
+| Update candidate preparation | Sol / medium | Authenticated raw root staging and no-overwrite publication; coordinator ran both actual 4 GiB roots and independent source/capture/selector comparisons |
+| Update/parser review | Sol / high | Unbounded debugfs capture found and fixed; bounded reads, deadline/reaping and ownership cleanup checked; no installed updater or hardware claim |
 | Slot metadata extraction | Luna / low | Source mapping established; coordinator clarified fresh per-boot RAM overlay semantics and authenticated actual archive metadata separately |
 
 Children used fresh focused contexts, exclusive write scopes and no delegation.

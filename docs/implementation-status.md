@@ -21,7 +21,7 @@ no larger card or live inventory was required to produce the diagnostic image.
 - [Jammy builder](build-host-assessment.md): actual kernel/U-Boot builds,
   ARM64 chroot and file-backed loop checks passed. Two compilation jobs;
   GCC 11 kernel / Linaro 7.4.1 U-Boot. Recent distribution-check samples retained
-  over 7.3 GB available RAM and 20 GB free disk; 4 GiB swap is configured.
+  over 7.3 GB available RAM and 19 GB free disk; 4 GiB swap is configured.
 - **Diagnostic candidate built and independently verified, not board-booted:**
   268,435,456 bytes, SHA-256
   `b05086afaab3d2f9da6c33b8e457f3552cce2899c08824d371615008bf66d9fd`;
@@ -46,8 +46,9 @@ no larger card or live inventory was required to produce the diagnostic image.
   GPT-role and cleanup fixtures pass. No installed updater or automatic rollback.
 - [Update candidate preparation](host-updates.md): explicit manifest SHA pin,
   full private root capture/readback, fixed slot/boot/package compatibility,
-  safe non-SD output and no-overwrite publication. File-only preparation; no
-  installed inactive-slot writer, activation or manual rollback controller.
+  safe non-SD output and no-overwrite publication. Actual 4 GiB A/B captures,
+  independent hashes/selector comparisons and bounded metadata reads pass.
+  No installed inactive-slot writer, activation or manual rollback controller.
 - [Management preparation](host-management.md): exact Ethernet MAC DHCPv4,
   selected-IP key-only SSH, NVMe host-key creation and RAM configuration.
   ARM key/sshd/PAM-account/unit checks pass; no SSH connection or systemd boot.
@@ -81,8 +82,8 @@ no larger card or live inventory was required to produce the diagnostic image.
 - [Guest fixture](guest-fixture.md): separate virt-profile kernel/initramfs and
   disposable disk built and hashed; launcher requires KVM with no TCG fallback.
   **No guest boot or KVM execution.** Guest networking/management remain open.
-- 254 Python cases across both suites and all shell regressions pass; two
-  privileged cases skipped locally have passed separately on Jammy. Actual
+- 290 Python cases across both suites and all shell regressions pass; the 286-case
+  discovery suite passes on Jammy with no skips (two privileged skips locally). Actual
   files/build checks are distinct from hardware gates. Independent Sol high
   reviews and routing outcomes: [implementation evidence](implementation-evidence.md).
 

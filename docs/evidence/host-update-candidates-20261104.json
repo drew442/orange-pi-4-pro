@@ -1,0 +1,124 @@
+{
+  "classification": "regular-file A/B candidate preparation checks; no installed update, activation, rollback or hardware acceptance",
+  "builder_directory": "/var/lib/a733-update-final-20261104",
+  "trusted_payload_manifest": {
+    "bytes": 7023,
+    "sha256": "51f8dfa7f0f66b005b9bfd08dc5f29fcf25f0791e5e844ab6af22de94aa9a44c"
+  },
+  "slots": {
+    "A": {
+      "files": {
+        "manifest.json": {
+          "bytes": 7023,
+          "sha256": "51f8dfa7f0f66b005b9bfd08dc5f29fcf25f0791e5e844ab6af22de94aa9a44c"
+        },
+        "selected.conf": {
+          "bytes": 179,
+          "sha256": "00d06e94d8544c4a177b1df2d5f5ed55b44f323a7dd3e2fa1b42a259425f7f2f"
+        },
+        "candidate.json": {
+          "bytes": 3183,
+          "sha256": "771b6fb5ca7b4e59f6b2c1f7d8fac99b7ff2cd0f11990157e93eb4df0c5d3833"
+        },
+        "root.ext4": {
+          "bytes": 4294967296,
+          "sha256": "6157897213b918c82241a6ff74920c2d5b92eb45cb30bc0333d8d97a58be733e"
+        }
+      },
+      "original_root_unchanged": true,
+      "selector_matches_independently_prepared_package_selector": true,
+      "trusted_manifest_exact_copy": true,
+      "receipt_bindings_match": true,
+      "directory_mode": "0700",
+      "all_file_modes": "0400",
+      "all_owner_uid_gid": [
+        0,
+        0
+      ]
+    },
+    "B": {
+      "files": {
+        "manifest.json": {
+          "bytes": 7023,
+          "sha256": "51f8dfa7f0f66b005b9bfd08dc5f29fcf25f0791e5e844ab6af22de94aa9a44c"
+        },
+        "selected.conf": {
+          "bytes": 179,
+          "sha256": "814c69e9545939fb4d382dc67cdb456dfa3c4f2485819f88560bd00a5e81880e"
+        },
+        "candidate.json": {
+          "bytes": 3183,
+          "sha256": "09e4090e68e32326696794b979cdfdde56f2f4b459c29697451b516efd08c92e"
+        },
+        "root.ext4": {
+          "bytes": 4294967296,
+          "sha256": "a7c98b1cff05ccb9a77857d4d7b3a4bfd36fd6734a05866d911d5d2adbaa1e27"
+        }
+      },
+      "original_root_unchanged": true,
+      "selector_matches_independently_prepared_package_selector": true,
+      "trusted_manifest_exact_copy": true,
+      "receipt_bindings_match": true,
+      "directory_mode": "0700",
+      "all_file_modes": "0400",
+      "all_owner_uid_gid": [
+        0,
+        0
+      ]
+    }
+  },
+  "producer_source_commit": "8cd3947f575681fab59268b59f8175fbd194bd84",
+  "resources": {
+    "available_disk_bytes": 19636002816,
+    "available_memory_bytes": 7577759744,
+    "capture_resources": {
+      "A": {
+        "elapsed": "0:18.12",
+        "maximum_resident_set_kib": 30588,
+        "exit_status": 0
+      },
+      "B": {
+        "elapsed": "0:18.30",
+        "maximum_resident_set_kib": 30592,
+        "exit_status": 0
+      }
+    },
+    "sources": {
+      "scripts/prepare-host-update.py": {
+        "bytes": 13372,
+        "sha256": "c1c0528aab579d1583627af0069736cf25b27714975532e99f642eb4c98f8bdb"
+      },
+      "build/host-initramfs.py": {
+        "bytes": 12506,
+        "sha256": "96c19c387b04a9e753e6eb658ef1ba7373f0cd4d58a46d8ee90c8a1348f9481d"
+      },
+      "tests/verify_host_update_candidates.py": {
+        "bytes": 5321,
+        "sha256": "80ceb8da6ae467b6ba4867768ade6a8cfaf35acc1c4c258fdf5801c088c8bfc9"
+      },
+      "tests/test_prepare_host_update.py": {
+        "bytes": 16539,
+        "sha256": "0df25e411d63371f28ef120816d4aeeb7a379201441137d6556874ba43c6a78f"
+      }
+    }
+  },
+  "validation": {
+    "local_discover_cases": 286,
+    "local_privileged_skips": 2,
+    "jammy_discover_cases": 286,
+    "jammy_privileged_skips": 0,
+    "separate_diagnostic_cases": 4,
+    "all_shell_regressions": "passed",
+    "toml_parse": "passed",
+    "bash_syntax": "passed",
+    "independent_review": "Sol high; bounded parser finding fixed, final file-only scope accepted",
+    "test_repair": "Jammy mutation test now forces distinct mtime and uses a real temporary descriptor; isolated unittest discovery explicitly adds the trusted checkout to sys.path."
+  },
+  "limits": [
+    "No installed inactive-slot writer, activation or rollback controller.",
+    "Same-version package-state fixture roots; no cross-version state compatibility proof.",
+    "No device selection or authorization, physical writes, A733 boot, power interruption or actual KVM execution.",
+    "Source dependencies reused from earlier pinned artifacts; not a new immutable-builder/full-vendor rebuild.",
+    "New bounded parser changes preparation code only; previously recorded bootstrap artifacts remain unchanged."
+  ]
+}
