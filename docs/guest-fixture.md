@@ -23,9 +23,8 @@ mkdir -p out
 build/guest-fixture.sh /home/drew/orange-pi-4-pro-build/kernel /home/drew/orange-pi-4-pro-build/busybox/bin/busybox "$(pwd -P)/out/guest-fixture-20261104-03"
 ```
 
-The earlier entrypoint passed end-to-end. The current seed helper has separate
-actual Jammy verification below; the complete kernel recipe has not yet been
-rerun after that change. Choose a new output name for another build;
+The current entrypoint passed end-to-end on Jammy, including the fixed seed and
+complete recipe archive. Choose a new output name for another build;
 existing destinations are refused. It checks the clean source Git commit,
 BusyBox hash and Ubuntu cross-compiler packages, then archives only tracked
 source into the new output. It never cleans or modifies the host kernel tree.
@@ -66,9 +65,14 @@ accepted. Readback checks content, inode metadata, raw superblock fields and
 On the actual builder, two unmodified CLI builds as root and drew, with different
 umask, working directory and timezone, produced identical 134,217,728-byte files:
 `ff595fac0b9a7d990f099edc0dd0f9d4859fb9942e185d2f2377088ce32bd577`.
-[Evidence](evidence/guest-seed-20261104.json) records the scope. Existing fixture
-artifacts and pins above are retained; use the complete manifest of a newly
-built fixture rather than combining an old disk pin with the new seed. This is
+[Evidence](evidence/guest-seed-20261104.json) records the scope. The [complete rebuild](evidence/guest-seed-fixture-20261104.json) passed in
+234.28 seconds with two jobs and 545,912 KiB maximum reported child RSS. Kernel
+and HTTP initramfs match the earlier network fixture; the disk matches both
+standalone seed builds. Actual cpio source readback, complete recipe/import
+closure, manifest pins, e2fsck, ID and counter checks pass. Download directory:
+`/home/drew/orange-pi-4-pro-build/guest-fixture-seed-20261104/` on the builder.
+Existing fixture artifacts and pins above are retained; use this new complete
+manifest rather than combining an old disk pin with the new seed. This is
 filesystem reproducibility on the pinned builder, not KVM execution or a
 cross-toolchain claim.
 

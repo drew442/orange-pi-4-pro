@@ -1,5 +1,10 @@
 # Isolated guest networking with a loopback TCP forward
 
+The [subsequent fixed-seed fixture rebuild](guest-fixture.md#deterministic-seed-preparation)
+retains this HTTP initramfs and kernel with a reproducible seed disk. Its complete
+manifest and download directory are linked there; earlier pins below remain
+valid for the earlier artifacts.
+
 Guests retain QEMU's restricted user network. An optional, explicitly configured
 TCP forward binds only to host `127.0.0.1`, targeting `10.0.2.15` inside that
 guest's private user network. No bridge, TAP, host route, firewall or management

@@ -846,3 +846,11 @@ exact downloads, authorized-card guards, write/readback, full-card evidence,
 serial expectations and baseline recovery before any installation. Source/model
 account token/cache/pricing totals were not exposed; monetary savings remain
 unknown. Hardware EL2, KVM guest execution and full release gates remain open.
+
+The subsequent [complete fixed-seed fixture rebuild](evidence/guest-seed-fixture-20261104.json)
+passes end to end: 234.28 seconds, two compilation jobs, 545,912 KiB maximum child
+RSS, 30-second RAM/disk samples. Kernel and HTTP initramfs match the prior network
+fixture byte for byte; the new seed matches both standalone root/drew builds.
+All manifest pins, actual cpio init/CGI, complete imported-source archive,
+e2fsck, fixture ID and zero counter pass independent file readback. This closes
+the earlier whole-recipe rerun gap; it does not establish guest execution.

@@ -72,8 +72,9 @@ hardware behavior is untested**. NVMe installation cannot resolve EL1 entry.
   [restore](guest-restoration.md), [HTTPS restore](guest-restore-delivery.md) and
   [isolated networking](guest-networking.md) pass host/packaged ARM checks.
   **No guest has booted.** No acceleration fallback is permitted. The new fixed
-  seed passes actual Jammy root/drew byte-identical builds; its complete fixture
-  rebuild is in progress. Earlier artifact pins remain unchanged.
+  seed passes actual Jammy root/drew byte-identical builds; the
+  [complete fixture rebuild](evidence/guest-seed-fixture-20261104.json) passes
+  with matching kernel/initramfs and new pinned seed. Earlier artifacts remain unchanged.
 - Jammy: 719 discovery cases without skips, four diagnostic assembly cases and
   all five shell regressions pass. Independent Sol high reviews cover boot,
   installation/selection and rollback changes. [Detailed implementation evidence](implementation-evidence.md)

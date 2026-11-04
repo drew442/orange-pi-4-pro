@@ -50,7 +50,7 @@
     }
   },
   "limitations": [
-    "Whole kernel fixture recipe not rerun after seed change.",
+    "Complete kernel fixture recipe subsequently rebuilt successfully; see guest-seed-fixture-20261104.json.",
     "Older fixture hashes remain valid for the original artifacts.",
     "No board or KVM guest test is implied."
   ],
