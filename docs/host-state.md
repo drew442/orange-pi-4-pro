@@ -67,8 +67,8 @@ filesystem UUID/journal, selected ownership and modes, marker, machine-id,
 management JSON, operator-key fingerprint, empty host-key directory and
 package database. It is regular-file readback, not signature verification or
 target installation. The selector record is validated against root A and the
-compatible `6.6.98-a733-diag` kernel. No fresh rebuild of the new selector
-format is claimed here.
+compatible `6.6.98-a733-diag` kernel. This new state fixture has not yet been
+rebuilt from a fresh checkout; generic bootstrap packaging was repeated separately.
 
 Runtime management activation, actual SSH key, complete SD host image,
 installer/updater/target activation, health checks, KVM, NVMe boot and all

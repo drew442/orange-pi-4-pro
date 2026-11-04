@@ -1,0 +1,17 @@
+{
+  "classification": "clean checkout generic bootstrap packaging; no hardware acceptance",
+  "source_commit": "b9b3791cbf10488b6c36f8c5608dd74f5e3878c4",
+  "builder": "drew@build.drewnet.online",
+  "checkout": "/home/drew/orange-pi-4-pro-build/nvme-selection-clean-20261104",
+  "output": "out/host-initramfs-20261104-04/initramfs.cpio.gz",
+  "state_uuid": "dfad484b-9958-4ce4-b92c-725734f515fd",
+  "root_image_or_slot_argument": false,
+  "archive": {
+    "bytes": 4761822,
+    "sha256": "544bedbf1ef6793c21a72006fd82419ae3738e568afc8069a3ec783ad381096a"
+  },
+  "comparison_to_prepared_archive": "cmp passed; byte-identical",
+  "worktree_after_build": "clean; generated out/ ignored",
+  "inputs": "existing hash-pinned userspace, kernel/DTB/modules and BusyBox",
+  "limit": "same prepared Ubuntu builder; not a clean OS or whole vendor-stack rebuild"
+}

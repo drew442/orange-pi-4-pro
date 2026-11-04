@@ -1,6 +1,6 @@
 # NVMe root/state handoff prototype
 
-The current candidate contains a **4,761,822-byte host initramfs**, SHA-256
+The prepared host initramfs is **4,761,822 bytes**, SHA-256
 `544bedbf1ef6793c21a72006fd82419ae3738e568afc8069a3ec783ad381096a`. Its
 immutable `/etc/a733-boot.conf` contains exactly `STATE_UUID` and
 `KERNEL_RELEASE=6.6.98-a733-diag`; it does not embed a root choice. The active
@@ -103,6 +103,11 @@ checks validated both slots; resolver fixtures passed 41 Bash and exact ARM ash
 cases. Host-init had 84 Bash fixtures and Python had 84 cases (including two
 private-state cases on Jammy). A GPT probe passed on a 128 MiB regular file;
 there were no block devices involved. These checks do not establish board boot.
+
+A [clean Git checkout repeat](evidence/nvme-selection-rebuild-20261104.json)
+of `b9b3791` produced a byte-identical generic archive using the same pinned
+inputs and state UUID. This is packaging reproduction on the prepared builder,
+not whole-stack or hardware reproduction.
 
 The state fixture uses test MAC/CIDR and a public key whose temporary private
 key was deleted; it is not deployment state. Actual SSH key, management
