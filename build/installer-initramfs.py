@@ -27,6 +27,7 @@ STATE = module('installer_archive_state', 'build/host-state.py')
 SOURCES = {'init': ('configs/installer-init', 0o755),
            'etc/udhcpc.script': ('configs/installer-udhcpc.script', 0o755),
            'usr/lib/a733-installer/install-nvme.py': ('scripts/install-nvme.py', 0o644),
+           'usr/lib/a733-installer/acquire-nvme.py': ('scripts/acquire-nvme.py', 0o644),
            'usr/lib/a733-installer/plan-nvme.py': ('scripts/plan-nvme.py', 0o644),
            'usr/lib/a733-installer/nvme_layout.py': ('scripts/nvme_layout.py', 0o644),
            'usr/share/licenses/GPL-2.0.txt': ('licenses/GPL-2.0.txt', 0o644),

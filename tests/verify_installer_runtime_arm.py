@@ -89,6 +89,7 @@ def verify(directory):
         raise ValueError('archive contents differ from trusted manifest')
     for name, source in (('init', 'configs/installer-init'), ('etc/udhcpc.script', 'configs/installer-udhcpc.script'),
                          ('usr/lib/a733-installer/install-nvme.py', 'scripts/install-nvme.py'),
+                         ('usr/lib/a733-installer/acquire-nvme.py', 'scripts/acquire-nvme.py'),
                          ('usr/lib/a733-installer/plan-nvme.py', 'scripts/plan-nvme.py'),
                          ('usr/lib/a733-installer/nvme_layout.py', 'scripts/nvme_layout.py')):
         if entries[name][1] != (REPO / source).read_bytes():
@@ -144,6 +145,8 @@ spec=importlib.util.spec_from_file_location('installer_writer_probe','/usr/lib/a
 writer=importlib.util.module_from_spec(spec);spec.loader.exec_module(writer)
 writer_help=subprocess.run(['/usr/bin/python3','-I','-B','/usr/lib/a733-installer/install-nvme.py','--help'],capture_output=True,text=True,timeout=20)
 assert writer_help.returncode==0 and 'prepare' in writer_help.stdout and 'apply' in writer_help.stdout
+acquire_help=subprocess.run(['/usr/bin/python3','-I','-B','/usr/lib/a733-installer/acquire-nvme.py','--help'],capture_output=True,text=True,timeout=20)
+assert acquire_help.returncode==0 and '--manifest-sha256' in acquire_help.stdout and '--storage-kind' in acquire_help.stdout
 fixture_manifest={'schema':1,'kernel_release':'6.6.98-a733-diag','files':{'nvme.img':{'bytes':250000000000,'sha256':'0'*64}},'logical_sector_bytes':512,'physical_sector_bytes':4096,'layout':writer.LAYOUT.layout(250000000000,512,4096),'deployment_intent':{'for_installation':False}}
 manifest_path=pathlib.Path('/fixture-manifest.json');manifest_path.write_text(json.dumps(fixture_manifest))
 refusal=subprocess.run(['/usr/bin/python3','-I','-B','/usr/lib/a733-installer/install-nvme.py','prepare','--image','/missing/nvme.img','--manifest',str(manifest_path),'--manifest-sha256',hashlib.sha256(manifest_path.read_bytes()).hexdigest(),'--target','/dev/no-target','--expected-model','NO-TARGET','--expected-serial','NO-TARGET','--expected-bytes','250000000000'],capture_output=True,text=True,timeout=20)
@@ -170,7 +173,7 @@ pathlib.Path('/fixture-hook.sh').write_text(hook)
 subprocess.run(['/bin/sh','/fixture-hook.sh','bound'],env=env,check=True,capture_output=True,timeout=20)
 assert pathlib.Path('/run/fixture-ip.log').read_text()=='fixture-call'*3
 assert pathlib.Path('/etc/resolv.conf').read_text()=='nameserver 192.0.2.53\n'
-print(json.dumps({'architecture':platform.machine(),'isolated_python':True,'core_modules':'imported','ca_file':paths.cafile,'ca_certificates':len(context.get_ca_certs()),'localhost_NSS':'passed','versions':versions,'planner_isolated_help':'passed','writer_isolated_help':'passed','writer_fixture_refusal':'passed before target access','writer_regular_file_engine':'passed; block flush and partition callbacks not exercised','init_ash_syntax':'passed','regular_file_mkfs_fsck_blkid_debugfs':'passed','dhcp_ram_resolver_hook':'passed; three IP commands replaced by logged fixture stub','DNS_TLS_connection':'not performed','physical_block_targets':'not opened'}))
+print(json.dumps({'architecture':platform.machine(),'isolated_python':True,'core_modules':'imported','ca_file':paths.cafile,'ca_certificates':len(context.get_ca_certs()),'localhost_NSS':'passed','versions':versions,'planner_isolated_help':'passed','writer_isolated_help':'passed','acquisition_isolated_help':'passed','writer_fixture_refusal':'passed before target access','writer_regular_file_engine':'passed; block flush and partition callbacks not exercised','init_ash_syntax':'passed','regular_file_mkfs_fsck_blkid_debugfs':'passed','dhcp_ram_resolver_hook':'passed; three IP commands replaced by logged fixture stub','DNS_TLS_connection':'not performed','physical_block_targets':'not opened'}))
 '''
         (root / 'probe.py').write_text(program)
         result = subprocess.run(['chroot', str(root), '/usr/bin/python3', '-I', '-B', '/probe.py'],

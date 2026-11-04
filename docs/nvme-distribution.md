@@ -64,3 +64,54 @@ installation plan or authorization. The current fixture remains ineligible.
 Network acquisition and physical board networking are separate validation
 gates. Builder file verification and loopback software probes cannot establish
 A733 Ethernet, DHCP, DNS, TLS, installed boot, zero SD writes or KVM execution.
+
+## Verified HTTPS acquisition tool
+
+`scripts/acquire-nvme.py` downloads into a new private directory and authenticates
+the manifest before parsing it. It requires HTTPS with certificate/hostname
+verification, refuses redirects and ignores ambient proxy variables. Requests
+have bounded reads and a total deadline; encoded size/hash readback and full
+bounded gzip expansion must pass before success is published. It retains the
+manifest's exact authenticated bytes. Receipt URLs omit query strings, which
+may contain credentials. Keep credentials out of URL paths as well.
+
+After arranging an authenticated HTTPS endpoint and obtaining its manifest
+digest independently, the installed preparation-console command is:
+
+```sh
+/usr/bin/python3 -I -B /usr/lib/a733-installer/acquire-nvme.py \
+  --manifest-url "$TRUSTED_MANIFEST_HTTPS_URL" \
+  --image-url "$TRUSTED_IMAGE_HTTPS_URL" \
+  --manifest-sha256 "$TRUSTED_MANIFEST_SHA256" \
+  --output "$NEW_ABSOLUTE_PAYLOAD_DIRECTORY" \
+  --storage-kind external
+```
+
+From a repository checkout, replace the script path with
+`scripts/acquire-nvme.py`. These variables are operator inputs, not a configured
+production endpoint. No production distribution service exists yet. An explicit
+`--ca-file` can add a trusted private CA; certificate verification cannot be
+disabled. The clock must be correct for TLS. Use `--max-seconds` to adjust the
+default 3,600-second acquisition/verification allowance, up to 86,400 seconds.
+
+`external` requires supported local block-backed storage and refuses MMC,
+loops and unknown backing topology, including MMC behind a device mapper.
+It allows removable USB storage, whose identity the operator must verify;
+some USB SD readers are indistinguishable. It does not identify the future
+installation target. The writer separately refuses source/target overlap.
+Private directory/file permissions must work on the mounted filesystem;
+incompatible FAT/exFAT mount masks are refused. Multi-device btrfs is refused.
+`--storage-kind ram` requires an already prepared tmpfs/ramfs with enough free
+space. The tool never mounts or enlarges storage automatically.
+
+Failures retain private incomplete files without a successful manifest/receipt.
+Retry with a new output directory. A receipt records software verification,
+not target authorization or physical installation; never edit a fixture into
+a deployment candidate. Downloads and full verification can take minutes even
+when compressed contents are small relative to the expanded disk.
+
+The implementation follows Python's [gzip stream interface](https://docs.python.org/3.10/library/gzip.html),
+[verified TLS contexts](https://docs.python.org/3.11/library/ssl.html#ssl.create_default_context)
+and [explicit URL handlers](https://docs.python.org/3.11/library/urllib.request.html).
+The file/hash checks and externally supplied digest establish the acquisition
+contract; loading CA data alone is not evidence of a board TLS connection.

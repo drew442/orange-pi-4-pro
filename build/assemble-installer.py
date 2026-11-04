@@ -29,6 +29,7 @@ BLOBS = HOST.BLOBS
 ENTRIES = {'init': ('configs/installer-init', 0o100755),
            'etc/udhcpc.script': ('configs/installer-udhcpc.script', 0o100755),
            'usr/lib/a733-installer/install-nvme.py': ('scripts/install-nvme.py', 0o100644),
+           'usr/lib/a733-installer/acquire-nvme.py': ('scripts/acquire-nvme.py', 0o100644),
            'usr/lib/a733-installer/plan-nvme.py': ('scripts/plan-nvme.py', 0o100644),
            'usr/lib/a733-installer/nvme_layout.py': ('scripts/nvme_layout.py', 0o100644)}
 INITRAMFS_RECIPES = {'build/installer-initramfs.py', 'build/host-initramfs.py',
