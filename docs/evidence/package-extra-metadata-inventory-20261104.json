@@ -1,0 +1,393 @@
+{
+  "classification": "authenticated interim userspace archive metadata; no installed boot or update acceptance",
+  "source": {
+    "bytes": 169852145,
+    "sha256": "1967e76c0c831c1c0bab432e7116457d4372c15b413090c054f8958b72dcb392"
+  },
+  "inspector_sha256": "5e23fcbc327849b6530c5b73efcff8c56475f4cd49e9434f112af50a581cd2fd",
+  "archive_members": 15892,
+  "member_content_bytes": 518081083,
+  "dpkg_status": {
+    "path": "var/lib/dpkg/status",
+    "bytes": 202495,
+    "sha256": "07c57261b03cc7748b0e814e8e739f300ee1db75c863c77adfdcfaa80fdc8807",
+    "package_stanzas": 220
+  },
+  "selected_paths": [
+    {
+      "path": "var/cache/debconf/config.dat",
+      "bytes": 17005,
+      "type": "0",
+      "sha256": "5c993d4832e1005cad494630a56e01da2c51643c74b0120aa5ac7d86a71396b5"
+    },
+    {
+      "path": "var/cache/debconf/templates.dat-old",
+      "bytes": 818962,
+      "type": "0",
+      "sha256": "634306a6dc0d6c15f671fbf46b2c5762f0b0703764b9a1f1847fb22eb007f7ff"
+    },
+    {
+      "path": "var/cache/debconf/passwords.dat",
+      "bytes": 0,
+      "type": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "var/cache/debconf/config.dat-old",
+      "bytes": 16781,
+      "type": "0",
+      "sha256": "e46c95fc5c58a047f7235c8f1247c9db15169b4c1320d1a58e877362f99cd6e1"
+    },
+    {
+      "path": "var/cache/debconf/templates.dat",
+      "bytes": 833027,
+      "type": "0",
+      "sha256": "cb5502b2a1ee4b88d35f27a2e6046bd99ed81be0ed10bacf7708e238dab93882"
+    },
+    {
+      "path": "var/lib/systemd/catalog",
+      "bytes": 0,
+      "type": "5"
+    },
+    {
+      "path": "var/lib/systemd/catalog/database",
+      "bytes": 214046,
+      "type": "0",
+      "sha256": "0fb7a9996ad3eb70649912b8e8a9a3674955c956f56438bbbd1ca632e3dd4bab"
+    },
+    {
+      "path": "var/lib/systemd/coredump",
+      "bytes": 0,
+      "type": "5"
+    },
+    {
+      "path": "var/lib/systemd/deb-systemd-helper-enabled",
+      "bytes": 0,
+      "type": "5"
+    },
+    {
+      "path": "var/lib/systemd/deb-systemd-helper-enabled/e2scrub_reap.service.dsh-also",
+      "bytes": 65,
+      "type": "0",
+      "sha256": "eba43fdd9fe0e8e1caa1e88a61fb25190bd62ce14806536702bdc4c1e5ded873"
+    },
+    {
+      "path": "var/lib/systemd/deb-systemd-helper-enabled/sockets.target.wants",
+      "bytes": 0,
+      "type": "5"
+    },
+    {
+      "path": "var/lib/systemd/deb-systemd-helper-enabled/sockets.target.wants/uuidd.socket",
+      "bytes": 0,
+      "type": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "var/lib/systemd/deb-systemd-helper-enabled/sysinit.target.wants",
+      "bytes": 0,
+      "type": "5"
+    },
+    {
+      "path": "var/lib/systemd/deb-systemd-helper-enabled/sysinit.target.wants/systemd-resolved.service",
+      "bytes": 0,
+      "type": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "var/lib/systemd/deb-systemd-helper-enabled/dpkg-db-backup.timer.dsh-also",
+      "bytes": 61,
+      "type": "0",
+      "sha256": "640dc8ad4776003d037f8847fdec19e1d5c01f827c8c1fb88746764aec5394b9"
+    },
+    {
+      "path": "var/lib/systemd/deb-systemd-helper-enabled/fstrim.timer.dsh-also",
+      "bytes": 53,
+      "type": "0",
+      "sha256": "6a9438efc04c93e981d38ad13aadb92e4207e12a6cf9bca683460be1a06257b2"
+    },
+    {
+      "path": "var/lib/systemd/deb-systemd-helper-enabled/nvmf-autoconnect.service.dsh-also",
+      "bytes": 66,
+      "type": "0",
+      "sha256": "a4f5e93f2318b0b0f3b9cf79f439c84c32d8ef1f2f95ce06d42446f299ced185"
+    },
+    {
+      "path": "var/lib/systemd/deb-systemd-helper-enabled/systemd-resolved.service.dsh-also",
+      "bytes": 124,
+      "type": "0",
+      "sha256": "1489f53ab4b6118d23e3208cf173e6a1090f5d1e6784b551c63ef7407c192a0d"
+    },
+    {
+      "path": "var/lib/systemd/deb-systemd-helper-enabled/apt-daily-upgrade.timer.dsh-also",
+      "bytes": 64,
+      "type": "0",
+      "sha256": "05e0a72e601e00feaeff5d237f892b5f891cbb9c156fc5da667ac56c25f20fdf"
+    },
+    {
+      "path": "var/lib/systemd/deb-systemd-helper-enabled/multi-user.target.wants",
+      "bytes": 0,
+      "type": "5"
+    },
+    {
+      "path": "var/lib/systemd/deb-systemd-helper-enabled/multi-user.target.wants/e2scrub_reap.service",
+      "bytes": 0,
+      "type": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "var/lib/systemd/deb-systemd-helper-enabled/multi-user.target.wants/ssh.service",
+      "bytes": 0,
+      "type": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "var/lib/systemd/deb-systemd-helper-enabled/uuidd.service.dsh-also",
+      "bytes": 54,
+      "type": "0",
+      "sha256": "c58dc1f07f320845d17e0df60f62513037f6f619edd5008c93c84694ebc03167"
+    },
+    {
+      "path": "var/lib/systemd/deb-systemd-helper-enabled/apt-daily.timer.dsh-also",
+      "bytes": 56,
+      "type": "0",
+      "sha256": "71649d5e78c0ba864daf3778e8d90a3707b88c587a4634cba67aa9094def7750"
+    },
+    {
+      "path": "var/lib/systemd/deb-systemd-helper-enabled/e2scrub_all.timer.dsh-also",
+      "bytes": 58,
+      "type": "0",
+      "sha256": "02a92626ce1053b563ecdf2724c5150257fc36219caf0d728dc849f541b1da2a"
+    },
+    {
+      "path": "var/lib/systemd/deb-systemd-helper-enabled/nvmefc-boot-connections.service.dsh-also",
+      "bytes": 73,
+      "type": "0",
+      "sha256": "e602f9148c1ae4a84c0082821bd850d85415c1bcc9e5f8ad3500e6ba7e680126"
+    },
+    {
+      "path": "var/lib/systemd/deb-systemd-helper-enabled/ssh.service.dsh-also",
+      "bytes": 89,
+      "type": "0",
+      "sha256": "6a2c7d69f9648f8466405da8effa4d941300df27952a7d942f91affb614e9807"
+    },
+    {
+      "path": "var/lib/systemd/deb-systemd-helper-enabled/dbus-org.freedesktop.resolve1.service",
+      "bytes": 0,
+      "type": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "var/lib/systemd/deb-systemd-helper-enabled/timers.target.wants",
+      "bytes": 0,
+      "type": "5"
+    },
+    {
+      "path": "var/lib/systemd/deb-systemd-helper-enabled/timers.target.wants/apt-daily-upgrade.timer",
+      "bytes": 0,
+      "type": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "var/lib/systemd/deb-systemd-helper-enabled/timers.target.wants/e2scrub_all.timer",
+      "bytes": 0,
+      "type": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "var/lib/systemd/deb-systemd-helper-enabled/timers.target.wants/dpkg-db-backup.timer",
+      "bytes": 0,
+      "type": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "var/lib/systemd/deb-systemd-helper-enabled/timers.target.wants/apt-daily.timer",
+      "bytes": 0,
+      "type": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "var/lib/systemd/deb-systemd-helper-enabled/timers.target.wants/fstrim.timer",
+      "bytes": 0,
+      "type": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "var/lib/systemd/deb-systemd-helper-enabled/sshd.service",
+      "bytes": 0,
+      "type": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "var/lib/systemd/deb-systemd-helper-enabled/uuidd.socket.dsh-also",
+      "bytes": 54,
+      "type": "0",
+      "sha256": "c58dc1f07f320845d17e0df60f62513037f6f619edd5008c93c84694ebc03167"
+    },
+    {
+      "path": "var/lib/systemd/deb-systemd-helper-enabled/default.target.wants",
+      "bytes": 0,
+      "type": "5"
+    },
+    {
+      "path": "var/lib/systemd/deb-systemd-helper-enabled/default.target.wants/nvmf-autoconnect.service",
+      "bytes": 0,
+      "type": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "var/lib/systemd/deb-systemd-helper-enabled/default.target.wants/nvmefc-boot-connections.service",
+      "bytes": 0,
+      "type": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "var/lib/systemd/deb-systemd-helper-enabled/ssh.socket.dsh-also",
+      "bytes": 52,
+      "type": "0",
+      "sha256": "04d0e502df2a9cdbb41e710018d1e278dc3079bd9f2b9e287bd37b0ad7e25b6d"
+    },
+    {
+      "path": "var/lib/systemd/pstore",
+      "bytes": 0,
+      "type": "5"
+    },
+    {
+      "path": "var/lib/ucf/cache",
+      "bytes": 0,
+      "type": "5"
+    },
+    {
+      "path": "var/lib/ucf/cache/:etc:ssh:sshd_config",
+      "bytes": 3223,
+      "type": "0",
+      "sha256": "160f305635ece2300959616ab840adeb028dfc3a986bc14859675aaf55e70bbe"
+    },
+    {
+      "path": "var/lib/ucf/registry.0",
+      "bytes": 0,
+      "type": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "var/lib/ucf/hashfile",
+      "bytes": 55,
+      "type": "0",
+      "sha256": "5c9a5bb1784b9f22452d528e81d788b94d21561fb1fcb4d53fac7ae7f7e24597"
+    },
+    {
+      "path": "var/lib/ucf/hashfile.0",
+      "bytes": 0,
+      "type": "0",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "var/lib/ucf/registry",
+      "bytes": 38,
+      "type": "0",
+      "sha256": "4c73ed1be7f50910be8f39157044d1faaeffc060e9cd23365ef6dde0844cac29"
+    }
+  ],
+  "var_lib_cache_groups": {
+    "var/cache/adduser": {
+      "members": 1,
+      "regular_bytes": 0,
+      "regular_files": 0,
+      "links": 0
+    },
+    "var/cache/apt": {
+      "members": 4,
+      "regular_bytes": 77282380,
+      "regular_files": 2,
+      "links": 0
+    },
+    "var/cache/debconf": {
+      "members": 6,
+      "regular_bytes": 1685775,
+      "regular_files": 5,
+      "links": 0
+    },
+    "var/cache/ldconfig": {
+      "members": 2,
+      "regular_bytes": 12588,
+      "regular_files": 1,
+      "links": 0
+    },
+    "var/cache/private": {
+      "members": 1,
+      "regular_bytes": 0,
+      "regular_files": 0,
+      "links": 0
+    },
+    "var/lib/apt": {
+      "members": 6,
+      "regular_bytes": 6661,
+      "regular_files": 1,
+      "links": 0
+    },
+    "var/lib/dbus": {
+      "members": 1,
+      "regular_bytes": 0,
+      "regular_files": 0,
+      "links": 0
+    },
+    "var/lib/dpkg": {
+      "members": 1061,
+      "regular_bytes": 5425169,
+      "regular_files": 1055,
+      "links": 0
+    },
+    "var/lib/libuuid": {
+      "members": 1,
+      "regular_bytes": 0,
+      "regular_files": 0,
+      "links": 0
+    },
+    "var/lib/misc": {
+      "members": 1,
+      "regular_bytes": 0,
+      "regular_files": 0,
+      "links": 0
+    },
+    "var/lib/pam": {
+      "members": 7,
+      "regular_bytes": 373,
+      "regular_files": 6,
+      "links": 0
+    },
+    "var/lib/private": {
+      "members": 1,
+      "regular_bytes": 0,
+      "regular_files": 0,
+      "links": 0
+    },
+    "var/lib/python": {
+      "members": 2,
+      "regular_bytes": 0,
+      "regular_files": 1,
+      "links": 0
+    },
+    "var/lib/shells.state": {
+      "members": 1,
+      "regular_bytes": 94,
+      "regular_files": 1,
+      "links": 0
+    },
+    "var/lib/systemd": {
+      "members": 37,
+      "regular_bytes": 214915,
+      "regular_files": 27,
+      "links": 0
+    },
+    "var/lib/ucf": {
+      "members": 7,
+      "regular_bytes": 3316,
+      "regular_files": 5,
+      "links": 0
+    }
+  },
+  "limits": [
+    "selected archive metadata only; no extraction, mounts or physical devices",
+    "does not prove runtime database resolution or cross-version rollback",
+    "current /var mapping and slot-version separation remain implementation work"
+  ]
+}

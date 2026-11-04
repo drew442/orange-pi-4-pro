@@ -47,6 +47,54 @@ pinned Jammy profile; merely having those packages installed is insufficient.
 Their versions, ownership and file hashes are retained. This checks the prepared
 builder, not acquisition of a clean immutable builder environment.
 
+## Verified fixture bundle
+
+The full-size fixture build passed on Jammy using recipe bytes matching commit
+`03dcd62`. The [manifest](evidence/nvme-bundle-20261104.json) preserves its older
+source manifest's absent deployment intent; the writer therefore refuses it.
+It uses the independently inspected raw fixture from `c368563`, not real
+administrator/network or SSD settings.
+
+| File | Bytes | SHA-256 |
+| --- | ---: | --- |
+| `nvme.img.gz` | 630,156,553 | `399f27eac0fcfaad3cb85a564cff794d35f7b65e2cb9e627f8f7782ee7f8a972` |
+| Expanded image | 250,000,000,000 | `6aa51794bf82b3814568a526c9242b5abbe041af603255d2b3b9438847fc4d98` |
+| `manifest.json` | 12,365 | `443971233d9aa955dfdc581693fe581d8f784246d05f08852f39899785d765e9` |
+
+Builder source/output directories are
+`/home/drew/orange-pi-4-pro-build/bundle-work-20261104/` and
+`out/nvme-bundle-250GB-20261104/` beneath it. The exact command that passed was:
+
+```sh
+sudo /usr/bin/python3.10 -I -B build/nvme-bundle.py \
+  /home/drew/orange-pi-4-pro-build/nvme-clean-20261104/out/nvme-image-250GB-repeat-20261104 \
+  "$(pwd -P)/out/nvme-bundle-250GB-20261104"
+```
+
+Use a new output name when repeating. The monitored run took about 39 minutes
+for compression, complete source hashing and full expansion verification on
+this builder. Gzip determinism has small-file repeat tests; a second full-size
+compression has not been run. Manifest provenance includes source identities
+and the free-space budget, so independent staging need not reproduce its bytes.
+
+Readable transfer files are under builder
+`/home/drew/orange-pi-4-pro-build/bundle-artifacts-20261104/`. Downloading the
+fixture is optional and authorizes no installation:
+
+```sh
+mkdir -m700 a733-nvme-fixture
+scp drew@build.drewnet.online:/home/drew/orange-pi-4-pro-build/bundle-artifacts-20261104/nvme.img.gz \
+  drew@build.drewnet.online:/home/drew/orange-pi-4-pro-build/bundle-artifacts-20261104/manifest.json \
+  a733-nvme-fixture/
+cd a733-nvme-fixture
+printf '%s  %s\n' 443971233d9aa955dfdc581693fe581d8f784246d05f08852f39899785d765e9 manifest.json | sha256sum -c -
+printf '%s  %s\n' 399f27eac0fcfaad3cb85a564cff794d35f7b65e2cb9e627f8f7782ee7f8a972 nvme.img.gz | sha256sum -c -
+```
+
+These commands write ordinary files on the chosen provisioning computer. Use
+known non-SD storage with sufficient free space. Keep gzip intact for the
+writer; do not expand it to a 250 GB temporary file.
+
 ## Acquisition and installation boundary
 
 Keep the compressed payload on identified external storage, or explicit RAM
@@ -93,6 +141,11 @@ production endpoint. No production distribution service exists yet. An explicit
 `--ca-file` can add a trusted private CA; certificate verification cannot be
 disabled. The clock must be correct for TLS. Use `--max-seconds` to adjust the
 default 3,600-second acquisition/verification allowance, up to 86,400 seconds.
+The Linux main-thread alarm bounds slow HTTP headers as well as transfer and
+verification. The tool refuses an existing, blocked or pending alarm and
+restores its handler afterward. Some libc DNS waits and uninterruptible kernel
+operations can defer signal delivery; the allowance is not a process-kill
+guarantee for those operations.
 
 `external` requires supported local block-backed storage and refuses MMC,
 loops and unknown backing topology, including MMC behind a device mapper.

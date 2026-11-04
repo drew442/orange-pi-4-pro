@@ -20,8 +20,8 @@ no larger card or live inventory was required to produce the diagnostic image.
   Vendor KVM was disabled; diagnostic configuration enables it. EL2 is unproven.
 - [Jammy builder](build-host-assessment.md): actual kernel/U-Boot builds,
   ARM64 chroot and file-backed loop checks passed. Two compilation jobs;
-  GCC 11 kernel / Linaro 7.4.1 U-Boot. Recent integrated build samples retained
-  at least 7.35 GB available RAM and 26.75 GB free disk; 4 GiB swap is configured.
+  GCC 11 kernel / Linaro 7.4.1 U-Boot. Recent distribution-check samples retained
+  over 7.3 GB available RAM and 24 GB free disk; 4 GiB swap is configured.
 - **Diagnostic candidate built and independently verified, not board-booted:**
   268,435,456 bytes, SHA-256
   `b05086afaab3d2f9da6c33b8e457f3552cce2899c08824d371615008bf66d9fd`;
@@ -61,10 +61,16 @@ no larger card or live inventory was required to produce the diagnostic image.
   exact-target TTY authorization, exclusive access, complete write/readback and
   conservative interruption reports implemented. Private native loop and ARM
   software checks pass; no production NVMe apply or physical acceptance.
+- [Compressed delivery](nvme-distribution.md): verified 630,156,553-byte gzip
+  expands to the full 250 GB fixture. Deterministic gzip recipe
+  preserves fixture eligibility; verified HTTPS acquisition checks encoded and
+  full expanded contents without raw staging. Updated installer and packaged
+  ARM loopback TLS probes pass; clean-checkout packaging is byte-identical.
+  Board networking and real per-installation delivery remain untested.
 - [Guest fixture](guest-fixture.md): separate virt-profile kernel/initramfs and
   disposable disk built and hashed; launcher requires KVM with no TCG fallback.
   **No guest boot or KVM execution.** Guest networking/management remain open.
-- 198 Python cases across both suites and all shell regressions pass; two
+- 242 Python cases across both suites and all shell regressions pass; two
   privileged cases skipped locally have passed separately on Jammy. Actual
   files/build checks are distinct from hardware gates. Independent Sol high
   reviews and routing outcomes: [implementation evidence](implementation-evidence.md).
@@ -77,12 +83,18 @@ no larger card or live inventory was required to produce the diagnostic image.
    return full serial/inventory evidence, including EL2/NVMe observations.
 2. Supply the administration public key and actual wired MAC. Validate real
    management activation and trusted host-key verification. Deliver the
-   actual per-installation candidate and verified payload acquisition. Validate
+   actual per-installation candidate and validate board payload acquisition. Validate
    the writer/locking/readback/interruption protocol on authorized hardware. The preparation runtime
    has exercised software probes; board boot/DHCP/DNS/TLS remain unproven.
 3. Deliver inactive-slot updates and serial/manual rollback. Separate each
    root version's package metadata from shared `/var/lib/dpkg` before
    cross-version updates; current slots share identical package versions.
+   [Authenticated archive inventory](evidence/package-metadata-inventory-20261104.json)
+   confirms 220 dpkg stanzas, five alternatives databases and retained APT state.
+   [Package-state preparation](host-package-state.md) describes the proposed
+   root-owned database views and required compatibility tests; no isolation yet.
+   Classify remaining package-generated state and remove 77.3 MB of unused APT
+   binary cache in a future authenticated build before calling the host minimal.
    Finish guest storage/networking, backup/restore and operational procedures.
 4. Full clean-build reproducibility remains open: U-Boot emits a random
    128-byte debug challenge; builds differ there plus checksums. Exact generated

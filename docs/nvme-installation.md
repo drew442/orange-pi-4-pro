@@ -33,9 +33,9 @@ builder inputs. No deployable candidate using these real inputs exists yet.
 
 The writer accepts an already acquired regular `nvme.img` or `nvme.img.gz` and
 its trusted build manifest. Gzip input requires both compressed and expanded
-size/SHA-256 records in that manifest. Producing/publishing an installable
-compressed bundle and completing network acquisition remain integration work;
-the current disk recipe emits the raw fixture image. Keep payloads on identified
+size/SHA-256 records in that manifest. The [bundle recipe and acquisition tool](nvme-distribution.md) provide verified
+compressed delivery. Existing published bundles remain fixtures; a real
+per-installation candidate and board network acquisition remain pending. Keep payloads on identified
 external storage or suitable RAM storage after measuring capacity; the 2 GB SD
 is an immutable bootstrap, not payload staging. `/run` and `/tmp` in the
 preparation image are each limited to 64 MiB.

@@ -168,6 +168,11 @@ configuration open. The packaging helper has six nonprivileged regressions.
 | Installer/runtime/boot review | Sol / high | Expanding aliases, empty stdlib files and provenance attribution findings fixed; private probe and SD checks reviewed |
 | Full-disk writer | Sol / medium | 26 safety/fault regressions; conservative shared reports, root precondition and throttled progress fixed before publication |
 | Writer/install review | Sol / high | Candidate eligibility mismatch and state-readback coverage gaps corrected; loop-only integration harness and packaging reviewed |
+| Compressed NVMe bundle | Sol / medium | 24 regressions; absent fixture intent preserved and active Jammy Python/zlib bound to package ownership and hashes |
+| Bundle review | Sol / high | Missing-intent and alternate-interpreter findings fixed; actual pinned Jammy runtime probe passed |
+| Verified payload acquisition | Sol / medium | 20 TLS/storage/deadline/failure regressions; source and receipt identities retained, full bounded expansion without raw staging |
+| Acquisition/install review | Sol / high | Slow-header deadline, foreign replacement cleanup and timer teardown findings fixed and independently rechecked; packaged ARM TLS probe and native full-size harness reviewed |
+| Slot metadata extraction | Luna / low | Source mapping established; coordinator clarified fresh per-boot RAM overlay semantics and authenticated actual archive metadata separately |
 
 Children used fresh focused contexts, exclusive write scopes and no delegation.
 At most two children were active. Input/output token counts, cache accounting,

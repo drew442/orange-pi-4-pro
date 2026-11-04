@@ -1,0 +1,301 @@
+{
+  "classification": "authenticated interim userspace archive metadata; no installed boot or update acceptance",
+  "source": {
+    "bytes": 169852145,
+    "sha256": "1967e76c0c831c1c0bab432e7116457d4372c15b413090c054f8958b72dcb392"
+  },
+  "inspector_sha256": "62514f4b540aac37895e4bfb17de0218759d751b159d92e20e0dede7512e24c4",
+  "archive_members": 15892,
+  "member_content_bytes": 518081083,
+  "dpkg_status": {
+    "path": "var/lib/dpkg/status",
+    "bytes": 202495,
+    "sha256": "07c57261b03cc7748b0e814e8e739f300ee1db75c863c77adfdcfaa80fdc8807",
+    "package_stanzas": 220
+  },
+  "selected_paths": [
+    {
+      "path": "var/lib/dpkg/alternatives/rmt",
+      "bytes": 113,
+      "type": "0",
+      "sha256": "cc31c88e6e9660da820eaf68418b4e9dfd76dfdbbbcebbaed446afe397971dc9"
+    },
+    {
+      "path": "var/lib/dpkg/alternatives/pager",
+      "bytes": 107,
+      "type": "0",
+      "sha256": "2e9eefcd61abb2a242529556f3291fab7d2f1a9f2eefd5e90209269f6d1ea4b9"
+    },
+    {
+      "path": "var/lib/dpkg/alternatives/awk",
+      "bytes": 207,
+      "type": "0",
+      "sha256": "06c7cfca68d405ca5e20fd379b93fe97fd1698841a1449f9b403115cedcf8eba"
+    },
+    {
+      "path": "var/lib/dpkg/alternatives/which",
+      "bytes": 787,
+      "type": "0",
+      "sha256": "55a922644024cd9549c6e1f916f8debcad849d26553ccacaef6935c2c3a84e2a"
+    },
+    {
+      "path": "var/lib/dpkg/alternatives/builtins.7.gz",
+      "bytes": 83,
+      "type": "0",
+      "sha256": "6cd368606c13e12657f237f25e3ddfd89c6ebc34b52b8391561ff89d0c052f62"
+    },
+    {
+      "path": "var/lib/apt/lists",
+      "bytes": 0,
+      "type": "5"
+    },
+    {
+      "path": "var/lib/apt/periodic",
+      "bytes": 0,
+      "type": "5"
+    },
+    {
+      "path": "var/lib/apt/extended_states",
+      "bytes": 6661,
+      "type": "0",
+      "sha256": "041db805ef8470573371efe750e420b223948830f41652a6def47413f7048434"
+    },
+    {
+      "path": "var/lib/apt/mirrors",
+      "bytes": 0,
+      "type": "5"
+    },
+    {
+      "path": "var/lib/apt/mirrors/partial",
+      "bytes": 0,
+      "type": "5"
+    },
+    {
+      "path": "etc/alternatives/which.ja1.gz",
+      "bytes": 0,
+      "type": "2",
+      "link": "/usr/share/man/ja/man1/which.debianutils.1.gz"
+    },
+    {
+      "path": "etc/alternatives/README",
+      "bytes": 100,
+      "type": "0",
+      "sha256": "a44afdb50eacfc09e45f6dac1e18ae231c179feec633c106e1060bae8ae11df1"
+    },
+    {
+      "path": "etc/alternatives/which.1.gz",
+      "bytes": 0,
+      "type": "2",
+      "link": "/usr/share/man/man1/which.debianutils.1.gz"
+    },
+    {
+      "path": "etc/alternatives/rmt.8.gz",
+      "bytes": 0,
+      "type": "2",
+      "link": "/usr/share/man/man8/rmt-tar.8.gz"
+    },
+    {
+      "path": "etc/alternatives/nawk.1.gz",
+      "bytes": 0,
+      "type": "2",
+      "link": "/usr/share/man/man1/mawk.1.gz"
+    },
+    {
+      "path": "etc/alternatives/rmt",
+      "bytes": 0,
+      "type": "2",
+      "link": "/usr/sbin/rmt-tar"
+    },
+    {
+      "path": "etc/alternatives/pager",
+      "bytes": 0,
+      "type": "2",
+      "link": "/bin/more"
+    },
+    {
+      "path": "etc/alternatives/nawk",
+      "bytes": 0,
+      "type": "2",
+      "link": "/usr/bin/mawk"
+    },
+    {
+      "path": "etc/alternatives/which.sl1.gz",
+      "bytes": 0,
+      "type": "2",
+      "link": "/usr/share/man/sl/man1/which.debianutils.1.gz"
+    },
+    {
+      "path": "etc/alternatives/which.it1.gz",
+      "bytes": 0,
+      "type": "2",
+      "link": "/usr/share/man/it/man1/which.debianutils.1.gz"
+    },
+    {
+      "path": "etc/alternatives/which.es1.gz",
+      "bytes": 0,
+      "type": "2",
+      "link": "/usr/share/man/es/man1/which.debianutils.1.gz"
+    },
+    {
+      "path": "etc/alternatives/awk.1.gz",
+      "bytes": 0,
+      "type": "2",
+      "link": "/usr/share/man/man1/mawk.1.gz"
+    },
+    {
+      "path": "etc/alternatives/awk",
+      "bytes": 0,
+      "type": "2",
+      "link": "/usr/bin/mawk"
+    },
+    {
+      "path": "etc/alternatives/which",
+      "bytes": 0,
+      "type": "2",
+      "link": "/usr/bin/which.debianutils"
+    },
+    {
+      "path": "etc/alternatives/pager.1.gz",
+      "bytes": 0,
+      "type": "2",
+      "link": "/usr/share/man/man1/more.1.gz"
+    },
+    {
+      "path": "etc/alternatives/which.pl1.gz",
+      "bytes": 0,
+      "type": "2",
+      "link": "/usr/share/man/pl/man1/which.debianutils.1.gz"
+    },
+    {
+      "path": "etc/alternatives/which.fr1.gz",
+      "bytes": 0,
+      "type": "2",
+      "link": "/usr/share/man/fr/man1/which.debianutils.1.gz"
+    },
+    {
+      "path": "etc/alternatives/which.de1.gz",
+      "bytes": 0,
+      "type": "2",
+      "link": "/usr/share/man/de/man1/which.debianutils.1.gz"
+    },
+    {
+      "path": "etc/alternatives/builtins.7.gz",
+      "bytes": 0,
+      "type": "2",
+      "link": "/usr/share/man/man7/bash-builtins.7.gz"
+    },
+    {
+      "path": "etc/apt/trusted.gpg.d",
+      "bytes": 0,
+      "type": "5"
+    },
+    {
+      "path": "etc/apt/trusted.gpg.d/debian-archive-bookworm-stable.asc",
+      "bytes": 461,
+      "type": "0",
+      "sha256": "521e9f6a9f9b92ee8d5ce74345e8cfd04028dae9db6f571259d584b293549824"
+    },
+    {
+      "path": "etc/apt/trusted.gpg.d/debian-archive-bullseye-stable.asc",
+      "bytes": 3403,
+      "type": "0",
+      "sha256": "fb260ce8521a2faa4937d98a29a5347807e10614b97d510fbabe5480c803bda9"
+    },
+    {
+      "path": "etc/apt/trusted.gpg.d/debian-archive-bullseye-automatic.asc",
+      "bytes": 11861,
+      "type": "0",
+      "sha256": "0b7dc94b880f0b63e2093394b113cafd870badb86e020a35614f49b9d83beb1e"
+    },
+    {
+      "path": "etc/apt/trusted.gpg.d/debian-archive-bullseye-security-automatic.asc",
+      "bytes": 11873,
+      "type": "0",
+      "sha256": "716e79393c724d14ecba8be46e99ecbe1b689f67ceff3cb3cab28f6e69e8b8b8"
+    },
+    {
+      "path": "etc/apt/trusted.gpg.d/debian-archive-trixie-security-automatic.asc",
+      "bytes": 11873,
+      "type": "0",
+      "sha256": "844c07d242db37f283afab9d5531270a0550841e90f9f1a9c3bd599722b808b7"
+    },
+    {
+      "path": "etc/apt/trusted.gpg.d/debian-archive-trixie-automatic.asc",
+      "bytes": 11861,
+      "type": "0",
+      "sha256": "6f1d277429dd7ffedcc6f8688a7ad9a458859b1139ffa026d1eeaadcbffb0da7"
+    },
+    {
+      "path": "etc/apt/trusted.gpg.d/debian-archive-bookworm-automatic.asc",
+      "bytes": 11861,
+      "type": "0",
+      "sha256": "c2a9a16fde95e037bafd0fa6b7e31f41b4ff1e85851de5558f19a2a2f0e955e2"
+    },
+    {
+      "path": "etc/apt/trusted.gpg.d/debian-archive-trixie-stable.asc",
+      "bytes": 1384,
+      "type": "0",
+      "sha256": "4d097bb93f83d731f475c5b92a0c2fcf108cfce1d4932792fca72d00b48d198b"
+    },
+    {
+      "path": "etc/apt/trusted.gpg.d/debian-archive-bookworm-security-automatic.asc",
+      "bytes": 11873,
+      "type": "0",
+      "sha256": "74f81645b4e3156d1e9a88c8dd9259271b89c7099d64af89a2a6996b592faa1f"
+    },
+    {
+      "path": "etc/apt/sources.list.d",
+      "bytes": 0,
+      "type": "5"
+    },
+    {
+      "path": "etc/apt/sources.list",
+      "bytes": 138,
+      "type": "0",
+      "sha256": "0cfc4cd19c8fdbb5b77d08f0e89e8368455e389e9e03850ad097528f50acc9a5"
+    },
+    {
+      "path": "etc/apt/preferences.d",
+      "bytes": 0,
+      "type": "5"
+    },
+    {
+      "path": "etc/apt/keyrings",
+      "bytes": 0,
+      "type": "5"
+    },
+    {
+      "path": "etc/apt/auth.conf.d",
+      "bytes": 0,
+      "type": "5"
+    },
+    {
+      "path": "etc/apt/apt.conf.d",
+      "bytes": 0,
+      "type": "5"
+    },
+    {
+      "path": "etc/apt/apt.conf.d/01autoremove",
+      "bytes": 399,
+      "type": "0",
+      "sha256": "35b4360d9126e5e5efc1ce42cea8a957ba42921de749ad8502922d536c9f385c"
+    },
+    {
+      "path": "etc/apt/apt.conf.d/70debconf",
+      "bytes": 182,
+      "type": "0",
+      "sha256": "db749e19baf3b72ca2c157c70c52522cae23d94bc8b2dc5793fd43d427445367"
+    },
+    {
+      "path": "etc/apt/apt.conf.d/99-prototype",
+      "bytes": 189,
+      "type": "0",
+      "sha256": "67dd26b5ab8907e1438ecda88f2bcc5d26a055e9df44c631c55475f952cd8910"
+    }
+  ],
+  "limits": [
+    "selected archive metadata only; no extraction, mounts or physical devices",
+    "does not prove runtime database resolution or cross-version rollback",
+    "current /var mapping and slot-version separation remain implementation work"
+  ]
+}

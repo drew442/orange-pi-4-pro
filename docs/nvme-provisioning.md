@@ -11,7 +11,7 @@ remain unperformed.
 
 The fixture uses nominal 250 GB capacity, 512-byte logical sectors and 4096-byte
 physical alignment. Actual SSD capacity and sector sizes must come from the
-identified hardware. A future writer must reject a mismatch; this fixture must
+identified hardware. The writer rejects a mismatch; this fixture must
 not be copied to an unknown target.
 
 ## Integrated layout
@@ -135,9 +135,9 @@ clean kernel/firmware/userspace build or physical deployment.
 The [writer](nvme-installation.md) now implements exact identity, review plan,
 interactive confirmations, locking/revalidation, full written-byte verification
 and conservative interruption reporting. Its production whole-NVMe path still
-needs authorized hardware execution. Authenticated payload acquisition from
-Ethernet/USB, backup creation/restore and the complete deployment procedure
-remain integration work; the planner observation alone authorizes no erasure.
+needs authorized hardware execution. The [compressed bundle and acquisition tool](nvme-distribution.md) implement
+verified delivery, with board Ethernet/USB acquisition still untested. Backup
+creation/restore and the complete deployment procedure remain integration work; the planner observation alone authorizes no erasure.
 
 A [builder archive inventory](evidence/installer-runtime-inventory-20261104.json)
 confirmed Python 3.11, its 26.6 MB uncompressed standard library, `lsblk`,

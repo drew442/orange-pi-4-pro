@@ -1,0 +1,152 @@
+{
+  "classification": "clean-checkout installer packaging and software inspection; no physical deployment acceptance",
+  "source_commit": "05ff311efec2c3cc963cb75013add75d7b5932c6",
+  "source_archive": {
+    "bytes": 1249280,
+    "sha256": "55ae5c80f7e625b6e9b709fa786c2cccf556275f1683ecbc703682fa2143685f"
+  },
+  "builder_checkout": "/home/drew/orange-pi-4-pro-build/acquisition-clean-20261104",
+  "inputs": "existing authenticated installer-runtime-20261104-03, diagnostic artifacts and pinned BusyBox; no runtime restaging or compilation",
+  "initramfs": {
+    "initramfs.cpio.gz": {
+      "bytes": 26850604,
+      "sha256": "a1a96940df2c04bcda2f9892c82867614eb6978be71beb37d18ec18b573318b0"
+    }
+  },
+  "SD_files": {
+    "a733-installer-prep.img": {
+      "bytes": 268435456,
+      "sha256": "73f9179db26887607cd986d52f4953ac5534769113b0662388b44e724b4557f9"
+    },
+    "a733-installer-prep.img.gz": {
+      "bytes": 39146751,
+      "sha256": "bb4a253fd257043022360d05c224b9dffbd04458fdff7d0483b3957bf4bbff78"
+    },
+    "uInitrd": {
+      "bytes": 26850668,
+      "sha256": "494fe7d918437814f91570057a4145b0cdcd31fad525f1541816f1bd89ad15e2"
+    }
+  },
+  "byte_comparison": "actual builder cmp passed for initramfs gzip, raw SD and compressed SD",
+  "local_download": "encoded and complete expanded hash/size passed",
+  "repeat_checks": {
+    "acquisition-arm-repeat-20261104.json": {
+      "classification": "packaged ARM64 chroot software checks; no board boot, physical installation or KVM acceptance",
+      "verifier_source": {
+        "bytes": 13236,
+        "sha256": "94681aa5621697f6e48c0a4e2f65c066d8c6c3996bc4c0c0c10845ffcefe2d70"
+      },
+      "archive": {
+        "bytes": 26850604,
+        "sha256": "a1a96940df2c04bcda2f9892c82867614eb6978be71beb37d18ec18b573318b0"
+      },
+      "expanded_bytes": 79041984,
+      "entries_checked": 2204,
+      "all_archive_hashes_modes_paths": "passed",
+      "ARM_checks": {
+        "architecture": "aarch64",
+        "isolated_python": true,
+        "core_modules": "imported",
+        "ca_file": "/usr/lib/ssl/cert.pem",
+        "ca_certificates": 142,
+        "localhost_NSS": "passed",
+        "versions": {
+          "python": "Python 3.11.2",
+          "lsblk": "lsblk from util-linux 2.38.1",
+          "blkid": "blkid from util-linux 2.38.1  (libblkid 2.38.1, 04-Aug-2022)",
+          "mke2fs": "mke2fs 1.47.0 (5-Feb-2023)",
+          "tune2fs": "tune2fs 1.47.0 (5-Feb-2023)",
+          "e2fsck": "e2fsck 1.47.0 (5-Feb-2023)",
+          "debugfs": "debugfs 1.47.0 (5-Feb-2023)",
+          "curl": "curl 7.88.1 (aarch64-unknown-linux-gnu) libcurl/7.88.1 OpenSSL/3.0.20 zlib/1.2.13 brotli/1.0.9 zstd/1.5.4 libidn2/2.3.3 libpsl/0.21.2 (+libidn2/2.3.3) libssh2/1.10.0 nghttp2/1.52.0 librtmp/2.3 OpenLDAP/2.5.13"
+        },
+        "planner_isolated_help": "passed",
+        "writer_isolated_help": "passed",
+        "acquisition_isolated_help": "passed",
+        "writer_fixture_refusal": "passed before target access",
+        "writer_regular_file_engine": "passed; block flush and partition callbacks not exercised",
+        "init_ash_syntax": "passed",
+        "regular_file_mkfs_fsck_blkid_debugfs": "passed",
+        "dhcp_ram_resolver_hook": "passed; three IP commands replaced by logged fixture stub",
+        "DNS_TLS_connection": "not performed",
+        "physical_block_targets": "not opened"
+      },
+      "private_fixture": "deleted after check; no mounts, listeners or external requests",
+      "limits": [
+        "Runtime tests cover the exercised commands/modules, not every possible dynamic load.",
+        "IP command was stubbed for DHCP hook; board DHCP/DNS/TLS untested.",
+        "No SD/NVMe/SPI write or actual KVM guest performed."
+      ]
+    },
+    "acquisition-arm-https-repeat-20261104.json": {
+      "classification": "ARM64 software TLS loopback probe; no board networking or hardware acceptance",
+      "verifier_source": {
+        "bytes": 8435,
+        "sha256": "22f0432485656110a3a07c983068c5bfd1bfaced202adb15fcf9a226729ed9d2"
+      },
+      "archive": {
+        "bytes": 26850604,
+        "sha256": "a1a96940df2c04bcda2f9892c82867614eb6978be71beb37d18ec18b573318b0"
+      },
+      "ARM_checks": {
+        "architecture": "aarch64",
+        "HTTPS_Content_Length_fetch": "passed",
+        "custom_CA_hostname_verification": "passed",
+        "untrusted_CA_refusal": "passed",
+        "redirect_refusal": "passed",
+        "encoded_and_expanded_verification": "passed",
+        "bytes": {
+          "encoded": {
+            "bytes": 597,
+            "sha256": "f19c32e3a01c4bfb22408802f133dac191fffcd2507675f0ab540dfec5f5ae23"
+          },
+          "decoded": {
+            "bytes": 65792,
+            "sha256": "120c518a83325c66464701a6ee080302f332bc768ea3f60473b209f1bfb091df"
+          }
+        },
+        "scope": "production transport and stream verifier; no full acquisition/storage policy or device operation"
+      },
+      "cleanup": "temporary chroot, certificate/private key and loopback listener removed; no mounts or external requests",
+      "limits": [
+        "No real DNS, DHCP, Ethernet, production endpoint or A733 TLS connection.",
+        "Full acquisition/storage guards have native mocked/loopback tests; this ARM probe exercises transport and stream checks.",
+        "No SD/NVMe/SPI access or actual KVM guest."
+      ]
+    },
+    "acquisition-sd-repeat-verify-20261104.json": {
+      "classification": "regular-file installer SD inspection; no physical boot or installation acceptance",
+      "image": {
+        "bytes": 268435456,
+        "sha256": "73f9179db26887607cd986d52f4953ac5534769113b0662388b44e724b4557f9"
+      },
+      "legacy_ext4_features": [
+        "ext_attr",
+        "resize_inode",
+        "dir_index",
+        "filetype",
+        "extent",
+        "flex_bg",
+        "sparse_super",
+        "large_file",
+        "huge_file",
+        "dir_nlink",
+        "extra_isize"
+      ],
+      "mbr_and_vendor_blob_offsets": "passed",
+      "pinned_kernel_DTB": "passed",
+      "script_and_initrd_wrappers_CRCs": "passed",
+      "checked_installer_archive_payload": {
+        "bytes": 26850604,
+        "sha256": "a1a96940df2c04bcda2f9892c82867614eb6978be71beb37d18ec18b573318b0"
+      },
+      "compressed_hash_and_expansion": "passed",
+      "physical_storage_writes": false
+    }
+  },
+  "limits": [
+    "cached-input packaging repeated, not a clean immutable builder/source acquisition",
+    "ARM TLS uses temporary localhost server; no board DNS/Ethernet/TLS",
+    "no physical SD/NVMe/SPI write, boot or KVM guest"
+  ]
+}
