@@ -916,3 +916,36 @@ Free disk increased from 9.3 GB to 23.9 GB (22.25 GiB), narrowly clearing the
 RAM remains about 7.7 GB; no compilation or package installation was needed.
 No board storage erase, SPI programming, hardware guest or deployment recovery
 was performed. Builder cache restoration is not physical release acceptance.
+
+## Current host roots and fixed-seed ARM workflow
+
+Fresh A/B roots include the current 39-file tool tree with optional loopback
+networking. Full native raw/compressed hashes, immutable ext4/no-journal features,
+closed tree contents and root ownership/modes pass. Actual ARM package-state
+queries on both roots match the 220-row lock and 1,122-entry BOM; read-only views,
+writable state logs and private namespace/loop cleanup pass. The 141.42-second
+build reported 68,076 KiB maximum child RSS and reused the compatible pinned
+kernel/DTB/modules. It needed no source/package download or compilation.
+
+The packaged ARM probe exposed a legacy-fixture pin mismatch with the newer
+HTTP initramfs/normalized disk. Sol medium added explicit repository-locked
+`legacy`/`fixed-seed-http` verifier profiles. Independent Sol high review required
+the fixed label check; it and strict 8 MiB kernel/64 MiB initrd/exact 128 MiB disk
+bounds are enforced. Six new tests cover profiles, malformed identity, descriptor
+capture refusals and forwarding/default compatibility. Original artifact capture
+still succeeds, and the newer initramfs refuses the default legacy profile.
+
+The actual packaged ARM workflow then passed with the fixed-seed fixture and
+loopback configuration in 118.89 seconds, 359,752 KiB maximum child RSS. It covers
+file-based enrollment/checkpoint/backup/local and HTTPS restore/unit checks with
+recorded live-boundary substitutions. No guest or systemd service was started.
+[Current root evidence](evidence/current-roots-20261104.json) retains precise scope,
+new component pins and source/log hashes. Jammy discovery passes 732 cases without
+skips, four diagnostic assembly cases and all five shell regressions.
+
+Additional generated kernel compiler objects were fully archived/compared before
+unlinking; all tracked source and 323 protected Image/configuration/map/module
+files remain unchanged. The [retention record](evidence/kernel-object-retention-20261104.json)
+keeps archive/member-list pins. After root export, free space is about 24.0 GB,
+above the 22 GiB full NVMe staging guard with limited headroom. Physical EL2/KVM,
+real management state/geometry, installation and release acceptance remain open.

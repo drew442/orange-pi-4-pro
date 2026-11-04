@@ -1,5 +1,10 @@
 # Installed and portable guest tools
 
+[Refreshed current roots](current-host-roots.md) now include the latest networking
+tool tree and pass the fixed-seed ARM workflow. The earlier artifact pins below
+remain valid for their original builds.
+
+
 The current immutable A/B root build includes the complete maintenance and guest
 tool tree at `/usr/lib/a733-tools`. The same source set is available as an
 authenticated portable archive. Operational commands no longer need a Git

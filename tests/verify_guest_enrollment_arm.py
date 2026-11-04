@@ -7,6 +7,7 @@ import importlib.util
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 import signal
 import stat
@@ -19,6 +20,7 @@ SOURCES = ('scripts/enroll-guest.py', 'scripts/guest-accounts.py', 'scripts/gues
            'scripts/launch-kvm-guest.py', 'configs/guest_config.py', 'configs/guest_identity.py',
            'configs/host-management.py', 'configs/host_config.py', 'configs/package_state.py')
 NAMES = {'kernel': 'Image', 'initrd': 'initramfs.cpio.gz', 'disk': 'guest-disk.raw'}
+FIXTURE_PROFILES = ('legacy', 'fixed-seed-http')
 
 
 def module(name, path):
@@ -26,6 +28,67 @@ def module(name, path):
     value = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(value)
     return value
+
+
+def load_fixture_profile(fixture_profile='legacy'):
+    """Select only repository-pinned evidence, independently of input paths."""
+    if type(fixture_profile) is not str or fixture_profile not in FIXTURE_PROFILES:
+        raise ValueError('unsupported guest fixture profile')
+    legacy_path = 'docs/evidence/guest-fixture-20261104.json'
+    selected_path = (legacy_path if fixture_profile == 'legacy' else
+                     'docs/evidence/guest-seed-fixture-20261104.json')
+
+    def read_evidence(path):
+        data = (REPO / path).read_bytes()
+        value = json.loads(data)
+        if type(value) is not dict or type(value.get('schema')) is not int or value['schema'] != 1:
+            raise ValueError('invalid fixture evidence schema')
+        return data, value
+
+    def pins_from(manifest):
+        if (type(manifest) is not dict or type(manifest.get('schema')) is not int or
+                manifest['schema'] != 1 or type(manifest.get('files')) is not dict):
+            raise ValueError('invalid fixture manifest schema')
+        pins = {}
+        for key, filename in NAMES.items():
+            record = manifest['files'].get(filename)
+            if type(record) is not dict or set(record) != {'bytes', 'sha256'}:
+                raise ValueError('invalid fixture artifact record')
+            size, digest = record['bytes'], record['sha256']
+            maximum = {'kernel': 8 * 1024**2, 'initrd': 64 * 1024**2,
+                       'disk': 128 * 1024**2}[key]
+            if (type(size) is not int or not 0 < size <= maximum or
+                    (key == 'disk' and size != 128 * 1024**2) or type(digest) is not str or
+                    re.fullmatch('[0-9a-f]{64}', digest) is None):
+                raise ValueError('invalid fixture artifact size/hash')
+            pins[filename] = dict(record)
+        return pins
+
+    data, legacy = read_evidence(legacy_path)
+    pins = pins_from(legacy)
+    provenance = {'profile': fixture_profile, 'evidence_path': selected_path}
+    if fixture_profile == 'fixed-seed-http':
+        data, evidence = read_evidence(selected_path)
+        manifest = evidence.get('artifact_manifest')
+        selected = pins_from(manifest)
+        if selected['Image'] != pins['Image']:
+            raise ValueError('fixture kernel differs from legacy pin')
+        seed = manifest.get('seed_builder')
+        if (type(seed) is not dict or type(seed.get('schema')) is not int or seed['schema'] != 1 or
+                type(seed.get('bytes')) is not int or seed['bytes'] != 134217728 or
+                {key: seed.get(key) for key in ('bytes', 'sha256')} != selected['guest-disk.raw'] or
+                seed.get('profile') != 'a733-disposable-guest-seed-v1' or
+                seed.get('label') != 'kvm-fixture' or
+                legacy.get('disk_uuid') != 'd67f33ba-e201-46bc-980b-61901bbd1156' or
+                legacy.get('disk_fixture_id') != 'a733-kvm-guest-fixture-v1' or
+                seed.get('uuid') != legacy.get('disk_uuid') or
+                manifest.get('disk_uuid') != legacy.get('disk_uuid') or
+                manifest.get('disk_fixture_id') != legacy.get('disk_fixture_id') or
+                type(manifest.get('initial_counter')) is not int or manifest['initial_counter'] != 0):
+            raise ValueError('invalid fixed seed identity/profile')
+        pins = selected
+        provenance['seed_builder'] = dict(seed)
+    return pins, {**provenance, 'evidence_sha256': hashlib.sha256(data).hexdigest()}
 
 
 PROBE = r"""
@@ -121,7 +184,8 @@ def capture_seed(source, target, expected):
 
 
 def verify(rootfs, guest_directory, *, probe=PROBE, sources=SOURCES, after_probe=None,
-           probe_context=None, source_entries=None, source_prefix='/source'):
+           probe_context=None, source_entries=None, source_prefix='/source', fixture_profile='legacy'):
+    pins, profile = load_fixture_profile(fixture_profile)
     if os.geteuid() != 0: raise ValueError('root required for private ARM fixture')
     fixture = module('enrollment_arm_fixture','tests/verify_guest_file_backend_arm.py')
     maintenance = module('enrollment_arm_binfmt','tests/verify_maintenance_arm.py')
@@ -130,7 +194,6 @@ def verify(rootfs, guest_directory, *, probe=PROBE, sources=SOURCES, after_probe
     binfmt = maintenance.binfmt_check(fixture.QEMU_PIN)
     storage = state.validate_workspace_storage(Path('/var/lib'))
     if shutil.disk_usage('/var/lib').free < 3 * 1024**3: raise ValueError('3 GiB free fixed storage required')
-    pins = json.loads((REPO/'docs/evidence/guest-fixture-20261104.json').read_bytes())['files']
     with tempfile.TemporaryDirectory(prefix='a733-guest-enrollment-arm-',dir='/var/lib') as directory:
         work=Path(directory); captured=work/'rootfs.tar.gz'
         fixture.capture(rootfs,captured); payload.authenticate(captured,fixture.ROOTFS)
@@ -172,6 +235,7 @@ def verify(rootfs, guest_directory, *, probe=PROBE, sources=SOURCES, after_probe
                 checks['native_followup'] = after_probe(root, checks)
     return {'classification':'ARM enrollment and unit file checks; no physical NVMe, systemd boot or KVM proof',
             'rootfs':fixture.ROOTFS,'binfmt':binfmt,'builder_staging_storage':storage,
+            'fixture_profile':profile,
             'verifier_source':fixture.record(Path(__file__).read_bytes()),'trusted_sources':source_records,
             'ARM_checks':checks,'limits':['RAM/NVMe mount and UUID policy boundaries mocked only inside disposable file fixture.',
             'Memory sample and CPU count belong to native builder, not A733 hardware.',
@@ -181,4 +245,5 @@ def verify(rootfs, guest_directory, *, probe=PROBE, sources=SOURCES, after_probe
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('rootfs_tar',type=Path);parser.add_argument('guest_directory',type=Path)
-    args=parser.parse_args();print(json.dumps(verify(args.rootfs_tar,args.guest_directory),indent=2))
+    parser.add_argument('--fixture-profile', choices=FIXTURE_PROFILES, default='legacy')
+    args=parser.parse_args();print(json.dumps(verify(args.rootfs_tar,args.guest_directory,fixture_profile=args.fixture_profile),indent=2))

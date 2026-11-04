@@ -47,18 +47,20 @@ hardware behavior is untested**. NVMe installation cannot resolve EL1 entry.
   SCP and copied kernel/DTB/initramfs/boot0 hashes pass; physical EL2 is unproven.
 - [Jammy builder](build-host-assessment.md): actual builds with two compilation
   jobs, GCC 11 kernel/Linaro 7.4.1 U-Boot; 4 GiB swap. Latest idle sample after
-  [verified cache retention](build-cache-retention.md): 23.9 GB free disk
-  (22.25 GiB), 7.7 GB available RAM. The 22 GiB NVMe staging guard passes
-  narrowly; recheck space before further payload builds. Five full working-tree
-  archives retain sources; all processed image bytes/hashes are unchanged.
+  [verified cache retention](build-cache-retention.md) and root refresh: about
+  24.0 GB free disk, 7.7 GB available RAM. The 22 GiB NVMe staging guard passes
+  with limited headroom; recheck before further builds. Source and generated
+  compiler-cache archives are retained; published image bytes remain unchanged.
 - [Minimal interim ARM64 userspace](host-userspace.md): 220 version/hash-locked
   packages, QEMU 7.2.22, OpenSSH/storage tools; approximately 531 MiB unpacked.
   Final Buildroot/release-base decision follows working hardware KVM baseline.
 - [Read-only A/B roots](host-payload.md), [package-state isolation](host-package-state.md),
   [NVMe state](host-state.md), [selection](nvme-root-selection.md) and
   [handoff](host-handoff.md) pass file-backed and packaged ARM checks. Current
-  [complete maintenance/guest tree](guest-tools-package.md) has 39 files at
-  `/usr/lib/a733-tools`; newer networking package/fixture are separate artifacts.
+  [current refreshed roots](current-host-roots.md) carry all 39 current tool files
+  at `/usr/lib/a733-tools`, including optional networking. Native content/ownership,
+  actual ARM 220-package queries and the fixed-seed packaged workflow pass.
+  Guest fixture/state/bootstrap/full-disk artifacts remain separately bound.
   [Management](host-management.md) has ARM sshd/key/unit checks; no real SSH login.
 - [Updates](host-updates.md), [selection journals](host-root-selection.md) and
   [RAM recovery](host-recovery.md) pass private-loop interruption/readback tests.
@@ -84,7 +86,7 @@ hardware behavior is untested**. NVMe installation cannot resolve EL1 entry.
   remain unbooted preparations; host state is a fixture. Actual historical images
   still verify, and new EL2 images refuse default baseline verification. A fresh
   committed-source checkout reproduced both images and installer initramfs bytes.
-- Jammy: 726 discovery cases without skips, four diagnostic assembly cases and
+- Jammy: 732 discovery cases without skips, four diagnostic assembly cases and
   all five shell regressions pass. Independent Sol high reviews cover boot,
   installation/selection and rollback changes. [Detailed implementation evidence](implementation-evidence.md)
   separates builds, software probes and physical results.

@@ -1,0 +1,20 @@
+{
+  "classification": "archived generated untracked kernel compiler objects; source/Image/modules retained",
+  "kernel_commit": "2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f",
+  "archive": "/var/lib/a733-cache-retention-20261104/kernel-object-cache.tar.gz",
+  "archive_bytes": 893430589,
+  "archive_sha256": "11a3282b5049e1587754109a0075a1af899245f0370c606af50105b538a4e5e3",
+  "member_list_sha256": "16150c0f6bd0f73794e7f22259c4f7c168b5381f1a32ba9af2df6f65968a993a",
+  "member_count": 11149,
+  "original_allocated_bytes": 2542538752,
+  "tar_compare": "passed against every selected file before unlink",
+  "protected_file_count": 323,
+  "protected_hashes_before_after": "unchanged",
+  "tracked_source": "unchanged",
+  "free_bytes_after": 24330371072,
+  "restore_note": "Restore only with matching source/config, no concurrent kernel build and no newer object files to overwrite.",
+  "one_off_script": {
+    "path": "/var/lib/a733-cache-retention-20261104/archive-kernel-objects.py",
+    "sha256": "c908710a55d388f9543b487aa00c118dbd3cfb6e3cdf28622771dafd92e34a86"
+  }
+}

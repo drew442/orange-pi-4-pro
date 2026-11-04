@@ -16,7 +16,7 @@ def module(name, path):
     return value
 
 
-def verify(package, package_pin, rootfs, guest_directory, *, loopback_network=False):
+def verify(package, package_pin, rootfs, guest_directory, *, loopback_network=False, fixture_profile='legacy'):
     tools = module('installed_arm_packager', 'build/maintenance-tools.py')
     maintenance = module('installed_arm_authentication', 'tests/verify_maintenance_arm.py')
     enrollment = module('installed_arm_enrollment', 'tests/verify_guest_enrollment_arm.py')
@@ -71,7 +71,8 @@ assert report['hardware_acceptance']=='pending'
     if entries != expected:
         raise ValueError('captured package changed before ARM staging')
     result = enrollment.verify(rootfs, guest_directory, probe=probe, probe_context=https.transport,
-                               source_entries=entries, source_prefix='/usr/lib/a733-tools')
+                               source_entries=entries, source_prefix='/usr/lib/a733-tools',
+                               fixture_profile=fixture_profile)
     result['classification'] = 'portable guest tools at installed ARM path; no systemd boot or KVM proof'
     result['package_manifest'] = tools.record(package_data)
     result['package_archive'] = tools.record(packed)
@@ -93,9 +94,11 @@ if __name__ == '__main__':
     parser.add_argument('package_directory', type=Path)
     parser.add_argument('--package-manifest-sha256', required=True)
     parser.add_argument('--loopback-network', action='store_true')
+    parser.add_argument('--fixture-profile', choices=('legacy', 'fixed-seed-http'), default='legacy')
     parser.add_argument('rootfs_tar', type=Path)
     parser.add_argument('guest_directory', type=Path)
     args = parser.parse_args()
     print(json.dumps(verify(args.package_directory, args.package_manifest_sha256,
                            args.rootfs_tar, args.guest_directory,
-                           loopback_network=args.loopback_network), indent=2))
+                           loopback_network=args.loopback_network,
+                           fixture_profile=args.fixture_profile), indent=2))

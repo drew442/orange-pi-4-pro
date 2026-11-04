@@ -36,6 +36,15 @@ The diagnostic and experimental image hashes are unchanged. Independent EL2
 artifact inspection passed again, including packed firmware, boot/filesystem
 contents and full gzip readback. This does not establish a new physical boot.
 
+A subsequent [compiler-object retention](evidence/kernel-object-retention-20261104.json)
+archived 11,149 generated, untracked kernel cache files before removing their
+expanded copies. All tracked source plus 323 protected configuration/Image/map/
+module files retain their hashes. The compared archive remains at
+`/var/lib/a733-cache-retention-20261104/kernel-object-cache.tar.gz`. Restore it
+only against matching source/configuration with no newer objects to overwrite;
+otherwise let the next two-job kernel build regenerate its cache. This creates
+headroom for refreshed roots without discarding compiled evidence.
+
 ## Recover an expanded guest build tree
 
 For the latest fixed-seed fixture, the following recovery was actually exercised

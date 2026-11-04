@@ -1,0 +1,256 @@
+{
+  "schema": 1,
+  "classification": "current immutable A/B root components and packaged ARM file workflows; hardware untested",
+  "source_commit_for_root_build": "cae5097",
+  "builder": "drew@build.drewnet.online; Ubuntu22.04.5 amd64",
+  "build_directory": "/var/lib/a733-current-roots-work-20261104/out/host-payload-current-20261104-01",
+  "download_directory": "/home/drew/orange-pi-4-pro-build/current-roots-20261104",
+  "manifest_sha256": "86d519362b56bbc31c79fa873ef66f2da07514d1213f22b84d082b9b50712c67",
+  "build": {
+    "elapsed_seconds": 141.42,
+    "maximum_rss_kib": 68076,
+    "resource_sample_seconds": 30,
+    "kernel_compilation": "none; preserved diagnostic kernel/DTB/modules"
+  },
+  "files": {
+    "root-A.ext4": {
+      "bytes": 4294967296,
+      "sha256": "0fab98a8548a9c1f02e11845bc036710ce9b9aca8ed1fbc1a8c6c41f2622c838"
+    },
+    "root-A.ext4.gz": {
+      "bytes": 143415593,
+      "sha256": "c80955d80719d4bba239158356645db87be7afc0948b5542207c9c42b208e92c"
+    },
+    "root-B.ext4": {
+      "bytes": 4294967296,
+      "sha256": "a7443a85a44f39eee29ff7d93810bdddaac13a9b29f7c79d10570d1ee9319132"
+    },
+    "root-B.ext4.gz": {
+      "bytes": 143415652,
+      "sha256": "8a21d898de41a3b29d16bba313321d0d3b7afa662e85844fe940be64a385a89c"
+    }
+  },
+  "installed_tools": {
+    "prefix": "/usr/lib/a733-tools",
+    "file_count": 39,
+    "matches_current_portable_package": {
+      "tools.tar.gz": {
+        "bytes": 113789,
+        "sha256": "8e8629540c21f5830359c6e7ca806407885efa148429aea88195bb3495c4b006"
+      },
+      "manifest_sha256": "60731890107e504dfce9e9d7297032daac46b320b7cee528e99d40fcd9fae5e1"
+    },
+    "full_tree_content_owner_mode_readback": "passed for both actual roots"
+  },
+  "root_verification": {
+    "classification": "managed regular-file root checks; no board boot or KVM acceptance",
+    "slot_reports": {
+      "A": {
+        "raw": {
+          "bytes": 4294967296,
+          "sha256": "0fab98a8548a9c1f02e11845bc036710ce9b9aca8ed1fbc1a8c6c41f2622c838"
+        },
+        "compressed": {
+          "bytes": 143415593,
+          "sha256": "c80955d80719d4bba239158356645db87be7afc0948b5542207c9c42b208e92c"
+        },
+        "runtime_files_match": true,
+        "read_only_no_journal": true,
+        "root_password_locked": true,
+        "machine_id_empty": true,
+        "host_keys_absent": true,
+        "compressed_expansion_matches": true
+      },
+      "B": {
+        "raw": {
+          "bytes": 4294967296,
+          "sha256": "a7443a85a44f39eee29ff7d93810bdddaac13a9b29f7c79d10570d1ee9319132"
+        },
+        "compressed": {
+          "bytes": 143415652,
+          "sha256": "8a21d898de41a3b29d16bba313321d0d3b7afa662e85844fe940be64a385a89c"
+        },
+        "runtime_files_match": true,
+        "read_only_no_journal": true,
+        "root_password_locked": true,
+        "machine_id_empty": true,
+        "host_keys_absent": true,
+        "compressed_expansion_matches": true
+      }
+    }
+  },
+  "package_state_ARM": {
+    "classification": "native kernel VFS, actual ARM 220-package default database queries and independent BOM readback",
+    "cases": {
+      "A": {
+        "independent_bom_entries": {
+          "apt": 6,
+          "debconf": 6,
+          "dpkg": 1061,
+          "pam": 7,
+          "shells": 1,
+          "systemd-catalog": 2,
+          "systemd-helper": 32,
+          "ucf": 7
+        },
+        "actual_arm_query": {
+          "rows": 220,
+          "lock_exact_after_arch_suffix_normalization": true,
+          "output_sha256": "5b09a1794388748c068ac743ffe763cf704ff0ffd9ca7d0d552ff4c76c3b26f4"
+        },
+        "state_log_writable": true,
+        "source_and_private_hash_unchanged": {
+          "bytes": 4294967296,
+          "sha256": "0fab98a8548a9c1f02e11845bc036710ce9b9aca8ed1fbc1a8c6c41f2622c838"
+        },
+        "explicit_unmount_and_detach": true
+      },
+      "B": {
+        "independent_bom_entries": {
+          "apt": 6,
+          "debconf": 6,
+          "dpkg": 1061,
+          "pam": 7,
+          "shells": 1,
+          "systemd-catalog": 2,
+          "systemd-helper": 32,
+          "ucf": 7
+        },
+        "actual_arm_query": {
+          "rows": 220,
+          "lock_exact_after_arch_suffix_normalization": true,
+          "output_sha256": "5b09a1794388748c068ac743ffe763cf704ff0ffd9ca7d0d552ff4c76c3b26f4"
+        },
+        "state_log_writable": true,
+        "source_and_private_hash_unchanged": {
+          "bytes": 4294967296,
+          "sha256": "a7443a85a44f39eee29ff7d93810bdddaac13a9b29f7c79d10570d1ee9319132"
+        },
+        "explicit_unmount_and_detach": true
+      }
+    },
+    "cleanup": {
+      "explicit_unmounts": true,
+      "all_owned_loops_detached": true
+    },
+    "limits": [
+      "No actual systemd boot, installed updates, power-cut or rollback test.",
+      "Emulation and file-backed loops do not establish board boot, KVM or hardware acceptance."
+    ]
+  },
+  "packaged_ARM_workflow": {
+    "classification": "portable guest tools at installed ARM path; no systemd boot or KVM proof",
+    "fixture_profile": {
+      "profile": "fixed-seed-http",
+      "evidence_path": "docs/evidence/guest-seed-fixture-20261104.json",
+      "seed_builder": {
+        "bytes": 134217728,
+        "e2fsprogs_version": "1.46.5-2ubuntu1.2",
+        "hardware_acceptance": "pending",
+        "label": "kvm-fixture",
+        "profile": "a733-disposable-guest-seed-v1",
+        "schema": 1,
+        "sha256": "ff595fac0b9a7d990f099edc0dd0f9d4859fb9942e185d2f2377088ce32bd577",
+        "source_date_epoch": 1793750400,
+        "uuid": "d67f33ba-e201-46bc-980b-61901bbd1156"
+      },
+      "evidence_sha256": "5bb9fef64e45bc67d4e7c70fa7ca1f499db890ea197a686b420b3cda846a4640"
+    },
+    "installed_prefix": "/usr/lib/a733-tools",
+    "loopback_network_profile": "preserved through enrollment/checkpoint/backup/restoration; unit and actual ARM launcher dry-run verified",
+    "elapsed_seconds": 118.89,
+    "maximum_rss_kib": 359752,
+    "scope": "actual ARM sysusers/enrollment/checkpoint/backup/local and HTTPS restoration/file readback/unit parsing; live hardware boundaries substituted in disposable fixture",
+    "limits": [
+      "Private authenticated ARM userspace receives only the closed portable tool tree at the installed path; no repository source tree is staged.",
+      "Actual sysusers, enrollment/checkpoint/backup/local and HTTPS restoration, file readback and unit parsing run; live hardware policy boundaries substituted only inside fixture.",
+      "No service/guest started, no board networking/NVMe/SD-write or KVM acceptance; configured interpreter path hash checked, kernel-held F descriptor not independently inspected."
+    ]
+  },
+  "legacy_fixture_compatibility": {
+    "classification": "actual legacy descriptor capture compatibility; no ARM or guest execution",
+    "profile": {
+      "profile": "legacy",
+      "evidence_path": "docs/evidence/guest-fixture-20261104.json",
+      "evidence_sha256": "18993631192c80523ff7ef60d26f510f290ae1b0494c2110380a436c19d6713d"
+    },
+    "all_three_original_artifacts": "captured and authenticated",
+    "new_HTTP_initrd_under_legacy_profile": "refused: seed metadata differs",
+    "temporary_files": "removed"
+  },
+  "checks": {
+    "jammy_python_discovery": {
+      "cases": 732,
+      "skips": 0,
+      "seconds": 37.677
+    },
+    "diagnostic_assembly": {
+      "cases": 4,
+      "seconds": 5.797
+    },
+    "shell_regressions": "all five passed"
+  },
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "scope": "explicit legacy/fixed-seed-http verifier selection, schema/identity/hash guards and bounds",
+    "outcome": "No blockers after requiring fixed label and tightening kernel/initrd/disk limits."
+  },
+  "sources": {
+    "tests/verify_guest_enrollment_arm.py": {
+      "bytes": 15995,
+      "sha256": "86417f2449f3f7cb1602b815cc37c6180d7ebcbb324dbf33d7a9999b0130657b"
+    },
+    "tests/verify_guest_tools_arm.py": {
+      "bytes": 6758,
+      "sha256": "34b7f1115e3d7392222126165e695e97d0d5d4ada152e9c219bfdb22c6193d3e"
+    },
+    "tests/test_guest_fixture_profiles.py": {
+      "bytes": 9275,
+      "sha256": "9300c62d8fe53799dac99213d0da5b499819e53b74bd7bea36d4d09759573ccd"
+    }
+  },
+  "raw_record_pins": {
+    "kernel-object-retention.json": {
+      "bytes": 878,
+      "sha256": "9816c374ca6691d5bd9dc50f435563bd4eb037d6f03804f32f8b27da179d9147"
+    },
+    "legacy-capture.json": {
+      "bytes": 473,
+      "sha256": "114edd907717231c1384f21243aae7a088a27d778b40d0ce23ffa646e2eaf73d"
+    },
+    "manifest.json": {
+      "bytes": 22456,
+      "sha256": "86d519362b56bbc31c79fa873ef66f2da07514d1213f22b84d082b9b50712c67"
+    },
+    "package-state-arm.json": {
+      "bytes": 12902,
+      "sha256": "85b1557be13fa5bc2e143218accfb712b2ce59ad928b899b9c086c2297f1599f"
+    },
+    "resources.log": {
+      "bytes": 2737,
+      "sha256": "7ac31bb47dd4748d01a58beb1f62e55caab87275100f3c323984bd33f2d59e2a"
+    },
+    "root-verification.json": {
+      "bytes": 10738,
+      "sha256": "5397a5d756004e5c7ea9ca7f5f19f9d4be79b7fdcb971ea6ce0cd806ab60d672"
+    },
+    "roots-build.log": {
+      "bytes": 1691,
+      "sha256": "08caf9ab1d46be7d93c45bb77c2a57f62d2412e584c6c758d8b6304e035abbed"
+    },
+    "tests.log": {
+      "bytes": 2653,
+      "sha256": "64d1506ee197d349bf97ea9f79346e510e2b4b446bcb00d4bf400d2fc383828a"
+    },
+    "tools-arm-fixed-seed.json": {
+      "bytes": 11732,
+      "sha256": "a965c1793a820adec28a9b3b13a9e5bb4c3d9d874d761ceca6b9a6c92718f756"
+    },
+    "tools-arm-fixed-seed.log": {
+      "bytes": 1217,
+      "sha256": "ac50af344d107bd005bcd1709d82af70e362a1d5e4e1ccc5c3eed07924f0d3e1"
+    }
+  },
+  "remaining": "No new installation state/full NVMe image; administration key, management settings, actual sector geometry and physical EL2 result required. No physical boot, KVM guest or deployment acceptance."
+}
