@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "source_date_epoch": 1793750400,
+  "vendor": {
+    "url": "https://github.com/orangepi-xunlong/orangepi-build.git",
+    "commit": "a95129bf30ea11886cc35f08ebb3e69695a26656"
+  },
+  "kernel": {
+    "url": "https://github.com/orangepi-xunlong/linux-orangepi.git",
+    "commit": "2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f"
+  },
+  "uboot": {
+    "url": "https://github.com/orangepi-xunlong/u-boot-orangepi.git",
+    "commit": "b791be842935b27268ae3d00e943a9075495f30a"
+  },
+  "patches": [
+    {
+      "path": "build/patches/uboot-env-nowhere-size.patch",
+      "sha256": "29617f37e189d5c2a9181793a4ef3c0a85fc84693e9b414e1f5b4ab6e3daaaba"
+    }
+  ],
+  "uboot_toolchain": {
+    "url": "https://mirrors.bfsu.edu.cn/armbian-releases/_toolchain/gcc-linaro-7.4.1-2019.02-x86_64_arm-linux-gnueabi.tar.xz",
+    "filename": "gcc-linaro-7.4.1-2019.02-x86_64_arm-linux-gnueabi.tar.xz",
+    "sha256": "42ccb2ed99d65b7090499e6f5ad65c4c94ae6bd022decfea102d50109557c7d2"
+  },
+  "busybox": {
+    "url": "https://ports.ubuntu.com/pool/main/b/busybox/busybox-static_1.30.1-7ubuntu3.1_arm64.deb",
+    "filename": "busybox-static_1.30.1-7ubuntu3.1_arm64.deb",
+    "sha256": "c467c2014f91795a69237339693a64089347f73a96d10613e7285b7433b3965a",
+    "binary_sha256": "0a41864f87a0737804f0f4a68a1cfa1ed22374f4f75a1be3eb376e2659ce1316"
+  },
+  "kernel_compiler": {
+    "command": "aarch64-linux-gnu-gcc",
+    "version": "11.4.0",
+    "packages": "builder-packages.lock.tsv"
+  },
+  "busybox_sources": [
+    {
+      "url": "https://ports.ubuntu.com/pool/main/b/busybox/busybox_1.30.1-7ubuntu3.1.dsc",
+      "filename": "busybox_1.30.1-7ubuntu3.1.dsc",
+      "sha256": "c1140501b5666fcf2c29f371016290dfc52964a4c303b352c565a8ce78ce7a95"
+    },
+    {
+      "url": "https://ports.ubuntu.com/pool/main/b/busybox/busybox_1.30.1.orig.tar.bz2",
+      "filename": "busybox_1.30.1.orig.tar.bz2",
+      "sha256": "3d1d04a4dbd34048f4794815a5c48ebb9eb53c5277e09ffffc060323b95dfbdc"
+    },
+    {
+      "url": "https://ports.ubuntu.com/pool/main/b/busybox/busybox_1.30.1-7ubuntu3.1.debian.tar.xz",
+      "filename": "busybox_1.30.1-7ubuntu3.1.debian.tar.xz",
+      "sha256": "5bc1660e21fb5a0b2ada3e26ae4e2d20d50477555e56df72503f0f091c4fd653"
+    }
+  ],
+  "firmware_inputs": "vendor-boot-inputs.sha256"
+}

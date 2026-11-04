@@ -1,0 +1,11 @@
+diff --git a/env/Kconfig b/env/Kconfig
+--- a/env/Kconfig
++++ b/env/Kconfig
+@@ -471,7 +471,6 @@ config ENV_OFFSET
+ 
+ config ENV_SIZE
+ 	hex "Environment Size"
+-	depends on !ENV_IS_NOWHERE
+ 	default 0x20000 if ARCH_SUNXI
+ 	help
+ 	  Size of the environment storage area

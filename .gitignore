@@ -3,3 +3,6 @@
 
 # Generated image artifacts
 /out/
+
+# Python bytecode from host-side checks
+__pycache__/

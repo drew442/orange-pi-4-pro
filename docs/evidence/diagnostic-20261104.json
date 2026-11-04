@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "board": "Orange Pi 4 Pro A733",
+  "classification": "diagnostic candidate, hardware untested",
+  "files": {
+    "a733-diagnostic.img": {
+      "bytes": 268435456,
+      "sha256": "b05086afaab3d2f9da6c33b8e457f3552cce2899c08824d371615008bf66d9fd"
+    },
+    "a733-diagnostic.img.gz": {
+      "bytes": 16188652,
+      "sha256": "cb896f74a25de809aac4926931f9f35f091126cba365b9b9586b72e7fc57566e"
+    },
+    "Image": {
+      "bytes": 27283464,
+      "sha256": "9df974c55fa61a77e8fe812652780dad471527eb9615c27838f481887d4c50e7"
+    },
+    "board.dtb": {
+      "bytes": 209320,
+      "sha256": "4d7d964a54668cf5dc12cd4bf7e72a625c79883541272aeba1a91adbbedb86ed"
+    },
+    "initramfs.cpio.gz": {
+      "bytes": 3650395,
+      "sha256": "e2b09f56f4df8cfd52b98c0f1fe018c92a0806d8cac6ee065c6ac31b15e6ca30"
+    },
+    "uImage": {
+      "bytes": 27283528,
+      "sha256": "6f9269755c4c2bc196c094899fa1ff20292f4d762c4000f77fcbb0887d5f154a"
+    },
+    "uInitrd": {
+      "bytes": 3650459,
+      "sha256": "79cdfcedf8903953696ec67e76c4089fc979240903d918628f5272c82b09f3f9"
+    },
+    "boot0_sdcard.fex": {
+      "bytes": 245760,
+      "sha256": "9213f1c56ef932930d43b5751e8937bea0e9ae7460ec16187cc1b0dffdb75345"
+    },
+    "boot_package.fex": {
+      "bytes": 1392640,
+      "sha256": "04ea9d1e64403f1a18be0c1e04f5c55da320fef23a39d8d803e147b0c12c2e03"
+    },
+    "kernel.config": {
+      "bytes": 212080,
+      "sha256": "8a29d9c36e52db7e8a7d6ff757dc69e660f4273c99e5f00c5dbc5a9b7e060675"
+    },
+    "uboot.config": {
+      "bytes": 35703,
+      "sha256": "253f9c77878c20e9146bfb35d5d80819f5314dd30ec489e5551f02e518002bb9"
+    },
+    "uboot-env-nowhere-size.patch": {
+      "bytes": 266,
+      "sha256": "29617f37e189d5c2a9181793a4ef3c0a85fc84693e9b414e1f5b4ab6e3daaaba"
+    },
+    "build-recipe.tar.gz": {
+      "bytes": 28423,
+      "sha256": "7ebf42a6b87ca785cc3f2866316fbae8a20948de7771947ba60d7c2a2e8c43a2"
+    },
+    "diagnostic-sources.lock.json": {
+      "bytes": 2273,
+      "sha256": "aa39f5fca29244ca961fc3f422d7110adca6975d2c6a29f80afd9d1d2f4b4821"
+    },
+    "builder-packages.lock.tsv": {
+      "bytes": 32519,
+      "sha256": "35c2faf42a936168098b1f54239825a3c42fc56c825fc0b2078bbd753425f48b"
+    }
+  }
+}

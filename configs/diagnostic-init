@@ -1,0 +1,58 @@
+#!/bin/sh
+# PID 1: diagnostic physical-console access only. No persistent mounts or writes.
+export PATH=/bin
+/bin/busybox --install -s /bin
+mount -t proc proc /proc
+mount -t sysfs sysfs /sys
+mount -t devtmpfs devtmpfs /dev
+mount -t tmpfs -o mode=0755,nosuid,nodev tmpfs /run
+mount -t tmpfs -o mode=1777,nosuid,nodev tmpfs /tmp
+exec </dev/console >/dev/console 2>&1
+
+echo 'Orange Pi A733 diagnostic initramfs: unrestricted physical root console.'
+echo 'No disk filesystems, swap, persistent networking or network listeners are configured.'
+# Module failure is diagnostic evidence; it must not prevent a console.
+if command -v modprobe >/dev/null 2>&1; then
+    modprobe nvme 2>/dev/null || :
+    for alias_file in $(find /sys/devices -name modalias 2>/dev/null); do
+        read -r alias < "$alias_file"
+        modprobe "$alias" 2>/dev/null || :
+    done
+fi
+uname -a
+cat /proc/cmdline
+cat /proc/partitions
+for disk in /sys/class/block/*; do
+    [ -e "$disk" ] || continue
+    echo "Block identity: ${disk##*/}"
+    for attribute in size ro device/model device/serial device/name; do
+        [ ! -r "$disk/$attribute" ] || { printf '%s: ' "$attribute"; cat "$disk/$attribute"; }
+    done
+done
+cat /proc/mounts
+ls -l /dev/kvm 2>/dev/null || echo '/dev/kvm unavailable; hardware KVM acceptance remains pending.'
+dmesg
+# Use only physical Ethernet interfaces; no Wi-Fi setup, lease persistence or daemon.
+if command -v ip >/dev/null 2>&1 && command -v udhcpc >/dev/null 2>&1; then
+    ip link set lo up || :
+    for net in /sys/class/net/*; do
+        [ -e "$net/device" ] && [ ! -d "$net/wireless" ] || continue
+        [ "$(cat "$net/type" 2>/dev/null)" = 1 ] || continue
+        interface=${net##*/}
+        ip link set "$interface" up || continue
+        udhcpc -f -n -q -t 3 -T 3 -i "$interface" -s /etc/udhcpc.script || :
+    done
+    ip addr
+    ip route
+fi
+# PID 1 stays alive when the operator exits. cttyhack supplies a controlling tty
+# on the kernel console where supported; the fallback still exposes the shell.
+while :; do
+    echo 'Starting diagnostic root shell; exit starts another shell.'
+    if command -v setsid >/dev/null 2>&1 && command -v cttyhack >/dev/null 2>&1; then
+        setsid cttyhack /bin/sh -i </dev/console >/dev/console 2>&1
+    else
+        /bin/sh -i </dev/console >/dev/console 2>&1
+    fi
+    sleep 1
+done

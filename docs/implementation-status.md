@@ -4,29 +4,54 @@ Updated 2026-11-04. Replace stale entries; keep this file short.
 
 ## Current milestone
 
-Build a headless diagnostic SD image that fits the actual 2 GB card, then collect live board inventory and prove NVMe and KVM operation. Vendor images are too large for the available SD; booting one or obtaining a larger card is not a prerequisite.
+Build a headless diagnostic SD candidate, then collect live A733 inventory and
+prove NVMe and KVM operation. Vendor images exceed the actual 2 GB SD capacity;
+neither a larger card nor live inventory is a prerequisite to the first image.
 
-## Established facts and decisions
+## Decisions and evidence
 
-- Target: Orange Pi 4 Pro A733, 2 GB SD, nominal 250 GB NVMe. RAM, board revision and SSD identity remain unverified; live inventory awaits first boot.
-- Desired host: minimal Linux KVM/QEMU with state and guests on NVMe; SPI boot preferred, immutable SD fallback. Hardware acceptance remains pending.
-- Vendor build source inspected: `orangepi-build` branch `next`, commit `a95129bf30ea11886cc35f08ebb3e69695a26656`. This is an inspection baseline, not a complete reproducible source lock.
-- Board config: `external/config/boards/orangepi4pro.conf`; family `sun60iw2`. At this revision `current` uses Linux 6.6 and `legacy` 5.15; boot branch is `v2018.05-sun60iw2`. Resolve component commits and firmware hashes before building.
-- Agent configuration is present; explicit Luna extraction was exercised. Fresh-session named-role activation still needs verification.
+- Target: Orange Pi 4 Pro A733, 2 GB **SD**, nominal 250 GB NVMe. Board RAM,
+  revision, SSD identity, power and cooling await first hardware evidence.
+- Preferred release boot: SPI to NVMe with SD removed; immutable SD fallback,
+  minimal host and real KVM-only guest remain mandatory. Nothing physical passed.
+- [Diagnostic inputs](../configs/diagnostic-sources.lock.json): vendor build
+  `a95129bf`, kernel `2ac08e8c` (6.6.98), U-Boot `b791be84` (2018.07), all full
+  commits locked. A733 boot0/monitor/SCP/pack tools have 26 checked input hashes.
+- Vendor KVM was disabled; diagnostic configuration enables it. Preserve the
+  vendor monitor/kernel/DTB stack and legacy image wrapping; EL2 remains unproven.
+- [Jammy builder](build-host-assessment.md): real loop mount, ARM64 chroot,
+  Linux 6.6.98 and patched U-Boot builds passed, two compilation jobs at a time.
+  GCC 11 kernel / Linaro 7.4.1 U-Boot. Samples retained over 6 GiB available RAM,
+  about 41 GiB disk free and negligible swap use; no resource-limit claim inferred.
+- **Diagnostic candidate built and independently verified**, not hardware booted:
+  268,435,456-byte image, SHA-256 `b05086afaab3d2f9da6c33b8e457f3552cce2899c08824d371615008bf66d9fd`.
+  Compressed: 16,188,652 bytes. [Manifest](evidence/diagnostic-20261104.json),
+  [download/build/serial guide](diagnostic-image.md). Local files under ignored
+  `out/diagnostic-20261104/`; builder `.../orange-pi-4-pro-build/artifacts/`.
+- 35 Python host tests plus initramfs regression pass locally/Jammy. Actual image
+  hashes, partition/filesystem contents, boot script CRC and wrapper payloads
+  verified independently. NVMe planner and KVM-only launcher are preparation only.
+- Independent Sol high boot/disk-selection reviews completed; reported size,
+  fallback, toolchain, tree-discovery and geometry issues fixed with checks.
+  Details and routing calibration: [implementation evidence](implementation-evidence.md).
 
-## Readiness and evidence
+## Open gates and next actions
 
-- No image, build recipe, installer, or hardware test result exists yet.
-- [Remote builder](build-host-assessment.md): `drew@build.drewnet.online`, Ubuntu 22.04.5 x86_64, four CPUs, 7.8 GiB RAM, 4 GiB swap and about 49 GiB free. All 86 selected dependencies installed; package consistency, ARM binfmt registration, locale and free loop device verified. Workspace: `/home/drew/orange-pi-4-pro-build`. Use `NO_APT_CACHER=yes`; start with two build jobs.
-- Source and manuals are cached under ignored `tmp/`; durable references are in the assessment and [plan](hypervisor-plan.md). Do not depend on those caches surviving a clone.
-
-## Next actions
-
-1. Use the prepared remote builder; validate actual loop mounts and ARM chroot execution during image-assembly preflight, and monitor disk use.
-2. Pin the chosen kernel, bootloader, firmware and toolchain; inspect raw boot layout and KVM prerequisites.
-3. Produce a small SD bootstrap with serial console and minimal rootfs. Check actual card capacity at provisioning; 1.8 GB decimal is a packaging target, not the card's measured limit.
-4. Boot hardware, collect inventory, and test NVMe and KVM. Continue image/installer work against the plan's gates.
+1. Identify the actual SD on the provisioning computer, verify capacity/checksum,
+   and obtain explicit exact-target authorization before flashing. SPI/NVMe have
+   not been written; no destructive operation is authorized for an unknown target.
+2. Capture full serial boot and inventory using the guide; investigate EL2/NVMe.
+   Minimal interim Debian userspace recipe is in progress while hardware awaits.
+3. Full reproducibility remains open: U-Boot generates a random 128-byte debug
+   challenge; two fresh U-Boot builds differ there plus checksums. Preserve that
+   generated source next time; review its security role before any deterministic
+   change. Clean-builder/package acquisition and opaque firmware license audit remain.
+4. Deliver the minimal host, actual NVMe installer, guest fixture, update/rollback,
+   backup/recovery and operational guides. The current NVMe tool is plan-only.
 
 ## Completion rule
 
-Build success is not hardware acceptance. Track concrete evidence for each release gate in the plan; no physical boot, zero-SD-write, recovery or KVM claim is currently proven.
+[Hardware acceptance](hardware-validation.md) remains entirely pending: actual
+KVM guest, installed NVMe boot, 10 cold/10 warm cycles, 24-hour workload, zero SD
+writes, recovery/rollback/restore and independently reproduced deployment.
+Build success, model review and emulation cannot satisfy these release gates.

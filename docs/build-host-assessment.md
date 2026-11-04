@@ -6,7 +6,11 @@ Prepared 2026-11-04: `drew@build.drewnet.online`, Ubuntu 22.04.5 LTS x86_64. SSH
 
 Installed and verified all 86 packages in [`configs/build-host-packages.txt`](../configs/build-host-packages.txt): pinned vendor base list, amd64 additions, Jammy Python packages and initial bootstrap utilities. Use `NO_APT_CACHER=yes`; the optional caching service was excluded. These are package names, not a version lock. Component-specific build dependencies may still be discovered.
 
-Validation passed: `dpkg --audit` (no findings), `apt-get check`, all manifest packages installed, `qemu-aarch64` binfmt enabled, `en_US.utf8` available, and `sudo losetup -f` returned a free loop device. Vendor GitHub access succeeded. No kernel/rootfs build, actual loop mount, or target ARM chroot execution has been tested yet. Start with two compilation jobs due to the smaller RAM budget and monitor peak memory and disk usage.
+Validation passed: `dpkg --audit` (no findings), `apt-get check`, all manifest packages installed, `qemu-aarch64` binfmt enabled, `en_US.utf8` available, and an actual file-backed ext4 loop mount plus static ARM64 chroot execution. `build/preflight.sh` reproduces the mount/chroot checks without accepting a physical target. Vendor GitHub access and pinned source fetch/hash checks succeeded. Start with two compilation jobs due to the smaller RAM budget; the diagnostic recipe samples memory and disk every 30 seconds.
+
+Added Jammy `gcc-aarch64-linux-gnu` and `gcc-arm-linux-gnueabi`; observed GCC 11.4.0. The former builds the kernel. GCC 11 failed the old U-Boot's conflicting function attributes under `-Werror`; the diagnostic recipe instead uses the vendor-listed Linaro 7.4.1 toolchain, hash pinned in `configs/diagnostic-sources.lock.json`. Its original Linaro URL returned HTML and the attempted Arm URL failed with an HTTP error; a hash-checked BFSU Armbian mirror download succeeded. No warning suppression patch was applied. The exact prepared package inventory is `configs/builder-packages.lock.tsv`; it is not yet an immutable clean-builder image or APT snapshot.
+
+Host regressions for initramfs, SD image assembly and NVMe planning pass on this Jammy host. These are generated-file/fixture tests, not physical-device tests. Build and hardware milestone evidence remains in [implementation status](implementation-status.md).
 
 Commands used from this repository:
 

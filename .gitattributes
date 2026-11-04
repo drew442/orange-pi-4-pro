@@ -1,0 +1,2 @@
+# Unified patch context deliberately includes a prefix space before source tabs.
+build/patches/*.patch whitespace=-blank-at-eol,-space-before-tab

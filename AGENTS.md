@@ -2,18 +2,21 @@
 
 ## Purpose and Current State
 
-Build a minimal KVM/QEMU host for the **Orange Pi 4 Pro A733**, using a 2 GB SD card and nominal 250 GB NVMe. Read `docs/implementation-status.md` first, then relevant sections of `docs/hypervisor-plan.md`. This repository currently contains planning and agent configuration; no working image exists.
+Build a minimal KVM/QEMU host for the **Orange Pi 4 Pro A733**, using a 2 GB SD card and nominal 250 GB NVMe. Read `docs/implementation-status.md` first, then relevant sections of `docs/hypervisor-plan.md`. Diagnostic recipes and host checks exist; no hardware-proven image exists yet.
 
-Vendor images exceed the available SD capacity. Create a small bootable image before requiring live hardware inventory. Prefer SPI-to-NVMe boot; otherwise keep SD boot files read-only with zero routine writes. Require an actual KVM guest for hardware acceptance.
+Vendor images exceed the available SD capacity. Build and boot the diagnostic candidate before requiring live hardware inventory. Prefer SPI-to-NVMe boot; otherwise keep SD boot files read-only with zero routine writes. Require an actual KVM guest for hardware acceptance.
 
 ## Structure and Commands
 
 - `.codex/config.toml` and `.codex/agents/`: coordinator defaults and worker roles.
 - `docs/`: implementation plan, current status, host assessment and routing policy.
 - `configs/build-host-packages.txt`: vendor-derived Ubuntu 22.04 builder dependencies.
+- `build/`: pinned diagnostic image recipe; see `docs/diagnostic-image.md`.
+- `scripts/plan-nvme.py`: read-only NVMe layout planner; never an installer.
+- `tests/`: host packaging and planner regressions; no hardware acceptance claims.
 - `tmp/` and `out/`: ignored research downloads and generated artifacts.
 
-No project build or test command exists yet. Add exact, verified commands alongside implementation. Run `git diff --check` for changes, parse modified TOML with Python `tomllib`, and use `bash -n` for Bash syntax checks. Syntax checks do not establish runtime correctness.
+Run `bash tests/test-diagnostic-initramfs.sh`, `python3 tests/test-assemble-diagnostic.py`, and `python3 -m unittest discover -s tests -p 'test_*.py'`. Run `git diff --check`, parse modified TOML with Python `tomllib`, and use `bash -n` for Bash syntax checks. Record end-to-end build evidence separately; host checks do not establish physical boot.
 
 ## Agent Routing
 
