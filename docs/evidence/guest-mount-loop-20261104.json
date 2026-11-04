@@ -1,0 +1,87 @@
+{
+  "actual_prepare_unmounted": true,
+  "classification": "private sparse-GPT native mount only; running-host/NVMe classification, active/state and TTY are fixtures; no physical NVMe, boot or KVM acceptance",
+  "cleanup": "owned guest/setup/private-run mounts removed; owned loop detached; workspace deleted; private namespace ends at process exit",
+  "counters": {
+    "chmod": 1,
+    "mount": 2
+  },
+  "guest_bytes": 232281604096,
+  "guest_uuid": "67b5bcfc-cf79-4229-b4e4-03a05217b329",
+  "independent_post_process_cleanup": "No fixture paths, owned loop backing or host-visible /run/a733-guests mount remained.",
+  "internal_journal_inode": 8,
+  "logical_disk_bytes": 250000000000,
+  "measurement": {
+    "elapsed": "0:00.63",
+    "exit_status": 0,
+    "maximum_resident_set_kib": 27416
+  },
+  "other_partition_4k_sentinels_unchanged": true,
+  "preservation_sentinel_unchanged": true,
+  "reports": {
+    "idempotent": {
+      "classification": "explicit p5 activation only; no physical boot or KVM proof",
+      "cleanup_errors": [],
+      "guest_may_be_modified": false,
+      "mount_attempted": false,
+      "mount_may_be_visible": true,
+      "mount_retained": true,
+      "mounted_before": true,
+      "permissions_may_be_modified": false,
+      "plan_sha256": "98ec8279d9b661164492d4f1db35da993dbeb32ec399401c6167c7bfc1224916",
+      "success": true
+    },
+    "interrupted": {
+      "classification": "explicit p5 activation only; no physical boot or KVM proof",
+      "cleanup_errors": [],
+      "errors": [
+        "KeyboardInterrupt: "
+      ],
+      "guest_may_be_modified": true,
+      "mount_attempted": true,
+      "mount_may_be_visible": false,
+      "mount_retained": false,
+      "mounted_before": false,
+      "permissions_may_be_modified": false,
+      "plan_sha256": "426fd6bcb9956f601a30f05f50d24f6e8dc3d9955b4ecab55ae37b80a42059e3",
+      "success": false
+    },
+    "retry": {
+      "classification": "explicit p5 activation only; no physical boot or KVM proof",
+      "cleanup_errors": [],
+      "guest_may_be_modified": true,
+      "mount_attempted": true,
+      "mount_may_be_visible": true,
+      "mount_retained": true,
+      "mounted_before": false,
+      "permissions_may_be_modified": true,
+      "plan_sha256": "426fd6bcb9956f601a30f05f50d24f6e8dc3d9955b4ecab55ae37b80a42059e3",
+      "success": true
+    }
+  },
+  "resources": {
+    "backing_inode": [
+      64512,
+      659535
+    ],
+    "guest": "/dev/loop7p5",
+    "loop": "/dev/loop7",
+    "namespace": "mnt:[4026532189]",
+    "workspace": "/var/lib/a733-guest-mount-loop-yumk9ymh"
+  },
+  "source_commit": "927a5a26e35aaab122f36e72b28c2dac1b747668",
+  "source_records": {
+    "scripts/activate-guest-storage.py": {
+      "bytes": 17823,
+      "sha256": "f147d977556ba0aaeaa954c10c2a01e69e0bcacb013e9725195ce2fd30ad37d4"
+    },
+    "scripts/guest-mount-target.py": {
+      "bytes": 7267,
+      "sha256": "037bf594538939707f3df1e1105da90c2a25397d34b356c73d48fad273b54e73"
+    },
+    "tests/verify_guest_mount_loop.py": {
+      "bytes": 20253,
+      "sha256": "9ec1f28a3b12969b49a6c181e108b7b39827cddc81b973cfcabcfb4216c7f44c"
+    }
+  }
+}

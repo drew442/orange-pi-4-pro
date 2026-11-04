@@ -12,7 +12,7 @@ Vendor images exceed the available SD capacity. Build and boot the diagnostic ca
 - `docs/`: implementation plan, current status, host assessment and routing policy.
 - `configs/build-host-packages.txt`: vendor-derived Ubuntu 22.04 builder dependencies.
 - `build/`: pinned diagnostic and host bootstrap/root/state recipes; see `docs/`.
-- `scripts/plan-nvme.py`: read-only NVMe layout planner; never an installer.
+- `scripts/`: guarded NVMe maintenance, guest activation and KVM-only launch.
 - `tests/`: host packaging and planner regressions; no hardware acceptance claims.
 - `tmp/` and `out/`: ignored research downloads and generated artifacts.
 

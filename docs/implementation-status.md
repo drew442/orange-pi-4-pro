@@ -89,9 +89,11 @@ no larger card or live inventory was required to produce the diagnostic image.
   disposable disk built and hashed; launcher requires KVM with no TCG fallback.
   [Guest launch guards](guest-operations.md) retain authenticated descriptors,
   lock disks and enforce same-NVMe guest placement before hashing. Real ARM
-  QEMU file-backend checks pass. **No guest boot or KVM execution.** Mount/account
-  activation, supervision and guest networking/management remain open.
-- 453 Python cases across both suites and all shell regressions pass; the 449-case
+  QEMU file-backend checks pass. [Explicit activation](guest-activation.md) adds
+  guarded p5 mounting and locked RAM accounts; actual private-loop interruption/
+  retry/idempotence and ARM sysusers checks pass. **No guest boot or KVM execution.**
+  Packaging/boot integration, enrollment, supervision and guest networking remain open.
+- 501 Python cases across both suites and all shell regressions pass; the 497-case
   discovery suite passes on Jammy with no skips (two privileged skips locally). Actual
   files/build checks are distinct from hardware gates. Independent Sol high
   reviews and routing outcomes: [implementation evidence](implementation-evidence.md).

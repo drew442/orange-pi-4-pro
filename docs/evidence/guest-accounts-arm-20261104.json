@@ -1,0 +1,88 @@
+{
+  "ARM_checks": {
+    "UID_collision_refusal": true,
+    "architecture": "aarch64",
+    "guest_account": {
+      "gid": 60001,
+      "home": "/nonexistent",
+      "name": "a733-vm-fixture",
+      "password": "locked; no hash",
+      "shell": "/usr/sbin/nologin",
+      "supplementary_groups": [],
+      "uid": 60001
+    },
+    "idempotent_apply": {
+      "accounts_may_be_modified": false,
+      "operation": "a733-guest-accounts",
+      "plan_sha256": "9bd7374906c030ddef1aa66978b06dfc7225087442841116c8f172e90e03d93d",
+      "schema": 1,
+      "success": true
+    },
+    "mount_provenance": "mocked only in disposable fixture; no actual host activation",
+    "private_fixture_apply": {
+      "accounts_may_be_modified": true,
+      "operation": "a733-guest-accounts",
+      "plan_sha256": "bdcfb4ec32940bad658d18bf0236d45123745a31d6cb1371c8084eab2fc96603",
+      "schema": 1,
+      "success": true
+    },
+    "real_CLI_refusal_before_writes": true,
+    "sysusers_version": "systemd 252 (252.39-1~deb12u2)",
+    "unrelated_account_rows": "byte-identical"
+  },
+  "binfmt": {
+    "bytes": 5628704,
+    "interpreter": "/usr/libexec/qemu-binfmt/aarch64-binfmt-P",
+    "limit": "Hashes configured interpreter pathname; kernel-held binfmt interpreter FD is not independently inspectable.",
+    "registration": "enabled\ninterpreter /usr/libexec/qemu-binfmt/aarch64-binfmt-P\nflags: PF\noffset 0\nmagic 7f454c460201010000000000000000000200b700\nmask ffffffffffffff00fffffffffffffffffeffffff\n",
+    "resolved_interpreter": "/usr/bin/qemu-aarch64-static",
+    "sha256": "92c4aeb8dd898de7152c184370ab22f09ae7c5b7279fd300081c76cee3f78a80"
+  },
+  "classification": "private ARM sysusers file checks; no board boot or account activation",
+  "independent_post_process_cleanup": "No fixture paths, owned loop backing or host-visible /run/a733-guests mount remained.",
+  "limits": [
+    "Runtime mount provenance was mocked only inside the authenticated private chroot.",
+    "No host account DB, physical storage, guest VM, KVM or deployment was changed.",
+    "Configured interpreter pathname/hash checked; kernel-held binfmt F descriptor not independently inspected."
+  ],
+  "measurement": {
+    "elapsed": "0:08.17",
+    "exit_status": 0,
+    "maximum_resident_set_kib": 53908
+  },
+  "rootfs": {
+    "bytes": 169852145,
+    "sha256": "1967e76c0c831c1c0bab432e7116457d4372c15b413090c054f8958b72dcb392"
+  },
+  "source_commit": "927a5a26e35aaab122f36e72b28c2dac1b747668",
+  "storage": {
+    "fstype": "ext4",
+    "maj:min": "252:0"
+  },
+  "trusted_sources": {
+    "configs/guest_identity.py": {
+      "bytes": 1997,
+      "sha256": "d7d126f015e64c7d2f26a6cad8686b90c7892c00ea9ab552e4fc36b9254d5e84"
+    },
+    "configs/host-management.py": {
+      "bytes": 22716,
+      "sha256": "3db7519f67986e4a1276a95666593b9d9a98355669926d8d3ddcf5fc319c4a54"
+    },
+    "configs/host_config.py": {
+      "bytes": 2873,
+      "sha256": "520140d56402ab803b8c137981cef5182c5e263a44ec8446ce836b6a7d160a22"
+    },
+    "configs/package_state.py": {
+      "bytes": 13113,
+      "sha256": "809630ebba9d927b6ad5034899a88a8a8fcf3401f94ff6f223f92f6fbfa9c6eb"
+    },
+    "scripts/guest-accounts.py": {
+      "bytes": 12769,
+      "sha256": "641ab5ae4c67e7fbc426dd6332823c34a3099d589c23e7bf647555bd1c1599c1"
+    }
+  },
+  "verifier_source": {
+    "bytes": 6610,
+    "sha256": "1f5c34d100a8441ce2c89419c66941dc47ef9447d357dc6dbc1d8f769e89ab8c"
+  }
+}

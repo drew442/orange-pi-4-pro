@@ -48,8 +48,10 @@ The boot filesystem contains the pinned kernel/DTB and the matching wrapped
 host initramfs and boot script. It uses no journal, 64-bit or metadata checksum
 features, matching the old bootloader reader's constraints. Its root is owned
 by root with mode 0755. Guest storage uses the `largefile4` ext4 profile for VM
-disk files; its root is root-owned mode 0700. Runtime guest storage mounting and
-service-user permissions remain installation/guest-management work.
+disk files; its root is root-owned mode 0700. The
+[explicit activation controller](guest-activation.md) validates and mounts p5,
+then grants root-directory traversal. Per-guest directory enrollment and
+automatic boot integration remain work.
 
 No NVMe boot0 or SPI firmware is written or synthesized here. The prepared boot
 partition does not prove that the current firmware can discover or boot it.

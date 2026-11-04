@@ -29,15 +29,13 @@ before exec. File-only `--dry-run` intentionally skips placement/KVM/QEMU checks
 and reports that omission; dry-run reads can update atime. Run builder checks
 on fixed builder storage, never use SD for routine guest work.
 
-Current images do not activate this guest mount or create service accounts.
-The prepared p5 filesystem root is root-owned `0700`; that does not permit an
-unprivileged guest user to traverse it. Integration must validate the actual
-installation UUID/namespace, mount p5, grant only the necessary directory
-traversal, and create a private per-guest directory owned by a dedicated service
-account before launch. Keep guest accounts outside administration and disk
-access groups; grant `/dev/kvm` access separately. These activation and
-permission steps have not been reproduced on hardware. No universal mount,
-chmod or account-creation command is authorized for an unidentified device.
+[Explicit activation controllers](guest-activation.md) now prepare and apply the
+p5 mount and locked service accounts. They are not installed in current images
+or invoked automatically. The mount controller grants root-directory traversal
+only after validating the mounted device; private per-guest directories and
+KVM device access still require enrollment. The account helper recreates fixed,
+locked identities in RAM `/etc` without administration or disk memberships.
+Neither procedure has been reproduced on hardware.
 
 ## Input lifetime and launch
 
@@ -75,9 +73,9 @@ Upstream references: [QEMU 7.2 invocation and file backends](https://gitlab.com/
 
 ## Remaining operational work
 
-Install and exercise guarded p5 mount/account activation, supervised launch and
-shutdown, bounded logs/resource limits, guest enrollment and isolated network
-policy. Implement consistent off-device backup and restore for stopped guest
+Package the explicit activation controllers and exercise them on the board.
+Integrate boot activation, supervised launch/shutdown, bounded logs/resource
+limits, guest enrollment and isolated network policy. Implement consistent off-device backup and restore for stopped guest
 disks and host state, then test restoration and failed-boot recovery. No
 snapshot or successful packaging run counts as a backup restoration. Preserve
 all [hardware acceptance gates](hardware-validation.md), including the actual

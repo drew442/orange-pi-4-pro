@@ -367,6 +367,45 @@ package installation was needed, and no physical device or hardware gate was
 tested. Full guest activation, supervision, network, backup and restoration
 remain required work.
 
+## 2026-11-04: explicit guest activation
+
+Source `927a5a2` adds live p5 activation and locked RAM service identities. Sol
+medium workers owned disjoint policy, transaction and account files; a fresh Sol
+medium worker supplied the native loop harness. Root retained the mount/journal
+contract, integration, ARM account harness, execution and acceptance ownership.
+At most two children were active. No account or mount was installed on the board.
+
+Independent Sol high review found a primary-GID parser bypass: a leading-zero
+foreign GID could evade a string collision check. Both passwd UID/GID now use
+canonical bounded unsigned numeric parsing; signed, malformed and overflow
+regressions pass. Root also fixed close-failure receipt preservation; independent
+review accepted both fixes. Existing unrelated credential rows must remain
+unchanged and no password hashes appear in plans or receipts.
+
+[Native loop evidence](evidence/guest-mount-loop-20261104.json) records actual
+p5 mount, post-kernel-mount SIGINT cleanup, retry, 0711 readback and idempotence
+on one fresh owned 250 GB sparse GPT loop; four non-guest partition sentinels
+and a guest file stayed unchanged. Its live-host/NVMe/TTY boundaries were
+fixtures. The coordinator corrected the harness's initial plan mode to 0400
+before execution. No physical device was accepted and no dirty-journal crash
+was simulated.
+
+[ARM evidence](evidence/guest-accounts-arm-20261104.json) records real pinned
+systemd-sysusers 252.39 creation, locked identity, unrelated-row preservation,
+idempotence and collision refusal. The real CLI refused the private chroot; only
+the trusted fixture's RAM mount guard was mocked for positive file checks. An
+earlier successful probe preceded the final numeric/receipt fixes; the final
+source was rerun from a clean checkout. No builder host accounts changed.
+
+All 497 discovery cases pass on Jammy with no skips (two privileged skips
+locally), plus four diagnostic cases and shell regressions. Both integration
+checks exited zero and post-process inspection found no leftover fixture, loop
+attachment or host-visible guest mount. Resource samples retained over 7 GB
+available RAM and 18 GB fixed-storage free space; no compilation/package install
+was needed. Raw logs are outside Git under the builder's
+`guest-activation-artifacts-20261104/logs/`. Packaging, boot integration, guest
+enrollment/supervision, backup/restore and every physical acceptance gate remain.
+
 Children used fresh focused contexts, exclusive write scopes and no delegation.
 At most two children were active. Input/output token counts, cache accounting,
 account prices and exact reviewer repair time were not exposed; monetary cost
