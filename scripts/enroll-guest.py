@@ -396,7 +396,9 @@ def stage_and_publish(review, receipt):
             records[name] = {**config[key], 'uid': uid, 'gid': gid, 'mode': format(mode, '04o')}
         manifest = {'schema': 1, 'profile': PROFILE, 'config': config,
                     'guest_uuid': review.plan['guest_uuid'], 'files': records}
-        create('enrollment.json', lambda fd: write_all(fd, canonical(manifest)), 0, 0, 0o400)
+        manifest_data = canonical(manifest)
+        receipt['manifest_sha256'] = hashlib.sha256(manifest_data).hexdigest()
+        create('enrollment.json', lambda fd: write_all(fd, manifest_data), 0, 0, 0o400)
         os.fchown(stage, 0, config['gid'])
         os.fchmod(stage, 0o710)
         os.fsync(stage)

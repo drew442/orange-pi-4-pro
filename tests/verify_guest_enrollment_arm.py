@@ -119,7 +119,7 @@ def capture_seed(source, target, expected):
     target.chmod(0o400)
 
 
-def verify(rootfs, guest_directory):
+def verify(rootfs, guest_directory, *, probe=PROBE, sources=SOURCES):
     if os.geteuid() != 0: raise ValueError('root required for private ARM fixture')
     fixture = module('enrollment_arm_fixture','tests/verify_guest_file_backend_arm.py')
     maintenance = module('enrollment_arm_binfmt','tests/verify_maintenance_arm.py')
@@ -136,7 +136,7 @@ def verify(rootfs, guest_directory):
         root.chmod(0o755)
         (root/'run/a733-state').mkdir(mode=0o700,exist_ok=True)
         source_records={}
-        for name in SOURCES:
+        for name in sources:
             data=fixture.regular(REPO/name);target=root/'source'/name
             target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(data);target.chmod(0o444)
             source_records[name]=fixture.record(data)
@@ -146,7 +146,7 @@ def verify(rootfs, guest_directory):
         (seed/'records.json').write_text(json.dumps(records))
         # Resource checks use a captured builder sample, never invented board RAM.
         (root/'proc/meminfo').write_bytes(Path('/proc/meminfo').read_bytes())
-        process=subprocess.Popen(['chroot',str(root),'/usr/bin/python3','-I','-B','-c',PROBE],
+        process=subprocess.Popen(['chroot',str(root),'/usr/bin/python3','-I','-B','-c',probe],
                                  env=fixture.ENV,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True,start_new_session=True)
         try:
             stdout,stderr=process.communicate(timeout=180)

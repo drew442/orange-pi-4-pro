@@ -137,6 +137,7 @@ class FileEngineTests(unittest.TestCase):
             self.assertEqual((path.stat().st_uid, path.stat().st_gid, stat.S_IMODE(path.stat().st_mode)), expected)
         manifest = final / 'enrollment.json'
         self.assertEqual((manifest.stat().st_uid, manifest.stat().st_gid, stat.S_IMODE(manifest.stat().st_mode)), (0, 0, 0o400))
+        self.assertEqual(result['manifest_sha256'], hashlib.sha256(manifest.read_bytes()).hexdigest())
         value = json.loads(manifest.read_bytes())
         self.assertEqual(value['profile'], E.PROFILE)
         self.assertEqual(set(value['files']), set(E.FILENAMES.values()))
