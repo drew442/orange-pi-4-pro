@@ -57,6 +57,11 @@ MBR, legacy ext4 features, kernel/DTB, boot script and initrd wrappers/CRCs,
 authenticated initramfs contents and full compressed expansion.
 
 [Evidence](evidence/el2-boot-profiles-20261104.json) records full artifact pins.
+A fresh protected checkout of commit `cae284a` rebuilt the host raw/gzip/initrd,
+installer initramfs and installer raw/gzip/initrd byte for byte. Both independent
+SD inspections passed again. This repeats packaging with authenticated cached
+inputs; it is not a clean-builder acquisition or physical deployment reproduction.
+
 Both raw SD images are 268,435,456 bytes and fit the actual 1,977,614,336-byte card.
 **The host bootstrap is a fixture**, referencing state UUID
 `cbc5029f-e3e3-45b6-a4ed-5a5cad32f3db` with test management inputs. Neither image

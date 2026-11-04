@@ -46,8 +46,9 @@ hardware behavior is untested**. NVMe installation cannot resolve EL1 entry.
   Emitted monitor call is `0x8000ff40`; expected SPSR is `0x3c9`. Packed monitor/
   SCP and copied kernel/DTB/initramfs/boot0 hashes pass; physical EL2 is unproven.
 - [Jammy builder](build-host-assessment.md): actual builds with two compilation
-  jobs, GCC 11 kernel/Linaro 7.4.1 U-Boot; 4 GiB swap. Latest sample during EL2
-  profile preparation: about 10 GB free disk and 7.4 GB available RAM.
+  jobs, GCC 11 kernel/Linaro 7.4.1 U-Boot; 4 GiB swap. Latest idle sample after EL2
+  profile repeat: 9.3 GB free disk and 7.6 GB available RAM. Full NVMe assembly
+  requires 22 GiB staging space; free regenerable caches before that build.
 - [Minimal interim ARM64 userspace](host-userspace.md): 220 version/hash-locked
   packages, QEMU 7.2.22, OpenSSH/storage tools; approximately 531 MiB unpacked.
   Final Buildroot/release-base decision follows working hardware KVM baseline.
@@ -79,7 +80,8 @@ hardware behavior is untested**. NVMe installation cannot resolve EL1 entry.
   accepting the locked EL2 package only by opt-in. Actual host SD and regenerated
   installer SD both build/inspect at 256 MiB; ARM runtime/TLS probes pass. They
   remain unbooted preparations; host state is a fixture. Actual historical images
-  still verify, and new EL2 images refuse default baseline verification.
+  still verify, and new EL2 images refuse default baseline verification. A fresh
+  committed-source checkout reproduced both images and installer initramfs bytes.
 - Jammy: 726 discovery cases without skips, four diagnostic assembly cases and
   all five shell regressions pass. Independent Sol high reviews cover boot,
   installation/selection and rollback changes. [Detailed implementation evidence](implementation-evidence.md)

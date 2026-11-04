@@ -363,6 +363,10 @@
     "tests.log": {
       "bytes": 2647,
       "sha256": "ae4a2c6bb47ba05241f35aea097482bf6830d004bd68feef0a44ad1a23c20660"
+    },
+    "repeat-verification.json": {
+      "bytes": 1456,
+      "sha256": "d8b07d34935187036f0e761f0e2405f782be7df8c13601801500ef5e654e9eb8"
     }
   },
   "limitations": [
@@ -370,5 +374,47 @@
     "Host SD uses fixture state/management configuration.",
     "No new complete NVMe image assembled; operator key/network and measured sector geometry pending.",
     "No physical storage erase or SPI programming."
-  ]
+  ],
+  "fresh_checkout_repeat": {
+    "classification": "fresh committed-source checkout repeat using authenticated cached payloads; no board test",
+    "source_commit": "cae284a",
+    "byte_identical_payloads": {
+      "host-sd": {
+        "a733-host-sd.img": {
+          "bytes": 268435456,
+          "sha256": "65e1a0b7e9facdee955f08877ec7c17d575b9c89245630ee28b9166f05e8640b"
+        },
+        "a733-host-sd.img.gz": {
+          "bytes": 17272012,
+          "sha256": "d2eaeec0474f83ce50c149b241adb6cda09964560cbfa69e7f8e299010a8c81e"
+        },
+        "uInitrd": {
+          "bytes": 4762444,
+          "sha256": "a28b70548a18ff0fb8dfe66e76106aae162e3f6f81e65ab47f025507b9add693"
+        }
+      },
+      "installer-initramfs": {
+        "initramfs.cpio.gz": {
+          "bytes": 26962929,
+          "sha256": "683f96751b258bdc3b06a14860ae2439fe5945416781b03c9c51d0224c8e80f8"
+        }
+      },
+      "installer-sd": {
+        "a733-installer-prep.img": {
+          "bytes": 268435456,
+          "sha256": "e81920628c4d03179cbb56d9d0ad6c4c20140d14a14e944bfa25e3faf1a3eb5c"
+        },
+        "a733-installer-prep.img.gz": {
+          "bytes": 39256045,
+          "sha256": "7932eec99ddf3d0e2ff93e1e4a1791c484bd1848ad2a2d08e2db7e47243b6a2b"
+        },
+        "uInitrd": {
+          "bytes": 26962993,
+          "sha256": "2c4c4d3d4179e9df59b72b59916c9a6d6a29a224124482ee434e089b5fc990c3"
+        }
+      }
+    },
+    "both_SD_inspectors": "passed",
+    "limitation": "Not a clean builder/package acquisition or independent physical deployment reproduction."
+  }
 }

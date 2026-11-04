@@ -881,3 +881,13 @@ vendor erase-count concern and the diagnostic's SD-only boot target. Luna low
 performed extraction and Sol high checked the source-based conclusions. No
 heatsink removal or SPI programming is required for these findings; actual ID,
 backup, recovery and authorization remain prerequisites for programming.
+
+A fresh protected checkout of `cae284a` rebuilt the explicit EL2 host SD,
+installer initramfs and installer SD. Raw/gzip/wrapped initrd bytes match the
+first artifacts exactly, and both SD inspectors pass again. The repeat uses
+existing authenticated payload/runtime caches, not clean package acquisition or
+an independently reproduced physical deployment. Final builder sample: 9,311,625,216
+bytes free, 7,651,188,736 bytes available RAM; no private probe mounts remain.
+The full NVMe assembler's 22 GiB staging guard remains in place; reclaim
+regenerable caches before preparing the actual operator image. No storage device
+was erased and no SPI programming occurred.
