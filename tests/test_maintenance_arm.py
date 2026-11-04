@@ -1,10 +1,14 @@
 """Unprivileged trust-boundary regressions for the opt-in ARM verifier."""
+import ast
 import hashlib
 import importlib.util
 import json
 import os
 from pathlib import Path
+import signal
 import stat
+import subprocess
+import sys
 import tempfile
 import unittest
 from unittest import mock
@@ -95,6 +99,47 @@ class TrustTests(unittest.TestCase):
 
 
 class NamespaceTests(unittest.TestCase):
+    def test_probe_repairs_inherited_ignored_and_blocked_sigint(self):
+        # Execute the exact fixture helper with a real publication operation;
+        # signal changes stay in a subprocess and never affect this test runner.
+        helper = next(node for node in ast.parse(VERIFY.PROBE).body
+                      if isinstance(node, ast.FunctionDef) and
+                      node.name == 'configure_probe_sigint')
+        code = '''
+import importlib.util,os,pathlib,signal,tempfile
+assert signal.getsignal(signal.SIGINT)==signal.SIG_IGN
+assert signal.SIGINT in signal.pthread_sigmask(signal.SIG_BLOCK,set())
+'''+ast.unparse(helper)+'''
+configure_probe_sigint()
+spec=importlib.util.spec_from_file_location('selection',%r)
+S=importlib.util.module_from_spec(spec);spec.loader.exec_module(S)
+data=S.serialize({'SCHEMA':'1','SLOT':'A','ROOT_UUID':S.INIT.PAYLOAD.SLOT_UUIDS['A'],
+                  'ROOT_MARKER_SHA256':'a'*64,'KERNEL_RELEASE':S.INIT.PAYLOAD.KERNEL_RELEASE})
+with tempfile.TemporaryDirectory() as tmp:
+    directory=pathlib.Path(tmp)
+    replace=S.os.replace
+    def interrupted(*args,**kwargs):
+        replace(*args,**kwargs);os.kill(os.getpid(),signal.SIGINT)
+    S.os.replace=interrupted
+    try:
+        try:S.atomic_store(directory,data)
+        except S.PublicationError as error:
+            assert error.published
+            assert isinstance(error.__cause__,KeyboardInterrupt)
+        else:raise AssertionError('queued SIGINT not delivered')
+    finally:S.os.replace=replace
+    assert (directory/'selected.conf').read_bytes()==data
+''' % str(VERIFY.REPO / 'build/root-selection.py')
+
+        def inherited_signal_state():
+            signal.signal(signal.SIGINT, signal.SIG_IGN)
+            signal.pthread_sigmask(signal.SIG_BLOCK, {signal.SIGINT})
+
+        result = subprocess.run([sys.executable, '-I', '-B', '-c', code],
+                                preexec_fn=inherited_signal_state,
+                                capture_output=True, text=True, timeout=20)
+        self.assertEqual(result.returncode, 0, result.stderr)
+
     def test_private_root_mount_precedes_restricted_mounts_and_chroot(self):
         root = Path('/var/lib/a733-maintenance-arm-test')
         pin = hashlib.sha256(Path(VERIFY.__file__).read_bytes()).hexdigest()

@@ -125,6 +125,14 @@ def stage_entries(root, entries):
 PROBE = r'''
 import hashlib,importlib.util,json,os,pathlib,platform,signal,struct,subprocess,sys,tempfile
 assert sys.flags.isolated and sys.dont_write_bytecode and platform.machine()=='aarch64'
+def configure_probe_sigint():
+    # unshare/sudo may inherit SIG_IGN or a blocked mask. This owned PID1
+    # fixture needs normal Python interruption for the publication probe.
+    signal.signal(signal.SIGINT,signal.default_int_handler)
+    signal.pthread_sigmask(signal.SIG_UNBLOCK,{signal.SIGINT})
+    assert signal.getsignal(signal.SIGINT) is signal.default_int_handler
+    assert signal.SIGINT not in signal.pthread_sigmask(signal.SIG_BLOCK,set())
+configure_probe_sigint()
 BASE=pathlib.Path('/usr/lib/a733-tools')
 def load(name,path):
     spec=importlib.util.spec_from_file_location(name,BASE/path)
