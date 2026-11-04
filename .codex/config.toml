@@ -1,0 +1,19 @@
+# Project defaults; explicit session choices may override these.
+model = "gpt-6.1-sol"
+model_reasoning_effort = "medium"
+developer_instructions = """
+Act as the project coordinator. Read docs/agent-routing.md before delegating.
+Delegate bounded work when the cheaper model or isolated context saves total work;
+handle trivial tasks directly. Use explicit model and effort from the routing table.
+Prefer fresh contexts with focused handoffs; do not clone the full conversation.
+Keep at most two children active and one writer per file. Children must not delegate.
+Retain architecture, integration, hardware acceptance and final review ownership.
+Preserve the A733, 2 GB SD, 250 GB NVMe, minimal host and zero routine SD write requirements.
+Never replace hardware validation with model confidence or emulation-only evidence.
+"""
+
+[agents]
+enabled = true
+max_concurrent_threads_per_session = 2
+default_subagent_model = "gpt-6-luna"
+default_subagent_reasoning_effort = "low"
