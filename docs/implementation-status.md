@@ -52,8 +52,9 @@ neither a larger card nor live inventory is a prerequisite to the first image.
 - [Host handoff prototype](host-handoff.md) packaged: 4,761,354-byte initramfs,
   authenticated compatible inputs, RO root/state validation then NVMe state RW,
   bounded tmpfs and ephemeral `/etc`. 49 handoff fixtures, pinned ARM64 ash checks
-  and actual builder overlay test passed. Cleanup/permission findings fixed after
-  review; no state provisioner, complete host boot image or board handoff yet.
+  and actual builder overlay test passed; clean Git checkout packaging repeated
+  byte-identically. Cleanup/permission findings fixed after review; no state
+  provisioner, complete host boot image or board handoff yet.
 
 ## Open gates and next actions
 

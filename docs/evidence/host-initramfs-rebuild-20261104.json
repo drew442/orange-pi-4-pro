@@ -1,0 +1,15 @@
+{
+  "classification": "clean Git checkout packaging repeat; no hardware acceptance",
+  "source_commit": "92b377abe373bb79ea0c9045e34a00d61462cec0",
+  "builder": "drew@build.drewnet.online",
+  "checkout": "/home/drew/orange-pi-4-pro-build/host-handoff-clean-20261104",
+  "output": "out/host-initramfs-20261104-02/initramfs.cpio.gz",
+  "archive": {
+    "bytes": 4761354,
+    "sha256": "2806c4cad490a2eda76dbbbf3803efc02a34144b783ed9d2a722f5bc5f3397b3"
+  },
+  "comparison_to_first_package": "cmp passed; byte-identical",
+  "tracked_and_untracked_worktree_status_after_build": "clean; generated out/ ignored",
+  "input_scope": "existing authenticated userspace, kernel/module/DTB and root payload files",
+  "limit": "same prepared Ubuntu builder; not a clean OS or complete vendor-stack rebuild"
+}

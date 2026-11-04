@@ -85,8 +85,11 @@ The packager pins the full root image, userspace archive, BusyBox and compatible
 kernel/DTB/config/module archive against committed evidence. It requires built-in
 NVMe/ext4/overlayfs/tmpfs/tmpfs-xattr/devtmpfs support and emits a deterministic
 root-owned newc/gzip archive plus file BOM and recipe hashes. Root marker reads
-use `debugfs` through the already authenticated descriptor. Full clean-builder
-reproducibility remains open.
+use `debugfs` through the already authenticated descriptor. A fresh Git checkout
+of `92b377a` produced a byte-identical second archive using the existing pinned
+input artifacts; its worktree stayed clean. The
+[repeat report](evidence/host-initramfs-rebuild-20261104.json) records this limited
+packaging result. Full clean-builder/vendor-stack reproducibility remains open.
 
 Evidence:
 
