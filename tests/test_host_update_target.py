@@ -1,5 +1,6 @@
 """Read-only policy fixtures; these are not hardware acceptance evidence."""
 import copy
+from contextlib import ExitStack
 import importlib.util
 import json
 import os
@@ -278,6 +279,145 @@ class TargetPolicyTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'live guard'):
                 TARGET.snapshot('/dev/nvme0n1', 'fixture', 'unique', self.size, 'B')
             guard.assert_called_once_with()
+
+    def selection_fixture(self, running, selected, marker_hash=None):
+        """Mock external reads, retaining actual context and inventory policies."""
+        number = 2 if running == 'A' else 3
+        self.active = {'slot': running, 'root_source': f'/dev/nvme0n1p{number}',
+                       'root_major_minor': f'259:{number}'}
+        for i in (2, 3):
+            self.disk['children'][i - 1]['mountpoints'] = ['/'] if i == number else []
+        release = TARGET.SELECT.INIT.PAYLOAD.KERNEL_RELEASE
+        marker = json.dumps({'schema': 1, 'slot': running,
+            'filesystem_uuid': TARGET.SELECT.INIT.PAYLOAD.SLOT_UUIDS[running],
+            'kernel_release': release}).encode()
+        selector = {'SCHEMA': '1', 'SLOT': selected,
+            'ROOT_UUID': TARGET.SELECT.INIT.PAYLOAD.SLOT_UUIDS[selected],
+            'ROOT_MARKER_SHA256': marker_hash or (TARGET.digest(marker) if selected == running else 'f' * 64),
+            'KERNEL_RELEASE': release}
+        files = {str(TARGET.MARKER): marker,
+                 str(TARGET.BOOT / 'selected.conf'): TARGET.SELECT.serialize(selector),
+                 '/run/a733-state/.a733-state': b'a733-state-v1\n89d3d789-f8c5-4cb7-908b-d0b1538c789a\n'}
+        stack = ExitStack()
+        self.addCleanup(stack.close)
+        guard = stack.enter_context(mock.patch.object(TARGET.MANAGEMENT, 'runtime_guard'))
+        stack.enter_context(mock.patch.object(Path, 'read_text', return_value=''))
+        stack.enter_context(mock.patch.object(TARGET.MANAGEMENT, 'mount_table', return_value={}))
+        stack.enter_context(mock.patch.object(TARGET.MANAGEMENT, 'validate_mounts', return_value=(
+            {'source': self.active['root_source'], 'id': self.active['root_major_minor']},
+            {'source': self.state['source'], 'id': self.state['major_minor']})))
+        stack.enter_context(mock.patch.object(TARGET.MANAGEMENT, 'block_identity'))
+        stack.enter_context(mock.patch.object(TARGET.MANAGEMENT, 'secure_path'))
+        reads = stack.enter_context(mock.patch.object(TARGET.MANAGEMENT, 'read_secure',
+            side_effect=lambda path, _limit: files[str(path)]))
+        stack.enter_context(mock.patch.object(TARGET.os, 'stat', return_value=SimpleNamespace(st_dev=123)))
+        stack.enter_context(mock.patch.object(TARGET.os, 'uname', return_value=SimpleNamespace(release=release)))
+        stack.enter_context(mock.patch.object(TARGET.INSTALL, 'inventory', return_value={'blockdevices': [self.disk]}))
+        stack.enter_context(mock.patch.object(TARGET.PLANNER, 'identify', side_effect=self.resolve))
+        stack.enter_context(mock.patch.object(TARGET.PLANNER, 'read_safety', side_effect=self.safety))
+        stack.enter_context(mock.patch.object(TARGET, 'sysfs_geometry'))
+        opened = stack.enter_context(mock.patch.object(TARGET, 'open_checked', return_value=70))
+        stack.enter_context(mock.patch.object(TARGET, 'gpt_context', return_value={
+            'disk_guid': str(uuid.UUID(int=6)),
+            'partition_guids': [str(uuid.UUID(int=i)) for i in range(1, 6)], 'sha256': 'a' * 64}))
+        stack.enter_context(mock.patch.object(TARGET.os, 'close'))
+        return stack, guard, reads, opened, selector
+
+    def test_activation_and_cancellation_complete_slot_matrix(self):
+        for running in ('A', 'B'):
+            for selected in ('A', 'B'):
+                for slot in ('A', 'B'):
+                    for intent in ('activate', 'cancel-pending'):
+                        for published in (False, True):
+                            with self.subTest(running=running, selected=selected, slot=slot,
+                                              intent=intent, published=published):
+                                stack, guard, reads, opened, selector = self.selection_fixture(running, selected)
+                                valid = (slot != running and selected == (slot if published else running)
+                                         if intent == 'activate' else
+                                         slot == running and (selected == running if published else selected != running))
+                                with stack:
+                                    def snapshot():
+                                        return TARGET.activation_snapshot('/dev/nvme0n1', 'fixture',
+                                            'unique', self.size, slot, intent, published)
+                                    if not valid:
+                                        with self.assertRaises(ValueError):
+                                            snapshot()
+                                        opened.assert_not_called()
+                                    else:
+                                        result = snapshot()
+                                        self.assertEqual(set(result), {'disk', 'target', 'active', 'state', 'gpt'})
+                                        self.assertEqual(result['state']['selector'], selector)
+                                        self.assertEqual(result['state']['selector_sha256'],
+                                            TARGET.digest(TARGET.SELECT.serialize(selector)))
+                                        self.assertEqual(result['active']['slot'], running)
+                                        self.assertEqual(result['target']['partition_number'], 2 if slot == 'A' else 3)
+                                        self.assertEqual(result['target']['size_bytes'], 4 * 1024**3)
+                                        self.assertEqual(reads.call_count, 3)
+                                    guard.assert_called_once_with()
+
+    def test_activation_arguments_are_strict(self):
+        for intent, published in (('stage', False), ('', False), (None, False),
+                                  ('activate', 0), ('activate', 1), ('activate', None),
+                                  ('cancel-pending', 'false')):
+            with self.subTest(intent=intent, published=published), \
+                    mock.patch.object(TARGET.MANAGEMENT, 'runtime_guard') as guard:
+                with self.assertRaises(ValueError):
+                    TARGET.activation_snapshot('/dev/nvme0n1', 'fixture', 'unique',
+                                               self.size, 'B', intent, published)
+                guard.assert_not_called()
+
+    def test_activation_keeps_current_marker_binding(self):
+        for intent, published, slot in (('activate', False, 'B'), ('cancel-pending', True, 'A')):
+            with self.subTest(intent=intent), self.selection_fixture('A', 'A', '0' * 64)[0]:
+                with self.assertRaisesRegex(ValueError, 'marker hash'):
+                    TARGET.activation_snapshot('/dev/nvme0n1', 'fixture', 'unique',
+                                               self.size, slot, intent, published)
+
+    def test_pending_selector_still_requires_full_parse(self):
+        marker = json.dumps({'schema': 1, 'slot': 'A',
+            'filesystem_uuid': TARGET.SELECT.INIT.PAYLOAD.SLOT_UUIDS['A'],
+            'kernel_release': TARGET.SELECT.INIT.PAYLOAD.KERNEL_RELEASE}).encode()
+        with mock.patch.object(TARGET.MANAGEMENT, 'validate_mounts', return_value=(
+                {'source': '/dev/nvme0n1p2', 'id': '259:2'},
+                {'source': '/dev/nvme0n1p4', 'id': '259:4'})):
+            with self.assertRaises(ValueError):
+                TARGET.running_context({}, marker, b'SLOT=B\n', b'',
+                                       TARGET.SELECT.INIT.PAYLOAD.KERNEL_RELEASE, 'pending')
+
+    def test_running_target_allows_mounts_but_refuses_other_busy_flags(self):
+        def policy(kind='running', slot='A'):
+            return TARGET.inventory_policy({'blockdevices': [self.disk]}, '/dev/nvme0n1',
+                'fixture', 'unique', self.size, slot, self.active, self.state,
+                self.resolve, self.safety, target_kind=kind)
+        self.assertEqual(policy()[1]['partition_number'], 2)
+        with self.assertRaisesRegex(ValueError, 'inactive'):
+            policy('inactive')
+        with self.assertRaisesRegex(ValueError, 'running'):
+            policy('running', 'B')
+        for identity in ('259:0', '259:2'):
+            for key, value in (('holders', ['dm-0']), ('read_only', True), ('swap', True)):
+                with self.subTest(identity=identity, key=key):
+                    original = self.safety
+                    def safety(nodes):
+                        flags = original(nodes)
+                        flags[identity][key] = value
+                        return flags
+                    with mock.patch.object(self, 'safety', safety), self.assertRaisesRegex(ValueError, 'busy'):
+                        policy()
+        for value in (True, None, '0'):
+            with mock.patch.dict(self.disk['children'][1], ro=value), self.assertRaisesRegex(ValueError, 'unknown'):
+                policy()
+        self.disk['mountpoints'] = ['/unexpected']
+        with self.assertRaisesRegex(ValueError, 'mounted'):
+            policy()
+
+    def test_activation_runtime_guard_cannot_be_bypassed_with_pending_selector(self):
+        for intent, published in (('activate', False), ('activate', True),
+                                  ('cancel-pending', False), ('cancel-pending', True)):
+            with mock.patch.object(TARGET.MANAGEMENT, 'runtime_guard', side_effect=ValueError('live guard')):
+                with self.assertRaisesRegex(ValueError, 'live guard'):
+                    TARGET.activation_snapshot('/dev/nvme0n1', 'fixture', 'unique',
+                                               self.size, 'B', intent, published)
 
 
 if __name__ == '__main__':

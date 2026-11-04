@@ -5,6 +5,7 @@ The atomic publication helper is for trusted staging/integration callers. It
 does not identify or authorize a mounted NVMe target or implement an updater.
 """
 import argparse
+import contextlib
 import hashlib
 import importlib.util
 import json
@@ -13,6 +14,7 @@ from pathlib import Path
 import re
 import secrets
 import shutil
+import signal
 import stat
 import subprocess
 import tempfile
@@ -58,37 +60,72 @@ class PublicationError(OSError):
         self.published = published
 
 
+@contextlib.contextmanager
+def publication_signals():
+    """Defer handled termination signals across rename and visibility accounting."""
+    previous = signal.pthread_sigmask(signal.SIG_BLOCK, {signal.SIGINT, signal.SIGTERM})
+    try:
+        yield
+    finally:
+        signal.pthread_sigmask(signal.SIG_SETMASK, previous)
+
+
+def named_inode(directory, name, identity):
+    """Reconcile an interrupted rename by inode, never by matching contents."""
+    if identity is None:
+        return False
+    try:
+        info = os.stat(name, dir_fd=directory, follow_symlinks=False)
+    except OSError:
+        return False
+    return (info.st_dev, info.st_ino) == identity
+
+
 def atomic_store(directory, data):
     """Publish a complete selector with fsync/rename/fsync, without target policy.
 
+    Accept a directory path or held integer directory FD (caller retains it).
     Caller must validate/authorize the directory and serialize update writers.
     A post-rename failure means the new record is visible but durability unknown.
     """
     parse(data)
-    descriptor = os.open(directory, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+    if isinstance(directory, int):
+        if type(directory) is not int:
+            raise ValueError('directory descriptor must be an integer, not boolean')
+        descriptor = os.open('.', os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=directory)
+    else:
+        descriptor = os.open(directory, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
     temporary = '.selected-' + secrets.token_hex(12)
     published = False
-    created = False
+    created = None
     try:
         info = os.fstat(descriptor)
         if info.st_uid != os.geteuid() or info.st_mode & 0o022:
             raise ValueError('selector directory must be owned by caller without group/world writes')
         target = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600,
                          dir_fd=descriptor)
-        created = True
+        info = os.fstat(target)
+        created = (info.st_dev, info.st_ino)
         with os.fdopen(target, 'wb') as stream:
             stream.write(data)
             stream.flush()
             os.fsync(stream.fileno())
-        os.replace(temporary, 'selected.conf', src_dir_fd=descriptor, dst_dir_fd=descriptor)
-        published = True
+        with publication_signals():
+            os.replace(temporary, 'selected.conf', src_dir_fd=descriptor, dst_dir_fd=descriptor)
+            published = True
         os.fsync(descriptor)
-    except OSError as error:
+    except (OSError, KeyboardInterrupt) as error:
+        published = published or named_inode(descriptor, 'selected.conf', created)
         raise PublicationError(error, published) from error
     finally:
-        if created and not published:
-            os.unlink(temporary, dir_fd=descriptor)
-        os.close(descriptor)
+        try:
+            if not published and named_inode(descriptor, temporary, created):
+                os.unlink(temporary, dir_fd=descriptor)
+        finally:
+            try:
+                os.close(descriptor)
+            except (OSError, KeyboardInterrupt) as error:
+                raise PublicationError(error, published) from error
 
 
 def capture_root(image, expected, destination):

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Read-only live installed-host policy for the inactive A733 root slot.
+"""Read-only live installed-host policy for A733 root operations.
 
 No CLI, configurable runtime paths, filesystem probing of the inactive slot,
 mounting, or authorization. A snapshot is evidence, never a device lock.
@@ -41,8 +41,9 @@ def digest(data):
     return hashlib.sha256(data).hexdigest()
 
 
-def running_context(table, marker, selector_data, state_marker, release):
+def running_context(table, marker, selector_data, state_marker, release, selection_mode='current'):
     """Validate current root, state, marker and selection as one policy unit."""
+    require(selection_mode in ('current', 'pending'), 'invalid selection mode')
     root, state = MANAGEMENT.validate_mounts(table)
     slot = 'A' if root['source'].endswith('p2') else 'B'
     payload = json.loads(marker, object_pairs_hook=INSTALL.unique_pairs)
@@ -51,8 +52,10 @@ def running_context(table, marker, selector_data, state_marker, release):
             payload.get('filesystem_uuid') == SELECT.INIT.PAYLOAD.SLOT_UUIDS[slot] and
             payload.get('kernel_release') == release == SELECT.INIT.PAYLOAD.KERNEL_RELEASE,
             'mounted root payload or current kernel differs')
-    require(selector['SLOT'] == slot, 'selected slot differs from running root; reboot required')
-    require(selector['ROOT_MARKER_SHA256'] == digest(marker), 'selected root marker hash differs')
+    if selection_mode == 'current':
+        require(selector['SLOT'] == slot, 'selected slot differs from running root; reboot required')
+    if selector['SLOT'] == slot:
+        require(selector['ROOT_MARKER_SHA256'] == digest(marker), 'selected root marker hash differs')
     lines = state_marker.decode('ascii').splitlines()
     require(len(lines) == 2 and lines[0] == 'a733-state-v1', 'invalid state marker')
     identity = str(uuid.UUID(lines[1]))
@@ -66,8 +69,11 @@ def running_context(table, marker, selector_data, state_marker, release):
 
 
 def inventory_policy(inventory, requested, expected_model, expected_serial, expected_bytes,
-                     slot, active, state, resolver, safety_reader):
-    require(slot in ('A', 'B') and slot != active['slot'], 'requested slot must be inactive')
+                     slot, active, state, resolver, safety_reader, target_kind='inactive'):
+    require(target_kind in ('inactive', 'running'), 'invalid target kind')
+    require(slot in ('A', 'B') and (slot != active['slot'] if target_kind == 'inactive'
+                                  else slot == active['slot']),
+            'requested slot must be ' + target_kind)
     require(isinstance(expected_model, str) and expected_model.strip() == expected_model and expected_model,
             'explicit nonempty model required')
     require(isinstance(expected_serial, str) and expected_serial.strip() == expected_serial and expected_serial,
@@ -112,11 +118,14 @@ def inventory_policy(inventory, requested, expected_model, expected_serial, expe
     target_number = 2 if slot == 'A' else 3
     evidence = safety_reader(nodes)
     for node in (disk, nodes[target_number]):
+        mounted_running = target_kind == 'running' and node is nodes[target_number]
         require(node.get('ro') is False or type(node.get('ro')) is int and node['ro'] == 0,
                 'read-only or unknown target state')
-        require(not any(node.get('mountpoints') or []), 'target is mounted')
+        require(mounted_running or not any(node.get('mountpoints') or []), 'target is mounted')
         flags = evidence[node['maj:min']]
-        require(not any(flags[key] for key in ('holders', 'read_only', 'mounted', 'swap')),
+        keys = ('holders', 'read_only', 'swap') if mounted_running else (
+            'holders', 'read_only', 'mounted', 'swap')
+        require(not any(flags[key] for key in keys),
                 'target is busy or read-only')
     record = {'requested_path': str(requested), 'canonical_path': canonical,
               'major_minor': major_minor, 'model': model, 'serial': serial,
@@ -186,6 +195,25 @@ def open_checked(record):
 
 
 def snapshot(target_path, expected_model, expected_serial, expected_bytes, slot):
+    """Staging requires the selected running root and an idle inactive target."""
+    return _snapshot(target_path, expected_model, expected_serial, expected_bytes, slot)
+
+
+def activation_snapshot(target_path, expected_model, expected_serial, expected_bytes,
+                        slot, intent, published=False):
+    """Read live evidence before or after explicit selector publication.
+
+    ``published`` is an internal postcondition check, never staging authority.
+    A pending selector is parsed, but does not establish the other root's health.
+    """
+    require(intent in ('activate', 'cancel-pending'), 'invalid selection intent')
+    require(type(published) is bool, 'published must be a boolean')
+    return _snapshot(target_path, expected_model, expected_serial, expected_bytes, slot,
+                     intent, published)
+
+
+def _snapshot(target_path, expected_model, expected_serial, expected_bytes, slot,
+              intent=None, published=False):
     MANAGEMENT.runtime_guard()
     table = MANAGEMENT.mount_table(Path('/proc/self/mountinfo').read_text())
     root_row, state_row = MANAGEMENT.validate_mounts(table)
@@ -196,10 +224,21 @@ def snapshot(target_path, expected_model, expected_serial, expected_bytes, slot)
     active, state = running_context(table, MANAGEMENT.read_secure(MARKER, 1024**2),
                                    MANAGEMENT.read_secure(BOOT / 'selected.conf', 4096),
                                    MANAGEMENT.read_secure('/run/a733-state/.a733-state', 128),
-                                   os.uname().release)
+                                   os.uname().release,
+                                   selection_mode='current' if intent is None else 'pending')
+    if intent is not None:
+        selected = state['selector']['SLOT']
+        running = active['slot']
+        if intent == 'activate':
+            require(slot != running and selected == (slot if published else running),
+                    'activation requires inactive target and expected selector')
+        else:
+            require(slot == running and (selected == running if published else selected != running),
+                    'cancellation requires running target and expected selector')
     disk, target, nodes, geometry = inventory_policy(
         INSTALL.inventory(), str(target_path), expected_model, expected_serial, expected_bytes,
-        slot, active, state, PLANNER.identify, PLANNER.read_safety)
+        slot, active, state, PLANNER.identify, PLANNER.read_safety,
+        target_kind='running' if intent == 'cancel-pending' else 'inactive')
     sysfs_geometry(nodes, geometry)
     disk_fd = open_checked(disk)
     try:

@@ -4,6 +4,7 @@ import importlib.util
 import io
 import json
 import os
+import signal
 from pathlib import Path
 import tempfile
 import unittest
@@ -76,6 +77,87 @@ class SelectionTests(unittest.TestCase):
             self.assertEqual((root / 'selected.conf').read_bytes(), record('B'))
             self.assertEqual((root / 'selected.conf').stat().st_mode & 0o777, 0o600)
             self.assertEqual([p.name for p in root.iterdir()], ['selected.conf'])
+
+    def test_held_directory_fd_survives_path_replacement(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary) / 'boot'
+            root.mkdir(mode=0o700)
+            descriptor = os.open(root, os.O_RDONLY | os.O_DIRECTORY)
+            try:
+                moved = root.with_name('original')
+                root.rename(moved)
+                root.mkdir(mode=0o700)
+                SELECT.atomic_store(descriptor, record('B'))
+                self.assertEqual((moved / 'selected.conf').read_bytes(), record('B'))
+                self.assertFalse((root / 'selected.conf').exists())
+                os.fstat(descriptor)  # Caller retains ownership of its descriptor.
+            finally:
+                os.close(descriptor)
+
+    def test_invalid_directory_fd(self):
+        with tempfile.TemporaryFile() as stream:
+            with self.assertRaises(OSError):
+                SELECT.atomic_store(stream.fileno(), record())
+        with self.assertRaises(ValueError):
+            SELECT.atomic_store(True, record())
+
+    def test_interrupt_before_and_after_rename_preserves_visibility(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            SELECT.atomic_store(root, record())
+            original_replace = os.replace
+            def renamed_then_interrupted(*args, **kwargs):
+                original_replace(*args, **kwargs)
+                raise KeyboardInterrupt('after rename return boundary')
+            for replacement, expected in ((mock.Mock(side_effect=KeyboardInterrupt('before rename')), False),
+                                          (renamed_then_interrupted, True)):
+                with mock.patch.object(SELECT.os, 'replace', side_effect=replacement):
+                    with self.assertRaises(SELECT.PublicationError) as caught:
+                        SELECT.atomic_store(root, record('B'))
+                self.assertEqual(caught.exception.published, expected)
+                self.assertEqual((root / 'selected.conf').read_bytes(), record('B') if expected else record())
+                self.assertEqual(list(root.glob('.selected-*')), [])
+
+    def test_close_failure_after_publication_keeps_visible_receipt(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            original_close = os.close
+            def close(fd):
+                original_close(fd)
+                raise OSError('directory close failed')
+            with mock.patch.object(SELECT.os, 'close', side_effect=close):
+                with self.assertRaises(SELECT.PublicationError) as caught:
+                    SELECT.atomic_store(root, record('B'))
+            self.assertTrue(caught.exception.published)
+            self.assertEqual((root / 'selected.conf').read_bytes(), record('B'))
+
+    def test_pending_sigint_delivered_after_visibility_assignment_and_mask_restored(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            SELECT.atomic_store(root, record())
+            previous_mask = signal.pthread_sigmask(signal.SIG_BLOCK, set())
+            previous_handler = signal.getsignal(signal.SIGINT)
+            delivered = []
+            original_replace = os.replace
+            def interrupt(signum, frame):
+                delivered.append(signum)
+                raise KeyboardInterrupt('pending handled SIGINT')
+            def rename_and_queue(*args, **kwargs):
+                original_replace(*args, **kwargs)
+                os.kill(os.getpid(), signal.SIGINT)
+                self.assertEqual(delivered, [])  # Still blocked inside publication.
+            signal.signal(signal.SIGINT, interrupt)
+            try:
+                with mock.patch.object(SELECT.os, 'replace', side_effect=rename_and_queue):
+                    with self.assertRaises(SELECT.PublicationError) as caught:
+                        SELECT.atomic_store(root, record('B'))
+                self.assertTrue(caught.exception.published)
+                self.assertEqual(delivered, [signal.SIGINT])
+                self.assertEqual(signal.pthread_sigmask(signal.SIG_BLOCK, set()), previous_mask)
+                self.assertEqual((root / 'selected.conf').read_bytes(), record('B'))
+            finally:
+                signal.signal(signal.SIGINT, previous_handler)
+                signal.pthread_sigmask(signal.SIG_SETMASK, previous_mask)
 
     def test_failure_before_rename_preserves_old_selection(self):
         with tempfile.TemporaryDirectory() as temporary:
