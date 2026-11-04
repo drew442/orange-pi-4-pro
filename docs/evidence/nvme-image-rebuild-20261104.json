@@ -1,0 +1,103 @@
+{
+  "classification": "clean-checkout integrated regular-file assembly and inspection; not complete fresh build, installation or hardware acceptance",
+  "source_commit": "c3685639c9792095f4b6622425170d01aa1c5270",
+  "builder": "drew@build.drewnet.online",
+  "checkout": "/home/drew/orange-pi-4-pro-build/nvme-clean-20261104",
+  "tracked_worktree_clean": true,
+  "cached_authenticated_inputs": true,
+  "same_inputs_layout_recipes": true,
+  "fresh_disk_guid": "fa57dd95-3c5f-401c-a7b1-57ac94afcfa5",
+  "fresh_partition_guids": [
+    "e868382d-fb0e-436b-9c39-67dd715b6d97",
+    "12603dbe-5c36-4088-a4bf-2c38edd45d61",
+    "9447877d-04db-401a-9dd5-ef986cca349b",
+    "fd5f8deb-efa8-4cc8-aca8-91693c6ae548",
+    "adf47fd4-3624-4630-8e16-03ddbebfc3a8"
+  ],
+  "filesystem_uuids": {
+    "boot": "bfa513cb-9ad8-4d5d-b8e6-00a9370d602e",
+    "root-a": "a7330000-0000-4000-8000-00000000000a",
+    "root-b": "a7330000-0000-4000-8000-00000000000b",
+    "state": "bfe5ba29-3175-47a3-a410-04b87e3de1a6",
+    "guests": "732ab30e-2c36-48de-b342-3929032e95ab"
+  },
+  "fixture_state_preserved": true,
+  "byte_identity_claimed": false,
+  "image": {
+    "bytes": 250000000000,
+    "sha256": "6aa51794bf82b3814568a526c9242b5abbe041af603255d2b3b9438847fc4d98"
+  },
+  "allocated_bytes": 1205710848,
+  "build_seconds": 286.3,
+  "independent_inspection": {
+    "classification": "independent regular-file NVMe inspection; no hardware acceptance",
+    "manifest": {
+      "bytes": 7608,
+      "sha256": "7414d449e650767183552cb5868d46870eb3c126dc7417233e524a97ea2ba86c"
+    },
+    "image": {
+      "bytes": 250000000000,
+      "sha256": "6aa51794bf82b3814568a526c9242b5abbe041af603255d2b3b9438847fc4d98"
+    },
+    "logical_sector_bytes": 512,
+    "gpt_primary_backup_and_geometry": true,
+    "filesystem_uuids_and_features": {
+      "boot": "bfa513cb-9ad8-4d5d-b8e6-00a9370d602e",
+      "root-a": "a7330000-0000-4000-8000-00000000000a",
+      "root-b": "a7330000-0000-4000-8000-00000000000b",
+      "state": "bfe5ba29-3175-47a3-a410-04b87e3de1a6",
+      "guests": "732ab30e-2c36-48de-b342-3929032e95ab"
+    },
+    "partition_payloads": {
+      "root-a": {
+        "bytes": 4294967296,
+        "sha256": "9ae1b5daabff5f7468be5d30f526ead3c4d3e042953480f5b289bead454d3ff3"
+      },
+      "root-b": {
+        "bytes": 4294967296,
+        "sha256": "70b401c51e5363c182d5916b2b67e29fa2ca1e402f2589dced08e9345ff380a1"
+      },
+      "state": {
+        "bytes": 8589934592,
+        "sha256": "d7cafee5bba682ad2c171a6b78ab436e6db929cbbbb464d32be266835fdef477"
+      }
+    },
+    "boot_file_hashes": {
+      "boot/boot.scr": {
+        "bytes": 1187,
+        "sha256": "f1ba10868782026d6fa4392b5e5f60db7953e8a340539f750ad710fb2b2032f1"
+      },
+      "boot/uInitrd": {
+        "bytes": 4761966,
+        "sha256": "0f954b221f29507beba3965dfa6fa66bd9f5154aa6a93ef5fa8c06a8ebfea733"
+      },
+      "boot/uImage": {
+        "bytes": 27283528,
+        "sha256": "6f9269755c4c2bc196c094899fa1ff20292f4d762c4000f77fcbb0887d5f154a"
+      },
+      "boot/boot.cmd": {
+        "bytes": 1115,
+        "sha256": "d65f4dc811150fed3ab9b67722e6b327341d388b0263907380c9bf59497fd93f"
+      },
+      "boot/dtb/allwinner/sun60i-a733-orangepi-4-pro.dtb": {
+        "bytes": 209320,
+        "sha256": "4d7d964a54668cf5dc12cd4bf7e72a625c79883541272aeba1a91adbbedb86ed"
+      }
+    },
+    "root_markers_and_state_selection": true,
+    "boot_and_guests_root_metadata": true,
+    "image_metadata_unchanged": true,
+    "limitations": [
+      "Trusted manifest required; no signature authentication.",
+      "Whole logical image hashed once; final dev/inode/size/mtime/ctime compared on a quiescent builder.",
+      "No physical installation, SPI/NVMe boot, zero SD writes, or KVM guest demonstrated."
+    ]
+  },
+  "resource_summary": {
+    "exit_code": 0,
+    "sample_count": 30,
+    "minimum_available_memory_bytes": 7449038848,
+    "minimum_disk_free_bytes": 26758131712,
+    "minimum_swap_free_bytes": 4176560128
+  }
+}

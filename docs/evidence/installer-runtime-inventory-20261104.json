@@ -1,0 +1,60 @@
+{
+  "classification": "authenticated archive inventory and direct ELF dependency names only; no closed installer runtime or hardware validation",
+  "archive": {
+    "path": "/home/drew/orange-pi-4-pro-build/recipe/out/host-userspace-bookworm-20261001-01/rootfs.tar.gz",
+    "bytes": 169852145,
+    "sha256": "1967e76c0c831c1c0bab432e7116457d4372c15b413090c054f8958b72dcb392"
+  },
+  "builder": "drew@build.drewnet.online",
+  "regular_files": {
+    "usr/bin/python3.11": 6616896,
+    "usr/bin/lsblk": 264360,
+    "mke2fs": 199048,
+    "tune2fs": 133456,
+    "e2fsck": 348192,
+    "debugfs": 271976,
+    "curl": 329888,
+    "ssh": 1182656
+  },
+  "symlinks": {
+    "usr/bin/python3": "python3.11"
+  },
+  "absent_all_member_basenames": [
+    "sfdisk"
+  ],
+  "python_stdlib": {
+    "prefix": "usr/lib/python3.11/",
+    "regular_files": 1140,
+    "uncompressed_bytes": 26585461,
+    "included_lib_dynload": {
+      "regular_files": 46,
+      "uncompressed_bytes": 4632208
+    }
+  },
+  "direct_dt_needed": {
+    "usr/bin/python3.11": [
+      "libm.so.6",
+      "libz.so.1",
+      "libexpat.so.1",
+      "libc.so.6",
+      "ld-linux-aarch64.so.1"
+    ],
+    "usr/bin/lsblk": [
+      "libblkid.so.1",
+      "libmount.so.1",
+      "libsmartcols.so.1",
+      "libudev.so.1",
+      "libc.so.6",
+      "ld-linux-aarch64.so.1"
+    ]
+  },
+  "target_execution": false,
+  "temporary_extraction": "private fixed-builder /var/tmp directory, deleted on exit",
+  "remaining": [
+    "Transitive ELF and Python extension dependency closure",
+    "Configuration, NSS and networking runtime data",
+    "ARM private-chroot execution and packaged initramfs validation",
+    "Compressed size below the 64 MiB boot load budget",
+    "Actual installer and physical acceptance"
+  ]
+}

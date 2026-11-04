@@ -1,0 +1,10 @@
+{
+  "classification": "Ubuntu builder integrated regular-file assembly; no A733 runtime evidence",
+  "exit_code": 0,
+  "seconds": 270.3,
+  "samples": 28,
+  "minimum_available_memory_bytes": 7358951424,
+  "minimum_filesystem_free_bytes": 29057863680,
+  "swap_configured_bytes": 4294963200,
+  "minimum_swap_free_bytes": 4294164480
+}

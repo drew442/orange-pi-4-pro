@@ -4,103 +4,88 @@ Updated 2026-11-04. Replace stale entries; keep this file short.
 
 ## Current milestone
 
-The headless diagnostic SD candidate is built. Collect live A733 inventory and
+The small headless diagnostic image is built. Collect live A733 inventory and
 prove NVMe and KVM operation. Vendor images exceed the actual 2 GB SD capacity;
-neither a larger card nor live inventory is a prerequisite to the first image.
+no larger card or live inventory was required to produce the diagnostic image.
 
 ## Decisions and evidence
 
-- Target: Orange Pi 4 Pro A733, 2 GB **SD**, nominal 250 GB NVMe. Board RAM,
-  revision, SSD identity, power and cooling await first hardware evidence.
-- Preferred release boot: SPI to NVMe with SD removed; immutable SD fallback,
-  minimal host and real KVM-only guest remain mandatory. Nothing physical passed.
-- [Diagnostic inputs](../configs/diagnostic-sources.lock.json): vendor build
-  `a95129bf`, kernel `2ac08e8c` (6.6.98), U-Boot `b791be84` (2018.07), all full
-  commits locked. A733 boot0/monitor/SCP/pack tools have 26 checked input hashes.
-- Vendor KVM was disabled; diagnostic configuration enables it. Preserve the
-  vendor monitor/kernel/DTB stack and legacy image wrapping; EL2 remains unproven.
-- [Jammy builder](build-host-assessment.md): real loop mount, ARM64 chroot,
-  Linux 6.6.98 and patched U-Boot builds passed, two compilation jobs at a time.
-  GCC 11 kernel / Linaro 7.4.1 U-Boot. Latest check: about 7 GiB available RAM,
-  30 GiB disk free and 4 GiB swap configured (negligible use); no resource-limit claim inferred.
-- **Diagnostic candidate built and independently verified**, not hardware booted:
-  268,435,456-byte image, SHA-256 `b05086afaab3d2f9da6c33b8e457f3552cce2899c08824d371615008bf66d9fd`.
-  Compressed: 16,188,652 bytes. [Manifest](evidence/diagnostic-20261104.json),
-  [download/build/serial guide](diagnostic-image.md). Local files under ignored
-  `out/diagnostic-20261104/`; builder `.../orange-pi-4-pro-build/artifacts/`.
-- 120 Python test cases pass, with privileged state cases run on Jammy; shell
-  regressions pass. Actual image
-  hashes, partition/filesystem contents, boot script CRC and wrapper payloads
-  verified independently. NVMe planner and KVM-only launcher are preparation only.
-- Independent Sol high boot/disk-selection reviews completed; reported size,
-  fallback, toolchain, tree-discovery and geometry issues fixed with checks.
-  Details and routing calibration: [implementation evidence](implementation-evidence.md).
-- [Interim ARM64 userspace](host-userspace.md) built: QEMU 7.2.22, OpenSSH and
-  storage tools, 220 version/hash-locked cached packages. Approximately 531 MiB
-  unpacked / 169,852,145-byte tar. Identities scrubbed, disable-service presets;
-  no host boot, installation or guest execution established.
-- [Guest fixture](guest-fixture.md) built from a separate virt profile: 5.25 MB
-  kernel, 0.97 MB initramfs, disposable 128 MiB disk. Hashes, seed and dry-run pass;
-  **no guest boot or KVM execution**. Script execution/WLAN issues fixed after review.
-- [A/B root payloads](host-payload.md) built: 4 GiB each, about 173 MB compressed,
-  matched kernel modules, ext4 read-only feature/no journal. Actual file-loop
-  remount/write denial and content/hash checks passed. Managed roots and a fixture state are built; physical boot, installer and
-  update integration remain open.
-- [NVMe boot resolver](host-storage-boot.md): authenticated ARM64 `blkid` runtime
-  and read-only UUID/identity selection implemented; 39 fixtures pass with the exact
-  diagnostic BusyBox. Private chroot/file probes passed; no mounts or host boot.
-  Independent review's duplicate-field parser finding was fixed and rechecked.
-- [Host handoff](host-handoff.md): 4,761,902-byte generic initramfs fixes state UUID
-  and ABI; [A/B selection lives on NVMe](nvme-root-selection.md), read after state
-  journal recovery. Fixed GPT roles, selected-root-only probes, bounded metadata,
-  86 handoff/41 resolver fixtures and pinned ARM64 ash/GPT-file checks pass.
-  Current bootstrap packaging repeated byte-identically from a clean checkout. Root-only
-  selection needs no SD repackaging; hardware handoff remains untested.
-- [State payload recipe](host-state.md) built an 8 GiB journaled regular-file
-  fixture (39.8 MB compressed), fresh identities, authenticated `/var` and operator
-  public key/config. Independent readback/gzip checks and 14 builder regressions
-  passed; clean-checkout repeat produced distinct installation identities and
-  passed readback. Test credentials/network values prevent deployment; on-device
-  management activation and a physical NVMe writer remain open.
-
-- [Management runtime](host-management.md): exact Ethernet MAC DHCPv4, selected-IP
-  key-only SSH, NVMe host-key creation and RAM configuration implemented/reviewed.
-  20 regressions and actual ARM key/sshd/PAM-account/unit-file checks pass; no
-  systemd boot, SSH connection or installed-NVMe activation. New managed A/B
-  hashes/contents and state/bootstrap pairing checked. Builder peak samples
-  retained at least 7.3 GB available RAM and 32.6 GB filesystem free.
-
-- [Complete host SD bootstrap](host-sd-bootstrap.md) built: 256 MiB raw /
-  17,271,090 bytes compressed, pinned vendor boot chain plus NVMe handoff.
-  Independent image/archive inspection and byte-identical clean-checkout
-  assembly repeat passed; trusted fixture state required.
-  No physical boot or installer acceptance. Packaging enforces Jammy tool versions.
+- Target: Orange Pi 4 Pro **A733**, 2 GB **SD**, nominal 250 GB NVMe. Board RAM,
+  revision, SSD identity, power and cooling await actual hardware evidence.
+- Prefer SPI-to-NVMe with SD removed; immutable SD fallback, minimal host and
+  real KVM guest remain mandatory. Nothing has passed physical acceptance.
+- [Pinned diagnostic inputs](../configs/diagnostic-sources.lock.json): vendor
+  build `a95129bf`, kernel `2ac08e8c` (6.6.98), U-Boot `b791be84` (2018.07).
+  Full commits, toolchain hashes and 26 opaque input hashes are retained.
+  Vendor KVM was disabled; diagnostic configuration enables it. EL2 is unproven.
+- [Jammy builder](build-host-assessment.md): actual kernel/U-Boot builds,
+  ARM64 chroot and file-backed loop checks passed. Two compilation jobs;
+  GCC 11 kernel / Linaro 7.4.1 U-Boot. Recent integrated build samples retained
+  at least 7.35 GB available RAM and 26.75 GB free disk; 4 GiB swap is configured.
+- **Diagnostic candidate built and independently verified, not board-booted:**
+  268,435,456 bytes, SHA-256
+  `b05086afaab3d2f9da6c33b8e457f3552cce2899c08824d371615008bf66d9fd`;
+  compressed 16,188,652 bytes. [Manifest](evidence/diagnostic-20261104.json),
+  [download/flashing/serial guide](diagnostic-image.md). Local files are under
+  ignored `out/diagnostic-20261104/`; builder `.../orange-pi-4-pro-build/artifacts/`.
+- [Interim ARM64 userspace](host-userspace.md): QEMU 7.2.22, OpenSSH and storage
+  tools; 220 version/hash-locked cached packages, approximately 531 MiB unpacked
+  / 169,852,145-byte tar. Buildroot/release-base decision follows board baseline.
+- [Managed A/B roots](host-payload.md): 4 GiB each, about 173 MB compressed,
+  matching modules, read-only ext4 feature/no journal. Full hashes, contents
+  and gzip expansions passed. Prior loop write-denial checks apply to the
+  original unconfigured prototype; managed roots remain unbooted.
+- [State](host-state.md), [NVMe selector](nvme-root-selection.md) and
+  [handoff](host-handoff.md): 8 GiB journaled fixture with fresh installation
+  identities; generic bootstrap fixes state UUID and ABI while root choice
+  lives on recovered NVMe state. Selected-root-only resolution, ownership,
+  GPT-role and cleanup fixtures pass. No installed updater or automatic rollback.
+- [Management preparation](host-management.md): exact Ethernet MAC DHCPv4,
+  selected-IP key-only SSH, NVMe host-key creation and RAM configuration.
+  ARM key/sshd/PAM-account/unit checks pass; no SSH connection or systemd boot.
+  Test credentials/network settings make the current state nondeployable.
+- [Complete SD host bootstrap](host-sd-bootstrap.md): 256 MiB raw /
+  17,271,090 bytes compressed. Independent inspection and byte-identical
+  clean-checkout assembly passed. It references fixture NVMe state.
+- [Integrated NVMe preparation](nvme-provisioning.md): 250,000,000,000-byte
+  sparse disk file combines GPT, boot, A/B, state and journaled guest storage.
+  Full logical hash and independent readback passed. Clean-checkout assembly
+  and independent readback passed with fresh disk/PARTUUID/boot/guest identities.
+  The on-device NVMe tool remains plan-only; no physical installer exists yet.
+- [Guest fixture](guest-fixture.md): separate virt-profile kernel/initramfs and
+  disposable disk built and hashed; launcher requires KVM with no TCG fallback.
+  **No guest boot or KVM execution.** Guest networking/management remain open.
+- 143 Python cases across both suites and all shell regressions pass; two
+  privileged cases skipped locally have passed separately on Jammy. Actual
+  files/build checks are distinct from hardware gates. Independent Sol high
+  reviews and routing outcomes: [implementation evidence](implementation-evidence.md).
 
 ## Open gates and next actions
 
-1. Identify the actual SD on the provisioning computer, verify capacity/checksum,
-   and obtain explicit exact-target authorization before flashing. SPI/NVMe have
-   not been written; no destructive operation is authorized for an unknown target.
-2. Capture full serial boot and inventory using the guide; investigate EL2/NVMe.
-   Integrate userspace and the guest fixture while hardware awaits; guest drivers
-   use a separate profile. Supply the administration public key and real wired MAC; validate
-   management activation and host-key verification on the board. Deliver verified inactive-slot writing,
-   activation/rollback and a physical installer; selector
-   preparation and atomic staging alone are not an installed updater.
-3. Full reproducibility remains open: U-Boot generates a random 128-byte debug
-   challenge; fresh U-Boot builds differ there plus checksums. Exact generated
-   source/binary/log collection passed independent review and an end-to-end
-   [validation build](evidence/diagnostic-provenance-20261104.json); original download
-   unchanged. Review its role before deterministic changes. Clean-builder/package
-   acquisition and opaque firmware license audit remain.
-4. Before cross-version A/B updates, separate root-version package metadata
-   from shared `/var/lib/dpkg`; current slots share identical package versions.
-   Deliver the minimal host, actual NVMe installer, guest fixture, update/rollback,
-   backup/recovery and operational guides. The current NVMe tool is plan-only.
+1. Identify the actual SD, verify capacity/checksum, and obtain exact-target
+   authorization before flashing. SPI/NVMe have not been written; no destructive
+   operation is authorized for an unknown target. Use the diagnostic guide and
+   return full serial/inventory evidence, including EL2/NVMe observations.
+2. Supply the administration public key and actual wired MAC. Validate real
+   management activation and trusted host-key verification. Deliver the
+   installer runtime and physical writer with target locking/revalidation,
+   written-byte verification and interruption handling. Existing archive
+   [runtime inventory](evidence/installer-runtime-inventory-20261104.json) is
+   not a closed standalone runtime or a measured compressed size fit.
+3. Deliver inactive-slot updates and serial/manual rollback. Separate each
+   root version's package metadata from shared `/var/lib/dpkg` before
+   cross-version updates; current slots share identical package versions.
+   Finish guest storage/networking, backup/restore and operational procedures.
+4. Full clean-build reproducibility remains open: U-Boot emits a random
+   128-byte debug challenge; builds differ there plus checksums. Exact generated
+   source/binary/log evidence passed review and a
+   [validation build](evidence/diagnostic-provenance-20261104.json). Review its
+   role before deterministic changes. Clean builder/package acquisition and
+   opaque-firmware/source/license audits remain.
 
 ## Completion rule
 
 [Hardware acceptance](hardware-validation.md) remains entirely pending: actual
 KVM guest, installed NVMe boot, 10 cold/10 warm cycles, 24-hour workload, zero SD
-writes, recovery/rollback/restore and independently reproduced deployment.
-Build success, model review and emulation cannot satisfy these release gates.
+writes, interruption/rollback/recovery/restore and independently reproduced
+deployment. Build success, model review and emulation cannot satisfy these gates.

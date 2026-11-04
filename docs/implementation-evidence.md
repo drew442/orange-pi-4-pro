@@ -158,6 +158,11 @@ configuration open. The packaging helper has six nonprivileged regressions.
 | Managed artifact documentation | Luna / low | Four bounded guides updated; coordinator corrected wording about mocked configuration preparation |
 | Complete host SD bootstrap | Sol / medium | 12 authentication/path/package/assembly regressions; coordinator executed real Jammy packaging and independent disk/archive inspection |
 | Host SD boot review | Sol / high | Four unchanged diagnostic regressions and 12 host tests passed; verifier metadata comparison suggestion fixed with two coordinator regressions |
+| NVMe layout and GPT codec | Sol / medium | Seven independent structure/CRC/UUID/readback cases; 18 original planner fixtures retained |
+| NVMe integration review | Sol / high | SD/removable backing-storage rejection fixed; formatter root-mode regression and explicit sector geometry checked |
+| Independent NVMe inspector | Sol / medium | Nine GPT tamper/sparse/path/filesystem tests; production codec not imported |
+| NVMe inspector review | Sol / high | Nine tests and bounded same-descriptor readback accepted; fixed builder staging confirmed separately |
+| Installer runtime inventory | Luna / low | Authenticated archive file sizes, Python symlink and direct ELF dependencies extracted; missing sfdisk confirmed, runtime closure still open |
 
 Children used fresh focused contexts, exclusive write scopes and no delegation.
 At most two children were active. Input/output token counts, cache accounting,
