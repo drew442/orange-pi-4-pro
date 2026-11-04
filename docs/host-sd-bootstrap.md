@@ -1,5 +1,11 @@
 # SD bootstrap for the NVMe host
 
+The [explicit EL2 packaging profile](boot-profiles.md) prepares the locked
+experimental handoff without changing the baseline artifacts below. The next
+physical action remains the [EL2 diagnostic test](el2-diagnostic.md); hardware
+KVM and deployment acceptance are still open.
+
+
 A complete 256 MiB host SD candidate has been assembled and inspected as an
 ordinary file on the Ubuntu 22.04 builder. It combines the pinned diagnostic
 vendor boot stack with the [NVMe host handoff](host-handoff.md). It has not

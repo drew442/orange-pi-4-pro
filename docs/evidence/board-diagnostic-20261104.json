@@ -57,8 +57,16 @@
     },
     "spi": {
       "reported_bytes": 16777216,
-      "chip_identity": "not established",
-      "backup_recovery": "not established"
+      "chip_identity": "Linux driver reports XM25QU128C (16384 Kbytes) at boot log line654; direct JEDEC sysfs capture pending",
+      "backup_recovery": "not established",
+      "driver_table": {
+        "source_commit": "2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f",
+        "path": "bsp/drivers/mtd/spi-nor-6.1/xmc.c",
+        "line": 19,
+        "model": "XM25QU128C",
+        "expected_jedec_id_from_source": "204118"
+      },
+      "selected_driver_config": "CONFIG_AW_MTD_SPI_NOR_6_1=y; CONFIG_MTD_SPI_NOR is not set"
     }
   },
   "operator_constraints": {

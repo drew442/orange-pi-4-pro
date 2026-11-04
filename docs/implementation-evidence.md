@@ -854,3 +854,30 @@ fixture byte for byte; the new seed matches both standalone root/drew builds.
 All manifest pins, actual cpio init/CGI, complete imported-source archive,
 e2fsck, fixture ID and zero counter pass independent file readback. This closes
 the earlier whole-recipe rerun gap; it does not establish guest execution.
+
+## Explicit boot-profile integration
+
+Luna low extracted baseline pin dependencies; the coordinator retained the
+existing default and required an explicit experimental profile across host SD,
+installer SD, NVMe assembly and inspectors. Sol medium implemented the bounded
+change. Independent Sol high review found historical default verification would
+reject missing metadata; the correction accepts only an absent baseline key with
+all blob/evidence pins intact. Null/malformed metadata and missing EL2 provenance
+are refused. Neither installation intent nor physical write authorization changes.
+
+[Actual Jammy evidence](evidence/el2-boot-profiles-20261104.json) records the
+256 MiB host and installer SD files, regenerated installer initramfs, raw offset/
+MBR/ext4/kernel/DTB/script/CRC/payload/gzip inspection, packaged ARM runtime and
+TLS loopback checks. Both actual historical baseline images still verify under
+the default; both actual new EL2 images refuse that default. Real component
+manifests pair under explicit EL2 and refuse wrong/missing/null profiles; no new
+complete NVMe image was generated. New host state is still a fixture. No image
+has a new physical boot result, and no KVM guest has executed.
+
+Jammy discovery passes 726 cases without skips, four diagnostic assembly cases
+and all five shell regressions. The [SPI source investigation](spi-boot-investigation.md)
+records the software-detected chip, separately pinned SPI boot0/layout, the fixed
+vendor erase-count concern and the diagnostic's SD-only boot target. Luna low
+performed extraction and Sol high checked the source-based conclusions. No
+heatsink removal or SPI programming is required for these findings; actual ID,
+backup, recovery and authorization remain prerequisites for programming.

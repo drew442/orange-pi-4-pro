@@ -1,0 +1,374 @@
+{
+  "schema": 1,
+  "classification": "explicit experimental EL2 packaging and file/ARM software checks; no board boot",
+  "builder": "drew@build.drewnet.online; Ubuntu22.04.5 amd64",
+  "work_directory": "/var/lib/a733-boot-profile-work-20261104",
+  "evidence_directory": "/home/drew/orange-pi-4-pro-build/el2-profile-evidence-20261104",
+  "profile": {
+    "name": "experimental-el2",
+    "target_service": "0x8000ff40",
+    "expected_spsr": "0x3c9",
+    "physical_acceptance_pending": true,
+    "evidence": {
+      "path": "docs/evidence/el2-diagnostic-20261104.json",
+      "bytes": 6582,
+      "sha256": "9c30d5d873fa8ad154b8068cdebfc7f40f6487ce6a79f76a52da4dd44ba1b5f8"
+    }
+  },
+  "host_sd": {
+    "directory": "out/host-sd-el2-20261104-01",
+    "state_uuid": "cbc5029f-e3e3-45b6-a4ed-5a5cad32f3db",
+    "deployment": "fixture state, not an installation candidate",
+    "files": {
+      "a733-host-sd.img": {
+        "bytes": 268435456,
+        "sha256": "65e1a0b7e9facdee955f08877ec7c17d575b9c89245630ee28b9166f05e8640b"
+      },
+      "a733-host-sd.img.gz": {
+        "bytes": 17272012,
+        "sha256": "d2eaeec0474f83ce50c149b241adb6cda09964560cbfa69e7f8e299010a8c81e"
+      },
+      "uInitrd": {
+        "bytes": 4762444,
+        "sha256": "a28b70548a18ff0fb8dfe66e76106aae162e3f6f81e65ab47f025507b9add693"
+      },
+      "assembly.log": {
+        "bytes": 4144,
+        "sha256": "6a8d30ed78e8a432a8a093411693c42184c72853c1487f5171820ee1f847d89f"
+      }
+    },
+    "verification": {
+      "classification": "independent regular-file host SD checks; hardware acceptance pending",
+      "image": {
+        "bytes": 268435456,
+        "sha256": "65e1a0b7e9facdee955f08877ec7c17d575b9c89245630ee28b9166f05e8640b"
+      },
+      "state_uuid": "cbc5029f-e3e3-45b6-a4ed-5a5cad32f3db",
+      "mbr_and_raw_blobs": "passed",
+      "legacy_ext4_features": [
+        "ext_attr",
+        "resize_inode",
+        "dir_index",
+        "filetype",
+        "extent",
+        "flex_bg",
+        "sparse_super",
+        "large_file",
+        "huge_file",
+        "dir_nlink",
+        "extra_isize"
+      ],
+      "pinned_kernel_and_dtb": "passed",
+      "host_script_crc_and_contents": "passed",
+      "initrd_wrapper_and_payload": "passed",
+      "initramfs_entries_checked": 424,
+      "gzip_expansion": "passed",
+      "physical_storage_writes": false
+    }
+  },
+  "installer_initramfs": {
+    "directory": "out/installer-initramfs-el2-20261104-01",
+    "files": {
+      "initramfs.cpio.gz": {
+        "bytes": 26962929,
+        "sha256": "683f96751b258bdc3b06a14860ae2439fe5945416781b03c9c51d0224c8e80f8"
+      }
+    },
+    "tool_package": {
+      "profile": "a733-maintenance-tools-v1",
+      "package_json": {
+        "bytes": 10906,
+        "sha256": "16f0ad01f0f9ca621dbc349676311f1341aa1b1a2e17bb4b85a4ea848ef53447"
+      }
+    },
+    "expanded_bytes": 79531212
+  },
+  "installer_sd": {
+    "directory": "out/installer-sd-el2-20261104-01",
+    "files": {
+      "a733-installer-prep.img": {
+        "bytes": 268435456,
+        "sha256": "e81920628c4d03179cbb56d9d0ad6c4c20140d14a14e944bfa25e3faf1a3eb5c"
+      },
+      "a733-installer-prep.img.gz": {
+        "bytes": 39256045,
+        "sha256": "7932eec99ddf3d0e2ff93e1e4a1791c484bd1848ad2a2d08e2db7e47243b6a2b"
+      },
+      "uInitrd": {
+        "bytes": 26962993,
+        "sha256": "2c4c4d3d4179e9df59b72b59916c9a6d6a29a224124482ee434e089b5fc990c3"
+      },
+      "assembly.log": {
+        "bytes": 4184,
+        "sha256": "3fac87c3fec0da49a70acff80ee79c34fe131d3bf119ff7d95b3a456b68f834c"
+      }
+    },
+    "verification": {
+      "classification": "regular-file installer SD inspection; no physical boot or installation acceptance",
+      "image": {
+        "bytes": 268435456,
+        "sha256": "e81920628c4d03179cbb56d9d0ad6c4c20140d14a14e944bfa25e3faf1a3eb5c"
+      },
+      "legacy_ext4_features": [
+        "ext_attr",
+        "resize_inode",
+        "dir_index",
+        "filetype",
+        "extent",
+        "flex_bg",
+        "sparse_super",
+        "large_file",
+        "huge_file",
+        "dir_nlink",
+        "extra_isize"
+      ],
+      "mbr_and_vendor_blob_offsets": "passed",
+      "pinned_kernel_DTB": "passed",
+      "script_and_initrd_wrappers_CRCs": "passed",
+      "checked_installer_archive_payload": {
+        "bytes": 26962929,
+        "sha256": "683f96751b258bdc3b06a14860ae2439fe5945416781b03c9c51d0224c8e80f8"
+      },
+      "compressed_hash_and_expansion": "passed",
+      "physical_storage_writes": false
+    }
+  },
+  "arm_runtime": {
+    "classification": "packaged ARM64 chroot software checks; no board boot, physical installation or KVM acceptance",
+    "verifier_source": {
+      "bytes": 13236,
+      "sha256": "94681aa5621697f6e48c0a4e2f65c066d8c6c3996bc4c0c0c10845ffcefe2d70"
+    },
+    "archive": {
+      "bytes": 26962929,
+      "sha256": "683f96751b258bdc3b06a14860ae2439fe5945416781b03c9c51d0224c8e80f8"
+    },
+    "expanded_bytes": 79531212,
+    "entries_checked": 2250,
+    "all_archive_hashes_modes_paths": "passed",
+    "ARM_checks": {
+      "architecture": "aarch64",
+      "isolated_python": true,
+      "core_modules": "imported",
+      "ca_file": "/usr/lib/ssl/cert.pem",
+      "ca_certificates": 142,
+      "localhost_NSS": "passed",
+      "versions": {
+        "python": "Python 3.11.2",
+        "lsblk": "lsblk from util-linux 2.38.1",
+        "blkid": "blkid from util-linux 2.38.1  (libblkid 2.38.1, 04-Aug-2022)",
+        "mke2fs": "mke2fs 1.47.0 (5-Feb-2023)",
+        "tune2fs": "tune2fs 1.47.0 (5-Feb-2023)",
+        "e2fsck": "e2fsck 1.47.0 (5-Feb-2023)",
+        "debugfs": "debugfs 1.47.0 (5-Feb-2023)",
+        "curl": "curl 7.88.1 (aarch64-unknown-linux-gnu) libcurl/7.88.1 OpenSSL/3.0.20 zlib/1.2.13 brotli/1.0.9 zstd/1.5.4 libidn2/2.3.3 libpsl/0.21.2 (+libidn2/2.3.3) libssh2/1.10.0 nghttp2/1.52.0 librtmp/2.3 OpenLDAP/2.5.13"
+      },
+      "planner_isolated_help": "passed",
+      "writer_isolated_help": "passed",
+      "acquisition_isolated_help": "passed",
+      "writer_fixture_refusal": "passed before target access",
+      "writer_regular_file_engine": "passed; block flush and partition callbacks not exercised",
+      "init_ash_syntax": "passed",
+      "regular_file_mkfs_fsck_blkid_debugfs": "passed",
+      "dhcp_ram_resolver_hook": "passed; three IP commands replaced by logged fixture stub",
+      "DNS_TLS_connection": "not performed",
+      "physical_block_targets": "not opened"
+    },
+    "private_fixture": "deleted after check; no mounts, listeners or external requests",
+    "limits": [
+      "Runtime tests cover the exercised commands/modules, not every possible dynamic load.",
+      "IP command was stubbed for DHCP hook; board DHCP/DNS/TLS untested.",
+      "No SD/NVMe/SPI write or actual KVM guest performed."
+    ]
+  },
+  "arm_tls": {
+    "classification": "ARM64 software TLS loopback probe; no board networking or hardware acceptance",
+    "verifier_source": {
+      "bytes": 8435,
+      "sha256": "22f0432485656110a3a07c983068c5bfd1bfaced202adb15fcf9a226729ed9d2"
+    },
+    "archive": {
+      "bytes": 26962929,
+      "sha256": "683f96751b258bdc3b06a14860ae2439fe5945416781b03c9c51d0224c8e80f8"
+    },
+    "ARM_checks": {
+      "architecture": "aarch64",
+      "HTTPS_Content_Length_fetch": "passed",
+      "custom_CA_hostname_verification": "passed",
+      "untrusted_CA_refusal": "passed",
+      "redirect_refusal": "passed",
+      "encoded_and_expanded_verification": "passed",
+      "bytes": {
+        "encoded": {
+          "bytes": 597,
+          "sha256": "f19c32e3a01c4bfb22408802f133dac191fffcd2507675f0ab540dfec5f5ae23"
+        },
+        "decoded": {
+          "bytes": 65792,
+          "sha256": "120c518a83325c66464701a6ee080302f332bc768ea3f60473b209f1bfb091df"
+        }
+      },
+      "scope": "production transport and stream verifier; no full acquisition/storage policy or device operation"
+    },
+    "cleanup": "temporary chroot, certificate/private key and loopback listener removed; no mounts or external requests",
+    "limits": [
+      "No real DNS, DHCP, Ethernet, production endpoint or A733 TLS connection.",
+      "Full acquisition/storage guards have native mocked/loopback tests; this ARM probe exercises transport and stream checks.",
+      "No SD/NVMe/SPI access or actual KVM guest."
+    ]
+  },
+  "nvme_pairing": {
+    "classification": "actual component-manifest pairing only; no NVMe image generation or device access",
+    "profile": {
+      "name": "experimental-el2",
+      "target_service": "0x8000ff40",
+      "expected_spsr": "0x3c9",
+      "physical_acceptance_pending": true,
+      "evidence": {
+        "path": "docs/evidence/el2-diagnostic-20261104.json",
+        "bytes": 6582,
+        "sha256": "9c30d5d873fa8ad154b8068cdebfc7f40f6487ce6a79f76a52da4dd44ba1b5f8"
+      }
+    },
+    "state_uuid": "cbc5029f-e3e3-45b6-a4ed-5a5cad32f3db",
+    "matching_real_artifact_manifests": "passed",
+    "negative_cases": [
+      {
+        "case": "default-baseline",
+        "reason": "SD boot profile differs from requested profile"
+      },
+      {
+        "case": "missing-el2",
+        "reason": "SD boot profile differs from requested profile"
+      },
+      {
+        "case": "explicit-null",
+        "reason": "SD boot profile differs from requested profile"
+      }
+    ],
+    "complete_NVMe_image": "not built; administrator/network/sector inputs pending"
+  },
+  "historical_compatibility": {
+    "actual_host_image": {
+      "bytes": 268435456,
+      "sha256": "a0eec1415503c7a69eb697218ef259df439f772e70c55cbae2774896c9561157"
+    },
+    "actual_installer_image": {
+      "bytes": 268435456,
+      "sha256": "0a44681cb8ab19060f8f620999812067fa2460582046a7808154d9b9afafa329"
+    },
+    "default_verifiers": "both historical actual images pass with absent metadata",
+    "experimental_images_under_default_baseline": "both refuse profile mismatch before image inspection"
+  },
+  "checks": {
+    "jammy_python_discovery": {
+      "cases": 726,
+      "skips": 0,
+      "seconds": 36.518
+    },
+    "diagnostic_assembly": {
+      "cases": 4,
+      "seconds": 6.258
+    },
+    "shell_regressions": "all five passed"
+  },
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "outcome": "No blockers after missing-key-only historical compatibility correction; null/malformed values and missing EL2 profile refused."
+  },
+  "sources": {
+    "build/assemble-host.py": {
+      "bytes": 15320,
+      "sha256": "575bea937fa8a2813d6537b3c96dee686b12feddb2bd69954ad3448a7899bee2"
+    },
+    "build/assemble-installer.py": {
+      "bytes": 9756,
+      "sha256": "c588cd644b83eea9ab20939978c15053a272c120bf45f16cec5bc114cb04605e"
+    },
+    "build/nvme-image.py": {
+      "bytes": 21789,
+      "sha256": "a37f2cd1c1b489a463784a513f16292cedd6e83ad04cd683bb06267ea57f3ece"
+    },
+    "tests/test_host_sd.py": {
+      "bytes": 19656,
+      "sha256": "be93f54a2e2332d6bc5080be782116c19ccf8b25df75e5c55b6a4591dace964e"
+    },
+    "tests/test_installer_sd.py": {
+      "bytes": 14919,
+      "sha256": "8e62de27c2939f621dd2bd5fdb107072bf84e3ecce48da7a986b86086a742a5c"
+    },
+    "tests/test_nvme_image.py": {
+      "bytes": 14668,
+      "sha256": "38eb0d645d4f7a018cef8270167377782107f51a1a410be8755dc18c07d7464e"
+    },
+    "tests/verify_host_sd.py": {
+      "bytes": 10432,
+      "sha256": "eafe848535f9aac8108a8e9953f89c23adf8da70741e39fe657d1247ba1480fb"
+    },
+    "tests/verify_installer_sd.py": {
+      "bytes": 5950,
+      "sha256": "33d92a5f1d7ea6a523933d1aa57963a255f91d859ed08c2f4cf10f579a882e00"
+    },
+    "docs/evidence/el2-diagnostic-20261104.json": {
+      "bytes": 6582,
+      "sha256": "9c30d5d873fa8ad154b8068cdebfc7f40f6487ce6a79f76a52da4dd44ba1b5f8"
+    }
+  },
+  "raw_evidence_pins": {
+    "historical-host-verify.json": {
+      "bytes": 753,
+      "sha256": "8e4e8bc7431989c07eb8555c870756ebfa3030f425cded56e9ade31277087e32"
+    },
+    "historical-installer-verify.json": {
+      "bytes": 806,
+      "sha256": "132f3c0c5955048df16dff8298826e061b812e12919ad5d2b1e1432f839e43c8"
+    },
+    "host-sd-verify.json": {
+      "bytes": 753,
+      "sha256": "243a3ec356553c8c37c5a2b33d5d376e676cee1ef0bfb46bfcd3136618a48341"
+    },
+    "host-sd.json": {
+      "bytes": 9166,
+      "sha256": "9144c7151f2b6d3cd553ad84859b72a0f1f4de1d54d433b6d4d2999dd017db3d"
+    },
+    "installer-arm.json": {
+      "bytes": 2157,
+      "sha256": "49c8991029629c9dc072d007e8116592f75ddc73daed63ed9fda3f80a3465a4d"
+    },
+    "installer-initramfs.json": {
+      "bytes": 10215,
+      "sha256": "fffeb0a90c79ac9009280df10d25617eec25fa9b1f4e9bd61d7ba781a3099e5a"
+    },
+    "installer-sd-verify.json": {
+      "bytes": 806,
+      "sha256": "3dbf38e9c4d639fb614ba19b2f3bc535c63af861e35c2bd3155929bf9f92cf6b"
+    },
+    "installer-sd.json": {
+      "bytes": 15442,
+      "sha256": "9a461fda4c73aa14ac83d6f72b17b696b53a8d10e1095cf24e9908651382e741"
+    },
+    "installer-tls-arm.json": {
+      "bytes": 1427,
+      "sha256": "15801ab3429285c8ba3787d9fecb37ea452a28275a3d661841012f80de334aea"
+    },
+    "nvme-pairing.json": {
+      "bytes": 996,
+      "sha256": "5e0880fb6d320d8f0427019872dde33f95325afc1037af00bd61a5e75472611b"
+    },
+    "resources.log": {
+      "bytes": 391,
+      "sha256": "fb959ce8489790317ccf0f540ca01e7a9d191abea015e7d8e028be2c34d2a2af"
+    },
+    "tests.log": {
+      "bytes": 2647,
+      "sha256": "ae4a2c6bb47ba05241f35aea097482bf6830d004bd68feef0a44ad1a23c20660"
+    }
+  },
+  "limitations": [
+    "EL2 diagnostic remains physically untested; no guest KVM execution.",
+    "Host SD uses fixture state/management configuration.",
+    "No new complete NVMe image assembled; operator key/network and measured sector geometry pending.",
+    "No physical storage erase or SPI programming."
+  ]
+}

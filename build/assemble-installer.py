@@ -74,7 +74,8 @@ def validate_manifest(manifest, diagnostic):
     return item
 
 
-def build(diagnostic_directory, installer_directory, output_directory):
+def build(diagnostic_directory, installer_directory, output_directory, boot_profile='baseline-el1'):
+    pinned, profile, profile_recipes = HOST.load_boot_profile(boot_profile)
     raw_output = Path(output_directory)
     output = HOST.safe_path(raw_output)
     if (not raw_output.is_absolute() or raw_output != output or
@@ -89,11 +90,11 @@ def build(diagnostic_directory, installer_directory, output_directory):
     for directory in (diagnostic_directory, installer_directory):
         if not directory.is_dir():
             raise ValueError(f'input must be a directory: {directory}')
-    pinned = HOST.json_object(HOST.read_regular(HOST.DIAGNOSTIC_RECORD, 1024**2))['files']
     manifest_data = HOST.read_regular(installer_directory / 'manifest.json', 4 * 1024**2)
     installer = HOST.json_object(manifest_data)
     initramfs_record = validate_manifest(installer, pinned)
     recipe_data = {name: HOST.read_regular(REPO / name, 4 * 1024**2) for name in RECIPES}
+    recipe_data.update(profile_recipes)
     recipes = {name: HOST.record(data) for name, data in recipe_data.items()}
     builder_packages = HOST.validate_builder_packages(REPO / 'configs/builder-packages.lock.tsv')
     output.parent.mkdir(exist_ok=True)
@@ -131,6 +132,7 @@ def build(diagnostic_directory, installer_directory, output_directory):
             with gzip.GzipFile(filename='', fileobj=destination, mode='wb', compresslevel=9, mtime=0) as compressed:
                 shutil.copyfileobj(source, compressed)
         result = {'schema': 1, 'board': 'Orange Pi 4 Pro A733', 'classification': CLASSIFICATION,
+                  'boot_profile': profile,
                   'kernel_release': KERNEL_RELEASE, 'source_date_epoch': int(HOST.EPOCH),
                   'boot_inputs': {name: pinned[name] for name in BLOBS}, 'sources': sources,
                   'installer_initramfs': {'path': str(installer_directory / 'initramfs.cpio.gz'), **HOST.record(archive)},
@@ -150,9 +152,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ('diagnostic_directory', 'installer_initramfs_directory', 'new_output_directory'):
         parser.add_argument(name)
+    parser.add_argument('--boot-profile', choices=HOST.BOOT_PROFILES, default='baseline-el1')
     args = parser.parse_args()
     try:
-        result = build(args.diagnostic_directory, args.installer_initramfs_directory, args.new_output_directory)
+        result = build(args.diagnostic_directory, args.installer_initramfs_directory, args.new_output_directory, boot_profile=args.boot_profile)
     except (ValueError, OSError, KeyError, TypeError, subprocess.CalledProcessError) as error:
         parser.exit(1, f'installer SD packaging: {error}\n')
     print(json.dumps(result, indent=2))

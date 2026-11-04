@@ -18,6 +18,10 @@ REPO = Path(__file__).resolve().parents[1]
 SPEC = importlib.util.spec_from_file_location('assemble_host', REPO / 'build/assemble-host.py')
 HOST = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(HOST)
+VERIFY_SPEC = importlib.util.spec_from_file_location('host_sd_independent_verify', REPO / 'tests/verify_host_sd.py')
+VERIFY = importlib.util.module_from_spec(VERIFY_SPEC)
+VERIFY_SPEC.loader.exec_module(VERIFY)
+
 TOOLS = ('mkimage', 'sfdisk', 'mkfs.ext4', 'e2fsck', 'debugfs')
 
 
@@ -40,6 +44,8 @@ class HostSDTests(unittest.TestCase):
         self.pinned = {}
         for name in HOST.BLOBS:
             data = ('nonbootable-fixture-' + name).encode()
+            if name == 'boot_package.fex':
+                data = data.ljust(1392640, b'\0')
             (self.diagnostic / name).write_bytes(data)
             self.pinned[name] = HOST.record(data)
         self.manifest = {'schema': 1, 'package_state_profile': 'a733-package-state-v1', 'state_uuid': 'bfe5ba29-3175-47a3-a410-04b87e3de1a6',
@@ -51,6 +57,13 @@ class HostSDTests(unittest.TestCase):
         self.write_manifest()
         self.pin_path = self.repo / 'docs/evidence/diagnostic-20261104.json'
         self.pin_path.write_text(json.dumps({'schema': 1, 'files': self.pinned}))
+        self.el2_package = b'EL2-fixture'.ljust(1392640, b'\0')
+        self.el2_pinned = copy.deepcopy(self.pinned)
+        self.el2_pinned['boot_package.fex'] = HOST.record(self.el2_package)
+        self.el2_evidence = {'schema': 1, 'files': self.el2_pinned,
+                             'handoff': {'expected_service': '0x8000ff40', 'expected_spsr': '0x3c9'}}
+        self.el2_path = self.repo / 'docs/evidence/el2-diagnostic-20261104.json'
+        self.el2_path.write_text(json.dumps(self.el2_evidence))
         self.addCleanup(patch.stopall)
         patch.object(HOST, 'REPO', self.repo).start()
         patch.object(HOST, 'DIAGNOSTIC_RECORD', self.pin_path).start()
@@ -62,6 +75,85 @@ class HostSDTests(unittest.TestCase):
 
     def build(self, output=None):
         return HOST.build(self.diagnostic, self.host, output or self.output)
+
+    def test_verifier_requires_explicit_profile_and_evidence_provenance(self):
+        with patch.object(VERIFY.HOST, 'REPO', self.repo), patch.object(VERIFY.HOST, 'DIAGNOSTIC_RECORD', self.pin_path):
+            for name in HOST.BOOT_PROFILES:
+                pinned, profile, recipes = HOST.load_boot_profile(name)
+                manifest = {'boot_inputs': pinned, 'boot_profile': profile,
+                            'recipes': {path: HOST.record(data) for path, data in recipes.items()}}
+                self.assertEqual(VERIFY.verify_boot_profile(manifest, name), pinned)
+                historical = copy.deepcopy(manifest)
+                del historical['boot_profile']
+                if name == 'baseline-el1':
+                    self.assertEqual(VERIFY.verify_boot_profile(historical, name), pinned)
+                    changed = copy.deepcopy(historical)
+                    changed['boot_inputs']['boot_package.fex']['sha256'] = '0' * 64
+                    with self.assertRaisesRegex(ValueError, 'input provenance'):
+                        VERIFY.verify_boot_profile(changed, name)
+                    del historical['recipes'][profile['evidence']['path']]
+                    with self.assertRaisesRegex(ValueError, 'evidence recipe'):
+                        VERIFY.verify_boot_profile(historical, name)
+                else:
+                    with self.assertRaisesRegex(ValueError, 'explicit trusted selection'):
+                        VERIFY.verify_boot_profile(historical, name)
+                for invalid in (None, {}, 'baseline-el1'):
+                    changed = copy.deepcopy(manifest)
+                    changed['boot_profile'] = invalid
+                    with self.subTest(profile=name, invalid=invalid), self.assertRaisesRegex(ValueError, 'explicit trusted selection'):
+                        VERIFY.verify_boot_profile(changed, name)
+                other = 'experimental-el2' if name == 'baseline-el1' else 'baseline-el1'
+                with self.assertRaisesRegex(ValueError, 'explicit trusted selection'):
+                    VERIFY.verify_boot_profile(manifest, other)
+                changed = copy.deepcopy(manifest)
+                del changed['recipes'][profile['evidence']['path']]
+                with self.assertRaisesRegex(ValueError, 'evidence recipe'):
+                    VERIFY.verify_boot_profile(changed, name)
+                changed = copy.deepcopy(manifest)
+                changed['boot_inputs']['boot0_sdcard.fex']['sha256'] = '0' * 64
+                with self.assertRaisesRegex(ValueError, 'input provenance'):
+                    VERIFY.verify_boot_profile(changed, name)
+
+    def test_profile_evidence_is_locked_and_validated_before_output(self):
+        for profile in ('unknown', '../experimental-el2'):
+            with self.subTest(profile=profile), self.assertRaisesRegex(ValueError, 'unknown boot profile'):
+                HOST.build(self.diagnostic, self.host, self.output, boot_profile=profile)
+            self.assertFalse(self.output.exists())
+        for blob in HOST.BLOBS:
+            changed = copy.deepcopy(self.el2_evidence)
+            changed['files'][blob]['bytes'] += 1
+            self.el2_path.write_text(json.dumps(changed))
+            with self.subTest(blob=blob), self.assertRaises(ValueError):
+                HOST.build(self.diagnostic, self.host, self.output, boot_profile='experimental-el2')
+            self.assertFalse(self.output.exists())
+        for handoff in ({}, {'expected_service': '0x8000ff04', 'expected_spsr': '0x3c9'},
+                        {'expected_service': '0x8000ff40', 'expected_spsr': '0x3c5'}):
+            changed = copy.deepcopy(self.el2_evidence)
+            changed['handoff'] = handoff
+            self.el2_path.write_text(json.dumps(changed))
+            with self.assertRaisesRegex(ValueError, 'handoff'):
+                HOST.build(self.diagnostic, self.host, self.output, boot_profile='experimental-el2')
+            self.assertFalse(self.output.exists())
+
+    @unittest.skipUnless(all(shutil.which(tool) for tool in TOOLS), 'image assembly tools required')
+    def test_experimental_package_requires_explicit_selection(self):
+        # The old initramfs pins remain valid: Image/DTB/config have not changed.
+        with self.assertRaisesRegex(ValueError, 'mismatch'):
+            HOST.build(self.diagnostic, self.host, self.output, boot_profile='experimental-el2')
+        shutil.rmtree(self.output)
+        (self.diagnostic / 'boot_package.fex').write_bytes(self.el2_package)
+        with self.assertRaisesRegex(ValueError, 'mismatch'):
+            self.build()
+        shutil.rmtree(self.output)
+        result = HOST.build(self.diagnostic, self.host, self.output, boot_profile='experimental-el2')
+        self.assertEqual(result['boot_inputs'], self.el2_pinned)
+        self.assertEqual(result['boot_profile']['name'], 'experimental-el2')
+        self.assertEqual(result['boot_profile']['target_service'], '0x8000ff40')
+        self.assertTrue(result['boot_profile']['physical_acceptance_pending'])
+        evidence = HOST.record(self.el2_path.read_bytes())
+        self.assertEqual(result['recipes']['docs/evidence/el2-diagnostic-20261104.json'], evidence)
+        self.assertEqual(result['boot_profile']['evidence'],
+                         {'path': 'docs/evidence/el2-diagnostic-20261104.json', **evidence})
 
     def test_manifest_rejects_schema_abi_uuid_and_boot_changes(self):
         for field, values in {'schema': (2, True), 'kernel_release': ('other',),

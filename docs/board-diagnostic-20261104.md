@@ -22,7 +22,7 @@ flashed-image readback hash is not included in these logs.
 | NVMe identity | `SPCC M.2 PCIe SSD`; serial `134807190FC700149277`; firmware `EDFM20.0` | Existing GPT/data are disposable by operator authorization |
 | PCIe | `0000:01:00.0`, 8 GT/s ×1; controller live | Invalid/missing SUBNQN warning; stable repeated I/O untested |
 | Ethernet | MAC `10:f4:ae:90:5e:57`; 1 Gbps full duplex | DHCP obtained no lease; no IPv4 address/route |
-| SPI | Linux exposes 16 MiB `spi0.0` | Chip/backup/recovery not established; programming unauthorized |
+| SPI | Linux reports `XM25QU128C`, 16 MiB `spi0.0` | Direct JEDEC capture/backup/recovery pending; programming unauthorized |
 | Root/write policy | RAM root; `/run` and `/tmp` tmpfs; no SD filesystem mount | Firmware writes/full-card offline hashes and cycle tests unproven |
 
 `/dev/nvme0` is the controller character device; `/dev/nvme0n1` is its block
@@ -35,6 +35,19 @@ The user recalls memory marking `CA12`, but no chip marking is required.
 Leave board and SSD heatsinks attached. RAM enumeration, NVMe identify/sysfs,
 and subsequent operating tests supply the relevant evidence. Power-supply rating
 and sustained cooling performance remain to be recorded without disassembly.
+
+## SPI identity without removing heatsinks
+
+Boot log line 654 reports `spi-nor spi0.0: XM25QU128C (16384 Kbytes)`.
+The pinned kernel configuration selects `CONFIG_AW_MTD_SPI_NOR_6_1=y`; the
+active vendor driver is under `bsp/drivers/mtd/spi-nor-6.1`, rather than the
+upstream-shaped `drivers/mtd/spi-nor` directory. Its
+[pinned XMC table](https://github.com/orangepi-xunlong/linux-orangepi/blob/2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f/bsp/drivers/mtd/spi-nor-6.1/xmc.c#L19)
+contains `XM25QU128C`, JEDEC ID `0x204118`, 256 × 64 KiB. This is the expected
+ID from source, not a separately captured raw-ID read. Direct software identity,
+backup/readback and recovery remain to be recorded before any programming. No
+physical chip marking is required. See the [SPI boot investigation](spi-boot-investigation.md)
+for the distinct firmware layout and remaining recovery/erase-geometry gates.
 
 ## Firmware handoff diagnosis
 

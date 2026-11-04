@@ -104,6 +104,11 @@ cat /sys/class/block/nvme0n1/size
 cat /sys/class/block/nvme0n1/queue/logical_block_size /sys/class/block/nvme0n1/queue/physical_block_size
 ip addr
 ip route
+# Optional SPI identity only: no flash writes or heatsink removal.
+cat /proc/mtd
+for f in /sys/class/mtd/mtd0/name /sys/class/mtd/mtd0/type /sys/class/mtd/mtd0/size /sys/class/mtd/mtd0/erasesize /sys/class/mtd/mtd0/writesize /sys/bus/spi/devices/spi0.0/spi-nor/partname /sys/bus/spi/devices/spi0.0/spi-nor/jedec_id; do
+    if [ -r "$f" ]; then echo "$f"; cat "$f"; fi
+done
 ```
 
 Return the full serial log plus the flashing image readback hash and before-boot

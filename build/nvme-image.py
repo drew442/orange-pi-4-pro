@@ -78,7 +78,21 @@ def validate_roots(manifest):
             raise ValueError('root payload must fill its fixed slot')
 
 
-def validate_pairing(roots, state, sd, diagnostic):
+def validate_pairing(roots, state, sd, diagnostic, boot_profile='baseline-el1'):
+    if boot_profile not in HOST.BOOT_PROFILES:
+        raise ValueError('unknown boot profile')
+    selected = sd.get('boot_profile')
+    if 'boot_profile' not in sd and boot_profile == 'baseline-el1':
+        # Historical baseline manifests predate explicit profile metadata.
+        pinned, _, _ = HOST.load_boot_profile(boot_profile)
+        if any(sd.get('boot_inputs', {}).get(name) != pinned[name] for name in HOST.BLOBS):
+            raise ValueError('historical SD boot profile locked inputs differ')
+    elif not isinstance(selected, dict) or selected.get('name') != boot_profile:
+        raise ValueError('SD boot profile differs from requested profile')
+    else:
+        pinned, expected, _ = HOST.load_boot_profile(boot_profile)
+        if selected != expected or any(sd.get('boot_inputs', {}).get(name) != pinned[name] for name in HOST.BLOBS):
+            raise ValueError('SD boot profile provenance or locked inputs differ')
     validate_roots(roots)
     state_uuid = canonical_uuid(state['state_uuid'])
     if state_uuid in roots['slot_uuids'].values() or state['files']['state.ext4']['bytes'] != 8 * GIB:
@@ -233,7 +247,8 @@ def root_selection(snapshot, slot, roots, diagnostic):
 
 
 def build(payload_directory, state_directory, sd_directory, diagnostic_directory,
-          output_directory, size_bytes, logical_sector_bytes=512, physical_sector_bytes=4096, for_installation=False):
+          output_directory, size_bytes, logical_sector_bytes=512, physical_sector_bytes=4096, for_installation=False, boot_profile='baseline-el1'):
+    diagnostic, profile, profile_recipes = HOST.load_boot_profile(boot_profile)
     if os.geteuid() != 0:
         raise ValueError('root required to seed root-owned filesystem metadata')
     # Geometry and all supplied manifests are checked before reserving output.
@@ -242,8 +257,7 @@ def build(payload_directory, state_directory, sd_directory, diagnostic_directory
     state_directory, state, state_record = metadata(state_directory)
     sd_directory, sd, sd_record = metadata(sd_directory)
     diagnostic_directory = HOST.safe_path(diagnostic_directory)
-    diagnostic = HOST.json_object(HOST.read_regular(HOST.DIAGNOSTIC_RECORD, 1024**2))['files']
-    state_uuid = validate_pairing(roots, state, sd, diagnostic)
+    state_uuid = validate_pairing(roots, state, sd, diagnostic, boot_profile)
     intent = installation_intent(state, for_installation)
     output = HOST.safe_path(output_directory)
     if (not Path(output_directory).is_absolute() or output.parent != REPO / 'out' or
@@ -326,7 +340,7 @@ def build(payload_directory, state_directory, sd_directory, diagnostic_directory
         # not describe a sparse disk image. This can take several minutes.
         image_record = HOST.file_record(image)
         result = {'schema': 1, 'classification': ('per-installation NVMe candidate; hardware acceptance pending' if for_installation else 'integrated NVMe regular-file fixture; no physical installation or hardware acceptance'),
-                  'deployment_intent': intent,
+                  'deployment_intent': intent, 'boot_profile': profile,
                   'state_uuid': state_uuid, 'boot_selection': selection, 'kernel_release': HOST.KERNEL_RELEASE,
                   'logical_sector_bytes': logical_sector_bytes, 'physical_sector_bytes': physical_sector_bytes,
                   'layout': gpt['layout'], 'disk_guid': gpt['disk_guid'], 'partition_guids': gpt['partition_guids'],
@@ -335,7 +349,7 @@ def build(payload_directory, state_directory, sd_directory, diagnostic_directory
                   'partition_payloads': {'root-a': roots['files']['root-A.ext4'], 'root-b': roots['files']['root-B.ext4'], 'state': state['files']['state.ext4']},
                   'boot_files': {str(p.relative_to(boot_seed)): HOST.file_record(p) for p in boot_seed.rglob('*') if p.is_file()},
                   'gpt_extents': [{'name': e['name'], 'offset_bytes': e['offset_bytes'], **HOST.record(e['data'])} for e in gpt['extents']],
-                  'builder_packages': packages, 'workspace_storage': storage, 'recipes': {name: HOST.file_record(REPO / name) for name in RECIPES},
+                  'builder_packages': packages, 'workspace_storage': storage, 'recipes': {**{name: HOST.file_record(REPO / name) for name in RECIPES}, **{name: HOST.record(data) for name, data in profile_recipes.items()}},
                   'files': {'nvme.img': image_record}, 'allocated_bytes': image.stat().st_blocks * 512,
                   'build_seconds': round(time.monotonic() - started, 1),
                   'reproducibility': 'fresh disk/partition/boot/guests UUIDs and filesystem metadata; byte identity not claimed',
@@ -352,10 +366,11 @@ if __name__ == '__main__':
     parser.add_argument('--for-installation', action='store_true', help='mark a candidate using real administrator/network inputs; never authorizes storage writes')
     parser.add_argument('--logical-sector-bytes', type=int, choices=(512, 4096), default=512)
     parser.add_argument('--physical-sector-bytes', type=int, default=4096)
+    parser.add_argument('--boot-profile', choices=HOST.BOOT_PROFILES, default='baseline-el1')
     args = parser.parse_args()
     try:
         result = build(args.payload_directory, args.state_directory, args.sd_directory, args.diagnostic_directory,
-                       args.new_output_directory, args.size_bytes, args.logical_sector_bytes, args.physical_sector_bytes, args.for_installation)
+                       args.new_output_directory, args.size_bytes, args.logical_sector_bytes, args.physical_sector_bytes, args.for_installation, boot_profile=args.boot_profile)
     except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as error:
         parser.exit(1, f'NVMe image: {error}\n')
     print(json.dumps(result, indent=2))

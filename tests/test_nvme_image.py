@@ -96,6 +96,59 @@ class NVMeImageTests(unittest.TestCase):
     def test_pinned_payload_state_bootstrap_pairing(self):
         self.assertEqual(IMAGE.validate_pairing(self.roots, self.state, self.sd, self.diag), self.state['state_uuid'])
 
+    def test_explicit_boot_profiles_require_matching_locked_sd_provenance(self):
+        for name in IMAGE.HOST.BOOT_PROFILES:
+            pinned, profile, _ = IMAGE.HOST.load_boot_profile(name)
+            sd = copy.deepcopy(self.sd)
+            sd['boot_inputs'] = pinned
+            sd['boot_profile'] = profile
+            self.assertEqual(IMAGE.validate_pairing(self.roots, self.state, sd, pinned, name),
+                             self.state['state_uuid'])
+            other = 'experimental-el2' if name == 'baseline-el1' else 'baseline-el1'
+            with self.subTest(profile=name), self.assertRaisesRegex(ValueError, 'boot profile'):
+                IMAGE.validate_pairing(self.roots, self.state, sd, pinned, other)
+            changed = copy.deepcopy(sd)
+            changed['boot_profile']['evidence']['sha256'] = '0' * 64
+            with self.assertRaisesRegex(ValueError, 'provenance'):
+                IMAGE.validate_pairing(self.roots, self.state, changed, pinned, name)
+            changed = copy.deepcopy(sd)
+            changed['boot_inputs']['boot_package.fex']['sha256'] = '0' * 64
+            with self.assertRaisesRegex(ValueError, 'locked inputs'):
+                IMAGE.validate_pairing(self.roots, self.state, changed, pinned, name)
+        for name in IMAGE.HOST.BOOT_PROFILES:
+            invalid = copy.deepcopy(self.sd)
+            invalid['boot_profile'] = None
+            with self.subTest(profile=name), self.assertRaisesRegex(ValueError, 'boot profile'):
+                IMAGE.validate_pairing(self.roots, self.state, invalid, self.diag, name)
+        historical_el2 = copy.deepcopy(self.sd)
+        historical_el2['boot_inputs']['boot_package.fex'] = IMAGE.HOST.load_boot_profile('experimental-el2')[0]['boot_package.fex']
+        with self.assertRaisesRegex(ValueError, 'locked inputs'):
+            IMAGE.validate_pairing(self.roots, self.state, historical_el2, self.diag)
+        self.assertEqual(IMAGE.HOST.load_boot_profile('experimental-el2')[0]['initramfs.cpio.gz'],
+                         self.diag['initramfs.cpio.gz'])
+        with self.assertRaisesRegex(ValueError, 'boot profile'):
+            IMAGE.validate_pairing(self.roots, self.state, self.sd, self.diag, 'experimental-el2')
+        with self.assertRaisesRegex(ValueError, 'unknown boot profile'):
+            IMAGE.validate_pairing(self.roots, self.state, self.sd, self.diag, 'unknown')
+
+    def test_build_profile_mismatch_refused_before_output_or_storage_work(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            directories = []
+            for name, manifest in (('roots', self.roots), ('state', self.state), ('sd', self.sd)):
+                directory = root / name
+                directory.mkdir()
+                (directory / 'manifest.json').write_text(json.dumps(manifest))
+                directories.append(directory)
+            output = root / 'out/nvme-image-fixture'
+            with patch.object(IMAGE.os, 'geteuid', return_value=0), patch.object(IMAGE.STATE, 'validate_workspace_storage') as storage, patch.object(IMAGE, 'make_filesystem') as filesystem:
+                with self.assertRaisesRegex(ValueError, 'boot profile'):
+                    IMAGE.build(*directories, root, output, 256060514304,
+                                boot_profile='experimental-el2')
+                storage.assert_not_called()
+                filesystem.assert_not_called()
+            self.assertFalse(output.parent.exists())
+
     def test_reject_mismatched_state_bootstrap_and_root_profile(self):
         for where, field, value in (('sd', 'state_uuid', 'd' * 36), ('sd', 'kernel_release', 'other'),
                                     ('roots', 'management_runtime', {}), ('roots', 'package_state', {}), ('sd', 'package_state_profile', 'wrong'), ('roots', 'slot_bytes', 1)):

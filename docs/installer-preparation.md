@@ -1,5 +1,11 @@
 # Installer preparation environment
 
+The [explicit EL2 packaging profile](boot-profiles.md) prepares the locked
+experimental handoff without changing the baseline artifacts below. The next
+physical action remains the [EL2 diagnostic test](el2-diagnostic.md); hardware
+KVM and deployment acceptance are still open.
+
+
 The A733 preparation image now provides Python, storage tools and an HTTPS
 client before NVMe is mounted. It fits the 2 GB SD budget and starts a physical
 root console with a read-only NVMe planner and an explicit, guarded full-disk

@@ -17,6 +17,7 @@ DIAGNOSTIC_RECORD = REPO / 'docs/evidence/diagnostic-20261104.json'
 KERNEL_RELEASE = '6.6.98-a733-diag'
 EPOCH = '1793750400'
 MAX_INITRAMFS = 64 * 1024**2 - 65  # Include the legacy 64-byte wrapper in budget.
+BOOT_PROFILES = ('baseline-el1', 'experimental-el2')
 BLOBS = ('boot0_sdcard.fex', 'boot_package.fex', 'uImage', 'Image', 'board.dtb', 'kernel.config')
 ENTRIES = {'init': 'configs/host-init',
            'etc/host-storage-resolver.sh': 'configs/host-storage-resolver.sh'}
@@ -78,6 +79,59 @@ def json_object(data):
     if not isinstance(value, dict):
         raise ValueError('manifest must be an object')
     return value
+
+
+def load_boot_profile(name='baseline-el1'):
+    """Select only repository-locked boot inputs; never accept caller pin files."""
+    if name not in BOOT_PROFILES:
+        raise ValueError('unknown boot profile')
+    baseline_data = read_regular(DIAGNOSTIC_RECORD, 1024**2)
+    baseline = json_object(baseline_data)
+
+    def files(document):
+        if type(document.get('schema')) is not int or document['schema'] != 1:
+            raise ValueError('invalid boot profile evidence schema')
+        records = document.get('files')
+        if not isinstance(records, dict):
+            raise ValueError('invalid boot profile evidence files')
+        for blob in BLOBS:
+            item = records.get(blob)
+            if (not isinstance(item, dict) or set(item) != {'bytes', 'sha256'} or
+                    type(item['bytes']) is not int or item['bytes'] <= 0 or
+                    not isinstance(item['sha256'], str) or
+                    not re.fullmatch('[0-9a-f]{64}', item['sha256'])):
+                raise ValueError(f'invalid boot profile record: {blob}')
+        return {blob: records[blob] for blob in BLOBS}
+    files(baseline)
+    # Keep diagnostic initramfs provenance for NVMe root-marker pairing.
+    pinned = dict(baseline['files'])
+    evidence_path = 'docs/evidence/diagnostic-20261104.json'
+    evidence_data = baseline_data
+    service, spsr = '0x8000ff04', '0x3c5'
+    if name == 'experimental-el2':
+        evidence_path = 'docs/evidence/el2-diagnostic-20261104.json'
+        evidence_data = read_regular(REPO / evidence_path, 1024**2)
+        candidate = json_object(evidence_data)
+        selected = files(candidate)
+        for blob in BLOBS:
+            if blob != 'boot_package.fex' and selected[blob] != pinned[blob]:
+                raise ValueError(f'EL2 immutable boot input differs: {blob}')
+        if (selected['boot_package.fex']['bytes'] != 1392640 or
+                selected['boot_package.fex']['bytes'] != pinned['boot_package.fex']['bytes'] or
+                selected['boot_package.fex'] == pinned['boot_package.fex']):
+            raise ValueError('EL2 boot package must be a distinct equal-size locked package')
+        service, spsr = '0x8000ff40', '0x3c9'
+        handoff = candidate.get('handoff')
+        if (not isinstance(handoff, dict) or handoff.get('expected_service') != service or
+                handoff.get('expected_spsr') != spsr):
+            raise ValueError('EL2 handoff expectation differs')
+        pinned['boot_package.fex'] = selected['boot_package.fex']
+    metadata = {'name': name, 'target_service': service, 'expected_spsr': spsr,
+                'physical_acceptance_pending': True,
+                'evidence': {'path': evidence_path, **record(evidence_data)}}
+    recipes = {'docs/evidence/diagnostic-20261104.json': baseline_data,
+               evidence_path: evidence_data}
+    return pinned, metadata, recipes
 
 
 def validate_manifest(manifest, diagnostic):
@@ -150,7 +204,8 @@ def file_record(path):
     return {'bytes': size, 'sha256': checksum.hexdigest()}
 
 
-def build(diagnostic_directory, host_directory, output_directory):
+def build(diagnostic_directory, host_directory, output_directory, boot_profile='baseline-el1'):
+    pinned, profile, profile_recipes = load_boot_profile(boot_profile)
     raw_output = Path(output_directory)
     output = safe_path(raw_output)
     if (not raw_output.is_absolute() or raw_output != output or
@@ -164,11 +219,11 @@ def build(diagnostic_directory, host_directory, output_directory):
     for directory in (diagnostic_directory, host_directory):
         if not directory.is_dir():
             raise ValueError(f'input must be a directory: {directory}')
-    pinned = json_object(read_regular(DIAGNOSTIC_RECORD, 1024**2))['files']
     manifest_data = read_regular(host_directory / 'manifest.json', 4 * 1024**2)
     host = json_object(manifest_data)
     initramfs_record = validate_manifest(host, pinned)
     recipe_data = {name: read_regular(REPO / name, 4 * 1024**2) for name in RECIPES}
+    recipe_data.update(profile_recipes)
     recipes = {name: record(data) for name, data in recipe_data.items()}
     builder_packages = validate_builder_packages(REPO / 'configs/builder-packages.lock.tsv')
     output.parent.mkdir(exist_ok=True)
@@ -207,6 +262,7 @@ def build(diagnostic_directory, host_directory, output_directory):
                 shutil.copyfileobj(source, compressed)
         result = {'schema': 1, 'board': 'Orange Pi 4 Pro A733',
                   'classification': 'NVMe host SD bootstrap prototype; no physical boot or KVM acceptance',
+                  'boot_profile': profile,
                   'state_uuid': host['state_uuid'], 'kernel_release': KERNEL_RELEASE,
                   'package_state_profile': host['package_state_profile'],
                   'root_selection': 'NVMe state boot/selected.conf; root A/B not embedded',
@@ -229,9 +285,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ('diagnostic_directory', 'host_initramfs_directory', 'new_output_directory'):
         parser.add_argument(name)
+    parser.add_argument('--boot-profile', choices=BOOT_PROFILES, default='baseline-el1')
     args = parser.parse_args()
     try:
-        result = build(args.diagnostic_directory, args.host_initramfs_directory, args.new_output_directory)
+        result = build(args.diagnostic_directory, args.host_initramfs_directory, args.new_output_directory, boot_profile=args.boot_profile)
     except (ValueError, OSError, KeyError, TypeError, subprocess.CalledProcessError) as error:
         parser.exit(1, f'host SD packaging: {error}\n')
     print(json.dumps(result, indent=2))

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Independent regular-file installer SD content and wrapper inspection."""
+import argparse
 import gzip
 import importlib.util
 import json
@@ -16,7 +17,7 @@ CHECK = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(CHECK)
 
 
-def verify(directory, archive_directory):
+def verify(directory, archive_directory, boot_profile='baseline-el1'):
     directory, archive_directory = Path(directory), Path(archive_directory)
     with CHECK.regular(directory / 'manifest.json') as source:
         manifest = json.load(source)
@@ -31,7 +32,7 @@ def verify(directory, archive_directory):
                            ('installer_initramfs', archive['files']['initramfs.cpio.gz'])):
         if any(manifest[name][field] != value for field, value in expected.items()):
             raise ValueError('installer input provenance differs')
-    pinned = json.loads((REPO / 'docs/evidence/diagnostic-20261104.json').read_text())['files']
+    pinned = CHECK.verify_boot_profile(manifest, boot_profile)
     expected_image = manifest['files']['a733-installer-prep.img']
     with CHECK.regular(directory / 'a733-installer-prep.img') as image, tempfile.TemporaryDirectory(prefix='installer-sd-inspect-', dir='/var/tmp') as temporary:
         if CHECK.stream_record(image) != expected_image or expected_image['bytes'] != CHECK.IMAGE_BYTES:
@@ -91,6 +92,9 @@ def verify(directory, archive_directory):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 3:
-        sys.exit(f'Usage: {sys.argv[0]} TRUSTED_INSTALLER_SD_DIRECTORY TRUSTED_INITRAMFS_DIRECTORY')
-    print(json.dumps(verify(*sys.argv[1:]), indent=2))
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('directory')
+    parser.add_argument('archive_directory')
+    parser.add_argument('--boot-profile', choices=CHECK.HOST.BOOT_PROFILES, default='baseline-el1')
+    args = parser.parse_args()
+    print(json.dumps(verify(args.directory, args.archive_directory, args.boot_profile), indent=2))

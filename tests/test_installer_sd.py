@@ -38,12 +38,21 @@ class InstallerSDTests(unittest.TestCase):
         self.pinned = {}
         for name in SD.BLOBS:
             data = ('nonbootable-fixture-' + name).encode()
+            if name == 'boot_package.fex':
+                data = data.ljust(1392640, b'\0')
             (self.diagnostic / name).write_bytes(data)
             self.pinned[name] = SD.HOST.record(data)
         archive = gzip.compress(b'nonbootable fixture', mtime=0)
         (self.installer / 'initramfs.cpio.gz').write_bytes(archive)
         self.pin_path = self.repo / 'docs/evidence/diagnostic-20261104.json'
         self.pin_path.write_text(json.dumps({'schema': 1, 'files': self.pinned}))
+        self.el2_package = b'EL2-fixture'.ljust(1392640, b'\0')
+        self.el2_pinned = copy.deepcopy(self.pinned)
+        self.el2_pinned['boot_package.fex'] = SD.HOST.record(self.el2_package)
+        self.el2_evidence = {'schema': 1, 'files': self.el2_pinned,
+                             'handoff': {'expected_service': '0x8000ff40', 'expected_spsr': '0x3c9'}}
+        self.el2_path = self.repo / 'docs/evidence/el2-diagnostic-20261104.json'
+        self.el2_path.write_text(json.dumps(self.el2_evidence))
         self.manifest = {'schema': 1, 'kernel_release': SD.KERNEL_RELEASE,
                          'boot_inputs': self.pinned,
                          'entries': {name: {'mode': mode, **SD.HOST.record((self.repo / source).read_bytes())}
@@ -53,6 +62,7 @@ class InstallerSDTests(unittest.TestCase):
         self.write_manifest()
         self.addCleanup(patch.stopall)
         patch.object(SD, 'REPO', self.repo).start()
+        patch.object(SD.HOST, 'REPO', self.repo).start()
         patch.object(SD.HOST, 'DIAGNOSTIC_RECORD', self.pin_path).start()
         self.packages = patch.object(SD.HOST, 'validate_builder_packages', return_value={'fixture': {}}).start()
         self.storage = patch.object(SD.STATE, 'validate_workspace_storage', return_value={'fstype': 'ext4', 'maj:min': '1:1'}).start()
@@ -62,6 +72,47 @@ class InstallerSDTests(unittest.TestCase):
 
     def build(self, output=None):
         return SD.build(self.diagnostic, self.installer, output or self.output)
+
+    def test_profile_evidence_is_locked_and_validated_before_output(self):
+        for profile in ('unknown', '../experimental-el2'):
+            with self.subTest(profile=profile), self.assertRaisesRegex(ValueError, 'unknown boot profile'):
+                SD.build(self.diagnostic, self.installer, self.output, boot_profile=profile)
+            self.assertFalse(self.output.exists())
+        for blob in SD.HOST.BLOBS:
+            changed = copy.deepcopy(self.el2_evidence)
+            changed['files'][blob]['bytes'] += 1
+            self.el2_path.write_text(json.dumps(changed))
+            with self.subTest(blob=blob), self.assertRaises(ValueError):
+                SD.build(self.diagnostic, self.installer, self.output, boot_profile='experimental-el2')
+            self.assertFalse(self.output.exists())
+        for handoff in ({}, {'expected_service': '0x8000ff04', 'expected_spsr': '0x3c9'},
+                        {'expected_service': '0x8000ff40', 'expected_spsr': '0x3c5'}):
+            changed = copy.deepcopy(self.el2_evidence)
+            changed['handoff'] = handoff
+            self.el2_path.write_text(json.dumps(changed))
+            with self.assertRaisesRegex(ValueError, 'handoff'):
+                SD.build(self.diagnostic, self.installer, self.output, boot_profile='experimental-el2')
+            self.assertFalse(self.output.exists())
+
+    @unittest.skipUnless(all(shutil.which(tool) for tool in TOOLS), 'image assembly tools required')
+    def test_experimental_package_requires_explicit_selection(self):
+        # The old initramfs pins remain valid: Image/DTB/config have not changed.
+        with self.assertRaisesRegex(ValueError, 'mismatch'):
+            SD.build(self.diagnostic, self.installer, self.output, boot_profile='experimental-el2')
+        shutil.rmtree(self.output)
+        (self.diagnostic / 'boot_package.fex').write_bytes(self.el2_package)
+        with self.assertRaisesRegex(ValueError, 'mismatch'):
+            self.build()
+        shutil.rmtree(self.output)
+        result = SD.build(self.diagnostic, self.installer, self.output, boot_profile='experimental-el2')
+        self.assertEqual(result['boot_inputs'], self.el2_pinned)
+        self.assertEqual(result['boot_profile']['name'], 'experimental-el2')
+        self.assertEqual(result['boot_profile']['target_service'], '0x8000ff40')
+        self.assertTrue(result['boot_profile']['physical_acceptance_pending'])
+        evidence = SD.HOST.record(self.el2_path.read_bytes())
+        self.assertEqual(result['recipes']['docs/evidence/el2-diagnostic-20261104.json'], evidence)
+        self.assertEqual(result['boot_profile']['evidence'],
+                         {'path': 'docs/evidence/el2-diagnostic-20261104.json', **evidence})
 
     def test_manifest_schema_kernel_boot_and_entries(self):
         for field, value in (('schema', True), ('schema', 2), ('kernel_release', 'other')):

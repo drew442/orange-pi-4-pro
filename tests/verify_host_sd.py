@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """Opt-in regular-file host SD inspection; no mounts or physical targets."""
+import argparse
+import importlib.util
 import gzip
 import hashlib
 import json
@@ -16,6 +18,24 @@ import zlib
 REPO = Path(__file__).resolve().parents[1]
 IMAGE_BYTES = 256 * 1024**2
 PARTITION_OFFSET = 32 * 1024**2
+
+
+SPEC = importlib.util.spec_from_file_location('verify_sd_boot_profiles', REPO / 'build/assemble-host.py')
+HOST = importlib.util.module_from_spec(SPEC)
+SPEC.loader.exec_module(HOST)
+
+
+def verify_boot_profile(manifest, boot_profile):
+    pinned, expected, recipes = HOST.load_boot_profile(boot_profile)
+    historical = 'boot_profile' not in manifest and boot_profile == 'baseline-el1'
+    if not historical and manifest.get('boot_profile') != expected:
+        raise ValueError('boot profile metadata differs from explicit trusted selection')
+    if manifest.get('boot_inputs') != {name: pinned[name] for name in HOST.BLOBS}:
+        raise ValueError('boot profile input provenance differs')
+    for name, data in recipes.items():
+        if manifest.get('recipes', {}).get(name) != record(data):
+            raise ValueError('boot profile evidence recipe provenance differs')
+    return pinned
 
 
 def record(data):
@@ -100,7 +120,7 @@ def inspect_newc(compressed, state_uuid, manifest):
     return len(entries)
 
 
-def verify(directory, initramfs_directory):
+def verify(directory, initramfs_directory, boot_profile='baseline-el1'):
     directory, initramfs_directory = Path(directory), Path(initramfs_directory)
     with regular(directory / 'manifest.json') as source:
         manifest = json.load(source)
@@ -116,7 +136,7 @@ def verify(directory, initramfs_directory):
                             ('host_initramfs', host['files']['initramfs.cpio.gz'])):
         if any(manifest[field][name] != value for name, value in expected.items()):
             raise ValueError('packaging input record differs from trusted host input')
-    pinned = json.loads((REPO / 'docs/evidence/diagnostic-20261104.json').read_text())['files']
+    pinned = verify_boot_profile(manifest, boot_profile)
     image_name = 'a733-host-sd.img'
     image_record = manifest['files'][image_name]
     with regular(directory / image_name) as image, tempfile.TemporaryDirectory(prefix='a733-host-sd-', dir='/var/tmp') as temporary:
@@ -181,6 +201,9 @@ def verify(directory, initramfs_directory):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 3:
-        sys.exit(f'Usage: {sys.argv[0]} HOST_SD_DIRECTORY TRUSTED_HOST_INITRAMFS_DIRECTORY')
-    print(json.dumps(verify(*sys.argv[1:]), indent=2))
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('directory')
+    parser.add_argument('initramfs_directory')
+    parser.add_argument('--boot-profile', choices=HOST.BOOT_PROFILES, default='baseline-el1')
+    args = parser.parse_args()
+    print(json.dumps(verify(args.directory, args.initramfs_directory, args.boot_profile), indent=2))
