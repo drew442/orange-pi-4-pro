@@ -10,8 +10,10 @@ import stat
 import subprocess
 import sys
 
-MIB = 1024**2
-GIB = 1024**3
+try:
+    from nvme_layout import GIB, MIB, layout
+except ModuleNotFoundError:
+    from scripts.nvme_layout import GIB, MIB, layout
 
 
 class UnsafeTarget(ValueError):
@@ -105,20 +107,10 @@ def plan(inventory, target, resolver=identify, safety_reader=read_safety,
         require(not state['read_only'], 'Kernel reports read-only device')
         require(not state['mounted'], 'Target or descendant is mounted')
         require(not state['swap'], 'Target or descendant has active swap')
-    # Reserve enough for a standard 128-entry GPT backup, then align down.
-    gpt_tail = 33 * logical
-    end = (size - gpt_tail) // MIB * MIB
-    offset = MIB
-    partitions = []
-    for number, (name, budget) in enumerate([
-            ('boot', 512 * MIB), ('root-a', 4 * GIB), ('root-b', 4 * GIB),
-            ('state', 8 * GIB), ('guests', None)], 1):
-        length = budget if budget is not None else end - offset
-        require(length >= MIB, 'Target is too small for fixed partitions and guest space')
-        partitions.append({'number': number, 'name': name, 'start_bytes': offset,
-                           'size_bytes': length, 'start_lba': offset // logical,
-                           'end_lba': (offset + length) // logical - 1})
-        offset += length
+    try:
+        geometry = layout(size, logical, physical)
+    except ValueError as error:
+        raise UnsafeTarget(str(error)) from error
     return {
         'schema_version': 1, 'operation': 'plan-only', 'writes_performed': False,
         'target': {'requested_path': target, 'canonical_path': canonical,
@@ -130,9 +122,7 @@ def plan(inventory, target, resolver=identify, safety_reader=read_safety,
                                    'checked_busy_indicators_absent': True, 'devices_checked': evidence,
                                    'expected_serial': expected_serial,
                                    'expected_bytes': expected_bytes},
-        'layout': {'table': 'gpt', 'alignment_bytes': MIB,
-                   'front_reserved_bytes': MIB, 'tail_reserved_bytes': size - end,
-                   'partitions': partitions},
+        'layout': geometry,
         'limitations': ['Observation is not a lock; revalidate before any future installer action.',
                         'Mount checks cover the current mount namespace.',
                         'Open raw-device users are not detected.',
