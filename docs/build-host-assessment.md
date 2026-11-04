@@ -27,6 +27,15 @@ sudo losetup -f
 
 Package logs remain on the builder at `/tmp/orangepi-apt-update.log` and `/tmp/orangepi-apt-install.log`; temporary logs are not release evidence archives. No disk resizing or OS replacement was performed.
 
+## Current cache capacity
+
+[Verified cache retention](build-cache-retention.md) recovered working space
+without changing generated image bytes. Five complete guest working trees are
+retained as compared archives; all 41 sparsified images retain their manifest
+pins. Latest recorded free space is 23.9 GB (22.25 GiB), narrowly above the
+22 GiB full NVMe staging guard. Recheck before each build and keep the initial
+two-job compilation limit. Physical acceptance is independent of these checks.
+
 ## Local host assessment
 
 Checked 2026-11-04 against vendor build commit `a95129bf30ea11886cc35f08ebb3e69695a26656`. **Local host only: suitable for source investigation, not an unmodified vendor image build.** No local dependencies were installed; remote provisioning is described above.

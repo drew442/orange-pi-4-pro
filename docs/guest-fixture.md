@@ -29,7 +29,9 @@ existing destinations are refused. It checks the clean source Git commit,
 BusyBox hash and Ubuntu cross-compiler packages, then archives only tracked
 source into the new output. It never cleans or modifies the host kernel tree.
 Compilation uses two jobs and fixed build metadata. Full source and license
-notices are retained beside artifacts.
+notices are retained beside artifacts. Expanded guest source trees now live in
+verified `src-working-tree.tar.gz` archives after [cache retention](build-cache-retention.md);
+restore a tree before inspecting its expanded `src/` directory.
 
 Independent review caught a missing `BINFMT_SCRIPT` setting, needed by `/init`;
 the fragment and required-symbol checks now enforce it. A subsequent compile

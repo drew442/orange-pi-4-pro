@@ -891,3 +891,28 @@ bytes free, 7,651,188,736 bytes available RAM; no private probe mounts remain.
 The full NVMe assembler's 22 GiB staging guard remains in place; reclaim
 regenerable caches before preparing the actual operator image. No storage device
 was erased and no SPI programming occurred.
+
+## Builder staging capacity and source retention
+
+Five complete generated guest working trees were archived and compared before
+removing expanded copies, retaining both failed and successful build states.
+The original pinned kernel checkout/configuration/Image/modules remain. Complete
+manifest artifact pins match before/after. Full restoration of the latest guest
+source cache was reproduced at its original path, compared member for member,
+and its Image/configuration authenticated against the published fixture; the
+expanded cache was removed again while its archive remained.
+
+Forty-one manifest-listed regular image files were made sparse without changing
+logical contents, size, path, inode or mode. Complete hashes pass before and after
+all operations. Independent Sol high review corrected evidence-directory/no-follow
+output guards, unconditional checks and busy-file detection before execution.
+The builder was kept quiescent; snapshot checks/advisory locks do not claim
+protection against a later noncooperating writer. EL2 artifact content and gzip
+inspection pass again. [Detailed evidence](evidence/build-cache-retention-20261104.json)
+retains source/script/journal pins outside Git.
+
+Free disk increased from 9.3 GB to 23.9 GB (22.25 GiB), narrowly clearing the
+22 GiB NVMe staging guard. Recheck before subsequent root/NVMe builds. Available
+RAM remains about 7.7 GB; no compilation or package installation was needed.
+No board storage erase, SPI programming, hardware guest or deployment recovery
+was performed. Builder cache restoration is not physical release acceptance.

@@ -1,0 +1,192 @@
+{
+  "schema": 1,
+  "classification": "builder-only cache retention and byte-preserving image allocation maintenance; no board testing",
+  "builder": "drew@build.drewnet.online; Ubuntu22.04.5 amd64",
+  "source_commit_before_maintenance": "b5cb33d",
+  "free_bytes_before": 9311608832,
+  "free_bytes_after": 23894417408,
+  "nvme_staging_guard_bytes": 23622320128,
+  "guard_passes_at_measurement": true,
+  "limited_headroom": "About260MiB above22GiB; recheck before every payload/NVMe build.",
+  "working_tree_archives": [
+    {
+      "source": "/home/drew/orange-pi-4-pro-build/recipe/out/guest-fixture-20261104-01/src",
+      "source_allocated_bytes": 2094759936,
+      "archive": "/home/drew/orange-pi-4-pro-build/recipe/out/guest-fixture-20261104-01/src-working-tree.tar.gz",
+      "archive_bytes": 407488359,
+      "archive_sha256": "4933453d9ac418dd240d8ffd6aafaee3a844b095005d8a4780a20452e4755ded",
+      "tar_compare": "passed against complete live tree",
+      "expanded_tree_removed": true,
+      "artifact_pins_after": "unchanged"
+    },
+    {
+      "source": "/home/drew/orange-pi-4-pro-build/recipe/out/guest-fixture-20261104-02/src",
+      "source_allocated_bytes": 2103918592,
+      "archive": "/home/drew/orange-pi-4-pro-build/recipe/out/guest-fixture-20261104-02/src-working-tree.tar.gz",
+      "archive_bytes": 409625653,
+      "archive_sha256": "3774d11164e1b213341dbd602daf50d5c975339b28d762dd8e305fefe3309c03",
+      "tar_compare": "passed against complete live tree",
+      "expanded_tree_removed": true,
+      "artifact_pins_after": "unchanged"
+    },
+    {
+      "source": "/home/drew/orange-pi-4-pro-build/recipe/out/guest-fixture-20261104-03/src",
+      "source_allocated_bytes": 2126598144,
+      "archive": "/home/drew/orange-pi-4-pro-build/recipe/out/guest-fixture-20261104-03/src-working-tree.tar.gz",
+      "archive_bytes": 418713234,
+      "archive_sha256": "6463540518334a402ee50f9c9b5d7460ad97ac3a72ff77268cf9c918fc2a6c83",
+      "tar_compare": "passed against complete live tree",
+      "expanded_tree_removed": true,
+      "artifact_pins_after": "unchanged"
+    },
+    {
+      "source": "/var/lib/a733-el2-checks-20261104/out/guest-fixture-seed-20261104-01/src",
+      "source_allocated_bytes": 2126594048,
+      "archive": "/var/lib/a733-el2-checks-20261104/out/guest-fixture-seed-20261104-01/src-working-tree.tar.gz",
+      "archive_bytes": 418658656,
+      "archive_sha256": "534c0ff2b1e210a92284df6cc30868983bd46a00effb6de06907561f7c0800ff",
+      "tar_compare": "passed against complete live tree",
+      "expanded_tree_removed": true,
+      "artifact_pins_after": "unchanged"
+    },
+    {
+      "source": "/var/lib/a733-guest-network-work-20261104/out/guest-fixture-network-20261104-01/src",
+      "source_allocated_bytes": 2126606336,
+      "archive": "/var/lib/a733-guest-network-work-20261104/out/guest-fixture-network-20261104-01/src-working-tree.tar.gz",
+      "archive_bytes": 418657795,
+      "archive_sha256": "35a1593ebf53fdc20a1d4ba9e51fc4fbf533be21730f133dcba122265f7d9b50",
+      "tar_compare": "passed against complete live tree",
+      "expanded_tree_removed": true,
+      "artifact_pins_after": "unchanged"
+    }
+  ],
+  "sparsified_images": {
+    "count": 41,
+    "allocated_bytes_before": 12314152960,
+    "allocated_bytes_after": 6228045824,
+    "checks": "Every processed image matches its complete manifest size/hash before and after; same inode/path/mode.",
+    "scope": "Manifest-listed regular files128MiB..8GiB under fixed builder prefixes; no device paths, loops or active image users.",
+    "implementation": "Held no-follow regular descriptor, advisory exclusive lock, fallocate --dig-holes; evidence written through protected held directory FD.",
+    "operator_assumption": "Trusted dedicated builder kept idle. Process/FD/mapping checks are snapshots, not protection against a later noncooperating writer."
+  },
+  "source_recovery_sample": {
+    "classification": "selected actual source-cache archive members recovered and authenticated; not physical recovery",
+    "archive": "/var/lib/a733-el2-checks-20261104/out/guest-fixture-seed-20261104-01/src-working-tree.tar.gz",
+    "archive_sha256": "534c0ff2b1e210a92284df6cc30868983bd46a00effb6de06907561f7c0800ff",
+    "members": {
+      "src/.config": {
+        "bytes": 68776,
+        "sha256": "9a9e9641eea8134a23773466f0e3adc5c75e73672dc69f7777bbb85f5f479e79"
+      },
+      "src/arch/arm64/boot/Image": {
+        "bytes": 5251080,
+        "sha256": "1294959bcaa5a5ad3791913e33cffb8f0893708396aac8be9837c03a0e1f9377"
+      },
+      "src/COPYING": {
+        "bytes": 496,
+        "sha256": "fb5a425bd3b3cd6071a3a9aff9909a859e7c1158d54d32e07658398cd67eb6a0"
+      },
+      "src/Makefile": {
+        "bytes": 67804,
+        "sha256": "b4bdf4b3e1f2d0bf105675b2f1e266d4b174a4766718af09508ad05313e333a0"
+      }
+    },
+    "full_tree_before_removal": "GNU tar compare passed for each of five working trees",
+    "physical_acceptance": "unchanged; pending"
+  },
+  "full_source_cache_restore": {
+    "classification": "full cached-source restoration test; not hardware/deployment recovery",
+    "archive": "/var/lib/a733-el2-checks-20261104/out/guest-fixture-seed-20261104-01/src-working-tree.tar.gz",
+    "sha256": "534c0ff2b1e210a92284df6cc30868983bd46a00effb6de06907561f7c0800ff",
+    "tar_full_extraction": "passed at original fixed path",
+    "tar_compare_after_restore": "passed for all members",
+    "Image_and_config": "match published fixture",
+    "expanded_cache_after_test": "removed; full archive retained",
+    "free_bytes_after": 23894454272
+  },
+  "el2_candidate_after_maintenance": {
+    "host_artifact_verification": "passed",
+    "image_bytes": 268435456,
+    "image_sha256": "08fff0a88c509ee484c2450c58d42629fd90eedb8cd4c57513f98f4f78611b58",
+    "hardware_acceptance": "UNTESTED",
+    "packed_components": {
+      "u-boot": {
+        "offset": 2048,
+        "bytes": 1196032,
+        "sha256": "6d31463d533159427db010ce168ac42b37c84a00574d010ce9b781d7d35bee28"
+      },
+      "monitor": {
+        "offset": 1198080,
+        "bytes": 78609,
+        "sha256": "8af16b86ae8e2eff634a3ebca76a8cdf3c10b3540387573d46c3d785545b2632"
+      },
+      "scp": {
+        "offset": 1276928,
+        "bytes": 105912,
+        "sha256": "07e6b97628101963e7944e012948c4bdf721f914bad347acd7dfbde89db42749"
+      }
+    },
+    "outside_boot_package": "byte-identical to pinned baseline",
+    "gzip_expansion": "byte-identical to raw image"
+  },
+  "original_kernel_checks": {
+    "kernel.config": "8a29d9c36e52db7e8a7d6ff757dc69e660f4273c99e5f00c5dbc5a9b7e060675",
+    "Image": "9df974c55fa61a77e8fe812652780dad471527eb9615c27838f481887d4c50e7",
+    "kernel_head": "2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f",
+    "free_bytes": 23894462464,
+    "memory_sample": "               total        used        free      shared  buff/cache   available\nMem:      8326705152   302813184   713773056     3620864  7310118912  7701893120\nSwap:     4294963200   172351488  4122611712\n",
+    "no_private_mounts": true
+  },
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "outcome": "Corrected evidence output to held-directory/exclusive no-follow writes, made safety checks unconditional, checked regular held size, added quiescence/FD/mapping guards; no remaining blocker under idle trusted-builder assumption."
+  },
+  "evidence_directory": "/var/lib/a733-cache-retention-20261104",
+  "operator_readable_records": "/home/drew/orange-pi-4-pro-build/cache-retention-evidence-20261104",
+  "raw_record_pins": {
+    "archive-recovery-sample.json": {
+      "bytes": 1019,
+      "sha256": "d359a40a0580ed5cdd58b9b4aa5a243de81387c4a0a5458e11d4f6b6faa446d5"
+    },
+    "el2-verification.json": {
+      "bytes": 796,
+      "sha256": "ebdeb0f6ab469a2c96c7d6ad339cecf0a6d07752c1426ab6b6980078723b77ce"
+    },
+    "final-checks.json": {
+      "bytes": 521,
+      "sha256": "b7b89f1ef8515e1101fbacf581442f1c3b63fc565795ca7b14635b1543bdcb0a"
+    },
+    "full-source-restore.json": {
+      "bytes": 549,
+      "sha256": "c538a02f334586ad57696f4af7c579e8b81be19328a17af037b2d0c2dcf47974"
+    },
+    "retention.json": {
+      "bytes": 7872,
+      "sha256": "c631c391d58e42dcb3d79b455949719187b7c8bb84a586f2519cce5dc614f72f"
+    },
+    "sparse-extra-images.json": {
+      "bytes": 2207,
+      "sha256": "a145e9ccc3f48c53606a4734955b4859b7b33a38d2665b3a7405afd04225d641"
+    },
+    "sparse-images.json": {
+      "bytes": 15694,
+      "sha256": "e275e828a43630eca4da7e870df9bdf64aae9e97eb6baf2b2a96439f65c0997e"
+    }
+  },
+  "one_off_script_pins": {
+    "archive-guest-caches.py": {
+      "bytes": 3675,
+      "sha256": "924da43dcae9755bbac61dbf36f583b92c6cfcbcaaf9667c7c82e6474138aa6e"
+    },
+    "sparsify-builder-images.py": {
+      "bytes": 6280,
+      "sha256": "26db89fada55fe10e08e133e147cb168e014344838cfa288ab65003f714493f7"
+    },
+    "sparsify-builder-extra-images.py": {
+      "bytes": 6315,
+      "sha256": "f6877e060bae8fb9731e40a5dd08cc56e7acc153561598bf0c2f8d4ca3a8553f"
+    }
+  },
+  "physical_acceptance": "unchanged; physical EL2/KVM, NVMe installation and release acceptance remain unproven"
+}
