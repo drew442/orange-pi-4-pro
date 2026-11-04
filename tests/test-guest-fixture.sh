@@ -6,6 +6,7 @@ work=$(mktemp -d)
 trap 'rm -rf -- "$work"' EXIT
 bash -n "$repo/build/guest-fixture.sh"
 sh -n "$repo/configs/guest-init"
+sh -n "$repo/configs/guest-network-cgi"
 reject() {
     if "$@" > "$work/rejection.log" 2>&1; then
         echo "Expected rejection: $*" >&2
@@ -34,7 +35,10 @@ assert 'mkfs' not in init
 assert init.index('"$$" -eq 1') < init.index('mount -t proc')
 assert init.index('ro,noload /dev/vda') < init.index('cat /mnt/fixture-id') < init.index('rw /dev/vda')
 assert init.index('umount /mnt || fail disk-unmount\nprintf') < init.index('PASS disk')
-assert init.index('ping -I eth0') < init.index('PASS network') < init.index('poweroff -f')
+assert 'ping -I eth0' not in init
+assert init.index('udhcpc -f') < init.index('httpd -f') < init.index('PASS network') < init.index('poweroff -f')
+assert init.index('umount /mnt || fail disk-unmount\nprintf') < init.index('httpd -f')
+assert 'tries" -le 120' in init
 assert 'tcg' not in recipe
 for symbol in ('PCI_HOST_GENERIC', 'SERIAL_AMBA_PL011_CONSOLE', 'VIRTIO_PCI', 'ARM_GIC_V3_ITS',
                'BINFMT_ELF', 'BINFMT_SCRIPT'):
@@ -76,9 +80,10 @@ archive = output / 'initramfs.cpio.gz'
 listing = subprocess.run(['bash', '-o', 'pipefail', '-c', 'gzip -dc "$1" | cpio -it --quiet', 'sh', str(archive)],
                          check=True, capture_output=True, text=True).stdout.splitlines()
 for path in ('./init', './bin/busybox', './bin/sh', './usr/share/licenses/GPL-2.0.txt',
-             './usr/share/licenses/busybox-copyright.txt', './etc/udhcpc.script'):
+             './usr/share/licenses/busybox-copyright.txt', './etc/udhcpc.script', './www/cgi-bin/probe'):
     assert path.removeprefix('./') in [item.removeprefix('./') for item in listing], path
 assert (output / 'initramfs-root/init').read_bytes() == (repo / 'configs/guest-init').read_bytes()
+assert (output / 'initramfs-root/www/cgi-bin/probe').read_bytes() == (repo / 'configs/guest-network-cgi').read_bytes()
 hook = (output / 'initramfs-root/etc/udhcpc.script').read_text()
 assert 'ip addr add' in hook and 'ip route replace' in hook
 assert 'resolv.conf' not in hook and '/mnt' not in hook

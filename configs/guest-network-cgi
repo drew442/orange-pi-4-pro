@@ -1,0 +1,23 @@
+#!/bin/sh
+# Disposable guest acceptance endpoint. Files live only on guest /run tmpfs.
+export PATH=/bin
+counter=$(cat /run/a733-guest-network-counter 2>/dev/null) || exit 1
+case "$counter" in ''|*[!0-9]*) exit 1 ;; esac
+[ "${#counter}" -le 9 ] || exit 1
+[ "$REQUEST_METHOD" = GET ] || exit 1
+case "$QUERY_STRING" in
+    '') ;;
+    "confirm=$counter") ;;
+    *) printf 'Status: 400 Bad Request\r\nContent-Type: text/plain\r\n\r\ninvalid confirmation\n'; exit 0 ;;
+esac
+printf 'Content-Type: text/plain\r\nCache-Control: no-store\r\n\r\na733-kvm-guest-network-v1 counter=%s\n' "$counter" || exit 1
+if [ "$QUERY_STRING" = "confirm=$counter" ]; then
+    # Publish complete contents at once; PID 1 must never see an empty marker.
+    temporary=/run/a733-guest-network-confirmed.$$
+    umask 077
+    (set -C; printf '%s\n' "$counter" > "$temporary") || exit 1
+    mv -f -- "$temporary" /run/a733-guest-network-confirmed || {
+        rm -f -- "$temporary"
+        exit 1
+    }
+fi

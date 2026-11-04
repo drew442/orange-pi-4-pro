@@ -40,7 +40,8 @@ def validate_config(data):
                            parse_constant=_reject_constant)
     except (UnicodeError, RecursionError) as error:
         raise ValueError('invalid config encoding or nesting') from error
-    require(type(value) is dict and set(value) == FIELDS, 'invalid enrollment fields')
+    require(type(value) is dict and FIELDS <= set(value) and
+            set(value) <= FIELDS | {'network'}, 'invalid enrollment fields')
     identity = IDENTITY.validate_config(json.dumps({
         'schema': value['schema'],
         'guests': [{key: value[key] for key in ('name', 'uid', 'gid')}],
@@ -64,6 +65,17 @@ def validate_config(data):
         require(type(digest) is str and re.fullmatch('[0-9a-f]{64}', digest) is not None,
                 'invalid ' + key + ' sha256')
         result[key] = {'bytes': size, 'sha256': digest}
+    if 'network' in value:
+        network = value['network']
+        require(type(network) is dict and set(network) == {
+            'mode', 'host_tcp_port', 'guest_tcp_port'}, 'invalid network fields')
+        require(type(network['mode']) is str and network['mode'] == 'isolated',
+                'invalid network mode')
+        result['network'] = {'mode': 'isolated'}
+        for key, minimum in (('host_tcp_port', 1024), ('guest_tcp_port', 1)):
+            port = network[key]
+            require(type(port) is int and minimum <= port <= 65535, 'invalid ' + key)
+            result['network'][key] = port
     return result
 
 
@@ -104,6 +116,9 @@ def render_unit(config, launcher_path, kvm_gid):
     for key in ('kernel', 'initrd', 'disk'):
         args.extend(['--' + key, artifact_paths[key], '--' + key + '-sha256', value[key]['sha256']])
     args.extend(['--memory-mib', str(value['memory_mib']), '--cpus', str(value['cpus'])])
+    if 'network' in value:
+        args.extend(['--host-tcp-port', str(value['network']['host_tcp_port']),
+                     '--guest-tcp-port', str(value['network']['guest_tcp_port'])])
     account = 'a733-vm-' + value['name']
     return '\n'.join([
         '[Unit]', 'Description=A733 guest ' + value['name'], 'After=local-fs.target', '',

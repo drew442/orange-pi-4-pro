@@ -59,11 +59,78 @@ class GuestLauncherTests(unittest.TestCase):
         self.assertEqual(report["hardware_acceptance"], "pending")
         self.assertEqual(report["argv"][report["argv"].index("-accel") + 1], "kvm")
         self.assertNotIn("hostfwd", result.stdout)
+        self.assertEqual(report['argv'][report['argv'].index('-netdev') + 1],
+                         'user,id=guestnet,restrict=on')
+        self.assertEqual(set(report), {'operation', 'hardware_acceptance', 'verified_inputs',
+                                       'argv', 'storage_policy'})
         for name, value in self.values.items():
             path = getattr(self.args, name)
             self.assertEqual(path.read_bytes(), value)
             self.assertEqual(path.stat().st_mtime_ns, before[name].st_mtime_ns)
             self.assertEqual(report["verified_inputs"][name]["path"], str(path))
+
+    def test_loopback_forward_backend_is_exact_and_inputs_remain_held(self):
+        for host, guest_port in ((1024, 1), (2222, 22), (65535, 65535)):
+            with self.subTest(host=host, guest=guest_port):
+                self.args.host_tcp_port = host
+                self.args.guest_tcp_port = guest_port
+                with launcher.prepare(self.args) as guest:
+                    argv = guest.argv()
+                    self.assertEqual(argv[argv.index('-netdev') + 1],
+                                     f'user,id=guestnet,restrict=on,ipv6=off,'
+                                     f'hostfwd=tcp:127.0.0.1:{host}-10.0.2.15:{guest_port}')
+                    self.assertEqual(argv.count('-netdev'), 1)
+                    self.assertEqual(argv[argv.index('-accel') + 1], 'kvm')
+                    descriptor_argv = guest.argv(descriptor_paths=True)
+                    self.assertEqual(descriptor_argv[descriptor_argv.index('-kernel') + 1],
+                                     f'/proc/self/fd/{guest.fds["kernel"]}')
+                    self.assertEqual(guest.report()['hardware_acceptance'], 'pending')
+                    self.assertEqual(set(guest.fds), set(self.values))
+        self.assertEqual(launcher.STORAGE.verify_guest_storage.call_count, 3)
+
+    def test_network_rejected_before_any_input_open_or_hash(self):
+        invalid = [(2222, None), (None, 22)]
+        invalid += [(port, 22) for port in (True, False, 1, 1023, 65536, 2222.0, '2222')]
+        invalid += [(2222, port) for port in (True, False, 0, -1, 65536, 22.0, '22')]
+        for host, guest in invalid:
+            with self.subTest(host=host, guest=guest):
+                self.args.host_tcp_port, self.args.guest_tcp_port = host, guest
+                with mock.patch.object(launcher.PreparedGuest, 'open_file') as opening, \
+                        mock.patch.object(launcher.PreparedGuest, 'verify_file') as hashing:
+                    with self.assertRaises(ValueError):
+                        launcher.prepare(self.args)
+                opening.assert_not_called()
+                hashing.assert_not_called()
+        launcher.STORAGE.verify_guest_storage.assert_not_called()
+
+    def test_cli_network_validates_before_launch_checks_or_inputs(self):
+        for flags in (['--host-tcp-port', '2222'], ['--guest-tcp-port', '22'],
+                      ['--host-tcp-port', '1023', '--guest-tcp-port', '22'],
+                      ['--host-tcp-port', '2222', '--guest-tcp-port', '65536']):
+            with self.subTest(flags=flags), \
+                    mock.patch.object(launcher, 'require_launch_access') as access, \
+                    mock.patch.object(launcher, 'prepare') as prepare, \
+                    mock.patch.object(launcher.sys, 'stderr'):
+                self.assertEqual(launcher.main(self.command() + flags), 1)
+                access.assert_not_called()
+                prepare.assert_not_called()
+        for port in ('22.0', 'true', '127.0.0.1:2222', '2222,hostfwd=udp::1-:1', '+2222', ' 2222'):
+            with self.subTest(port=port), mock.patch.object(launcher.sys, 'stderr'):
+                with self.assertRaises(SystemExit):
+                    launcher.parser().parse_args(self.command(True) +
+                                                ['--host-tcp-port', port, '--guest-tcp-port', '22'])
+
+    def test_forwarded_cli_dry_run_keeps_kvm_required_and_fixed_listener(self):
+        result = subprocess.run([sys.executable, str(SCRIPT), *self.command(True),
+                                 '--host-tcp-port', '2222', '--guest-tcp-port', '22'],
+                                capture_output=True, text=True, check=True,
+                                env={**os.environ, 'PATH': '/no-qemu'})
+        report = json.loads(result.stdout)
+        self.assertEqual(report['argv'][report['argv'].index('-netdev') + 1],
+                         'user,id=guestnet,restrict=on,ipv6=off,'
+                         'hostfwd=tcp:127.0.0.1:2222-10.0.2.15:22')
+        self.assertEqual(report['argv'][report['argv'].index('-accel') + 1], 'kvm')
+        self.assertEqual(report['hardware_acceptance'], 'pending')
 
     def test_invalid_inputs_and_cleanup(self):
         for kind in ("bad-hash", "mismatch", "empty", "directory", "fifo", "symlink", "hardlink"):

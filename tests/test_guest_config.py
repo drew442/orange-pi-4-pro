@@ -15,6 +15,7 @@ VALID = {'schema': 1, 'name': 'one', 'uid': 60001, 'gid': 60001,
          'kernel': {'bytes': 100, 'sha256': 'a' * 64},
          'initrd': {'bytes': 200, 'sha256': 'b' * 64},
          'disk': {'bytes': 1024, 'sha256': 'c' * 64}}
+NETWORK = {'mode': 'isolated', 'host_tcp_port': 2222, 'guest_tcp_port': 22}
 
 
 class SchemaTests(unittest.TestCase):
@@ -30,6 +31,58 @@ class SchemaTests(unittest.TestCase):
         result = self.validate(VALID)
         result['disk']['bytes'] = 512
         self.assertEqual(VALID['disk']['bytes'], 1024)
+        self.assertEqual(data, (json.dumps(VALID, sort_keys=True, separators=(',', ':')) + '\n').encode())
+
+    def test_network_roundtrip_boundaries_and_copy(self):
+        self.assertEqual(CONFIG.FIELDS, set(VALID))
+        for host, guest in ((1024, 1), (2222, 22), (65535, 65535)):
+            network = {**NETWORK, 'host_tcp_port': host, 'guest_tcp_port': guest}
+            value = {**VALID, 'network': network}
+            result = self.validate(value)
+            self.assertEqual(result, value)
+            self.assertEqual(CONFIG.canonical(result),
+                             (json.dumps(value, sort_keys=True, separators=(',', ':')) + '\n').encode())
+            result['network']['host_tcp_port'] = 9999
+            self.assertEqual(network['host_tcp_port'], host)
+
+    def test_network_rejects_unsupported_profiles_fields_and_port_types(self):
+        bad = [None, False, [], 'isolated', {}]
+        bad.extend({**NETWORK, 'mode': mode} for mode in ('off', 'nat', 'bridge', True, None))
+        for key in NETWORK:
+            missing = dict(NETWORK)
+            del missing[key]
+            bad.append(missing)
+        for key, value in (('host_ip', '0.0.0.0'), ('guest_ip', '10.0.2.16'),
+                           ('protocol', 'udp'), ('forwards', []), ('mac', '00:00:00:00:00:00')):
+            bad.append({**NETWORK, key: value})
+        for key, values in {'host_tcp_port': (True, False, None, 0, 1, 1023, 65536, 2222.0, '2222'),
+                            'guest_tcp_port': (True, False, None, 0, -1, 65536, 22.0, '22')}.items():
+            bad.extend({**NETWORK, key: value} for value in values)
+        for network in bad:
+            with self.subTest(network=network), self.assertRaises(ValueError):
+                self.validate({**VALID, 'network': network})
+        data = json.dumps({**VALID, 'network': NETWORK})
+        with self.assertRaises(ValueError):
+            CONFIG.validate_config(data.replace('"host_tcp_port": 2222',
+                                                '"host_tcp_port": 2222, "host_tcp_port": 3333'))
+
+    def test_network_survives_manifest_checkpoint_and_restore(self):
+        spec = importlib.util.spec_from_file_location('network_manifest', BASE / 'configs/guest_manifest.py')
+        manifest_module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(manifest_module)
+        config = {**VALID, 'network': NETWORK}
+        manifest = {'schema': 1, 'profile': manifest_module.PROFILE, 'config': config,
+                    'guest_uuid': '11111111-1111-4111-8111-111111111111', 'files': {}}
+        for key, filename in manifest_module.FILENAMES.items():
+            uid, gid, mode = (config['uid'], config['gid'], '0600') if key == 'disk' else (0, 0, '0444')
+            manifest['files'][filename] = {**config[key], 'uid': uid, 'gid': gid, 'mode': mode}
+        normalized = manifest_module.validate_manifest(manifest_module.canonical(manifest))
+        checkpoint = manifest_module.proposed_manifest(normalized, 'd' * 64,
+                                                       {**VALID['disk'], 'sha256': 'e' * 64})
+        restored = manifest_module.restored_manifest(checkpoint, 'f' * 64, 'a' * 64,
+                                                     '22222222-2222-4222-8222-222222222222')
+        for value in (normalized, checkpoint, restored):
+            self.assertEqual(value['config']['network'], NETWORK)
 
     def test_exact_fields_and_identity(self):
         bad = [{**VALID, 'unexpected': 1}, {**VALID, 'schema': True}]
@@ -94,6 +147,13 @@ class SchemaTests(unittest.TestCase):
 
 
 class UnitTests(unittest.TestCase):
+    def test_network_adds_only_paired_forward_arguments(self):
+        legacy = CONFIG.render_unit(VALID, '/opt/a733/launch-kvm-guest.py', 108)
+        forwarded = CONFIG.render_unit({**VALID, 'network': NETWORK},
+                                       '/opt/a733/launch-kvm-guest.py', 108)
+        self.assertEqual(forwarded, legacy.replace('--cpus 2\n',
+                         '--cpus 2 --host-tcp-port 2222 --guest-tcp-port 22\n'))
+
     def test_fixed_paths_and_argument_boundaries(self):
         paths = CONFIG.paths(VALID)
         self.assertEqual(paths, {'kernel': '/run/a733-guests/one/Image',

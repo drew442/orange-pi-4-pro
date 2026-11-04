@@ -50,9 +50,23 @@ printf 'PASS disk previous=%s counter=%s\n' "$counter" "$next"
 ip link set lo up || fail loopback
 ip link set eth0 up || fail ethernet
 udhcpc -f -n -q -t 5 -T 3 -i eth0 -s /etc/udhcpc.script || fail dhcp
-# Restricted QEMU usernet gateway ICMP must be confirmed on the physical host.
-ping -I eth0 -c 3 -W 3 10.0.2.2 || fail network
-printf 'PASS network gateway=10.0.2.2\n'
+# A real host request/response through an explicit loopback-only QEMU forward
+# proves more than a synthetic usernet gateway ping. No outward route is needed.
+printf '%s\n' "$next" > /run/a733-guest-network-counter || fail network-counter
+httpd -f -p 8080 -h /www &
+network_pid=$!
+printf 'READY network tcp=8080 counter=%s; host must verify and confirm HTTP response\n' "$next"
+tries=0
+while [ ! -f /run/a733-guest-network-confirmed ]; do
+    kill -0 "$network_pid" || fail network-server
+    tries=$((tries + 1))
+    [ "$tries" -le 120 ] || fail network-timeout
+    sleep 1
+done
+[ "$(cat /run/a733-guest-network-confirmed)" = "$next" ] || fail network-confirmation
+kill "$network_pid" || fail network-server-stop
+wait "$network_pid" || :
+printf 'PASS network loopback-http counter=%s\n' "$next"
 printf 'PASS fixture counter=%s; clean shutdown requested\n' "$next"
 poweroff -f
 fail poweroff

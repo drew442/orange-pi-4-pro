@@ -78,12 +78,13 @@ kmake -j2 Image > "$output/logs/kernel-build.log" 2>&1
 cp -- "$output/src/arch/arm64/boot/Image" "$output/Image"
 cp -- "$output/src/.config" "$output/kernel.config"
 root=$output/initramfs-root
-mkdir -p -- "$root"/{bin,dev,proc,sys,tmp,run,mnt,etc,usr/share/licenses}
+mkdir -p -- "$root"/{bin,dev,proc,sys,tmp,run,mnt,etc,usr/share/licenses,www/cgi-bin}
 cp -- "$busybox" "$root/bin/busybox"
 ln -s busybox "$root/bin/sh"
 cp -- "$repo/configs/guest-init" "$root/init"
+cp -- "$repo/configs/guest-network-cgi" "$root/www/cgi-bin/probe"
 cp -- "$repo/licenses/GPL-2.0.txt" "$repo/licenses/busybox-copyright.txt" "$root/usr/share/licenses/"
-chmod 0755 "$root/init" "$root/bin/busybox"
+chmod 0755 "$root/init" "$root/bin/busybox" "$root/www/cgi-bin/probe"
 cat > "$root/etc/udhcpc.script" <<'HOOK'
 #!/bin/sh
 case "$1" in
@@ -113,10 +114,11 @@ E2FSPROGS_FAKE_TIME=$SOURCE_DATE_EPOCH mkfs.ext4 -q -F -b 4096 -O ^has_journal \
     -L kvm-fixture -d "$output/seed" "$output/guest-disk.raw" > "$output/logs/disk-build.log" 2>&1
 cp -- "$repo/build/guest-fixture.sh" "$output/guest-fixture.sh"
 cp -- "$repo/configs/guest-init" "$output/guest-init"
+cp -- "$repo/configs/guest-network-cgi" "$output/guest-network-cgi"
 cp -R -- "$repo/licenses" "$output/licenses"
 # src/LICENSES and src/COPYING are retained alongside the full pinned source.
 (cd "$output"; sha256sum Image kernel.config initramfs.cpio.gz guest-disk.raw \
-    guest-kernel.fragment guest-init guest-fixture.sh diagnostic-sources.lock.json builder-packages.lock.tsv > SHA256SUMS)
+    guest-kernel.fragment guest-init guest-network-cgi guest-fixture.sh diagnostic-sources.lock.json builder-packages.lock.tsv > SHA256SUMS)
 python3 - "$output" "${pins[0]}" "${pins[1]}" "${pins[2]}" <<'PY'
 import hashlib, json, pathlib, sys
 root = pathlib.Path(sys.argv[1])
@@ -131,7 +133,7 @@ for line in (root / 'SHA256SUMS').read_text().splitlines():
     'source_date_epoch': 1793750400, 'compilation_jobs': 2,
     'disk_fixture_id': 'a733-kvm-guest-fixture-v1', 'initial_counter': 0,
     'disk_uuid': 'd67f33ba-e201-46bc-980b-61901bbd1156',
-    'network_probe': 'DHCP and ICMP to 10.0.2.2; restricted usernet behavior unproven',
+    'network_probe': 'DHCP plus host HTTP request/confirmation through explicit 127.0.0.1 TCP forward to guest port 8080; KVM execution unproven',
     'files': files,
 }, indent=2) + '\n')
 PY

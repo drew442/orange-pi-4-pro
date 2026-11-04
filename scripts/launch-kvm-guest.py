@@ -37,6 +37,25 @@ def positive_int(value):
     return number
 
 
+def tcp_port(value):
+    if not re.fullmatch(r'[0-9]+', value):
+        raise argparse.ArgumentTypeError('must be a decimal TCP port')
+    return int(value)
+
+
+def network_config(args):
+    """Validate the one supported forward before touching any guest input."""
+    host = getattr(args, 'host_tcp_port', None)
+    guest = getattr(args, 'guest_tcp_port', None)
+    if host is None and guest is None:
+        return None
+    if type(host) is not int or not 1024 <= host <= 65535:
+        raise ValueError('host_tcp_port must be an integer from 1024 through 65535')
+    if type(guest) is not int or not 1 <= guest <= 65535:
+        raise ValueError('guest_tcp_port must be an integer from 1 through 65535')
+    return {'mode': 'isolated', 'host_tcp_port': host, 'guest_tcp_port': guest}
+
+
 def parser():
     result = argparse.ArgumentParser(description=__doc__)
     for name in ("kernel", "initrd", "disk"):
@@ -44,6 +63,10 @@ def parser():
         result.add_argument(f"--{name}-sha256", required=True)
     result.add_argument("--memory-mib", required=True, type=positive_int)
     result.add_argument("--cpus", required=True, type=positive_int)
+    result.add_argument('--host-tcp-port', type=tcp_port,
+                        help='paired loopback-only TCP listener, from 1024 through 65535')
+    result.add_argument('--guest-tcp-port', type=tcp_port,
+                        help='paired TCP destination at fixed guest address 10.0.2.15')
     result.add_argument("--dry-run", action="store_true")
     return result
 
@@ -64,6 +87,7 @@ class PreparedGuest:
 
     def __init__(self, args):
         self.args = args
+        self.network = network_config(args)
         self.fds = {}
         self.snapshots = {}
         self.inputs = {}
@@ -150,6 +174,11 @@ class PreparedGuest:
                  else info["path"] for name, info in self.inputs.items()}
         block = {"driver": "raw", "node-name": "guest-disk",
                  "file": {"driver": "file", "filename": paths["disk"]}}
+        netdev = 'user,id=guestnet,restrict=on'
+        if self.network is not None:
+            netdev += (',ipv6=off,hostfwd=tcp:127.0.0.1:' +
+                       str(self.network['host_tcp_port']) + '-10.0.2.15:' +
+                       str(self.network['guest_tcp_port']))
         return [shutil.which("qemu-system-aarch64") or "qemu-system-aarch64",
                 "-machine", "virt,gic-version=host", "-accel", "kvm", "-cpu", "host",
                 "-m", str(self.args.memory_mib), "-smp", str(self.args.cpus),
@@ -158,7 +187,7 @@ class PreparedGuest:
                 "-append", "console=ttyAMA0 rdinit=/init",
                 "-blockdev", json.dumps(block, separators=(",", ":")),
                 "-device", "virtio-blk-pci,drive=guest-disk",
-                "-netdev", "user,id=guestnet,restrict=on",
+                "-netdev", netdev,
                 "-device", "virtio-net-pci,netdev=guestnet"]
 
     def report(self):
@@ -222,6 +251,7 @@ def require_launch_access(args):
 def main(argv=None):
     args = parser().parse_args(argv)
     try:
+        network_config(args)
         if not args.dry_run:
             require_launch_access(args)
         with prepare(args) as guest:
