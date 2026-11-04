@@ -20,8 +20,8 @@ no larger card or live inventory was required to produce the diagnostic image.
   Vendor KVM was disabled; diagnostic configuration enables it. EL2 is unproven.
 - [Jammy builder](build-host-assessment.md): actual kernel/U-Boot builds,
   ARM64 chroot and file-backed loop checks passed. Two compilation jobs;
-  GCC 11 kernel / Linaro 7.4.1 U-Boot. Recent distribution-check samples retained
-  over 7.3 GB available RAM and 19 GB free disk; 4 GiB swap is configured.
+  GCC 11 kernel / Linaro 7.4.1 U-Boot. Latest idle sample has
+  over 7.7 GB available RAM and 19 GB free disk; 4 GiB swap is configured.
 - **Diagnostic candidate built and independently verified, not board-booted:**
   268,435,456 bytes, SHA-256
   `b05086afaab3d2f9da6c33b8e457f3552cce2899c08824d371615008bf66d9fd`;
@@ -38,17 +38,17 @@ no larger card or live inventory was required to produce the diagnostic image.
 - [Package-state isolation](host-package-state.md): eight version-owned views
   bind read-only from the selected root; 77.3 MB of caches pruned in private
   staging. Native A→B→A tests and ARM64 binfmt queries on both actual roots
-  match all 220 package rows and 1,122 BOM entries; no real updater/rollback.
+  match all 220 package rows and 1,122 BOM entries; no physical update/rollback.
 - [State](host-state.md), [NVMe selector](nvme-root-selection.md) and
   [handoff](host-handoff.md): 8 GiB journaled fixture with fresh installation
   identities; generic bootstrap fixes state UUID and ABI while root choice
   lives on recovered NVMe state. Selected-root-only resolution, ownership,
-  GPT-role and cleanup fixtures pass. No installed updater or automatic rollback.
-- [Update candidate preparation](host-updates.md): explicit manifest SHA pin,
-  full private root capture/readback, fixed slot/boot/package compatibility,
-  safe non-SD output and no-overwrite publication. Actual 4 GiB A/B captures,
-  independent hashes/selector comparisons and bounded metadata reads pass.
-  No installed inactive-slot writer, activation or manual rollback controller.
+  GPT-role and cleanup fixtures pass. Activation and automatic rollback remain open.
+- [Root updates](host-updates.md): authenticated A/B file preparation and guarded
+  inactive-slot staging CLI. Private loop interruption at 8 MiB and complete
+  4 GiB retry/readback pass; selected/boot/guest sentinels stay unchanged.
+  Live NVMe/TTY policy uses separate fixtures. Checkout-only prototype;
+  packaging, activation, manual rollback and physical update tests remain open.
 - [Management preparation](host-management.md): exact Ethernet MAC DHCPv4,
   selected-IP key-only SSH, NVMe host-key creation and RAM configuration.
   ARM key/sshd/PAM-account/unit checks pass; no SSH connection or systemd boot.
@@ -82,7 +82,7 @@ no larger card or live inventory was required to produce the diagnostic image.
 - [Guest fixture](guest-fixture.md): separate virt-profile kernel/initramfs and
   disposable disk built and hashed; launcher requires KVM with no TCG fallback.
   **No guest boot or KVM execution.** Guest networking/management remain open.
-- 290 Python cases across both suites and all shell regressions pass; the 286-case
+- 333 Python cases across both suites and all shell regressions pass; the 329-case
   discovery suite passes on Jammy with no skips (two privileged skips locally). Actual
   files/build checks are distinct from hardware gates. Independent Sol high
   reviews and routing outcomes: [implementation evidence](implementation-evidence.md).
@@ -98,9 +98,9 @@ no larger card or live inventory was required to produce the diagnostic image.
    actual per-installation candidate and validate board payload acquisition. Validate
    the writer/locking/readback/interruption protocol on authorized hardware. The preparation runtime
    has exercised software probes; board boot/DHCP/DNS/TLS remain unproven.
-3. Deliver inactive-slot updates and serial/manual rollback using the supported
-   package-state ABI and immutable boot stack. Isolation is software-validated;
-   actual cross-version updates/state compatibility remain unproven. Finish
+3. Complete explicit activation and serial/manual rollback using the supported
+   package-state ABI and immutable boot stack. Package and validate the staging
+   protocol on hardware; cross-version updates/state compatibility remain unproven. Finish
    guest storage/networking, backup/restore and operational procedures.
 4. Full clean-build reproducibility remains open: U-Boot emits a random
    128-byte debug challenge; builds differ there plus checksums. Exact generated

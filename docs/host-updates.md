@@ -131,6 +131,41 @@ actual hardware interruption/recovery tests remain open. Advisory locks require
 cooperating maintenance tools; privileged raw-device users are not a supported
 concurrency model.
 
+## Staging software evidence
+
+The [private-loop report](evidence/host-update-stage-loop-20261104.json) records
+an injected write error after 8 MiB, conservative incomplete-slot reporting,
+and a separate full 4 GiB retry with flush and complete SHA-256 readback.
+Selection and unrelated boot/guest sentinels remained unchanged. Second
+exclusive claims were refused; no partition refresh occurred. Independent
+checks found the owned loop detached and all private workspaces removed.
+The final run took 28.71 seconds with 34,212 KiB peak process RSS.
+
+The test explicitly replaces the live NVMe context and TTY authorization with
+fixtures. Production source authentication, block open/locks, geometry ioctls,
+copy, flush and readback execute unchanged. This is not a live host update,
+activation, rollback, physical interruption or board boot result. The source
+root is the same-version B fixture. Separate policy fixtures cover exact
+identity, active-slot refusal, GPT/4Kn geometry, busy targets and context races.
+
+Verified opt-in command on the Jammy builder:
+
+```sh
+sudo /usr/bin/python3.10 -I -B \
+  /var/lib/a733-update-stage-20261104/tests/verify_host_update_loop.py \
+  /var/lib/a733-update-final-20261104/candidate-B \
+  --manifest-sha256 51f8dfa7f0f66b005b9bfd08dc5f29fcf25f0791e5e844ab6af22de94aa9a44c
+```
+
+It accepts no target argument, creates only its own file-backed loop, requires
+6 GiB free on supported fixed builder storage, and retains its workspace if
+detach fails. It settles device events before each separate transaction and
+keeps production nonblocking locks. The first retry was safely refused until
+device events were settled; the lock owner was not identified. The test uses
+direct hook replacements to avoid retaining copy buffers in mock call history.
+For the underlying semantics, see [block-device O_EXCL](https://man7.org/linux/man-pages/man2/open.2.html)
+and [advisory flock](https://man7.org/linux/man-pages/man2/flock.2.html).
+
 ## Required activation protocol
 
 The staging controller identifies the actual NVMe model, serial, capacity,

@@ -1,0 +1,203 @@
+{
+  "partial_report": {
+    "success": false,
+    "target_modified": true,
+    "bytes_attempted": 12582912,
+    "bytes_written": 8388608,
+    "bytes_verified": 0,
+    "selector_writes_performed": false,
+    "activation_ready": false,
+    "classification": "staging receipt only; no activation or health/hardware proof",
+    "operation": "inactive-slot-host-update",
+    "plan_sha256": "b16d1adeb8a5e2f1ac0824a508126dcdb7a594062a11f4e35ea3a20072d3b3b3",
+    "staged_slot": "B",
+    "target": {
+      "requested_path": "/dev/loop7",
+      "canonical_path": "/dev/loop7",
+      "major_minor": "7:7",
+      "model": "PRIVATE LOOP FIXTURE",
+      "serial": "NO-PHYSICAL-TARGET",
+      "size_bytes": 4294967296,
+      "logical_sector_bytes": 512,
+      "physical_sector_bytes": 512,
+      "partition_number": 3,
+      "partition_uuid": "a7330000-0000-4000-8000-000000000003"
+    },
+    "source": {
+      "candidate": "/var/lib/a733-update-final-20261104/candidate-B",
+      "slot": "B",
+      "root": {
+        "bytes": 4294967296,
+        "sha256": "a7c98b1cff05ccb9a77857d4d7b3a4bfd36fd6734a05866d911d5d2adbaa1e27"
+      },
+      "manifest_sha256": "51f8dfa7f0f66b005b9bfd08dc5f29fcf25f0791e5e844ab6af22de94aa9a44c",
+      "selector": {
+        "bytes": 179,
+        "sha256": "814c69e9545939fb4d382dc67cdb456dfa3c4f2485819f88560bd00a5e81880e"
+      },
+      "files": {
+        "manifest.json": {
+          "device": 64512,
+          "inode": 655840,
+          "bytes": 7023,
+          "mtime_ns": 1793810495735638432,
+          "ctime_ns": 1793810495735638432
+        },
+        "root.ext4": {
+          "device": 64512,
+          "inode": 655839,
+          "bytes": 4294967296,
+          "mtime_ns": 1793810492190639432,
+          "ctime_ns": 1793810492190639432
+        },
+        "selected.conf": {
+          "device": 64512,
+          "inode": 655841,
+          "bytes": 179,
+          "mtime_ns": 1793810495737638431,
+          "ctime_ns": 1793810495737638431
+        }
+      }
+    },
+    "selected_before": {
+      "SCHEMA": "1",
+      "SLOT": "A",
+      "ROOT_UUID": "a7330000-0000-4000-8000-00000000000a",
+      "ROOT_MARKER_SHA256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "KERNEL_RELEASE": "6.6.98-a733-diag"
+    },
+    "error": "OSError: [Errno 5] intentional private-loop write interruption"
+  },
+  "explicit_full_retry_report": {
+    "success": true,
+    "target_modified": true,
+    "bytes_attempted": 4294967296,
+    "bytes_written": 4294967296,
+    "bytes_verified": 4294967296,
+    "selector_writes_performed": false,
+    "activation_ready": true,
+    "classification": "staging receipt only; no activation or health/hardware proof",
+    "operation": "inactive-slot-host-update",
+    "plan_sha256": "fb66e8385fe01622a886b6d4fb23d3e6366de82ad09c385bdadb188a771d008c",
+    "staged_slot": "B",
+    "target": {
+      "requested_path": "/dev/loop7",
+      "canonical_path": "/dev/loop7",
+      "major_minor": "7:7",
+      "model": "PRIVATE LOOP FIXTURE",
+      "serial": "NO-PHYSICAL-TARGET",
+      "size_bytes": 4294967296,
+      "logical_sector_bytes": 512,
+      "physical_sector_bytes": 512,
+      "partition_number": 3,
+      "partition_uuid": "a7330000-0000-4000-8000-000000000003"
+    },
+    "source": {
+      "candidate": "/var/lib/a733-update-final-20261104/candidate-B",
+      "slot": "B",
+      "root": {
+        "bytes": 4294967296,
+        "sha256": "a7c98b1cff05ccb9a77857d4d7b3a4bfd36fd6734a05866d911d5d2adbaa1e27"
+      },
+      "manifest_sha256": "51f8dfa7f0f66b005b9bfd08dc5f29fcf25f0791e5e844ab6af22de94aa9a44c",
+      "selector": {
+        "bytes": 179,
+        "sha256": "814c69e9545939fb4d382dc67cdb456dfa3c4f2485819f88560bd00a5e81880e"
+      },
+      "files": {
+        "manifest.json": {
+          "device": 64512,
+          "inode": 655840,
+          "bytes": 7023,
+          "mtime_ns": 1793810495735638432,
+          "ctime_ns": 1793810495735638432
+        },
+        "root.ext4": {
+          "device": 64512,
+          "inode": 655839,
+          "bytes": 4294967296,
+          "mtime_ns": 1793810492190639432,
+          "ctime_ns": 1793810492190639432
+        },
+        "selected.conf": {
+          "device": 64512,
+          "inode": 655841,
+          "bytes": 179,
+          "mtime_ns": 1793810495737638431,
+          "ctime_ns": 1793810495737638431
+        }
+      }
+    },
+    "selected_before": {
+      "SCHEMA": "1",
+      "SLOT": "A",
+      "ROOT_UUID": "a7330000-0000-4000-8000-00000000000a",
+      "ROOT_MARKER_SHA256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "KERNEL_RELEASE": "6.6.98-a733-diag"
+    },
+    "readback_sha256": "a7c98b1cff05ccb9a77857d4d7b3a4bfd36fd6734a05866d911d5d2adbaa1e27"
+  },
+  "complete_bytes_written_including_zero_ranges": 4294967296,
+  "selector_and_unrelated_sentinels_unchanged": true,
+  "production_candidate_authentication": true,
+  "production_block_open_locks_ioctls_write_readback": true,
+  "second_exclusive_claim_refused_each_attempt": true,
+  "partition_table_refresh_calls": 0,
+  "source_files_unchanged": true,
+  "cleanup": "owned loop detached and private target/state/sentinel files deleted",
+  "classification": "native private-loop staging transaction only; no live NVMe policy, TTY authorization, activation, rollback or hardware proof",
+  "source_root": {
+    "bytes": 4294967296,
+    "sha256": "a7c98b1cff05ccb9a77857d4d7b3a4bfd36fd6734a05866d911d5d2adbaa1e27"
+  },
+  "sources": {
+    "scripts/update-host.py": {
+      "bytes": 15029,
+      "sha256": "b3f5d12831fda92a290c70358ef0dc9d6b41987415b36cfe8d506a5b82efb1ac"
+    },
+    "scripts/host-update-target.py": {
+      "bytes": 11299,
+      "sha256": "44bb97b3e186afdc9e61b9c1680a49f1314cab63c19e8145318ca434e00283d2"
+    },
+    "tests/verify_host_update_loop.py": {
+      "bytes": 13157,
+      "sha256": "7022dda445123d8b2db9604071dbb48b1d3657547b8273093026400a252c0601"
+    }
+  },
+  "production_source_commit": "306d8465433618a078895d89200d416d4c7ef40e",
+  "final_harness_source_commit": "853ad688d25dce7c5fc70d69939cafa99e227259",
+  "source_provenance": "Production checkout was staged by git archive at production_source_commit. The final reviewed test-harness changes were overlaid; recorded source bytes match final_harness_source_commit. No immutable-builder or complete-vendor clean rebuild claim.",
+  "builder": "drew@build.drewnet.online Ubuntu 22.04.5 amd64, Python 3.10.12",
+  "resources": {
+    "owned_loop_backing_attribute_absent": true,
+    "private_loop_workspaces_remaining": [],
+    "final_available_disk_bytes": 19625336832,
+    "final_available_memory_bytes": 7821750272,
+    "compilation_jobs": "none; two-job initial compilation policy unchanged",
+    "elapsed": "0:28.71",
+    "maximum_process_resident_set_kib": 34212,
+    "exit_status": 0
+  },
+  "validation": {
+    "local_discovery_cases": 329,
+    "local_privileged_skips": 2,
+    "jammy_discovery_cases": 329,
+    "jammy_privileged_skips": 0,
+    "separate_diagnostic_cases": 4,
+    "all_shell_regressions": "passed",
+    "bash_syntax": "passed",
+    "all_toml_parse": "passed",
+    "independent_review": "Sol high; production target/writer and final test harness accepted"
+  },
+  "test_repairs": [
+    "Initial full retry was refused by a nonblocking lock with EAGAIN before writing. Settling builder device events before the fresh retry plan cleared the refusal; the lock owner was not independently identified. Production nonblocking locks were unchanged.",
+    "Initial test Mock call history retained all 4 GiB of pwrite buffers (peak RSS 4,240,856 KiB). Direct test-hook replacements removed that history; final process RSS is recorded above. Production copy remains bounded.",
+    "Failed loop-detach cleanup now retains its private workspace and prints loop/backing paths rather than unlinking an attached backing file."
+  ],
+  "limitations": [
+    "The live installed-host policy and interactive TTY authorization are explicitly replaced by fixtures in this loop test; their separate tests are mocked host-policy checks.",
+    "No physical NVMe, SD or SPI target, real root switch, manual rollback, kernel boot, power cut, real KVM guest or systemd management activation was tested.",
+    "Same-version package-state B root used; no cross-version state compatibility or backup restore proof.",
+    "Tools currently require a full trusted checkout on the installed host; they are not yet packaged into the root or installer image."
+  ]
+}

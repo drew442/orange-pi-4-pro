@@ -53,8 +53,9 @@ a new directory on safe non-SD storage. It does not select an installed target.
 
 `atomic_store()` in `build/root-selection.py` implements file fsync, atomic
 rename and directory fsync. Its caller must authorize the target directory and
-serialize writers. It is used for fresh staging; there is no installed
-activation CLI, inactive-slot writer or complete update/rollback controller.
+serialize writers. It is used for fresh staging. The [guarded inactive-slot
+writer](host-updates.md#stage-the-inactive-slot) does not call it: activation
+and the complete update/rollback controller remain open.
 Fault fixtures show pre-rename failure retains the old record; post-rename
 directory-sync failure reports the new record published with durability
 uncertain. These are file/fault fixtures, not power-cut or hardware evidence.

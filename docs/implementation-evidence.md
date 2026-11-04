@@ -135,8 +135,8 @@ receipts and `0700`/`0400` metadata match. Each capture took about 18 seconds
 with about 30 MiB peak RSS. The 286-case suite passes on Jammy without skips,
 plus four local diagnostic cases and all shell regressions. A Jammy test repair
 removed timestamp-granularity dependence; the isolated discovery invocation
-explicitly supplies the trusted repository import path. No production code
-changed after the captured producer commit. The test verifier and final test
+explicitly supplies the trusted repository import path. The recorded candidate producer hashes remain unchanged; the later staging
+controller is recorded separately below. The test verifier and final test
 source hashes are recorded separately.
 
 Independent Sol high review caught unbounded debugfs stdout accumulation in
@@ -145,6 +145,36 @@ child cleanup and duplicate-key rejection before JSON parsing. Oversize, hang,
 EOF-then-hang, cleanup-swap and actual regular-file ext4 checks pass. These are
 file-only preparation checks, not installed update, rollback, power-cut or
 hardware evidence. New code does not imply a rebuilt/deployed bootstrap.
+
+## Inactive-slot staging software checks
+
+[Staging evidence](evidence/host-update-stage-loop-20261104.json) records the
+checkout-only controller, read-only live-host policy fixtures, and a native
+private-loop transaction. An injected error leaves 8 MiB written, 12 MiB
+attempted and zero verified; the current selection is unchanged. A fresh
+explicit retry writes and verifies all 4 GiB against the authenticated B root.
+Real exclusive block claims, descriptor/geometry ioctls, flush and full readback
+run; live NVMe identity and TTY authorization are replaced by explicit test
+fixtures. Guest/boot sentinel checks are confined to private files. No root
+switch, physical update, rollback or power-cut acceptance is implied.
+
+Two early retries were safely refused by a nonblocking lock before any new
+write. Settling builder device events before the separate retry plan cleared
+the refusal; the lock owner was not independently identified. Resource sampling
+also caught test mock call history retaining copy buffers. Direct hook
+replacements reduced final peak process RSS to 34,212 KiB. The successful
+final run took 28.71 seconds; independent inspection confirmed no owned backing
+attribute or private workspace remained. Detach failure preserves the workspace
+for investigation. These harness repairs leave production locks and copying
+unchanged.
+
+All 329 discovery cases pass on Jammy without skips; four separate diagnostic
+cases, shell regressions, Bash syntax, TOML parsing and diff checks pass.
+Independent Sol high review accepted target selection, exact GPT byte checks,
+source/storage authentication, interruption reporting and the final harness.
+The controller still requires a trusted complete checkout; packaging,
+activation/manual rollback, cross-version shared state, and all hardware release
+gates remain open.
 
 ## Routing calibration
 
@@ -199,6 +229,9 @@ hardware evidence. New code does not imply a rebuilt/deployed bootstrap.
 | Package guide updates | Luna / low | Coordinator requested one correction to preserve commands/references and correct state RW semantics, then corrected remaining scope wording |
 | Update candidate preparation | Sol / medium | Authenticated raw root staging and no-overwrite publication; coordinator ran both actual 4 GiB roots and independent source/capture/selector comparisons |
 | Update/parser review | Sol / high | Unbounded debugfs capture found and fixed; bounded reads, deadline/reaping and ownership cleanup checked; no installed updater or hardware claim |
+| Inactive target policy | Sol / medium | Exact live root/state/selector ties, fixed GPT/kernel geometry and idle opposite-slot policy; 14 fixtures including identity matrix and snapshot orchestration |
+| Inactive staging writer | Sol / medium | 29 source/authorization/race/lock/failure fixtures; coordinator ran real 4 GiB private-loop interruption/retry and verified cleanup |
+| Inactive staging review | Sol / high | Production policy/transaction accepted; retained-workspace cleanup improvement and final bounded-memory harness checked; physical gates unchanged |
 | Slot metadata extraction | Luna / low | Source mapping established; coordinator clarified fresh per-boot RAM overlay semantics and authenticated actual archive metadata separately |
 
 Children used fresh focused contexts, exclusive write scopes and no delegation.
