@@ -3,8 +3,10 @@
 Routine updates must replace the inactive 4 GiB NVMe root, verify its complete
 contents, and then explicitly publish its selector on NVMe state. The current
 implementation prepares authenticated **files on the builder** and provides a
-guarded inactive-slot staging CLI for a running installed host. The CLI has not
-been used on physical hardware. It does not activate a candidate or perform rollback.
+guarded inactive-slot staging CLI for a running installed host. The staging CLI
+has not been used on physical hardware. The separate [selection controller](host-root-selection.md)
+supports explicit activation and pending-selection cancellation; booted rollback
+and failed-boot recovery remain unvalidated.
 Do not copy a prepared selector into live state by hand. Physical update and
 interruption testing remain release gates.
 
@@ -166,28 +168,16 @@ direct hook replacements to avoid retaining copy buffers in mock call history.
 For the underlying semantics, see [block-device O_EXCL](https://man7.org/linux/man-pages/man2/open.2.html)
 and [advisory flock](https://man7.org/linux/man-pages/man2/flock.2.html).
 
-## Required activation protocol
+## Explicit activation
 
-The staging controller identifies the actual NVMe model, serial, capacity,
-sector geometry and GPT roles, and prove the selected root and state belong to
-that drive. It rejects the active slot, mounted/in-use inactive partitions,
-source overlap and changed identities. The future activation controller must
-share the NVMe update lock, reverify both target identity and complete root
-contents, and obtain explicit authorization before changing selection.
-
-Write every authenticated root byte, flush, and independently read back the
-entire slot before offering activation. Preserve the previous verified selector
-and a verified off-device state backup. A partial write must leave the current
-selection intact. Recheck the current selection under the update lock, then use
-the existing fsync/rename/fsync publication helper. A publication error after
-rename means the visible selection must be inspected before proceeding.
-
-Activation must not automatically declare success. After an explicit reboot,
-verify the selected marker, NVMe-backed state and package views, management
-reachability, and actual KVM guest startup. These checks have not run on the
-board. The controller must not write the boot partition, SD or SPI during a
-routine root update. Kernel/DTB/initramfs changes require a separate recovery
-and maintenance procedure.
+Use the separate [root-selection controller](host-root-selection.md) after
+staging. It does not trust a saved staging receipt: it reauthenticates the
+complete installed root, shares the NVMe update lock, journals the original and
+proposed selector, and explicitly publishes next-boot selection. The current
+running root stays unchanged. Publication/interruption receipts distinguish
+visible selection from confirmed durability; no automatic reboot or health
+claim is made. The selector format and compatible immutable bootstrap remain
+unchanged.
 
 ## Manual rollback and recovery gates
 
@@ -198,7 +188,9 @@ Guest storage must remain untouched. Shared-state changes must be backward
 compatible or have a tested restore path; package-state isolation alone does
 not establish application/state compatibility across releases.
 
-There is no installed rollback command or automatic fallback policy yet. Do
+A healthy running host can select a retained old slot with its old trusted
+manifest, and can cancel a pending selection before reboot. These paths do not
+provide offline failed-boot recovery. There is no automatic fallback policy; do
 not advertise unattended updates. Required disposable-data tests include
 interruption during inactive-slot writes, before and after selector publication,
 manual A→B→A rollback, failed health checks, missing NVMe, and state-backup

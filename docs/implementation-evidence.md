@@ -172,9 +172,39 @@ All 329 discovery cases pass on Jammy without skips; four separate diagnostic
 cases, shell regressions, Bash syntax, TOML parsing and diff checks pass.
 Independent Sol high review accepted target selection, exact GPT byte checks,
 source/storage authentication, interruption reporting and the final harness.
-The controller still requires a trusted complete checkout; packaging,
-activation/manual rollback, cross-version shared state, and all hardware release
-gates remain open.
+The staging controller still requires a trusted complete checkout. The later
+selection controller is recorded below; packaging, booted rollback, cross-version
+shared state and all hardware release gates remain open.
+
+## Explicit root selection software checks
+
+[Selection evidence](evidence/host-root-selection-loop-20261104.json) records
+source `ca180ef` on Jammy: actual authenticated 4 GiB A/B private copies, A
+mounted read-only, and 64 MiB journaled ext4 state in a private mount namespace.
+A pre-rename fault retains A; a post-rename interruption reports B visible with
+durability uncertain. Reusing the durable journal and explicitly cancelling
+pending selection restores A. Offline unmounted-state readback confirms A;
+both complete root hashes and unrelated sentinels remain unchanged. All owned
+mounts, loops and files were removed, independently checked after process exit.
+The run took 1:53.89 with 37,500 KiB peak process RSS. Live NVMe identity/TTY
+checks are explicit fixtures; no actual boot, running-root switch or hardware
+rollback is implied.
+
+Independent Sol high review reproduced false publication receipts for Ctrl-C
+after rename, then at the helper-return/caller-accounting boundary. The helper
+now defers handled signals through rename accounting, reconciles by the created
+inode, accepts held directory FDs and preserves visibility on close failure.
+The coordinator applied the reviewer's caller guard after the first focused
+repair. Actual queued SIGINT and handled SIGTERM tests preserve visible/durable
+flags and restore signal masks. The reviewer independently reran 59 focused
+policy/helper/transaction cases. Journals sync existing file data before parent
+sync on reuse; they preserve history, not an assertion of previous-slot health.
+
+All 367 discovery cases pass on Jammy without skips, plus four diagnostic cases
+and shell regressions. Packaging, offline failed-boot recovery, shared-state
+restore/cross-version compatibility, board management/KVM health and all physical
+release criteria remain open. The five-field selector and existing immutable
+boot images are unchanged; this work does not deploy a new bootstrap.
 
 ## Routing calibration
 
@@ -232,6 +262,9 @@ gates remain open.
 | Inactive target policy | Sol / medium | Exact live root/state/selector ties, fixed GPT/kernel geometry and idle opposite-slot policy; 14 fixtures including identity matrix and snapshot orchestration |
 | Inactive staging writer | Sol / medium | 29 source/authorization/race/lock/failure fixtures; coordinator ran real 4 GiB private-loop interruption/retry and verified cleanup |
 | Inactive staging review | Sol / high | Production policy/transaction accepted; retained-workspace cleanup improvement and final bounded-memory harness checked; physical gates unchanged |
+| Selection policy | Sol / medium | Activation/cancellation pre/post states with strict unchanged staging defaults; 20 focused fixtures |
+| Selection transaction | Sol / medium | Read-only whole-root authentication, held-directory publication and durable history; interruption repair integrated with coordinator caller fix |
+| Selection/signal review | Sol / high | Independently reproduced helper/caller Ctrl-C gaps, verified both fixes and 59 focused cases; private ext4 harness reviewed before coordinator run |
 | Slot metadata extraction | Luna / low | Source mapping established; coordinator clarified fresh per-boot RAM overlay semantics and authenticated actual archive metadata separately |
 
 Children used fresh focused contexts, exclusive write scopes and no delegation.

@@ -55,14 +55,17 @@ a new directory on safe non-SD storage. It does not select an installed target.
 rename and directory fsync. Its caller must authorize the target directory and
 serialize writers. It is used for fresh staging. The [guarded inactive-slot
 writer](host-updates.md#stage-the-inactive-slot) does not call it: activation
-and the complete update/rollback controller remain open.
+is provided separately by the [explicit selection controller](host-root-selection.md).
+Offline failed-boot recovery and hardware rollback remain open.
 Fault fixtures show pre-rename failure retains the old record; post-rename
 directory-sync failure reports the new record published with durability
 uncertain. These are file/fault fixtures, not power-cut or hardware evidence.
 
-Before activation, verify the written inactive image, preserve a usable prior
-record, quiesce writers, and check management plus actual KVM health. Interrupted
-publication and manual rollback need testing on disposable data. Automatic
+The selection controller verifies the complete target, preserves a durable
+before/after journal, serializes writers and publishes through a held directory
+FD. Signal interruptions retain honest visibility accounting. Private ext4
+interruption/cancellation checks pass; management, actual KVM health, power-cut
+recovery and booted rollback still need hardware testing. Automatic
 fallback/rollback requires separately proven policy. Kernel/DTB/initramfs
 maintenance is separate from routine root updates. SPI-to-NVMe preference,
 zero routine SD writes, installer safety, backup and physical acceptance remain

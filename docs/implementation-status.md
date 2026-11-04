@@ -43,12 +43,14 @@ no larger card or live inventory was required to produce the diagnostic image.
   [handoff](host-handoff.md): 8 GiB journaled fixture with fresh installation
   identities; generic bootstrap fixes state UUID and ABI while root choice
   lives on recovered NVMe state. Selected-root-only resolution, ownership,
-  GPT-role and cleanup fixtures pass. Activation and automatic rollback remain open.
+  GPT-role and cleanup fixtures pass. Physical selection/rollback remain open.
 - [Root updates](host-updates.md): authenticated A/B file preparation and guarded
   inactive-slot staging CLI. Private loop interruption at 8 MiB and complete
   4 GiB retry/readback pass; selected/boot/guest sentinels stay unchanged.
-  Live NVMe/TTY policy uses separate fixtures. Checkout-only prototype;
-  packaging, activation, manual rollback and physical update tests remain open.
+  [Explicit selection](host-root-selection.md) adds durable journals, activation
+  and cancellation; real ext4 interruption/readback checks pass. Live NVMe/TTY
+  policy uses fixtures. Checkout-only tools; packaging, booted rollback,
+  offline failed-boot recovery and all physical update tests remain open.
 - [Management preparation](host-management.md): exact Ethernet MAC DHCPv4,
   selected-IP key-only SSH, NVMe host-key creation and RAM configuration.
   ARM key/sshd/PAM-account/unit checks pass; no SSH connection or systemd boot.
@@ -82,7 +84,7 @@ no larger card or live inventory was required to produce the diagnostic image.
 - [Guest fixture](guest-fixture.md): separate virt-profile kernel/initramfs and
   disposable disk built and hashed; launcher requires KVM with no TCG fallback.
   **No guest boot or KVM execution.** Guest networking/management remain open.
-- 333 Python cases across both suites and all shell regressions pass; the 329-case
+- 371 Python cases across both suites and all shell regressions pass; the 367-case
   discovery suite passes on Jammy with no skips (two privileged skips locally). Actual
   files/build checks are distinct from hardware gates. Independent Sol high
   reviews and routing outcomes: [implementation evidence](implementation-evidence.md).
@@ -98,9 +100,9 @@ no larger card or live inventory was required to produce the diagnostic image.
    actual per-installation candidate and validate board payload acquisition. Validate
    the writer/locking/readback/interruption protocol on authorized hardware. The preparation runtime
    has exercised software probes; board boot/DHCP/DNS/TLS remain unproven.
-3. Complete explicit activation and serial/manual rollback using the supported
-   package-state ABI and immutable boot stack. Package and validate the staging
-   protocol on hardware; cross-version updates/state compatibility remain unproven. Finish
+3. Complete offline failed-boot recovery and validate serial/manual rollback.
+   Package the maintenance tools and test staging/selection on hardware;
+   cross-version updates/state compatibility remain unproven. Finish
    guest storage/networking, backup/restore and operational procedures.
 4. Full clean-build reproducibility remains open: U-Boot emits a random
    128-byte debug challenge; builds differ there plus checksums. Exact generated

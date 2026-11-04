@@ -1,0 +1,310 @@
+{
+  "classification": "private-loop selection and real ext4 journal checks; live NVMe policy and TTY mocked; no boot, running-root switch, failed-boot recovery or hardware proof",
+  "prepublication_failure": {
+    "success": false,
+    "selection_write_attempted": true,
+    "selection_published": false,
+    "publication_durable": false,
+    "journal_visible": true,
+    "journal_durable": true,
+    "root_switched": false,
+    "block_writes_performed": false,
+    "classification": "selection receipt only; no health, boot, KVM or recovery proof",
+    "operation": "explicit-root-selection",
+    "intent": "activate",
+    "plan_sha256": "fa8da5bf63bf2d0bd2abb42527b318ca105f29c732de6fce1de364e56f56dcd0",
+    "target": {
+      "requested_path": "/dev/loop8",
+      "canonical_path": "/dev/loop8",
+      "major_minor": "7:8",
+      "model": "PRIVATE LOOP FIXTURE",
+      "serial": "NO-PHYSICAL-TARGET",
+      "size_bytes": 4294967296,
+      "logical_sector_bytes": 512,
+      "physical_sector_bytes": 512,
+      "partition_number": 3,
+      "partition_uuid": "a7330000-0000-4000-8000-000000000003"
+    },
+    "manifest": {
+      "path": "/var/lib/a733-update-final-20261104/candidate-B/manifest.json",
+      "slot": "B",
+      "root": {
+        "bytes": 4294967296,
+        "sha256": "a7c98b1cff05ccb9a77857d4d7b3a4bfd36fd6734a05866d911d5d2adbaa1e27"
+      },
+      "manifest_sha256": "51f8dfa7f0f66b005b9bfd08dc5f29fcf25f0791e5e844ab6af22de94aa9a44c",
+      "identity": {
+        "device": 64512,
+        "inode": 655840,
+        "bytes": 7023,
+        "mtime_ns": 1793810495735638432,
+        "ctime_ns": 1793810495735638432
+      }
+    },
+    "expected_root": {
+      "bytes": 4294967296,
+      "sha256": "a7c98b1cff05ccb9a77857d4d7b3a4bfd36fd6734a05866d911d5d2adbaa1e27"
+    },
+    "selected_before": {
+      "SCHEMA": "1",
+      "SLOT": "A",
+      "ROOT_UUID": "a7330000-0000-4000-8000-00000000000a",
+      "ROOT_MARKER_SHA256": "3a391301604aa248b15daa58fc0fa94cfeb355431dcec1c81fed6fbdc122cb3e",
+      "KERNEL_RELEASE": "6.6.98-a733-diag"
+    },
+    "proposed_selector": {
+      "SCHEMA": "1",
+      "SLOT": "B",
+      "ROOT_UUID": "a7330000-0000-4000-8000-00000000000b",
+      "ROOT_MARKER_SHA256": "9ced119915566ce4cc07de03b1bb7c7de1557f641514895555b2aa28a8fcd48b",
+      "KERNEL_RELEASE": "6.6.98-a733-diag"
+    },
+    "journal_name": "selection-fa8da5bf63bf2d0bd2abb42527b318ca105f29c732de6fce1de364e56f56dcd0.json",
+    "error": "PublicationError: selector publication failed; published=False: [Errno 5] intentional prepublication rename failure"
+  },
+  "postrename_interruption": {
+    "success": false,
+    "selection_write_attempted": true,
+    "selection_published": true,
+    "publication_durable": false,
+    "journal_visible": true,
+    "journal_durable": true,
+    "root_switched": false,
+    "block_writes_performed": false,
+    "classification": "selection receipt only; no health, boot, KVM or recovery proof",
+    "operation": "explicit-root-selection",
+    "intent": "activate",
+    "plan_sha256": "fa8da5bf63bf2d0bd2abb42527b318ca105f29c732de6fce1de364e56f56dcd0",
+    "target": {
+      "requested_path": "/dev/loop8",
+      "canonical_path": "/dev/loop8",
+      "major_minor": "7:8",
+      "model": "PRIVATE LOOP FIXTURE",
+      "serial": "NO-PHYSICAL-TARGET",
+      "size_bytes": 4294967296,
+      "logical_sector_bytes": 512,
+      "physical_sector_bytes": 512,
+      "partition_number": 3,
+      "partition_uuid": "a7330000-0000-4000-8000-000000000003"
+    },
+    "manifest": {
+      "path": "/var/lib/a733-update-final-20261104/candidate-B/manifest.json",
+      "slot": "B",
+      "root": {
+        "bytes": 4294967296,
+        "sha256": "a7c98b1cff05ccb9a77857d4d7b3a4bfd36fd6734a05866d911d5d2adbaa1e27"
+      },
+      "manifest_sha256": "51f8dfa7f0f66b005b9bfd08dc5f29fcf25f0791e5e844ab6af22de94aa9a44c",
+      "identity": {
+        "device": 64512,
+        "inode": 655840,
+        "bytes": 7023,
+        "mtime_ns": 1793810495735638432,
+        "ctime_ns": 1793810495735638432
+      }
+    },
+    "expected_root": {
+      "bytes": 4294967296,
+      "sha256": "a7c98b1cff05ccb9a77857d4d7b3a4bfd36fd6734a05866d911d5d2adbaa1e27"
+    },
+    "selected_before": {
+      "SCHEMA": "1",
+      "SLOT": "A",
+      "ROOT_UUID": "a7330000-0000-4000-8000-00000000000a",
+      "ROOT_MARKER_SHA256": "3a391301604aa248b15daa58fc0fa94cfeb355431dcec1c81fed6fbdc122cb3e",
+      "KERNEL_RELEASE": "6.6.98-a733-diag"
+    },
+    "proposed_selector": {
+      "SCHEMA": "1",
+      "SLOT": "B",
+      "ROOT_UUID": "a7330000-0000-4000-8000-00000000000b",
+      "ROOT_MARKER_SHA256": "9ced119915566ce4cc07de03b1bb7c7de1557f641514895555b2aa28a8fcd48b",
+      "KERNEL_RELEASE": "6.6.98-a733-diag"
+    },
+    "journal_name": "selection-fa8da5bf63bf2d0bd2abb42527b318ca105f29c732de6fce1de364e56f56dcd0.json",
+    "error": "PublicationError: selector publication failed; published=True: intentional postrename interruption before directory sync"
+  },
+  "cancel_pending": {
+    "success": true,
+    "selection_write_attempted": true,
+    "selection_published": true,
+    "publication_durable": true,
+    "journal_visible": true,
+    "journal_durable": true,
+    "root_switched": false,
+    "block_writes_performed": false,
+    "classification": "selection receipt only; no health, boot, KVM or recovery proof",
+    "operation": "explicit-root-selection",
+    "intent": "cancel-pending",
+    "plan_sha256": "847d434eb876683e6736e2db36cc2b4da773b4561aebd30bbb45609216c32453",
+    "target": {
+      "requested_path": "/dev/loop7",
+      "canonical_path": "/dev/loop7",
+      "major_minor": "7:7",
+      "model": "PRIVATE LOOP FIXTURE",
+      "serial": "NO-PHYSICAL-TARGET",
+      "size_bytes": 4294967296,
+      "logical_sector_bytes": 512,
+      "physical_sector_bytes": 512,
+      "partition_number": 2,
+      "partition_uuid": "a7330000-0000-4000-8000-000000000002"
+    },
+    "manifest": {
+      "path": "/var/lib/a733-update-final-20261104/candidate-A/manifest.json",
+      "slot": "A",
+      "root": {
+        "bytes": 4294967296,
+        "sha256": "6157897213b918c82241a6ff74920c2d5b92eb45cb30bc0333d8d97a58be733e"
+      },
+      "manifest_sha256": "51f8dfa7f0f66b005b9bfd08dc5f29fcf25f0791e5e844ab6af22de94aa9a44c",
+      "identity": {
+        "device": 64512,
+        "inode": 655833,
+        "bytes": 7023,
+        "mtime_ns": 1793810477434644267,
+        "ctime_ns": 1793810477434644267
+      }
+    },
+    "expected_root": {
+      "bytes": 4294967296,
+      "sha256": "6157897213b918c82241a6ff74920c2d5b92eb45cb30bc0333d8d97a58be733e"
+    },
+    "selected_before": {
+      "SCHEMA": "1",
+      "SLOT": "B",
+      "ROOT_UUID": "a7330000-0000-4000-8000-00000000000b",
+      "ROOT_MARKER_SHA256": "9ced119915566ce4cc07de03b1bb7c7de1557f641514895555b2aa28a8fcd48b",
+      "KERNEL_RELEASE": "6.6.98-a733-diag"
+    },
+    "proposed_selector": {
+      "SCHEMA": "1",
+      "SLOT": "A",
+      "ROOT_UUID": "a7330000-0000-4000-8000-00000000000a",
+      "ROOT_MARKER_SHA256": "3a391301604aa248b15daa58fc0fa94cfeb355431dcec1c81fed6fbdc122cb3e",
+      "KERNEL_RELEASE": "6.6.98-a733-diag"
+    },
+    "journal_name": "selection-847d434eb876683e6736e2db36cc2b4da773b4561aebd30bbb45609216c32453.json",
+    "selected_after": {
+      "SCHEMA": "1",
+      "SLOT": "A",
+      "ROOT_UUID": "a7330000-0000-4000-8000-00000000000a",
+      "ROOT_MARKER_SHA256": "3a391301604aa248b15daa58fc0fa94cfeb355431dcec1c81fed6fbdc122cb3e",
+      "KERNEL_RELEASE": "6.6.98-a733-diag"
+    }
+  },
+  "root_block_opens": [
+    {
+      "slot": "B",
+      "exclusive": true
+    },
+    {
+      "slot": "B",
+      "exclusive": true
+    },
+    {
+      "slot": "B",
+      "exclusive": true
+    },
+    {
+      "slot": "B",
+      "exclusive": true
+    },
+    {
+      "slot": "B",
+      "exclusive": true
+    },
+    {
+      "slot": "B",
+      "exclusive": true
+    },
+    {
+      "slot": "B",
+      "exclusive": true
+    },
+    {
+      "slot": "A",
+      "exclusive": false
+    },
+    {
+      "slot": "A",
+      "exclusive": false
+    },
+    {
+      "slot": "A",
+      "exclusive": false
+    },
+    {
+      "slot": "A",
+      "exclusive": false
+    }
+  ],
+  "raw_root_images_unchanged": true,
+  "mounted_readonly_A_refused_exclusive_claim": true,
+  "journaled_state_bytes": 67108864,
+  "journal_records": {
+    "selection-847d434eb876683e6736e2db36cc2b4da773b4561aebd30bbb45609216c32453.json": {
+      "bytes": 2502,
+      "sha256": "d6cb387d8a449a123c9a81534e48c92e4c84f5383bf42c01f1e9e2db21bc7bfc"
+    },
+    "selection-fa8da5bf63bf2d0bd2abb42527b318ca105f29c732de6fce1de364e56f56dcd0.json": {
+      "bytes": 2496,
+      "sha256": "b50a0a8b27d925a4972661a14a8344e6531454a37cfa9b92ea5bac54693e8771"
+    }
+  },
+  "offline_state_selector_readback": "A",
+  "unrelated_sentinels_unchanged": true,
+  "sources": {
+    "scripts/select-host-root.py": {
+      "bytes": 19791,
+      "sha256": "9092bf07c8c83912a0d64ae1238fcb4c4002363cb90f844c7926f995f4266238"
+    },
+    "scripts/host-update-target.py": {
+      "bytes": 13517,
+      "sha256": "e4d11cc2457497b2339aa39d19077ab90489ec2fb10a1bc3c5f4afa127c59ab3"
+    },
+    "build/root-selection.py": {
+      "bytes": 10350,
+      "sha256": "15b5a64630cd74793af946ea89b5b3f3bd580a07bf52baa9a893bdd71b82b6e2"
+    },
+    "tests/verify_host_selection_loop.py": {
+      "bytes": 16682,
+      "sha256": "a287992c3958be3a9cfee6999e0e375d05fdd3b72dd4040e87c15c1d66230f6c"
+    }
+  },
+  "cleanup": "all owned mounts unmounted, loops detached and private workspace deleted",
+  "source_commit": "ca180ef4aaeed5d05eed855c60d49c448bff25fe",
+  "builder": "drew@build.drewnet.online Ubuntu 22.04.5 amd64 Python 3.10.12",
+  "resources": {
+    "private_workspaces_remaining": [],
+    "private_loop_backings_remaining": {},
+    "final_available_disk_bytes": 19614625792,
+    "final_available_memory_bytes": 7777624064,
+    "compilation": "none; initial two-job policy unchanged",
+    "elapsed": "1:53.89",
+    "maximum_process_resident_set_kib": 37500,
+    "exit_status": 0
+  },
+  "validation": {
+    "local_discovery_cases": 367,
+    "local_privileged_skips": 2,
+    "jammy_discovery_cases": 367,
+    "jammy_privileged_skips": 0,
+    "separate_diagnostic_cases": 4,
+    "all_shell_regressions": "passed",
+    "toml_parse": "passed",
+    "bash_syntax": "passed",
+    "independent_review": "Sol high; interruption accounting blocker fixed and caller boundary independently verified; 59 focused cases pass"
+  },
+  "review_repairs": [
+    "Initial publisher caught OSError but not KeyboardInterrupt; postrename interruption could falsely report old selection. Helper now defers handled signals around rename accounting, reconciles by created inode, and preserves publication state on close failure.",
+    "A second independently reproduced boundary existed after helper return but before caller receipt flags. Coordinator applied Sol-high prescribed caller guard; actual queued SIGINT and handled SIGTERM tests preserve visible/durable flags and restore signal masks.",
+    "Held directory descriptors bind publication to the intended state directory; existing journal file data is synced before the parent directory on reuse."
+  ],
+  "limitations": [
+    "Live NVMe identity/topology and interactive TTY authorization are replaced by explicit fixtures; separate policy/transaction tests cover those checks.",
+    "Two 4 GiB authenticated same-version root copies and 64 MiB journaled ext4 state use private loops; this is not the physical 250 GB installation layout.",
+    "Only next-boot selection changes A to pending B to A. No running root switch, actual boot, failed-boot recovery, host rollback after reboot, power cut or KVM guest execution.",
+    "Source checkout from git archive reuses previously authenticated package-state candidates; no immutable clean-builder or vendor-stack rebuild claim.",
+    "Tools remain checkout-only; no packaged updater/recovery image or physical SD/NVMe/SPI deployment has been performed."
+  ]
+}

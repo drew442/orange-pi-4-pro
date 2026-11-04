@@ -32,13 +32,12 @@ uses a nonexclusive read-only descriptor because the verified running root is
 mounted read-only. Both paths hash all 4 GiB before parsing bounded filesystem
 metadata and hold the descriptor through publication.
 
-The following is prototype CLI usage. Set every `A733_*` value from actual host
-inventory and a trusted release record; there is no default target. The tools
-must be staged at the stated root-owned checkout path before use. These
+The following is prototype CLI usage. Enter a root shell with `sudo -i`, then
+set every `A733_*` value from actual host inventory and a trusted release
+record; there is no default target. The tools must be staged at the stated root-owned checkout path before use. These
 commands have not been reproduced on the board.
 
 ```sh
-sudo -i
 : "${A733_NVME_TARGET:?Set the exact whole-NVMe stable path}"
 : "${A733_NVME_MODEL:?Set the exact model}"
 : "${A733_NVME_SERIAL:?Set the exact serial}"
@@ -85,7 +84,8 @@ and [fsync](https://man7.org/linux/man-pages/man2/fsync.2.html) for the underlyi
 semantics. The original five-field [selector format](nvme-root-selection.md)
 and immutable bootstrap remain compatible.
 
-Handled SIGINT/SIGTERM are deferred through publication and receipt accounting.
+Handled SIGINT/SIGTERM are deferred through publication and receipt accounting;
+see [Python signal masks](https://docs.python.org/3.10/library/signal.html#signal.pthread_sigmask).
 A failure before rename reports selection unpublished. A failure or interruption
 after rename reports the new selection visible, with durability uncertain when
 directory sync did not complete. An interruption after a completed publisher
@@ -103,3 +103,40 @@ After an explicit reboot, verify the actual selected marker, NVMe state/package
 views, management reachability and an actual KVM guest. No automatic reboot or
 rollback is implemented. Interrupted publication, failed-boot recovery,
 cross-version state restoration and all physical release tests remain required.
+
+## Verified software checks
+
+[Private-loop evidence](evidence/host-root-selection-loop-20261104.json) records
+actual authenticated 4 GiB A/B copies and 64 MiB journaled ext4 state in a
+private mount namespace. The running-root fixture A was mounted read-only and
+refused an exclusive block claim. Activation read idle B with exclusive claims;
+cancellation read mounted A nonexclusively. All controller block opens were
+read-only; both root images remained byte-identical.
+
+An injected pre-rename failure retained A and a durable journal. Reusing that
+journal with a post-rename interruption reported B visible and durability
+uncertain. Explicit cancellation then published A durably. Offline readback of
+the unmounted state filesystem confirmed A. Unrelated sentinels were unchanged;
+all private mounts/loops/files were removed. The run took 1:53.89 with 37,500 KiB
+peak process RSS. These are file/loop and fault-injection checks, not power-cut
+or booted rollback results. The live NVMe context and TTY authorization were
+explicitly replaced by fixtures.
+
+Verified command on the Jammy builder:
+
+```sh
+sudo /usr/bin/python3.10 -I -B \
+  /var/lib/a733-selection-work-20261104/tests/verify_host_selection_loop.py \
+  /var/lib/a733-update-final-20261104 \
+  --manifest-sha256 51f8dfa7f0f66b005b9bfd08dc5f29fcf25f0791e5e844ab6af22de94aa9a44c
+```
+
+The harness accepts no target argument and requires 12 GiB free on supported
+fixed builder storage. It creates its own loops, retains the workspace if
+cleanup fails, and imports no untrusted executable fixture. Separate native
+signal tests queue actual SIGINT and handled SIGTERM around publication,
+including the helper-return boundary; independent review verified conservative
+receipts and restored masks. The 367-case suite passes on Jammy without skips,
+plus four separate diagnostic cases and shell regressions. ARM execution of
+this new controller, actual host health, packaged recovery and all physical
+acceptance remain open.
