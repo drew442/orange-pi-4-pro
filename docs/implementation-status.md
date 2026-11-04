@@ -35,6 +35,11 @@ no larger card or live inventory was required to produce the diagnostic image.
   matching modules, read-only ext4 feature/no journal. Full hashes, contents
   and gzip expansions passed. New-root writable-loop checks deny read-write
   remounts and writes; no systemd or board boot.
+  [Current tool-bearing roots](guest-tools-package.md) include the complete
+  39-file maintenance/guest tree at `/usr/lib/a733-tools`. Exact raw/compressed
+  and ownership/mode readback passes; portable archive clean-repeat is identical.
+  Packaged ARM workflows pass at the installed path without a checkout.
+  The published recovery SD and full-disk fixture retain earlier components.
 - [Package-state isolation](host-package-state.md): eight version-owned views
   bind read-only from the selected root; 77.3 MB of caches pruned in private
   staging. Native A→B→A tests and ARM64 binfmt queries on both actual roots
@@ -51,8 +56,8 @@ no larger card or live inventory was required to produce the diagnostic image.
   and cancellation; real ext4 interruption/readback checks pass. Live NVMe/TTY
   policy uses fixtures. [RAM recovery](host-recovery.md) archives malformed
   selectors and selects a retained root; native 250 GB GPT/8 GiB state checks
-  pass. The portable [maintenance package](maintenance-tools.md) is included in
-  the refreshed preparation SD. ARM imports/CLI, full 4 GiB authentication,
+  pass. The earlier [maintenance subset](maintenance-tools.md) is included in
+  the published preparation SD. ARM imports/CLI, full 4 GiB authentication,
   debugfs and queued-SIGINT publication checks pass. Crash-journal replay, booted rollback and all
   physical update/recovery tests remain open.
 - [Management preparation](host-management.md): exact Ethernet MAC DHCPv4,
@@ -104,8 +109,8 @@ no larger card or live inventory was required to produce the diagnostic image.
   staging; real ARM loopback TLS and native index checks pass. Off-device retention,
   full-capacity resource checks, actual board networking,
   restored KVM boot and physical recovery remain open. Actual clean shutdown,
-  restart, packaging/boot integration and networking remain open.
-- 673 Python cases across both suites and all shell regressions pass; the 669-case
+  restart, automatic boot integration and networking remain open.
+- 678 Python cases across both suites and all shell regressions pass; the 674-case
   discovery suite passes on Jammy with no skips (94 privileged skips locally). Actual
   files/build checks are distinct from hardware gates. Independent Sol high
   reviews and routing outcomes: [implementation evidence](implementation-evidence.md).

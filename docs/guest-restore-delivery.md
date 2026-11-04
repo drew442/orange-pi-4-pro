@@ -11,13 +11,13 @@ mandatory. No physical board network or restored KVM test has passed.
 
 First finish [backup transfer and independent receiver readback](guest-backups.md).
 Use the resulting protected archive and independently trusted pins. In a shell
-on that separate machine, with a complete reviewed checkout and fixed storage:
+on that separate machine, with a trusted complete portable tool tree and fixed storage:
 
 ```bash
 set -euo pipefail
 umask 077
 set -C
-: "${A733_BACKUP_TOOLS:?Set absolute trusted complete checkout}"
+: "${A733_BACKUP_TOOLS:?Set absolute trusted complete portable tool tree}"
 : "${A733_VERIFIED_BACKUP:?Set absolute verified receiver output directory}"
 : "${A733_BACKUP_ARCHIVE_SHA256:?Set successful authenticated source archive pin}"
 : "${A733_BACKUP_MANIFEST_SHA256:?Set trusted source manifest pin}"
@@ -81,7 +81,7 @@ destination. In its root shell, set trusted values:
 set -euo pipefail
 umask 077
 set -C
-: "${A733_GUEST_TOOLS:?Set absolute trusted complete checkout on RAM or NVMe}"
+: "${A733_GUEST_TOOLS:?Set absolute trusted complete installed or portable tool tree}"
 : "${A733_BACKUP_ARCHIVE_URL:?Set protected HTTPS archive URL}"
 : "${A733_BACKUP_CHUNK_INDEX_URL:?Set protected HTTPS index URL}"
 : "${A733_BACKUP_CHUNK_INDEX_SHA256:?Set trusted successful index receipt pin}"

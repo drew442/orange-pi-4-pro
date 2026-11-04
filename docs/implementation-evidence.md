@@ -645,3 +645,74 @@ execution, physical recovery and reproduced deployment remain open. Children
 used fresh focused contexts, exclusive files, no descendants and at most two
 concurrent children. Tokens, cache accounting, account prices and exact review
 time were not exposed; monetary cost and measured savings are unknown.
+
+## 2026-11-04: installed and portable guest tool closure
+
+Source `cd80603` extends the explicit maintenance package to 38 sources plus
+`package.json`, with 16 CLI entrypoints, and installs the same captured tree
+under `/usr/lib/a733-tools` in both immutable root slots. A fresh Sol medium
+worker owned the package allowlist/tests and maintenance ARM CLI list. Root
+owned root integration, provenance, raw-image verification and packaged ARM
+workflows. A fresh Sol high reviewer accepted the final implementation and
+native checks. Luna low updated six guest guides from supplied verified facts;
+root reviewed those edits. Children used exclusive files, fresh contexts, no
+descendants and at most two concurrent children.
+
+The [113,133-byte portable archive](evidence/guest-tools-package-20261104.json)
+has SHA-256 `e7495d225ef754a3ad591baecd098db7555a494dfe36d6b808de298be7f1ba07`.
+Its manifest and archive match a fresh-checkout rebuild byte for byte. Both
+[4 GiB root components](evidence/guest-tools-payload-20261104.json) retain the
+compatible kernel/DTB/modules, journal-free read-only format and package-state
+ABI. Exact source/provenance bytes are shared with the portable package.
+No activation, mount, account, service, guest or listener is added by packaging.
+
+Review strengthened [independent root inspection](evidence/guest-tools-payload-verify-20261104.json)
+to require the checkout-derived complete BOM/entrypoints, every package
+directory's exact entries and root-owned `0555` mode, and root-owned `0444`
+file contents. An empty self-declared BOM cannot pass. The first raw verifier
+run exposed variable shadowing in the newly added directory loop; root fixed
+the verifier and successfully repeated it on the same images. Images were not
+rebuilt to mask the failure. Raw hashes, compressed expansion, ownership,
+package metadata and both slots pass final checks. Build time was 144.14 seconds
+with 68,060 KiB maximum RSS; verification took 43.77 seconds and 21,364 KiB.
+
+The [packaged ARM probe](evidence/guest-tools-arm-20261104.json) authenticates
+the external package manifest, exact tree and deterministic archive, then stages
+only captured package bytes at the installed path. Review found a second-read
+gap after tree authentication; captured bytes are now compared again with
+trusted expected bytes before any staging. Regressions refuse a changed capture
+and inconsistent outer entrypoints before execution. Actual ARM sysusers,
+enrollment, checkpointing, backup, local and real-TLS HTTPS restoration,
+ownership/readback and unit parsing pass without a repository tree in the
+chroot. No guest or service starts. The probe took 112.39 seconds and 360,200 KiB.
+Live NVMe/namespace/UUID/service/UID-census/TTY policy boundaries remain explicit
+fixture substitutions, not hardware evidence.
+
+The separate [maintenance ARM probe](evidence/guest-maintenance-arm-20261104.json)
+imports all 37 Python modules and runs all 16 CLI help paths using the pinned
+minimal runtime. It retains full 4 GiB candidate authentication, real ARM
+debugfs inspection, GPT/sysfs fixtures, atomic selector storage/queued SIGINT
+and production guard refusals. It took 119.43 seconds and 102,736 KiB. The
+registered binfmt interpreter pathname/hash is checked; its kernel-held F
+descriptor is not independently inspected. RAM recovery is not an operational
+guest host, and its published SD image still carries the older tool subset.
+
+Jammy root passed 674 discovery cases without skips, four diagnostic cases and
+all shell regressions. Local discovery passed with 94 privileged skips. TOML,
+Bash syntax, guide syntax/links and diff checks passed. To preserve the root
+builder's unchanged conservative free-space guard, a verified duplicate
+268,435,456-byte generated SD image was removed from the old repeat directory
+after hashing it against the retained primary and confirming it was not loop
+attached. Its identical compressed repeat, primary raw image and logs remain.
+No physical target was erased. Post-checks found no private fixture or mount;
+free builder space was 17,472,258,048 bytes with about 7.7 GB available memory.
+No compilation or package installation occurred.
+
+Artifacts/logs are exported under the builder's
+`guest-tools-artifacts-20261104/`; raw roots remain in the protected build output,
+with compressed roots exported for download. The [operator guide](guest-tools-package.md)
+distinguishes new installed/portable trees from the earlier recovery SD and
+full-disk fixtures. Full per-installation assembly, actual boot integration,
+guest networking/KVM, zero SD writes and physical recovery/acceptance remain
+open. Tokens/cache/account prices and exact review time were not exposed;
+monetary cost and measured savings remain unknown.

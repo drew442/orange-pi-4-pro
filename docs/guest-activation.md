@@ -1,9 +1,12 @@
 # Guest storage and account activation
 
 Explicit controllers now prepare and apply guest-storage mounting and locked
-service identities. They require the installed managed host; neither controller
-is included in the published recovery SD or host roots. Stage the complete
-trusted checkout on NVMe or RAM first. [Guest enrollment](guest-enrollment.md) now publishes the private directory
+service identities. Stage the trusted maintenance tree on NVMe or RAM first.
+The new immutable A/B root includes the complete tree at `/usr/lib/a733-tools`;
+the authenticated portable archive can stage the same complete versioned tree.
+The published recovery SD image is an older subset and has not been refreshed.
+See [guest tools availability](guest-tools-package.md) for paths. No board has
+been installed or booted and no KVM guest has passed. [Guest enrollment](guest-enrollment.md) now publishes the private directory
 and protected assets. Automatic boot integration and production supervision
 remain work in progress. No physical
 activation or KVM guest has been demonstrated.
@@ -28,7 +31,7 @@ explicit operator approval. These commands have not been reproduced on the
 board. Enter a root shell and set every value from the actual installation:
 
 ```sh
-: "${A733_GUEST_TOOLS:?Set absolute trusted complete checkout directory}"
+: "${A733_GUEST_TOOLS:?Set absolute trusted complete installed or portable tool tree}"
 : "${A733_NVME_TARGET:?Set exact whole NVMe stable path}"
 : "${A733_NVME_MODEL:?Set exact model}"
 : "${A733_NVME_SERIAL:?Set exact serial}"

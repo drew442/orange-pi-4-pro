@@ -1,0 +1,570 @@
+{
+  "board": "Orange Pi 4 Pro A733",
+  "builder_packages": {
+    "e2fsprogs": {
+      "architecture": "amd64",
+      "version": "1.46.5-2ubuntu1.2"
+    },
+    "gzip": {
+      "architecture": "amd64",
+      "version": "1.10-4ubuntu4.2"
+    },
+    "libext2fs2": {
+      "architecture": "amd64",
+      "version": "1.46.5-2ubuntu1.2"
+    },
+    "tar": {
+      "architecture": "amd64",
+      "version": "1.34+dfsg-1ubuntu0.1.22.04.6"
+    }
+  },
+  "cache_pruning": [
+    {
+      "bytes": 38641220,
+      "path": "var/cache/apt/pkgcache.bin",
+      "sha256": "44be7de1a7b849a862a390ab094694ac83e23d8cedd408f2abdaa42676461611"
+    },
+    {
+      "bytes": 38641160,
+      "path": "var/cache/apt/srcpkgcache.bin",
+      "sha256": "26c572d46b690c0cf8785a886abf215aa9adb8ebf7894d0677e9f34708d1e1cb"
+    },
+    {
+      "bytes": 12588,
+      "path": "var/cache/ldconfig/aux-cache",
+      "sha256": "9d7151dea46b884ffa1565cdf185f2ab2440bd641627f92db7751afeb670faf8"
+    }
+  ],
+  "classification": "managed host root prototype; installation and hardware acceptance pending",
+  "files": {
+    "Image": {
+      "bytes": 27283464,
+      "sha256": "9df974c55fa61a77e8fe812652780dad471527eb9615c27838f481887d4c50e7"
+    },
+    "board.dtb": {
+      "bytes": 209320,
+      "sha256": "4d7d964a54668cf5dc12cd4bf7e72a625c79883541272aeba1a91adbbedb86ed"
+    },
+    "initramfs.cpio.gz": {
+      "bytes": 3650395,
+      "sha256": "e2b09f56f4df8cfd52b98c0f1fe018c92a0806d8cac6ee065c6ac31b15e6ca30"
+    },
+    "kernel.config": {
+      "bytes": 212080,
+      "sha256": "8a29d9c36e52db7e8a7d6ff757dc69e660f4273c99e5f00c5dbc5a9b7e060675"
+    },
+    "modules.json": {
+      "bytes": 60283,
+      "sha256": "80ddcd28eedce2e2e900aa3c0059d36189fe285b492dc1f7daf3eb84fe92af1d"
+    },
+    "provenance/a733-management-ssh.service": {
+      "bytes": 360,
+      "sha256": "d9603c6eb460ab1429234cbf6f7689b1dbbf72a4fcc61e97e90458e8877c07cb"
+    },
+    "provenance/builder-packages.lock.tsv": {
+      "bytes": 32519,
+      "sha256": "35c2faf42a936168098b1f54239825a3c42fc56c825fc0b2078bbd753425f48b"
+    },
+    "provenance/diagnostic-20261104.json": {
+      "bytes": 2224,
+      "sha256": "6d743d81ee27ced3b55cbcd218bbf0693743be66e85d074e59a052c8819fde1c"
+    },
+    "provenance/diagnostic-sources.lock.json": {
+      "bytes": 2273,
+      "sha256": "aa39f5fca29244ca961fc3f422d7110adca6975d2c6a29f80afd9d1d2f4b4821"
+    },
+    "provenance/host-management.py": {
+      "bytes": 22716,
+      "sha256": "3db7519f67986e4a1276a95666593b9d9a98355669926d8d3ddcf5fc319c4a54"
+    },
+    "provenance/host-payload.py": {
+      "bytes": 20834,
+      "sha256": "3aa7aafdb5dcd037f047c5e606ead40a91616bf338ae30c055d3264401938a37"
+    },
+    "provenance/host-userspace-20261104.json": {
+      "bytes": 1118,
+      "sha256": "370ee0bdb625f4dd10943c2cefb9f0e85d4c70b9b9b279be81697108b1558353"
+    },
+    "provenance/host-userspace-package-hashes.lock.tsv": {
+      "bytes": 28638,
+      "sha256": "f2f613e79d9c1abc1689e19cfe81b624d9d2ac3beeb322fd5788980d919f7d86"
+    },
+    "provenance/host-userspace-packages.lock.tsv": {
+      "bytes": 6671,
+      "sha256": "f2abf03d0d6e7fd506560689093220514cbf1acc678f7560562026d6ca6564a6"
+    },
+    "provenance/host-userspace-packages.txt": {
+      "bytes": 217,
+      "sha256": "2751818bd1cb5226b7b468a4d5d295ac110b616256f5d658e6c9023c2ccef1ee"
+    },
+    "provenance/host-userspace.sh": {
+      "bytes": 11084,
+      "sha256": "e62952afd5ba656599aabef745169d5b9cf4b05eba063b8fe7b8727c24acbf33"
+    },
+    "provenance/host_config.py": {
+      "bytes": 2873,
+      "sha256": "520140d56402ab803b8c137981cef5182c5e263a44ec8446ce836b6a7d160a22"
+    },
+    "provenance/maintenance/build/host-initramfs.py": {
+      "bytes": 12506,
+      "sha256": "96c19c387b04a9e753e6eb658ef1ba7373f0cd4d58a46d8ee90c8a1348f9481d"
+    },
+    "provenance/maintenance/build/host-payload.py": {
+      "bytes": 20834,
+      "sha256": "3aa7aafdb5dcd037f047c5e606ead40a91616bf338ae30c055d3264401938a37"
+    },
+    "provenance/maintenance/build/host-state.py": {
+      "bytes": 16004,
+      "sha256": "e088e7557e210a1718aaf70ebaaf0f481144fe640f640650a2a76e71cc72e6ec"
+    },
+    "provenance/maintenance/build/host-storage-tools.py": {
+      "bytes": 4985,
+      "sha256": "e8d54568a6f43552996021a6a0a3178769564238be34a8642fca9d304f8f9750"
+    },
+    "provenance/maintenance/build/maintenance-tools.py": {
+      "bytes": 14288,
+      "sha256": "d45c9ff6d5fb9e67e95dfeef89f91419be37161267259c11ca416353e2c07c8c"
+    },
+    "provenance/maintenance/build/root-selection.py": {
+      "bytes": 10350,
+      "sha256": "15b5a64630cd74793af946ea89b5b3f3bd580a07bf52baa9a893bdd71b82b6e2"
+    },
+    "provenance/maintenance/configs/guest_backup.py": {
+      "bytes": 6738,
+      "sha256": "449a623551e76177bc4fb5aafb477ac8e57c147f1d9ad2a4e564ccd467b43486"
+    },
+    "provenance/maintenance/configs/guest_backup_chunks.py": {
+      "bytes": 2706,
+      "sha256": "f2cde5024d1a833f6d953ed0d8c4388eae28a13ee3a86367c41f562973b31ccc"
+    },
+    "provenance/maintenance/configs/guest_config.py": {
+      "bytes": 5775,
+      "sha256": "0ffbbfab27398d7d37cbe68035751940be46074e69f58d34f4f077ea9c427861"
+    },
+    "provenance/maintenance/configs/guest_identity.py": {
+      "bytes": 1997,
+      "sha256": "d7d126f015e64c7d2f26a6cad8686b90c7892c00ea9ab552e4fc36b9254d5e84"
+    },
+    "provenance/maintenance/configs/guest_manifest.py": {
+      "bytes": 6364,
+      "sha256": "e4407e98d6ccee39b4437f88de9c885965e15ec4c59be085ce6b89115d6fd6c6"
+    },
+    "provenance/maintenance/configs/host-management.py": {
+      "bytes": 22716,
+      "sha256": "3db7519f67986e4a1276a95666593b9d9a98355669926d8d3ddcf5fc319c4a54"
+    },
+    "provenance/maintenance/configs/host_config.py": {
+      "bytes": 2873,
+      "sha256": "520140d56402ab803b8c137981cef5182c5e263a44ec8446ce836b6a7d160a22"
+    },
+    "provenance/maintenance/configs/package_state.py": {
+      "bytes": 13113,
+      "sha256": "809630ebba9d927b6ad5034899a88a8a8fcf3401f94ff6f223f92f6fbfa9c6eb"
+    },
+    "provenance/maintenance/docs/evidence/diagnostic-20261104.json": {
+      "bytes": 2224,
+      "sha256": "6d743d81ee27ced3b55cbcd218bbf0693743be66e85d074e59a052c8819fde1c"
+    },
+    "provenance/maintenance/package.json": {
+      "bytes": 10904,
+      "sha256": "33d4b658164ef9bbec96cd5997279bcd24cd6bd52caf034d80bae245a1a994c1"
+    },
+    "provenance/maintenance/scripts/acquire-nvme.py": {
+      "bytes": 17658,
+      "sha256": "68eac982f9282e65f5cfb323d0ce5ed6b5b0772f2aa23dcdbd66df3dad598b25"
+    },
+    "provenance/maintenance/scripts/activate-guest-storage.py": {
+      "bytes": 17823,
+      "sha256": "f147d977556ba0aaeaa954c10c2a01e69e0bcacb013e9725195ce2fd30ad37d4"
+    },
+    "provenance/maintenance/scripts/backup-guest.py": {
+      "bytes": 9419,
+      "sha256": "e566d2426a7c6a876b63bc49592a63d5276642c4e1c7c28adb5a4c69d24cf47a"
+    },
+    "provenance/maintenance/scripts/checkpoint-guest.py": {
+      "bytes": 12703,
+      "sha256": "50c01b06819adfc9bc1f1bd13ba20ae1acac660518f653f9b103567c515dec20"
+    },
+    "provenance/maintenance/scripts/enroll-guest.py": {
+      "bytes": 23309,
+      "sha256": "04e12b68426d3c1137f9835e098dc20a3c0370c97de7ada592fb4e1e2b7db64e"
+    },
+    "provenance/maintenance/scripts/guest-accounts.py": {
+      "bytes": 12769,
+      "sha256": "641ab5ae4c67e7fbc426dd6332823c34a3099d589c23e7bf647555bd1c1599c1"
+    },
+    "provenance/maintenance/scripts/guest-checkpoint-policy.py": {
+      "bytes": 12977,
+      "sha256": "e7779518ad5a4d002b827d48b60c9d93d418d2283004a9df2ee088aab1c6a30f"
+    },
+    "provenance/maintenance/scripts/guest-mount-target.py": {
+      "bytes": 7267,
+      "sha256": "037bf594538939707f3df1e1105da90c2a25397d34b356c73d48fad273b54e73"
+    },
+    "provenance/maintenance/scripts/guest-restore-https.py": {
+      "bytes": 11507,
+      "sha256": "4ac8bd9de94617ea5ce4eceae2a215aa122b2ff5ee7d25febe71c159cb032a96"
+    },
+    "provenance/maintenance/scripts/guest-restore-source.py": {
+      "bytes": 6178,
+      "sha256": "976317a90a6d6a5ae4cc7ee350871e14c051b08b1f08fd0832c230ec73646f05"
+    },
+    "provenance/maintenance/scripts/guest-storage.py": {
+      "bytes": 8915,
+      "sha256": "64cd02b2e01fe8f58b0c425f6bfb2ae8849ab2b3b7f4022e4d712604a396ed44"
+    },
+    "provenance/maintenance/scripts/host-recovery-target.py": {
+      "bytes": 9770,
+      "sha256": "9901e568384fd7d4e5722e22eac84e936640f05e8fee4900b06d2b2b987e960b"
+    },
+    "provenance/maintenance/scripts/host-update-target.py": {
+      "bytes": 13517,
+      "sha256": "e4d11cc2457497b2339aa39d19077ab90489ec2fb10a1bc3c5f4afa127c59ab3"
+    },
+    "provenance/maintenance/scripts/index-guest-backup.py": {
+      "bytes": 8657,
+      "sha256": "7ba70ec494740075fd98e926cb38a51e1ca6d044e4c027d49fde3ad8b22c1c35"
+    },
+    "provenance/maintenance/scripts/install-nvme.py": {
+      "bytes": 22122,
+      "sha256": "d4c46227f9589822e8dae0a896b8c6a28c356ce67cc0f574b85598a4df612f47"
+    },
+    "provenance/maintenance/scripts/launch-kvm-guest.py": {
+      "bytes": 9719,
+      "sha256": "197f1bba532b23a5e751284dc62653a8cd0284aafbe4259f5ca4648134640e28"
+    },
+    "provenance/maintenance/scripts/nvme_layout.py": {
+      "bytes": 6162,
+      "sha256": "742a71575d94c9be29e01af3f50dc0d0639b38800c3e5a86ded49ac8906e518f"
+    },
+    "provenance/maintenance/scripts/plan-nvme.py": {
+      "bytes": 7815,
+      "sha256": "8ed9075de6ab4425457aa3f309847f2e66b134691f0fe80ac5eb7c43f1746e31"
+    },
+    "provenance/maintenance/scripts/prepare-host-update.py": {
+      "bytes": 13372,
+      "sha256": "c1c0528aab579d1583627af0069736cf25b27714975532e99f642eb4c98f8bdb"
+    },
+    "provenance/maintenance/scripts/recover-host-root.py": {
+      "bytes": 21526,
+      "sha256": "64ed3b156338a7ba51de646260883f353090e16be1f36c44815f4327df7f3a40"
+    },
+    "provenance/maintenance/scripts/restore-guest.py": {
+      "bytes": 22062,
+      "sha256": "4ae09706f9085b7427acb890333bc464bac8c78027b522ee86172cca708e3bd5"
+    },
+    "provenance/maintenance/scripts/select-host-root.py": {
+      "bytes": 19847,
+      "sha256": "39810e44ed03c406d3548c7526a7edd00d5dcb7163e5e421b0f3e9fe32c56d49"
+    },
+    "provenance/maintenance/scripts/update-host.py": {
+      "bytes": 15029,
+      "sha256": "b3f5d12831fda92a290c70358ef0dc9d6b41987415b36cfe8d506a5b82efb1ac"
+    },
+    "provenance/maintenance/scripts/verify-guest-backup.py": {
+      "bytes": 15832,
+      "sha256": "af48fc57f66f6d7c3f151cf3509f9e840917b121cbd6de447875c694a7a31e0d"
+    },
+    "provenance/package_state.py": {
+      "bytes": 13113,
+      "sha256": "809630ebba9d927b6ad5034899a88a8a8fcf3401f94ff6f223f92f6fbfa9c6eb"
+    },
+    "root-A.ext4": {
+      "bytes": 4294967296,
+      "sha256": "6329177322737505220da66b082b126e4ed66fd618e039c8b2e012214c0bbfda"
+    },
+    "root-A.ext4.gz": {
+      "bytes": 143416603,
+      "sha256": "d7e5b509118a18fed19efb447fffac12da635582f896020b93b09009a1810105"
+    },
+    "root-B.ext4": {
+      "bytes": 4294967296,
+      "sha256": "a07015569e3c2b8fcd9094f1e462929c93be481ba6f1dd94426ee9b70eb9acfe"
+    },
+    "root-B.ext4.gz": {
+      "bytes": 143415900,
+      "sha256": "641b207c8f077a5f0332f4ba78e7dd1228b2c4bac31559ba810c66e0ebecd3e8"
+    }
+  },
+  "kernel_release": "6.6.98-a733-diag",
+  "maintenance_runtime": {
+    "entrypoints": {
+      "acquire-nvme": "scripts/acquire-nvme.py",
+      "activate-guest-storage": "scripts/activate-guest-storage.py",
+      "backup-guest": "scripts/backup-guest.py",
+      "checkpoint-guest": "scripts/checkpoint-guest.py",
+      "enroll-guest": "scripts/enroll-guest.py",
+      "guest-accounts": "scripts/guest-accounts.py",
+      "index-guest-backup": "scripts/index-guest-backup.py",
+      "install-nvme": "scripts/install-nvme.py",
+      "launch-kvm-guest": "scripts/launch-kvm-guest.py",
+      "plan-nvme": "scripts/plan-nvme.py",
+      "prepare-host-update": "scripts/prepare-host-update.py",
+      "recover-host-root": "scripts/recover-host-root.py",
+      "restore-guest": "scripts/restore-guest.py",
+      "select-host-root": "scripts/select-host-root.py",
+      "update-host": "scripts/update-host.py",
+      "verify-guest-backup": "scripts/verify-guest-backup.py"
+    },
+    "files": {
+      "usr/lib/a733-tools/build/host-initramfs.py": {
+        "bytes": 12506,
+        "mode": 292,
+        "sha256": "96c19c387b04a9e753e6eb658ef1ba7373f0cd4d58a46d8ee90c8a1348f9481d"
+      },
+      "usr/lib/a733-tools/build/host-payload.py": {
+        "bytes": 20834,
+        "mode": 292,
+        "sha256": "3aa7aafdb5dcd037f047c5e606ead40a91616bf338ae30c055d3264401938a37"
+      },
+      "usr/lib/a733-tools/build/host-state.py": {
+        "bytes": 16004,
+        "mode": 292,
+        "sha256": "e088e7557e210a1718aaf70ebaaf0f481144fe640f640650a2a76e71cc72e6ec"
+      },
+      "usr/lib/a733-tools/build/host-storage-tools.py": {
+        "bytes": 4985,
+        "mode": 292,
+        "sha256": "e8d54568a6f43552996021a6a0a3178769564238be34a8642fca9d304f8f9750"
+      },
+      "usr/lib/a733-tools/build/root-selection.py": {
+        "bytes": 10350,
+        "mode": 292,
+        "sha256": "15b5a64630cd74793af946ea89b5b3f3bd580a07bf52baa9a893bdd71b82b6e2"
+      },
+      "usr/lib/a733-tools/configs/guest_backup.py": {
+        "bytes": 6738,
+        "mode": 292,
+        "sha256": "449a623551e76177bc4fb5aafb477ac8e57c147f1d9ad2a4e564ccd467b43486"
+      },
+      "usr/lib/a733-tools/configs/guest_backup_chunks.py": {
+        "bytes": 2706,
+        "mode": 292,
+        "sha256": "f2cde5024d1a833f6d953ed0d8c4388eae28a13ee3a86367c41f562973b31ccc"
+      },
+      "usr/lib/a733-tools/configs/guest_config.py": {
+        "bytes": 5775,
+        "mode": 292,
+        "sha256": "0ffbbfab27398d7d37cbe68035751940be46074e69f58d34f4f077ea9c427861"
+      },
+      "usr/lib/a733-tools/configs/guest_identity.py": {
+        "bytes": 1997,
+        "mode": 292,
+        "sha256": "d7d126f015e64c7d2f26a6cad8686b90c7892c00ea9ab552e4fc36b9254d5e84"
+      },
+      "usr/lib/a733-tools/configs/guest_manifest.py": {
+        "bytes": 6364,
+        "mode": 292,
+        "sha256": "e4407e98d6ccee39b4437f88de9c885965e15ec4c59be085ce6b89115d6fd6c6"
+      },
+      "usr/lib/a733-tools/configs/host-management.py": {
+        "bytes": 22716,
+        "mode": 292,
+        "sha256": "3db7519f67986e4a1276a95666593b9d9a98355669926d8d3ddcf5fc319c4a54"
+      },
+      "usr/lib/a733-tools/configs/host_config.py": {
+        "bytes": 2873,
+        "mode": 292,
+        "sha256": "520140d56402ab803b8c137981cef5182c5e263a44ec8446ce836b6a7d160a22"
+      },
+      "usr/lib/a733-tools/configs/package_state.py": {
+        "bytes": 13113,
+        "mode": 292,
+        "sha256": "809630ebba9d927b6ad5034899a88a8a8fcf3401f94ff6f223f92f6fbfa9c6eb"
+      },
+      "usr/lib/a733-tools/docs/evidence/diagnostic-20261104.json": {
+        "bytes": 2224,
+        "mode": 292,
+        "sha256": "6d743d81ee27ced3b55cbcd218bbf0693743be66e85d074e59a052c8819fde1c"
+      },
+      "usr/lib/a733-tools/package.json": {
+        "bytes": 10904,
+        "mode": 292,
+        "sha256": "33d4b658164ef9bbec96cd5997279bcd24cd6bd52caf034d80bae245a1a994c1"
+      },
+      "usr/lib/a733-tools/scripts/acquire-nvme.py": {
+        "bytes": 17658,
+        "mode": 292,
+        "sha256": "68eac982f9282e65f5cfb323d0ce5ed6b5b0772f2aa23dcdbd66df3dad598b25"
+      },
+      "usr/lib/a733-tools/scripts/activate-guest-storage.py": {
+        "bytes": 17823,
+        "mode": 292,
+        "sha256": "f147d977556ba0aaeaa954c10c2a01e69e0bcacb013e9725195ce2fd30ad37d4"
+      },
+      "usr/lib/a733-tools/scripts/backup-guest.py": {
+        "bytes": 9419,
+        "mode": 292,
+        "sha256": "e566d2426a7c6a876b63bc49592a63d5276642c4e1c7c28adb5a4c69d24cf47a"
+      },
+      "usr/lib/a733-tools/scripts/checkpoint-guest.py": {
+        "bytes": 12703,
+        "mode": 292,
+        "sha256": "50c01b06819adfc9bc1f1bd13ba20ae1acac660518f653f9b103567c515dec20"
+      },
+      "usr/lib/a733-tools/scripts/enroll-guest.py": {
+        "bytes": 23309,
+        "mode": 292,
+        "sha256": "04e12b68426d3c1137f9835e098dc20a3c0370c97de7ada592fb4e1e2b7db64e"
+      },
+      "usr/lib/a733-tools/scripts/guest-accounts.py": {
+        "bytes": 12769,
+        "mode": 292,
+        "sha256": "641ab5ae4c67e7fbc426dd6332823c34a3099d589c23e7bf647555bd1c1599c1"
+      },
+      "usr/lib/a733-tools/scripts/guest-checkpoint-policy.py": {
+        "bytes": 12977,
+        "mode": 292,
+        "sha256": "e7779518ad5a4d002b827d48b60c9d93d418d2283004a9df2ee088aab1c6a30f"
+      },
+      "usr/lib/a733-tools/scripts/guest-mount-target.py": {
+        "bytes": 7267,
+        "mode": 292,
+        "sha256": "037bf594538939707f3df1e1105da90c2a25397d34b356c73d48fad273b54e73"
+      },
+      "usr/lib/a733-tools/scripts/guest-restore-https.py": {
+        "bytes": 11507,
+        "mode": 292,
+        "sha256": "4ac8bd9de94617ea5ce4eceae2a215aa122b2ff5ee7d25febe71c159cb032a96"
+      },
+      "usr/lib/a733-tools/scripts/guest-restore-source.py": {
+        "bytes": 6178,
+        "mode": 292,
+        "sha256": "976317a90a6d6a5ae4cc7ee350871e14c051b08b1f08fd0832c230ec73646f05"
+      },
+      "usr/lib/a733-tools/scripts/guest-storage.py": {
+        "bytes": 8915,
+        "mode": 292,
+        "sha256": "64cd02b2e01fe8f58b0c425f6bfb2ae8849ab2b3b7f4022e4d712604a396ed44"
+      },
+      "usr/lib/a733-tools/scripts/host-recovery-target.py": {
+        "bytes": 9770,
+        "mode": 292,
+        "sha256": "9901e568384fd7d4e5722e22eac84e936640f05e8fee4900b06d2b2b987e960b"
+      },
+      "usr/lib/a733-tools/scripts/host-update-target.py": {
+        "bytes": 13517,
+        "mode": 292,
+        "sha256": "e4d11cc2457497b2339aa39d19077ab90489ec2fb10a1bc3c5f4afa127c59ab3"
+      },
+      "usr/lib/a733-tools/scripts/index-guest-backup.py": {
+        "bytes": 8657,
+        "mode": 292,
+        "sha256": "7ba70ec494740075fd98e926cb38a51e1ca6d044e4c027d49fde3ad8b22c1c35"
+      },
+      "usr/lib/a733-tools/scripts/install-nvme.py": {
+        "bytes": 22122,
+        "mode": 292,
+        "sha256": "d4c46227f9589822e8dae0a896b8c6a28c356ce67cc0f574b85598a4df612f47"
+      },
+      "usr/lib/a733-tools/scripts/launch-kvm-guest.py": {
+        "bytes": 9719,
+        "mode": 292,
+        "sha256": "197f1bba532b23a5e751284dc62653a8cd0284aafbe4259f5ca4648134640e28"
+      },
+      "usr/lib/a733-tools/scripts/nvme_layout.py": {
+        "bytes": 6162,
+        "mode": 292,
+        "sha256": "742a71575d94c9be29e01af3f50dc0d0639b38800c3e5a86ded49ac8906e518f"
+      },
+      "usr/lib/a733-tools/scripts/plan-nvme.py": {
+        "bytes": 7815,
+        "mode": 292,
+        "sha256": "8ed9075de6ab4425457aa3f309847f2e66b134691f0fe80ac5eb7c43f1746e31"
+      },
+      "usr/lib/a733-tools/scripts/prepare-host-update.py": {
+        "bytes": 13372,
+        "mode": 292,
+        "sha256": "c1c0528aab579d1583627af0069736cf25b27714975532e99f642eb4c98f8bdb"
+      },
+      "usr/lib/a733-tools/scripts/recover-host-root.py": {
+        "bytes": 21526,
+        "mode": 292,
+        "sha256": "64ed3b156338a7ba51de646260883f353090e16be1f36c44815f4327df7f3a40"
+      },
+      "usr/lib/a733-tools/scripts/restore-guest.py": {
+        "bytes": 22062,
+        "mode": 292,
+        "sha256": "4ae09706f9085b7427acb890333bc464bac8c78027b522ee86172cca708e3bd5"
+      },
+      "usr/lib/a733-tools/scripts/select-host-root.py": {
+        "bytes": 19847,
+        "mode": 292,
+        "sha256": "39810e44ed03c406d3548c7526a7edd00d5dcb7163e5e421b0f3e9fe32c56d49"
+      },
+      "usr/lib/a733-tools/scripts/update-host.py": {
+        "bytes": 15029,
+        "mode": 292,
+        "sha256": "b3f5d12831fda92a290c70358ef0dc9d6b41987415b36cfe8d506a5b82efb1ac"
+      },
+      "usr/lib/a733-tools/scripts/verify-guest-backup.py": {
+        "bytes": 15832,
+        "mode": 292,
+        "sha256": "af48fc57f66f6d7c3f151cf3509f9e840917b121cbd6de447875c694a7a31e0d"
+      }
+    },
+    "profile": "a733-maintenance-tools-v1"
+  },
+  "management_runtime": {
+    "files": {
+      "usr/lib/orangepi-hypervisor/host-management.py": {
+        "bytes": 22716,
+        "sha256": "3db7519f67986e4a1276a95666593b9d9a98355669926d8d3ddcf5fc319c4a54"
+      },
+      "usr/lib/orangepi-hypervisor/host_config.py": {
+        "bytes": 2873,
+        "sha256": "520140d56402ab803b8c137981cef5182c5e263a44ec8446ce836b6a7d160a22"
+      },
+      "usr/lib/orangepi-hypervisor/package_state.py": {
+        "bytes": 13113,
+        "sha256": "809630ebba9d927b6ad5034899a88a8a8fcf3401f94ff6f223f92f6fbfa9c6eb"
+      },
+      "usr/lib/systemd/system/a733-management-ssh.service": {
+        "bytes": 360,
+        "sha256": "d9603c6eb460ab1429234cbf6f7689b1dbbf72a4fcc61e97e90458e8877c07cb"
+      }
+    },
+    "profile": "a733-management-v1"
+  },
+  "package_state": {
+    "manifest": {
+      "bytes": 189468,
+      "sha256": "682f6ae0293cc8ef1a1e4780e30140fd557ede4de893328c8fc0dec5582dba7d"
+    },
+    "profile": "a733-package-state-v1"
+  },
+  "reproducibility": "not established; filesystem/package-generated metadata may vary",
+  "schema": 1,
+  "slot_bytes": 4294967296,
+  "slot_uuids": {
+    "A": "a7330000-0000-4000-8000-00000000000a",
+    "B": "a7330000-0000-4000-8000-00000000000b"
+  },
+  "sources": {
+    "Image": {
+      "bytes": 27283464,
+      "sha256": "9df974c55fa61a77e8fe812652780dad471527eb9615c27838f481887d4c50e7"
+    },
+    "board.dtb": {
+      "bytes": 209320,
+      "sha256": "4d7d964a54668cf5dc12cd4bf7e72a625c79883541272aeba1a91adbbedb86ed"
+    },
+    "initramfs.cpio.gz": {
+      "bytes": 3650395,
+      "sha256": "e2b09f56f4df8cfd52b98c0f1fe018c92a0806d8cac6ee065c6ac31b15e6ca30"
+    },
+    "kernel.config": {
+      "bytes": 212080,
+      "sha256": "8a29d9c36e52db7e8a7d6ff757dc69e660f4273c99e5f00c5dbc5a9b7e060675"
+    },
+    "rootfs.tar.gz": {
+      "bytes": 169852145,
+      "sha256": "1967e76c0c831c1c0bab432e7116457d4372c15b413090c054f8958b72dcb392"
+    }
+  },
+  "tools": {
+    "e2fsck": "e2fsck 1.46.5 (30-Dec-2021)\n\tUsing EXT2FS Library version 1.46.5, 30-Dec-2021",
+    "mke2fs": "mke2fs 1.46.5 (30-Dec-2021)\n\tUsing EXT2FS Library version 1.46.5",
+    "tune2fs": "tune2fs: invalid option -- 'V'\nUsage: tune2fs [-c max_mounts_count] [-e errors_behavior] [-f] [-g group]\n\t[-i interval[d|m|w]] [-j] [-J journal_options] [-l]\n\t[-m reserved_blocks_percent] [-o [^]mount_options[,...]]\n\t[-r reserved_blocks_count] [-u user] [-C mount_count]\n\t[-L volume_label] [-M last_mounted_dir]\n\t[-O [^]feature[,...]] [-Q quota_options]\n\t[-E extended-option[,...]] [-T last_check_time] [-U UUID]\n\t[-I new_inode_size] [-z undo_file] device\ntune2fs 1.46.5 (30-Dec-2021)"
+  }
+}

@@ -28,8 +28,11 @@ an unlinked disk. Namespace, process visibility and census errors fail closed.
 The census is bounded and remains a snapshot; trusted root must exclude new
 uncooperative processes throughout restoration.
 
-Stage a complete reviewed checkout on RAM or NVMe. The current maintenance image
-does not include restoration. Choose [direct HTTPS delivery](guest-restore-delivery.md)
+Use the complete installed tree at `/usr/lib/a733-tools` on the new immutable
+A/B root or a trusted complete portable tool tree on RAM or NVMe. The older
+published recovery SD image has not been refreshed. See
+[guest tools availability](guest-tools-package.md). No board installation,
+boot or KVM guest pass has been demonstrated. Choose [direct HTTPS delivery](guest-restore-delivery.md)
 to avoid local encoded staging. For the local-file mode below, copy the verified archive from the separate backup
 machine to a **protected directory on the selected NVMe**, outside every enrolled
 guest directory. Its ancestors must be root-owned without shared write access;
@@ -57,7 +60,7 @@ procedure. In a destination root shell, set these variables from trusted records
 set -euo pipefail
 umask 077
 set -C
-: "${A733_GUEST_TOOLS:?Set absolute trusted complete checkout directory}"
+: "${A733_GUEST_TOOLS:?Set absolute trusted complete installed or portable tool tree}"
 : "${A733_RESTORE_ARCHIVE:?Set absolute protected selected-NVMe archive path}"
 : "${A733_BACKUP_ARCHIVE_SHA256:?Set authenticated source receipt archive pin}"
 : "${A733_BACKUP_MANIFEST_SHA256:?Set trusted backed-up manifest pin}"

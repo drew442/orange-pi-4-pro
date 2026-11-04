@@ -10,8 +10,11 @@ No physical enrollment or KVM execution has been demonstrated.
 
 First complete [storage/account activation](guest-activation.md) on the actual
 managed host. The configured locked identity must already exist exactly as
-specified. Stage the full trusted checkout on NVMe or RAM. Published images and
-the maintenance archive do not yet include these enrollment tools.
+specified. Use the complete installed tree at `/usr/lib/a733-tools` on the new
+immutable A/B root, or stage a trusted complete portable tool tree on NVMe or
+RAM. The older published recovery SD image has not been refreshed. See
+[guest tools availability](guest-tools-package.md). No board installation,
+boot or KVM guest pass has been demonstrated.
 
 Supply a root:root, single-link `0400` configuration file on RAM or selected
 NVMe state. The exact schema below uses the existing [pinned guest fixture](guest-fixture.md).
@@ -55,7 +58,7 @@ These commands have not been reproduced on the board. Use a root shell and
 set all paths from reviewed artifacts and the actual installation:
 
 ```sh
-: "${A733_GUEST_TOOLS:?Set absolute trusted complete checkout directory}"
+: "${A733_GUEST_TOOLS:?Set absolute trusted complete installed or portable tool tree}"
 : "${A733_GUEST_CONFIG:?Set protected enrollment config path}"
 : "${A733_GUEST_KERNEL:?Set protected pinned kernel seed path}"
 : "${A733_GUEST_INITRD:?Set protected pinned initramfs seed path}"

@@ -53,11 +53,14 @@ is root:guest-group `0710`, so the guest cannot replace its manifest or assets.
 
 The following is prospective usage after verified physical shutdown and
 installation. It has not been reproduced on the board. In a root shell, set
-values from the trusted records and stage the complete current checkout on
-NVMe or RAM:
+values from the trusted records and use the complete installed tree at
+`/usr/lib/a733-tools` on the new immutable A/B root or a trusted complete
+portable tool tree on NVMe or RAM. The older recovery SD image has not been
+refreshed; see [guest tools availability](guest-tools-package.md). No board
+installation, boot or KVM guest pass has been demonstrated:
 
 ```sh
-: "${A733_GUEST_TOOLS:?Set absolute trusted complete checkout directory}"
+: "${A733_GUEST_TOOLS:?Set absolute trusted complete installed or portable tool tree}"
 : "${A733_GUEST_NAME:?Set enrolled guest name}"
 : "${A733_GUEST_MANIFEST_SHA256:?Set independently trusted current manifest pin}"
 umask 077

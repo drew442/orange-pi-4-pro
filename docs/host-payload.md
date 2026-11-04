@@ -4,7 +4,11 @@ The builder produced two raw 4 GiB ext4 root-slot images from the authenticated
 [interim ARM64 userspace](host-userspace.md) and matching A733 kernel modules.
 They include management runtime profile `a733-management-v1`: the management
 helper, configuration and package-state modules, and systemd SSH service.
-Marker and manifest records hash all four files. The images remain prototypes: they are not
+Marker and manifest records hash all four files. The
+[current root build](guest-tools-package.md) also includes the complete closed
+maintenance/guest tree at `/usr/lib/a733-tools`, with its own exact BOM and
+immutable modes. The artifact records below retain the earlier package-state
+components; they have not been silently replaced. The images remain prototypes: they are not
 installed or hardware-booted, and establish no KVM or SD-write acceptance.
 
 ## Format and provenance

@@ -1,14 +1,16 @@
 # Portable maintenance tools
 
-`build/maintenance-tools.py` packages the current closed maintenance source set
+`build/maintenance-tools.py` packages the closed maintenance and guest source set
 for later staging by an installed host or recovery runtime. It does not install,
 execute or authorize the package. The package contains a read-only `tree/`,
-`tools.tar.gz` and `manifest.json`; the seven command entrypoints are
-`install-nvme`, `acquire-nvme`, `plan-nvme`, `prepare-host-update`,
-`update-host`, `select-host-root` and `recover-host-root`. Their adjacent Python
+`tools.tar.gz` and `manifest.json`. The current package has 16 entrypoints,
+covering installation, host maintenance and guest operations; see the
+[current package and installed-root guide](guest-tools-package.md). Adjacent Python
 imports are retained under `tree/scripts`, `tree/build` and `tree/configs`;
 invoke scripts in isolated Python mode with `-I -B` only after staging the
-complete tree.
+complete tree. The artifact records and staging example below describe the
+earlier seven-command package still present in the published recovery SD.
+That SD has not been refreshed; use the current package guide for guest tools.
 
 ## Build on fixed storage
 
@@ -76,7 +78,7 @@ A733 target, 2 GB SD, nominal 250 GB NVMe, minimal host and zero routine SD
 writes. Physical acceptance still requires actual hardware boot, NVMe operation
 and an actual KVM guest.
 
-## Current artifacts and software evidence
+## Published recovery SD package and software evidence
 
 Built on Jammy from source commit `d5c71f5`. The 58,524-byte `tools.tar.gz` has
 SHA-256 `ca8428bddf7415a2983aee2db2c834aaa1e2d86d83a2ec8ffcbdd0c604ebd742`.

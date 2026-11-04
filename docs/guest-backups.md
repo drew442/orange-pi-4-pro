@@ -7,9 +7,11 @@ the new files. These tools prepare backup artifacts. Guest restoration, a
 restored KVM boot and off-device retention still require validation. No such
 hardware test has passed.
 
-The current maintenance image does not contain these tools. Use a complete,
-trusted checkout on RAM or NVMe; do not copy a single script without its imported
-modules. Deployment and boot integration remain open.
+Use the complete installed tree at `/usr/lib/a733-tools` on the new immutable
+A/B root or a trusted complete portable tool tree on RAM or NVMe; do not copy a
+single script without its imported modules. The older published recovery SD
+image has not been refreshed. See [guest tools availability](guest-tools-package.md).
+No board installation, boot or KVM guest pass has been demonstrated.
 
 ## Prepare a consistent source
 
@@ -33,10 +35,13 @@ older verified backups before planning any history-retention change.
 ## Transfer to a separate machine
 
 The following is prospective installed-board usage, not a reproduced deployment.
-Stage the complete reviewed checkout at `/run/a733-guest-tools` on the board.
+Install the complete current tool tree on the board at `/usr/lib/a733-tools`.
+Do not copy only the sender script to match the remote path. An older root can
+use a complete trusted portable tool tree and a reviewed adapted remote absolute
+path; this guide's command is for the new root.
 Confirm the board's SSH host key through the trusted management procedure.
 On the **separate backup machine**, use a root shell with known fixed storage,
-the trusted checkout and the appropriate SSH key. Fill in these values from
+the trusted complete portable tool tree and appropriate SSH key. Fill in these values from
 trusted records:
 
 ```bash
@@ -46,14 +51,14 @@ set -C
 : "${A733_BOARD:?Set root@verified-board-address}"
 : "${A733_GUEST_NAME:?Set enrolled guest name}"
 : "${A733_GUEST_MANIFEST_SHA256:?Set trusted current manifest SHA-256}"
-: "${A733_BACKUP_TOOLS:?Set absolute trusted complete checkout on backup machine}"
+: "${A733_BACKUP_TOOLS:?Set absolute trusted complete portable tool tree on backup machine}"
 : "${A733_BACKUP_INBOX:?Set new absolute private directory on fixed backup storage}"
 : "${A733_BACKUP_OUTPUT:?Set different new absolute verified output directory}"
 [[ "$A733_GUEST_NAME" =~ ^[a-z]([a-z0-9-]{0,14}[a-z0-9])?$ ]]
 [[ "$A733_GUEST_MANIFEST_SHA256" =~ ^[0-9a-f]{64}$ ]]
 mkdir -m 0700 -- "$A733_BACKUP_INBOX"
 ssh -T -o BatchMode=yes -o StrictHostKeyChecking=yes "$A733_BOARD" \
-  "/usr/bin/python3 -I -B /run/a733-guest-tools/scripts/backup-guest.py '$A733_GUEST_NAME' --manifest-sha256 '$A733_GUEST_MANIFEST_SHA256'" \
+  "/usr/bin/python3 -I -B /usr/lib/a733-tools/scripts/backup-guest.py '$A733_GUEST_NAME' --manifest-sha256 '$A733_GUEST_MANIFEST_SHA256'" \
   > "$A733_BACKUP_INBOX/archive.tar.gz" \
   2> "$A733_BACKUP_INBOX/source-receipt.json"
 ```
