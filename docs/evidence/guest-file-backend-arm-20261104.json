@@ -1,0 +1,138 @@
+{
+  "ARM_checks": {
+    "architecture": "aarch64",
+    "held_descriptor_checks": {
+      "disk": {
+        "copied": {
+          "bytes": 1048576,
+          "sha256": "11030261d987f0966338a7afb2fb76b1503b1683d72ffc4ffacd111bc298722f"
+        },
+        "descriptor_access": "read-only",
+        "original": {
+          "bytes": 1048576,
+          "sha256": "11030261d987f0966338a7afb2fb76b1503b1683d72ffc4ffacd111bc298722f"
+        },
+        "qemu_img_info": {
+          "actual-size": 1048576,
+          "dirty-flag": false,
+          "filename": "/proc/self/fd/5",
+          "format": "raw",
+          "virtual-size": 1048576
+        },
+        "replacement": {
+          "bytes": 13,
+          "sha256": "fe9caf44cd52fb52cdaf0e12366db55ea5b1ba6139331df304015b5aa015f28c"
+        }
+      },
+      "initrd": {
+        "copied": {
+          "bytes": 1048576,
+          "sha256": "5ae9782017a68037004b2bf806c77d324db4d915ed3725d84eb3121b2ad16061"
+        },
+        "descriptor_access": "read-only",
+        "original": {
+          "bytes": 1048576,
+          "sha256": "5ae9782017a68037004b2bf806c77d324db4d915ed3725d84eb3121b2ad16061"
+        },
+        "qemu_img_info": {
+          "actual-size": 1048576,
+          "dirty-flag": false,
+          "filename": "/proc/self/fd/4",
+          "format": "raw",
+          "virtual-size": 1048576
+        },
+        "replacement": {
+          "bytes": 15,
+          "sha256": "4e1c18ac6a9d796db52c6b1de8e896b379b40627500c63ae6df3dc430eaa5764"
+        }
+      },
+      "kernel": {
+        "copied": {
+          "bytes": 1048576,
+          "sha256": "4e29ad18ab9f42d7c233500771a39d7c852b200baf328fd00fbbe3fecea1eb56"
+        },
+        "descriptor_access": "read-only",
+        "original": {
+          "bytes": 1048576,
+          "sha256": "4e29ad18ab9f42d7c233500771a39d7c852b200baf328fd00fbbe3fecea1eb56"
+        },
+        "qemu_img_info": {
+          "actual-size": 1048576,
+          "dirty-flag": false,
+          "filename": "/proc/self/fd/3",
+          "format": "raw",
+          "virtual-size": 1048576
+        },
+        "replacement": {
+          "bytes": 15,
+          "sha256": "21b114ebbeadc8309f80962d89f033456ac077e47ee211cba92eb32266772fe6"
+        }
+      }
+    },
+    "physical_block_nodes": "absent",
+    "private_PID_namespace": true,
+    "private_proc": "ro,nosuid,nodev,noexec",
+    "python": "3.11.2 (main, May 12 2026, 05:17:27) [GCC 12.2.0]",
+    "qemu_img_version": "qemu-img version 7.2.22 (Debian 1:7.2+dfsg-7+deb12u18+b3)\nCopyright (c) 2003-2022 Fabrice Bellard and the QEMU Project developers"
+  },
+  "binfmt": {
+    "bytes": 5628704,
+    "interpreter": "/usr/libexec/qemu-binfmt/aarch64-binfmt-P",
+    "limit": "Hashes configured interpreter pathname; kernel-held binfmt interpreter FD is not independently inspectable.",
+    "registration": "enabled\ninterpreter /usr/libexec/qemu-binfmt/aarch64-binfmt-P\nflags: PF\noffset 0\nmagic 7f454c460201010000000000000000000200b700\nmask ffffffffffffff00fffffffffffffffffeffffff\n",
+    "resolved_interpreter": "/usr/bin/qemu-aarch64-static",
+    "sha256": "92c4aeb8dd898de7152c184370ab22f09ae7c5b7279fd300081c76cee3f78a80"
+  },
+  "builder_staging_storage": {
+    "fstype": "ext4",
+    "maj:min": "252:0"
+  },
+  "classification": "ARM64 QEMU file-backend software probe; no guest boot or KVM execution",
+  "limits": [
+    "Native builder kernel and ARM binfmt do not validate A733 hardware.",
+    "Dry-run uses read-only descriptors and does not exercise the storage guard, writable disk or launcher flock.",
+    "qemu-img file backend only; QEMU system kernel/initrd loaders, VM, KVM, boot and networking untested.",
+    "Configured interpreter pathname hash checked; inherited kernel binfmt F interpreter FD is not independently inspectable."
+  ],
+  "private_fixture": "deleted after namespace exit; no physical target arguments",
+  "resources": {
+    "elapsed": "0:09.12",
+    "exit_status": 0,
+    "maximum_resident_set_kib": 53776
+  },
+  "rootfs": {
+    "bytes": 169852145,
+    "sha256": "1967e76c0c831c1c0bab432e7116457d4372c15b413090c054f8958b72dcb392"
+  },
+  "runtime_ELF": {
+    "usr/bin/python3.11": {
+      "ELF_machine": 183,
+      "bytes": 6616896,
+      "sha256": "304aa87a76ebb13fd22d253ac157f14980ff2cdb23e6274f3b045571405e07dc"
+    },
+    "usr/bin/qemu-img": {
+      "ELF_machine": 183,
+      "bytes": 2356872,
+      "sha256": "59c9214d58ef2e3844fc10bc835b01edde6a850bef300169db8898f6263c1bee"
+    }
+  },
+  "source_commit": "16ad9524414894aefcf583ce3562bb3c12969af6",
+  "trusted_sources": {
+    "scripts/guest-storage.py": {
+      "bytes": 8017,
+      "sha256": "fa3521e031449f40b88941f451e67f62401b7ff57bc82416be4a288f8168e18c"
+    },
+    "scripts/launch-kvm-guest.py": {
+      "bytes": 9719,
+      "sha256": "197f1bba532b23a5e751284dc62653a8cd0284aafbe4259f5ca4648134640e28"
+    }
+  },
+  "userspace_evidence": {
+    "bytes": 1118,
+    "sha256": "370ee0bdb625f4dd10943c2cefb9f0e85d4c70b9b9b279be81697108b1558353"
+  },
+  "verifier_source": {
+    "bytes": 12238,
+    "sha256": "9bfef9f9a20c195cc3294c6ecf0c0064099f6b73ae18555000e29809301c5363"
+  }
+}

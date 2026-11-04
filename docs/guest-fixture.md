@@ -71,15 +71,19 @@ PASS fixture counter=1; clean shutdown requested
 ## Launch preparation and hardware evidence
 
 Keep the source fixture immutable. Copy its disposable disk to an explicitly
-chosen writable test location on NVMe before actual validation; the first
-launch uses the seed hash above. Capture `findmnt -T` for that location to prove
+chosen writable test location on the guest NVMe filesystem before actual
+validation; the first launch uses the seed hash above. Capture `findmnt -T` for that location to prove
 where storage resides. Never put guest state on SD or pass a physical disk.
 
 `scripts/launch-kvm-guest.py` requires kernel, initramfs and disk checkpoint
 hashes, an explicit measured memory budget and CPU count. It enforces a non-root
 process, KVM access, `-machine virt,gic-version=host -accel kvm -cpu host`, and no
 accelerator fallback. It exposes no monitor or forwarded network listener.
-Protected input files must remain unchanged between verification and launch.
+The launcher retains authenticated descriptors through exec, locks the disk
+for cooperating launchers, and checks NVMe placement before payload reads.
+Kernel/initramfs must remain protected against concurrent in-place writers.
+The [guest runtime contract](guest-operations.md) describes the fixed NVMe mount,
+unprivileged account and operational work still required.
 See [QEMU's virt machine reference](https://gitlab.com/qemu-project/qemu/-/blob/v7.2.0/docs/system/arm/virt.rst).
 
 The following dry-run passed on the builder with actual artifact files. Here
@@ -95,11 +99,11 @@ python3 scripts/launch-kvm-guest.py \
   --memory-mib 256 --cpus 1 --dry-run
 ```
 
-Actual board launch awaits measured RAM, an unprivileged account/KVM permissions,
-and installed or temporary authenticated userspace. Record the exact actual
+Actual launch through this installed-host tool awaits measured RAM, an
+unprivileged account/KVM permissions, the managed read-only root and activated
+NVMe guest storage. Record the exact actual
 QEMU command, host identity, KVM device/vCPU evidence where available, full guest
 console and QEMU exit status. Console markers alone cannot prove acceleration
 or clean host-side exit. On a second launch, verify the reviewed disk checkpoint
-hash after clean shutdown and require a persisted counter increment. A RAM-backed
-bring-up test must be labeled as such; NVMe storage/durability and the full
+hash after clean shutdown and require a persisted counter increment. NVMe storage/durability and the full
 [release acceptance](hardware-validation.md) remain separate mandatory gates.

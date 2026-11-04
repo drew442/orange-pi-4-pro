@@ -1,0 +1,121 @@
+# Guest runtime preparation
+
+The host uses unprivileged QEMU processes with KVM explicitly required. The
+current fixture launcher authenticates kernel, initramfs and raw disk inputs,
+retains their open descriptors through exec, and coordinates cooperating
+launchers with a nonblocking exclusive disk lock. This is preparation code;
+no A733 guest has executed and no hardware gate has passed.
+
+## Storage contract
+
+Actual launch requires the selected read-only NVMe root on p2 or p3 and the
+same namespace's p5 guest filesystem mounted at `/run/a733-guests`. The target
+directory belongs to RAM `/run`; the mounted filesystem and all guest data
+belong to NVMe. The ext4 guest mount must be writable with `nodev,nosuid,noexec`
+and have filesystem root `/`. `noexec` permits QEMU to read disk images; it
+prevents executing host programs directly from this filesystem.
+
+`scripts/guest-storage.py` reads mountinfo, descriptor mount IDs, block-node
+metadata and sysfs identity without opening a block device. It rejects SD,
+USB/dm backing, another NVMe namespace, p4 state, alternate binds and nested
+mounts. The held disk must belong to the exact guest mount. Kernel/initramfs
+files must belong to the selected root mount or the same guest mount. This
+checks current placement; bootstrap GPT verification and physical identity
+acceptance remain separate requirements.
+
+Storage checks precede payload reads because reads on writable filesystems can
+update atime. The launcher repeats placement and held-inode metadata checks
+before exec. File-only `--dry-run` intentionally skips placement/KVM/QEMU checks
+and reports that omission; dry-run reads can update atime. Run builder checks
+on fixed builder storage, never use SD for routine guest work.
+
+Current images do not activate this guest mount or create service accounts.
+The prepared p5 filesystem root is root-owned `0700`; that does not permit an
+unprivileged guest user to traverse it. Integration must validate the actual
+installation UUID/namespace, mount p5, grant only the necessary directory
+traversal, and create a private per-guest directory owned by a dedicated service
+account before launch. Keep guest accounts outside administration and disk
+access groups; grant `/dev/kvm` access separately. These activation and
+permission steps have not been reproduced on hardware. No universal mount,
+chmod or account-creation command is authorized for an unidentified device.
+
+## Input lifetime and launch
+
+Keep a trusted immutable fixture seed off the writable working path. Copy the
+raw seed to the chosen NVMe guest directory. Supply trusted hashes and measured
+CPU/RAM budgets using the [fixture procedure](guest-fixture.md). Retain both
+`scripts/launch-kvm-guest.py` and its adjacent `guest-storage.py` when staging
+these tools. They are not included in the previously published maintenance
+archive or installed host roots.
+
+Input leaves must be nonempty regular files with one hard link. Verification
+reads exactly the captured size, rejects inode/size/mode/timestamp/link changes,
+and closes all held descriptors on refusal. Actual launch opens the disk
+read/write, holds its lock and passes only the three input descriptors beyond
+stdio to QEMU. Kernel/initramfs remain opened read-only. QEMU receives
+`/proc/self/fd/N` paths, so replacing a pathname cannot redirect its later open.
+Unrelated descriptors become close-on-exec. Standard input/output/error must be
+provided by the console or supervisor; input descriptors never occupy them.
+
+Locking coordinates cooperating launchers. A privileged process or a process
+with write permission that ignores locks can still alter bytes in place.
+Protect immutable inputs against those writers and never copy, hash or back up
+a running guest disk as though it were a consistent checkpoint. Record the new
+disk hash only after a clean shutdown and review before the next launch.
+
+The command fixes `virt,gic-version=host`, `-accel kvm`, `-cpu host`, explicit
+memory/vCPU counts and a raw file backend. Restricted user networking exposes
+no forwarded listener. The physical guest still must prove CPU, disk
+persistence, networking, clean shutdown and restart; fixture console markers
+alone do not establish KVM acceleration.
+
+Upstream references: [QEMU 7.2 invocation and file backends](https://gitlab.com/qemu-project/qemu/-/blob/v7.2.0/qemu-options.hx),
+[Python descriptor inheritance](https://docs.python.org/3/library/os.html#inheritance-of-file-descriptors),
+[Linux mountinfo fields](https://www.kernel.org/doc/Documentation/filesystems/proc.txt).
+
+## Remaining operational work
+
+Install and exercise guarded p5 mount/account activation, supervised launch and
+shutdown, bounded logs/resource limits, guest enrollment and isolated network
+policy. Implement consistent off-device backup and restore for stopped guest
+disks and host state, then test restoration and failed-boot recovery. No
+snapshot or successful packaging run counts as a backup restoration. Preserve
+all [hardware acceptance gates](hardware-validation.md), including the actual
+KVM guest and 24-hour workload.
+
+## Verified software checks
+
+At source commit `16ad952`, 449 discovery cases passed on Jammy without skips
+(two privileged skips locally), plus four separate diagnostic cases and all
+shell regressions. Independent Sol high review accepted descriptor lifetime,
+placement/refusal ordering and the second storage-check failure regression.
+Actual unprivileged [builder refusal](evidence/guest-storage-builder-refusal-20261104.json)
+confirms that its unsupported storage namespace is rejected. Fixture positives
+do not establish real NVMe placement.
+
+The [pinned ARM QEMU file-backend probe](evidence/guest-file-backend-arm-20261104.json)
+passed on the builder in 9.12 seconds, maximum RSS 53,776 KiB. After the three
+input paths were renamed and replaced, ARM `qemu-img` 7.2.22 reported the original
+size and copied the original bytes from every held descriptor. The verifier
+uses authenticated userspace in a private PID/mount namespace with read-only
+proc, only `/dev/null`, no sys/dev bind and no block devices. It uses the
+launcher's file-only dry-run mode and read-only descriptors; writable QEMU disk
+operation, system kernel/initramfs loaders, VM startup and KVM are untested.
+The configured binfmt interpreter pathname/hash was checked; the kernel-retained
+F interpreter descriptor was not independently inspected.
+
+Exact executed commands, from the private clean builder checkout:
+
+```sh
+sudo -i
+cd /var/lib/a733-guest-runtime-work-20261104
+/usr/bin/python3.10 -B -m unittest discover -s tests -p 'test_*.py'
+/usr/bin/python3.10 -B tests/test-assemble-diagnostic.py
+for script in tests/test-*.sh; do bash "$script"; done
+/usr/bin/python3.10 -I -B tests/verify_guest_file_backend_arm.py \
+  /home/drew/orange-pi-4-pro-build/recipe/out/host-userspace-bookworm-20261001-01/rootfs.tar.gz
+```
+
+These use existing pinned inputs without compilation or package installation.
+Raw logs and exported tool copies are on the builder under
+`/home/drew/orange-pi-4-pro-build/guest-runtime-artifacts-20261104/`.

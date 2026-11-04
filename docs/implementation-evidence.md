@@ -337,6 +337,36 @@ these are samples, not exact peak-use measurements. No private ARM fixtures or
 host-visible mounts remained. Physical boot, NVMe/SPI work, dirty-journal replay,
 rollback, SD-write measurements and actual KVM remain unperformed.
 
+## 2026-11-04: guest input lifetime and placement
+
+Source `16ad952` replaces path-reopen launch with held authenticated descriptors,
+regular single-link checks, bounded exact-size hashing and cooperative disk
+locking. Two Sol medium workers owned disjoint launcher/storage files; root
+integrated the guard before hash reads, added boot-input placement, descriptor
+numbers above stdio, close-on-exec treatment and second-check failure coverage.
+The fixed guest mount lives under RAM `/run/a733-guests`, with data on selected
+NVMe p5. No mount activation/account creation is implemented or assumed.
+
+Independent Sol high review caught a test that reached the new earlier KVM
+access check instead of the intended lock. Calling the lock engine directly
+corrected that test without bypassing its real flock. The reviewer then accepted
+all policy/FD changes and reran 24 launcher plus 12 storage cases. Dry-run test
+wording was corrected to content preservation, since reads can update atime.
+
+A fresh Sol medium worker supplied the opt-in ARM backend harness. Coordinator
+reviewed its authenticated archive capture, private namespace, regular-file-only
+QEMU operations and cleanup, then ran it on Jammy. [Actual ARM evidence](evidence/guest-file-backend-arm-20261104.json)
+records original descriptor bytes surviving path replacement through QEMU 7.2.22
+file reads. No VM/accelerator was invoked. An actual UID-65534 builder storage
+call [refused unsupported topology](evidence/guest-storage-builder-refusal-20261104.json).
+All 449 discovery cases passed on Jammy with no skips, plus four diagnostic
+cases and shell regressions. Local discovery had two privileged skips.
+No private ARM fixture or host-visible mount remained; resource sampling had
+over 7.3 GB available RAM and 18 GB free fixed storage. No compilation or
+package installation was needed, and no physical device or hardware gate was
+tested. Full guest activation, supervision, network, backup and restoration
+remain required work.
+
 Children used fresh focused contexts, exclusive write scopes and no delegation.
 At most two children were active. Input/output token counts, cache accounting,
 account prices and exact reviewer repair time were not exposed; monetary cost

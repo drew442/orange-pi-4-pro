@@ -1,0 +1,7 @@
+{
+  "classification": "actual builder layout refusal; no hardware acceptance",
+  "effective_uid": 65534,
+  "refused": "duplicate mount identity or target",
+  "block_devices_opened": false,
+  "mounts_or_writes": false
+}
