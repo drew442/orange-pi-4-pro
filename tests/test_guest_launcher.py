@@ -105,6 +105,10 @@ class GuestLauncherTests(unittest.TestCase):
         for mutation in ("grow", "shrink", "overwrite", "hardlink"):
             with self.subTest(mutation=mutation):
                 self.args.kernel.write_bytes(self.values["kernel"])
+                # Writes in one filesystem clock tick may keep identical
+                # timestamps. Start in a distinct epoch so this tests actual
+                # metadata-change detection rather than scheduler timing.
+                os.utime(self.args.kernel, ns=(1_000_000_000, 1_000_000_000))
                 read_sizes = []
                 changed = False
 
@@ -128,7 +132,8 @@ class GuestLauncherTests(unittest.TestCase):
                 count = self.fd_count()
                 with mock.patch.object(launcher.os, "read", side_effect=read):
                     with self.assertRaisesRegex(ValueError, "changed"):
-                        launcher.prepare(self.args)
+                        with launcher.prepare(self.args):
+                            pass
                 self.assertEqual(read_sizes, [len(self.values["kernel"])])
                 self.assertEqual(self.fd_count(), count)
                 if mutation == "hardlink":
