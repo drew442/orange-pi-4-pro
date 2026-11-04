@@ -1,0 +1,291 @@
+{
+  "artifacts": {
+    "tools.tar.gz": {
+      "bytes": 58524,
+      "sha256": "ca8428bddf7415a2983aee2db2c834aaa1e2d86d83a2ec8ffcbdd0c604ebd742"
+    }
+  },
+  "build_source_commit": "d5c71f54b040d7274833e5b285806c4a6f500707",
+  "classification": "portable maintenance tools; no hardware acceptance",
+  "entrypoints": {
+    "acquire-nvme": "scripts/acquire-nvme.py",
+    "install-nvme": "scripts/install-nvme.py",
+    "plan-nvme": "scripts/plan-nvme.py",
+    "prepare-host-update": "scripts/prepare-host-update.py",
+    "recover-host-root": "scripts/recover-host-root.py",
+    "select-host-root": "scripts/select-host-root.py",
+    "update-host": "scripts/update-host.py"
+  },
+  "files": {
+    "build/host-initramfs.py": {
+      "bytes": 12506,
+      "mode": 292,
+      "sha256": "96c19c387b04a9e753e6eb658ef1ba7373f0cd4d58a46d8ee90c8a1348f9481d"
+    },
+    "build/host-payload.py": {
+      "bytes": 18259,
+      "mode": 292,
+      "sha256": "09bc4faca64c388260b6c999255b28c83f9e5d19c22f25ecf710ff673944abf4"
+    },
+    "build/host-storage-tools.py": {
+      "bytes": 4985,
+      "mode": 292,
+      "sha256": "e8d54568a6f43552996021a6a0a3178769564238be34a8642fca9d304f8f9750"
+    },
+    "build/root-selection.py": {
+      "bytes": 10350,
+      "mode": 292,
+      "sha256": "15b5a64630cd74793af946ea89b5b3f3bd580a07bf52baa9a893bdd71b82b6e2"
+    },
+    "configs/host-management.py": {
+      "bytes": 22716,
+      "mode": 292,
+      "sha256": "3db7519f67986e4a1276a95666593b9d9a98355669926d8d3ddcf5fc319c4a54"
+    },
+    "configs/host_config.py": {
+      "bytes": 2873,
+      "mode": 292,
+      "sha256": "520140d56402ab803b8c137981cef5182c5e263a44ec8446ce836b6a7d160a22"
+    },
+    "configs/package_state.py": {
+      "bytes": 13113,
+      "mode": 292,
+      "sha256": "809630ebba9d927b6ad5034899a88a8a8fcf3401f94ff6f223f92f6fbfa9c6eb"
+    },
+    "docs/evidence/diagnostic-20261104.json": {
+      "bytes": 2224,
+      "mode": 292,
+      "sha256": "6d743d81ee27ced3b55cbcd218bbf0693743be66e85d074e59a052c8819fde1c"
+    },
+    "package.json": {
+      "bytes": 5181,
+      "mode": 292,
+      "sha256": "eef470b0669d3dda8b4ffe8568c44336e5eea1097fcc88f9f93fce7397ea9606"
+    },
+    "scripts/acquire-nvme.py": {
+      "bytes": 17658,
+      "mode": 292,
+      "sha256": "68eac982f9282e65f5cfb323d0ce5ed6b5b0772f2aa23dcdbd66df3dad598b25"
+    },
+    "scripts/host-recovery-target.py": {
+      "bytes": 9770,
+      "mode": 292,
+      "sha256": "9901e568384fd7d4e5722e22eac84e936640f05e8fee4900b06d2b2b987e960b"
+    },
+    "scripts/host-update-target.py": {
+      "bytes": 13517,
+      "mode": 292,
+      "sha256": "e4d11cc2457497b2339aa39d19077ab90489ec2fb10a1bc3c5f4afa127c59ab3"
+    },
+    "scripts/install-nvme.py": {
+      "bytes": 22122,
+      "mode": 292,
+      "sha256": "d4c46227f9589822e8dae0a896b8c6a28c356ce67cc0f574b85598a4df612f47"
+    },
+    "scripts/nvme_layout.py": {
+      "bytes": 6162,
+      "mode": 292,
+      "sha256": "742a71575d94c9be29e01af3f50dc0d0639b38800c3e5a86ded49ac8906e518f"
+    },
+    "scripts/plan-nvme.py": {
+      "bytes": 7815,
+      "mode": 292,
+      "sha256": "8ed9075de6ab4425457aa3f309847f2e66b134691f0fe80ac5eb7c43f1746e31"
+    },
+    "scripts/prepare-host-update.py": {
+      "bytes": 13372,
+      "mode": 292,
+      "sha256": "c1c0528aab579d1583627af0069736cf25b27714975532e99f642eb4c98f8bdb"
+    },
+    "scripts/recover-host-root.py": {
+      "bytes": 21526,
+      "mode": 292,
+      "sha256": "64ed3b156338a7ba51de646260883f353090e16be1f36c44815f4327df7f3a40"
+    },
+    "scripts/select-host-root.py": {
+      "bytes": 19847,
+      "mode": 292,
+      "sha256": "39810e44ed03c406d3548c7526a7edd00d5dcb7163e5e421b0f3e9fe32c56d49"
+    },
+    "scripts/update-host.py": {
+      "bytes": 15029,
+      "mode": 292,
+      "sha256": "b3f5d12831fda92a290c70358ef0dc9d6b41987415b36cfe8d506a5b82efb1ac"
+    }
+  },
+  "gid": 0,
+  "kernel_release": "6.6.98-a733-diag",
+  "profile": "a733-maintenance-tools-v1",
+  "recipes": {
+    "build/host-initramfs.py": {
+      "bytes": 12506,
+      "sha256": "96c19c387b04a9e753e6eb658ef1ba7373f0cd4d58a46d8ee90c8a1348f9481d"
+    },
+    "build/host-payload.py": {
+      "bytes": 18259,
+      "sha256": "09bc4faca64c388260b6c999255b28c83f9e5d19c22f25ecf710ff673944abf4"
+    },
+    "build/host-storage-tools.py": {
+      "bytes": 4985,
+      "sha256": "e8d54568a6f43552996021a6a0a3178769564238be34a8642fca9d304f8f9750"
+    },
+    "build/maintenance-tools.py": {
+      "bytes": 13452,
+      "sha256": "96c3c7f38d22f808c1bfa9ff0fc884bb6c1ae45b326ef3271f7ac6fcd8d2c03a"
+    },
+    "build/root-selection.py": {
+      "bytes": 10350,
+      "sha256": "15b5a64630cd74793af946ea89b5b3f3bd580a07bf52baa9a893bdd71b82b6e2"
+    },
+    "configs/host-management.py": {
+      "bytes": 22716,
+      "sha256": "3db7519f67986e4a1276a95666593b9d9a98355669926d8d3ddcf5fc319c4a54"
+    },
+    "configs/host_config.py": {
+      "bytes": 2873,
+      "sha256": "520140d56402ab803b8c137981cef5182c5e263a44ec8446ce836b6a7d160a22"
+    },
+    "configs/package_state.py": {
+      "bytes": 13113,
+      "sha256": "809630ebba9d927b6ad5034899a88a8a8fcf3401f94ff6f223f92f6fbfa9c6eb"
+    },
+    "docs/evidence/diagnostic-20261104.json": {
+      "bytes": 2224,
+      "sha256": "6d743d81ee27ced3b55cbcd218bbf0693743be66e85d074e59a052c8819fde1c"
+    },
+    "scripts/acquire-nvme.py": {
+      "bytes": 17658,
+      "sha256": "68eac982f9282e65f5cfb323d0ce5ed6b5b0772f2aa23dcdbd66df3dad598b25"
+    },
+    "scripts/host-recovery-target.py": {
+      "bytes": 9770,
+      "sha256": "9901e568384fd7d4e5722e22eac84e936640f05e8fee4900b06d2b2b987e960b"
+    },
+    "scripts/host-update-target.py": {
+      "bytes": 13517,
+      "sha256": "e4d11cc2457497b2339aa39d19077ab90489ec2fb10a1bc3c5f4afa127c59ab3"
+    },
+    "scripts/install-nvme.py": {
+      "bytes": 22122,
+      "sha256": "d4c46227f9589822e8dae0a896b8c6a28c356ce67cc0f574b85598a4df612f47"
+    },
+    "scripts/nvme_layout.py": {
+      "bytes": 6162,
+      "sha256": "742a71575d94c9be29e01af3f50dc0d0639b38800c3e5a86ded49ac8906e518f"
+    },
+    "scripts/plan-nvme.py": {
+      "bytes": 7815,
+      "sha256": "8ed9075de6ab4425457aa3f309847f2e66b134691f0fe80ac5eb7c43f1746e31"
+    },
+    "scripts/prepare-host-update.py": {
+      "bytes": 13372,
+      "sha256": "c1c0528aab579d1583627af0069736cf25b27714975532e99f642eb4c98f8bdb"
+    },
+    "scripts/recover-host-root.py": {
+      "bytes": 21526,
+      "sha256": "64ed3b156338a7ba51de646260883f353090e16be1f36c44815f4327df7f3a40"
+    },
+    "scripts/select-host-root.py": {
+      "bytes": 19847,
+      "sha256": "39810e44ed03c406d3548c7526a7edd00d5dcb7163e5e421b0f3e9fe32c56d49"
+    },
+    "scripts/update-host.py": {
+      "bytes": 15029,
+      "sha256": "b3f5d12831fda92a290c70358ef0dc9d6b41987415b36cfe8d506a5b82efb1ac"
+    }
+  },
+  "schema": 1,
+  "source_records": {
+    "build/host-initramfs.py": {
+      "bytes": 12506,
+      "mode": 292,
+      "sha256": "96c19c387b04a9e753e6eb658ef1ba7373f0cd4d58a46d8ee90c8a1348f9481d"
+    },
+    "build/host-payload.py": {
+      "bytes": 18259,
+      "mode": 292,
+      "sha256": "09bc4faca64c388260b6c999255b28c83f9e5d19c22f25ecf710ff673944abf4"
+    },
+    "build/host-storage-tools.py": {
+      "bytes": 4985,
+      "mode": 292,
+      "sha256": "e8d54568a6f43552996021a6a0a3178769564238be34a8642fca9d304f8f9750"
+    },
+    "build/root-selection.py": {
+      "bytes": 10350,
+      "mode": 292,
+      "sha256": "15b5a64630cd74793af946ea89b5b3f3bd580a07bf52baa9a893bdd71b82b6e2"
+    },
+    "configs/host-management.py": {
+      "bytes": 22716,
+      "mode": 292,
+      "sha256": "3db7519f67986e4a1276a95666593b9d9a98355669926d8d3ddcf5fc319c4a54"
+    },
+    "configs/host_config.py": {
+      "bytes": 2873,
+      "mode": 292,
+      "sha256": "520140d56402ab803b8c137981cef5182c5e263a44ec8446ce836b6a7d160a22"
+    },
+    "configs/package_state.py": {
+      "bytes": 13113,
+      "mode": 292,
+      "sha256": "809630ebba9d927b6ad5034899a88a8a8fcf3401f94ff6f223f92f6fbfa9c6eb"
+    },
+    "docs/evidence/diagnostic-20261104.json": {
+      "bytes": 2224,
+      "mode": 292,
+      "sha256": "6d743d81ee27ced3b55cbcd218bbf0693743be66e85d074e59a052c8819fde1c"
+    },
+    "scripts/acquire-nvme.py": {
+      "bytes": 17658,
+      "mode": 292,
+      "sha256": "68eac982f9282e65f5cfb323d0ce5ed6b5b0772f2aa23dcdbd66df3dad598b25"
+    },
+    "scripts/host-recovery-target.py": {
+      "bytes": 9770,
+      "mode": 292,
+      "sha256": "9901e568384fd7d4e5722e22eac84e936640f05e8fee4900b06d2b2b987e960b"
+    },
+    "scripts/host-update-target.py": {
+      "bytes": 13517,
+      "mode": 292,
+      "sha256": "e4d11cc2457497b2339aa39d19077ab90489ec2fb10a1bc3c5f4afa127c59ab3"
+    },
+    "scripts/install-nvme.py": {
+      "bytes": 22122,
+      "mode": 292,
+      "sha256": "d4c46227f9589822e8dae0a896b8c6a28c356ce67cc0f574b85598a4df612f47"
+    },
+    "scripts/nvme_layout.py": {
+      "bytes": 6162,
+      "mode": 292,
+      "sha256": "742a71575d94c9be29e01af3f50dc0d0639b38800c3e5a86ded49ac8906e518f"
+    },
+    "scripts/plan-nvme.py": {
+      "bytes": 7815,
+      "mode": 292,
+      "sha256": "8ed9075de6ab4425457aa3f309847f2e66b134691f0fe80ac5eb7c43f1746e31"
+    },
+    "scripts/prepare-host-update.py": {
+      "bytes": 13372,
+      "mode": 292,
+      "sha256": "c1c0528aab579d1583627af0069736cf25b27714975532e99f642eb4c98f8bdb"
+    },
+    "scripts/recover-host-root.py": {
+      "bytes": 21526,
+      "mode": 292,
+      "sha256": "64ed3b156338a7ba51de646260883f353090e16be1f36c44815f4327df7f3a40"
+    },
+    "scripts/select-host-root.py": {
+      "bytes": 19847,
+      "mode": 292,
+      "sha256": "39810e44ed03c406d3548c7526a7edd00d5dcb7163e5e421b0f3e9fe32c56d49"
+    },
+    "scripts/update-host.py": {
+      "bytes": 15029,
+      "mode": 292,
+      "sha256": "b3f5d12831fda92a290c70358ef0dc9d6b41987415b36cfe8d506a5b82efb1ac"
+    }
+  },
+  "uid": 0
+}

@@ -7,17 +7,17 @@ an independently trusted release manifest/pin. Root images, GPT, boot files and
 guest partitions are not rewritten. Recovery changes regular files on NVMe
 state; mounting that filesystem can also replay its journal.
 
-This is a checkout-only prototype. Current SD artifacts do not include the new
-tool, and no physical failed-boot recovery has been demonstrated. The RAM
-runtime, ARM execution, networking, recovery card and procedure still require
-packaging and board validation. Keep the [diagnostic serial guide](diagnostic-image.md)
+The [maintenance package](maintenance-tools.md) and preparation initramfs now
+include the controller and its source closure. No physical failed-boot recovery
+has been demonstrated; networking, recovery boot and the procedure still require
+board validation. Keep the [diagnostic serial guide](diagnostic-image.md)
 available; do not change SPI before proving board recovery.
 
 ## Preparation and authorization
 
-Boot the pinned preparation environment and stage a trusted complete checkout,
-the retained release manifest and a review-plan directory on RAM or identified
-external storage. The kernel must be AArch64 `6.6.98-a733-diag`, `/` must be RAM,
+Boot the pinned preparation environment, which includes the trusted tools at
+`/usr/lib/a733-tools`. Stage the retained release manifest and a review-plan
+directory on RAM or identified external storage. The kernel must be AArch64 `6.6.98-a733-diag`, `/` must be RAM,
 `/run` must be writable tmpfs, and swap must be inactive. The target namespace
 and all five partitions must be unmounted, idle and match the fixed GPT layout.
 Source and plan files cannot reside anywhere on that target or on SD/MMC.
@@ -34,7 +34,7 @@ can otherwise open a separate device, outside the selected state partition.
 
 Enter a root shell, set the required values from actual inventory and trusted
 release records, and use the following prototype CLI form. The directories
-and checkout must be staged with root ownership and mode `0700`; manifests and
+must have root ownership and mode `0700`; manifests and
 review plans must be root-owned regular files with one link and mode `0400`.
 These commands have not been reproduced on the board.
 
@@ -52,10 +52,10 @@ set -- --target "$A733_NVME_TARGET" --expected-model "$A733_NVME_MODEL" \
   --state-uuid "$A733_STATE_UUID" --slot "$A733_RECOVER_SLOT" \
   --payload-manifest "$A733_RELEASE_MANIFEST" \
   --manifest-sha256 "$A733_MANIFEST_SHA256"
-/usr/bin/python3 -I -B /run/update-tools/scripts/recover-host-root.py \
+/usr/bin/python3 -I -B /usr/lib/a733-tools/scripts/recover-host-root.py \
   prepare "$@" > /run/recovery-plan.json
 chmod 0400 /run/recovery-plan.json
-/usr/bin/python3 -I -B /run/update-tools/scripts/recover-host-root.py \
+/usr/bin/python3 -I -B /usr/lib/a733-tools/scripts/recover-host-root.py \
   apply "$@" --plan /run/recovery-plan.json
 ```
 

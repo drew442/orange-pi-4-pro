@@ -3,17 +3,17 @@
 `scripts/select-host-root.py` verifies a complete installed root against an
 externally pinned release manifest, then changes the **next boot selection** on
 NVMe state. It never switches the running root, reboots, migrates shared state,
-or declares management/KVM health. This is a checkout-only prototype; it is not
-yet included in the packaged host or recovery SD. No physical activation or
-rollback has been performed.
+or declares management/KVM health. The [maintenance package](maintenance-tools.md)
+provides the controller for explicit host staging and includes it in the
+preparation SD. No physical activation or rollback has been performed.
 
 `activate` selects the idle opposite slot while selection still matches the
 running root. After a successful boot, the same operation can select a retained
 old root using its old trusted release manifest. `cancel-pending` selects the
 currently running read-only root when another slot is pending and no reboot
 has occurred. It cannot run when the installed host failed to boot; use the
-separate [RAM recovery controller](host-recovery.md). Packaged recovery and
-hardware rollback validation remain open.
+separate [RAM recovery controller](host-recovery.md). Hardware recovery and
+rollback validation remain open.
 
 ## Preconditions and commands
 
@@ -24,7 +24,8 @@ does not establish application/state compatibility. Preserve the compatible
 kernel/DTB/initramfs stack; routine selection never writes SD, SPI, root blocks
 or the boot partition.
 
-Run the complete trusted checkout from NVMe or RAM on the installed host.
+Stage the complete authenticated [maintenance package](maintenance-tools.md)
+on NVMe or RAM on the installed host.
 Release manifests must be root-owned, mode `0400`, with one link and safe
 non-symlink ancestors. The tool checks source storage, actual running mounts,
 NVMe model/serial/capacity, GPT, partition roles, current selector and kernel ABI.
@@ -35,10 +36,11 @@ metadata and hold the descriptor through publication.
 
 The following is prototype CLI usage. Enter a root shell with `sudo -i`, then
 set every `A733_*` value from actual host inventory and a trusted release
-record; there is no default target. The tools must be staged at the stated root-owned checkout path before use. These
-commands have not been reproduced on the board.
+record; there is no default target. Stage the tools at the stated root-owned
+package path before use. These commands have not been reproduced on the board.
 
 ```sh
+: "${A733_TOOLS:?Set absolute staged a733-tools directory}"
 : "${A733_NVME_TARGET:?Set the exact whole-NVMe stable path}"
 : "${A733_NVME_MODEL:?Set the exact model}"
 : "${A733_NVME_SERIAL:?Set the exact serial}"
@@ -51,15 +53,16 @@ set -- --intent activate --slot "$A733_SELECT_SLOT" \
   --expected-serial "$A733_NVME_SERIAL" --expected-bytes "$A733_NVME_BYTES" \
   --payload-manifest "$A733_RELEASE_MANIFEST" \
   --manifest-sha256 "$A733_MANIFEST_SHA256"
-/usr/bin/python3 -I -B /run/a733-state/update-tools/scripts/select-host-root.py \
+/usr/bin/python3 -I -B "$A733_TOOLS/scripts/select-host-root.py" \
   prepare "$@" > /run/a733-state/updates/selection-plan.json
 chmod 0400 /run/a733-state/updates/selection-plan.json
-/usr/bin/python3 -I -B /run/a733-state/update-tools/scripts/select-host-root.py \
+/usr/bin/python3 -I -B "$A733_TOOLS/scripts/select-host-root.py" \
   apply "$@" --plan /run/a733-state/updates/selection-plan.json
 ```
 
-Create the maintenance checkout, release and plan directories with root
-ownership and mode `0700`; they are not preinstalled by current images. Review
+Create private package-wrapper, release and plan directories with root
+ownership and mode `0700`; the package tree uses read-only files and directories.
+The host does not preinstall a package wrapper. Review
 the complete plan before `apply`. It requires an interactive terminal,
 `BACKUP VERIFIED`, and the exact displayed `SELECT` phrase binding intent, slot,
 serial, partition, byte count and plan hash. There is no force/unattended switch.
@@ -138,7 +141,8 @@ cleanup fails, and imports no untrusted executable fixture. Separate native
 signal tests queue actual SIGINT and handled SIGTERM around publication,
 including the helper-return boundary; independent review verified conservative
 receipts and restored masks. The 367-case suite passes on Jammy without skips,
-plus four separate diagnostic cases and shell regressions. ARM execution of
-this new controller, actual host health, packaged recovery and all physical
-acceptance remain open. The later offline controller has separate
+plus four separate diagnostic cases and shell regressions at that checkpoint.
+The later [maintenance package](maintenance-tools.md) adds the source closure
+and preparation-SD integration. Actual host health, booted rollback and all
+physical acceptance remain open. The later offline controller has separate
 [software recovery evidence](host-recovery.md#native-software-evidence).

@@ -1,0 +1,36 @@
+{
+  "classification": "ARM64 software TLS loopback probe; no board networking or hardware acceptance",
+  "verifier_source": {
+    "bytes": 8435,
+    "sha256": "22f0432485656110a3a07c983068c5bfd1bfaced202adb15fcf9a226729ed9d2"
+  },
+  "archive": {
+    "bytes": 26909515,
+    "sha256": "b1e2f9c19c97224fe5d1eff612cbd271cba34eef6eea9d4ad060a3463c66a98d"
+  },
+  "ARM_checks": {
+    "architecture": "aarch64",
+    "HTTPS_Content_Length_fetch": "passed",
+    "custom_CA_hostname_verification": "passed",
+    "untrusted_CA_refusal": "passed",
+    "redirect_refusal": "passed",
+    "encoded_and_expanded_verification": "passed",
+    "bytes": {
+      "encoded": {
+        "bytes": 597,
+        "sha256": "f19c32e3a01c4bfb22408802f133dac191fffcd2507675f0ab540dfec5f5ae23"
+      },
+      "decoded": {
+        "bytes": 65792,
+        "sha256": "120c518a83325c66464701a6ee080302f332bc768ea3f60473b209f1bfb091df"
+      }
+    },
+    "scope": "production transport and stream verifier; no full acquisition/storage policy or device operation"
+  },
+  "cleanup": "temporary chroot, certificate/private key and loopback listener removed; no mounts or external requests",
+  "limits": [
+    "No real DNS, DHCP, Ethernet, production endpoint or A733 TLS connection.",
+    "Full acquisition/storage guards have native mocked/loopback tests; this ARM probe exercises transport and stream checks.",
+    "No SD/NVMe/SPI access or actual KVM guest."
+  ]
+}

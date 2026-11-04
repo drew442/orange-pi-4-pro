@@ -92,10 +92,11 @@ deploy previously recorded bootstrap images.
 
 ## Stage the inactive slot
 
-`scripts/update-host.py` requires a complete trusted checkout on NVMe or RAM,
-root privileges and the expected live host mounts/configuration. It is not yet
-included in the packaged host or preparation SD. The candidate directory and
-its three authoritative files must be root-owned with modes `0700` and `0400`.
+`scripts/update-host.py` requires the complete authenticated
+[maintenance package](maintenance-tools.md) on NVMe or RAM, root privileges and
+the expected live host mounts/configuration. The preparation SD includes it at
+`/usr/lib/a733-tools/scripts/update-host.py`; host use requires explicit staging.
+The candidate directory and its three authoritative files must be root-owned with modes `0700` and `0400`.
 Candidate receipts are informational; the writer authenticates the manifest,
 entire root and proposed selector again. Every held source file is checked for
 SD/MMC backing and inactive-target overlap, including individual bind mounts.

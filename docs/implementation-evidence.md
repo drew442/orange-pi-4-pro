@@ -298,6 +298,44 @@ restoration and all physical release gates remain open.
 | Offline recovery transaction | Sol / medium | Full root/state read-only preflight, journal-first repair of missing/malformed selection, conservative mount/publication/cleanup receipts; 20 fixtures |
 | Offline recovery review | Sol / high | External-journal device-safety blocker found and fixed; controller/shared publisher and fresh-GPT native harness reviewed; physical acceptance unchanged |
 | Slot metadata extraction | Luna / low | Source mapping established; coordinator clarified fresh per-boot RAM overlay semantics and authenticated actual archive metadata separately |
+| Maintenance package | Sol / medium | Exact runtime source closure, deterministic archive and captured installer copies; coordinator built tools and refreshed 256 MiB SD |
+| Package/install review | Sol / high | Ancestor publication race, foreign cleanup and source reread findings fixed; shared captured sources accepted |
+| ARM maintenance probe | Sol / medium | Authenticated closure, real candidate hash/debugfs, restricted private namespace and policy refusal checks; actual execution recorded separately |
+| ARM namespace correction/review | Sol / medium + Sol / high | Actual candidate guard refused a chroot without a root mount; nonrecursive private root bind fixed fixture topology without bypassing production policy |
+| Maintenance guide | Luna / low | Bounded source extraction drafted guide; coordinator supplied actual artifacts, corrected immutable-host staging path and integrated operational guides |
+
+## 2026-11-04: portable maintenance integration
+
+Source `d5c71f5` produced the 58,524-byte authenticated tools archive and a
+refreshed 256 MiB preparation SD; [records](evidence/maintenance-tools-20261104.json)
+and [cached clean repeat](evidence/maintenance-rebuild-20261104.json) retain
+artifact hashes. Kernel, DTB and vendor boot components stayed pinned.
+Independent package review found unsafe ancestor publication, foreign cleanup
+and source reread issues; descriptor-relative publication/owned cleanup and one
+captured source map corrected them before the actual build. Legacy installer
+paths and the new tree use the same bytes.
+
+The first actual ARM maintenance run correctly refused candidate storage
+because the chroot lacked a visible root mount. An independently reviewed
+nonrecursive private self-bind fixed the fixture topology. The next run passed
+full candidate authentication/debugfs, then exposed inherited ignored SIGINT in
+the signal fixture. Verifier `c44d670` establishes and checks Python's standard
+handler/unblocked mask; a real subprocess regression covers ignored+blocked
+inheritance. Production source/storage/publication policy was unchanged.
+The [final ARM run](evidence/maintenance-arm-20261104.json) passed in 1m38s,
+maximum RSS 102,560 KiB. Actual configured QEMU pathname/hash and binfmt F flag
+were verified; the kernel-retained interpreter descriptor was not inspected.
+
+Both actual SD inspections, packaged ARM runtime/TLS probes, archive extraction
+and native help checks passed. Current discovery: 426 cases on Jammy, no skips;
+locally two privileged skips. Four separate diagnostic cases and all shell
+regressions also pass. No new compilation or package installation was needed.
+Builder logs, including the two failed fixture runs, are retained under
+`/home/drew/orange-pi-4-pro-build/maintenance-artifacts-20261104/logs/`.
+Post-cleanup sampling had over 7 GB available RAM and 18 GB free fixed storage;
+these are samples, not exact peak-use measurements. No private ARM fixtures or
+host-visible mounts remained. Physical boot, NVMe/SPI work, dirty-journal replay,
+rollback, SD-write measurements and actual KVM remain unperformed.
 
 Children used fresh focused contexts, exclusive write scopes and no delegation.
 At most two children were active. Input/output token counts, cache accounting,

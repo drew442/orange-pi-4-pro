@@ -1,0 +1,48 @@
+{
+  "classification": "packaged ARM64 chroot software checks; no board boot, physical installation or KVM acceptance",
+  "verifier_source": {
+    "bytes": 13236,
+    "sha256": "94681aa5621697f6e48c0a4e2f65c066d8c6c3996bc4c0c0c10845ffcefe2d70"
+  },
+  "archive": {
+    "bytes": 26909515,
+    "sha256": "b1e2f9c19c97224fe5d1eff612cbd271cba34eef6eea9d4ad060a3463c66a98d"
+  },
+  "expanded_bytes": 79298728,
+  "entries_checked": 2230,
+  "all_archive_hashes_modes_paths": "passed",
+  "ARM_checks": {
+    "architecture": "aarch64",
+    "isolated_python": true,
+    "core_modules": "imported",
+    "ca_file": "/usr/lib/ssl/cert.pem",
+    "ca_certificates": 142,
+    "localhost_NSS": "passed",
+    "versions": {
+      "python": "Python 3.11.2",
+      "lsblk": "lsblk from util-linux 2.38.1",
+      "blkid": "blkid from util-linux 2.38.1  (libblkid 2.38.1, 04-Aug-2022)",
+      "mke2fs": "mke2fs 1.47.0 (5-Feb-2023)",
+      "tune2fs": "tune2fs 1.47.0 (5-Feb-2023)",
+      "e2fsck": "e2fsck 1.47.0 (5-Feb-2023)",
+      "debugfs": "debugfs 1.47.0 (5-Feb-2023)",
+      "curl": "curl 7.88.1 (aarch64-unknown-linux-gnu) libcurl/7.88.1 OpenSSL/3.0.20 zlib/1.2.13 brotli/1.0.9 zstd/1.5.4 libidn2/2.3.3 libpsl/0.21.2 (+libidn2/2.3.3) libssh2/1.10.0 nghttp2/1.52.0 librtmp/2.3 OpenLDAP/2.5.13"
+    },
+    "planner_isolated_help": "passed",
+    "writer_isolated_help": "passed",
+    "acquisition_isolated_help": "passed",
+    "writer_fixture_refusal": "passed before target access",
+    "writer_regular_file_engine": "passed; block flush and partition callbacks not exercised",
+    "init_ash_syntax": "passed",
+    "regular_file_mkfs_fsck_blkid_debugfs": "passed",
+    "dhcp_ram_resolver_hook": "passed; three IP commands replaced by logged fixture stub",
+    "DNS_TLS_connection": "not performed",
+    "physical_block_targets": "not opened"
+  },
+  "private_fixture": "deleted after check; no mounts, listeners or external requests",
+  "limits": [
+    "Runtime tests cover the exercised commands/modules, not every possible dynamic load.",
+    "IP command was stubbed for DHCP hook; board DHCP/DNS/TLS untested.",
+    "No SD/NVMe/SPI write or actual KVM guest performed."
+  ]
+}

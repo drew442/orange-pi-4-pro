@@ -1,0 +1,172 @@
+{
+  "ARM_checks": {
+    "CLI_help": [
+      "scripts/prepare-host-update.py",
+      "scripts/update-host.py",
+      "scripts/select-host-root.py",
+      "scripts/recover-host-root.py",
+      "scripts/plan-nvme.py",
+      "scripts/install-nvme.py",
+      "scripts/acquire-nvme.py"
+    ],
+    "GPT_roundtrip_sysfs_fixture": "passed",
+    "architecture": "aarch64",
+    "authenticated_candidate": {
+      "candidate": "/fixture/candidate-A",
+      "files": {
+        "manifest.json": {
+          "bytes": 7023,
+          "ctime_ns": 1793818177560986023,
+          "device": 64512,
+          "inode": 660798,
+          "mtime_ns": 1793818177560986023
+        },
+        "root.ext4": {
+          "bytes": 4294967296,
+          "ctime_ns": 1793818174021976411,
+          "device": 64512,
+          "inode": 660512,
+          "mtime_ns": 1793818174021976411
+        },
+        "selected.conf": {
+          "bytes": 179,
+          "ctime_ns": 1793818177560986023,
+          "device": 64512,
+          "inode": 660799,
+          "mtime_ns": 1793818177560986023
+        }
+      },
+      "manifest_sha256": "51f8dfa7f0f66b005b9bfd08dc5f29fcf25f0791e5e844ab6af22de94aa9a44c",
+      "root": {
+        "bytes": 4294967296,
+        "sha256": "6157897213b918c82241a6ff74920c2d5b92eb45cb30bc0333d8d97a58be733e"
+      },
+      "selector": {
+        "bytes": 179,
+        "sha256": "00d06e94d8544c4a177b1df2d5f5ed55b44f323a7dd3e2fa1b42a259425f7f2f"
+      },
+      "slot": "A"
+    },
+    "imported_modules": [
+      "build/host-initramfs.py",
+      "build/host-payload.py",
+      "build/host-storage-tools.py",
+      "build/root-selection.py",
+      "configs/host-management.py",
+      "configs/host_config.py",
+      "configs/package_state.py",
+      "scripts/acquire-nvme.py",
+      "scripts/host-recovery-target.py",
+      "scripts/host-update-target.py",
+      "scripts/install-nvme.py",
+      "scripts/nvme_layout.py",
+      "scripts/plan-nvme.py",
+      "scripts/prepare-host-update.py",
+      "scripts/recover-host-root.py",
+      "scripts/select-host-root.py",
+      "scripts/update-host.py"
+    ],
+    "isolated_python": true,
+    "physical_block_nodes": "absent",
+    "private_PID_namespace": true,
+    "production_guard_refusals": {
+      "live": "unsafe mount: /",
+      "recovery": "fixed A733 preparation kernel required"
+    },
+    "python": "3.11.2 (main, May 12 2026, 05:17:27) [GCC 12.2.0]",
+    "selector_roundtrip_atomic_store_queued_SIGINT": "passed",
+    "source_inspection": "full logical root hash and real ARM debugfs descriptor/selector inspection"
+  },
+  "artifact_build_commit": "d5c71f54b040d7274833e5b285806c4a6f500707",
+  "binfmt": {
+    "bytes": 5628704,
+    "interpreter": "/usr/libexec/qemu-binfmt/aarch64-binfmt-P",
+    "limit": "Hashes configured interpreter pathname; kernel-held binfmt interpreter FD is not independently inspectable.",
+    "registration": "enabled\ninterpreter /usr/libexec/qemu-binfmt/aarch64-binfmt-P\nflags: PF\noffset 0\nmagic 7f454c460201010000000000000000000200b700\nmask ffffffffffffff00fffffffffffffffffeffffff\n",
+    "resolved_interpreter": "/usr/bin/qemu-aarch64-static",
+    "sha256": "92c4aeb8dd898de7152c184370ab22f09ae7c5b7279fd300081c76cee3f78a80"
+  },
+  "classification": "ARM64 binfmt/chroot software checks; no board, boot, KVM or recovery acceptance",
+  "limits": [
+    "Native builder kernel and ARM64 binfmt are not A733 hardware.",
+    "No update apply, real NVMe, dirty-journal recovery, SD-write or actual KVM guest validation.",
+    "Configured interpreter pathname/hash verified; kernel-held binfmt F interpreter descriptor not independently inspected."
+  ],
+  "native_compatibility": {
+    "management_runtime": {
+      "files": {
+        "usr/lib/orangepi-hypervisor/host-management.py": {
+          "bytes": 22716,
+          "sha256": "3db7519f67986e4a1276a95666593b9d9a98355669926d8d3ddcf5fc319c4a54"
+        },
+        "usr/lib/orangepi-hypervisor/host_config.py": {
+          "bytes": 2873,
+          "sha256": "520140d56402ab803b8c137981cef5182c5e263a44ec8446ce836b6a7d160a22"
+        },
+        "usr/lib/orangepi-hypervisor/package_state.py": {
+          "bytes": 13113,
+          "sha256": "809630ebba9d927b6ad5034899a88a8a8fcf3401f94ff6f223f92f6fbfa9c6eb"
+        },
+        "usr/lib/systemd/system/a733-management-ssh.service": {
+          "bytes": 360,
+          "sha256": "d9603c6eb460ab1429234cbf6f7689b1dbbf72a4fcc61e97e90458e8877c07cb"
+        }
+      },
+      "profile": "a733-management-v1"
+    },
+    "package_state": {
+      "manifest": {
+        "bytes": 189468,
+        "sha256": "682f6ae0293cc8ef1a1e4780e30140fd557ede4de893328c8fc0dec5582dba7d"
+      },
+      "profile": "a733-package-state-v1"
+    },
+    "sources": {
+      "Image": {
+        "bytes": 27283464,
+        "sha256": "9df974c55fa61a77e8fe812652780dad471527eb9615c27838f481887d4c50e7"
+      },
+      "board.dtb": {
+        "bytes": 209320,
+        "sha256": "4d7d964a54668cf5dc12cd4bf7e72a625c79883541272aeba1a91adbbedb86ed"
+      },
+      "initramfs.cpio.gz": {
+        "bytes": 3650395,
+        "sha256": "e2b09f56f4df8cfd52b98c0f1fe018c92a0806d8cac6ee065c6ac31b15e6ca30"
+      },
+      "kernel.config": {
+        "bytes": 212080,
+        "sha256": "8a29d9c36e52db7e8a7d6ff757dc69e660f4273c99e5f00c5dbc5a9b7e060675"
+      },
+      "rootfs.tar.gz": {
+        "bytes": 169852145,
+        "sha256": "1967e76c0c831c1c0bab432e7116457d4372c15b413090c054f8958b72dcb392"
+      }
+    }
+  },
+  "package_entries": 19,
+  "package_manifest": {
+    "bytes": 7785,
+    "sha256": "a903d00fd62dd14fc81a53c8e059304945ab7d012d12e8af34bc2b3195e7fafe"
+  },
+  "payload_manifest": {
+    "bytes": 7023,
+    "sha256": "51f8dfa7f0f66b005b9bfd08dc5f29fcf25f0791e5e844ab6af22de94aa9a44c"
+  },
+  "private_fixture": "deleted after namespace exit; no block nodes or physical target arguments",
+  "resources": {
+    "elapsed": "1:38.19",
+    "exit_status": 0,
+    "maximum_resident_set_kib": 102560
+  },
+  "runtime_entries": 1462,
+  "runtime_manifest": {
+    "bytes": 552746,
+    "sha256": "45ce15c6a83b6d59efead5c8b32699ac06d93e40ba027f3559023f502ef3f97d"
+  },
+  "verifier_commit": "c44d6704623fc73b2753b5343cc6af96118a0efc",
+  "verifier_source": {
+    "bytes": 19512,
+    "sha256": "f3a210d89d40252399a6799d8b1b6dea0c7576bdcd6de55328257dea102fe517"
+  }
+}

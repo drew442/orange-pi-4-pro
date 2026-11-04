@@ -51,8 +51,10 @@ no larger card or live inventory was required to produce the diagnostic image.
   and cancellation; real ext4 interruption/readback checks pass. Live NVMe/TTY
   policy uses fixtures. [RAM recovery](host-recovery.md) archives malformed
   selectors and selects a retained root; native 250 GB GPT/8 GiB state checks
-  pass. Checkout-only tools; ARM packaging, crash-journal replay, booted rollback
-  and all physical update/recovery tests remain open.
+  pass. The portable [maintenance package](maintenance-tools.md) is included in
+  the refreshed preparation SD. ARM imports/CLI, full 4 GiB authentication,
+  debugfs and queued-SIGINT publication checks pass. Crash-journal replay, booted rollback and all
+  physical update/recovery tests remain open.
 - [Management preparation](host-management.md): exact Ethernet MAC DHCPv4,
   selected-IP key-only SSH, NVMe host-key creation and RAM configuration.
   ARM key/sshd/PAM-account/unit checks pass; no SSH connection or systemd boot.
@@ -68,7 +70,7 @@ no larger card or live inventory was required to produce the diagnostic image.
   component sets are verified separately; a new full-disk per-installation
   candidate and physical installation await real inputs.
 - [Installer preparation](installer-preparation.md): pinned ARM Python/storage/TLS
-  client runtime and 256 MiB SD candidate built; 26.8 MB compressed initramfs.
+  client runtime and 256 MiB SD candidate built; 26.9 MB compressed initramfs.
   Private ARM file-tool/CA/NSS probes, SD inspection and byte-identical clean
   repeat pass. Real board networking and installation remain open.
 - [Guarded NVMe writer](nvme-installation.md): authenticated prepare/apply,
@@ -86,7 +88,7 @@ no larger card or live inventory was required to produce the diagnostic image.
 - [Guest fixture](guest-fixture.md): separate virt-profile kernel/initramfs and
   disposable disk built and hashed; launcher requires KVM with no TCG fallback.
   **No guest boot or KVM execution.** Guest networking/management remain open.
-- 401 Python cases across both suites and all shell regressions pass; the 397-case
+- 430 Python cases across both suites and all shell regressions pass; the 426-case
   discovery suite passes on Jammy with no skips (two privileged skips locally). Actual
   files/build checks are distinct from hardware gates. Independent Sol high
   reviews and routing outcomes: [implementation evidence](implementation-evidence.md).
@@ -102,7 +104,7 @@ no larger card or live inventory was required to produce the diagnostic image.
    actual per-installation candidate and validate board payload acquisition. Validate
    the writer/locking/readback/interruption protocol on authorized hardware. The preparation runtime
    has exercised software probes; board boot/DHCP/DNS/TLS remain unproven.
-3. Package and exercise maintenance/recovery tools on ARM and the board.
+3. Exercise the packaged maintenance/recovery tools on the board.
    Validate dirty-journal recovery, serial/manual rollback and backup restoration;
    cross-version updates/state compatibility remain unproven. Finish
    guest storage/networking, backup/restore and operational procedures.
