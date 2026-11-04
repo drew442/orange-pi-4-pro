@@ -3,6 +3,7 @@
 
 import argparse
 import json
+import importlib.util
 import os
 from pathlib import Path
 import re
@@ -10,10 +11,12 @@ import stat
 import subprocess
 import sys
 
-try:
-    from nvme_layout import GIB, MIB, layout
-except ModuleNotFoundError:
-    from scripts.nvme_layout import GIB, MIB, layout
+# Also support the installer's isolated Python invocation (-I), which omits
+# the script directory from sys.path. Import only the adjacent trusted module.
+_spec = importlib.util.spec_from_file_location('a733_nvme_layout', Path(__file__).with_name('nvme_layout.py'))
+_layout = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(_layout)
+GIB, MIB, layout = _layout.GIB, _layout.MIB, _layout.layout
 
 
 class UnsafeTarget(ValueError):

@@ -48,6 +48,12 @@ class PlannerTests(unittest.TestCase):
             return planner.plan({'blockdevices': [self.disk]}, target,
                                 resolver=self.identities.__getitem__, **kwargs)
 
+    def test_isolated_cli_import_from_another_directory(self):
+        result = subprocess.run(['python3', '-I', '-B', str(Path(__file__).parents[1] / 'scripts/plan-nvme.py'), '--help'],
+                                cwd=self.root, capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn('--target', result.stdout)
+
     def test_actual_decimal_capacity_and_output_invariants(self):
         result = self.run_plan(expected_serial='TEST123', expected_bytes=250_000_000_000)
         self.assertEqual(result['target']['size_bytes'], 250_000_000_000)

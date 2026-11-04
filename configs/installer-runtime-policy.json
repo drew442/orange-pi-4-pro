@@ -1,0 +1,53 @@
+{
+  "schema": 1,
+  "source_evidence": "docs/evidence/host-userspace-20261104.json",
+  "archive": {
+    "bytes": 169852145,
+    "sha256": "1967e76c0c831c1c0bab432e7116457d4372c15b413090c054f8958b72dcb392"
+  },
+  "executables": [
+    "usr/bin/python3.11",
+    "usr/bin/lsblk",
+    "usr/sbin/blkid",
+    "usr/sbin/mke2fs",
+    "usr/sbin/tune2fs",
+    "usr/sbin/e2fsck",
+    "usr/sbin/debugfs",
+    "usr/bin/curl"
+  ],
+  "required_trees": [
+    "usr/lib/python3.11"
+  ],
+  "optional_trees": [
+    "usr/lib/aarch64-linux-gnu/ossl-modules"
+  ],
+  "required_data": [
+    "etc/mke2fs.conf",
+    "etc/nsswitch.conf",
+    "etc/ssl/certs/ca-certificates.crt"
+  ],
+  "optional_data": [
+    "etc/gai.conf",
+    "etc/ssl/openssl.cnf",
+    "etc/services",
+    "etc/protocols",
+    "usr/lib/ssl/cert.pem",
+    "usr/lib/ssl/openssl.cnf"
+  ],
+  "optional_libraries": [
+    "libnss_files.so.2",
+    "libnss_dns.so.2"
+  ],
+  "library_directories": [
+    "lib/aarch64-linux-gnu",
+    "usr/lib/aarch64-linux-gnu"
+  ],
+  "loader": "lib/ld-linux-aarch64.so.1",
+  "symlinks": {
+    "usr/bin/python3": "python3.11"
+  },
+  "notices": "all usr/share/doc/*/copyright (including directory aliases), plus usr/share/common-licenses regular files",
+  "acceptance": "ELF closure is insufficient to prove dynamic data loading; private ARM64 chroot tests required; no hardware acceptance",
+  "archive_aliases": "Resolve bounded archive-root hardlinks and root-contained symlinks to selected regular bytes; output contains no hardlinks",
+  "input_capture": "Private compressed snapshot authenticated before parsing; one decompression capped at 1 GiB; 2 GiB staging free-space guard"
+}

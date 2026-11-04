@@ -1,0 +1,18 @@
+#!/bin/sh
+# DHCP changes network state and RAM-root resolver data only; no lease file.
+case "$1" in
+    bound|renew)
+        ip addr flush dev "$interface" || exit 1
+        ip addr add "$ip/${mask:-${subnet:-255.255.255.0}}" dev "$interface" || exit 1
+        for gateway in $router; do
+            ip route replace default via "$gateway" dev "$interface" || exit 1
+            break
+        done
+        : > /etc/resolv.conf
+        for server in $dns; do
+            # Accept IPv4 resolver addresses only; no arbitrary resolver options.
+            case "$server" in ''|*[!0-9.]*) continue ;; esac
+            printf 'nameserver %s\n' "$server" >> /etc/resolv.conf
+        done
+        ;;
+esac
