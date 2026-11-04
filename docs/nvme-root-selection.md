@@ -42,6 +42,13 @@ For the current prepared A selection, state creation uses
 state fixture and both managed root images are prototypes, not installed or
 hardware-booted.
 
+## Authenticated candidate preparation
+
+The [update preparer](host-updates.md) adds an explicit externally trusted
+manifest hash, private captured root, compatibility checks, proposed selector
+and preparation receipt. It accepts raw regular image files and publishes only
+a new directory on safe non-SD storage. It does not select an installed target.
+
 ## Publication and remaining update work
 
 `atomic_store()` in `build/root-selection.py` implements file fsync, atomic

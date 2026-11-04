@@ -44,6 +44,10 @@ no larger card or live inventory was required to produce the diagnostic image.
   identities; generic bootstrap fixes state UUID and ABI while root choice
   lives on recovered NVMe state. Selected-root-only resolution, ownership,
   GPT-role and cleanup fixtures pass. No installed updater or automatic rollback.
+- [Update candidate preparation](host-updates.md): explicit manifest SHA pin,
+  full private root capture/readback, fixed slot/boot/package compatibility,
+  safe non-SD output and no-overwrite publication. File-only preparation; no
+  installed inactive-slot writer, activation or manual rollback controller.
 - [Management preparation](host-management.md): exact Ethernet MAC DHCPv4,
   selected-IP key-only SSH, NVMe host-key creation and RAM configuration.
   ARM key/sshd/PAM-account/unit checks pass; no SSH connection or systemd boot.

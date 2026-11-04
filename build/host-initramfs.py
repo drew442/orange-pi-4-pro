@@ -8,10 +8,12 @@ import json
 import os
 from pathlib import Path
 import re
+import selectors
 import stat
 import struct
 import subprocess
 import tarfile
+import time
 
 REPO = Path(__file__).resolve().parents[1]
 
@@ -42,6 +44,74 @@ def read_pinned(path, expected):
         raise
 
 
+MARKER_LIMIT = 64 * 1024
+DEBUGFS_TIMEOUT = 30
+
+
+def bounded_output(command, limit, *, pass_fds=(), timeout=DEBUGFS_TIMEOUT):
+    """Bound subprocess output before accumulating or parsing its contents.
+
+    Nonblocking reads enforce one deadline even if the child emits slowly or
+    closes stdout and then hangs. stderr never accumulates in Python memory.
+    Every failure kills and reaps the child; no communicate() allocation occurs.
+    """
+    if type(limit) is not int or limit < 0 or not 0 < timeout <= DEBUGFS_TIMEOUT:
+        raise ValueError('invalid subprocess output/deadline bound')
+    deadline = time.monotonic() + timeout
+    child = subprocess.Popen(command, pass_fds=pass_fds, stdout=subprocess.PIPE,
+                             stderr=subprocess.DEVNULL)
+    output = bytearray()
+    try:
+        os.set_blocking(child.stdout.fileno(), False)
+        with selectors.DefaultSelector() as selector:
+            selector.register(child.stdout, selectors.EVENT_READ)
+            while True:
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
+                    raise TimeoutError('debugfs metadata read deadline exceeded')
+                if not selector.select(remaining):
+                    raise TimeoutError('debugfs metadata read deadline exceeded')
+                try:
+                    data = os.read(child.stdout.fileno(), min(64 * 1024, limit - len(output) + 1))
+                except BlockingIOError:
+                    continue
+                if not data:
+                    break
+                if len(output) + len(data) > limit:
+                    raise ValueError('debugfs metadata exceeds size bound')
+                output.extend(data)
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            raise TimeoutError('debugfs metadata read deadline exceeded')
+        try:
+            status = child.wait(timeout=remaining)
+        except subprocess.TimeoutExpired as error:
+            raise TimeoutError('debugfs metadata read deadline exceeded') from error
+        if status:
+            raise subprocess.CalledProcessError(status, command)
+        return bytes(output)
+    finally:
+        child.stdout.close()
+        if child.poll() is None:
+            child.kill()
+        # SIGKILL ordinarily makes this immediate; bound even kernel failure.
+        child.wait(timeout=5)
+
+
+def debugfs_content(descriptor, path, limit):
+    return bounded_output(['debugfs', '-R', 'cat ' + path,
+                           f'/proc/self/fd/{descriptor}'], limit, pass_fds=(descriptor,))
+
+
+def unique_marker_pairs(pairs):
+    value = {}
+    for key, item in pairs:
+        if key in value:
+            raise ValueError('duplicate root marker field')
+        value[key] = item
+    return value
+
+
 def root_marker(stream, slot):
     stream.seek(1024)
     block = stream.read(1024)
@@ -53,26 +123,21 @@ def root_marker(stream, slot):
     if str(uuid.UUID(bytes=block[104:120])) != PAYLOAD.SLOT_UUIDS[slot]:
         raise ValueError('root UUID differs from slot')
     descriptor = stream.fileno()
-    result = subprocess.run(['debugfs', '-R', 'cat /usr/lib/orangepi-hypervisor/payload.json',
-                             f'/proc/self/fd/{descriptor}'], pass_fds=(descriptor,),
-                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
-    value = json.loads(result.stdout)
+    marker = debugfs_content(descriptor, '/usr/lib/orangepi-hypervisor/payload.json', MARKER_LIMIT)
+    value = json.loads(marker, object_pairs_hook=unique_marker_pairs)
+    if not isinstance(value, dict):
+        raise ValueError('root payload marker must be a JSON object')
     if (value['slot'] != slot or value['filesystem_uuid'] != PAYLOAD.SLOT_UUIDS[slot] or
             value['kernel_release'] != PAYLOAD.KERNEL_RELEASE):
         raise ValueError('root payload marker incompatible with selected slot/kernel')
     profile = PAYLOAD.PACKAGE.validate_profile(value.get('package_state'))
     base = '/' + PAYLOAD.PACKAGE.ROOT
     def package_file(name, limit):
-        result = subprocess.run(['debugfs', '-R', 'cat ' + base + '/' + name,
-                                 f'/proc/self/fd/{descriptor}'], pass_fds=(descriptor,),
-                                stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
-        if len(result.stdout) > limit:
-            raise ValueError('package-state metadata exceeds bound')
-        return result.stdout
+        return debugfs_content(descriptor, base + '/' + name, limit)
     if package_file('FORMAT', 128) != PAYLOAD.PACKAGE.FORMAT:
         raise ValueError('root package-state format differs')
     PAYLOAD.PACKAGE.validate_manifest(package_file('manifest.json', PAYLOAD.PACKAGE.MANIFEST_LIMIT), profile)
-    return result.stdout, value
+    return marker, value
 
 
 def newc(entries):

@@ -1,13 +1,19 @@
 """File-only initramfs tests; no mounts, board boot or guest execution."""
+import contextlib
 import hashlib
 import importlib.util
 import json
+import os
 from pathlib import Path
 import shutil
 import stat
 import subprocess
+import struct
+import sys
 import tempfile
 import unittest
+import uuid
+from unittest import mock
 
 SPEC = importlib.util.spec_from_file_location('host_initramfs', Path(__file__).resolve().parents[1] / 'build/host-initramfs.py')
 INIT = importlib.util.module_from_spec(SPEC)
@@ -110,6 +116,96 @@ class InitramfsTests(unittest.TestCase):
                 check=True, capture_output=True)
             with image.open('rb') as stream, self.assertRaisesRegex(ValueError, 'format'):
                 INIT.root_marker(stream, 'A')
+
+
+class BoundedMetadataTests(unittest.TestCase):
+    def command(self, program):
+        return [sys.executable, '-c', program]
+
+    @contextlib.contextmanager
+    def tracked_children(self):
+        original = subprocess.Popen
+        children = []
+        def spawn(*args, **kwargs):
+            child = original(*args, **kwargs)
+            children.append(child)
+            return child
+        with mock.patch.object(INIT.subprocess, 'Popen', side_effect=spawn):
+            yield children
+        self.assertTrue(children)
+        for child in children:
+            self.assertIsNotNone(child.returncode)
+            self.assertTrue(child.stdout.closed)
+            with self.assertRaises(ChildProcessError):
+                os.waitpid(child.pid, os.WNOHANG)
+
+    def test_output_at_exact_bound_succeeds_and_reaps(self):
+        with self.tracked_children():
+            self.assertEqual(INIT.bounded_output(self.command("import os; os.write(1, b'x' * 128)"),
+                                                  128, timeout=2), b'x' * 128)
+
+    def test_continuous_overlimit_output_killed_without_accumulating(self):
+        with self.tracked_children(), self.assertRaisesRegex(ValueError, 'size bound'):
+            INIT.bounded_output(self.command("import os\nwhile True: os.write(1, b'x' * 4096)"),
+                                128, timeout=2)
+
+    def test_silent_hang_times_out_and_reaps(self):
+        with self.tracked_children(), self.assertRaisesRegex(TimeoutError, 'deadline'):
+            INIT.bounded_output(self.command('import time; time.sleep(60)'), 128, timeout=0.1)
+
+    def test_stdout_eof_then_hang_times_out_and_reaps(self):
+        with self.tracked_children(), self.assertRaisesRegex(TimeoutError, 'deadline'):
+            INIT.bounded_output(self.command('import os,time; os.close(1); time.sleep(60)'),
+                                128, timeout=0.1)
+
+    def test_nonzero_exit_rejected_and_reaped(self):
+        with self.tracked_children(), self.assertRaises(subprocess.CalledProcessError):
+            INIT.bounded_output(self.command('raise SystemExit(3)'), 128, timeout=2)
+
+    def marker_stream(self):
+        stream = tempfile.TemporaryFile()
+        self.addCleanup(stream.close)
+        data = bytearray(2048)
+        data[1024 + 56:1024 + 58] = b'\x53\xef'
+        struct.pack_into('<I', data, 1024 + 100, 0x1000)
+        data[1024 + 104:1024 + 120] = uuid.UUID(INIT.PAYLOAD.SLOT_UUIDS['A']).bytes
+        stream.write(data)
+        stream.flush()
+        return stream
+
+    def test_duplicate_and_nonobject_marker_rejected(self):
+        for content in (b'{"slot":"A","slot":"A"}', b'{"nested":{"x":1,"x":2}}', b'[]'):
+            with self.subTest(content=content), mock.patch.object(INIT, 'debugfs_content', return_value=content):
+                with self.assertRaises(ValueError):
+                    INIT.root_marker(self.marker_stream(), 'A')
+
+    def test_marker_limit_enforced_before_json_parse(self):
+        original = subprocess.Popen
+        children = []
+        def overlimit(command, **kwargs):
+            child = original(self.command("import os\nwhile True: os.write(1, b'x' * 4096)"), **kwargs)
+            children.append(child)
+            return child
+        with mock.patch.object(INIT.subprocess, 'Popen', side_effect=overlimit), \
+                mock.patch.object(INIT.json, 'loads', side_effect=AssertionError('JSON parser reached')):
+            with self.assertRaisesRegex(ValueError, 'size bound'):
+                INIT.root_marker(self.marker_stream(), 'A')
+        self.assertTrue(children)
+        self.assertIsNotNone(children[0].returncode)
+
+    def test_all_metadata_reads_receive_fixed_caps(self):
+        profile = {'profile': INIT.PAYLOAD.PACKAGE.PROFILE,
+                   'manifest': {'bytes': 1, 'sha256': 'a' * 64}}
+        metadata = {'slot': 'A', 'filesystem_uuid': INIT.PAYLOAD.SLOT_UUIDS['A'],
+                    'kernel_release': INIT.PAYLOAD.KERNEL_RELEASE, 'package_state': profile}
+        marker = json.dumps(metadata).encode()
+        with mock.patch.object(INIT, 'debugfs_content', side_effect=[marker, INIT.PAYLOAD.PACKAGE.FORMAT, b'x']) as read, \
+                mock.patch.object(INIT.PAYLOAD.PACKAGE, 'validate_manifest'):
+            actual, value = INIT.root_marker(self.marker_stream(), 'A')
+        self.assertEqual(actual, marker)
+        self.assertEqual(value, metadata)
+        self.assertEqual([call.args[2] for call in read.call_args_list],
+                         [64 * 1024, 128, INIT.PAYLOAD.PACKAGE.MANIFEST_LIMIT])
 
 
 if __name__ == '__main__':
