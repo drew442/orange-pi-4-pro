@@ -1,0 +1,11 @@
+{
+  "output": "/home/drew/orange-pi-4-pro-build/package-state-work-20261104/out/package-selection-B.conf",
+  "selector": {
+    "SCHEMA": "1",
+    "SLOT": "B",
+    "ROOT_UUID": "a7330000-0000-4000-8000-00000000000b",
+    "ROOT_MARKER_SHA256": "9ced119915566ce4cc07de03b1bb7c7de1557f641514895555b2aa28a8fcd48b",
+    "KERNEL_RELEASE": "6.6.98-a733-diag"
+  },
+  "sha256": "814c69e9545939fb4d382dc67cdb456dfa3c4f2485819f88560bd00a5e81880e"
+}

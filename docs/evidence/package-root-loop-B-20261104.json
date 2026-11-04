@@ -1,0 +1,13 @@
+{
+  "host_file_loop_test": "passed",
+  "kernel": "6.8.0-138-generic",
+  "image_bytes": 4294967296,
+  "sha256": "a7c98b1cff05ccb9a77857d4d7b3a4bfd36fd6734a05866d911d5d2adbaa1e27",
+  "loop_block_read_only": false,
+  "attachment": "byte-identical private staged regular file",
+  "staged_image_unchanged": true,
+  "read_write_remount": "rejected",
+  "write_probe": "EROFS",
+  "image_unchanged": true,
+  "physical_board_acceptance": "pending"
+}

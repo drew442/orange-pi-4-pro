@@ -1,0 +1,157 @@
+{
+  "classification": "clean-checkout package-state root rebuild and deterministic bootstrap packaging; no physical deployment acceptance",
+  "source_commit": "f2428b9940769a2e402cec6dbc3c0446a4efdfc6",
+  "package_profile": {
+    "manifest": {
+      "bytes": 189468,
+      "sha256": "682f6ae0293cc8ef1a1e4780e30140fd557ede4de893328c8fc0dec5582dba7d"
+    },
+    "profile": "a733-package-state-v1"
+  },
+  "root_markers_and_package_BOMs_byte_identical": true,
+  "first_root_cache_absence_checked": true,
+  "raw_root_byte_identity": "not claimed; filesystem metadata changes between independent creations",
+  "repeat_roots": {
+    "root-A.ext4": {
+      "bytes": 4294967296,
+      "sha256": "7eeea9953d1b00f178e1b100a843e7839a7f2d789b91e69e8848823552b740c0"
+    },
+    "root-A.ext4.gz": {
+      "bytes": 143285258,
+      "sha256": "6a87c30c121b6a06b4a21c85d6324491c524375a8ce0b39c527bcd71b1b39b86"
+    },
+    "root-B.ext4": {
+      "bytes": 4294967296,
+      "sha256": "ff105026abaf2a85a718e8d2ea413939f2084c24c71314e000b3cc74b065f7e7"
+    },
+    "root-B.ext4.gz": {
+      "bytes": 143284808,
+      "sha256": "7c727e4f162d538ae4b87d67dacf83d1e15c1f5d02318081a1dc05aa394195aa"
+    }
+  },
+  "host_bootstrap_cmp": "actual cmp passed initramfs gzip, raw SD and gzip SD",
+  "installer_cmp": "actual cmp passed initramfs gzip, raw SD and gzip SD",
+  "limits": [
+    "existing authenticated source/cache and prepared builder reused; no immutable clean builder",
+    "no systemd or board boot, physical install, real updater/rollback or KVM"
+  ],
+  "repeat_installer_checks": {
+    "package-installer-arm-repeat-20261104.json": {
+      "classification": "packaged ARM64 chroot software checks; no board boot, physical installation or KVM acceptance",
+      "verifier_source": {
+        "bytes": 13236,
+        "sha256": "94681aa5621697f6e48c0a4e2f65c066d8c6c3996bc4c0c0c10845ffcefe2d70"
+      },
+      "archive": {
+        "bytes": 26853830,
+        "sha256": "de514547f1b04cbdf4ed83116ea44a4204ee7e06c66fc25ef1b549b67a1c6295"
+      },
+      "expanded_bytes": 79055868,
+      "entries_checked": 2205,
+      "all_archive_hashes_modes_paths": "passed",
+      "ARM_checks": {
+        "architecture": "aarch64",
+        "isolated_python": true,
+        "core_modules": "imported",
+        "ca_file": "/usr/lib/ssl/cert.pem",
+        "ca_certificates": 142,
+        "localhost_NSS": "passed",
+        "versions": {
+          "python": "Python 3.11.2",
+          "lsblk": "lsblk from util-linux 2.38.1",
+          "blkid": "blkid from util-linux 2.38.1  (libblkid 2.38.1, 04-Aug-2022)",
+          "mke2fs": "mke2fs 1.47.0 (5-Feb-2023)",
+          "tune2fs": "tune2fs 1.47.0 (5-Feb-2023)",
+          "e2fsck": "e2fsck 1.47.0 (5-Feb-2023)",
+          "debugfs": "debugfs 1.47.0 (5-Feb-2023)",
+          "curl": "curl 7.88.1 (aarch64-unknown-linux-gnu) libcurl/7.88.1 OpenSSL/3.0.20 zlib/1.2.13 brotli/1.0.9 zstd/1.5.4 libidn2/2.3.3 libpsl/0.21.2 (+libidn2/2.3.3) libssh2/1.10.0 nghttp2/1.52.0 librtmp/2.3 OpenLDAP/2.5.13"
+        },
+        "planner_isolated_help": "passed",
+        "writer_isolated_help": "passed",
+        "acquisition_isolated_help": "passed",
+        "writer_fixture_refusal": "passed before target access",
+        "writer_regular_file_engine": "passed; block flush and partition callbacks not exercised",
+        "init_ash_syntax": "passed",
+        "regular_file_mkfs_fsck_blkid_debugfs": "passed",
+        "dhcp_ram_resolver_hook": "passed; three IP commands replaced by logged fixture stub",
+        "DNS_TLS_connection": "not performed",
+        "physical_block_targets": "not opened"
+      },
+      "private_fixture": "deleted after check; no mounts, listeners or external requests",
+      "limits": [
+        "Runtime tests cover the exercised commands/modules, not every possible dynamic load.",
+        "IP command was stubbed for DHCP hook; board DHCP/DNS/TLS untested.",
+        "No SD/NVMe/SPI write or actual KVM guest performed."
+      ]
+    },
+    "package-installer-https-arm-repeat-20261104.json": {
+      "classification": "ARM64 software TLS loopback probe; no board networking or hardware acceptance",
+      "verifier_source": {
+        "bytes": 8435,
+        "sha256": "22f0432485656110a3a07c983068c5bfd1bfaced202adb15fcf9a226729ed9d2"
+      },
+      "archive": {
+        "bytes": 26853830,
+        "sha256": "de514547f1b04cbdf4ed83116ea44a4204ee7e06c66fc25ef1b549b67a1c6295"
+      },
+      "ARM_checks": {
+        "architecture": "aarch64",
+        "HTTPS_Content_Length_fetch": "passed",
+        "custom_CA_hostname_verification": "passed",
+        "untrusted_CA_refusal": "passed",
+        "redirect_refusal": "passed",
+        "encoded_and_expanded_verification": "passed",
+        "bytes": {
+          "encoded": {
+            "bytes": 597,
+            "sha256": "f19c32e3a01c4bfb22408802f133dac191fffcd2507675f0ab540dfec5f5ae23"
+          },
+          "decoded": {
+            "bytes": 65792,
+            "sha256": "120c518a83325c66464701a6ee080302f332bc768ea3f60473b209f1bfb091df"
+          }
+        },
+        "scope": "production transport and stream verifier; no full acquisition/storage policy or device operation"
+      },
+      "cleanup": "temporary chroot, certificate/private key and loopback listener removed; no mounts or external requests",
+      "limits": [
+        "No real DNS, DHCP, Ethernet, production endpoint or A733 TLS connection.",
+        "Full acquisition/storage guards have native mocked/loopback tests; this ARM probe exercises transport and stream checks.",
+        "No SD/NVMe/SPI access or actual KVM guest."
+      ]
+    },
+    "package-installer-sd-repeat-verify-20261104.json": {
+      "classification": "regular-file installer SD inspection; no physical boot or installation acceptance",
+      "image": {
+        "bytes": 268435456,
+        "sha256": "bd33504f9a0b4c5a87239c95c71353f1d518588e6247f43ce9396172e1c85e2a"
+      },
+      "legacy_ext4_features": [
+        "ext_attr",
+        "resize_inode",
+        "dir_index",
+        "filetype",
+        "extent",
+        "flex_bg",
+        "sparse_super",
+        "large_file",
+        "huge_file",
+        "dir_nlink",
+        "extra_isize"
+      ],
+      "mbr_and_vendor_blob_offsets": "passed",
+      "pinned_kernel_DTB": "passed",
+      "script_and_initrd_wrappers_CRCs": "passed",
+      "checked_installer_archive_payload": {
+        "bytes": 26853830,
+        "sha256": "de514547f1b04cbdf4ed83116ea44a4204ee7e06c66fc25ef1b549b67a1c6295"
+      },
+      "compressed_hash_and_expansion": "passed",
+      "physical_storage_writes": false
+    }
+  },
+  "source_archive": {
+    "bytes": 1423360,
+    "sha256": "1be82ba56a3c0b49277da8d3cf7679cc7df645a34e5d111716ab78e26ac5ae0a"
+  }
+}

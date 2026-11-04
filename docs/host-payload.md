@@ -3,8 +3,8 @@
 The builder produced two raw 4 GiB ext4 root-slot images from the authenticated
 [interim ARM64 userspace](host-userspace.md) and matching A733 kernel modules.
 They include management runtime profile `a733-management-v1`: the management
-helper, its configuration module, and systemd SSH service. Marker and manifest
-records hash all three files. The images remain prototypes: they are not
+helper, configuration and package-state modules, and systemd SSH service.
+Marker and manifest records hash all four files. The images remain prototypes: they are not
 installed or hardware-booted, and establish no KVM or SD-write acceptance.
 
 ## Format and provenance
@@ -25,8 +25,13 @@ management helper generates host keys there; test keys existed only in a
 disposable ARM chroot.
 
 The build manifest records slot, source hashes, prototype classification,
-management-runtime hashes, tools and provenance. A/B UUIDs are fixed for these
-images; a future installer must assign unique GPT PARTUUIDs. No GPT layout or
+management-runtime hashes, tools and provenance. The new package metadata ABI is
+`a733-package-state-v1`; roots require the matching state/bootstrap pairing.
+Eight version-owned metadata views are stored under
+`/usr/lib/orangepi-hypervisor/package-state` and are bound read-only at runtime.
+Shared-state copies of these metadata databases remain present but
+nonauthoritative. A/B UUIDs are fixed for these
+images; the integrated assembler assigns fresh GPT identities. No GPT layout or
 physical storage identifiers are written by this recipe.
 
 ## Build and verification
@@ -35,10 +40,10 @@ On the prepared Ubuntu 22.04 builder, using its pinned inputs:
 
 ```sh
 mkdir -p out
-sudo python3 build/host-payload.py \
+sudo /usr/bin/python3.10 -I -B build/host-payload.py \
   /home/drew/orange-pi-4-pro-build/recipe/out/host-userspace-bookworm-20261001-01/rootfs.tar.gz \
   /home/drew/orange-pi-4-pro-build/artifacts \
-  "$(pwd -P)/out/host-payload-20261104-02"
+  "$(pwd -P)/out/host-payload-package-state-20261104-01"
 ```
 
 The command passed. Use a new output name to repeat it. It requires root,
@@ -47,21 +52,26 @@ free-space requirements, and processes slots sequentially. No network, mounts
 or physical-device operations occur.
 
 Builder output:
-`/home/drew/orange-pi-4-pro-build/management-work-20261104/out/host-payload-20261104-02/`.
-See [manifest](evidence/managed-payload-20261104.json) and
-[verification](evidence/managed-payload-verify-20261104.json).
+`/home/drew/orange-pi-4-pro-build/package-state-work-20261104/out/host-payload-package-state-20261104-01/`.
+See [manifest](evidence/package-payload-20261104.json) and
+[verification](evidence/package-payload-verify-20261104.json).
 
 | Artifact | Bytes | SHA-256 |
 | --- | ---: | --- |
-| `root-A.ext4` | 4,294,967,296 | `9ae1b5daabff5f7468be5d30f526ead3c4d3e042953480f5b289bead454d3ff3` |
-| `root-A.ext4.gz` | 173,053,400 | `0943c929d591db53b64557625e3dd1abe5462b83defdf83f9b270da19f3870c0` |
-| `root-B.ext4` | 4,294,967,296 | `70b401c51e5363c182d5916b2b67e29fa2ca1e402f2589dced08e9345ff380a1` |
-| `root-B.ext4.gz` | 173,053,267 | `f2747502ca3d52f467f57080b520a02e8c83f88602b17ac4507de47e3789e372` |
+| `root-A.ext4` | 4,294,967,296 | `6157897213b918c82241a6ff74920c2d5b92eb45cb30bc0333d8d97a58be733e` |
+| `root-A.ext4.gz` | 143,285,038 | `0ee3eca8df37f38ac9a1683ea41e0ed40609e8edad166090fbcc13b8079194d4` |
+| `root-B.ext4` | 4,294,967,296 | `a7c98b1cff05ccb9a77857d4d7b3a4bfd36fd6734a05866d911d5d2adbaa1e27` |
+| `root-B.ext4.gz` | 143,285,222 | `a7dfe4f6d46bd1c41f272177c019ce35975a39ad0655c5b71e05957cde575d8a` |
 
-Both complete hashes and compressed expansions passed; management files match
-the manifest. These are regular-file/content checks. Prior loop checks relate to
-the original unconfigured prototype and do not establish loop behavior for
-these managed images. Keep payloads on fixed builder storage or transfer them
-over authenticated networking/USB; never stage them on SD or in RAM. The
+Both complete hashes and compressed expansions passed; management and package-state files match
+the manifest. ARM package-query and managed-root loop evidence is recorded in
+[package ARM checks](evidence/package-payload-arm-20261104.json) and
+[state loop checks](evidence/package-state-loop-20261104.json). The tiny A→B→A VFS cycle used distinct synthetic package versions. A separate
+probe mounted both actual managed roots and queried their packages under
+ARM64 binfmt/chroot; neither is physical NVMe/board evidence. Three caches were pruned only from private builder
+staging (77,294,968 bytes per extracted userspace tree; both roots and fresh state omit them). The eight
+metadata database copies under shared `/var` remain but are nonauthoritative. Keep payloads on fixed builder storage or transfer them
+over authenticated networking/USB; never stage them on SD or in RAM. A [clean repeat](evidence/package-rebuild-20261104.json) reproduced root markers
+and package descriptors; raw filesystem byte identity is not claimed. The
 diagnostic SD remains the first-boot candidate. No image authorizes storage
 erasure or replaces the pending hardware gates.

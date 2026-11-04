@@ -1,0 +1,34 @@
+{
+  "classification": "package-state software build and verification resources; no hardware acceptance",
+  "source_commit": "f2428b9940769a2e402cec6dbc3c0446a4efdfc6",
+  "root_build_maximum_resident_set_kib": 67864,
+  "root_build_exit_status": 0,
+  "sampled_available_memory_bytes": [
+    7586119680,
+    7598800896,
+    7656964096,
+    7631290368
+  ],
+  "sampled_free_disk_bytes": [
+    24956129280,
+    23747342336,
+    22924783616,
+    21058887680
+  ],
+  "sampling_limits": "Manual start/intermediate/end host samples, not exact global peaks. Root build /usr/bin/time -v retained outside Git.",
+  "compilation": "none; vendor firmware/kernel/DTB/toolchains unchanged; initial two-job policy retained",
+  "tests": {
+    "python_discover_cases": 250,
+    "local_privileged_skips": 2,
+    "jammy_host_state_cases": 15,
+    "jammy_host_state_skips": 0,
+    "separate_diagnostic_cases": 4,
+    "host_handoff_shell_fixtures": 113,
+    "all_shell_regressions": "passed",
+    "tiny_package_view_write_denials": 24,
+    "actual_root_package_view_write_denials": 16,
+    "actual_root_package_query_rows": 220,
+    "actual_root_BOM_entries_each": 1122
+  },
+  "gates": "no board boot, installation, actual KVM, real updater/rollback or power-cut test"
+}

@@ -1,0 +1,29 @@
+{
+  "classification": "regular-file installer SD inspection; no physical boot or installation acceptance",
+  "image": {
+    "bytes": 268435456,
+    "sha256": "bd33504f9a0b4c5a87239c95c71353f1d518588e6247f43ce9396172e1c85e2a"
+  },
+  "legacy_ext4_features": [
+    "ext_attr",
+    "resize_inode",
+    "dir_index",
+    "filetype",
+    "extent",
+    "flex_bg",
+    "sparse_super",
+    "large_file",
+    "huge_file",
+    "dir_nlink",
+    "extra_isize"
+  ],
+  "mbr_and_vendor_blob_offsets": "passed",
+  "pinned_kernel_DTB": "passed",
+  "script_and_initrd_wrappers_CRCs": "passed",
+  "checked_installer_archive_payload": {
+    "bytes": 26853830,
+    "sha256": "de514547f1b04cbdf4ed83116ea44a4204ee7e06c66fc25ef1b549b67a1c6295"
+  },
+  "compressed_hash_and_expansion": "passed",
+  "physical_storage_writes": false
+}

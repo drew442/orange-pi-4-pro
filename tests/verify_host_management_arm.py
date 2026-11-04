@@ -106,7 +106,7 @@ finally:
     M.runtime_guard=guard
 assert pathlib.Path('/etc/hostname').read_text()==cfg['hostname']+'\n'
 assert 'MACAddress='+cfg['management_mac'] in pathlib.Path('/etc/systemd/network/00-a733-management.network').read_text()
-for name in ('ssh.service','sshd.service','ssh.socket','sshd.socket'):
+for name in ('ssh.service','sshd.service','ssh.socket','sshd.socket','apt-daily.service','apt-daily.timer','apt-daily-upgrade.service','apt-daily-upgrade.timer','dpkg-db-backup.service','dpkg-db-backup.timer','systemd-journal-catalog-update.service'):
     assert os.readlink('/etc/systemd/system/'+name)=='/dev/null'
 assert os.readlink('/etc/systemd/system/multi-user.target.wants/a733-management-ssh.service')=='/lib/systemd/system/a733-management-ssh.service'
 assert hashlib.sha256(key.read_bytes()).digest()==first
@@ -122,7 +122,7 @@ print(json.dumps({'key_generation_noreplace':'passed','private_key_single_link':
             raise ValueError(f'private ARM64 check failed: {result.stderr}')
         report = json.loads(result.stdout)
         report.update(classification='ARM64 binfmt/chroot software checks; no board boot, SSH connection or KVM acceptance',
-                      runtime=runtime, private_fixture_keys='deleted with temporary chroot', userspace=expected)
+                      runtime=runtime, verifier_source=PAYLOAD.file_record(Path(__file__)), private_fixture_keys='deleted with temporary chroot', userspace=expected)
         return report
 
 

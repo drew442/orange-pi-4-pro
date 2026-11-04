@@ -18,12 +18,15 @@ Before handing control to systemd, the bootstrap runs the management helper
 with isolated Python imports and bytecode writes disabled. It checks selected
 NVMe root/state partition roles, read-only root, writable state, state UUID,
 marker, kernel ABI, ownership, bind sources and RAM overlay provenance.
-Unexpected nested mounts fail closed. Configuration failure returns to serial
+The package-state descriptor and eight read-only binds must match the selected
+root, including exact mount origins and source/bound inodes. Unexpected package
+ancestor/descendant and immutable `/usr` overmounts fail closed. Configuration failure returns to serial
 recovery rather than continuing to start management.
 
 The helper prepares only the RAM-backed `/etc`: hostname, systemd-networkd and
 resolved configuration, service links and journald limits. It masks the native
-SSH service/socket aliases. Ethernet selection requires one physical wired
+SSH service/socket aliases plus APT, dpkg-backup and catalog-update maintenance
+units. Ethernet selection requires one physical wired
 interface matching the configured MAC; DHCPv4 is enabled there, with IPv6 RA,
 link-local addressing, LLMNR and mDNS disabled. Board DHCP/network behavior is
 still untested.
@@ -55,16 +58,14 @@ From the repository on the prepared Ubuntu 22.04 builder:
 
 ```sh
 python3 -m unittest discover -s tests -p 'test_host_management.py'
-sudo python3 tests/verify_host_management_arm.py \
+sudo /usr/bin/python3.10 -I -B tests/verify_host_management_arm.py \
   /home/drew/orange-pi-4-pro-build/recipe/out/host-userspace-bookworm-20261001-01/rootfs.tar.gz
-sudo python3 tests/verify_managed_payload.py \
-  /home/drew/orange-pi-4-pro-build/management-work-20261104/out/host-payload-20261104-02
+sudo /usr/bin/python3.10 -I -B tests/verify_managed_payload.py \
+  /home/drew/orange-pi-4-pro-build/package-state-work-20261104/out/host-payload-package-state-20261104-01
 ```
 
-The recorded artifacts were built from the source retained in commit
-`754cdb7`; a later trailing-blank-line cleanup of `host_config.py` changes its
-source hash without changing behavior. Artifact manifests retain the exact
-built bytes. A new build must use its own generated manifest.
+The recorded artifact recipe/runtime bytes match commit `f2428b9`.
+Artifact manifests retain the exact built bytes. A new build must use its own generated manifest.
 
 The ARM checker requires prepared binfmt support. It authenticates the userspace
 archive and creates a disposable private chroot; it does not mount filesystems,
@@ -75,9 +76,11 @@ checking is not SSH authentication or session execution. Configuration-file
 preparation used a mocked mount guard only inside this disposable fixture; the
 real CLI rejected the missing NVMe environment before configuration writes.
 
-See [ARM results](evidence/management-arm-20261104.json),
-[root inspection](evidence/managed-payload-verify-20261104.json),
-[build resources](evidence/managed-build-resources-20261104.json), and the
+See [ARM management checks](evidence/package-management-arm-20261104.json),
+[ARM package query/VFS results](evidence/package-payload-arm-20261104.json),
+[root inspection](evidence/package-payload-verify-20261104.json),
+[managed loop checks](evidence/package-state-loop-20261104.json),
+[package-state verification](evidence/package-state-verify-20261104.json), and the
 [root](host-payload.md), [state](host-state.md) and [handoff](host-handoff.md)
 guides for artifact hashes and reproducible recipe commands. Readback verified
 both complete raw roots, compressed hashes/expansions, runtime contents, empty

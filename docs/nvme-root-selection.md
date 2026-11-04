@@ -25,20 +25,20 @@ ABI and compatible boot inputs, then creates only a new selector file. No
 installed partition is read or changed.
 
 ```sh
-sudo python3 build/root-selection.py \
-  /home/drew/orange-pi-4-pro-build/management-work-20261104/out/host-payload-20261104-02/root-A.ext4 \
-  "$(pwd -P)/out/managed-selection-A.conf" --slot A \
-  --payload-manifest /home/drew/orange-pi-4-pro-build/management-work-20261104/out/host-payload-20261104-02/manifest.json
-sudo python3 build/root-selection.py \
-  /home/drew/orange-pi-4-pro-build/management-work-20261104/out/host-payload-20261104-02/root-B.ext4 \
-  "$(pwd -P)/out/managed-selection-B.conf" --slot B \
-  --payload-manifest /home/drew/orange-pi-4-pro-build/management-work-20261104/out/host-payload-20261104-02/manifest.json
+sudo /usr/bin/python3.10 -I -B build/root-selection.py \
+  /home/drew/orange-pi-4-pro-build/package-state-work-20261104/out/host-payload-package-state-20261104-01/root-A.ext4 \
+  "$(pwd -P)/out/package-selection-A.conf" --slot A \
+  --payload-manifest /home/drew/orange-pi-4-pro-build/package-state-work-20261104/out/host-payload-package-state-20261104-01/manifest.json
+sudo /usr/bin/python3.10 -I -B build/root-selection.py \
+  /home/drew/orange-pi-4-pro-build/package-state-work-20261104/out/host-payload-package-state-20261104-01/root-B.ext4 \
+  "$(pwd -P)/out/package-selection-B.conf" --slot B \
+  --payload-manifest /home/drew/orange-pi-4-pro-build/package-state-work-20261104/out/host-payload-package-state-20261104-01/manifest.json
 ```
 
 For the current prepared A selection, state creation uses
-`--boot-selection "$(pwd -P)/out/managed-selection-A.conf"`; see
+`--boot-selection "$(pwd -P)/out/package-selection-A.conf"`; see
 [state guide](host-state.md). The prepared selector is
-`$(pwd -P)/out/managed-selection-A.conf` when run from this checkout. The new
+`$(pwd -P)/out/package-selection-A.conf` when run from this checkout. The new
 state fixture and both managed root images are prototypes, not installed or
 hardware-booted.
 
@@ -59,3 +59,7 @@ fallback/rollback requires separately proven policy. Kernel/DTB/initramfs
 maintenance is separate from routine root updates. SPI-to-NVMe preference,
 zero routine SD writes, installer safety, backup and physical acceptance remain
 open.
+
+Current selector preparation also requires `a733-package-state-v1` and matching
+root-marker/manifest descriptor records. Frozen older prototype roots cannot
+pair with the new bootstrap. See [package-state isolation](host-package-state.md).

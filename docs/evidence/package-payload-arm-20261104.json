@@ -1,0 +1,433 @@
+{
+  "classification": "native kernel VFS, actual ARM 220-package default database queries and independent BOM readback",
+  "payload_manifest": {
+    "bytes": 7023,
+    "sha256": "51f8dfa7f0f66b005b9bfd08dc5f29fcf25f0791e5e844ab6af22de94aa9a44c"
+  },
+  "cases": {
+    "A": {
+      "independent_bom_entries": {
+        "apt": 6,
+        "debconf": 6,
+        "dpkg": 1061,
+        "pam": 7,
+        "shells": 1,
+        "systemd-catalog": 2,
+        "systemd-helper": 32,
+        "ucf": 7
+      },
+      "mounts": {
+        "dpkg": {
+          "mount": {
+            "id": "684",
+            "device": "7:7",
+            "root": "/usr/lib/orangepi-hypervisor/package-state/dpkg",
+            "target": "/var/tmp/a733-package-payload-p51putfx/chroot/newroot/var/lib/dpkg",
+            "flags": [
+              "ro",
+              "nosuid",
+              "nodev",
+              "relatime"
+            ],
+            "filesystem": "ext4",
+            "super_flags": [
+              "ro",
+              "norecovery"
+            ]
+          },
+          "root_write_errno": 30
+        },
+        "apt": {
+          "mount": {
+            "id": "685",
+            "device": "7:7",
+            "root": "/usr/lib/orangepi-hypervisor/package-state/apt",
+            "target": "/var/tmp/a733-package-payload-p51putfx/chroot/newroot/var/lib/apt",
+            "flags": [
+              "ro",
+              "nosuid",
+              "nodev",
+              "relatime"
+            ],
+            "filesystem": "ext4",
+            "super_flags": [
+              "ro",
+              "norecovery"
+            ]
+          },
+          "root_write_errno": 30
+        },
+        "debconf": {
+          "mount": {
+            "id": "686",
+            "device": "7:7",
+            "root": "/usr/lib/orangepi-hypervisor/package-state/debconf",
+            "target": "/var/tmp/a733-package-payload-p51putfx/chroot/newroot/var/cache/debconf",
+            "flags": [
+              "ro",
+              "nosuid",
+              "nodev",
+              "relatime"
+            ],
+            "filesystem": "ext4",
+            "super_flags": [
+              "ro",
+              "norecovery"
+            ]
+          },
+          "root_write_errno": 30
+        },
+        "ucf": {
+          "mount": {
+            "id": "687",
+            "device": "7:7",
+            "root": "/usr/lib/orangepi-hypervisor/package-state/ucf",
+            "target": "/var/tmp/a733-package-payload-p51putfx/chroot/newroot/var/lib/ucf",
+            "flags": [
+              "ro",
+              "nosuid",
+              "nodev",
+              "relatime"
+            ],
+            "filesystem": "ext4",
+            "super_flags": [
+              "ro",
+              "norecovery"
+            ]
+          },
+          "root_write_errno": 30
+        },
+        "pam": {
+          "mount": {
+            "id": "688",
+            "device": "7:7",
+            "root": "/usr/lib/orangepi-hypervisor/package-state/pam",
+            "target": "/var/tmp/a733-package-payload-p51putfx/chroot/newroot/var/lib/pam",
+            "flags": [
+              "ro",
+              "nosuid",
+              "nodev",
+              "relatime"
+            ],
+            "filesystem": "ext4",
+            "super_flags": [
+              "ro",
+              "norecovery"
+            ]
+          },
+          "root_write_errno": 30
+        },
+        "shells": {
+          "mount": {
+            "id": "689",
+            "device": "7:7",
+            "root": "/usr/lib/orangepi-hypervisor/package-state/shells",
+            "target": "/var/tmp/a733-package-payload-p51putfx/chroot/newroot/var/lib/shells.state",
+            "flags": [
+              "ro",
+              "nosuid",
+              "nodev",
+              "relatime"
+            ],
+            "filesystem": "ext4",
+            "super_flags": [
+              "ro",
+              "norecovery"
+            ]
+          },
+          "root_write_errno": 30
+        },
+        "systemd-helper": {
+          "mount": {
+            "id": "690",
+            "device": "7:7",
+            "root": "/usr/lib/orangepi-hypervisor/package-state/systemd-helper",
+            "target": "/var/tmp/a733-package-payload-p51putfx/chroot/newroot/var/lib/systemd/deb-systemd-helper-enabled",
+            "flags": [
+              "ro",
+              "nosuid",
+              "nodev",
+              "relatime"
+            ],
+            "filesystem": "ext4",
+            "super_flags": [
+              "ro",
+              "norecovery"
+            ]
+          },
+          "root_write_errno": 30
+        },
+        "systemd-catalog": {
+          "mount": {
+            "id": "691",
+            "device": "7:7",
+            "root": "/usr/lib/orangepi-hypervisor/package-state/systemd-catalog",
+            "target": "/var/tmp/a733-package-payload-p51putfx/chroot/newroot/var/lib/systemd/catalog",
+            "flags": [
+              "ro",
+              "nosuid",
+              "nodev",
+              "relatime"
+            ],
+            "filesystem": "ext4",
+            "super_flags": [
+              "ro",
+              "norecovery"
+            ]
+          },
+          "root_write_errno": 30
+        }
+      },
+      "actual_arm_query": {
+        "rows": 220,
+        "lock_exact_after_arch_suffix_normalization": true,
+        "output_sha256": "5b09a1794388748c068ac743ffe763cf704ff0ffd9ca7d0d552ff4c76c3b26f4"
+      },
+      "dpkg_query_elf_machine": 183,
+      "actual_arm_python_machine": "aarch64",
+      "state_log_writable": true,
+      "source_and_private_hash_unchanged": {
+        "bytes": 4294967296,
+        "sha256": "6157897213b918c82241a6ff74920c2d5b92eb45cb30bc0333d8d97a58be733e"
+      },
+      "explicit_unmount_and_detach": true
+    },
+    "B": {
+      "independent_bom_entries": {
+        "apt": 6,
+        "debconf": 6,
+        "dpkg": 1061,
+        "pam": 7,
+        "shells": 1,
+        "systemd-catalog": 2,
+        "systemd-helper": 32,
+        "ucf": 7
+      },
+      "mounts": {
+        "dpkg": {
+          "mount": {
+            "id": "684",
+            "device": "7:7",
+            "root": "/usr/lib/orangepi-hypervisor/package-state/dpkg",
+            "target": "/var/tmp/a733-package-payload-p51putfx/chroot/newroot/var/lib/dpkg",
+            "flags": [
+              "ro",
+              "nosuid",
+              "nodev",
+              "relatime"
+            ],
+            "filesystem": "ext4",
+            "super_flags": [
+              "ro",
+              "norecovery"
+            ]
+          },
+          "root_write_errno": 30
+        },
+        "apt": {
+          "mount": {
+            "id": "685",
+            "device": "7:7",
+            "root": "/usr/lib/orangepi-hypervisor/package-state/apt",
+            "target": "/var/tmp/a733-package-payload-p51putfx/chroot/newroot/var/lib/apt",
+            "flags": [
+              "ro",
+              "nosuid",
+              "nodev",
+              "relatime"
+            ],
+            "filesystem": "ext4",
+            "super_flags": [
+              "ro",
+              "norecovery"
+            ]
+          },
+          "root_write_errno": 30
+        },
+        "debconf": {
+          "mount": {
+            "id": "686",
+            "device": "7:7",
+            "root": "/usr/lib/orangepi-hypervisor/package-state/debconf",
+            "target": "/var/tmp/a733-package-payload-p51putfx/chroot/newroot/var/cache/debconf",
+            "flags": [
+              "ro",
+              "nosuid",
+              "nodev",
+              "relatime"
+            ],
+            "filesystem": "ext4",
+            "super_flags": [
+              "ro",
+              "norecovery"
+            ]
+          },
+          "root_write_errno": 30
+        },
+        "ucf": {
+          "mount": {
+            "id": "687",
+            "device": "7:7",
+            "root": "/usr/lib/orangepi-hypervisor/package-state/ucf",
+            "target": "/var/tmp/a733-package-payload-p51putfx/chroot/newroot/var/lib/ucf",
+            "flags": [
+              "ro",
+              "nosuid",
+              "nodev",
+              "relatime"
+            ],
+            "filesystem": "ext4",
+            "super_flags": [
+              "ro",
+              "norecovery"
+            ]
+          },
+          "root_write_errno": 30
+        },
+        "pam": {
+          "mount": {
+            "id": "688",
+            "device": "7:7",
+            "root": "/usr/lib/orangepi-hypervisor/package-state/pam",
+            "target": "/var/tmp/a733-package-payload-p51putfx/chroot/newroot/var/lib/pam",
+            "flags": [
+              "ro",
+              "nosuid",
+              "nodev",
+              "relatime"
+            ],
+            "filesystem": "ext4",
+            "super_flags": [
+              "ro",
+              "norecovery"
+            ]
+          },
+          "root_write_errno": 30
+        },
+        "shells": {
+          "mount": {
+            "id": "689",
+            "device": "7:7",
+            "root": "/usr/lib/orangepi-hypervisor/package-state/shells",
+            "target": "/var/tmp/a733-package-payload-p51putfx/chroot/newroot/var/lib/shells.state",
+            "flags": [
+              "ro",
+              "nosuid",
+              "nodev",
+              "relatime"
+            ],
+            "filesystem": "ext4",
+            "super_flags": [
+              "ro",
+              "norecovery"
+            ]
+          },
+          "root_write_errno": 30
+        },
+        "systemd-helper": {
+          "mount": {
+            "id": "690",
+            "device": "7:7",
+            "root": "/usr/lib/orangepi-hypervisor/package-state/systemd-helper",
+            "target": "/var/tmp/a733-package-payload-p51putfx/chroot/newroot/var/lib/systemd/deb-systemd-helper-enabled",
+            "flags": [
+              "ro",
+              "nosuid",
+              "nodev",
+              "relatime"
+            ],
+            "filesystem": "ext4",
+            "super_flags": [
+              "ro",
+              "norecovery"
+            ]
+          },
+          "root_write_errno": 30
+        },
+        "systemd-catalog": {
+          "mount": {
+            "id": "691",
+            "device": "7:7",
+            "root": "/usr/lib/orangepi-hypervisor/package-state/systemd-catalog",
+            "target": "/var/tmp/a733-package-payload-p51putfx/chroot/newroot/var/lib/systemd/catalog",
+            "flags": [
+              "ro",
+              "nosuid",
+              "nodev",
+              "relatime"
+            ],
+            "filesystem": "ext4",
+            "super_flags": [
+              "ro",
+              "norecovery"
+            ]
+          },
+          "root_write_errno": 30
+        }
+      },
+      "actual_arm_query": {
+        "rows": 220,
+        "lock_exact_after_arch_suffix_normalization": true,
+        "output_sha256": "5b09a1794388748c068ac743ffe763cf704ff0ffd9ca7d0d552ff4c76c3b26f4"
+      },
+      "dpkg_query_elf_machine": 183,
+      "actual_arm_python_machine": "aarch64",
+      "state_log_writable": true,
+      "source_and_private_hash_unchanged": {
+        "bytes": 4294967296,
+        "sha256": "a7c98b1cff05ccb9a77857d4d7b3a4bfd36fd6734a05866d911d5d2adbaa1e27"
+      },
+      "explicit_unmount_and_detach": true
+    }
+  },
+  "busybox": {
+    "bytes": 1794520,
+    "sha256": "0a41864f87a0737804f0f4a68a1cfa1ed22374f4f75a1be3eb376e2659ce1316"
+  },
+  "sources": {
+    "tests/verify_package_payload_arm.py": {
+      "bytes": 20602,
+      "sha256": "30b940b0e16693c0044e0aecfcc0c15563ae39fc3a94ac4b42bbadf605f9e898"
+    },
+    "tests/verify_package_state_loop.py": {
+      "bytes": 20936,
+      "sha256": "652b4cf355d83e98699ceb534f0f16a509b5f7776727fadcd1b556c3af8ab067"
+    },
+    "configs/package_state.py": {
+      "bytes": 13113,
+      "sha256": "809630ebba9d927b6ad5034899a88a8a8fcf3401f94ff6f223f92f6fbfa9c6eb"
+    },
+    "build/root-selection.py": {
+      "bytes": 8874,
+      "sha256": "c6a7aa531da127937a7a7856700ff4574f069b4a860dec3268696fa9ac9e9efd"
+    },
+    "configs/host-userspace-packages.lock.tsv": {
+      "bytes": 6671,
+      "sha256": "f2abf03d0d6e7fd506560689093220514cbf1acc678f7560562026d6ca6564a6"
+    }
+  },
+  "production_host_init": {
+    "bytes": 15116,
+    "sha256": "82515ff0fb49d0d3399f3cc3546a768742bd50db6500452bafa6ae1d105c3964"
+  },
+  "covered_state_unchanged": true,
+  "descriptor_policy": "close_fds=True; stdin=/dev/null; stdout/stderr only; no host /dev, /proc or /sys binds",
+  "worker_environment": {
+    "PATH": "/usr/sbin:/usr/bin:/sbin:/bin",
+    "LC_ALL": "C"
+  },
+  "cleanup": {
+    "explicit_unmounts": true,
+    "all_owned_loops_detached": true
+  },
+  "limitations": [
+    "No actual systemd boot, installed updates, power-cut or rollback test.",
+    "Emulation and file-backed loops do not establish board boot, KVM or hardware acceptance."
+  ],
+  "storage": {
+    "fstype": "ext4",
+    "maj:min": "252:0"
+  },
+  "raw_log": "/home/drew/orange-pi-4-pro-build/package-state-work-20261104/tmp/package-payload-arm-ljdpxz3f.log",
+  "private_files_deleted": true
+}

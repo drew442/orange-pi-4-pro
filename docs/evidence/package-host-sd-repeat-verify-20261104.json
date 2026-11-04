@@ -1,0 +1,28 @@
+{
+  "classification": "independent regular-file host SD checks; hardware acceptance pending",
+  "image": {
+    "bytes": 268435456,
+    "sha256": "a0eec1415503c7a69eb697218ef259df439f772e70c55cbae2774896c9561157"
+  },
+  "state_uuid": "cbc5029f-e3e3-45b6-a4ed-5a5cad32f3db",
+  "mbr_and_raw_blobs": "passed",
+  "legacy_ext4_features": [
+    "ext_attr",
+    "resize_inode",
+    "dir_index",
+    "filetype",
+    "extent",
+    "flex_bg",
+    "sparse_super",
+    "large_file",
+    "huge_file",
+    "dir_nlink",
+    "extra_isize"
+  ],
+  "pinned_kernel_and_dtb": "passed",
+  "host_script_crc_and_contents": "passed",
+  "initrd_wrapper_and_payload": "passed",
+  "initramfs_entries_checked": 424,
+  "gzip_expansion": "passed",
+  "physical_storage_writes": false
+}

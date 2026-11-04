@@ -21,12 +21,12 @@ no network, mounts, package scripts, or physical-device writes. Output must be
 a new absolute repository `out/host-state-*` directory.
 
 ```sh
-sudo python3 build/host-state.py \
+sudo /usr/bin/python3.10 -I -B build/host-state.py \
   /home/drew/orange-pi-4-pro-build/recipe/out/host-userspace-bookworm-20261001-01/rootfs.tar.gz \
   /home/drew/orange-pi-4-pro-build/state-fixture-inputs-20261104/management.json \
   /home/drew/orange-pi-4-pro-build/state-fixture-inputs-20261104/admin.pub \
-  "$(pwd -P)/out/host-state-20261104-04" \
-  --boot-selection "$(pwd -P)/out/managed-selection-A.conf"
+  "$(pwd -P)/out/host-state-package-state-20261104-01" \
+  --boot-selection "$(pwd -P)/out/package-selection-A.conf"
 ```
 
 Fixture management settings use DHCP, MAC `02:73:30:00:00:01`, hostname
@@ -39,20 +39,24 @@ never on SD or in RAM.
 ## Current evidence and limits
 
 Builder output is
-`/home/drew/orange-pi-4-pro-build/management-work-20261104/out/host-state-20261104-04`.
-State UUID is `bfe5ba29-3175-47a3-a410-04b87e3de1a6`; raw image size is
+`/home/drew/orange-pi-4-pro-build/package-state-work-20261104/out/host-state-package-state-20261104-01`.
+State UUID is `cbc5029f-e3e3-45b6-a4ed-5a5cad32f3db`; raw image size is
 8,589,934,592 bytes and SHA-256 is
-`d7cafee5bba682ad2c171a6b78ab436e6db929cbbbb464d32be266835fdef477`.
-See [fixture manifest](evidence/managed-state-fixture-20261104.json) and
-[verification](evidence/managed-state-verify-20261104.json). Readback confirmed
+`786dfbae96ed85b8a6f4b59b3ac308d406d2994a0e9e9c7402790db9c4d96163`.
+See [fixture manifest](evidence/package-state-manifest-20261104.json) and
+[verification](evidence/package-state-verify-20261104.json). Readback confirmed
 UUID/journal, management config, selector, identity, metadata, package database,
 public-key fingerprint, empty SSH host-key directory, and compressed expansion.
 This is regular-file readback, not target installation or boot.
 
-State selector schema, identity and ownership checks are specified in
+Three expendable caches were pruned only from private staging (APT caches and
+ldconfig aux-cache; 77,294,968 bytes total); shared `/var` package metadata
+copies are retained but nonauthoritative. The root-owned package-state ABI is
+`a733-package-state-v1` and must match root and bootstrap. State selector schema, identity and ownership checks are specified in
 [the handoff document](host-handoff.md). On-device management activation, actual
 operator-key login, installation-specific state/bootstrap pairing, installer,
 inactive-slot writer,
 activation/rollback, backup, health checks, KVM and all physical acceptance
-remain open. Preserve SPI-to-NVMe preference and zero routine SD writes;
+remain open. [Native loop checks](evidence/package-state-loop-20261104.json) and
+ARM ash fixture checks do not establish physical NVMe operation. Preserve SPI-to-NVMe preference and zero routine SD writes;
 explicit kernel/DTB/initramfs maintenance may update boot files.

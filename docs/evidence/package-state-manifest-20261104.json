@@ -1,0 +1,166 @@
+{
+  "admin_public_key_fingerprint": "SHA256:zJDXpqimTuhgMi8BhG83V7SeYsDurn/2Dmt9g/R3Fzc",
+  "board": "Orange Pi 4 Pro A733",
+  "boot_selection": {
+    "KERNEL_RELEASE": "6.6.98-a733-diag",
+    "ROOT_MARKER_SHA256": "3a391301604aa248b15daa58fc0fa94cfeb355431dcec1c81fed6fbdc122cb3e",
+    "ROOT_UUID": "a7330000-0000-4000-8000-00000000000a",
+    "SCHEMA": "1",
+    "SLOT": "A"
+  },
+  "builder_packages": {
+    "e2fsprogs": {
+      "architecture": "amd64",
+      "version": "1.46.5-2ubuntu1.2"
+    },
+    "gzip": {
+      "architecture": "amd64",
+      "version": "1.10-4ubuntu4.2"
+    },
+    "libext2fs2": {
+      "architecture": "amd64",
+      "version": "1.46.5-2ubuntu1.2"
+    },
+    "tar": {
+      "architecture": "amd64",
+      "version": "1.34+dfsg-1ubuntu0.1.22.04.6"
+    }
+  },
+  "cache_pruning": [
+    {
+      "bytes": 38641220,
+      "path": "var/cache/apt/pkgcache.bin",
+      "sha256": "44be7de1a7b849a862a390ab094694ac83e23d8cedd408f2abdaa42676461611"
+    },
+    {
+      "bytes": 38641160,
+      "path": "var/cache/apt/srcpkgcache.bin",
+      "sha256": "26c572d46b690c0cf8785a886abf215aa9adb8ebf7894d0677e9f34708d1e1cb"
+    },
+    {
+      "bytes": 12588,
+      "path": "var/cache/ldconfig/aux-cache",
+      "sha256": "9d7151dea46b884ffa1565cdf185f2ab2440bd641627f92db7751afeb670faf8"
+    }
+  ],
+  "classification": "per-installation state; not a portable template; no hardware acceptance",
+  "compression": "streamed gzip; empty filename and mtime=0; identical image bytes produce identical gzip bytes on the pinned builder",
+  "contents_scope": "staging-contents.json records the pre-mke2fs source tree only; not an exact filesystem BOM",
+  "files": {
+    "provenance/builder-packages.lock.tsv": {
+      "bytes": 32519,
+      "sha256": "35c2faf42a936168098b1f54239825a3c42fc56c825fc0b2078bbd753425f48b"
+    },
+    "provenance/host-initramfs.py": {
+      "bytes": 10046,
+      "sha256": "aeeecd2ae4030b499f063e77ea2c7d4b30c02d51a3961d79817c037ea6d9853c"
+    },
+    "provenance/host-payload.py": {
+      "bytes": 18259,
+      "sha256": "09bc4faca64c388260b6c999255b28c83f9e5d19c22f25ecf710ff673944abf4"
+    },
+    "provenance/host-state.py": {
+      "bytes": 16004,
+      "sha256": "e088e7557e210a1718aaf70ebaaf0f481144fe640f640650a2a76e71cc72e6ec"
+    },
+    "provenance/host-storage-tools.py": {
+      "bytes": 4985,
+      "sha256": "e8d54568a6f43552996021a6a0a3178769564238be34a8642fca9d304f8f9750"
+    },
+    "provenance/host-userspace-20261104.json": {
+      "bytes": 1118,
+      "sha256": "370ee0bdb625f4dd10943c2cefb9f0e85d4c70b9b9b279be81697108b1558353"
+    },
+    "provenance/host-userspace-package-hashes.lock.tsv": {
+      "bytes": 28638,
+      "sha256": "f2f613e79d9c1abc1689e19cfe81b624d9d2ac3beeb322fd5788980d919f7d86"
+    },
+    "provenance/host-userspace-packages.lock.tsv": {
+      "bytes": 6671,
+      "sha256": "f2abf03d0d6e7fd506560689093220514cbf1acc678f7560562026d6ca6564a6"
+    },
+    "provenance/host-userspace.sh": {
+      "bytes": 11084,
+      "sha256": "e62952afd5ba656599aabef745169d5b9cf4b05eba063b8fe7b8727c24acbf33"
+    },
+    "provenance/host_config.py": {
+      "bytes": 2873,
+      "sha256": "520140d56402ab803b8c137981cef5182c5e263a44ec8446ce836b6a7d160a22"
+    },
+    "provenance/package_state.py": {
+      "bytes": 13113,
+      "sha256": "809630ebba9d927b6ad5034899a88a8a8fcf3401f94ff6f223f92f6fbfa9c6eb"
+    },
+    "provenance/root-selection.py": {
+      "bytes": 8874,
+      "sha256": "c6a7aa531da127937a7a7856700ff4574f069b4a860dec3268696fa9ac9e9efd"
+    },
+    "staging-contents.json": {
+      "bytes": 269980,
+      "sha256": "3d3beb3114b9f1f916eeaf91ea29ce5e2a80eaeec6ae9bbfe14f73741c62f905"
+    },
+    "state.ext4": {
+      "bytes": 8589934592,
+      "sha256": "786dfbae96ed85b8a6f4b59b3ac308d406d2994a0e9e9c7402790db9c4d96163"
+    },
+    "state.ext4.gz": {
+      "bytes": 10008847,
+      "sha256": "395602145db64be38ba1c3371c40884823e78ffc3d47475f283510a7e0ebf447"
+    }
+  },
+  "filesystem_directories": {
+    "/": {
+      "gid": 0,
+      "mode": "0755",
+      "type": "directory",
+      "uid": 0
+    },
+    "/lost+found": {
+      "gid": 0,
+      "mode": "0700",
+      "type": "directory",
+      "uid": 0
+    }
+  },
+  "hardware_acceptance": "pending; no physical boot, NVMe installation, KVM or SD-write evidence",
+  "identity_policy": "fresh per installation; never clone this image across hosts; fresh builds intentionally differ",
+  "machine_id": "63c5e13acac46bc8b4e2bd1909eee2b5",
+  "management": {
+    "dhcp": true,
+    "hostname": "a733-state-fixture",
+    "management_cidr": "192.0.2.0/24",
+    "management_mac": "02:73:30:00:00:01",
+    "schema": 1
+  },
+  "schema": 1,
+  "sources": {
+    "boot_selection_input": {
+      "bytes": 179,
+      "sha256": "00d06e94d8544c4a177b1df2d5f5ed55b44f323a7dd3e2fa1b42a259425f7f2f"
+    },
+    "operator_config": {
+      "bytes": 136,
+      "sha256": "5bcd1e6ebd3163d38fce602f7a59f3b6d81834d1ea328a201661baaf7cf37b57"
+    },
+    "operator_public_key": {
+      "bytes": 103,
+      "sha256": "ab433dfcee3d8a3981d16bded54bc6e7130f9ae2b00367aa59a2ae77e51a8bda"
+    },
+    "rootfs.tar.gz": {
+      "bytes": 169852145,
+      "sha256": "1967e76c0c831c1c0bab432e7116457d4372c15b413090c054f8958b72dcb392"
+    }
+  },
+  "staging_storage": {
+    "fstype": "ext4",
+    "maj:min": "252:0"
+  },
+  "staging_storage_guard_limit": "kernel sdX/removable=0 cannot identify every USB SD reader; operator must use known fixed builder storage",
+  "state_bytes": 8589934592,
+  "state_uuid": "cbc5029f-e3e3-45b6-a4ed-5a5cad32f3db",
+  "tools": {
+    "debugfs": "debugfs 1.46.5 (30-Dec-2021)\n\tUsing EXT2FS Library version 1.46.5",
+    "e2fsck": "e2fsck 1.46.5 (30-Dec-2021)\n\tUsing EXT2FS Library version 1.46.5, 30-Dec-2021",
+    "mke2fs": "mke2fs 1.46.5 (30-Dec-2021)\n\tUsing EXT2FS Library version 1.46.5"
+  }
+}

@@ -1,0 +1,192 @@
+{
+  "board": "Orange Pi 4 Pro A733",
+  "builder_packages": {
+    "e2fsprogs": {
+      "architecture": "amd64",
+      "version": "1.46.5-2ubuntu1.2"
+    },
+    "gzip": {
+      "architecture": "amd64",
+      "version": "1.10-4ubuntu4.2"
+    },
+    "libext2fs2": {
+      "architecture": "amd64",
+      "version": "1.46.5-2ubuntu1.2"
+    },
+    "tar": {
+      "architecture": "amd64",
+      "version": "1.34+dfsg-1ubuntu0.1.22.04.6"
+    }
+  },
+  "cache_pruning": [
+    {
+      "bytes": 38641220,
+      "path": "var/cache/apt/pkgcache.bin",
+      "sha256": "44be7de1a7b849a862a390ab094694ac83e23d8cedd408f2abdaa42676461611"
+    },
+    {
+      "bytes": 38641160,
+      "path": "var/cache/apt/srcpkgcache.bin",
+      "sha256": "26c572d46b690c0cf8785a886abf215aa9adb8ebf7894d0677e9f34708d1e1cb"
+    },
+    {
+      "bytes": 12588,
+      "path": "var/cache/ldconfig/aux-cache",
+      "sha256": "9d7151dea46b884ffa1565cdf185f2ab2440bd641627f92db7751afeb670faf8"
+    }
+  ],
+  "classification": "managed host root prototype; installation and hardware acceptance pending",
+  "files": {
+    "Image": {
+      "bytes": 27283464,
+      "sha256": "9df974c55fa61a77e8fe812652780dad471527eb9615c27838f481887d4c50e7"
+    },
+    "board.dtb": {
+      "bytes": 209320,
+      "sha256": "4d7d964a54668cf5dc12cd4bf7e72a625c79883541272aeba1a91adbbedb86ed"
+    },
+    "initramfs.cpio.gz": {
+      "bytes": 3650395,
+      "sha256": "e2b09f56f4df8cfd52b98c0f1fe018c92a0806d8cac6ee065c6ac31b15e6ca30"
+    },
+    "kernel.config": {
+      "bytes": 212080,
+      "sha256": "8a29d9c36e52db7e8a7d6ff757dc69e660f4273c99e5f00c5dbc5a9b7e060675"
+    },
+    "modules.json": {
+      "bytes": 60283,
+      "sha256": "80ddcd28eedce2e2e900aa3c0059d36189fe285b492dc1f7daf3eb84fe92af1d"
+    },
+    "provenance/a733-management-ssh.service": {
+      "bytes": 360,
+      "sha256": "d9603c6eb460ab1429234cbf6f7689b1dbbf72a4fcc61e97e90458e8877c07cb"
+    },
+    "provenance/builder-packages.lock.tsv": {
+      "bytes": 32519,
+      "sha256": "35c2faf42a936168098b1f54239825a3c42fc56c825fc0b2078bbd753425f48b"
+    },
+    "provenance/diagnostic-20261104.json": {
+      "bytes": 2224,
+      "sha256": "6d743d81ee27ced3b55cbcd218bbf0693743be66e85d074e59a052c8819fde1c"
+    },
+    "provenance/diagnostic-sources.lock.json": {
+      "bytes": 2273,
+      "sha256": "aa39f5fca29244ca961fc3f422d7110adca6975d2c6a29f80afd9d1d2f4b4821"
+    },
+    "provenance/host-management.py": {
+      "bytes": 22716,
+      "sha256": "3db7519f67986e4a1276a95666593b9d9a98355669926d8d3ddcf5fc319c4a54"
+    },
+    "provenance/host-payload.py": {
+      "bytes": 18259,
+      "sha256": "09bc4faca64c388260b6c999255b28c83f9e5d19c22f25ecf710ff673944abf4"
+    },
+    "provenance/host-userspace-20261104.json": {
+      "bytes": 1118,
+      "sha256": "370ee0bdb625f4dd10943c2cefb9f0e85d4c70b9b9b279be81697108b1558353"
+    },
+    "provenance/host-userspace-package-hashes.lock.tsv": {
+      "bytes": 28638,
+      "sha256": "f2f613e79d9c1abc1689e19cfe81b624d9d2ac3beeb322fd5788980d919f7d86"
+    },
+    "provenance/host-userspace-packages.lock.tsv": {
+      "bytes": 6671,
+      "sha256": "f2abf03d0d6e7fd506560689093220514cbf1acc678f7560562026d6ca6564a6"
+    },
+    "provenance/host-userspace-packages.txt": {
+      "bytes": 217,
+      "sha256": "2751818bd1cb5226b7b468a4d5d295ac110b616256f5d658e6c9023c2ccef1ee"
+    },
+    "provenance/host-userspace.sh": {
+      "bytes": 11084,
+      "sha256": "e62952afd5ba656599aabef745169d5b9cf4b05eba063b8fe7b8727c24acbf33"
+    },
+    "provenance/host_config.py": {
+      "bytes": 2873,
+      "sha256": "520140d56402ab803b8c137981cef5182c5e263a44ec8446ce836b6a7d160a22"
+    },
+    "provenance/package_state.py": {
+      "bytes": 13113,
+      "sha256": "809630ebba9d927b6ad5034899a88a8a8fcf3401f94ff6f223f92f6fbfa9c6eb"
+    },
+    "root-A.ext4": {
+      "bytes": 4294967296,
+      "sha256": "6157897213b918c82241a6ff74920c2d5b92eb45cb30bc0333d8d97a58be733e"
+    },
+    "root-A.ext4.gz": {
+      "bytes": 143285038,
+      "sha256": "0ee3eca8df37f38ac9a1683ea41e0ed40609e8edad166090fbcc13b8079194d4"
+    },
+    "root-B.ext4": {
+      "bytes": 4294967296,
+      "sha256": "a7c98b1cff05ccb9a77857d4d7b3a4bfd36fd6734a05866d911d5d2adbaa1e27"
+    },
+    "root-B.ext4.gz": {
+      "bytes": 143285222,
+      "sha256": "a7dfe4f6d46bd1c41f272177c019ce35975a39ad0655c5b71e05957cde575d8a"
+    }
+  },
+  "kernel_release": "6.6.98-a733-diag",
+  "management_runtime": {
+    "files": {
+      "usr/lib/orangepi-hypervisor/host-management.py": {
+        "bytes": 22716,
+        "sha256": "3db7519f67986e4a1276a95666593b9d9a98355669926d8d3ddcf5fc319c4a54"
+      },
+      "usr/lib/orangepi-hypervisor/host_config.py": {
+        "bytes": 2873,
+        "sha256": "520140d56402ab803b8c137981cef5182c5e263a44ec8446ce836b6a7d160a22"
+      },
+      "usr/lib/orangepi-hypervisor/package_state.py": {
+        "bytes": 13113,
+        "sha256": "809630ebba9d927b6ad5034899a88a8a8fcf3401f94ff6f223f92f6fbfa9c6eb"
+      },
+      "usr/lib/systemd/system/a733-management-ssh.service": {
+        "bytes": 360,
+        "sha256": "d9603c6eb460ab1429234cbf6f7689b1dbbf72a4fcc61e97e90458e8877c07cb"
+      }
+    },
+    "profile": "a733-management-v1"
+  },
+  "package_state": {
+    "manifest": {
+      "bytes": 189468,
+      "sha256": "682f6ae0293cc8ef1a1e4780e30140fd557ede4de893328c8fc0dec5582dba7d"
+    },
+    "profile": "a733-package-state-v1"
+  },
+  "reproducibility": "not established; filesystem/package-generated metadata may vary",
+  "schema": 1,
+  "slot_bytes": 4294967296,
+  "slot_uuids": {
+    "A": "a7330000-0000-4000-8000-00000000000a",
+    "B": "a7330000-0000-4000-8000-00000000000b"
+  },
+  "sources": {
+    "Image": {
+      "bytes": 27283464,
+      "sha256": "9df974c55fa61a77e8fe812652780dad471527eb9615c27838f481887d4c50e7"
+    },
+    "board.dtb": {
+      "bytes": 209320,
+      "sha256": "4d7d964a54668cf5dc12cd4bf7e72a625c79883541272aeba1a91adbbedb86ed"
+    },
+    "initramfs.cpio.gz": {
+      "bytes": 3650395,
+      "sha256": "e2b09f56f4df8cfd52b98c0f1fe018c92a0806d8cac6ee065c6ac31b15e6ca30"
+    },
+    "kernel.config": {
+      "bytes": 212080,
+      "sha256": "8a29d9c36e52db7e8a7d6ff757dc69e660f4273c99e5f00c5dbc5a9b7e060675"
+    },
+    "rootfs.tar.gz": {
+      "bytes": 169852145,
+      "sha256": "1967e76c0c831c1c0bab432e7116457d4372c15b413090c054f8958b72dcb392"
+    }
+  },
+  "tools": {
+    "e2fsck": "e2fsck 1.46.5 (30-Dec-2021)\n\tUsing EXT2FS Library version 1.46.5, 30-Dec-2021",
+    "mke2fs": "mke2fs 1.46.5 (30-Dec-2021)\n\tUsing EXT2FS Library version 1.46.5",
+    "tune2fs": "tune2fs: invalid option -- 'V'\nUsage: tune2fs [-c max_mounts_count] [-e errors_behavior] [-f] [-g group]\n\t[-i interval[d|m|w]] [-j] [-J journal_options] [-l]\n\t[-m reserved_blocks_percent] [-o [^]mount_options[,...]]\n\t[-r reserved_blocks_count] [-u user] [-C mount_count]\n\t[-L volume_label] [-M last_mounted_dir]\n\t[-O [^]feature[,...]] [-Q quota_options]\n\t[-E extended-option[,...]] [-T last_check_time] [-U UUID]\n\t[-I new_inode_size] [-z undo_file] device\ntune2fs 1.46.5 (30-Dec-2021)"
+  }
+}

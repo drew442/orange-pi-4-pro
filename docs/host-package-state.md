@@ -1,77 +1,110 @@
 # Package metadata across A/B roots
 
-This is preparation for versioned updates. The current implementation still
-binds the entire shared state `/var` over the selected root's `/var`; package
-metadata isolation and cross-version updates are not implemented. Both
-published root slots contain the same package versions.
+The interim Debian host now keeps version-owned package metadata with each
+immutable root. Software fixtures and artifact checks pass; no installed update,
+real rollback, systemd boot or hardware acceptance has been demonstrated.
+Both built root slots still contain the same 220 package versions.
 
-The [authenticated archive inventory](evidence/package-metadata-inventory-20261104.json)
-records 220 package stanzas, five `/var/lib/dpkg/alternatives` databases,
-corresponding `/etc/alternatives` entries and retained APT `extended_states`.
-The source recipe clears downloaded package indexes and `.deb` files but retains
-those databases. Separating only `dpkg/status` would leave other version-dependent
-metadata shared. `/etc` uses the selected root as its lower layer and a fresh
-RAM upper layer each boot; its alternatives links must remain paired with the
-selected root's databases.
+Previously, binding shared state `/var` hid each selected root's package
+database. The [authenticated archive inventory](evidence/package-metadata-inventory-20261104.json)
+and [broader inventory](evidence/package-extra-metadata-inventory-20261104.json)
+identified the metadata and caches that needed explicit treatment.
 
-A [broader archive inventory](evidence/package-extra-metadata-inventory-20261104.json)
-also finds debconf, ucf, PAM and systemd-generated state, shell registration and
-ldconfig cache data. Two APT binary caches occupy 77,282,380 bytes despite the
-download cleanup. Classify each as image-owned metadata, unused maintenance data,
-regenerable cache or backward-compatible persistent state before adopting the
-contract. Remove unnecessary binary caches in a future authenticated build;
-do not describe the current archive as cache-free. This design remains subject
-to the release-base choice after the hardware baseline.
+## Format and state classification
 
-## Proposed initial-deployment contract
+`a733-package-state-v1` relocates these complete components into
+`/usr/lib/orangepi-hypervisor/package-state/NAME` during private builder staging:
 
-Keep each root's complete dpkg and APT database trees under its immutable
-`/usr/lib/orangepi-hypervisor/package-state/{dpkg,apt}`. The builder should move
-the authenticated trees there, leave real `/var/lib/{dpkg,apt}` mountpoints,
-and record an explicit package-state format and contents in root metadata.
-It must reject symlink parents, unsafe destinations and existing output rather
-than editing a previously built image.
+| Name | Runtime view | Treatment |
+| --- | --- | --- |
+| `dpkg` | `/var/lib/dpkg` | Read-only package database, including alternatives |
+| `apt` | `/var/lib/apt` | Read-only package indexes/state |
+| `debconf` | `/var/cache/debconf` | Read-only built configuration metadata |
+| `ucf` | `/var/lib/ucf` | Read-only built configuration registry/cache |
+| `pam` | `/var/lib/pam` | Read-only PAM configuration-generation metadata |
+| `shells` | `/var/lib/shells.state` | Read-only registration file |
+| `systemd-helper` | `/var/lib/systemd/deb-systemd-helper-enabled` | Read-only package service-helper records |
+| `systemd-catalog` | `/var/lib/systemd/catalog` | Read-only built message catalog |
 
-After binding writable state `/var`, early boot should bind the selected root's
-database trees over `/var/lib/{dpkg,apt}` and explicitly make those binds
-read-only. Logs, host identity and application state remain on NVMe. Existing
-prototype state can retain its covered database copies without treating them
-as authoritative; this design requires no on-device deletion or migration.
-Database writes from in-place APT/dpkg operations are outside image-based host
-maintenance. Timer/service policy also needs review before this is deployed.
+The snapshot preserves contents, links, modes and ownership, leaves real empty
+mountpoints, and records all 1,122 entries in a bounded descriptor. Its
+189,468-byte manifest has SHA-256
+`682f6ae0293cc8ef1a1e4780e30140fd557ede4de893328c8fc0dec5582dba7d`.
+The root marker and trusted payload manifest bind this descriptor's size/hash.
+`/etc/alternatives` stays in the selected root's lower `/etc`; the writable
+upper layer is fresh RAM each boot. In-place APT/dpkg maintenance is unsupported.
 
-The handoff must validate the format and real source/target directories, track
-both mounts for failure cleanup, and refuse a missing or incompatible format.
-The management validator must require the exact read-only, selected-root-backed
-nested mounts and reject foreign or additional overmounts. A whitelist alone
-would weaken the existing topology checks.
-Require matching format metadata during root/bootstrap packaging, selector
-preparation and integrated-image assembly as well as at boot. The current mount
-parser does not reject every foreign mount under the future database source and
-target paths; extend exact origin, root-path, ownership and nested-mount checks
-before claiming those paths are protected.
+Logs, coredumps, pstore, identity and host-generated runtime state remain on
+writable NVMe state. Empty Python package-compilation markers and maintenance
+registries are not evidence that arbitrary future package state is compatible.
+New packages, state migrations and root-version combinations require a separate
+compatibility audit and rollback/restore tests. The release-base choice still
+follows the board baseline; this is the interim Debian contract.
 
-New root markers change the selector's authenticated marker digest. Build fresh
-selection/state/bootstrap artifacts together and check their pairing. A new
-bootstrap requiring this format cannot promise to boot older prototype roots.
-No such prototype is installed on hardware. Preserve old recovery artifacts
-separately; do not advertise an untested legacy migration or rollback path.
-After initial deployment with a stable format, routine compatible root updates
-should switch NVMe slots without rewriting SD. Kernel/bootstrap maintenance
-remains an explicit separate operation.
+Both root and fresh-state builders remove only three known regenerable files:
+APT `pkgcache.bin` and `srcpkgcache.bin` (77,282,380 bytes together), plus
+ldconfig `aux-cache` (12,588 bytes). The original authenticated 169,852,145-byte
+userspace archive is unchanged. Runtime caches may be regenerated on NVMe;
+these checks establish artifact contents, not a cache-free running system.
 
-## Required evidence before adoption
+## Handoff and compatibility
 
-Use tiny distinct A/B database fixtures to prove selection, alternatives
-consistency, failed-format rejection, exact mount origins/options and cleanup
-at each bind/remount failure. Check actual root artifacts contain the complete
-authenticated metadata, not just status files. In private file-backed builder
-mounts, require database writes to fail while an unrelated state log remains
-writable, and run the packaged ARM `dpkg-query` against the selected view.
-Changing slots must change the visible package version without mutating either
-root or the covered shared-state database.
+After the writable state `/var` bind, early boot validates real, safely owned
+source/target ancestors, creates eight package binds and separately remounts
+each `ro,nodev,nosuid`. It checks actual mount flags and tracks each successful
+bind for cleanup even if its remount fails. State itself remains read-write.
+This follows the separate bind/remount behavior in [Linux mount(2)](https://man7.org/linux/man-pages/man2/mount.2.html).
 
-These checks would establish software behavior only. Installed A/B switching,
-interrupted updates, actual rollback and backup restoration still require the
-[hardware acceptance](hardware-validation.md) evidence. The design does not
-implement an updater, authorize physical writes or satisfy any release gate.
+Management preparation requires exact selected-root device identities and
+mount-root paths, no foreign ancestor/descendant or immutable `/usr` overmounts,
+matching source/bound inodes and the authenticated descriptor. It masks native
+SSH aliases and package-maintenance APT, dpkg-backup and catalog-update units
+in RAM. Unit masking uses the [systemd 252 unit search/mask semantics](https://raw.githubusercontent.com/systemd/systemd/v252/man/systemd.unit.xml).
+
+Root selection, bootstrap packaging and integrated-image assembly reject an
+unsupported or mismatched package-state ABI. New selectors bind regenerated
+root-marker hashes. Old frozen prototype roots lack this format and cannot be
+mixed with the new bootstrap; this is not a legacy migration or rollback path.
+Existing state database copies remain covered and nonauthoritative; no installed
+state is deleted or migrated. Runtime package queries must use the selected
+views, not the covered `/run/a733-state/var` copies. Routine compatible root
+updates must leave SD unchanged; kernel/bootstrap maintenance remains explicit.
+
+## Executed checks and reproducible commands
+
+Recipe bytes match commit `f2428b9`. On the prepared Jammy builder:
+
+```sh
+sudo /usr/bin/python3.10 -I -B tests/verify_package_state_loop.py \
+  /home/drew/orange-pi-4-pro-build/busybox/bin/busybox
+sudo /usr/bin/python3.10 -I -B tests/verify_package_payload_arm.py \
+  /home/drew/orange-pi-4-pro-build/package-state-work-20261104/out/host-payload-package-state-20261104-01 \
+  /home/drew/orange-pi-4-pro-build/busybox/bin/busybox
+```
+
+Both passed. The first uses newly created tiny files, a private mount namespace,
+real production ARM BusyBox mount functions, and native queries on synthetic
+version 1/2 databases. A→B→A selected the matching alternatives and database;
+24 root write attempts returned `EROFS`, state logs stayed writable, covered
+state databases and source images stayed unchanged, and owned loops/mounts were
+explicitly removed. [Tiny VFS evidence](evidence/package-state-loop-20261104.json)
+does not implement or test an installed updater.
+
+The second independently inspected both actual 4 GiB root files, compared every
+metadata entry and executed their ARM64 `dpkg-query` binaries through the default
+`/var/lib/dpkg` view under binfmt/chroot. Both returned the exact 220-row package
+lock. The worker uses a fixed environment so `DPKG_ADMINDIR`/`DPKG_ROOT` cannot
+redirect the query; the [Bookworm dpkg-query manual](https://manpages.debian.org/bookworm/dpkg/dpkg-query.1.en.html)
+documents database selection and architecture-qualified package names.
+[Artifact/ARM evidence](evidence/package-payload-arm-20261104.json) records
+read-only binds, writable logs, unchanged source/covered state and cleanup.
+Separate [A](evidence/package-root-loop-A-20261104.json) and
+[B](evidence/package-root-loop-B-20261104.json) checks used writable private loop
+copies and confirmed the ext4 feature denies read-write remounts and writes.
+
+A [clean-checkout repeat](evidence/package-rebuild-20261104.json) reproduced root
+markers/package descriptors and byte-identical host/installer bootstrap files.
+Raw root byte identity is not claimed because filesystem metadata changes.
+Existing authenticated inputs and the prepared builder were reused.
+Hardware boot, real cross-version updates, interrupted-update recovery, rollback,
+backup restoration and actual KVM remain mandatory [release gates](hardware-validation.md).

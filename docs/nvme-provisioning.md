@@ -14,6 +14,12 @@ physical alignment. Actual SSD capacity and sector sizes must come from the
 identified hardware. The writer rejects a mismatch; this fixture must
 not be copied to an unknown target.
 
+The published full-disk fixtures below were built at `c368563` before
+`a733-package-state-v1`. They remain frozen and nondeployable. Current
+[root/state/bootstrap components](host-package-state.md) use the new ABI;
+new assembly rejects older incompatible inputs. Do not mix their state UUIDs
+or selectors. No new full-disk package-state fixture is claimed here.
+
 ## Integrated layout
 
 | Role | Start byte | Bytes | Filesystem |

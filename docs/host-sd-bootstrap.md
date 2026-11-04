@@ -8,7 +8,7 @@ or evidence of a working hypervisor. SPI-to-NVMe with SD removed remains the
 preferred release mode.
 
 The current candidate references fixture state UUID
-`bfe5ba29-3175-47a3-a410-04b87e3de1a6`. That state contains a deleted test
+`cbc5029f-e3e3-45b6-a4ed-5a5cad32f3db`. That state contains a deleted test
 credential's public key and documentation-only network settings. It is not an
 operator installation. Use the [diagnostic candidate](diagnostic-image.md) for
 first board boot; supply real Ethernet identity and administration public key
@@ -17,16 +17,16 @@ before preparing installation state and its matching bootstrap.
 ## Artifact and boot behavior
 
 Builder output is under
-`/home/drew/orange-pi-4-pro-build/host-sd-work-20261104/out/host-sd-managed-20261104-01/`.
-The [manifest](evidence/host-sd-20261104.json) records input, recipe and package
-versions; [independent inspection](evidence/host-sd-verify-20261104.json) records
+`/home/drew/orange-pi-4-pro-build/package-state-work-20261104/out/host-sd-package-state-20261104-01/`.
+The [manifest](evidence/package-host-sd-20261104.json) records input, recipe and package
+versions; [independent inspection](evidence/package-host-sd-verify-20261104.json) records
 content checks.
 
 | File | Bytes | SHA-256 |
 | --- | ---: | --- |
-| `a733-host-sd.img` | 268,435,456 | `84389fabf3ab8391a452944891a75799ba13d0eda87dc695b404198c3dfbed48` |
-| `a733-host-sd.img.gz` | 17,271,090 | `59f817002eb61bc8b4d55b6fcd5413d29aa65f397477b23f22aed934b53ac740` |
-| `uInitrd` | 4,761,966 | `0f954b221f29507beba3965dfa6fa66bd9f5154aa6a93ef5fa8c06a8ebfea733` |
+| `a733-host-sd.img` | 268,435,456 | `a0eec1415503c7a69eb697218ef259df439f772e70c55cbae2774896c9561157` |
+| `a733-host-sd.img.gz` | 17,271,977 | `aa64c35cb9f570e748350edacd6ad546e762a3d7ee2ac49b63a4b07c6034d8a7` |
+| `uInitrd` | 4,762,444 | `a28b70548a18ff0fb8dfe66e76106aae162e3f6f81e65ab47f025507b9add693` |
 
 The image fits below the 2 GB card budget. Actual card capacity, identity and
 explicit target authorization are still required before flashing anything.
@@ -55,13 +55,13 @@ flowchart LR
 On the prepared Jammy builder, from the repository:
 
 ```sh
-sudo python3 build/assemble-host.py \
+sudo /usr/bin/python3.10 -I -B build/assemble-host.py \
   /home/drew/orange-pi-4-pro-build/artifacts \
-  /home/drew/orange-pi-4-pro-build/management-work-20261104/out/host-initramfs-20261104-05 \
-  "$(pwd -P)/out/host-sd-managed-20261104-01"
-sudo python3 tests/verify_host_sd.py \
-  "$(pwd -P)/out/host-sd-managed-20261104-01" \
-  /home/drew/orange-pi-4-pro-build/management-work-20261104/out/host-initramfs-20261104-05
+  /home/drew/orange-pi-4-pro-build/package-state-work-20261104/out/host-initramfs-package-state-20261104-01 \
+  "$(pwd -P)/out/host-sd-package-state-20261104-01"
+sudo /usr/bin/python3.10 -I -B tests/verify_host_sd.py \
+  "$(pwd -P)/out/host-sd-package-state-20261104-01" \
+  /home/drew/orange-pi-4-pro-build/package-state-work-20261104/out/host-initramfs-package-state-20261104-01
 ```
 
 These commands passed. Choose a new output name to repeat. Root is needed to
@@ -86,19 +86,14 @@ ext4 features, pinned kernel/DTB, legacy script and initrd header/data CRCs,
 script contents, compressed distribution expansion and all 424 newc entries.
 It matched the actual state UUID and init/resolver bytes to the supplied
 manifest/current source. Packaging and inspection did not use physical targets.
-A [clean-checkout repeat](evidence/host-sd-rebuild-20261104.json) at
-`a349c8b` reproduced the raw image, gzip and wrapped initrd byte-identically,
-using the cached authenticated inputs and same pinned packaging tools. The
-second image also passed independent inspection. This repeats assembly only;
-it is not a fresh firmware/kernel/userspace build or reproduced deployment.
+A [clean-checkout repeat](evidence/package-rebuild-20261104.json) from `f2428b9`
+reproduced the host initramfs, raw SD and compressed SD byte-identically. It
+reused authenticated cached inputs, not a clean immutable builder or hardware.
 
 Default diagnostic assembly regressions also passed after adding the optional
 explicit boot-command input to the shared assembler.
 
-The compressed fixture artifact and manifest are also available in
-`/home/drew/orange-pi-4-pro-build/host-sd-artifacts-20261104/` on the builder
-and under ignored local `out/host-sd-20261104/`. The transferred compressed file
-was checked against the hash above. These files contain no host private keys.
+The current fixture contains no host private keys.
 
 ## Hardware handoff still required
 

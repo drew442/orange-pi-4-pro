@@ -172,6 +172,10 @@ configuration open. The packaging helper has six nonprivileged regressions.
 | Bundle review | Sol / high | Missing-intent and alternate-interpreter findings fixed; actual pinned Jammy runtime probe passed |
 | Verified payload acquisition | Sol / medium | 20 TLS/storage/deadline/failure regressions; source and receipt identities retained, full bounded expansion without raw staging |
 | Acquisition/install review | Sol / high | Slow-header deadline, foreign replacement cleanup and timer teardown findings fixed and independently rechecked; packaged ARM TLS probe and native full-size harness reviewed |
+| Immutable package metadata | Sol / medium | Eight complete snapshot trees, bounded descriptor and staging-only cache pruning; root added bootstrap/selector/runtime pairing |
+| Package-state/install review | Sol / high | Installer provenance Path error and ambient dpkg database override found and fixed; exact mount/ABI negative fixtures and two private-loop harnesses reviewed |
+| Package VFS/ARM probes | Sol / medium | Native tiny A1→B2→A1 plus actual ARM default-path queries and independent 1,122-entry metadata readback; coordinator executed and verified cleanup |
+| Package guide updates | Luna / low | Coordinator requested one correction to preserve commands/references and correct state RW semantics, then corrected remaining scope wording |
 | Slot metadata extraction | Luna / low | Source mapping established; coordinator clarified fresh per-boot RAM overlay semantics and authenticated actual archive metadata separately |
 
 Children used fresh focused contexts, exclusive write scopes and no delegation.

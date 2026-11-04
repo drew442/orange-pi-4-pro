@@ -1,0 +1,65 @@
+{
+  "classification": "managed regular-file root checks; no board boot or KVM acceptance",
+  "management_runtime": {
+    "files": {
+      "usr/lib/orangepi-hypervisor/host-management.py": {
+        "bytes": 22716,
+        "sha256": "3db7519f67986e4a1276a95666593b9d9a98355669926d8d3ddcf5fc319c4a54"
+      },
+      "usr/lib/orangepi-hypervisor/host_config.py": {
+        "bytes": 2873,
+        "sha256": "520140d56402ab803b8c137981cef5182c5e263a44ec8446ce836b6a7d160a22"
+      },
+      "usr/lib/orangepi-hypervisor/package_state.py": {
+        "bytes": 13113,
+        "sha256": "809630ebba9d927b6ad5034899a88a8a8fcf3401f94ff6f223f92f6fbfa9c6eb"
+      },
+      "usr/lib/systemd/system/a733-management-ssh.service": {
+        "bytes": 360,
+        "sha256": "d9603c6eb460ab1429234cbf6f7689b1dbbf72a4fcc61e97e90458e8877c07cb"
+      }
+    },
+    "profile": "a733-management-v1"
+  },
+  "package_state": {
+    "manifest": {
+      "bytes": 189468,
+      "sha256": "682f6ae0293cc8ef1a1e4780e30140fd557ede4de893328c8fc0dec5582dba7d"
+    },
+    "profile": "a733-package-state-v1"
+  },
+  "slots": {
+    "A": {
+      "raw": {
+        "bytes": 4294967296,
+        "sha256": "6157897213b918c82241a6ff74920c2d5b92eb45cb30bc0333d8d97a58be733e"
+      },
+      "compressed": {
+        "bytes": 143285038,
+        "sha256": "0ee3eca8df37f38ac9a1683ea41e0ed40609e8edad166090fbcc13b8079194d4"
+      },
+      "runtime_files_match": true,
+      "read_only_no_journal": true,
+      "root_password_locked": true,
+      "machine_id_empty": true,
+      "host_keys_absent": true,
+      "compressed_expansion_matches": true
+    },
+    "B": {
+      "raw": {
+        "bytes": 4294967296,
+        "sha256": "a7c98b1cff05ccb9a77857d4d7b3a4bfd36fd6734a05866d911d5d2adbaa1e27"
+      },
+      "compressed": {
+        "bytes": 143285222,
+        "sha256": "a7dfe4f6d46bd1c41f272177c019ce35975a39ad0655c5b71e05957cde575d8a"
+      },
+      "runtime_files_match": true,
+      "read_only_no_journal": true,
+      "root_password_locked": true,
+      "machine_id_empty": true,
+      "host_keys_absent": true,
+      "compressed_expansion_matches": true
+    }
+  }
+}

@@ -17,14 +17,14 @@ needed to produce it. Actual SD capacity and target identity still need checking
 
 | Artifact | Bytes | SHA-256 |
 | --- | ---: | --- |
-| `initramfs.cpio.gz` | 26,850,604 | `a1a96940df2c04bcda2f9892c82867614eb6978be71beb37d18ec18b573318b0` |
-| `a733-installer-prep.img` | 268,435,456 | `73f9179db26887607cd986d52f4953ac5534769113b0662388b44e724b4557f9` |
-| `a733-installer-prep.img.gz` | 39,146,751 | `bb4a253fd257043022360d05c224b9dffbd04458fdff7d0483b3957bf4bbff78` |
+| `initramfs.cpio.gz` | 26,853,830 | `de514547f1b04cbdf4ed83116ea44a4204ee7e06c66fc25ef1b549b67a1c6295` |
+| `a733-installer-prep.img` | 268,435,456 | `bd33504f9a0b4c5a87239c95c71353f1d518588e6247f43ce9396172e1c85e2a` |
+| `a733-installer-prep.img.gz` | 39,141,036 | `95cb997cc005854dfbfd92b8688407f45cec2a64f633102f830fe1c3303e27c6` |
 
 The compressed initramfs plus its 64-byte wrapper fits the existing 64 MiB
-load-region bound. Expanded archive size is 79,041,984 bytes; board RAM and boot
-memory reservations remain hardware checks. The source runtime stages 1,460
-regular files totaling 66,700,388 bytes. It includes Python 3.11, util-linux 2.38.1,
+load-region bound. Expanded archive size is 79,055,868 bytes; board RAM and boot
+memory reservations remain hardware checks. The source runtime stages 1,461
+regular files totaling 66,713,692 bytes. It includes Python 3.11, util-linux 2.38.1,
 e2fsprogs 1.47.0, curl 7.88.1, their selected libraries, CA/config data and notices.
 It omits an SSH server and launches no listeners.
 
@@ -49,12 +49,12 @@ administrator credentials or pre-generated SSH host keys.
 
 ## Verified build and inspection
 
-From a clean checkout at `05ff311` on the prepared builder, using its authenticated
+From a clean checkout at `f2428b9` on the prepared builder, using its authenticated
 cached runtime and diagnostic inputs:
 
 ```sh
 sudo /usr/bin/python3.10 -I -B build/installer-initramfs.py \
-  /home/drew/orange-pi-4-pro-build/installer-work-20261104/out/installer-runtime-20261104-03 \
+  /home/drew/orange-pi-4-pro-build/package-state-work-20261104/out/installer-runtime-package-state-20261104-01 \
   /home/drew/orange-pi-4-pro-build/artifacts \
   /home/drew/orange-pi-4-pro-build/busybox/bin/busybox \
   "$(pwd -P)/out/installer-initramfs-repeat"
@@ -71,7 +71,7 @@ sudo /usr/bin/python3.10 -I -B tests/verify_installer_sd.py \
   "$(pwd -P)/out/installer-initramfs-repeat"
 ```
 
-All commands passed. A [clean-checkout repeat](evidence/acquisition-rebuild-20261104.json)
+All commands passed. A [clean-checkout repeat](evidence/package-rebuild-20261104.json)
 reproduced initramfs, raw SD and gzip bytes exactly, and repeated both ARM and
 SD inspections. This repeats preparation recipes using cached authenticated
 inputs, not a complete clean vendor build or physical deployment.
@@ -98,11 +98,13 @@ metadata with the pinned BusyBox/modules. The SD wrapper preserves the pinned
 kernel/DTB/firmware, checks current preparation source records and uses the
 reviewed regular-file assembler. No physical target is accepted by these recipes.
 
-Evidence: [runtime staging](evidence/installer-runtime-20261104.json),
-[initramfs](evidence/acquisition-initramfs-20261104.json),
-[ARM probes](evidence/acquisition-arm-20261104.json),
-[SD manifest](evidence/acquisition-sd-20261104.json), and
-[independent SD inspection](evidence/acquisition-sd-verify-20261104.json).
+Runtime dependencies remain the same authenticated ARM libraries/tools; staging
+was repeated to refresh source provenance, including `package_state.py`.
+Evidence:
+[initramfs](evidence/package-installer-initramfs-20261104.json),
+[ARM probes](evidence/package-installer-arm-20261104.json),
+[SD manifest](evidence/package-installer-sd-20261104.json), and
+[independent SD inspection](evidence/package-installer-sd-verify-20261104.json).
 The full runtime file BOM is embedded at
 `/usr/share/a733-installer/runtime-manifest.json` and retained on the builder.
 
@@ -111,7 +113,7 @@ Actual ARM64 binfmt/chroot checks passed for isolated Python imports, CA loading
 regular-file mkfs/fsck/blkid/debugfs. The DHCP resolver test replaces exactly
 three IP commands with logged fixture stubs. No real Ethernet configuration,
 external DNS/TLS connection, kernel boot or KVM guest is established. A separate
-[packaged ARM HTTPS probe](evidence/acquisition-arm-https-20261104.json)
+[packaged ARM HTTPS probe](evidence/package-installer-https-arm-20261104.json)
 passed verified private-CA transport, untrusted-CA and redirect refusal, and
 encoded/expanded stream checks against a temporary loopback server. It does not
 exercise full acquisition/storage policy on ARM or prove board networking. Chroot
@@ -120,15 +122,15 @@ programs or proof of every possible dynamic-data load.
 
 ## Download and hardware handoff
 
-The compressed image and manifest are readable on the builder under
-`/home/drew/orange-pi-4-pro-build/acquisition-artifacts-20261104/`; a checked local
-copy is under ignored `out/acquisition-20261104/`.
+The compressed image and `installer-manifest.json` are readable on the builder under
+`/home/drew/orange-pi-4-pro-build/package-artifacts-20261104/`; a checked local
+copy is under ignored `out/package-state-20261104/`.
 
 ```sh
-scp drew@build.drewnet.online:/home/drew/orange-pi-4-pro-build/acquisition-artifacts-20261104/a733-installer-prep.img.gz .
-printf '%s  %s\n' bb4a253fd257043022360d05c224b9dffbd04458fdff7d0483b3957bf4bbff78 a733-installer-prep.img.gz | sha256sum -c -
+scp drew@build.drewnet.online:/home/drew/orange-pi-4-pro-build/package-artifacts-20261104/a733-installer-prep.img.gz .
+printf '%s  %s\n' 95cb997cc005854dfbfd92b8688407f45cec2a64f633102f830fe1c3303e27c6 a733-installer-prep.img.gz | sha256sum -c -
 gzip -dk a733-installer-prep.img.gz
-printf '%s  %s\n' 73f9179db26887607cd986d52f4953ac5534769113b0662388b44e724b4557f9 a733-installer-prep.img | sha256sum -c -
+printf '%s  %s\n' bd33504f9a0b4c5a87239c95c71353f1d518588e6247f43ce9396172e1c85e2a a733-installer-prep.img | sha256sum -c -
 ```
 
 Downloading/decompressing writes ordinary files only. Follow the

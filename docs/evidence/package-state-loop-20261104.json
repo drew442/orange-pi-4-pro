@@ -1,0 +1,711 @@
+{
+  "classification": "private native-kernel VFS and ARM BusyBox production-function checks only",
+  "sources": {
+    "tests/verify_package_state_loop.py": {
+      "bytes": 20936,
+      "sha256": "652b4cf355d83e98699ceb534f0f16a509b5f7776727fadcd1b556c3af8ab067"
+    },
+    "configs/host-init": {
+      "bytes": 15116,
+      "sha256": "82515ff0fb49d0d3399f3cc3546a768742bd50db6500452bafa6ae1d105c3964"
+    },
+    "configs/package_state.py": {
+      "bytes": 13113,
+      "sha256": "809630ebba9d927b6ad5034899a88a8a8fcf3401f94ff6f223f92f6fbfa9c6eb"
+    },
+    "build/host-state.py": {
+      "bytes": 16004,
+      "sha256": "e088e7557e210a1718aaf70ebaaf0f481144fe640f640650a2a76e71cc72e6ec"
+    }
+  },
+  "busybox": {
+    "bytes": 1794520,
+    "sha256": "0a41864f87a0737804f0f4a68a1cfa1ed22374f4f75a1be3eb376e2659ce1316"
+  },
+  "tools": {
+    "native_dpkg_query": "Debian dpkg-query package management program query tool version 1.21.1 (amd64).",
+    "mkfs_ext4": "mke2fs 1.46.5 (30-Dec-2021)\n\tUsing EXT2FS Library version 1.46.5",
+    "busybox_arm": "BusyBox v1.30.1 (Ubuntu 1:1.30.1-7ubuntu3.1) multi-call binary."
+  },
+  "descriptor_policy": "close_fds=True; stdin=/dev/null; only stdout/stderr retained; no /dev, /sys, /proc bind mounts; new procfs only",
+  "fixtures": {
+    "A": {
+      "image": {
+        "bytes": 134217728,
+        "sha256": "e7381c39af1ea112417b9b3e11857eb721dbfb35440681b0638267742e2e9f7c"
+      },
+      "uuid": "a7330000-0000-4000-8000-00000000000a",
+      "package_profile": {
+        "profile": "a733-package-state-v1",
+        "manifest": {
+          "bytes": 2662,
+          "sha256": "4b53444174435509599b1904a6eddf6af647acc45760b5a15698da9fe31000fa"
+        }
+      },
+      "source_unchanged": true,
+      "ext4_no_journal": true,
+      "ext4_readonly_feature": true
+    },
+    "B": {
+      "image": {
+        "bytes": 67108864,
+        "sha256": "3c5ed74a367ddc2dac0bfabde265089db66885da1a3ea8be657b416c9b57279b"
+      },
+      "uuid": "a7330000-0000-4000-8000-00000000000b",
+      "package_profile": {
+        "profile": "a733-package-state-v1",
+        "manifest": {
+          "bytes": 2662,
+          "sha256": "557cbe4266f045002610e0fa58e389d7f9ca4d2f05c01b302f196e35ef36a72d"
+        }
+      },
+      "source_unchanged": true,
+      "ext4_no_journal": true,
+      "ext4_readonly_feature": true
+    }
+  },
+  "cases": [
+    {
+      "slot": "A",
+      "native_dpkg_query_synthetic_database": "a733-fixture 1 arm64 install ok installed",
+      "package_mounts": {
+        "dpkg": {
+          "id": "684",
+          "device": "7:7",
+          "root": "/usr/lib/orangepi-hypervisor/package-state/dpkg",
+          "target": "/var/tmp/a733-package-loop-uthn7fkd/chroot/newroot/var/lib/dpkg",
+          "flags": [
+            "ro",
+            "nosuid",
+            "nodev",
+            "relatime"
+          ],
+          "filesystem": "ext4",
+          "super_flags": [
+            "ro",
+            "norecovery"
+          ]
+        },
+        "apt": {
+          "id": "685",
+          "device": "7:7",
+          "root": "/usr/lib/orangepi-hypervisor/package-state/apt",
+          "target": "/var/tmp/a733-package-loop-uthn7fkd/chroot/newroot/var/lib/apt",
+          "flags": [
+            "ro",
+            "nosuid",
+            "nodev",
+            "relatime"
+          ],
+          "filesystem": "ext4",
+          "super_flags": [
+            "ro",
+            "norecovery"
+          ]
+        },
+        "debconf": {
+          "id": "686",
+          "device": "7:7",
+          "root": "/usr/lib/orangepi-hypervisor/package-state/debconf",
+          "target": "/var/tmp/a733-package-loop-uthn7fkd/chroot/newroot/var/cache/debconf",
+          "flags": [
+            "ro",
+            "nosuid",
+            "nodev",
+            "relatime"
+          ],
+          "filesystem": "ext4",
+          "super_flags": [
+            "ro",
+            "norecovery"
+          ]
+        },
+        "ucf": {
+          "id": "687",
+          "device": "7:7",
+          "root": "/usr/lib/orangepi-hypervisor/package-state/ucf",
+          "target": "/var/tmp/a733-package-loop-uthn7fkd/chroot/newroot/var/lib/ucf",
+          "flags": [
+            "ro",
+            "nosuid",
+            "nodev",
+            "relatime"
+          ],
+          "filesystem": "ext4",
+          "super_flags": [
+            "ro",
+            "norecovery"
+          ]
+        },
+        "pam": {
+          "id": "688",
+          "device": "7:7",
+          "root": "/usr/lib/orangepi-hypervisor/package-state/pam",
+          "target": "/var/tmp/a733-package-loop-uthn7fkd/chroot/newroot/var/lib/pam",
+          "flags": [
+            "ro",
+            "nosuid",
+            "nodev",
+            "relatime"
+          ],
+          "filesystem": "ext4",
+          "super_flags": [
+            "ro",
+            "norecovery"
+          ]
+        },
+        "shells": {
+          "id": "689",
+          "device": "7:7",
+          "root": "/usr/lib/orangepi-hypervisor/package-state/shells",
+          "target": "/var/tmp/a733-package-loop-uthn7fkd/chroot/newroot/var/lib/shells.state",
+          "flags": [
+            "ro",
+            "nosuid",
+            "nodev",
+            "relatime"
+          ],
+          "filesystem": "ext4",
+          "super_flags": [
+            "ro",
+            "norecovery"
+          ]
+        },
+        "systemd-helper": {
+          "id": "690",
+          "device": "7:7",
+          "root": "/usr/lib/orangepi-hypervisor/package-state/systemd-helper",
+          "target": "/var/tmp/a733-package-loop-uthn7fkd/chroot/newroot/var/lib/systemd/deb-systemd-helper-enabled",
+          "flags": [
+            "ro",
+            "nosuid",
+            "nodev",
+            "relatime"
+          ],
+          "filesystem": "ext4",
+          "super_flags": [
+            "ro",
+            "norecovery"
+          ]
+        },
+        "systemd-catalog": {
+          "id": "691",
+          "device": "7:7",
+          "root": "/usr/lib/orangepi-hypervisor/package-state/systemd-catalog",
+          "target": "/var/tmp/a733-package-loop-uthn7fkd/chroot/newroot/var/lib/systemd/catalog",
+          "flags": [
+            "ro",
+            "nosuid",
+            "nodev",
+            "relatime"
+          ],
+          "filesystem": "ext4",
+          "super_flags": [
+            "ro",
+            "norecovery"
+          ]
+        }
+      },
+      "state_var_mount": {
+        "id": "683",
+        "device": "252:0",
+        "root": "/var/tmp/a733-package-loop-uthn7fkd/state-var",
+        "target": "/var/tmp/a733-package-loop-uthn7fkd/chroot/newroot/var",
+        "flags": [
+          "rw",
+          "relatime"
+        ],
+        "filesystem": "ext4",
+        "super_flags": [
+          "rw"
+        ]
+      },
+      "root_write_failures": {
+        "dpkg": {
+          "errno": 30,
+          "name": "EROFS"
+        },
+        "apt": {
+          "errno": 30,
+          "name": "EROFS"
+        },
+        "debconf": {
+          "errno": 30,
+          "name": "EROFS"
+        },
+        "ucf": {
+          "errno": 30,
+          "name": "EROFS"
+        },
+        "pam": {
+          "errno": 30,
+          "name": "EROFS"
+        },
+        "shells": {
+          "errno": 30,
+          "name": "EROFS"
+        },
+        "systemd-helper": {
+          "errno": 30,
+          "name": "EROFS"
+        },
+        "systemd-catalog": {
+          "errno": 30,
+          "name": "EROFS"
+        }
+      },
+      "alternatives": {
+        "target": "/usr/share/a733-fixture/value-1",
+        "contents": "slot-version-1\n",
+        "database": "auto\n/usr/bin/a733-fixture\n\n/usr/share/a733-fixture/value-1\n10\n"
+      },
+      "state_log_writable": true
+    },
+    {
+      "slot": "B",
+      "native_dpkg_query_synthetic_database": "a733-fixture 2 arm64 install ok installed",
+      "package_mounts": {
+        "dpkg": {
+          "id": "684",
+          "device": "7:8",
+          "root": "/usr/lib/orangepi-hypervisor/package-state/dpkg",
+          "target": "/var/tmp/a733-package-loop-uthn7fkd/chroot/newroot/var/lib/dpkg",
+          "flags": [
+            "ro",
+            "nosuid",
+            "nodev",
+            "relatime"
+          ],
+          "filesystem": "ext4",
+          "super_flags": [
+            "ro",
+            "norecovery"
+          ]
+        },
+        "apt": {
+          "id": "685",
+          "device": "7:8",
+          "root": "/usr/lib/orangepi-hypervisor/package-state/apt",
+          "target": "/var/tmp/a733-package-loop-uthn7fkd/chroot/newroot/var/lib/apt",
+          "flags": [
+            "ro",
+            "nosuid",
+            "nodev",
+            "relatime"
+          ],
+          "filesystem": "ext4",
+          "super_flags": [
+            "ro",
+            "norecovery"
+          ]
+        },
+        "debconf": {
+          "id": "686",
+          "device": "7:8",
+          "root": "/usr/lib/orangepi-hypervisor/package-state/debconf",
+          "target": "/var/tmp/a733-package-loop-uthn7fkd/chroot/newroot/var/cache/debconf",
+          "flags": [
+            "ro",
+            "nosuid",
+            "nodev",
+            "relatime"
+          ],
+          "filesystem": "ext4",
+          "super_flags": [
+            "ro",
+            "norecovery"
+          ]
+        },
+        "ucf": {
+          "id": "687",
+          "device": "7:8",
+          "root": "/usr/lib/orangepi-hypervisor/package-state/ucf",
+          "target": "/var/tmp/a733-package-loop-uthn7fkd/chroot/newroot/var/lib/ucf",
+          "flags": [
+            "ro",
+            "nosuid",
+            "nodev",
+            "relatime"
+          ],
+          "filesystem": "ext4",
+          "super_flags": [
+            "ro",
+            "norecovery"
+          ]
+        },
+        "pam": {
+          "id": "688",
+          "device": "7:8",
+          "root": "/usr/lib/orangepi-hypervisor/package-state/pam",
+          "target": "/var/tmp/a733-package-loop-uthn7fkd/chroot/newroot/var/lib/pam",
+          "flags": [
+            "ro",
+            "nosuid",
+            "nodev",
+            "relatime"
+          ],
+          "filesystem": "ext4",
+          "super_flags": [
+            "ro",
+            "norecovery"
+          ]
+        },
+        "shells": {
+          "id": "689",
+          "device": "7:8",
+          "root": "/usr/lib/orangepi-hypervisor/package-state/shells",
+          "target": "/var/tmp/a733-package-loop-uthn7fkd/chroot/newroot/var/lib/shells.state",
+          "flags": [
+            "ro",
+            "nosuid",
+            "nodev",
+            "relatime"
+          ],
+          "filesystem": "ext4",
+          "super_flags": [
+            "ro",
+            "norecovery"
+          ]
+        },
+        "systemd-helper": {
+          "id": "690",
+          "device": "7:8",
+          "root": "/usr/lib/orangepi-hypervisor/package-state/systemd-helper",
+          "target": "/var/tmp/a733-package-loop-uthn7fkd/chroot/newroot/var/lib/systemd/deb-systemd-helper-enabled",
+          "flags": [
+            "ro",
+            "nosuid",
+            "nodev",
+            "relatime"
+          ],
+          "filesystem": "ext4",
+          "super_flags": [
+            "ro",
+            "norecovery"
+          ]
+        },
+        "systemd-catalog": {
+          "id": "691",
+          "device": "7:8",
+          "root": "/usr/lib/orangepi-hypervisor/package-state/systemd-catalog",
+          "target": "/var/tmp/a733-package-loop-uthn7fkd/chroot/newroot/var/lib/systemd/catalog",
+          "flags": [
+            "ro",
+            "nosuid",
+            "nodev",
+            "relatime"
+          ],
+          "filesystem": "ext4",
+          "super_flags": [
+            "ro",
+            "norecovery"
+          ]
+        }
+      },
+      "state_var_mount": {
+        "id": "683",
+        "device": "252:0",
+        "root": "/var/tmp/a733-package-loop-uthn7fkd/state-var",
+        "target": "/var/tmp/a733-package-loop-uthn7fkd/chroot/newroot/var",
+        "flags": [
+          "rw",
+          "relatime"
+        ],
+        "filesystem": "ext4",
+        "super_flags": [
+          "rw"
+        ]
+      },
+      "root_write_failures": {
+        "dpkg": {
+          "errno": 30,
+          "name": "EROFS"
+        },
+        "apt": {
+          "errno": 30,
+          "name": "EROFS"
+        },
+        "debconf": {
+          "errno": 30,
+          "name": "EROFS"
+        },
+        "ucf": {
+          "errno": 30,
+          "name": "EROFS"
+        },
+        "pam": {
+          "errno": 30,
+          "name": "EROFS"
+        },
+        "shells": {
+          "errno": 30,
+          "name": "EROFS"
+        },
+        "systemd-helper": {
+          "errno": 30,
+          "name": "EROFS"
+        },
+        "systemd-catalog": {
+          "errno": 30,
+          "name": "EROFS"
+        }
+      },
+      "alternatives": {
+        "target": "/usr/share/a733-fixture/value-2",
+        "contents": "slot-version-2\n",
+        "database": "auto\n/usr/bin/a733-fixture\n\n/usr/share/a733-fixture/value-2\n10\n"
+      },
+      "state_log_writable": true
+    },
+    {
+      "slot": "A",
+      "native_dpkg_query_synthetic_database": "a733-fixture 1 arm64 install ok installed",
+      "package_mounts": {
+        "dpkg": {
+          "id": "684",
+          "device": "7:7",
+          "root": "/usr/lib/orangepi-hypervisor/package-state/dpkg",
+          "target": "/var/tmp/a733-package-loop-uthn7fkd/chroot/newroot/var/lib/dpkg",
+          "flags": [
+            "ro",
+            "nosuid",
+            "nodev",
+            "relatime"
+          ],
+          "filesystem": "ext4",
+          "super_flags": [
+            "ro",
+            "norecovery"
+          ]
+        },
+        "apt": {
+          "id": "685",
+          "device": "7:7",
+          "root": "/usr/lib/orangepi-hypervisor/package-state/apt",
+          "target": "/var/tmp/a733-package-loop-uthn7fkd/chroot/newroot/var/lib/apt",
+          "flags": [
+            "ro",
+            "nosuid",
+            "nodev",
+            "relatime"
+          ],
+          "filesystem": "ext4",
+          "super_flags": [
+            "ro",
+            "norecovery"
+          ]
+        },
+        "debconf": {
+          "id": "686",
+          "device": "7:7",
+          "root": "/usr/lib/orangepi-hypervisor/package-state/debconf",
+          "target": "/var/tmp/a733-package-loop-uthn7fkd/chroot/newroot/var/cache/debconf",
+          "flags": [
+            "ro",
+            "nosuid",
+            "nodev",
+            "relatime"
+          ],
+          "filesystem": "ext4",
+          "super_flags": [
+            "ro",
+            "norecovery"
+          ]
+        },
+        "ucf": {
+          "id": "687",
+          "device": "7:7",
+          "root": "/usr/lib/orangepi-hypervisor/package-state/ucf",
+          "target": "/var/tmp/a733-package-loop-uthn7fkd/chroot/newroot/var/lib/ucf",
+          "flags": [
+            "ro",
+            "nosuid",
+            "nodev",
+            "relatime"
+          ],
+          "filesystem": "ext4",
+          "super_flags": [
+            "ro",
+            "norecovery"
+          ]
+        },
+        "pam": {
+          "id": "688",
+          "device": "7:7",
+          "root": "/usr/lib/orangepi-hypervisor/package-state/pam",
+          "target": "/var/tmp/a733-package-loop-uthn7fkd/chroot/newroot/var/lib/pam",
+          "flags": [
+            "ro",
+            "nosuid",
+            "nodev",
+            "relatime"
+          ],
+          "filesystem": "ext4",
+          "super_flags": [
+            "ro",
+            "norecovery"
+          ]
+        },
+        "shells": {
+          "id": "689",
+          "device": "7:7",
+          "root": "/usr/lib/orangepi-hypervisor/package-state/shells",
+          "target": "/var/tmp/a733-package-loop-uthn7fkd/chroot/newroot/var/lib/shells.state",
+          "flags": [
+            "ro",
+            "nosuid",
+            "nodev",
+            "relatime"
+          ],
+          "filesystem": "ext4",
+          "super_flags": [
+            "ro",
+            "norecovery"
+          ]
+        },
+        "systemd-helper": {
+          "id": "690",
+          "device": "7:7",
+          "root": "/usr/lib/orangepi-hypervisor/package-state/systemd-helper",
+          "target": "/var/tmp/a733-package-loop-uthn7fkd/chroot/newroot/var/lib/systemd/deb-systemd-helper-enabled",
+          "flags": [
+            "ro",
+            "nosuid",
+            "nodev",
+            "relatime"
+          ],
+          "filesystem": "ext4",
+          "super_flags": [
+            "ro",
+            "norecovery"
+          ]
+        },
+        "systemd-catalog": {
+          "id": "691",
+          "device": "7:7",
+          "root": "/usr/lib/orangepi-hypervisor/package-state/systemd-catalog",
+          "target": "/var/tmp/a733-package-loop-uthn7fkd/chroot/newroot/var/lib/systemd/catalog",
+          "flags": [
+            "ro",
+            "nosuid",
+            "nodev",
+            "relatime"
+          ],
+          "filesystem": "ext4",
+          "super_flags": [
+            "ro",
+            "norecovery"
+          ]
+        }
+      },
+      "state_var_mount": {
+        "id": "683",
+        "device": "252:0",
+        "root": "/var/tmp/a733-package-loop-uthn7fkd/state-var",
+        "target": "/var/tmp/a733-package-loop-uthn7fkd/chroot/newroot/var",
+        "flags": [
+          "rw",
+          "relatime"
+        ],
+        "filesystem": "ext4",
+        "super_flags": [
+          "rw"
+        ]
+      },
+      "root_write_failures": {
+        "dpkg": {
+          "errno": 30,
+          "name": "EROFS"
+        },
+        "apt": {
+          "errno": 30,
+          "name": "EROFS"
+        },
+        "debconf": {
+          "errno": 30,
+          "name": "EROFS"
+        },
+        "ucf": {
+          "errno": 30,
+          "name": "EROFS"
+        },
+        "pam": {
+          "errno": 30,
+          "name": "EROFS"
+        },
+        "shells": {
+          "errno": 30,
+          "name": "EROFS"
+        },
+        "systemd-helper": {
+          "errno": 30,
+          "name": "EROFS"
+        },
+        "systemd-catalog": {
+          "errno": 30,
+          "name": "EROFS"
+        }
+      },
+      "alternatives": {
+        "target": "/usr/share/a733-fixture/value-1",
+        "contents": "slot-version-1\n",
+        "database": "auto\n/usr/bin/a733-fixture\n\n/usr/share/a733-fixture/value-1\n10\n"
+      },
+      "state_log_writable": true
+    }
+  ],
+  "covered_state_original_hashes": {
+    "cache/debconf/covered-original": {
+      "bytes": 23,
+      "sha256": "6a8a13c5cbb060409462969846653ef5f7597aff8be42dd9e006b227fcfcadc7"
+    },
+    "lib/apt/covered-original": {
+      "bytes": 19,
+      "sha256": "492baa0111df213d68ebe53168707f1d05c8a082ee369e6e7f7c3f87b52f2449"
+    },
+    "lib/dpkg/covered-original": {
+      "bytes": 20,
+      "sha256": "499fe6b5542809899198f7dc75eaa16a0571ac133e0a5622249ab4b57d353b2c"
+    },
+    "lib/dpkg/status": {
+      "bytes": 43,
+      "sha256": "33adfc8b4a0392e64dc27bed35d786200bdb1797de207329e4c7435281108344"
+    },
+    "lib/pam/covered-original": {
+      "bytes": 19,
+      "sha256": "9bc509d3be3975dd56d242c6cd9cae2299529686c546a455d3db82d9834370e0"
+    },
+    "lib/shells.state": {
+      "bytes": 22,
+      "sha256": "8e29e6f976bf8596d9fc3701e74740bcc2ca2627b1a01075d255021c15eee7be"
+    },
+    "lib/systemd/catalog/covered-original": {
+      "bytes": 31,
+      "sha256": "ff550274739c32357874079c9e595de7233c58d45e95e5c8a1017eed1baad197"
+    },
+    "lib/systemd/deb-systemd-helper-enabled/covered-original": {
+      "bytes": 30,
+      "sha256": "ceb904e976aba556c1f2337086832023c50c4fe2f93ec6655ab0497c862e9753"
+    },
+    "lib/ucf/covered-original": {
+      "bytes": 19,
+      "sha256": "f198c4266bb8a27eb1216e2451fccb241af2b145e10e749a881dc54330a0a09d"
+    }
+  },
+  "covered_state_unchanged": true,
+  "cleanup": {
+    "explicit_unmounts": true,
+    "all_owned_loops_detached": true
+  },
+  "limitations": [
+    "Native dpkg-query reads synthetic ARM64 package databases; packaged ARM dpkg-query is not tested.",
+    "Tiny fixtures do not authenticate or inspect the 220-package production root payload.",
+    "No physical boot, KVM guest, updater, power-cut or rollback acceptance."
+  ],
+  "storage": {
+    "fstype": "ext4",
+    "maj:min": "252:0"
+  },
+  "raw_log": "/home/drew/orange-pi-4-pro-build/package-state-work-20261104/tmp/package-state-loop-d4rt7fw2.log",
+  "private_files_deleted": true
+}
