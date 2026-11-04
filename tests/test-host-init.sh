@@ -57,6 +57,7 @@ hi_bb() {
         cat)
             case "$1" in */boot/selected.conf) printf 'read-selector\n' >> "$fixture/log" ;; esac ;;
         mount)
+            if [[ "$*" == *remount,bind,ro* ]] && [ -f "$fixture/fail-package-remount" ] && [ "${!#}" = "$(cat "$fixture/fail-package-remount")" ]; then return 1; fi
             printf 'mount %s\n' "$*" >> "$fixture/log"
             target=${!#}
             if [ -f "$fixture/fail-mount" ] && [ "$target" = "$(cat "$fixture/fail-mount")" ]; then return 1; fi
@@ -66,6 +67,10 @@ hi_bb() {
                     [ ! -f "$fixture/recovered-selector" ] || cp "$fixture/recovered-selector" "$state/boot/selected.conf"
                     [ ! -f "$fixture/mutate-id" ] || printf 'fedcba9876543210fedcba9876543210\n' > "$state/identity/machine-id" ;;
             esac
+            if [[ "$*" == *remount,bind,ro* ]]; then
+                value=ro; [ ! -f "$fixture/ignore-package-ro" ] || value=rw
+                printf '40 20 259:2 /package %s %s,nodev,nosuid - ext4 /dev/nvme0n1p2 ro\n' "$target" "$value" >> "$fixture/proc/self/mountinfo"
+            fi
             return 0 ;;
         umount)
             printf 'umount %s\n' "$*" >> "$fixture/log"
@@ -121,6 +126,23 @@ reset_fixture() {
     printf 'SCHEMA=1\nSLOT=A\nROOT_UUID=%s\nROOT_MARKER_SHA256=%s\nKERNEL_RELEASE=6.6.98-a733-diag\n' "$root_uuid" "$hash" > "$state/boot/selected.conf"
     chmod 600 "$state/boot/selected.conf"
     printf '21 1 259:2 / /newroot ro,nodev - ext4 /dev/nvme0n1p2 ro\n' > "$fixture/proc/self/mountinfo"
+    local name path kind base
+    base=$fixture/newroot/usr/lib/orangepi-hypervisor/package-state
+    mkdir -p "$base"
+    printf 'a733-package-state-v1\n' > "$base/FORMAT"
+    printf '{}\n' > "$base/manifest.json"
+    while read -r name path kind; do
+        mkdir -p "$fixture/newroot/${path%/*}" "$state/${path%/*}"
+        if [ "$kind" = directory ]; then
+            mkdir -p "$base/$name" "$fixture/newroot/$path" "$state/$path"
+        else
+            : > "$base/$name"; : > "$fixture/newroot/$path"; : > "$state/$path"
+        fi
+    done <<END_ITEMS
+$(hi_package_items)
+END_ITEMS
+    find "$fixture/newroot" -type d -exec chmod go-w {} +
+    find "$fixture/newroot" -type f -exec chmod go-w {} +
     : > "$fixture/log"
 }
 fail() { echo "FAIL: $*" >&2; cat "$fixture/log" >&2; exit 1; }
@@ -166,6 +188,22 @@ PY
 [ "$(stat -c %a "$fixture/newroot/run/etc-upper")" = 755 ] || fail 'overlay /etc root mode'
 [ "$(stat -c %a "$fixture/newroot/run/etc-work")" = 700 ] || fail 'overlay work mode'
 
+
+reset_fixture; printf 'wrong\n' > "$fixture/newroot/usr/lib/orangepi-hypervisor/package-state/FORMAT"; reject 'package ABI' yes
+reset_fixture; touch "$fixture/ignore-package-ro"; reject 'package bind remount ignored' yes
+while read -r name path kind; do
+    reset_fixture; printf '/newroot/%s\n' "$path" > "$fixture/fail-mount"; reject "package bind failure $name" yes
+    reset_fixture; printf '/newroot/%s\n' "$path" > "$fixture/fail-package-remount"; reject "package remount failure $name" yes
+    grep -q "^umount /newroot/$path$" "$fixture/log" || fail 'failed remount bind not cleaned'
+    reset_fixture; rm -rf "$fixture/newroot/usr/lib/orangepi-hypervisor/package-state/$name"
+    ln -s /tmp "$fixture/newroot/usr/lib/orangepi-hypervisor/package-state/$name"
+    reject "package source symlink $name" yes
+done <<END_ITEMS
+$(hi_package_items)
+END_ITEMS
+reset_fixture; rmdir "$fixture/newroot/var/cache/debconf"; rmdir "$fixture/newroot/var/cache"
+ln -s /tmp "$fixture/newroot/var/cache"; reject 'package target symlink ancestor' yes
+
 reset_fixture; printf 'ROOT_UUID=%s\n' "$root_uuid" >> "$fixture/etc/a733-boot.conf"; reject 'duplicate config'
 reset_fixture; printf 'UNKNOWN=yes\n' >> "$fixture/etc/a733-boot.conf"; reject 'unknown config'
 reset_fixture; sed -i 's/STATE_UUID=/STATE_UUID =/' "$fixture/etc/a733-boot.conf"; reject 'malformed config'
@@ -198,7 +236,7 @@ reset_fixture; truncate -s -1 "$state/.a733-state"; reject 'state marker no newl
 reset_fixture; printf '\n' >> "$state/.a733-state"; reject 'state marker extra newline'
 reset_fixture; truncate -s -1 "$state/.a733-state"; printf '\0' >> "$state/.a733-state"; reject 'NUL replaces marker newline'
 reset_fixture; mv "$state/.a733-state" "$fixture/marker"; ln -s "$fixture/marker" "$state/.a733-state"; reject 'state marker symlink'
-reset_fixture; rmdir "$state/var"; reject 'missing state directory'
+reset_fixture; rm -rf "$state/var"; reject 'missing state directory'
 reset_fixture; rmdir "$state/home"; ln -s "$fixture" "$state/home"; reject 'state directory symlink'
 reset_fixture; chmod 777 "$state/var"; reject 'writable state directory'
 reset_fixture; printf '/run/a733-state/root\n' > "$fixture/bad-owner"; reject 'wrong state owner'
@@ -221,7 +259,10 @@ import sys
 lines = open(sys.argv[1]).read().splitlines()
 cleanup = [line for line in lines if line.startswith('umount ')][1:]
 assert cleanup == ['umount ' + p for p in (
-    '/newroot/etc', '/newroot/home', '/newroot/root', '/newroot/var',
+    '/newroot/etc', '/newroot/var/lib/systemd/catalog', '/newroot/var/lib/systemd/deb-systemd-helper-enabled',
+    '/newroot/var/lib/shells.state', '/newroot/var/lib/pam', '/newroot/var/lib/ucf',
+    '/newroot/var/cache/debconf', '/newroot/var/lib/apt', '/newroot/var/lib/dpkg',
+    '/newroot/home', '/newroot/root', '/newroot/var',
     '/newroot/run/a733-state', '/newroot')], cleanup
 assert lines.index('umount /newroot/run/a733-state') < lines.index('mount --move /newroot/run /run') < lines.index('umount /newroot')
 PY

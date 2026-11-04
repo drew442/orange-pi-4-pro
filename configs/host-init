@@ -124,13 +124,59 @@ hi_cleanup() {
     HI_MOUNTS=
 }
 hi_readonly_root() {
+    hi_readonly_mount /newroot
+}
+hi_readonly_mount() {
     hi_bb cat /proc/self/mountinfo | hi_bb awk '
-        $5 == "/newroot" {
+        $5 == target {
             count++; n=split($6, flags, ","); ro=0; rw=0
             for(i=1;i<=n;i++) { if(flags[i]=="ro") ro=1; if(flags[i]=="rw") rw=1 }
             if(!ro || rw) bad=1
         }
-        END { exit (count==1 && !bad) ? 0 : 1 }'
+        END { exit (count==1 && !bad) ? 0 : 1 }' target="$1"
+}
+# Keep this fixed map identical to configs/package_state.py COMPONENTS.
+hi_package_items() {
+    printf '%s\n' 'dpkg var/lib/dpkg directory' 'apt var/lib/apt directory' \
+        'debconf var/cache/debconf directory' 'ucf var/lib/ucf directory' \
+        'pam var/lib/pam directory' 'shells var/lib/shells.state file' \
+        'systemd-helper var/lib/systemd/deb-systemd-helper-enabled directory' \
+        'systemd-catalog var/lib/systemd/catalog directory'
+}
+hi_package_path() {
+    local path kind parent
+    path=$1; kind=$2; parent=${path%/*}
+    case "$path" in /newroot/*) ;; *) return 1 ;; esac
+    while [ "$parent" != /newroot ]; do
+        hi_directory "$parent" && hi_owned "$parent" || return 1
+        parent=${parent%/*}
+    done
+    hi_directory /newroot && hi_owned /newroot && hi_owned "$path" || return 1
+    case "$kind" in directory) hi_directory "$path" ;; file) hi_regular "$path" ;; *) return 1 ;; esac
+}
+hi_package_format() {
+    local base expected
+    base=/newroot/usr/lib/orangepi-hypervisor/package-state
+    hi_package_path "$base" directory && hi_package_path "$base/FORMAT" file &&
+    hi_package_path "$base/manifest.json" file || return 1
+    expected=a733-package-state-v1
+    [ "$(hi_size "$base/FORMAT")" = "$((${#expected} + 1))" ] &&
+    printf '%s\n' "$expected" | hi_bb cmp -s - "$base/FORMAT"
+}
+hi_package_mounts() {
+    local name path kind source target
+    hi_package_format || return 1
+    while read -r name path kind; do
+        source=/newroot/usr/lib/orangepi-hypervisor/package-state/$name
+        target=/newroot/$path
+        hi_package_path "$source" "$kind" && hi_package_path "$target" "$kind" || return 1
+        hi_mount "$target" --bind "$source" || return 1
+        # MS_BIND alone does not apply per-mount read-only flags reliably.
+        # The bind is already tracked, so a remount failure is cleaned up too.
+        hi_bb mount -o remount,bind,ro,nodev,nosuid "$target" && hi_readonly_mount "$target" || return 1
+    done <<END_PACKAGE_ITEMS
+$(hi_package_items)
+END_PACKAGE_ITEMS
 }
 hi_root() {
     local path hash
@@ -208,6 +254,7 @@ hi_runtime() {
     for path in var root home; do
         hi_mount "/newroot/$path" --bind "/newroot/run/a733-state/$path" || return 1
     done
+    hi_package_mounts || return 1
     # Overlay inherits the upper directory's mode for the merged /etc root.
     hi_bb mkdir -m 0755 /newroot/run/etc-upper &&
     hi_bb mkdir -m 0700 /newroot/run/etc-work || return 1

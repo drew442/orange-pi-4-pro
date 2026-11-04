@@ -49,7 +49,7 @@ def runtime_entries(directory):
     policy = HOST.record((REPO / 'configs/installer-runtime-policy.json').read_bytes())
     if manifest.get('schema') != 1 or manifest.get('source') != source or manifest.get('policy') != policy:
         raise ValueError('runtime manifest source/policy differs')
-    required_provenance = {'build/installer-runtime.py', 'build/host-state.py', 'configs/host_config.py',
+    required_provenance = {'build/installer-runtime.py', 'build/host-state.py', 'configs/host_config.py', 'configs/package_state.py',
                            'configs/installer-runtime-policy.json', 'docs/evidence/host-userspace-20261104.json',
                            'configs/host-userspace-packages.lock.tsv', 'configs/host-userspace-package-hashes.lock.tsv',
                            'configs/builder-packages.lock.tsv'}
@@ -150,7 +150,7 @@ def build(runtime_directory, diagnostic_directory, busybox, output):
     (output / 'initramfs.cpio.gz').write_bytes(compressed)
     recipes = {'build/installer-initramfs.py', 'build/host-initramfs.py', 'build/host-payload.py',
                'build/installer-runtime.py', 'build/assemble-host.py', 'build/host-state.py',
-               'build/root-selection.py', 'build/host-storage-tools.py', 'configs/host_config.py',
+               'build/root-selection.py', 'build/host-storage-tools.py', 'configs/host_config.py', 'configs/package_state.py',
                'configs/installer-runtime-policy.json', *(s for s, _ in SOURCES.values())}
     result = {'schema': 1, 'classification': 'installer preparation initramfs; no physical installation or hardware acceptance',
               'kernel_release': '6.6.98-a733-diag', 'boot_inputs': diagnostic,

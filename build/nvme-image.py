@@ -40,7 +40,7 @@ STATE = module('nvme_image_state', 'build/host-state.py')
 GIB = 1024**3
 RECIPES = ('build/nvme-image.py', 'scripts/nvme_layout.py', 'build/assemble-host.py',
            'build/root-selection.py', 'build/host-initramfs.py', 'build/host-payload.py',
-           'build/host-state.py', 'configs/host_config.py',
+           'build/host-state.py', 'configs/host_config.py', 'configs/package_state.py',
            'configs/host-boot.cmd', 'configs/builder-packages.lock.tsv')
 
 
@@ -72,6 +72,7 @@ def validate_roots(manifest):
             profile.get('profile') != 'a733-management-v1' or
             set(profile.get('files', {})) != {v[0] for v in payload.MANAGEMENT_FILES.values()}):
         raise ValueError('incompatible managed root manifest')
+    payload.PACKAGE.validate_profile(manifest.get('package_state'))
     for slot in ('A', 'B'):
         if manifest['files'][f'root-{slot}.ext4']['bytes'] != 4 * GIB:
             raise ValueError('root payload must fill its fixed slot')
@@ -82,6 +83,8 @@ def validate_pairing(roots, state, sd, diagnostic):
     state_uuid = canonical_uuid(state['state_uuid'])
     if state_uuid in roots['slot_uuids'].values() or state['files']['state.ext4']['bytes'] != 8 * GIB:
         raise ValueError('incompatible state identity/size')
+    if sd.get('package_state_profile') != SELECT.INIT.PAYLOAD.PACKAGE.PROFILE:
+        raise ValueError('bootstrap lacks required package-state ABI')
     if sd.get('state_uuid') != state_uuid or sd.get('kernel_release') != HOST.KERNEL_RELEASE:
         raise ValueError('state and immutable bootstrap differ')
     for name in ('Image', 'board.dtb', 'kernel.config'):
@@ -217,6 +220,8 @@ def make_filesystem(image, size, label, identity, seed, legacy=False):
 def root_selection(snapshot, slot, roots, diagnostic):
     with snapshot.open('rb') as source:
         marker, value = SELECT.INIT.root_marker(source, slot)
+    if value.get('package_state') != roots.get('package_state'):
+        raise ValueError('captured root package-state differs from trusted manifest')
     if value['management_runtime'] != roots['management_runtime']:
         raise ValueError('captured root runtime differs from trusted manifest')
     for name in ('Image', 'board.dtb', 'kernel.config', 'initramfs.cpio.gz'):

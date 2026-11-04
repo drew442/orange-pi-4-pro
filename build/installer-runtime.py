@@ -344,7 +344,7 @@ def package(source, output):
     unpacked.unlink()
     provenance = {}
     for path in (policy_path, Path(__file__).resolve(), REPO / 'build/host-state.py',
-                 REPO / 'configs/host_config.py', REPO / policy['source_evidence'],
+                 REPO / 'configs/host_config.py', REPO / 'configs/package_state.py', REPO / policy['source_evidence'],
                  REPO / 'configs/host-userspace-packages.lock.tsv',
                  REPO / 'configs/host-userspace-package-hashes.lock.tsv',
                  REPO / 'configs/builder-packages.lock.tsv'):

@@ -20,6 +20,9 @@ class NVMeImageTests(unittest.TestCase):
         self.roots = json.loads((REPO / 'docs/evidence/managed-payload-20261104.json').read_text())
         self.state = json.loads((REPO / 'docs/evidence/managed-state-fixture-20261104.json').read_text())['manifest']
         self.sd = json.loads((REPO / 'docs/evidence/host-sd-20261104.json').read_text())
+        self.roots['package_state'] = {'profile': 'a733-package-state-v1', 'manifest': {'bytes':1,'sha256':'a'*64}}
+        self.roots['management_runtime']['files']['usr/lib/orangepi-hypervisor/package_state.py'] = {'bytes':1,'sha256':'a'*64}
+        self.sd['package_state_profile'] = 'a733-package-state-v1'
         self.diag = json.loads((REPO / 'docs/evidence/diagnostic-20261104.json').read_text())['files']
 
     def test_fixture_cannot_be_marked_for_installation(self):
@@ -95,7 +98,7 @@ class NVMeImageTests(unittest.TestCase):
 
     def test_reject_mismatched_state_bootstrap_and_root_profile(self):
         for where, field, value in (('sd', 'state_uuid', 'd' * 36), ('sd', 'kernel_release', 'other'),
-                                    ('roots', 'management_runtime', {}), ('roots', 'slot_bytes', 1)):
+                                    ('roots', 'management_runtime', {}), ('roots', 'package_state', {}), ('sd', 'package_state_profile', 'wrong'), ('roots', 'slot_bytes', 1)):
             values = {'roots': copy.deepcopy(self.roots), 'state': copy.deepcopy(self.state), 'sd': copy.deepcopy(self.sd)}
             values[where][field] = value
             with self.subTest(where=where, field=field), self.assertRaises(ValueError):

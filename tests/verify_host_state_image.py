@@ -70,6 +70,11 @@ def verify(image, manifest_path):
                                     pass_fds=(descriptor,), check=True,
                                     stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             return result.stdout
+        if 'cache_pruning' in manifest:
+            for cache in ('/var/cache/apt/pkgcache.bin', '/var/cache/apt/srcpkgcache.bin',
+                          '/var/cache/ldconfig/aux-cache'):
+                if b'Inode:' in debugfs('stat ' + cache):
+                    raise ValueError('disposable cache remains in state image')
 
         def metadata(path, kind, mode):
             value = debugfs('stat ' + path).decode()

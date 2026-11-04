@@ -7,6 +7,7 @@ Run as root: host-payload.py ROOTFS_TAR DIAGNOSTIC_ARTIFACT_DIR NEW_OUTPUT_DIR
 import argparse
 import gzip
 import hashlib
+import importlib.util
 import json
 import os
 import re
@@ -19,6 +20,10 @@ import tarfile
 import tempfile
 
 REPO = Path(__file__).resolve().parent.parent
+package_spec = importlib.util.spec_from_file_location('payload_package_state', REPO / 'configs/package_state.py')
+PACKAGE = importlib.util.module_from_spec(package_spec)
+package_spec.loader.exec_module(PACKAGE)
+
 SLOT_BYTES = 4 * 1024**3
 KERNEL_RELEASE = '6.6.98-a733-diag'
 SLOT_UUIDS = {'A': 'a7330000-0000-4000-8000-00000000000a',
@@ -26,6 +31,7 @@ SLOT_UUIDS = {'A': 'a7330000-0000-4000-8000-00000000000a',
 CLASSIFICATION = 'managed host root prototype; installation and hardware acceptance pending'
 BOOT_FILES = ('Image', 'board.dtb', 'kernel.config', 'initramfs.cpio.gz')
 MANAGEMENT_FILES = {
+    'configs/package_state.py': ('usr/lib/orangepi-hypervisor/package_state.py', 0o644),
     'configs/host-management.py': ('usr/lib/orangepi-hypervisor/host-management.py', 0o755),
     'configs/host_config.py': ('usr/lib/orangepi-hypervisor/host_config.py', 0o644),
     'configs/a733-management-ssh.service': ('usr/lib/systemd/system/a733-management-ssh.service', 0o644),
@@ -342,8 +348,10 @@ def build(rootfs, diagnostic, output):
     with tempfile.TemporaryDirectory(prefix='.staging-', dir=output) as stage:
         root = Path(stage)
         extract_rootfs(rootfs, root)
+        cache_pruning = PACKAGE.prune_caches(root)
         module_bom = import_modules(root, modules)
         management = install_management(root)
+        package_state = PACKAGE.snapshot(root)
         write_json(output / 'modules.json', module_bom)
         metadata_dir = within_root(root, 'usr/lib/orangepi-hypervisor')
         metadata_dir.mkdir(parents=True, exist_ok=True)
@@ -352,7 +360,8 @@ def build(rootfs, diagnostic, output):
                 'schema': 1, 'classification': CLASSIFICATION, 'slot': slot,
                 'filesystem_uuid': SLOT_UUIDS[slot], 'kernel_release': KERNEL_RELEASE,
                 'sources': sources, 'modules_bom': file_record(output / 'modules.json'),
-                'management_runtime': management})
+                'management_runtime': management, 'package_state': package_state,
+                'cache_pruning': cache_pruning})
             image = output / f'root-{slot}.ext4'
             make_image(root, image, slot)
             with image.open('rb') as source, (output / (image.name + '.gz')).open('xb') as target:
@@ -364,7 +373,8 @@ def build(rootfs, diagnostic, output):
         'schema': 1, 'board': 'Orange Pi 4 Pro A733', 'classification': CLASSIFICATION,
         'kernel_release': KERNEL_RELEASE, 'slot_bytes': SLOT_BYTES,
         'slot_uuids': SLOT_UUIDS, 'sources': sources, 'files': files,
-        'management_runtime': management,
+        'management_runtime': management, 'package_state': package_state,
+        'cache_pruning': cache_pruning,
         'builder_packages': builder_packages,
         'reproducibility': 'not established; filesystem/package-generated metadata may vary',
         'tools': {tool: tool_version(tool) for tool in ('mke2fs', 'tune2fs', 'e2fsck')}})

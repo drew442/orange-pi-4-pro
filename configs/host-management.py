@@ -26,6 +26,9 @@ import uuid
 _spec = importlib.util.spec_from_file_location('a733_host_config', Path(__file__).with_name('host_config.py'))
 CONFIG = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(CONFIG)
+_spec = importlib.util.spec_from_file_location('a733_package_state', Path(__file__).with_name('package_state.py'))
+PACKAGE = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(PACKAGE)
 STATE = Path('/run/a733-state')
 RUNTIME = Path('/run/a733-management')
 KEY_NAME = 'ssh_host_ed25519_key'
@@ -109,6 +112,7 @@ def validate_mounts(table):
             continue
         require(target not in protected[2:] and not any(target.startswith(parent + '/') for parent in protected),
                 'unexpected nested management mount')
+        require(target != '/usr' and not target.startswith('/usr/'), 'unexpected immutable userspace mount')
     require('rw' not in root['flags'] and root['root'] == '/' and state['root'] == '/', 'wrong mount roots')
     match = re.fullmatch(r'/dev/(nvme[0-9]+n[0-9]+)p([23])', root['source'])
     require(match is not None, 'root must be selected NVMe p2/p3')
@@ -117,6 +121,18 @@ def validate_mounts(table):
     for name in ('var', 'root', 'home'):
         row = one('/' + name, 'ext4', {'rw', 'nodev', 'nosuid'})
         require(row['id'] == state['id'] and row['root'] == '/' + name, 'wrong state bind')
+    package_targets = {'/' + target for target, _ in PACKAGE.COMPONENTS.values()}
+    for target in table:
+        # /var itself is expected. Package view ancestors and descendants must
+        # not hide the selected root or redirect writable state elsewhere.
+        if target != '/var' and target not in package_targets:
+            require(not any(target.startswith(path + '/') or path.startswith(target.rstrip('/') + '/')
+                            for path in package_targets) or target == '/', 'foreign package-state mount')
+    for name, (target, kind) in PACKAGE.COMPONENTS.items():
+        row = one('/' + target, 'ext4', {'ro', 'nodev', 'nosuid'})
+        require('rw' not in row['flags'] and row['id'] == root['id'] and
+                row['source'] == root['source'] and row['root'] == '/' + PACKAGE.ROOT + '/' + name,
+                'wrong immutable package-state bind')
     identity = one('/etc/machine-id', 'ext4', {'rw', 'nodev', 'nosuid'})
     require(identity['id'] == state['id'] and identity['root'] == '/identity/machine-id',
             'wrong machine identity bind')
@@ -188,6 +204,16 @@ def runtime_guard():
     slot = 'A' if root['source'].endswith('p2') else 'B'
     require(payload.get('slot') == slot and payload.get('filesystem_uuid') ==
             f'a7330000-0000-4000-8000-00000000000{slot.lower()}', 'wrong root payload slot')
+    package = PACKAGE.validate_profile(payload.get('package_state'))
+    base = Path('/') / PACKAGE.ROOT
+    require(read_secure(base / 'FORMAT', 128) == PACKAGE.FORMAT, 'wrong package-state format')
+    PACKAGE.validate_manifest(read_secure(base / 'manifest.json', PACKAGE.MANIFEST_LIMIT), package)
+    for name, (target, kind) in PACKAGE.COMPONENTS.items():
+        source = secure_path(base / name, directory=kind == 'directory')
+        bound = secure_path('/' + target, directory=kind == 'directory')
+        require((source.st_dev, source.st_ino) == (bound.st_dev, bound.st_ino) and
+                f'{os.major(source.st_dev)}:{os.minor(source.st_dev)}' == root['id'],
+                'package-state source/bind identity differs')
     secure_path(STATE / 'config', 0o700, True)
     secure_path(STATE / 'identity/ssh', 0o700, True)
     secure_path('/root', 0o700, True)
@@ -277,7 +303,10 @@ def prepare():
         ram_directory(Path(path).parent)
         atomic_write(path, contents, 0o644)
     ram_link('/etc/resolv.conf', '/run/systemd/resolve/stub-resolv.conf')
-    for name in ('ssh.service', 'sshd.service', 'ssh.socket', 'sshd.socket'):
+    for name in ('ssh.service', 'sshd.service', 'ssh.socket', 'sshd.socket',
+                 'apt-daily.service', 'apt-daily.timer', 'apt-daily-upgrade.service',
+                 'apt-daily-upgrade.timer', 'dpkg-db-backup.service', 'dpkg-db-backup.timer',
+                 'systemd-journal-catalog-update.service'):
         ram_link('/etc/systemd/system/' + name, '/dev/null')
     for name in ('systemd-networkd.service', 'systemd-resolved.service', 'a733-management-ssh.service'):
         ram_link('/etc/systemd/system/multi-user.target.wants/' + name, '/lib/systemd/system/' + name)

@@ -11,7 +11,7 @@ REPO = Path(__file__).resolve().parents[1]
 SPEC = importlib.util.spec_from_file_location('installer_archive_tests', REPO / 'build/installer-initramfs.py')
 ARCHIVE = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(ARCHIVE)
-PROVENANCE = ('build/installer-runtime.py', 'build/host-state.py', 'configs/host_config.py',
+PROVENANCE = ('build/installer-runtime.py', 'build/host-state.py', 'configs/host_config.py', 'configs/package_state.py',
               'configs/installer-runtime-policy.json', 'docs/evidence/host-userspace-20261104.json',
               'configs/host-userspace-packages.lock.tsv', 'configs/host-userspace-package-hashes.lock.tsv',
               'configs/builder-packages.lock.tsv')

@@ -42,7 +42,7 @@ class HostSDTests(unittest.TestCase):
             data = ('nonbootable-fixture-' + name).encode()
             (self.diagnostic / name).write_bytes(data)
             self.pinned[name] = HOST.record(data)
-        self.manifest = {'schema': 1, 'state_uuid': 'bfe5ba29-3175-47a3-a410-04b87e3de1a6',
+        self.manifest = {'schema': 1, 'package_state_profile': 'a733-package-state-v1', 'state_uuid': 'bfe5ba29-3175-47a3-a410-04b87e3de1a6',
                          'kernel_release': HOST.KERNEL_RELEASE, 'boot_inputs': self.pinned,
                          'entries': {name: HOST.record((self.repo / path).read_bytes())
                                      for name, path in HOST.ENTRIES.items()},

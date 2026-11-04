@@ -30,13 +30,14 @@ class SelectionTests(unittest.TestCase):
             profile = {'profile': 'a733-management-v1', 'files': {
                 destination: {'bytes': 1, 'sha256': 'a' * 64}
                 for destination, _ in SELECT.INIT.PAYLOAD.MANAGEMENT_FILES.values()}}
-            manifest = {'slot_bytes': SELECT.INIT.PAYLOAD.SLOT_BYTES,
+            package = {'profile': 'a733-package-state-v1', 'manifest': {'bytes':1, 'sha256':'a'*64}}
+            manifest = {'package_state': package, 'slot_bytes': SELECT.INIT.PAYLOAD.SLOT_BYTES,
                         'slot_uuids': SELECT.INIT.PAYLOAD.SLOT_UUIDS,
                         'kernel_release': SELECT.INIT.PAYLOAD.KERNEL_RELEASE,
                         'management_runtime': profile,
                         'files': {'root-A.ext4': {'bytes': SELECT.INIT.PAYLOAD.SLOT_BYTES, 'sha256': 'b' * 64}}}
             path = root / 'manifest.json'
-            metadata = {'sources': boot, 'management_runtime': profile}
+            metadata = {'sources': boot, 'management_runtime': profile, 'package_state': package}
             with mock.patch.object(SELECT, 'REPO', root), \
                     mock.patch.object(SELECT.shutil, 'disk_usage') as space, \
                     mock.patch.object(SELECT, 'capture_root'), \
@@ -50,6 +51,9 @@ class SelectionTests(unittest.TestCase):
                     self.assertFalse(marker.called)
                 path.write_text(json.dumps(manifest))
                 self.assertEqual(SELECT.parse(SELECT.prepare(root / 'image', 'A', path))['SLOT'], 'A')
+                marker.return_value = (b'marker', {**metadata, 'package_state': {'profile':'other'}})
+                with self.assertRaisesRegex(ValueError, 'package-state'):
+                    SELECT.prepare(root / 'image', 'A', path)
                 marker.return_value = (b'marker', {**metadata, 'management_runtime': {'profile': 'different'}})
                 with self.assertRaisesRegex(ValueError, 'management runtime differs'):
                     SELECT.prepare(root / 'image', 'A', path)

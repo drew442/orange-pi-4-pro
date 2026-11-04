@@ -49,7 +49,7 @@ class ArchiveTests(unittest.TestCase):
             root = Path(temporary)
             record = payload.install_management(root)
             self.assertEqual(record['profile'], 'a733-management-v1')
-            self.assertEqual(len(record['files']), 3)
+            self.assertEqual(len(record['files']), 4)
             for name, expected in record['files'].items():
                 self.assertEqual(payload.file_record(root / name), expected)
             self.assertEqual((root / 'usr/lib/orangepi-hypervisor/host-management.py').stat().st_mode & 0o777, 0o755)

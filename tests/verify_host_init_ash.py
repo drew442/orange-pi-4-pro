@@ -64,6 +64,12 @@ def verify(busybox):
         put('newroot/run/a733-state/boot/selected.conf',
             (f'SCHEMA=1\nSLOT=A\nROOT_UUID={ROOT_UUID}\nROOT_MARKER_SHA256={hashlib.sha256(marker).hexdigest()}\n'
              'KERNEL_RELEASE=6.6.98-a733-diag\n').encode(), 0o600)
+        base = 'newroot/usr/lib/orangepi-hypervisor/package-state'
+        put(base + '/FORMAT', b'a733-package-state-v1\n', 0o444)
+        put(base + '/manifest.json', b'{}\n', 0o444)
+        for path in root.rglob('*'):
+            if path.is_dir() and not path.is_symlink():
+                path.chmod(path.stat().st_mode & ~0o022)
         scripts = {}
         for source, target in (('configs/host-init', 'host-init'),
                                ('configs/host-storage-resolver.sh', 'etc/host-storage-resolver.sh')):
@@ -88,6 +94,10 @@ HI_MACHINE_ID=
 hi_state_valid
 hi_selection
 hi_root
+hi_package_format
+printf 'wrong\n' > /newroot/usr/lib/orangepi-hypervisor/package-state/FORMAT
+if hi_package_format; then exit 1; fi
+printf 'a733-package-state-v1\n' > /newroot/usr/lib/orangepi-hypervisor/package-state/FORMAT
 ROOT_MARKER_SHA256_SAVED=$ROOT_MARKER_SHA256
 printf 'SCHEMA=1\\nSLOT=B\\nROOT_UUID=a7330000-0000-4000-8000-00000000000b\\nROOT_MARKER_SHA256=%s\\nKERNEL_RELEASE=6.6.98-a733-diag\\n' "$ROOT_MARKER_SHA256_SAVED" > /newroot/run/a733-state/boot/selected.conf
 hi_selection
@@ -105,7 +115,7 @@ if hi_state_valid; then exit 1; fi
 printf '0123456789abcdef0123456789abcdef\n' > /newroot/run/a733-state/identity/machine-id
 /bin/busybox chmod 666 /newroot/run/a733-state/identity/machine-id
 if hi_state_valid; then exit 1; fi
-printf '10 pinned ARM64 ash validation checks passed; both slots use unchanged bootstrap config\n'
+printf '12 pinned ARM64 ash validation checks passed; both slots use unchanged bootstrap config\n'
 ''')
         environment = {'PATH': '/bin', 'LC_ALL': 'C'}
         # Check dependencies without invoking mount/switch_root.

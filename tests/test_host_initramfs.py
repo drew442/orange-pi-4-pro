@@ -74,7 +74,15 @@ class InitramfsTests(unittest.TestCase):
             root = base / 'root'
             target = root / 'usr/lib/orangepi-hypervisor/payload.json'
             target.parent.mkdir(parents=True)
-            value = {'slot': 'A', 'filesystem_uuid': INIT.PAYLOAD.SLOT_UUIDS['A'],
+            for relative, kind in INIT.PAYLOAD.PACKAGE.COMPONENTS.values():
+                component = root / relative
+                component.parent.mkdir(parents=True, exist_ok=True)
+                if kind == 'directory': component.mkdir(exist_ok=True)
+                else: component.write_bytes(b'fixture')
+            for path in (root, *root.rglob('*')):
+                path.chmod(path.stat().st_mode & ~0o022)
+            package = INIT.PAYLOAD.PACKAGE.snapshot(root)
+            value = {'package_state': package, 'slot': 'A', 'filesystem_uuid': INIT.PAYLOAD.SLOT_UUIDS['A'],
                      'kernel_release': INIT.PAYLOAD.KERNEL_RELEASE}
             data = (json.dumps(value) + '\n').encode()
             target.write_bytes(data)
@@ -92,6 +100,16 @@ class InitramfsTests(unittest.TestCase):
             self.assertEqual(actual, value)
             with image.open('rb') as stream, self.assertRaisesRegex(ValueError, 'UUID'):
                 INIT.root_marker(stream, 'B')
+            subprocess.run(['debugfs', '-w', '-R',
+                'set_inode_field /usr/lib/orangepi-hypervisor/package-state/manifest.json size 1', str(image)],
+                check=True, capture_output=True)
+            with image.open('rb') as stream, self.assertRaisesRegex(ValueError, 'manifest'):
+                INIT.root_marker(stream, 'A')
+            subprocess.run(['debugfs', '-w', '-R',
+                'set_inode_field /usr/lib/orangepi-hypervisor/package-state/FORMAT size 0', str(image)],
+                check=True, capture_output=True)
+            with image.open('rb') as stream, self.assertRaisesRegex(ValueError, 'format'):
+                INIT.root_marker(stream, 'A')
 
 
 if __name__ == '__main__':

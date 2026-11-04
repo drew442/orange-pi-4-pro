@@ -60,6 +60,18 @@ def root_marker(stream, slot):
     if (value['slot'] != slot or value['filesystem_uuid'] != PAYLOAD.SLOT_UUIDS[slot] or
             value['kernel_release'] != PAYLOAD.KERNEL_RELEASE):
         raise ValueError('root payload marker incompatible with selected slot/kernel')
+    profile = PAYLOAD.PACKAGE.validate_profile(value.get('package_state'))
+    base = '/' + PAYLOAD.PACKAGE.ROOT
+    def package_file(name, limit):
+        result = subprocess.run(['debugfs', '-R', 'cat ' + base + '/' + name,
+                                 f'/proc/self/fd/{descriptor}'], pass_fds=(descriptor,),
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
+        if len(result.stdout) > limit:
+            raise ValueError('package-state metadata exceeds bound')
+        return result.stdout
+    if package_file('FORMAT', 128) != PAYLOAD.PACKAGE.FORMAT:
+        raise ValueError('root package-state format differs')
+    PAYLOAD.PACKAGE.validate_manifest(package_file('manifest.json', PAYLOAD.PACKAGE.MANIFEST_LIMIT), profile)
     return result.stdout, value
 
 
@@ -156,10 +168,11 @@ def build(rootfs, diagnostic, busybox, state_uuid, output):
     (output / 'initramfs.cpio.gz').write_bytes(data)
     manifest = {'schema': 1, 'classification': 'NVMe host handoff prototype; no physical boot or KVM acceptance',
                 'state_uuid': state_uuid, 'kernel_release': PAYLOAD.KERNEL_RELEASE,
+                'package_state_profile': PAYLOAD.PACKAGE.PROFILE,
                 'root_selection': 'NVMe state boot/selected.conf; root A/B not embedded', 'boot_inputs': diag,
                 'recipes': {name: PAYLOAD.file_record(REPO / name) for name in
                             ('build/host-initramfs.py', 'build/host-payload.py',
-                             'build/host-storage-tools.py', 'configs/host-storage-tools.lock.json')},
+                             'build/host-storage-tools.py', 'configs/host-storage-tools.lock.json', 'configs/package_state.py')},
                 'files': {'initramfs.cpio.gz': {'bytes': len(data), 'sha256': hashlib.sha256(data).hexdigest()}},
                 'entries': {name: {'mode': mode, 'bytes': len(content), 'sha256': hashlib.sha256(content).hexdigest()}
                             for name, (mode, content) in sorted(entries.items()) if stat.S_ISREG(mode)}}

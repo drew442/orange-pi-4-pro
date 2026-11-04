@@ -23,7 +23,7 @@ ENTRIES = {'init': 'configs/host-init',
 RECIPES = ('build/assemble-host.py', 'build/assemble-diagnostic.sh', 'configs/host-boot.cmd',
            'build/host-initramfs.py', 'configs/host-init', 'configs/host-storage-resolver.sh',
            'configs/diagnostic-sources.lock.json', 'configs/builder-packages.lock.tsv',
-           'docs/evidence/diagnostic-20261104.json')
+           'docs/evidence/diagnostic-20261104.json', 'configs/package_state.py')
 
 
 def safe_path(path):
@@ -88,6 +88,8 @@ def validate_manifest(manifest, diagnostic):
             not re.fullmatch(r'[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}', state_uuid) or
             state_uuid == '00000000-0000-0000-0000-000000000000'):
         raise ValueError('state UUID must be canonical lowercase and nonzero')
+    if manifest.get('package_state_profile') != 'a733-package-state-v1':
+        raise ValueError('host bootstrap lacks required package-state ABI')
     if manifest.get('kernel_release') != KERNEL_RELEASE:
         raise ValueError('incompatible host kernel ABI')
     for name in ('Image', 'board.dtb', 'kernel.config'):
@@ -206,6 +208,7 @@ def build(diagnostic_directory, host_directory, output_directory):
         result = {'schema': 1, 'board': 'Orange Pi 4 Pro A733',
                   'classification': 'NVMe host SD bootstrap prototype; no physical boot or KVM acceptance',
                   'state_uuid': host['state_uuid'], 'kernel_release': KERNEL_RELEASE,
+                  'package_state_profile': host['package_state_profile'],
                   'root_selection': 'NVMe state boot/selected.conf; root A/B not embedded',
                   'source_date_epoch': int(EPOCH), 'boot_inputs': {name: pinned[name] for name in BLOBS},
                   'sources': sources,

@@ -35,7 +35,7 @@ ENTRIES = {'init': ('configs/installer-init', 0o100755),
 INITRAMFS_RECIPES = {'build/installer-initramfs.py', 'build/host-initramfs.py',
                     'build/host-payload.py', 'build/installer-runtime.py',
                     'build/assemble-host.py', 'build/host-state.py', 'build/root-selection.py',
-                    'build/host-storage-tools.py', 'configs/host_config.py',
+                    'build/host-storage-tools.py', 'configs/host_config.py', 'configs/package_state.py',
                     'configs/installer-runtime-policy.json',
                     *(source for source, _ in ENTRIES.values()),
                     'licenses/GPL-2.0.txt', 'licenses/busybox-copyright.txt'}

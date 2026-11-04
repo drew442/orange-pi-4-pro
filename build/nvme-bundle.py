@@ -27,7 +27,7 @@ CHUNK = 4 * MIB
 COMPRESSION_LEVEL = 6
 RECIPES = ('build/nvme-bundle.py', 'build/host-state.py', 'build/host-payload.py',
            'build/root-selection.py', 'build/host-initramfs.py', 'build/host-storage-tools.py',
-           'configs/host_config.py',
+           'configs/host_config.py', 'configs/package_state.py',
            'scripts/install-nvme.py', 'scripts/plan-nvme.py', 'scripts/nvme_layout.py',
            'configs/builder-packages.lock.tsv')
 

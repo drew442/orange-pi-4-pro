@@ -55,6 +55,20 @@ def verify(directory):
             marker = json.loads(inspect('cat /usr/lib/orangepi-hypervisor/payload.json'))
             if marker['slot'] != slot or marker['management_runtime'] != profile:
                 raise ValueError('root marker/profile differs')
+            package = manifest.get('package_state')
+            if (not isinstance(package, dict) or package.get('profile') != 'a733-package-state-v1'
+                    or marker.get('package_state') != package):
+                raise ValueError('package-state profile differs')
+            base = '/usr/lib/orangepi-hypervisor/package-state/'
+            if inspect('cat ' + base + 'FORMAT') != b'a733-package-state-v1\n':
+                raise ValueError('package-state format differs')
+            descriptor = inspect('cat ' + base + 'manifest.json')
+            if {'bytes': len(descriptor), 'sha256': hashlib.sha256(descriptor).hexdigest()} != package['manifest']:
+                raise ValueError('package-state descriptor hash differs')
+            for cache in ('/var/cache/apt/pkgcache.bin', '/var/cache/apt/srcpkgcache.bin',
+                          '/var/cache/ldconfig/aux-cache'):
+                if b'Inode:' in inspect('stat ' + cache):
+                    raise ValueError('disposable cache remains in root image')
             for path, record in profile['files'].items():
                 contents = inspect('cat /' + path)
                 if {'bytes': len(contents), 'sha256': hashlib.sha256(contents).hexdigest()} != record:
@@ -84,7 +98,7 @@ def verify(directory):
                          'root_password_locked': True, 'machine_id_empty': True,
                          'host_keys_absent': True, 'compressed_expansion_matches': True}
     return {'classification': 'managed regular-file root checks; no board boot or KVM acceptance',
-            'management_runtime': profile, 'slots': reports}
+            'management_runtime': profile, 'package_state': manifest['package_state'], 'slots': reports}
 
 
 if __name__ == '__main__':

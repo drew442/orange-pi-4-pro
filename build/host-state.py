@@ -264,7 +264,8 @@ def build(rootfs, config_path, public_key_path, output, boot_selection, state_uu
                  REPO / 'configs/builder-packages.lock.tsv',
                  REPO / 'configs/host-userspace-packages.lock.tsv',
                  REPO / 'configs/host-userspace-package-hashes.lock.tsv',
-                 REPO / 'build/host-userspace.sh', REPO / 'configs/host_config.py'):
+                 REPO / 'build/host-userspace.sh', REPO / 'configs/host_config.py',
+                 REPO / 'configs/package_state.py'):
         write_private(provenance / path.name, bounded_input(path, 8 * 1024**2))
     write_private(provenance / evidence.name, evidence_data)
     with tempfile.TemporaryDirectory(prefix='.staging-', dir=output) as temporary:
@@ -272,6 +273,7 @@ def build(rootfs, config_path, public_key_path, output, boot_selection, state_uu
         extracted = stage / 'userspace'
         extracted.mkdir()
         PAYLOAD.extract_rootfs(snapshot, extracted)
+        cache_pruning = PAYLOAD.PACKAGE.prune_caches(extracted)
         state = stage / 'state'
         machine_id = seed_state(extracted, state, state_uuid, config, public_key, selection_data)
         PAYLOAD.write_json(output / 'staging-contents.json', contents(state))
@@ -295,6 +297,7 @@ def build(rootfs, config_path, public_key_path, output, boot_selection, state_uu
         'management': config, 'admin_public_key_fingerprint': fingerprint,
         'boot_selection': selection,
         'builder_packages': packages, 'staging_storage': storage, 'files': files,
+        'cache_pruning': cache_pruning,
         'tools': {tool: PAYLOAD.tool_version(tool) for tool in ('mke2fs', 'e2fsck', 'debugfs')},
         'hardware_acceptance': 'pending; no physical boot, NVMe installation, KVM or SD-write evidence'})
 

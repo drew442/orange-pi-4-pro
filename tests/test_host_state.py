@@ -153,6 +153,28 @@ class Validators(unittest.TestCase):
         with self.assertRaises(ValueError):
             STATE.PAYLOAD.validate_tar([parent, tarfile.TarInfo('var/data')])
 
+    def test_cache_pruning_precedes_state_seed_and_keeps_metadata(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            extracted = root / 'extracted'
+            (extracted / 'var/cache/apt').mkdir(parents=True)
+            (extracted / 'var/lib/dpkg').mkdir(parents=True)
+            (extracted / 'var/lib/dpkg/status').write_bytes(b'retained physical state copy')
+            extracted.chmod(0o755)
+            cache = extracted / 'var/cache/apt/pkgcache.bin'
+            cache.write_bytes(b'unused cache')
+            for path in extracted.rglob('*'):
+                if path.is_dir():
+                    path.chmod(0o755)
+            records = STATE.PAYLOAD.PACKAGE.prune_caches(extracted)
+            self.assertEqual(records[0]['path'], 'var/cache/apt/pkgcache.bin')
+            if os.geteuid() != 0:
+                return  # seed_state's root-owned-var contract is checked separately.
+            state = root / 'state'
+            STATE.seed_state(extracted, state, str(uuid.uuid4()), CONFIG, KEY, SELECTION)
+            self.assertFalse((state / 'var/cache/apt/pkgcache.bin').exists())
+            self.assertEqual((state / 'var/lib/dpkg/status').read_bytes(), b'retained physical state copy')
+
     def test_seed_rejects_symlink_var(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

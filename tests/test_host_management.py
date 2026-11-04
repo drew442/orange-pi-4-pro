@@ -26,6 +26,7 @@ MOUNTS = '''20 1 259:2 / / ro,nodev - ext4 /dev/nvme0n1p2 ro
 27 20 259:4 /identity/machine-id /etc/machine-id rw,nodev,nosuid - ext4 /dev/nvme0n1p4 rw
 '''
 
+MOUNTS += ''.join(f'{40+i} 20 259:2 /{M.PACKAGE.ROOT}/{name} /{target} ro,nodev,nosuid - ext4 /dev/nvme0n1p2 ro\n' for i,(name,(target,kind)) in enumerate(M.PACKAGE.COMPONENTS.items()))
 
 class ValidationTests(unittest.TestCase):
     def test_strict_configuration(self):
@@ -65,6 +66,25 @@ class ValidationTests(unittest.TestCase):
             with self.subTest(target=target), self.assertRaises(ValueError):
                 M.validate_mounts(M.mount_table(MOUNTS + suffix))
 
+    def test_all_package_views_require_selected_readonly_origin(self):
+        M.validate_mounts(M.mount_table(MOUNTS.replace('259:2', '259:3').replace('nvme0n1p2', 'nvme0n1p3')))
+        for name, (target, kind) in M.PACKAGE.COMPONENTS.items():
+            original = next(line for line in MOUNTS.splitlines(True) if f' /{target} ' in line)
+            changes = ('', original + original,
+                       original.replace('ro,nodev,nosuid', 'rw,nodev,nosuid'),
+                       original.replace('259:2', '179:1'),
+                       original.replace('nvme0n1p2', 'nvme0n1p3'),
+                       original.replace('/' + M.PACKAGE.ROOT + '/' + name, '/wrong-subdirectory'))
+            for changed in changes:
+                with self.subTest(name=name, change=changed), self.assertRaises(ValueError):
+                    M.validate_mounts(M.mount_table(MOUNTS.replace(original, changed)))
+            for foreign in ('/' + target + '/foreign', '/' + target.rsplit('/', 1)[0]):
+                with self.subTest(foreign=foreign), self.assertRaises(ValueError):
+                    M.validate_mounts(M.mount_table(MOUNTS + f'90 20 179:1 / {foreign} rw - ext4 /dev/mmcblk0p1 rw\n'))
+        for foreign in ('/usr', '/usr/lib', '/usr/lib/orangepi-hypervisor', '/' + M.PACKAGE.ROOT):
+            with self.subTest(foreign=foreign), self.assertRaises(ValueError):
+                M.validate_mounts(M.mount_table(MOUNTS + f'90 20 179:1 / {foreign} rw - ext4 /dev/mmcblk0p1 rw\n'))
+
     def test_ssh_never_wildcard_and_key_only(self):
         rendered = M.ssh_config('192.0.2.20', CONFIG)
         self.assertEqual([x for x in rendered.splitlines() if x.startswith('ListenAddress')], ['ListenAddress 192.0.2.20'])
@@ -89,6 +109,8 @@ class ValidationTests(unittest.TestCase):
                 self.assertTrue(str(call.args[0]).startswith('/etc/'))
             links = dict(call.args for call in link.call_args_list)
             for name in ['ssh.service', 'sshd.service', 'ssh.socket', 'sshd.socket']:
+                self.assertEqual(links['/etc/systemd/system/' + name], '/dev/null')
+            for name in ('apt-daily.service','apt-daily.timer','apt-daily-upgrade.service','apt-daily-upgrade.timer','dpkg-db-backup.service','dpkg-db-backup.timer','systemd-journal-catalog-update.service'):
                 self.assertEqual(links['/etc/systemd/system/' + name], '/dev/null')
             self.assertIn('a733-management-ssh.service', ' '.join(links))
             contents = dict((str(c.args[0]), c.args[1]) for c in write.call_args_list)

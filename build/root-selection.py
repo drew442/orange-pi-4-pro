@@ -134,6 +134,7 @@ def prepare(image, slot, payload_manifest):
             not isinstance(profile, dict) or profile.get('profile') != 'a733-management-v1' or
             set(profile.get('files', {})) != {destination for destination, _ in INIT.PAYLOAD.MANAGEMENT_FILES.values()}):
         raise ValueError('payload manifest lacks compatible managed-host profile')
+    INIT.PAYLOAD.PACKAGE.validate_profile(roots.get('package_state'))
     diag = json.loads((REPO / 'docs/evidence/diagnostic-20261104.json').read_text())['files']
     expected = roots['files'][f'root-{slot}.ext4']
     if expected['bytes'] != INIT.PAYLOAD.SLOT_BYTES:
@@ -152,6 +153,8 @@ def prepare(image, slot, payload_manifest):
     for name in ('Image', 'board.dtb', 'kernel.config', 'initramfs.cpio.gz'):
         if metadata['sources'][name] != diag[name]:
             raise ValueError('root and immutable boot stack differ')
+    if metadata.get('package_state') != roots['package_state']:
+        raise ValueError('root package-state differs from trusted manifest')
     if metadata.get('management_runtime') != roots['management_runtime']:
         raise ValueError('root marker management runtime differs from trusted manifest')
     return serialize({'SCHEMA': '1', 'SLOT': slot, 'ROOT_UUID': INIT.PAYLOAD.SLOT_UUIDS[slot],
