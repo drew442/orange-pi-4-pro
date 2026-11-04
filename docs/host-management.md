@@ -61,6 +61,11 @@ sudo python3 tests/verify_managed_payload.py \
   /home/drew/orange-pi-4-pro-build/management-work-20261104/out/host-payload-20261104-02
 ```
 
+The recorded artifacts were built from the source retained in commit
+`754cdb7`; a later trailing-blank-line cleanup of `host_config.py` changes its
+source hash without changing behavior. Artifact manifests retain the exact
+built bytes. A new build must use its own generated manifest.
+
 The ARM checker requires prepared binfmt support. It authenticates the userspace
 archive and creates a disposable private chroot; it does not mount filesystems,
 configure networking or start listeners. Test private keys are removed with the

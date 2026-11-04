@@ -60,5 +60,3 @@ def validate_public_key(data):
     canonical = f'ssh-ed25519 {fields[1]}\n'.encode()
     fingerprint = 'SHA256:' + base64.b64encode(hashlib.sha256(blob).digest()).decode().rstrip('=')
     return canonical, fingerprint
-
-
