@@ -4,7 +4,7 @@
 
 Develop a reproducible, minimal Linux KVM host for the **Orange Pi 4 Pro A733**, with a 2 GB SD card and a nominal 250 GB NVMe drive. Guests, host state, logs, and updates belong on NVMe. Prefer SPI boot with the SD removed; otherwise use SD only for immutable boot files. Deliver an installer, host image, source manifest, operational documentation, and hardware validation results.
 
-This is the implementation plan. No image, board access, KVM execution, or installation is established yet. RAM capacity, board revision, SSD model, power supply, and intended guest workload must be recorded during bring-up. Guest limits depend on measured available RAM; do not confuse SD capacity with memory.
+This is the implementation plan. No image, board access, KVM execution, or installation is established yet. Vendor images are too large for the available SD card, so a custom small bootable image is the first milestone. Live inventory cannot be collected until it boots. RAM capacity, board revision, SSD model, power supply, and intended guest workload must be recorded when available; collect live measurements after first boot. Guest limits depend on measured available RAM; do not confuse SD capacity with memory.
 
 ## Evidence and decisions
 
@@ -18,7 +18,7 @@ Choose **Linux KVM and QEMU** provisionally. A CPU specification alone does not 
 
 ## Minimal image strategy
 
-1. Reproduce a vendor-supported headless Linux baseline to isolate boot, NVMe, and KVM issues. Keep the compatible firmware, device tree, and kernel together initially.
+1. Build a small headless bootstrap image using the vendor board stack to isolate boot, NVMe, and KVM issues. Stock vendor images cannot fit the available SD card and are not a bring-up prerequisite. Keep compatible firmware, device tree, and kernel together, with a minimal rootfs and serial diagnostics. Verify image byte size before asking for live inventory.
 2. Build a custom root filesystem with Buildroot after the baseline passes. Use a project `BR2_EXTERNAL` tree and pinned versions; retain required vendor board support rather than presuming mainline support.
 3. If Buildroot integration delays a working host, use a minimal Debian arm64 root filesystem with the proven board stack as an interim image. Measure disk use, idle RAM, maintenance burden, and boot reliability before choosing the release base. Debian userspace does not supply board boot support by itself.
 
@@ -46,7 +46,7 @@ Proposed NVMe GPT layout, subject to bootloader filesystem support:
 
 Calculate from actual bytes, not a presumed 250 GiB. Use stable PARTUUIDs or filesystem UUIDs. Keep root read-only, `/run` and `/tmp` in bounded tmpfs, and persistent state on NVMe. Disable disk swap initially; evaluate bounded zram after memory measurements. Snapshots are not backups.
 
-SD artifacts must fit the actual card byte count, including bootloader reservations and partition tables. Target an uncompressed installer image below 1.8 GB decimal and fail packaging if it exceeds the device. Stream the NVMe payload over wired networking or read it from USB; do not stage a large payload on SD or in RAM. A larger temporary SD may assist diagnosis but is not an acceptable final installation dependency.
+SD artifacts must fit the actual card byte count, including bootloader reservations and partition tables. Target an uncompressed installer image below 1.8 GB decimal and fail packaging if it exceeds the device. Stream the NVMe payload over wired networking or read it from USB; do not stage a large payload on SD or in RAM. No larger temporary SD is available or required by this plan; the first diagnostic image must also fit the available card.
 
 ## Agent work packages and dependency gates
 
@@ -85,7 +85,7 @@ dmesg | grep -Ei 'kvm|hyp|el2|nvme|pcie'
 
 ## Installation and deployment sequence
 
-1. Record board/SSD identity, RAM, power and cooling. Establish serial access and test recovery before changing SPI. Back up existing flash and disks to another machine and verify the backup can be read.
+1. Record externally visible board/SSD identity, power and cooling where available; defer live inventory until the small bootstrap image boots. Establish serial access and test recovery before changing SPI. Back up existing flash and disks to another machine and verify the backup can be read.
 2. Build the selected pinned release; verify checksums and actual SD capacity on the provisioning host. The installer must identify targets by model, serial and size, refuse mounted/in-use targets, display its write plan, and require explicit target selection before erasure.
 3. Write only the installer to SD. Boot its read-only filesystem and use RAM for temporary runtime state. Acquire the authenticated NVMe payload over Ethernet or USB and verify it before activation.
 4. Provision the NVMe layout, install root and boot artifacts, assign unique identifiers, and write host configuration to the state partition. Never clone pre-generated SSH keys or shared passwords. Configure key-based SSH and restrict management access.
@@ -116,4 +116,4 @@ Release only when evidence includes:
 
 Final documentation must include architecture and boot-chain diagrams, pinned component versions, build commands and host prerequisites, byte-accurate image layouts, installer usage, guest creation and networking, SD write policy, update/rollback procedures, recovery, backup/restore, known SSD limitations, and test logs. Link upstream references beside the relevant instructions. A second agent or operator must follow the guide from a clean environment and report discrepancies.
 
-The next action is work package A: inspect the vendor board configuration and acquire board inventory/console evidence, while B checks the matching firmware and kernel for KVM prerequisites. Implementation completion requires the above hardware results; completion of this planning document does not imply a working hypervisor.
+The next action is to provision a compatible build environment using `docs/build-host-assessment.md`, then work package A builds the small SD bootstrap from the inspected vendor configuration. Collect inventory/console evidence after first boot, while B checks matching firmware and kernel sources for KVM prerequisites. Implementation completion requires the above hardware results; completion of this planning document does not imply a working hypervisor.

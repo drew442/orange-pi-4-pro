@@ -1,33 +1,29 @@
 # Repository Guidelines
 
-## Project Structure & Module Organization
+## Purpose and Current State
 
-This `orange-pi-4-pro` directory starts without source code, tests, assets, build configuration, or Git metadata. Update this guide as the project develops; the paths below are suggested conventions, not existing directories.
+Build a minimal KVM/QEMU host for the **Orange Pi 4 Pro A733**, using a 2 GB SD card and nominal 250 GB NVMe. Read `docs/implementation-status.md` first, then relevant sections of `docs/hypervisor-plan.md`. This repository currently contains planning and agent configuration; no working image exists.
 
-- Keep setup instructions and project purpose in `README.md`.
-- Place implementation code in `src/`, automated tests in `tests/`, and development scripts in `scripts/`.
-- Put hardware notes and operational instructions in `docs/`. Create directories only when needed.
+Vendor images exceed the available SD capacity. Create a small bootable image before requiring live hardware inventory. Prefer SPI-to-NVMe boot; otherwise keep SD boot files read-only with zero routine writes. Require an actual KVM guest for hardware acceptance.
 
-## Build, Test, and Development Commands
+## Structure and Commands
 
-No build, test, or local run commands are currently configured. When introducing tooling, document exact commands, prerequisites, and expected results in `README.md` and update this section. Avoid documenting commands such as `npm test` or `make build` until their configuration exists.
+- `.codex/config.toml` and `.codex/agents/`: coordinator defaults and worker roles.
+- `docs/`: implementation plan, current status, host assessment and routing policy.
+- `tmp/` and `out/`: ignored research downloads and generated artifacts.
 
-For any future Bash scripts, run `bash -n scripts/<name>.sh` to check syntax; this does not validate runtime behavior.
+No project build or test command exists yet. Add exact, verified commands alongside implementation. Run `git diff --check` for changes, parse modified TOML with Python `tomllib`, and use `bash -n` for Bash syntax checks. Syntax checks do not establish runtime correctness.
 
-## Coding Style & Naming Conventions
+## Agent Routing
 
-No language, formatter, or linter has been selected. Follow the conventions of the language introduced and commit its formatting configuration alongside the first implementation. Use spaces for indentation unless the file format requires tabs, as Make recipes do. Keep indentation consistent within each file.
+Delegate bounded work according to `docs/agent-routing.md`: Luna for extraction, Sol for implementation/review, Astra only for justified escalation. Use explicit model and effort with focused fresh-context handoffs. Limit active children to two, prohibit nested delegation, and assign one writer per file. Keep architecture, integration and acceptance with the coordinator.
 
-Use descriptive names and lowercase, hyphen-separated documentation filenames, such as `board-setup.md`. Keep changes focused and avoid unrelated formatting edits.
+## Changes and Validation
 
-## Testing Guidelines
+Use descriptive names, consistent language-native formatting, and focused patches. Pin vendor revisions and cite source paths for hardware claims. Add meaningful regression tests with behavior changes. Independently review boot, disk selection and rollback logic; record hardware evidence separately from host checks.
 
-No testing framework or coverage threshold exists yet. Add reproducible tests with new behavior and regression tests with bug fixes. Follow the selected framework’s test naming conventions and document how to run targeted tests.
+Use imperative commit subjects. Commit coherent changes with validation results; pull requests should explain purpose, risks and linked issues where applicable. Keep generated images, downloaded sources and secrets out of Git.
 
-For hardware-dependent checks, record the board model, operating system, prerequisites, commands, and observed results. Distinguish automated checks from manual verification.
+## Documentation Hygiene
 
-## Commit & Pull Request Guidelines
-
-No Git history is available to establish commit conventions. Use concise, imperative subjects, for example `Add board setup instructions`, and keep commits focused on one change.
-
-Pull requests should describe the purpose, affected files, validation performed, and any remaining limitations. Link relevant issues and include screenshots only when visual behavior changes.
+Keep this guide concise and current. Replace obsolete instructions instead of appending history. Store evolving decisions and blockers in the status file, detailed evidence in linked documents, and raw logs outside routine agent context. Never describe an untested image or unavailable hardware check as successful.
