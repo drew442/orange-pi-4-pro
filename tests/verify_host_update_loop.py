@@ -159,10 +159,12 @@ def verify(candidate, manifest_pin):
                     owned_loop(loop, backing)
                     require(selector.read_bytes() == previous, 'fixture selector changed')
                     return copy.deepcopy(context)
-                with mock.patch.object(UPDATE, 'snapshot', side_effect=snapshot), \
-                     mock.patch.object(UPDATE, 'authorize'), \
-                     mock.patch.object(UPDATE.WRITER.os, 'pwrite', side_effect=write), \
-                     mock.patch.object(UPDATE.fcntl, 'ioctl', side_effect=ioctl):
+                # Direct replacements avoid Mock's call history retaining all
+                # 4 GiB of write buffers for this otherwise bounded copy.
+                with mock.patch.object(UPDATE, 'snapshot', new=snapshot), \
+                     mock.patch.object(UPDATE, 'authorize', new=lambda unused: None), \
+                     mock.patch.object(UPDATE.WRITER.os, 'pwrite', new=write), \
+                     mock.patch.object(UPDATE.fcntl, 'ioctl', new=ioctl):
                     plan = UPDATE.make_plan(args, source)
                     partial = UPDATE.apply(args, source, plan)
                     require(not partial['success'] and partial['target_modified']
@@ -176,13 +178,18 @@ def verify(candidate, manifest_pin):
                         require(raw.read(4096) == b'\xa5' * 4096, 'unwritten old tail changed')
                     require({path.name:record(path) for path in [selector,*sentinels]} == before,
                             'partial stage changed a sentinel')
+                    # Quiesce builder device events before starting a separate
+                    # transaction; retain the production nonblocking lock.
+                    subprocess.run(['udevadm','settle','--timeout=10'], check=True,
+                                   capture_output=True, timeout=15)
                     interrupt = False
                     writes.clear()
                     retry_plan = UPDATE.make_plan(args, source)
                     complete = UPDATE.apply(args, source, retry_plan)
                     require(complete['success'] and complete['target_modified']
                             and complete['bytes_written'] == complete['bytes_verified'] == SIZE
-                            and complete['activation_ready'], 'complete retry failed')
+                            and complete['activation_ready'],
+                            'complete retry failed: ' + json.dumps(complete, sort_keys=True))
                     require(complete['readback_sha256'] == source.expected['sha256']
                             and not complete['selector_writes_performed']
                             and ioctls == ['BLKFLSBUF'], 'stage readback/flush contract differs')
