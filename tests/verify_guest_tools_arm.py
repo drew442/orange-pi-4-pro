@@ -16,7 +16,7 @@ def module(name, path):
     return value
 
 
-def verify(package, package_pin, rootfs, guest_directory):
+def verify(package, package_pin, rootfs, guest_directory, *, loopback_network=False):
     tools = module('installed_arm_packager', 'build/maintenance-tools.py')
     maintenance = module('installed_arm_authentication', 'tests/verify_maintenance_arm.py')
     enrollment = module('installed_arm_enrollment', 'tests/verify_guest_enrollment_arm.py')
@@ -45,6 +45,23 @@ def verify(package, package_pin, rootfs, guest_directory):
     if any(text.count(marker) != 1 for text, marker in markers):
         raise ValueError('trusted probe interface changed')
     probe = ''.join(text.split(marker, 1)[0] for text, marker in markers) + https.TAIL
+    if loopback_network:
+        config_marker = "config_path=pathlib.Path('/run/enrollment-config.json')"
+        final_marker = "print(json.dumps({'architecture':platform.machine(),'source_archive'"
+        if probe.count(config_marker) != 1 or probe.count(final_marker) != 1:
+            raise ValueError('trusted network probe interface changed')
+        probe = probe.replace(config_marker,
+            "config['network']={'mode':'isolated','host_tcp_port':18080,'guest_tcp_port':8080}\n" + config_marker)
+        checks = r'''
+assert restored_manifest['config']['network']==config['network']
+assert '--host-tcp-port 18080 --guest-tcp-port 8080' in restored_unit
+forwarded=subprocess.run(launch_args+['--host-tcp-port','18080','--guest-tcp-port','8080'],capture_output=True,text=True,timeout=60)
+assert forwarded.returncode==0,forwarded.stderr
+report=json.loads(forwarded.stdout)
+assert report['argv'][report['argv'].index('-netdev')+1]=='user,id=guestnet,restrict=on,ipv6=off,hostfwd=tcp:127.0.0.1:18080-10.0.2.15:8080'
+assert report['hardware_acceptance']=='pending'
+'''
+        probe = probe.replace(final_marker, checks + final_marker)
     probe = probe.replace('/source/', '/usr/lib/a733-tools/')
     compile(probe, '/installed-tools-probe.py', 'exec')
     # Bytes are read from the authenticated portable tree, rather than a checkout
@@ -60,6 +77,8 @@ def verify(package, package_pin, rootfs, guest_directory):
     result['package_archive'] = tools.record(packed)
     result['installed_prefix'] = '/usr/lib/a733-tools'
     result['entrypoints'] = manifest['entrypoints']
+    result['loopback_network_profile'] = ('preserved through enrollment/checkpoint/backup/restoration; unit and actual ARM launcher dry-run verified'
+                                          if loopback_network else 'not requested')
     result['packaged_verifier_source'] = tools.record(Path(__file__).read_bytes())
     result['combined_probe'] = tools.record(probe.encode())
     result['limits'] = [
@@ -73,8 +92,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('package_directory', type=Path)
     parser.add_argument('--package-manifest-sha256', required=True)
+    parser.add_argument('--loopback-network', action='store_true')
     parser.add_argument('rootfs_tar', type=Path)
     parser.add_argument('guest_directory', type=Path)
     args = parser.parse_args()
     print(json.dumps(verify(args.package_directory, args.package_manifest_sha256,
-                           args.rootfs_tar, args.guest_directory), indent=2))
+                           args.rootfs_tar, args.guest_directory,
+                           loopback_network=args.loopback_network), indent=2))
