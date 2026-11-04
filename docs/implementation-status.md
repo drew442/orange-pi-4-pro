@@ -28,7 +28,7 @@ neither a larger card nor live inventory is a prerequisite to the first image.
   Compressed: 16,188,652 bytes. [Manifest](evidence/diagnostic-20261104.json),
   [download/build/serial guide](diagnostic-image.md). Local files under ignored
   `out/diagnostic-20261104/`; builder `.../orange-pi-4-pro-build/artifacts/`.
-- 52 Python host tests plus shell regressions pass. Actual image
+- 58 Python host tests plus shell regressions pass. Actual image
   hashes, partition/filesystem contents, boot script CRC and wrapper payloads
   verified independently. NVMe planner and KVM-only launcher are preparation only.
 - Independent Sol high boot/disk-selection reviews completed; reported size,
@@ -45,6 +45,10 @@ neither a larger card nor live inventory is a prerequisite to the first image.
   matched kernel modules, ext4 read-only feature/no journal. Actual file-loop
   remount/write denial and content/hash checks passed. They remain unconfigured;
   no physical boot, installer, persistent-state or update integration is established.
+- [NVMe boot resolver](host-storage-boot.md): authenticated ARM64 `blkid` runtime
+  and read-only UUID/identity selection implemented; 39 fixtures pass with the exact
+  diagnostic BusyBox. Private chroot/file probes passed; no mounts or host boot.
+  Independent review's duplicate-field parser finding was fixed and rechecked.
 
 ## Open gates and next actions
 

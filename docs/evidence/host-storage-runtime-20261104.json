@@ -1,0 +1,48 @@
+{
+  "classification": "ARM64 userspace binfmt/chroot file test; no boot or KVM acceptance",
+  "version": "blkid from util-linux 2.38.1  (libblkid 2.38.1, 04-Aug-2022)",
+  "probe": [
+    "DEVNAME=/fixture.ext4",
+    "UUID=e7330000-0000-4000-8000-000000000001",
+    "TYPE=ext4"
+  ],
+  "blank_status": 2,
+  "fixture_bytes_unchanged": true,
+  "runtime_files": {
+    "sbin/blkid": {
+      "source": "usr/sbin/blkid",
+      "bytes": 198856,
+      "sha256": "c9b5a5b2b30c5300ec2b6ea7d29618e727cfdb9d28a4bb2ab64b0d2550e5842a"
+    },
+    "lib/aarch64-linux-gnu/libblkid.so.1": {
+      "source": "usr/lib/aarch64-linux-gnu/libblkid.so.1.1.0",
+      "bytes": 396248,
+      "sha256": "5315fa2b1a050713f155a90d2faa4c64187626f4a580e6e05d2d40190e086363"
+    },
+    "lib/aarch64-linux-gnu/libc.so.6": {
+      "source": "usr/lib/aarch64-linux-gnu/libc.so.6",
+      "bytes": 1651408,
+      "sha256": "e4ac8ae1d81e4865e3aadedb962879cf9415903b3f2ba81ec75e9962b86ab8b0"
+    },
+    "lib/ld-linux-aarch64.so.1": {
+      "source": "usr/lib/aarch64-linux-gnu/ld-linux-aarch64.so.1",
+      "bytes": 202912,
+      "sha256": "17538b8f9889a470c061f69a8fea8124da89627311cd16546c133a89f09056df"
+    }
+  },
+  "diagnostic_busybox_ash": {
+    "busybox_sha256": "0a41864f87a0737804f0f4a68a1cfa1ed22374f4f75a1be3eb376e2659ce1316",
+    "fixture_result": "host storage resolver: 39 fixture checks passed (ash)",
+    "scripts": {
+      "configs/host-storage-resolver.sh": {
+        "bytes": 8403,
+        "sha256": "766db392133aca005afabecea1c930ac1aafa346553f22c27a20e729fbc763bd"
+      },
+      "tests/test-host-storage-resolver.sh": {
+        "bytes": 8054,
+        "sha256": "ff7829065f8862009d723808da04f0ec5c0cd8abc6826eee7fa5af398cba92c4"
+      }
+    },
+    "stat_format_and_hex_printf": "passed"
+  }
+}

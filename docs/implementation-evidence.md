@@ -112,6 +112,19 @@ does not write devices; mount namespaces, raw-device users and observation races
 remain explicit limitations for any future installer design. All 18 planner tests
 pass locally and on Jammy.
 
+## Early-boot storage preparation
+
+The [NVMe resolver and ARM64 runtime](host-storage-boot.md) have independent Sol
+high review. The reviewer reproduced acceptance of an empty duplicate export
+field; the implementer added separate occurrence flags and three regressions.
+All 39 fixtures then passed under Bash, host BusyBox ash and the exact pinned
+diagnostic ARM64 BusyBox 1.30.1. Coordinator execution in private builder chroots
+also checked the four-file dynamic ELF closure, positive ext4/negative blank-file
+probes, unchanged fixture hashes and BusyBox stat/hex conversion. No mounts or
+physical storage writes occurred. The resolver is deliberately conservative about
+blank partitions and remains preparation, with root/state mounting and management
+configuration open. The packaging helper has six nonprivileged regressions.
+
 ## Routing calibration
 
 | Work | Explicit model / effort | Outcome / repair |
@@ -131,6 +144,9 @@ pass locally and on Jammy.
 | Boot provenance review | Sol / high | Copy timing/checksum/source-only guards accepted; no firmware normalization or hardware claim |
 | Immutable root payloads | Sol / medium | Authenticated archive/module packaging; 12 fixtures; actual 4 GiB A/B builds and content audit passed |
 | Payload/loop review | Sol / high | Fixed loop attachment race and required writable-block evidence; controlled file tests accepted; hardware remains pending |
+| blkid runtime extraction | Luna / low | Exact binary/dependency hashes and package ownership extracted; coordinator authenticated and executed isolated runtime |
+| NVMe boot resolver | Sol / medium | 39 fixtures accepted after one targeted duplicate-field correction |
+| Storage boot review | Sol / high | Duplicate-field rejection independently reproduced and fix verified; coordinator tested exact ARM64 BusyBox |
 
 Children used fresh focused contexts, exclusive write scopes and no delegation.
 At most two children were active. Input/output token counts, cache accounting,

@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "source": "docs/evidence/host-userspace-20261104.json",
+  "packages": {
+    "util-linux": "2.38.1-5+deb12u3",
+    "libblkid1": "2.38.1-5+deb12u3",
+    "libc6": "2.36-9+deb12u14"
+  },
+  "files": {
+    "sbin/blkid": {"source": "usr/sbin/blkid", "bytes": 198856, "sha256": "c9b5a5b2b30c5300ec2b6ea7d29618e727cfdb9d28a4bb2ab64b0d2550e5842a"},
+    "lib/aarch64-linux-gnu/libblkid.so.1": {"source": "usr/lib/aarch64-linux-gnu/libblkid.so.1.1.0", "bytes": 396248, "sha256": "5315fa2b1a050713f155a90d2faa4c64187626f4a580e6e05d2d40190e086363"},
+    "lib/aarch64-linux-gnu/libc.so.6": {"source": "usr/lib/aarch64-linux-gnu/libc.so.6", "bytes": 1651408, "sha256": "e4ac8ae1d81e4865e3aadedb962879cf9415903b3f2ba81ec75e9962b86ab8b0"},
+    "lib/ld-linux-aarch64.so.1": {"source": "usr/lib/aarch64-linux-gnu/ld-linux-aarch64.so.1", "bytes": 202912, "sha256": "17538b8f9889a470c061f69a8fea8124da89627311cd16546c133a89f09056df"}
+  },
+  "notices": {
+    "usr/share/licenses/storage-tools/util-linux-copyright": "usr/share/doc/util-linux/copyright",
+    "usr/share/licenses/storage-tools/libblkid1-copyright": "usr/share/doc/libblkid1/copyright",
+    "usr/share/licenses/storage-tools/libc6-copyright": "usr/share/doc/libc6/copyright"
+  }
+}
