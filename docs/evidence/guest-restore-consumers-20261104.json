@@ -1,0 +1,18 @@
+{
+  "builder": "drew@build.drewnet.online; Ubuntu 22.04.5 amd64",
+  "classification": "native builder process census only; no actual guest",
+  "host_accounts_created": false,
+  "idle_after_reaped_exit": true,
+  "idle_before": true,
+  "live_child_refused": true,
+  "observed_uids": [
+    60001,
+    60001,
+    60001,
+    60001
+  ],
+  "pid": 489720,
+  "run_date": "2026-11-04",
+  "source_commit": "f7e86a9e0eccf603606d4f6c31a66b53b6e697c0",
+  "source_sha256": "181d20df0dae5f432b4dd4ca5558628baea2506de8ef5b1546c1a2555f94089f"
+}

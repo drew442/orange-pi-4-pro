@@ -523,3 +523,60 @@ transfer to another machine and readback. Fresh-destination restore, off-device
 retention, restored KVM execution and maintenance/boot integration remain open.
 Model input/output tokens, cache use, account prices and exact review/repair
 time were not exposed; monetary cost and measured savings remain unknown.
+
+## 2026-11-04: fresh-destination guest file restoration
+
+Source `f7e86a9` adds a read-only authenticated restore source and guarded
+prepare/apply controller. Two fresh Sol medium workers owned disjoint source
+and transaction files/tests. Root designed UUID rebinding and provenance,
+implemented the manifest extension and ARM integration probe, and retained
+architecture/integration/acceptance ownership. Independent Sol high review
+accepted the final implementation and all 35 focused root cases without skips.
+
+Review reproduced a valid 300-record history producing a 70,827-byte plan, which
+the 64 KiB apply reader refused. The plan now binds the exact history envelope
+with byte count, SHA-256 and record count. History files are closed after fsync,
+then individually reopened for final identity/metadata/full-readback checks,
+rather than retaining a descriptor per record. A 300-record restore passed
+under a 96-descriptor limit. Real queued SIGTERM after rename and parent-fsync
+failure tests preserve visible publication and report durability separately.
+Foreign entries are retained instead of being recursively removed.
+
+[Actual ARM file evidence](evidence/guest-restore-arm-20261104.json) authenticates
+the pinned rootfs and guest fixture, creates disposable locked accounts, mutates
+and checkpoints the disk, streams its backup, then restores into a fresh
+directory with a different destination UUID. All 140,442,449 payload bytes pass
+independent copy/readback checks; exact history and original source bytes are
+preserved. The restored manifest pin is
+`be343cde567c17185cf36449bc529019b5a98a6088a130a432dcdc68362780d9`.
+Existing-target refusal, updated manifest provenance, a new checkpoint-base
+inspection, launch dry-run and unit parsing pass. Live namespace/NVMe/UUID/
+service/UID-census/TTY boundaries were substituted only inside the disposable
+fixture. No VM or service was started. All recorded runtime/harness source
+hashes match the committed files.
+
+A separate [native UID census](evidence/guest-restore-consumers-20261104.json)
+sees an actual child with real/effective/saved/filesystem UID 60001 and refuses
+restoration policy while it exists; the census succeeds before creation and
+after reaped exit. No host account was created. This is a process-policy check
+on the builder, not a stopped-guest or board-visibility proof.
+
+The ARM probe took 95.68 seconds and 202,900 KiB maximum RSS. Jammy root passed
+627 discovery cases without skips, four diagnostic cases and all shell
+regressions. Local discovery passed with 78 privileged skips; root restore
+cases passed separately. TOML, Bash syntax and diff checks passed. Cleanup
+checks found no fixture directory or restore mount. Builder free space was
+18,745,786,368 bytes with about 7.8 GB available memory; no compilation or
+package installation occurred. Logs remain outside Git under
+`guest-restore-artifacts-20261104/logs/` on the builder.
+
+[The restoration guide](guest-restoration.md) documents complete source and
+destination prerequisites, exact prospective commands, receipts and limits.
+Local archive staging can consume too much room for a large guest on the
+nominal 250 GB NVMe; delivery without staging remains implementation work.
+Off-device retention, restored KVM/network/data checks, physical interruption,
+boot integration and reproduced deployment remain open. No physical storage
+was erased or written. Token/cache/account-price and exact review-time data
+were not exposed; monetary costs and measured savings are unknown. Children
+used focused fresh contexts, exclusive files, no nested delegation and at most
+two concurrent children.

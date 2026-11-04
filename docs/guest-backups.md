@@ -134,10 +134,11 @@ successful restored guest.
 
 ## Restoration and acceptance still required
 
-Do not copy a backup directory over an enrolled guest. A guarded fresh-destination
-restore must validate the destination NVMe/account, rebind installation identity,
-preserve source provenance and refuse existing files. That controller remains
-to be implemented. Host state, boot firmware and pre-installation physical-media
+Do not copy a backup directory over an enrolled guest. The
+[fresh-destination restore controller](guest-restoration.md) validates the
+destination NVMe/account, rebinds installation identity, preserves source
+provenance and refuses existing files. Local archive staging and physical
+restoration remain validation constraints. Host state, boot firmware and pre-installation physical-media
 backups are separate requirements; this guest archive does not replace them.
 
 Acceptance must restore disposable data from the separate machine, verify its
