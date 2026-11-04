@@ -94,5 +94,46 @@ class TrustTests(unittest.TestCase):
         self.assertNotIn('guard=lambda', VERIFY.PROBE)
 
 
+class NamespaceTests(unittest.TestCase):
+    def test_private_root_mount_precedes_restricted_mounts_and_chroot(self):
+        root = Path('/var/lib/a733-maintenance-arm-test')
+        pin = hashlib.sha256(Path(VERIFY.__file__).read_bytes()).hexdigest()
+        calls = mock.Mock()
+        with mock.patch.object(VERIFY.os, 'getpid', return_value=1), \
+                mock.patch.object(VERIFY.subprocess, 'run', calls.run), \
+                mock.patch.object(VERIFY.os, 'chroot', calls.chroot), \
+                mock.patch.object(VERIFY.os, 'chdir', calls.chdir), \
+                mock.patch.object(VERIFY.os, 'execve', calls.execve):
+            VERIFY.worker(root, pin)
+        options = {'check': True, 'env': VERIFY.ENV,
+                   'capture_output': True, 'timeout': 20}
+        self.assertEqual(calls.mock_calls, [
+            mock.call.run(['/usr/bin/mount', '--make-rprivate', '/'], **options),
+            mock.call.run(['/usr/bin/mount', '--bind', str(root), str(root)], **options),
+            mock.call.run(['/usr/bin/mount', '-t', 'proc', '-o',
+                           'ro,nosuid,nodev,noexec', 'proc', str(root / 'proc')], **options),
+            mock.call.run(['/usr/bin/mount', '--bind', '/sys', str(root / 'sys')], **options),
+            mock.call.run(['/usr/bin/mount', '-o', 'remount,bind,ro,nosuid,nodev,noexec',
+                           str(root / 'sys')], **options),
+            mock.call.chroot(root), mock.call.chdir('/'),
+            mock.call.execve('/usr/bin/python3',
+                             ['/usr/bin/python3', '-I', '-B', '/probe.py'], VERIFY.ENV),
+        ])
+
+    def test_root_bind_failure_stops_before_chroot(self):
+        root = Path('/var/lib/a733-maintenance-arm-test')
+        pin = hashlib.sha256(Path(VERIFY.__file__).read_bytes()).hexdigest()
+        with mock.patch.object(VERIFY.os, 'getpid', return_value=1), \
+                mock.patch.object(VERIFY.subprocess, 'run',
+                                  side_effect=[None, OSError('bind failed')]) as run, \
+                mock.patch.object(VERIFY.os, 'chroot') as chroot, \
+                mock.patch.object(VERIFY.os, 'execve') as execve:
+            with self.assertRaisesRegex(OSError, 'bind failed'):
+                VERIFY.worker(root, pin)
+        self.assertEqual(run.call_count, 2)
+        chroot.assert_not_called()
+        execve.assert_not_called()
+
+
 if __name__ == '__main__':
     unittest.main()

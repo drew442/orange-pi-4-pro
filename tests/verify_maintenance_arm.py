@@ -141,6 +141,9 @@ clis=['scripts/prepare-host-update.py','scripts/update-host.py','scripts/select-
 for path in clis:
     result=subprocess.run(['/usr/bin/python3','-I','-B',str(BASE/path),'--help'],capture_output=True,text=True,timeout=30)
     assert result.returncode==0,(path,result.stderr)
+root_mounts=[r.split(' - ')[0].split() for r in pathlib.Path('/proc/self/mountinfo').read_text().splitlines() if r.split(' - ')[0].split()[4]=='/']
+candidate_device=os.stat('/fixture/candidate-A').st_dev
+assert len(root_mounts)==1 and root_mounts[0][2]==str(os.major(candidate_device))+':'+str(os.minor(candidate_device)),root_mounts
 source=U.Source('/fixture/candidate-A',pathlib.Path('/payload-pin').read_text(),'A')
 try:
     source.check();review=source.review
@@ -204,6 +207,10 @@ def worker(root, pin):
     def run(args):
         subprocess.run(args, check=True, env=ENV, capture_output=True, timeout=20)
     run(['/usr/bin/mount', '--make-rprivate', '/'])
+    # Give the chroot a visible root mount so the real candidate storage guard
+    # can resolve its backing filesystem. Nonrecursive bind keeps host child
+    # mounts out; create only our restricted proc/sys mounts afterwards.
+    run(['/usr/bin/mount', '--bind', str(root), str(root)])
     run(['/usr/bin/mount', '-t', 'proc', '-o', 'ro,nosuid,nodev,noexec', 'proc', str(root / 'proc')])
     run(['/usr/bin/mount', '--bind', '/sys', str(root / 'sys')])
     run(['/usr/bin/mount', '-o', 'remount,bind,ro,nosuid,nodev,noexec', str(root / 'sys')])
