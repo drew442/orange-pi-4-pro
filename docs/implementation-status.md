@@ -21,14 +21,14 @@ neither a larger card nor live inventory is a prerequisite to the first image.
   vendor monitor/kernel/DTB stack and legacy image wrapping; EL2 remains unproven.
 - [Jammy builder](build-host-assessment.md): real loop mount, ARM64 chroot,
   Linux 6.6.98 and patched U-Boot builds passed, two compilation jobs at a time.
-  GCC 11 kernel / Linaro 7.4.1 U-Boot. Samples retained over 6 GiB available RAM,
-  about 41 GiB disk free and negligible swap use; no resource-limit claim inferred.
+  GCC 11 kernel / Linaro 7.4.1 U-Boot. Latest check: about 7 GiB available RAM,
+  35 GiB disk free and negligible swap use; no resource-limit claim inferred.
 - **Diagnostic candidate built and independently verified**, not hardware booted:
   268,435,456-byte image, SHA-256 `b05086afaab3d2f9da6c33b8e457f3552cce2899c08824d371615008bf66d9fd`.
   Compressed: 16,188,652 bytes. [Manifest](evidence/diagnostic-20261104.json),
   [download/build/serial guide](diagnostic-image.md). Local files under ignored
   `out/diagnostic-20261104/`; builder `.../orange-pi-4-pro-build/artifacts/`.
-- 35 Python host tests plus initramfs regression pass locally/Jammy. Actual image
+- 37 Python host tests plus shell regressions pass. Actual image
   hashes, partition/filesystem contents, boot script CRC and wrapper payloads
   verified independently. NVMe planner and KVM-only launcher are preparation only.
 - Independent Sol high boot/disk-selection reviews completed; reported size,
@@ -51,9 +51,10 @@ neither a larger card nor live inventory is a prerequisite to the first image.
    Integrate userspace and the guest fixture while hardware awaits; guest drivers
    use a separate profile. Production state/boot/update/install integration is open.
 3. Full reproducibility remains open: U-Boot generates a random 128-byte debug
-   challenge; two fresh U-Boot builds differ there plus checksums. Exact generated
-   source/binary/log collection is implemented and independently reviewed; end-to-end
-   check is next. Review its role before deterministic changes. Clean-builder/package
+   challenge; fresh U-Boot builds differ there plus checksums. Exact generated
+   source/binary/log collection passed independent review and an end-to-end
+   [validation build](evidence/diagnostic-provenance-20261104.json); original download
+   unchanged. Review its role before deterministic changes. Clean-builder/package
    acquisition and opaque firmware license audit remain.
 4. Deliver the minimal host, actual NVMe installer, guest fixture, update/rollback,
    backup/recovery and operational guides. The current NVMe tool is plan-only.

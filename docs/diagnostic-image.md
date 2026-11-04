@@ -119,8 +119,13 @@ Do not normalize or replace this challenge without reviewing firmware/security
 requirements. The recipe now preserves the exact generated challenge C source,
 unpacked U-Boot binary, configuration and full captured compiler build log before
 packing/cleanup, with separate provenance checksums and manifest entries. The
-published first candidate predates this collection change; end-to-end verification
-of the new collection is pending. Full bit-for-bit reproducibility is not established.
+published first candidate predates this collection change and remains unchanged.
+A [provenance validation build](evidence/diagnostic-provenance-20261104.json) from
+clean project checkout `82e9e7b` completed on the builder. Its saved 128-byte
+challenge appears exactly once in the saved unpacked binary, at offset 754,336;
+both checksum lists and filesystem verification passed after worktree removal.
+It reused pinned source caches and existing kernel output, so this is not a full
+clean-builder reproducibility result. Full bit-for-bit reproducibility is not established.
 
 Recipe entry point (end-to-end execution evidence is tracked in status):
 

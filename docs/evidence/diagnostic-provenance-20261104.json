@@ -1,0 +1,94 @@
+{
+  "schema": 1,
+  "board": "Orange Pi 4 Pro A733",
+  "classification": "diagnostic candidate, hardware untested",
+  "files": {
+    "a733-diagnostic.img": {
+      "bytes": 268435456,
+      "sha256": "4bb5799835e254e42ce1eed33aae27687740141d2a152672b12b63d7c6a7397d"
+    },
+    "a733-diagnostic.img.gz": {
+      "bytes": 16188648,
+      "sha256": "9a530642fe5f6a626953fc6182b9dbe86e281a98dfc180225bc6a5ab610952ed"
+    },
+    "Image": {
+      "bytes": 27283464,
+      "sha256": "9df974c55fa61a77e8fe812652780dad471527eb9615c27838f481887d4c50e7"
+    },
+    "board.dtb": {
+      "bytes": 209320,
+      "sha256": "4d7d964a54668cf5dc12cd4bf7e72a625c79883541272aeba1a91adbbedb86ed"
+    },
+    "initramfs.cpio.gz": {
+      "bytes": 3650392,
+      "sha256": "99a787a616496b9a2728d10e99c1bcb2cd6be13a573237647003fdd1f779cdbe"
+    },
+    "uImage": {
+      "bytes": 27283528,
+      "sha256": "6f9269755c4c2bc196c094899fa1ff20292f4d762c4000f77fcbb0887d5f154a"
+    },
+    "uInitrd": {
+      "bytes": 3650456,
+      "sha256": "481ca07e5cd807d4d9fc95ff9e8445d31f04992480357695ffb8558a627a5edf"
+    },
+    "boot0_sdcard.fex": {
+      "bytes": 245760,
+      "sha256": "9213f1c56ef932930d43b5751e8937bea0e9ae7460ec16187cc1b0dffdb75345"
+    },
+    "boot_package.fex": {
+      "bytes": 1392640,
+      "sha256": "7d80e9c5070e092e3bad81d898cc97ab33fcf0ba95e2f1def31467e1f413ba3d"
+    },
+    "kernel.config": {
+      "bytes": 212080,
+      "sha256": "8a29d9c36e52db7e8a7d6ff757dc69e660f4273c99e5f00c5dbc5a9b7e060675"
+    },
+    "uboot.config": {
+      "bytes": 35703,
+      "sha256": "253f9c77878c20e9146bfb35d5d80819f5314dd30ec489e5551f02e518002bb9"
+    },
+    "uboot-sunxi-challenge.c": {
+      "bytes": 930,
+      "sha256": "890203d0da1926642d84d13ce47c834984ddb49a1608b7c2d032805b27e4baae"
+    },
+    "uboot-unpacked.bin": {
+      "bytes": 1192546,
+      "sha256": "f6e6f71a9c8fb5b01c7d5aeb2d999330b22bf34873a20d71b00d0c64c9c8e606"
+    },
+    "uboot-build.log": {
+      "bytes": 38893,
+      "sha256": "949e9d68ffb3d45d4cc56e10e761f85be4094d2017369ef14b6d25609a2f555e"
+    },
+    "uboot-provenance.sha256": {
+      "bytes": 336,
+      "sha256": "5c2ca4351f649608fe7cd263197391436b65e61f98f418fd2721d45cedb3459d"
+    },
+    "uboot-env-nowhere-size.patch": {
+      "bytes": 266,
+      "sha256": "29617f37e189d5c2a9181793a4ef3c0a85fc84693e9b414e1f5b4ab6e3daaaba"
+    },
+    "build-recipe.tar.gz": {
+      "bytes": 50990,
+      "sha256": "0cd1791233194b11f7ec3c92d5b34407c1c92adf946d4602b3dc9d18b537814d"
+    },
+    "diagnostic-sources.lock.json": {
+      "bytes": 2273,
+      "sha256": "aa39f5fca29244ca961fc3f422d7110adca6975d2c6a29f80afd9d1d2f4b4821"
+    },
+    "builder-packages.lock.tsv": {
+      "bytes": 32519,
+      "sha256": "35c2faf42a936168098b1f54239825a3c42fc56c825fc0b2078bbd753425f48b"
+    }
+  },
+  "uboot_provenance": {
+    "generated_challenge": "uboot-sunxi-challenge.c",
+    "challenge_generation": "vendor per-build random bytes; preserved unchanged",
+    "challenge_classification": "build provenance; not supplied as a secret or default credential",
+    "challenge_security_role": "audit remains open",
+    "reproducibility": "per-build randomness retained; no bit reproducibility claim",
+    "unpacked_binary": "uboot-unpacked.bin",
+    "configuration": "uboot.config",
+    "compiler_build_log": "uboot-build.log",
+    "checksums": "uboot-provenance.sha256"
+  }
+}

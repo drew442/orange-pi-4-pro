@@ -90,6 +90,17 @@ No board boot, physical storage erase, SD flash, SPI programming, NVMe installat
 or KVM guest was performed. Exact-SD inventory/authorization and all hardware
 acceptance results remain outstanding.
 
+The later [provenance validation build](evidence/diagnostic-provenance-20261104.json)
+ran from clean project checkout `82e9e7b` using the existing pinned source/download
+caches and kernel output, with a fresh U-Boot worktree and separate artifact
+directory. It preserved the exact generated challenge C, unpacked binary, config
+and complete captured build log before cleanup. Both checksum lists and the actual
+image verifier passed after worktree removal. Parsing the saved C recovered 128
+bytes that occur exactly once at offset 754,336 in the unpacked binary. This
+preserves provenance without changing randomness or claiming its full security
+role is audited. It is not a second full clean-builder build. The original offered
+diagnostic image was reverified unchanged; neither image has booted on the board.
+
 ## Independent NVMe plan review
 
 A separate Sol high review found absent `lsblk --tree` would refuse ordinary
@@ -116,6 +127,8 @@ pass locally and on Jammy.
 | Host userspace review | Sol / high | Private namespace and debootstrap lifecycle fixes independently checked before root run |
 | Guest fixture implementation | Sol / medium | Host packaging tests passed; coordinator completed actual two-job kernel build after script-format/WLAN corrections |
 | Guest fixture review | Sol / high | Missing script-execution dependency caught; disk/write safeguards checked; actual KVM remains unperformed |
+| Boot provenance collection | Sol / medium | Two fixture tests passed; coordinator verified actual generated source/binary pairing after cleanup |
+| Boot provenance review | Sol / high | Copy timing/checksum/source-only guards accepted; no firmware normalization or hardware claim |
 
 Children used fresh focused contexts, exclusive write scopes and no delegation.
 At most two children were active. Input/output token counts, cache accounting,
