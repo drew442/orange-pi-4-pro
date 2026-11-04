@@ -10,6 +10,7 @@ Vendor images exceed the available SD capacity. Create a small bootable image be
 
 - `.codex/config.toml` and `.codex/agents/`: coordinator defaults and worker roles.
 - `docs/`: implementation plan, current status, host assessment and routing policy.
+- `configs/build-host-packages.txt`: vendor-derived Ubuntu 22.04 builder dependencies.
 - `tmp/` and `out/`: ignored research downloads and generated artifacts.
 
 No project build or test command exists yet. Add exact, verified commands alongside implementation. Run `git diff --check` for changes, parse modified TOML with Python `tomllib`, and use `bash -n` for Bash syntax checks. Syntax checks do not establish runtime correctness.

@@ -1,6 +1,31 @@
 # Build host assessment
 
-Checked 2026-11-04 against vendor build commit `a95129bf30ea11886cc35f08ebb3e69695a26656`. **Ready for source investigation, not yet ready for an unmodified vendor image build.** No dependencies were installed and no vendor build script was executed during this assessment.
+## Active remote builder
+
+Prepared 2026-11-04: `drew@build.drewnet.online`, Ubuntu 22.04.5 LTS x86_64. SSH and passwordless sudo verified. Four CPUs, 7.8 GiB RAM, 4 GiB swap, approximately 49 GiB available after package installation. Workspace: `/home/drew/orange-pi-4-pro-build`. Use this host for vendor builds; the local Noble assessment below is retained only to explain why local builds are unsuitable.
+
+Installed and verified all 86 packages in [`configs/build-host-packages.txt`](../configs/build-host-packages.txt): pinned vendor base list, amd64 additions, Jammy Python packages and initial bootstrap utilities. Use `NO_APT_CACHER=yes`; the optional caching service was excluded. These are package names, not a version lock. Component-specific build dependencies may still be discovered.
+
+Validation passed: `dpkg --audit` (no findings), `apt-get check`, all manifest packages installed, `qemu-aarch64` binfmt enabled, `en_US.utf8` available, and `sudo losetup -f` returned a free loop device. Vendor GitHub access succeeded. No kernel/rootfs build, actual loop mount, or target ARM chroot execution has been tested yet. Start with two compilation jobs due to the smaller RAM budget and monitor peak memory and disk usage.
+
+Commands used from this repository:
+
+```sh
+scp configs/build-host-packages.txt drew@build.drewnet.online:/tmp/orangepi-build-packages.txt
+ssh drew@build.drewnet.online
+sudo apt-get update
+sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends $(cat /tmp/orangepi-build-packages.txt)
+sudo dpkg --audit
+sudo apt-get check
+sudo update-binfmts --display qemu-aarch64
+sudo losetup -f
+```
+
+Package logs remain on the builder at `/tmp/orangepi-apt-update.log` and `/tmp/orangepi-apt-install.log`; temporary logs are not release evidence archives. No disk resizing or OS replacement was performed.
+
+## Local host assessment
+
+Checked 2026-11-04 against vendor build commit `a95129bf30ea11886cc35f08ebb3e69695a26656`. **Local host only: suitable for source investigation, not an unmodified vendor image build.** No local dependencies were installed; remote provisioning is described above.
 
 ## Requirements compared with this host
 
@@ -68,9 +93,9 @@ zip
 
 Package presence does not prove version compatibility. `apt-cache policy` used existing local indexes, without refreshing them. `debootstrap` and `qemu-aarch64-static` are already available. The vendor bootstrap also has package-install and host-mutation steps; do not source its scripts merely to enumerate dependencies.
 
-## Recommended next step
+## Local host alternative
 
-Provision an isolated Ubuntu 22.04 amd64 builder with a dedicated persistent workspace. Validate package resolution there before starting a long build; use a VM or a deliberately configured container with the mount/loop/binfmt facilities required by image assembly. Do not assume an ordinary unprivileged container will work. Pin the environment and record exact setup commands once exercised. Do not replace the host OS, mix Jammy repositories into Noble, or bypass dependency errors.
+Use the prepared remote Jammy host. If a local builder is later needed, provision an isolated Ubuntu 22.04 amd64 environment with a dedicated persistent workspace. Validate package resolution there before starting a long build; use a VM or a deliberately configured container with the mount/loop/binfmt facilities required by image assembly. Do not assume an ordinary unprivileged container will work. Pin the environment and record exact setup commands once exercised. Do not replace the host OS, mix Jammy repositories into Noble, or bypass dependency errors.
 
 Then pin the board's actual kernel, bootloader, binary firmware and toolchain inputs. Produce the small headless SD bootstrap first; live inventory and board tests follow that image. No stock-image installation or larger SD card is required.
 

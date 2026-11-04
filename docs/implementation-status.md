@@ -17,12 +17,12 @@ Build a headless diagnostic SD image that fits the actual 2 GB card, then collec
 ## Readiness and evidence
 
 - No image, build recipe, installer, or hardware test result exists yet.
-- [Host assessment](build-host-assessment.md): x86_64 Ubuntu 24.04, four CPUs, roughly 16 GiB RAM and 48 GiB free; vendor-documented Ubuntu 22.04 environment is not provisioned. Dependency audit found 40 missing package names among 83 checked.
+- [Remote builder](build-host-assessment.md): `drew@build.drewnet.online`, Ubuntu 22.04.5 x86_64, four CPUs, 7.8 GiB RAM, 4 GiB swap and about 49 GiB free. All 86 selected dependencies installed; package consistency, ARM binfmt registration, locale and free loop device verified. Workspace: `/home/drew/orange-pi-4-pro-build`. Use `NO_APT_CACHER=yes`; start with two build jobs.
 - Source and manuals are cached under ignored `tmp/`; durable references are in the assessment and [plan](hypervisor-plan.md). Do not depend on those caches surviving a clone.
 
 ## Next actions
 
-1. Provision and validate an isolated Ubuntu 22.04 builder; resolve dependencies and monitor disk use.
+1. Use the prepared remote builder; validate actual loop mounts and ARM chroot execution during image-assembly preflight, and monitor disk use.
 2. Pin the chosen kernel, bootloader, firmware and toolchain; inspect raw boot layout and KVM prerequisites.
 3. Produce a small SD bootstrap with serial console and minimal rootfs. Check actual card capacity at provisioning; 1.8 GB decimal is a packaging target, not the card's measured limit.
 4. Boot hardware, collect inventory, and test NVMe and KVM. Continue image/installer work against the plan's gates.
