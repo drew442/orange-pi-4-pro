@@ -31,7 +31,8 @@ def validate_manifest(data):
     except (UnicodeError, RecursionError) as error:
         raise ValueError('invalid manifest encoding or nesting') from error
     fields = {'schema', 'profile', 'config', 'guest_uuid', 'files'}
-    require(type(value) is dict and set(value) in (fields, fields | {'checkpoint'}), 'invalid manifest fields')
+    require(type(value) is dict and fields <= set(value) and
+            set(value) <= fields | {'checkpoint', 'restoration'}, 'invalid manifest fields')
     require(type(value['schema']) is int and value['schema'] == 1 and value['profile'] == PROFILE,
             'invalid manifest profile/schema')
     config = CONFIG.validate_config(json.dumps(value['config'], allow_nan=False))
@@ -61,6 +62,20 @@ def validate_manifest(data):
         digest(checkpoint['previous_manifest_sha256'])
         digest(checkpoint['previous_disk_sha256'])
         require(checkpoint['clean_shutdown_attested'] is True, 'clean shutdown attestation required')
+    if 'restoration' in value:
+        restoration = value['restoration']
+        require(type(restoration) is dict and set(restoration) == {
+            'archive_sha256', 'manifest_sha256', 'guest_uuid'}, 'invalid restoration fields')
+        digest(restoration['archive_sha256'])
+        digest(restoration['manifest_sha256'])
+        source_uuid = restoration['guest_uuid']
+        require(type(source_uuid) is str, 'invalid restoration UUID')
+        try:
+            parsed_source = uuid.UUID(source_uuid)
+        except (ValueError, AttributeError) as error:
+            raise ValueError('invalid restoration UUID') from error
+        require(str(parsed_source) == source_uuid and parsed_source.int != 0,
+                'canonical nonzero restoration UUID required')
     value['config'] = config
     return value
 
@@ -91,3 +106,22 @@ def proposed_manifest(current_manifest, old_manifest_sha, new_disk_record):
         'clean_shutdown_attested': True,
     }
     return validate_manifest(canonical(proposed))
+
+
+def restored_manifest(source_manifest, archive_sha256, manifest_sha256, destination_guest_uuid):
+    """Rebase an authenticated backup onto a fresh destination installation.
+
+    The caller authenticates the encoded archive and exact source manifest first.
+    Old history is retained separately; the restored base starts a new checkpoint
+    chain, linking its exact predecessor through external backup provenance.
+    """
+    current = validate_manifest(canonical(source_manifest))
+    digest(archive_sha256)
+    digest(manifest_sha256)
+    restored = copy.deepcopy(current)
+    restored.pop('checkpoint', None)
+    restored['guest_uuid'] = destination_guest_uuid
+    restored['restoration'] = {'archive_sha256': archive_sha256,
+                               'manifest_sha256': manifest_sha256,
+                               'guest_uuid': current['guest_uuid']}
+    return validate_manifest(canonical(restored))
