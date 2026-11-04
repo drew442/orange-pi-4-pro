@@ -22,10 +22,21 @@ SOURCES = tuple(sorted((
     'scripts/install-nvme.py', 'scripts/acquire-nvme.py', 'scripts/plan-nvme.py', 'scripts/nvme_layout.py',
     'build/root-selection.py', 'build/host-initramfs.py', 'build/host-payload.py',
     'build/host-storage-tools.py', 'configs/package_state.py', 'configs/host-management.py',
-    'configs/host_config.py', 'docs/evidence/diagnostic-20261104.json')))
+    'configs/host_config.py', 'docs/evidence/diagnostic-20261104.json',
+    'configs/guest_config.py', 'configs/guest_identity.py', 'configs/guest_manifest.py',
+    'configs/guest_backup.py', 'configs/guest_backup_chunks.py', 'build/host-state.py',
+    'scripts/activate-guest-storage.py', 'scripts/guest-mount-target.py',
+    'scripts/guest-accounts.py', 'scripts/guest-storage.py', 'scripts/enroll-guest.py',
+    'scripts/launch-kvm-guest.py', 'scripts/guest-checkpoint-policy.py',
+    'scripts/checkpoint-guest.py', 'scripts/backup-guest.py', 'scripts/verify-guest-backup.py',
+    'scripts/index-guest-backup.py', 'scripts/guest-restore-source.py',
+    'scripts/guest-restore-https.py', 'scripts/restore-guest.py')))
 ENTRYPOINTS = {name: f'scripts/{name}.py' for name in (
     'install-nvme', 'acquire-nvme', 'plan-nvme', 'prepare-host-update',
-    'update-host', 'select-host-root', 'recover-host-root')}
+    'update-host', 'select-host-root', 'recover-host-root',
+    'activate-guest-storage', 'guest-accounts', 'enroll-guest', 'launch-kvm-guest',
+    'checkpoint-guest', 'backup-guest', 'verify-guest-backup', 'index-guest-backup',
+    'restore-guest')}
 MAX_SOURCE = 2 * 1024**2
 MAX_PAYLOAD = 4 * 1024**2
 

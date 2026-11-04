@@ -145,7 +145,7 @@ for path in sorted(BASE.rglob('*.py')):
 U=load('maintenance_update','scripts/update-host.py')
 R=load('maintenance_recovery','scripts/host-recovery-target.py')
 S=U.PREP.SELECT
-clis=['scripts/prepare-host-update.py','scripts/update-host.py','scripts/select-host-root.py','scripts/recover-host-root.py','scripts/plan-nvme.py','scripts/install-nvme.py','scripts/acquire-nvme.py']
+clis=sorted(package['entrypoints'].values())
 for path in clis:
     result=subprocess.run(['/usr/bin/python3','-I','-B',str(BASE/path),'--help'],capture_output=True,text=True,timeout=30)
     assert result.returncode==0,(path,result.stderr)

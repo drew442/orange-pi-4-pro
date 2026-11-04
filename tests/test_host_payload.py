@@ -44,6 +44,42 @@ def modules(extra=None):
 
 
 class ArchiveTests(unittest.TestCase):
+    def test_maintenance_tree_is_complete_read_only_and_matches_portable_package(self):
+        entries = payload.maintenance_entries()
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            installed = payload.install_maintenance(root, entries)
+            self.assertEqual(installed['profile'], 'a733-maintenance-tools-v1')
+            for name, (mode, data) in entries.items():
+                relative = 'usr/lib/a733-tools/' + name
+                path = root / relative
+                self.assertEqual(path.read_bytes(), data)
+                self.assertEqual(path.stat().st_mode & 0o7777, mode)
+                self.assertEqual(installed['files'][relative], {**payload.file_record(path), 'mode': mode})
+            for path in (root / 'usr/lib/a733-tools').rglob('*'):
+                if path.is_dir():
+                    self.assertEqual(path.stat().st_mode & 0o7777, 0o555)
+            with self.assertRaisesRegex(ValueError, 'already exists'):
+                payload.install_maintenance(root, entries)
+            # Private test cleanup must restore directory write permission.
+            for path in sorted((root / 'usr/lib/a733-tools').rglob('*'), reverse=True):
+                if path.is_dir():
+                    path.chmod(0o755)
+            (root / 'usr/lib/a733-tools').chmod(0o755)
+
+    def test_maintenance_staging_refuses_existing_objects_and_symlink_ancestors(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            (root / 'usr/lib').mkdir(parents=True)
+            (root / 'usr/lib/a733-tools').symlink_to(root / 'elsewhere')
+            with self.assertRaises(ValueError):
+                payload.install_maintenance(root)
+            (root / 'usr/lib/a733-tools').unlink()
+            (root / 'usr/lib').rmdir()
+            (root / 'usr/lib').symlink_to(root.parent)
+            with self.assertRaises(ValueError):
+                payload.install_maintenance(root)
+
     def test_management_runtime_is_installed_and_bound_to_content_hashes(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

@@ -2,13 +2,29 @@
 """Inspect trusted managed-root regular files without mounting or repairing."""
 import gzip
 import hashlib
+import importlib.util
 import json
 import os
 from pathlib import Path
+import re
 import stat
 import struct
 import subprocess
 import sys
+
+REPO = Path(__file__).resolve().parents[1]
+
+
+def expected_maintenance():
+    spec = importlib.util.spec_from_file_location('managed_payload_tools', REPO / 'build/maintenance-tools.py')
+    tools = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(tools)
+    entries = tools.entries(REPO)
+    metadata = json.loads(entries['package.json'][1])
+    return {'profile': metadata['profile'], 'entrypoints': metadata['entrypoints'],
+            'files': {'usr/lib/a733-tools/' + name: {
+                'bytes': len(data), 'sha256': hashlib.sha256(data).hexdigest(), 'mode': mode}
+                for name, (mode, data) in entries.items()}}
 
 
 def digest(stream):
@@ -36,6 +52,9 @@ def verify(directory):
     profile = manifest['management_runtime']
     if profile['profile'] != 'a733-management-v1':
         raise ValueError('unexpected root profile')
+    maintenance = manifest.get('maintenance_runtime')
+    if maintenance != expected_maintenance():
+        raise ValueError('complete maintenance/guest runtime must match trusted checkout')
     reports = {}
     for slot in ('A', 'B'):
         name = f'root-{slot}.ext4'
@@ -55,6 +74,35 @@ def verify(directory):
             marker = json.loads(inspect('cat /usr/lib/orangepi-hypervisor/payload.json'))
             if marker['slot'] != slot or marker['management_runtime'] != profile:
                 raise ValueError('root marker/profile differs')
+            if marker.get('maintenance_runtime') != maintenance:
+                raise ValueError('root maintenance marker/profile differs')
+            directories = {'usr/lib/a733-tools'}
+            for tool_path in maintenance['files']:
+                directories.update(str(parent) for parent in Path(tool_path).parents
+                                   if str(parent).startswith('usr/lib/a733-tools'))
+            for tool_directory in directories:
+                info = inspect('stat /' + tool_directory).decode()
+                if ('Type: directory' not in info or 'Mode:  0555' not in info or
+                        not re.search(r'User:\s+0\s+Group:\s+0\b', info)):
+                    raise ValueError('installed maintenance directory metadata differs: ' + tool_directory)
+                expected_names = {'.', '..'} | {
+                    Path(name).name for name in set(maintenance['files']) | directories
+                    if str(Path(name).parent) == tool_directory}
+                listing = inspect('ls -p /' + tool_directory).decode().splitlines()
+                if {line.split('/')[5] for line in listing if line.startswith('/')} != expected_names:
+                    raise ValueError('installed maintenance directory entries differ: ' + tool_directory)
+            for path, record in maintenance['files'].items():
+                if (not path.startswith('usr/lib/a733-tools/') or '..' in Path(path).parts
+                        or record.get('mode') != 0o444):
+                    raise ValueError('unexpected maintenance path or mode')
+                contents = inspect('cat /' + path)
+                if {'bytes': len(contents), 'sha256': hashlib.sha256(contents).hexdigest()} != {
+                        key: record[key] for key in ('bytes', 'sha256')}:
+                    raise ValueError('installed maintenance bytes differ: ' + path)
+                info = inspect('stat /' + path).decode()
+                if ('Type: regular' not in info or 'Mode:  0444' not in info or
+                        not re.search(r'User:\s+0\s+Group:\s+0\b', info)):
+                    raise ValueError('installed maintenance ownership/mode differs: ' + path)
             package = manifest.get('package_state')
             if (not isinstance(package, dict) or package.get('profile') != 'a733-package-state-v1'
                     or marker.get('package_state') != package):
@@ -98,7 +146,8 @@ def verify(directory):
                          'root_password_locked': True, 'machine_id_empty': True,
                          'host_keys_absent': True, 'compressed_expansion_matches': True}
     return {'classification': 'managed regular-file root checks; no board boot or KVM acceptance',
-            'management_runtime': profile, 'package_state': manifest['package_state'], 'slots': reports}
+            'management_runtime': profile, 'maintenance_runtime': maintenance,
+            'package_state': manifest['package_state'], 'slots': reports}
 
 
 if __name__ == '__main__':

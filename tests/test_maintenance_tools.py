@@ -6,6 +6,8 @@ import json
 import os
 from pathlib import Path
 import stat
+import subprocess
+import sys
 import tarfile
 import tempfile
 import unittest
@@ -39,7 +41,7 @@ class MaintenanceToolsTests(unittest.TestCase):
 
     def test_real_sources_are_exact_and_allowlist_is_closed(self):
         values = TOOLS.entries()
-        self.assertEqual(len(TOOLS.SOURCES), 18)
+        self.assertEqual(len(TOOLS.SOURCES), 38)
         self.assertEqual(set(values), set(TOOLS.SOURCES) | {'package.json'})
         for name in TOOLS.SOURCES:
             self.assertEqual(values[name], (0o444, (REPO / name).read_bytes()))
@@ -49,7 +51,59 @@ class MaintenanceToolsTests(unittest.TestCase):
         self.assertEqual(set(metadata['source_records']), set(TOOLS.SOURCES))
         self.assertNotIn('package.json', metadata['files'])
         self.assertEqual(TOOLS.canonical(metadata), values['package.json'][1])
-        self.assertEqual(len(metadata['entrypoints']), 7)
+        self.assertEqual(len(metadata['entrypoints']), 16)
+
+    def test_extracted_package_imports_and_cli_help_without_checkout(self):
+        # Use only archive bytes in a private relocated tree. Import every helper,
+        # including the HTTPS source otherwise reached only by restore apply.
+        probe = r"""
+import importlib.util, json, pathlib, sys
+assert sys.flags.isolated and sys.dont_write_bytecode
+root = pathlib.Path(sys.argv[1]).resolve()
+package = json.loads((root / 'package.json').read_bytes())
+original = importlib.util.spec_from_file_location
+loaded = set()
+def local_spec(name, location, *args, **kwargs):
+    path = pathlib.Path(location).resolve()
+    assert path.is_relative_to(root), ('dependency escaped package', str(path))
+    loaded.add(str(path.relative_to(root)))
+    return original(name, location, *args, **kwargs)
+importlib.util.spec_from_file_location = local_spec
+def load(name, path):
+    spec = local_spec(name, root / path)
+    value = importlib.util.module_from_spec(spec)
+    sys.modules[name] = value
+    spec.loader.exec_module(value)
+    return value
+for index, path in enumerate(sorted(package['source_records'])):
+    if path.endswith('.py'):
+        load('relocated_' + str(index), path)
+restore = load('relocated_restore', 'scripts/restore-guest.py')
+restore.module('relocated_https', 'scripts/guest-restore-https.py')
+assert loaded <= set(package['source_records'])
+print(json.dumps(sorted(loaded)))
+"""
+        with tempfile.TemporaryDirectory() as temporary:
+            directory = Path(temporary)
+            library = directory / 'usr/lib'
+            library.mkdir(parents=True)
+            with tarfile.open(fileobj=io.BytesIO(TOOLS.archive(TOOLS.entries())), mode='r:gz') as archive:
+                archive.extractall(library, filter='data')
+            root = library / 'a733-tools'
+            before = sorted(path.relative_to(root).as_posix() for path in root.rglob('*'))
+            environment = {'PATH': os.defpath, 'LC_ALL': 'C', 'PYTHONPATH': str(REPO)}
+            result = subprocess.run([sys.executable, '-I', '-B', '-c', probe, str(root)],
+                                    cwd=directory, env=environment, capture_output=True, text=True, timeout=30)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(set(json.loads(result.stdout)), {name for name in TOOLS.SOURCES if name.endswith('.py')})
+            metadata = json.loads((root / 'package.json').read_bytes())
+            for name, path in metadata['entrypoints'].items():
+                with self.subTest(entrypoint=name):
+                    result = subprocess.run([sys.executable, '-I', '-B', str(root / path), '--help'],
+                                            cwd=directory, env=environment, capture_output=True, text=True, timeout=30)
+                    self.assertEqual(result.returncode, 0, result.stderr)
+                    self.assertIn('usage:', result.stdout)
+            self.assertEqual(sorted(path.relative_to(root).as_posix() for path in root.rglob('*')), before)
 
     def test_deterministic_archive_and_root_ownership(self):
         values = TOOLS.entries()

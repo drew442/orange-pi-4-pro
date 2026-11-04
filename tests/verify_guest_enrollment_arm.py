@@ -121,7 +121,7 @@ def capture_seed(source, target, expected):
 
 
 def verify(rootfs, guest_directory, *, probe=PROBE, sources=SOURCES, after_probe=None,
-           probe_context=None):
+           probe_context=None, source_entries=None, source_prefix='/source'):
     if os.geteuid() != 0: raise ValueError('root required for private ARM fixture')
     fixture = module('enrollment_arm_fixture','tests/verify_guest_file_backend_arm.py')
     maintenance = module('enrollment_arm_binfmt','tests/verify_maintenance_arm.py')
@@ -138,10 +138,21 @@ def verify(rootfs, guest_directory, *, probe=PROBE, sources=SOURCES, after_probe
         root.chmod(0o755)
         (root/'run/a733-state').mkdir(mode=0o700,exist_ok=True)
         source_records={}
-        for name in sources:
-            data=fixture.regular(REPO/name);target=root/'source'/name
+        if source_prefix not in ('/source', '/usr/lib/a733-tools'):
+            raise ValueError('unsupported trusted source staging prefix')
+        captured_sources = ({name: (0o444, fixture.regular(REPO/name)) for name in sources}
+                            if source_entries is None else source_entries)
+        for name, (mode, data) in captured_sources.items():
+            if not name or Path(name).is_absolute() or '..' in Path(name).parts or mode != 0o444:
+                raise ValueError('invalid trusted source entry')
+            target=root/source_prefix.lstrip('/')/name
             target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(data);target.chmod(0o444)
             source_records[name]=fixture.record(data)
+        if source_prefix == '/usr/lib/a733-tools':
+            prefix = root / source_prefix.lstrip('/')
+            for directory in sorted((p for p in prefix.rglob('*') if p.is_dir()), reverse=True):
+                directory.chmod(0o555)
+            prefix.chmod(0o555)
         seed=root/'seed';seed.mkdir(mode=0o700);records={}
         for name,filename in NAMES.items():
             capture_seed(guest_directory/filename,seed/filename,pins[filename]);records[name]=pins[filename]

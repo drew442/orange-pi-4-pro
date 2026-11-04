@@ -224,6 +224,46 @@ def install_management(root):
     return {'profile': 'a733-management-v1', 'files': records}
 
 
+def maintenance_entries():
+    # Build-time only: runtime imports of this module must not import the
+    # packager, which itself records this source in its closed runtime set.
+    spec = importlib.util.spec_from_file_location('payload_maintenance_tools', REPO / 'build/maintenance-tools.py')
+    tools = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(tools)
+    return tools.entries(REPO)
+
+
+def install_maintenance(root, entries=None):
+    """Install the complete closed tool tree into a new immutable root."""
+    entries = maintenance_entries() if entries is None else entries
+    parent = root
+    for part in ('usr', 'lib'):
+        parent = parent / part
+        if parent.is_symlink() or (parent.exists() and not parent.is_dir()):
+            raise ValueError('unsafe maintenance ancestor')
+    destination = root / 'usr/lib/a733-tools'
+    if destination.exists() or destination.is_symlink():
+        raise ValueError('maintenance destination already exists')
+    destination.mkdir(parents=True, mode=0o700)
+    directories = {destination}
+    files = {}
+    for name, (mode, data) in sorted(entries.items()):
+        target = within_root(root, 'usr/lib/a733-tools/' + name)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        directories.update(parent for parent in target.parents
+                           if parent == destination or destination in parent.parents)
+        with target.open('xb') as output:
+            output.write(data)
+        target.chmod(mode)
+        relative = str(target.relative_to(root))
+        files[relative] = {**file_record(target), 'mode': mode}
+    for directory in sorted(directories, key=lambda p: len(p.parts), reverse=True):
+        directory.chmod(0o555)
+    metadata = json.loads(entries['package.json'][1])
+    return {'profile': metadata['profile'], 'entrypoints': metadata['entrypoints'],
+            'files': files}
+
+
 def make_image(root, output, slot, size=SLOT_BYTES):
     if output.is_symlink():
         raise ValueError('symlink image output refused')
@@ -351,6 +391,16 @@ def build(rootfs, diagnostic, output):
         cache_pruning = PACKAGE.prune_caches(root)
         module_bom = import_modules(root, modules)
         management = install_management(root)
+        tool_entries = maintenance_entries()
+        maintenance = install_maintenance(root, tool_entries)
+        maintenance_provenance = provenance / 'maintenance'
+        maintenance_provenance.mkdir()
+        provenance_entries = {**tool_entries,
+            'build/maintenance-tools.py': (0o444, (REPO / 'build/maintenance-tools.py').read_bytes())}
+        for relative, (_mode, data) in provenance_entries.items():
+            target = maintenance_provenance / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(data)
         package_state = PACKAGE.snapshot(root)
         write_json(output / 'modules.json', module_bom)
         metadata_dir = within_root(root, 'usr/lib/orangepi-hypervisor')
@@ -360,7 +410,8 @@ def build(rootfs, diagnostic, output):
                 'schema': 1, 'classification': CLASSIFICATION, 'slot': slot,
                 'filesystem_uuid': SLOT_UUIDS[slot], 'kernel_release': KERNEL_RELEASE,
                 'sources': sources, 'modules_bom': file_record(output / 'modules.json'),
-                'management_runtime': management, 'package_state': package_state,
+                'management_runtime': management, 'maintenance_runtime': maintenance,
+                'package_state': package_state,
                 'cache_pruning': cache_pruning})
             image = output / f'root-{slot}.ext4'
             make_image(root, image, slot)
@@ -373,7 +424,8 @@ def build(rootfs, diagnostic, output):
         'schema': 1, 'board': 'Orange Pi 4 Pro A733', 'classification': CLASSIFICATION,
         'kernel_release': KERNEL_RELEASE, 'slot_bytes': SLOT_BYTES,
         'slot_uuids': SLOT_UUIDS, 'sources': sources, 'files': files,
-        'management_runtime': management, 'package_state': package_state,
+        'management_runtime': management, 'maintenance_runtime': maintenance,
+        'package_state': package_state,
         'cache_pruning': cache_pruning,
         'builder_packages': builder_packages,
         'reproducibility': 'not established; filesystem/package-generated metadata may vary',
