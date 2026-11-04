@@ -1,0 +1,29 @@
+{
+  "classification": "clean Git checkout per-installation state repeat; no hardware acceptance",
+  "source_commit": "67c0d8c892297246a93488247e47b8eea6f114a3",
+  "builder": "drew@build.drewnet.online",
+  "checkout": "/home/drew/orange-pi-4-pro-build/host-state-clean-20261104",
+  "output": "out/host-state-20261104-02",
+  "same_authenticated_operator_and_userspace_inputs": true,
+  "fresh_state_uuid": "d011bf8e-04a3-402d-9fac-f1075026ed69",
+  "fresh_machine_id": "58f26ae33916e48085e38129fd0f1f38",
+  "identities_differ_from_first": true,
+  "files": {
+    "state.ext4": {
+      "bytes": 8589934592,
+      "sha256": "0bc71b5cd9a79311f0361602398827974d86eb3bde40d5c9bf00a7782b5f1555"
+    },
+    "state.ext4.gz": {
+      "bytes": 39828213,
+      "sha256": "7e5c64846db486122566c1e0f4567958b1caf77526234253f855febbdc783745"
+    }
+  },
+  "readback_and_expansion": "passed",
+  "worktree_after_build": "clean; generated out/ ignored",
+  "resource_samples": 10,
+  "minimum_observed_available_memory_bytes": 7454306304,
+  "minimum_observed_filesystem_free_bytes": 34838937600,
+  "limit": "same prepared Ubuntu builder; filesystem identities and creation metadata intentionally vary; no whole-image byte reproducibility claim",
+  "last_build_resource_sample_seconds": 90.01,
+  "duration_limit": "last sample time is recorded; exact build duration was not measured"
+}

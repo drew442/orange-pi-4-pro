@@ -106,3 +106,11 @@ high review cleared staging-metadata and device-guard coverage findings. Latest
 builder checks showed about 33 GiB free disk and 6.9 GiB available RAM. Actual
 handoff, dirty-journal recovery, NVMe installation, SSH, KVM and SD-write acceptance
 remain pending.
+
+A [fresh Git checkout repeat](evidence/host-state-rebuild-20261104.json) from
+`67c0d8c` passed the [same independent readback checks](evidence/host-state-rebuild-verify-20261104.json)
+using identical authenticated userspace/operator inputs. Its UUID and machine-id
+differ from the first fixture, as required. The worktree stayed clean. Ten samples
+through 90 seconds of the build observed at least 6.9 GiB available RAM and about
+33 GiB free disk; exact build duration was not measured. This used the same
+prepared Ubuntu host and cached inputs, not a fresh OS/vendor-stack build.

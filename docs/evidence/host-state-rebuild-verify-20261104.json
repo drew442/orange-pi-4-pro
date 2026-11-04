@@ -1,0 +1,18 @@
+{
+  "classification": "regular-file state verification; no hardware acceptance",
+  "image": {
+    "bytes": 8589934592,
+    "sha256": "0bc71b5cd9a79311f0361602398827974d86eb3bde40d5c9bf00a7782b5f1555"
+  },
+  "state_uuid": "d011bf8e-04a3-402d-9fac-f1075026ed69",
+  "machine_id": "58f26ae33916e48085e38129fd0f1f38",
+  "journal": true,
+  "filesystem_read_only_feature": false,
+  "filesystem_metadata": "checked root/lost+found and identity/config/key directories/files",
+  "management_config_matches": true,
+  "operator_public_key_fingerprint": "SHA256:zJDXpqimTuhgMi8BhG83V7SeYsDurn/2Dmt9g/R3Fzc",
+  "host_key_directory_empty": true,
+  "package_database_matches_staging": true,
+  "compressed_hash_and_expansion_match": true,
+  "image_unchanged": true
+}

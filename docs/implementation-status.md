@@ -28,8 +28,8 @@ neither a larger card nor live inventory is a prerequisite to the first image.
   Compressed: 16,188,652 bytes. [Manifest](evidence/diagnostic-20261104.json),
   [download/build/serial guide](diagnostic-image.md). Local files under ignored
   `out/diagnostic-20261104/`; builder `.../orange-pi-4-pro-build/artifacts/`.
-- 78 Python test cases plus shell regressions; privileged state cases also pass
-  on Jammy. Actual image
+- 78 Python test cases pass, with privileged state cases run on Jammy; shell
+  regressions pass. Actual image
   hashes, partition/filesystem contents, boot script CRC and wrapper payloads
   verified independently. NVMe planner and KVM-only launcher are preparation only.
 - Independent Sol high boot/disk-selection reviews completed; reported size,
@@ -59,8 +59,9 @@ neither a larger card nor live inventory is a prerequisite to the first image.
 - [State payload recipe](host-state.md) built an 8 GiB journaled regular-file
   fixture (39.8 MB compressed), fresh identities, authenticated `/var` and operator
   public key/config. Independent readback/gzip checks and 14 builder regressions
-  passed. Test credentials/network values prevent deployment; runtime management
-  activation and a physical NVMe writer remain open.
+  passed; clean-checkout repeat produced distinct installation identities and
+  passed readback. Test credentials/network values prevent deployment; runtime
+  management activation and a physical NVMe writer remain open.
 
 ## Open gates and next actions
 
