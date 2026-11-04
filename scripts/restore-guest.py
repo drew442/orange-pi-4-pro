@@ -82,7 +82,9 @@ def uid_consumers(uid, proc_root=Path('/proc')):
 
 class Review:
     """Guard the namespace before authenticating any archive bytes."""
-    def __init__(self, archive, archive_sha256, manifest_sha256, guest_uuid, plan_path=None):
+    def __init__(self, archive, archive_sha256, manifest_sha256, guest_uuid, plan_path=None,
+                 *, archive_url=None, chunk_manifest_url=None, chunk_manifest_sha256=None,
+                 ca_file=None, network_timeout_seconds=86400):
         self.held = []
         self.source = None
         try:
@@ -97,7 +99,17 @@ class Review:
             self.context = ENROLL.STORAGE.verify_guest_directory(self.root.fd)
             ENROLL.probe_uuid(self.context, guest_uuid)
             devices = {os.stat('/').st_dev, os.stat(ENROLL.MANAGEMENT.STATE).st_dev, info.st_dev}
-            self.source = SOURCE.Source(archive, archive_sha256, manifest_sha256, devices)
+            require(bool(archive) != bool(archive_url), 'choose a local archive or HTTPS archive URL')
+            if archive_url:
+                network = module('restore_https_source', 'scripts/guest-restore-https.py')
+                self.source = network.RemoteSource(archive_url, chunk_manifest_url,
+                    chunk_manifest_sha256, archive_sha256, manifest_sha256,
+                    ca_file=ca_file, timeout_seconds=network_timeout_seconds)
+            else:
+                require(chunk_manifest_url is None and chunk_manifest_sha256 is None and
+                        ca_file is None and network_timeout_seconds == 86400,
+                        'network options require HTTPS source')
+                self.source = SOURCE.Source(archive, archive_sha256, manifest_sha256, devices)
             self.config = self.source.manifest['config']
             self.check_accounts_service_budget()
             ENROLL.absent(self.root.fd, self.config['name'])
@@ -113,9 +125,7 @@ class Review:
                 'schema': 1, 'operation': PROFILE, 'config': self.config,
                 'source_guest_uuid': self.source.manifest['guest_uuid'], 'guest_uuid': guest_uuid,
                 'storage': self.context,
-                'archive': {'path': self.source.held.path,
-                            'identity': ENROLL.identity(self.source.held.info),
-                            **self.source.archive_record},
+                'archive': self.source.description,
                 'source_manifest': record(self.source.manifest_data),
                 'history': {**record(self.source.history_data), 'record_count': len(self.source.history)},
                 'manifest': {**record(self.manifest_data), 'value': self.manifest},
@@ -182,8 +192,8 @@ class Review:
             raise error
 
 
-def prepare(archive, archive_sha256, manifest_sha256, guest_uuid):
-    review = Review(archive, archive_sha256, manifest_sha256, guest_uuid)
+def prepare(archive, archive_sha256, manifest_sha256, guest_uuid, **network_options):
+    review = Review(archive, archive_sha256, manifest_sha256, guest_uuid, **network_options)
     try:
         return review.plan
     finally:
@@ -387,7 +397,7 @@ def stage_and_publish(review, lock_check, receipt):
                         receipt['cleanup_error'] = type(error).__name__
 
 
-def apply(archive, archive_sha256, manifest_sha256, guest_uuid, plan_path):
+def apply(archive, archive_sha256, manifest_sha256, guest_uuid, plan_path, **network_options):
     receipt = {'schema': 1, 'operation': PROFILE, 'success': False, 'published': False,
                'durable': False, 'staging_retained': False, 'directory_may_be_published': False,
                'bytes_attempted_staged': 0, 'archive_sha256': archive_sha256,
@@ -404,7 +414,7 @@ def apply(archive, archive_sha256, manifest_sha256, guest_uuid, plan_path):
                     ENROLL.identity(os.lstat(ENROLL.LOCK)) == ENROLL.identity(info), 'enrollment lock changed')
         lock_check()
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        review = Review(archive, archive_sha256, manifest_sha256, guest_uuid, plan_path)
+        review = Review(archive, archive_sha256, manifest_sha256, guest_uuid, plan_path, **network_options)
         receipt['plan_sha256'] = review.plan['plan_sha256']
         receipt['manifest_sha256'] = review.plan['manifest']['sha256']
         authorize(review.plan)
@@ -428,8 +438,15 @@ def main(argv=None):
     commands = parser.add_subparsers(dest='command', required=True)
     for action in ('prepare', 'apply'):
         command = commands.add_parser(action)
-        for name in ('archive', 'archive-sha256', 'manifest-sha256', 'guest-uuid'):
+        source = command.add_mutually_exclusive_group(required=True)
+        source.add_argument('--archive')
+        source.add_argument('--archive-url')
+        for name in ('archive-sha256', 'manifest-sha256', 'guest-uuid'):
             command.add_argument('--' + name, required=True)
+        command.add_argument('--chunk-manifest-url')
+        command.add_argument('--chunk-manifest-sha256')
+        command.add_argument('--ca-file')
+        command.add_argument('--network-timeout-seconds', type=int, default=86400)
         if action == 'apply':
             command.add_argument('--plan', required=True)
     args = parser.parse_args(argv)
@@ -439,7 +456,11 @@ def main(argv=None):
     previous = signal.signal(signal.SIGTERM, interrupted)
     try:
         arguments = (args.archive, args.archive_sha256, args.manifest_sha256, args.guest_uuid)
-        result = apply(*arguments, args.plan) if args.command == 'apply' else prepare(*arguments)
+        network = {'archive_url': args.archive_url, 'chunk_manifest_url': args.chunk_manifest_url,
+                   'chunk_manifest_sha256': args.chunk_manifest_sha256, 'ca_file': args.ca_file,
+                   'network_timeout_seconds': args.network_timeout_seconds}
+        result = (apply(*arguments, args.plan, **network) if args.command == 'apply'
+                  else prepare(*arguments, **network))
         print(canonical(result).decode(), end='')
         return 0 if result.get('success', True) else 1
     finally:

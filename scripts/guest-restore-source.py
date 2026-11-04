@@ -30,6 +30,45 @@ CHUNK = 1024 * 1024
 MAX_ARCHIVE = 251 * 1024**3
 
 
+def scan_backup(stream, manifest_sha256, emit=None, initial=None):
+    """Validate the bounded decoded profile from an authenticated byte source.
+
+    Local sources authenticate their complete encoded file before decoding;
+    remote sources authenticate every encoded chunk before releasing it. The
+    caller must also finish its encoded stream verification before publication.
+    """
+    size = FORMAT.read_header(stream, FORMAT.NAMES[0], FORMAT.MANIFEST.LIMIT)
+    manifest_data = FORMAT.read_exact(stream, size)
+    require(hashlib.sha256(manifest_data).hexdigest() == manifest_sha256,
+            'manifest digest mismatch')
+    manifest = FORMAT.MANIFEST.validate_manifest(manifest_data)
+    RECEIVER.padding(stream, size)
+    size = FORMAT.read_header(stream, FORMAT.NAMES[1], FORMAT.HISTORY_LIMIT)
+    history_data = FORMAT.read_exact(stream, size)
+    history = FORMAT.validate_history(history_data, manifest_data)
+    RECEIVER.padding(stream, size)
+    if initial is not None:
+        require((manifest_data, history_data) == initial, 'restore source manifest/history differs')
+    for name in FORMAT.NAMES[2:]:
+        expected = manifest['files'][name]
+        size = FORMAT.read_header(stream, name, expected['bytes'])
+        require(size == expected['bytes'], 'backup payload size mismatch')
+        digest = hashlib.sha256()
+        remaining = size
+        while remaining:
+            chunk = FORMAT.read_exact(stream, min(CHUNK, remaining))
+            digest.update(chunk)
+            if emit is not None:
+                emit(name, chunk)
+            remaining -= len(chunk)
+        require(digest.hexdigest() == expected['sha256'], 'backup payload digest mismatch')
+        RECEIVER.padding(stream, size)
+    tail = stream.read(10241)
+    require(1024 <= len(tail) <= 10240 and len(tail) % 512 == 0 and
+            tail == bytes(len(tail)), 'invalid tar end or extra decoded data')
+    return manifest_data, manifest, history_data, history
+
+
 class Source:
     """Authenticate once, then stream verified payloads into caller-owned files."""
     def __init__(self, path, archive_sha256, manifest_sha256, allowed_devices):
@@ -77,36 +116,8 @@ class Source:
             require(os.pread(fd, 10, 0) == b'\x1f\x8b\x08\x00\x00\x00\x00\x00\x02\xff',
                     'noncanonical gzip header')
             stream = RECEIVER.GzipReader(fd)
-            size = FORMAT.read_header(stream, FORMAT.NAMES[0], FORMAT.MANIFEST.LIMIT)
-            manifest_data = FORMAT.read_exact(stream, size)
-            require(hashlib.sha256(manifest_data).hexdigest() == self.manifest_sha256,
-                    'manifest digest mismatch')
-            manifest = FORMAT.MANIFEST.validate_manifest(manifest_data)
-            RECEIVER.padding(stream, size)
-            size = FORMAT.read_header(stream, FORMAT.NAMES[1], FORMAT.HISTORY_LIMIT)
-            history_data = FORMAT.read_exact(stream, size)
-            history = FORMAT.validate_history(history_data, manifest_data)
-            RECEIVER.padding(stream, size)
-            if self._initial is not None:
-                require((manifest_data, history_data) == self._initial,
-                        'restore source manifest/history differs')
-            for name in FORMAT.NAMES[2:]:
-                expected = manifest['files'][name]
-                size = FORMAT.read_header(stream, name, expected['bytes'])
-                require(size == expected['bytes'], 'backup payload size mismatch')
-                digest = hashlib.sha256()
-                remaining = size
-                while remaining:
-                    chunk = FORMAT.read_exact(stream, min(CHUNK, remaining))
-                    digest.update(chunk)
-                    if emit is not None:
-                        emit(name, chunk)
-                    remaining -= len(chunk)
-                require(digest.hexdigest() == expected['sha256'], 'backup payload digest mismatch')
-                RECEIVER.padding(stream, size)
-            tail = stream.read(10241)
-            require(1024 <= len(tail) <= 10240 and len(tail) % 512 == 0 and
-                    tail == bytes(len(tail)), 'invalid tar end or extra decoded data')
+            manifest_data, manifest, history_data, history = scan_backup(
+                stream, self.manifest_sha256, emit, self._initial)
             self.recheck()
             if self._initial is None:
                 self.manifest_data = manifest_data
@@ -116,6 +127,12 @@ class Source:
                 self._initial = (manifest_data, history_data)
         finally:
             self.recheck()
+
+    @property
+    def description(self):
+        self.recheck()
+        return {'path': self.held.path, 'identity': ENROLL.identity(self.held.info),
+                **self.archive_record}
 
     def close(self):
         held, self.held = self.held, None
