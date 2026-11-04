@@ -24,6 +24,7 @@ def module(name, path):
 HOST = module('installer_archive_host', 'build/assemble-host.py')
 INIT = module('installer_archive_init', 'build/host-initramfs.py')
 STATE = module('installer_archive_state', 'build/host-state.py')
+TOOLS = module('installer_archive_tools', 'build/maintenance-tools.py')
 SOURCES = {'init': ('configs/installer-init', 0o755),
            'etc/udhcpc.script': ('configs/installer-udhcpc.script', 0o755),
            'usr/lib/a733-installer/install-nvme.py': ('scripts/install-nvme.py', 0o644),
@@ -125,8 +126,15 @@ def build(runtime_directory, diagnostic_directory, busybox, output):
     INIT.add(entries, 'bin/sh', stat.S_IFLNK | 0o777, b'busybox')
     for name, (mode, value) in sorted(runtime.items()):
         INIT.add(entries, name, mode, value)
+    tool_entries = TOOLS.entries(REPO)
+    captured_sources = {name: value for name, (_, value) in tool_entries.items()
+                        if name in TOOLS.SOURCES}
     for name, (source, mode) in SOURCES.items():
-        INIT.add(entries, name, stat.S_IFREG | mode, (REPO / source).read_bytes())
+        if source not in captured_sources:
+            captured_sources[source] = (REPO / source).read_bytes()
+        INIT.add(entries, name, stat.S_IFREG | mode, captured_sources[source])
+    for name, (mode, value) in sorted(tool_entries.items()):
+        INIT.add(entries, 'usr/lib/a733-tools/' + name, stat.S_IFREG | mode, value)
     generated = {'etc/hosts': (0o644, b'127.0.0.1 localhost\n::1 localhost\n'),
                  'etc/resolv.conf': (0o644, b''),
                  'etc/passwd': (0o644, b'root:x:0:0:root:/root:/bin/sh\n'),
@@ -152,12 +160,17 @@ def build(runtime_directory, diagnostic_directory, busybox, output):
                'build/installer-runtime.py', 'build/assemble-host.py', 'build/host-state.py',
                'build/root-selection.py', 'build/host-storage-tools.py', 'configs/host_config.py', 'configs/package_state.py',
                'configs/installer-runtime-policy.json', *(s for s, _ in SOURCES.values())}
+    recipes.update(TOOLS.SOURCES)
+    recipes.add('build/maintenance-tools.py')
     result = {'schema': 1, 'classification': 'installer preparation initramfs; no physical installation or hardware acceptance',
               'kernel_release': '6.6.98-a733-diag', 'boot_inputs': diagnostic,
+              'tool_package': {'profile': TOOLS.PROFILE,
+                               'package_json': HOST.record(tool_entries['package.json'][1])},
               'runtime_manifest': HOST.record(runtime_data), 'runtime_source': manifest['source'],
               'busybox': busybox_record, 'expanded_bytes': len(archive),
               'files': {'initramfs.cpio.gz': HOST.record(compressed)},
-              'recipes': {name: HOST.file_record(REPO / name) for name in sorted(recipes)},
+              'recipes': {name: (HOST.record(captured_sources[name]) if name in captured_sources
+                                 else HOST.file_record(REPO / name)) for name in sorted(recipes)},
               'entries': {name: {'mode': mode, **HOST.record(value)} for name, (mode, value) in sorted(entries.items())},
               'limitations': ['Physical writer included; physical installation and board acceptance untested.',
                               'Actual board boot, Ethernet/DNS/TLS, SD writes and KVM execution are untested.']}

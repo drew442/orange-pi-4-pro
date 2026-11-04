@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 
 REPO = Path(__file__).resolve().parents[1]
 SPEC = importlib.util.spec_from_file_location('installer_archive_tests', REPO / 'build/installer-initramfs.py')
@@ -85,6 +86,126 @@ class InstallerArchiveTests(unittest.TestCase):
                         ARCHIVE.INIT.newc({'device': (stat.S_IFBLK | 0o600, b'')})):
             with self.assertRaises(ValueError):
                 verifier.decode(damaged)
+
+    def package_fixture(self, output):
+        diagnostic = {name: {'bytes': 1, 'sha256': '0' * 64}
+                      for name in ('Image', 'board.dtb', 'kernel.config', 'initramfs.cpio.gz')}
+        def read(path, *args):
+            if Path(path) == ARCHIVE.HOST.DIAGNOSTIC_RECORD:
+                return json.dumps({'files': diagnostic}).encode()
+            return b'x'
+        return (patch.object(ARCHIVE.STATE, 'validate_workspace_storage'),
+                patch.object(ARCHIVE, 'runtime_entries', return_value=({}, {'source': {}}, b'{}')),
+                patch.object(ARCHIVE.HOST, 'read_regular', side_effect=read),
+                patch.object(ARCHIVE.INIT, 'validate_kernel'),
+                patch.object(ARCHIVE.INIT.PAYLOAD, 'module_entries', return_value={}),
+                patch.object(ARCHIVE.gzip, 'decompress', return_value=b''))
+
+    def test_archive_includes_closed_tools_and_provenance(self):
+        (REPO / 'out').mkdir(exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix='installer-initramfs-test-', dir=REPO / 'out') as temporary:
+            output = Path(temporary)
+            output.rmdir()
+            from contextlib import ExitStack
+            with ExitStack() as stack:
+                for context in self.package_fixture(output):
+                    stack.enter_context(context)
+                result = ARCHIVE.build('missing', REPO, 'missing', output)
+            tools = ARCHIVE.TOOLS.entries(REPO)
+            for name, (mode, data) in tools.items():
+                self.assertEqual(result['entries']['usr/lib/a733-tools/' + name],
+                                 {'mode': stat.S_IFREG | mode, **ARCHIVE.HOST.record(data)})
+            for name in ARCHIVE.TOOLS.SOURCES:
+                self.assertEqual(result['recipes'][name], ARCHIVE.HOST.file_record(REPO / name))
+            self.assertIn('build/maintenance-tools.py', result['recipes'])
+            self.assertEqual(result['tool_package'], {'profile': ARCHIVE.TOOLS.PROFILE,
+                             'package_json': ARCHIVE.HOST.record(tools['package.json'][1])})
+            for name in ('install-nvme.py', 'acquire-nvme.py', 'plan-nvme.py', 'nvme_layout.py'):
+                self.assertIn('usr/lib/a733-installer/' + name, result['entries'])
+
+    def test_runtime_recipe_hashes_use_captured_archive_bytes(self):
+        from contextlib import ExitStack
+        captured = ARCHIVE.TOOLS.entries(REPO)
+        other_sources = {source: (REPO / source).read_bytes()
+                         for source, _ in ARCHIVE.SOURCES.values()
+                         if source not in captured}
+        real_compress = ARCHIVE.gzip.compress
+        real_file_record = ARCHIVE.HOST.file_record
+        compressed = False
+        def compress(data, *args, **kwargs):
+            nonlocal compressed
+            compressed = True
+            return real_compress(data, *args, **kwargs)
+        def changed_record(path):
+            name = str(Path(path).relative_to(REPO))
+            if compressed and (name in ARCHIVE.TOOLS.SOURCES or name in other_sources):
+                self.fail('runtime source reread after archive capture: ' + name)
+            return real_file_record(path)
+        with tempfile.TemporaryDirectory(prefix='installer-initramfs-test-', dir=REPO / 'out') as temporary:
+            output = Path(temporary)
+            output.rmdir()
+            with ExitStack() as stack:
+                for context in self.package_fixture(output):
+                    stack.enter_context(context)
+                stack.enter_context(patch.object(ARCHIVE.gzip, 'compress', side_effect=compress))
+                stack.enter_context(patch.object(ARCHIVE.HOST, 'file_record', side_effect=changed_record))
+                result = ARCHIVE.build('missing', REPO, 'missing', output)
+            self.assertTrue(compressed)
+            for name in ARCHIVE.TOOLS.SOURCES:
+                self.assertEqual(result['recipes'][name], ARCHIVE.HOST.record(captured[name][1]))
+            for name, data in other_sources.items():
+                self.assertEqual(result['recipes'][name], ARCHIVE.HOST.record(data))
+
+    def test_legacy_and_new_tool_paths_share_one_captured_snapshot(self):
+        from contextlib import ExitStack
+        captured = ARCHIVE.TOOLS.entries(REPO)
+        metadata = json.loads(captured['package.json'][1])
+        duplicate = {source for source, _ in ARCHIVE.SOURCES.values()
+                     if source in ARCHIVE.TOOLS.SOURCES}
+        for source in duplicate:
+            mode, original = captured[source]
+            captured[source] = (mode, original + b'\n# captured newer source\n')
+            item = {'mode': mode, **ARCHIVE.HOST.record(captured[source][1])}
+            metadata['files'][source] = metadata['source_records'][source] = item
+        captured['package.json'] = (0o444, ARCHIVE.TOOLS.canonical(metadata))
+        with tempfile.TemporaryDirectory(prefix='installer-initramfs-test-', dir=REPO / 'out') as temporary:
+            output = Path(temporary)
+            output.rmdir()
+            with ExitStack() as stack:
+                for context in self.package_fixture(output):
+                    stack.enter_context(context)
+                stack.enter_context(patch.object(ARCHIVE.TOOLS, 'entries', return_value=captured))
+                result = ARCHIVE.build('missing', REPO, 'missing', output)
+            for legacy, (source, _) in ARCHIVE.SOURCES.items():
+                if source in duplicate:
+                    expected = ARCHIVE.HOST.record(captured[source][1])
+                    for field, value in expected.items():
+                        self.assertEqual(result['entries'][legacy][field], value)
+                        self.assertEqual(result['entries']['usr/lib/a733-tools/' + source][field], value)
+                    self.assertEqual(result['recipes'][source], expected)
+
+    def test_existing_archive_budgets_remain_enforced(self):
+        from contextlib import ExitStack
+        class Large:
+            def __init__(self, size):
+                self.size = size
+            def __len__(self):
+                return self.size
+        for expanded in (True, False):
+            with self.subTest(expanded=expanded), tempfile.TemporaryDirectory(
+                    prefix='installer-initramfs-test-', dir=REPO / 'out') as temporary:
+                output = Path(temporary)
+                output.rmdir()
+                with ExitStack() as stack:
+                    for context in self.package_fixture(output):
+                        stack.enter_context(context)
+                    if expanded:
+                        stack.enter_context(patch.object(ARCHIVE.INIT, 'newc', return_value=Large(256 * 1024**2 + 1)))
+                    else:
+                        stack.enter_context(patch.object(ARCHIVE.gzip, 'compress', return_value=Large(64 * 1024**2 - 64)))
+                    with self.assertRaisesRegex(ValueError, 'budget'):
+                        ARCHIVE.build('missing', REPO, 'missing', output)
+                self.assertFalse(output.exists())
 
     def test_output_must_be_new_absolute_ignored_workspace(self):
         for output in ('out/installer-initramfs-relative', '/tmp/installer-initramfs-outside'):
