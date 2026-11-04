@@ -1,0 +1,284 @@
+{
+  "schema": 1,
+  "board": "Orange Pi 4 Pro A733",
+  "classification": "installer preparation prototype; physical writer/boot/KVM acceptance pending",
+  "kernel_release": "6.6.98-a733-diag",
+  "source_date_epoch": 1793750400,
+  "boot_inputs": {
+    "boot0_sdcard.fex": {
+      "bytes": 245760,
+      "sha256": "9213f1c56ef932930d43b5751e8937bea0e9ae7460ec16187cc1b0dffdb75345"
+    },
+    "boot_package.fex": {
+      "bytes": 1392640,
+      "sha256": "04ea9d1e64403f1a18be0c1e04f5c55da320fef23a39d8d803e147b0c12c2e03"
+    },
+    "uImage": {
+      "bytes": 27283528,
+      "sha256": "6f9269755c4c2bc196c094899fa1ff20292f4d762c4000f77fcbb0887d5f154a"
+    },
+    "Image": {
+      "bytes": 27283464,
+      "sha256": "9df974c55fa61a77e8fe812652780dad471527eb9615c27838f481887d4c50e7"
+    },
+    "board.dtb": {
+      "bytes": 209320,
+      "sha256": "4d7d964a54668cf5dc12cd4bf7e72a625c79883541272aeba1a91adbbedb86ed"
+    },
+    "kernel.config": {
+      "bytes": 212080,
+      "sha256": "8a29d9c36e52db7e8a7d6ff757dc69e660f4273c99e5f00c5dbc5a9b7e060675"
+    }
+  },
+  "sources": {
+    "boot0_sdcard.fex": {
+      "path": "/home/drew/orange-pi-4-pro-build/artifacts/boot0_sdcard.fex",
+      "bytes": 245760,
+      "sha256": "9213f1c56ef932930d43b5751e8937bea0e9ae7460ec16187cc1b0dffdb75345"
+    },
+    "boot_package.fex": {
+      "path": "/home/drew/orange-pi-4-pro-build/artifacts/boot_package.fex",
+      "bytes": 1392640,
+      "sha256": "04ea9d1e64403f1a18be0c1e04f5c55da320fef23a39d8d803e147b0c12c2e03"
+    },
+    "uImage": {
+      "path": "/home/drew/orange-pi-4-pro-build/artifacts/uImage",
+      "bytes": 27283528,
+      "sha256": "6f9269755c4c2bc196c094899fa1ff20292f4d762c4000f77fcbb0887d5f154a"
+    },
+    "Image": {
+      "path": "/home/drew/orange-pi-4-pro-build/artifacts/Image",
+      "bytes": 27283464,
+      "sha256": "9df974c55fa61a77e8fe812652780dad471527eb9615c27838f481887d4c50e7"
+    },
+    "board.dtb": {
+      "path": "/home/drew/orange-pi-4-pro-build/artifacts/board.dtb",
+      "bytes": 209320,
+      "sha256": "4d7d964a54668cf5dc12cd4bf7e72a625c79883541272aeba1a91adbbedb86ed"
+    },
+    "kernel.config": {
+      "path": "/home/drew/orange-pi-4-pro-build/artifacts/kernel.config",
+      "bytes": 212080,
+      "sha256": "8a29d9c36e52db7e8a7d6ff757dc69e660f4273c99e5f00c5dbc5a9b7e060675"
+    }
+  },
+  "installer_initramfs": {
+    "path": "/home/drew/orange-pi-4-pro-build/writer-work-20261104/out/installer-initramfs-writer-20261104-02/initramfs.cpio.gz",
+    "bytes": 26845230,
+    "sha256": "0f6be1b8c17b97ab7843e48d058810b7cdb2ef6e1fdf0ff521b7beac54fe2e21"
+  },
+  "trusted_installer_manifest": {
+    "path": "/home/drew/orange-pi-4-pro-build/writer-work-20261104/out/installer-initramfs-writer-20261104-02/manifest.json",
+    "bytes": 421399,
+    "sha256": "64eb3b7a917e881686cc5e0cf00a8114d90d2c9518a9c1221f9b8d5e0ee0d4c1"
+  },
+  "source_bom": {
+    "schema": 1,
+    "source_date_epoch": 1793750400,
+    "vendor": {
+      "url": "https://github.com/orangepi-xunlong/orangepi-build.git",
+      "commit": "a95129bf30ea11886cc35f08ebb3e69695a26656"
+    },
+    "kernel": {
+      "url": "https://github.com/orangepi-xunlong/linux-orangepi.git",
+      "commit": "2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f"
+    },
+    "uboot": {
+      "url": "https://github.com/orangepi-xunlong/u-boot-orangepi.git",
+      "commit": "b791be842935b27268ae3d00e943a9075495f30a"
+    },
+    "patches": [
+      {
+        "path": "build/patches/uboot-env-nowhere-size.patch",
+        "sha256": "29617f37e189d5c2a9181793a4ef3c0a85fc84693e9b414e1f5b4ab6e3daaaba"
+      }
+    ],
+    "uboot_toolchain": {
+      "url": "https://mirrors.bfsu.edu.cn/armbian-releases/_toolchain/gcc-linaro-7.4.1-2019.02-x86_64_arm-linux-gnueabi.tar.xz",
+      "filename": "gcc-linaro-7.4.1-2019.02-x86_64_arm-linux-gnueabi.tar.xz",
+      "sha256": "42ccb2ed99d65b7090499e6f5ad65c4c94ae6bd022decfea102d50109557c7d2"
+    },
+    "busybox": {
+      "url": "https://ports.ubuntu.com/pool/main/b/busybox/busybox-static_1.30.1-7ubuntu3.1_arm64.deb",
+      "filename": "busybox-static_1.30.1-7ubuntu3.1_arm64.deb",
+      "sha256": "c467c2014f91795a69237339693a64089347f73a96d10613e7285b7433b3965a",
+      "binary_sha256": "0a41864f87a0737804f0f4a68a1cfa1ed22374f4f75a1be3eb376e2659ce1316"
+    },
+    "kernel_compiler": {
+      "command": "aarch64-linux-gnu-gcc",
+      "version": "11.4.0",
+      "packages": "builder-packages.lock.tsv"
+    },
+    "busybox_sources": [
+      {
+        "url": "https://ports.ubuntu.com/pool/main/b/busybox/busybox_1.30.1-7ubuntu3.1.dsc",
+        "filename": "busybox_1.30.1-7ubuntu3.1.dsc",
+        "sha256": "c1140501b5666fcf2c29f371016290dfc52964a4c303b352c565a8ce78ce7a95"
+      },
+      {
+        "url": "https://ports.ubuntu.com/pool/main/b/busybox/busybox_1.30.1.orig.tar.bz2",
+        "filename": "busybox_1.30.1.orig.tar.bz2",
+        "sha256": "3d1d04a4dbd34048f4794815a5c48ebb9eb53c5277e09ffffc060323b95dfbdc"
+      },
+      {
+        "url": "https://ports.ubuntu.com/pool/main/b/busybox/busybox_1.30.1-7ubuntu3.1.debian.tar.xz",
+        "filename": "busybox_1.30.1-7ubuntu3.1.debian.tar.xz",
+        "sha256": "5bc1660e21fb5a0b2ada3e26ae4e2d20d50477555e56df72503f0f091c4fd653"
+      }
+    ],
+    "firmware_inputs": "vendor-boot-inputs.sha256"
+  },
+  "builder_packages": {
+    "bash": {
+      "version": "5.1-6ubuntu1.1",
+      "architecture": "amd64"
+    },
+    "coreutils": {
+      "version": "8.32-4.1ubuntu1.4",
+      "architecture": "amd64"
+    },
+    "e2fsprogs": {
+      "version": "1.46.5-2ubuntu1.2",
+      "architecture": "amd64"
+    },
+    "libpython3.10-stdlib": {
+      "version": "3.10.12-1~22.04.18",
+      "architecture": "amd64"
+    },
+    "python3.10-minimal": {
+      "version": "3.10.12-1~22.04.18",
+      "architecture": "amd64"
+    },
+    "u-boot-tools": {
+      "version": "2022.01+dfsg-2ubuntu2.9",
+      "architecture": "amd64"
+    },
+    "util-linux": {
+      "version": "2.37.2-4ubuntu3.6",
+      "architecture": "amd64"
+    }
+  },
+  "recipes": {
+    "build/assemble-installer.py": {
+      "bytes": 9413,
+      "sha256": "8b66c06ee5794d772a2e821eef04670e176536a573cfc96e49c9a2bea732f165"
+    },
+    "build/assemble-diagnostic.sh": {
+      "bytes": 4249,
+      "sha256": "211204c83e030ab59d343a24b5133cd53a18811c9eb762db428a44373bddbdc4"
+    },
+    "configs/installer-boot.cmd": {
+      "bytes": 1111,
+      "sha256": "68c02a894a9f008ac3f75777e76d83dbde7185d1066c65fe2b943ae33ba497ed"
+    },
+    "configs/diagnostic-sources.lock.json": {
+      "bytes": 2273,
+      "sha256": "aa39f5fca29244ca961fc3f422d7110adca6975d2c6a29f80afd9d1d2f4b4821"
+    },
+    "configs/builder-packages.lock.tsv": {
+      "bytes": 32519,
+      "sha256": "35c2faf42a936168098b1f54239825a3c42fc56c825fc0b2078bbd753425f48b"
+    },
+    "docs/evidence/diagnostic-20261104.json": {
+      "bytes": 2224,
+      "sha256": "6d743d81ee27ced3b55cbcd218bbf0693743be66e85d074e59a052c8819fde1c"
+    }
+  },
+  "initramfs_recipes": {
+    "build/assemble-host.py": {
+      "bytes": 11902,
+      "sha256": "9949b03d26f4cf89b968a45d50f1e49389a9062d220f07166980d9837411fb3d"
+    },
+    "build/host-initramfs.py": {
+      "bytes": 9174,
+      "sha256": "6f571586f4454d47f8e970ff52b376a992ca0033ed870912f46ec2dc43b7b8bf"
+    },
+    "build/host-payload.py": {
+      "bytes": 17686,
+      "sha256": "80a7b1b1eefaba633db5bdd02f01336bc9439767b8e2ff4f9bab3db88b490798"
+    },
+    "build/host-state.py": {
+      "bytes": 15848,
+      "sha256": "55a25a18a1f63d3956343d91d6194cfd2334dd6bfa30a577392033a707f187ed"
+    },
+    "build/host-storage-tools.py": {
+      "bytes": 4985,
+      "sha256": "e8d54568a6f43552996021a6a0a3178769564238be34a8642fca9d304f8f9750"
+    },
+    "build/installer-initramfs.py": {
+      "bytes": 10266,
+      "sha256": "cd045d5361fec303161d55647f7ecab7b20c217504b5c4933ceb0d8a86a3cf61"
+    },
+    "build/installer-runtime.py": {
+      "bytes": 17506,
+      "sha256": "eef20d8eedaa6f873bb86f9bb4bfbc01bcc31caa72a721139e7dd750d04782ca"
+    },
+    "build/root-selection.py": {
+      "bytes": 8663,
+      "sha256": "916be8c13dabe741d09f678654a87ad213560387664deec8ff32c901bc95e600"
+    },
+    "configs/host_config.py": {
+      "bytes": 2873,
+      "sha256": "520140d56402ab803b8c137981cef5182c5e263a44ec8446ce836b6a7d160a22"
+    },
+    "configs/installer-init": {
+      "bytes": 1930,
+      "sha256": "479e24c546f098f1f37515bddb756158db3084b7b72fe15f68a211b79ecb9055"
+    },
+    "configs/installer-runtime-policy.json": {
+      "bytes": 1648,
+      "sha256": "fd426abed164c722b28081277c05608227f7b52e4767ea6e14cbf2346bfd130a"
+    },
+    "configs/installer-udhcpc.script": {
+      "bytes": 697,
+      "sha256": "9d7c6e8cc6dbeb39a6ef8d61c5cc2193ac227598f5e303f8af47245fd3087ef3"
+    },
+    "licenses/GPL-2.0.txt": {
+      "bytes": 18026,
+      "sha256": "39db8f9acf036595a2566ea3fe560bc7bd65d8749f088e0f4a4ef2f8a6cb4b34"
+    },
+    "licenses/busybox-copyright.txt": {
+      "bytes": 1110,
+      "sha256": "336d995e819d3a7a3fdbf3f5041c07094f75ee849acb3bb742b7503d45786329"
+    },
+    "scripts/install-nvme.py": {
+      "bytes": 22122,
+      "sha256": "d4c46227f9589822e8dae0a896b8c6a28c356ce67cc0f574b85598a4df612f47"
+    },
+    "scripts/nvme_layout.py": {
+      "bytes": 6162,
+      "sha256": "742a71575d94c9be29e01af3f50dc0d0639b38800c3e5a86ded49ac8906e518f"
+    },
+    "scripts/plan-nvme.py": {
+      "bytes": 7815,
+      "sha256": "8ed9075de6ab4425457aa3f309847f2e66b134691f0fe80ac5eb7c43f1746e31"
+    }
+  },
+  "boot_command": {
+    "bytes": 1111,
+    "sha256": "68c02a894a9f008ac3f75777e76d83dbde7185d1066c65fe2b943ae33ba497ed"
+  },
+  "staging_storage": {
+    "fstype": "ext4",
+    "maj:min": "252:0"
+  },
+  "staging_storage_guard_limit": "kernel sdX/removable=0 cannot identify every USB SD reader; use known fixed builder storage",
+  "files": {
+    "a733-installer-prep.img": {
+      "bytes": 268435456,
+      "sha256": "97c997c00ddfdffba5030b147d5aeacd94d40857a0a425d6524fc5292b12a7d3"
+    },
+    "a733-installer-prep.img.gz": {
+      "bytes": 39138331,
+      "sha256": "e26479b3292552c30d462aa164d7ee527b6157e9a66696f8e2241e4a586b57d4"
+    },
+    "uInitrd": {
+      "bytes": 26845294,
+      "sha256": "53f5cc556bec603e07dd1031ef627e1103600c4fcd59a82a07b00f79f37275b8"
+    },
+    "assembly.log": {
+      "bytes": 4280,
+      "sha256": "7244df68bff5ae5aa7671f3220f968a47fd2367ed158a5e511cf88a5ea107aa0"
+    }
+  }
+}

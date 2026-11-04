@@ -2,8 +2,10 @@
 
 The A733 preparation image now provides Python, storage tools and an HTTPS
 client before NVMe is mounted. It fits the 2 GB SD budget and starts a physical
-root console with a read-only NVMe planner. A physical writer is still missing;
-this image has not installed an NVMe or booted on the board. The
+root console with a read-only NVMe planner and an explicit, guarded full-disk
+writer. The [writer procedure](nvme-installation.md) requires a real installation
+candidate and exact-target authorization. This image has not installed an NVMe
+or booted on the board. The
 [diagnostic candidate](diagnostic-image.md) remains the first hardware baseline.
 
 ## Current artifacts and behavior
@@ -14,12 +16,12 @@ needed to produce it. Actual SD capacity and target identity still need checking
 
 | Artifact | Bytes | SHA-256 |
 | --- | ---: | --- |
-| `initramfs.cpio.gz` | 26,837,671 | `009ce61f04ae371ad81c1bb6e728e819f39d7d9f97d1953e0245fd463225c0a9` |
-| `a733-installer-prep.img` | 268,435,456 | `c848c7dccbc52a049b316eb4d7f37328141bd709a22cdc7adecf076aa3c7514f` |
-| `a733-installer-prep.img.gz` | 39,131,796 | `7dc55ef57a8b63a21754201cb101d56a4decd899e783c4f0de07a30c2492b2a3` |
+| `initramfs.cpio.gz` | 26,845,230 | `0f6be1b8c17b97ab7843e48d058810b7cdb2ef6e1fdf0ff521b7beac54fe2e21` |
+| `a733-installer-prep.img` | 268,435,456 | `97c997c00ddfdffba5030b147d5aeacd94d40857a0a425d6524fc5292b12a7d3` |
+| `a733-installer-prep.img.gz` | 39,138,331 | `e26479b3292552c30d462aa164d7ee527b6157e9a66696f8e2241e4a586b57d4` |
 
 The compressed initramfs plus its 64-byte wrapper fits the existing 64 MiB
-load-region bound. Expanded archive size is 79,001,896 bytes; board RAM and boot
+load-region bound. Expanded archive size is 79,024,172 bytes; board RAM and boot
 memory reservations remain hardware checks. The source runtime stages 1,460
 regular files totaling 66,700,388 bytes. It includes Python 3.11, util-linux 2.38.1,
 e2fsprogs 1.47.0, curl 7.88.1, their selected libraries, CA/config data and notices.
@@ -46,7 +48,7 @@ administrator credentials or pre-generated SSH host keys.
 
 ## Verified build and inspection
 
-From a clean checkout at `b8f8c9a` on the prepared builder, using its authenticated
+From a clean checkout at `915a2f7` on the prepared builder, using its authenticated
 cached inputs:
 
 ```sh
@@ -57,19 +59,19 @@ sudo python3 build/installer-initramfs.py \
   "$(pwd -P)/out/installer-runtime-repeat" \
   /home/drew/orange-pi-4-pro-build/artifacts \
   /home/drew/orange-pi-4-pro-build/busybox/bin/busybox \
-  "$(pwd -P)/out/installer-initramfs-repeat"
+  "$(pwd -P)/out/installer-initramfs-full-repeat"
 sudo python3 tests/verify_installer_runtime_arm.py \
-  "$(pwd -P)/out/installer-initramfs-repeat"
+  "$(pwd -P)/out/installer-initramfs-full-repeat"
 sudo python3 build/assemble-installer.py \
   /home/drew/orange-pi-4-pro-build/artifacts \
-  "$(pwd -P)/out/installer-initramfs-repeat" \
-  "$(pwd -P)/out/installer-sd-repeat"
+  "$(pwd -P)/out/installer-initramfs-full-repeat" \
+  "$(pwd -P)/out/installer-sd-full-repeat"
 sudo python3 tests/verify_installer_sd.py \
-  "$(pwd -P)/out/installer-sd-repeat" \
-  "$(pwd -P)/out/installer-initramfs-repeat"
+  "$(pwd -P)/out/installer-sd-full-repeat" \
+  "$(pwd -P)/out/installer-initramfs-full-repeat"
 ```
 
-All commands passed. A [clean-checkout repeat](evidence/installer-rebuild-20261104.json)
+All commands passed. A [clean-checkout repeat](evidence/writer-rebuild-20261104.json)
 reproduced initramfs, raw SD and gzip bytes exactly, and repeated both ARM and
 SD inspections. This repeats preparation recipes using cached authenticated
 inputs, not a complete clean vendor build or physical deployment.
@@ -97,10 +99,10 @@ kernel/DTB/firmware, checks current preparation source records and uses the
 reviewed regular-file assembler. No physical target is accepted by these recipes.
 
 Evidence: [runtime staging](evidence/installer-runtime-20261104.json),
-[initramfs](evidence/installer-initramfs-20261104.json),
-[ARM probes](evidence/installer-runtime-arm-20261104.json),
-[SD manifest](evidence/installer-sd-20261104.json), and
-[independent SD inspection](evidence/installer-sd-verify-20261104.json).
+[initramfs](evidence/writer-initramfs-20261104.json),
+[ARM probes](evidence/writer-arm-20261104.json),
+[SD manifest](evidence/writer-sd-20261104.json), and
+[independent SD inspection](evidence/writer-sd-verify-20261104.json).
 The full runtime file BOM is embedded at
 `/usr/share/a733-installer/runtime-manifest.json` and retained on the builder.
 
@@ -115,14 +117,14 @@ programs or proof of every possible dynamic-data load.
 ## Download and hardware handoff
 
 The compressed image and manifest are readable on the builder under
-`/home/drew/orange-pi-4-pro-build/installer-artifacts-20261104/`; a checked local
-copy is under ignored `out/installer-20261104/`.
+`/home/drew/orange-pi-4-pro-build/writer-artifacts-20261104/`; a checked local
+copy is under ignored `out/writer-20261104/`.
 
 ```sh
-scp drew@build.drewnet.online:/home/drew/orange-pi-4-pro-build/installer-artifacts-20261104/a733-installer-prep.img.gz .
-printf '%s  %s\n' 7dc55ef57a8b63a21754201cb101d56a4decd899e783c4f0de07a30c2492b2a3 a733-installer-prep.img.gz | sha256sum -c -
+scp drew@build.drewnet.online:/home/drew/orange-pi-4-pro-build/writer-artifacts-20261104/a733-installer-prep.img.gz .
+printf '%s  %s\n' e26479b3292552c30d462aa164d7ee527b6157e9a66696f8e2241e4a586b57d4 a733-installer-prep.img.gz | sha256sum -c -
 gzip -dk a733-installer-prep.img.gz
-printf '%s  %s\n' c848c7dccbc52a049b316eb4d7f37328141bd709a22cdc7adecf076aa3c7514f a733-installer-prep.img | sha256sum -c -
+printf '%s  %s\n' 97c997c00ddfdffba5030b147d5aeacd94d40857a0a425d6524fc5292b12a7d3 a733-installer-prep.img | sha256sum -c -
 ```
 
 Downloading/decompressing writes ordinary files only. Follow the

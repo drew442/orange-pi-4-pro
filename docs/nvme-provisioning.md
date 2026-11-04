@@ -4,8 +4,10 @@ The provisioning pipeline now assembles the proposed disk layout into a new
 sparse regular file. This joins the previously separate roots, state and boot
 artifacts before implementing physical writes. It does not identify, erase,
 partition or install a physical NVMe, and implies no target authorization.
-The read-only [device planner](../scripts/plan-nvme.py) remains the available
-on-device entry point. A physical installer is still required.
+The [device planner](../scripts/plan-nvme.py) and
+[guarded full-disk writer](nvme-installation.md) provide read-only planning and
+explicit installation. Production whole-NVMe apply and physical acceptance
+remain unperformed.
 
 The fixture uses nominal 250 GB capacity, 512-byte logical sectors and 4096-byte
 physical alignment. Actual SSD capacity and sector sizes must come from the
@@ -130,12 +132,12 @@ clean kernel/firmware/userspace build or physical deployment.
 
 ## Remaining installer and acceptance work
 
-A physical installer must still acquire authenticated payloads from Ethernet
-or USB, identify the exact model/serial/capacity/sector geometry, display its
-write plan and obtain explicit target authorization. It must lock/revalidate
-the target, reject active mounts/swap/holders, preserve backups, verify written
-bytes, and handle interruption without reporting success. The current planner's
-observation alone is not a lock or authorization.
+The [writer](nvme-installation.md) now implements exact identity, review plan,
+interactive confirmations, locking/revalidation, full written-byte verification
+and conservative interruption reporting. Its production whole-NVMe path still
+needs authorized hardware execution. Authenticated payload acquisition from
+Ethernet/USB, backup creation/restore and the complete deployment procedure
+remain integration work; the planner observation alone authorizes no erasure.
 
 A [builder archive inventory](evidence/installer-runtime-inventory-20261104.json)
 confirmed Python 3.11, its 26.6 MB uncompressed standard library, `lsblk`,
@@ -144,7 +146,7 @@ absent; the pure GPT encoder avoids relying on it for table serialization.
 The [installer preparation runtime](installer-preparation.md) now packages
 selected ELF/Python dependencies and networking data in a 26.8 MB compressed
 initramfs; isolated ARM software probes passed. Real board boot, DNS/TLS and the
-physical writer remain unproven. Inventory alone is not runtime acceptance.
+physical installation remain unproven. Inventory alone is not runtime acceptance.
 
 Inactive-slot updates, serial/manual rollback, backward-compatible state
 migrations, package metadata handling, backup/restore and runtime guest storage

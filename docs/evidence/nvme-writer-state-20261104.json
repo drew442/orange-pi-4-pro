@@ -1,0 +1,10 @@
+{
+  "classification": "existing regular-file fixture authenticated and state identity read back; no hardware acceptance",
+  "state_image": {
+    "bytes": 8589934592,
+    "sha256": "d7cafee5bba682ad2c171a6b78ab436e6db929cbbbb464d32be266835fdef477"
+  },
+  "configuration_key_machineid_modes_hostkey_empty": "passed",
+  "for_installation_fixture_rejected": "fixture credentials/network values cannot mark an installation candidate",
+  "builder": "drew@build.drewnet.online"
+}

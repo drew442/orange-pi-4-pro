@@ -1,0 +1,68 @@
+{
+  "classification": "native kernel loop-device byte-engine checks only; no physical NVMe or hardware acceptance",
+  "writer_source": {
+    "bytes": 22122,
+    "sha256": "d4c46227f9589822e8dae0a896b8c6a28c356ce67cc0f574b85598a4df612f47"
+  },
+  "harness_source": {
+    "bytes": 11441,
+    "sha256": "2e1fdf51cb5097aa1f2398eda75ec1d03fa704a666e043c30c43e2f3e7a6abc3"
+  },
+  "storage": {
+    "fstype": "ext4",
+    "maj:min": "252:0"
+  },
+  "fixture_bytes": 134217728,
+  "cases": {
+    "complete": {
+      "report": {
+        "success": true,
+        "target_modified": true,
+        "bytes_attempted": 134217728,
+        "bytes_written": 134217728,
+        "bytes_verified": 134217728,
+        "readback_sha256": "a7fed20231bae0538b7f5111c26887316c9a116fcc07e14e572af4c377f390c2"
+      },
+      "exclusive_second_open_refused": true,
+      "kernel_partition_readback": true,
+      "production_descriptor_geometry_ioctls": true,
+      "nonzero_old_bytes_and_zero_ranges_replaced": true
+    },
+    "interrupted_then_rewrite": {
+      "interrupted_report": {
+        "success": false,
+        "target_modified": true,
+        "bytes_attempted": 4194304,
+        "bytes_written": 4194304,
+        "bytes_verified": 0,
+        "error": "KeyboardInterrupt: intentional private-loop interruption"
+      },
+      "unwritten_old_tail_preserved": true,
+      "explicit_full_rewrite_report": {
+        "success": true,
+        "target_modified": true,
+        "bytes_attempted": 134217728,
+        "bytes_written": 134217728,
+        "bytes_verified": 134217728,
+        "readback_sha256": "a7fed20231bae0538b7f5111c26887316c9a116fcc07e14e572af4c377f390c2"
+      }
+    },
+    "corrupted_readback": {
+      "report": {
+        "success": false,
+        "target_modified": true,
+        "bytes_attempted": 134217728,
+        "bytes_written": 134217728,
+        "bytes_verified": 134217728,
+        "error": "ValueError: target readback SHA-256 mismatch"
+      },
+      "partition_refresh_skipped": true
+    }
+  },
+  "cleanup": "all owned loops detached and private files deleted",
+  "limitations": [
+    "Production whole-NVMe prepare/apply/authorization paths use separate mocked policy tests.",
+    "Loop interruptions are not physical power-cut, NVMe firmware or rollback validation.",
+    "No SD, NVMe or SPI target erased; actual KVM guest acceptance remains pending."
+  ]
+}

@@ -1,0 +1,177 @@
+{
+  "classification": "clean-checkout writer software checks and preparation-image packaging; no physical deployment or hardware acceptance",
+  "source_commit": "915a2f77e2e066a7d50cd37ea313d96cf85a6568",
+  "checkout": "/home/drew/orange-pi-4-pro-build/writer-clean-20261104",
+  "builder": "drew@build.drewnet.online",
+  "tracked_worktree_clean": true,
+  "cached_authenticated_inputs": true,
+  "raw_compressed_initramfs_cmp": "byte-identical",
+  "initramfs": {
+    "bytes": 26845230,
+    "sha256": "0f6be1b8c17b97ab7843e48d058810b7cdb2ef6e1fdf0ff521b7beac54fe2e21"
+  },
+  "SD_artifacts": {
+    "a733-installer-prep.img": {
+      "bytes": 268435456,
+      "sha256": "97c997c00ddfdffba5030b147d5aeacd94d40857a0a425d6524fc5292b12a7d3"
+    },
+    "a733-installer-prep.img.gz": {
+      "bytes": 39138331,
+      "sha256": "e26479b3292552c30d462aa164d7ee527b6157e9a66696f8e2241e4a586b57d4"
+    },
+    "uInitrd": {
+      "bytes": 26845294,
+      "sha256": "53f5cc556bec603e07dd1031ef627e1103600c4fcd59a82a07b00f79f37275b8"
+    }
+  },
+  "native_loop_checks": {
+    "classification": "native kernel loop-device byte-engine checks only; no physical NVMe or hardware acceptance",
+    "writer_source": {
+      "bytes": 22122,
+      "sha256": "d4c46227f9589822e8dae0a896b8c6a28c356ce67cc0f574b85598a4df612f47"
+    },
+    "harness_source": {
+      "bytes": 11441,
+      "sha256": "2e1fdf51cb5097aa1f2398eda75ec1d03fa704a666e043c30c43e2f3e7a6abc3"
+    },
+    "storage": {
+      "fstype": "ext4",
+      "maj:min": "252:0"
+    },
+    "fixture_bytes": 134217728,
+    "cases": {
+      "complete": {
+        "report": {
+          "success": true,
+          "target_modified": true,
+          "bytes_attempted": 134217728,
+          "bytes_written": 134217728,
+          "bytes_verified": 134217728,
+          "readback_sha256": "a7fed20231bae0538b7f5111c26887316c9a116fcc07e14e572af4c377f390c2"
+        },
+        "exclusive_second_open_refused": true,
+        "kernel_partition_readback": true,
+        "production_descriptor_geometry_ioctls": true,
+        "nonzero_old_bytes_and_zero_ranges_replaced": true
+      },
+      "interrupted_then_rewrite": {
+        "interrupted_report": {
+          "success": false,
+          "target_modified": true,
+          "bytes_attempted": 4194304,
+          "bytes_written": 4194304,
+          "bytes_verified": 0,
+          "error": "KeyboardInterrupt: intentional private-loop interruption"
+        },
+        "unwritten_old_tail_preserved": true,
+        "explicit_full_rewrite_report": {
+          "success": true,
+          "target_modified": true,
+          "bytes_attempted": 134217728,
+          "bytes_written": 134217728,
+          "bytes_verified": 134217728,
+          "readback_sha256": "a7fed20231bae0538b7f5111c26887316c9a116fcc07e14e572af4c377f390c2"
+        }
+      },
+      "corrupted_readback": {
+        "report": {
+          "success": false,
+          "target_modified": true,
+          "bytes_attempted": 134217728,
+          "bytes_written": 134217728,
+          "bytes_verified": 134217728,
+          "error": "ValueError: target readback SHA-256 mismatch"
+        },
+        "partition_refresh_skipped": true
+      }
+    },
+    "cleanup": "all owned loops detached and private files deleted",
+    "limitations": [
+      "Production whole-NVMe prepare/apply/authorization paths use separate mocked policy tests.",
+      "Loop interruptions are not physical power-cut, NVMe firmware or rollback validation.",
+      "No SD, NVMe or SPI target erased; actual KVM guest acceptance remains pending."
+    ]
+  },
+  "ARM_checks": {
+    "classification": "packaged ARM64 chroot software checks; no board boot, physical installation or KVM acceptance",
+    "verifier_source": {
+      "bytes": 12826,
+      "sha256": "f7ed39bdd7bcabaf130976b79d2d30d583d76131761b7d0f28169588ceb3e402"
+    },
+    "archive": {
+      "bytes": 26845230,
+      "sha256": "0f6be1b8c17b97ab7843e48d058810b7cdb2ef6e1fdf0ff521b7beac54fe2e21"
+    },
+    "expanded_bytes": 79024172,
+    "entries_checked": 2203,
+    "all_archive_hashes_modes_paths": "passed",
+    "ARM_checks": {
+      "architecture": "aarch64",
+      "isolated_python": true,
+      "core_modules": "imported",
+      "ca_file": "/usr/lib/ssl/cert.pem",
+      "ca_certificates": 142,
+      "localhost_NSS": "passed",
+      "versions": {
+        "python": "Python 3.11.2",
+        "lsblk": "lsblk from util-linux 2.38.1",
+        "blkid": "blkid from util-linux 2.38.1  (libblkid 2.38.1, 04-Aug-2022)",
+        "mke2fs": "mke2fs 1.47.0 (5-Feb-2023)",
+        "tune2fs": "tune2fs 1.47.0 (5-Feb-2023)",
+        "e2fsck": "e2fsck 1.47.0 (5-Feb-2023)",
+        "debugfs": "debugfs 1.47.0 (5-Feb-2023)",
+        "curl": "curl 7.88.1 (aarch64-unknown-linux-gnu) libcurl/7.88.1 OpenSSL/3.0.20 zlib/1.2.13 brotli/1.0.9 zstd/1.5.4 libidn2/2.3.3 libpsl/0.21.2 (+libidn2/2.3.3) libssh2/1.10.0 nghttp2/1.52.0 librtmp/2.3 OpenLDAP/2.5.13"
+      },
+      "planner_isolated_help": "passed",
+      "writer_isolated_help": "passed",
+      "writer_fixture_refusal": "passed before target access",
+      "writer_regular_file_engine": "passed; block flush and partition callbacks not exercised",
+      "init_ash_syntax": "passed",
+      "regular_file_mkfs_fsck_blkid_debugfs": "passed",
+      "dhcp_ram_resolver_hook": "passed; three IP commands replaced by logged fixture stub",
+      "DNS_TLS_connection": "not performed",
+      "physical_block_targets": "not opened"
+    },
+    "private_fixture": "deleted after check; no mounts, listeners or external requests",
+    "limits": [
+      "Runtime tests cover the exercised commands/modules, not every possible dynamic load.",
+      "IP command was stubbed for DHCP hook; board DHCP/DNS/TLS untested.",
+      "No SD/NVMe/SPI write or actual KVM guest performed."
+    ]
+  },
+  "SD_inspection": {
+    "classification": "regular-file installer SD inspection; no physical boot or installation acceptance",
+    "image": {
+      "bytes": 268435456,
+      "sha256": "97c997c00ddfdffba5030b147d5aeacd94d40857a0a425d6524fc5292b12a7d3"
+    },
+    "legacy_ext4_features": [
+      "ext_attr",
+      "resize_inode",
+      "dir_index",
+      "filetype",
+      "extent",
+      "flex_bg",
+      "sparse_super",
+      "large_file",
+      "huge_file",
+      "dir_nlink",
+      "extra_isize"
+    ],
+    "mbr_and_vendor_blob_offsets": "passed",
+    "pinned_kernel_DTB": "passed",
+    "script_and_initrd_wrappers_CRCs": "passed",
+    "checked_installer_archive_payload": {
+      "bytes": 26845230,
+      "sha256": "0f6be1b8c17b97ab7843e48d058810b7cdb2ef6e1fdf0ff521b7beac54fe2e21"
+    },
+    "compressed_hash_and_expansion": "passed",
+    "physical_storage_writes": false
+  },
+  "fresh_runtime_staging": "repeated from the pinned rootfs archive; full runtime manifest byte-identical to source runtime03",
+  "full_pipeline_outputs": {
+    "runtime": "out/installer-runtime-repeat",
+    "initramfs": "out/installer-initramfs-full-repeat",
+    "SD": "out/installer-sd-full-repeat"
+  }
+}

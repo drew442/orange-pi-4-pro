@@ -51,15 +51,20 @@ no larger card or live inventory was required to produce the diagnostic image.
   sparse disk file combines GPT, boot, A/B, state and journaled guest storage.
   Full logical hash and independent readback passed. Clean-checkout assembly
   and independent readback passed with fresh disk/PARTUUID/boot/guest identities.
-  The on-device NVMe tool remains plan-only; no physical installer exists yet.
+  Published NVMe payloads remain nondeployable fixtures; real candidate inputs
+  and physical installation are still pending.
 - [Installer preparation](installer-preparation.md): pinned ARM Python/storage/TLS
   client runtime and 256 MiB SD candidate built; 26.8 MB compressed initramfs.
   Private ARM file-tool/CA/NSS probes, SD inspection and byte-identical clean
-  repeat pass. Real board networking, physical writer and installation remain open.
+  repeat pass. Real board networking and installation remain open.
+- [Guarded NVMe writer](nvme-installation.md): authenticated prepare/apply,
+  exact-target TTY authorization, exclusive access, complete write/readback and
+  conservative interruption reports implemented. Private native loop and ARM
+  software checks pass; no production NVMe apply or physical acceptance.
 - [Guest fixture](guest-fixture.md): separate virt-profile kernel/initramfs and
   disposable disk built and hashed; launcher requires KVM with no TCG fallback.
   **No guest boot or KVM execution.** Guest networking/management remain open.
-- 168 Python cases across both suites and all shell regressions pass; two
+- 198 Python cases across both suites and all shell regressions pass; two
   privileged cases skipped locally have passed separately on Jammy. Actual
   files/build checks are distinct from hardware gates. Independent Sol high
   reviews and routing outcomes: [implementation evidence](implementation-evidence.md).
@@ -72,8 +77,8 @@ no larger card or live inventory was required to produce the diagnostic image.
    return full serial/inventory evidence, including EL2/NVMe observations.
 2. Supply the administration public key and actual wired MAC. Validate real
    management activation and trusted host-key verification. Deliver the
-   physical writer with payload acquisition, target locking/revalidation,
-   written-byte verification and interruption handling. The preparation runtime
+   actual per-installation candidate and verified payload acquisition. Validate
+   the writer/locking/readback/interruption protocol on authorized hardware. The preparation runtime
    has exercised software probes; board boot/DHCP/DNS/TLS remain unproven.
 3. Deliver inactive-slot updates and serial/manual rollback. Separate each
    root version's package metadata from shared `/var/lib/dpkg` before
