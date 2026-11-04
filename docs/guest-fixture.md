@@ -1,8 +1,8 @@
 # Pinned KVM guest fixture
 
 The guest artifacts have been built and checked as files. **No guest has booted**
-and no hardware KVM result is established. The physical first action remains
-the [diagnostic SD boot](diagnostic-image.md), after exact-card authorization.
+and no hardware KVM result is established. The [physical diagnostic boot](board-diagnostic-20261104.md)
+entered EL1; an EL2 diagnostic handoff test is the next prerequisite.
 The current [HTTP network fixture](guest-networking.md) replaces gateway ping
 with a host request/confirmation. Its new artifact pins and build are documented
 there. The records below retain the earlier fixture used by file-only probes;
@@ -23,7 +23,9 @@ mkdir -p out
 build/guest-fixture.sh /home/drew/orange-pi-4-pro-build/kernel /home/drew/orange-pi-4-pro-build/busybox/bin/busybox "$(pwd -P)/out/guest-fixture-20261104-03"
 ```
 
-The entrypoint passed end-to-end. Choose a new output name for another build;
+The earlier entrypoint passed end-to-end. The current seed helper has separate
+actual Jammy verification below; the complete kernel recipe has not yet been
+rerun after that change. Choose a new output name for another build;
 existing destinations are refused. It checks the clean source Git commit,
 BusyBox hash and Ubuntu cross-compiler packages, then archives only tracked
 source into the new output. It never cleans or modifies the host kernel tree.
@@ -50,6 +52,25 @@ Build/resource logs: builder `guest-fixture-build-03.log` and
 All artifact hashes, seed ID, zero counter and `e2fsck -fn` passed. Packaging and
 input guards were tested locally; no emulator or physical guest run was used
 for these results. Cross-builder binary comparison is pending.
+
+## Deterministic seed preparation
+
+`build/guest-seed.py` replaces `mke2fs -d`, which copied builder UID/GID and
+ctime into the earlier disks. The fixed 128 MiB image controls its ext4 features,
+geometry, UUID, hash seed, owners, modes and timestamps. It requires pinned
+Jammy e2fsprogs/libext2fs2 `1.46.5-2ubuntu1.2`, trusted fixed-storage output
+parents and a new regular file. No device or arbitrary seed-tree input is
+accepted. Readback checks content, inode metadata, raw superblock fields and
+`e2fsck -fn`; helper and direct imports are hashed with future fixture artifacts.
+
+On the actual builder, two unmodified CLI builds as root and drew, with different
+umask, working directory and timezone, produced identical 134,217,728-byte files:
+`ff595fac0b9a7d990f099edc0dd0f9d4859fb9942e185d2f2377088ce32bd577`.
+[Evidence](evidence/guest-seed-20261104.json) records the scope. Existing fixture
+artifacts and pins above are retained; use the complete manifest of a newly
+built fixture rather than combining an old disk pin with the new seed. This is
+filesystem reproducibility on the pinned builder, not KVM execution or a
+cross-toolchain claim.
 
 ## Earlier fixture behavior and safeguards
 

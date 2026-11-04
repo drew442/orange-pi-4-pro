@@ -795,3 +795,18 @@ and restart evidence. Actual board DHCP, guest kernel/virtio traffic, KVM,
 long-run behavior and network continuity through boot/update/rollback remain
 open. Token/cache/account pricing and exact reviewer time were not exposed;
 monetary cost and measured savings remain unknown.
+
+## Fixed guest seed metadata
+
+Sol medium implemented a bounded seed helper; independent Sol high review found
+no blocker and requested complete imported-source provenance. The coordinator
+retained a full build/configs/scripts/licenses archive in future fixture outputs.
+Eight helper regressions and the actual fixture staging/seed shell regression
+pass locally. The production CLI was then run without test substitutions on the
+pinned Jammy builder as root and as drew with different umask/cwd/timezone.
+Both full 128 MiB files compare byte for byte, SHA-256
+`ff595fac0b9a7d990f099edc0dd0f9d4859fb9942e185d2f2377088ce32bd577`.
+[Evidence](evidence/guest-seed-20261104.json) records the package pins and sources.
+Readback includes explicit ext4 metadata, content and e2fsck. The complete
+kernel/fixture recipe has not been rerun after this change; existing published
+fixture pins remain unchanged. No guest or physical storage test is implied.

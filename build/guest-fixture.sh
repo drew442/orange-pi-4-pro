@@ -14,7 +14,7 @@ output=$(realpath -m -- "$3")
 kernel=$(realpath -e -- "$1")
 busybox=$(realpath -e -- "$2")
 [[ -d $kernel && -f $busybox && -x $busybox ]] || { echo 'Invalid kernel tree or BusyBox executable' >&2; exit 1; }
-for tool in git python3 aarch64-linux-gnu-gcc make readelf cpio gzip tar mkfs.ext4 sha256sum dpkg-query; do
+for tool in git python3 aarch64-linux-gnu-gcc make readelf cpio gzip tar mke2fs debugfs e2fsck findmnt sha256sum dpkg-query; do
     command -v "$tool" >/dev/null || { echo "Missing host tool: $tool" >&2; exit 1; }
 done
 readarray -t pins < <(python3 - "$repo/configs/diagnostic-sources.lock.json" <<'PY'
@@ -102,30 +102,30 @@ chmod 0755 "$root/etc/udhcpc.script"
 find "$root" -type d -exec chmod 0755 {} +
 find "$root" -exec touch -h -d "@$SOURCE_DATE_EPOCH" {} +
 (cd "$root"; find . -print0 | sort -z | cpio --null -o --format=newc --owner=0:0 --reproducible --quiet) | gzip -n -9 > "$output/initramfs.cpio.gz"
-printf 'a733-kvm-guest-fixture-v1\n' > "$output/seed/fixture-id"
-printf '0\n' > "$output/seed/counter"
-find "$output/seed" -exec touch -d "@$SOURCE_DATE_EPOCH" {} +
-# This fresh private directory contains only a newly-created regular file, no device paths.
-( set -o noclobber; : > "$output/guest-disk.raw" )
-[[ -f $output/guest-disk.raw && ! -L $output/guest-disk.raw ]]
-truncate -s 134217728 "$output/guest-disk.raw"
-E2FSPROGS_FAKE_TIME=$SOURCE_DATE_EPOCH mkfs.ext4 -q -F -b 4096 -O ^has_journal \
-    -E lazy_itable_init=0,lazy_journal_init=0,hash_seed=d67f33ba-e201-46bc-980b-61901bbd1156 -U d67f33ba-e201-46bc-980b-61901bbd1156 \
-    -L kvm-fixture -d "$output/seed" "$output/guest-disk.raw" > "$output/logs/disk-build.log" 2>&1
+# The fixed seed builder controls filesystem metadata instead of copying host
+# UID/GID/ctime from an arbitrary staging directory with mke2fs -d.
+python3 -I -B "$repo/build/guest-seed.py" "$output/guest-disk.raw" > "$output/logs/disk-build.log" 2>&1
 cp -- "$repo/build/guest-fixture.sh" "$output/guest-fixture.sh"
+cp -- "$repo/build/guest-seed.py" "$output/guest-seed.py"
 cp -- "$repo/configs/guest-init" "$output/guest-init"
 cp -- "$repo/configs/guest-network-cgi" "$output/guest-network-cgi"
 cp -R -- "$repo/licenses" "$output/licenses"
+# Preserve the complete helper import/source closure, independent of the checkout.
+tar --sort=name --mtime="@$SOURCE_DATE_EPOCH" --owner=0 --group=0 --numeric-owner \
+    --exclude=__pycache__ -C "$repo" -cf - build configs scripts licenses | gzip -n > "$output/guest-build-recipe.tar.gz"
 # src/LICENSES and src/COPYING are retained alongside the full pinned source.
 (cd "$output"; sha256sum Image kernel.config initramfs.cpio.gz guest-disk.raw \
-    guest-kernel.fragment guest-init guest-network-cgi guest-fixture.sh diagnostic-sources.lock.json builder-packages.lock.tsv > SHA256SUMS)
+    guest-kernel.fragment guest-init guest-network-cgi guest-fixture.sh guest-seed.py guest-build-recipe.tar.gz diagnostic-sources.lock.json builder-packages.lock.tsv > SHA256SUMS)
 python3 - "$output" "${pins[0]}" "${pins[1]}" "${pins[2]}" <<'PY'
-import hashlib, json, pathlib, sys
+import hashlib, json, os, pathlib, sys
 root = pathlib.Path(sys.argv[1])
 files = {}
 for line in (root / 'SHA256SUMS').read_text().splitlines():
     digest, name = line.split(maxsplit=1)
     files[name] = {'sha256': digest, 'bytes': (root / name).stat().st_size}
+seed = json.loads((root / 'logs/disk-build.log').read_bytes())
+assert seed['bytes'] == files['guest-disk.raw']['bytes'] and seed['sha256'] == files['guest-disk.raw']['sha256']
+assert seed['source_date_epoch'] == int(os.environ['SOURCE_DATE_EPOCH'])
 (root / 'artifact-manifest.json').write_text(json.dumps({
     'schema': 1, 'purpose': 'ARM64 QEMU virt KVM guest fixture; preparation only',
     'hardware_acceptance': 'pending', 'kernel_commit': sys.argv[2],
@@ -133,6 +133,7 @@ for line in (root / 'SHA256SUMS').read_text().splitlines():
     'source_date_epoch': 1793750400, 'compilation_jobs': 2,
     'disk_fixture_id': 'a733-kvm-guest-fixture-v1', 'initial_counter': 0,
     'disk_uuid': 'd67f33ba-e201-46bc-980b-61901bbd1156',
+    'seed_builder': seed,
     'network_probe': 'DHCP plus host HTTP request/confirmation through explicit 127.0.0.1 TCP forward to guest port 8080; KVM execution unproven',
     'files': files,
 }, indent=2) + '\n')

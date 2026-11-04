@@ -55,16 +55,37 @@ assert 'src/.scmversion' in recipe
 # Execute the actual staging/package and seed sections without kernel compilation.
 # The host ELF placeholder is used solely to test archive contents, never executed.
 output = work / 'artifact'
-output.mkdir()
+output.mkdir(mode=0o700)
 (output / 'initramfs-root').mkdir()
 (output / 'seed').mkdir()
 (output / 'logs').mkdir()
 start = recipe.index('root=$output/initramfs-root\n')
 end = recipe.index('cp -- "$repo/build/guest-fixture.sh"', start)
 commands = recipe[start:end]
+# Only this host-only fixture bypasses the known-fixed-storage/Jammy policies.
+# Production exposes no override: the actual builder runs the exact CLI.
+shim = work / 'seed-shim.py'
+shim.write_text('''import importlib.util, json, os, pathlib, sys
+spec=importlib.util.spec_from_file_location('seed_test', pathlib.Path(sys.argv[1])/'build/guest-seed.py')
+S=importlib.util.module_from_spec(spec);spec.loader.exec_module(S)
+check=S.TRUST.check_directory
+temporary=pathlib.Path('/tmp').stat()
+def fixture_directory(info):
+    if (info.st_dev,info.st_ino)!=(temporary.st_dev,temporary.st_ino):check(info)
+S.TRUST.check_directory=fixture_directory
+S.STATE.validate_workspace_storage=lambda path:None
+S.check_versions=lambda:None
+print(json.dumps(S.build(pathlib.Path(sys.argv[2]))))
+''')
+invocation = 'python3 -I -B "$repo/build/guest-seed.py" "$output/guest-disk.raw"'
+assert commands.count(invocation) == 1
+commands = commands.replace(invocation, 'python3 "$seed_shim" "$repo" "$output/guest-disk.raw"')
 env = dict(os.environ, repo=str(repo), output=str(output),
-           busybox=shutil.which('true'), SOURCE_DATE_EPOCH='1793750400', LC_ALL='C')
-subprocess.run(['bash', '-euo', 'pipefail', '-c', commands], env=env, check=True)
+           busybox=shutil.which('true'), seed_shim=str(shim), SOURCE_DATE_EPOCH='1793750400', LC_ALL='C')
+packaging = subprocess.run(['bash', '-euo', 'pipefail', '-c', commands], env=env,
+                           capture_output=True, text=True)
+assert packaging.returncode == 0, (packaging.stderr +
+    (output / 'logs/disk-build.log').read_text())[-8000:]
 disk = output / 'guest-disk.raw'
 assert disk.is_file() and not disk.is_symlink()
 assert disk.stat().st_size == 134217728

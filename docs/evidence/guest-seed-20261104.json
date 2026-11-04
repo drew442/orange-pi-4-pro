@@ -1,0 +1,62 @@
+{
+  "schema": 1,
+  "classification": "fixed disposable seed file reproducibility on pinned Jammy builder; no guest execution",
+  "builder": "drew@build.drewnet.online",
+  "os": "Ubuntu22.04.5 amd64",
+  "packages": {
+    "e2fsprogs": "1.46.5-2ubuntu1.2",
+    "libext2fs2": "1.46.5-2ubuntu1.2"
+  },
+  "runs": [
+    {
+      "uid": "root",
+      "path": "/var/lib/a733-seed-root-20261104/guest-disk.raw"
+    },
+    {
+      "uid": "drew",
+      "umask": "077",
+      "cwd": "/",
+      "timezone": "Pacific/Auckland",
+      "path": "/var/lib/a733-seed-drew-20261104/guest-disk.raw"
+    }
+  ],
+  "result": {
+    "cmp_exit": 0,
+    "bytes": 134217728,
+    "sha256": "ff595fac0b9a7d990f099edc0dd0f9d4859fb9942e185d2f2377088ce32bd577",
+    "source_date_epoch": 1793750400
+  },
+  "sources": {
+    "build/guest-seed.py": {
+      "sha256": "b7c1b89ab0f5d2365a05e6b432e440d94c478d4e4ca3cd344a4127072ade0ded"
+    },
+    "build/maintenance-tools.py": {
+      "sha256": "d45c9ff6d5fb9e67e95dfeef89f91419be37161267259c11ca416353e2c07c8c"
+    },
+    "build/host-state.py": {
+      "sha256": "e088e7557e210a1718aaf70ebaaf0f481144fe640f640650a2a76e71cc72e6ec"
+    },
+    "build/host-payload.py": {
+      "sha256": "3aa7aafdb5dcd037f047c5e606ead40a91616bf338ae30c055d3264401938a37"
+    },
+    "build/root-selection.py": {
+      "sha256": "15b5a64630cd74793af946ea89b5b3f3bd580a07bf52baa9a893bdd71b82b6e2"
+    },
+    "configs/host_config.py": {
+      "sha256": "520140d56402ab803b8c137981cef5182c5e263a44ec8446ce836b6a7d160a22"
+    },
+    "tests/test_guest_seed.py": {
+      "sha256": "97a5506d7362e1572e7944ca445eca2b542f7e3b7830ea435e7618458c783776"
+    }
+  },
+  "limitations": [
+    "Whole kernel fixture recipe not rerun after seed change.",
+    "Older fixture hashes remain valid for the original artifacts.",
+    "No board or KVM guest test is implied."
+  ],
+  "review": {
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "outcome": "No blockers in helper; retain direct/imported source provenance. Root added complete build/configs/scripts/licenses recipe archive to future fixture artifacts."
+  }
+}
