@@ -152,6 +152,9 @@ hi_root() {
     hi_regular /newroot/usr/lib/aarch64-linux-gnu/ld-linux-aarch64.so.1 &&
     hi_bb test -x /newroot/usr/lib/systemd/systemd &&
     hi_bb test -x /newroot/usr/lib/aarch64-linux-gnu/ld-linux-aarch64.so.1 || return 1
+    hi_regular /newroot/usr/lib/orangepi-hypervisor/host-management.py &&
+    hi_regular /newroot/usr/lib/orangepi-hypervisor/host_config.py &&
+    hi_bb test -x /newroot/usr/bin/python3 || return 1
     hash=$(hi_bb sha256sum /newroot/usr/lib/orangepi-hypervisor/payload.json) || return 1
     [ "${hash%% *}" = "$ROOT_MARKER_SHA256" ]
 }
@@ -248,6 +251,9 @@ hi_move() {
 # applet or in the new dynamic init cannot return to this recovery shell.
 hi_switch() { exec /bin/busybox switch_root /newroot /sbin/init; }
 hi_console() { exec </dev/console >/dev/console 2>&1; }
+hi_management() {
+    hi_bb chroot /newroot /usr/bin/python3 -I -B /usr/lib/orangepi-hypervisor/host-management.py prepare
+}
 hi_handoff() {
     HI_MOUNTS=; HI_MACHINE_ID=; HI_STATE_MOUNT=/run/a733-state
     hi_mount /proc -t proc -o nosuid,nodev,noexec proc &&
@@ -264,6 +270,7 @@ hi_handoff() {
     hi_move /proc /newroot/proc || return 1
     hi_move /sys /newroot/sys || return 1
     hi_move /dev /newroot/dev || return 1
+    hi_management || return 1
     hi_switch
     # Real switch_root never returns on success.
 }

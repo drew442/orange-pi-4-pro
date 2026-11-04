@@ -1,0 +1,8 @@
+{
+  "build_exit": 0,
+  "build_seconds": 168.9,
+  "resource_samples": 17,
+  "minimum_observed_available_memory_bytes": 7329832960,
+  "minimum_observed_filesystem_free_bytes": 32656011264,
+  "scope": "Ubuntu builder only; not A733 requirements"
+}

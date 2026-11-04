@@ -44,6 +44,18 @@ def modules(extra=None):
 
 
 class ArchiveTests(unittest.TestCase):
+    def test_management_runtime_is_installed_and_bound_to_content_hashes(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            record = payload.install_management(root)
+            self.assertEqual(record['profile'], 'a733-management-v1')
+            self.assertEqual(len(record['files']), 3)
+            for name, expected in record['files'].items():
+                self.assertEqual(payload.file_record(root / name), expected)
+            self.assertEqual((root / 'usr/lib/orangepi-hypervisor/host-management.py').stat().st_mode & 0o777, 0o755)
+            with self.assertRaisesRegex(ValueError, 'already exists'):
+                payload.install_management(root)
+
     def test_tar_traversal_and_absolute(self):
         for name in ('../escape', '/escape', 'usr/../../escape'):
             with self.subTest(name=name), self.assertRaises(ValueError):

@@ -1,0 +1,54 @@
+{
+  "classification": "managed regular-file root checks; no board boot or KVM acceptance",
+  "management_runtime": {
+    "files": {
+      "usr/lib/orangepi-hypervisor/host-management.py": {
+        "bytes": 20546,
+        "sha256": "5b6dcabc36a081de04d54e13e0174958489160e2e8b994b02dd9eb42cd73d22e"
+      },
+      "usr/lib/orangepi-hypervisor/host_config.py": {
+        "bytes": 2875,
+        "sha256": "b92903460ddc78756934697cd87f11c9acaa28d24ecd412894208870324d95c8"
+      },
+      "usr/lib/systemd/system/a733-management-ssh.service": {
+        "bytes": 360,
+        "sha256": "d9603c6eb460ab1429234cbf6f7689b1dbbf72a4fcc61e97e90458e8877c07cb"
+      }
+    },
+    "profile": "a733-management-v1"
+  },
+  "slots": {
+    "A": {
+      "raw": {
+        "bytes": 4294967296,
+        "sha256": "9ae1b5daabff5f7468be5d30f526ead3c4d3e042953480f5b289bead454d3ff3"
+      },
+      "compressed": {
+        "bytes": 173053400,
+        "sha256": "0943c929d591db53b64557625e3dd1abe5462b83defdf83f9b270da19f3870c0"
+      },
+      "runtime_files_match": true,
+      "read_only_no_journal": true,
+      "root_password_locked": true,
+      "machine_id_empty": true,
+      "host_keys_absent": true,
+      "compressed_expansion_matches": true
+    },
+    "B": {
+      "raw": {
+        "bytes": 4294967296,
+        "sha256": "70b401c51e5363c182d5916b2b67e29fa2ca1e402f2589dced08e9345ff380a1"
+      },
+      "compressed": {
+        "bytes": 173053267,
+        "sha256": "f2747502ca3d52f467f57080b520a02e8c83f88602b17ac4507de47e3789e372"
+      },
+      "runtime_files_match": true,
+      "read_only_no_journal": true,
+      "root_password_locked": true,
+      "machine_id_empty": true,
+      "host_keys_absent": true,
+      "compressed_expansion_matches": true
+    }
+  }
+}

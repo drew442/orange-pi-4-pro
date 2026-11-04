@@ -1,0 +1,13 @@
+{
+  "classification": "independent generic host archive inspection; no hardware boot",
+  "archive": {
+    "bytes": 4761902,
+    "sha256": "00b8cbe9ae85d3abe7b772981b5b685c4326a924abc13f336ce3f2cb577bcc84"
+  },
+  "regular_entries_verified": 345,
+  "all_entries_checked": 424,
+  "metadata_and_paths": "passed",
+  "configuration": "state UUID and kernel ABI only",
+  "current_init_and_resolver": "exact byte match",
+  "shell_link": "busybox"
+}

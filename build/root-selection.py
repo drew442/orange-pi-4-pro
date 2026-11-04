@@ -118,10 +118,26 @@ def capture_root(image, expected, destination):
     destination.chmod(0o400)
 
 
-def prepare(image, slot):
-    roots = json.loads((REPO / 'docs/evidence/host-payload-20261104.json').read_text())
+def prepare(image, slot, payload_manifest):
+    descriptor = os.open(payload_manifest, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    with os.fdopen(descriptor, 'rb') as source:
+        if not stat.S_ISREG(os.fstat(source.fileno()).st_mode):
+            raise ValueError('trusted payload manifest must be a regular file')
+        data = source.read(1024**2 + 1)
+    if len(data) > 1024**2:
+        raise ValueError('payload manifest exceeds size bound')
+    roots = json.loads(data)
+    profile = roots.get('management_runtime')
+    if (roots['slot_bytes'] != INIT.PAYLOAD.SLOT_BYTES or
+            roots['slot_uuids'] != INIT.PAYLOAD.SLOT_UUIDS or
+            roots['kernel_release'] != INIT.PAYLOAD.KERNEL_RELEASE or
+            not isinstance(profile, dict) or profile.get('profile') != 'a733-management-v1' or
+            set(profile.get('files', {})) != {destination for destination, _ in INIT.PAYLOAD.MANAGEMENT_FILES.values()}):
+        raise ValueError('payload manifest lacks compatible managed-host profile')
     diag = json.loads((REPO / 'docs/evidence/diagnostic-20261104.json').read_text())['files']
     expected = roots['files'][f'root-{slot}.ext4']
+    if expected['bytes'] != INIT.PAYLOAD.SLOT_BYTES:
+        raise ValueError('root image must fill the fixed slot byte budget')
     parent = REPO / 'out'
     if parent.is_symlink():
         raise ValueError('symlink staging parent refused')
@@ -136,6 +152,8 @@ def prepare(image, slot):
     for name in ('Image', 'board.dtb', 'kernel.config', 'initramfs.cpio.gz'):
         if metadata['sources'][name] != diag[name]:
             raise ValueError('root and immutable boot stack differ')
+    if metadata.get('management_runtime') != roots['management_runtime']:
+        raise ValueError('root marker management runtime differs from trusted manifest')
     return serialize({'SCHEMA': '1', 'SLOT': slot, 'ROOT_UUID': INIT.PAYLOAD.SLOT_UUIDS[slot],
                       'ROOT_MARKER_SHA256': hashlib.sha256(marker).hexdigest(),
                       'KERNEL_RELEASE': INIT.PAYLOAD.KERNEL_RELEASE})
@@ -146,12 +164,14 @@ if __name__ == '__main__':
     parser.add_argument('root_image', type=Path)
     parser.add_argument('new_output', type=Path)
     parser.add_argument('--slot', choices=('A', 'B'), required=True)
+    parser.add_argument('--payload-manifest', type=Path, required=True,
+                        help='trusted release/build manifest containing the full root image hash')
     args = parser.parse_args()
     try:
         output = Path(os.path.abspath(args.new_output))
         if output.parent != REPO / 'out' or output.parent.is_symlink():
             raise ValueError('output must be a new regular file directly below repo/out/')
-        data = prepare(args.root_image, args.slot)
+        data = prepare(args.root_image, args.slot, args.payload_manifest)
         output.parent.mkdir(exist_ok=True)
         descriptor = os.open(output, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
         with os.fdopen(descriptor, 'wb') as stream:

@@ -1,0 +1,48 @@
+{
+  "key_generation_noreplace": "passed",
+  "private_key_single_link": true,
+  "private_key_reused": true,
+  "missing_public_key_recovered": true,
+  "test_host_public_key_fingerprint": "SHA256:kBhL/4zUggwDFB2F8KJn95U3td9p2nLtoGhAZJA4Ock",
+  "sshd_syntax": "passed",
+  "sshd_effective_policy": {
+    "addressfamily": "inet",
+    "listenaddress": "192.0.2.10:22",
+    "authenticationmethods": "publickey",
+    "passwordauthentication": "no",
+    "kbdinteractiveauthentication": "no",
+    "usepam": "yes",
+    "allowusers": "root@192.0.2.0/24",
+    "disableforwarding": "yes",
+    "authorizedkeysfile": "/root/.ssh/authorized_keys"
+  },
+  "locked_root_pam_account_check": 0,
+  "password_locked_root_public_key_login": "not performed",
+  "prepare_guard_without_NVMe": "rejected before configuration writes",
+  "private_file_preparation": "passed; guard mocked only inside disposable chroot",
+  "unit_verify_returncode": 0,
+  "unit_verify_diagnostics": "",
+  "classification": "ARM64 binfmt/chroot software checks; no board boot, SSH connection or KVM acceptance",
+  "runtime": {
+    "profile": "a733-management-v1",
+    "files": {
+      "usr/lib/orangepi-hypervisor/host-management.py": {
+        "bytes": 20546,
+        "sha256": "5b6dcabc36a081de04d54e13e0174958489160e2e8b994b02dd9eb42cd73d22e"
+      },
+      "usr/lib/orangepi-hypervisor/host_config.py": {
+        "bytes": 2875,
+        "sha256": "b92903460ddc78756934697cd87f11c9acaa28d24ecd412894208870324d95c8"
+      },
+      "usr/lib/systemd/system/a733-management-ssh.service": {
+        "bytes": 360,
+        "sha256": "d9603c6eb460ab1429234cbf6f7689b1dbbf72a4fcc61e97e90458e8877c07cb"
+      }
+    }
+  },
+  "private_fixture_keys": "deleted with temporary chroot",
+  "userspace": {
+    "bytes": 169852145,
+    "sha256": "1967e76c0c831c1c0bab432e7116457d4372c15b413090c054f8958b72dcb392"
+  }
+}

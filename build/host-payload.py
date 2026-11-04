@@ -23,8 +23,13 @@ SLOT_BYTES = 4 * 1024**3
 KERNEL_RELEASE = '6.6.98-a733-diag'
 SLOT_UUIDS = {'A': 'a7330000-0000-4000-8000-00000000000a',
               'B': 'a7330000-0000-4000-8000-00000000000b'}
-CLASSIFICATION = 'unconfigured prototype; no boot integration or hardware acceptance'
+CLASSIFICATION = 'managed host root prototype; installation and hardware acceptance pending'
 BOOT_FILES = ('Image', 'board.dtb', 'kernel.config', 'initramfs.cpio.gz')
+MANAGEMENT_FILES = {
+    'configs/host-management.py': ('usr/lib/orangepi-hypervisor/host-management.py', 0o755),
+    'configs/host_config.py': ('usr/lib/orangepi-hypervisor/host_config.py', 0o644),
+    'configs/a733-management-ssh.service': ('usr/lib/systemd/system/a733-management-ssh.service', 0o644),
+}
 
 
 def file_record(path):
@@ -200,6 +205,19 @@ def write_json(path, value):
     Path(path).write_text(json.dumps(value, indent=2, sort_keys=True) + '\n')
 
 
+def install_management(root):
+    records = {}
+    for source, (destination, mode) in MANAGEMENT_FILES.items():
+        target = within_root(root, destination)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        if target.exists() or target.is_symlink():
+            raise ValueError(f'management destination already exists: {destination}')
+        shutil.copyfile(REPO / source, target)
+        target.chmod(mode)
+        records[destination] = file_record(target)
+    return {'profile': 'a733-management-v1', 'files': records}
+
+
 def make_image(root, output, slot, size=SLOT_BYTES):
     if output.is_symlink():
         raise ValueError('symlink image output refused')
@@ -316,7 +334,8 @@ def build(rootfs, diagnostic, output):
                  REPO / 'build/host-userspace.sh',
                  REPO / 'configs/host-userspace-packages.txt',
                  REPO / 'configs/host-userspace-packages.lock.tsv',
-                 REPO / 'configs/host-userspace-package-hashes.lock.tsv'):
+                 REPO / 'configs/host-userspace-package-hashes.lock.tsv',
+                 *(REPO / source for source in MANAGEMENT_FILES)):
         shutil.copyfile(path, provenance / path.name)
     for name in BOOT_FILES:
         shutil.copyfile(diagnostic / name, output / name)
@@ -324,6 +343,7 @@ def build(rootfs, diagnostic, output):
         root = Path(stage)
         extract_rootfs(rootfs, root)
         module_bom = import_modules(root, modules)
+        management = install_management(root)
         write_json(output / 'modules.json', module_bom)
         metadata_dir = within_root(root, 'usr/lib/orangepi-hypervisor')
         metadata_dir.mkdir(parents=True, exist_ok=True)
@@ -331,7 +351,8 @@ def build(rootfs, diagnostic, output):
             write_json(metadata_dir / 'payload.json', {
                 'schema': 1, 'classification': CLASSIFICATION, 'slot': slot,
                 'filesystem_uuid': SLOT_UUIDS[slot], 'kernel_release': KERNEL_RELEASE,
-                'sources': sources, 'modules_bom': file_record(output / 'modules.json')})
+                'sources': sources, 'modules_bom': file_record(output / 'modules.json'),
+                'management_runtime': management})
             image = output / f'root-{slot}.ext4'
             make_image(root, image, slot)
             with image.open('rb') as source, (output / (image.name + '.gz')).open('xb') as target:
@@ -343,6 +364,7 @@ def build(rootfs, diagnostic, output):
         'schema': 1, 'board': 'Orange Pi 4 Pro A733', 'classification': CLASSIFICATION,
         'kernel_release': KERNEL_RELEASE, 'slot_bytes': SLOT_BYTES,
         'slot_uuids': SLOT_UUIDS, 'sources': sources, 'files': files,
+        'management_runtime': management,
         'builder_packages': builder_packages,
         'reproducibility': 'not established; filesystem/package-generated metadata may vary',
         'tools': {tool: tool_version(tool) for tool in ('mke2fs', 'tune2fs', 'e2fsck')}})

@@ -50,6 +50,9 @@ def verify(busybox):
         marker = b'ash marker fixture\n'
         put('newroot/usr/lib/orangepi-hypervisor/payload.json', marker)
         put('newroot/usr/lib/systemd/systemd', b'fixture, never executed', 0o755)
+        put('newroot/usr/lib/orangepi-hypervisor/host-management.py', b'fixture, never executed', 0o755)
+        put('newroot/usr/lib/orangepi-hypervisor/host_config.py', b'fixture, never executed')
+        put('newroot/usr/bin/python3', b'fixture, never executed', 0o755)
         put('newroot/usr/lib/aarch64-linux-gnu/ld-linux-aarch64.so.1', b'fixture, never executed', 0o755)
         (root / 'newroot/sbin').symlink_to('usr/sbin')
         (root / 'newroot/lib').symlink_to('usr/lib')
@@ -109,7 +112,7 @@ printf '10 pinned ARM64 ash validation checks passed; both slots use unchanged b
         applets = subprocess.check_output(['/usr/sbin/chroot', str(root), '/bin/busybox', '--list'],
                                           env=environment, text=True).splitlines()
         required = {'cmp', 'stat', 'readlink', 'sha256sum', 'awk', 'grep', 'mount', 'umount', 'switch_root',
-                    'test', 'cat', 'head', 'mkdir', 'sed', 'sleep', 'sh', 'ash', 'chmod', 'uname'}
+                    'test', 'cat', 'head', 'mkdir', 'sed', 'sleep', 'sh', 'ash', 'chmod', 'uname', 'chroot'}
         if not required <= set(applets):
             raise ValueError(f'BusyBox missing: {required - set(applets)}')
         result = subprocess.run(['/usr/sbin/chroot', str(root), '/bin/busybox', 'ash', '/check.sh'],

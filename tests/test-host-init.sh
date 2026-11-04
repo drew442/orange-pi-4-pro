@@ -44,6 +44,9 @@ hi_bb() {
     local command=$1 arg path target count value
     shift
     case "$command" in
+        chroot)
+            printf 'management %s\n' "$*" >> "$fixture/log"
+            [ ! -f "$fixture/fail-management" ]; return ;;
         head)
             printf 'bounded-read %s\n' "$*" >> "$fixture/log"
             case "${!#}" in */boot/selected.conf) printf 'read-selector\n' >> "$fixture/log" ;; esac
@@ -92,7 +95,7 @@ hi_bb() {
 }
 reset_fixture() {
     rm -rf "$fixture"/*
-    mkdir -p "$fixture/etc" "$fixture/proc/self" "$fixture/newroot"/{run,tmp,etc,var,root,home,proc,sys,dev,usr/sbin,usr/lib/orangepi-hypervisor,usr/lib/systemd,usr/lib/aarch64-linux-gnu}
+    mkdir -p "$fixture/etc" "$fixture/proc/self" "$fixture/newroot"/{run,tmp,etc,var,root,home,proc,sys,dev,usr/bin,usr/sbin,usr/lib/orangepi-hypervisor,usr/lib/systemd,usr/lib/aarch64-linux-gnu}
     chmod 755 "$fixture/newroot/etc"
     ln -s usr/sbin "$fixture/newroot/sbin"
     ln -s usr/lib "$fixture/newroot/lib"
@@ -104,6 +107,10 @@ reset_fixture() {
     : > "$fixture/newroot/etc/machine-id"
     : > "$fixture/newroot/usr/lib/systemd/systemd"
     : > "$fixture/newroot/usr/lib/aarch64-linux-gnu/ld-linux-aarch64.so.1"
+    : > "$fixture/newroot/usr/lib/orangepi-hypervisor/host-management.py"
+    : > "$fixture/newroot/usr/lib/orangepi-hypervisor/host_config.py"
+    : > "$fixture/newroot/usr/bin/python3"
+    chmod 755 "$fixture/newroot/usr/bin/python3"
     chmod 755 "$fixture/newroot/usr/lib/systemd/systemd" "$fixture/newroot/usr/lib/aarch64-linux-gnu/ld-linux-aarch64.so.1"
     printf 'a733-state-v1\n%s\n' "$state_uuid" > "$state/.a733-state"
     printf '0123456789abcdef0123456789abcdef\n' > "$state/identity/machine-id"
@@ -144,6 +151,7 @@ def index(fragment):
     return next(i for i, line in enumerate(lines) if fragment in line)
 assert index('rw,nodev,nosuid') < index('read-selector') < index('resolve-root') < index('ro,noload,nodev /dev/nvme0n1p2 /newroot') < index('--move /run /newroot/run')
 assert index('devtmpfs /dev') < index('console') < index('resolve')
+assert index('--move /dev /newroot/dev') < index('management /newroot /usr/bin/python3 -I -B') < index('switch_root ')
 assert index('ro,noload,nodev,nosuid') < index('umount /run/a733-state')
 assert index('umount /run/a733-state') < index('probe nvme0n1p4') < index('rw,nodev,nosuid')
 assert index('rw,nodev,nosuid') < index('--bind /newroot/run/a733-state/var') < index('-t overlay')
@@ -178,6 +186,10 @@ reset_fixture; mv "$fixture/newroot/usr/lib/orangepi-hypervisor" "$fixture/paylo
 reset_fixture; sed -i 's/ro,nodev/rw,nodev/' "$fixture/proc/self/mountinfo"; reject 'root mounted writable' yes
 reset_fixture; : > "$fixture/proc/self/mountinfo"; reject 'missing root mount' yes
 reset_fixture; chmod -x "$fixture/newroot/usr/lib/systemd/systemd"; reject 'init not executable' yes
+reset_fixture; rm "$fixture/newroot/usr/lib/orangepi-hypervisor/host-management.py"; reject 'management code missing' yes
+reset_fixture; touch "$fixture/fail-management"; reject 'management preparation failure' yes
+grep -q '^mount --move /newroot/dev /dev$' "$fixture/log" || fail 'management failure did not restore dev'
+grep -q '^umount /newroot/run/a733-state$' "$fixture/log" || fail 'management failure did not unmount writable state'
 reset_fixture; chmod 700 "$fixture/newroot/etc"; reject 'base etc mode differs from overlay root' yes
 reset_fixture; rm "$fixture/newroot/usr/sbin/init"; ln -s /other/init "$fixture/newroot/usr/sbin/init"; reject 'wrong init target' yes
 reset_fixture; rm "$fixture/newroot/usr/lib/aarch64-linux-gnu/ld-linux-aarch64.so.1"; reject 'missing ELF interpreter' yes

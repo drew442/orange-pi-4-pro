@@ -153,6 +153,9 @@ configuration open. The packaging helper has six nonprivileged regressions.
 | State artifact review | Sol / high | Staging-versus-filesystem metadata and storage-test coverage findings fixed; coordinator read back actual selected content and verified both full hashes/expansion |
 | NVMe root selection | Sol / medium | Fixed GPT roles, recovered-state selector and moved-/run cleanup; 84 handoff and 41 resolver fixtures |
 | Selection review | Sol / high | Mutable-inode parsing and unbounded PID1 metadata findings fixed; private authenticated capture and capped reads independently checked |
+| Management activation | Sol / medium | 20 regressions; coordinator built managed roots/state/bootstrap and executed ARM software probes |
+| Management review | Sol / high | Foreign overlay/nested mount rejection and atomic no-replace key publication corrected and rechecked; hardware activation pending |
+| Managed artifact documentation | Luna / low | Four bounded guides updated; coordinator corrected wording about mocked configuration preparation |
 
 Children used fresh focused contexts, exclusive write scopes and no delegation.
 At most two children were active. Input/output token counts, cache accounting,
