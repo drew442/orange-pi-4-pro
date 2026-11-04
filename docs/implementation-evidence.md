@@ -149,6 +149,8 @@ configuration open. The packaging helper has six nonprivileged regressions.
 | Storage boot review | Sol / high | Duplicate-field rejection independently reproduced and fix verified; coordinator tested exact ARM64 BusyBox |
 | Host handoff implementation | Sol / medium | 49 fixtures; coordinator found absolute init-link, console and overlay-permission issues, fixed at same tier |
 | Host handoff review | Sol / high | Partial-move cleanup ordering finding fixed; coordinator authenticated actual archive, tested pinned ash and private builder overlay |
+| Per-installation state | Sol / medium | 14 regressions; actual 8 GiB journaled file/gzip built using fixture inputs and fresh identities |
+| State artifact review | Sol / high | Staging-versus-filesystem metadata and storage-test coverage findings fixed; coordinator read back actual selected content and verified both full hashes/expansion |
 
 Children used fresh focused contexts, exclusive write scopes and no delegation.
 At most two children were active. Input/output token counts, cache accounting,

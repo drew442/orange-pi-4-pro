@@ -32,11 +32,16 @@ write, it must contain:
 - A root-owned regular `identity/machine-id`, exactly 32 lowercase hex digits plus
   newline, excluding the all-zero value; mode 0400, 0444, 0600 or 0644.
 
-The future provisioner must seed `var` from the matching userspace, preserve its
-package ownership/modes, prepare home/admin configuration and generate a unique
-machine-id and state UUID for each installation. Boot never formats or populates
-missing state. State format/migrations must remain compatible with both root
-slots or have a tested restore path.
+The [state-file recipe](host-state.md) now seeds `var` from the matching userspace,
+preserves its package ownership/modes, prepares home/admin configuration and
+generates a unique machine-id and state UUID for each installation. Boot never
+formats or populates missing state. State format/migrations must remain compatible
+with both root slots or have a tested restore path.
+
+The prototype boot configuration fixes one root UUID/marker in the initramfs.
+Routine A/B updates therefore still require a mutable selection record on NVMe
+before update acceptance. Regenerating SD boot files is not an acceptable routine
+root-update mechanism. No automatic rollback is claimed.
 
 After read-only validation, state is unmounted, its block identity/UUID is
 rechecked, and it mounts read-write on NVMe. Journal recovery may occur at this
