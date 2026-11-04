@@ -1,0 +1,19 @@
+{
+  "classification": "build host inventory; no A733 hardware evidence",
+  "observed_utc": "2026-11-04T11:51:47.322428+00:00",
+  "builder": "drew@build.drewnet.online",
+  "os": "Ubuntu 22.04.5 LTS amd64",
+  "cpus": 4,
+  "memory_bytes": {
+    "total": 8326705152,
+    "available": 7509159936,
+    "swap_total": 4294963200,
+    "swap_free": 4294426624
+  },
+  "workspace_disk_bytes": {
+    "total": 65174941696,
+    "used": 28652564480,
+    "free": 33178468352
+  },
+  "passwordless_sudo": true
+}

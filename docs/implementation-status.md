@@ -22,13 +22,13 @@ neither a larger card nor live inventory is a prerequisite to the first image.
 - [Jammy builder](build-host-assessment.md): real loop mount, ARM64 chroot,
   Linux 6.6.98 and patched U-Boot builds passed, two compilation jobs at a time.
   GCC 11 kernel / Linaro 7.4.1 U-Boot. Latest check: about 7 GiB available RAM,
-  30 GiB disk free and no swap configured; no resource-limit claim inferred.
+  30 GiB disk free and 4 GiB swap configured (negligible use); no resource-limit claim inferred.
 - **Diagnostic candidate built and independently verified**, not hardware booted:
   268,435,456-byte image, SHA-256 `b05086afaab3d2f9da6c33b8e457f3552cce2899c08824d371615008bf66d9fd`.
   Compressed: 16,188,652 bytes. [Manifest](evidence/diagnostic-20261104.json),
   [download/build/serial guide](diagnostic-image.md). Local files under ignored
   `out/diagnostic-20261104/`; builder `.../orange-pi-4-pro-build/artifacts/`.
-- 106 Python test cases pass, with privileged state cases run on Jammy; shell
+- 120 Python test cases pass, with privileged state cases run on Jammy; shell
   regressions pass. Actual image
   hashes, partition/filesystem contents, boot script CRC and wrapper payloads
   verified independently. NVMe planner and KVM-only launcher are preparation only.
@@ -70,6 +70,12 @@ neither a larger card nor live inventory is a prerequisite to the first image.
   hashes/contents and state/bootstrap pairing checked. Builder peak samples
   retained at least 7.3 GB available RAM and 32.6 GB filesystem free.
 
+- [Complete host SD bootstrap](host-sd-bootstrap.md) built: 256 MiB raw /
+  17,271,090 bytes compressed, pinned vendor boot chain plus NVMe handoff.
+  Independent image/archive inspection and byte-identical clean-checkout
+  assembly repeat passed; trusted fixture state required.
+  No physical boot or installer acceptance. Packaging enforces Jammy tool versions.
+
 ## Open gates and next actions
 
 1. Identify the actual SD on the provisioning computer, verify capacity/checksum,
@@ -79,7 +85,7 @@ neither a larger card nor live inventory is a prerequisite to the first image.
    Integrate userspace and the guest fixture while hardware awaits; guest drivers
    use a separate profile. Supply the administration public key and real wired MAC; validate
    management activation and host-key verification on the board. Deliver verified inactive-slot writing,
-   activation/rollback and a complete bootstrap/physical installer; selector
+   activation/rollback and a physical installer; selector
    preparation and atomic staging alone are not an installed updater.
 3. Full reproducibility remains open: U-Boot generates a random 128-byte debug
    challenge; fresh U-Boot builds differ there plus checksums. Exact generated

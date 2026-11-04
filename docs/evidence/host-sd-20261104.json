@@ -1,0 +1,224 @@
+{
+  "schema": 1,
+  "board": "Orange Pi 4 Pro A733",
+  "classification": "NVMe host SD bootstrap prototype; no physical boot or KVM acceptance",
+  "state_uuid": "bfe5ba29-3175-47a3-a410-04b87e3de1a6",
+  "kernel_release": "6.6.98-a733-diag",
+  "root_selection": "NVMe state boot/selected.conf; root A/B not embedded",
+  "source_date_epoch": 1793750400,
+  "boot_inputs": {
+    "boot0_sdcard.fex": {
+      "bytes": 245760,
+      "sha256": "9213f1c56ef932930d43b5751e8937bea0e9ae7460ec16187cc1b0dffdb75345"
+    },
+    "boot_package.fex": {
+      "bytes": 1392640,
+      "sha256": "04ea9d1e64403f1a18be0c1e04f5c55da320fef23a39d8d803e147b0c12c2e03"
+    },
+    "uImage": {
+      "bytes": 27283528,
+      "sha256": "6f9269755c4c2bc196c094899fa1ff20292f4d762c4000f77fcbb0887d5f154a"
+    },
+    "Image": {
+      "bytes": 27283464,
+      "sha256": "9df974c55fa61a77e8fe812652780dad471527eb9615c27838f481887d4c50e7"
+    },
+    "board.dtb": {
+      "bytes": 209320,
+      "sha256": "4d7d964a54668cf5dc12cd4bf7e72a625c79883541272aeba1a91adbbedb86ed"
+    },
+    "kernel.config": {
+      "bytes": 212080,
+      "sha256": "8a29d9c36e52db7e8a7d6ff757dc69e660f4273c99e5f00c5dbc5a9b7e060675"
+    }
+  },
+  "sources": {
+    "boot0_sdcard.fex": {
+      "path": "/home/drew/orange-pi-4-pro-build/artifacts/boot0_sdcard.fex",
+      "bytes": 245760,
+      "sha256": "9213f1c56ef932930d43b5751e8937bea0e9ae7460ec16187cc1b0dffdb75345"
+    },
+    "boot_package.fex": {
+      "path": "/home/drew/orange-pi-4-pro-build/artifacts/boot_package.fex",
+      "bytes": 1392640,
+      "sha256": "04ea9d1e64403f1a18be0c1e04f5c55da320fef23a39d8d803e147b0c12c2e03"
+    },
+    "uImage": {
+      "path": "/home/drew/orange-pi-4-pro-build/artifacts/uImage",
+      "bytes": 27283528,
+      "sha256": "6f9269755c4c2bc196c094899fa1ff20292f4d762c4000f77fcbb0887d5f154a"
+    },
+    "Image": {
+      "path": "/home/drew/orange-pi-4-pro-build/artifacts/Image",
+      "bytes": 27283464,
+      "sha256": "9df974c55fa61a77e8fe812652780dad471527eb9615c27838f481887d4c50e7"
+    },
+    "board.dtb": {
+      "path": "/home/drew/orange-pi-4-pro-build/artifacts/board.dtb",
+      "bytes": 209320,
+      "sha256": "4d7d964a54668cf5dc12cd4bf7e72a625c79883541272aeba1a91adbbedb86ed"
+    },
+    "kernel.config": {
+      "path": "/home/drew/orange-pi-4-pro-build/artifacts/kernel.config",
+      "bytes": 212080,
+      "sha256": "8a29d9c36e52db7e8a7d6ff757dc69e660f4273c99e5f00c5dbc5a9b7e060675"
+    }
+  },
+  "host_initramfs": {
+    "path": "/home/drew/orange-pi-4-pro-build/management-work-20261104/out/host-initramfs-20261104-05/initramfs.cpio.gz",
+    "bytes": 4761902,
+    "sha256": "00b8cbe9ae85d3abe7b772981b5b685c4326a924abc13f336ce3f2cb577bcc84"
+  },
+  "trusted_host_manifest": {
+    "path": "/home/drew/orange-pi-4-pro-build/management-work-20261104/out/host-initramfs-20261104-05/manifest.json",
+    "bytes": 75333,
+    "sha256": "870f63f174623a6df92bfaa5d7e24e23f026aa23677501b9ba33332ec5d98b9e"
+  },
+  "source_bom": {
+    "schema": 1,
+    "source_date_epoch": 1793750400,
+    "vendor": {
+      "url": "https://github.com/orangepi-xunlong/orangepi-build.git",
+      "commit": "a95129bf30ea11886cc35f08ebb3e69695a26656"
+    },
+    "kernel": {
+      "url": "https://github.com/orangepi-xunlong/linux-orangepi.git",
+      "commit": "2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f"
+    },
+    "uboot": {
+      "url": "https://github.com/orangepi-xunlong/u-boot-orangepi.git",
+      "commit": "b791be842935b27268ae3d00e943a9075495f30a"
+    },
+    "patches": [
+      {
+        "path": "build/patches/uboot-env-nowhere-size.patch",
+        "sha256": "29617f37e189d5c2a9181793a4ef3c0a85fc84693e9b414e1f5b4ab6e3daaaba"
+      }
+    ],
+    "uboot_toolchain": {
+      "url": "https://mirrors.bfsu.edu.cn/armbian-releases/_toolchain/gcc-linaro-7.4.1-2019.02-x86_64_arm-linux-gnueabi.tar.xz",
+      "filename": "gcc-linaro-7.4.1-2019.02-x86_64_arm-linux-gnueabi.tar.xz",
+      "sha256": "42ccb2ed99d65b7090499e6f5ad65c4c94ae6bd022decfea102d50109557c7d2"
+    },
+    "busybox": {
+      "url": "https://ports.ubuntu.com/pool/main/b/busybox/busybox-static_1.30.1-7ubuntu3.1_arm64.deb",
+      "filename": "busybox-static_1.30.1-7ubuntu3.1_arm64.deb",
+      "sha256": "c467c2014f91795a69237339693a64089347f73a96d10613e7285b7433b3965a",
+      "binary_sha256": "0a41864f87a0737804f0f4a68a1cfa1ed22374f4f75a1be3eb376e2659ce1316"
+    },
+    "kernel_compiler": {
+      "command": "aarch64-linux-gnu-gcc",
+      "version": "11.4.0",
+      "packages": "builder-packages.lock.tsv"
+    },
+    "busybox_sources": [
+      {
+        "url": "https://ports.ubuntu.com/pool/main/b/busybox/busybox_1.30.1-7ubuntu3.1.dsc",
+        "filename": "busybox_1.30.1-7ubuntu3.1.dsc",
+        "sha256": "c1140501b5666fcf2c29f371016290dfc52964a4c303b352c565a8ce78ce7a95"
+      },
+      {
+        "url": "https://ports.ubuntu.com/pool/main/b/busybox/busybox_1.30.1.orig.tar.bz2",
+        "filename": "busybox_1.30.1.orig.tar.bz2",
+        "sha256": "3d1d04a4dbd34048f4794815a5c48ebb9eb53c5277e09ffffc060323b95dfbdc"
+      },
+      {
+        "url": "https://ports.ubuntu.com/pool/main/b/busybox/busybox_1.30.1-7ubuntu3.1.debian.tar.xz",
+        "filename": "busybox_1.30.1-7ubuntu3.1.debian.tar.xz",
+        "sha256": "5bc1660e21fb5a0b2ada3e26ae4e2d20d50477555e56df72503f0f091c4fd653"
+      }
+    ],
+    "firmware_inputs": "vendor-boot-inputs.sha256"
+  },
+  "builder_packages": {
+    "bash": {
+      "version": "5.1-6ubuntu1.1",
+      "architecture": "amd64"
+    },
+    "coreutils": {
+      "version": "8.32-4.1ubuntu1.4",
+      "architecture": "amd64"
+    },
+    "e2fsprogs": {
+      "version": "1.46.5-2ubuntu1.2",
+      "architecture": "amd64"
+    },
+    "libpython3.10-stdlib": {
+      "version": "3.10.12-1~22.04.18",
+      "architecture": "amd64"
+    },
+    "python3.10-minimal": {
+      "version": "3.10.12-1~22.04.18",
+      "architecture": "amd64"
+    },
+    "u-boot-tools": {
+      "version": "2022.01+dfsg-2ubuntu2.9",
+      "architecture": "amd64"
+    },
+    "util-linux": {
+      "version": "2.37.2-4ubuntu3.6",
+      "architecture": "amd64"
+    }
+  },
+  "recipes": {
+    "build/assemble-host.py": {
+      "bytes": 11902,
+      "sha256": "9949b03d26f4cf89b968a45d50f1e49389a9062d220f07166980d9837411fb3d"
+    },
+    "build/assemble-diagnostic.sh": {
+      "bytes": 4249,
+      "sha256": "211204c83e030ab59d343a24b5133cd53a18811c9eb762db428a44373bddbdc4"
+    },
+    "configs/host-boot.cmd": {
+      "bytes": 1115,
+      "sha256": "d65f4dc811150fed3ab9b67722e6b327341d388b0263907380c9bf59497fd93f"
+    },
+    "build/host-initramfs.py": {
+      "bytes": 9174,
+      "sha256": "6f571586f4454d47f8e970ff52b376a992ca0033ed870912f46ec2dc43b7b8bf"
+    },
+    "configs/host-init": {
+      "bytes": 12971,
+      "sha256": "6529a25da186c79db38d76ef010e378c908d30836e0534b084bb0d700e57c39f"
+    },
+    "configs/host-storage-resolver.sh": {
+      "bytes": 9771,
+      "sha256": "6b5096fa16f473796c41dcc82636bb4d06381d5f00a33438ef392ae32a911798"
+    },
+    "configs/diagnostic-sources.lock.json": {
+      "bytes": 2273,
+      "sha256": "aa39f5fca29244ca961fc3f422d7110adca6975d2c6a29f80afd9d1d2f4b4821"
+    },
+    "configs/builder-packages.lock.tsv": {
+      "bytes": 32519,
+      "sha256": "35c2faf42a936168098b1f54239825a3c42fc56c825fc0b2078bbd753425f48b"
+    },
+    "docs/evidence/diagnostic-20261104.json": {
+      "bytes": 2224,
+      "sha256": "6d743d81ee27ced3b55cbcd218bbf0693743be66e85d074e59a052c8819fde1c"
+    }
+  },
+  "boot_command": {
+    "bytes": 1115,
+    "sha256": "d65f4dc811150fed3ab9b67722e6b327341d388b0263907380c9bf59497fd93f"
+  },
+  "compatible_immutable_boot_stack": "Pinned diagnostic boot0/package/uImage/DTB; legacy arm wrappers and vendor load protocol",
+  "files": {
+    "a733-host-sd.img": {
+      "bytes": 268435456,
+      "sha256": "84389fabf3ab8391a452944891a75799ba13d0eda87dc695b404198c3dfbed48"
+    },
+    "a733-host-sd.img.gz": {
+      "bytes": 17271090,
+      "sha256": "59f817002eb61bc8b4d55b6fcd5413d29aa65f397477b23f22aed934b53ac740"
+    },
+    "uInitrd": {
+      "bytes": 4761966,
+      "sha256": "0f954b221f29507beba3965dfa6fa66bd9f5154aa6a93ef5fa8c06a8ebfea733"
+    },
+    "assembly.log": {
+      "bytes": 4252,
+      "sha256": "67c4ce8a1807b60900af8cc0b9bb167f14059a0fbafc00a6bcd958a8801278d1"
+    }
+  }
+}

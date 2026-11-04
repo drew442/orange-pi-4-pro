@@ -51,7 +51,8 @@ This is regular-file readback, not target installation or boot.
 
 State selector schema, identity and ownership checks are specified in
 [the handoff document](host-handoff.md). On-device management activation, actual
-operator-key login, complete SD host image, installer, inactive-slot writer,
+operator-key login, installation-specific state/bootstrap pairing, installer,
+inactive-slot writer,
 activation/rollback, backup, health checks, KVM and all physical acceptance
 remain open. Preserve SPI-to-NVMe preference and zero routine SD writes;
 explicit kernel/DTB/initramfs maintenance may update boot files.

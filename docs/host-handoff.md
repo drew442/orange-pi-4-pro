@@ -47,6 +47,10 @@ SSH from one configured IPv4 client CIDR, supervised renewal, and 128 MiB
 persistent plus 16 MiB volatile journals. Hardware memory/network behavior is
 unverified. See the [management guide](host-management.md).
 
+A [complete 256 MiB SD bootstrap](host-sd-bootstrap.md) now packages this handoff
+with the pinned vendor boot stack. It references fixture state and remains
+uninstalled and unbooted.
+
 ## Prepared artifacts
 
 Root choice requires an explicit trusted manifest; there is no hardcoded

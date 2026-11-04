@@ -156,6 +156,8 @@ configuration open. The packaging helper has six nonprivileged regressions.
 | Management activation | Sol / medium | 20 regressions; coordinator built managed roots/state/bootstrap and executed ARM software probes |
 | Management review | Sol / high | Foreign overlay/nested mount rejection and atomic no-replace key publication corrected and rechecked; hardware activation pending |
 | Managed artifact documentation | Luna / low | Four bounded guides updated; coordinator corrected wording about mocked configuration preparation |
+| Complete host SD bootstrap | Sol / medium | 12 authentication/path/package/assembly regressions; coordinator executed real Jammy packaging and independent disk/archive inspection |
+| Host SD boot review | Sol / high | Four unchanged diagnostic regressions and 12 host tests passed; verifier metadata comparison suggestion fixed with two coordinator regressions |
 
 Children used fresh focused contexts, exclusive write scopes and no delegation.
 At most two children were active. Input/output token counts, cache accounting,
