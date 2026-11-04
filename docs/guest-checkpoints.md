@@ -3,7 +3,9 @@
 `scripts/checkpoint-guest.py` records the current hash of an enrolled, stopped
 guest disk in its protected manifest. It never resizes or copies the disk,
 starts/stops a service, or claims filesystem cleanliness. A checkpoint is not a
-backup, snapshot or successful guest boot. Physical shutdown, restart and
+backup, snapshot or successful guest boot. Use the separate
+[backup artifact workflow](guest-backups.md) to preserve disk contents off-device.
+Physical shutdown, restart and
 restoration remain acceptance gates.
 
 ## Establish a trusted starting record

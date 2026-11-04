@@ -479,3 +479,47 @@ Children used fresh focused contexts, exclusive write scopes and no delegation.
 At most two children were active. Input/output token counts, cache accounting,
 account prices and exact reviewer repair time were not exposed; monetary cost
 and measured savings are unknown. Hardware acceptance was not delegated or waived.
+
+## 2026-11-04: streamed guest backup artifacts
+
+Source `f984c01` adds a stopped-guest sender and authenticated artifact receiver.
+Two fresh Sol medium workers owned disjoint sender/tests and format/receiver/tests
+files. Root specified the fixed framing and exact history contract, wrote the
+ARM/native integration probe and reviewed the changes. Independent Sol high
+review accepted the implementation and reran all 33 focused tests under sudo
+without skips. No child delegated or handled physical acceptance.
+
+Coordinator review corrected the receiver's subprocess descriptor path to use
+`/proc/<receiverPID>/fd/N`: `/proc/self/fd/N` would refer to findmnt's own
+descriptors. A regression and the actual native receiver storage check cover
+the correction. The artifact verification file records completed file checks;
+publication and durability belong exclusively to the final receiver receipt,
+so a post-rename fsync failure cannot leave a false durability claim inside it.
+
+[Actual ARM/native evidence](evidence/guest-backup-arm-20261104.json) records a
+3,386,765-byte compressed archive, SHA-256
+`e83ddd8bc5d71ca2507cae92ce4735add9243c36b5f991573c9f29ceef3c85de`.
+The pinned 128 MiB disk, kernel, initramfs, current manifest and exact checkpoint
+history passed ARM source streaming and native private capture/authentication,
+sparse extraction and independent full readback. A wrong compressed pin was
+refused before parsing; an existing output was refused. All source and harness
+hashes match the committed files. Source live storage/service/consumer/approval
+boundaries were substitutions inside a disposable fixture. The native receiver
+used the actual builder ext4/LVM storage check. Both ends ran on the builder;
+this is neither an off-device retention test nor a restored guest boot.
+
+The probe took 63.79 seconds, with 197,048 KiB maximum RSS. Jammy root discovery
+passed 592 tests without skips, plus four diagnostic cases and all shell
+regressions. Local discovery passed with 51 privileged skips; local root backup
+tests also passed. TOML parsing, Bash syntax and diff checks passed. Post-checks
+found no fixture directory or backup mount, with 18,750,976,000 bytes free and
+about 7.8 GB available RAM. No compilation, package installation, physical
+storage write, guest launch, clean shutdown or hardware acceptance was performed.
+Logs remain outside Git in the builder's
+`guest-backup-artifacts-20261104/logs/` directory.
+
+[Prospective operator instructions](guest-backups.md) cover authenticated SSH
+transfer to another machine and readback. Fresh-destination restore, off-device
+retention, restored KVM execution and maintenance/boot integration remain open.
+Model input/output tokens, cache use, account prices and exact review/repair
+time were not exposed; monetary cost and measured savings remain unknown.

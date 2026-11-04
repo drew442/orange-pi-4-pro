@@ -95,10 +95,14 @@ no larger card or live inventory was required to produce the diagnostic image.
   [Enrollment](guest-enrollment.md) publishes protected assets and a private disk;
   actual pinned ARM copy/UID permission checks and systemd unit parsing pass.
   [Checkpoints](guest-checkpoints.md) add pinned stopped-disk records and exact
-  history; ARM interruption/no-op/new-pin file checks pass. Actual clean shutdown,
+  history; ARM interruption/no-op/new-pin file checks pass.
+  [Backup artifacts](guest-backups.md) preserve all assets and history through a
+  streamed, authenticated archive. Actual ARM sender/native receiver full-file
+  checks pass on the same builder; off-device retention and guarded restoration
+  remain open. Actual clean shutdown,
   restart, packaging/boot integration and networking remain open.
-- 563 Python cases across both suites and all shell regressions pass; the 559-case
-  discovery suite passes on Jammy with no skips (47 privileged skips locally). Actual
+- 596 Python cases across both suites and all shell regressions pass; the 592-case
+  discovery suite passes on Jammy with no skips (51 privileged skips locally). Actual
   files/build checks are distinct from hardware gates. Independent Sol high
   reviews and routing outcomes: [implementation evidence](implementation-evidence.md).
 
