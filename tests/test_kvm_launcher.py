@@ -21,6 +21,10 @@ SPEC.loader.exec_module(launcher)
 
 class LauncherTests(unittest.TestCase):
     def setUp(self):
+        storage = patch.object(launcher.STORAGE, 'verify_guest_storage',
+                                    return_value={'fixture': 'placement mocked; no NVMe acceptance'})
+        storage.start()
+        self.addCleanup(storage.stop)
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         self.root = Path(self.tmp.name)
@@ -34,7 +38,8 @@ class LauncherTests(unittest.TestCase):
         self.args = launcher.parser().parse_args(self.cli)
 
     def test_kvm_only_and_explicit_limits(self):
-        result = launcher.prepare(self.args)
+        with launcher.prepare(self.args) as guest:
+            result = guest.report()
         argv = result["argv"]
         for flag, value in (("-machine", "virt,gic-version=host"), ("-accel", "kvm"),
                             ("-cpu", "host"), ("-m", "256"), ("-smp", "1"),
@@ -46,7 +51,8 @@ class LauncherTests(unittest.TestCase):
         self.assertEqual(result["hardware_acceptance"], "pending")
 
     def test_no_listeners_or_passthrough(self):
-        argv = launcher.prepare(self.args)["argv"]
+        with launcher.prepare(self.args) as guest:
+            argv = guest.argv()
         self.assertEqual(argv[argv.index("-netdev") + 1], "user,id=guestnet,restrict=on")
         for forbidden in ("hostfwd", "guestfwd", "-qmp", "-vnc", "vfio", "/dev/"):
             self.assertNotIn(forbidden, " ".join(argv))
@@ -55,7 +61,8 @@ class LauncherTests(unittest.TestCase):
         renamed = self.root / "disk,driver=host_device"
         self.args.disk.rename(renamed)
         self.args.disk = renamed
-        argv = launcher.prepare(self.args)["argv"]
+        with launcher.prepare(self.args) as guest:
+            argv = guest.argv()
         block = json.loads(argv[argv.index("-blockdev") + 1])
         self.assertEqual(block["driver"], "raw")
         self.assertEqual(block["file"], {"driver": "file", "filename": str(renamed)})
@@ -71,7 +78,8 @@ class LauncherTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "SHA-256 mismatch"):
             launcher.prepare(self.args)
         self.args.disk_sha256 = hashlib.sha256(self.args.disk.read_bytes()).hexdigest()
-        launcher.prepare(self.args)
+        with launcher.prepare(self.args):
+            pass
 
     def test_reject_non_regular_inputs_without_opening(self):
         fifo = self.root / "fifo"
@@ -80,21 +88,23 @@ class LauncherTests(unittest.TestCase):
         link.symlink_to(self.args.disk)
         for path in (self.root, Path("/dev/null"), fifo, link):
             with self.subTest(path=path), self.assertRaisesRegex(ValueError, "regular file"):
-                launcher.verify_file(path, self.args.disk_sha256)
+                with patch.object(self.args, "disk", path):
+                    launcher.prepare(self.args)
 
     def test_reject_disk_aliasing_boot_input(self):
         self.args.disk.unlink()
         os.link(self.args.kernel, self.args.disk)
         self.args.disk_sha256 = self.args.kernel_sha256
-        with self.assertRaisesRegex(ValueError, "separate"):
+        with self.assertRaisesRegex(ValueError, "single-link"):
             launcher.prepare(self.args)
 
     def test_empty_and_invalid_digest(self):
         self.args.disk.write_bytes(b"")
         with self.assertRaisesRegex(ValueError, "empty"):
-            launcher.verify_file(self.args.disk, hashlib.sha256(b"").hexdigest())
-        with self.assertRaisesRegex(ValueError, "Invalid SHA-256"):
-            launcher.verify_file(self.args.kernel, "not a digest")
+            launcher.prepare(self.args)
+        with patch.object(self.args, "kernel_sha256", "not a digest"):
+            with self.assertRaisesRegex(ValueError, "Invalid SHA-256"):
+                launcher.prepare(self.args)
 
     def test_dry_run_requires_no_kvm_or_qemu(self):
         output = io.StringIO()
@@ -138,7 +148,8 @@ class LauncherTests(unittest.TestCase):
     def test_actual_launch_uses_direct_exec_after_access_check(self):
         with patch.object(launcher.shutil, "which", return_value="/usr/bin/qemu-system-aarch64"), \
                 patch.object(launcher, "require_launch_access") as access, \
-                patch.object(launcher.os, "execv") as execute:
+                patch.object(launcher.os, "execv") as execute, \
+                patch.object(launcher.PreparedGuest, "inherit_inputs"):
             self.assertEqual(launcher.main(self.cli), 0)
         access.assert_called_once()
         executable, argv = execute.call_args.args
