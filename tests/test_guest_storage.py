@@ -229,6 +229,21 @@ class GuestStorageTests(unittest.TestCase):
                     GUARD.verify_guest_storage(self.fd, boot_fds=[boot_fd],
                         proc_root=self.proc, sys_root=self.sys, dev_root=self.dev)
 
+    def test_directory_entrypoint_retains_device_and_mount_identity_checks(self):
+        self.disk_info.st_mode = stat.S_IFDIR | 0o711
+        kwargs = dict(proc_root=self.proc, sys_root=self.sys, dev_root=self.dev)
+        with self.assertRaisesRegex(ValueError, 'regular'):
+            GUARD.verify_guest_storage(self.fd, **kwargs)
+        result = GUARD.verify_guest_directory(self.fd, **kwargs)
+        self.assertEqual(result['guest_device'], [259, 5])
+        self.disk_info.st_dev = os.makedev(179, 1)
+        with self.assertRaisesRegex(ValueError, 'guest filesystem'):
+            GUARD.verify_guest_directory(self.fd, **kwargs)
+        self.disk_info.st_dev = os.makedev(259, 5)
+        (self.proc / f'self/fdinfo/{self.fd}').write_text('mnt_id:\t31\n')
+        with self.assertRaisesRegex(ValueError, 'alternate mount'):
+            GUARD.verify_guest_directory(self.fd, **kwargs)
+
     def test_actual_host_is_not_assumed_to_be_supported(self):
         # Current host is a builder, not the A733 managed read-only NVMe layout.
         with self.assertRaises((ValueError, OSError)):

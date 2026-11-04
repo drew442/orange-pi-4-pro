@@ -135,8 +135,8 @@ def fd_mount_id(data):
     return values[0]
 
 
-def verify_guest_storage(disk_fd, *, boot_fds=(), proc_root=Path('/proc'), sys_root=Path('/sys'),
-                         dev_root=Path('/dev')):
+def _verify_guest_location(disk_fd, *, directory=False, boot_fds=(), proc_root=Path('/proc'),
+                           sys_root=Path('/sys'), dev_root=Path('/dev')):
     """Return placement evidence or raise ValueError/OSError without writing.
 
     The caller retains the regular file descriptor through QEMU handoff. These
@@ -144,7 +144,10 @@ def verify_guest_storage(disk_fd, *, boot_fds=(), proc_root=Path('/proc'), sys_r
     """
     require(type(disk_fd) is int and disk_fd >= 0, 'invalid disk descriptor')
     info = os.fstat(disk_fd)
-    require(stat.S_ISREG(info.st_mode), 'guest disk descriptor must be regular')
+    if directory:
+        require(stat.S_ISDIR(info.st_mode), 'guest directory descriptor required')
+    else:
+        require(stat.S_ISREG(info.st_mode), 'guest disk descriptor must be regular')
     table = mount_table(read_bounded(Path(proc_root) / 'self/mountinfo', MOUNTINFO_LIMIT))
     root, guest, namespace = validate_mounts(table)
     for row in (root, guest):
@@ -165,3 +168,17 @@ def verify_guest_storage(disk_fd, *, boot_fds=(), proc_root=Path('/proc'), sys_r
             'namespace': namespace, 'root_device': list(root['device']),
             'guest_device': list(guest['device']), 'guest_mount_id': guest['mount_id'],
             'boot_inputs_checked': len(boot_fds)}
+
+
+def verify_guest_storage(disk_fd, *, boot_fds=(), proc_root=Path('/proc'), sys_root=Path('/sys'),
+                         dev_root=Path('/dev')):
+    """Validate a held regular disk without weakening the launch contract."""
+    return _verify_guest_location(disk_fd, boot_fds=boot_fds, proc_root=proc_root,
+                                  sys_root=sys_root, dev_root=dev_root)
+
+
+def verify_guest_directory(directory_fd, *, proc_root=Path('/proc'), sys_root=Path('/sys'),
+                           dev_root=Path('/dev')):
+    """Validate the held p5 directory before enrollment creates any files."""
+    return _verify_guest_location(directory_fd, directory=True, proc_root=proc_root,
+                                  sys_root=sys_root, dev_root=dev_root)
