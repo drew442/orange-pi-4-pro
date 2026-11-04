@@ -2,7 +2,7 @@
 # Assemble only a new regular image file. This script never opens physical disks.
 set -euo pipefail
 export LC_ALL=C TZ=UTC
-[[ $# == 2 ]] || { echo "Usage: $0 INPUT_DIRECTORY NEW_OUTPUT_IMG" >&2; exit 2; }
+[[ $# == 2 || $# == 3 ]] || { echo "Usage: $0 INPUT_DIRECTORY NEW_OUTPUT_IMG [BOOT_COMMAND]" >&2; exit 2; }
 inputs=$(realpath "$1")
 output=$(realpath -m "$2")
 [[ ! -e $output && ! -L $output ]] || { echo 'Output must not exist' >&2; exit 1; }
@@ -29,12 +29,19 @@ done
     echo 'Initrd exceeds diagnostic load-region budget' >&2; exit 1;
 }
 repo=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
+boot_command=$repo/configs/diagnostic-boot.cmd
+if [[ $# == 3 ]]; then
+    boot_command=$3
+    [[ -f $boot_command && ! -L $boot_command && -s $boot_command ]] || {
+        echo 'Boot command must be a nonempty regular file, not a symlink' >&2; exit 1;
+    }
+fi
 work=$(mktemp -d)
 trap 'rm -rf "$work"' EXIT
 mkdir -p "$work/fs/boot/dtb/allwinner" "$(dirname "$output")"
 cp "$inputs/uImage" "$inputs/uInitrd" "$work/fs/boot/"
 cp "$inputs/board.dtb" "$work/fs/boot/dtb/allwinner/sun60i-a733-orangepi-4-pro.dtb"
-cp "$repo/configs/diagnostic-boot.cmd" "$work/fs/boot/boot.cmd"
+cp "$boot_command" "$work/fs/boot/boot.cmd"
 export SOURCE_DATE_EPOCH=1793750400
 mkimage -C none -A arm -T script -d "$work/fs/boot/boot.cmd" "$work/fs/boot/boot.scr"
 find "$work/fs" -exec touch -h -d "@$SOURCE_DATE_EPOCH" {} +
