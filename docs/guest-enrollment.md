@@ -101,7 +101,9 @@ The published directory contract is:
 The guest can modify its disk, but cannot rename assets, create directory
 entries, modify the kernel/initramfs or read the protected manifest. The
 manifest binds configuration, expected seed hashes, ownership and p5 UUID.
-It is an enrollment record, not a health or successful-boot record.
+It is an enrollment record, not a health or successful-boot record. Save the
+`manifest_sha256` from a successful published/durable receipt in the trusted
+installation record before launching the guest.
 
 Receipts distinguish attempted staging, possible publication, visible
 publication and directory synchronization. Failure after publication preserves
@@ -128,8 +130,9 @@ fallback. No unit was started by the software checks.
 
 `Restart=no` is deliberate: the initial disk hash is embedded in the unit. A
 successful guest write changes that checkpoint, so another start must refuse
-until a separately reviewed stopped-guest checkpoint workflow updates the
-trusted record. That workflow and automatic boot integration remain open.
+until the [stopped-guest checkpoint controller](guest-checkpoints.md) updates
+the trusted record and the unit is regenerated. Automatic boot integration
+remains open.
 Stopping this preparation unit sends SIGTERM; this is **not** a guest graceful
 shutdown protocol. Controlled shutdown, timeout/force policy, consistent
 backup/restore and production lifecycle management remain required. The test

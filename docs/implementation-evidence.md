@@ -440,6 +440,41 @@ package install, physical enrollment, board boot, actual KVM or SD-write test
 was performed. Raw failed/final suite logs and ARM results are retained under
 the builder's `guest-enrollment-artifacts-20261104/logs/`.
 
+## 2026-11-04: stopped-guest checkpoint records
+
+Source `6c62d03` adds strict manifest validation, retained stopped-disk inspection
+and metadata-only checkpoint publication. Two fresh Sol medium workers owned
+disjoint policy/schema and transaction files. Root specified the service/lock/
+consumer contract, added enrollment manifest pins and exact raw history bytes,
+and wrote the ARM integration wrapper. Independent Sol high review accepted
+the implementation and all 31 checkpoint plus 22 enrollment tests under sudo.
+
+The reviewer noted that parsed history alone could not reconstruct a valid
+noncanonical old manifest's exact pin. Before integration, the archive gained
+exact base64 before/after bytes; a regression proves both bytes and recorded
+hashes. History remains manifest metadata, never a disk backup. The checkpoint
+records clean-shutdown attestation rather than claiming filesystem verification.
+
+[Actual ARM evidence](evidence/guest-checkpoint-arm-20261104.json) proves initial
+enrollment pin output, old launch-pin refusal after a working-disk write, actual
+cross-process lock refusal, queued-SIGTERM publication reconciliation, exact
+history, unchanged disk bytes, old manifest-pin refusal, no-op behavior, new-pin
+dry-run and updated unit parsing. Live storage, stopped-service, consumer and
+TTY boundaries were fixtures, and no guest or service was started. A separate
+[real proc scan](evidence/guest-checkpoint-consumers-20261104.json) saw a
+UID-60001 child holding an owned regular file and returned empty after exit;
+the prepared builder also reported the expected properties for a nonexistent
+unit. These checks do not establish board visibility or guest cleanliness.
+
+The full Jammy run passed 559 discovery cases without skips, plus four diagnostic
+cases and all shell regressions. Local discovery had 47 privileged skips; the
+checkpoint/enrollment root suites separately passed locally. Both ARM and
+post-process cleanup checks passed. No compilation/package install, physical
+checkpoint, VM, actual KVM, power-loss recovery or SD-write test was performed.
+Raw logs remain outside Git in `guest-checkpoint-artifacts-20261104/logs/` on
+the builder. Actual clean shutdown/restart, packaging, boot integration, guest
+networking and off-device backup restoration remain required.
+
 Children used fresh focused contexts, exclusive write scopes and no delegation.
 At most two children were active. Input/output token counts, cache accounting,
 account prices and exact reviewer repair time were not exposed; monetary cost

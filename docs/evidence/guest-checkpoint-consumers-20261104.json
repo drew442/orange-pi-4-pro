@@ -1,0 +1,19 @@
+{
+  "after": [],
+  "before": [],
+  "classification": "actual builder proc FD scan on an owned regular file; no guest execution",
+  "during": [
+    {
+      "fd": 3,
+      "pid": 381973
+    }
+  ],
+  "matched_actual_child": true,
+  "other_process_uid": 60001,
+  "policy_source": {
+    "bytes": 12977,
+    "sha256": "e7779518ad5a4d002b827d48b60c9d93d418d2283004a9df2ee088aab1c6a30f"
+  },
+  "source_commit": "6c62d031eba9734b5b2d239a7817bef97ced9bd2",
+  "storage_or_service_policy_validation": false
+}

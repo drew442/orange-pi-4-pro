@@ -78,7 +78,9 @@ Upstream references: [QEMU 7.2 invocation and file backends](https://gitlab.com/
 
 Package the explicit activation controllers and exercise them on the board.
 Integrate boot activation, supervised launch/shutdown, bounded logs/resource
-limits, stopped-guest checkpoints and isolated network policy. Implement consistent off-device backup and restore for stopped guest
+limits and isolated network policy. The explicit
+[checkpoint controller](guest-checkpoints.md) now records stopped-disk hashes;
+actual clean shutdown and restart remain unproven. Implement consistent off-device backup and restore for stopped guest
 disks and host state, then test restoration and failed-boot recovery. No
 snapshot or successful packaging run counts as a backup restoration. Preserve
 all [hardware acceptance gates](hardware-validation.md), including the actual
