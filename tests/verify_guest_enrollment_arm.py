@@ -119,7 +119,7 @@ def capture_seed(source, target, expected):
     target.chmod(0o400)
 
 
-def verify(rootfs, guest_directory, *, probe=PROBE, sources=SOURCES):
+def verify(rootfs, guest_directory, *, probe=PROBE, sources=SOURCES, after_probe=None):
     if os.geteuid() != 0: raise ValueError('root required for private ARM fixture')
     fixture = module('enrollment_arm_fixture','tests/verify_guest_file_backend_arm.py')
     maintenance = module('enrollment_arm_binfmt','tests/verify_maintenance_arm.py')
@@ -154,6 +154,8 @@ def verify(rootfs, guest_directory, *, probe=PROBE, sources=SOURCES):
             os.killpg(process.pid,signal.SIGKILL);process.wait();raise
         if process.returncode:raise ValueError('ARM enrollment probe failed: '+stderr[-16000:])
         checks=json.loads(stdout)
+        if after_probe is not None:
+            checks['native_followup'] = after_probe(root, checks)
     return {'classification':'ARM enrollment and unit file checks; no physical NVMe, systemd boot or KVM proof',
             'rootfs':fixture.ROOTFS,'binfmt':binfmt,'builder_staging_storage':storage,
             'verifier_source':fixture.record(Path(__file__).read_bytes()),'trusted_sources':source_records,
