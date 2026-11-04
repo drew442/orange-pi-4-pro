@@ -116,8 +116,11 @@ U-Boot `Makefile:1579-1586` generates a 128-byte random `sunxi_challenge` for
 USB debug-key verification; its address is exposed in the firmware header.
 Its random bytes and dependent checksums explain the observed U-Boot differences.
 Do not normalize or replace this challenge without reviewing firmware/security
-requirements. Future builds must preserve its generated source and hash before
-worktree cleanup. Full bit-for-bit reproducibility is not established.
+requirements. The recipe now preserves the exact generated challenge C source,
+unpacked U-Boot binary, configuration and full captured compiler build log before
+packing/cleanup, with separate provenance checksums and manifest entries. The
+published first candidate predates this collection change; end-to-end verification
+of the new collection is pending. Full bit-for-bit reproducibility is not established.
 
 Recipe entry point (end-to-end execution evidence is tracked in status):
 

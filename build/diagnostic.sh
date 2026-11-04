@@ -1,6 +1,56 @@
 #!/usr/bin/env bash
 # Run on the recorded Ubuntu 22.04 builder. Two compilation jobs, sequential trees.
 set -euo pipefail
+
+# Callable with fixture paths for host regression checks; sourcing never builds.
+collect_uboot_provenance() {
+    local tree=$1 destination=$2 build_log=$3 input
+    for input in "$tree/board/sunxi/sunxi_challenge.c" "$tree/u-boot.bin" "$tree/.config" "$build_log"; do
+        [[ -s $input ]] || { echo "Missing U-Boot provenance input: $input" >&2; return 1; }
+    done
+    mkdir -p "$destination"
+    cp "$tree/board/sunxi/sunxi_challenge.c" "$destination/uboot-sunxi-challenge.c"
+    cp "$tree/u-boot.bin" "$destination/uboot-unpacked.bin"
+    cp "$tree/.config" "$destination/uboot.config"
+    cp "$build_log" "$destination/uboot-build.log"
+    (cd "$destination"; sha256sum uboot-sunxi-challenge.c uboot-unpacked.bin \
+        uboot.config uboot-build.log > uboot-provenance.sha256)
+}
+
+append_uboot_provenance_checksums() {
+    (cd "$1"; sha256sum uboot-sunxi-challenge.c uboot-unpacked.bin \
+        uboot-build.log uboot-provenance.sha256 >> SHA256SUMS)
+}
+
+write_artifact_manifest() {
+    python3 - "$1" <<'PY'
+import json
+from pathlib import Path
+import sys
+
+directory = Path(sys.argv[1])
+files = {}
+for line in (directory / 'SHA256SUMS').read_text().splitlines():
+    checksum, name = line.split(maxsplit=1)
+    files[name] = {'bytes': (directory / name).stat().st_size, 'sha256': checksum}
+(directory / 'artifact-manifest.json').write_text(json.dumps({
+    'schema': 1, 'board': 'Orange Pi 4 Pro A733',
+    'classification': 'diagnostic candidate, hardware untested', 'files': files,
+    'uboot_provenance': {
+        'generated_challenge': 'uboot-sunxi-challenge.c',
+        'challenge_generation': 'vendor per-build random bytes; preserved unchanged',
+        'challenge_classification': 'build provenance; not supplied as a secret or default credential',
+        'challenge_security_role': 'audit remains open',
+        'reproducibility': 'per-build randomness retained; no bit reproducibility claim',
+        'unpacked_binary': 'uboot-unpacked.bin',
+        'configuration': 'uboot.config', 'compiler_build_log': 'uboot-build.log',
+        'checksums': 'uboot-provenance.sha256',
+    },
+}, indent=2) + '\n')
+PY
+}
+
+[[ ${BASH_SOURCE[0]} == "$0" ]] || return 0
 export LC_ALL=C TZ=UTC SOURCE_DATE_EPOCH=1793750400
 [[ $# == 1 ]] || { echo "Usage: $0 DEDICATED_WORKSPACE" >&2; exit 2; }
 repo=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
@@ -86,6 +136,9 @@ grep -Fxq 'CONFIG_BOOTCOMMAND="setenv boot_targets mmc0; run distro_bootcmd"' "$
 ! grep -qx CONFIG_CMD_SAVEENV=y "$uboot_tree/.config"
 ! grep -qx CONFIG_SUNXI_OTA_TURNNING=y "$uboot_tree/.config"
 uboot_make -j2 >> logs/uboot-build.log 2>&1
+# Preserve the vendor-generated random challenge and original compiler output
+# before packing mutates its copy of u-boot.bin or cleanup removes the worktree.
+collect_uboot_provenance "$uboot_tree" "$workspace/artifacts" "$workspace/logs/uboot-build.log"
 pack=$workspace/artifacts/pack
 mkdir -p "$pack"
 cp -R vendor/external/packages/pack-uboot/sun60iw2/bin/. "$pack/"
@@ -114,7 +167,6 @@ find artifacts/modules/lib/modules -type l \( -name build -o -name source \) -de
 cp kernel/arch/arm64/boot/Image artifacts/Image
 cp kernel/arch/arm64/boot/dts/allwinner/sun60i-a733-orangepi-4-pro.dtb artifacts/board.dtb
 cp kernel/.config artifacts/kernel.config
-cp "$uboot_tree/.config" artifacts/uboot.config
 cp artifacts/pack/boot0_sdcard.fex artifacts/pack/boot_package.fex artifacts/
 mkimage -A arm -O linux -T kernel -C none -a 0x41000000 -e 0x41000000 -n 'Linux kernel' -d artifacts/Image artifacts/uImage
 mkimage -A arm -O linux -T ramdisk -C gzip -n uInitrd -d artifacts/initramfs.cpio.gz artifacts/uInitrd
@@ -122,6 +174,7 @@ mkimage -A arm -O linux -T ramdisk -C gzip -n uInitrd -d artifacts/initramfs.cpi
 gzip -n -c artifacts/a733-diagnostic.img > artifacts/a733-diagnostic.img.gz
 ( cd artifacts; sha256sum a733-diagnostic.img a733-diagnostic.img.gz Image board.dtb \
     initramfs.cpio.gz uImage uInitrd boot0_sdcard.fex boot_package.fex kernel.config uboot.config > SHA256SUMS )
+append_uboot_provenance_checksums "$workspace/artifacts"
 cp "$repo/configs/diagnostic-sources.lock.json" "$repo/configs/builder-packages.lock.tsv" artifacts/
 cp "$repo/build/patches/uboot-env-nowhere-size.patch" artifacts/
 ( cd artifacts; sha256sum uboot-env-nowhere-size.patch >> SHA256SUMS )
@@ -135,22 +188,7 @@ cp downloads/busybox_1.30.1* artifacts/busybox-source/
 tar --sort=name --mtime="@$SOURCE_DATE_EPOCH" --owner=0 --group=0 --numeric-owner \
     --exclude=__pycache__ -C "$repo" -cf - build configs licenses | gzip -n > artifacts/build-recipe.tar.gz
 ( cd artifacts; sha256sum build-recipe.tar.gz diagnostic-sources.lock.json builder-packages.lock.tsv >> SHA256SUMS )
-python3 - "$workspace/artifacts" <<'PY'
-import hashlib
-import json
-from pathlib import Path
-import sys
-
-directory = Path(sys.argv[1])
-files = {}
-for line in (directory / 'SHA256SUMS').read_text().splitlines():
-    checksum, name = line.split(maxsplit=1)
-    files[name] = {'bytes': (directory / name).stat().st_size, 'sha256': checksum}
-(directory / 'artifact-manifest.json').write_text(json.dumps({
-    'schema': 1, 'board': 'Orange Pi 4 Pro A733',
-    'classification': 'diagnostic candidate, hardware untested', 'files': files,
-}, indent=2) + '\n')
-PY
+write_artifact_manifest "$workspace/artifacts"
 free -h > logs/resources-end.txt
 df -h . /tmp >> logs/resources-end.txt
 date -u > logs/build-end.txt

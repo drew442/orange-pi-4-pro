@@ -51,9 +51,10 @@ neither a larger card nor live inventory is a prerequisite to the first image.
    Integrate userspace and the guest fixture while hardware awaits; guest drivers
    use a separate profile. Production state/boot/update/install integration is open.
 3. Full reproducibility remains open: U-Boot generates a random 128-byte debug
-   challenge; two fresh U-Boot builds differ there plus checksums. Preserve that
-   generated source next time; review its security role before any deterministic
-   change. Clean-builder/package acquisition and opaque firmware license audit remain.
+   challenge; two fresh U-Boot builds differ there plus checksums. Exact generated
+   source/binary/log collection is implemented and independently reviewed; end-to-end
+   check is next. Review its role before deterministic changes. Clean-builder/package
+   acquisition and opaque firmware license audit remain.
 4. Deliver the minimal host, actual NVMe installer, guest fixture, update/rollback,
    backup/recovery and operational guides. The current NVMe tool is plan-only.
 
