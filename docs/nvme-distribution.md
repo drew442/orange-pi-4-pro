@@ -95,6 +95,30 @@ These commands write ordinary files on the chosen provisioning computer. Use
 known non-SD storage with sufficient free space. Keep gzip intact for the
 writer; do not expand it to a 250 GB temporary file.
 
+The [full-size native HTTPS check](evidence/nvme-bundle-https-20261104.json)
+then passed from commit `05ff311`: it served this private bundle over temporary
+loopback TLS and exercised the complete acquisition/storage guard, encoded
+download/readback and full expanded hash. No raw temporary image was created.
+The acquired manifest bytes matched exactly and the writer's eligibility
+validator still refused the legacy fixture. It took about 12 minutes.
+[Resource records](evidence/nvme-distribution-resources-20261104.json) retain
+sampled minima and exact commands; raw samples remain outside Git.
+
+The native test command was run on the prepared builder from its verified source
+snapshot, with a new destination on known fixed storage:
+
+```sh
+sudo /usr/bin/python3.10 -I -B tests/verify_nvme_bundle_https.py \
+  /home/drew/orange-pi-4-pro-build/bundle-work-20261104/out/nvme-bundle-250GB-20261104 \
+  "$(pwd -P)/out/payload-acquired-250GB-20261104"
+```
+
+The harness computes its pin from the trusted local builder manifest; it does
+not reproduce distribution to another operator or validate the production
+writer's prepare/apply path. It removes its certificate/private key and listener,
+retaining acquired ordinary files for inspection. ARM transport used a small
+loopback fixture; full-size acquisition has not run on ARM or the A733.
+
 ## Acquisition and installation boundary
 
 Keep the compressed payload on identified external storage, or explicit RAM

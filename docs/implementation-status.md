@@ -66,6 +66,8 @@ no larger card or live inventory was required to produce the diagnostic image.
   preserves fixture eligibility; verified HTTPS acquisition checks encoded and
   full expanded contents without raw staging. Updated installer and packaged
   ARM loopback TLS probes pass; clean-checkout packaging is byte-identical.
+  Full-size native HTTPS acquisition/readback/expansion passed without raw
+  staging; the fixture remains writer-ineligible.
   Board networking and real per-installation delivery remain untested.
 - [Guest fixture](guest-fixture.md): separate virt-profile kernel/initramfs and
   disposable disk built and hashed; launcher requires KVM with no TCG fallback.

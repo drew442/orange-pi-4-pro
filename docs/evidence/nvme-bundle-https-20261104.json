@@ -1,0 +1,32 @@
+{
+  "classification": "native full-size loopback HTTPS acquisition; no board or deployment acceptance",
+  "source_manifest": {
+    "bytes": 12365,
+    "sha256": "443971233d9aa955dfdc581693fe581d8f784246d05f08852f39899785d765e9"
+  },
+  "encoded": {
+    "bytes": 630156553,
+    "sha256": "399f27eac0fcfaad3cb85a564cff794d35f7b65e2cb9e627f8f7782ee7f8a972"
+  },
+  "decoded": {
+    "bytes": 250000000000,
+    "sha256": "6aa51794bf82b3814568a526c9242b5abbe041af603255d2b3b9438847fc4d98"
+  },
+  "source_intent_present": false,
+  "fixture_refused_by_writer": true,
+  "encoded_download_readback_full_bounded_expansion": "passed",
+  "elapsed_seconds": 703.792,
+  "recipes": {
+    "scripts/acquire-nvme.py": "68eac982f9282e65f5cfb323d0ce5ed6b5b0772f2aa23dcdbd66df3dad598b25",
+    "scripts/install-nvme.py": "d4c46227f9589822e8dae0a896b8c6a28c356ce67cc0f574b85598a4df612f47",
+    "scripts/plan-nvme.py": "8ed9075de6ab4425457aa3f309847f2e66b134691f0fe80ac5eb7c43f1746e31",
+    "scripts/nvme_layout.py": "742a71575d94c9be29e01af3f50dc0d0639b38800c3e5a86ded49ac8906e518f",
+    "tests/verify_nvme_bundle_https.py": "906ee1db0d3687208d0ed881e5959b6616d298322841e8445a0132e5a25fd90c"
+  },
+  "cleanup": "temporary private certificate/key and loopback listener removed; acquired regular files retained",
+  "limits": [
+    "Trusted builder manifest is pinned before transfer; this test creates no release signature.",
+    "No expanded raw file, physical block-device write, mount or external request.",
+    "Native host storage guard exercised; ARM full-size acquisition and A733 networking untested."
+  ]
+}

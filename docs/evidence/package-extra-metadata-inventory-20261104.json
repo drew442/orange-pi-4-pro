@@ -389,5 +389,6 @@
     "selected archive metadata only; no extraction, mounts or physical devices",
     "does not prove runtime database resolution or cross-version rollback",
     "current /var mapping and slot-version separation remain implementation work"
-  ]
+  ],
+  "inspector_builder_path": "/home/drew/orange-pi-4-pro-build/inventory-package-extra-state-20261104.py"
 }

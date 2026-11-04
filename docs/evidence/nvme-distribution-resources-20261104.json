@@ -1,0 +1,73 @@
+{
+  "classification": "monitored builder compressed-distribution checks; no physical acceptance",
+  "bundle_recipe_commit": "03dcd62827c4980a4976d5abe510552cb2d40ce7",
+  "acquisition_commit": "05ff311efec2c3cc963cb75013add75d7b5932c6",
+  "resource_checks": {
+    "bundle_build": {
+      "command": [
+        "/usr/bin/python3.10",
+        "-I",
+        "-B",
+        "/home/drew/orange-pi-4-pro-build/bundle-work-20261104/build/nvme-bundle.py",
+        "/home/drew/orange-pi-4-pro-build/nvme-clean-20261104/out/nvme-image-250GB-repeat-20261104",
+        "/home/drew/orange-pi-4-pro-build/bundle-work-20261104/out/nvme-bundle-250GB-20261104"
+      ],
+      "exit_code": 0,
+      "sample_count": 80,
+      "elapsed_seconds": 2359.54,
+      "sampled_minimum_available_memory_bytes": 7545049088,
+      "sampled_minimum_free_disk_bytes": 25957265408,
+      "sampled_minimum_swap_free_bytes": 4176560128,
+      "first_sample": {
+        "elapsed_seconds": 0.0,
+        "available_bytes": 27615186944,
+        "encoded_bytes": 0,
+        "MemAvailable": 7632433152,
+        "SwapFree": 4176560128
+      },
+      "last_sample": {
+        "elapsed_seconds": 2359.54,
+        "available_bytes": 26216558592,
+        "encoded_bytes": 630156553,
+        "MemAvailable": 7601311744,
+        "SwapFree": 4176560128
+      }
+    },
+    "full_size_HTTPS_acquisition": {
+      "command": [
+        "/usr/bin/python3.10",
+        "-I",
+        "-B",
+        "/home/drew/orange-pi-4-pro-build/acquisition-work-20261104/tests/verify_nvme_bundle_https.py",
+        "/home/drew/orange-pi-4-pro-build/bundle-work-20261104/out/nvme-bundle-250GB-20261104",
+        "/home/drew/orange-pi-4-pro-build/acquisition-work-20261104/out/payload-acquired-250GB-20261104"
+      ],
+      "exit_code": 0,
+      "sample_count": 25,
+      "elapsed_seconds": 704.1,
+      "sampled_minimum_available_memory_bytes": 7467483136,
+      "sampled_minimum_free_disk_bytes": 24956149760,
+      "sampled_minimum_swap_free_bytes": 4176560128,
+      "first_sample": {
+        "elapsed_seconds": 0.0,
+        "available_bytes": 26216542208,
+        "MemAvailable": 7626637312,
+        "SwapFree": 4176560128
+      },
+      "last_sample": {
+        "elapsed_seconds": 704.1,
+        "available_bytes": 24956153856,
+        "MemAvailable": 7601643520,
+        "SwapFree": 4176560128
+      }
+    }
+  },
+  "raw_logs": "/home/drew/orange-pi-4-pro-build/{nvme-bundle-resources-20261104,nvme-acquisition-resources-20261104}.json on prepared builder; copies in ignored out/acquisition-20261104",
+  "local_download": "630156553 encoded bytes and exact manifest pin rehashed successfully; no additional raw expansion",
+  "software_gate_limits": [
+    "Samples are not exact peak measurements.",
+    "TLS used temporary loopback fixture, not board DHCP/DNS/Ethernet or production distribution endpoint.",
+    "Source manifest pin came from trusted builder; no release signature or third-party trust-channel reproduction.",
+    "Published NVMe payload is nondeployable; no physical storage write, SPI programming, installed boot or KVM guest."
+  ]
+}
