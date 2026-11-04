@@ -2,8 +2,9 @@
 
 Routine updates must replace the inactive 4 GiB NVMe root, verify its complete
 contents, and then explicitly publish its selector on NVMe state. The current
-implementation prepares authenticated **files on the builder**. It does not yet
-write an installed root partition, activate a candidate, or perform rollback.
+implementation prepares authenticated **files on the builder** and provides a
+guarded inactive-slot staging CLI for a running installed host. The CLI has not
+been used on physical hardware. It does not activate a candidate or perform rollback.
 Do not copy a prepared selector into live state by hand. Physical update and
 interruption testing remain release gates.
 
@@ -87,14 +88,57 @@ marker at 64 KiB, and limits each extraction to 30 seconds plus up to five
 seconds for child cleanup. This preparation-code change does not rebuild or
 deploy previously recorded bootstrap images.
 
-## Required installation and activation protocol
+## Stage the inactive slot
 
-The remaining controller must identify the actual NVMe model, serial, capacity,
+`scripts/update-host.py` requires a complete trusted checkout on NVMe or RAM,
+root privileges and the expected live host mounts/configuration. It is not yet
+included in the packaged host or preparation SD. The candidate directory and
+its three authoritative files must be root-owned with modes `0700` and `0400`.
+Candidate receipts are informational; the writer authenticates the manifest,
+entire root and proposed selector again. Every held source file is checked for
+SD/MMC backing and inactive-target overlap, including individual bind mounts.
+
+The read-only `prepare` command requires explicit `--target`, `--expected-model`,
+`--expected-serial`, `--expected-bytes`, `--slot`, `--candidate` and
+`--manifest-sha256` arguments. These must come from the actual host inventory and
+trusted release record. No physical target is available yet, so no universal
+device path or deployment command is supplied. `--slot` must be opposite the
+running slot; a pending selection change requires a reboot before staging.
+
+Save the resulting JSON plan on NVMe or RAM. Invoke `apply` with the same
+arguments and `--plan /absolute/path/to/reviewed-plan.json` from an interactive
+terminal. It displays the complete plan and requires `BACKUP VERIFIED`, then
+the exact displayed `STAGE` phrase containing slot, serial, partition path,
+byte count and plan hash. Verify an off-device backup of the existing roots and
+state before authorizing overwrite. There is no unattended/force switch.
+
+The controller compares the plan before and after authorization, locks
+`boot/update.lock` on NVMe state, and opens only the inactive partition with
+`O_EXCL`. It checks full primary/backup GPT bytes, all five kernel partition
+geometries, live root/state/selector identities, and inactive busy indicators.
+Active root, state and guest mounts remain permitted. All 4 GiB, including zero
+ranges, are written, flushed and read back. It never refreshes the partition
+table or publishes a selector. A successful receipt binds the source, target
+and reviewed plan; `activation_ready` means staging/readback succeeded and is
+neither activation authorization nor a health result. Activation must reverify
+the written root rather than trusting a saved receipt.
+
+On failure, assume the inactive slot may be incomplete whenever a write was
+attempted. The report preserves attempted, written and verified byte counts.
+Selection is never written by this command. A full explicit retry needs a new
+plan after any changed slot bytes. SIGKILL or power loss may leave no report;
+actual hardware interruption/recovery tests remain open. Advisory locks require
+cooperating maintenance tools; privileged raw-device users are not a supported
+concurrency model.
+
+## Required activation protocol
+
+The staging controller identifies the actual NVMe model, serial, capacity,
 sector geometry and GPT roles, and prove the selected root and state belong to
-that drive. It must reject the active slot, mounted/in-use inactive partitions,
-source overlap and changed identities. Before physical writes, display the
-exact target and obtain operator authorization. Hold an exclusive inactive-slot
-descriptor and serialize all update/activation writers using NVMe state.
+that drive. It rejects the active slot, mounted/in-use inactive partitions,
+source overlap and changed identities. The future activation controller must
+share the NVMe update lock, reverify both target identity and complete root
+contents, and obtain explicit authorization before changing selection.
 
 Write every authenticated root byte, flush, and independently read back the
 entire slot before offering activation. Preserve the previous verified selector
