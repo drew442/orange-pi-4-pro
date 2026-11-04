@@ -1,15 +1,18 @@
 # Hardware acceptance record
 
-All hardware gates are **pending**. Host-only checks are recorded separately in
+The first [physical diagnostic boot](board-diagnostic-20261104.md) reached the
+RAM shell and enumerated NVMe; **EL1 handoff blocks KVM**. Release gates remain
+open. Host-only checks are recorded separately in
 [implementation status](implementation-status.md) and the diagnostic guide.
 Never infer a passed board test from a build, model review or QEMU emulation.
 
 ## Evidence to collect after the diagnostic SD boot
 
 Follow [diagnostic console and inventory](diagnostic-image.md#serial-console-and-first-boot).
-Record board revision/RAM, SSD model/serial/actual byte count, power/cooling,
+Record diagnostic RAM, accessible board labels, SSD model/serial/actual byte count, power/cooling,
 SD identity/capacity, image SHA-256, kernel/U-Boot configs, firmware hashes and
-full boot console. Preserve raw logs outside routine agent context (`out/` or
+full boot console. Leave attached heatsinks in place; chip markings are optional.
+Preserve raw logs outside routine agent context (`out/` or
 an off-device evidence archive), and add durable summaries/links here.
 
 The minimal diagnostic shell has BusyBox rather than the full host utilities.
@@ -21,14 +24,14 @@ for boot0/U-Boot writes.
 
 | Gate | Required observation | Status |
 | --- | --- | --- |
-| Diagnostic SD | Actual 2 GB card, serial boot through Linux shell | Pending |
-| Inventory | Board/RAM/SSD/power/cooling and exact capacities | Pending |
-| NVMe | PCIe/NVMe enumeration, errors and stable repeated access | Pending |
-| KVM | EL2 messages plus guest execution with KVM explicitly required | Pending |
+| Diagnostic SD | Actual 2 GB card, serial boot through Linux shell | Observed: 1,977,614,336-byte card; RAM shell |
+| Inventory | Board/RAM/SSD/power/cooling and exact capacities | RAM/CPU/SD/SSD recorded; power/cooling operating tests pending |
+| NVMe | PCIe/NVMe enumeration, errors and stable repeated access | Enumerates/live; repeated access and warning investigation pending |
+| KVM | EL2 messages plus guest execution with KVM explicitly required | Failed prerequisite: EL1; HYP unavailable; no guest execution |
 | Installation | Fresh deployment on actual card and nominal 250 GB SSD | Pending |
 | Boot reliability | 10 cold boots and 10 warm reboots, matched firmware/SSD | Pending |
 | Workload | 24 hours: CPU/disk/network, temperatures/memory/NVMe errors | Pending |
-| SD policy | SD removed, or full-card hashes plus write counters/firmware audit | Pending |
+| SD policy | SD removed, or full-card hashes plus write counters/firmware audit | No mounted SD; one zero-write snapshot; full gate pending |
 | Update/recovery | Interrupted update, rollback, missing NVMe, disposable data | Pending |
 | Backup | Off-device backup restored and checked | Pending |
 | Security | Unique keys, no shared secrets, limited guest privileges/services | Pending |
@@ -92,8 +95,11 @@ lock nor authorization to install; raw-device users and other mount namespaces
 remain limitations. Revalidate just before any future installer action.
 
 Before erasing physical storage or programming SPI, identify the exact device,
-publish its concrete write plan, preserve/read-check backups and recovery inputs,
-and obtain the user's explicit authorization. No such device operation has been
-performed. SPI remains untouched until its actual chip, backup and recovery route
+publish its concrete write plan, preserve/read-check required backups and recovery
+inputs, and obtain explicit authorization. The user has authorized discarding the
+NVMe with serial `134807190FC700149277`, model `SPCC M.2 PCIe SSD`, size
+256,060,514,304 bytes; do not request that permission again if identity matches.
+Revalidate identity and idle state immediately before writing. No such device
+operation has been performed. SPI remains untouched until its actual chip, backup and recovery route
 are verified. Automatic rollback is not established; do not promise it before
 the proven boot architecture supports it.

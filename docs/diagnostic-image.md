@@ -1,14 +1,14 @@
 # Diagnostic SD candidate
 
 This milestone provides a physical-console diagnostic RAM root for the Orange Pi
-4 Pro **A733**. It is not the installed hypervisor. Board boot, NVMe, EL2, KVM,
-firmware write behavior and recovery must be measured on the actual board.
-The 2 GB figure is SD capacity; board RAM remains unknown.
+4 Pro **A733**. It is not the installed hypervisor. The [first physical boot](board-diagnostic-20261104.md) reached its RAM shell,
+enumerated NVMe and reported 12 GiB DRAM. It entered EL1; KVM was unavailable.
+The 2 GB figure is SD capacity. Firmware writes and recovery remain unproven.
 
 ## Current verified artifact
 
 Built 2026-11-04 on the prepared Jammy host; independent review and file-only
-verification passed. Physical boot has not been performed. The durable
+verification passed. The operator supplied a physical boot log; EL2 failed. The durable
 [artifact manifest](evidence/diagnostic-20261104.json) records all hashes/sizes.
 
 | File | Bytes | SHA-256 |
@@ -236,8 +236,9 @@ for d in /sys/class/block/*; do
 done
 ```
 
-Return the complete serial log, externally visible board revision/RAM markings,
-SSD model/serial, power supply rating and cooling details. Missing output or
+Return the complete serial log, diagnostic RAM/SSD identities and capacities,
+power supply rating and cooling details. Externally visible board labels are
+optional; do not remove heatsinks to obtain chip markings. Missing output or
 failures are useful evidence; do not retry using a larger card or vendor image.
 `/dev/kvm` existence is preliminary only. The release still requires an actual
 KVM-only guest, NVMe boot, repeated boot/workload and write-counter/hash checks.

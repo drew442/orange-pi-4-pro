@@ -4,25 +4,31 @@ Updated 2026-11-04. Replace stale entries; keep this file short.
 
 ## Current milestone
 
-The small headless diagnostic image is built. Collect live A733 inventory and
-prove NVMe and KVM operation. Vendor images exceed the actual 2 GB SD capacity;
+The small headless diagnostic image booted to its RAM shell on the A733.
+[Physical evidence](board-diagnostic-20261104.md) identifies RAM/SD/NVMe.
+**BL31 enters EL1; KVM reports HYP unavailable.** Prepare a separately reviewed
+EL2 diagnostic variant before NVMe installation. Vendor images exceed the actual 2 GB SD capacity;
 no larger card or live inventory was required to produce the diagnostic image.
 
 ## Decisions and evidence
 
-- Target: Orange Pi 4 Pro **A733**, 2 GB **SD**, nominal 250 GB NVMe. Board RAM,
-  revision, SSD identity, power and cooling await actual hardware evidence.
+- Target: Orange Pi 4 Pro **A733**, 2 GB **SD**, nominal 250 GB NVMe. Diagnostic reports 12 GiB
+  LPDDR5, eight CPUs, 1,977,614,336-byte SD and 256,060,514,304-byte NVMe.
+  Heatsinks stay attached; diagnostic identity replaces chip markings.
 - Prefer SPI-to-NVMe with SD removed; immutable SD fallback, minimal host and
-  real KVM guest remain mandatory. Nothing has passed physical acceptance.
+  real KVM guest remain mandatory. First diagnostic boot/NVMe enumeration are
+  observed; KVM, installed boot and release acceptance remain open.
 - [Pinned diagnostic inputs](../configs/diagnostic-sources.lock.json): vendor
   build `a95129bf`, kernel `2ac08e8c` (6.6.98), U-Boot `b791be84` (2018.07).
   Full commits, toolchain hashes and 26 opaque input hashes are retained.
-  Vendor KVM was disabled; diagnostic configuration enables it. EL2 is unproven.
+  Vendor KVM was disabled; diagnostic configuration enables it. Actual EL1 boot
+  blocks KVM. Pinned monitor supports a hypervisor service; separate experiment
+  changes only the U-Boot handoff, preserving firmware/kernel/DTB.
 - [Jammy builder](build-host-assessment.md): actual kernel/U-Boot builds,
   ARM64 chroot and file-backed loop checks passed. Two compilation jobs;
   GCC 11 kernel / Linaro 7.4.1 U-Boot. Latest idle sample has
   over 7.3 GB available RAM and 15 GB free disk; 4 GiB swap is configured.
-- **Diagnostic candidate built and independently verified, not board-booted:**
+- **Diagnostic candidate built, independently verified and operator-booted:**
   268,435,456 bytes, SHA-256
   `b05086afaab3d2f9da6c33b8e457f3552cce2899c08824d371615008bf66d9fd`;
   compressed 16,188,652 bytes. [Manifest](evidence/diagnostic-20261104.json),
@@ -121,11 +127,15 @@ no larger card or live inventory was required to produce the diagnostic image.
 
 ## Open gates and next actions
 
-1. Identify the actual SD, verify capacity/checksum, and obtain exact-target
-   authorization before flashing. SPI/NVMe have not been written; no destructive
-   operation is authorized for an unknown target. Use the diagnostic guide and
-   return full serial/inventory evidence, including EL2/NVMe observations.
-2. Supply the administration public key and actual wired MAC. Validate real
+1. Build and independently review the narrow EL2 diagnostic U-Boot variant;
+   verify emitted service `0x8000ff40`, unchanged firmware/kernel/DTB, image fit
+   and hashes. Obtain a full board boot log: SPSR `0x3c9`, eight CPUs at EL2,
+   KVM initialization and `/dev/kvm`; then prove actual KVM guest execution.
+   The user authorized erasing NVMe serial `134807190FC700149277`, model
+   `SPCC M.2 PCIe SSD`, size 256,060,514,304 bytes. Revalidate before writing;
+   no erase/SPI action has occurred. SPI programming remains unauthorized.
+2. Supply the administration public key. Wired MAC is `10:f4:ae:90:5e:57`;
+   link is up but DHCP has no lease/IPv4 route. Validate real
    management activation and trusted host-key verification. Deliver the
    actual per-installation candidate and validate board payload acquisition. Validate
    the writer/locking/readback/interruption protocol on authorized hardware. The preparation runtime
@@ -143,7 +153,7 @@ no larger card or live inventory was required to produce the diagnostic image.
 
 ## Completion rule
 
-[Hardware acceptance](hardware-validation.md) remains entirely pending: actual
+[Hardware acceptance](hardware-validation.md) remains incomplete: actual
 KVM guest, installed NVMe boot, 10 cold/10 warm cycles, 24-hour workload, zero SD
 writes, interruption/rollback/recovery/restore and independently reproduced
 deployment. Build success, model review and emulation cannot satisfy these gates.

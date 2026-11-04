@@ -1,0 +1,71 @@
+{
+  "schema": 1,
+  "classification": "user-supplied physical diagnostic boot; KVM failed; release acceptance incomplete",
+  "received_utc_date": "2026-11-04",
+  "capture_time_note": "Filename date/time labels retained verbatim; capture timezone/date not independently established.",
+  "raw_logs": {
+    "05112026-0819-full-boot-and-read-only-checks.txt": {
+      "path": "tmp/05112026-0819-full-boot-and-read-only-checks.txt",
+      "bytes": 202611,
+      "sha256": "a67f9a8e7c71fbfe62d2caacac9d1260565297371833dd5f1e072f25667c9e46"
+    },
+    "05112026-0833-nvme-info.txt": {
+      "path": "tmp/05112026-0833-nvme-info.txt",
+      "bytes": 1461,
+      "sha256": "2cf17bb0e6eade1d6ace1f8d389cb63d39262e087c77bdcd5544a51f1c073a24"
+    }
+  },
+  "baseline_candidate_manifest": "diagnostic-20261104.json",
+  "image_identity_note": "Reported as diagnostic image by operator; offline flashed-image readback hash not included in logs.",
+  "observations": {
+    "dram_mib": 12288,
+    "linux_memtotal_kib": 12153464,
+    "online_cpus": 8,
+    "bl31_spsr": "0x3c5",
+    "linux_boot_exception_level": "EL1",
+    "kvm": "HYP mode not available; /dev/kvm absent",
+    "sd": {
+      "linux_namespace": "/dev/mmcblk1",
+      "name": "SU02G",
+      "cid": "035344535530324780716f216e00a8f5",
+      "bytes": 1977614336,
+      "sectors_512_bytes": 3862528,
+      "linux_ro": 0,
+      "snapshot_writes_completed": 0,
+      "snapshot_sectors_written": 0,
+      "zero_routine_write_acceptance": "pending firmware audit, offline full-card hashes and repeated workloads"
+    },
+    "nvme": {
+      "controller": "/dev/nvme0",
+      "namespace": "/dev/nvme0n1",
+      "pci_address": "0000:01:00.0",
+      "model": "SPCC M.2 PCIe SSD",
+      "serial": "134807190FC700149277",
+      "firmware": "EDFM20.0",
+      "bytes": 256060514304,
+      "sectors_512_bytes": 500118192,
+      "link": "PCIe 3.0 x1, 8 GT/s",
+      "logical_physical_block_sizes": "not captured",
+      "smart": "not captured",
+      "warning": "missing or invalid SUBNQN; controller later reports live"
+    },
+    "ethernet": {
+      "mac": "10:f4:ae:90:5e:57",
+      "link": "1000 Mbps full duplex",
+      "dhcp": "no lease",
+      "ipv4": "none"
+    },
+    "spi": {
+      "reported_bytes": 16777216,
+      "chip_identity": "not established",
+      "backup_recovery": "not established"
+    }
+  },
+  "operator_constraints": {
+    "heatsinks": "remain attached; no chip-marking requirement",
+    "memory_marking_recollection": "CA12; unverified and not needed for current work",
+    "nvme_erasure_authorization": "User explicitly permits erasing the observed NVMe; scope model SPCC M.2 PCIe SSD, serial 134807190FC700149277, namespace size 256060514304 bytes. Revalidate identity and idle state immediately before writing.",
+    "spi_programming_authorized": false
+  },
+  "actions_performed_by_coordinator": "Read logs and investigate pinned sources/binaries only; no board storage erase or SPI programming."
+}

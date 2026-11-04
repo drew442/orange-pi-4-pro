@@ -4,7 +4,7 @@
 
 Develop a reproducible, minimal Linux KVM host for the **Orange Pi 4 Pro A733**, with a 2 GB SD card and a nominal 250 GB NVMe drive. Guests, host state, logs, and updates belong on NVMe. Prefer SPI boot with the SD removed; otherwise use SD only for immutable boot files. Deliver an installer, host image, source manifest, operational documentation, and hardware validation results.
 
-This is the implementation plan. A custom 256 MiB diagnostic candidate has been built and checked on the builder; board boot, KVM execution and installation remain unproven. See [implementation status](implementation-status.md) and the [diagnostic guide](diagnostic-image.md). Vendor images exceed the available SD capacity. Live inventory follows the custom image's first boot. RAM capacity, board revision, SSD model, power supply, and intended guest workload must be recorded when available. Guest limits depend on measured available RAM; do not confuse SD capacity with memory.
+This is the implementation plan. A custom 256 MiB diagnostic candidate has booted to its RAM shell on the board; its firmware enters EL1, so KVM execution and installation remain unproven. See [implementation status](implementation-status.md) and the [diagnostic guide](diagnostic-image.md). Vendor images exceed the available SD capacity. [Recorded diagnostic inventory](board-diagnostic-20261104.md) identifies 12 GiB RAM and the actual NVMe. Diagnostic outputs suffice for component identity; attached heatsinks remain in place. Record power supply and intended guest workload when available. Guest limits depend on measured available RAM; do not confuse SD capacity with memory.
 
 ## Evidence and decisions
 
@@ -54,7 +54,7 @@ Assign independent agents after interfaces are agreed. Each must deliver code, d
 
 | Work package | Deliverables | Dependencies and acceptance |
 | --- | --- | --- |
-| A: Board and boot | Pinned vendor sources, firmware inventory, console capture, boot layout, recovery procedure | Identify revision and SSD; demonstrate repeatable NVMe root boot |
+| A: Board and boot | Pinned vendor sources, firmware inventory, console capture, boot layout, recovery procedure | Identify accessible board labels and diagnostic SSD identity; demonstrate repeatable NVMe root boot |
 | B: Virtualization | Kernel config/patches, guest fixture, KVM probe and launch recipe | A baseline; prove a guest executes with KVM explicitly required |
 | C: Image build | Buildroot external tree or interim minimal distro recipe, locked builder, artifact manifest | A and B interfaces; clean build produces boot and root artifacts |
 | D: Installer and updates | 2 GB SD installer, NVMe provisioning, dry-run device report, rollback mechanism | A layout and C artifacts; safe target identification and interruption tests |
@@ -85,7 +85,7 @@ dmesg | grep -Ei 'kvm|hyp|el2|nvme|pcie'
 
 ## Installation and deployment sequence
 
-1. Record externally visible board/SSD identity, power and cooling where available; defer live inventory until the small bootstrap image boots. Establish serial access and test recovery before changing SPI. Back up existing flash and disks to another machine and verify the backup can be read.
+1. Record diagnostic board/SSD identity, accessible labels, power and cooling where available; do not remove heatsinks for markings. Establish serial access and test recovery before changing SPI. Back up existing flash to another machine and verify the backup can be read; back up disk data unless the operator explicitly authorizes discarding it.
 2. Build the selected pinned release; verify checksums and actual SD capacity on the provisioning host. The installer must identify targets by model, serial and size, refuse mounted/in-use targets, display its write plan, and require explicit target selection before erasure.
 3. Write only the installer to SD. Boot its read-only filesystem and use RAM for temporary runtime state. Acquire the authenticated NVMe payload over Ethernet or USB and verify it before activation.
 4. Provision the NVMe layout, install root and boot artifacts, assign unique identifiers, and write host configuration to the state partition. Never clone pre-generated SSH keys or shared passwords. Configure key-based SSH and restrict management access.
@@ -116,4 +116,4 @@ Release only when evidence includes:
 
 Final documentation must include architecture and boot-chain diagrams, pinned component versions, build commands and host prerequisites, byte-accurate image layouts, installer usage, guest creation and networking, SD write policy, update/rollback procedures, recovery, backup/restore, known SSD limitations, and test logs. Link upstream references beside the relevant instructions. A second agent or operator must follow the guide from a clean environment and report discrepancies.
 
-Use the Ubuntu 22.04 build host at `drew@build.drewnet.online` described in `docs/build-host-assessment.md`. The diagnostic stack and binary inputs are locked, assembly preflight and candidate build have passed, and physical first boot is next after exact-SD authorization. Collect inventory/console evidence using the diagnostic guide; continue minimal host and installer work while hardware results are pending. Full clean-build reproducibility and firmware licensing remain open. Implementation completion requires the above hardware results; a diagnostic build does not imply a working hypervisor.
+Use the Ubuntu 22.04 build host at `drew@build.drewnet.online` described in `docs/build-host-assessment.md`. The diagnostic stack and binary inputs are locked, and physical first boot has supplied RAM, SD and NVMe inventory. The EL1 handoff blocks KVM. Prepare a separately reviewed diagnostic U-Boot variant using the pinned monitor hypervisor service, preserving firmware/kernel/DTB, then collect full serial evidence. Continue minimal host and installer work while hardware results are pending. Full clean-build reproducibility and firmware licensing remain open. Implementation completion requires the above hardware results; a diagnostic build does not imply a working hypervisor.
