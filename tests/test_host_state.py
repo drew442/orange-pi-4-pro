@@ -19,6 +19,9 @@ REPO = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location('host_state', REPO / 'build/host-state.py')
 STATE = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(STATE)
+SELECTION = STATE.SELECTION.serialize({'SCHEMA': '1', 'SLOT': 'A',
+    'ROOT_UUID': STATE.PAYLOAD.SLOT_UUIDS['A'], 'ROOT_MARKER_SHA256': 'a' * 64,
+    'KERNEL_RELEASE': STATE.PAYLOAD.KERNEL_RELEASE})
 BLOB = struct.pack('>I', 11) + b'ssh-ed25519' + struct.pack('>I', 32) + bytes(range(32))
 KEY = b'ssh-ed25519 ' + base64.b64encode(BLOB) + b' operator comment\n'
 CONFIG = {'schema': 1, 'hostname': 'a733-test', 'management_mac': '02:11:22:33:44:55',
@@ -156,7 +159,7 @@ class Validators(unittest.TestCase):
             (root / 'input').mkdir()
             (root / 'input/var').symlink_to(root)
             with self.assertRaises(ValueError):
-                STATE.seed_state(root / 'input', root / 'state', str(uuid.uuid4()), CONFIG, KEY)
+                STATE.seed_state(root / 'input', root / 'state', str(uuid.uuid4()), CONFIG, KEY, SELECTION)
             self.assertFalse((root / 'state').exists())
 
     def test_streamed_image_gzip(self):
@@ -199,7 +202,7 @@ class RootFixtures(unittest.TestCase):
                 os.setxattr(extracted / 'var/lib/data', 'user.fixture', b'preserved')
                 state = root / f'state{i}'
                 state_uuid = str(uuid.uuid4())
-                machine_id = STATE.seed_state(extracted, state, state_uuid, CONFIG, STATE.validate_public_key(KEY)[0])
+                machine_id = STATE.seed_state(extracted, state, state_uuid, CONFIG, STATE.validate_public_key(KEY)[0], SELECTION)
                 identifiers.append(machine_id)
                 self.assertRegex(machine_id, r'^[0-9a-f]{32}$')
                 self.assertEqual((state / '.a733-state').read_text(), f'a733-state-v1\n{state_uuid}\n')
@@ -207,9 +210,11 @@ class RootFixtures(unittest.TestCase):
                 self.assertEqual((state / 'var/lib/data').stat().st_uid, 123)
                 self.assertEqual(os.getxattr(state / 'var/lib/data', 'user.fixture'), b'preserved')
                 for name, mode in [('root', 0o700), ('home', 0o755), ('identity/ssh', 0o700),
-                                   ('config/management.json', 0o600), ('root/.ssh/authorized_keys', 0o600)]:
+                                   ('config/management.json', 0o600), ('root/.ssh/authorized_keys', 0o600),
+                                   ('boot', 0o700), ('boot/selected.conf', 0o600)]:
                     self.assertEqual(stat.S_IMODE((state / name).stat().st_mode), mode)
                 self.assertEqual(list((state / 'identity/ssh').iterdir()), [])
+                self.assertEqual((state / 'boot/selected.conf').read_bytes(), SELECTION)
             self.assertNotEqual(*identifiers)
 
     @unittest.skipUnless(all(shutil.which(tool) for tool in ('mke2fs', 'e2fsck', 'debugfs')), 'ext4 fixture tools unavailable')
@@ -218,7 +223,7 @@ class RootFixtures(unittest.TestCase):
             root = Path(temporary)
             (root / 'userspace/var').mkdir(parents=True)
             state_uuid = str(uuid.uuid4())
-            STATE.seed_state(root / 'userspace', root / 'state', state_uuid, CONFIG, STATE.validate_public_key(KEY)[0])
+            STATE.seed_state(root / 'userspace', root / 'state', state_uuid, CONFIG, STATE.validate_public_key(KEY)[0], SELECTION)
             image = root / 'state.ext4'
             metadata = STATE.make_image(root / 'state', image, state_uuid, size=32 * 1024**2)
             self.assertEqual(metadata['/'], {'type': 'directory', 'mode': '0755', 'uid': 0, 'gid': 0})

@@ -1,13 +1,11 @@
 #!/bin/sh
-# Read-only early-boot resolver. Source for hs_resolve ROOT_UUID STATE_UUID;
-# execute as host-storage-resolver.sh ROOT_UUID STATE_UUID. No eval is needed:
-# success prints ROOT_DEVICE=/dev/nvme... and STATE_DEVICE=/dev/nvme....
-# Requires devtmpfs, sysfs, procfs, /bin/busybox and util-linux /sbin/blkid.
-# Every discovered NVMe partition must probe successfully; an unformatted or
-# unrecognized partition therefore prevents selection in this preparation stage.
-# Observation is not a lock. Run before storage services or mounting either fs.
-# Backend functions below are separated for sourced, unprivileged fixture tests;
-# the CLI has no environment/path overrides and never accepts arbitrary devices.
+# Read-only NVMe GPT resolver. CLI: state STATE_UUID, or
+# root STATE_DEVICE STATE_UUID SLOT ROOT_UUID. Source for the corresponding
+# hs_resolve_state / hs_resolve_root functions. Parse output as data, never eval.
+# Only p4 state candidates and the selected p2/p3 root are filesystem-probed.
+# Every eligible p4 must be recognizable; unrelated/unrecognized p4 fails closed.
+# Observations do not lock devices; run before other storage services.
+# Backend primitives are replaceable only by sourced unprivileged fixtures.
 
 hs_error() { printf '%s\n' "storage resolver: $*" >&2; return 1; }
 hs_read() { /bin/busybox cat "$1"; }
@@ -118,63 +116,103 @@ END_PROBE
     HS_UUID=$uuid; HS_TYPE=$type
 }
 
-hs_resolve() (
-    [ "$#" = 2 ] || { hs_error 'expected ROOT_UUID STATE_UUID'; exit 1; }
-    hs_uuid "$1" && hs_uuid "$2" && [ "$1" != "$2" ] || {
-        hs_error 'UUIDs must be distinct, canonical lowercase UUIDs'; exit 1;
-    }
-    root_uuid=$1; state_uuid=$2
-    # Early boot has no swap. Reject all active swap, including files and aliases.
-    swaps=$(hs_read /proc/swaps) || { hs_error 'cannot read swap inventory'; exit 1; }
-    # Kernel spacing is not an ABI; accept the exact five header fields.
+hs_probe_table() { /sbin/blkid -p -o export -s PTTYPE "$1"; }
+hs_table() {
+    local data line device type seen_device seen_type
+    data=$(hs_probe_table "/dev/$1") || return 1
+    device=; type=; seen_device=0; seen_type=0
+    while IFS= read -r line; do
+        case "$line" in
+            DEVNAME=*) [ "$seen_device" = 0 ] || return 1; seen_device=1; device=${line#DEVNAME=} ;;
+            PTTYPE=*) [ "$seen_type" = 0 ] || return 1; seen_type=1; type=${line#PTTYPE=} ;;
+            *) return 1 ;;
+        esac
+    done <<END_TABLE
+$data
+END_TABLE
+    [ "$device" = "/dev/$1" ] && [ "$type" = gpt ]
+}
+hs_no_swap() {
+    local swaps
+    swaps=$(hs_read /proc/swaps) || return 1
     printf '%s\n' "$swaps" | /bin/busybox awk '
         NR == 1 && NF == 5 && $1 == "Filename" && $2 == "Type" &&
         $3 == "Size" && $4 == "Used" && $5 == "Priority" { ok=1; next }
-        { ok=0; exit } END { exit ok ? 0 : 1 }' || {
-            hs_error 'active swap or malformed swap inventory'; exit 1;
-        }
-    candidates=$(hs_candidates) || { hs_error 'cannot enumerate NVMe'; exit 1; }
-    root=; state=; root_parent=; state_parent=; root_id=; state_id=
-    for name in $candidates; do
-        # Whole namespaces are not filesystem candidates.
-        hs_match "$name" '^nvme[0-9]+n[0-9]+$' && continue
-        hs_identity "$name" || { hs_error "invalid NVMe partition identity: $name"; exit 1; }
-        hs_filesystem "$name" || { hs_error "failed/ambiguous filesystem probe: $name"; exit 1; }
-        case "$HS_UUID" in
-            "$root_uuid")
-                [ -z "$root" ] && [ "$HS_TYPE" = ext4 ] || {
-                    hs_error 'duplicate root UUID or root is not ext4'; exit 1;
-                }
-                root=$name; root_parent=$HS_PARENT; root_id=$HS_ID ;;
-            "$state_uuid")
-                [ -z "$state" ] && [ "$HS_TYPE" = ext4 ] || {
-                    hs_error 'duplicate state UUID or state is not ext4'; exit 1;
-                }
-                state=$name; state_parent=$HS_PARENT; state_id=$HS_ID ;;
-        esac
+        { ok=0; exit } END { exit ok ? 0 : 1 }'
+}
+hs_state_candidates() {
+    local names name
+    names=$(hs_candidates) || return 1
+    for name in $names; do
+        hs_match "$name" '^nvme[0-9]+n[0-9]+p4$' && printf '%s\n' "$name"
     done
-    [ -n "$root" ] && [ -n "$state" ] && [ "$root" != "$state" ] &&
-    [ "$root_id" != "$state_id" ] && [ "$root_parent" = "$state_parent" ] || {
-        hs_error 'root/state missing, aliased, or on different NVMe namespaces'; exit 1;
+    return 0
+}
+hs_resolve_state() (
+    [ "$#" = 1 ] && hs_uuid "$1" || { hs_error 'expected canonical STATE_UUID'; exit 1; }
+    state_uuid=$1
+    hs_no_swap || { hs_error 'active swap or malformed swap inventory'; exit 1; }
+    candidates=$(hs_state_candidates) || { hs_error 'cannot enumerate state partitions'; exit 1; }
+    state=; parent=; id=
+    for name in $candidates; do
+        hs_identity "$name" && hs_filesystem "$name" || {
+            hs_error "invalid/unrecognized state candidate: $name"; exit 1;
+        }
+        if [ "$HS_UUID" = "$state_uuid" ]; then
+            [ -z "$state" ] && [ "$HS_TYPE" = ext4 ] || { hs_error 'duplicate state UUID or non-ext4 state'; exit 1; }
+            state=$name; parent=$HS_PARENT; id=$HS_ID
+        fi
+    done
+    [ -n "$state" ] || { hs_error 'state missing'; exit 1; }
+    current=$(hs_state_candidates) && [ "$current" = "$candidates" ] &&
+    hs_identity "$state" && [ "$HS_PARENT" = "$parent" ] && [ "$HS_ID" = "$id" ] &&
+    hs_filesystem "$state" && [ "$HS_UUID" = "$state_uuid" ] && [ "$HS_TYPE" = ext4 ] &&
+    hs_idle "$state" "$id" writable && hs_table "$parent" &&
+    parent_id=$(hs_read "/sys/class/block/$parent/dev") && hs_idle "$parent" "$parent_id" writable || {
+        hs_error 'state changed, busy, read-only or not GPT'; exit 1;
     }
-    # Detect removal/replacement during scanning; observations still cannot lock.
-    current=$(hs_candidates) || { hs_error 'cannot re-enumerate NVMe'; exit 1; }
-    [ "$current" = "$candidates" ] || { hs_error 'NVMe inventory changed'; exit 1; }
-    hs_identity "$root" && [ "$HS_PARENT" = "$root_parent" ] && [ "$HS_ID" = "$root_id" ] &&
+    printf 'STATE_DEVICE=/dev/%s\n' "$state"
+)
+
+# State may already be mounted RW for journal recovery when selecting the root.
+# Revalidate its identity/UUID and write eligibility without requiring idle state.
+hs_resolve_root() (
+    [ "$#" = 4 ] || { hs_error 'expected STATE_DEVICE STATE_UUID SLOT ROOT_UUID'; exit 1; }
+    state=${1#/dev/}; state_uuid=$2; slot=$3; root_uuid=$4
+    hs_match "$1" '^/dev/nvme[0-9]+n[0-9]+p4$' && hs_uuid "$state_uuid" || {
+        hs_error 'invalid state identity'; exit 1;
+    }
+    case "$slot:$root_uuid" in
+        A:a7330000-0000-4000-8000-00000000000a) number=2 ;;
+        B:a7330000-0000-4000-8000-00000000000b) number=3 ;;
+        *) hs_error 'invalid slot/root UUID pair'; exit 1 ;;
+    esac
+    [ "$state_uuid" != "$root_uuid" ] && hs_no_swap && hs_identity "$state" || { hs_error 'invalid state or swap'; exit 1; }
+    parent=$HS_PARENT; state_id=$HS_ID; root=${parent}p${number}
+    hs_filesystem "$state" && [ "$HS_UUID" = "$state_uuid" ] && [ "$HS_TYPE" = ext4 ] &&
+    hs_holders_empty "/sys/class/block/$state" && [ "$(hs_read "/sys/class/block/$state/ro")" = 0 ] &&
+    hs_table "$parent" && hs_identity "$root" && [ "$HS_PARENT" = "$parent" ] &&
+    [ "$HS_ID" != "$state_id" ] || { hs_error 'invalid state/GPT/root identity'; exit 1; }
+    root_id=$HS_ID
     hs_filesystem "$root" && [ "$HS_UUID" = "$root_uuid" ] && [ "$HS_TYPE" = ext4 ] &&
     hs_idle "$root" "$root_id" readonly &&
-    hs_identity "$state" && [ "$HS_PARENT" = "$state_parent" ] && [ "$HS_ID" = "$state_id" ] &&
+    hs_identity "$state" && [ "$HS_PARENT" = "$parent" ] && [ "$HS_ID" = "$state_id" ] &&
     hs_filesystem "$state" && [ "$HS_UUID" = "$state_uuid" ] && [ "$HS_TYPE" = ext4 ] &&
-    hs_idle "$state" "$state_id" writable || {
-        hs_error 'selected partition changed, is busy, or state is read-only'; exit 1;
+    hs_identity "$root" && [ "$HS_PARENT" = "$parent" ] && [ "$HS_ID" = "$root_id" ] &&
+    hs_filesystem "$root" && [ "$HS_UUID" = "$root_uuid" ] && [ "$HS_TYPE" = ext4 ] &&
+    hs_idle "$root" "$root_id" readonly && hs_table "$parent" &&
+    parent_id=$(hs_read "/sys/class/block/$parent/dev") && hs_idle "$parent" "$parent_id" writable || {
+        hs_error 'selected root/state changed or root/namespace busy'; exit 1;
     }
-    parent_id=$(hs_read "/sys/class/block/$root_parent/dev") &&
-    hs_idle "$root_parent" "$parent_id" writable || {
-        hs_error 'NVMe namespace is busy or read-only'; exit 1;
-    }
-    printf 'ROOT_DEVICE=/dev/%s\nSTATE_DEVICE=/dev/%s\n' "$root" "$state"
+    printf 'ROOT_DEVICE=/dev/%s\n' "$root"
 )
 
 case "$0" in
-    */host-storage-resolver.sh|host-storage-resolver.sh) hs_resolve "$@" ;;
+    */host-storage-resolver.sh|host-storage-resolver.sh)
+        command=${1:-}; [ "$#" = 0 ] || shift
+        case "$command" in
+            state) hs_resolve_state "$@" ;;
+            root) hs_resolve_root "$@" ;;
+            *) hs_error 'expected state or root subcommand' ;;
+        esac ;;
 esac

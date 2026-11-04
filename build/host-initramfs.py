@@ -97,11 +97,11 @@ def validate_kernel(data):
         raise ValueError(f'kernel must build in: {missing}')
 
 
-def build(rootfs, diagnostic, busybox, root_image, slot, state_uuid, output):
+def build(rootfs, diagnostic, busybox, state_uuid, output):
     if not re.fullmatch(r'[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}', state_uuid):
         raise ValueError('state UUID must be canonical lowercase')
-    if state_uuid in PAYLOAD.SLOT_UUIDS.values():
-        raise ValueError('state UUID must differ from root slots')
+    if state_uuid in PAYLOAD.SLOT_UUIDS.values() or state_uuid == '00000000-0000-0000-0000-000000000000':
+        raise ValueError('state UUID must be nonzero and differ from root slots')
     output = Path(os.path.abspath(output))
     if output.parent != REPO / 'out' or not output.name.startswith('host-initramfs-'):
         raise ValueError('output must be a new repo/out/host-initramfs-NAME directory')
@@ -109,7 +109,6 @@ def build(rootfs, diagnostic, busybox, root_image, slot, state_uuid, output):
         raise ValueError('existing/symlink output refused')
     diag = json.loads((REPO / 'docs/evidence/diagnostic-20261104.json').read_text())['files']
     user = json.loads((REPO / 'docs/evidence/host-userspace-20261104.json').read_text())['files']['rootfs.tar.gz']
-    roots = json.loads((REPO / 'docs/evidence/host-payload-20261104.json').read_text())
     lock = json.loads((REPO / 'configs/host-storage-tools.lock.json').read_text())
     busybox_hash = json.loads((REPO / 'configs/diagnostic-sources.lock.json').read_text())['busybox']['binary_sha256']
     descriptor = os.open(busybox, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
@@ -119,8 +118,6 @@ def build(rootfs, diagnostic, busybox, root_image, slot, state_uuid, output):
         busybox_data = stream.read(8 * 1024**2 + 1)
     if hashlib.sha256(busybox_data).hexdigest() != busybox_hash:
         raise ValueError('BusyBox hash mismatch')
-    with read_pinned(root_image, roots['files'][f'root-{slot}.ext4']) as stream:
-        marker, metadata = root_marker(stream, slot)
     for name in ('Image', 'board.dtb', 'kernel.config'):
         with read_pinned(Path(diagnostic) / name, diag[name]) as stream:
             if name == 'kernel.config':
@@ -130,9 +127,6 @@ def build(rootfs, diagnostic, busybox, root_image, slot, state_uuid, output):
     with read_pinned(rootfs, user) as stream:
         with tarfile.open(fileobj=stream, mode='r:gz') as archive:
             runtime = STORAGE.selected_files(archive, lock)
-    for name in ('Image', 'board.dtb', 'kernel.config', 'initramfs.cpio.gz'):
-        if metadata['sources'][name] != diag[name]:
-            raise ValueError('root marker and boot stack source mismatch')
     entries = {}
     for name in ('bin', 'sbin', 'dev', 'proc', 'sys', 'run', 'tmp', 'etc', 'newroot', 'lib/modules'):
         add(entries, name, stat.S_IFDIR | (0o1777 if name == 'tmp' else 0o755))
@@ -141,9 +135,7 @@ def build(rootfs, diagnostic, busybox, root_image, slot, state_uuid, output):
     for name, source in {'init': 'configs/host-init',
                          'etc/host-storage-resolver.sh': 'configs/host-storage-resolver.sh'}.items():
         add(entries, name, stat.S_IFREG | 0o755, (REPO / source).read_bytes())
-    configuration = (f'ROOT_UUID={PAYLOAD.SLOT_UUIDS[slot]}\nSTATE_UUID={state_uuid}\n'
-                     f'ROOT_MARKER_SHA256={hashlib.sha256(marker).hexdigest()}\n'
-                     f'KERNEL_RELEASE={PAYLOAD.KERNEL_RELEASE}\n').encode()
+    configuration = (f'STATE_UUID={state_uuid}\nKERNEL_RELEASE={PAYLOAD.KERNEL_RELEASE}\n').encode()
     add(entries, 'etc/a733-boot.conf', stat.S_IFREG | 0o644, configuration)
     for name, item in lock['files'].items():
         add(entries, name, stat.S_IFREG | 0o755, runtime[item['source']])
@@ -163,9 +155,8 @@ def build(rootfs, diagnostic, busybox, root_image, slot, state_uuid, output):
     output.mkdir(mode=0o700)
     (output / 'initramfs.cpio.gz').write_bytes(data)
     manifest = {'schema': 1, 'classification': 'NVMe host handoff prototype; no physical boot or KVM acceptance',
-                'slot': slot, 'root_uuid': PAYLOAD.SLOT_UUIDS[slot], 'state_uuid': state_uuid,
-                'root_marker_sha256': hashlib.sha256(marker).hexdigest(),
-                'root_image': roots['files'][f'root-{slot}.ext4'], 'boot_inputs': diag,
+                'state_uuid': state_uuid, 'kernel_release': PAYLOAD.KERNEL_RELEASE,
+                'root_selection': 'NVMe state boot/selected.conf; root A/B not embedded', 'boot_inputs': diag,
                 'recipes': {name: PAYLOAD.file_record(REPO / name) for name in
                             ('build/host-initramfs.py', 'build/host-payload.py',
                              'build/host-storage-tools.py', 'configs/host-storage-tools.lock.json')},
@@ -178,13 +169,11 @@ def build(rootfs, diagnostic, busybox, root_image, slot, state_uuid, output):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    for argument in ('userspace_tar', 'diagnostic_dir', 'busybox', 'root_image', 'state_uuid', 'new_output'):
+    for argument in ('userspace_tar', 'diagnostic_dir', 'busybox', 'state_uuid', 'new_output'):
         parser.add_argument(argument)
-    parser.add_argument('--slot', choices=('A', 'B'), required=True)
     args = parser.parse_args()
     try:
-        result = build(args.userspace_tar, args.diagnostic_dir, args.busybox, args.root_image,
-                       args.slot, args.state_uuid, args.new_output)
+        result = build(args.userspace_tar, args.diagnostic_dir, args.busybox, args.state_uuid, args.new_output)
     except (ValueError, OSError, subprocess.CalledProcessError, tarfile.TarError) as error:
         parser.exit(1, f'host initramfs: {error}\n')
     print(json.dumps({key: value for key, value in result.items() if key != 'entries'}, indent=2))

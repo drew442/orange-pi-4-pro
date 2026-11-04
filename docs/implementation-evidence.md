@@ -151,6 +151,8 @@ configuration open. The packaging helper has six nonprivileged regressions.
 | Host handoff review | Sol / high | Partial-move cleanup ordering finding fixed; coordinator authenticated actual archive, tested pinned ash and private builder overlay |
 | Per-installation state | Sol / medium | 14 regressions; actual 8 GiB journaled file/gzip built using fixture inputs and fresh identities |
 | State artifact review | Sol / high | Staging-versus-filesystem metadata and storage-test coverage findings fixed; coordinator read back actual selected content and verified both full hashes/expansion |
+| NVMe root selection | Sol / medium | Fixed GPT roles, recovered-state selector and moved-/run cleanup; 84 handoff and 41 resolver fixtures |
+| Selection review | Sol / high | Mutable-inode parsing and unbounded PID1 metadata findings fixed; private authenticated capture and capped reads independently checked |
 
 Children used fresh focused contexts, exclusive write scopes and no delegation.
 At most two children were active. Input/output token counts, cache accounting,

@@ -4,27 +4,33 @@
 hi_bb() { /bin/busybox "$@"; }
 hi_resolver() { . /etc/host-storage-resolver.sh; }
 hi_error() { printf '%s\n' "A733 host handoff: $*" >&2; return 1; }
-hi_match() { printf '%s\n' "$1" | hi_bb grep -Eq "$2"; }
+hi_match() {
+    case "$1" in *'
+'*) return 1 ;; esac
+    printf '%s\n' "$1" | hi_bb grep -Eq "$2"
+}
 hi_regular() { hi_bb test -f "$1" && ! hi_bb test -L "$1"; }
 hi_directory() { hi_bb test -d "$1" && ! hi_bb test -L "$1"; }
 hi_size() { hi_bb stat -c %s "$1"; }
+# Bound malformed metadata before capture, and bound I/O even if it grows after
+# stat. Callers compare the captured bytes with the file to reject truncation.
+hi_bounded_read() {
+    local size
+    size=$(hi_size "$1") || return 1
+    hi_match "$size" '^[0-9]+$' && [ "$size" -ge 1 ] && [ "$size" -le "$2" ] || return 1
+    hi_bb head -c "$(($2 + 1))" "$1"
+}
 
 hi_config() {
-    local data line bytes size seen_root seen_state seen_hash seen_kernel
-    ROOT_UUID=; STATE_UUID=; ROOT_MARKER_SHA256=; KERNEL_RELEASE=
-    seen_root=0; seen_state=0; seen_hash=0; seen_kernel=0; bytes=0
+    local data line seen_state seen_kernel
+    ROOT_UUID=; ROOT_MARKER_SHA256=; SLOT=; STATE_UUID=; KERNEL_RELEASE=
+    seen_state=0; seen_kernel=0
     hi_regular /etc/a733-boot.conf || return 1
-    data=$(hi_bb cat /etc/a733-boot.conf) || return 1
-    size=$(hi_size /etc/a733-boot.conf) || return 1
+    data=$(hi_bounded_read /etc/a733-boot.conf 2048) || return 1
     while IFS= read -r line; do
-        bytes=$((bytes + ${#line} + 1))
         case "$line" in
-            ROOT_UUID=*) [ "$seen_root" = 0 ] || return 1
-                seen_root=1; ROOT_UUID=${line#ROOT_UUID=} ;;
             STATE_UUID=*) [ "$seen_state" = 0 ] || return 1
                 seen_state=1; STATE_UUID=${line#STATE_UUID=} ;;
-            ROOT_MARKER_SHA256=*) [ "$seen_hash" = 0 ] || return 1
-                seen_hash=1; ROOT_MARKER_SHA256=${line#ROOT_MARKER_SHA256=} ;;
             KERNEL_RELEASE=*) [ "$seen_kernel" = 0 ] || return 1
                 seen_kernel=1; KERNEL_RELEASE=${line#KERNEL_RELEASE=} ;;
             *) return 1 ;;
@@ -32,39 +38,62 @@ hi_config() {
     done <<END_CONFIG
 $data
 END_CONFIG
-    # Exact byte length also rejects stripped NULs and missing/extra newlines.
     printf '%s\n' "$data" | hi_bb cmp -s - /etc/a733-boot.conf || return 1
-    [ "$bytes" = "$size" ] && [ "$seen_root$seen_state$seen_hash$seen_kernel" = 1111 ] &&
-    hs_uuid "$ROOT_UUID" && hs_uuid "$STATE_UUID" && [ "$ROOT_UUID" != "$STATE_UUID" ] &&
-    hi_match "$ROOT_MARKER_SHA256" '^[0-9a-f]{64}$' &&
+    [ "$seen_state$seen_kernel" = 11 ] && hs_uuid "$STATE_UUID" &&
     [ "$KERNEL_RELEASE" = 6.6.98-a733-diag ] &&
     [ "$(hi_bb uname -r)" = "$KERNEL_RELEASE" ]
 }
-
 hi_devices() {
-    local attempt data line root state
-    attempt=0; data=
+    local attempt data state
+    attempt=0
     while [ "$attempt" -lt 10 ]; do
-        if data=$(hs_resolve "$ROOT_UUID" "$STATE_UUID"); then break; fi
+        if data=$(hs_resolve_state "$STATE_UUID"); then break; fi
         attempt=$((attempt + 1))
         [ "$attempt" -ge 10 ] || hi_bb sleep 1 || return 1
     done
     [ "$attempt" -lt 10 ] || return 1
-    root=; state=
-    while IFS= read -r line; do
-        case "$line" in
-            ROOT_DEVICE=*) [ -z "$root" ] || return 1; root=${line#ROOT_DEVICE=} ;;
-            STATE_DEVICE=*) [ -z "$state" ] || return 1; state=${line#STATE_DEVICE=} ;;
-            *) return 1 ;;
-        esac
-    done <<END_DEVICES
-$data
-END_DEVICES
-    hi_match "$root" '^/dev/nvme[0-9]+n[0-9]+p[1-9][0-9]*$' &&
-    hi_match "$state" '^/dev/nvme[0-9]+n[0-9]+p[1-9][0-9]*$' && [ "$root" != "$state" ] || return 1
-    ROOT_DEVICE=$root; STATE_DEVICE=$state
+    state=${data#STATE_DEVICE=}
+    [ "$data" = "STATE_DEVICE=$state" ] &&
+    hi_match "$state" '^/dev/nvme[0-9]+n[0-9]+p4$' || return 1
+    STATE_DEVICE=$state
     hs_identity "${state##*/}" || return 1
     STATE_ID=$HS_ID; STATE_PARENT=$HS_PARENT
+}
+hi_selection() {
+    local path data line schema slot uuid hash kernel seen_schema seen_slot seen_uuid seen_hash seen_kernel
+    path=$HI_STATE_MOUNT/boot
+    hi_directory "$path" && hi_owned "$path" || return 1
+    case "$(hi_bb stat -c %a "$path")" in 500|700) ;; *) return 1 ;; esac
+    path=$path/selected.conf
+    hi_regular "$path" && hi_owned "$path" || return 1
+    data=$(hi_bounded_read "$path" 4096) || return 1
+    seen_schema=0; seen_slot=0; seen_uuid=0; seen_hash=0; seen_kernel=0
+    schema=; slot=; uuid=; hash=; kernel=
+    while IFS= read -r line; do
+        case "$line" in
+            SCHEMA=*) [ "$seen_schema" = 0 ] || return 1; seen_schema=1; schema=${line#SCHEMA=} ;;
+            SLOT=*) [ "$seen_slot" = 0 ] || return 1; seen_slot=1; slot=${line#SLOT=} ;;
+            ROOT_UUID=*) [ "$seen_uuid" = 0 ] || return 1; seen_uuid=1; uuid=${line#ROOT_UUID=} ;;
+            ROOT_MARKER_SHA256=*) [ "$seen_hash" = 0 ] || return 1; seen_hash=1; hash=${line#ROOT_MARKER_SHA256=} ;;
+            KERNEL_RELEASE=*) [ "$seen_kernel" = 0 ] || return 1; seen_kernel=1; kernel=${line#KERNEL_RELEASE=} ;;
+            *) return 1 ;;
+        esac
+    done <<END_SELECTION
+$data
+END_SELECTION
+    printf '%s\n' "$data" | hi_bb cmp -s - "$path" || return 1
+    [ "$seen_schema$seen_slot$seen_uuid$seen_hash$seen_kernel" = 11111 ] &&
+    [ "$schema" = 1 ] && [ "$kernel" = "$KERNEL_RELEASE" ] &&
+    hi_match "$hash" '^[0-9a-f]{64}$' || return 1
+    case "$slot:$uuid" in
+        A:a7330000-0000-4000-8000-00000000000a|B:a7330000-0000-4000-8000-00000000000b) ;;
+        *) return 1 ;;
+    esac
+    SLOT=$slot; ROOT_UUID=$uuid; ROOT_MARKER_SHA256=$hash
+    data=$(hs_resolve_root "$STATE_DEVICE" "$STATE_UUID" "$SLOT" "$ROOT_UUID") || return 1
+    ROOT_DEVICE=${data#ROOT_DEVICE=}
+    case "$SLOT" in A) path=/dev/${STATE_PARENT}p2 ;; B) path=/dev/${STATE_PARENT}p3 ;; esac
+    [ "$data" = "ROOT_DEVICE=$path" ] && [ "$ROOT_DEVICE" = "$path" ]
 }
 
 # Track only our own successful mounts, newest first. Cleanup never repairs disks.
@@ -75,15 +104,17 @@ hi_mount() {
     HI_MOUNTS="$target $HI_MOUNTS"
 }
 hi_unmount_state() {
-    hi_bb umount /newroot/run/a733-state || return 1
+    hi_bb umount "$HI_STATE_MOUNT" || return 1
     # At this point state is the most recently mounted filesystem.
-    [ "${HI_MOUNTS%% *}" = /newroot/run/a733-state ] || return 1
+    [ "${HI_MOUNTS%% *}" = "$HI_STATE_MOUNT" ] || return 1
     HI_MOUNTS=${HI_MOUNTS#* }
 }
 hi_cleanup() {
     local target
     for target in $HI_MOUNTS; do
         case "$target" in
+            /newroot/run)
+                hi_bb mount --move /newroot/run /run || hi_error "cleanup could not restore /run" ;;
             /newroot/proc|/newroot/sys|/newroot/dev)
                 hi_bb mount --move "$target" "/${target##*/}" || hi_error "cleanup could not restore $target" ;;
             /proc|/sys|/dev|/run|/tmp) ;; # Keep the serial recovery environment alive.
@@ -135,37 +166,38 @@ hi_owned() {
 }
 hi_state_valid() {
     local path marker expected identity mode
-    hi_directory /newroot/run/a733-state && hi_owned /newroot/run/a733-state || return 1
+    hi_directory "$HI_STATE_MOUNT" && hi_owned "$HI_STATE_MOUNT" || return 1
     for path in var root home identity; do
-        hi_directory "/newroot/run/a733-state/$path" && hi_owned "/newroot/run/a733-state/$path" || return 1
+        hi_directory "$HI_STATE_MOUNT/$path" && hi_owned "$HI_STATE_MOUNT/$path" || return 1
     done
-    path=/newroot/run/a733-state/.a733-state
+    path=$HI_STATE_MOUNT/.a733-state
     hi_regular "$path" && hi_owned "$path" || return 1
-    marker=$(hi_bb cat "$path") || return 1
     expected=$(printf 'a733-state-v1\n%s' "$STATE_UUID")
-    [ "$marker" = "$expected" ] && [ "$(hi_size "$path")" = "$((${#expected} + 1))" ] || return 1
+    [ "$(hi_size "$path")" = "$((${#expected} + 1))" ] || return 1
+    marker=$(hi_bounded_read "$path" "$((${#expected} + 1))") || return 1
+    [ "$marker" = "$expected" ] || return 1
     printf '%s\n' "$expected" | hi_bb cmp -s - "$path" || return 1
-    path=/newroot/run/a733-state/identity/machine-id
+    path=$HI_STATE_MOUNT/identity/machine-id
     hi_regular "$path" && hi_owned "$path" || return 1
     mode=$(hi_bb stat -c %a "$path") || return 1
     case "$mode" in 400|444|600|644) ;; *) return 1 ;; esac
     [ "$(hi_size "$path")" = 33 ] || return 1
-    identity=$(hi_bb cat "$path") || return 1
+    identity=$(hi_bounded_read "$path" 33) || return 1
     hi_match "$identity" '^[0-9a-f]{32}$' && [ "$identity" != 00000000000000000000000000000000 ] || return 1
     printf '%s\n' "$identity" | hi_bb cmp -s - "$path" || return 1
     if [ -n "$HI_MACHINE_ID" ]; then [ "$HI_MACHINE_ID" = "$identity" ] || return 1; fi
     HI_MACHINE_ID=$identity
 }
 hi_state() {
-    hi_mount /newroot/run -t tmpfs -o size=64M,mode=0755,nodev,nosuid tmpfs || return 1
-    hi_bb mkdir -m 0700 /newroot/run/a733-state || return 1
-    hi_mount /newroot/run/a733-state -t ext4 -o ro,noload,nodev,nosuid "$STATE_DEVICE" || return 1
+    hi_bb mkdir -m 0700 "$HI_STATE_MOUNT" || return 1
+    hi_mount "$HI_STATE_MOUNT" -t ext4 -o ro,noload,nodev,nosuid "$STATE_DEVICE" || return 1
     hi_state_valid || return 1
     hi_unmount_state || return 1
     hs_identity "${STATE_DEVICE##*/}" && [ "$HS_ID" = "$STATE_ID" ] && [ "$HS_PARENT" = "$STATE_PARENT" ] &&
-    hs_filesystem "${STATE_DEVICE##*/}" && [ "$HS_UUID" = "$STATE_UUID" ] && [ "$HS_TYPE" = ext4 ] || return 1
+    hs_filesystem "${STATE_DEVICE##*/}" && [ "$HS_UUID" = "$STATE_UUID" ] && [ "$HS_TYPE" = ext4 ] &&
+    hs_idle "${STATE_DEVICE##*/}" "$STATE_ID" writable && hs_table "$STATE_PARENT" || return 1
     # Journal replay is permitted only on selected, prevalidated NVMe state.
-    hi_mount /newroot/run/a733-state -t ext4 -o rw,nodev,nosuid "$STATE_DEVICE" || return 1
+    hi_mount "$HI_STATE_MOUNT" -t ext4 -o rw,nodev,nosuid "$STATE_DEVICE" || return 1
     hi_state_valid
 }
 hi_runtime() {
@@ -193,26 +225,41 @@ hi_drop_mount() {
     hi_forget_mount "$1"
 }
 hi_move() {
+    local target kept
     hi_bb mount --move "$1" "$2" || return 1
-    hi_forget_mount "$1"
-    # Restoring pseudo filesystems must precede unmounting their parent root.
-    HI_MOUNTS="$2 $HI_MOUNTS"
+    if [ "$1" = /run ]; then
+        kept=
+        for target in $HI_MOUNTS; do
+            case "$target" in
+                /run|/newroot) ;;
+                /run/*) kept="$kept/newroot$target " ;;
+                *) kept="$kept$target " ;;
+            esac
+        done
+        # The moved child must unmount before restoring /run and dropping root.
+        HI_MOUNTS="$kept/newroot/run /newroot "
+        HI_STATE_MOUNT=/newroot/run/a733-state
+    else
+        hi_forget_mount "$1"
+        HI_MOUNTS="$2 $HI_MOUNTS"
+    fi
 }
 # The final exec transfers PID 1 ownership to switch_root. Failure inside that
 # applet or in the new dynamic init cannot return to this recovery shell.
 hi_switch() { exec /bin/busybox switch_root /newroot /sbin/init; }
 hi_console() { exec </dev/console >/dev/console 2>&1; }
 hi_handoff() {
-    HI_MOUNTS=; HI_MACHINE_ID=
+    HI_MOUNTS=; HI_MACHINE_ID=; HI_STATE_MOUNT=/run/a733-state
     hi_mount /proc -t proc -o nosuid,nodev,noexec proc &&
     hi_mount /sys -t sysfs -o nosuid,nodev,noexec sysfs &&
     hi_mount /dev -t devtmpfs -o nosuid devtmpfs &&
     hi_console &&
     hi_mount /run -t tmpfs -o size=64M,mode=0755,nodev,nosuid tmpfs &&
     hi_mount /tmp -t tmpfs -o size=64M,mode=1777,nodev,nosuid tmpfs || return 1
-    hi_resolver && hi_config && hi_devices && hi_root && hi_state && hi_runtime || return 1
+    hi_resolver && hi_config && hi_devices && hi_state && hi_selection && hi_root &&
+    hi_move /run /newroot/run && hi_runtime || return 1
     # Drop empty old RAM mounts so switch_root does not strand these filesystems.
-    hi_drop_mount /tmp && hi_drop_mount /run || return 1
+    hi_drop_mount /tmp || return 1
     # Retarget cleanup after each successful move, including partial failure.
     hi_move /proc /newroot/proc || return 1
     hi_move /sys /newroot/sys || return 1

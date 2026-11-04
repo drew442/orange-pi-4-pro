@@ -1,116 +1,112 @@
 # NVMe root/state handoff prototype
 
-The prepared builder produced a **4,761,354-byte host initramfs**, SHA-256
-`2806c4cad490a2eda76dbbbf3803efc02a34144b783ed9d2a722f5bc5f3397b3`.
-It contains the pinned diagnostic BusyBox, authenticated ARM64 storage tools,
-matching A733 modules and the new host handoff script. The original diagnostic
-SD image is unchanged. This initramfs has not booted on the board and is not a
-complete host installation or an SD image.
+The current candidate contains a **4,761,822-byte host initramfs**, SHA-256
+`544bedbf1ef6793c21a72006fd82419ae3738e568afc8069a3ec783ad381096a`. Its
+immutable `/etc/a733-boot.conf` contains exactly `STATE_UUID` and
+`KERNEL_RELEASE=6.6.98-a733-diag`; it does not embed a root choice. The active
+schema-1 selector is `boot/selected.conf` on NVMe state. The original diagnostic
+image is unchanged. No physical boot, SD write, NVMe installation or KVM guest
+has been demonstrated.
 
 ## Boot behavior and state contract
 
-`configs/host-init` executes automatically only as `/init` at PID 1. It reads
-four data-only configuration fields: root/state filesystem UUIDs, the expected
-root payload marker hash, and kernel release. Unknown/duplicate fields and
-malformed bytes fail validation. The selected root/state must satisfy the
-[NVMe resolver contract](host-storage-boot.md).
+`configs/host-init` reads the immutable configuration as bounded data, never
+shell syntax. It resolves the requested state UUID, mounts state read-only with
+`noload`, and validates the v1 marker, layout, ownership and machine-id before
+any write. It then unmounts and rechecks identity, UUID and GPT, remounts
+read-write (allowing journal recovery), revalidates and reads the selector.
+The immutable configuration read is bounded to 2048 bytes and the selector
+read to 4096 bytes; marker and identity checks require exact values.
+Unknown, duplicate or malformed fields fail. There is no automatic fallback,
+attempt counter or boot-time selector write.
 
-Root mounts ext4 `ro,noload,nodev`; its read-only mount, payload marker hash,
-expected Debian init/loader paths and compatible kernel release are checked.
-Runtime marker verification does not authenticate every filesystem byte; the
-packager authenticates the complete input image, and installation must verify
-the written payload separately.
+The [resolver contract](host-storage-boot.md) scans only eligible NVMe p4 state
+partitions. Duplicate UUIDs and unrecognized eligible p4 partitions fail
+closed. Fixed GPT roles are p1 boot, p2 root A, p3 root B, p4 state and p5
+guests. Selector choice validates the selected namespace/GPT and same-parent
+root/state roles; it does not probe the unselected root filesystem, so damage
+to an unused slot does not prevent a manual selector rollback.
 
-State first mounts `ro,noload,nodev,nosuid`. Before any state journal replay or
-write, it must contain:
+The selected root mounts ext4 read-only and its marker and expected init paths
+are checked. Runtime marker verification does not authenticate every filesystem
+byte; the root-selection preparer authenticates the pinned complete image and
+installation must verify written payloads separately. State marker is a
+root-owned regular `.a733-state` file containing exactly
+`a733-state-v1\nSTATE_UUID\n`. Required root-owned real directories are `var`,
+`root`, `home` and `identity`, with no group/world writes or special mode bits;
+the state root has the same restrictions. `identity/machine-id` is exactly 32
+lowercase hex digits and newline, nonzero, root-owned, and mode 0400, 0444,
+0600 or 0644.
 
-- A root-owned regular `.a733-state` file with exactly
-  `a733-state-v1\nSTATE_UUID\n`, substituting the configured UUID.
-- Root-owned real directories `var`, `root`, `home` and `identity`, without
-  group/world writes or special mode bits. State's filesystem root has the same
-  ownership/mode restrictions.
-- A root-owned regular `identity/machine-id`, exactly 32 lowercase hex digits plus
-  newline, excluding the all-zero value; mode 0400, 0444, 0600 or 0644.
-
-The [state-file recipe](host-state.md) now seeds `var` from the matching userspace,
-preserves its package ownership/modes, prepares home/admin configuration and
-generates a unique machine-id and state UUID for each installation. Boot never
-formats or populates missing state. State format/migrations must remain compatible
-with both root slots or have a tested restore path.
-
-The prototype boot configuration fixes one root UUID/marker in the initramfs.
-Routine A/B updates therefore still require a mutable selection record on NVMe
-before update acceptance. Regenerating SD boot files is not an acceptable routine
-root-update mechanism. No automatic rollback is claimed.
-
-After read-only validation, state is unmounted, its block identity/UUID is
-rechecked, and it mounts read-write on NVMe. Journal recovery may occur at this
-point. The marker/layout/machine-id are checked again. State supplies `/var`,
-`/root`, `/home` and `/etc/machine-id` through bind mounts. An ephemeral `/etc`
-overlay keeps the root image unchanged; upper/work share bounded `/run` tmpfs.
-Upper and base `/etc` are 0755 so unprivileged services can read configuration;
-work is 0700. The pinned kernel has overlayfs and tmpfs xattrs built in, satisfying
-the [overlayfs requirements](https://www.kernel.org/doc/html/v6.6/filesystems/overlayfs.html).
-Each final `/run` and `/tmp` has a 64 MiB tmpfs limit. These budgets require board
-memory/workload validation. Persistent configuration beyond machine-id remains
-integration work; ephemeral `/etc` edits do not survive reboot.
-
-The handoff drops unused initial RAM mounts, moves proc/sys/dev into the new
-root and transfers PID 1 to `/sbin/init`. Earlier validation failures attempt
-reverse cleanup and a physical serial recovery shell without automatic reboot
-or SD fallback. The final
-[`switch_root` exec](https://github.com/mirror/busybox/blob/1_30_1/util-linux/switch_root.c)
-is an irreversible boundary: failure inside that applet or the new dynamic init
-cannot return to the script's recovery shell. Hardware recovery remains required.
+State supplies `/var`, `/root`, `/home` and `/etc/machine-id`. The existing
+`/run` is a 64 MiB tmpfs; nested state is moved to the new root before
+bindings. `/etc` uses an ephemeral overlay and `/tmp` is a 64 MiB tmpfs. These
+budgets need board memory/workload validation. Persistent management activation
+and SSH host-key generation remain open. The final `switch_root`/init boundary
+and physical recovery remain hardware gates. See [overlayfs requirements](https://www.kernel.org/doc/html/v6.6/filesystems/overlayfs.html).
 
 ## Verified preparation
 
-From the prepared builder repository checkout:
+Prepare an initial root selector from a pinned full 4 GiB image; it checks the
+image, slot marker and boot stack, then creates only a new regular output:
+
+```sh
+sudo python3 build/root-selection.py \
+  /home/drew/orange-pi-4-pro-build/project/out/host-payload-20261104-01/root-A.ext4 \
+  "$(pwd -P)/out/root-selection-A.conf" --slot A
+```
+
+State creation now requires that selector and seeds boot mode 0700 and
+`boot/selected.conf` mode 0600 using an atomic helper:
+
+```sh
+sudo python3 build/host-state.py \
+  /home/drew/orange-pi-4-pro-build/recipe/out/host-userspace-bookworm-20261001-01/rootfs.tar.gz \
+  /home/drew/orange-pi-4-pro-build/state-fixture-inputs-20261104/management.json \
+  /home/drew/orange-pi-4-pro-build/state-fixture-inputs-20261104/admin.pub \
+  "$(pwd -P)/out/host-state-20261104-03" \
+  --boot-selection "$(pwd -P)/out/root-selection-A.conf"
+```
+
+The generic initramfs command no longer takes a root image or slot:
 
 ```sh
 sudo python3 build/host-initramfs.py \
   /home/drew/orange-pi-4-pro-build/recipe/out/host-userspace-bookworm-20261001-01/rootfs.tar.gz \
   /home/drew/orange-pi-4-pro-build/artifacts \
   /home/drew/orange-pi-4-pro-build/busybox/bin/busybox \
-  /home/drew/orange-pi-4-pro-build/project/out/host-payload-20261104-01/root-A.ext4 \
-  e7330000-0000-4000-8000-000000000001 \
-  "$(pwd -P)/out/host-initramfs-20261104-01" --slot A
-sudo python3 tests/verify_host_init_ash.py \
-  /home/drew/orange-pi-4-pro-build/busybox/bin/busybox
-sudo python3 tests/verify_host_etc_overlay.py
+  dfad484b-9958-4ce4-b92c-725734f515fd \
+  "$(pwd -P)/out/host-initramfs-20261104-03"
 ```
 
-These commands passed. Use a new output name on another run. The UUID above is
-a **fixture configuration**, not an identified or provisioned physical state
-partition. This prototype does not authorize any physical write. Root is needed
-to read the existing private payload directory and run isolated chroot/mount
-tests; packaging itself performs no mounts, network access or device writes.
+Current builder outputs are
+`/home/drew/orange-pi-4-pro-build/host-state-clean-20261104/out/host-state-20261104-03`
+and
+`/home/drew/orange-pi-4-pro-build/host-state-clean-20261104/out/host-initramfs-20261104-03`. State UUID is
+`dfad484b-9958-4ce4-b92c-725734f515fd`; the raw 8 GiB state image SHA-256 is
+`faa22756adb5275cabdc27be88b813d533f41175daf3ee1d905daa3884535421`, and its
+gzip is 39,828,609 bytes, SHA-256
+`6018fd1d25c06a6f6329dea8fdc5183d19b470931b5ab8d6220e0275ba0cd2a0`.
+The [selector guide](nvme-root-selection.md) describes format and limitations.
+The `atomic_store` helper requires its caller to authorize and quiesce the
+directory. Fault fixtures confirm the old record before rename and report a
+post-rename directory-sync failure as published with durability unknown. This
+is not a complete updater or automatic rollback mechanism.
 
-The packager pins the full root image, userspace archive, BusyBox and compatible
-kernel/DTB/config/module archive against committed evidence. It requires built-in
-NVMe/ext4/overlayfs/tmpfs/tmpfs-xattr/devtmpfs support and emits a deterministic
-root-owned newc/gzip archive plus file BOM and recipe hashes. Root marker reads
-use `debugfs` through the already authenticated descriptor. A fresh Git checkout
-of `92b377a` produced a byte-identical second archive using the existing pinned
-input artifacts; its worktree stayed clean. The
-[repeat report](evidence/host-initramfs-rebuild-20261104.json) records this limited
-packaging result. Full clean-builder/vendor-stack reproducibility remains open.
+Evidence: [initramfs](evidence/nvme-selection-initramfs-20261104.json),
+[archive](evidence/nvme-selection-archive-20261104.json),
+[ARM ash](evidence/nvme-selection-ash-20261104.json),
+[state verification](evidence/nvme-selection-state-20261104.json), and
+[state build context](evidence/nvme-selection-state-build-20261104.json).
+Archive checks verified 345 regular files and 424 entries. Ten pinned ARM ash
+checks validated both slots; resolver fixtures passed 41 Bash and exact ARM ash
+cases. Host-init had 84 Bash fixtures and Python had 84 cases (including two
+private-state cases on Jammy). A GPT probe passed on a 128 MiB regular file;
+there were no block devices involved. These checks do not establish board boot.
 
-Evidence:
-
-- [Build inputs/output](evidence/host-initramfs-20261104.json) and
-  [independent archive checks](evidence/host-initramfs-archive-20261104.json): all
-  345 regular-file hashes, 424 archive entries, paths, ownership, timestamps,
-  symlink, configuration and current source scripts checked.
-- [Pinned ARM64 ash](evidence/host-init-ash-20261104.json): required applets and
-  eight function fixtures passed through binfmt/chroot, with mocked kernel/mount
-  input. Full handoff has 49 unprivileged Bash fixtures covering ordering/failures.
-- [Actual builder overlay test](evidence/host-etc-overlay-20261104.json): private
-  directory/tmpfs mounts on Linux 6.8.0-138-generic preserved the read-only lower,
-  allowed an unprivileged read, confined writes to RAM and enforced 64 MiB.
-
-The A733 kernel has not performed these mounts. Dirty-state journal recovery,
-systemd startup, provisioned identities, management access, NVMe boot, KVM guest
-execution and zero physical SD writes remain unproven. Next work is state
-provisioning, persistent management configuration and packaging a complete host
-boot selection while retaining the diagnostic recovery image.
+The state fixture uses test MAC/CIDR and a public key whose temporary private
+key was deleted; it is not deployment state. Actual SSH key, management
+activation, complete SD host image, installer/updater/target activation,
+health checks, KVM and all physical acceptance remain open. Root-only selector
+changes do not repack SD; kernel, DTB or initramfs changes require explicit boot
+maintenance. The SD must remain read-only with zero routine writes.

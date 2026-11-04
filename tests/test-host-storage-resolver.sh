@@ -42,10 +42,21 @@ hs_holders_empty() {
 hs_probe() {
     local name=${1##*/}
     [ ! -e "$fixture/probe/$name.fail" ] || return 8
+    printf '%s\n' "$name" >> "$fixture/probed"
+    if [ "$name" = nvme0n1p2 ]; then
+        [ ! -f "$fixture/mutate-root" ] || printf '259:99\n' > "$fixture/dev/nvme0n1p2.identity"
+        [ ! -f "$fixture/mutate-state-on-root" ] || printf '259:99\n' > "$fixture/dev/nvme0n1p4.identity"
+    fi
+    if [ "$name" = nvme0n1p4 ] && [ -f "$fixture/mutate-state" ]; then
+        printf '259:99\n' > "$fixture/dev/nvme0n1p4.identity"
+    fi
     cat "$fixture/probe/$name"
 }
+hs_probe_table() { cat "$fixture/table/${1##*/}"; }
 namespace() {
     local name=$1 id=$2
+    mkdir -p "$fixture/table"
+    printf 'DEVNAME=/dev/%s\nPTTYPE=gpt\n' "$name" > "$fixture/table/$name"
     mkdir -p "$fixture/sys/devices/$name/holders" "$fixture/sys/class/block" "$fixture/dev" "$fixture/probe"
     ln -s "../../devices/$name" "$fixture/sys/class/block/$name"
     touch "$fixture/dev/$name"
@@ -71,138 +82,80 @@ reset_fixture() {
     printf '1 0 0:1 / / rw - rootfs rootfs rw\n' > "$fixture/proc/self/mountinfo"
     namespace nvme0n1 259:0
     partition nvme0n1 2 259:2 "$ROOT_UUID"
+    partition nvme0n1 3 259:3 a7330000-0000-4000-8000-00000000000b
     partition nvme0n1 4 259:4 "$STATE_UUID"
 }
 pass_count=0
 success() {
-    local output
-    output=$(hs_resolve "$ROOT_UUID" "$STATE_UUID") || { echo "FAIL: $1" >&2; exit 1; }
-    [ "$output" = $'ROOT_DEVICE=/dev/nvme0n1p2\nSTATE_DEVICE=/dev/nvme0n1p4' ] || { echo "FAIL output: $1" >&2; exit 1; }
+    local output slot=${2:-A} uuid=$ROOT_UUID number=2
+    [ "$slot" = A ] || { uuid=a7330000-0000-4000-8000-00000000000b; number=3; }
+    output=$(hs_resolve_state "$STATE_UUID") || { echo "FAIL state: $1" >&2; exit 1; }
+    [ "$output" = STATE_DEVICE=/dev/nvme0n1p4 ] || exit 1
+    output=$(hs_resolve_root /dev/nvme0n1p4 "$STATE_UUID" "$slot" "$uuid") || { echo "FAIL root: $1" >&2; exit 1; }
+    [ "$output" = ROOT_DEVICE=/dev/nvme0n1p$number ] || exit 1
     pass_count=$((pass_count+1))
 }
 failure() {
     local label=$1; shift
-    if hs_resolve "$@" > "$fixture/result" 2> "$fixture/error"; then
+    if "$@" > "$fixture/result" 2> "$fixture/error"; then
         echo "FAIL accepted: $label" >&2; exit 1
     fi
     [ ! -s "$fixture/result" ] && [ -s "$fixture/error" ] || { echo "FAIL diagnostic: $label" >&2; exit 1; }
     pass_count=$((pass_count+1))
 }
-reject() { failure "$1" "$ROOT_UUID" "$STATE_UUID"; }
-
-reset_fixture; success 'normal NVMe'
-printf '1\n' > "$fixture/sys/devices/nvme0n1/nvme0n1p2/ro"
-success 'block read-only root'
-partition nvme0n1 1 259:1 AB12-CD34 vfat
-success 'unrelated non-ext4 boot partition'
+reject() { failure "$1" hs_resolve_state "$STATE_UUID"; }
+reject_root() { failure "$1" hs_resolve_root /dev/nvme0n1p4 "$STATE_UUID" A "$ROOT_UUID"; }
+reset_fixture; success normal
+reset_fixture; touch "$fixture/probe/nvme0n1p2.fail"; success 'rollback B ignores damaged A' B
+! grep -q '^nvme0n1p2$' "$fixture/probed"
+reset_fixture; touch "$fixture/probe/nvme0n1p3.fail"; success 'A ignores damaged B'
+reset_fixture; partition nvme0n1 5 259:5 "$STATE_UUID"; success 'ignore UUID outside role p4'
+reset_fixture; partition nvme0n1 1 259:1 AB12-CD34 vfat; touch "$fixture/probe/nvme0n1p1.fail"; success 'ignore unreadable boot'
+reset_fixture; printf '1\n' > "$fixture/sys/devices/nvme0n1/nvme0n1p2/ro"; success 'block RO root'
 reset_fixture
-failure 'malformed root UUID' invalid "$STATE_UUID"
-failure 'multiline UUID' "$ROOT_UUID
-$ROOT_UUID" "$STATE_UUID"
-failure 'empty UUID' '' "$STATE_UUID"
-failure 'uppercase UUID' A7330000-0000-4000-8000-00000000000a "$STATE_UUID"
-failure 'same root/state UUID' "$ROOT_UUID" "$ROOT_UUID"
-reset_fixture
-sed -i "s/$STATE_UUID/$ROOT_UUID/" "$fixture/probe/nvme0n1p4"
-reject 'duplicate root UUID'
-reset_fixture
-partition nvme0n1 5 259:5 "$STATE_UUID"
-reject 'duplicate state UUID'
-reset_fixture
-namespace nvme1n1 260:0
-partition nvme1n1 4 260:4 "$STATE_UUID"
-rm "$fixture/sys/class/block/nvme0n1p4"
-reject 'different namespaces'
-reset_fixture
-mv "$fixture/sys/class/block/nvme0n1p4" "$fixture/sys/class/block/mmcblk0p4"
-reject 'state UUID only on SD'
-reset_fixture
-printf '259:2\n' > "$fixture/dev/nvme0n1p4.identity"
-reject 'root/state same device identity'
-reset_fixture
-touch "$fixture/probe/nvme0n1p4.fail"
-reject 'blkid probe failure'
-reset_fixture
-: > "$fixture/probe/nvme0n1p4"
-reject 'empty probe result'
-reset_fixture
-printf '1\n' > "$fixture/sys/devices/nvme0n1/nvme0n1p4/ro"
-reject 'read-only state'
-reset_fixture
-printf '1\n' > "$fixture/sys/devices/nvme0n1/ro"
-reject 'read-only namespace'
-reset_fixture
-touch "$fixture/sys/devices/nvme0n1/nvme0n1p4/holders/dm-0"
-reject 'state holder'
-reset_fixture
-touch "$fixture/sys/devices/nvme0n1/holders/dm-0"
-reject 'namespace holder'
-reset_fixture
-printf '2 1 259:2 / /root ro - ext4 /dev/nvme0n1p2 ro\n' >> "$fixture/proc/self/mountinfo"
-reject 'root already mounted'
-reset_fixture
-printf '2 1 259:4 / /state rw - ext4 /dev/nvme0n1p4 rw\n' >> "$fixture/proc/self/mountinfo"
-reject 'state already mounted'
-reset_fixture
-printf '/swapfile file 100 0 -2\n' >> "$fixture/proc/swaps"
-reject 'active swap file'
-reset_fixture
-printf 'bad inventory\n' > "$fixture/proc/swaps"
-reject 'malformed swap inventory'
-reset_fixture
-rm "$fixture/proc/self/mountinfo"
-reject 'missing mount inventory'
-reset_fixture
-printf 'broken\n' > "$fixture/proc/self/mountinfo"
-reject 'malformed mount inventory'
-reset_fixture
-rm "$fixture/dev/nvme0n1p4"
-ln -s nvme0n1p2 "$fixture/dev/nvme0n1p4"
-reject 'devtmpfs symlink'
-reset_fixture
-printf '259:8\n' > "$fixture/dev/nvme0n1p4.identity"
-reject 'device sysfs identity mismatch'
-reset_fixture
-printf '259:8\n' > "$fixture/dev/nvme0n1.identity"
-reject 'namespace sysfs identity mismatch'
-reset_fixture
-printf '3\n' > "$fixture/sys/devices/nvme0n1/nvme0n1p4/partition"
-reject 'partition number mismatch'
-reset_fixture
-mkdir -p "$fixture/sys/devices/other/nvme0n1p4"
-rm "$fixture/sys/class/block/nvme0n1p4"
-ln -s ../../devices/other/nvme0n1p4 "$fixture/sys/class/block/nvme0n1p4"
-reject 'sysfs parent mismatch'
-reset_fixture
-sed -i 's/TYPE=ext4/TYPE=vfat/' "$fixture/probe/nvme0n1p4"
-reject 'selected state not ext4'
-reset_fixture
-printf 'UUID=%s\n' "$STATE_UUID" >> "$fixture/probe/nvme0n1p4"
-reject 'duplicate probe field'
-# An empty first value is still a field occurrence and must not permit a
-# second value to replace it. Keep a complete otherwise-valid probe after it.
+for uuid in invalid '' A7330000-0000-4000-8000-00000000000a; do
+    failure 'invalid UUID' hs_resolve_state "$uuid"
+done
+failure 'mismatched slot' hs_resolve_root /dev/nvme0n1p4 "$STATE_UUID" B "$ROOT_UUID"
+failure 'SD state' hs_resolve_root /dev/mmcblk0p4 "$STATE_UUID" A "$ROOT_UUID"
+reset_fixture; namespace nvme1n1 260:0; partition nvme1n1 4 260:4 "$STATE_UUID"; reject 'duplicate eligible state'
+reset_fixture; namespace nvme1n1 260:0; partition nvme1n1 4 260:4 other; touch "$fixture/probe/nvme1n1p4.fail"; reject 'unrecognized unrelated p4'
+reset_fixture; mv "$fixture/sys/class/block/nvme0n1p4" "$fixture/sys/class/block/mmcblk0p4"; reject 'state only on SD'
 for field in DEVNAME UUID TYPE; do
     reset_fixture
-    { printf '%s=\n' "$field"; cat "$fixture/probe/nvme0n1p4"; } > "$fixture/duplicate-probe"
-    mv "$fixture/duplicate-probe" "$fixture/probe/nvme0n1p4"
-    reject "empty duplicate $field field"
+    { printf '%s=\n' "$field"; cat "$fixture/probe/nvme0n1p4"; } > "$fixture/duplicate"
+    mv "$fixture/duplicate" "$fixture/probe/nvme0n1p4"
+    reject "empty duplicate $field"
 done
-reset_fixture
-printf 'DEVNAME=/dev/mmcblk0p4\nUUID=%s\nTYPE=ext4\n' "$STATE_UUID" > "$fixture/probe/nvme0n1p4"
-reject 'blkid device identity mismatch'
-reset_fixture
-printf 'TYPE=$(touch /tmp/forbidden)\n' >> "$fixture/probe/nvme0n1p4"
-reject 'probe shell metacharacters stay data'
-reset_fixture
-touch "$fixture/change-inventory"
-reject 'inventory disappears after initial scan'
-reset_fixture
-rm "$fixture/dev/nvme0n1p4.identity"
-reject 'partition is not a block node'
-# Sourcing must produce no output or execute a probe, including in BusyBox ash.
+for field in DEVNAME PTTYPE; do
+    reset_fixture
+    printf '%s=\n' "$field" >> "$fixture/table/nvme0n1"
+    reject "duplicate table $field"
+done
+reset_fixture; printf 'DEVNAME=/dev/nvme0n1\nPTTYPE=dos\n' > "$fixture/table/nvme0n1"; reject 'non-GPT'
+reset_fixture; sed -i 's,nvme0n1,nvme1n1,' "$fixture/table/nvme0n1"; reject 'table device mismatch'
+reset_fixture; touch "$fixture/probe/nvme0n1p4.fail"; reject 'state probe failure'
+reset_fixture; touch "$fixture/probe/nvme0n1p2.fail"; reject_root 'selected root probe failure'
+for device in nvme0n1 nvme0n1p4; do
+    reset_fixture; printf '1\n' > "$fixture/sys/class/block/$device/ro"; reject 'read-only state/namespace'
+    reset_fixture; touch "$fixture/sys/class/block/$device/holders/dm-0"; reject 'holder'
+    reset_fixture; printf '259:99\n' > "$fixture/dev/$device.identity"; reject 'identity mismatch'
+done
+reset_fixture; printf '2 1 259:2 / /root ro - ext4 /dev/nvme0n1p2 ro\n' >> "$fixture/proc/self/mountinfo"; reject_root 'root mounted'
+reset_fixture; printf '2 1 259:4 / /run/a733-state rw - ext4 /dev/nvme0n1p4 rw\n' >> "$fixture/proc/self/mountinfo"
+reject 'state mounted before selection'
+hs_resolve_root /dev/nvme0n1p4 "$STATE_UUID" A "$ROOT_UUID" > "$fixture/result" || exit 1
+pass_count=$((pass_count+1))
+reset_fixture; printf '/swap file 100 0 -2\n' >> "$fixture/proc/swaps"; reject 'swap'
+reset_fixture; printf 'broken\n' > "$fixture/proc/self/mountinfo"; reject 'malformed mount inventory'
+reset_fixture; printf '3\n' > "$fixture/sys/class/block/nvme0n1p4/partition"; reject 'partition role mismatch'
+reset_fixture; sed -i 's/TYPE=ext4/TYPE=vfat/' "$fixture/probe/nvme0n1p4"; reject 'non-ext4 state'
+reset_fixture; sed -i "s/$ROOT_UUID/$STATE_UUID/" "$fixture/probe/nvme0n1p2"; reject_root 'stale root UUID'
+reset_fixture; touch "$fixture/change-inventory"; reject 'changed inventory'
+reset_fixture; touch "$fixture/mutate-state"; reject 'state replaced during discovery'
+reset_fixture; touch "$fixture/mutate-root"; reject_root 'root replaced during probe'
+reset_fixture; touch "$fixture/mutate-state-on-root"; reject_root 'state replaced during root probe'
 [ -z "$(/bin/busybox ash -c '. "$1"' ash "$repo/configs/host-storage-resolver.sh")" ]
 /bin/busybox ash -n "$repo/configs/host-storage-resolver.sh"
 printf 'host storage resolver: %s fixture checks passed (%s)\n' "$pass_count" "${1:-bash}"
-if [ "${1:-}" != ash ]; then
-    /bin/busybox ash "$0" ash
-fi
+if [ "${1:-}" != ash ]; then /bin/busybox ash "$0" ash; fi

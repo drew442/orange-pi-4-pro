@@ -13,11 +13,16 @@ passes=0
 
 hi_resolver() { :; }
 hi_console() { printf 'console\n' >> "$fixture/log"; }
-hs_resolve() {
+hs_resolve_state() {
     printf 'resolve\n' >> "$fixture/log"
     [ ! -e "$fixture/no-device" ] || return 1
     if [ -e "$fixture/bad-resolver" ]; then cat "$fixture/bad-resolver"; return; fi
-    printf 'ROOT_DEVICE=/dev/nvme0n1p2\nSTATE_DEVICE=/dev/nvme0n1p4\n'
+    printf 'STATE_DEVICE=/dev/nvme0n1p4\n'
+}
+hs_resolve_root() {
+    printf 'resolve-root %s %s\n' "$3" "$4" >> "$fixture/log"
+    [ ! -f "$fixture/bad-root-resolver" ] || { cat "$fixture/bad-root-resolver"; return; }
+    case "$3" in A) printf 'ROOT_DEVICE=/dev/nvme0n1p2\n' ;; B) printf 'ROOT_DEVICE=/dev/nvme0n1p3\n' ;; esac
 }
 hs_identity() {
     printf 'identity %s\n' "$1" >> "$fixture/log"
@@ -29,6 +34,8 @@ hs_filesystem() {
     HS_UUID=$state_uuid; HS_TYPE=ext4
     [ ! -e "$fixture/changed-uuid" ] || HS_UUID=$root_uuid
 }
+hs_idle() { [ ! -f "$fixture/became-busy" ]; }
+hs_table() { [ ! -f "$fixture/changed-table" ]; }
 hi_switch() { printf 'switch_root /newroot /sbin/init\n' >> "$fixture/log"; }
 
 # Only primitive I/O is replaced. Configuration parsing, validation, ordering,
@@ -37,6 +44,15 @@ hi_bb() {
     local command=$1 arg path target count value
     shift
     case "$command" in
+        head)
+            printf 'bounded-read %s\n' "$*" >> "$fixture/log"
+            case "${!#}" in */boot/selected.conf) printf 'read-selector\n' >> "$fixture/log" ;; esac
+            if [ -f "$fixture/grow-selector" ] && [ "${!#}" = /run/a733-state/boot/selected.conf ]; then
+                /bin/busybox head -c 1048576 /dev/zero >> "$state/boot/selected.conf"
+            fi
+            ;;
+        cat)
+            case "$1" in */boot/selected.conf) printf 'read-selector\n' >> "$fixture/log" ;; esac ;;
         mount)
             printf 'mount %s\n' "$*" >> "$fixture/log"
             target=${!#}
@@ -44,12 +60,13 @@ hi_bb() {
             case "$*" in
                 *'rw,nodev,nosuid'*)
                     [ ! -f "$fixture/mutate-marker" ] || printf 'wrong\n' > "$state/.a733-state"
+                    [ ! -f "$fixture/recovered-selector" ] || cp "$fixture/recovered-selector" "$state/boot/selected.conf"
                     [ ! -f "$fixture/mutate-id" ] || printf 'fedcba9876543210fedcba9876543210\n' > "$state/identity/machine-id" ;;
             esac
             return 0 ;;
         umount)
             printf 'umount %s\n' "$*" >> "$fixture/log"
-            if [ "$1" = /newroot/run/a733-state ] && [ -f "$fixture/replace-on-unmount" ]; then touch "$fixture/changed-device"; fi
+            if [ "$1" = /run/a733-state ] && [ -f "$fixture/replace-on-unmount" ]; then touch "$fixture/changed-device"; fi
             [ ! -f "$fixture/fail-umount" ] || [ "$1" != "$(cat "$fixture/fail-umount")" ] ;;
         sleep) printf 'sleep %s\n' "$*" >> "$fixture/log"; return 0 ;;
         uname)
@@ -64,6 +81,7 @@ hi_bb() {
     case "$command" in mount|umount|sleep|uname) return $? ;; esac
     local -a arguments=()
     for arg in "$@"; do
+        case "$arg" in /run/a733-state|/run/a733-state/*) arg=/newroot$arg ;; esac
         case "$arg" in /newroot|/newroot/*|/etc/a733-boot.conf|/proc/self/mountinfo) arg=$fixture$arg ;; esac
         arguments+=("$arg")
     done
@@ -91,7 +109,10 @@ reset_fixture() {
     printf '0123456789abcdef0123456789abcdef\n' > "$state/identity/machine-id"
     chmod 644 "$state/.a733-state" "$state/identity/machine-id"
     hash=$(sha256sum "$fixture/newroot/usr/lib/orangepi-hypervisor/payload.json"); hash=${hash%% *}
-    printf 'ROOT_UUID=%s\nSTATE_UUID=%s\nROOT_MARKER_SHA256=%s\nKERNEL_RELEASE=6.6.98-a733-diag\n' "$root_uuid" "$state_uuid" "$hash" > "$fixture/etc/a733-boot.conf"
+    printf 'STATE_UUID=%s\nKERNEL_RELEASE=6.6.98-a733-diag\n' "$state_uuid" > "$fixture/etc/a733-boot.conf"
+    mkdir -m 700 "$state/boot"
+    printf 'SCHEMA=1\nSLOT=A\nROOT_UUID=%s\nROOT_MARKER_SHA256=%s\nKERNEL_RELEASE=6.6.98-a733-diag\n' "$root_uuid" "$hash" > "$state/boot/selected.conf"
+    chmod 600 "$state/boot/selected.conf"
     printf '21 1 259:2 / /newroot ro,nodev - ext4 /dev/nvme0n1p2 ro\n' > "$fixture/proc/self/mountinfo"
     : > "$fixture/log"
 }
@@ -113,22 +134,25 @@ reject() {
 }
 
 reset_fixture
+selection_before=$(sha256sum "$state/boot/selected.conf")
 success 'provisioned root and state'
+[ "$(sha256sum "$state/boot/selected.conf")" = "$selection_before" ] || fail 'boot changed selection'
 python3 - "$fixture/log" <<'PY'
 import sys
 lines = open(sys.argv[1]).read().splitlines()
 def index(fragment):
     return next(i for i, line in enumerate(lines) if fragment in line)
-assert index('ro,noload,nodev /dev/nvme0n1p2 /newroot') < index('ro,noload,nodev,nosuid')
+assert index('rw,nodev,nosuid') < index('read-selector') < index('resolve-root') < index('ro,noload,nodev /dev/nvme0n1p2 /newroot') < index('--move /run /newroot/run')
 assert index('devtmpfs /dev') < index('console') < index('resolve')
-assert index('ro,noload,nodev,nosuid') < index('umount /newroot/run/a733-state')
-assert index('umount /newroot/run/a733-state') < index('probe nvme0n1p4') < index('rw,nodev,nosuid')
+assert index('ro,noload,nodev,nosuid') < index('umount /run/a733-state')
+assert index('umount /run/a733-state') < index('probe nvme0n1p4') < index('rw,nodev,nosuid')
 assert index('rw,nodev,nosuid') < index('--bind /newroot/run/a733-state/var') < index('-t overlay')
 assert index('-t overlay') < index('--bind /newroot/run/a733-state/identity/machine-id')
 assert index('size=64M,mode=1777,nodev,nosuid tmpfs /newroot/tmp') < index('--move /proc')
-assert index('size=64M,mode=1777,nodev,nosuid tmpfs /newroot/tmp') < index('umount /tmp') < index('umount /run') < index('--move /proc')
+assert index('--move /run /newroot/run') < index('size=64M,mode=1777,nodev,nosuid tmpfs /newroot/tmp') < index('umount /tmp') < index('--move /proc')
+assert 'umount /run' not in lines
 assert lines[-1] == 'switch_root /newroot /sbin/init'
-assert sum('size=64M' in line for line in lines) == 4
+assert sum('size=64M' in line for line in lines) == 3
 assert all('/dev/mmc' not in line for line in lines)
 PY
 [ "$(stat -c %a "$fixture/newroot/run/etc-upper")" = 755 ] || fail 'overlay /etc root mode'
@@ -136,9 +160,8 @@ PY
 
 reset_fixture; printf 'ROOT_UUID=%s\n' "$root_uuid" >> "$fixture/etc/a733-boot.conf"; reject 'duplicate config'
 reset_fixture; printf 'UNKNOWN=yes\n' >> "$fixture/etc/a733-boot.conf"; reject 'unknown config'
-reset_fixture; sed -i 's/ROOT_UUID=/ROOT_UUID =/' "$fixture/etc/a733-boot.conf"; reject 'malformed config'
+reset_fixture; sed -i 's/STATE_UUID=/STATE_UUID =/' "$fixture/etc/a733-boot.conf"; reject 'malformed config'
 reset_fixture; sed -i '/STATE_UUID=/d' "$fixture/etc/a733-boot.conf"; reject 'missing config'
-reset_fixture; sed -i "s/$state_uuid/$root_uuid/" "$fixture/etc/a733-boot.conf"; reject 'same UUIDs'
 reset_fixture; printf '\n' >> "$fixture/etc/a733-boot.conf"; reject 'extra config newline'
 reset_fixture; truncate -s -1 "$fixture/etc/a733-boot.conf"; reject 'missing config newline'
 reset_fixture; printf '\0' >> "$fixture/etc/a733-boot.conf"; reject 'config NUL'
@@ -147,17 +170,17 @@ reset_fixture; printf 'KERNEL_RELEASE=$(touch /unreachable)\n' > "$fixture/etc/a
 reset_fixture; printf '6.6.98-other\n' > "$fixture/kernel"; reject 'kernel mismatch'
 reset_fixture; touch "$fixture/no-device"; reject 'retry exhaustion'
 [ "$(grep -c '^resolve$' "$fixture/log")" = 10 ] && [ "$(grep -c '^sleep 1$' "$fixture/log")" = 9 ] || fail 'retry bound'
-reset_fixture; printf 'ROOT_DEVICE=/dev/mmcblk0p2\nSTATE_DEVICE=/dev/nvme0n1p4\n' > "$fixture/bad-resolver"; reject 'SD path'
-reset_fixture; printf 'ROOT_DEVICE=/dev/nvme0n1p2\nROOT_DEVICE=/dev/nvme0n1p2\nSTATE_DEVICE=/dev/nvme0n1p4\n' > "$fixture/bad-resolver"; reject 'duplicate resolver result'
-reset_fixture; printf 'modified\n' >> "$fixture/newroot/usr/lib/orangepi-hypervisor/payload.json"; reject 'root hash'
-reset_fixture; mv "$fixture/newroot/usr/lib/orangepi-hypervisor/payload.json" "$fixture/marker"; ln -s "$fixture/marker" "$fixture/newroot/usr/lib/orangepi-hypervisor/payload.json"; reject 'root marker symlink'
-reset_fixture; mv "$fixture/newroot/usr/lib/orangepi-hypervisor" "$fixture/payload"; ln -s "$fixture/payload" "$fixture/newroot/usr/lib/orangepi-hypervisor"; reject 'root marker ancestor symlink'
-reset_fixture; sed -i 's/ro,nodev/rw,nodev/' "$fixture/proc/self/mountinfo"; reject 'root mounted writable'
-reset_fixture; : > "$fixture/proc/self/mountinfo"; reject 'missing root mount'
-reset_fixture; chmod -x "$fixture/newroot/usr/lib/systemd/systemd"; reject 'init not executable'
-reset_fixture; chmod 700 "$fixture/newroot/etc"; reject 'base etc mode differs from overlay root'
-reset_fixture; rm "$fixture/newroot/usr/sbin/init"; ln -s /other/init "$fixture/newroot/usr/sbin/init"; reject 'wrong init target'
-reset_fixture; rm "$fixture/newroot/usr/lib/aarch64-linux-gnu/ld-linux-aarch64.so.1"; reject 'missing ELF interpreter'
+reset_fixture; printf 'STATE_DEVICE=/dev/mmcblk0p4\n' > "$fixture/bad-resolver"; reject 'SD path'
+reset_fixture; printf 'STATE_DEVICE=/dev/nvme0n1p4\nSTATE_DEVICE=/dev/nvme0n1p4\n' > "$fixture/bad-resolver"; reject 'duplicate resolver result'
+reset_fixture; printf 'modified\n' >> "$fixture/newroot/usr/lib/orangepi-hypervisor/payload.json"; reject 'root hash' yes
+reset_fixture; mv "$fixture/newroot/usr/lib/orangepi-hypervisor/payload.json" "$fixture/marker"; ln -s "$fixture/marker" "$fixture/newroot/usr/lib/orangepi-hypervisor/payload.json"; reject 'root marker symlink' yes
+reset_fixture; mv "$fixture/newroot/usr/lib/orangepi-hypervisor" "$fixture/payload"; ln -s "$fixture/payload" "$fixture/newroot/usr/lib/orangepi-hypervisor"; reject 'root marker ancestor symlink' yes
+reset_fixture; sed -i 's/ro,nodev/rw,nodev/' "$fixture/proc/self/mountinfo"; reject 'root mounted writable' yes
+reset_fixture; : > "$fixture/proc/self/mountinfo"; reject 'missing root mount' yes
+reset_fixture; chmod -x "$fixture/newroot/usr/lib/systemd/systemd"; reject 'init not executable' yes
+reset_fixture; chmod 700 "$fixture/newroot/etc"; reject 'base etc mode differs from overlay root' yes
+reset_fixture; rm "$fixture/newroot/usr/sbin/init"; ln -s /other/init "$fixture/newroot/usr/sbin/init"; reject 'wrong init target' yes
+reset_fixture; rm "$fixture/newroot/usr/lib/aarch64-linux-gnu/ld-linux-aarch64.so.1"; reject 'missing ELF interpreter' yes
 reset_fixture; printf 'wrong\n' > "$state/.a733-state"; reject 'state marker'
 reset_fixture; truncate -s -1 "$state/.a733-state"; reject 'state marker no newline'
 reset_fixture; printf '\n' >> "$state/.a733-state"; reject 'state marker extra newline'
@@ -166,7 +189,7 @@ reset_fixture; mv "$state/.a733-state" "$fixture/marker"; ln -s "$fixture/marker
 reset_fixture; rmdir "$state/var"; reject 'missing state directory'
 reset_fixture; rmdir "$state/home"; ln -s "$fixture" "$state/home"; reject 'state directory symlink'
 reset_fixture; chmod 777 "$state/var"; reject 'writable state directory'
-reset_fixture; printf '/newroot/run/a733-state/root\n' > "$fixture/bad-owner"; reject 'wrong state owner'
+reset_fixture; printf '/run/a733-state/root\n' > "$fixture/bad-owner"; reject 'wrong state owner'
 reset_fixture; printf '00000000000000000000000000000000\n' > "$state/identity/machine-id"; reject 'zero identity'
 reset_fixture; printf '0123456789ABCDEF0123456789abcdef\n' > "$state/identity/machine-id"; reject 'uppercase identity'
 reset_fixture; truncate -s -1 "$state/identity/machine-id"; reject 'identity missing newline'
@@ -175,8 +198,10 @@ reset_fixture; chmod 666 "$state/identity/machine-id"; reject 'identity mode'
 reset_fixture; mv "$state/identity/machine-id" "$fixture/id"; ln -s "$fixture/id" "$state/identity/machine-id"; reject 'identity symlink'
 reset_fixture; touch "$fixture/changed-uuid"; reject 'state UUID changed after RO unmount'
 reset_fixture; touch "$fixture/replace-on-unmount"; reject 'state block identity replaced after RO unmount'
+reset_fixture; touch "$fixture/became-busy"; reject 'state became busy before RW'
+reset_fixture; touch "$fixture/changed-table"; reject 'GPT changed before RW'
 reset_fixture; touch "$fixture/mutate-marker"; reject 'state marker changed on RW mount' yes
-grep -q '^umount /newroot/run/a733-state$' "$fixture/log" || fail 'RW cleanup'
+grep -q '^umount /run/a733-state$' "$fixture/log" || fail 'RW cleanup'
 reset_fixture; touch "$fixture/mutate-id"; reject 'machine identity changed on RW mount' yes
 reset_fixture; printf '/newroot/etc/machine-id\n' > "$fixture/fail-mount"; reject 'late bind failure' yes
 python3 - "$fixture/log" <<'PY'
@@ -185,7 +210,8 @@ lines = open(sys.argv[1]).read().splitlines()
 cleanup = [line for line in lines if line.startswith('umount ')][1:]
 assert cleanup == ['umount ' + p for p in (
     '/newroot/etc', '/newroot/home', '/newroot/root', '/newroot/var',
-    '/newroot/run/a733-state', '/newroot/run', '/newroot')], cleanup
+    '/newroot/run/a733-state', '/newroot')], cleanup
+assert lines.index('umount /newroot/run/a733-state') < lines.index('mount --move /newroot/run /run') < lines.index('umount /newroot')
 PY
 reset_fixture; printf '/newroot/sys\n' > "$fixture/fail-mount"; reject 'partial pseudo filesystem move' yes
 grep -q '^mount --move /newroot/proc /proc$' "$fixture/log" || fail 'restore moved proc'
@@ -195,11 +221,62 @@ import sys
 lines = open(sys.argv[1]).read().splitlines()
 assert lines.index('mount --move /newroot/sys /sys') < lines.index('mount --move /newroot/proc /proc') < lines.index('umount /newroot')
 PY
-reset_fixture; printf '/run\n' > "$fixture/fail-umount"; reject 'old RAM unmount failure' yes
-! grep -q '^mount --move ' "$fixture/log" || fail 'pseudo filesystems moved after RAM unmount failed'
+reset_fixture; printf '/tmp\n' > "$fixture/fail-umount"; reject 'old RAM unmount failure' yes
+! grep -q '^mount --move /proc' "$fixture/log" || fail 'pseudo filesystems moved after RAM unmount failed'
 reset_fixture; printf '/newroot/etc/machine-id\n' > "$fixture/fail-mount"; printf '/newroot/etc\n' > "$fixture/fail-umount"; reject 'cleanup continues after unmount failure' yes
 grep -q '^umount /newroot/run/a733-state$' "$fixture/log" || fail 'state cleanup skipped'
 grep -q 'cleanup could not unmount /newroot/etc' "$fixture/stderr" || fail 'cleanup failure not reported'
+
+reset_fixture
+cp "$state/boot/selected.conf" "$fixture/recovered-selector"
+printf 'dirty metadata exposes stale/invalid record\n' > "$state/boot/selected.conf"
+success 'journal recovery exposes valid selector before read'
+
+# Oversized metadata is rejected before any content capture. A selector that
+# grows after stat is still read through a fixed 4097-byte cap and rejected.
+for metadata in config selector marker identity; do
+    reset_fixture
+    case "$metadata" in
+        config) oversized=/etc/a733-boot.conf; file=$fixture$oversized; writable=no ;;
+        selector) oversized=/run/a733-state/boot/selected.conf; file=$state/boot/selected.conf; writable=yes ;;
+        marker) oversized=/run/a733-state/.a733-state; file=$state/.a733-state; writable=no ;;
+        identity) oversized=/run/a733-state/identity/machine-id; file=$state/identity/machine-id; writable=no ;;
+    esac
+    /bin/busybox head -c 8192 /dev/zero > "$file"
+    reject "oversized $metadata" "$writable"
+    ! grep -Fq -- " $oversized" "$fixture/log" || fail "read oversized $metadata"
+done
+reset_fixture; touch "$fixture/grow-selector"; reject 'selector grows after size check' yes
+grep -q '^bounded-read -c 4097 /run/a733-state/boot/selected.conf$' "$fixture/log" || fail 'selector read cap'
+
+# Mutable selector is parsed only after journal recovery and is never sourced.
+reset_fixture
+sed -i 's/SLOT=A/SLOT=B/; s/00000000000a/00000000000b/' "$state/boot/selected.conf"
+success 'slot B'
+grep -q 'ro,noload,nodev /dev/nvme0n1p3 /newroot' "$fixture/log" || fail 'B root path'
+for field in SCHEMA SLOT ROOT_UUID ROOT_MARKER_SHA256 KERNEL_RELEASE; do
+    reset_fixture; printf '%s=\n' "$field" >> "$state/boot/selected.conf"; reject "duplicate selector $field" yes
+    reset_fixture; sed -i "/^$field=/d" "$state/boot/selected.conf"; reject "missing selector $field" yes
+done
+reset_fixture; printf 'UNKNOWN=yes\n' >> "$state/boot/selected.conf"; reject 'unknown selector' yes
+reset_fixture; printf '\n' >> "$state/boot/selected.conf"; reject 'extra selector newline' yes
+reset_fixture; truncate -s -1 "$state/boot/selected.conf"; reject 'missing selector newline' yes
+reset_fixture; printf '\0' >> "$state/boot/selected.conf"; reject 'selector NUL' yes
+reset_fixture; truncate -s -1 "$state/boot/selected.conf"; printf '\0' >> "$state/boot/selected.conf"; reject 'NUL replaces selector newline' yes
+reset_fixture; sed -i 's/SLOT=A/SLOT=B/' "$state/boot/selected.conf"; reject 'stale slot UUID' yes
+reset_fixture; sed -i 's/6.6.98-a733-diag/6.6.98-other/' "$state/boot/selected.conf"; reject 'selector ABI mismatch' yes
+reset_fixture; sed -i 's/SCHEMA=1/SCHEMA=2/' "$state/boot/selected.conf"; reject 'unsupported selector schema' yes
+reset_fixture; sed -i 's/ROOT_MARKER_SHA256=.*/ROOT_MARKER_SHA256=ABC/' "$state/boot/selected.conf"; reject 'invalid selector hash' yes
+reset_fixture; sed -i 's/SLOT=A/SLOT=$(touch \/unreachable)/' "$state/boot/selected.conf"; reject 'selector shell code stays data' yes
+reset_fixture; chmod 666 "$state/boot/selected.conf"; reject 'writable selector' yes
+reset_fixture; chmod 755 "$state/boot"; reject 'nonprivate boot directory' yes
+reset_fixture; printf '/run/a733-state/boot/selected.conf\n' > "$fixture/bad-owner"; reject 'selector owner' yes
+reset_fixture; mv "$state/boot/selected.conf" "$fixture/selector"; ln -s "$fixture/selector" "$state/boot/selected.conf"; reject 'selector symlink' yes
+reset_fixture; mv "$state/boot" "$fixture/boot"; ln -s "$fixture/boot" "$state/boot"; reject 'boot symlink' yes
+reset_fixture; printf 'ROOT_DEVICE=/dev/mmcblk0p2\n' > "$fixture/bad-root-resolver"; reject 'root resolver SD' yes
+reset_fixture; printf '/newroot/run\n' > "$fixture/fail-mount"; reject 'run move failure' yes
+# Failure before /run move must clean the still-original state location.
+grep -q '^umount /run/a733-state$' "$fixture/log" || fail 'original state cleanup'
 
 # Running a copy named init outside PID 1 must remain inert, even with hostile env.
 cp "$repo/configs/host-init" "$fixture/init"

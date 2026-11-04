@@ -1,0 +1,15 @@
+{
+  "classification": "independent file archive verification; no board boot",
+  "archive": {
+    "bytes": 4761822,
+    "sha256": "544bedbf1ef6793c21a72006fd82419ae3738e568afc8069a3ec783ad381096a"
+  },
+  "regular_files_verified": 345,
+  "entries_verified": 424,
+  "immutable_config": [
+    "STATE_UUID=dfad484b-9958-4ce4-b92c-725734f515fd",
+    "KERNEL_RELEASE=6.6.98-a733-diag"
+  ],
+  "root_choice_and_marker_in_bootstrap_config": false,
+  "source_and_recipe_hashes_match": true
+}

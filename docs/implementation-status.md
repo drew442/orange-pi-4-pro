@@ -28,7 +28,7 @@ neither a larger card nor live inventory is a prerequisite to the first image.
   Compressed: 16,188,652 bytes. [Manifest](evidence/diagnostic-20261104.json),
   [download/build/serial guide](diagnostic-image.md). Local files under ignored
   `out/diagnostic-20261104/`; builder `.../orange-pi-4-pro-build/artifacts/`.
-- 78 Python test cases pass, with privileged state cases run on Jammy; shell
+- 84 Python test cases pass, with privileged state cases run on Jammy; shell
   regressions pass. Actual image
   hashes, partition/filesystem contents, boot script CRC and wrapper payloads
   verified independently. NVMe planner and KVM-only launcher are preparation only.
@@ -50,12 +50,11 @@ neither a larger card nor live inventory is a prerequisite to the first image.
   and read-only UUID/identity selection implemented; 39 fixtures pass with the exact
   diagnostic BusyBox. Private chroot/file probes passed; no mounts or host boot.
   Independent review's duplicate-field parser finding was fixed and rechecked.
-- [Host handoff prototype](host-handoff.md) packaged: 4,761,354-byte initramfs,
-  authenticated compatible inputs, RO root/state validation then NVMe state RW,
-  bounded tmpfs and ephemeral `/etc`. 49 handoff fixtures, pinned ARM64 ash checks
-  and actual builder overlay test passed; clean Git checkout packaging repeated
-  byte-identically. Cleanup/permission findings fixed after review; no complete
-  host boot image or board handoff yet.
+- [Host handoff](host-handoff.md): 4,761,822-byte generic initramfs fixes state UUID
+  and ABI; [A/B selection lives on NVMe](nvme-root-selection.md), read after state
+  journal recovery. Fixed GPT roles, selected-root-only probes, bounded metadata,
+  84 handoff/41 resolver fixtures and pinned ARM64 ash/GPT-file checks pass.
+  Root-only selection needs no SD repackaging; hardware handoff remains untested.
 - [State payload recipe](host-state.md) built an 8 GiB journaled regular-file
   fixture (39.8 MB compressed), fresh identities, authenticated `/var` and operator
   public key/config. Independent readback/gzip checks and 14 builder regressions
@@ -71,8 +70,9 @@ neither a larger card nor live inventory is a prerequisite to the first image.
 2. Capture full serial boot and inventory using the guide; investigate EL2/NVMe.
    Integrate userspace and the guest fixture while hardware awaits; guest drivers
    use a separate profile. Supply the administration public key; configure and
-   activate persistent management. Move A/B boot selection to NVMe before routine
-   updates; current initramfs fixes one root. Physical installer remains open.
+   activate persistent management. Deliver verified inactive-slot writing,
+   activation/rollback and a complete bootstrap/physical installer; selector
+   preparation and atomic staging alone are not an installed updater.
 3. Full reproducibility remains open: U-Boot generates a random 128-byte debug
    challenge; fresh U-Boot builds differ there plus checksums. Exact generated
    source/binary/log collection passed independent review and an end-to-end

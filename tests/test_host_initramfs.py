@@ -59,8 +59,9 @@ class InitramfsTests(unittest.TestCase):
                 INIT.read_pinned(alias, expected)
 
     def test_state_uuid_and_output_guards(self):
-        arguments = ('missing', 'missing', 'missing', 'missing', 'A')
-        for value in ('invalid', INIT.PAYLOAD.SLOT_UUIDS['A'], 'A7330000-0000-4000-8000-000000000001'):
+        arguments = ('missing', 'missing', 'missing')
+        for value in ('invalid', '00000000-0000-0000-0000-000000000000',
+                      INIT.PAYLOAD.SLOT_UUIDS['A'], 'A7330000-0000-4000-8000-000000000001'):
             with self.subTest(value=value), self.assertRaises(ValueError):
                 INIT.build(*arguments, value, '/tmp/invalid')
         with self.assertRaisesRegex(ValueError, 'new repo/out'):

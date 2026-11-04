@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Opt-in root check of ARM64 runtime closure using private regular-file fixtures.
 
-Requires working ARM64 binfmt registration and mke2fs. No mount or block devices.
+Requires ARM64 binfmt, mke2fs and sfdisk. No mount or block devices.
 Usage: sudo python3 tests/verify_storage_tools_runtime.py STAGED_TOOLS [PINNED_BUSYBOX]
 """
 import hashlib
@@ -54,7 +54,13 @@ def verify(source):
                 stream.truncate(32 * 1024**2)
         subprocess.run(['mke2fs', '-q', '-F', '-t', 'ext4', '-U', UUID,
                         '-O', '^has_journal', str(fixture)], check=True)
-        before = {image.name: record(image.read_bytes()) for image in (fixture, blank)}
+        gpt = root / 'gpt.img'
+        with gpt.open('xb') as stream:
+            stream.truncate(128 * 1024**2)
+        subprocess.run(['sfdisk', '--no-reread', '--no-tell-kernel', str(gpt)],
+                       input='label: gpt\nunit: sectors\n\n' + 'size=32768\n' * 5,
+                       text=True, check=True, stdout=subprocess.DEVNULL)
+        before = {image.name: record(image.read_bytes()) for image in (fixture, blank, gpt)}
         environment = {'PATH': '/usr/sbin:/usr/bin:/sbin:/bin', 'LC_ALL': 'C'}
         version = subprocess.run(['chroot', str(root), '/sbin/blkid', '--version'],
                                  env=environment, check=True, capture_output=True, text=True).stdout.strip()
@@ -68,11 +74,17 @@ def verify(source):
                                  env=environment, capture_output=True, text=True)
         if failure.returncode != 2 or failure.stdout:
             raise ValueError('blank file must produce no identifiers and status 2')
-        after = {image.name: record(image.read_bytes()) for image in (fixture, blank)}
+        table = subprocess.run(['chroot', str(root), '/sbin/blkid', '-p', '-o', 'export',
+                                '-s', 'PTTYPE', '/gpt.img'], env=environment, check=True,
+                               capture_output=True, text=True)
+        if set(table.stdout.splitlines()) != {'DEVNAME=/gpt.img', 'PTTYPE=gpt'}:
+            raise ValueError(f'unexpected GPT probe output: {table.stdout!r}')
+        after = {image.name: record(image.read_bytes()) for image in (fixture, blank, gpt)}
         if before != after:
             raise ValueError('probe modified regular-file input')
         return {'classification': 'ARM64 userspace binfmt/chroot file test; no boot or KVM acceptance',
                 'version': version, 'probe': result.stdout.splitlines(), 'blank_status': failure.returncode,
+                'gpt_probe': table.stdout.splitlines(),
                 'fixture_bytes_unchanged': True, 'runtime_files': lock['files']}
 
 

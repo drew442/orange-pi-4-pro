@@ -81,9 +81,9 @@ def verify(image, manifest_path):
 
         for path, mode in (('/', 0o755), ('/lost+found', 0o700), ('/var', 0o755),
                            ('/root', 0o700), ('/root/.ssh', 0o700), ('/home', 0o755),
-                           ('/identity', 0o700), ('/identity/ssh', 0o700), ('/config', 0o700)):
+                           ('/identity', 0o700), ('/identity/ssh', 0o700), ('/config', 0o700), ('/boot', 0o700)):
             metadata(path, 'directory', mode)
-        for path in ('/.a733-state', '/identity/machine-id', '/config/management.json', '/root/.ssh/authorized_keys'):
+        for path in ('/.a733-state', '/identity/machine-id', '/config/management.json', '/root/.ssh/authorized_keys', '/boot/selected.conf'):
             metadata(path, 'regular', 0o600)
         if debugfs('cat /.a733-state') != f'a733-state-v1\n{state_uuid}\n'.encode():
             raise ValueError('state marker mismatch')
@@ -93,6 +93,11 @@ def verify(image, manifest_path):
             raise ValueError('machine-id mismatch')
         if json.loads(debugfs('cat /config/management.json')) != manifest['management']:
             raise ValueError('management configuration mismatch')
+        selection = debugfs('cat /boot/selected.conf')
+        selection_fields = ('SCHEMA', 'SLOT', 'ROOT_UUID', 'ROOT_MARKER_SHA256', 'KERNEL_RELEASE')
+        expected_selection = ''.join(f'{key}={manifest["boot_selection"][key]}\n' for key in selection_fields).encode()
+        if selection != expected_selection or len(manifest['boot_selection']) != 5:
+            raise ValueError('boot selection differs from manifest')
         key = debugfs('cat /root/.ssh/authorized_keys')
         fields = key.decode('ascii').split()
         if len(fields) != 2 or fields[0] != 'ssh-ed25519' or not key.endswith(b'\n'):
@@ -145,7 +150,8 @@ def verify(image, manifest_path):
                 'image': before, 'state_uuid': state_uuid, 'machine_id': manifest['machine_id'],
                 'journal': True, 'filesystem_read_only_feature': False,
                 'filesystem_metadata': 'checked root/lost+found and identity/config/key directories/files',
-                'management_config_matches': True, 'operator_public_key_fingerprint': fingerprint,
+                'management_config_matches': True, 'boot_selection_matches': True,
+                'operator_public_key_fingerprint': fingerprint,
                 'host_key_directory_empty': True, 'package_database_matches_staging': True,
                 'compressed_hash_and_expansion_match': True, 'image_unchanged': True}
     finally:

@@ -32,6 +32,9 @@ CLASSIFICATION = 'per-installation state; not a portable template; no hardware a
 spec = importlib.util.spec_from_file_location('host_payload_state', REPO / 'build/host-payload.py')
 PAYLOAD = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(PAYLOAD)
+selection_spec = importlib.util.spec_from_file_location('state_root_selection', REPO / 'build/root-selection.py')
+SELECTION = importlib.util.module_from_spec(selection_spec)
+selection_spec.loader.exec_module(SELECTION)
 
 
 def digest(stream):
@@ -172,7 +175,8 @@ def write_private(path, data):
         stream.write(data)
 
 
-def seed_state(extracted, state, state_uuid, config, public_key):
+def seed_state(extracted, state, state_uuid, config, public_key, selection):
+    selector = SELECTION.parse(selection)
     source_var = extracted / 'var'
     info = source_var.lstat()
     if not stat.S_ISDIR(info.st_mode) or info.st_uid != 0 or info.st_mode & 0o7022:
@@ -180,7 +184,7 @@ def seed_state(extracted, state, state_uuid, config, public_key):
     state.mkdir(mode=0o700)
     source_var.rename(state / 'var')
     for name, mode in (('root', 0o700), ('home', 0o755), ('identity', 0o700),
-                       ('identity/ssh', 0o700), ('config', 0o700), ('root/.ssh', 0o700)):
+                       ('identity/ssh', 0o700), ('config', 0o700), ('root/.ssh', 0o700), ('boot', 0o700)):
         (state / name).mkdir(mode=mode)
         (state / name).chmod(mode)
     machine_id = secrets.token_hex(16)
@@ -190,6 +194,7 @@ def seed_state(extracted, state, state_uuid, config, public_key):
     write_private(state / 'identity/machine-id', (machine_id + '\n').encode())
     write_private(state / 'root/.ssh/authorized_keys', public_key)
     write_private(state / 'config/management.json', (json.dumps(config, sort_keys=True, separators=(',', ':')) + '\n').encode())
+    SELECTION.atomic_store(state / 'boot', SELECTION.serialize(selector))
     return machine_id
 
 
@@ -260,7 +265,7 @@ def compress_image(image, output):
             shutil.copyfileobj(source, compressed, length=1024**2)
 
 
-def build(rootfs, config_path, public_key_path, output, state_uuid=None):
+def build(rootfs, config_path, public_key_path, output, boot_selection, state_uuid=None):
     if os.geteuid() != 0:
         raise ValueError('root required to preserve userspace metadata')
     os.umask(0o077)
@@ -273,6 +278,8 @@ def build(rootfs, config_path, public_key_path, output, state_uuid=None):
     key_data = bounded_input(public_key_path, 16384)
     config = validate_config(config_data)
     public_key, fingerprint = validate_public_key(key_data)
+    selection_data = bounded_input(boot_selection, 4096)
+    selection = SELECTION.parse(selection_data)
     state_uuid = validate_uuid(state_uuid or str(uuid.uuid4()))
     evidence = REPO / 'docs/evidence/host-userspace-20261104.json'
     evidence_data = bounded_input(evidence, 1024**2)
@@ -303,7 +310,8 @@ def build(rootfs, config_path, public_key_path, output, state_uuid=None):
         PAYLOAD.authenticate(snapshot, expected)
     provenance = output / 'provenance'
     provenance.mkdir(mode=0o700)
-    for path in (Path(__file__).resolve(), REPO / 'build/host-payload.py',
+    for path in (Path(__file__).resolve(), REPO / 'build/host-payload.py', REPO / 'build/root-selection.py',
+                 REPO / 'build/host-initramfs.py', REPO / 'build/host-storage-tools.py',
                  REPO / 'configs/builder-packages.lock.tsv',
                  REPO / 'configs/host-userspace-packages.lock.tsv',
                  REPO / 'configs/host-userspace-package-hashes.lock.tsv',
@@ -316,7 +324,7 @@ def build(rootfs, config_path, public_key_path, output, state_uuid=None):
         extracted.mkdir()
         PAYLOAD.extract_rootfs(snapshot, extracted)
         state = stage / 'state'
-        machine_id = seed_state(extracted, state, state_uuid, config, public_key)
+        machine_id = seed_state(extracted, state, state_uuid, config, public_key, selection_data)
         PAYLOAD.write_json(output / 'staging-contents.json', contents(state))
         filesystem_metadata = make_image(state, output / 'state.ext4', state_uuid)
     snapshot.unlink()
@@ -332,9 +340,11 @@ def build(rootfs, config_path, public_key_path, output, state_uuid=None):
         'filesystem_directories': filesystem_metadata,
         'staging_storage_guard_limit': 'kernel sdX/removable=0 cannot identify every USB SD reader; operator must use known fixed builder storage',
         'sources': {'rootfs.tar.gz': expected,
+                    'boot_selection_input': {'bytes': len(selection_data), 'sha256': hashlib.sha256(selection_data).hexdigest()},
                     'operator_config': {'bytes': len(config_data), 'sha256': hashlib.sha256(config_data).hexdigest()},
                     'operator_public_key': {'bytes': len(key_data), 'sha256': hashlib.sha256(key_data).hexdigest()}},
         'management': config, 'admin_public_key_fingerprint': fingerprint,
+        'boot_selection': selection,
         'builder_packages': packages, 'staging_storage': storage, 'files': files,
         'tools': {tool: PAYLOAD.tool_version(tool) for tool in ('mke2fs', 'e2fsck', 'debugfs')},
         'hardware_acceptance': 'pending; no physical boot, NVMe installation, KVM or SD-write evidence'})
@@ -346,10 +356,12 @@ def main():
     parser.add_argument('config_json', type=Path)
     parser.add_argument('admin_public_key', type=Path)
     parser.add_argument('output', type=Path)
+    parser.add_argument('--boot-selection', type=Path, required=True,
+                        help='initial selector prepared from a verified compatible root image')
     parser.add_argument('--state-uuid', help='explicit per-installation UUID for recovery/fixtures; defaults to fresh UUID4')
     args = parser.parse_args()
     try:
-        build(args.rootfs_tar, args.config_json, args.admin_public_key, args.output, args.state_uuid)
+        build(args.rootfs_tar, args.config_json, args.admin_public_key, args.output, args.boot_selection, args.state_uuid)
     except (ValueError, OSError, tarfile.TarError, subprocess.CalledProcessError) as error:
         parser.exit(1, f'host state: {error}\n')
 

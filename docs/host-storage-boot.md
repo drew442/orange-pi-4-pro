@@ -1,81 +1,52 @@
 # NVMe boot-device selection preparation
 
-The storage resolver and its authenticated ARM64 probing runtime are implemented
-and tested. They do **not** mount a root or state filesystem, start the host,
-install storage or change the diagnostic SD image. Physical A733 boot, NVMe
-identity and zero SD writes remain untested.
+The resolver chooses state first, then the root recorded in the validated NVMe
+selector. It does not mount filesystems, install storage or change the
+diagnostic SD image. Physical A733 boot, NVMe identity and zero SD writes remain
+untested. The [handoff document](host-handoff.md) covers validation order and
+the current evidence.
 
-## Selection contract
+## GPT and resolver contract
 
-`configs/host-storage-resolver.sh ROOT_UUID STATE_UUID` expects trusted devtmpfs,
-sysfs and procfs, `/bin/busybox`, and util-linux `/sbin/blkid`. It selects distinct
-ext4 partitions with the two canonical lowercase filesystem UUIDs on one NVMe
-namespace. It checks device-node versus sysfs identity, partition parentage,
-duplicate UUIDs, current-namespace mounts, holders, active swap and state/namespace
-read-only flags. Root may be block-read-only. Output contains only
-`ROOT_DEVICE=/dev/nvme...` and `STATE_DEVICE=/dev/nvme...`; callers must parse
-these records without `eval`.
+Each selected namespace has fixed roles: p1 boot, p2 root A, p3 root B, p4
+state and p5 guest storage. The resolver CLI is:
 
-The plan permits filesystem UUIDs. Current root payloads have distinct fixed A/B
-UUIDs; cloned NVMe installations can therefore be ambiguous and are rejected.
-The future installer must assign unique GPT identifiers and a unique state UUID.
-The current resolver does not select by GPT PARTUUID, model or serial and is not
-an installer target-authorization mechanism. It never selects an SD partition.
-
-Every discovered NVMe partition must return a successful probe with UUID/type.
-Blank, unrecognized or unreadable partitions prevent selection; unrelated
-recognized formats, such as a boot VFAT filesystem, may be present. This is a
-conservative preparation contract requiring refinement before a general installer.
-All active swap is rejected. These observations do not lock devices or detect raw
-device users or mounts in other namespaces; use before storage services start.
-
-Probing uses explicit devices and
-[`blkid --probe`](https://github.com/util-linux/util-linux/blob/v2.38.1/misc-utils/blkid.8.adoc),
-which bypasses the cache and reports ambiguous signatures through its exit status.
-All nonzero statuses stop selection. Export fields are parsed as data with
-duplicate-field rejection and no assumed order. No formatting, repair, mount,
-boot-selection write or fallback to another storage class occurs.
-
-## Runtime packaging and verified commands
-
-The diagnostic BusyBox has no `blkid` or `findfs` applet. The new
-`build/host-storage-tools.py` extracts only four pinned ELF files and three
-copyright notices from the hash-verified userspace archive. It copies resolved
-library bytes to the required runtime paths, without extracting archive links,
-running package code or requiring root. The output must be new and below `out/`.
-The [file/package lock](../configs/host-storage-tools.lock.json) records the exact
-binary bytes, util-linux/libblkid 2.38.1 and glibc 2.36 package versions.
-
-On the prepared Ubuntu 22.04 builder, from its repository checkout:
-
-```sh
-python3 build/host-storage-tools.py \
-  /home/drew/orange-pi-4-pro-build/recipe/out/host-userspace-bookworm-20261001-01/rootfs.tar.gz \
-  "$(pwd -P)/out/host-storage-tools-20261104-01"
-sudo python3 tests/verify_storage_tools_runtime.py \
-  out/host-storage-tools-20261104-01 \
-  /home/drew/orange-pi-4-pro-build/busybox/bin/busybox
+```text
+state STATE_UUID -> STATE_DEVICE
+root STATE_DEVICE STATE_UUID SLOT ROOT_UUID -> ROOT_DEVICE
 ```
 
-Both commands passed. The second is an opt-in regular-file test using ARM64
-binfmt/chroot on the x86 builder, with no mounts or physical storage targets.
-It copies hash-verified runtime files to a new private temporary root, creates
-an ext4 file and a blank file, checks probe results and confirms unchanged file
-hashes. It also runs all 39 resolver fixtures with the exact diagnostic ARM64
-BusyBox 1.30.1, including its `stat` and hexadecimal `printf` behavior.
-The [packaging manifest](evidence/host-storage-tools-20261104.json) and
-[runtime report](evidence/host-storage-runtime-20261104.json) retain the evidence.
-The packaged ARM64 runtime also identified both existing 4 GiB A/B payload files.
-None of these checks executes a guest or satisfies hardware acceptance.
+Only eligible NVMe p4 partitions are scanned for state. Duplicate state UUIDs
+or an unrecognized eligible p4 fail closed. For root selection it validates
+the selected GPT namespace and same-parent role. It does not inspect the
+unselected root filesystem, allowing manual rollback when that unused slot is
+corrupt. Output is parsed as data, never with `eval`. The resolver identifies
+NVMe namespaces and partitions using block-node and sysfs identity, parentage,
+GPT, and fresh blkid probes. It never selects SD. Observations do not lock
+devices, so use before storage services start.
 
-Unprivileged regressions:
+The immutable initramfs config contains only `STATE_UUID` and
+`KERNEL_RELEASE=6.6.98-a733-diag`. State's `boot/selected.conf` is schema 1 and
+contains `SLOT`, `ROOT_UUID`, `ROOT_MARKER_SHA256`, and `KERNEL_RELEASE` in
+addition to `SCHEMA`. It is data-only, bounded, and validated against the
+selected root marker and expected kernel. No root choice or selector write is
+embedded in routine boot.
 
-```sh
-python3 -m unittest discover -s tests -p 'test_host_storage_tools.py'
-bash tests/test-host-storage-resolver.sh
-```
+## Runtime and evidence
 
-The [host handoff prototype](host-handoff.md) now packages root/state mount and
-validation logic, bounded tmpfs and persistent machine-id support. Actual board
-handoff, state provisioning and persistent management configuration remain open.
-The existing A/B roots and diagnostic image have not been changed.
+The diagnostic BusyBox has no `blkid` applet. The package recipe extracts four
+hash-pinned ARM64 ELF files and three notices from the authenticated userspace
+archive. It uses util-linux/libblkid 2.38.1 and glibc 2.36. See the
+[runtime lock](../configs/host-storage-tools.lock.json) and
+[runtime evidence](evidence/nvme-selection-blkid-20261104.json). ARM64
+binfmt/chroot probing passed for ext4, blank files, and GPT on a 128 MiB regular
+file; fixture hashes were unchanged. No block devices or physical targets
+were used.
+
+Resolver fixture coverage is 41 cases in Bash and exact pinned ARM64 BusyBox
+ash. This is host evidence, not physical boot or KVM acceptance. A full
+host boot/installer image, updater and target activation remain open.
+Preserve the compatible firmware/kernel/DTB stack and prefer SPI-to-NVMe boot.
+If SD boot remains necessary, its boot files stay read-only with zero routine
+writes; root-only selection changes do not require SD repacking, while kernel,
+DTB or initramfs changes require explicit boot maintenance.
