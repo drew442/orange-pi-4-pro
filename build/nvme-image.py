@@ -8,6 +8,8 @@ import argparse
 import hashlib
 import importlib.util
 import json
+import ipaddress
+import re
 import os
 from pathlib import Path
 import shutil
@@ -91,6 +93,53 @@ def validate_pairing(roots, state, sd, diagnostic):
     if state['boot_selection']['KERNEL_RELEASE'] != HOST.KERNEL_RELEASE:
         raise ValueError('state selector ABI differs')
     return state_uuid
+
+
+def installation_intent(state, for_installation=False):
+    """Record operator build intent; this is never physical-write authorization."""
+    if type(for_installation) is not bool:
+        raise ValueError('installation intent must be boolean')
+    config = STATE.validate_config(json.dumps(state['management']))
+    fingerprint = state['admin_public_key_fingerprint']
+    if not isinstance(fingerprint, str) or not re.fullmatch(r'SHA256:[A-Za-z0-9+/]{43}', fingerprint):
+        raise ValueError('invalid administration public-key fingerprint')
+    if for_installation:
+        documentation = ('192.0.2.0/24', '198.51.100.0/24', '203.0.113.0/24', '127.0.0.0/8', '224.0.0.0/3')
+        network = ipaddress.IPv4Network(config['management_cidr'])
+        if (fingerprint == 'SHA256:zJDXpqimTuhgMi8BhG83V7SeYsDurn/2Dmt9g/R3Fzc' or
+                config['management_mac'] in ('02:73:30:00:00:01', '02:11:22:33:44:55') or
+                any(network.overlaps(ipaddress.IPv4Network(value)) for value in documentation)):
+            raise ValueError('fixture credentials/network values cannot mark an installation candidate')
+    return {'for_installation': for_installation,
+            'administration_public_key_fingerprint': fingerprint,
+            'management_mac': config['management_mac'], 'management_cidr': config['management_cidr']}
+
+
+def validate_state_identity(image, state):
+    actual = STATE.validate_config(debugfs(image, 'cat /config/management.json'))
+    _, fingerprint = STATE.validate_public_key(debugfs(image, 'cat /root/.ssh/authorized_keys'))
+    identity = debugfs(image, 'cat /identity/machine-id')
+    if (actual != state['management'] or fingerprint != state['admin_public_key_fingerprint'] or
+            identity != (state['machine_id'] + '\n').encode() or
+            re.fullmatch(rb'[0-9a-f]{32}\n', identity) is None or identity == b'0' * 32 + b'\n'):
+        raise ValueError('captured state configuration, administrator or machine identity differs')
+    for path in ('/config/management.json', '/root/.ssh/authorized_keys', '/identity/machine-id'):
+        info = debugfs(image, 'stat ' + path).decode()
+        if not re.search(r'Type:\s+regular\s+Mode:\s+0?600\b', info) or not re.search(r'User:\s+0\s+Group:\s+0\b', info):
+            raise ValueError('state identity file metadata differs')
+    info = debugfs(image, 'stat /identity/ssh').decode()
+    if not re.search(r'Type:\s+directory\s+Mode:\s+0?700\b', info) or not re.search(r'User:\s+0\s+Group:\s+0\b', info):
+        raise ValueError('SSH identity directory metadata differs')
+    listing = debugfs(image, 'ls -p /identity/ssh').decode()
+    names = []
+    for line in listing.splitlines():
+        if line.strip():
+            fields = line.split('/')
+            if len(fields) < 7:
+                raise ValueError('unexpected SSH identity directory listing')
+            names.append(fields[5])
+    if sorted(names) != ['.', '..']:
+        raise ValueError('installation state must not embed SSH host keys')
 
 
 def write_all(fd, data, offset):
@@ -179,7 +228,7 @@ def root_selection(snapshot, slot, roots, diagnostic):
 
 
 def build(payload_directory, state_directory, sd_directory, diagnostic_directory,
-          output_directory, size_bytes, logical_sector_bytes=512, physical_sector_bytes=4096):
+          output_directory, size_bytes, logical_sector_bytes=512, physical_sector_bytes=4096, for_installation=False):
     if os.geteuid() != 0:
         raise ValueError('root required to seed root-owned filesystem metadata')
     # Geometry and all supplied manifests are checked before reserving output.
@@ -190,6 +239,7 @@ def build(payload_directory, state_directory, sd_directory, diagnostic_directory
     diagnostic_directory = HOST.safe_path(diagnostic_directory)
     diagnostic = HOST.json_object(HOST.read_regular(HOST.DIAGNOSTIC_RECORD, 1024**2))['files']
     state_uuid = validate_pairing(roots, state, sd, diagnostic)
+    intent = installation_intent(state, for_installation)
     output = HOST.safe_path(output_directory)
     if (not Path(output_directory).is_absolute() or output.parent != REPO / 'out' or
             not output.name.startswith('nvme-image-') or output.exists()):
@@ -220,6 +270,7 @@ def build(payload_directory, state_directory, sd_directory, diagnostic_directory
         if (sb[56:58] != b'\x53\xef' or str(uuid.UUID(bytes=sb[104:120])) != state_uuid or
                 not struct.unpack_from('<I', sb, 92)[0] & 4 or struct.unpack_from('<I', sb, 100)[0] & 0x1000):
             raise ValueError('captured state UUID/ext4 format differs')
+        validate_state_identity(state_image, state)
         selection = state['boot_selection']
         if (selection != selections[selection['SLOT']] or
                 debugfs(state_image, 'cat /boot/selected.conf') != SELECT.serialize(selection) or
@@ -269,7 +320,8 @@ def build(payload_directory, state_directory, sd_directory, diagnostic_directory
         # Hash all logical bytes, including zeros; allocated-byte hashes alone do
         # not describe a sparse disk image. This can take several minutes.
         image_record = HOST.file_record(image)
-        result = {'schema': 1, 'classification': 'integrated NVMe regular-file fixture; no physical installation or hardware acceptance',
+        result = {'schema': 1, 'classification': ('per-installation NVMe candidate; hardware acceptance pending' if for_installation else 'integrated NVMe regular-file fixture; no physical installation or hardware acceptance'),
+                  'deployment_intent': intent,
                   'state_uuid': state_uuid, 'boot_selection': selection, 'kernel_release': HOST.KERNEL_RELEASE,
                   'logical_sector_bytes': logical_sector_bytes, 'physical_sector_bytes': physical_sector_bytes,
                   'layout': gpt['layout'], 'disk_guid': gpt['disk_guid'], 'partition_guids': gpt['partition_guids'],
@@ -282,7 +334,7 @@ def build(payload_directory, state_directory, sd_directory, diagnostic_directory
                   'files': {'nvme.img': image_record}, 'allocated_bytes': image.stat().st_blocks * 512,
                   'build_seconds': round(time.monotonic() - started, 1),
                   'reproducibility': 'fresh disk/partition/boot/guests UUIDs and filesystem metadata; byte identity not claimed',
-                  'limitations': ['Fixture state must not be deployed or cloned.', 'No physical target identity or write authorization implied.', 'No SPI firmware or NVMe-boot capability established.', 'Zero SD writes and actual KVM guest acceptance require board evidence.']}
+                  'limitations': [('Per-installation state must not be cloned.' if for_installation else 'Fixture state must not be deployed or cloned.'), 'No physical target identity or write authorization implied.', 'No SPI firmware or NVMe-boot capability established.', 'Zero SD writes and actual KVM guest acceptance require board evidence.']}
         (output / 'manifest.json').write_text(json.dumps(result, indent=2) + '\n')
     return result
 
@@ -292,12 +344,13 @@ if __name__ == '__main__':
     for name in ('payload_directory', 'state_directory', 'sd_directory', 'diagnostic_directory', 'new_output_directory'):
         parser.add_argument(name)
     parser.add_argument('--size-bytes', type=int, required=True)
+    parser.add_argument('--for-installation', action='store_true', help='mark a candidate using real administrator/network inputs; never authorizes storage writes')
     parser.add_argument('--logical-sector-bytes', type=int, choices=(512, 4096), default=512)
     parser.add_argument('--physical-sector-bytes', type=int, default=4096)
     args = parser.parse_args()
     try:
         result = build(args.payload_directory, args.state_directory, args.sd_directory, args.diagnostic_directory,
-                       args.new_output_directory, args.size_bytes, args.logical_sector_bytes, args.physical_sector_bytes)
+                       args.new_output_directory, args.size_bytes, args.logical_sector_bytes, args.physical_sector_bytes, args.for_installation)
     except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as error:
         parser.exit(1, f'NVMe image: {error}\n')
     print(json.dumps(result, indent=2))
