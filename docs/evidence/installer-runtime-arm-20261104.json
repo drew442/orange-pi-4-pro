@@ -1,0 +1,44 @@
+{
+  "classification": "packaged ARM64 chroot software checks; no board boot, physical installation or KVM acceptance",
+  "verifier_source": {
+    "bytes": 10528,
+    "sha256": "bf656a186c46174c51d010b3b973cda85426fa388b6b1ba5b472e1bf4c2731ab"
+  },
+  "archive": {
+    "bytes": 26837671,
+    "sha256": "009ce61f04ae371ad81c1bb6e728e819f39d7d9f97d1953e0245fd463225c0a9"
+  },
+  "expanded_bytes": 79001896,
+  "entries_checked": 2202,
+  "all_archive_hashes_modes_paths": "passed",
+  "ARM_checks": {
+    "architecture": "aarch64",
+    "isolated_python": true,
+    "core_modules": "imported",
+    "ca_file": "/usr/lib/ssl/cert.pem",
+    "ca_certificates": 142,
+    "localhost_NSS": "passed",
+    "versions": {
+      "python": "Python 3.11.2",
+      "lsblk": "lsblk from util-linux 2.38.1",
+      "blkid": "blkid from util-linux 2.38.1  (libblkid 2.38.1, 04-Aug-2022)",
+      "mke2fs": "mke2fs 1.47.0 (5-Feb-2023)",
+      "tune2fs": "tune2fs 1.47.0 (5-Feb-2023)",
+      "e2fsck": "e2fsck 1.47.0 (5-Feb-2023)",
+      "debugfs": "debugfs 1.47.0 (5-Feb-2023)",
+      "curl": "curl 7.88.1 (aarch64-unknown-linux-gnu) libcurl/7.88.1 OpenSSL/3.0.20 zlib/1.2.13 brotli/1.0.9 zstd/1.5.4 libidn2/2.3.3 libpsl/0.21.2 (+libidn2/2.3.3) libssh2/1.10.0 nghttp2/1.52.0 librtmp/2.3 OpenLDAP/2.5.13"
+    },
+    "planner_isolated_help": "passed",
+    "init_ash_syntax": "passed",
+    "regular_file_mkfs_fsck_blkid_debugfs": "passed",
+    "dhcp_ram_resolver_hook": "passed; three IP commands replaced by logged fixture stub",
+    "DNS_TLS_connection": "not performed",
+    "physical_block_targets": "not opened"
+  },
+  "private_fixture": "deleted after check; no mounts, listeners or external requests",
+  "limits": [
+    "Runtime tests cover the exercised commands/modules, not every possible dynamic load.",
+    "IP command was stubbed for DHCP hook; board DHCP/DNS/TLS untested.",
+    "No SD/NVMe/SPI write or actual KVM guest performed."
+  ]
+}

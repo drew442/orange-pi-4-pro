@@ -1,0 +1,156 @@
+{
+  "schema": 1,
+  "classification": "installer preparation initramfs; no physical installation or hardware acceptance",
+  "kernel_release": "6.6.98-a733-diag",
+  "boot_inputs": {
+    "a733-diagnostic.img": {
+      "bytes": 268435456,
+      "sha256": "b05086afaab3d2f9da6c33b8e457f3552cce2899c08824d371615008bf66d9fd"
+    },
+    "a733-diagnostic.img.gz": {
+      "bytes": 16188652,
+      "sha256": "cb896f74a25de809aac4926931f9f35f091126cba365b9b9586b72e7fc57566e"
+    },
+    "Image": {
+      "bytes": 27283464,
+      "sha256": "9df974c55fa61a77e8fe812652780dad471527eb9615c27838f481887d4c50e7"
+    },
+    "board.dtb": {
+      "bytes": 209320,
+      "sha256": "4d7d964a54668cf5dc12cd4bf7e72a625c79883541272aeba1a91adbbedb86ed"
+    },
+    "initramfs.cpio.gz": {
+      "bytes": 3650395,
+      "sha256": "e2b09f56f4df8cfd52b98c0f1fe018c92a0806d8cac6ee065c6ac31b15e6ca30"
+    },
+    "uImage": {
+      "bytes": 27283528,
+      "sha256": "6f9269755c4c2bc196c094899fa1ff20292f4d762c4000f77fcbb0887d5f154a"
+    },
+    "uInitrd": {
+      "bytes": 3650459,
+      "sha256": "79cdfcedf8903953696ec67e76c4089fc979240903d918628f5272c82b09f3f9"
+    },
+    "boot0_sdcard.fex": {
+      "bytes": 245760,
+      "sha256": "9213f1c56ef932930d43b5751e8937bea0e9ae7460ec16187cc1b0dffdb75345"
+    },
+    "boot_package.fex": {
+      "bytes": 1392640,
+      "sha256": "04ea9d1e64403f1a18be0c1e04f5c55da320fef23a39d8d803e147b0c12c2e03"
+    },
+    "kernel.config": {
+      "bytes": 212080,
+      "sha256": "8a29d9c36e52db7e8a7d6ff757dc69e660f4273c99e5f00c5dbc5a9b7e060675"
+    },
+    "uboot.config": {
+      "bytes": 35703,
+      "sha256": "253f9c77878c20e9146bfb35d5d80819f5314dd30ec489e5551f02e518002bb9"
+    },
+    "uboot-env-nowhere-size.patch": {
+      "bytes": 266,
+      "sha256": "29617f37e189d5c2a9181793a4ef3c0a85fc84693e9b414e1f5b4ab6e3daaaba"
+    },
+    "build-recipe.tar.gz": {
+      "bytes": 28423,
+      "sha256": "7ebf42a6b87ca785cc3f2866316fbae8a20948de7771947ba60d7c2a2e8c43a2"
+    },
+    "diagnostic-sources.lock.json": {
+      "bytes": 2273,
+      "sha256": "aa39f5fca29244ca961fc3f422d7110adca6975d2c6a29f80afd9d1d2f4b4821"
+    },
+    "builder-packages.lock.tsv": {
+      "bytes": 32519,
+      "sha256": "35c2faf42a936168098b1f54239825a3c42fc56c825fc0b2078bbd753425f48b"
+    }
+  },
+  "runtime_manifest": {
+    "bytes": 552338,
+    "sha256": "8067f57956fb6099305770f7a7fcea5ed58ce18156a5e3ef19064b99c3319d96"
+  },
+  "runtime_source": {
+    "bytes": 169852145,
+    "sha256": "1967e76c0c831c1c0bab432e7116457d4372c15b413090c054f8958b72dcb392"
+  },
+  "busybox": {
+    "bytes": 1794520,
+    "sha256": "0a41864f87a0737804f0f4a68a1cfa1ed22374f4f75a1be3eb376e2659ce1316"
+  },
+  "expanded_bytes": 79001896,
+  "files": {
+    "initramfs.cpio.gz": {
+      "bytes": 26837671,
+      "sha256": "009ce61f04ae371ad81c1bb6e728e819f39d7d9f97d1953e0245fd463225c0a9"
+    }
+  },
+  "recipes": {
+    "build/assemble-host.py": {
+      "bytes": 11902,
+      "sha256": "9949b03d26f4cf89b968a45d50f1e49389a9062d220f07166980d9837411fb3d"
+    },
+    "build/host-initramfs.py": {
+      "bytes": 9174,
+      "sha256": "6f571586f4454d47f8e970ff52b376a992ca0033ed870912f46ec2dc43b7b8bf"
+    },
+    "build/host-payload.py": {
+      "bytes": 17686,
+      "sha256": "80a7b1b1eefaba633db5bdd02f01336bc9439767b8e2ff4f9bab3db88b490798"
+    },
+    "build/host-state.py": {
+      "bytes": 15848,
+      "sha256": "55a25a18a1f63d3956343d91d6194cfd2334dd6bfa30a577392033a707f187ed"
+    },
+    "build/host-storage-tools.py": {
+      "bytes": 4985,
+      "sha256": "e8d54568a6f43552996021a6a0a3178769564238be34a8642fca9d304f8f9750"
+    },
+    "build/installer-initramfs.py": {
+      "bytes": 10165,
+      "sha256": "79526bd8f9c774cb71983c327f8d482a25055d33a6fbde2fe256740e17e952b2"
+    },
+    "build/installer-runtime.py": {
+      "bytes": 17506,
+      "sha256": "eef20d8eedaa6f873bb86f9bb4bfbc01bcc31caa72a721139e7dd750d04782ca"
+    },
+    "build/root-selection.py": {
+      "bytes": 8663,
+      "sha256": "916be8c13dabe741d09f678654a87ad213560387664deec8ff32c901bc95e600"
+    },
+    "configs/host_config.py": {
+      "bytes": 2873,
+      "sha256": "520140d56402ab803b8c137981cef5182c5e263a44ec8446ce836b6a7d160a22"
+    },
+    "configs/installer-init": {
+      "bytes": 1930,
+      "sha256": "479e24c546f098f1f37515bddb756158db3084b7b72fe15f68a211b79ecb9055"
+    },
+    "configs/installer-runtime-policy.json": {
+      "bytes": 1648,
+      "sha256": "fd426abed164c722b28081277c05608227f7b52e4767ea6e14cbf2346bfd130a"
+    },
+    "configs/installer-udhcpc.script": {
+      "bytes": 697,
+      "sha256": "9d7c6e8cc6dbeb39a6ef8d61c5cc2193ac227598f5e303f8af47245fd3087ef3"
+    },
+    "licenses/GPL-2.0.txt": {
+      "bytes": 18026,
+      "sha256": "39db8f9acf036595a2566ea3fe560bc7bd65d8749f088e0f4a4ef2f8a6cb4b34"
+    },
+    "licenses/busybox-copyright.txt": {
+      "bytes": 1110,
+      "sha256": "336d995e819d3a7a3fdbf3f5041c07094f75ee849acb3bb742b7503d45786329"
+    },
+    "scripts/nvme_layout.py": {
+      "bytes": 6162,
+      "sha256": "742a71575d94c9be29e01af3f50dc0d0639b38800c3e5a86ded49ac8906e518f"
+    },
+    "scripts/plan-nvme.py": {
+      "bytes": 7815,
+      "sha256": "8ed9075de6ab4425457aa3f309847f2e66b134691f0fe80ac5eb7c43f1746e31"
+    }
+  },
+  "limitations": [
+    "Physical-console preparation only; no physical writer implemented.",
+    "Actual board boot, Ethernet/DNS/TLS, SD writes and KVM execution are untested."
+  ]
+}

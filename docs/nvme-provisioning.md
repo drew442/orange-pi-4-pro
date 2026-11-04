@@ -141,10 +141,10 @@ A [builder archive inventory](evidence/installer-runtime-inventory-20261104.json
 confirmed Python 3.11, its 26.6 MB uncompressed standard library, `lsblk`,
 ext4 tools, curl and SSH in the authenticated interim userspace. `sfdisk` is
 absent; the pure GPT encoder avoids relying on it for table serialization.
-Transitive ELF/Python dependencies, networking data, isolated ARM execution and
-an installer initramfs below the 64 MiB load budget still need implementation
-and validation. File presence and direct dependency names do not prove a closed
-runtime or a compressed size fit.
+The [installer preparation runtime](installer-preparation.md) now packages
+selected ELF/Python dependencies and networking data in a 26.8 MB compressed
+initramfs; isolated ARM software probes passed. Real board boot, DNS/TLS and the
+physical writer remain unproven. Inventory alone is not runtime acceptance.
 
 Inactive-slot updates, serial/manual rollback, backward-compatible state
 migrations, package metadata handling, backup/restore and runtime guest storage

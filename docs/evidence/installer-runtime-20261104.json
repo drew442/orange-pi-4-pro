@@ -1,0 +1,80 @@
+{
+  "schema": 1,
+  "classification": "Pinned installer runtime staging; exercised ARM software checks recorded separately; no hardware acceptance",
+  "source": {
+    "bytes": 169852145,
+    "sha256": "1967e76c0c831c1c0bab432e7116457d4372c15b413090c054f8958b72dcb392"
+  },
+  "policy": {
+    "bytes": 1648,
+    "sha256": "fd426abed164c722b28081277c05608227f7b52e4767ea6e14cbf2346bfd130a"
+  },
+  "provenance": {
+    "build/host-state.py": {
+      "bytes": 15848,
+      "sha256": "55a25a18a1f63d3956343d91d6194cfd2334dd6bfa30a577392033a707f187ed"
+    },
+    "build/installer-runtime.py": {
+      "bytes": 17506,
+      "sha256": "eef20d8eedaa6f873bb86f9bb4bfbc01bcc31caa72a721139e7dd750d04782ca"
+    },
+    "configs/builder-packages.lock.tsv": {
+      "bytes": 32519,
+      "sha256": "35c2faf42a936168098b1f54239825a3c42fc56c825fc0b2078bbd753425f48b"
+    },
+    "configs/host-userspace-package-hashes.lock.tsv": {
+      "bytes": 28638,
+      "sha256": "f2f613e79d9c1abc1689e19cfe81b624d9d2ac3beeb322fd5788980d919f7d86"
+    },
+    "configs/host-userspace-packages.lock.tsv": {
+      "bytes": 6671,
+      "sha256": "f2abf03d0d6e7fd506560689093220514cbf1acc678f7560562026d6ca6564a6"
+    },
+    "configs/host_config.py": {
+      "bytes": 2873,
+      "sha256": "520140d56402ab803b8c137981cef5182c5e263a44ec8446ce836b6a7d160a22"
+    },
+    "configs/installer-runtime-policy.json": {
+      "bytes": 1648,
+      "sha256": "fd426abed164c722b28081277c05608227f7b52e4767ea6e14cbf2346bfd130a"
+    },
+    "docs/evidence/host-userspace-20261104.json": {
+      "bytes": 1118,
+      "sha256": "370ee0bdb625f4dd10943c2cefb9f0e85d4c70b9b9b279be81697108b1558353"
+    }
+  },
+  "builder_tools": {
+    "method": "pinned native readelf parses target ELF without target execution",
+    "packages": [
+      [
+        "binutils",
+        "2.38-4ubuntu2.12",
+        "amd64"
+      ],
+      [
+        "binutils-x86-64-linux-gnu",
+        "2.38-4ubuntu2.12",
+        "amd64"
+      ]
+    ],
+    "readelf": "/usr/bin/x86_64-linux-gnu-readelf",
+    "readelf_record": {
+      "bytes": 776640,
+      "sha256": "04db0000749aff89e4af21429340b00b536fc6f80e811c872c006507881a5560"
+    }
+  },
+  "staging_storage": {
+    "fstype": "ext4",
+    "maj:min": "252:0"
+  },
+  "regular_file_count": 1460,
+  "total_uncompressed_bytes": 66700388,
+  "totals_scope": "installed regular files including provenance; excludes this self-referential manifest",
+  "full_manifest": {
+    "bytes": 552338,
+    "sha256": "8067f57956fb6099305770f7a7fcea5ed58ce18156a5e3ef19064b99c3319d96",
+    "builder_path": "/home/drew/orange-pi-4-pro-build/installer-work-20261104/out/installer-runtime-20261104-03/runtime-manifest.json",
+    "packaged_path": "usr/share/a733-installer/runtime-manifest.json"
+  },
+  "elf_closure_files": 112
+}

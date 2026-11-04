@@ -163,6 +163,9 @@ configuration open. The packaging helper has six nonprivileged regressions.
 | Independent NVMe inspector | Sol / medium | Nine GPT tamper/sparse/path/filesystem tests; production codec not imported |
 | NVMe inspector review | Sol / high | Nine tests and bounded same-descriptor readback accepted; fixed builder staging confirmed separately |
 | Installer runtime inventory | Luna / low | Authenticated archive file sizes, Python symlink and direct ELF dependencies extracted; missing sfdisk confirmed, runtime closure still open |
+| Installer runtime staging | Sol / medium | Ten regressions; safe hardlinks, bounded alias traversal and private source capture corrected before actual staging |
+| Installer preparation SD | Sol / medium | Eight authenticated input/path/storage/assembly fixtures; 256 MiB layout preserved |
+| Installer/runtime/boot review | Sol / high | Expanding aliases, empty stdlib files and provenance attribution findings fixed; private probe and SD checks reviewed |
 
 Children used fresh focused contexts, exclusive write scopes and no delegation.
 At most two children were active. Input/output token counts, cache accounting,
