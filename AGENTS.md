@@ -16,7 +16,7 @@ Vendor images exceed the available SD capacity. Build and boot the diagnostic ca
 - `tests/`: host packaging and planner regressions; no hardware acceptance claims.
 - `tmp/` and `out/`: ignored research downloads and generated artifacts.
 
-Run `bash tests/test-diagnostic-initramfs.sh`, `bash tests/test-host-userspace.sh`, `python3 tests/test-assemble-diagnostic.py`, and `python3 -m unittest discover -s tests -p 'test_*.py'`. Run `git diff --check`, parse modified TOML with Python `tomllib`, and use `bash -n` for Bash syntax checks. Record end-to-end build evidence separately; host checks do not establish physical boot.
+Run all `tests/test-*.sh` with Bash, `python3 tests/test-assemble-diagnostic.py`, and `python3 -m unittest discover -s tests -p 'test_*.py'`. Run `git diff --check`, parse modified TOML with Python `tomllib`, and use `bash -n` for Bash syntax checks. Record end-to-end build evidence separately; host checks do not establish physical boot.
 
 ## Agent Routing
 

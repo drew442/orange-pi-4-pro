@@ -1,0 +1,58 @@
+#!/bin/sh
+# Runs only as guest PID 1. Disk writes require the exact disposable fixture identity.
+[ "$$" -eq 1 ] || { echo "Guest init requires PID 1" >&2; exit 1; }
+export PATH=/bin
+/bin/busybox --install -s /bin
+fail() {
+    echo "FAIL $*"
+    while :; do
+        setsid cttyhack /bin/sh -i </dev/console >/dev/console 2>&1
+        sleep 1
+    done
+}
+mount -t proc proc /proc || fail proc
+mount -t sysfs sysfs /sys || fail sysfs
+mount -t devtmpfs devtmpfs /dev || fail devtmpfs
+exec </dev/console >/dev/console 2>&1
+mount -t tmpfs -o mode=1777,nosuid,nodev tmpfs /tmp || fail tmpfs
+mount -t tmpfs -o mode=0755,nosuid,nodev tmpfs /run || fail run
+printf 'a733-kvm-guest-fixture-v1\n' | sha256sum > /run/cpu.sha256 || fail checksum
+read -r checksum _ignored < /run/cpu.sha256
+[ "$checksum" = 5ab247be0ba27004a2adee73bc50d4a1dfcd98f16ef5fa32c024e5f1c5c29f1c ] || fail checksum
+printf 'PASS cpu sha256=%s\n' "$checksum"
+# Wait for built-in virtio block probing; never scan or format other disks.
+tries=0
+while [ ! -b /dev/vda ]; do
+    tries=$((tries + 1))
+    [ "$tries" -lt 10 ] || fail missing-fixture-disk
+    sleep 1
+done
+identity=$(blkid /dev/vda) || fail disk-identity
+case "$identity" in *'TYPE="ext4"'*) ;; *) fail disk-type ;; esac
+case "$identity" in *'LABEL="kvm-fixture"'*) ;; *) fail disk-label ;; esac
+case "$identity" in *'UUID="d67f33ba-e201-46bc-980b-61901bbd1156"'*) ;; *) fail disk-uuid ;; esac
+# noload prevents journal replay before the content marker is verified.
+mount -t ext4 -o ro,noload /dev/vda /mnt || fail disk-mount
+[ "$(cat /mnt/fixture-id)" = a733-kvm-guest-fixture-v1 ] || fail disk-marker
+counter=$(cat /mnt/counter) || fail disk-counter
+case "$counter" in ''|*[!0-9]*) fail disk-counter ;; esac
+# Bound arithmetic and forbid leading zeros (shell arithmetic can interpret octal).
+[ "${#counter}" -le 8 ] || fail disk-counter-range
+case "$counter" in 0|[1-9]*) ;; *) fail disk-counter-format ;; esac
+[ "$counter" = 0 ] || [ "${counter#0}" = "$counter" ] || fail disk-counter-format
+umount /mnt || fail disk-unmount
+mount -t ext4 -o rw /dev/vda /mnt || fail disk-write-mount
+next=$((counter + 1))
+printf '%s\n' "$next" > /mnt/counter || fail disk-write
+sync || fail disk-sync
+umount /mnt || fail disk-unmount
+printf 'PASS disk previous=%s counter=%s\n' "$counter" "$next"
+ip link set lo up || fail loopback
+ip link set eth0 up || fail ethernet
+udhcpc -f -n -q -t 5 -T 3 -i eth0 -s /etc/udhcpc.script || fail dhcp
+# Restricted QEMU usernet gateway ICMP must be confirmed on the physical host.
+ping -I eth0 -c 3 -W 3 10.0.2.2 || fail network
+printf 'PASS network gateway=10.0.2.2\n'
+printf 'PASS fixture counter=%s; clean shutdown requested\n' "$next"
+poweroff -f
+fail poweroff

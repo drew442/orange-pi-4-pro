@@ -38,6 +38,7 @@ Those additional comparison checks passed against the actual first build.
 On the Ubuntu builder, from the repository root:
 
 ```sh
+mkdir -p out
 sudo bash build/host-userspace.sh "$(pwd -P)/out/host-userspace-bookworm-20261001-01"
 ```
 

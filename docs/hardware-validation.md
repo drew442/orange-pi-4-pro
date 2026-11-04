@@ -57,8 +57,8 @@ kernel/initramfs/disk SHA-256 checks, measured memory/CPU budgets and a non-root
 launch requirement. `--dry-run` verifies inputs and prints JSON without requiring
 KVM or QEMU; it is preparation only. The guest disk must be a regular NVMe-backed
 file, never a physical drive. It is mutable: after a clean shutdown, preserve its
-new reviewed checkpoint hash for the next launch. No guest fixture or successful
-guest run exists yet. Restricted user-mode networking has no inbound listeners;
+new reviewed checkpoint hash for the next launch. A [guest fixture](guest-fixture.md)
+is built but has not booted. Restricted user-mode networking has no inbound listeners;
 network acceptance still needs a defined tested fixture/service.
 
 The helper selects the host's GIC version for KVM, as supported by

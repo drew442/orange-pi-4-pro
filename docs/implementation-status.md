@@ -38,6 +38,9 @@ neither a larger card nor live inventory is a prerequisite to the first image.
   storage tools, 220 version/hash-locked cached packages. Approximately 531 MiB
   unpacked / 169,852,145-byte tar. Identities scrubbed, services disabled; no boot,
   read-only root/state integration, installation or guest execution established.
+- [Guest fixture](guest-fixture.md) built from a separate virt profile: 5.25 MB
+  kernel, 0.97 MB initramfs, disposable 128 MiB disk. Hashes, seed and dry-run pass;
+  **no guest boot or KVM execution**. Script execution/WLAN issues fixed after review.
 
 ## Open gates and next actions
 
@@ -45,8 +48,8 @@ neither a larger card nor live inventory is a prerequisite to the first image.
    and obtain explicit exact-target authorization before flashing. SPI/NVMe have
    not been written; no destructive operation is authorized for an unknown target.
 2. Capture full serial boot and inventory using the guide; investigate EL2/NVMe.
-   Integrate the userspace prototype and build a separate virt guest fixture while
-   hardware awaits. The A733 host config lacks the required guest virtio/PL011 drivers.
+   Integrate userspace and the guest fixture while hardware awaits; guest drivers
+   use a separate profile. Production state/boot/update/install integration is open.
 3. Full reproducibility remains open: U-Boot generates a random 128-byte debug
    challenge; two fresh U-Boot builds differ there plus checksums. Preserve that
    generated source next time; review its security role before any deterministic

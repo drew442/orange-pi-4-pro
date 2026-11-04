@@ -1,0 +1,52 @@
+{
+  "schema": 1,
+  "purpose": "ARM64 QEMU virt KVM guest fixture; preparation only",
+  "hardware_acceptance": "pending",
+  "kernel_commit": "2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f",
+  "busybox_binary_sha256": "0a41864f87a0737804f0f4a68a1cfa1ed22374f4f75a1be3eb376e2659ce1316",
+  "compiler_version": "11.4.0",
+  "source_date_epoch": 1793750400,
+  "compilation_jobs": 2,
+  "disk_fixture_id": "a733-kvm-guest-fixture-v1",
+  "initial_counter": 0,
+  "disk_uuid": "d67f33ba-e201-46bc-980b-61901bbd1156",
+  "network_probe": "DHCP and ICMP to 10.0.2.2; restricted usernet behavior unproven",
+  "files": {
+    "Image": {
+      "sha256": "1294959bcaa5a5ad3791913e33cffb8f0893708396aac8be9837c03a0e1f9377",
+      "bytes": 5251080
+    },
+    "kernel.config": {
+      "sha256": "9a9e9641eea8134a23773466f0e3adc5c75e73672dc69f7777bbb85f5f479e79",
+      "bytes": 68776
+    },
+    "initramfs.cpio.gz": {
+      "sha256": "62a07e1a5a7c38c5677a4c3750fc479c2636fe9e611aed67c89d3b9623a2c725",
+      "bytes": 973641
+    },
+    "guest-disk.raw": {
+      "sha256": "0f78f07743e41fec6655b44792284980536f5cd62d08fdcaea0025bb222c6278",
+      "bytes": 134217728
+    },
+    "guest-kernel.fragment": {
+      "sha256": "61984ad245672e179b7e16bbf85d1a5583eca09059e14c422042d10d9bd2cab0",
+      "bytes": 1143
+    },
+    "guest-init": {
+      "sha256": "5fc6a7c64baa69b1240fa5243e12e120871d8d2b6eca6ff4479e2e9fbd6c9d1b",
+      "bytes": 2706
+    },
+    "guest-fixture.sh": {
+      "sha256": "ee226e00d145b9bd9337a38edff7d4c5d529a413e1b92ef2f77f17eed6b988c8",
+      "bytes": 8412
+    },
+    "diagnostic-sources.lock.json": {
+      "sha256": "aa39f5fca29244ca961fc3f422d7110adca6975d2c6a29f80afd9d1d2f4b4821",
+      "bytes": 2273
+    },
+    "builder-packages.lock.tsv": {
+      "sha256": "35c2faf42a936168098b1f54239825a3c42fc56c825fc0b2078bbd753425f48b",
+      "bytes": 32519
+    }
+  }
+}

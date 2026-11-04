@@ -114,6 +114,8 @@ pass locally and on Jammy.
 | License extraction | Luna / low | Located notices and missing opaque-firmware terms; coordinator verified U-Boot notice path after incomplete extraction |
 | Host userspace implementation | Sol / medium | Signed snapshot recipe; mount/cleanup findings fixed at same tier; actual build passed |
 | Host userspace review | Sol / high | Private namespace and debootstrap lifecycle fixes independently checked before root run |
+| Guest fixture implementation | Sol / medium | Host packaging tests passed; coordinator completed actual two-job kernel build after script-format/WLAN corrections |
+| Guest fixture review | Sol / high | Missing script-execution dependency caught; disk/write safeguards checked; actual KVM remains unperformed |
 
 Children used fresh focused contexts, exclusive write scopes and no delegation.
 At most two children were active. Input/output token counts, cache accounting,
