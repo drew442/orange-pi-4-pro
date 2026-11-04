@@ -129,6 +129,8 @@ pass locally and on Jammy.
 | Guest fixture review | Sol / high | Missing script-execution dependency caught; disk/write safeguards checked; actual KVM remains unperformed |
 | Boot provenance collection | Sol / medium | Two fixture tests passed; coordinator verified actual generated source/binary pairing after cleanup |
 | Boot provenance review | Sol / high | Copy timing/checksum/source-only guards accepted; no firmware normalization or hardware claim |
+| Immutable root payloads | Sol / medium | Authenticated archive/module packaging; 12 fixtures; actual 4 GiB A/B builds and content audit passed |
+| Payload/loop review | Sol / high | Fixed loop attachment race and required writable-block evidence; controlled file tests accepted; hardware remains pending |
 
 Children used fresh focused contexts, exclusive write scopes and no delegation.
 At most two children were active. Input/output token counts, cache accounting,

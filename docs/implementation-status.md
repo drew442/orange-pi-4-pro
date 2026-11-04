@@ -22,13 +22,13 @@ neither a larger card nor live inventory is a prerequisite to the first image.
 - [Jammy builder](build-host-assessment.md): real loop mount, ARM64 chroot,
   Linux 6.6.98 and patched U-Boot builds passed, two compilation jobs at a time.
   GCC 11 kernel / Linaro 7.4.1 U-Boot. Latest check: about 7 GiB available RAM,
-  35 GiB disk free and negligible swap use; no resource-limit claim inferred.
+  34 GiB disk free and negligible swap use; no resource-limit claim inferred.
 - **Diagnostic candidate built and independently verified**, not hardware booted:
   268,435,456-byte image, SHA-256 `b05086afaab3d2f9da6c33b8e457f3552cce2899c08824d371615008bf66d9fd`.
   Compressed: 16,188,652 bytes. [Manifest](evidence/diagnostic-20261104.json),
   [download/build/serial guide](diagnostic-image.md). Local files under ignored
   `out/diagnostic-20261104/`; builder `.../orange-pi-4-pro-build/artifacts/`.
-- 37 Python host tests plus shell regressions pass. Actual image
+- 52 Python host tests plus shell regressions pass. Actual image
   hashes, partition/filesystem contents, boot script CRC and wrapper payloads
   verified independently. NVMe planner and KVM-only launcher are preparation only.
 - Independent Sol high boot/disk-selection reviews completed; reported size,
@@ -41,6 +41,10 @@ neither a larger card nor live inventory is a prerequisite to the first image.
 - [Guest fixture](guest-fixture.md) built from a separate virt profile: 5.25 MB
   kernel, 0.97 MB initramfs, disposable 128 MiB disk. Hashes, seed and dry-run pass;
   **no guest boot or KVM execution**. Script execution/WLAN issues fixed after review.
+- [A/B root payloads](host-payload.md) built: 4 GiB each, about 173 MB compressed,
+  matched kernel modules, ext4 read-only feature/no journal. Actual file-loop
+  remount/write denial and content/hash checks passed. They remain unconfigured;
+  no physical boot, installer, persistent-state or update integration is established.
 
 ## Open gates and next actions
 
