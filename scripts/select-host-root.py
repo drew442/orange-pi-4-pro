@@ -245,6 +245,23 @@ def failure(report, error):
     report['error'] = f'{type(error).__name__}: {error}'
 
 
+def publish_selector(directory, data, report):
+    """Publish through a held directory while preserving interruption accounting.
+
+    Caller owns authorization, durable history, target verification and locks.
+    State files are written; no root block device is written or switched.
+    """
+    report['selection_write_attempted'] = True
+    with SELECT.publication_signals():
+        try:
+            SELECT.atomic_store(directory, data)
+        except SELECT.PublicationError as error:
+            report['selection_published'] = error.published
+            raise
+        report['selection_published'] = True
+        report['publication_durable'] = True
+
+
 def apply(args, manifest, plan, report=None, *, plan_check=lambda target: None):
     report = new_report() if report is None else report
     try:
@@ -299,17 +316,7 @@ def apply(args, manifest, plan, report=None, *, plan_check=lambda target: None):
                     check()
                     require(secure_read(boot, 'selected.conf', 4096) == before,
                             'selector changed before publication')
-                    report['selection_write_attempted'] = True
-                    # Keep handled signals deferred through caller accounting,
-                    # including the boundary just after the helper returns.
-                    with SELECT.publication_signals():
-                        try:
-                            SELECT.atomic_store(boot, proposed)
-                        except SELECT.PublicationError as error:
-                            report['selection_published'] = error.published
-                            raise
-                        report['selection_published'] = True
-                        report['publication_durable'] = True
+                    publish_selector(boot, proposed, report)
                     actual = secure_read(boot, 'selected.conf', 4096)
                     report['selected_after'] = SELECT.parse(actual)
                     require(actual == proposed, 'published selector readback differs')
