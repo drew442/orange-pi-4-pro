@@ -1,0 +1,13 @@
+{
+  "classification": "clean-checkout generic bootstrap packaging only; no complete deployment reproduction or hardware acceptance",
+  "source_commit": "8b144b7af1e01a01d090afc2761534afcbedf893",
+  "builder": "drew@build.drewnet.online",
+  "checkout": "/home/drew/orange-pi-4-pro-build/managed-clean-20261104",
+  "tracked_worktree_clean": true,
+  "output": "out/host-initramfs-repeat/initramfs.cpio.gz",
+  "bytes": 4761902,
+  "sha256": "00b8cbe9ae85d3abe7b772981b5b685c4326a924abc13f336ce3f2cb577bcc84",
+  "byte_comparison_to_managed_bootstrap": "identical",
+  "uses_cached_authenticated_inputs": true,
+  "new_root_or_state_build": "not performed by this repeat"
+}

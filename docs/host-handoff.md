@@ -87,6 +87,10 @@ systemd boot, a listener, SSH connection or physical operation. Configuration-fi
 a disposable chroot. Real ARM key generation exercised directory metadata
 checks and atomic publication; no installed-NVMe activation was performed.
 
+A [clean-checkout repeat](evidence/managed-clean-bootstrap-20261104.json) at
+`8b144b7` reproduced the generic bootstrap byte-identically using the cached,
+authenticated inputs. This repeats packaging only, not complete deployment.
+
 The `atomic_store` helper requires an authorized, quiesced directory. It is a
 publication primitive, not an updater or automatic rollback controller.
 Actual key login, SSH discovery, installer, inactive-slot writer,

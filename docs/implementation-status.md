@@ -54,7 +54,7 @@ neither a larger card nor live inventory is a prerequisite to the first image.
   and ABI; [A/B selection lives on NVMe](nvme-root-selection.md), read after state
   journal recovery. Fixed GPT roles, selected-root-only probes, bounded metadata,
   86 handoff/41 resolver fixtures and pinned ARM64 ash/GPT-file checks pass.
-  Earlier bootstrap packaging repeated byte-identically from a clean checkout. Root-only
+  Current bootstrap packaging repeated byte-identically from a clean checkout. Root-only
   selection needs no SD repackaging; hardware handoff remains untested.
 - [State payload recipe](host-state.md) built an 8 GiB journaled regular-file
   fixture (39.8 MB compressed), fresh identities, authenticated `/var` and operator
