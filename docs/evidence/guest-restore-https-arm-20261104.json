@@ -1,0 +1,280 @@
+{
+  "ARM_checks": {
+    "TLS": "real loopback TLS with verified certificate/hostname and custom protected CA; HTTP transport not mocked",
+    "architecture": "aarch64",
+    "board_network": "not tested",
+    "chunk_index": {
+      "bytes": 543,
+      "chunk_count": 4,
+      "sha256": "ad2ce11ae99f8dd0e1eb410e1c160a3494b866850f29bf093785f261bae4ef29"
+    },
+    "guest_execution": "not performed",
+    "https_restore": {
+      "archive_sha256": "e83ddd8bc5d71ca2507cae92ce4735add9243c36b5f991573c9f29ceef3c85de",
+      "bytes_attempted_staged": 140442449,
+      "directory_may_be_published": true,
+      "durable": true,
+      "manifest_sha256": "be343cde567c17185cf36449bc529019b5a98a6088a130a432dcdc68362780d9",
+      "operation": "a733-guest-restore-v1",
+      "plan_sha256": "c0a954a39398a425726a84d425274cb5f7f7f39258a05e84945439ed45c60455",
+      "published": true,
+      "schema": 1,
+      "source_manifest_sha256": "f441b905072a8c384b0c75a80832c9be647445019390cb5949be3a3380227a77",
+      "staging_retained": false,
+      "success": true
+    },
+    "live_boundaries": "NVMe/namespace/UUID/service/UID census/approval substituted only inside disposable fixture",
+    "local_archive_staging_by_remote_reader": false,
+    "local_restore": {
+      "archive_sha256": "e83ddd8bc5d71ca2507cae92ce4735add9243c36b5f991573c9f29ceef3c85de",
+      "bytes_attempted_staged": 140442449,
+      "directory_may_be_published": true,
+      "durable": true,
+      "manifest_sha256": "be343cde567c17185cf36449bc529019b5a98a6088a130a432dcdc68362780d9",
+      "operation": "a733-guest-restore-v1",
+      "plan_sha256": "b5826636d426be791c6390583b85266549dbb117ec1fa05fbf244bf83311293d",
+      "published": true,
+      "schema": 1,
+      "source_manifest_sha256": "f441b905072a8c384b0c75a80832c9be647445019390cb5949be3a3380227a77",
+      "staging_retained": false,
+      "success": true
+    },
+    "native_followup": {
+      "classification": "chunk index publication only, no VM or off-device retention",
+      "matches_ARM_index": true,
+      "receipt": {
+        "archive": {
+          "bytes": 3386765,
+          "sha256": "e83ddd8bc5d71ca2507cae92ce4735add9243c36b5f991573c9f29ceef3c85de"
+        },
+        "chunk_count": 4,
+        "classification": "artifact-only",
+        "durable": true,
+        "guarantees": "Requires prior full backup verification; no VM restore acceptance.",
+        "index": {
+          "bytes": 543,
+          "sha256": "ad2ce11ae99f8dd0e1eb410e1c160a3494b866850f29bf093785f261bae4ef29"
+        },
+        "manifest_sha256": "f441b905072a8c384b0c75a80832c9be647445019390cb5949be3a3380227a77",
+        "profile": "a733-guest-backup-chunks-v1",
+        "published": true,
+        "schema": 1,
+        "source_storage": {
+          "fstype": "ext4",
+          "maj:min": "252:0"
+        },
+        "storage": {
+          "fstype": "ext4",
+          "maj:min": "252:0"
+        },
+        "success": true
+      },
+      "storage_checks": "actual native fixed storage, no substitutions"
+    },
+    "prepare_no_destination_writes": true,
+    "private_staging_empty": true,
+    "remote_payloads_history_and_manifest_match_local_restore": true,
+    "source_archive": {
+      "bytes": 3386765,
+      "sha256": "e83ddd8bc5d71ca2507cae92ce4735add9243c36b5f991573c9f29ceef3c85de"
+    },
+    "wrong_index_pin_refused": true
+  },
+  "binfmt": {
+    "bytes": 5628704,
+    "interpreter": "/usr/libexec/qemu-binfmt/aarch64-binfmt-P",
+    "limit": "Hashes configured interpreter pathname; kernel-held binfmt interpreter FD is not independently inspectable.",
+    "registration": "enabled\ninterpreter /usr/libexec/qemu-binfmt/aarch64-binfmt-P\nflags: PF\noffset 0\nmagic 7f454c460201010000000000000000000200b700\nmask ffffffffffffff00fffffffffffffffffeffffff\n",
+    "resolved_interpreter": "/usr/bin/qemu-aarch64-static",
+    "sha256": "92c4aeb8dd898de7152c184370ab22f09ae7c5b7279fd300081c76cee3f78a80"
+  },
+  "builder": "drew@build.drewnet.online; Ubuntu 22.04.5 amd64",
+  "builder_staging_storage": {
+    "fstype": "ext4",
+    "maj:min": "252:0"
+  },
+  "classification": "ARM HTTPS guest file restore; same-builder loopback, no restored VM or KVM",
+  "combined_probe": {
+    "bytes": 18900,
+    "sha256": "1d15c30cae51e955203f344897b2316c354a9fa660f5521259eab568ee262eae"
+  },
+  "https_restore_verifier_source": {
+    "bytes": 9398,
+    "sha256": "95ec8cbcab54d7bb9d5dc478e4aa9189ea53d2c2c64d707baa24010f56061158"
+  },
+  "limits": [
+    "Actual pinned ARM userspace, archive generation, HTTPS, TLS certificate/hostname checks, chunk verification and full copy/readback execute.",
+    "NVMe topology/UUID/namespace/service/UID census/TTY boundaries substituted only inside disposable fixture.",
+    "Fixture server reads a backup generated on the same builder; remote reader does not stage an archive, but off-device retention and board networking are untested.",
+    "No guest VM/KVM/board boot/physical restoration; configured binfmt interpreter hash checked, kernel-held F descriptor not independently inspected."
+  ],
+  "measurement": {
+    "elapsed_seconds": 112.24,
+    "exit_status": 0,
+    "maximum_rss_kib": 362164
+  },
+  "native_indexer_source": {
+    "bytes": 8657,
+    "sha256": "7ba70ec494740075fd98e926cb38a51e1ca6d044e4c027d49fde3ad8b22c1c35"
+  },
+  "post_check": {
+    "available_builder_memory_bytes": 7758225408,
+    "fixture_directories_remaining": 0,
+    "free_builder_bytes": 18740310016,
+    "guest_restore_https_mounts_remaining": 0,
+    "no_compilation_or_packages_installed": true
+  },
+  "raw_result": {
+    "bytes": 9474,
+    "path": "/home/drew/orange-pi-4-pro-build/guest-restore-https-artifacts-20261104/logs/arm.json",
+    "sha256": "0cf69d4f4b362aae5c69d2df94aab394ea5bca1865b5177341efb5fb15ea33d0"
+  },
+  "regressions": {
+    "diagnostic": {
+      "cases": 4,
+      "result": "passed"
+    },
+    "independent_review": {
+      "local_compatibility_cases": 17,
+      "model": "gpt-6.1-sol",
+      "new_focused_cases": 42,
+      "reasoning_effort": "high",
+      "result": "accepted; SSL keylog avoidance and deterministic metadata regression correction re-reviewed"
+    },
+    "jammy_discovery": {
+      "cases": 669,
+      "result": "passed",
+      "skipped": 0
+    },
+    "local_discovery": {
+      "cases": 669,
+      "result": "passed",
+      "skipped": 94
+    },
+    "shell": "all tests/test-*.sh passed"
+  },
+  "rootfs": {
+    "bytes": 169852145,
+    "sha256": "1967e76c0c831c1c0bab432e7116457d4372c15b413090c054f8958b72dcb392"
+  },
+  "run_date": "2026-11-04",
+  "source_commit": "7679fbe5517099c49b26627700d0a02e86c761aa",
+  "trusted_sources": {
+    "build/host-initramfs.py": {
+      "bytes": 12506,
+      "sha256": "96c19c387b04a9e753e6eb658ef1ba7373f0cd4d58a46d8ee90c8a1348f9481d"
+    },
+    "build/host-payload.py": {
+      "bytes": 18259,
+      "sha256": "09bc4faca64c388260b6c999255b28c83f9e5d19c22f25ecf710ff673944abf4"
+    },
+    "build/host-state.py": {
+      "bytes": 16004,
+      "sha256": "e088e7557e210a1718aaf70ebaaf0f481144fe640f640650a2a76e71cc72e6ec"
+    },
+    "build/host-storage-tools.py": {
+      "bytes": 4985,
+      "sha256": "e8d54568a6f43552996021a6a0a3178769564238be34a8642fca9d304f8f9750"
+    },
+    "build/root-selection.py": {
+      "bytes": 10350,
+      "sha256": "15b5a64630cd74793af946ea89b5b3f3bd580a07bf52baa9a893bdd71b82b6e2"
+    },
+    "configs/guest_backup.py": {
+      "bytes": 6738,
+      "sha256": "449a623551e76177bc4fb5aafb477ac8e57c147f1d9ad2a4e564ccd467b43486"
+    },
+    "configs/guest_backup_chunks.py": {
+      "bytes": 2706,
+      "sha256": "f2cde5024d1a833f6d953ed0d8c4388eae28a13ee3a86367c41f562973b31ccc"
+    },
+    "configs/guest_config.py": {
+      "bytes": 5775,
+      "sha256": "0ffbbfab27398d7d37cbe68035751940be46074e69f58d34f4f077ea9c427861"
+    },
+    "configs/guest_identity.py": {
+      "bytes": 1997,
+      "sha256": "d7d126f015e64c7d2f26a6cad8686b90c7892c00ea9ab552e4fc36b9254d5e84"
+    },
+    "configs/guest_manifest.py": {
+      "bytes": 6364,
+      "sha256": "e4407e98d6ccee39b4437f88de9c885965e15ec4c59be085ce6b89115d6fd6c6"
+    },
+    "configs/host-management.py": {
+      "bytes": 22716,
+      "sha256": "3db7519f67986e4a1276a95666593b9d9a98355669926d8d3ddcf5fc319c4a54"
+    },
+    "configs/host_config.py": {
+      "bytes": 2873,
+      "sha256": "520140d56402ab803b8c137981cef5182c5e263a44ec8446ce836b6a7d160a22"
+    },
+    "configs/package_state.py": {
+      "bytes": 13113,
+      "sha256": "809630ebba9d927b6ad5034899a88a8a8fcf3401f94ff6f223f92f6fbfa9c6eb"
+    },
+    "scripts/acquire-nvme.py": {
+      "bytes": 17658,
+      "sha256": "68eac982f9282e65f5cfb323d0ce5ed6b5b0772f2aa23dcdbd66df3dad598b25"
+    },
+    "scripts/backup-guest.py": {
+      "bytes": 9419,
+      "sha256": "e566d2426a7c6a876b63bc49592a63d5276642c4e1c7c28adb5a4c69d24cf47a"
+    },
+    "scripts/checkpoint-guest.py": {
+      "bytes": 12703,
+      "sha256": "50c01b06819adfc9bc1f1bd13ba20ae1acac660518f653f9b103567c515dec20"
+    },
+    "scripts/enroll-guest.py": {
+      "bytes": 23309,
+      "sha256": "04e12b68426d3c1137f9835e098dc20a3c0370c97de7ada592fb4e1e2b7db64e"
+    },
+    "scripts/guest-accounts.py": {
+      "bytes": 12769,
+      "sha256": "641ab5ae4c67e7fbc426dd6332823c34a3099d589c23e7bf647555bd1c1599c1"
+    },
+    "scripts/guest-checkpoint-policy.py": {
+      "bytes": 12977,
+      "sha256": "e7779518ad5a4d002b827d48b60c9d93d418d2283004a9df2ee088aab1c6a30f"
+    },
+    "scripts/guest-restore-https.py": {
+      "bytes": 11507,
+      "sha256": "4ac8bd9de94617ea5ce4eceae2a215aa122b2ff5ee7d25febe71c159cb032a96"
+    },
+    "scripts/guest-restore-source.py": {
+      "bytes": 6178,
+      "sha256": "976317a90a6d6a5ae4cc7ee350871e14c051b08b1f08fd0832c230ec73646f05"
+    },
+    "scripts/guest-storage.py": {
+      "bytes": 8915,
+      "sha256": "64cd02b2e01fe8f58b0c425f6bfb2ae8849ab2b3b7f4022e4d712604a396ed44"
+    },
+    "scripts/install-nvme.py": {
+      "bytes": 22122,
+      "sha256": "d4c46227f9589822e8dae0a896b8c6a28c356ce67cc0f574b85598a4df612f47"
+    },
+    "scripts/launch-kvm-guest.py": {
+      "bytes": 9719,
+      "sha256": "197f1bba532b23a5e751284dc62653a8cd0284aafbe4259f5ca4648134640e28"
+    },
+    "scripts/nvme_layout.py": {
+      "bytes": 6162,
+      "sha256": "742a71575d94c9be29e01af3f50dc0d0639b38800c3e5a86ded49ac8906e518f"
+    },
+    "scripts/plan-nvme.py": {
+      "bytes": 7815,
+      "sha256": "8ed9075de6ab4425457aa3f309847f2e66b134691f0fe80ac5eb7c43f1746e31"
+    },
+    "scripts/restore-guest.py": {
+      "bytes": 22062,
+      "sha256": "4ae09706f9085b7427acb890333bc464bac8c78027b522ee86172cca708e3bd5"
+    },
+    "scripts/verify-guest-backup.py": {
+      "bytes": 15832,
+      "sha256": "af48fc57f66f6d7c3f151cf3509f9e840917b121cbd6de447875c694a7a31e0d"
+    }
+  },
+  "verifier_source": {
+    "bytes": 11498,
+    "sha256": "f79f9c2eb5078e2ed8c754ebd2c785a58f2308f2841deb0e280c7820b61c2f04"
+  }
+}

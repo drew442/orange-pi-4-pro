@@ -100,11 +100,13 @@ no larger card or live inventory was required to produce the diagnostic image.
   streamed, authenticated archive. Actual ARM sender/native receiver full-file
   checks pass on the same builder. [Fresh-destination restoration](guest-restoration.md)
   adds provenance, UUID rebinding and exact copy/readback; actual ARM file checks
-  pass. Off-device retention, large-archive delivery without local staging,
+  pass. [Pinned HTTPS delivery](guest-restore-delivery.md) avoids local archive
+  staging; real ARM loopback TLS and native index checks pass. Off-device retention,
+  full-capacity resource checks, actual board networking,
   restored KVM boot and physical recovery remain open. Actual clean shutdown,
   restart, packaging/boot integration and networking remain open.
-- 631 Python cases across both suites and all shell regressions pass; the 627-case
-  discovery suite passes on Jammy with no skips (78 privileged skips locally). Actual
+- 673 Python cases across both suites and all shell regressions pass; the 669-case
+  discovery suite passes on Jammy with no skips (94 privileged skips locally). Actual
   files/build checks are distinct from hardware gates. Independent Sol high
   reviews and routing outcomes: [implementation evidence](implementation-evidence.md).
 

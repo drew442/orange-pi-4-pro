@@ -29,20 +29,20 @@ The census is bounded and remains a snapshot; trusted root must exclude new
 uncooperative processes throughout restoration.
 
 Stage a complete reviewed checkout on RAM or NVMe. The current maintenance image
-does not include restoration. Copy the verified archive from the separate backup
+does not include restoration. Choose [direct HTTPS delivery](guest-restore-delivery.md)
+to avoid local encoded staging. For the local-file mode below, copy the verified archive from the separate backup
 machine to a **protected directory on the selected NVMe**, outside every enrolled
 guest directory. Its ancestors must be root-owned without shared write access;
 the archive must be a root:root, single-link regular file with mode `0400`.
 Use a private directory on state or guest storage, not SD or RAM. Verify the
 staged encoded hash against the successful authenticated source receipt.
 
-This initial controller requires local archive staging. Allow room for that
+Local-file mode requires archive staging. Allow room for that
 archive plus the full logical kernel/initramfs/disk, history and a 256 MiB margin
 for the new guest. Sparse zero runs do not relax the free-space guard. A large
 backup may not fit alongside its restored disk on the nominal 250 GB NVMe;
-delivery without full local archive staging remains implementation work. This
-limitation must be resolved or demonstrated compatible with the release guest
-layout before claiming a complete deployment/recovery procedure.
+use pinned HTTPS delivery for that case. Full-capacity resource checks and the
+actual deployment/recovery procedure still require board validation.
 
 Never delete an existing guest to make this command pass. Replacement of a
 physical installation or disposal of old guest data needs a separately reviewed

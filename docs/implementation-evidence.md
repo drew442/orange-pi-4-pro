@@ -580,3 +580,68 @@ was erased or written. Token/cache/account-price and exact review-time data
 were not exposed; monetary costs and measured savings are unknown. Children
 used focused fresh contexts, exclusive files, no nested delegation and at most
 two concurrent children.
+
+## 2026-11-04: pinned HTTPS guest restoration without archive staging
+
+Source `7679fbe` adds a canonical encoded-chunk index generator and HTTPS source,
+sharing the existing decoded archive parser. Two fresh Sol medium workers owned
+disjoint chunk/index and network source files/tests. Root integrated source
+selection, preserved local compatibility, added real TLS controller tests and
+the ARM/native probe, and retained architecture/acceptance ownership. Independent
+Sol high review accepted all changes, including 42 new focused cases and 17
+local-controller compatibility cases.
+
+The index authenticates each 1 MiB encoded chunk before any decoder receives its
+bytes, and the complete archive hash/size/EOF before the final chunk is released.
+The index hash precedes index JSON parsing. Canonical framing, external manifest
+pin, complete history and all payload checks remain required. HTTPS performs
+fresh verified scans for prepare, apply review and private copying. Selected
+host/namespace/storage/UUID checks precede contact; guest-specific account,
+service, UID, budget and free-space checks follow the first authenticated
+read-only scan and precede destination writes. No encoded local archive is
+created by this source.
+
+Root review replaced environment-sensitive SSL context creation with an explicit
+verifying client context. An actual TLS regression confirms `SSLKEYLOGFILE`
+cannot create a local key log. The first Jammy discovery run also exposed a
+test relying on an identical rewrite changing a timestamp within one clock tick.
+Seeding an old initial mtime makes the observed-change regression deterministic;
+production hash/metadata checks were unchanged. Both corrections received
+focused independent review. Initial failed and pre-correction probe logs are
+retained alongside final logs.
+
+[Actual ARM TLS evidence](evidence/guest-restore-https-arm-20261104.json) restores
+the pinned fixture over real loopback TLS, including certificate/hostname
+verification with a protected custom CA. Its 3,386,765-byte archive has four
+encoded chunks; the 543-byte index SHA-256 is
+`ad2ce11ae99f8dd0e1eb410e1c160a3494b866850f29bf093785f261bae4ef29`.
+All 140,442,449 payload bytes, manifest and exact history match local restoration.
+Wrong-index-pin refusal and private-stage cleanup pass. A native index-generator
+follow-up uses actual builder fixed-storage checks for input/output and produces
+the identical index. Source and harness hashes match the committed files.
+Actual TLS unit tests additionally reject certificates/hostnames/redirects,
+changed multi-chunk streams, suffixes/truncation and a drip-fed deadline. A real
+TLS controller test changes the final chunk during copying after private writes;
+the destination stays unpublished and owned staging is removed.
+
+The final probe took 112.24 seconds and 362,164 KiB maximum RSS. Its source and
+destination live on the same builder, and NVMe/namespace/UUID/service/UID-census/
+TTY boundaries were fixture substitutions. The retained server archive is a
+fixture input, not a client staging file. No guest was booted. This neither
+proves off-device retention nor board networking or full-capacity resource use.
+
+Jammy root discovery passed 669 cases without skips, plus four diagnostic cases
+and all shell regressions. Local discovery passed with 94 privileged skips.
+TOML parsing, Bash syntax, documentation command syntax/links and diff checks
+passed. Post-checks found no fixture directory or HTTPS restore mount; builder
+free space was 18,740,310,016 bytes with about 7.8 GB available RAM. No compilation,
+package installation or physical storage operation occurred. Raw logs remain
+outside Git under the builder's `guest-restore-https-artifacts-20261104/logs/`.
+
+[Delivery instructions](guest-restore-delivery.md) cover index generation,
+trusted pins, restricted static HTTPS endpoint requirements and exact client
+commands. Endpoint deployment, actual board networking/resources, restored KVM
+execution, physical recovery and reproduced deployment remain open. Children
+used fresh focused contexts, exclusive files, no descendants and at most two
+concurrent children. Tokens, cache accounting, account prices and exact review
+time were not exposed; monetary cost and measured savings are unknown.
