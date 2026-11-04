@@ -28,7 +28,7 @@ neither a larger card nor live inventory is a prerequisite to the first image.
   Compressed: 16,188,652 bytes. [Manifest](evidence/diagnostic-20261104.json),
   [download/build/serial guide](diagnostic-image.md). Local files under ignored
   `out/diagnostic-20261104/`; builder `.../orange-pi-4-pro-build/artifacts/`.
-- 58 Python host tests plus shell regressions pass. Actual image
+- 64 Python host tests plus shell regressions pass. Actual image
   hashes, partition/filesystem contents, boot script CRC and wrapper payloads
   verified independently. NVMe planner and KVM-only launcher are preparation only.
 - Independent Sol high boot/disk-selection reviews completed; reported size,
@@ -36,19 +36,24 @@ neither a larger card nor live inventory is a prerequisite to the first image.
   Details and routing calibration: [implementation evidence](implementation-evidence.md).
 - [Interim ARM64 userspace](host-userspace.md) built: QEMU 7.2.22, OpenSSH and
   storage tools, 220 version/hash-locked cached packages. Approximately 531 MiB
-  unpacked / 169,852,145-byte tar. Identities scrubbed, services disabled; no boot,
-  read-only root/state integration, installation or guest execution established.
+  unpacked / 169,852,145-byte tar. Identities scrubbed, disable-service presets;
+  no host boot, installation or guest execution established.
 - [Guest fixture](guest-fixture.md) built from a separate virt profile: 5.25 MB
   kernel, 0.97 MB initramfs, disposable 128 MiB disk. Hashes, seed and dry-run pass;
   **no guest boot or KVM execution**. Script execution/WLAN issues fixed after review.
 - [A/B root payloads](host-payload.md) built: 4 GiB each, about 173 MB compressed,
   matched kernel modules, ext4 read-only feature/no journal. Actual file-loop
-  remount/write denial and content/hash checks passed. They remain unconfigured;
-  no physical boot, installer, persistent-state or update integration is established.
+  remount/write denial and content/hash checks passed. Provisioned state, management,
+  physical boot, installer and update integration remain open.
 - [NVMe boot resolver](host-storage-boot.md): authenticated ARM64 `blkid` runtime
   and read-only UUID/identity selection implemented; 39 fixtures pass with the exact
   diagnostic BusyBox. Private chroot/file probes passed; no mounts or host boot.
   Independent review's duplicate-field parser finding was fixed and rechecked.
+- [Host handoff prototype](host-handoff.md) packaged: 4,761,354-byte initramfs,
+  authenticated compatible inputs, RO root/state validation then NVMe state RW,
+  bounded tmpfs and ephemeral `/etc`. 49 handoff fixtures, pinned ARM64 ash checks
+  and actual builder overlay test passed. Cleanup/permission findings fixed after
+  review; no state provisioner, complete host boot image or board handoff yet.
 
 ## Open gates and next actions
 

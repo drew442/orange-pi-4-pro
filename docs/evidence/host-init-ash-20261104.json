@@ -1,0 +1,35 @@
+{
+  "classification": "pinned ARM64 ash/chroot function fixtures; no real mounts or hardware acceptance",
+  "busybox_sha256": "0a41864f87a0737804f0f4a68a1cfa1ed22374f4f75a1be3eb376e2659ce1316",
+  "required_applets": [
+    "ash",
+    "awk",
+    "cat",
+    "chmod",
+    "cmp",
+    "grep",
+    "mkdir",
+    "mount",
+    "readlink",
+    "sed",
+    "sh",
+    "sha256sum",
+    "sleep",
+    "stat",
+    "switch_root",
+    "test",
+    "umount",
+    "uname"
+  ],
+  "result": "8 pinned ARM64 ash validation checks passed",
+  "scripts": {
+    "configs/host-init": {
+      "bytes": 10737,
+      "sha256": "9b107433a7820f39f123f7759c045084f12f6ab302d2d84b17453cb7bd548604"
+    },
+    "configs/host-storage-resolver.sh": {
+      "bytes": 8403,
+      "sha256": "766db392133aca005afabecea1c930ac1aafa346553f22c27a20e729fbc763bd"
+    }
+  }
+}

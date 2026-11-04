@@ -1,0 +1,13 @@
+{
+  "classification": "independent regular-file archive verification; no hardware acceptance",
+  "archive": {
+    "bytes": 4761354,
+    "sha256": "2806c4cad490a2eda76dbbbf3803efc02a34144b783ed9d2a722f5bc5f3397b3"
+  },
+  "regular_files_verified": 345,
+  "entries_verified": 424,
+  "archive_metadata": "root owned, fixed timestamps, no hardlinks",
+  "source_scripts_match": true,
+  "boot_configuration_matches_manifest": true,
+  "trailer_and_paths": "passed"
+}

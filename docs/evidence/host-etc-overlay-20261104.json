@@ -1,0 +1,9 @@
+{
+  "classification": "builder directory/tmpfs mount test; no board or KVM acceptance",
+  "kernel": "6.8.0-138-generic",
+  "overlay_mode": "0755",
+  "tmpfs_bytes": 67108864,
+  "unprivileged_read": "passed",
+  "writes_in_tmpfs": true,
+  "lower_unchanged": true
+}

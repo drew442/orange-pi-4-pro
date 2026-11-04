@@ -75,8 +75,7 @@ python3 -m unittest discover -s tests -p 'test_host_storage_tools.py'
 bash tests/test-host-storage-resolver.sh
 ```
 
-Next integration work must mount the selected root `ro,noload`, validate its
-payload marker and compatible boot stack, validate provisioned state before any
-write, provide bounded tmpfs and persistent identity/management configuration,
-and establish failure/recovery behavior. The existing unconfigured A/B roots and
-diagnostic initramfs have not been changed by this preparation.
+The [host handoff prototype](host-handoff.md) now packages root/state mount and
+validation logic, bounded tmpfs and persistent machine-id support. Actual board
+handoff, state provisioning and persistent management configuration remain open.
+The existing A/B roots and diagnostic image have not been changed.

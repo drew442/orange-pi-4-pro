@@ -147,6 +147,8 @@ configuration open. The packaging helper has six nonprivileged regressions.
 | blkid runtime extraction | Luna / low | Exact binary/dependency hashes and package ownership extracted; coordinator authenticated and executed isolated runtime |
 | NVMe boot resolver | Sol / medium | 39 fixtures accepted after one targeted duplicate-field correction |
 | Storage boot review | Sol / high | Duplicate-field rejection independently reproduced and fix verified; coordinator tested exact ARM64 BusyBox |
+| Host handoff implementation | Sol / medium | 49 fixtures; coordinator found absolute init-link, console and overlay-permission issues, fixed at same tier |
+| Host handoff review | Sol / high | Partial-move cleanup ordering finding fixed; coordinator authenticated actual archive, tested pinned ash and private builder overlay |
 
 Children used fresh focused contexts, exclusive write scopes and no delegation.
 At most two children were active. Input/output token counts, cache accounting,
