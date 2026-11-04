@@ -41,7 +41,7 @@ for boot0/U-Boot writes.
 
 The kernel configuration enables arm64 KVM, but firmware handoff may still
 prevent EL2 use. `/dev/kvm` and successful capability ioctls alone do not prove
-guest CPU execution. A later pinned ARM64 guest fixture must boot using:
+guest CPU execution. The pinned ARM64 guest fixture is prepared and must boot using:
 
 ```text
 qemu-system-aarch64 -machine virt,gic-version=host -accel kvm -cpu host ...
@@ -61,8 +61,9 @@ launch requirement. `--dry-run` verifies inputs and prints JSON without requirin
 KVM or QEMU; it is preparation only. The guest disk must be a regular NVMe-backed
 file, never a physical drive. It is mutable: after a clean shutdown, preserve its
 new reviewed checkpoint hash for the next launch. A [guest fixture](guest-fixture.md)
-is built but has not booted. Restricted user-mode networking has no inbound listeners;
-network acceptance still needs a defined tested fixture/service.
+is built but has not booted. Restricted user-mode networking has no inbound
+listeners by default; the [HTTP fixture and explicit loopback profile](guest-networking.md)
+define the pending actual guest network test.
 
 The helper selects the host's GIC version for KVM, as supported by
 [QEMU 7.2's virt machine](https://gitlab.com/qemu-project/qemu/-/blob/v7.2.0/docs/system/arm/virt.rst).

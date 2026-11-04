@@ -91,6 +91,17 @@ hardware behavior is untested**. NVMe installation cannot resolve EL1 entry.
   installation/selection and rollback changes. [Detailed implementation evidence](implementation-evidence.md)
   separates builds, software probes and physical results.
 
+## External integration blockers
+
+The same required board-test/configuration inputs remain outstanding across
+consecutive work turns: no EL2-candidate boot capture, administration public key,
+working management settings or direct NVMe sector-size output has arrived. The
+two supplied hardware logs still match their recorded hashes and show EL1 with
+HYP unavailable. Integration is blocked on these external results. Prepared
+components and software checks do not replace the remaining physical gates.
+NVMe erase authorization for the recorded drive persists; no additional erase
+permission is being requested.
+
 ## Next actions and open gates
 
 1. Boot the [reviewed EL2 candidate](el2-diagnostic.md); return full serial capture,
