@@ -1,0 +1,117 @@
+{
+  "ARM_checks": {
+    "BusyBox_HTTP_CGI": {
+      "exact_confirmation_recorded": true,
+      "interpreter": "pinned static ARM BusyBox ash/httpd, no guest kernel",
+      "read_without_confirmation": true,
+      "response_sha256": "2c805ef601e04719dfe3f33be152c5d31c2f4b43de9b88197329b4ea3920c81c",
+      "wrong_confirmation_refused": true
+    },
+    "architecture": "aarch64",
+    "classification": "software network/CGI checks; not board network, VM or KVM acceptance",
+    "guest_execution": "none; QMP must report zero CPUs",
+    "network_backend": {
+      "blocked_host_attempt": {
+        "destination": "10.0.2.2",
+        "host_accepts": 0,
+        "observation_seconds": 0.75,
+        "port": 39465
+      },
+      "classification": "network-backends-only",
+      "frames_received": 6,
+      "loopback_bind": {
+        "address": "127.0.0.1",
+        "port": 57335,
+        "source": "/proc/net/tcp and /proc/net/tcp6",
+        "wildcard_listener": false
+      },
+      "payload_hex": "613733332d6e6574776f726b2d6261636b656e642d666978747572653a14df1b1859b168dd800f676c62f6db48bfef2e930c97badd",
+      "payload_sha256": "6fe98bba1a66b893baeefdc7051cd3c39c3f46073b92ed74f31ff603d15d775f",
+      "process_status": "running-before-cleanup",
+      "qmp_cpus": [],
+      "roundtrip_bytes": 53
+    }
+  },
+  "BusyBox_binary": {
+    "bytes": 1794520,
+    "sha256": "0a41864f87a0737804f0f4a68a1cfa1ed22374f4f75a1be3eb376e2659ce1316"
+  },
+  "CGI_source": {
+    "bytes": 973,
+    "sha256": "4512642cf6aacb7a8a9ecd7ed859710ead4e4ada45cc9d6e53d4ae2cdeb9950b"
+  },
+  "QEMU_binary": {
+    "bytes": 23242128,
+    "sha256": "05d8eba0b9d1b07677aba4d8ef560e63e3ba4e315346a608a7eb5e69cb12a056"
+  },
+  "binfmt": {
+    "bytes": 5628704,
+    "interpreter": "/usr/libexec/qemu-binfmt/aarch64-binfmt-P",
+    "limit": "Hashes configured interpreter pathname; kernel-held binfmt interpreter FD is not independently inspectable.",
+    "registration": "enabled\ninterpreter /usr/libexec/qemu-binfmt/aarch64-binfmt-P\nflags: PF\noffset 0\nmagic 7f454c460201010000000000000000000200b700\nmask ffffffffffffff00fffffffffffffffffeffffff\n",
+    "resolved_interpreter": "/usr/bin/qemu-aarch64-static",
+    "sha256": "92c4aeb8dd898de7152c184370ab22f09ae7c5b7279fd300081c76cee3f78a80"
+  },
+  "builder": "drew@build.drewnet.online; Ubuntu 22.04.5 amd64",
+  "builder_storage": {
+    "fstype": "ext4",
+    "maj:min": "252:0"
+  },
+  "classification": "ARM QEMU network backends and static BusyBox CGI; no guest CPU/KVM",
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "result": "accepted after atomic guest-RAM confirmation publication correction"
+  },
+  "limits": [
+    "No guest kernel runs; QEMU machine none exposes zero CPUs. Synthetic Ethernet is a test endpoint.",
+    "Private network/PID/mount namespace and loopback only; no host management/firewall/bridge changes.",
+    "BusyBox CGI runs under static ARM ash/httpd, without guest init; no DHCP, physical board, VM or KVM evidence.",
+    "Configured binfmt interpreter pathname/hash checked; kernel-held F descriptor not independently inspected."
+  ],
+  "measurement": {
+    "elapsed_seconds": 13.86,
+    "exit_status": 0,
+    "maximum_rss_kib": 58208
+  },
+  "packet_source": {
+    "bytes": 14352,
+    "sha256": "348969f80202f76d53147e70e17c171d9e1766c53a128b820b7cece43f56b52d"
+  },
+  "post_check": {
+    "available_builder_memory_bytes": 7676190720,
+    "board_storage_or_SPI_written": false,
+    "free_builder_bytes": 15319891968,
+    "private_fixture_directories_remaining": 0,
+    "private_fixture_mounts_remaining": 0
+  },
+  "raw_result": {
+    "bytes": 3264,
+    "path": "/home/drew/orange-pi-4-pro-build/guest-network-artifacts-20261104/logs/network-arm.json",
+    "sha256": "8818b6b5cd4de9779e6d21db8dd457087e06d2e283970242871bc2268a9873b2"
+  },
+  "regressions": {
+    "diagnostic_cases": 4,
+    "jammy_discovery": {
+      "cases": 693,
+      "result": "passed",
+      "skipped": 0
+    },
+    "local_discovery": {
+      "cases": 693,
+      "result": "passed",
+      "skipped": 94
+    },
+    "shell": "all tests/test-*.sh passed"
+  },
+  "rootfs": {
+    "bytes": 169852145,
+    "sha256": "1967e76c0c831c1c0bab432e7116457d4372c15b413090c054f8958b72dcb392"
+  },
+  "run_date": "2026-11-04",
+  "source_commit": "1b5123ce7ae2293686c9b269cb368d94804dc457",
+  "verifier_source": {
+    "bytes": 8699,
+    "sha256": "024fced5d73b0f94de9365aa8bfaf157dd3ff35c1b36e1d043f0cae7e2b30885"
+  }
+}

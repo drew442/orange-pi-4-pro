@@ -1,0 +1,31 @@
+{
+  "all_manifest_hashes_match": true,
+  "build_measurement": {
+    "elapsed_seconds": 268.78,
+    "maximum_rss_kib": 545700,
+    "resource_sample_seconds": 30
+  },
+  "classification": "regular file fixture inspection; no guest boot",
+  "compilation_jobs": 2,
+  "expanded_initramfs_bytes": 1821184,
+  "fixture_id": "a733-kvm-guest-fixture-v1",
+  "hardware_acceptance": "pending",
+  "initial_counter": 0,
+  "initramfs_init_CGI_match": true,
+  "kernel_matches_prior_Image": true,
+  "observed_seed_metadata_difference": {
+    "complete_binary_difference_explanation": "not established; whole seed filesystem reproducibility remains open",
+    "new_counter_ctime": "2026-11-04 21:24:22 UTC",
+    "new_counter_uid_gid": [
+      0,
+      0
+    ],
+    "prior_counter_ctime": "2026-11-04 08:11:13 UTC",
+    "prior_counter_uid_gid": [
+      1000,
+      1000
+    ]
+  },
+  "source_bytes_match": true,
+  "source_commit": "1b5123ce7ae2293686c9b269cb368d94804dc457"
+}

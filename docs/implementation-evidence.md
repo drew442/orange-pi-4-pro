@@ -716,3 +716,82 @@ full-disk fixtures. Full per-installation assembly, actual boot integration,
 guest networking/KVM, zero SD writes and physical recovery/acceptance remain
 open. Tokens/cache/account prices and exact review time were not exposed;
 monetary cost and measured savings remain unknown.
+
+## 2026-11-04: restricted loopback TCP guest networking
+
+Source `0d83950` adds an optional strict network configuration and paired launch
+flags; source `1b5123c` extends the trusted packaged ARM probe. Two fresh Sol
+medium workers owned disjoint schema/launcher and packet-fixture files. Root
+owned the guest HTTP fixture, actual ARM/network namespace harness, compilation,
+packaging and integration. Independent Sol high review accepted the final
+production changes and test-only probe extension, including a native zero-CPU
+network-backend execution. Children used focused fresh contexts, exclusive
+files, no descendants and at most two concurrent children.
+
+Legacy configs/units retain their exact restricted backend without a listener.
+Opt-in forwarding fixes host IPv4 loopback, the guest DHCP address and TCP;
+ports and complete pairs are checked before payload access. New units retain
+KVM-only execution, unprivileged identity, capabilities and NVMe/descriptor
+guards. No bridge, TAP, host route, firewall or management configuration is
+changed. Checkpoint/backup/restoration preserve the optional config. Earlier
+strict readers refuse it, so rollback must retain a compatible portable tree
+and remains a physical validation gate.
+
+The [actual ARM network/CGI probe](evidence/guest-network-arm-20261104.json)
+uses authenticated userspace and pinned static BusyBox in private PID/mount/
+network namespaces. QEMU's `none` machine reports zero CPUs through QMP; a
+synthetic Ethernet/TCP endpoint echoes 53 bytes through real usernet forwarding.
+Proc TCP tables show only `127.0.0.1`, no wildcard/IPv6 forward. A synthetic SYN
+toward a separate host-gateway listener produces zero accepts over 0.75 seconds.
+This is a bounded backend-policy check, not exhaustive isolation or a guest
+network test. Static ARM BusyBox ash/httpd serves the exact CGI, rejects a wrong
+confirmation and records the correct counter. No guest kernel or KVM executes.
+The probe took 13.86 seconds and 58,208 KiB maximum RSS.
+
+Review found that the initial CGI marker redirection could expose an empty file
+before printf completed. The final CGI writes a private noclobber RAM temporary
+file, then atomically renames it. A deterministic delayed-printf regression
+verifies that init cannot observe incomplete marker contents. The final ARM
+probe was repeated with this fix; pre-correction logs remain alongside it.
+The guest disk is synced/unmounted before HTTP starts and confirmation has a
+120-second deadline. A gateway ping no longer stands in for request/response.
+
+The [packaged ARM configuration workflow](evidence/guest-network-config-arm-20261104.json)
+preserves networking through actual enrollment, checkpoints, backup and local/
+HTTPS restoration file checks, with existing live-boundary substitutions. It
+verifies generated unit flags and the packaged launcher's exact dry-run backend.
+It took 111.65 seconds and 359,824 KiB. Hardware acceptance remains explicitly
+pending; no service or guest was started by that workflow. Source hashes match
+the committed files. The [113,789-byte updated package](evidence/guest-network-package-20261104.json)
+matches a fresh-checkout archive/manifest rebuild byte for byte. Existing root
+images and recovery SD were not replaced.
+
+The [new guest fixture](evidence/guest-network-fixture-20261104.json) compiles from
+the pinned vendor source with two jobs and 30-second memory/disk samples. Build
+time was 268.78 seconds and maximum reported child RSS 545,700 KiB. The kernel
+matches the prior Image byte for byte. New initramfs SHA-256 is
+`2f3360a8f6365b84c352cae99949a5ae92a81001efe28dbae221f334805f854b`;
+new 128 MiB disk SHA-256 is
+`48074e898f24a18ed617c5a999f81806d4c6064086712acb4d4831d6ce4102ff`.
+[File readback](evidence/guest-network-fixture-verify-20261104.json) verifies all
+manifest pins, actual cpio init/CGI contents, e2fsck, ID and zero counter.
+Compared with the earlier disk, observed inode differences include builder
+UID/GID and source ctime. A complete binary-difference explanation and whole
+seed-filesystem reproducibility remain open; source/kernel reproducibility is
+not generalized to that disk.
+
+Final Jammy root discovery passed 693 cases without skips, four diagnostic
+cases and all shell regressions. Local discovery passed with 94 privileged
+skips. TOML, Bash/POSIX syntax, guide syntax/links and diff checks passed. No
+private probe mount/directory remained. Builder free space after export was
+15,319,891,968 bytes with about 7.7 GB available RAM. No packages were installed;
+no board storage or SPI was written. Logs/artifacts are outside Git under the
+builder's `guest-network-artifacts-20261104/`.
+
+[Prospective hardware instructions](guest-networking.md) require the updated
+complete portable tools, trusted fixture pins, console counter, verified HTTP
+read and confirmation, listener/management checks, KVM-only execution, shutdown
+and restart evidence. Actual board DHCP, guest kernel/virtio traffic, KVM,
+long-run behavior and network continuity through boot/update/rollback remain
+open. Token/cache/account pricing and exact reviewer time were not exposed;
+monetary cost and measured savings remain unknown.

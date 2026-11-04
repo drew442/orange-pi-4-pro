@@ -5,6 +5,8 @@ current fixture launcher authenticates kernel, initramfs and raw disk inputs,
 retains their open descriptors through exec, and coordinates cooperating
 launchers with a nonblocking exclusive disk lock. This is preparation code;
 no A733 guest has executed and no hardware gate has passed.
+The optional [isolated loopback TCP profile](guest-networking.md) adds a single
+explicit host forward while preserving the default restricted backend.
 
 ## Storage contract
 

@@ -21,7 +21,7 @@ no larger card or live inventory was required to produce the diagnostic image.
 - [Jammy builder](build-host-assessment.md): actual kernel/U-Boot builds,
   ARM64 chroot and file-backed loop checks passed. Two compilation jobs;
   GCC 11 kernel / Linaro 7.4.1 U-Boot. Latest idle sample has
-  over 7.3 GB available RAM and 18 GB free disk; 4 GiB swap is configured.
+  over 7.3 GB available RAM and 15 GB free disk; 4 GiB swap is configured.
 - **Diagnostic candidate built and independently verified, not board-booted:**
   268,435,456 bytes, SHA-256
   `b05086afaab3d2f9da6c33b8e457f3552cce2899c08824d371615008bf66d9fd`;
@@ -109,8 +109,12 @@ no larger card or live inventory was required to produce the diagnostic image.
   staging; real ARM loopback TLS and native index checks pass. Off-device retention,
   full-capacity resource checks, actual board networking,
   restored KVM boot and physical recovery remain open. Actual clean shutdown,
-  restart, automatic boot integration and networking remain open.
-- 678 Python cases across both suites and all shell regressions pass; the 674-case
+  restart and automatic boot integration remain open.
+  [Optional loopback TCP networking](guest-networking.md) preserves restricted
+  usernet; actual ARM backend/CGI and packaged configuration checks pass without
+  a guest CPU. Updated fixture/package are separate from existing root images;
+  actual guest traffic and rollback with networking remain untested.
+- 697 Python cases across both suites and all shell regressions pass; the 693-case
   discovery suite passes on Jammy with no skips (94 privileged skips locally). Actual
   files/build checks are distinct from hardware gates. Independent Sol high
   reviews and routing outcomes: [implementation evidence](implementation-evidence.md).

@@ -5,6 +5,9 @@ tool tree at `/usr/lib/a733-tools`. The same source set is available as an
 authenticated portable archive. Operational commands no longer need a Git
 checkout. These root components have not been installed or booted on the board.
 The published preparation/recovery SD retains its earlier maintenance subset.
+The later [networking extension](guest-networking.md) requires its updated
+portable archive; the root components recorded here have not been rebuilt with
+that optional-forward support.
 
 The package contains 38 explicit source files plus `package.json`, with 16 CLI
 entrypoints for installation, host maintenance and guest activation, enrollment,

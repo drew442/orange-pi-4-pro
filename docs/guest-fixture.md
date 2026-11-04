@@ -3,6 +3,10 @@
 The guest artifacts have been built and checked as files. **No guest has booted**
 and no hardware KVM result is established. The physical first action remains
 the [diagnostic SD boot](diagnostic-image.md), after exact-card authorization.
+The current [HTTP network fixture](guest-networking.md) replaces gateway ping
+with a host request/confirmation. Its new artifact pins and build are documented
+there. The records below retain the earlier fixture used by file-only probes;
+do not combine its old initramfs pin with the new expected HTTP behavior.
 
 ## Build and provenance
 
@@ -47,7 +51,7 @@ All artifact hashes, seed ID, zero counter and `e2fsck -fn` passed. Packaging an
 input guards were tested locally; no emulator or physical guest run was used
 for these results. Cross-builder binary comparison is pending.
 
-## Guest behavior and safeguards
+## Earlier fixture behavior and safeguards
 
 The guest `/init` refuses execution outside PID 1. It computes a known CPU
 checksum, then checks `/dev/vda` for the exact disposable fixture UUID/label.
@@ -78,7 +82,8 @@ where storage resides. Never put guest state on SD or pass a physical disk.
 `scripts/launch-kvm-guest.py` requires kernel, initramfs and disk checkpoint
 hashes, an explicit measured memory budget and CPU count. It enforces a non-root
 process, KVM access, `-machine virt,gic-version=host -accel kvm -cpu host`, and no
-accelerator fallback. It exposes no monitor or forwarded network listener.
+accelerator fallback. It exposes no monitor or forwarded listener by default;
+the new explicit [loopback-only network profile](guest-networking.md) is optional.
 The launcher retains authenticated descriptors through exec, locks the disk
 for cooperating launchers, and checks NVMe placement before payload reads.
 Kernel/initramfs must remain protected against concurrent in-place writers.
