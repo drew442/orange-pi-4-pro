@@ -1,13 +1,15 @@
 # Implementation status
 
-Updated 2026-11-04. Replace stale entries; detailed evidence lives in linked files.
+Updated 2026-11-05. Replace stale entries; detailed evidence lives in linked files.
 
 ## Current milestone
 
-The 256 MiB diagnostic booted to its RAM shell on the A733. Its BL31 handoff
-enters **EL1**, and KVM reports HYP unavailable. A separately built and reviewed
-[EL2 diagnostic](el2-diagnostic.md) is ready for the next physical boot; **its
-hardware behavior is untested**. NVMe installation cannot resolve EL1 entry.
+The [second physical diagnostic boot](evidence/board-el2-20261104.json) confirms
+BL31 SPSR `0x3c9`, all eight CPUs at EL2, KVM VHE initialization and `/dev/kvm`.
+**Actual KVM guest execution remains unproven.** Ethernet negotiates 1 Gbps/full
+but has no DHCP lease. A missing kernel module-helper path explains Generic PHY
+fallback; a [RAM-only driver/packet test](ethernet-diagnostics.md) is ready. The
+specific PHY/clock cause and Ethernet fix still need live confirmation.
 
 ## Decisions and physical evidence
 
@@ -17,7 +19,8 @@ hardware behavior is untested**. NVMe installation cannot resolve EL1 entry.
 - [Physical logs](board-diagnostic-20261104.md): 12 GiB LPDDR5, eight CPUs;
   SU02G SD 1,977,614,336 bytes, CID `035344535530324780716f216e00a8f5`;
   NVMe 256,060,514,304 bytes, model `SPCC M.2 PCIe SSD`, serial
-  `134807190FC700149277`, firmware `EDFM20.0`. Use actual NVMe geometry.
+  `134807190FC700149277`, firmware `EDFM20.0`; both logical and physical sectors are **512 bytes**.
+  Use actual NVMe geometry.
 - Heatsinks remain attached. Diagnostic outputs supply component identities;
   chip markings are unnecessary. Power rating/thermal endurance remain open.
 - User explicitly authorized discarding that exact NVMe's data. Revalidate its
@@ -28,6 +31,8 @@ hardware behavior is untested**. NVMe installation cannot resolve EL1 entry.
   Firmware audit, offline full-card hash comparisons and cycle/workload evidence
   remain necessary. A single Linux snapshot does not prove zero routine writes.
 - Wired MAC `10:f4:ae:90:5e:57`, 1 Gbps link; DHCP has no lease/IPv4 route.
+  Switch native VLAN is operator-verified; server sees no requests. PHY is
+  Generic; collect PHY ID and switch-visible TX after fixing module loading.
   Administration public key and DHCP/static management choice requested.
 
 ## Builds and host-only verification
@@ -43,21 +48,28 @@ hardware behavior is untested**. NVMe installation cannot resolve EL1 entry.
   bytes, SHA-256 `08fff0a88c509ee484c2450c58d42629fd90eedb8cd4c57513f98f4f78611b58`;
   gzip 16,188,653 bytes. Only the equal-size boot package is replaced; all outside
   bytes match the authenticated baseline, including the complete filesystem.
-  Emitted monitor call is `0x8000ff40`; expected SPSR is `0x3c9`. Packed monitor/
-  SCP and copied kernel/DTB/initramfs/boot0 hashes pass; physical EL2 is unproven.
+  Emitted monitor call is `0x8000ff40`; actual SPSR is `0x3c9`. Packed monitor/
+  SCP and copied kernel/DTB/initramfs/boot0 hashes pass; physical EL2/KVM
+  initialization are observed, with actual guest execution still pending.
 - [Jammy builder](build-host-assessment.md): actual builds with two compilation
   jobs, GCC 11 kernel/Linaro 7.4.1 U-Boot; 4 GiB swap. Latest idle sample after
   [verified cache retention](build-cache-retention.md) and root refresh: about
-  24.0 GB free disk, 7.7 GB available RAM. The 22 GiB NVMe staging guard passes
-  with limited headroom; recheck before further builds. Source and generated
-  compiler-cache archives are retained; published image bytes remain unchanged.
+  23.08 GB free disk and 7.0 GiB available RAM after the two network-image builds.
+  This is below the 22 GiB full NVMe staging guard: reclaim only verified
+  disposable staging or expand the filesystem before a full NVMe image build.
+  Source/compiler-cache archives and prior published image bytes remain retained.
+- [Network helper correction](ethernet-diagnostics.md): two fresh builds produce
+  identical 268,435,456-byte raw images and 16,188,752-byte gzip files. Independent
+  review, module-byte/mode preservation and standalone inspection pass. The
+  preparation installer initramfs was regenerated; its actual ARM runtime probe
+  passes. Physical Ethernet/PHY/DHCP confirmation remains outstanding.
 - [Minimal interim ARM64 userspace](host-userspace.md): 220 version/hash-locked
   packages, QEMU 7.2.22, OpenSSH/storage tools; approximately 531 MiB unpacked.
   Final Buildroot/release-base decision follows working hardware KVM baseline.
 - [Read-only A/B roots](host-payload.md), [package-state isolation](host-package-state.md),
   [NVMe state](host-state.md), [selection](nvme-root-selection.md) and
-  [handoff](host-handoff.md) pass file-backed and packaged ARM checks. Current
-  [current refreshed roots](current-host-roots.md) carry all 39 current tool files
+  [handoff](host-handoff.md) pass file-backed and packaged ARM checks. The
+  [refreshed roots](current-host-roots.md) carry all 39 current tool files
   at `/usr/lib/a733-tools`, including optional networking. Native content/ownership,
   actual ARM 220-package queries and the fixed-seed packaged workflow pass.
   Guest fixture/state/bootstrap/full-disk artifacts remain separately bound.
@@ -86,34 +98,35 @@ hardware behavior is untested**. NVMe installation cannot resolve EL1 entry.
   remain unbooted preparations; host state is a fixture. Actual historical images
   still verify, and new EL2 images refuse default baseline verification. A fresh
   committed-source checkout reproduced both images and installer initramfs bytes.
-- Jammy: 732 discovery cases without skips, four diagnostic assembly cases and
+- Jammy: 746 discovery cases without skips, four diagnostic assembly cases and
   all five shell regressions pass. Independent Sol high reviews cover boot,
   installation/selection and rollback changes. [Detailed implementation evidence](implementation-evidence.md)
   separates builds, software probes and physical results.
 
 ## External integration blockers
 
-The same required board-test/configuration inputs remain outstanding across
-consecutive work turns: no EL2-candidate boot capture, administration public key,
-working management settings or direct NVMe sector-size output has arrived. The
-two supplied hardware logs still match their recorded hashes and show EL1 with
-HYP unavailable. Integration is blocked on these external results. Prepared
-components and software checks do not replace the remaining physical gates.
+The new physical capture resolves EL2 entry and NVMe sector geometry. Board
+networking and actual KVM execution remain open. Administration public key and
+working management settings are still required for real installation state.
 NVMe erase authorization for the recorded drive persists; no additional erase
-permission is being requested.
+permission is being requested. SPI identity/geometry are directly observed as
+XM25QU128C, JEDEC `204118`, 16 MiB, erase 65,536 bytes, write 1 byte; verified
+backup/recovery and SPI-specific programming authorization remain outstanding.
 
 ## Next actions and open gates
 
-1. Boot the [reviewed EL2 candidate](el2-diagnostic.md); return full serial capture,
-   image readback and before/after whole-SD hashes. Require SPSR `0x3c9`, eight
-   CPUs at EL2, KVM initialization and `/dev/kvm`, then actual KVM guest execution.
+1. Run the [RAM-only Ethernet test](ethernet-diagnostics.md). Capture actual PHY
+   ID/driver, before/after counters, switch MAC learning/port RX and DHCP outcome.
+   The permanent `/sbin/modprobe` archive fix passes independent review and
+   two byte-identical Jammy image builds; see the linked guide for hashes. Then prove a KVM-only guest, shutdown/restart and storage
+   persistence on the actual host; `/dev/kvm` alone does not satisfy this gate.
 2. Resolve management addressing and administration key; produce actual-geometry
    installation inputs and reviewed recovery artifacts. Validate real board
    boot/DHCP or static addressing/DNS/TLS, guarded NVMe write/readback and boot.
 3. Prove installed NVMe operation, SD policy, repeated boots/workload, interrupted
    updates, manual rollback, dirty-journal recovery and off-device restore. SPI
-   is reported as XM25QU128C/16 MiB; direct ID confirmation, backup and proven
-   recovery remain necessary before programming authorization.
+   is identified as XM25QU128C/16 MiB; backup and proven recovery remain
+   necessary before programming authorization.
    [Pinned SPI investigation](spi-boot-investigation.md) records its distinct
    layout, fixed erase-count concern and the diagnostic's SD-only boot target.
 4. Full clean-build reproducibility remains open: vendor U-Boot generates a

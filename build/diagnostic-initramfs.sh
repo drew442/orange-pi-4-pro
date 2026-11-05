@@ -3,6 +3,7 @@
 set -euo pipefail
 export LC_ALL=C
 export TZ=UTC
+umask 022
 usage() {
     echo "Usage: $0 STATIC_AARCH64_BUSYBOX OUTPUT_CPIO_GZ [MODULES_DIR]" >&2
     echo 'MODULES_DIR contains release directories as installed below /lib/modules.' >&2
@@ -33,12 +34,15 @@ work=$(mktemp -d)
 archive=''
 trap 'rm -rf -- "$work"; [[ -z $archive ]] || rm -f -- "$archive"' EXIT
 root=$work/root
-mkdir -p "$root"/{bin,dev,proc,sys,run,tmp,etc,lib/modules}
+mkdir -p "$root"/{bin,sbin,dev,proc,sys,run,tmp,etc,lib/modules}
 mkdir -p "$root/usr/share/licenses"
 cp -- "$recipe_dir/../licenses/GPL-2.0.txt" "$recipe_dir/../licenses/busybox-copyright.txt" "$root/usr/share/licenses/"
 cp -- "$busybox" "$root/bin/busybox"
 chmod 0755 "$root/bin/busybox"
 ln -s busybox "$root/bin/sh"
+# CONFIG_MODPROBE_PATH=/sbin/modprobe: kernel PHY autoload happens while the
+# platform module creates MDIO devices, before our one-time modalias snapshot.
+ln -s ../bin/busybox "$root/sbin/modprobe"
 cp -- "$recipe_dir/../configs/diagnostic-init" "$root/init"
 chmod 0755 "$root/init"
 # The DHCP hook changes RAM-backed network state only. No lease file or daemon.
@@ -64,7 +68,7 @@ if [[ $# == 3 ]]; then
         echo 'MODULES_DIR may contain only regular files and directories' >&2
         exit 1
     fi
-    cp -R -- "$3/." "$root/lib/modules/"
+    cp --preserve=mode -R -- "$3/." "$root/lib/modules/"
 fi
 # Fixed metadata, ordering and gzip header make identical inputs reproducible.
 find "$root" -type d -exec chmod 0755 {} +

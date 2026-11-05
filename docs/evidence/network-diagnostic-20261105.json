@@ -1,0 +1,90 @@
+{
+  "schema": 1,
+  "classification": "host-built network module-helper correction; physical boot and Ethernet pending",
+  "built_utc_date": "2026-11-05",
+  "builder": "Ubuntu 22.04.5 amd64 at build.drewnet.online",
+  "recipe": "build/network-diagnostic.py",
+  "source_snapshot_note": "Working source reviewed independently before builds; committed alongside this record. No compilation required.",
+  "base": "el2-diagnostic-20261104.json",
+  "preserved_core_files": [
+    "Image",
+    "uImage",
+    "kernel.config",
+    "board.dtb",
+    "boot0_sdcard.fex",
+    "boot_package.fex"
+  ],
+  "preserved_core_hashes": true,
+  "module_archive_check": "395 module-tree entries preserve bytes and modes; /sbin/modprobe -> ../bin/busybox added",
+  "repeat_build": "Two fresh output directories produced identical raw image and gzip bytes",
+  "artifact_manifest_sha256": "f390934dd470b11f583c1344ac9c6ca14cc2093968fa9bd12f99e20850191dc2",
+  "files": {
+    "Image": {
+      "bytes": 27283464,
+      "sha256": "9df974c55fa61a77e8fe812652780dad471527eb9615c27838f481887d4c50e7"
+    },
+    "a733-diagnostic.img": {
+      "bytes": 268435456,
+      "sha256": "eea4ca991ff62c80d5f158a97c2510cee13f421cbfe9b7bad32b922e2bf26fcd"
+    },
+    "a733-diagnostic.img.gz": {
+      "bytes": 16188752,
+      "sha256": "9ecd929b1f6ea302659b4b19c6837ba747131c8e7dc091a1a541793fddcf7339"
+    },
+    "base-el2-artifact-manifest.json": {
+      "bytes": 15974,
+      "sha256": "749d5ba0e95a516edfc4bf671b51d2533fb0588bc0d3abcdce090d1a081b3a32"
+    },
+    "base-el2-evidence.json": {
+      "bytes": 6582,
+      "sha256": "9c30d5d873fa8ad154b8068cdebfc7f40f6487ce6a79f76a52da4dd44ba1b5f8"
+    },
+    "board.dtb": {
+      "bytes": 209320,
+      "sha256": "4d7d964a54668cf5dc12cd4bf7e72a625c79883541272aeba1a91adbbedb86ed"
+    },
+    "boot0_sdcard.fex": {
+      "bytes": 245760,
+      "sha256": "9213f1c56ef932930d43b5751e8937bea0e9ae7460ec16187cc1b0dffdb75345"
+    },
+    "boot_package.fex": {
+      "bytes": 1392640,
+      "sha256": "b20c3d1133aee6474416bc9846b0bf94d5439aa12d7f7555b44607105ddab3b6"
+    },
+    "build-recipe.tar.gz": {
+      "bytes": 343772,
+      "sha256": "a4de5c3c20916bf2048f379c52f717e964fab90f9b2e8bb9531596de8d04ffa2"
+    },
+    "initramfs.cpio.gz": {
+      "bytes": 3650435,
+      "sha256": "5cc5e4dab4a347cf25444e85648c14461d9da668018594db1b5bf345e7d93c9b"
+    },
+    "kernel.config": {
+      "bytes": 212080,
+      "sha256": "8a29d9c36e52db7e8a7d6ff757dc69e660f4273c99e5f00c5dbc5a9b7e060675"
+    },
+    "retained-source-manifest.json": {
+      "bytes": 3346,
+      "sha256": "70d6de9bcc49cd16f4a25f6c50e3b34fac85f8dfb3d2cc032146fa75db0026f0"
+    },
+    "uImage": {
+      "bytes": 27283528,
+      "sha256": "6f9269755c4c2bc196c094899fa1ff20292f4d762c4000f77fcbb0887d5f154a"
+    },
+    "uInitrd": {
+      "bytes": 3650499,
+      "sha256": "02835443e82ce955002ff5c7d1eb9c15d6fe771eb636f0e7482bb178b6109964"
+    }
+  },
+  "hardware_acceptance": "pending",
+  "storage_actions": "No physical media written",
+  "independent_review": "gpt-6.1-sol high: no blocking findings after TMPDIR/provenance corrections",
+  "installer_runtime": "Regenerated preparation initramfs with helper; existing actual ARM runtime verifier passed; board networking untested",
+  "validation": {
+    "jammy_discovery": "746 cases; no skips; passed",
+    "diagnostic_assembly": "4 cases passed",
+    "shell_regressions": "5 scripts passed",
+    "local_discovery": "746 cases passed; 94 privileged/environment cases skipped; full Jammy sudo run supplies coverage",
+    "syntax_whitespace_toml": "passed"
+  }
+}

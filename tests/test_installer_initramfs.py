@@ -111,6 +111,8 @@ class InstallerArchiveTests(unittest.TestCase):
                 for context in self.package_fixture(output):
                     stack.enter_context(context)
                 result = ARCHIVE.build('missing', REPO, 'missing', output)
+            self.assertEqual(result['entries']['sbin/modprobe'],
+                             {'mode': stat.S_IFLNK | 0o777, **ARCHIVE.HOST.record(b'../bin/busybox')})
             tools = ARCHIVE.TOOLS.entries(REPO)
             for name, (mode, data) in tools.items():
                 self.assertEqual(result['entries']['usr/lib/a733-tools/' + name],

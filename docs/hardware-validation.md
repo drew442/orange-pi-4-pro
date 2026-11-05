@@ -1,7 +1,8 @@
 # Hardware acceptance record
 
 The first [physical diagnostic boot](board-diagnostic-20261104.md) reached the
-RAM shell and enumerated NVMe; **EL1 handoff blocks KVM**. Release gates remain
+RAM shell and enumerated NVMe. The [second boot](evidence/board-el2-20261104.json)
+confirms all CPUs at EL2 and KVM VHE initialization; **guest execution is pending**. Release gates remain
 open. Host-only checks are recorded separately in
 [implementation status](implementation-status.md) and the diagnostic guide.
 Never infer a passed board test from a build, model review or QEMU emulation.
@@ -27,7 +28,7 @@ for boot0/U-Boot writes.
 | Diagnostic SD | Actual 2 GB card, serial boot through Linux shell | Observed: 1,977,614,336-byte card; RAM shell |
 | Inventory | Board/RAM/SSD/power/cooling and exact capacities | RAM/CPU/SD/SSD recorded; power/cooling operating tests pending |
 | NVMe | PCIe/NVMe enumeration, errors and stable repeated access | Enumerates/live; repeated access and warning investigation pending |
-| KVM | EL2 messages plus guest execution with KVM explicitly required | Failed prerequisite: EL1; HYP unavailable; no guest execution |
+| KVM | EL2 messages plus guest execution with KVM explicitly required | EL2/VHE and /dev/kvm observed; no guest execution |
 | Installation | Fresh deployment on actual card and nominal 250 GB SSD | Pending |
 | Boot reliability | 10 cold boots and 10 warm reboots, matched firmware/SSD | Pending |
 | Workload | 24 hours: CPU/disk/network, temperatures/memory/NVMe errors | Pending |

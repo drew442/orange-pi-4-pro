@@ -2,8 +2,10 @@
 
 The [first physical boot](board-diagnostic-20261104.md) entered EL1, leaving KVM
 unavailable. This separate SD image changes normal U-Boot `bootm` to use the
-pinned monitor's existing hypervisor service `0x8000ff40`. **It has not booted on
-the board.** Its expected SPSR is `0x3c9`; this is a test expectation.
+pinned monitor's existing hypervisor service `0x8000ff40`. The [operator's second boot](evidence/board-el2-20261104.json) confirms SPSR `0x3c9`,
+all eight CPUs at EL2, KVM VHE initialization and `/dev/kvm`. Actual KVM guest
+execution is still required. Ethernet bring-up now follows the
+[RAM-only PHY test](ethernet-diagnostics.md).
 
 Leave both heatsinks attached. This image mounts no disk filesystem, erases no
 NVMe and programs no SPI. It runs the same RAM diagnostics as the first image.

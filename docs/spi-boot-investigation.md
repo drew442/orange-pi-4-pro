@@ -11,8 +11,8 @@ The vendor build commit is `a95129bf30ea11886cc35f08ebb3e69695a26656`; U-Boot is
 `b791be842935b27268ae3d00e943a9075495f30a`. The board uses the vendor kernel's
 `CONFIG_AW_MTD_SPI_NOR_6_1` driver. Its
 [XMC table](https://github.com/orangepi-xunlong/linux-orangepi/blob/2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f/bsp/drivers/mtd/spi-nor-6.1/xmc.c#L19)
-associates this name with JEDEC ID `0x204118`. That is the expected source ID;
-direct sysfs capture is still pending. No physical marking is required.
+associates this name with JEDEC ID `0x204118`. The [second physical capture](evidence/board-el2-20261104.json) directly confirms
+JEDEC `204118`, 16,777,216 bytes, erase size 65,536 bytes and write size 1 byte. No physical marking is required.
 
 The vendor
 [family SPI writer](https://github.com/orangepi-xunlong/orangepi-build/blob/a95129bf30ea11886cc35f08ebb3e69695a26656/external/config/sources/families/sun60iw2.conf#L230)
@@ -31,12 +31,10 @@ beyond the entire 16,777,216-byte SPI capacity. **Never write a diagnostic or
 host SD image onto SPI.** This table is source evidence, not a programming plan.
 
 The vendor function erases **50 MTD erase blocks**, then writes these two files.
-That number is not a byte count. At a 64 KiB erase unit it spans 3,276,800 bytes;
-at 4 KiB it spans only 204,800 bytes, less than boot0 alone. The selected kernel
-configuration enables 4 KiB-sector support, but the actual device's MTD
-`erasesize` has not been captured. Therefore the vendor's fixed erase count
-cannot establish a safe erase extent. A future reviewed programmer must use
-actual geometry and preserve all bytes outside explicitly authorized ranges.
+With the observed 65,536-byte erase size this spans 3,276,800 bytes and covers
+both components. This resolves the earlier unknown erase geometry; it does not
+establish that the entire erased range is disposable. A future reviewed
+programmer must preserve all bytes outside explicitly authorized ranges.
 
 The vendor
 [`nand-sata-install`](https://github.com/orangepi-xunlong/orangepi-build/blob/a95129bf30ea11886cc35f08ebb3e69695a26656/external/packages/bsp/common/usr/sbin/nand-sata-install#L743)
@@ -55,14 +53,13 @@ SPCC namespace, which does not establish the firmware driver or boot script.
 The reviewed diagnostic U-Boot explicitly restricts `boot_targets` to `mmc0`.
 Copying its boot package into SPI would not by itself implement NVMe-first boot.
 A separately reviewed SPI/NVMe boot policy must preserve the compatible firmware,
-read-only environment and EL2 handoff while selecting NVMe boot files. First
-confirm the [EL2 diagnostic](el2-diagnostic.md) on the board; firmware service
-inspection and successful compilation cannot replace that test.
+read-only environment and EL2 handoff while selecting NVMe boot files. The [EL2 diagnostic](el2-diagnostic.md) has physically initialized KVM, but
+SPI boot and guest execution remain untested.
 
 Before proposing any SPI write:
 
-1. Capture direct software identity, MTD size/erase/write geometry and partition
-   map through the optional read-only commands in the diagnostic guide.
+1. Revalidate the recorded software identity and geometry immediately before
+   any programming plan; capture the complete MTD partition map.
 2. Read the entire exact SPI into RAM, transfer it off-device after management
    networking works, repeat the read and verify byte count/hash and retained
    backup. Do not store a backup on SD or the NVMe that will be reprovisioned.

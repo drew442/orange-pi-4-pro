@@ -1,0 +1,109 @@
+{
+  "schema": 1,
+  "classification": "operator-supplied physical EL2 diagnostic boot; KVM initialized, guest execution pending",
+  "received_utc_date": "2026-11-04",
+  "capture_time_note": "Filename timestamp retained as supplied; timezone not independently established.",
+  "raw_log": {
+    "path": "tmp/05112026-1033-full-boot-and-el2-diagnostic.txt",
+    "bytes": 179703,
+    "sha256": "f3c3588bfd1791f6ad4bead7f61c1727b201da90aafc9c03649615e5f3d72c86"
+  },
+  "candidate_record": "el2-diagnostic-20261104.json",
+  "artifact_identity_note": "Operator reports EL2 diagnostic; serial components match the expected stack. Offline flashed-image/full-card hashes were not included.",
+  "observations": {
+    "bl31_spsr": "0x3c9",
+    "all_cpus_entry": "EL2",
+    "online_cpus": "0-7",
+    "kvm": "VHE mode initialized successfully",
+    "ipa_size_limit_bits": 40,
+    "dev_kvm": {
+      "type": "character",
+      "major": 10,
+      "minor": 232,
+      "mode": "0600",
+      "owner": "root"
+    },
+    "guest_execution": "not performed",
+    "dram_mib": 12288,
+    "nvme": {
+      "model": "SPCC M.2 PCIe SSD",
+      "serial": "134807190FC700149277",
+      "firmware": "EDFM20.0",
+      "namespace": "/dev/nvme0n1",
+      "bytes": 256060514304,
+      "sectors_512_bytes": 500118192,
+      "logical_block_size": 512,
+      "physical_block_size": 512,
+      "pcie_link": "Gen3 x1",
+      "warning": "missing or invalid SUBNQN"
+    },
+    "sd": {
+      "namespace": "/dev/mmcblk1",
+      "ro": 0,
+      "stat_fields": [
+        1,
+        0,
+        8,
+        1025,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1028,
+        1025,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "writes_completed": 0,
+      "sectors_written": 0,
+      "zero_routine_write_acceptance": "pending full-card before/after hashes, firmware audit, repeated workload/cycles"
+    },
+    "spi": {
+      "model": "XM25QU128C",
+      "jedec_id": "204118",
+      "bytes": 16777216,
+      "erase_bytes": 65536,
+      "write_bytes": 1,
+      "programming_authorized": false,
+      "backup_recovery": "pending"
+    },
+    "ethernet": {
+      "interface": "eth0",
+      "mac": "10:f4:ae:90:5e:57",
+      "bound_phy": "Generic PHY",
+      "driver": "BSP sunxi-stmmac/dwmac-sunxi",
+      "phy_interface": "rgmii",
+      "phy_clock_mode": "external transmit clock",
+      "link": "1000 Mbps full duplex",
+      "ipv4": "none",
+      "dhcp": "DISCOVER attempts, no lease",
+      "interface_counters": "not captured",
+      "raw_phy_id": "not captured"
+    }
+  },
+  "operator_network_observation": {
+    "switch_port": "1Gbit full duplex up",
+    "native_vlan": "operator reports correct VLAN",
+    "dhcp_server": "operator reports no request history for eth0 MAC despite manual udhcpc -i eth0"
+  },
+  "software_finding": {
+    "confirmed": "Published diagnostic lacks /sbin/modprobe although pinned kernel CONFIG_MODPROBE_PATH points there. Motorcomm PHY driver is a packaged module.",
+    "inference": "If PHY ID is YT8531 (0x4f51e91b), Generic PHY omits vendor initialization of the 125 MHz clock expected by MAC. Needs live ID/rebind/packet evidence.",
+    "fix_preparation": "Add kernel helper symlink to diagnostic and installer archives; kernel/DTB/firmware preserved.",
+    "live_test_guide": "../ethernet-diagnostics.md"
+  },
+  "source_references": {
+    "kernel_commit": "2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f",
+    "phy_module": "drivers/net/phy/motorcomm.c:102-124,406-445",
+    "phy_identifier": "include/linux/motorcomm_phy.h",
+    "external_clock": "bsp/drivers/stmmac/dwmac-sunxi.c:63-72",
+    "missing_helper_handling": "drivers/net/phy/phy_device.c:672-689",
+    "generic_detach": "drivers/net/phy/phy_device.c:1899"
+  },
+  "storage_actions": "No coordinator NVMe erase or SPI programming."
+}

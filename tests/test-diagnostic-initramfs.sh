@@ -29,10 +29,11 @@ elf('aarch64-dynamic', interp=True)
 PY
 mkdir -p "$work/modules/6.6-test/kernel/drivers"
 printf 'module-fixture\n' > "$work/modules/6.6-test/kernel/drivers/test.ko"
+chmod 0664 "$work/modules/6.6-test/kernel/drivers/test.ko"
 recipe=$repo/build/diagnostic-initramfs.sh
 "$recipe" "$work/aarch64-static" "$work/first.gz" "$work/modules"
 touch -d @123456789 "$work/aarch64-static" "$work/modules/6.6-test/kernel/drivers/test.ko"
-"$recipe" "$work/aarch64-static" "$work/second.gz" "$work/modules"
+(umask 077; "$recipe" "$work/aarch64-static" "$work/second.gz" "$work/modules")
 cmp "$work/first.gz" "$work/second.gz"
 "$recipe" "$work/aarch64-static" "$work/no-modules.gz"
 for bad in x86-static aarch64-dynamic; do
@@ -89,7 +90,13 @@ assert files['./init'][1] == (repo / 'configs/diagnostic-init').read_bytes()
 assert stat.S_ISREG(files['./init'][0]) and files['./init'][0] & 0o777 == 0o755
 assert files['./bin/sh'][1] == b'busybox'
 assert stat.S_ISLNK(files['./bin/sh'][0])
+assert stat.S_ISDIR(files['./sbin'][0])
+assert stat.S_ISLNK(files['./sbin/modprobe'][0])
+assert files['./sbin/modprobe'][1] == b'../bin/busybox'
+# The kernel helper resolves to the same authenticated static BusyBox binary.
+assert stat.S_ISREG(files['./bin/busybox'][0])
 assert files['./lib/modules/6.6-test/kernel/drivers/test.ko'][1] == b'module-fixture\n'
+assert stat.S_IMODE(files['./lib/modules/6.6-test/kernel/drivers/test.ko'][0]) == 0o664
 for name in ('dev', 'proc', 'sys', 'run', 'tmp'):
     assert stat.S_ISDIR(files['./' + name][0])
 assert not any(name.endswith('.ko') for name in unpack(work / 'no-modules.gz'))

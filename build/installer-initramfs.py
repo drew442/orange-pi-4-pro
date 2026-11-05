@@ -124,6 +124,8 @@ def build(runtime_directory, diagnostic_directory, busybox, output):
         INIT.add(entries, name, stat.S_IFDIR | mode, b'')
     INIT.add(entries, 'bin/busybox', stat.S_IFREG | 0o755, binary)
     INIT.add(entries, 'bin/sh', stat.S_IFLNK | 0o777, b'busybox')
+    # The pinned kernel invokes this absolute helper for newly created PHYs.
+    INIT.add(entries, 'sbin/modprobe', stat.S_IFLNK | 0o777, b'../bin/busybox')
     for name, (mode, value) in sorted(runtime.items()):
         INIT.add(entries, name, mode, value)
     tool_entries = TOOLS.entries(REPO)

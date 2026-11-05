@@ -5,9 +5,9 @@ This milestone provides a physical-console diagnostic RAM root for the Orange Pi
 enumerated NVMe and reported 12 GiB DRAM. It entered EL1; KVM was unavailable.
 The 2 GB figure is SD capacity. Firmware writes and recovery remain unproven.
 
-The [separate EL2 experiment](el2-diagnostic.md) provides the next candidate and
+The [separate EL2 experiment](el2-diagnostic.md) has now physically initialized KVM at EL2 and provides
 concrete reflash/readback/recovery commands for the already identified card.
-This page retains the original booted baseline and its artifact pins.
+This page retains the original booted baseline and its artifact pins. See [Ethernet diagnostics](ethernet-diagnostics.md) for the missing module-helper fix and current RAM-only test.
 
 ## Current verified artifact
 

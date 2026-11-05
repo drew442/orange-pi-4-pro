@@ -1,15 +1,15 @@
 # Explicit boot profiles for prepared host and installer images
 
 The original board boot reached Linux at EL1 and could not initialize KVM.
-The [separate EL2 diagnostic](el2-diagnostic.md) is the next physical test.
+The [separate EL2 diagnostic](el2-diagnostic.md) has physically entered EL2 on all eight CPUs with KVM VHE initialization; actual guest execution remains pending.
 Host/installer/NVMe packaging now accepts an **explicit** locked profile so
-preparation can retain that handoff after it is tested. Selecting a profile
+preparation can retain that handoff with the same pinned components. Selecting a profile
 never establishes hardware acceptance or authorizes a storage write.
 
 | Profile | Monitor service | Expected SPSR | Status |
 | --- | --- | --- | --- |
 | `baseline-el1` (default) | `0x8000ff04` | `0x3c5` | Original diagnostic booted; KVM unavailable |
-| `experimental-el2` | `0x8000ff40` | `0x3c9` | Compiled/inspected; physical boot and KVM untested |
+| `experimental-el2` | `0x8000ff40` | `0x3c9` | Physical EL2/VHE initialization observed; guest execution pending |
 
 The selector reads fixed repository evidence paths, not caller-supplied pin
 manifests. The experimental profile substitutes only the exact locked
