@@ -1,0 +1,164 @@
+{
+  "schema": 1,
+  "classification": "personalized roots and state; no hardware installation or SSH login",
+  "builder": "Ubuntu 22.04.5 amd64, build.drewnet.online",
+  "protected_snapshot": "/var/lib/a733-operator-work-20261105",
+  "root_files": {
+    "root-A.ext4": {
+      "bytes": 4294967296,
+      "sha256": "1f5eeeeaf2570262da052654743506445279747cc92f08e54e89aaaff2aeebf8"
+    },
+    "root-A.ext4.gz": {
+      "bytes": 143413586,
+      "sha256": "adc704a4098b481492c620c04a0c8461d5b7738df0bd4d5a653c62f7cbfd4256"
+    },
+    "root-B.ext4": {
+      "bytes": 4294967296,
+      "sha256": "4325eb4692432ee66d09dbd827a2fb49b1c1856426000ffdfc5081d6cdcac885"
+    },
+    "root-B.ext4.gz": {
+      "bytes": 143413606,
+      "sha256": "263c87d2c9e87e114c651cfa78a15a1027615a9f523a6fa25be569b2b82c8e76"
+    }
+  },
+  "state": {
+    "uuid": "64504c34-85b4-4035-9618-d86b298f8349",
+    "machine_id": "89aa499e5d4ab355ecc9031c102bd036",
+    "files": {
+      "provenance/builder-packages.lock.tsv": {
+        "bytes": 32519,
+        "sha256": "35c2faf42a936168098b1f54239825a3c42fc56c825fc0b2078bbd753425f48b"
+      },
+      "provenance/host-initramfs.py": {
+        "bytes": 12506,
+        "sha256": "96c19c387b04a9e753e6eb658ef1ba7373f0cd4d58a46d8ee90c8a1348f9481d"
+      },
+      "provenance/host-payload.py": {
+        "bytes": 20834,
+        "sha256": "3aa7aafdb5dcd037f047c5e606ead40a91616bf338ae30c055d3264401938a37"
+      },
+      "provenance/host-state.py": {
+        "bytes": 16156,
+        "sha256": "86ae81c43537b6770fb4a094ea85b21dfea9514b42d954291a631b72d15080b4"
+      },
+      "provenance/host-storage-tools.py": {
+        "bytes": 4985,
+        "sha256": "e8d54568a6f43552996021a6a0a3178769564238be34a8642fca9d304f8f9750"
+      },
+      "provenance/host-userspace-20261104.json": {
+        "bytes": 1118,
+        "sha256": "370ee0bdb625f4dd10943c2cefb9f0e85d4c70b9b9b279be81697108b1558353"
+      },
+      "provenance/host-userspace-package-hashes.lock.tsv": {
+        "bytes": 28638,
+        "sha256": "f2f613e79d9c1abc1689e19cfe81b624d9d2ac3beeb322fd5788980d919f7d86"
+      },
+      "provenance/host-userspace-packages.lock.tsv": {
+        "bytes": 6671,
+        "sha256": "f2abf03d0d6e7fd506560689093220514cbf1acc678f7560562026d6ca6564a6"
+      },
+      "provenance/host-userspace.sh": {
+        "bytes": 11084,
+        "sha256": "e62952afd5ba656599aabef745169d5b9cf4b05eba063b8fe7b8727c24acbf33"
+      },
+      "provenance/host_config.py": {
+        "bytes": 5090,
+        "sha256": "db661a276e46cfa924b51c159b6afec5eacfaef9d83291edc6a5269c50c4f29a"
+      },
+      "provenance/package_state.py": {
+        "bytes": 13113,
+        "sha256": "809630ebba9d927b6ad5034899a88a8a8fcf3401f94ff6f223f92f6fbfa9c6eb"
+      },
+      "provenance/root-selection.py": {
+        "bytes": 10350,
+        "sha256": "15b5a64630cd74793af946ea89b5b3f3bd580a07bf52baa9a893bdd71b82b6e2"
+      },
+      "staging-contents.json": {
+        "bytes": 269981,
+        "sha256": "1e01c73af127abc0cc1ff4ebc190a06b7872ce36054b5cb1dd8a61ab968ce95f"
+      },
+      "state.ext4": {
+        "bytes": 8589934592,
+        "sha256": "c6e465ebf203703f60370039720dc4f427a9776248d0a0a58d4c945897849139"
+      },
+      "state.ext4.gz": {
+        "bytes": 10008842,
+        "sha256": "a1e49b82e834a0699c27d213efdd9bbad210c040cf71dc29b358a8b7685755f3"
+      }
+    },
+    "management": {
+      "dhcp": true,
+      "hostname": "a733-host",
+      "management_cidr": "0.0.0.0/0",
+      "management_mac": "10:f4:ae:90:5e:57",
+      "schema": 1
+    },
+    "admin_public_key_fingerprints": [
+      "SHA256:WVU8wsBgfy5mGFNAZMdrvf+a3cTYo85B8llJlHIhUKA",
+      "SHA256:Dw9WPpqQ741skiDShdwAP3qXQtpgxgbUSlCp2hmod7k"
+    ],
+    "boot_selection": {
+      "KERNEL_RELEASE": "6.6.98-a733-diag",
+      "ROOT_MARKER_SHA256": "c029aed4ebc7270395c7939c1cfcf16ee8b8b9721f12fba6d9b143e7d447aed6",
+      "ROOT_UUID": "a7330000-0000-4000-8000-00000000000a",
+      "SCHEMA": "1",
+      "SLOT": "A"
+    }
+  },
+  "deployment_intent": {
+    "for_installation": true,
+    "administration_public_key_fingerprints": [
+      "SHA256:WVU8wsBgfy5mGFNAZMdrvf+a3cTYo85B8llJlHIhUKA",
+      "SHA256:Dw9WPpqQ741skiDShdwAP3qXQtpgxgbUSlCp2hmod7k"
+    ],
+    "management_mac": "10:f4:ae:90:5e:57",
+    "management_cidr": "0.0.0.0/0"
+  },
+  "validation": [
+    "independent root content/hash inspection passed",
+    "independent state filesystem/key readback and gzip expansion passed",
+    "NVMe assembler actual-state identity readback and real installation intent passed",
+    "755 privileged Jammy tests without skips, 4 image assembly tests and 5 shell regressions passed",
+    "independent Sol high review passed",
+    "matching personalized 256 MiB EL2 host bootstrap independent SD inspection passed"
+  ],
+  "hardware_acceptance": "pending actual SSH with each key, NVMe installation/boot, real KVM guest, SD and release gates",
+  "bootstrap": {
+    "manifest_sha256": "b208e52c69b269f8b76a8bf97bc57a61311fb9d0a5e4208d97add3038d347184",
+    "state_uuid": "64504c34-85b4-4035-9618-d86b298f8349",
+    "boot_profile": {
+      "name": "experimental-el2",
+      "target_service": "0x8000ff40",
+      "expected_spsr": "0x3c9",
+      "physical_acceptance_pending": true,
+      "evidence": {
+        "path": "docs/evidence/el2-diagnostic-20261104.json",
+        "bytes": 6582,
+        "sha256": "9c30d5d873fa8ad154b8068cdebfc7f40f6487ce6a79f76a52da4dd44ba1b5f8"
+      }
+    },
+    "files": {
+      "a733-host-sd.img": {
+        "bytes": 268435456,
+        "sha256": "284354c70ee948031f72572c3b074dfc58dc43603a311b53880a1bc391d35228"
+      },
+      "a733-host-sd.img.gz": {
+        "bytes": 17271989,
+        "sha256": "137b6a6faeae1648d612b1e0d22ee1d7904724a612a30336243f2361e4d0a266"
+      },
+      "uInitrd": {
+        "bytes": 4762445,
+        "sha256": "991304eb0cb1ad63ab6c3a67c2b4ea7ee85e6399b396ecd2846cf0a306ace487"
+      },
+      "assembly.log": {
+        "bytes": 4150,
+        "sha256": "c1623f37aebf3f95be7387bb6b1133fefaac90dd9d015ca051f09d07c8606259"
+      }
+    }
+  },
+  "remaining_preparation": [
+    "Reclaim verified disposable staging or expand builder storage: latest free 21,231,185,920 bytes below 22 GiB full-disk staging guard.",
+    "Refresh installer runtime/image with new multi-key writer before real full-disk deployment.",
+    "Assemble full disk using actual NVMe 256060514304 bytes and 512/512 sector geometry; retain user authorization for exact recorded serial."
+  ]
+}

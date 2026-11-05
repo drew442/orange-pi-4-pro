@@ -3,8 +3,9 @@
 The current state image is an 8 GiB journaled ext4 per-installation fixture. It
 has not been written to NVMe or booted. Its test MAC/CIDR and operator public
 key are unsuitable for deployment; the corresponding temporary private key was
-deleted. Supply the real board Ethernet identity and operator public key for an
-installation. Never clone prepared state across hosts.
+deleted. The [real operator inputs](evidence/operator-inputs-20261105.json) now supply
+the Ethernet identity, two keys and any-source SSH policy. Fresh installation
+artifacts remain required. Never clone prepared state across hosts.
 
 The recipe copies `/var` from authenticated userspace and seeds the state
 contract, management configuration, machine-id, filesystem UUID, and
@@ -36,6 +37,21 @@ data only; they do not themselves activate DHCP or SSH. Keep generated payloads
 on known fixed builder storage or transfer by authenticated networking/USB,
 never on SD or in RAM.
 
+## Multiple administration keys
+
+`ADMIN_PUBLIC_KEY` may contain up to 16 distinct plain Ed25519/RSA keys within
+16,384 bytes, one per line. Options, blank lines, duplicate keys, malformed wire
+fields and RSA keys below 2048 bits are rejected. Optional comments are stripped
+from canonical `authorized_keys`; order is preserved. State manifests record
+`admin_public_key_fingerprints` for the whole bundle. A one-key state also keeps
+the legacy singular fingerprint field; readers reject contradictory metadata.
+
+The operator supplied RSA3072 and Ed25519 keys; both are required for the real
+installation. SSH host identity remains a separately generated single Ed25519
+key, created on NVMe at first managed boot. No host private key is embedded in
+this state input. Management CIDR `0.0.0.0/0` intentionally allows any IPv4 source;
+password authentication remains disabled.
+
 ## Current evidence and limits
 
 Builder output is
@@ -60,3 +76,21 @@ activation/rollback, backup, health checks, KVM and all physical acceptance
 remain open. [Native loop checks](evidence/package-state-loop-20261104.json) and
 ARM ash fixture checks do not establish physical NVMe operation. Preserve SPI-to-NVMe preference and zero routine SD writes;
 explicit kernel/DTB/initramfs maintenance may update boot files.
+
+## Personalized preparation
+
+[Current build evidence](evidence/operator-build-20261105.json) records actual
+RSA3072/Ed25519 fingerprints, DHCP, MAC `10:f4:ae:90:5e:57` and any-source IPv4
+access. Fresh A/B roots and an 8 GiB state image were built on Jammy. Independent
+state readback confirms both canonical keys, private file/directory modes,
+management configuration, selected A root, unique machine/filesystem identity,
+empty host-key directory and matching gzip expansion. The NVMe assembler's
+actual state-identity and installation-intent checks also pass.
+
+Protected builder outputs are under
+`/var/lib/a733-operator-work-20261105/out/`, with names
+`host-payload-operator-20261105-01` and `host-state-operator-20261105-01`.
+This state UUID is `64504c34-85b4-4035-9618-d86b298f8349`; it is specific to this
+installation. These are component images, not whole-disk installation images.
+Do not flash them individually onto the namespace. Full-disk assembly, delivery,
+physical identity revalidation and actual SSH with both keys remain pending.

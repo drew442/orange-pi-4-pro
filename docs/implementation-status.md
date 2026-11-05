@@ -34,8 +34,9 @@ permanent helper fix and route/DNS/TLS checks remain pending.
 - Wired MAC `10:f4:ae:90:5e:57`, 1 Gbps/full, YT8531 vendor driver; one DHCP
   lease observed after cable reconnection. Prior Generic PHY fallback is fixed
   in RAM. Cold boot repeatability and network delivery remain unproven.
-  Administration public key, hostname and allowed administration CIDR requested;
-  use DHCP for the actual host configuration.
+  [Operator inputs](evidence/operator-inputs-20261105.json) now provide RSA3072
+  and Ed25519 keys and authorize any SSH source (`0.0.0.0/0`); use DHCP and
+  hostname `a733-host`. Public-key-only authentication remains required.
 
 ## Builds and host-only verification
 
@@ -56,8 +57,8 @@ permanent helper fix and route/DNS/TLS checks remain pending.
 - [Jammy builder](build-host-assessment.md): actual builds with two compilation
   jobs, GCC 11 kernel/Linaro 7.4.1 U-Boot; 4 GiB swap. Latest idle sample after
   [verified cache retention](build-cache-retention.md) and root refresh: about
-  22.83 GB free disk after the corrected preparation-image build; the most recent
-  memory sample showed 7.1 GiB available.
+  21.23 GB free disk after personalized roots/state/bootstrap creation; the most
+  recent memory sample showed 7.2 GiB available.
   This is below the 22 GiB full NVMe staging guard: reclaim only verified
   disposable staging or expand the filesystem before a full NVMe image build.
   Source/compiler-cache archives and prior published image bytes remain retained.
@@ -103,7 +104,7 @@ permanent helper fix and route/DNS/TLS checks remain pending.
   remain unbooted preparations; host state is a fixture. Actual historical images
   still verify, and new EL2 images refuse default baseline verification. A fresh
   committed-source checkout reproduced both images and installer initramfs bytes.
-- Jammy: 746 discovery cases without skips, four diagnostic assembly cases and
+- Jammy: 755 discovery cases without skips, four diagnostic assembly cases and
   all five shell regressions pass. Independent Sol high reviews cover boot,
   installation/selection and rollback changes. [Detailed implementation evidence](implementation-evidence.md)
   separates builds, software probes and physical results.
@@ -111,8 +112,14 @@ permanent helper fix and route/DNS/TLS checks remain pending.
 ## External integration blockers
 
 The new physical capture resolves EL2 entry and NVMe sector geometry. Repeatable cold-boot
-networking, payload delivery and actual KVM execution remain open. Administration public key and
-working management settings are still required for real installation state.
+networking, payload delivery and actual KVM execution remain open. Real keys
+and source policy are supplied. Multi-key state/runtime/installer support now
+passes independent review and [actual ARM SSH-policy checks](evidence/operator-management-arm-20261105.json).
+[Fresh roots and personalized state](evidence/operator-build-20261105.json) pass
+independent content/hash and ordered-key filesystem readback. A matching 256 MiB EL2
+bootstrap passes independent inspection; full NVMe assembly and physical deployment
+remain open. Refresh the preparation runtime/image with the new multi-key writer
+before deploying a personalized full-disk candidate.
 NVMe erase authorization for the recorded drive persists; no additional erase
 permission is being requested. SPI identity/geometry are directly observed as
 XM25QU128C, JEDEC `204118`, 16 MiB, erase 65,536 bytes, write 1 byte; verified
@@ -126,7 +133,7 @@ backup/recovery and SPI-specific programming authorization remain outstanding.
    byte-identical across two builds. Then prove a KVM-only guest, shutdown/restart
    and storage persistence on the actual installed host; `/dev/kvm` alone does
    not satisfy this gate.
-2. Resolve management addressing and administration key; produce actual-geometry
+2. Use the supplied keys, DHCP and any-source SSH policy to produce actual-geometry
    installation inputs and reviewed recovery artifacts. Validate real board
    boot/DHCP or static addressing/DNS/TLS, guarded NVMe write/readback and boot.
 3. Prove installed NVMe operation, SD policy, repeated boots/workload, interrupted

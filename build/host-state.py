@@ -66,6 +66,7 @@ COMMON = importlib.util.module_from_spec(common_spec)
 common_spec.loader.exec_module(COMMON)
 validate_config = COMMON.validate_config
 validate_public_key = COMMON.validate_public_key
+validate_public_keys = COMMON.validate_public_keys
 
 
 def validate_uuid(value):
@@ -226,7 +227,7 @@ def build(rootfs, config_path, public_key_path, output, boot_selection, state_uu
     config_data = bounded_input(config_path, 16384)
     key_data = bounded_input(public_key_path, 16384)
     config = validate_config(config_data)
-    public_key, fingerprint = validate_public_key(key_data)
+    public_key, fingerprints = validate_public_keys(key_data)
     selection_data = bounded_input(boot_selection, 4096)
     selection = SELECTION.parse(selection_data)
     state_uuid = validate_uuid(state_uuid or str(uuid.uuid4()))
@@ -294,7 +295,8 @@ def build(rootfs, config_path, public_key_path, output, boot_selection, state_uu
                     'boot_selection_input': {'bytes': len(selection_data), 'sha256': hashlib.sha256(selection_data).hexdigest()},
                     'operator_config': {'bytes': len(config_data), 'sha256': hashlib.sha256(config_data).hexdigest()},
                     'operator_public_key': {'bytes': len(key_data), 'sha256': hashlib.sha256(key_data).hexdigest()}},
-        'management': config, 'admin_public_key_fingerprint': fingerprint,
+        'management': config, 'admin_public_key_fingerprints': fingerprints,
+        **({'admin_public_key_fingerprint': fingerprints[0]} if len(fingerprints) == 1 else {}),
         'boot_selection': selection,
         'builder_packages': packages, 'staging_storage': storage, 'files': files,
         'cache_pruning': cache_pruning,

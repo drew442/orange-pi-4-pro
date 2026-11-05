@@ -50,7 +50,7 @@ spec=importlib.util.spec_from_file_location('management',path)
 M=importlib.util.module_from_spec(spec); spec.loader.exec_module(M)
 for name in ('/usr/sbin/ip','/sbin/blkid','/usr/bin/python3','/usr/bin/ssh-keygen','/usr/sbin/sshd'):
     assert pathlib.Path(name).is_file() and os.access(name,os.X_OK),name
-cfg={'schema':1,'hostname':'a733-arm-fixture','management_mac':'02:73:30:00:00:01','management_cidr':'192.0.2.0/24','dhcp':True}
+cfg={'schema':1,'hostname':'a733-arm-fixture','management_mac':'02:73:30:00:00:01','management_cidr':'0.0.0.0/0','dhcp':True}
 key=M.ensure_host_key(M.STATE/'identity/ssh')
 first=hashlib.sha256(key.read_bytes()).digest()
 assert key.stat().st_nlink==1
@@ -61,6 +61,17 @@ public_bytes=public.read_bytes(); public.unlink()
 M.ensure_host_key(M.STATE/'identity/ssh')
 assert public.read_bytes()==public_bytes and hashlib.sha256(key.read_bytes()).digest()==first
 _,fingerprint=M.CONFIG.validate_public_key(public_bytes)
+rsa=pathlib.Path('/run/a733-management/test-admin-rsa')
+subprocess.run(['/usr/bin/ssh-keygen','-q','-t','rsa','-b','3072','-N','','-f',str(rsa)],check=True,capture_output=True)
+rsa_public=rsa.with_name(rsa.name+'.pub')
+admin_bundle=rsa_public.read_bytes()+public_bytes
+canonical,admin_fingerprints=M.CONFIG.validate_public_keys(admin_bundle)
+assert len(admin_fingerprints)==2
+for path,expected in zip((rsa_public,public),admin_fingerprints):
+    actual=subprocess.run(['/usr/bin/ssh-keygen','-lf',str(path)],check=True,capture_output=True,text=True).stdout.split()[1]
+    assert actual==expected
+assert M.CONFIG.validate_public_keys(canonical)==(canonical,admin_fingerprints)
+rsa.unlink()  # Disposable test identity; never an installed host key.
 conf=pathlib.Path('/run/a733-management/sshd_config')
 conf.write_text(M.ssh_config('192.0.2.10',cfg)); conf.chmod(0o600)
 subprocess.run(['/usr/sbin/sshd','-t','-f',str(conf)],check=True,capture_output=True)
@@ -68,9 +79,11 @@ result=subprocess.run(['/usr/sbin/sshd','-T','-f',str(conf),'-C','user=root,addr
 values={}
 for line in result.stdout.splitlines():
     name,_,value=line.partition(' '); values.setdefault(name,[]).append(value)
-required={'addressfamily':'inet','listenaddress':'192.0.2.10:22','authenticationmethods':'publickey','passwordauthentication':'no','kbdinteractiveauthentication':'no','usepam':'yes','allowusers':'root@192.0.2.0/24','disableforwarding':'yes','authorizedkeysfile':'/root/.ssh/authorized_keys'}
+required={'addressfamily':'inet','listenaddress':'192.0.2.10:22','authenticationmethods':'publickey','passwordauthentication':'no','kbdinteractiveauthentication':'no','usepam':'yes','allowusers':'root@0.0.0.0/0','disableforwarding':'yes','authorizedkeysfile':'/root/.ssh/authorized_keys'}
 for name,value in required.items(): assert values.get(name)==[value],(name,values.get(name))
 assert values['permitrootlogin'][0] in ('without-password','prohibit-password')
+assert 'ssh-rsa' not in values['pubkeyacceptedalgorithms'][0].split(',')
+assert 'rsa-sha2-256' in values['pubkeyacceptedalgorithms'][0].split(',')
 # Account checks are distinct from an SSH authentication/session test.
 locked=[line.split(':')[1] for line in pathlib.Path('/etc/shadow').read_text().splitlines() if line.startswith('root:')][0]
 assert locked.startswith(('!','*'))
@@ -112,7 +125,7 @@ assert os.readlink('/etc/systemd/system/multi-user.target.wants/a733-management-
 assert hashlib.sha256(key.read_bytes()).digest()==first
 unit=subprocess.run(['/usr/bin/systemd-analyze','verify','/usr/lib/systemd/system/a733-management-ssh.service'],capture_output=True,text=True)
 assert unit.returncode==0,unit.stderr
-print(json.dumps({'key_generation_noreplace':'passed','private_key_single_link':True,'private_key_reused':True,'missing_public_key_recovered':True,'test_host_public_key_fingerprint':fingerprint,'sshd_syntax':'passed','sshd_effective_policy':required,'locked_root_pam_account_check':account_status,'password_locked_root_public_key_login':'not performed','prepare_guard_without_NVMe':'rejected before configuration writes','private_file_preparation':'passed; guard mocked only inside disposable chroot','unit_verify_returncode':unit.returncode,'unit_verify_diagnostics':unit.stderr.strip()},indent=2))
+print(json.dumps({'key_generation_noreplace':'passed','private_key_single_link':True,'private_key_reused':True,'missing_public_key_recovered':True,'test_host_public_key_fingerprint':fingerprint,'test_administration_public_key_fingerprints':admin_fingerprints,'sshd_syntax':'passed','sshd_effective_policy':required,'locked_root_pam_account_check':account_status,'password_locked_root_public_key_login':'not performed','prepare_guard_without_NVMe':'rejected before configuration writes','private_file_preparation':'passed; guard mocked only inside disposable chroot','unit_verify_returncode':unit.returncode,'unit_verify_diagnostics':unit.stderr.strip()},indent=2))
 '''
         (root / 'check.py').write_text(program)
         result = subprocess.run(['chroot', str(root), '/usr/bin/python3', '-I', '-B', '/check.py'],

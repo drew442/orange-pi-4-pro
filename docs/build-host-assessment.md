@@ -32,8 +32,8 @@ Package logs remain on the builder at `/tmp/orangepi-apt-update.log` and `/tmp/o
 [Verified cache retention](build-cache-retention.md) recovered working space
 without changing generated image bytes. Five complete guest working trees are
 retained as compared archives; all 41 sparsified images retain their manifest
-pins. After the two network diagnostic builds, the latest recorded free space is
-23.08 GB (21.50 GiB), below the 22 GiB full NVMe staging guard. Reclaim verified
+pins. After personalized roots/state/bootstrap preparation, the latest recorded free
+space is 21.23 GB (19.77 GiB), below the 22 GiB full NVMe staging guard. Reclaim verified
 disposable staging or expand storage before building a full NVMe image. Recheck before each build and keep the initial
 two-job compilation limit. Physical acceptance is independent of these checks.
 

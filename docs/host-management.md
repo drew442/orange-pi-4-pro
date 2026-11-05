@@ -8,11 +8,13 @@ validation as specified in the [plan](hypervisor-plan.md).
 
 ## Persistent inputs and activation
 
-[State creation](host-state.md) requires the operator's Ed25519 public key,
+[State creation](host-state.md) requires the operator's public-key bundle (Ed25519 and/or RSA),
 actual wired Ethernet MAC, hostname and canonical IPv4 administration client
 CIDR. DHCP is required. The committed fixture uses documentation-only network
 values and a test public key whose private key was deleted; it cannot provide
-operator access. No real administration key has been supplied yet.
+operator access. The operator has now supplied RSA3072 and Ed25519 keys and authorized any
+IPv4 source (`0.0.0.0/0`); [input fingerprints](evidence/operator-inputs-20261105.json)
+record the real settings. Existing historical fixtures remain unsuitable for deployment.
 
 Before handing control to systemd, the bootstrap runs the management helper
 with isolated Python imports and bytecode writes disabled. It checks selected
@@ -33,8 +35,8 @@ still untested.
 
 The custom service waits for exactly one usable IPv4 address and launches SSH
 bound to that address. It stops/restarts the child on address changes and fails
-on ambiguity. SSH permits public-key root access only from the configured client
-CIDR; password/keyboard-interactive authentication and forwarding are disabled.
+on ambiguity. SSH permits public-key root access from the configured client CIDR (including
+explicit `0.0.0.0/0` for any IPv4 source); password/keyboard-interactive authentication and forwarding are disabled.
 The helper rechecks runtime provenance before starting service work.
 
 Host private keys are generated only in selected NVMe state, never embedded in
@@ -96,3 +98,21 @@ Policy follows the pinned [OpenSSH 9.2 portable configuration manual](https://ra
 [systemd 252 network configuration](https://www.freedesktop.org/software/systemd/man/252/systemd.network.html)
 and [journald limits](https://www.freedesktop.org/software/systemd/man/252/journald.conf.html).
 The PAM probe uses the [Linux-PAM 1.5.2 interface constants](https://raw.githubusercontent.com/linux-pam/linux-pam/v1.5.2/libpam/include/security/_pam_types.h).
+
+## Real operator inputs
+
+The supplied keys are `drew@BoganEdition` (RSA3072) and `drew@codex` (Ed25519).
+Both will be installed into the same root `authorized_keys`, with canonical
+key bytes and an ordered fingerprint list authenticated through state-image
+readback and installation intent. Raw public-key inputs remain in ignored
+per-installation storage; no private operator key is required by the builder.
+The default hostname is `a733-host`, MAC is `10:f4:ae:90:5e:57`, and addressing
+uses DHCP. The requested unrestricted source policy is IPv4 `0.0.0.0/0` because
+the management listener currently uses IPv4 only. Password login and forwarding
+remain disabled. RSA keys use the supported RSA SHA-2 signature algorithms;
+the configuration does not enable the legacy `ssh-rsa` SHA-1 signature algorithm.
+
+Changing these validation sources requires fresh roots, state and installation
+artifacts. Earlier single-key fixtures and the currently published preparation
+image do not become personalized simply because the inputs have been recorded.
+Actual SSH authentication with both keys remains a board acceptance check.

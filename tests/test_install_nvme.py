@@ -130,10 +130,30 @@ class PolicyTests(unittest.TestCase):
             result = subprocess.run(['python3', '-I', '-B', script, 'apply', flag], capture_output=True, text=True)
             self.assertNotEqual(result.returncode, 0)
 
+    def test_multiple_administrators_and_any_ipv4_source(self):
+        value = manifest()
+        intent = value['deployment_intent']
+        first = intent.pop('administration_public_key_fingerprint')
+        intent['administration_public_key_fingerprints'] = [first, 'SHA256:' + 'B' * 43]
+        intent['management_cidr'] = '0.0.0.0/0'
+        INSTALL.validate_manifest(value)
+        for keys in ([], [first, first], 'wrong', None, [first, 1], [first] * 17,
+                     [first, 'SHA256:zJDXpqimTuhgMi8BhG83V7SeYsDurn/2Dmt9g/R3Fzc']):
+            intent['administration_public_key_fingerprints'] = keys
+            with self.subTest(keys=keys), self.assertRaises(ValueError):
+                INSTALL.validate_manifest(value)
+        intent['administration_public_key_fingerprints'] = [first, 'SHA256:' + 'B' * 43]
+        intent['administration_public_key_fingerprint'] = first
+        with self.assertRaises(ValueError):
+            INSTALL.validate_manifest(value)
+        intent['administration_public_key_fingerprints'] = [first]
+        INSTALL.validate_manifest(value)
+
     def test_fixture_and_incompatible_manifest_refused(self):
         for field, value in (('for_installation', False), ('for_installation', 1),
                              ('management_mac', '02:73:30:00:00:01'),
                              ('management_cidr', '192.0.2.0/24'),
+                             ('management_cidr', '192.0.0.0/16'),
                              ('administration_public_key_fingerprint', 'SHA256:zJDXpqimTuhgMi8BhG83V7SeYsDurn/2Dmt9g/R3Fzc')):
             changed = manifest()
             changed['deployment_intent'][field] = value

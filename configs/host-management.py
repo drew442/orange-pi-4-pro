@@ -218,7 +218,7 @@ def runtime_guard():
     secure_path(STATE / 'identity/ssh', 0o700, True)
     secure_path('/root', 0o700, True)
     secure_path('/root/.ssh', 0o700, True)
-    CONFIG.validate_public_key(read_secure('/root/.ssh/authorized_keys', 16384, 0o600))
+    CONFIG.validate_public_keys(read_secure('/root/.ssh/authorized_keys', 16384, 0o600))
     return CONFIG.validate_config(read_secure(STATE / 'config/management.json', 16384, 0o600))
 
 
@@ -355,6 +355,7 @@ def ensure_host_key(directory):
     derived = subprocess.run(['/usr/bin/ssh-keygen', '-y', '-f', str(private)],
                              check=True, capture_output=True, timeout=10).stdout
     public, _ = CONFIG.validate_public_key(derived)
+    require(public.startswith(b'ssh-ed25519 '), 'host identity must be Ed25519')
     pubpath = private.with_name(private.name + '.pub')
     if os.path.lexists(pubpath):
         actual, _ = CONFIG.validate_public_key(read_secure(pubpath, 16384))

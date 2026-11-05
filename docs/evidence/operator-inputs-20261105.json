@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "classification": "operator-authorized real installation inputs; images and physical installation pending",
+  "received_utc_date": "2026-11-05",
+  "management": {
+    "schema": 1,
+    "hostname": "a733-host",
+    "management_mac": "10:f4:ae:90:5e:57",
+    "management_cidr": "0.0.0.0/0",
+    "dhcp": true
+  },
+  "hostname_note": "Coordinator default a733-host; no operator hostname supplied.",
+  "ssh_policy": "Both supplied keys authorized; any IPv4 source, public-key authentication only; host SSH currently IPv4-only.",
+  "keys": [
+    {
+      "type": "ssh-rsa",
+      "bits": 3072,
+      "comment": "drew@BoganEdition",
+      "fingerprint": "SHA256:WVU8wsBgfy5mGFNAZMdrvf+a3cTYo85B8llJlHIhUKA"
+    },
+    {
+      "type": "ssh-ed25519",
+      "bits": 256,
+      "comment": "drew@codex",
+      "fingerprint": "SHA256:Dw9WPpqQ741skiDShdwAP3qXQtpgxgbUSlCp2hmod7k"
+    }
+  ],
+  "input_records": {
+    "admin.pub": {
+      "bytes": 663,
+      "sha256": "ded86d3be3f910e5b33d7938d21245a149e2b19dc517f0ac4f582b5b0c52f68b"
+    },
+    "management.json": {
+      "bytes": 136,
+      "sha256": "382ccdfb6273614a23f99034dd269740166c2786d65a001ec51deecbe4683491"
+    }
+  },
+  "private_input_location": "Ignored tmp/operator-installation/ and builder /home/drew/orange-pi-4-pro-build/operator-inputs-20261105/; public key text is kept out of Git.",
+  "nvme": {
+    "model": "SPCC M.2 PCIe SSD",
+    "serial": "134807190FC700149277",
+    "bytes": 256060514304,
+    "logical_sector_bytes": 512,
+    "physical_sector_bytes": 512,
+    "erase_authorized": true
+  },
+  "storage_actions": "No NVMe/SPI writes; exact live disk identity must still match before installation."
+}

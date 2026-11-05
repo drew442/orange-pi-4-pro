@@ -84,3 +84,15 @@ to create fresh matched state/bootstrap/NVMe artifacts after the
 [EL2 diagnostic result](el2-diagnostic.md). Physical KVM, installation, SD policy,
 repeated boots, workload, update/rollback/recovery and deployment reproduction
 remain mandatory [release gates](hardware-validation.md).
+
+## Personalized management refresh
+
+[New preparation evidence](evidence/operator-build-20261105.json) supersedes the
+historical root artifacts above for the real installation. Fresh A/B roots at
+`/var/lib/a733-operator-work-20261105/out/host-payload-operator-20261105-01`
+include the multi-key management validator and installer support. Independent
+root contents, modes, full raw hashes and compressed expansion pass. Actual ARM
+[management-policy checks](evidence/operator-management-arm-20261105.json) pass;
+installed-host boot and SSH login remain untested. The separately built
+[personalized state](host-state.md#personalized-preparation) holds both real keys;
+keys are not embedded into the immutable roots.

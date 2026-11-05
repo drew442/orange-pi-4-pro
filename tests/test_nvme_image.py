@@ -34,10 +34,36 @@ class NVMeImageTests(unittest.TestCase):
         candidate['management']['management_cidr'] = '192.168.50.0/24'
         candidate['admin_public_key_fingerprint'] = 'SHA256:' + 'A' * 43
         self.assertTrue(IMAGE.installation_intent(candidate, True)['for_installation'])
-        for cidr in ('192.0.2.0/24', '198.51.100.0/24', '203.0.113.0/24', '127.0.0.0/8', '224.0.0.0/3'):
+        for cidr in ('192.0.0.0/16', '192.0.2.0/24', '198.51.100.0/24', '203.0.113.0/24', '127.0.0.0/8', '224.0.0.0/3'):
             candidate['management']['management_cidr'] = cidr
             with self.subTest(cidr=cidr), self.assertRaises(ValueError):
                 IMAGE.installation_intent(candidate, True)
+
+    def test_plural_manifest_compatibility_crosschecks_and_fixture_rejection(self):
+        candidate = copy.deepcopy(self.state)
+        legacy = candidate['admin_public_key_fingerprint']
+        self.assertEqual(IMAGE.admin_fingerprints(candidate), [legacy])
+        candidate['admin_public_key_fingerprints'] = [legacy]
+        self.assertEqual(IMAGE.admin_fingerprints(candidate), [legacy])
+        candidate['management']['management_mac'] = '02:00:00:73:33:12'
+        candidate['management']['management_cidr'] = '0.0.0.0/0'
+        candidate.pop('admin_public_key_fingerprint')
+        first, second = 'SHA256:' + 'A' * 43, 'SHA256:' + 'B' * 43
+        candidate['admin_public_key_fingerprints'] = [first, second]
+        intent = IMAGE.installation_intent(candidate, True)
+        self.assertEqual(intent['administration_public_key_fingerprints'], [first, second])
+        self.assertNotIn('administration_public_key_fingerprint', intent)
+        for values in ([], None, 'invalid', [first, first], [first, 1], [first] * 17):
+            candidate['admin_public_key_fingerprints'] = values
+            with self.subTest(values=values), self.assertRaises(ValueError):
+                IMAGE.admin_fingerprints(candidate)
+        candidate['admin_public_key_fingerprints'] = [first, legacy]
+        with self.assertRaisesRegex(ValueError, 'fixture'):
+            IMAGE.installation_intent(candidate, True)
+        candidate['admin_public_key_fingerprints'] = [first, second]
+        candidate['admin_public_key_fingerprint'] = first
+        with self.assertRaisesRegex(ValueError, 'legacy'):
+            IMAGE.admin_fingerprints(candidate)
 
     def test_candidate_eligibility_matches_writer(self):
         spec = importlib.util.spec_from_file_location('image_writer_policy', REPO / 'scripts/install-nvme.py')
@@ -86,6 +112,31 @@ class NVMeImageTests(unittest.TestCase):
         with patch.object(IMAGE, 'debugfs', side_effect=lambda image, name: responses[name]):
             with self.assertRaises(ValueError):
                 IMAGE.validate_state_identity(Path('fixture'), wrong)
+
+    def test_multikey_state_readback_detects_missing_extra_and_reordered_keys(self):
+        import base64
+        import struct
+        def key(number):
+            return b'ssh-ed25519 ' + base64.b64encode(struct.pack('>I', 11) + b'ssh-ed25519' +
+                    struct.pack('>I', 32) + bytes([number]) * 32) + b'\n'
+        first, second, extra = key(1), key(2), key(3)
+        state = copy.deepcopy(self.state)
+        state.pop('admin_public_key_fingerprint')
+        state['admin_public_key_fingerprints'] = IMAGE.STATE.validate_public_keys(first + second)[1]
+        responses = {'cat /config/management.json': json.dumps(state['management']).encode(),
+                     'cat /root/.ssh/authorized_keys': first + second,
+                     'cat /identity/machine-id': (state['machine_id'] + '\n').encode(),
+                     'ls -p /identity/ssh': b'/2/040700/0/0/./4096/\n/1/040700/0/0/../4096/\n',
+                     'stat /identity/ssh': b'Type: directory Mode: 0700\nUser: 0 Group: 0\n'}
+        for path in ('/config/management.json', '/root/.ssh/authorized_keys', '/identity/machine-id'):
+            responses['stat ' + path] = b'Type: regular Mode: 0600\nUser: 0 Group: 0\n'
+        with patch.object(IMAGE, 'debugfs', side_effect=lambda image, command: responses[command]):
+            IMAGE.validate_state_identity(Path('fixture'), state)
+            for data in (first, second + first, first + second + extra, first + first,
+                         first.rstrip(b'\n') + b' comment\n' + second):
+                responses['cat /root/.ssh/authorized_keys'] = data
+                with self.subTest(data=data[:70]), self.assertRaises(ValueError):
+                    IMAGE.validate_state_identity(Path('fixture'), state)
 
     def test_state_readback_cannot_substitute_declared_identity(self):
         from unittest.mock import patch

@@ -36,7 +36,7 @@ class Validators(unittest.TestCase):
                      ('management_mac', '01:11:22:33:44:55'),
                      ('management_mac', '00:00:00:00:00:00'),
                      ('management_mac', '02:AA:22:33:44:55'),
-                     ('management_cidr', '192.0.2.1/24'), ('management_cidr', '0.0.0.0/0'),
+                     ('management_cidr', '192.0.2.1/24'),
                      ('management_cidr', '::/64'), ('management_cidr', '192.0.2.0/255.255.255.0')]
         for field, value in mutations:
             with self.subTest(field=field, value=value), self.assertRaises(ValueError):
@@ -56,6 +56,13 @@ class Validators(unittest.TestCase):
                     KEY.replace(b'ssh-ed25519', b'ssh-ed25519\0')):
             with self.subTest(key=key), self.assertRaises(ValueError):
                 STATE.validate_public_key(key)
+
+    def test_state_bundle_interface_preserves_multiple_keys(self):
+        other = b'ssh-ed25519 ' + base64.b64encode(BLOB[:-1] + b'z') + b'\n'
+        canonical, fingerprints = STATE.validate_public_keys(KEY + other)
+        self.assertEqual(len(fingerprints), 2)
+        self.assertEqual(canonical, STATE.validate_public_key(KEY)[0] + other)
+        self.assertEqual(STATE.validate_config(json.dumps({**CONFIG, 'management_cidr': '0.0.0.0/0'}))['management_cidr'], '0.0.0.0/0')
 
     def test_uuid(self):
         value = str(uuid.uuid4())

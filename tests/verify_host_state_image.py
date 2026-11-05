@@ -18,6 +18,53 @@ import sys
 import uuid
 
 
+def administration_fingerprints(data):
+    # Independent RFC4253 readback parser: do not trust the build's key parser.
+    if not data or len(data) > 16384 or not data.endswith(b'\n'):
+        raise ValueError('unexpected authorized keys size or terminator')
+    lines = data[:-1].split(b'\n')
+    if not 1 <= len(lines) <= 16:
+        raise ValueError('unexpected authorized keys count')
+    fingerprints = []
+    for line in lines:
+        fields = line.split(b' ')
+        if len(fields) != 2 or fields[0] not in (b'ssh-ed25519', b'ssh-rsa'):
+            raise ValueError('unexpected authorized keys format')
+        blob = base64.b64decode(fields[1], validate=True)
+        if base64.b64encode(blob) != fields[1]:
+            raise ValueError('noncanonical public key encoding')
+        parts = []
+        remaining = blob
+        while remaining:
+            if len(remaining) < 4:
+                raise ValueError('truncated key field header')
+            size = int.from_bytes(remaining[:4], 'big')
+            if size > len(remaining) - 4:
+                raise ValueError('truncated key field')
+            parts.append(remaining[4:4+size])
+            remaining = remaining[4+size:]
+        if not parts or parts[0] != fields[0]:
+            raise ValueError('public key algorithm mismatch')
+        if fields[0] == b'ssh-ed25519':
+            if len(parts) != 2 or len(parts[1]) != 32:
+                raise ValueError('unexpected Ed25519 key')
+        else:
+            if len(parts) != 3:
+                raise ValueError('unexpected RSA key')
+            for value in parts[1:]:
+                if (not value or value[0] >= 128 or
+                        (value[0] == 0 and (len(value) < 2 or value[1] < 128))):
+                    raise ValueError('noncanonical RSA mpint')
+            exponent, modulus = (int.from_bytes(value, 'big') for value in parts[1:])
+            if (not 2048 <= modulus.bit_length() <= 16384 or not modulus % 2 or
+                    not 3 <= exponent <= 0xffffffff or not exponent % 2 or exponent >= modulus):
+                raise ValueError('unexpected RSA parameters')
+        fingerprints.append('SHA256:' + base64.b64encode(hashlib.sha256(blob).digest()).decode().rstrip('='))
+    if len(fingerprints) != len(set(fingerprints)):
+        raise ValueError('duplicate administrator key')
+    return fingerprints
+
+
 def digest(descriptor):
     value = hashlib.sha256()
     offset = 0
@@ -104,15 +151,11 @@ def verify(image, manifest_path):
         if selection != expected_selection or len(manifest['boot_selection']) != 5:
             raise ValueError('boot selection differs from manifest')
         key = debugfs('cat /root/.ssh/authorized_keys')
-        fields = key.decode('ascii').split()
-        if len(fields) != 2 or fields[0] != 'ssh-ed25519' or not key.endswith(b'\n'):
-            raise ValueError('unexpected authorized key format')
-        blob = base64.b64decode(fields[1], validate=True)
-        if len(blob) != 51 or blob[:19] != struct.pack('>I', 11) + b'ssh-ed25519' + struct.pack('>I', 32):
-            raise ValueError('unexpected Ed25519 public key blob')
-        fingerprint = 'SHA256:' + base64.b64encode(hashlib.sha256(blob).digest()).decode().rstrip('=')
-        if fingerprint != manifest['admin_public_key_fingerprint']:
-            raise ValueError('operator public key differs from build')
+        fingerprints = administration_fingerprints(key)
+        expected = manifest.get('admin_public_key_fingerprints', [manifest.get('admin_public_key_fingerprint')])
+        if (fingerprints != expected or ('admin_public_key_fingerprint' in manifest and
+                fingerprints != [manifest['admin_public_key_fingerprint']])):
+            raise ValueError('operator public keys differ from build')
         listing = debugfs('ls -p /identity/ssh').decode()
         names = []
         for line in listing.splitlines():
@@ -156,7 +199,8 @@ def verify(image, manifest_path):
                 'journal': True, 'filesystem_read_only_feature': False,
                 'filesystem_metadata': 'checked root/lost+found and identity/config/key directories/files',
                 'management_config_matches': True, 'boot_selection_matches': True,
-                'operator_public_key_fingerprint': fingerprint,
+                'operator_public_key_fingerprints': fingerprints,
+                **({'operator_public_key_fingerprint': fingerprints[0]} if len(fingerprints) == 1 else {}),
                 'host_key_directory_empty': True, 'package_database_matches_staging': True,
                 'compressed_hash_and_expansion_match': True, 'image_unchanged': True}
     finally:

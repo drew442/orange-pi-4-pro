@@ -32,7 +32,7 @@ class ValidationTests(unittest.TestCase):
     def test_strict_configuration(self):
         self.assertEqual(M.CONFIG.validate_config(json.dumps(CONFIG)), CONFIG)
         for field, value in [('hostname', 'x\nListenAddress 0.0.0.0'), ('management_mac', 'ff:ff:ff:ff:ff:ff'),
-                             ('management_cidr', '0.0.0.0/0'), ('management_cidr', '192.0.2.1/24'),
+                             ('management_cidr', '192.0.2.1/24'),
                              ('schema', True), ('dhcp', 1)]:
             with self.subTest(field=field, value=value), self.assertRaises(ValueError):
                 M.CONFIG.validate_config(json.dumps({**CONFIG, field: value}))
@@ -125,6 +125,95 @@ class ValidationTests(unittest.TestCase):
                 M.runtime_guard()
             opened.assert_not_called()
             command.assert_not_called()
+
+
+class AdministrationBundleTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.temporary = tempfile.TemporaryDirectory()
+        cls.keys = []
+        cls.fingerprints = []
+        for algorithm in ('rsa', 'ed25519'):
+            path = Path(cls.temporary.name) / algorithm
+            args = ['ssh-keygen', '-q', '-t', algorithm, '-N', '', '-f', str(path)]
+            if algorithm == 'rsa':
+                args.extend(['-b', '3072'])
+            subprocess.run(args, check=True, capture_output=True)
+            cls.keys.append(path.with_suffix('.pub').read_bytes())
+            result = subprocess.run(['ssh-keygen', '-lf', str(path.with_suffix('.pub'))],
+                                    check=True, capture_output=True, text=True)
+            cls.fingerprints.append(result.stdout.split()[1])
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.temporary.cleanup()
+
+    def test_real_rsa3072_ed25519_ordered_bundle(self):
+        canonical, fingerprints = M.CONFIG.validate_public_keys(b''.join(self.keys))
+        self.assertEqual(fingerprints, self.fingerprints)
+        self.assertEqual(canonical, b''.join(M.CONFIG.validate_public_key(key)[0] for key in self.keys))
+        spec = importlib.util.spec_from_file_location('independent_state_verifier',
+            Path(__file__).with_name('verify_host_state_image.py'))
+        verifier = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(verifier)
+        self.assertEqual(verifier.administration_fingerprints(canonical), fingerprints)
+        for invalid in (canonical + canonical, canonical.replace(b'\n', b' comment\n', 1),
+                        canonical.rstrip(b'\n')):
+            with self.assertRaises(ValueError):
+                verifier.administration_fingerprints(invalid)
+        self.assertEqual(M.CONFIG.validate_public_keys(canonical), (canonical, fingerprints))
+        with self.assertRaises(ValueError):
+            M.CONFIG.validate_public_key(canonical)
+
+    def test_bundle_rejects_duplicates_blanks_options_controls_and_bounds(self):
+        for data in (b'', b'\n', PUBLIC + b'\n', PUBLIC + PUBLIC,
+                     b'command="id" ' + PUBLIC, PUBLIC.replace(b'\n', b'\tcomment\n'),
+                     PUBLIC + b'\x7f', b'x' * 16385,
+                     b''.join(b'ssh-ed25519 ' + base64.b64encode(BLOB[:-1] + bytes([i])) + b'\n'
+                              for i in range(17))):
+            with self.subTest(data=data[:80]), self.assertRaises(ValueError):
+                M.CONFIG.validate_public_keys(data)
+        keys = b''.join(b'ssh-ed25519 ' + base64.b64encode(BLOB[:-1] + bytes([i])) + b'\n'
+                        for i in range(16))
+        self.assertEqual(len(M.CONFIG.validate_public_keys(keys)[1]), 16)
+
+    def test_rsa_wire_format_and_mpint_rejections(self):
+        def field(value):
+            return struct.pack('>I', len(value)) + value
+        def key(exponent, modulus, suffix=b''):
+            blob = field(b'ssh-rsa') + field(exponent) + field(modulus) + suffix
+            return b'ssh-rsa ' + base64.b64encode(blob) + b'\n'
+        modulus = b'\x00\x80' + b'\x01' * 255
+        self.assertEqual(M.CONFIG.validate_public_key(key(b'\x01\x00\x01', modulus))[0],
+                         key(b'\x01\x00\x01', modulus))
+        for exponent, number, suffix in ((b'', modulus, b''), (b'\x00\x03', modulus, b''),
+                (b'\x80', modulus, b''), (b'\x02', modulus, b''), (b'\x01', modulus, b''),
+                (b'\x01' * 5, modulus, b''), (b'\x03', b'\x80' + b'\x01' * 255, b''),
+                (b'\x03', b'\x00' + modulus, b''), (b'\x03', b'\x7f' * 256, b''),
+                (b'\x03', modulus[:-1] + b'\x02', b''), (b'\x03', modulus, b'x'),
+                (b'\x03', b'\x00\x80' + b'\x01' * 2048, b'')):
+            with self.subTest(exponent=exponent, number_bits=len(number)), self.assertRaises(ValueError):
+                M.CONFIG.validate_public_key(key(exponent, number, suffix))
+        with self.assertRaises(ValueError):
+            M.CONFIG.validate_public_key(b'ssh-rsa AAAAB3NzaC1yc2EAAAAD')
+
+    def test_any_ipv4_source_preserves_bound_listener_and_modern_algorithms(self):
+        config = {**CONFIG, 'management_cidr': '0.0.0.0/0'}
+        self.assertEqual(M.CONFIG.validate_config(json.dumps(config)), config)
+        rendered = M.ssh_config('192.0.2.20', config)
+        self.assertIn('AllowUsers root@0.0.0.0/0\n', rendered)
+        self.assertIn('ListenAddress 192.0.2.20\n', rendered)
+        self.assertIn('AddressFamily inet\n', rendered)
+        self.assertNotIn('ssh-rsa', rendered)
+
+    def test_host_identity_rejects_valid_rsa(self):
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / M.KEY_NAME
+            path.write_bytes(b'fixture-private')
+            with patch.object(M, 'secure_path'), patch.object(M, 'read_secure', return_value=b'fixture-private'), \
+                    patch.object(M.subprocess, 'run', return_value=Mock(stdout=self.keys[0])):
+                with self.assertRaisesRegex(ValueError, 'Ed25519'):
+                    M.ensure_host_key(Path(temp))
 
 
 class AddressTests(unittest.TestCase):

@@ -103,21 +103,27 @@ def validate_manifest(value):
     intent = value.get('deployment_intent')
     require(isinstance(intent, dict) and intent.get('for_installation') is True,
             'artifact is a fixture, not intended for installation')
-    mac, cidr, key = (intent.get(name) for name in
-                      ('management_mac', 'management_cidr', 'administration_public_key_fingerprint'))
+    mac, cidr = (intent.get(name) for name in ('management_mac', 'management_cidr'))
+    legacy = intent.get('administration_public_key_fingerprint')
+    keys = intent.get('administration_public_key_fingerprints', [legacy])
+    require(isinstance(keys, list) and 1 <= len(keys) <= 16, 'invalid administration fingerprints')
+    require('administration_public_key_fingerprint' not in intent or keys == [legacy],
+            'legacy and plural administration fingerprints differ')
     require(isinstance(mac, str) and re.fullmatch(r'(?:[0-9a-f]{2}:){5}[0-9a-f]{2}', mac)
             and not int(mac[:2], 16) & 1 and mac != '00:00:00:00:00:00'
             and mac not in ('02:73:30:00:00:01', '02:11:22:33:44:55'), 'invalid or fixture management MAC')
     require(isinstance(cidr, str), 'management CIDR required')
     network = ipaddress.IPv4Network(cidr, strict=True)
-    require(str(network) == cidr and network.prefixlen > 0
-            and not any(network.overlaps(ipaddress.IPv4Network(n)) for n in
-                        ('192.0.2.0/24', '198.51.100.0/24', '203.0.113.0/24', '127.0.0.0/8', '224.0.0.0/3')),
+    require(str(network) == cidr
+            and (cidr == '0.0.0.0/0' or not any(network.overlaps(ipaddress.IPv4Network(n)) for n in
+                        ('192.0.2.0/24', '198.51.100.0/24', '203.0.113.0/24', '127.0.0.0/8', '224.0.0.0/3'))),
             'invalid or fixture management CIDR')
-    require(isinstance(key, str) and re.fullmatch(r'SHA256:[A-Za-z0-9+/]{43}', key)
-            and key != 'SHA256:zJDXpqimTuhgMi8BhG83V7SeYsDurn/2Dmt9g/R3Fzc',
-            'invalid or fixture administration fingerprint')
-    require(len(base64.b64decode(key[7:] + '=', validate=True)) == 32, 'invalid fingerprint')
+    for key in keys:
+        require(isinstance(key, str) and re.fullmatch(r'SHA256:[A-Za-z0-9+/]{43}', key)
+                and key != 'SHA256:zJDXpqimTuhgMi8BhG83V7SeYsDurn/2Dmt9g/R3Fzc',
+                'invalid or fixture administration fingerprint')
+        require(len(base64.b64decode(key[7:] + '=', validate=True)) == 32, 'invalid fingerprint')
+    require(len(set(keys)) == len(keys), 'duplicate administration fingerprints')
     return record
 
 

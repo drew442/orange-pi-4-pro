@@ -33,30 +33,82 @@ def validate_config(data):
     if not isinstance(cidr, str):
         raise ValueError('management_cidr must be canonical IPv4 CIDR')
     network = ipaddress.IPv4Network(cidr, strict=True)
-    if str(network) != cidr or network.prefixlen == 0:
-        raise ValueError('management_cidr must be canonical IPv4 CIDR with prefix 1..32')
+    if str(network) != cidr:
+        raise ValueError('management_cidr must be canonical IPv4 CIDR with prefix 0..32')
     return value
 
 
+MAX_PUBLIC_KEYS = 16
+MAX_PUBLIC_KEYS_BYTES = 16384
+
+
 def validate_public_key(data):
+    """Parse exactly one plain key, stripping only its optional ASCII comment."""
+    if len(data) > MAX_PUBLIC_KEYS_BYTES:
+        raise ValueError('public key exceeds byte bound')
     try:
         text = data.decode('ascii')
     except UnicodeDecodeError as error:
         raise ValueError('public key must be ASCII') from error
-    if '\r' in text or '\x00' in text or len(text.splitlines()) != 1:
-        raise ValueError('public key must be one line')
-    fields = text.strip().split()
-    if len(fields) < 2 or fields[0] != 'ssh-ed25519':
-        raise ValueError('a plain ssh-ed25519 public key without options is required')
+    line = text[:-1] if text.endswith('\n') else text
+    if not line or any(ord(char) < 32 or ord(char) == 127 for char in line):
+        raise ValueError('public key must be one line without controls')
+    fields = line.split()
+    if len(fields) < 2 or fields[0] not in ('ssh-ed25519', 'ssh-rsa'):
+        raise ValueError('a plain ssh-ed25519 or ssh-rsa public key without options is required')
     try:
         blob = base64.b64decode(fields[1], validate=True)
     except ValueError as error:
         raise ValueError('invalid public key base64') from error
-    algorithm = b'ssh-ed25519'
-    expected = struct.pack('>I', len(algorithm)) + algorithm + struct.pack('>I', 32)
-    if (len(blob) != len(expected) + 32 or not blob.startswith(expected)
-            or base64.b64encode(blob).decode() != fields[1]):
-        raise ValueError('invalid RFC4253 ed25519 public key')
-    canonical = f'ssh-ed25519 {fields[1]}\n'.encode()
+    if base64.b64encode(blob).decode() != fields[1]:
+        raise ValueError('noncanonical public key base64')
+    offset = 0
+    def field():
+        nonlocal offset
+        if offset + 4 > len(blob):
+            raise ValueError('truncated RFC4253 field')
+        size = struct.unpack_from('>I', blob, offset)[0]
+        offset += 4
+        if size > len(blob) - offset:
+            raise ValueError('truncated RFC4253 field')
+        value = blob[offset:offset + size]
+        offset += size
+        return value
+    if field() != fields[0].encode():
+        raise ValueError('public key algorithm mismatch')
+    if fields[0] == 'ssh-ed25519':
+        if len(field()) != 32:
+            raise ValueError('invalid RFC4253 ed25519 public key')
+    else:
+        def positive_mpint():
+            value = field()
+            if (not value or value[0] & 128 or
+                    (value[0] == 0 and (len(value) == 1 or not value[1] & 128))):
+                raise ValueError('invalid canonical positive RSA mpint')
+            return int.from_bytes(value, 'big')
+        exponent, modulus = positive_mpint(), positive_mpint()
+        if (not 2048 <= modulus.bit_length() <= 16384 or not modulus & 1 or
+                not 3 <= exponent <= 0xffffffff or not exponent & 1 or exponent >= modulus):
+            raise ValueError('invalid RSA modulus or exponent')
+    if offset != len(blob):
+        raise ValueError('trailing public key binary data')
+    canonical = f'{fields[0]} {fields[1]}\n'.encode()
     fingerprint = 'SHA256:' + base64.b64encode(hashlib.sha256(blob).digest()).decode().rstrip('=')
     return canonical, fingerprint
+
+
+def validate_public_keys(data):
+    """Return canonical authorized_keys bytes and ordered unique fingerprints."""
+    if not data or len(data) > MAX_PUBLIC_KEYS_BYTES:
+        raise ValueError('authorized keys must contain 1..16384 bytes')
+    lines = data[:-1].split(b'\n') if data.endswith(b'\n') else data.split(b'\n')
+    if not 1 <= len(lines) <= MAX_PUBLIC_KEYS:
+        raise ValueError('authorized keys must contain 1..16 keys')
+    canonical, fingerprints = [], []
+    for line in lines:
+        key, fingerprint = validate_public_key(line)
+        if fingerprint in fingerprints:
+            raise ValueError('duplicate administration public key')
+        canonical.append(key)
+        fingerprints.append(fingerprint)
+    return b''.join(canonical), fingerprints

@@ -112,31 +112,48 @@ def validate_pairing(roots, state, sd, diagnostic, boot_profile='baseline-el1'):
     return state_uuid
 
 
+def admin_fingerprints(state):
+    """Accept historical single-key metadata and cross-check new ordered lists."""
+    plural = state.get('admin_public_key_fingerprints')
+    legacy = state.get('admin_public_key_fingerprint')
+    values = plural if plural is not None else [legacy]
+    if (not isinstance(values, list) or not 1 <= len(values) <= STATE.COMMON.MAX_PUBLIC_KEYS or
+            any(not isinstance(value, str) or not re.fullmatch(r'SHA256:[A-Za-z0-9+/]{43}', value)
+                for value in values) or len(set(values)) != len(values)):
+        raise ValueError('invalid administration public-key fingerprints')
+    if 'admin_public_key_fingerprint' in state and values != [legacy]:
+        raise ValueError('legacy and plural administration fingerprints differ')
+    if 'admin_public_key_fingerprints' in state and plural is None:
+        raise ValueError('invalid administration public-key fingerprints')
+    return values
+
+
 def installation_intent(state, for_installation=False):
     """Record operator build intent; this is never physical-write authorization."""
     if type(for_installation) is not bool:
         raise ValueError('installation intent must be boolean')
     config = STATE.validate_config(json.dumps(state['management']))
-    fingerprint = state['admin_public_key_fingerprint']
-    if not isinstance(fingerprint, str) or not re.fullmatch(r'SHA256:[A-Za-z0-9+/]{43}', fingerprint):
-        raise ValueError('invalid administration public-key fingerprint')
+    fingerprints = admin_fingerprints(state)
     if for_installation:
         documentation = ('192.0.2.0/24', '198.51.100.0/24', '203.0.113.0/24', '127.0.0.0/8', '224.0.0.0/3')
         network = ipaddress.IPv4Network(config['management_cidr'])
-        if (fingerprint == 'SHA256:zJDXpqimTuhgMi8BhG83V7SeYsDurn/2Dmt9g/R3Fzc' or
+        if ('SHA256:zJDXpqimTuhgMi8BhG83V7SeYsDurn/2Dmt9g/R3Fzc' in fingerprints or
                 config['management_mac'] in ('02:73:30:00:00:01', '02:11:22:33:44:55') or
-                any(network.overlaps(ipaddress.IPv4Network(value)) for value in documentation)):
+                (config['management_cidr'] != '0.0.0.0/0' and
+                 any(network.overlaps(ipaddress.IPv4Network(value)) for value in documentation))):
             raise ValueError('fixture credentials/network values cannot mark an installation candidate')
     return {'for_installation': for_installation,
-            'administration_public_key_fingerprint': fingerprint,
+            'administration_public_key_fingerprints': fingerprints,
+            **({'administration_public_key_fingerprint': fingerprints[0]} if len(fingerprints) == 1 else {}),
             'management_mac': config['management_mac'], 'management_cidr': config['management_cidr']}
 
 
 def validate_state_identity(image, state):
     actual = STATE.validate_config(debugfs(image, 'cat /config/management.json'))
-    _, fingerprint = STATE.validate_public_key(debugfs(image, 'cat /root/.ssh/authorized_keys'))
+    key_data = debugfs(image, 'cat /root/.ssh/authorized_keys')
+    canonical, fingerprints = STATE.validate_public_keys(key_data)
     identity = debugfs(image, 'cat /identity/machine-id')
-    if (actual != state['management'] or fingerprint != state['admin_public_key_fingerprint'] or
+    if (key_data != canonical or actual != state['management'] or fingerprints != admin_fingerprints(state) or
             identity != (state['machine_id'] + '\n').encode() or
             re.fullmatch(rb'[0-9a-f]{32}\n', identity) is None or identity == b'0' * 32 + b'\n'):
         raise ValueError('captured state configuration, administrator or machine identity differs')
