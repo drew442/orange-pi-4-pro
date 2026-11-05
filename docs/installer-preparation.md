@@ -1,9 +1,9 @@
 # Installer preparation environment
 
-The [explicit EL2 packaging profile](boot-profiles.md) prepares the locked
-experimental handoff without changing the baseline artifacts below. The next
-physical action remains the [EL2 diagnostic test](el2-diagnostic.md); hardware
-KVM and deployment acceptance are still open.
+The [EL2 diagnostic](el2-diagnostic.md) has physically initialized KVM. The
+[next preparation image](#next-physical-boot) includes the module-helper fix and
+retains the proven EL2 boot package. One live RAM-session DHCP lease is recorded;
+cold-boot network reliability and actual KVM guest execution remain open.
 
 
 The A733 preparation image now provides Python, storage tools and an HTTPS
@@ -20,7 +20,7 @@ or booted on the board. The
 
 Built on the prepared Ubuntu 22.04 builder from authenticated interim userspace,
 pinned vendor kernel/modules, DTB and firmware. No live hardware inventory was
-needed to produce it. Actual SD capacity and target identity still need checking.
+needed to produce it. Actual SD capacity and NVMe identity are recorded; revalidate before writing.
 
 | Artifact | Bytes | SHA-256 |
 | --- | ---: | --- |
@@ -173,3 +173,74 @@ are disabled in preparation commands. The bundled CA data supports
 [curl certificate verification](https://curl.se/docs/sslcerts.html); loading that
 data in software does not establish a board TLS connection or correct clock.
 Vendor boot-protocol references remain in the [diagnostic guide](diagnostic-image.md).
+
+## Next physical boot
+
+Use this current candidate rather than the historical baseline table above.
+[Build evidence](evidence/installer-helper-20261105.json) records the pinned EL2
+boot package, corrected `/sbin/modprobe`, ARM runtime probe and independent SD
+inspection. It is a preparation RAM shell, with no automatic disk installation.
+This exact image has not booted on the board.
+
+On the flashing computer, download and authenticate:
+
+```sh
+mkdir a733-installer-helper-test
+cd a733-installer-helper-test
+scp drew@build.drewnet.online:/home/drew/orange-pi-4-pro-build/installer-helper-20261105/a733-installer-prep.img.gz .
+printf '%s  %s\n' bed50bf2aee979f80cc2e273fd16e8fad9e130ba56e71296aa8b8d898452adc6 a733-installer-prep.img.gz | sha256sum -c -
+gzip -dk a733-installer-prep.img.gz
+printf '%s  %s\n' 0144c6dc8eefd285496923e0b3cf538854a6e444565ef32c4ced7df266009d9b a733-installer-prep.img | sha256sum -c -
+```
+
+Gzip size is 39,252,785 bytes; raw size is 268,435,456 bytes. Follow the
+[identified-SD flashing procedure](el2-diagnostic.md#reflash-the-identified-diagnostic-sd)
+using **`a733-installer-prep.img`** and raw hash
+**`0144c6dc8eefd285496923e0b3cf538854a6e444565ef32c4ced7df266009d9b`**
+throughout its pre-write and readback checks. Use the same identified, authorized
+SU02G card; keep the previous diagnostic image for recovery. Do not write NVMe
+or SPI. Retain full-card hashes before and after the boot.
+
+Leave Ethernet connected to the same switch port throughout power-off and boot.
+Record serial from before power-on: existing 3.3 V TTL wiring, 115200 baud, 8N1,
+no flow control and adapter VCC disconnected. Preserve automatic PHY/DHCP output
+before making manual changes. At the shell, enter these **one line at a time**:
+
+```sh
+uname -a
+cat /sys/devices/system/cpu/online
+ls -l /dev/kvm /sbin/modprobe
+cat /sys/class/net/eth0/phydev/phy_id
+readlink /sys/class/net/eth0/phydev/driver
+ip addr show eth0
+ip route
+cat /etc/resolv.conf
+cat /proc/net/dev
+cat /sys/class/block/mmcblk1/ro /sys/class/block/mmcblk1/stat
+/usr/bin/python3 -I -B /usr/lib/a733-installer/plan-nvme.py --target /dev/nvme0n1
+```
+
+The final command is a read-only report, not installation. If no lease arrived,
+record the failure, then run this bounded retry with the cable left connected:
+
+```sh
+udhcpc -f -n -q -t 5 -T 3 -i eth0 -s /etc/udhcpc.script
+ip addr show eth0
+ip route
+cat /etc/resolv.conf
+cat /proc/net/dev
+```
+
+If a default route is shown, ping its actual gateway address using
+`ping -c 3 ACTUAL_GATEWAY`. Check `date -u` before TLS. If the clock is wrong,
+set it in RAM with `date -u -s 'YYYY-MM-DD HH:MM:SS'`, substituting current UTC.
+Then test DNS and verified HTTPS without downloading an installation payload:
+
+```sh
+/usr/bin/curl --head --fail --connect-timeout 10 --max-time 30 https://deb.debian.org/debian/
+```
+
+Retain errors and do not bypass certificate verification. Return the full boot
+and command capture, image readback/full-card hashes, and note whether any
+cable movement or manual driver repair was required. A successful boot here
+advances preparation; it does not establish installed-host or KVM guest acceptance.

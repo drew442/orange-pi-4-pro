@@ -15,6 +15,37 @@ transmit-clock mode needs. Autonegotiated link alone does not prove that MAC
 frames leave the board. The PHY ID and live result must confirm this hypothesis.
 Do not change VLANs or device-tree delays based on it alone.
 
+## Latest physical result
+
+The [next capture](evidence/ethernet-lease-20261105.json) confirms PHY ID
+`0x4f51e91b` and binding to `YT8531 Gigabit Ethernet`. Its first DHCP attempt
+still failed. After the operator moved the cable to another device and back,
+an explicit `udhcpc` obtained `192.168.1.115/24` for 7,200 seconds. This proves
+one successful exchange, with no cold-boot repeatability or route/DNS/TLS proof.
+It does not isolate PHY/MAC link-reset state from upstream behavior.
+
+The capture includes a MAC VLAN-filter timeout during interface shutdown, plus
+an unexpected `}` and later `phy_test` calls that print only `BEFORE`. Do not
+reuse that session's partially defined function. The explicit module, binding
+and final DHCP outputs remain useful independent evidence. The RX drop counters
+are cumulative and cannot be assigned to DHCP without a bounded capture.
+
+While the successful session is still running, paste these short commands one
+line at a time at the `/ #` prompt; they do not reset the interface or write media:
+
+```sh
+cat /sys/class/net/eth0/phydev/phy_id
+readlink /sys/class/net/eth0/phydev/driver
+ip addr show eth0
+ip route
+cat /etc/resolv.conf
+cat /proc/net/dev
+```
+
+Return the output. The next cold-boot test should use the corrected preparation
+image with the cable left connected, avoiding a second diagnostic-only reflash.
+See [preparation boot](installer-preparation.md#next-physical-boot).
+
 ## RAM-only live test
 
 Run this on the **currently booted diagnostic RAM shell**, recording the complete

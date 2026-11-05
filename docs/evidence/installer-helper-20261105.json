@@ -1,0 +1,76 @@
+{
+  "schema": 1,
+  "classification": "EL2 installer preparation image with kernel module helper; board boot pending",
+  "built_utc_date": "2026-11-05",
+  "builder": "Ubuntu 22.04.5 amd64, build.drewnet.online",
+  "source_commit": "b66c675",
+  "manifest_sha256": "075d5ffcb128a5fc9a84e16c03548533de953af20fcafea7123d701479e623b5",
+  "boot_profile": {
+    "name": "experimental-el2",
+    "target_service": "0x8000ff40",
+    "expected_spsr": "0x3c9",
+    "physical_acceptance_pending": true,
+    "evidence": {
+      "path": "docs/evidence/el2-diagnostic-20261104.json",
+      "bytes": 6582,
+      "sha256": "9c30d5d873fa8ad154b8068cdebfc7f40f6487ce6a79f76a52da4dd44ba1b5f8"
+    }
+  },
+  "boot_inputs": {
+    "boot0_sdcard.fex": {
+      "bytes": 245760,
+      "sha256": "9213f1c56ef932930d43b5751e8937bea0e9ae7460ec16187cc1b0dffdb75345"
+    },
+    "boot_package.fex": {
+      "bytes": 1392640,
+      "sha256": "b20c3d1133aee6474416bc9846b0bf94d5439aa12d7f7555b44607105ddab3b6"
+    },
+    "uImage": {
+      "bytes": 27283528,
+      "sha256": "6f9269755c4c2bc196c094899fa1ff20292f4d762c4000f77fcbb0887d5f154a"
+    },
+    "Image": {
+      "bytes": 27283464,
+      "sha256": "9df974c55fa61a77e8fe812652780dad471527eb9615c27838f481887d4c50e7"
+    },
+    "board.dtb": {
+      "bytes": 209320,
+      "sha256": "4d7d964a54668cf5dc12cd4bf7e72a625c79883541272aeba1a91adbbedb86ed"
+    },
+    "kernel.config": {
+      "bytes": 212080,
+      "sha256": "8a29d9c36e52db7e8a7d6ff757dc69e660f4273c99e5f00c5dbc5a9b7e060675"
+    }
+  },
+  "installer_initramfs": {
+    "path": "/var/lib/a733-network-autoload-work-20261104/out/installer-initramfs-helper-20261105-01/initramfs.cpio.gz",
+    "bytes": 26962965,
+    "sha256": "1d49bd905c181b0f2243b2cd257c9811c05a07082b5116bf17ad20be2a68917d"
+  },
+  "files": {
+    "a733-installer-prep.img": {
+      "bytes": 268435456,
+      "sha256": "0144c6dc8eefd285496923e0b3cf538854a6e444565ef32c4ced7df266009d9b"
+    },
+    "a733-installer-prep.img.gz": {
+      "bytes": 39252785,
+      "sha256": "bed50bf2aee979f80cc2e273fd16e8fad9e130ba56e71296aa8b8d898452adc6"
+    },
+    "uInitrd": {
+      "bytes": 26963029,
+      "sha256": "11cad295e900eeda2287c7f3b5087397c3b069acc5ceeac660809cc0ff946c94"
+    },
+    "assembly.log": {
+      "bytes": 4226,
+      "sha256": "cea2ee6240f916235d05d88335e4e271884e5167d11d2a1ced0b3c8709f4e708"
+    }
+  },
+  "validation": [
+    "actual ARM installer runtime probe passed",
+    "independent installer SD inspection passed: offsets, pinned kernel/DTB, wrappers/CRC, authenticated initramfs, gzip expansion",
+    "helper/boot packaging independently reviewed in b66c675",
+    "gpt-6.1-sol high independently reviewed current flashing/serial/read-only planner procedure; no blockers"
+  ],
+  "physical_acceptance": "No board boot of this artifact yet; no physical storage written",
+  "publication": "drew@build.drewnet.online:/home/drew/orange-pi-4-pro-build/installer-helper-20261105/"
+}

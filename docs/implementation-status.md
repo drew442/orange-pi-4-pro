@@ -6,10 +6,11 @@ Updated 2026-11-05. Replace stale entries; detailed evidence lives in linked fil
 
 The [second physical diagnostic boot](evidence/board-el2-20261104.json) confirms
 BL31 SPSR `0x3c9`, all eight CPUs at EL2, KVM VHE initialization and `/dev/kvm`.
-**Actual KVM guest execution remains unproven.** Ethernet negotiates 1 Gbps/full
-but has no DHCP lease. A missing kernel module-helper path explains Generic PHY
-fallback; a [RAM-only driver/packet test](ethernet-diagnostics.md) is ready. The
-specific PHY/clock cause and Ethernet fix still need live confirmation.
+**Actual KVM guest execution remains unproven.** The [live Ethernet test](evidence/ethernet-lease-20261105.json)
+confirms YT8531 (`0x4f51e91b`) vendor binding and a subsequent DHCP lease at
+`192.168.1.115/24`. The first attempt still failed after binding; a cable swap
+and return preceded success. The sole cause is unresolved. Cold boot with the
+permanent helper fix and route/DNS/TLS checks remain pending.
 
 ## Decisions and physical evidence
 
@@ -30,10 +31,11 @@ specific PHY/clock cause and Ethernet fix still need live confirmation.
 - SD is unmounted in Linux; one write-counter snapshot is zero, but `ro=0`.
   Firmware audit, offline full-card hash comparisons and cycle/workload evidence
   remain necessary. A single Linux snapshot does not prove zero routine writes.
-- Wired MAC `10:f4:ae:90:5e:57`, 1 Gbps link; DHCP has no lease/IPv4 route.
-  Switch native VLAN is operator-verified; server sees no requests. PHY is
-  Generic; collect PHY ID and switch-visible TX after fixing module loading.
-  Administration public key and DHCP/static management choice requested.
+- Wired MAC `10:f4:ae:90:5e:57`, 1 Gbps/full, YT8531 vendor driver; one DHCP
+  lease observed after cable reconnection. Prior Generic PHY fallback is fixed
+  in RAM. Cold boot repeatability and network delivery remain unproven.
+  Administration public key, hostname and allowed administration CIDR requested;
+  use DHCP for the actual host configuration.
 
 ## Builds and host-only verification
 
@@ -54,15 +56,18 @@ specific PHY/clock cause and Ethernet fix still need live confirmation.
 - [Jammy builder](build-host-assessment.md): actual builds with two compilation
   jobs, GCC 11 kernel/Linaro 7.4.1 U-Boot; 4 GiB swap. Latest idle sample after
   [verified cache retention](build-cache-retention.md) and root refresh: about
-  23.08 GB free disk and 7.0 GiB available RAM after the two network-image builds.
+  22.83 GB free disk after the corrected preparation-image build; the most recent
+  memory sample showed 7.1 GiB available.
   This is below the 22 GiB full NVMe staging guard: reclaim only verified
   disposable staging or expand the filesystem before a full NVMe image build.
   Source/compiler-cache archives and prior published image bytes remain retained.
 - [Network helper correction](ethernet-diagnostics.md): two fresh builds produce
   identical 268,435,456-byte raw images and 16,188,752-byte gzip files. Independent
   review, module-byte/mode preservation and standalone inspection pass. The
-  preparation installer initramfs was regenerated; its actual ARM runtime probe
-  passes. Physical Ethernet/PHY/DHCP confirmation remains outstanding.
+  [corrected preparation SD](installer-preparation.md#next-physical-boot) builds
+  and passes independent SD inspection; its installer initramfs was regenerated; its actual ARM runtime probe
+  passes. Live vendor binding and DHCP are observed; corrected-image cold boot and
+  route/DNS/TLS confirmation remain outstanding.
 - [Minimal interim ARM64 userspace](host-userspace.md): 220 version/hash-locked
   packages, QEMU 7.2.22, OpenSSH/storage tools; approximately 531 MiB unpacked.
   Final Buildroot/release-base decision follows working hardware KVM baseline.
@@ -105,8 +110,8 @@ specific PHY/clock cause and Ethernet fix still need live confirmation.
 
 ## External integration blockers
 
-The new physical capture resolves EL2 entry and NVMe sector geometry. Board
-networking and actual KVM execution remain open. Administration public key and
+The new physical capture resolves EL2 entry and NVMe sector geometry. Repeatable cold-boot
+networking, payload delivery and actual KVM execution remain open. Administration public key and
 working management settings are still required for real installation state.
 NVMe erase authorization for the recorded drive persists; no additional erase
 permission is being requested. SPI identity/geometry are directly observed as
@@ -115,11 +120,12 @@ backup/recovery and SPI-specific programming authorization remain outstanding.
 
 ## Next actions and open gates
 
-1. Run the [RAM-only Ethernet test](ethernet-diagnostics.md). Capture actual PHY
-   ID/driver, before/after counters, switch MAC learning/port RX and DHCP outcome.
-   The permanent `/sbin/modprobe` archive fix passes independent review and
-   two byte-identical Jammy image builds; see the linked guide for hashes. Then prove a KVM-only guest, shutdown/restart and storage
-   persistence on the actual host; `/dev/kvm` alone does not satisfy this gate.
+1. Boot the corrected preparation image with the Ethernet cable left connected;
+   capture automatic vendor binding/DHCP plus route/DNS/TLS checks. The permanent
+   helper correction is independently reviewed and the diagnostic rebuild is
+   byte-identical across two builds. Then prove a KVM-only guest, shutdown/restart
+   and storage persistence on the actual installed host; `/dev/kvm` alone does
+   not satisfy this gate.
 2. Resolve management addressing and administration key; produce actual-geometry
    installation inputs and reviewed recovery artifacts. Validate real board
    boot/DHCP or static addressing/DNS/TLS, guarded NVMe write/readback and boot.

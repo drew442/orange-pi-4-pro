@@ -1,0 +1,52 @@
+{
+  "schema": 1,
+  "classification": "physical diagnostic RAM PHY rebind and subsequent DHCP success; cold boot repeatability unproven",
+  "received_utc_date": "2026-11-05",
+  "raw_log": {
+    "path": "tmp/05112026-1110-ethernet-diagnostic.txt",
+    "bytes": 14051,
+    "sha256": "4669b386aa4889143f67d416ef6f37f3ee2b260991efe5f470ce9b765206ac63"
+  },
+  "observations": {
+    "phy_id": "0x4f51e91b",
+    "phy_driver": "YT8531 Gigabit Ethernet",
+    "module": "motorcomm",
+    "link": "1000 Mbps full duplex",
+    "mac": "10:f4:ae:90:5e:57",
+    "first_recorded_dhcp": "five DISCOVER attempts; no lease despite vendor PHY binding",
+    "later_dhcp": {
+      "address": "192.168.1.115",
+      "prefix": 24,
+      "lease_seconds": 7200,
+      "sequence": "discover, select, obtained; address present on eth0"
+    },
+    "rx_tx_samples": [
+      {
+        "rx_bytes": 318622,
+        "rx_packets": 3768,
+        "rx_dropped": 1295,
+        "tx_bytes": 14584,
+        "tx_packets": 64
+      },
+      {
+        "rx_bytes": 330970,
+        "rx_packets": 3910,
+        "rx_dropped": 1353,
+        "tx_bytes": 15560,
+        "tx_packets": 76
+      }
+    ],
+    "counter_limits": "Cumulative snapshots, not a bounded DHCP interval; final sample precedes successful DHCP. Zero reported RX/TX errors does not identify cause of RX drops.",
+    "mac_warning": "Timeout accessing MAC_VLAN_Tag_Filter; failed to kill vid 0081/0 on first recorded down/up",
+    "shell_capture": "Unexpected closing brace and phy_test calls printing BEFORE only; complete function execution is not established. Explicit final udhcpc succeeds.",
+    "not_captured": [
+      "post-lease route and resolver",
+      "gateway/DNS/TLS connectivity",
+      "switch counters or mirror capture",
+      "cold boot with permanent helper fix"
+    ]
+  },
+  "operator_report": "Cable moved to another device which obtained a lease; cable returned to Orange Pi before successful retry.",
+  "assessment": "Vendor PHY identity/binding and one successful DHCP exchange proven. Missing module-helper defect remains confirmed. Sole cause and role of cable/link/upstream state remain unresolved.",
+  "storage_actions": "No storage-writing commands in this capture; no coordinator NVMe/SPI write."
+}
