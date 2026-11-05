@@ -182,7 +182,12 @@ boot package, corrected `/sbin/modprobe`, ARM runtime probe and independent SD
 inspection. It is a preparation RAM shell, with no automatic disk installation.
 This exact image has not booted on the board.
 
-On the flashing computer, download and authenticate:
+On `codex.drewnet.online`, the current image is already staged and hash-verified at
+`/home/drew/orange-pi-4-pro/out/installer-helper-20261105/a733-installer-prep.img`.
+The similarly named `out/installer-20261104/a733-installer-prep.img` is an older
+artifact and does not match the current hash. Keep the versioned paths distinct.
+
+On another flashing computer, download and authenticate:
 
 ```sh
 mkdir a733-installer-helper-test
