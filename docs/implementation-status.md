@@ -39,7 +39,9 @@ by subsequent clean-build work.
   `192.168.1.1` and verified HTTPS are observed on the preparation boot. The clock
   starts in 1970; HTTPS passed after manual UTC correction. Repeated installed-host
   networking and automatic time remain open. [Time-sync input](host-time.md) is
-  authenticated but needs a new package/state profile and physical validation.
+  authenticated; the [fixed identity gate](timesync-identity.md) passes ARM checks.
+  A new package/state profile, clock-state compatibility and physical validation
+  remain pending.
 - [Operator inputs](evidence/operator-inputs-20261105.json): RSA3072 and Ed25519
   keys, DHCP hostname `a733-host`, any source/subnet. Require public-key-only SSH.
   [ARM SSH-policy checks](evidence/ssh-console-management-arm-20261106.json) pass;
@@ -92,7 +94,7 @@ by subsequent clean-build work.
   independent readback. The [explicit normalized profile](userspace-profiles.md) now integrates root/state
   selection and passes actual complete staging: 15,876 base entries, 220 packages,
   eight package-state components and the unchanged 39-file runtime. Latest native
-  discovery: **1,159 cases, 97 environment skips**,
+  discovery: **1,178 cases, 97 environment skips**,
   four assembly cases and all five shell suites. The [tracked outer launcher](userspace-pipeline-launcher.md)
   passes review and read-only plans; actual root preflight refuses insufficient
   capacity before output creation. Its full execution, production composition and

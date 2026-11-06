@@ -1,0 +1,356 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "tiny ARM sysusers/account fixture only; no package installation, daemon, clock change, production image or hardware acceptance",
+  "source_commit": "b0c3ba624b3064c6d95f553661a642dcb68f89d9",
+  "success": true,
+  "actual_run": {
+    "schema": 1,
+    "classification": "tiny ARM sysusers/account fixture only; no package installation, daemon, clock change, production image or hardware acceptance",
+    "archive": {
+      "bytes": 138025729,
+      "sha256": "98d6a57bbb70ff55bef32b6bd051ebfcb6bc0fad4f6c8b3167e8619b5a9d961e"
+    },
+    "qemu_sha256": "92c4aeb8dd898de7152c184370ab22f09ae7c5b7279fd300081c76cee3f78a80",
+    "inputs_manifest_sha256": "e7015dad4ff72ac8b985c50224d3d1597e84c1c7dc005d9a3246f49da702a036",
+    "resources": {
+      "free_before_bytes": 3262922752,
+      "free_after_bytes": 3247067136
+    },
+    "success": true,
+    "commands": [
+      {
+        "command": [
+          "/usr/bin/setpriv",
+          "--bounding-set=-all,+chown",
+          "--no-new-privs",
+          "/usr/bin/qemu-aarch64-static",
+          "-L",
+          "/var/lib/a733-timesync-identity-fixture-20261106/runtime",
+          "/var/lib/a733-timesync-identity-fixture-20261106/runtime/usr/bin/systemd-sysusers",
+          "--version"
+        ],
+        "returncode": 0,
+        "label": "version"
+      },
+      {
+        "command": [
+          "/usr/bin/setpriv",
+          "--bounding-set=-all,+chown",
+          "--no-new-privs",
+          "/usr/bin/qemu-aarch64-static",
+          "-L",
+          "/var/lib/a733-timesync-identity-fixture-20261106/runtime",
+          "/var/lib/a733-timesync-identity-fixture-20261106/runtime/usr/bin/systemd-sysusers",
+          "--root",
+          "/var/lib/a733-timesync-identity-fixture-20261106/after"
+        ],
+        "returncode": 0,
+        "label": "create"
+      },
+      {
+        "command": [
+          "/usr/bin/setpriv",
+          "--bounding-set=-all,+chown",
+          "--no-new-privs",
+          "/usr/bin/qemu-aarch64-static",
+          "-L",
+          "/var/lib/a733-timesync-identity-fixture-20261106/runtime",
+          "/var/lib/a733-timesync-identity-fixture-20261106/runtime/usr/bin/systemd-sysusers",
+          "--root",
+          "/var/lib/a733-timesync-identity-fixture-20261106/after"
+        ],
+        "returncode": 0,
+        "label": "repeat"
+      }
+    ],
+    "version": "systemd 252 (252.39-1~deb12u2)\n+PAM +AUDIT +SELINUX +APPARMOR +IMA +SMACK +SECCOMP +GCRYPT -GNUTLS +OPENSSL +ACL +BLKID +CURL +ELFUTILS +FIDO2 +IDN2 -IDN +IPTC +KMOD +LIBCRYPTSETUP +LIBFDISK +PCRE2 -PWQUALITY +P11KIT +QRENCODE +TPM2 +BZIP2 +LZ4 +XZ +ZLIB +ZSTD -BPF_FRAMEWORK -XKBCOMMON +UTMP +SYSVINIT default-hierarchy=unified",
+    "before": {
+      "phase": "before",
+      "account": "systemd-timesync",
+      "uid": 996,
+      "gid": 996,
+      "reservation": "unused",
+      "sha256": {
+        "passwd": "27c2f35b3c3030dec127edfa49a7d4f8fbecb990d72c48f31f4d1410ca8ab14e",
+        "group": "02025770f81f4413ae5c0e162c9fbb3939022d6f28a250c38d9fabbf00b2e9cb",
+        "sysusers_policy": "d3873e161fa2ba8cee53de2a675b1ed8af9145c7151ba7a2775634c480766079"
+      }
+    },
+    "after": {
+      "phase": "after",
+      "account": "systemd-timesync",
+      "uid": 996,
+      "gid": 996,
+      "reservation": "exact",
+      "sha256": {
+        "passwd": "12038b45df80da2ee29f15fb9d37f2ab89b9d4c4c733b6e48a5721b23407fe93",
+        "group": "bae50d9e4c73080daaca1ee7697b9813be43bdcc155539884a23a6c22a935637",
+        "sysusers_policy": "d3873e161fa2ba8cee53de2a675b1ed8af9145c7151ba7a2775634c480766079"
+      }
+    },
+    "preexisting_tuples_unchanged": true,
+    "repeat_account_files_unchanged": true,
+    "conflicts_rejected_without_mutation": true,
+    "host_inventory_unchanged": true
+  },
+  "selected_runtime_manifest": {
+    "archive": {
+      "bytes": 138025729,
+      "sha256": "98d6a57bbb70ff55bef32b6bd051ebfcb6bc0fad4f6c8b3167e8619b5a9d961e"
+    },
+    "files": {
+      "usr/bin/systemd-sysusers": {
+        "bytes": 68184,
+        "sha256": "5cda73fdf728a3b692f1bfab32646e987dde2af0526dd3688f8ded37740439df"
+      },
+      "usr/lib/aarch64-linux-gnu/systemd/libsystemd-shared-252.so": {
+        "bytes": 3419888,
+        "sha256": "af1824e1469859c6747e856c7d7faf313119ec877ec4451864f03fa589fcdba0"
+      },
+      "usr/lib/aarch64-linux-gnu/libacl.so.1": {
+        "bytes": 67432,
+        "sha256": "2a585838721dfb146ad64ca5d7ce1b063996c92ed18c24dfd2c3e7a2422a1b0d"
+      },
+      "usr/lib/aarch64-linux-gnu/libc.so.6": {
+        "bytes": 1651408,
+        "sha256": "e4ac8ae1d81e4865e3aadedb962879cf9415903b3f2ba81ec75e9962b86ab8b0"
+      },
+      "usr/lib/aarch64-linux-gnu/ld-linux-aarch64.so.1": {
+        "bytes": 202912,
+        "sha256": "17538b8f9889a470c061f69a8fea8124da89627311cd16546c133a89f09056df"
+      },
+      "usr/lib/aarch64-linux-gnu/libblkid.so.1": {
+        "bytes": 396248,
+        "sha256": "5315fa2b1a050713f155a90d2faa4c64187626f4a580e6e05d2d40190e086363"
+      },
+      "usr/lib/aarch64-linux-gnu/libcap.so.2": {
+        "bytes": 67552,
+        "sha256": "dcb3587efc518852f7a1430594526ee9d7334126a9afb46f23cfa60f1b2d1927"
+      },
+      "usr/lib/aarch64-linux-gnu/libcrypt.so.1": {
+        "bytes": 198584,
+        "sha256": "3c70a152ded3b0eab8f2f3b3d2a80e2ce0808909e8c6828a8dcfc6b883ff30fb"
+      },
+      "usr/lib/aarch64-linux-gnu/libgcrypt.so.20": {
+        "bytes": 1000296,
+        "sha256": "01c8f6929c4c5853f8204a727e2be5fc3f7cef3f850e2818558800aa5f78c80e"
+      },
+      "usr/lib/aarch64-linux-gnu/libgpg-error.so.0": {
+        "bytes": 198640,
+        "sha256": "44c67a9e7a5cfc227e84dcb8f96463103c12415286a8e003bc66abebc4b1f6bd"
+      },
+      "usr/lib/aarch64-linux-gnu/libip4tc.so.2": {
+        "bytes": 67960,
+        "sha256": "1ce697c70bbda5c4363ab1bf50bce60d299aae5cbf1f5236b3dfe979bf1fd735"
+      },
+      "usr/lib/aarch64-linux-gnu/libkmod.so.2": {
+        "bytes": 133176,
+        "sha256": "2d52e1400ed9411139dcd9e4a3cd7f85959ab77585c0d06a960ac3c1adec64bc"
+      },
+      "usr/lib/aarch64-linux-gnu/libzstd.so.1": {
+        "bytes": 657352,
+        "sha256": "63ff891e4316be1d30a8e551ded6cbb0283772105b352103608e60c06c95ac15"
+      },
+      "usr/lib/aarch64-linux-gnu/liblzma.so.5": {
+        "bytes": 198584,
+        "sha256": "530e774de0f3fd8754351f387f52db6a0cb134b350e43d80044dea7109400f17"
+      },
+      "usr/lib/aarch64-linux-gnu/libcrypto.so.3": {
+        "bytes": 4532392,
+        "sha256": "6ca49d148cc9fff2ee82e46019f508d736cef6b3f15f2f5cbbc86457df9b05ce"
+      },
+      "usr/lib/aarch64-linux-gnu/liblz4.so.1": {
+        "bytes": 199056,
+        "sha256": "43109ed13afa34ff991ed73c4d520c5056378949b17d77c50d5773c5aa851439"
+      },
+      "usr/lib/aarch64-linux-gnu/libmount.so.1": {
+        "bytes": 461432,
+        "sha256": "c4feeb360a1bc2996da81bfe08dd9f1453558513cea012e2c45752a9833d5a83"
+      },
+      "usr/lib/aarch64-linux-gnu/libselinux.so.1": {
+        "bytes": 198800,
+        "sha256": "6f51339a6f92f88785dfcfdb13194c3d10cb10ccee1d0ddb5b3e3445145c761c"
+      },
+      "usr/lib/aarch64-linux-gnu/libpcre2-8.so.0": {
+        "bytes": 592440,
+        "sha256": "cabf859fab34e77fba3ab3485878cc19014327246a7c6aa21ac0d2d1a32dcc81"
+      },
+      "usr/lib/aarch64-linux-gnu/libpam.so.0": {
+        "bytes": 67512,
+        "sha256": "cb005bb0077bba0ed3b66cc7936c0ee5ecc72c7813e5ec813f442bb484f7fc43"
+      },
+      "usr/lib/aarch64-linux-gnu/libaudit.so.1": {
+        "bytes": 132984,
+        "sha256": "5a22c8b2977c4e5d32688e5c1e2d8af3620c1798f94b64f7cd6a22c005abb5bd"
+      },
+      "usr/lib/aarch64-linux-gnu/libcap-ng.so.0": {
+        "bytes": 67504,
+        "sha256": "c84ade3b16a3af69ab562f49fd1269c1d6438280909b41a9185caa9e359cec0f"
+      },
+      "usr/lib/aarch64-linux-gnu/libseccomp.so.2": {
+        "bytes": 133328,
+        "sha256": "37ab5fe229e2edbd12350516158d4940337ceec093f0a498583636a0b4b54375"
+      },
+      "usr/lib/aarch64-linux-gnu/libm.so.6": {
+        "bytes": 591960,
+        "sha256": "3c4cb3be0b974edf05f023f85ab15107fb5afc2687163593d0d4cf8e80c17b39"
+      },
+      "base-passwd": {
+        "bytes": 1120,
+        "sha256": "27c2f35b3c3030dec127edfa49a7d4f8fbecb990d72c48f31f4d1410ca8ab14e"
+      },
+      "base-group": {
+        "bytes": 607,
+        "sha256": "02025770f81f4413ae5c0e162c9fbb3939022d6f28a250c38d9fabbf00b2e9cb"
+      },
+      "base-shadow": {
+        "bytes": 600,
+        "sha256": "dd3aae9dcb6dc8be3e8fc6639662430917dbd9d14cffa05e4f729e7bf76a1908"
+      },
+      "base-gshadow": {
+        "bytes": 507,
+        "sha256": "bb6f87338edc454e9097ccb5f2a0ec9337b6839f2f09f1c3ca12143fc1f8153e"
+      },
+      "usr/lib/ld-linux-aarch64.so.1": {
+        "bytes": 202912,
+        "sha256": "17538b8f9889a470c061f69a8fea8124da89627311cd16546c133a89f09056df"
+      },
+      "project/build/timesync-identity.py": {
+        "bytes": 8173,
+        "sha256": "5ee1f6d3a2b3211189d0f45a2c007a45c1a950fb960cb7b75b5fe2a47a767909"
+      },
+      "project/configs/host-timesync-sysusers.conf": {
+        "bytes": 170,
+        "sha256": "d3873e161fa2ba8cee53de2a675b1ed8af9145c7151ba7a2775634c480766079"
+      }
+    },
+    "expanded_bytes": 15511370
+  },
+  "source_files": {
+    "build/timesync-identity.py": {
+      "bytes": 8173,
+      "sha256": "5ee1f6d3a2b3211189d0f45a2c007a45c1a950fb960cb7b75b5fe2a47a767909"
+    },
+    "configs/host-timesync-sysusers.conf": {
+      "bytes": 170,
+      "sha256": "d3873e161fa2ba8cee53de2a675b1ed8af9145c7151ba7a2775634c480766079"
+    },
+    "tests/test_timesync_identity.py": {
+      "bytes": 10478,
+      "sha256": "3deaefd7d1f04c69d3cbf8f0e817bcba65fc1a3b2803e06a442e0644af22972c"
+    }
+  },
+  "retained_records": {
+    "out/timesync-identity-arm-20261106/create.stderr": {
+      "bytes": 138,
+      "sha256": "01fe248d721eab9a996d3caec2809880dd2d2b77028d72a3435faa1611341ada"
+    },
+    "out/timesync-identity-arm-20261106/create.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/timesync-identity-arm-20261106/fixture-inputs.json": {
+      "bytes": 5063,
+      "sha256": "e7015dad4ff72ac8b985c50224d3d1597e84c1c7dc005d9a3246f49da702a036"
+    },
+    "out/timesync-identity-arm-20261106/host-packages.after.tsv": {
+      "bytes": 40966,
+      "sha256": "446b7eb3364a6f196390c698c1c133086fee5eb3b080ec4483cc1d8584b39b15"
+    },
+    "out/timesync-identity-arm-20261106/host-packages.before.tsv": {
+      "bytes": 40966,
+      "sha256": "446b7eb3364a6f196390c698c1c133086fee5eb3b080ec4483cc1d8584b39b15"
+    },
+    "out/timesync-identity-arm-20261106/receipt.json": {
+      "bytes": 3325,
+      "sha256": "18a683a325774bc2e1e13ed3e75abc0c5780e958b04e5a084d572739040db581"
+    },
+    "out/timesync-identity-arm-20261106/records.tar": {
+      "bytes": 102400,
+      "sha256": "753e3051cefadbf313ce0fca56f7d7b2bc9adbcc30b1e8b77aa833e7c644f036"
+    },
+    "out/timesync-identity-arm-20261106/repeat.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/timesync-identity-arm-20261106/repeat.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/timesync-identity-arm-20261106/verification-code/prepare-timesync-arm-fixture-02-20261106.py": {
+      "bytes": 2379,
+      "sha256": "75ccedd97d863d6b011356efaefd97c063ca5d585ec7cd69f0be7ec78604e8f9"
+    },
+    "out/timesync-identity-arm-20261106/verification-code/prepare-timesync-arm-fixture-20261106.py": {
+      "bytes": 1826,
+      "sha256": "4d9fd6a34ffb3365b8a1f55d285cad66bd91fbc1bf7bfb51c24e7677b5cbd0e2"
+    },
+    "out/timesync-identity-arm-20261106/verification-code/verify-timesync-identity-arm-20261106.py": {
+      "bytes": 5856,
+      "sha256": "ea62ed431be779202974b8da7cbf200e8225f682ed7d539a3d6e16ef450a66c4"
+    },
+    "out/timesync-identity-arm-20261106/version.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/timesync-identity-arm-20261106/version.stdout": {
+      "bytes": 329,
+      "sha256": "390af12493d5f1a36a377ef1ded1dbd490a372ea2b464539d838b47d00f3b648"
+    }
+  },
+  "verification_command": [
+    "/usr/bin/python3",
+    "-I",
+    "-B",
+    "/var/lib/a733-timesync-identity-tools-20261106/verify.py"
+  ],
+  "fixture_input_tar": {
+    "bytes": 15554560,
+    "sha256": "2386a56dd11f87d92d508a9415d8d99eece0ddde23292af47d98f310efea3e76"
+  },
+  "validation": {
+    "focused_cases": 19,
+    "native_discovery_cases": 1178,
+    "environment_skips": 97,
+    "assembly_cases": 4,
+    "bash_suites": 5,
+    "toml_files_parsed": 5,
+    "diff_check": true
+  },
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "source_review_passed": true,
+    "fixture_script_review_passed": true,
+    "retained_records_review_passed": true,
+    "read_only_remote_postcheck_passed": true,
+    "checks": [
+      "all pinned input bytes",
+      "protected directory ownership/mode",
+      "exact UID/GID996 and unchanged old account tuples",
+      "receipt account hashes",
+      "collision rejection without mutation",
+      "unchanged outer package inventory",
+      "reserve retained"
+    ]
+  },
+  "earlier_preparation_attempts": [
+    {
+      "result": "unsupported library alias rejected before actual sysusers execution",
+      "script": "verification-code/prepare-timesync-arm-fixture-20261106.py",
+      "correction": "select only recursively read ELF dependencies in second preparation script"
+    },
+    {
+      "result": "premature unprivileged version probe failed to open the loader while first preparation was incomplete; no sysusers execution",
+      "correction": "waited for complete second runtime and ran reviewed protected fixture on the pinned builder"
+    }
+  ],
+  "limitations": [
+    "The daemon package was not installed or enabled, and no clock-setting operation was performed.",
+    "No timesync user was added to published root/state images; existing220package locks/profile/producer source pins unchanged.",
+    "Shared clock-state ownership, cross-version A/B switch/rollback, NTP and physical time remain untested.",
+    "This is user-mode ARM tool execution, not a KVM guest or hardware acceptance.",
+    "Builder LVM growth is unapproved and production build guards remain unchanged."
+  ]
+}

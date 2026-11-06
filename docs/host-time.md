@@ -25,9 +25,16 @@ bind. Routine SD writes remain prohibited. Starting the service alone does not
 prove accurate synchronization; time-sensitive operations need an observed
 synchronization result, with offline behavior handled explicitly.
 
+The [stable identity policy and read-only gates](timesync-identity.md) now pass
+actual pinned ARM sysusers creation/repeat checks on the builder, with independent
+review. UID/GID 996 is reserved for a future profile; published images still have
+no timesync account or daemon. Clock-state ownership and A/B transitions remain
+unproven.
+
 Before enabling it in a future payload, introduce a separate pinned userspace
 profile and regenerate its per-root package metadata. Audit the added service
 user and state ownership across A/B updates and rollback. Enable/configure the
 unit deliberately, verify actual DNS/NTP reachability on the board, and capture
 cold-boot time establishment and clock persistence alongside SD hashes/write
-counters. These steps remain unperformed; staging the package does not pass them.
+counters. Those integration and hardware steps remain unperformed; package staging and
+account fixtures do not pass them.

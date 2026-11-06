@@ -23,6 +23,7 @@ artifacts remain bound to [the deployment guide](deploy-personalized-20261106.md
 | Authenticated userspace profiles | [Explicit selection and actual staging](userspace-profiles.md): normalized/default pins, 12 provenance files, complete 15,876-entry extraction, 220 packages, eight package-state components and closed runtime | No production images; source-side resolver only |
 | Root/state recipe integration | [Optional metadata backend](evidence/root-metadata-backend-20261106.json), [preparation](root-reconstruction-preparation.md): full extraction through payload interface, no real nodes | Complete root/state/NVMe reconstruction and image readback remain open |
 | Guest fixture | [Fixed seed fixture](evidence/guest-seed-fixture-20261104.json): root/drew byte-identical Jammy builds | No guest has booted; real KVM is mandatory |
+| Future time-service identity | [Fixed identity gate and ARM fixture](timesync-identity.md): stable996, old tuples unchanged, repeat/collision checks and independent review | Daemon installation, new221-package profile, clock-state/A-B/NTP/hardware unproven |
 | Distribution inputs | [26-input license inventory](evidence/vendor-boot-license-inventory-20261106.json) | Attribution/grants unresolved; no public redistribution clearance claimed |
 
 The pinned mke2fs creator copies child modification times at whole-second
