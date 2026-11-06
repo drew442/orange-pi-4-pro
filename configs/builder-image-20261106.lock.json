@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "role": "Frozen AMD64 Ubuntu 22.04 build environment; not an Orange Pi boot image",
+  "build_host": "build.drewnet.online",
+  "producer_commit": "09c9ee7284a86efe4dff08fe81b5736d0b9ac305",
+  "raw_archive": {
+    "bytes": 4033443840,
+    "sha256": "2a8c6f66c1614e3b25e7ba51f3225790132ddca35cb34649afbf5c738adb2d6b"
+  },
+  "compressed_archive": {
+    "filename": "builder-root.tar.gz",
+    "bytes": 1603576598,
+    "sha256": "40ddaba53179d76b80f2804207533970f34eac07c2e7e88665ff395e4b5d3930"
+  },
+  "source_namespace_manifest": {
+    "bytes": 25615899,
+    "sha256": "0937b28df5ad6b304c7e7580e44855c4babb5e2cc1a601f7240d07f281724583"
+  },
+  "restored_inventory": {
+    "bytes": 50228,
+    "sha256": "491549c326d626e92de1c001bee3346215a707e9a63635584ede5085bde60faf"
+  },
+  "recipe": {
+    "bytes": 36315,
+    "sha256": "c5218e4f4ccc3340f00907219c8ef0073a1309bc92fb38ca6dd3e173a2215ebd"
+  },
+  "package_version_lock": {
+    "bytes": 32546,
+    "sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425"
+  },
+  "namespace": {
+    "uid_base": 1048576,
+    "uid_count": 65536,
+    "private_network": true,
+    "no_new_privileges": true,
+    "private_users_ownership": "off",
+    "read_only_runtime": true
+  },
+  "retained_locations": [
+    "build.drewnet.online:/var/lib/a733-frozen-builders/freeze-20261106-01/builder-root.tar.gz",
+    "codex.drewnet.online:/var/lib/a733-frozen-builder-retention-20261106/builder-root.tar.gz"
+  ]
+}

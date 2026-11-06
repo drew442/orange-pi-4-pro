@@ -1,0 +1,202 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Fresh network source/toolchain acquisition on codex; no compilation or frozen-builder execution",
+  "acquisition_host": "codex.drewnet.online",
+  "git_version": "git version 2.43.0",
+  "completed_utc": "2026-11-06T15:12:44.769756+00:00",
+  "sources": [
+    {
+      "name": "vendor",
+      "url": "https://github.com/orangepi-xunlong/orangepi-build.git",
+      "commit": "a95129bf30ea11886cc35f08ebb3e69695a26656",
+      "tree": "346695303ab2375580a1060a07445ab4f5a5a957",
+      "shallow": true,
+      "no_alternates": true,
+      "fsck_full": "passed",
+      "archive": "/home/drew/orange-pi-4-pro/out/upstream-git-inputs-20261106/vendor.git.tar",
+      "archive_bytes": 234547200,
+      "archive_sha256": "e76c01e93cf98014ed96198c45a0eb85a13cbd689c0f28ad63d65f803a35b042"
+    },
+    {
+      "name": "kernel",
+      "url": "https://github.com/orangepi-xunlong/linux-orangepi.git",
+      "commit": "2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f",
+      "tree": "7c30b4d7ddba799527ef056b98359a41fc824277",
+      "shallow": true,
+      "no_alternates": true,
+      "fsck_full": "passed",
+      "archive": "/home/drew/orange-pi-4-pro/out/upstream-git-inputs-20261106/kernel.git.tar",
+      "archive_bytes": 319385600,
+      "archive_sha256": "50e86191ec7cb121966be5f3aab5bc7573947b641a491e3342a7e80db2728319"
+    },
+    {
+      "name": "uboot",
+      "url": "https://github.com/orangepi-xunlong/u-boot-orangepi.git",
+      "commit": "b791be842935b27268ae3d00e943a9075495f30a",
+      "tree": "eb452cd22546eca6904a1cba4ab7ab84acbe0c05",
+      "shallow": true,
+      "no_alternates": true,
+      "fsck_full": "passed",
+      "archive": "/home/drew/orange-pi-4-pro/out/upstream-git-inputs-20261106/uboot.git.tar",
+      "archive_bytes": 30914560,
+      "archive_sha256": "bfd08da469b5c424bfd465b49b7466e47223ce8d7ce98c84b163b01749358df6"
+    }
+  ],
+  "uboot_toolchain": {
+    "url": "https://mirrors.bfsu.edu.cn/armbian-releases/_toolchain/gcc-linaro-7.4.1-2019.02-x86_64_arm-linux-gnueabi.tar.xz",
+    "path": "/home/drew/orange-pi-4-pro/out/upstream-git-inputs-20261106/toolchain/gcc-linaro-7.4.1-2019.02-x86_64_arm-linux-gnueabi.tar.xz",
+    "bytes": 109519380,
+    "sha256": "42ccb2ed99d65b7090499e6f5ad65c4c94ae6bd022decfea102d50109557c7d2",
+    "scope": "Fresh network acquisition; no extraction or execution"
+  },
+  "firmware_files": [
+    {
+      "path": "external/packages/pack-uboot/sun60iw2/bin/boot0_sdcard.fex",
+      "bytes": 245760,
+      "sha256": "a1ed6f1b8c4f5d98c29febefdc7203e5c442c2d1b841d204278b62ad56a70fd2"
+    },
+    {
+      "path": "external/packages/pack-uboot/sun60iw2/bin/boot0_sdcard_a733.fex",
+      "bytes": 245760,
+      "sha256": "9213f1c56ef932930d43b5751e8937bea0e9ae7460ec16187cc1b0dffdb75345"
+    },
+    {
+      "path": "external/packages/pack-uboot/sun60iw2/bin/boot0_sdcard_orangepizero3w.fex",
+      "bytes": 245760,
+      "sha256": "829ea8e3b65d71a02f2d0e094bc073de3a10869f948f62db49dbf023d07fabe3"
+    },
+    {
+      "path": "external/packages/pack-uboot/sun60iw2/bin/boot0_sdcard_orangepizero3w_1800M.fex",
+      "bytes": 245760,
+      "sha256": "d2a9bcccf012dce554c4613cf3e2e4256fe9863f6215afbe979aca891d4a6e27"
+    },
+    {
+      "path": "external/packages/pack-uboot/sun60iw2/bin/boot0_spinor_a733.fex",
+      "bytes": 237568,
+      "sha256": "7f0babc242c1e4614c7243bd2c45a980e4385727ffbb544a7c8f2d324cf8dc07"
+    },
+    {
+      "path": "external/packages/pack-uboot/sun60iw2/bin/boot0_ufs_a733.fex",
+      "bytes": 245760,
+      "sha256": "c5729d90686acfe7db9c649010c8026355fec212e72455e9eda6d17087c0942f"
+    },
+    {
+      "path": "external/packages/pack-uboot/sun60iw2/bin/boot0_ufs_orangepizero3w.fex",
+      "bytes": 245760,
+      "sha256": "7046c43d43b3b2e47452ccb6d5db935e109dc9ca7bde7d2ab90105e7901998b3"
+    },
+    {
+      "path": "external/packages/pack-uboot/sun60iw2/bin/boot_package.cfg",
+      "bytes": 209,
+      "sha256": "09bd43f68e54c0746b5130a3acf37fd38191d9187e329e2b78711561b6f9d918"
+    },
+    {
+      "path": "external/packages/pack-uboot/sun60iw2/bin/dts/u-boot-current.dts",
+      "bytes": 239512,
+      "sha256": "bd8e32740bc1c25532f28cae7860c61f07506dfc53a672d9726d2fd7ea71ff0c"
+    },
+    {
+      "path": "external/packages/pack-uboot/sun60iw2/bin/monitor.fex",
+      "bytes": 78609,
+      "sha256": "8af16b86ae8e2eff634a3ebca76a8cdf3c10b3540387573d46c3d785545b2632"
+    },
+    {
+      "path": "external/packages/pack-uboot/sun60iw2/bin/scp.fex",
+      "bytes": 105912,
+      "sha256": "07e6b97628101963e7944e012948c4bdf721f914bad347acd7dfbde89db42749"
+    },
+    {
+      "path": "external/packages/pack-uboot/sun60iw2/bin/sys_config/sys_config.fex",
+      "bytes": 5006,
+      "sha256": "eb598823d947fa39d0cf2102051b921d10f41b26538103b9fa3a266c6a486a29"
+    },
+    {
+      "path": "external/packages/pack-uboot/tools/dragonsecboot",
+      "bytes": 9105656,
+      "sha256": "e5f9076504a0ccde29c5978bcfc341c1c5ac02d947c47b849a5e8d26433545f6"
+    },
+    {
+      "path": "external/packages/pack-uboot/tools/dtc",
+      "bytes": 142013,
+      "sha256": "18061084fa0c0f4c067c904ab05f7ca9642bf9d9511a18bcbc5250ef1e099f01"
+    },
+    {
+      "path": "external/packages/pack-uboot/tools/genchecksum_uboot",
+      "bytes": 18512,
+      "sha256": "f4025c64574829a1f74c462c24ac4749c1437f29a333f6e8178cbb5e22e5cc12"
+    },
+    {
+      "path": "external/packages/pack-uboot/tools/merge_full_img",
+      "bytes": 913374,
+      "sha256": "c19d539a07b7b158244966f421736da38358802b1508221a1c063ae79492b7f5"
+    },
+    {
+      "path": "external/packages/pack-uboot/tools/merge_package",
+      "bytes": 18347,
+      "sha256": "fb9c40be1c111cc02f003f58472ebd1b4f10d347974a7723f54adca517c04ce7"
+    },
+    {
+      "path": "external/packages/pack-uboot/tools/merge_uboot",
+      "bytes": 893429,
+      "sha256": "39f53d597bed4f38684993ce1f5dc3fb4f9fd8038ef102fbc3887336a5f26239"
+    },
+    {
+      "path": "external/packages/pack-uboot/tools/script",
+      "bytes": 913850,
+      "sha256": "c1c790ffaa432aaed06e6a984c15d8046f989ebb4b32bcc84b4b8107671e2dad"
+    },
+    {
+      "path": "external/packages/pack-uboot/tools/update_boot0",
+      "bytes": 916445,
+      "sha256": "5a3c53802f75f0dd6619aa416d6b9b670f32eee51b60639642108a1184777753"
+    },
+    {
+      "path": "external/packages/pack-uboot/tools/update_boot1",
+      "bytes": 22817,
+      "sha256": "22c797c5916416537d9c5460ea4f3485edae3691d748d2f3660dbdb42e64a7de"
+    },
+    {
+      "path": "external/packages/pack-uboot/tools/update_chip",
+      "bytes": 824752,
+      "sha256": "1e524b189bc5e38312a64a0499d3be9fc22a5f8b0626c060212b57228e4e9a00"
+    },
+    {
+      "path": "external/packages/pack-uboot/tools/update_dtb",
+      "bytes": 878167,
+      "sha256": "67196a69c24a3640ec913e3de4d1d8eea6286edc074ca94260efa7e2c5c5308e"
+    },
+    {
+      "path": "external/packages/pack-uboot/tools/update_scp",
+      "bytes": 53561,
+      "sha256": "a97d281216f3ac0f1c153bd4ef51461ffaa5d013e1e8d6a3f6a05a4c7d4d45c7"
+    },
+    {
+      "path": "external/packages/pack-uboot/tools/update_uboot",
+      "bytes": 912620,
+      "sha256": "e98aeeae539ca292dea866e026456f5ad83888c13bd897433322052b089f90e7"
+    },
+    {
+      "path": "external/packages/pack-uboot/tools/update_uboot_fdt",
+      "bytes": 893428,
+      "sha256": "0e49db9d3cf95c1b5dbf011addc2ec00963607e69aa125c3ab98230bc6331032"
+    }
+  ],
+  "native_directory": "/home/drew/orange-pi-4-pro/out/upstream-git-inputs-20261106",
+  "script": {
+    "path": "/home/drew/orange-pi-4-pro/tmp/acquire-upstream-git-20261106.py",
+    "sha256": "5f5965a1f393cd3483a4878c7251085cacbefcad4bda92193cdb5c0480e4243a"
+  },
+  "checks": [
+    "All commits and tree IDs read from newly initialized repositories fetched from exact upstream URLs.",
+    "Every repository passed git fsck --full --no-reflogs; no alternates; explicit one-commit shallow boundary.",
+    "Complete archive SHA256/length verified; archive file and directory fsync performed.",
+    "Fresh Linaro archive matches original pinned SHA256; no extraction/execution.",
+    "All 26 pinned vendor firmware/tool blobs independently rehashed from the fresh Git object database."
+  ],
+  "remaining": [
+    "Import and inspect these source inputs on the Ubuntu 22.04 build host.",
+    "Reproduce complete artifacts in fresh frozen-builder environments.",
+    "Resolve redistribution attribution/grants and all actual hardware acceptance."
+  ]
+}

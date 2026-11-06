@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "role": "Fresh upstream inputs for clean-builder artifact replays; no builds executed",
+  "diagnostic_source_lock": {
+    "path": "configs/diagnostic-sources.lock.json",
+    "sha256": "aa39f5fca29244ca961fc3f422d7110adca6975d2c6a29f80afd9d1d2f4b4821"
+  },
+  "git_snapshots": [
+    {
+      "name": "vendor",
+      "url": "https://github.com/orangepi-xunlong/orangepi-build.git",
+      "commit": "a95129bf30ea11886cc35f08ebb3e69695a26656",
+      "tree": "346695303ab2375580a1060a07445ab4f5a5a957",
+      "repository_type": "bare shallow Git snapshot with local objects and explicit shallow boundary",
+      "archive": "vendor.git.tar",
+      "bytes": 234547200,
+      "sha256": "e76c01e93cf98014ed96198c45a0eb85a13cbd689c0f28ad63d65f803a35b042"
+    },
+    {
+      "name": "kernel",
+      "url": "https://github.com/orangepi-xunlong/linux-orangepi.git",
+      "commit": "2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f",
+      "tree": "7c30b4d7ddba799527ef056b98359a41fc824277",
+      "repository_type": "bare shallow Git snapshot with local objects and explicit shallow boundary",
+      "archive": "kernel.git.tar",
+      "bytes": 319385600,
+      "sha256": "50e86191ec7cb121966be5f3aab5bc7573947b641a491e3342a7e80db2728319"
+    },
+    {
+      "name": "uboot",
+      "url": "https://github.com/orangepi-xunlong/u-boot-orangepi.git",
+      "commit": "b791be842935b27268ae3d00e943a9075495f30a",
+      "tree": "eb452cd22546eca6904a1cba4ab7ab84acbe0c05",
+      "repository_type": "bare shallow Git snapshot with local objects and explicit shallow boundary",
+      "archive": "uboot.git.tar",
+      "bytes": 30914560,
+      "sha256": "bfd08da469b5c424bfd465b49b7466e47223ce8d7ce98c84b163b01749358df6"
+    }
+  ],
+  "uboot_toolchain": {
+    "url": "https://mirrors.bfsu.edu.cn/armbian-releases/_toolchain/gcc-linaro-7.4.1-2019.02-x86_64_arm-linux-gnueabi.tar.xz",
+    "filename": "gcc-linaro-7.4.1-2019.02-x86_64_arm-linux-gnueabi.tar.xz",
+    "bytes": 109519380,
+    "sha256": "42ccb2ed99d65b7090499e6f5ad65c4c94ae6bd022decfea102d50109557c7d2"
+  },
+  "firmware_inputs": {
+    "path": "configs/vendor-boot-inputs.sha256",
+    "sha256": "c516276f8f7896975f7e1adb272e37b45edc8e5280de5612b85a9da302a9b768",
+    "fresh_vendor_blob_checks": 26
+  }
+}

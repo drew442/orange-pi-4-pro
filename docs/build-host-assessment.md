@@ -52,8 +52,10 @@ The [actual clean seed isolation probe](clean-builder.md) now passes on Jammy,
 with no host inventory drift or remaining mapped processes/mounts. It ended
 with 24.53 GB free after seed staging and retained failed attempts. The subsequent [offline installation](evidence/builder-offline-install-20261106.json)
 now configures all 842 exact versions in a fresh seed, with package audits and
-unchanged host/cache postchecks. Builder freeze/restore and fresh artifact
-rebuilds remain open.
+unchanged host/cache postchecks. [Builder freeze and restoration](evidence/builder-frozen-20261106.json) now pass,
+including complete metadata and restored 842-package/isolation checks. The freeze
+left approximately 5.3 GB free; retire verified redundant scratch before source
+builds, keeping all existing disk guards. Fresh artifact rebuilds remain open.
 
 ## Local host assessment
 

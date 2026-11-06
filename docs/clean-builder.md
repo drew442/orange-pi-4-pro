@@ -4,8 +4,9 @@ The signed Ubuntu Base seed now passes an actual isolation probe on
 `drew@build.drewnet.online`. This is the AMD64 build environment. The current
 Orange Pi installation continues to use the [personalized deployment](deploy-personalized-20261106.md).
 The [fresh offline installation of 842 packages](evidence/builder-offline-install-20261106.json)
-now passes. The frozen builder digest and clean artifact rebuilds remain open;
-these builder checks supply no A733 guest or deployment acceptance.
+now passes. The installed builder filesystem has also been frozen, exported
+twice, restored with metadata, and checked. These builder checks supply no A733
+guest or deployment acceptance.
 
 ## Verified seed and isolation
 
@@ -109,11 +110,28 @@ shifted. A nonrecursive read-only source bind preserves the stored API directory
 headers rather than exposing nspawn's temporary mounts. This fixture does not
 establish complete builder-image restoration.
 
-## Remaining construction
+## Frozen builder and remaining construction
 
-Freeze and hash the installed builder filesystem with its namespace ownership
-and metadata preserved, validate restoration, independently acquire the locked
-sources/toolchains, and reproduce artifacts in fresh environments. Keep service,
-capability/device and network restrictions throughout those operations.
-Hardware KVM execution and all [release gates](hardware-validation.md) remain
-separate requirements.
+The successful freeze receipt is
+[`builder-frozen-20261106.json`](evidence/builder-frozen-20261106.json), for
+recipe commit `09c9ee7284a86efe4dff08fe81b5736d0b9ac305`. Two exports from the
+same installed tree at
+`/var/lib/a733-frozen-builders/freeze-20261106-01` produced identical raw
+archives: 4,033,443,840 bytes, SHA-256
+`2a8c6f66c1614e3b25e7ba51f3225790132ddca35cb34649afbf5c738adb2d6b`. The gzip
+archive is 1,603,576,598 bytes, SHA-256
+`40ddaba53179d76b80f2804207533970f34eac07c2e7e88665ff395e4b5d3930`. A native
+gzip copy was fully expanded and hash-verified under
+`/var/lib/a733-frozen-builder-retention-20261106`. The lock record is
+[`builder-image-20261106.lock.json`](../configs/builder-image-20261106.lock.json).
+
+Namespace restoration preserved full file metadata; package inventory, isolation
+probes, and unchanged host inventory/configuration checks passed. This verifies
+two exports of one installed tree, not two independent OS builds or source
+rebuilds. Fresh source acquisition is complete; artifact builds remain pending.
+Keep service, capability/device and network restrictions throughout the remaining
+build work. Hardware KVM execution and all
+[release gates](hardware-validation.md) remain separate requirements; no
+hardware acceptance is claimed. The project remains the A733 with a 2 GB SD and
+250 GB NVMe, zero routine SD writes, and an actual KVM guest required for
+hardware acceptance.

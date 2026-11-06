@@ -1,0 +1,187 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Actual AMD64 builder freeze and restored-OS validation; no source rebuild or hardware acceptance",
+  "builder_host": "build.drewnet.online",
+  "producer_commit": "09c9ee7284a86efe4dff08fe81b5736d0b9ac305",
+  "command": "sudo -n env -i PATH=/usr/bin:/bin HOME=/nonexistent LC_ALL=C TZ=UTC /usr/bin/python3 -I -B /var/lib/a733-builder-freeze-project-20261106/build/freeze-builder.py --seed-output /var/lib/a733-clean-builder/seed-probe-20261106-05 --output /var/lib/a733-frozen-builders/freeze-20261106-01",
+  "success": true,
+  "builder_frozen": true,
+  "artifact_rebuilds": false,
+  "hardware_acceptance": false,
+  "lock": {
+    "path": "configs/builder-image-20261106.lock.json",
+    "sha256": "8c18f055a5b876192f2b930523810d85493454b878495b5c5ba495e65dbe9800"
+  },
+  "raw_receipt": {
+    "path": "build.drewnet.online:/var/lib/a733-frozen-builders/freeze-20261106-01/receipt.json",
+    "bytes": 55899,
+    "sha256": "03455b8dc1b54fae6a0ea3f195110e7763fecf9464e5284d6d0815e5168bc219"
+  },
+  "artifacts": {
+    "raw_archive": {
+      "bytes": 4033443840,
+      "sha256": "2a8c6f66c1614e3b25e7ba51f3225790132ddca35cb34649afbf5c738adb2d6b"
+    },
+    "compressed_archive": {
+      "bytes": 1603576598,
+      "sha256": "40ddaba53179d76b80f2804207533970f34eac07c2e7e88665ff395e4b5d3930"
+    },
+    "manifest": {
+      "bytes": 25615899,
+      "sha256": "0937b28df5ad6b304c7e7580e44855c4babb5e2cc1a601f7240d07f281724583"
+    },
+    "restored_inventory": {
+      "bytes": 50228,
+      "sha256": "491549c326d626e92de1c001bee3346215a707e9a63635584ede5085bde60faf"
+    }
+  },
+  "export_runs": {
+    "run1": {
+      "members": 91570,
+      "special_nodes": 0
+    },
+    "run2": {
+      "members": 91570,
+      "special_nodes": 0
+    }
+  },
+  "checks": [
+    "Two canonical exports of the same installed root have identical full SHA256.",
+    "Full compressed expansion equals raw archive size and hash.",
+    "Namespace extraction and GNU tar comparison pass; canonical content/metadata manifest matches, including ownership, ACLs, xattrs, file capabilities, hardlinks and nanosecond mtimes.",
+    "Restored OS passes exact 842-package inventory, dpkg audit, apt check and restricted namespace probe.",
+    "Host package inventory/configuration, source, producer and package caches unchanged; mapped processes and mounts absent after cleanup.",
+    "Separate codex root-private copy fsynced and fully expanded/hash verified."
+  ],
+  "post_checks": {
+    "success": true,
+    "errors": []
+  },
+  "host_inventory_before": {
+    "bytes": 32546,
+    "sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425"
+  },
+  "host_inventory_after": {
+    "bytes": 32546,
+    "sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425"
+  },
+  "host_configuration_before_sha256": "12224d56842bcdf1798c0ca44e7affcfae8583366c879e3115eaf6ae885ab2c1",
+  "host_configuration_after_sha256": "12224d56842bcdf1798c0ca44e7affcfae8583366c879e3115eaf6ae885ab2c1",
+  "resources": {
+    "before_exports": {
+      "free_bytes": 19309260800,
+      "available_memory_bytes": 7396003840
+    },
+    "before_restored_probe": {
+      "free_bytes": 5318066176,
+      "available_memory_bytes": 7171129344
+    },
+    "minimum_sampled_free_bytes": 5318066176,
+    "minimum_sampled_available_memory_bytes": 7170940928
+  },
+  "validation": {
+    "focused_tests": 20,
+    "full_native_unittests": 929,
+    "native_skips": 95,
+    "shell_regressions": 5,
+    "assembly_cases": 4,
+    "independent_review": "Sol high; recipe c5218e4f4ccc3340f00907219c8ef0073a1309bc92fb38ca6dd3e173a2215ebd; no remaining blockers"
+  },
+  "limitations": [
+    "Exports share one installed source root; independent fresh OS construction is not proved.",
+    "Fresh source/kernel/U-Boot builds inside the frozen environment remain pending.",
+    "Physical NVMe installation, SSH, KVM execution and release acceptance remain pending."
+  ],
+  "retained_raw_records": {
+    "directory": "/home/drew/orange-pi-4-pro/out/builder-freeze-20261106/records",
+    "files": [
+      {
+        "filename": "compare.log",
+        "bytes": 34157638,
+        "sha256": "253f0e9db1b7f83a892427a70bd074f565f07e9744ec13caf3275c463cc8d83b"
+      },
+      {
+        "filename": "compare.sh",
+        "bytes": 5992,
+        "sha256": "f51acfe04d9965bd7e287c3ec367615d517d6ae5e4db1ce1b5fee29d76884ee0"
+      },
+      {
+        "filename": "export.sh",
+        "bytes": 5564,
+        "sha256": "5d0943b6a1cf169844cd728e766c034328d3ce243a3484180c27cfdce3ba65e5"
+      },
+      {
+        "filename": "files.list",
+        "bytes": 5299279,
+        "sha256": "ab6b4fc0e13f1ff8fedde7219bc47811632982a88f0c5b32f32bbf2c7071d55d"
+      },
+      {
+        "filename": "host-inventory-after.tsv",
+        "bytes": 32546,
+        "sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425"
+      },
+      {
+        "filename": "host-inventory-before.tsv",
+        "bytes": 32546,
+        "sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425"
+      },
+      {
+        "filename": "inventory.sh",
+        "bytes": 2759,
+        "sha256": "acac7e488f518f6bdf06c0e66ba836fea064dae5d4056bccd028c570ba0161c5"
+      },
+      {
+        "filename": "receipt.json",
+        "bytes": 55899,
+        "sha256": "03455b8dc1b54fae6a0ea3f195110e7763fecf9464e5284d6d0815e5168bc219"
+      },
+      {
+        "filename": "resources.jsonl",
+        "bytes": 29837,
+        "sha256": "a2520bdf99fc790f65367c0ff08bf0e62993f901bbcd04891059247f84264650"
+      },
+      {
+        "filename": "restore.log",
+        "bytes": 3067,
+        "sha256": "adb0ebe4c4071b4c40d68714bc64d25aee2136f655a428de47132b5ab36bb5bd"
+      },
+      {
+        "filename": "restore.sh",
+        "bytes": 2771,
+        "sha256": "1dc132f3d3e5e71d31355a91b55aef378274ab09947a649d6bae4f58d4304a21"
+      },
+      {
+        "filename": "restored-installed.tsv",
+        "bytes": 50228,
+        "sha256": "491549c326d626e92de1c001bee3346215a707e9a63635584ede5085bde60faf"
+      },
+      {
+        "filename": "restored-inventory.log",
+        "bytes": 53335,
+        "sha256": "3fcb864fd04e9f8e432cca3a68792290f22dada95a50f84a28e6fe1813b3528c"
+      },
+      {
+        "filename": "run1.log",
+        "bytes": 34157638,
+        "sha256": "3d431213ec7d3c06157fd691751a83f1adf5797f2923dcf4258bb1cb86aad38f"
+      },
+      {
+        "filename": "run2.log",
+        "bytes": 34157638,
+        "sha256": "1d2d960e6aa3af9b39f86b72fdb5ef1fc26cd6c59b6a36136c1e57c16b0f92ce"
+      },
+      {
+        "filename": "source-host-manifest.json",
+        "bytes": 26714583,
+        "sha256": "88819f357852ff19b0cc2d38cfe6a4566e392427a03e22e68dda896a28a9ab0b"
+      },
+      {
+        "filename": "source-namespace-manifest.json",
+        "bytes": 25615899,
+        "sha256": "0937b28df5ad6b304c7e7580e44855c4babb5e2cc1a601f7240d07f281724583"
+      }
+    ],
+    "remote_hashes_match": true
+  }
+}
