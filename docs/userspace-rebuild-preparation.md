@@ -36,19 +36,24 @@ Do not confuse that binary index with the separately retained Sources index.
 
 The [private API setup](userspace-api-preflight.md) now passes an actual test inside
 the frozen builder and independent review. It supplies read-only private proc/sysfs
-views to ARM commands without restoring payload capabilities. A trusted setup helper running as host root exits before the restricted payload continues; no maintainer script
-has run. Stock bootstrap integration remains open.
+views to ARM commands without restoring payload capabilities. A trusted setup helper running as host root exits
+before the restricted payload continues; no maintainer script has run. Stock bootstrap integration remains open.
 
-The next step is a reviewed offline bootstrap adapter. Pinned debootstrap
+The [tracked offline mirror and bootstrap adapter](offline-userspace-reconstruction.md)
+now pass actual signature verification and the foreign data-extraction phase.
+The mirror authenticates all 220 inputs; debootstrap caches 99 and extracts 96
+required archives. Its target package database remains empty, with eight inert
+ordinary device placeholders. Complete second-stage integration remains open.
+
+Pinned debootstrap
 1.0.126+nmu1ubuntu0.9 still assumes it can create a test device and mount API
 filesystems. Its `functions` file, retained from the frozen builder under
 `tmp/frozen-debootstrap-reference-20261106/`, has the device sanity check near
 line 1635 and device setup near lines 1299–1330. The setup also expects full,
-tty and ptmx. Additional disk space does not fix these assumptions. Replace
-only the necessary checks/setup with verified prebound devices and appropriate
-private API filesystems; do not pretend to be a different container type or
-restore prohibited capabilities. Preserve the verified private API setup and verify the complete adapted device
-and mount lifecycle before any package maintainer scripts run.
+tty and ptmx. The tracked adapter replaces the necessary checks for distinct foreign and
+second-stage phases. Its second-stage device/API guards have fixture coverage;
+integrate and verify the complete mount lifecycle before any maintainer scripts
+run, preserving private APIs and prohibited capabilities.
 
 After that adapter passes review and execution, compare the complete configured
 inventory, package audits and source/cache/host postchecks; strip per-machine

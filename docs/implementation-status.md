@@ -207,7 +207,12 @@ backup/recovery and SPI-specific programming authorization remain outstanding.
    raw package inputs inside the frozen builder. [Private API setup](userspace-api-preflight.md)
    also passes actual ARM reads and independent review, with payload capability
    drops unchanged and a separate trusted setup helper. No maintainer scripts
-   ran; adapting the offline bootstrap lifecycle is the next userspace step.
+   ran. The [tracked offline mirror and adapter](offline-userspace-reconstruction.md)
+   now pass real signature verification and foreign data extraction: 220 inputs
+   authenticated, 99 packages cached, 96 extracted, and target status still empty.
+   Independent review, complete retained-repository checks and 1,004 discovery
+   cases (95 skips), four assembly cases and all shell suites pass. Integrating
+   second-stage devices/APIs and configuring the complete userspace remain next.
    [Root reconstruction preparation](root-reconstruction-preparation.md) proves
    virtual device metadata without real nodes. The complete 15,892-member
    userspace archive now passes staging content/metadata checks and selected

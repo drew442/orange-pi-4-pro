@@ -1,0 +1,205 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Authenticated offline repository and pinned foreign DATA extraction in frozen builder; no configured userspace or hardware acceptance",
+  "success": true,
+  "builder": "build.drewnet.online",
+  "phase": "/var/lib/a733-clean-replay-20261106/userspace-foreign-01",
+  "raw_records": "out/userspace-foreign-20261106/",
+  "driver_code": {
+    "out/userspace-foreign-20261106/verification-code/run-userspace-foreign-20261106.py": {
+      "bytes": 4804,
+      "sha256": "a964eb0644e0ea962fa249dd12af850c26766a27b31ccd7227267876be71870b"
+    },
+    "out/userspace-foreign-20261106/verification-code/launch-userspace-foreign-20261106.py": {
+      "bytes": 4117,
+      "sha256": "6972fb8bfc9847a2c90d87fb2e9f0d0b629c9cd6c9da8061727e699c9a03c468"
+    }
+  },
+  "staged_inputs": {
+    "Packages.xz": {
+      "bytes": 8689464,
+      "sha256": "2ddb1737692e8c45c53e8d57c0ce4cd21c78c5703b830c3226b1423566a06c00"
+    },
+    "launcher.py": {
+      "bytes": 4117,
+      "sha256": "6972fb8bfc9847a2c90d87fb2e9f0d0b629c9cd6c9da8061727e699c9a03c468"
+    },
+    "project/build/debootstrap-adapter.py": {
+      "bytes": 18308,
+      "sha256": "d10f8a8ea1e83a0b659582d895e98bf8553165dbfc2469aab54eab82e1c501ea"
+    },
+    "project/build/offline-userspace-repo.py": {
+      "bytes": 19197,
+      "sha256": "bb8a4c71595f9867e4f7cf2958a2bf5bca6e0d81c49819eb1b7483957b0a4911"
+    },
+    "project/configs/host-userspace-package-hashes.lock.tsv": {
+      "bytes": 28638,
+      "sha256": "f2f613e79d9c1abc1689e19cfe81b624d9d2ac3beeb322fd5788980d919f7d86"
+    },
+    "project/configs/host-userspace-packages.lock.tsv": {
+      "bytes": 6671,
+      "sha256": "f2abf03d0d6e7fd506560689093220514cbf1acc678f7560562026d6ca6564a6"
+    },
+    "run.py": {
+      "bytes": 4804,
+      "sha256": "a964eb0644e0ea962fa249dd12af850c26766a27b31ccd7227267876be71870b"
+    }
+  },
+  "repository": {
+    "packages_authenticated": 220,
+    "bom_files": 669,
+    "bom_sha256": "c543bb4113abfa3e1658733a916bc3aea7167b20ef91e584a4b841fe87add17b",
+    "manifest": {
+      "bytes": 195321,
+      "sha256": "b323d3fe609940f7c6d57ebf51bfa71271dfd143c81f8d09f5faf0a1ef81d9e9"
+    },
+    "actual_gpgv": "exit 0 with good Debian archive/release signatures; independently repeated using retained public keyring and InRelease",
+    "index": "Full signed ARM64 binary index retained unchanged; pool contains only the 220 locked binaries. Missing dependencies must fail offline."
+  },
+  "foreign_stage": {
+    "required_package_count": 96,
+    "base_package_count": 3,
+    "cached_bootstrap_debs": 99,
+    "data_archives_extracted": 96,
+    "dpkg_status_bytes": 0,
+    "device_placeholders": {
+      "null": {
+        "placeholder_type": "ordinary regular file",
+        "major": 1,
+        "minor": 3,
+        "mode": 438
+      },
+      "zero": {
+        "placeholder_type": "ordinary regular file",
+        "major": 1,
+        "minor": 5,
+        "mode": 438
+      },
+      "full": {
+        "placeholder_type": "ordinary regular file",
+        "major": 1,
+        "minor": 7,
+        "mode": 438
+      },
+      "random": {
+        "placeholder_type": "ordinary regular file",
+        "major": 1,
+        "minor": 8,
+        "mode": 438
+      },
+      "urandom": {
+        "placeholder_type": "ordinary regular file",
+        "major": 1,
+        "minor": 9,
+        "mode": 438
+      },
+      "tty": {
+        "placeholder_type": "ordinary regular file",
+        "major": 5,
+        "minor": 0,
+        "mode": 438
+      },
+      "console": {
+        "placeholder_type": "ordinary regular file",
+        "major": 5,
+        "minor": 1,
+        "mode": 438
+      },
+      "ptmx": {
+        "placeholder_type": "ordinary regular file",
+        "major": 5,
+        "minor": 2,
+        "mode": 438
+      }
+    },
+    "command": {
+      "argv": [
+        "/bin/sh",
+        "/a733-export-output/adapter/debootstrap",
+        "--arch=arm64",
+        "--variant=minbase",
+        "--foreign",
+        "--force-check-gpg",
+        "--keyring=/a733-export-output/repo/verified-keyring.gpg",
+        "--include=ca-certificates",
+        "bookworm",
+        "/a733-export-output/arm-root",
+        "file:///a733-export-output/repo"
+      ],
+      "status": 0,
+      "environment": {
+        "PATH": "/usr/sbin:/usr/bin:/sbin:/bin",
+        "HOME": "/nonexistent",
+        "LC_ALL": "C",
+        "TZ": "UTC",
+        "DEBOOTSTRAP_DIR": "/a733-export-output/adapter",
+        "DEBIAN_FRONTEND": "noninteractive",
+        "SYSTEMD_OFFLINE": "1"
+      }
+    },
+    "adapter_manifest": {
+      "bytes": 2663,
+      "sha256": "dc1c4bee9855197e0c39a9e1e00e1a7802e13f054ee60ff2fca9d8ed33d6c52e"
+    },
+    "source_control": "Four exact pinned upstream files; executable/scripts unchanged and functions only receive the reviewed appended override."
+  },
+  "boundary": {
+    "prohibited_capability_mask": "0xa631000",
+    "no_new_privileges": "1",
+    "restrictions_unchanged": true,
+    "host_packages_unchanged": true,
+    "mapped_processes_after": [],
+    "output_mounts_after": []
+  },
+  "resources": {
+    "samples": 13,
+    "minimum_free_bytes": 5407723520,
+    "minimum_available_memory_bytes": 7445274624
+  },
+  "native_repository_retention": {
+    "success": true,
+    "files_verified": 669,
+    "package_count": 220,
+    "archive": {
+      "bytes": 106858274,
+      "sha256": "f67a76ae5fa43c5d6acf8035029ec81f52f9f56cc04cea0a34d9cec2cd867f91"
+    },
+    "scope": "all retained repository regular files including signed metadata and pool; native file ownership is not a preservation claim"
+  },
+  "tests": {
+    "focused_mirror": 19,
+    "focused_adapter": 22,
+    "discovery_cases": 1004,
+    "environment_skips": 95,
+    "diagnostic_assembly": 4,
+    "shell_suites": 5,
+    "passed": true,
+    "logs": [
+      "tmp/offline-userspace-discovery-tests-20261106.log",
+      "tmp/offline-userspace-assembly-tests-20261106.log",
+      "tmp/offline-userspace-shell-tests-20261106.log"
+    ]
+  },
+  "review": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "result": "Implementation, integration scripts and actual records independently reviewed; no outstanding findings. Native repository signatures/BOM/pool/control records and source adapter prefix/override rechecked."
+  },
+  "limitations": [
+    "Original rootfs archive was not used as a construction seed. This reconstructs from locked binary packages, not source recompilation.",
+    "Foreign stage is data extraction only: target package status database remains empty and device files are ordinary inert placeholders.",
+    "Complete target tree remains on the builder; selected logs/package lists/receipts and complete authenticated repository were copied to codex.",
+    "No second-stage, ARM maintainer scripts, complete 220-package configuration, final userspace archive, production images or deployment acceptance established.",
+    "Second-stage device/API setup and lifecycle still require integration and actual validation before running maintainers.",
+    "Build-host volume expansion remains unperformed and approval-pending; production image capacity guards remain unchanged.",
+    "No physical installation, real KVM guest, SD-write, endurance, rollback, restore or SPI test performed."
+  ],
+  "raw_records_manifest": {
+    "path": "out/userspace-foreign-20261106/records-manifest.json",
+    "files": 463,
+    "bytes": 70323,
+    "sha256": "d53b33129002c592f45811c6673e1ccec1248b119797fa2510e58181610eacaa",
+    "scope": "records, code and compressed repository archive; expanded repository files have their separate complete 669-file BOM"
+  }
+}
