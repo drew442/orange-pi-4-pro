@@ -53,6 +53,19 @@ class ReplayTests(unittest.TestCase):
         for name in ('MAKEFLAGS', 'CC', 'GIT_DIR', 'CPATH', 'DPKG_ADMINDIR'):
             self.assertNotIn(name, env)
 
+    def test_git_trust_is_invocation_local_exact_and_path_validated(self):
+        with patch.object(replay, 'run', return_value=b'ok') as execute:
+            self.assertEqual(replay.git(self.workspace, 'status', '--porcelain'), b'ok')
+        command = execute.call_args.args[0]
+        self.assertEqual(command.count(f'safe.directory={self.workspace}'), 1)
+        self.assertNotIn('safe.directory=*', command)
+        self.assertEqual(command[command.index('-C') + 1], self.workspace)
+        alias = self.root / 'cache-alias'
+        alias.symlink_to(self.workspace)
+        with patch.object(replay, 'run') as execute, self.assertRaisesRegex(ValueError, 'Symlink'):
+            replay.git(alias, 'status')
+        execute.assert_not_called()
+
     def test_start_resources_thresholds(self):
         good = {'free_disk_bytes': {'output': 15_000_000_001}, 'available_ram_bytes': 3_000_000_000}
         for sample, accepted in ((good, True), ({**good, 'free_disk_bytes': {'out': 15_000_000_000}}, False),
@@ -116,6 +129,21 @@ class ReplayTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'differs from HEAD'):
             replay.project_source(self.repo)
 
+    def test_exact_git_trust_handles_other_owner_without_trusting_unrelated_tree(self):
+        self.project()
+        env = dict(replay.environment(), GIT_TEST_ASSUME_DIFFERENT_OWNER='1')
+        private = self.root / 'private-owner-test'
+        with patch.object(replay, 'environment', return_value=env):
+            with self.assertRaises(subprocess.CalledProcessError):
+                replay.run(['git', '-C', self.repo, 'status', '--porcelain'])
+            self.assertEqual(replay.git(self.repo, 'status', '--porcelain'), b'')
+            replay.run(replay.git_command(self.repo, 'clone', '--shared', '--no-checkout', self.repo, private))
+            # Invocation-local trust must not persist for another repository.
+            with self.assertRaises(subprocess.CalledProcessError):
+                replay.run(['git', '-C', private, 'status', '--porcelain'])
+            replay.git(private, 'checkout', '--detach', 'HEAD')
+            self.assertEqual(replay.git(private, 'status', '--porcelain'), b'')
+
     def test_project_dirty_and_untracked_refused(self):
         self.project()
         (self.repo / 'untracked').write_text('not committed')
@@ -135,7 +163,7 @@ class ReplayTests(unittest.TestCase):
         replay.run(['git', 'clone', '-q', '--depth=1', original.as_uri(), cache])
         before = replay.source_state(cache, head)
         self.assertTrue(before['shallow'])
-        replay.run(['git', 'clone', '-q', '--shared', '--no-checkout', cache, private])
+        replay.run(replay.git_command(cache, 'clone', '-q', '--shared', '--no-checkout', cache, private))
         replay.git(private, 'checkout', '-q', '--detach', head)
         self.assertEqual(replay.source_state(private, head), before)
         self.assertEqual(replay.source_state(cache, head), before)
@@ -230,6 +258,8 @@ class ReplayTests(unittest.TestCase):
         self.assertTrue(result['shared_inputs_unchanged'])
         self.assertIsNone(result['modules_match_unanchored_retained_baseline'])
         self.assertIn('--shared', commands[0])
+        self.assertIn(f'safe.directory={self.workspace / "kernel"}', commands[0])
+        self.assertIn(f'safe.directory={self.output / "kernel-source"}', commands[1])
         self.assertTrue(all('LOCALVERSION=-a733-diag' in command for command in commands if 'Image' in command or 'modules_install' in command))
         self.assertEqual((self.workspace / 'artifacts/Image').read_bytes(), b'kernel')
         samples = [json.loads(line) for line in (self.output / 'logs/resources.jsonl').read_text().splitlines()]

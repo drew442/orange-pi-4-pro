@@ -13,6 +13,7 @@ import os
 from pathlib import Path
 import re
 import shutil
+import shlex
 import signal
 import stat
 import subprocess
@@ -55,8 +56,23 @@ def run(command, cwd=None, log=None):
     return helper.run(command, cwd=cwd, env=environment(), log=log)
 
 
+def git_command(tree, *args):
+    tree = safe_path(tree)
+    # Root may replay Drew-owned caches. Trust only this validated invocation's
+    # exact tree; never inherit SUDO_UID or alter persistent Git configuration.
+    trust = ['-c', f'safe.directory={tree}']
+    if args and args[0] == 'clone':
+        # Clone unsets GIT_CONFIG_PARAMETERS for upload-pack, which separately
+        # validates source/.git. Give that read-only subprocess its exact trust.
+        endpoint = safe_path(tree / '.git')
+        upload_pack = shlex.join(['/usr/bin/git', '-c', f'safe.directory={endpoint}', 'upload-pack'])
+        args = (args[0], f'--upload-pack={upload_pack}', *args[1:])
+    return ['git', '--no-optional-locks', '-c', 'core.hooksPath=/dev/null',
+            *trust, '-C', tree, *args]
+
+
 def git(tree, *args):
-    return run(['git', '--no-optional-locks', '-c', 'core.hooksPath=/dev/null', '-C', tree, *args])
+    return run(git_command(tree, *args))
 
 
 def project_source(repo):
@@ -262,9 +278,9 @@ def build(repo, workspace, output, before, config):
                 shutil.copyfile(workspace / 'artifacts' / name, artifacts / ('original-' + name))
                 helper.authenticate(artifacts / ('original-' + name), before['targets'][name])
             with (logs / 'source-checkout.log').open('wb') as log:
-                monitor.command(['git', '-c', 'core.hooksPath=/dev/null', 'clone', '--shared', '--no-checkout',
-                                 workspace / 'kernel', tree], output, log)
-                monitor.command(['git', '-c', 'core.hooksPath=/dev/null', 'checkout', '--detach', KERNEL_HEAD], tree, log)
+                monitor.command(git_command(workspace / 'kernel', 'clone', '--shared', '--no-checkout',
+                                            workspace / 'kernel', safe_path(tree)), output, log)
+                monitor.command(git_command(tree, 'checkout', '--detach', KERNEL_HEAD), tree, log)
             private_before = source_state(tree, KERNEL_HEAD)
             require(private_before == before['kernel'], 'Private clone changed pinned source/shallow state')
             require(not os.path.lexists(tree / '.scmversion'), 'Unexpected private .scmversion')
