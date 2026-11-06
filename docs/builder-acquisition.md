@@ -28,8 +28,11 @@ historical archive contents; do not change the active builder's APT sources
 while a replay is enforcing its exact before/after inventory.
 
 The separate `build/fetch-builder-packages.py` recipe uses the already pinned
-aria2 1.36.0 on the Jammy builder, with two transfers, TLS checks, redirects
-disabled and per-file SHA-256. It independently rehashes the complete cache
+aria2 1.36.0 on the Jammy builder, with two transfers, fixed initial HTTPS
+origins, TLS checks and per-file SHA-256. It retains aria2's native redirect
+behavior; torrent/metalink following is disabled. The [actual offline option
+probe](evidence/builder-fetch-option-probe-20261106.json) validates the complete
+argument set before transfer. It independently rehashes the complete cache
 before writing a success receipt. Outputs are new private
 `out/builder-packages-NAME` directories; explicit `--resume` requires the original
 clean commit/input binding. Completed corruption is refused and bound aria2

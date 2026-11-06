@@ -165,7 +165,8 @@ def aria_input(output, missing, records):
 def aria_command(output):
     return ['/usr/bin/aria2c', '--no-conf=true', '--input-file=' + str(output / 'aria2-input.txt'),
             '--max-concurrent-downloads=2', '--split=1', '--max-connection-per-server=1',
-            '--check-certificate=true', '--max-http-redirect=0', '--check-integrity=true',
+            '--check-certificate=true', '--follow-torrent=false', '--follow-metalink=false',
+            '--check-integrity=true',
             '--continue=true', '--auto-file-renaming=false', '--allow-overwrite=false',
             '--file-allocation=none', '--max-tries=2', '--retry-wait=2',
             '--connect-timeout=30', '--timeout=60', '--summary-interval=0',
@@ -259,6 +260,8 @@ def fetch(repo, output, resume=False):
             safe.write_json(state, initial)
         report = {'schema': 1, 'status': 'failed', 'binding': initial, 'builder_before': before,
                   'aria2_version': version, 'jobs': 2, 'aria2_exit': None,
+                  'redirect_policy': 'Native aria2 1.36.0 redirects; no redirect restriction. '
+                      'Fixed initial HTTPS origins, certificate checks and immutable final SHA256.',
                   'archives': [{'path': path, **record, 'status': 'pending'}
                                for path, record in records.items()]}
         interruption = None
@@ -275,6 +278,16 @@ def fetch(repo, output, resume=False):
             report['aria2_input_sha256'] = digest(value.encode())
             command = aria_command(output)
             report['command'] = command
+            # --help parses every supplied option and exits without starting transfers.
+            smoke_command = command + ['--help=#basic']
+            report['aria2_option_smoke'] = {'command': smoke_command, 'exit': None}
+            try:
+                smoke = run(smoke_command)
+            except subprocess.CalledProcessError as exc:
+                report['aria2_option_smoke'].update(exit=exc.returncode,
+                    stderr=(exc.stderr or b'').decode(errors='replace')[:4096])
+                raise
+            report['aria2_option_smoke'].update(exit=0, stdout_sha256=digest(smoke))
             if missing:
                 write_text(output / 'aria2.log', '')
                 with (output / 'aria2.log').open('ab') as log:

@@ -1,0 +1,82 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Actual offline aria2 1.36.0 argument probes; no download proof",
+  "probe": {
+    "version": "aria2 version 1.36.0",
+    "help_all_sha256": "b6e41d42ca71390e0af0c256dfff1653d5892c9a077ff527813414b518c4d3cb",
+    "policy": "Native redirects; no redirect restriction",
+    "probes": [
+      {
+        "command": [
+          "/usr/bin/aria2c",
+          "--no-conf=true",
+          "--input-file=/home/drew/orange-pi-4-pro/out/builder-packages-option-smoke/aria2-input.txt",
+          "--max-concurrent-downloads=2",
+          "--split=1",
+          "--max-connection-per-server=1",
+          "--check-certificate=true",
+          "--follow-torrent=false",
+          "--follow-metalink=false",
+          "--check-integrity=true",
+          "--continue=true",
+          "--auto-file-renaming=false",
+          "--allow-overwrite=false",
+          "--file-allocation=none",
+          "--max-tries=2",
+          "--retry-wait=2",
+          "--connect-timeout=30",
+          "--timeout=60",
+          "--summary-interval=0",
+          "--console-log-level=notice",
+          "--download-result=full",
+          "--help=#basic"
+        ],
+        "exit": 0,
+        "stdout_sha256": "61a2c73dfdf6423c2dc651db65c1aa87d2e9b39f4cdbf1b138f9e117289ab037",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/usr/bin/aria2c",
+          "--no-conf=true",
+          "--input-file=/home/drew/orange-pi-4-pro/out/builder-packages-option-smoke/aria2-input.txt",
+          "--max-concurrent-downloads=2",
+          "--split=1",
+          "--max-connection-per-server=1",
+          "--check-certificate=true",
+          "--follow-torrent=false",
+          "--follow-metalink=false",
+          "--check-integrity=true",
+          "--continue=true",
+          "--auto-file-renaming=false",
+          "--allow-overwrite=false",
+          "--file-allocation=none",
+          "--max-tries=2",
+          "--retry-wait=2",
+          "--connect-timeout=30",
+          "--timeout=60",
+          "--summary-interval=0",
+          "--console-log-level=notice",
+          "--download-result=full",
+          "--a733-unknown-option=true",
+          "--help=#basic"
+        ],
+        "exit": 28,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr": "/usr/bin/aria2c: unrecognized option '--a733-unknown-option=true'\nUsage: aria2c [OPTIONS] [URI | MAGNET | TORRENT_FILE | METALINK_FILE]...\nSee 'aria2c -h'.\n"
+      }
+    ]
+  },
+  "failed_first_attempt": {
+    "source_commit": "f4fb7faeb2f3c63b00ebe403707d657dab52c595",
+    "output": "/home/drew/orange-pi-4-pro-build/builder-package-acquisition-20261106/out/builder-packages-20261106-01",
+    "result": "failed before transfer; unsupported --max-http-redirect=0",
+    "aria2_exit": 28,
+    "verified_archives": 0,
+    "unchanged_builder_inventory": true,
+    "success_receipt_exists": false
+  },
+  "correction": "Remove unsupported flag; record native redirect behavior; disable torrent/metalink following with supported flags; validate all arguments through actual --help parsing before transfer.",
+  "acceptance_limit": "A successful option probe is not successful package acquisition or a constructed clean builder."
+}

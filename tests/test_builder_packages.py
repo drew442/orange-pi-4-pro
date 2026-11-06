@@ -122,10 +122,23 @@ class BuilderPackagesTests(unittest.TestCase):
         command = m.aria_command(self.output)
         for flag in ('--no-conf=true', '--max-concurrent-downloads=2', '--split=1',
                      '--max-connection-per-server=1', '--check-certificate=true',
-                     '--max-http-redirect=0', '--auto-file-renaming=false',
+                     '--follow-torrent=false', '--follow-metalink=false', '--auto-file-renaming=false',
                      '--allow-overwrite=false'):
             self.assertIn(flag, command)
         self.assertFalse(any(k.lower().endswith('proxy') for k in m.ENV))
+
+    @unittest.skipUnless(Path('/usr/bin/aria2c').is_file(), 'native aria2 binary unavailable')
+    def test_real_aria2_option_parser_offline(self):
+        version = subprocess.check_output(['/usr/bin/aria2c', '--no-conf=true', '--version'], env=m.ENV)
+        self.assertTrue(version.startswith(b'aria2 version 1.36.0\n'))
+        command = m.aria_command(self.output)
+        result = subprocess.run(command + ['--help=#basic'], env=m.ENV, capture_output=True)
+        self.assertEqual(result.returncode, 0, result.stderr.decode())
+        unknown = subprocess.run(command + ['--a733-unknown-option=true', '--help=#basic'],
+                                 env=m.ENV, capture_output=True)
+        self.assertNotEqual(unknown.returncode, 0)
+        self.assertIn(b'unrecognized option', unknown.stderr)
+        self.assertEqual(list(self.output.iterdir()), [])
 
     def test_clean_git_binding_and_changed_head(self):
         def git(*args):
@@ -174,6 +187,23 @@ class BuilderPackagesTests(unittest.TestCase):
         self.assertEqual(report['builder_after'], {'inventory': 'exact'})
         self.assertFalse((self.output / 'receipt.json').exists())
         self.assertEqual(report['archives'][0]['status'], 'failed')
+
+    def test_option_smoke_failure_prevents_any_transfer(self):
+        (self.output / 'fetch-state.json').write_text(json.dumps({'head': 'fixture', 'files': {}}))
+        failure = subprocess.CalledProcessError(28, ['aria2c', '--unsupported=true'])
+        with patch.object(m, 'binding', return_value={'head': 'fixture', 'files': {}}), \
+             patch.object(m, 'inputs', return_value=self.records), \
+             patch.object(m.helper, 'check_builder', return_value={'inventory': 'exact'}), \
+             patch.object(m, 'run', side_effect=[b'aria2 version 1.36.0\n', failure]), \
+             patch.object(m, 'download_command') as download:
+            with self.assertRaises(ValueError):
+                m.fetch(self.repo, self.output, True)
+            download.assert_not_called()
+        report = json.loads((self.output / 'fetch-report.json').read_text())
+        self.assertEqual(report['status'], 'failed')
+        self.assertIsNone(report['aria2_exit'])
+        self.assertEqual(report['aria2_option_smoke']['exit'], 28)
+        self.assertFalse((self.output / 'receipt.json').exists())
 
     def test_old_receipt_removed_on_corrupt_cache(self):
         self.archive(b'bad')
