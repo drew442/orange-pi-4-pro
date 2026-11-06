@@ -57,9 +57,13 @@ including complete metadata and restored 842-package/isolation checks. The freez
 left approximately 5.3 GB free. [Verified duplicate retirement](evidence/builder-scratch-retirement-20261106.json)
 recovered 11.25 GB of logical files; [fresh source checkout/import](evidence/frozen-source-import-20261106.json)
 then passed in the restored builder. [Two U-Boot replays](evidence/frozen-uboot-replay-20261106.json)
-now match the retained binary and boot package. Approximately 9.38 GB remains,
-below the kernel’s 15 GB start guard; recover more verified capacity before
-kernel compilation. Kernel and full-image rebuilds remain open.
+now match the retained binary and boot package. [Further verified retention](evidence/kernel-space-retention-20261106.json)
+raised free space from about 9.38 GB to 15.48 GB before launch. The
+[fresh kernel build](evidence/frozen-kernel-started-20261106.json) passed its
+15 GB disk/3 GB RAM start guards and is compiling with two jobs. The old kernel
+cache is retained on codex, where full restoration, archive comparison and Git
+object checks pass. Compile results and full-image reproduction remain open;
+recheck resources rather than reusing these historical free-space samples.
 
 ## Local host assessment
 

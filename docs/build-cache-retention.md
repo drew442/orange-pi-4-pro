@@ -112,7 +112,8 @@ Direct archive inspection corrects the earlier claim about borrowed Git objects:
 there is no alternates member, and a local 316,118,371-byte Git pack is retained.
 Restoring only archived Git metadata on codex resolves the pinned shallow commit
 and passes `git fsck --full --no-reflogs`, without the original builder path.
-Original source caches remain retained for existing recipes. Full working-tree
+The original kernel source cache is now retained off-host as recorded below;
+restore it before running a legacy recipe directly on the host. Full working-tree
 restoration and rebuilding were not exercised by this metadata check. This is
 independent of physical recovery.
 
@@ -122,8 +123,8 @@ Five guest kernel `src/` working trees, including two failed-build trees, were
 compressed in full to sibling `src-working-tree.tar.gz` files. GNU tar compared
 each complete archive against the live tree before its expanded copy was removed.
 Images, configurations, logs, licenses, recipe archives and source snapshots were
-retained. Manifest pins before and after archival match. The original pinned
-kernel checkout, configuration, built Image and modules remain in place.
+retained. Manifest pins before and after archival match. The original pinned kernel checkout and its cached files are now retained
+off-host as recorded below; comparison artifacts remain on the builder.
 
 Forty-one manifest-listed generated images were made sparse by replacing
 allocated zero blocks with holes. Their logical bytes, lengths, paths, inodes
@@ -206,3 +207,32 @@ and now also at `/var/lib/a733-scratch-retirement-20261106/kernel-source.tar.gz`
 on codex. Earlier builder archive paths are historical and require restoration.
 Current deployment artifacts, source checkouts and both builder rootfs trees
 remain untouched. This operation establishes no hardware acceptance.
+
+## Kernel-build capacity recovery
+
+[Verified retention](evidence/kernel-space-retention-20261106.json) moved three
+complete trees to root-private codex archives under
+`/var/lib/a733-builder-retained-20261106/build-output-trees/`:
+
+| Archive | Historical builder tree | SHA-256 |
+| --- | --- | --- |
+| `fresh-uboot.tar.gz` | `/var/lib/a733-clean-replay-20261106/uboot-run-02/work/project/out` | `284982b46d5c7c1b53a536f575bc5359371d6718fd8bf0c4cd494785818fb165` |
+| `builder-debs.tar.gz` | `/var/lib/a733-clean-builder/seed-probe-20261106-05/package-install/debs` | `2be30c38a2649e6300f3a34aa68f9224ccb2ad8bd4c3995d0385ae057f74a4ec` |
+| `old-kernel-source.tar.gz` | `/home/drew/orange-pi-4-pro-build/kernel` | `7ba3277e51e7a02c56e8dbccf2c6598f90fb398e965ecdca6f4e2f0f67b6346d` |
+
+All archives were compared before removal, transferred, fully hashed/fsynced
+and held open through retirement. Independent review and 30 root fixtures on
+both hosts pass. Both installed builder rootfs trees, fresh upstream checkouts
+and current deployment artifacts remain on the builder. Baseline artifacts
+remain at `/home/drew/orange-pi-4-pro-build/artifacts`. The fresh source tree
+is `/var/lib/a733-clean-replay-20261106/home/drew/orange-pi-4-pro-build/kernel`
+and is mounted at the canonical workspace path inside the frozen environment.
+
+The old source archive was actually restored on codex at
+`/var/lib/a733-kernel-source-restoration-20261106/kernel`; full GNU tar
+comparison, exact pinned HEAD and standalone `git fsck --full --no-reflogs`
+pass. To recover a historical builder tree, transfer its pinned archive and
+extract into that tree’s parent only while the target is absent and workloads
+are stopped, preserving numeric ownership, permissions, ACLs and xattrs.
+The archive roots are respectively `out`, `debs` and `kernel`. Recheck capacity
+before restoration; the new kernel build is consuming the recovered space.

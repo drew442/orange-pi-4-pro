@@ -2,7 +2,8 @@
 
 The separate `build/kernel-replay.py` recipe rebuilds the retained A733 kernel
 in a fresh private source checkout. It leaves the published installation images
-and original cached build tree in place. The [actual private build](evidence/kernel-replay-20261106.json)
+in place. Cache recovery locations are recorded in
+[build-cache retention](build-cache-retention.md). The [actual private build](evidence/kernel-replay-20261106.json)
 now [reproduces the complete Image, DTB and configuration](evidence/kernel-replay-mapped-20261106.json)
 with explicit original debug paths and umask 0002. Independent verification also
 authenticates all regular module files against the original initramfs. The
@@ -18,8 +19,10 @@ It uses two compilation jobs and the explicit complete
 `replay-20261106` builder package profile. Compiler and full inventory checks
 remain mandatory before and after compilation.
 
-The source caches are registered at `/home/drew/orange-pi-4-pro-build` on the
-Ubuntu 22.04 builder. Both vendor and kernel caches are deliberately shallow
+The prepared-host replays used caches at `/home/drew/orange-pi-4-pro-build` on
+the Ubuntu 22.04 builder. The original kernel cache is now retained off-host;
+the fresh frozen-builder run binds its separately imported sources at that
+canonical path inside the namespace. Both vendor and kernel caches are deliberately shallow
 checkouts of their pinned commits; this property is recorded. The private kernel
 checkout requests a shared clone from the cached source, then checks out the
 pinned commit into new files. Inspection found local Git packs and no alternates
@@ -136,3 +139,21 @@ Sampled minimum available RAM was 6,971,584,512 bytes and minimum free disk
 builder with reused pinned source caches. Independent source acquisition,
 a fresh immutable builder, whole-image assembly and physical release acceptance
 remain separate. The deployment images were not replaced.
+
+## Fresh-source build in the frozen environment
+
+[Verified off-host retention](evidence/kernel-space-retention-20261106.json)
+recovered enough space without removing either builder OS root or current
+deployment images. The original cache, including its complete Git metadata,
+restores on codex and passes full archive comparison and object checks.
+[The fresh kernel launch](evidence/frozen-kernel-started-20261106.json) passed
+the unchanged 15 GB disk/3 GB RAM start checks and has observed compiler
+progress with two jobs, original debug-path mapping and umask 0002.
+
+The frozen OS and independently imported source home are read-only. The
+new project/output tree provides writable build space. Three authenticated original
+Image/DTB/config files serve solely as comparison baselines. Original object
+files and the modules directory were not copied. The original compressed
+initramfs has also been authenticated on codex for the later independent
+332-file module comparison. Final artifacts, postchecks and module equality
+are still pending; launch and compiler progress establish no hardware result.

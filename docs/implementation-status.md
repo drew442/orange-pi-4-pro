@@ -188,9 +188,13 @@ backup/recovery and SPI-specific programming authorization remain outstanding.
    pass integrity/no-alternates checks. [Two U-Boot replays](evidence/frozen-uboot-replay-20261106.json)
    now reproduce the authenticated unpacked binary and packed boot package in
    that frozen environment, with both complete artifact/log sets rehashed on
-   codex. Kernel/full-image reproduction remains open. Recover further capacity
-   from the current 9.38 GB free to meet the unchanged 15 GB kernel start guard. Retain two compilation
-   jobs and existing kernel/NVMe guards.
+   codex. [Further verified retention](evidence/kernel-space-retention-20261106.json)
+   left 15.48 GB free before launch. The old kernel cache restores on codex
+   with full archive comparison and Git object checks passing. The
+   [fresh kernel build](evidence/frozen-kernel-started-20261106.json) has passed
+   its 15 GB disk/3 GB RAM start guards and is compiling with two jobs in the
+   frozen environment. Final Image/DTB/config/module comparisons and full-image
+   reproduction remain open. Existing kernel/NVMe guards remain mandatory.
    The [26-input license inventory](evidence/vendor-boot-license-inventory-20261106.json)
    records missing attribution/grants. All [479 userspace source archives](evidence/userspace-sources-acquired-20261106.json)
    for the 220 binary packages are acquired and independently rehashed.

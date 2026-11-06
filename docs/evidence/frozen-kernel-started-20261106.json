@@ -1,0 +1,135 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Actual kernel build launch and observed compiler progress only; final result not yet observed at capture",
+  "build_host": "build.drewnet.online",
+  "output": "/var/lib/a733-clean-replay-20261106/kernel-run-01/work/project/out/kernel-replay-frozen-20261106-01",
+  "producer_commit": "345ad9d3cfa4ec7c08b3baaf1d8173d1d12a64ba",
+  "kernel_source": {
+    "commit": "2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f",
+    "git_status_porcelain": "",
+    "shallow": true
+  },
+  "vendor_source": {
+    "commit": "a95129bf30ea11886cc35f08ebb3e69695a26656",
+    "git_status_porcelain": "",
+    "shallow": true
+  },
+  "builder_profile": {
+    "lock": {
+      "bytes": 32546,
+      "sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425"
+    },
+    "lock_file": "configs/builder-replay-packages-20261106.lock.tsv",
+    "name": "replay-20261106",
+    "original_lock": {
+      "bytes": 32519,
+      "sha256": "35c2faf42a936168098b1f54239825a3c42fc56c825fc0b2078bbd753425f48b"
+    },
+    "package_delta_from_original": [
+      {
+        "original": {
+          "architecture": "amd64",
+          "version": "2.4.14"
+        },
+        "package": "apt",
+        "selected": {
+          "architecture": "amd64",
+          "version": "2.4.15ubuntu0.1"
+        }
+      },
+      {
+        "original": {
+          "architecture": "amd64",
+          "version": "2.4.14"
+        },
+        "package": "apt-utils",
+        "selected": {
+          "architecture": "amd64",
+          "version": "2.4.15ubuntu0.1"
+        }
+      },
+      {
+        "original": {
+          "architecture": "all",
+          "version": "20260816ubuntu0.22.04.1"
+        },
+        "package": "ca-certificates",
+        "selected": {
+          "architecture": "all",
+          "version": "20260816ubuntu0.22.04.2"
+        }
+      },
+      {
+        "original": {
+          "architecture": "amd64",
+          "version": "2.4.14"
+        },
+        "package": "libapt-pkg6.0:amd64",
+        "selected": {
+          "architecture": "amd64",
+          "version": "2.4.15ubuntu0.1"
+        }
+      },
+      {
+        "original": {
+          "architecture": "all",
+          "version": "22.1.0-2ubuntu2.7"
+        },
+        "package": "python3-twisted",
+        "selected": {
+          "architecture": "all",
+          "version": "22.1.0-2ubuntu2.8"
+        }
+      }
+    ]
+  },
+  "start_resources": {
+    "utc": "2026-11-06T15:57:16Z",
+    "available_ram_bytes": 7350575104,
+    "free_disk_bytes": {
+      "/home/drew/orange-pi-4-pro-build": 15476740096,
+      "/a733-export-output/project/out/kernel-replay-frozen-20261106-01": 15476740096
+    },
+    "phase": "start"
+  },
+  "jobs": 2,
+  "debug_path_profile": "original-20261104",
+  "compiler_progress_observed": true,
+  "hardware_acceptance": false,
+  "result_at_capture": "pending",
+  "scripts": {
+    "tmp/run-frozen-kernel-20261106.py": {
+      "bytes": 2579,
+      "sha256": "54921cce3e7c70014ff99b1ae2d5f326db5d2fba32eaa2d1ed9d8835e6d6e366"
+    },
+    "tmp/frozen-kernel-inner-20261106.py": {
+      "bytes": 629,
+      "sha256": "859404985812a79178f0410e9355afedad7469b1858673f6d27d5cd534dec829"
+    },
+    "tmp/stage-fresh-kernel-baselines-20261106.py": {
+      "bytes": 1422,
+      "sha256": "f7ca9ed5ad41744e9729df4db734eb67f0182183e613092a61b5ad95cc57900b"
+    }
+  },
+  "retained_records": {
+    "out/frozen-kernel-replay-20261106/started/input-snapshot.json": {
+      "bytes": 4231,
+      "sha256": "1338b30c5b481b124e986376a5e75230a5823ebfc1bc16280f4bb7a57332e4a6"
+    },
+    "out/frozen-kernel-replay-20261106/started/progress-sample.txt": {
+      "bytes": 881,
+      "sha256": "44857919ac678301fa59b87afe0c42f797d73ea9412570ec32fd6b0212b31cff"
+    },
+    "out/frozen-kernel-replay-20261106/started/resources-start.json": {
+      "bytes": 236,
+      "sha256": "dfca06e144e339a917ee8ed03e425e4d37d106bbe27f73926c9016a53794d370"
+    },
+    "out/frozen-kernel-replay-20261106/started/source-provenance.json": {
+      "bytes": 3175,
+      "sha256": "1846fe02adeb03025fc68a0c3c2e30299439a0995b24ace81c7b91334c9fa7fd"
+    }
+  },
+  "comparison_baselines": "Three authenticated original Image/DTB/config comparison files only; no original object files or modules baseline copied.",
+  "independent_review": "Sol high cleared exact wrapper bytes before launch."
+}

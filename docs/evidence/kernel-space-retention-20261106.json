@@ -1,0 +1,326 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Verified off-host retention and retirement of three fixed generated/source cache trees; no physical storage operation",
+  "success": true,
+  "builder": "build.drewnet.online",
+  "native_archives": [
+    {
+      "tag": "fresh-uboot",
+      "archive": "/var/lib/a733-builder-retained-20261106/build-output-trees/fresh-uboot.tar.gz",
+      "bytes": 820747317,
+      "sha256": "284982b46d5c7c1b53a536f575bc5359371d6718fd8bf0c4cd494785818fb165",
+      "full_native_hash_fsync_verified": true,
+      "remote_source": "/var/lib/a733-clean-replay-20261106/uboot-run-02/work/project/out"
+    },
+    {
+      "tag": "builder-debs",
+      "archive": "/var/lib/a733-builder-retained-20261106/build-output-trees/builder-debs.tar.gz",
+      "bytes": 982972845,
+      "sha256": "2be30c38a2649e6300f3a34aa68f9224ccb2ad8bd4c3995d0385ae057f74a4ec",
+      "full_native_hash_fsync_verified": true,
+      "remote_source": "/var/lib/a733-clean-builder/seed-probe-20261106-05/package-install/debs"
+    },
+    {
+      "tag": "old-kernel-source",
+      "archive": "/var/lib/a733-builder-retained-20261106/build-output-trees/old-kernel-source.tar.gz",
+      "bytes": 755735402,
+      "sha256": "7ba3277e51e7a02c56e8dbccf2c6598f90fb398e965ecdca6f4e2f0f67b6346d",
+      "full_native_hash_fsync_verified": true,
+      "remote_source": "/home/drew/orange-pi-4-pro-build/kernel"
+    }
+  ],
+  "retirements": [
+    {
+      "archive": "/var/lib/a733-kernel-space-retention-20261106/fresh-uboot.tar.gz",
+      "archive_bytes": 820747317,
+      "archive_sha256": "284982b46d5c7c1b53a536f575bc5359371d6718fd8bf0c4cd494785818fb165",
+      "builder_archive_removed": true,
+      "exact_entry_set_sha256": "b6ef9aa77db99ed8f0fb62066e98cb321d62ce3b9e086a116e83bfbb398372ec",
+      "free_after_bytes": 10979094528,
+      "free_before_bytes": 8512135168,
+      "native_acknowledgement": "NATIVE_COPY_HASH_LENGTH_FSYNC_VERIFIED_AND_DESCRIPTOR_HELD",
+      "native_receipt_caller_attestation": {
+        "archive_bytes": 820747317,
+        "archive_sha256": "284982b46d5c7c1b53a536f575bc5359371d6718fd8bf0c4cd494785818fb165",
+        "native_copy_hash_fsync_verified": true,
+        "native_copy_path": "/var/lib/a733-builder-retained-20261106/build-output-trees/fresh-uboot.tar.gz",
+        "native_descriptor_held": true,
+        "native_held_stat": [
+          64512,
+          4109667,
+          33024,
+          820747317,
+          1793980371065890825,
+          1793980371663932921
+        ],
+        "native_verified_unix": 1793980371.6660588,
+        "tag": "fresh-uboot"
+      },
+      "phase": "retire",
+      "public_source_path_exists_after_retirement": false,
+      "quarantine": "/var/lib/a733-clean-replay-20261106/uboot-run-02/work/project/.a733-retirement-fresh-uboot-20261106",
+      "quarantine_removed": true,
+      "retired_unix": 1793980417.61233,
+      "schema": 1,
+      "source": "/var/lib/a733-clean-replay-20261106/uboot-run-02/work/project/out",
+      "source_facts_sha256": "e9afc0feca8e56dc8185f7a34a3098fe83eb1c6d3a96b4477e3fc5dd76d26d28",
+      "source_removed": true,
+      "tag": "fresh-uboot",
+      "tar_compare": "passed"
+    },
+    {
+      "archive": "/var/lib/a733-kernel-space-retention-20261106/builder-debs.tar.gz",
+      "archive_bytes": 982972845,
+      "archive_sha256": "2be30c38a2649e6300f3a34aa68f9224ccb2ad8bd4c3995d0385ae057f74a4ec",
+      "builder_archive_removed": true,
+      "exact_entry_set_sha256": "55ba5ebfde578e870077db20fdf5aba656889331a87cccb2d5c1b83ad30e5cf2",
+      "free_after_bytes": 11802120192,
+      "free_before_bytes": 10816602112,
+      "native_acknowledgement": "NATIVE_COPY_HASH_LENGTH_FSYNC_VERIFIED_AND_DESCRIPTOR_HELD",
+      "native_receipt_caller_attestation": {
+        "archive_bytes": 982972845,
+        "archive_sha256": "2be30c38a2649e6300f3a34aa68f9224ccb2ad8bd4c3995d0385ae057f74a4ec",
+        "native_copy_hash_fsync_verified": true,
+        "native_copy_path": "/var/lib/a733-builder-retained-20261106/build-output-trees/builder-debs.tar.gz",
+        "native_descriptor_held": true,
+        "native_held_stat": [
+          64512,
+          4109672,
+          33024,
+          982972845,
+          1793980445905812969,
+          1793980446608856039
+        ],
+        "native_verified_unix": 1793980446.612444,
+        "tag": "builder-debs"
+      },
+      "phase": "retire",
+      "public_source_path_exists_after_retirement": false,
+      "quarantine": "/var/lib/a733-clean-builder/seed-probe-20261106-05/package-install/.a733-retirement-builder-debs-20261106",
+      "quarantine_removed": true,
+      "retired_unix": 1793980458.122026,
+      "schema": 1,
+      "source": "/var/lib/a733-clean-builder/seed-probe-20261106-05/package-install/debs",
+      "source_facts_sha256": "7ffe46b19a7c5aa83986edd6bbe25b71af45a0f6c155dbc6d78520b7026ab0ca",
+      "source_removed": true,
+      "tag": "builder-debs",
+      "tar_compare": "passed"
+    },
+    {
+      "archive": "/var/lib/a733-kernel-space-retention-20261106/old-kernel-source.tar.gz",
+      "archive_bytes": 755735402,
+      "archive_sha256": "7ba3277e51e7a02c56e8dbccf2c6598f90fb398e965ecdca6f4e2f0f67b6346d",
+      "builder_archive_removed": true,
+      "exact_entry_set_sha256": "7621c99c4bf204e6e9413470c04046139fb8df94e258861ee88f519be88cea30",
+      "free_after_bytes": 14728060928,
+      "free_before_bytes": 11996401664,
+      "native_acknowledgement": "NATIVE_COPY_HASH_LENGTH_FSYNC_VERIFIED_AND_DESCRIPTOR_HELD",
+      "native_receipt_caller_attestation": {
+        "archive_bytes": 755735402,
+        "archive_sha256": "7ba3277e51e7a02c56e8dbccf2c6598f90fb398e965ecdca6f4e2f0f67b6346d",
+        "native_copy_hash_fsync_verified": true,
+        "native_copy_path": "/var/lib/a733-builder-retained-20261106/build-output-trees/old-kernel-source.tar.gz",
+        "native_descriptor_held": true,
+        "native_held_stat": [
+          64512,
+          4109680,
+          33024,
+          755735402,
+          1793980548187529275,
+          1793980548737557206
+        ],
+        "native_verified_unix": 1793980548.7403731,
+        "tag": "old-kernel-source"
+      },
+      "phase": "retire",
+      "public_source_path_exists_after_retirement": false,
+      "quarantine": "/home/drew/orange-pi-4-pro-build/.a733-retirement-old-kernel-source-20261106",
+      "quarantine_removed": true,
+      "retired_unix": 1793980605.95991,
+      "schema": 1,
+      "source": "/home/drew/orange-pi-4-pro-build/kernel",
+      "source_facts_sha256": "5097199f00dbfe9776c6ad1aa8be79347f46fafd46c0670047b0b7be9ffe32f0",
+      "source_removed": true,
+      "tag": "old-kernel-source",
+      "tar_compare": "passed"
+    }
+  ],
+  "actual_source_checks": {
+    "before_retirement_fsck_log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "no_git_symlinks_log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "restored_archive_compare_exit_code": 0,
+    "restored_git_fsck_exit_code": 0,
+    "restored_git_head": "2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f",
+    "restored_path": "codex.drewnet.online:/var/lib/a733-kernel-source-restoration-20261106/kernel",
+    "restored_fsck_log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "restored_compare_log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "resources": {
+    "measured_free_bytes_before_baseline_staging": 9380073472,
+    "measured_free_bytes_after_retirement": 15483789312,
+    "available_memory_bytes_after": 7357513728,
+    "note": "Disk values are separate observations; baseline staging and retained records also consume space."
+  },
+  "validation": {
+    "native_root_fixtures": 30,
+    "jammy_root_fixtures": 30,
+    "independent_sol_high_review": "Cleared exact helper/caller with actual Git symlink/fsck evidence retained."
+  },
+  "scripts": {
+    "tmp/retain-kernel-space-20261106.py": {
+      "bytes": 26570,
+      "sha256": "f932168387569e1d5cbe68c57db178dcbb6e0e2f421bb81382701f6226631868"
+    },
+    "tmp/copy-kernel-space-20261106.py": {
+      "bytes": 7266,
+      "sha256": "1a8239917581b026b4ab0d16cfe7768c121990c938d588b66fc022d028b1a1c5"
+    },
+    "tmp/test-kernel-space-20261106.py": {
+      "bytes": 21922,
+      "sha256": "06d78417ae817f6c8e3a596a60fa037a58de7ccf4a3f8a91532f1dfa39de48e1"
+    }
+  },
+  "raw_records": {
+    "out/kernel-space-retention-20261106/records/builder-debs.quarantine-compare.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/kernel-space-retention-20261106/records/copy-kernel-space-20261106.py": {
+      "bytes": 7266,
+      "sha256": "1a8239917581b026b4ab0d16cfe7768c121990c938d588b66fc022d028b1a1c5"
+    },
+    "out/kernel-space-retention-20261106/records/old-kernel-source.retire-intent.json": {
+      "bytes": 947,
+      "sha256": "b61fad9c7395262e2c7dff608f268bfb2325126ed175137e3cf8f2eb32b09a74"
+    },
+    "out/kernel-space-retention-20261106/records/builder-debs.retire-compare.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/kernel-space-retention-20261106/records/old-kernel-source.retire-compare.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/kernel-space-retention-20261106/records/builder-debs.retire.json": {
+      "bytes": 1608,
+      "sha256": "3bb3c065e9abf8da6c07c62aa83d1957c8c6b20de2a6b748a6ed938efd5cf064"
+    },
+    "out/kernel-space-retention-20261106/records/old-kernel-source.archive.json": {
+      "bytes": 32944855,
+      "sha256": "86a97e434602959d0dbc99ec7c2451c004124a485944eb70403c9cdf07451fc4"
+    },
+    "out/kernel-space-retention-20261106/records/fresh-uboot.archive.json": {
+      "bytes": 19278622,
+      "sha256": "fc6957e244c7a0db98d8e9ab4cf3873fb592b1020d95cf2c44aa9a5c6cd16bda"
+    },
+    "out/kernel-space-retention-20261106/records/retain-kernel-space-20261106.py": {
+      "bytes": 26570,
+      "sha256": "f932168387569e1d5cbe68c57db178dcbb6e0e2f421bb81382701f6226631868"
+    },
+    "out/kernel-space-retention-20261106/records/old-kernel-source.create.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/kernel-space-retention-20261106/records/old-kernel-source.quarantine-compare.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/kernel-space-retention-20261106/records/fresh-uboot.native-after.json": {
+      "bytes": 2304,
+      "sha256": "d72af7e903558412898ef4f14d245eadebc5ab3c26d5f96b1f81559eb6adb368"
+    },
+    "out/kernel-space-retention-20261106/records/builder-debs.native-before.json": {
+      "bytes": 1270,
+      "sha256": "574d3a398e99f35b9674241d933af430918491770e310bb344440a3215ee6dd2"
+    },
+    "out/kernel-space-retention-20261106/records/old-kernel-source.native-before.json": {
+      "bytes": 1262,
+      "sha256": "34cb7830d0bed71af984985e706d4dd77995ff73d850e1dacb259606d61b83d4"
+    },
+    "out/kernel-space-retention-20261106/records/old-kernel-source.retire.json": {
+      "bytes": 1567,
+      "sha256": "15669003b9f8784b700b118f32ff485e3d7ded5a1df7b6b4e2b05a3576d5f0ac"
+    },
+    "out/kernel-space-retention-20261106/records/fresh-uboot.archive-compare.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/kernel-space-retention-20261106/records/fresh-uboot.quarantine-compare.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/kernel-space-retention-20261106/records/builder-debs.native-after.json": {
+      "bytes": 2322,
+      "sha256": "f8c2fcebaba178d2a8f21afabd24253c392c7fdba3148abfd52ec10bb248d54c"
+    },
+    "out/kernel-space-retention-20261106/records/fresh-uboot.native-before.json": {
+      "bytes": 1263,
+      "sha256": "4dafaca10c3ba3b19842301d2d5a255d0952fe220de3f72c80f86e4ad3495413"
+    },
+    "out/kernel-space-retention-20261106/records/builder-debs.archive-compare.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/kernel-space-retention-20261106/records/old-kernel-source.archive-compare.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/kernel-space-retention-20261106/records/test-kernel-space-20261106.py": {
+      "bytes": 21922,
+      "sha256": "06d78417ae817f6c8e3a596a60fa037a58de7ccf4a3f8a91532f1dfa39de48e1"
+    },
+    "out/kernel-space-retention-20261106/records/old-kernel-source.native-after.json": {
+      "bytes": 2292,
+      "sha256": "cf790a823f3456103624e5d2ec24ecc506772b03efbcfbee0a2be31a55b23cf0"
+    },
+    "out/kernel-space-retention-20261106/records/fresh-uboot.retire-intent.json": {
+      "bytes": 978,
+      "sha256": "66c58a9b1fa7016d31de1baf368f8eef2024a44a1fc4ac0083d0790bbac599fd"
+    },
+    "out/kernel-space-retention-20261106/records/fresh-uboot.retire.json": {
+      "bytes": 1591,
+      "sha256": "3e643461fb95b5e8ae2ab8547af477557b039a6432627a6b6f5466b332a1ed9a"
+    },
+    "out/kernel-space-retention-20261106/records/builder-debs.archive.json": {
+      "bytes": 252750,
+      "sha256": "75d662b8d773b8120e101f3327095d9fd8d54499ef3af4be780ebf5425b02a76"
+    },
+    "out/kernel-space-retention-20261106/records/builder-debs.retire-intent.json": {
+      "bytes": 992,
+      "sha256": "33a4002d9c9b9c218f12927e258d2e107e2735b3de0f5e3be35a3d9386f2130b"
+    },
+    "out/kernel-space-retention-20261106/records/builder-debs.create.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/kernel-space-retention-20261106/records/fresh-uboot.retire-compare.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/kernel-space-retention-20261106/records/fresh-uboot.create.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "remote_raw_record_hashes_match_native": true,
+  "preserved": [
+    "Both installed/frozen builder rootfs trees",
+    "Fresh upstream source checkouts under /var/lib/a733-clean-replay-20261106/home",
+    "Original kernel comparison artifacts",
+    "All current deployment images"
+  ],
+  "hardware_acceptance": false
+}
