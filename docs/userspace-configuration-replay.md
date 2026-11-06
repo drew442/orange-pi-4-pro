@@ -3,9 +3,10 @@
 The [tracked configuration run](evidence/userspace-configuration-recipe-20261106.json)
 passes on `build.drewnet.online` from commit
 `02bb4084bf9135a53dd38ffeaab7c1ac4399ba64`. It freshly configures a clone of the
-retained authenticated foreign-stage tree. This repeats ARM configuration; a
-second complete foreign construction and complete deployment reproduction remain
-open. Physical installation and KVM guest acceptance remain pending.
+retained authenticated foreign-stage tree. This repeats ARM configuration; the
+subsequent [fresh pipeline](userspace-fresh-pipeline.md) also repeats foreign
+construction from raw packages and matches the normalized exports. Complete
+deployment reproduction remains open. Physical installation and KVM guest acceptance remain pending.
 
 ## Prepared environment and inputs
 
@@ -109,8 +110,9 @@ from cleanup. The fixed gzip header did not hide the differing source metadata
 and contents. The subsequent [normalized export pair](userspace-export-reproducibility.md)
 now removes the generated NVMe identifiers and three caches and clamps later
 archive timestamps, producing matching compressed/raw/BOM bytes. Both
-configurations still reused one foreign extraction; complete independent
-construction remains a separate requirement.
+configurations still reused one foreign extraction. The subsequent
+[fresh pipeline](userspace-fresh-pipeline.md) now reconstructs anew from raw
+packages and matches their normalized result; production deployment remains open.
 
 ## Evidence and failures
 

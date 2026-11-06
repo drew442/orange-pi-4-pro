@@ -1,0 +1,215 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Verified off-builder retention of five unused generated regular files; no physical-device operation or hardware acceptance",
+  "success": true,
+  "source_code": {
+    "bytes": 12948,
+    "sha256": "5c8ac4df97069ec55717260b7a7cc200289269dfcf5033facc909845c22f3c45"
+  },
+  "protected_coordinator": "/var/lib/a733-userspace-space-retention-20261106/coordinator.py",
+  "protected_coordinator_mode": "root:root0400 under root:root0700 parent; SHA checked before actual execution",
+  "entries": [
+    {
+      "path": "/var/lib/a733-clean-replay-20261106/full-root-metadata-fixture-02/work/full-root-fixture/diagnostic-1g.ext4",
+      "sha256": "744ad9dc411e8342fc0f45038595adbcaa3e90e9276b70725a72e6cea4bb6bb6",
+      "size": 1073741824,
+      "codex_original": "/home/drew/orange-pi-4-pro/out/full-root-metadata-fixture-20261106/work/full-root-fixture/diagnostic-1g.ext4",
+      "protected_codex_copy": "/var/lib/a733-userspace-space-retention-20261106/retained-0.ext4"
+    },
+    {
+      "path": "/var/lib/a733-clean-replay-20261106/userspace-configure-01/work/export-20261106-01/rootfs.tar.gz",
+      "sha256": "1034908833bd6faf934114a6c0c96840db815ba077166438159dcca54a1fe1a7",
+      "size": 165687301,
+      "codex_original": "/home/drew/orange-pi-4-pro/out/userspace-export-20261106/rootfs.tar.gz",
+      "protected_codex_copy": "/var/lib/a733-userspace-space-retention-20261106/retained-1.tar.gz"
+    },
+    {
+      "path": "/var/lib/a733-clean-replay-20261106/userspace-configure-recipe-01/work/export-recipe-01/rootfs.tar.gz",
+      "sha256": "c2059eccac59534bac627eb9b9864225e2bc35a012697d11e66b76a8b0c6688b",
+      "size": 165686672,
+      "codex_original": "/home/drew/orange-pi-4-pro/out/userspace-export-recipe-20261106/rootfs.tar.gz",
+      "protected_codex_copy": "/var/lib/a733-userspace-space-retention-20261106/retained-2.tar.gz"
+    },
+    {
+      "path": "/var/lib/a733-clean-replay-20261106/userspace-configure-01/work/export-canonical-01/rootfs.tar.gz",
+      "sha256": "98d6a57bbb70ff55bef32b6bd051ebfcb6bc0fad4f6c8b3167e8619b5a9d961e",
+      "size": 138025729,
+      "codex_original": "/home/drew/orange-pi-4-pro/out/userspace-export-canonical-01-20261106/rootfs.tar.gz",
+      "protected_codex_copy": "/var/lib/a733-userspace-space-retention-20261106/retained-3.tar.gz"
+    },
+    {
+      "path": "/var/lib/a733-clean-replay-20261106/userspace-configure-recipe-01/work/export-canonical-02/rootfs.tar.gz",
+      "sha256": "98d6a57bbb70ff55bef32b6bd051ebfcb6bc0fad4f6c8b3167e8619b5a9d961e",
+      "size": 138025729,
+      "codex_original": "/home/drew/orange-pi-4-pro/out/userspace-export-canonical-02-20261106/rootfs.tar.gz",
+      "protected_codex_copy": "/var/lib/a733-userspace-space-retention-20261106/retained-4.tar.gz"
+    }
+  ],
+  "retention_proof": "Before remote unlink, native originals and separate protected native copies were hash/length/fsync verified and their descriptors held. All were rechecked after SSH, including failure path. Independent postreview rehashed all copies.",
+  "remote_journal": "/var/lib/a733-userspace-space-retention-20261106/receipt.jsonl",
+  "journal_contract": "Exclusive append-only start, durable intent before each unlink, per-parent fsync, completion after each unlink, complete-write loops and final exclusive summary; interrupted tail cannot truncate earlier records.",
+  "postchecks": {
+    "all_selected_builder_files_absent": true,
+    "free_disk_bytes": 4575662080,
+    "time": 1793998735.1300516,
+    "filesystem_bytes": 65174941696
+  },
+  "latest_pre_operation_free_bytes": 3459932160,
+  "latest_pre_sample_is_not_transactional": true,
+  "code_review": "Sol high cleared after two corrections (append-only journal and protected executable snapshot)",
+  "fixtures": {
+    "cases": 13,
+    "passed": true
+  },
+  "independent_postreview": {
+    "builder_postchecks": {
+      "all_selected_builder_files_absent": true,
+      "filesystem_bytes": 65174941696,
+      "free_disk_bytes": 4575662080,
+      "time": 1793998735.1300516
+    },
+    "classification": "Independent postreview of generated builder-artifact retention; no hardware acceptance",
+    "date": "2026-11-06",
+    "findings": [],
+    "fixture_cases_independently_passed": 13,
+    "helper_sha256": "5c8ac4df97069ec55717260b7a7cc200289269dfcf5033facc909845c22f3c45",
+    "journal": {
+      "exact_allowlist": true,
+      "lines": 12,
+      "no_additional_removals_recorded": true,
+      "ordered_durable_intent_completion_code_review": true,
+      "summary_and_execution_log_match": true
+    },
+    "limits": [
+      "Builder target absence and free capacity are established by retained coordinator postchecks, not a second remote inspection.",
+      "No whole-host audit of unrelated activity is claimed. The reviewed helper contains only the five fixed target unlinks.",
+      "No physical SD, NVMe, SPI, boot or real KVM acceptance was performed."
+    ],
+    "native_readback": [
+      {
+        "bytes": 12948,
+        "mode": 256,
+        "nlink": 1,
+        "path": "/var/lib/a733-userspace-space-retention-20261106/coordinator.py",
+        "sha256": "5c8ac4df97069ec55717260b7a7cc200289269dfcf5033facc909845c22f3c45",
+        "uid": 0
+      },
+      {
+        "bytes": 1073741824,
+        "mode": 384,
+        "nlink": 1,
+        "path": "/var/lib/a733-userspace-space-retention-20261106/retained-0.ext4",
+        "sha256": "744ad9dc411e8342fc0f45038595adbcaa3e90e9276b70725a72e6cea4bb6bb6",
+        "uid": 0
+      },
+      {
+        "bytes": 165687301,
+        "mode": 384,
+        "nlink": 1,
+        "path": "/var/lib/a733-userspace-space-retention-20261106/retained-1.tar.gz",
+        "sha256": "1034908833bd6faf934114a6c0c96840db815ba077166438159dcca54a1fe1a7",
+        "uid": 0
+      },
+      {
+        "bytes": 165686672,
+        "mode": 384,
+        "nlink": 1,
+        "path": "/var/lib/a733-userspace-space-retention-20261106/retained-2.tar.gz",
+        "sha256": "c2059eccac59534bac627eb9b9864225e2bc35a012697d11e66b76a8b0c6688b",
+        "uid": 0
+      },
+      {
+        "bytes": 138025729,
+        "mode": 384,
+        "nlink": 1,
+        "path": "/var/lib/a733-userspace-space-retention-20261106/retained-3.tar.gz",
+        "sha256": "98d6a57bbb70ff55bef32b6bd051ebfcb6bc0fad4f6c8b3167e8619b5a9d961e",
+        "uid": 0
+      },
+      {
+        "bytes": 138025729,
+        "mode": 384,
+        "nlink": 1,
+        "path": "/var/lib/a733-userspace-space-retention-20261106/retained-4.tar.gz",
+        "sha256": "98d6a57bbb70ff55bef32b6bd051ebfcb6bc0fad4f6c8b3167e8619b5a9d961e",
+        "uid": 0
+      },
+      {
+        "bytes": 1073741824,
+        "mode": 384,
+        "nlink": 1,
+        "path": "/home/drew/orange-pi-4-pro/out/full-root-metadata-fixture-20261106/work/full-root-fixture/diagnostic-1g.ext4",
+        "sha256": "744ad9dc411e8342fc0f45038595adbcaa3e90e9276b70725a72e6cea4bb6bb6",
+        "uid": 1000
+      },
+      {
+        "bytes": 165687301,
+        "mode": 420,
+        "nlink": 1,
+        "path": "/home/drew/orange-pi-4-pro/out/userspace-export-20261106/rootfs.tar.gz",
+        "sha256": "1034908833bd6faf934114a6c0c96840db815ba077166438159dcca54a1fe1a7",
+        "uid": 1000
+      },
+      {
+        "bytes": 165686672,
+        "mode": 420,
+        "nlink": 1,
+        "path": "/home/drew/orange-pi-4-pro/out/userspace-export-recipe-20261106/rootfs.tar.gz",
+        "sha256": "c2059eccac59534bac627eb9b9864225e2bc35a012697d11e66b76a8b0c6688b",
+        "uid": 1000
+      },
+      {
+        "bytes": 138025729,
+        "mode": 420,
+        "nlink": 1,
+        "path": "/home/drew/orange-pi-4-pro/out/userspace-export-canonical-01-20261106/rootfs.tar.gz",
+        "sha256": "98d6a57bbb70ff55bef32b6bd051ebfcb6bc0fad4f6c8b3167e8619b5a9d961e",
+        "uid": 1000
+      },
+      {
+        "bytes": 138025729,
+        "mode": 420,
+        "nlink": 1,
+        "path": "/home/drew/orange-pi-4-pro/out/userspace-export-canonical-02-20261106/rootfs.tar.gz",
+        "sha256": "98d6a57bbb70ff55bef32b6bd051ebfcb6bc0fad4f6c8b3167e8619b5a9d961e",
+        "uid": 1000
+      }
+    ],
+    "schema": 1,
+    "success": true
+  },
+  "raw_records": "out/userspace-space-retention-20261106/",
+  "retained_records": {
+    "out/userspace-space-retention-20261106/receipt.json": {
+      "bytes": 1103,
+      "sha256": "1d605103095b480e16a6b6a40f3f717989645f563a788f37736aa69edda2f49a"
+    },
+    "out/userspace-space-retention-20261106/receipt.jsonl": {
+      "bytes": 5435,
+      "sha256": "fee61864a0771dc45cadf7d1eae3dbd829005187cd3f3b410750f437994c7ab4"
+    },
+    "out/userspace-space-retention-20261106/postchecks.json": {
+      "bytes": 136,
+      "sha256": "bd9a4f0121b41b06d04e364c49b9fe5d58e90fd8534f2c5fde21f758e23b5b65"
+    },
+    "out/userspace-space-retention-20261106/independent-postreview.json": {
+      "bytes": 4043,
+      "sha256": "1de4539e3cee0037b101dc119f94f102dffaaaea2606303d1fbfa4acd925826e"
+    },
+    "out/userspace-space-retention-20261106/verification-code/retain-userspace-input-space-20261106.py": {
+      "bytes": 12948,
+      "sha256": "5c8ac4df97069ec55717260b7a7cc200289269dfcf5033facc909845c22f3c45"
+    },
+    "out/userspace-space-retention-20261106/verification-code/test-retain-userspace-input-space-20261106.py": {
+      "bytes": 9036,
+      "sha256": "a68f46c8057e0f4fbfddd41cd7741c21a0a4863fa06fc59c5f061eadb1536c48"
+    }
+  },
+  "limits": [
+    "Only five selected generated builder copies removed; all bytes retained in two codex locations.",
+    "Deployment SD/NVMe artifacts, source caches, configured trees and original foreign tree unchanged.",
+    "No build-host LVM resize, physical target erase or SPI programming.",
+    "Capacity samples drift with other filesystem activity; approximately1.12GB recovered, not a whole-host audit."
+  ]
+}

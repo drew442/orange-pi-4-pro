@@ -5,7 +5,9 @@ passes inside the frozen Ubuntu 22.04 builder. The subsequent
 [configuration and cleaned export](evidence/userspace-configured-export-20261106.json)
 now also pass for all 220 locked packages. The latest
 [normalized export pair](userspace-export-reproducibility.md) is byte-identical
-from the two configured trees; independent complete construction remains open. Current installation images and the
+from the two configured trees. The subsequent [fresh pipeline](userspace-fresh-pipeline.md)
+reconstructs from the raw pinned binary inputs and produces the same bytes.
+Production image composition and independent deployment remain open. Current installation images and the
 [operator deployment procedure](deploy-personalized-20261106.md) are unchanged.
 
 [`offline-userspace-repo.py`](../build/offline-userspace-repo.py) privately copies

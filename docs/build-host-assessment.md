@@ -66,15 +66,19 @@ minima of 10.13 GB disk free and 6.48 GB RAM available. The old kernel cache is
 retained on codex, where full restoration, archive comparison and Git object
 checks pass. [Both full SD images](sd-image-reproduction.md) now reproduce
 inside the frozen builder, including standalone inspections. The final formal
-run stayed above 7.57 GB disk free and 7.15 GB RAM available. NVMe/root/userspace
-reconstruction remains open; recover capacity and recheck all guards before
-further staging.
+run stayed above 7.57 GB disk free and 7.15 GB RAM available. Subsequent
+[verified userspace retention](userspace-rebuild-capacity.md) recovered about
+1.12 GB. The [fresh userspace pipeline](userspace-fresh-pipeline.md) now passes
+from raw pinned packages with a byte-identical normalized result; it recorded
+minima of 3.76 GB free disk and 7.12 GB available RAM. Production root/state/NVMe
+reconstruction remains open; recheck all guards before further staging.
 
 ## Available volume-group capacity
 
 Read-only LVM inventory on 2026-11-06 identifies 66,542,632,960 bytes of unused
 extents in `ubuntu-vg`, equal to the current root LV allocation. Current filesystem
-free space is about 7.68 GB after replay builds. The
+free space was about 7.68 GB after the earlier replay builds; the latest sample
+after the fresh userspace pipeline is about 3.79 GB. The
 [prepared 20 GiB growth proposal](build-host-capacity-plan.md) has an exact target,
 metadata backup, successful allocation test and independently reviewed guards.
 It awaits separate approval because it changes the build host root filesystem;

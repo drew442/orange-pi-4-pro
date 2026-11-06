@@ -4,7 +4,8 @@
 now produce identical compressed archives, raw tar streams and BOM bytes from
 the [two separately configured ARM trees](userspace-configuration-replay.md).
 Independent complete readback passes. Both configurations shared one authenticated
-foreign-stage source; complete independent construction and physical deployment
+foreign-stage source. A subsequent [fresh raw-package pipeline](userspace-fresh-pipeline.md)
+now produces matching bytes. Production image composition and physical deployment
 remain open. The published installation images are unchanged.
 
 ## Generic-base cleanup
@@ -70,7 +71,8 @@ no-new-privileges and seven capability drops. The existing configured trees were
 already audited and exported under the preceding policy; this run applies the
 new cleanup and timestamp contract to those retained trees.
 
-Both copies are retained on codex and the builder:
+Both copies are retained on codex. Their unused builder copies were later moved
+off the builder by [verified capacity retention](userspace-rebuild-capacity.md):
 
 - `out/userspace-export-canonical-01-20261106/rootfs.tar.gz`
 - `out/userspace-export-canonical-02-20261106/rootfs.tar.gz`
@@ -93,8 +95,8 @@ Distinct configure receipts preserve the two inputs' provenance.
 Both host inventories remain unchanged, with no mapped processes or output
 mounts left. Each run records 52 resource samples; minima are **3,464,351,744 bytes
 free disk** and **7,417,167,872 bytes available RAM** across the pair. Cleanup
-recovered enough space to retain both archives; no artifact retirement or builder
-resize occurred. Raw logs, input wrappers, readback code and receipts remain
+recovered enough space to retain both archives during those runs; no retirement
+or resize occurred in that export phase. Later retention is tracked separately. Raw logs, input wrappers, readback code and receipts remain
 under the two ignored output directories with hashes bound by the evidence.
 
 Native validation passes **1,098 discovery cases** with 96 environment skips,
@@ -102,8 +104,9 @@ four assembly cases and all five shell suites. The 30 focused exporter cases
 include unsafe-cleanup rejection, unchanged native times, byte equality despite
 generated variations and detection of source changes hidden by clamping.
 
-Next, perform complete independent foreign extraction/configuration/export from
-pinned inputs, then integrate the selected userspace profile into production
-root/state/NVMe reconstruction and full readback. Continue the [physical deployment](deploy-personalized-20261106.md)
+The subsequent [fresh pipeline](userspace-fresh-pipeline.md) completes a new
+foreign extraction/configuration/export from raw pinned binary inputs and matches
+this pair. Next, consolidate outer orchestration and integrate the selected
+userspace profile into production root/state/NVMe reconstruction and full readback. Continue the [physical deployment](deploy-personalized-20261106.md)
 and [hardware acceptance](hardware-validation.md) separately. This generic archive
 is a build result; the deployment guide still selects the published images.

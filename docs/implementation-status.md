@@ -87,9 +87,11 @@ by subsequent clean-build work.
   with no APT fallback warnings. The [normalized export pair](userspace-export-reproducibility.md)
   now matches compressed/raw/BOM bytes: 138,025,729 bytes compressed, 15,876 entries.
   Generated NVMe IDs/caches are removed and later archive timestamps clamped to
-  the pinned snapshot. Full independent construction remains open. Latest native
-  discovery: **1,098 cases, 96 environment skips**, four assembly cases and all five
-  shell suites. These are software checks, not hardware acceptance.
+  the pinned snapshot. The [fresh raw-package pipeline](userspace-fresh-pipeline.md)
+  now authenticates/extracts/configures anew and matches those bytes, with complete
+  independent readback. Latest native discovery: **1,121 cases, 96 environment skips**,
+  four assembly cases and all five shell suites. Production composition and
+  independent deployment remain open; these checks establish no hardware acceptance.
 
 ## Next actions and blockers
 
@@ -101,9 +103,9 @@ by subsequent clean-build work.
 2. Validate NVMe host boot and SSH with both keys. Run [the first KVM guest](kvm-first-guest.md)
    for CPU/disk/network, clean shutdown/restart and persisted disk marker. Return
    its console/log evidence; `/dev/kvm` alone cannot satisfy the gate.
-3. Continue [clean-build work](build-reproduction-status.md): repeat complete foreign
-   extraction/configuration/export from pinned inputs, then production root/state/
-   NVMe reconstruction and complete readback. The reviewed [20 GiB builder LVM growth](build-host-capacity-plan.md)
+3. Continue [clean-build work](build-reproduction-status.md): consolidate outer
+   pipeline orchestration, explicitly adopt the normalized userspace profile, then
+   reconstruct production roots/state/NVMe and complete image readback. The reviewed [20 GiB builder LVM growth](build-host-capacity-plan.md)
    awaits approval; no resize occurred and capacity guards remain unchanged.
    [Firmware license evidence](evidence/vendor-boot-license-inventory-20261106.json)
    remains incomplete; all 479 userspace source archives are acquired, not compiled.

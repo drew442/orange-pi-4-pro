@@ -1,0 +1,733 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Fresh complete interim userspace reconstruction from pinned binary package inputs; production images, independent operator and physical acceptance pending",
+  "success": true,
+  "source_revision": "aa6922de0e9ab818343991215c92014e046e94d7",
+  "builder": "build.drewnet.online",
+  "construction": "Fresh mirror authenticated from original signed index/keyring and220rawbinaryarchives; fresh native foreign extraction then in-place ARM configuration and normalized export. No generated rootfs archive or old configured/foreign tree used as seed.",
+  "builder_os": "Existing pinned frozenUbuntu22amd64 root, read-only; not a second independent builder OS construction.",
+  "stages": [
+    {
+      "stage": "foreign",
+      "raw_records": "out/userspace-foreign-recipe-20261106/",
+      "success": true,
+      "resource_minima": {
+        "samples": 14,
+        "free_disk_bytes": 4115197952,
+        "available_memory_bytes": 7224971264
+      },
+      "retained_code": {
+        "out/userspace-foreign-recipe-20261106/verification-code/launch-userspace-foreign-recipe-20261106.py": {
+          "bytes": 4747,
+          "sha256": "9734346eba7104c524b243334e63dccb4dc127bbaa99a9f0891df8de014e6c40"
+        },
+        "out/userspace-foreign-recipe-20261106/verification-code/run.py": {
+          "bytes": 204,
+          "sha256": "e782065ed422909b0d56a4981b423b2b97989222b25980ba29fa9c8d43f74d9d"
+        }
+      }
+    },
+    {
+      "stage": "configuration",
+      "raw_records": "out/userspace-configure-fresh-20261106/",
+      "success": true,
+      "resource_minima": {
+        "samples": 155,
+        "free_disk_bytes": 3762524160,
+        "available_memory_bytes": 7122173952
+      },
+      "retained_code": {
+        "out/userspace-configure-fresh-20261106/verification-code/launch-userspace-configure-fresh-20261106.py": {
+          "bytes": 10290,
+          "sha256": "47510ee22d289c3bff096389976235efddf5aae4e15851288a2adfcedb4015f2"
+        },
+        "out/userspace-configure-fresh-20261106/verification-code/run.py": {
+          "bytes": 208,
+          "sha256": "525eea13899977a85cc21bae2589629b3380aee9ac7cbee95dfd8d858725b575"
+        }
+      }
+    },
+    {
+      "stage": "export",
+      "raw_records": "out/userspace-export-fresh-20261106/",
+      "success": true,
+      "resource_minima": {
+        "samples": 52,
+        "free_disk_bytes": 3762688000,
+        "available_memory_bytes": 7280771072
+      },
+      "retained_code": {
+        "out/userspace-export-fresh-20261106/verification-code/independent-review.py": {
+          "bytes": 19362,
+          "sha256": "84cc5291df46e37cd496e44aad357032a207562e9578f321436e1830cf29d9ae"
+        },
+        "out/userspace-export-fresh-20261106/verification-code/launch-userspace-export-fresh-20261106.py": {
+          "bytes": 4214,
+          "sha256": "d0d41ac667d5e95bce9dab325e49782ec31a3d93dfedf7f1f5740607126ed3d6"
+        },
+        "out/userspace-export-fresh-20261106/verification-code/readback-canonical-userspace-20261106.py": {
+          "bytes": 9113,
+          "sha256": "a2f08e8b0603c69a4658c48a98a0ccf5299281e39209ced61b0bd381bdad8620"
+        },
+        "out/userspace-export-fresh-20261106/verification-code/run.py": {
+          "bytes": 385,
+          "sha256": "f9221317ddbfeb5b8f99a0f83e3a5cd16146f6dfa8e435a495c59215887dba2e"
+        }
+      }
+    }
+  ],
+  "foreign": {
+    "receipt_sha256": "5365ef01928610bc3df6b2835e6309ad6dccba418b3248bd4a47dab313d26c84",
+    "repository": {
+      "manifest": {
+        "bytes": 195321,
+        "sha256": "b323d3fe609940f7c6d57ebf51bfa71271dfd143c81f8d09f5faf0a1ef81d9e9"
+      },
+      "package_count": 220,
+      "bom_sha256": "c543bb4113abfa3e1658733a916bc3aea7167b20ef91e584a4b841fe87add17b"
+    },
+    "adapter_manifest": {
+      "bytes": 2663,
+      "sha256": "dc1c4bee9855197e0c39a9e1e00e1a7802e13f054ee60ff2fca9d8ed33d6c52e"
+    },
+    "required": 96,
+    "base": 3,
+    "cached_archives": 99,
+    "dpkg_status_bytes_at_foreign_stage": 0,
+    "device_placeholders": {
+      "null": {
+        "placeholder_type": "ordinary regular file",
+        "major": 1,
+        "minor": 3,
+        "mode": 438
+      },
+      "zero": {
+        "placeholder_type": "ordinary regular file",
+        "major": 1,
+        "minor": 5,
+        "mode": 438
+      },
+      "full": {
+        "placeholder_type": "ordinary regular file",
+        "major": 1,
+        "minor": 7,
+        "mode": 438
+      },
+      "random": {
+        "placeholder_type": "ordinary regular file",
+        "major": 1,
+        "minor": 8,
+        "mode": 438
+      },
+      "urandom": {
+        "placeholder_type": "ordinary regular file",
+        "major": 1,
+        "minor": 9,
+        "mode": 438
+      },
+      "tty": {
+        "placeholder_type": "ordinary regular file",
+        "major": 5,
+        "minor": 0,
+        "mode": 438
+      },
+      "console": {
+        "placeholder_type": "ordinary regular file",
+        "major": 5,
+        "minor": 1,
+        "mode": 438
+      },
+      "ptmx": {
+        "placeholder_type": "ordinary regular file",
+        "major": 5,
+        "minor": 2,
+        "mode": 438
+      }
+    }
+  },
+  "configuration": {
+    "receipt_sha256": "426037cdbc8600f70c3118cdae3bcd5aea62e77082b5a61225dc9347412e65b5",
+    "commands": [
+      {
+        "name": "second-stage",
+        "argv": [
+          "/usr/sbin/chroot",
+          "/a733-export-output/arm-root",
+          "/usr/bin/qemu-aarch64-static",
+          "/bin/sh",
+          "/debootstrap/debootstrap",
+          "--second-stage"
+        ],
+        "status": 0
+      },
+      {
+        "name": "base-inventory",
+        "argv": [
+          "/usr/sbin/chroot",
+          "/a733-export-output/arm-root",
+          "/usr/bin/qemu-aarch64-static",
+          "/usr/bin/dpkg-query",
+          "-W",
+          "-f=${Package}\t${Version}\t${Architecture}\t${db:Status-Status}\n"
+        ],
+        "status": 0
+      },
+      {
+        "name": "apt-update",
+        "argv": [
+          "/usr/sbin/chroot",
+          "/a733-export-output/arm-root",
+          "/usr/bin/qemu-aarch64-static",
+          "/usr/bin/apt-get",
+          "update"
+        ],
+        "status": 0
+      },
+      {
+        "name": "apt-install",
+        "argv": [
+          "/usr/sbin/chroot",
+          "/a733-export-output/arm-root",
+          "/usr/bin/qemu-aarch64-static",
+          "/usr/bin/apt-get",
+          "--yes",
+          "--no-install-recommends",
+          "install",
+          "adduser=3.134",
+          "apt=2.6.1",
+          "base-files=12.4+deb12u15",
+          "base-passwd=3.6.1",
+          "bash=5.2.15-2+b13",
+          "bsdutils=1:2.38.1-5+deb12u3",
+          "ca-certificates=20230311+deb12u1",
+          "coreutils=9.1-1",
+          "curl=7.88.1-10+deb12u15",
+          "dash=0.5.12-2",
+          "dbus=1.14.10-1~deb12u1",
+          "dbus-bin=1.14.10-1~deb12u1",
+          "dbus-daemon=1.14.10-1~deb12u1",
+          "dbus-session-bus-common=1.14.10-1~deb12u1",
+          "dbus-system-bus-common=1.14.10-1~deb12u1",
+          "debconf=1.5.82",
+          "debian-archive-keyring=2023.3+deb12u2",
+          "debianutils=5.7-0.5~deb12u1",
+          "diffutils=1:3.8-4",
+          "dmsetup=2:1.02.185-2",
+          "dpkg=1.21.23",
+          "e2fsprogs=1.47.0-2+b2",
+          "findutils=4.9.0-4",
+          "gcc-12-base=12.2.0-14+deb12u1",
+          "gpgv=2.2.40-1.1+deb12u2",
+          "grep=3.8-5",
+          "gzip=1.12-1",
+          "hostname=3.23+nmu1",
+          "init-system-helpers=1.65.2+deb12u1",
+          "iproute2=6.1.0-3",
+          "iso-codes=4.15.0-1",
+          "kmod=30+20221128-1",
+          "libacl1=2.3.1-3",
+          "libaio1=0.3.113-4",
+          "libapparmor1=3.0.8-3",
+          "libapt-pkg6.0=2.6.1",
+          "libargon2-1=0~20171227-0.3+deb12u1",
+          "libasound2=1.2.8-1+b1",
+          "libasound2-data=1.2.8-1",
+          "libattr1=1:2.5.1-4",
+          "libaudit-common=1:3.0.9-1",
+          "libaudit1=1:3.0.9-1",
+          "libblkid1=2.38.1-5+deb12u3",
+          "libbpf1=1:1.1.2-0+deb12u1",
+          "libbrlapi0.8=6.5-7+deb12u1",
+          "libbrotli1=1.0.9-2+b6",
+          "libbsd0=0.11.7-2",
+          "libbz2-1.0=1.0.8-5+b1",
+          "libc-bin=2.36-9+deb12u14",
+          "libc6=2.36-9+deb12u14",
+          "libcacard0=1:2.8.0-3",
+          "libcap-ng0=0.8.3-1+b3",
+          "libcap2=1:2.66-4+deb12u3+b1",
+          "libcap2-bin=1:2.66-4+deb12u3+b1",
+          "libcapstone4=4.0.2-5",
+          "libcbor0.8=0.8.0-2+b1",
+          "libcom-err2=1.47.0-2+b2",
+          "libcrypt1=1:4.4.33-2",
+          "libcryptsetup12=2:2.6.1-4~deb12u2",
+          "libcurl4=7.88.1-10+deb12u15",
+          "libdaxctl1=76.1-1",
+          "libdb5.3=5.3.28+dfsg2-1",
+          "libdbus-1-3=1.14.10-1~deb12u1",
+          "libdebconfclient0=0.270",
+          "libdevmapper1.02.1=2:1.02.185-2",
+          "libdrm-common=2.4.114-1",
+          "libdrm2=2.4.114-1+b1",
+          "libdw1=0.188-2.1",
+          "libedit2=3.1-20221030-2",
+          "libelf1=0.188-2.1",
+          "libepoxy0=1.5.10-1",
+          "libexecs0=1.3-2",
+          "libexpat1=2.5.0-1+deb12u2",
+          "libext2fs2=1.47.0-2+b2",
+          "libfdisk1=2.38.1-5+deb12u3",
+          "libfdt1=1.6.1-4+b1",
+          "libffi8=3.4.4-1",
+          "libfido2-1=1.12.0-2+b1",
+          "libfile-find-rule-perl=0.34-4~deb12u1",
+          "libfuse3-3=3.14.0-4",
+          "libgbm1=22.3.6-1+deb12u2",
+          "libgcc-s1=12.2.0-14+deb12u1",
+          "libgcrypt20=1.10.1-3+deb12u1",
+          "libgdbm-compat4=1.23-3",
+          "libgdbm6=1.23-3",
+          "libglib2.0-0=2.74.6-2+deb12u9",
+          "libgmp10=2:6.2.1+dfsg1-1.1",
+          "libgnutls30=3.7.9-2+deb12u7",
+          "libgpg-error0=1.46-1",
+          "libgssapi-krb5-2=1.20.1-2+deb12u5",
+          "libgstreamer-plugins-base1.0-0=1.22.0-3+deb12u6",
+          "libgstreamer1.0-0=1.22.0-2+deb12u1",
+          "libhogweed6=3.8.1-2",
+          "libibverbs1=44.0-2",
+          "libidn2-0=2.3.3-1+b1",
+          "libip4tc2=1.8.9-2",
+          "libjpeg62-turbo=1:2.1.5-2",
+          "libjson-c5=0.16-2",
+          "libk5crypto3=1.20.1-2+deb12u5",
+          "libkeyutils1=1.6.3-2",
+          "libkmod2=30+20221128-1",
+          "libkrb5-3=1.20.1-2+deb12u5",
+          "libkrb5support0=1.20.1-2+deb12u5",
+          "libldap-2.5-0=2.5.13+dfsg-5",
+          "liblz4-1=1.9.4-1",
+          "liblzma5=5.4.1-1+deb12u1",
+          "libmd0=1.0.4-2",
+          "libmnl0=1.0.4-3",
+          "libmount1=2.38.1-5+deb12u3",
+          "libncursesw6=6.4-4",
+          "libndctl6=76.1-1",
+          "libnettle8=3.8.1-2",
+          "libnghttp2-14=1.52.0-1+deb12u3",
+          "libnl-3-200=3.7.0-0.2+b1",
+          "libnl-route-3-200=3.7.0-0.2+b1",
+          "libnsl2=1.3.0-2",
+          "libnspr4=2:4.35-1",
+          "libnss3=2:3.87.1-1+deb12u2",
+          "libnuma1=2.0.16-1",
+          "libnumber-compare-perl=0.03-3",
+          "libnvme1=1.3-1+deb12u1",
+          "libopus0=1.3.1-3",
+          "liborc-0.4-0=1:0.4.33-2",
+          "libp11-kit0=0.24.1-2",
+          "libpam-modules=1.5.2-6+deb12u2",
+          "libpam-modules-bin=1.5.2-6+deb12u2",
+          "libpam-runtime=1.5.2-6+deb12u2",
+          "libpam0g=1.5.2-6+deb12u2",
+          "libpcre2-8-0=10.42-1",
+          "libpcsclite1=1.9.9-2",
+          "libperl5.36=5.36.0-7+deb12u3",
+          "libpixman-1-0=0.42.2-1",
+          "libpmem1=1.12.1-2",
+          "libpng16-16=1.6.39-2+deb12u5",
+          "libproc2-0=2:4.0.2-3",
+          "libpsl5=0.21.2-1",
+          "libpython3-stdlib=3.11.2-1+b1",
+          "libpython3.11-minimal=3.11.2-6+deb12u8",
+          "libpython3.11-stdlib=3.11.2-6+deb12u8",
+          "librdmacm1=44.0-2",
+          "libreadline8=8.2-1.3",
+          "librtmp1=2.4+20151223.gitfa8646d.1-2+b2",
+          "libsasl2-2=2.1.28+dfsg-10",
+          "libsasl2-modules-db=2.1.28+dfsg-10",
+          "libseccomp2=2.5.4-1+deb12u1",
+          "libselinux1=3.4-1+b6",
+          "libsemanage-common=3.4-1",
+          "libsemanage2=3.4-1+b5",
+          "libsepol2=3.4-2.1",
+          "libslirp0=4.7.0-1",
+          "libsmartcols1=2.38.1-5+deb12u3",
+          "libsndio7.0=1.9.0-0.3+b2",
+          "libspice-server1=0.15.1-1",
+          "libsqlite3-0=3.40.1-2+deb12u2",
+          "libss2=1.47.0-2+b2",
+          "libssh2-1=1.10.0-3+b1",
+          "libssl3=3.0.20-1~deb12u2",
+          "libstdc++6=12.2.0-14+deb12u1",
+          "libsystemd-shared=252.39-1~deb12u2",
+          "libsystemd0=252.39-1~deb12u2",
+          "libtasn1-6=4.19.0-2+deb12u1",
+          "libtext-glob-perl=0.11-3",
+          "libtinfo6=6.4-4",
+          "libtirpc-common=1.3.3+ds-1",
+          "libtirpc3=1.3.3+ds-1",
+          "libudev1=252.39-1~deb12u2",
+          "libunistring2=1.0-2",
+          "libunwind8=1.6.2-3",
+          "liburing2=2.3-3",
+          "libusb-1.0-0=2:1.0.26-1",
+          "libusbredirparser1=0.13.0-2",
+          "libuuid1=2.38.1-5+deb12u3",
+          "libvdeplug2=4.0.1-4",
+          "libwayland-server0=1.21.0-1",
+          "libwrap0=7.6.q-32",
+          "libxtables12=1.8.9-2",
+          "libxxhash0=0.8.1-1",
+          "libzstd1=1.5.4+dfsg2-5",
+          "login=1:4.13+dfsg1-1+deb12u2",
+          "logsave=1.47.0-2+b2",
+          "mawk=1.3.4.20200120-3.1",
+          "media-types=10.0.0",
+          "mount=2.38.1-5+deb12u3",
+          "ncurses-base=6.4-4",
+          "ncurses-bin=6.4-4",
+          "nvme-cli=2.4+really2.3-3",
+          "openssh-client=1:9.2p1-2+deb12u10",
+          "openssh-server=1:9.2p1-2+deb12u10",
+          "openssh-sftp-server=1:9.2p1-2+deb12u10",
+          "openssl=3.0.20-1~deb12u2",
+          "passwd=1:4.13+dfsg1-1+deb12u2",
+          "perl=5.36.0-7+deb12u3",
+          "perl-base=5.36.0-7+deb12u3",
+          "perl-modules-5.36=5.36.0-7+deb12u3",
+          "procps=2:4.0.2-3",
+          "python3=3.11.2-1+b1",
+          "python3-minimal=3.11.2-1+b1",
+          "python3.11=3.11.2-6+deb12u8",
+          "python3.11-minimal=3.11.2-6+deb12u8",
+          "qemu-system-arm=1:7.2+dfsg-7+deb12u18+b3",
+          "qemu-system-common=1:7.2+dfsg-7+deb12u18+b3",
+          "qemu-system-data=1:7.2+dfsg-7+deb12u18",
+          "qemu-utils=1:7.2+dfsg-7+deb12u18+b3",
+          "readline-common=8.2-1.3",
+          "runit-helper=2.15.2",
+          "sed=4.9-1+deb12u1",
+          "sensible-utils=0.0.17+nmu1",
+          "systemd=252.39-1~deb12u2",
+          "systemd-resolved=252.39-1~deb12u2",
+          "systemd-sysv=252.39-1~deb12u2",
+          "sysvinit-utils=3.06-4",
+          "tar=1.34+dfsg-1.2+deb12u1",
+          "tzdata=2026b-0+deb12u1",
+          "ucf=3.0043+nmu1+deb12u1",
+          "udev=252.39-1~deb12u2",
+          "usrmerge=37~deb12u1",
+          "util-linux=2.38.1-5+deb12u3",
+          "util-linux-extra=2.38.1-5+deb12u3",
+          "uuid-runtime=2.38.1-5+deb12u3",
+          "zlib1g=1:1.2.13.dfsg-1"
+        ],
+        "status": 0
+      },
+      {
+        "name": "full-inventory",
+        "argv": [
+          "/usr/sbin/chroot",
+          "/a733-export-output/arm-root",
+          "/usr/bin/qemu-aarch64-static",
+          "/usr/bin/dpkg-query",
+          "-W",
+          "-f=${Package}\t${Version}\t${Architecture}\t${db:Status-Status}\n"
+        ],
+        "status": 0
+      },
+      {
+        "name": "dpkg-audit",
+        "argv": [
+          "/usr/sbin/chroot",
+          "/a733-export-output/arm-root",
+          "/usr/bin/qemu-aarch64-static",
+          "/usr/bin/dpkg",
+          "--audit"
+        ],
+        "status": 0
+      },
+      {
+        "name": "apt-check",
+        "argv": [
+          "/usr/sbin/chroot",
+          "/a733-export-output/arm-root",
+          "/usr/bin/qemu-aarch64-static",
+          "/usr/bin/apt-get",
+          "check"
+        ],
+        "status": 0
+      }
+    ],
+    "base_packages": 99,
+    "packages": 220,
+    "dpkg_audit_clean": true,
+    "apt_check_passed": true,
+    "final_pids": [
+      1,
+      2
+    ],
+    "helper_receipt_sha256": "cc63be72cfce307199ade5b2a60f978cc5bac72ad49c99e94d1dc5349065876b"
+  },
+  "export": {
+    "schema": 1,
+    "phase": "final-userspace-export",
+    "success": true,
+    "configure_receipt_sha256": "426037cdbc8600f70c3118cdae3bcd5aea62e77082b5a61225dc9347412e65b5",
+    "exporter_sha256": "1cd49563c43fe7ddd78d309ef2d9fe48b2ad1d1d29ee6d7050374db12be118ed",
+    "inventory": {
+      "packages": 220,
+      "lock_sha256": "f2abf03d0d6e7fd506560689093220514cbf1acc678f7560562026d6ca6564a6"
+    },
+    "cleanup": {
+      "root_mode": {
+        "before": 493,
+        "after": 493
+      },
+      "removed_paths": [
+        "a733-repo",
+        "etc/nvme/hostid",
+        "etc/nvme/hostnqn",
+        "etc/ssh/ssh_host_ecdsa_key",
+        "etc/ssh/ssh_host_ecdsa_key.pub",
+        "etc/ssh/ssh_host_ed25519_key",
+        "etc/ssh/ssh_host_ed25519_key.pub",
+        "etc/ssh/ssh_host_rsa_key",
+        "etc/ssh/ssh_host_rsa_key.pub",
+        "usr/bin/qemu-aarch64-static",
+        "usr/sbin/policy-rc.d",
+        "var/cache/apt/pkgcache.bin",
+        "var/cache/apt/srcpkgcache.bin",
+        "var/cache/ldconfig/aux-cache",
+        "var/lib/dbus/machine-id"
+      ],
+      "pruned_child_counts": {
+        "var/lib/apt/lists": 5,
+        "var/cache/apt/archives": 101,
+        "var/log": 12,
+        "run": 9,
+        "tmp": 0
+      },
+      "generic_base_generated_paths": [
+        "etc/nvme/hostid",
+        "etc/nvme/hostnqn",
+        "var/cache/apt/pkgcache.bin",
+        "var/cache/apt/srcpkgcache.bin",
+        "var/cache/ldconfig/aux-cache"
+      ],
+      "machine_id_emptied": true,
+      "root_password_locked": true
+    },
+    "archive": {
+      "bytes": 138025729,
+      "sha256": "98d6a57bbb70ff55bef32b6bd051ebfcb6bc0fad4f6c8b3167e8619b5a9d961e"
+    },
+    "raw_tar": {
+      "bytes": 468398080,
+      "sha256": "a3b1ccfb69c24844d50cf60fb4c4286eb366dc6ba8da0f77ff672c8202b6e730"
+    },
+    "members": 15876,
+    "character_headers": 8,
+    "timestamps": {
+      "policy": "clamp archive/BOM mtime_ns to min(native, epoch); preserve earlier nanoseconds",
+      "epoch": 1790812800,
+      "clamped_entries": 2763,
+      "native_source_metadata_verified": true
+    },
+    "classification": "interim userspace only; no physical boot, KVM, NVMe or SD-write acceptance",
+    "metadata": "normalized archive timestamps; native same-UID-map xattrs; no original-rootfs binary-equivalence claim"
+  },
+  "comparison": {
+    "canonical_reference": "out/userspace-export-canonical-01-20261106/",
+    "compressed_bytes_identical": true,
+    "bom_bytes_identical": true,
+    "raw_tar_hash_identical": true,
+    "source_and_export_postconditions": "Both inventories and all namespace cleanup checks independently validated from actual records"
+  },
+  "independent_review": {
+    "success": true,
+    "classification": "Independent full raw-stream readback and actual receipt-chain review of fresh locked-package foreign extraction, isolated ARM configuration and normalized interim userspace export; shared frozen OS/raw package cache; no full production payload/state/NVMe or hardware acceptance",
+    "archive": {
+      "archive": {
+        "bytes": 138025729,
+        "sha256": "98d6a57bbb70ff55bef32b6bd051ebfcb6bc0fad4f6c8b3167e8619b5a9d961e"
+      },
+      "raw_tar": {
+        "bytes": 468398080,
+        "sha256": "a3b1ccfb69c24844d50cf60fb4c4286eb366dc6ba8da0f77ff672c8202b6e730"
+      },
+      "members": 15876,
+      "types": {
+        "dir": 1720,
+        "symlink": 1850,
+        "char": 8,
+        "file": 12295,
+        "hardlink": 3
+      },
+      "root_locked": true,
+      "machine_id_empty": true,
+      "forbidden_build_and_identity_paths_absent": true,
+      "inventory_exact": 220
+    },
+    "compressed_and_bom_bytes_identical_to_canonical_01": true,
+    "normalized_historical_difference": {
+      "removed_paths": [
+        "etc/nvme/hostid",
+        "etc/nvme/hostnqn",
+        "var/cache/apt/pkgcache.bin",
+        "var/cache/apt/srcpkgcache.bin",
+        "var/cache/ldconfig/aux-cache"
+      ],
+      "mtime_epoch": 1790812800,
+      "clamped_entries": 2763
+    },
+    "exporter_sha256": "1cd49563c43fe7ddd78d309ef2d9fe48b2ad1d1d29ee6d7050374db12be118ed",
+    "foreign_receipt_sha256": "5365ef01928610bc3df6b2835e6309ad6dccba418b3248bd4a47dab313d26c84",
+    "configure_receipt_sha256": "426037cdbc8600f70c3118cdae3bcd5aea62e77082b5a61225dc9347412e65b5",
+    "source_manifests": {
+      "userspace-foreign-recipe-20261106": {
+        "revision": "aa6922de0e9ab818343991215c92014e046e94d7",
+        "files": 6,
+        "sha256": "6847953ddb7acfee5edef8000bac6cbc261adae6040d8454aed078104b27e48b"
+      },
+      "userspace-configure-fresh-20261106": {
+        "revision": "aa6922de0e9ab818343991215c92014e046e94d7",
+        "files": 4,
+        "sha256": "ee1b322b581715c79257395d157f29a0104985f8c18b6259b02cbb6f818da1de"
+      }
+    },
+    "phases": [
+      {
+        "phase": "userspace-foreign-recipe-20261106",
+        "success": true,
+        "host_inventory_exact_842_unchanged": true,
+        "namespace_cleanup_empty": true,
+        "minimum_free_bytes": 4115197952,
+        "minimum_available_memory_bytes": 7224971264,
+        "resource_samples": 14,
+        "launcher_sha256": "9734346eba7104c524b243334e63dccb4dc127bbaa99a9f0891df8de014e6c40",
+        "runner_sha256": "e782065ed422909b0d56a4981b423b2b97989222b25980ba29fa9c8d43f74d9d",
+        "phase_receipt_sha256": "185ee236cec33790d99b38e38f1082db191de4cd0925a1ce27d9b19c723745ec"
+      },
+      {
+        "phase": "userspace-configure-fresh-20261106",
+        "success": true,
+        "host_inventory_exact_842_unchanged": true,
+        "namespace_cleanup_empty": true,
+        "minimum_free_bytes": 3762524160,
+        "minimum_available_memory_bytes": 7122173952,
+        "resource_samples": 155,
+        "launcher_sha256": "47510ee22d289c3bff096389976235efddf5aae4e15851288a2adfcedb4015f2",
+        "runner_sha256": "525eea13899977a85cc21bae2589629b3380aee9ac7cbee95dfd8d858725b575",
+        "phase_receipt_sha256": "f3ee30323f851f5590a61cf87d5925b9c6b6f056b4991449f2374229c12914a9"
+      },
+      {
+        "phase": "userspace-export-fresh-20261106",
+        "success": true,
+        "host_inventory_exact_842_unchanged": true,
+        "namespace_cleanup_empty": true,
+        "minimum_free_bytes": 3762688000,
+        "minimum_available_memory_bytes": 7280771072,
+        "resource_samples": 52,
+        "launcher_sha256": "d0d41ac667d5e95bce9dab325e49782ec31a3d93dfedf7f1f5740607126ed3d6",
+        "runner_sha256": "f9221317ddbfeb5b8f99a0f83e3a5cd16146f6dfa8e435a495c59215887dba2e",
+        "phase_receipt_sha256": "52a265d10680d6fb4ffb9f2362eadd2475b83af07a516f032b846fc73567edb8"
+      }
+    ],
+    "artifacts": {
+      "rootfs-bom.json": "1c415ad29e297260b89f199c48c0185e8c9987be5c336fd553cff5e5c38aaa72",
+      "receipt.json": "66c0ee097150f68114b8eef943f8ac5ecb7961df29cebfeedea9e767503dc496"
+    },
+    "reviewer_script_sha256": "84cc5291df46e37cd496e44aad357032a207562e9578f321436e1830cf29d9ae"
+  },
+  "retained_files": {
+    "out/userspace-foreign-recipe-20261106/records.tar": {
+      "bytes": 327680,
+      "sha256": "e20c0ceea3caf2b9866b789b647cf5a41c0e2f600bbd1e56c0f5b1ca828be8de"
+    },
+    "out/userspace-foreign-recipe-20261106/input-manifest.json": {
+      "bytes": 1406,
+      "sha256": "6847953ddb7acfee5edef8000bac6cbc261adae6040d8454aed078104b27e48b"
+    },
+    "out/userspace-foreign-recipe-20261106/work/foreign-receipt.json": {
+      "bytes": 6064,
+      "sha256": "5365ef01928610bc3df6b2835e6309ad6dccba418b3248bd4a47dab313d26c84"
+    },
+    "out/userspace-foreign-recipe-20261106/work/repo/manifest.json": {
+      "bytes": 195321,
+      "sha256": "b323d3fe609940f7c6d57ebf51bfa71271dfd143c81f8d09f5faf0a1ef81d9e9"
+    },
+    "out/userspace-foreign-recipe-20261106/work/adapter/manifest.json": {
+      "bytes": 2663,
+      "sha256": "dc1c4bee9855197e0c39a9e1e00e1a7802e13f054ee60ff2fca9d8ed33d6c52e"
+    },
+    "out/userspace-configure-fresh-20261106/records.tar": {
+      "bytes": 399360,
+      "sha256": "db1a4976e05798b2e6bc7df0437973eecc5eab0a0655713e03341d11880a980d"
+    },
+    "out/userspace-configure-fresh-20261106/input-manifest.json": {
+      "bytes": 964,
+      "sha256": "ee1b322b581715c79257395d157f29a0104985f8c18b6259b02cbb6f818da1de"
+    },
+    "out/userspace-configure-fresh-20261106/work/configure-receipt.json": {
+      "bytes": 11183,
+      "sha256": "426037cdbc8600f70c3118cdae3bcd5aea62e77082b5a61225dc9347412e65b5"
+    },
+    "out/userspace-export-fresh-20261106/rootfs.tar.gz": {
+      "bytes": 138025729,
+      "sha256": "98d6a57bbb70ff55bef32b6bd051ebfcb6bc0fad4f6c8b3167e8619b5a9d961e"
+    },
+    "out/userspace-export-fresh-20261106/rootfs-bom.json": {
+      "bytes": 4337400,
+      "sha256": "1c415ad29e297260b89f199c48c0185e8c9987be5c336fd553cff5e5c38aaa72"
+    },
+    "out/userspace-export-fresh-20261106/receipt.json": {
+      "bytes": 2175,
+      "sha256": "66c0ee097150f68114b8eef943f8ac5ecb7961df29cebfeedea9e767503dc496"
+    },
+    "out/userspace-export-fresh-20261106/phase-records.tar": {
+      "bytes": 102400,
+      "sha256": "af88c078573036fef0dc095e104a5f010dcc8d75a4acfec8521347423809634a"
+    },
+    "out/userspace-export-fresh-20261106/coordinator-readback.json": {
+      "bytes": 852,
+      "sha256": "21a9a82a8de2e9dbea769a601646898b43d11ccce4625a31f941c4e674f8d1a9"
+    },
+    "out/userspace-export-fresh-independent-review-20261106.json": {
+      "bytes": 4041,
+      "sha256": "7dab752e5212b00fb019a1b600f3c5606934d6084eb2468278e9eaf8a0c58368"
+    },
+    "out/userspace-export-fresh-20261106/verification-code/independent-review.py": {
+      "bytes": 19362,
+      "sha256": "84cc5291df46e37cd496e44aad357032a207562e9578f321436e1830cf29d9ae"
+    }
+  },
+  "validation": {
+    "native_discovery_cases": 1121,
+    "environment_skips": 96,
+    "assembly_cases": 4,
+    "shell_suites": 5,
+    "prepare_focused_cases": 23,
+    "retention_safety_cases": 13,
+    "toml_files": 5,
+    "diff_check": true
+  },
+  "routing": [
+    {
+      "task": "foreign recipe",
+      "model": "gpt-6.1-sol",
+      "effort": "medium"
+    },
+    {
+      "task": "source/wrappers/complete pipeline review",
+      "model": "gpt-6.1-sol",
+      "effort": "high"
+    },
+    {
+      "task": "capacity source and postreview",
+      "model": "gpt-6.1-sol",
+      "effort": "high"
+    }
+  ],
+  "account_cost": "Child token usage and account charges not exposed; unknown. Source bytecode-cache boundary and two retention protocol corrections resolved before real operations.",
+  "limits": [
+    "Fresh interim userspace pipeline verified; top-level one-off wrapper consolidation into tracked orchestration remains.",
+    "Same pinned frozen builder and original rawpackagecache; no independentoperator deployment reproduction claim.",
+    "Current production payload recipe still selects its historical archive profile; integrating this normalized profile and rebuilding full roots/state/NVMe remains.",
+    "No new board boot, real SSH/KVM execution, SD-write/endurance/update/recovery/restore evidence.",
+    "No builder resize, physical SD/NVMe erasure or SPI programming; published installation artifacts unchanged."
+  ]
+}
