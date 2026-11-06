@@ -1,0 +1,116 @@
+{
+  "schema": 1,
+  "profile": "timesync-20261106",
+  "classification": "input contract only; no configured tree, archive, image or hardware acceptance",
+  "base": {
+    "profile": "normalized-20261106",
+    "archive": {
+      "bytes": 138025729,
+      "sha256": "98d6a57bbb70ff55bef32b6bd051ebfcb6bc0fad4f6c8b3167e8619b5a9d961e"
+    },
+    "bom": {
+      "bytes": 4337400,
+      "sha256": "1c415ad29e297260b89f199c48c0185e8c9987be5c336fd553cff5e5c38aaa72"
+    },
+    "packages": 220
+  },
+  "addition": {
+    "package": "systemd-timesyncd",
+    "version": "252.39-1~deb12u2",
+    "architecture": "arm64",
+    "filename": "systemd-timesyncd_252.39-1~deb12u2_arm64.deb",
+    "bytes": 62172,
+    "sha256": "700be69248209d27e58ee0736f1460bc8acb10c1e717efc985ebd23dd5fd7714"
+  },
+  "locks": {
+    "configs/host-userspace-packages.lock.tsv": {
+      "bytes": 6671,
+      "sha256": "f2abf03d0d6e7fd506560689093220514cbf1acc678f7560562026d6ca6564a6"
+    },
+    "configs/host-userspace-package-hashes.lock.tsv": {
+      "bytes": 28638,
+      "sha256": "f2f613e79d9c1abc1689e19cfe81b624d9d2ac3beeb322fd5788980d919f7d86"
+    },
+    "configs/host-timesync-packages.lock.tsv": {
+      "bytes": 6712,
+      "sha256": "2e97a93bfa02ebd89b7d437df1c9c946a5e14f76b40823d54a3f1a59ab3d0d43"
+    },
+    "configs/host-timesync-package-hashes.lock.tsv": {
+      "bytes": 28789,
+      "sha256": "58f2027166e566f485e9fabccb6a7259c05ad1d882193a8392ee93d60652ebff"
+    }
+  },
+  "identity": {
+    "name": "systemd-timesync",
+    "uid": 996,
+    "gid": 996,
+    "policy": {
+      "path": "configs/host-timesync-sysusers.conf",
+      "bytes": 170,
+      "sha256": "d3873e161fa2ba8cee53de2a675b1ed8af9145c7151ba7a2775634c480766079"
+    }
+  },
+  "package_evidence": {
+    "path": "docs/evidence/time-sync-package-input-20261106.json",
+    "bytes": 2617,
+    "sha256": "acaa7643bd375d58bf68b935b6eb3fbe04c35ede73cd293e94f48dcf87ae55cd"
+  },
+  "source": {
+    "package": "systemd",
+    "version": "252.39-1~deb12u2",
+    "directory": "pool/main/s/systemd",
+    "binary_packages": [
+      "libsystemd-shared",
+      "libsystemd0",
+      "libudev1",
+      "systemd",
+      "systemd-resolved",
+      "systemd-sysv",
+      "systemd-timesyncd",
+      "udev"
+    ],
+    "archives": [
+      {
+        "filename": "systemd_252.39-1~deb12u2.debian.tar.xz",
+        "bytes": 177476,
+        "sha256": "27c548c678593cbe82e1701fc480bfe56e99b8f8750cbc09e720b6aa4fcbffaf"
+      },
+      {
+        "filename": "systemd_252.39-1~deb12u2.dsc",
+        "bytes": 6574,
+        "sha256": "f2f952ae61fd40f1ef3ee48c8721e23eaaec5396ef5f1b0c2e138d78fade9c6e"
+      },
+      {
+        "filename": "systemd_252.39.orig.tar.gz",
+        "bytes": 12399886,
+        "sha256": "08a54a6c4d4cf969fc025eaa8922a55d6bc458100c242510b56c96e7d72af1c5"
+      }
+    ]
+  },
+  "configured_packages": 221,
+  "source_lock": {
+    "path": "configs/host-userspace-source-archives.lock.json",
+    "bytes": 122443,
+    "sha256": "f75bae857ffcfdfcfe5b7062880850d14b9f40bcdc7296f1999aa6a901fd6185"
+  },
+  "service": {
+    "unit": "systemd-timesyncd.service",
+    "enablement": "required in this derived profile; no startup during build",
+    "links": {
+      "etc/systemd/system/sysinit.target.wants/systemd-timesyncd.service": "/lib/systemd/system/systemd-timesyncd.service",
+      "etc/systemd/system/dbus-org.freedesktop.timesync1.service": "/lib/systemd/system/systemd-timesyncd.service"
+    },
+    "installed_files": {
+      "usr/lib/systemd/system/systemd-timesyncd.service": {
+        "bytes": 1764,
+        "sha256": "0e2cc5ea697a01cf8eef93cbadaaa029d23fb9759af459315ee0b3a349214303",
+        "mode": "0644"
+      },
+      "usr/lib/systemd/systemd-timesyncd": {
+        "bytes": 67656,
+        "sha256": "2aa831ae71fd9fc5d0aad09c5d25364c806a2527653897b4f96802934b13df39",
+        "mode": "0755"
+      }
+    }
+  }
+}
