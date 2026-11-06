@@ -1,10 +1,12 @@
 # NVMe provisioning preparation
 
-The [explicit EL2 packaging profile](boot-profiles.md) prepares the locked
-experimental handoff without changing the baseline artifacts below. The next
-physical action remains the [EL2 diagnostic test](el2-diagnostic.md); hardware
-KVM and deployment acceptance are still open.
+The [personalized candidate](evidence/personalized-nvme-20261106.json) now uses
+actual 256,060,514,304-byte geometry, 512/512 sectors, both real keys and the
+physically proven EL2 boot stack. Its complete raw/encoded software verification
+passes. Follow the [concrete deployment procedure](deploy-personalized-20261106.md);
+actual NVMe installation/boot, SSH and KVM guest acceptance remain open.
 
+The historical nominal-250-GB fixtures below remain frozen and nondeployable.
 
 The provisioning pipeline now assembles the proposed disk layout into a new
 sparse regular file. This joins the previously separate roots, state and boot

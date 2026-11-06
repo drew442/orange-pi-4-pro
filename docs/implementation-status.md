@@ -103,8 +103,10 @@ unbooted. No extra diagnostic-only reflash is required for the successful checks
   bootstrap is at `out/host-deployment-20261106/a733-host-sd.img`. Both are
   256 MiB and local full hashes pass. Installer ARM/TLS/SD probes pass, including
   both-key/discard-policy support. No board boot of these new artifacts is claimed.
-  The encoded NVMe bundle is running complete-stream verification; the pinned
-  delivery endpoint and final operator procedure are not yet published.
+  [The installation guide](deploy-personalized-20261106.md) now pins the
+  547,077,631-byte gzip bundle. Complete expansion/hash verification and a live
+  authenticated LAN transfer pass. The pinned HTTPS endpoint is running on
+  codex; the reviewed two-image procedure is ready for the operator.
 - [Guest fixture](guest-fixture.md), [KVM-only launch](guest-operations.md),
   [activation](guest-activation.md), [enrollment](guest-enrollment.md),
   [checkpoints](guest-checkpoints.md), [backup](guest-backups.md),
@@ -133,10 +135,10 @@ command is required to repeat those successful observations. Real keys/source
 policy and [ARM SSH-policy checks](evidence/ssh-console-management-arm-20261106.json)
 are prepared. [The actual-geometry candidate](evidence/personalized-nvme-20261106.json)
 and matching 256 MiB EL2 bootstrap pass software inspection. Builder headroom
-was recovered without losing retained bytes. Complete encoded verification,
-start pinned HTTPS delivery and finish the reviewed operator procedure before
-requesting another SD flash. No physical installation or payload transfer to
-the board has occurred. Actual SSH, KVM guest execution and release gates remain open.
+was recovered without losing retained bytes. Encoded verification, pinned HTTPS
+LAN delivery and independent procedure review now pass. The
+[operator installation sequence](deploy-personalized-20261106.md) is ready.
+No physical installation or payload transfer to the board has occurred. Actual SSH, KVM guest execution and release gates remain open.
 NVMe erase authorization for the recorded drive persists; no additional erase
 permission is being requested. SPI identity/geometry are directly observed as
 XM25QU128C, JEDEC `204118`, 16 MiB, erase 65,536 bytes, write 1 byte; verified
@@ -144,12 +146,14 @@ backup/recovery and SPI-specific programming authorization remain outstanding.
 
 ## Next actions and open gates
 
-1. Finish the personalized installation candidate and verified delivery/recovery
-   procedure using actual NVMe geometry and both supplied keys. Keep the current
-   preparation boot/log as evidence; a fresh planner identity/idle report is
-   required immediately before writing the already authorized exact NVMe.
+1. Operator follows the [personalized deployment](deploy-personalized-20261106.md):
+   flash the current installer, authenticate/acquire the compressed bundle into
+   bounded RAM, inspect the exact-device plan and apply the already authorized
+   NVMe erase/write/readback. Preserve logs and SD hashes, then switch to the
+   matching host-bootstrap SD. Source and target are revalidated before writing.
 2. Validate physical installation/readback, host boot and SSH with both keys,
-   then prove a KVM-only guest, shutdown/restart and NVMe disk persistence.
+   then follow [the first KVM guest procedure](kvm-first-guest.md) for actual
+   execution, clean shutdown/restart and NVMe disk persistence.
    `/dev/kvm` alone does not satisfy this gate. Establish automatic time and
    repeat network checks under installed-host conditions.
 3. Prove installed NVMe operation, SD policy, repeated boots/workload, interrupted

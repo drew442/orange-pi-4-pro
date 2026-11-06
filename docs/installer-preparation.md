@@ -13,11 +13,11 @@ root console with a read-only NVMe planner and an explicit, guarded full-disk
 writer. The [verified payload acquisition tool](nvme-distribution.md) and complete
 [maintenance/recovery package](maintenance-tools.md) are included.
 The [writer procedure](nvme-installation.md) requires a real installation
-candidate and exact-target authorization. This image has not installed an NVMe
-or booted on the board. The
+candidate and exact-target authorization. No preparation image has installed an NVMe. The earlier helper variant has
+physically booted; the refreshed deployment variant still awaits its first boot. The
 [diagnostic candidate](diagnostic-image.md) remains the first hardware baseline.
 
-## Current artifacts and behavior
+## Historical prototype artifacts and behavior
 
 Built on the prepared Ubuntu 22.04 builder from authenticated interim userspace,
 pinned vendor kernel/modules, DTB and firmware. No live hardware inventory was
@@ -177,81 +177,33 @@ Vendor boot-protocol references remain in the [diagnostic guide](diagnostic-imag
 
 ## Next physical boot
 
-Use this current candidate rather than the historical baseline table above.
-[Build evidence](evidence/installer-helper-20261105.json) records the pinned EL2
-boot package, corrected `/sbin/modprobe`, ARM runtime probe and independent SD
-inspection. It is a preparation RAM shell, with no automatic disk installation.
-This exact image has now booted to its RAM shell on the board; the
-[physical record](evidence/installer-prep-physical-20261106.json) confirms automatic
-YT8531 binding, DHCP, routing/DNS and HTTPS after manual UTC correction. The
-modalias scan emitted errors for a path containing spaces; source now corrects
-that scan, but the corrected source has not been reflashed or physically tested.
-The successful checks do not require another diagnostic-only reflash.
+The prior preparation boot has passed automatic PHY/DHCP, route/DNS, verified
+HTTPS after manual UTC correction, and read-only NVMe planning; see the
+[physical record](evidence/installer-prep-physical-20261106.json). No additional
+diagnostic-only reflash is required.
 
-On `codex.drewnet.online`, the current image is already staged and hash-verified at
-`/home/drew/orange-pi-4-pro/out/installer-helper-20261105/a733-installer-prep.img`.
-The similarly named `out/installer-20261104/a733-installer-prep.img` is an older
-artifact and does not match the current hash. Keep the versioned paths distinct.
+The next action is the [personalized installation procedure](deploy-personalized-20261106.md).
+It uses this locally staged **refreshed installer** first:
 
-On another flashing computer, download and authenticate:
-
-```sh
-mkdir a733-installer-helper-test
-cd a733-installer-helper-test
-scp drew@build.drewnet.online:/home/drew/orange-pi-4-pro-build/installer-helper-20261105/a733-installer-prep.img.gz .
-printf '%s  %s\n' bed50bf2aee979f80cc2e273fd16e8fad9e130ba56e71296aa8b8d898452adc6 a733-installer-prep.img.gz | sha256sum -c -
-gzip -dk a733-installer-prep.img.gz
-printf '%s  %s\n' 0144c6dc8eefd285496923e0b3cf538854a6e444565ef32c4ced7df266009d9b a733-installer-prep.img | sha256sum -c -
+```text
+/home/drew/orange-pi-4-pro/out/installer-deployment-20261106/a733-installer-prep.img
 ```
 
-Gzip size is 39,252,785 bytes; raw size is 268,435,456 bytes. Follow the
-[identified-SD flashing procedure](el2-diagnostic.md#reflash-the-identified-diagnostic-sd)
-using **`a733-installer-prep.img`** and raw hash
-**`0144c6dc8eefd285496923e0b3cf538854a6e444565ef32c4ced7df266009d9b`**
-throughout its pre-write and readback checks. Use the same identified, authorized
-SU02G card; keep the previous diagnostic image for recovery. Do not write NVMe
-or SPI. Retain full-card hashes before and after the boot.
+It is 268,435,456 bytes, SHA-256
+`2e16dea5e2941823bf8b40f1687ac417a67c91cecd87173b109fed23ca932499`.
+The [artifact record](evidence/deployment-installer-20261106.json) confirms
+multi-key/discard-policy support, quoted modalias scanning, actual ARM software
+probes and independent SD inspection. This exact new image remains physically
+unbooted. Its gzip and raw files are already downloaded and verified on codex.
 
-Leave Ethernet connected to the same switch port throughout power-off and boot.
-Record serial from before power-on: existing 3.3 V TTL wiring, 115200 baud, 8N1,
-no flow control and adapter VCC disconnected. Preserve automatic PHY/DHCP output
-before making manual changes. At the shell, enter these **one line at a time**:
+Follow the linked procedure for the exact SD checks, pinned HTTPS acquisition,
+read-only plan, already-authorized exact-drive apply/readback, and subsequent
+switch to the **different matching host bootstrap image**. Keys reside in the
+personalized NVMe state. The installer remains a serial-console RAM environment
+with no SSH server and no automatic NVMe installation. SSH is tested after the
+NVMe installation and host-bootstrap boot.
 
-```sh
-uname -a
-cat /sys/devices/system/cpu/online
-ls -l /dev/kvm /sbin/modprobe
-cat /sys/class/net/eth0/phydev/phy_id
-readlink /sys/class/net/eth0/phydev/driver
-ip addr show eth0
-ip route
-cat /etc/resolv.conf
-cat /proc/net/dev
-cat /sys/class/block/mmcblk1/ro /sys/class/block/mmcblk1/stat
-/usr/bin/python3 -I -B /usr/lib/a733-installer/plan-nvme.py --target /dev/nvme0n1
-```
-
-The final command is a read-only report, not installation. If no lease arrived,
-record the failure, then run this bounded retry with the cable left connected:
-
-```sh
-udhcpc -f -n -q -t 5 -T 3 -i eth0 -s /etc/udhcpc.script
-ip addr show eth0
-ip route
-cat /etc/resolv.conf
-cat /proc/net/dev
-```
-
-If a default route is shown, ping its actual gateway address using
-`ping -c 3 ACTUAL_GATEWAY`. Check `date -u` before TLS. If the clock is wrong,
-set it in RAM with `date -u -s 'YYYY-MM-DD HH:MM:SS'`, substituting current UTC.
-Then test DNS and verified HTTPS without downloading an installation payload:
-
-```sh
-/usr/bin/curl --head --fail --connect-timeout 10 --max-time 30 https://deb.debian.org/debian/
-```
-
-Retain errors and do not bypass certificate verification. Return the full boot
-and command capture, image readback/full-card hashes, and note whether any
-cable movement or manual driver repair was required. A successful boot here
-advances preparation; it does not establish installed-host or KVM guest acceptance.
+The earlier `out/installer-helper-20261105/` image is the physical preparation
+baseline, and `out/installer-20261104/` is older still. Neither substitutes for
+the refreshed installer's authenticated tools. Keep the working recovery inputs;
+use the versioned path above and complete installation guide for the next step.

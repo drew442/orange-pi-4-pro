@@ -96,3 +96,15 @@ root contents, modes, full raw hashes and compressed expansion pass. Actual ARM
 installed-host boot and SSH login remain untested. The separately built
 [personalized state](host-state.md#personalized-preparation) holds both real keys;
 keys are not embedded into the immutable roots.
+
+## Installation-ready candidate
+
+The [final personalized candidate](evidence/personalized-nvme-20261106.json)
+supersedes the earlier preparation above. Source `18affa1` includes explicit
+discard policy and trusted serial SSH fingerprint output. Root/state/bootstrap
+bindings and the complete full-disk GPT/filesystems/selection pass independent
+software inspection. The encoded bundle and authenticated LAN delivery also
+pass; no physical installation or guest execution is claimed. Use the
+[complete installation procedure](deploy-personalized-20261106.md), then the
+[first physical KVM guest procedure](kvm-first-guest.md). The guest fixture is
+staged and hash-verified on codex for that later step.

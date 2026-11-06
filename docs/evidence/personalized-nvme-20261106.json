@@ -178,6 +178,191 @@
     ]
   },
   "independent_review": "gpt-6.1-sol high verified manifests, actual component identity/key/rootmarker contents and source closure; no binding defect",
-  "publication_state": "Encoded bundle and final procedure still pending; no physical writes",
-  "hardware_acceptance": "No physical installation, SSH login, guest execution, boot reliability, SD policy or recovery proof claimed."
+  "publication_state": "Encoded bundle complete; actual LAN TLS transfer verified; physical board installation pending.",
+  "hardware_acceptance": "No physical installation, SSH login, guest execution, boot reliability, SD policy or recovery proof claimed.",
+  "bundle": {
+    "builder_directory": "/var/lib/a733-deployment-work-20261106/out/nvme-bundle-deployment-20261106-01",
+    "local_public_directory": "/home/drew/orange-pi-4-pro/out/deployment-delivery-20261106/public",
+    "manifest": {
+      "bytes": 13613,
+      "sha256": "bdd3c8f103e08fc1b759ca97e631ee20255d43aefe42abcce5361614a41b041e"
+    },
+    "files": {
+      "nvme.img": {
+        "bytes": 256060514304,
+        "sha256": "74f3c6f9c66df8e125148b7a7d06ebc521d1c0fd5ae8e53de4a90c740e5224fc"
+      },
+      "nvme.img.gz": {
+        "bytes": 547077631,
+        "sha256": "4d1145c5ff8689c1e8ca847e39551eb36f54e703a2843f35fd0ce7ec7574b526"
+      }
+    },
+    "distribution": {
+      "format": "gzip",
+      "source_manifest": {
+        "bytes": 8713,
+        "sha256": "38447236dfc9c520f4d2f2dbb381832bcafa6d51e4d606daf41eaf862e60d4f5"
+      },
+      "source_image": {
+        "path": "/var/lib/a733-deployment-work-20261106/out/nvme-image-deployment-20261106-02/nvme.img",
+        "identity": {
+          "device": 64512,
+          "inode": 1578478,
+          "bytes": 256060514304,
+          "mtime_ns": 1793952259382689512,
+          "ctime_ns": 1793952259382689512
+        },
+        "record": {
+          "bytes": 256060514304,
+          "sha256": "74f3c6f9c66df8e125148b7a7d06ebc521d1c0fd5ae8e53de4a90c740e5224fc"
+        }
+      },
+      "compression": {
+        "level": 6,
+        "mtime": 0,
+        "filename": "",
+        "implementation": "Python gzip.GzipFile",
+        "python_implementation": "CPython",
+        "python_version": "3.10.12",
+        "zlib_compile_version": "1.2.11",
+        "zlib_runtime_version": "1.2.11"
+      },
+      "builder_packages": {
+        "libpython3.10-minimal": {
+          "version": "3.10.12-1~22.04.18",
+          "architecture": "amd64"
+        },
+        "libpython3.10-stdlib": {
+          "version": "3.10.12-1~22.04.18",
+          "architecture": "amd64"
+        },
+        "python3.10-minimal": {
+          "version": "3.10.12-1~22.04.18",
+          "architecture": "amd64"
+        },
+        "zlib1g": {
+          "version": "1:1.2.11.dfsg-2ubuntu9.2",
+          "architecture": "amd64"
+        }
+      },
+      "runtime_files": {
+        "zlib_module": {
+          "origin": "built-in",
+          "covered_by": "executable"
+        },
+        "executable": {
+          "path": "/usr/bin/python3.10",
+          "package_path": "/usr/bin/python3.10",
+          "package": "python3.10-minimal",
+          "bytes": 5941864,
+          "sha256": "a2f33a6e006989270f4340528eb61f8f97366e00a5d1b602ac8672ea44fc56ae"
+        },
+        "gzip_module": {
+          "path": "/usr/lib/python3.10/gzip.py",
+          "package_path": "/usr/lib/python3.10/gzip.py",
+          "package": "libpython3.10-stdlib:amd64",
+          "bytes": 21849,
+          "sha256": "fb131d4bbe711c410f54c7f0b3c2c64292e1279199fd04c53837db03e542a907"
+        },
+        "zlib_library": {
+          "path": "/usr/lib/x86_64-linux-gnu/libz.so.1.2.11",
+          "package_path": "/lib/x86_64-linux-gnu/libz.so.1.2.11",
+          "package": "zlib1g:amd64",
+          "bytes": 108936,
+          "sha256": "64c206f0146cc58bbddc4f22054436f4ff278f5a554aa3ce6921ddf7e9133370"
+        }
+      },
+      "recipes": {
+        "build/nvme-bundle.py": {
+          "bytes": 15123,
+          "sha256": "246f2d6cb2b98f4d610df52ae3f68ea672a3db7656694f7ef04d2e2b42a7fba8"
+        },
+        "build/host-state.py": {
+          "bytes": 16156,
+          "sha256": "86ae81c43537b6770fb4a094ea85b21dfea9514b42d954291a631b72d15080b4"
+        },
+        "build/host-payload.py": {
+          "bytes": 20834,
+          "sha256": "3aa7aafdb5dcd037f047c5e606ead40a91616bf338ae30c055d3264401938a37"
+        },
+        "build/root-selection.py": {
+          "bytes": 10350,
+          "sha256": "15b5a64630cd74793af946ea89b5b3f3bd580a07bf52baa9a893bdd71b82b6e2"
+        },
+        "build/host-initramfs.py": {
+          "bytes": 12506,
+          "sha256": "96c19c387b04a9e753e6eb658ef1ba7373f0cd4d58a46d8ee90c8a1348f9481d"
+        },
+        "build/host-storage-tools.py": {
+          "bytes": 4985,
+          "sha256": "e8d54568a6f43552996021a6a0a3178769564238be34a8642fca9d304f8f9750"
+        },
+        "configs/host_config.py": {
+          "bytes": 5090,
+          "sha256": "db661a276e46cfa924b51c159b6afec5eacfaef9d83291edc6a5269c50c4f29a"
+        },
+        "configs/package_state.py": {
+          "bytes": 13113,
+          "sha256": "809630ebba9d927b6ad5034899a88a8a8fcf3401f94ff6f223f92f6fbfa9c6eb"
+        },
+        "scripts/install-nvme.py": {
+          "bytes": 24243,
+          "sha256": "e14d44911653e5bf3c8441e5b6518656f768c6821513450e22fc7b0381b53334"
+        },
+        "scripts/plan-nvme.py": {
+          "bytes": 7815,
+          "sha256": "8ed9075de6ab4425457aa3f309847f2e66b134691f0fe80ac5eb7c43f1746e31"
+        },
+        "scripts/nvme_layout.py": {
+          "bytes": 6162,
+          "sha256": "742a71575d94c9be29e01af3f50dc0d0639b38800c3e5a86ded49ac8906e518f"
+        },
+        "configs/builder-packages.lock.tsv": {
+          "bytes": 32519,
+          "sha256": "35c2faf42a936168098b1f54239825a3c42fc56c825fc0b2078bbd753425f48b"
+        }
+      },
+      "workspace_storage": {
+        "fstype": "ext4",
+        "maj:min": "252:0"
+      },
+      "encoded_size_limit": 22888153088,
+      "verification": "all logical source bytes hashed; fsynced encoded bytes hashed on readback; full bounded gzip expansion hashed",
+      "trust": "source manifest is trusted builder input; no signature or hardware acceptance implied",
+      "staging_storage_guard_limit": "kernel sdX/removable=0 cannot identify every USB SD reader; operator must use known fixed builder storage"
+    },
+    "bounded_ram_transport": {
+      "tmpfs_cap_bytes": 1073741824,
+      "reserve_bytes": 67108864,
+      "encoded_and_reserve_fit": true,
+      "minimum_available_ram_bytes": 3221225472,
+      "expanded_image_staged_in_ram": false
+    }
+  },
+  "live_delivery_check": {
+    "classification": "live LAN TLS delivery check from build host to codex; not board installation",
+    "endpoint": "https://192.168.1.132:8443",
+    "manifest_sha256": "bdd3c8f103e08fc1b759ca97e631ee20255d43aefe42abcce5361614a41b041e",
+    "encoded": {
+      "bytes": 547077631,
+      "sha256": "4d1145c5ff8689c1e8ca847e39551eb36f54e703a2843f35fd0ce7ec7574b526"
+    },
+    "ca_sha256": "4c71c2528ab650b2f9b8dc2a4554ed6248d77461abb7191bb58dd030a9eb9b56",
+    "TLS_verification": "private CA and IP SAN verified; no certificate bypass",
+    "expanded_image_verification": "performed by bundle builder; this LAN test checks encoded transfer only",
+    "board_delivery": "not performed"
+  },
+  "final_procedure_review": "gpt-6.1-sol high cleared final artifact bindings, exact pins, bounded staging, honest discard policy, readback gates, SD mismatch preservation, two SSH identities and recovery instructions; actual execution remains pending",
+  "delivery_server": {
+    "endpoint": "https://192.168.1.132:8443",
+    "source": "build/serve-deployment.py",
+    "source_sha256": "08c76433ed28a45931d52ca3282245041d53f694d59f83ff79f2debadba91450",
+    "certificate_sha256": "4c71c2528ab650b2f9b8dc2a4554ed6248d77461abb7191bb58dd030a9eb9b56",
+    "certificate_not_before_utc": "2026-11-06 07:42:33",
+    "certificate_not_after_utc": "2026-11-20 07:42:33",
+    "runtime_python": "3.12.3",
+    "runtime_openssl": "OpenSSL 3.0.13 30 Jan 2024",
+    "server_private_key": "Kept outside public directory and Git; no key bytes recorded",
+    "state_at_verification": "running; exact manifest and full encoded payload verified from build host over LAN"
+  }
 }

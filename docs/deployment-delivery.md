@@ -2,8 +2,11 @@
 
 The prepared helper serves a verified compressed installation bundle over HTTPS
 on `192.168.1.132:8443` (codex). It has passed native TLS tests and independent
-review. A complete personalized bundle and running service are still pending;
-this page does not authorize or start an installation.
+review. The personalized bundle is complete and the service is running. A full encoded
+LAN transfer from the build host passed pinned-CA/IP verification, length and
+SHA-256 checks. Actual board transfer remains unperformed. Follow the
+[concrete deployment procedure](deploy-personalized-20261106.md), which preserves
+the user's existing authorization for the exact recorded NVMe.
 
 The operator obtains the public delivery certificate and manifest SHA-256 through
 the trusted serial/repository instructions. Copying an unverified endpoint's CA
@@ -19,7 +22,9 @@ Regenerating it requires updated out-of-band instructions and a new hash.
 Its private key remains in ignored `out/deployment-delivery-20261106/private/`;
 only `delivery-ca.pem` belongs in the public directory.
 
-After the authenticated bundle is staged, the intended command is:
+The active service was started with this command; run it in a separate terminal
+only if the existing endpoint is no longer listening, keeping the verified
+public files and certificate unchanged:
 
 ```sh
 python3 -I -B build/serve-deployment.py \
@@ -42,3 +47,11 @@ checks, symlink/privacy guards, image mutation and idle-handshake recovery.
 These are software checks; actual board transfer and installation remain
 separate hardware evidence. Stop this temporary endpoint after deployment and
 retain the bundle, certificate/hash record and captured installation reports.
+
+The manifest SHA-256 is
+`bdd3c8f103e08fc1b759ca97e631ee20255d43aefe42abcce5361614a41b041e`.
+The 547,077,631-byte encoded image SHA-256 is
+`4d1145c5ff8689c1e8ca847e39551eb36f54e703a2843f35fd0ce7ec7574b526`.
+The builder verified its complete 256,060,514,304-byte expansion. The retained
+[receipt](evidence/personalized-nvme-20261106.json) separates that verification
+from the native LAN transfer and still-pending board result.

@@ -30,13 +30,14 @@ The [recorded operator inputs](evidence/operator-inputs-20261105.json) now suppl
 the real MAC, RSA3072 and Ed25519 keys, exact NVMe model/serial/capacity and
 512/512 sector geometry. Preserve its compatible kernel/DTB/bootstrap and state UUID together.
 The [provisioning guide](nvme-provisioning.md) describes the image layout and
-builder inputs. No deployable candidate using these real inputs exists yet.
+builder inputs. The [personalized candidate](evidence/personalized-nvme-20261106.json) now passes
+software inspection; use its [exact deployment procedure](deploy-personalized-20261106.md).
 
 The writer accepts an already acquired regular `nvme.img` or `nvme.img.gz` and
 its trusted build manifest. Gzip input requires both compressed and expanded
 size/SHA-256 records in that manifest. The [bundle recipe and acquisition tool](nvme-distribution.md) provide verified
-compressed delivery. Existing published bundles remain fixtures; a real
-per-installation candidate and board network acquisition remain pending. Keep payloads on identified
+compressed delivery. Historical bundles remain fixtures; the personalized bundle now passes complete
+verification and native LAN delivery. Actual board acquisition remains pending. Keep payloads on identified
 external storage or suitable RAM storage after measuring capacity; the 2 GB SD
 is an immutable bootstrap, not payload staging. `/run` and `/tmp` in the
 preparation image are each limited to 64 MiB.
