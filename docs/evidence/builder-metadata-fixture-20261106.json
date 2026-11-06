@@ -1,0 +1,80 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Actual Ubuntu22 builder namespace metadata fixture; not full builder image or A733 acceptance",
+  "success": true,
+  "prototype_sha256": "b856f32a1eaf53e9bef269d400d5b4b52cbc7976f49b3106700af0747d5313f8",
+  "builder_output": "/var/lib/a733-builder-metadata-fixture-20261106-02",
+  "native_records": "/home/drew/orange-pi-4-pro/out/builder-metadata-fixture-20261106",
+  "raw_records": [
+    {
+      "name": "receipt.json",
+      "bytes": 3790,
+      "sha256": "821b7987a267dee8d908786ee16137424108b6bf53b25c0ce9a1cc66bebc1bc5"
+    },
+    {
+      "name": "run.log",
+      "bytes": 3046,
+      "sha256": "3a6fdf07a1785c27203ab74bcd979a7c1ecef4edcb564acbc0f17ed9b250b0d5"
+    },
+    {
+      "name": "fixture.sh",
+      "bytes": 2522,
+      "sha256": "0dae8038293cca095ba50e44a3fd786d89b35dcbbf9a33e3a651b7ad9b332931"
+    },
+    {
+      "name": "output/report.json",
+      "bytes": 2586,
+      "sha256": "fb42584b5a968b2b75323b8e2f4286319a043d2f197dfed6776cc65f8b1ee13c"
+    }
+  ],
+  "readonly_root": "/var/lib/a733-clean-builder/seed-probe-20261106-05/rootfs",
+  "uid_mapping": "0 1048576 65536",
+  "readonly_ownership": "off; root was already shifted and verified",
+  "metadata_match": [
+    "namespace UID/GID",
+    "mode",
+    "nanosecond mtime",
+    "all xattr bytes",
+    "named user/group POSIX ACL1000",
+    "namespaced security.capability",
+    "hardlink groups",
+    "relative symlink target",
+    "file length and SHA256"
+  ],
+  "physical_api_headers_match_host": true,
+  "physical_source_binding": "rootfs:/a733-debs:norbind",
+  "sparse_logical_bytes": 67108867,
+  "restored_sparse_allocated_bytes": 8192,
+  "command": [
+    "/usr/bin/systemd-nspawn",
+    "--directory=/var/lib/a733-clean-builder/seed-probe-20261106-05/rootfs",
+    "--settings=no",
+    "--as-pid2",
+    "--register=no",
+    "--keep-unit",
+    "--console=pipe",
+    "--private-users=1048576:65536",
+    "--private-users-ownership=off",
+    "--private-network",
+    "--no-new-privileges=yes",
+    "--drop-capability=CAP_SYS_ADMIN,CAP_SYS_MODULE,CAP_SYS_RAWIO,CAP_SYS_BOOT,CAP_SYS_TIME,CAP_MKNOD,CAP_NET_ADMIN",
+    "--resolv-conf=off",
+    "--timezone=off",
+    "--link-journal=no",
+    "--bind-ro=/var/lib/a733-clean-builder/seed-probe-20261106-05/probe.sh:/a733-probe.sh",
+    "--bind-ro=/var/lib/a733-clean-builder/seed-probe-20261106-05/firmware-empty:/sys/firmware",
+    "--read-only",
+    "--bind-ro=/var/lib/a733-clean-builder/seed-probe-20261106-05/rootfs:/a733-debs:norbind",
+    "--bind-ro=/var/lib/a733-builder-metadata-fixture-20261106-02/source:/a733-sources",
+    "--bind-ro=/var/lib/a733-builder-metadata-fixture-20261106-02/fixture.sh:/a733-install.sh",
+    "--bind=/var/lib/a733-builder-metadata-fixture-20261106-02/output:/a733-export-output",
+    "/bin/sh",
+    "/a733-install.sh"
+  ],
+  "limits": [
+    "Disposable ordinary files only; complete installed-root freeze/restore remains unperformed.",
+    "First fixture failed before payload because systemd249 forbids readonly plus ownership=chown; failed state retained separately.",
+    "This metadata experiment does not establish artifact build reproducibility or hardware acceptance."
+  ]
+}

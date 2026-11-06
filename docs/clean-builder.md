@@ -99,6 +99,16 @@ explains the correction. The first failed run remains separate, including its
 [retained input cache](build-cache-retention.md#failed-builder-installation-cache).
 The corrected installation used a fresh seed.
 
+## Metadata restoration preparation
+
+The [actual metadata fixture](evidence/builder-metadata-fixture-20261106.json)
+restores named ACLs, namespaced file capabilities, binary xattrs, hardlinks,
+symlinks, nanosecond timestamps and sparse data exactly. Read-only operations
+use ownership adjustment `off` after validating that the root is already
+shifted. A nonrecursive read-only source bind preserves the stored API directory
+headers rather than exposing nspawn's temporary mounts. This fixture does not
+establish complete builder-image restoration.
+
 ## Remaining construction
 
 Freeze and hash the installed builder filesystem with its namespace ownership
