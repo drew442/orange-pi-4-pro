@@ -209,6 +209,13 @@ def in_range(value):
     return UID_BASE <= int(value) < UID_BASE + UID_COUNT
 
 
+def shifted_root_owner(rootfs):
+    owner = rootfs.stat()
+    require(owner.st_uid == UID_BASE and owner.st_gid == UID_BASE,
+            'Persistent root ownership shift not observed')
+    return [owner.st_uid, owner.st_gid]
+
+
 def validate_identity_tables(passwd, groups, subuid='', subgid=''):
     for text, index in ((passwd, 2), (passwd, 3), (groups, 2)):
         for line in text.splitlines():
@@ -413,6 +420,9 @@ def construct(seed, output, repo=REPO):
             managed_command(['/usr/bin/tar', '--extract', '--gzip', '--file=' + str(private_seed),
                              '--directory=' + str(rootfs), '--numeric-owner', '--same-owner',
                              '--same-permissions', '--keep-old-files', '--delay-directory-restore'], log)
+        if mask_firmware:
+            firmware_target = safe_path(rootfs / 'sys/firmware')
+            firmware_target.mkdir(mode=0o755, exist_ok=True)
         probe = output / 'probe.sh'
         probe.write_bytes(PROBE)
         probe.chmod(0o444)
@@ -424,6 +434,7 @@ def construct(seed, output, repo=REPO):
         check_range_unused()
         with (output / 'probe.log').open('xb') as log:
             managed_command(command, log)
+        report['ownership_shift']['observed_rootfs_uid_gid'] = shifted_root_owner(rootfs)
         report['probe'] = validate_probe((output / 'probe.log').read_bytes())
         report['probe_log'] = facts(output / 'probe.log')
         report['success'] = True

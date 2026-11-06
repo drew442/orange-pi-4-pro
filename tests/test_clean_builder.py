@@ -125,6 +125,15 @@ class ProbeTests(unittest.TestCase):
 
 
 class HostGuardsTests(unittest.TestCase):
+    def test_persistent_shift_requires_both_host_uid_and_gid(self):
+        path = Mock()
+        path.stat.return_value = types.SimpleNamespace(st_uid=builder.UID_BASE, st_gid=builder.UID_BASE)
+        self.assertEqual(builder.shifted_root_owner(path), [builder.UID_BASE] * 2)
+        for uid, gid in ((0, 0), (0, builder.UID_BASE), (builder.UID_BASE, 0)):
+            path.stat.return_value = types.SimpleNamespace(st_uid=uid, st_gid=gid)
+            with self.assertRaisesRegex(ValueError, 'ownership shift not observed'):
+                builder.shifted_root_owner(path)
+
     def test_range_allocations_and_overlap(self):
         builder.validate_identity_tables('root:x:0:0::/:/bin/sh\n', 'root:x:0:\n',
                                          'drew:100000:65536\n', 'drew:100000:65536\n')
@@ -271,7 +280,10 @@ class ReceiptTests(unittest.TestCase):
             def command(argv, log):
                 if argv[0] == '/usr/bin/tar':
                     (output / 'rootfs/tmp').mkdir()
+                    (output / 'rootfs/sys').mkdir()
                 else:
+                    if '--inaccessible=/sys/firmware' in argv:
+                        self.assertTrue((output / 'rootfs/sys/firmware').is_dir())
                     log.write(probe_output())
                     if mode == 'probe_failure':
                         raise ValueError('fixture probe failure')
@@ -291,7 +303,8 @@ class ReceiptTests(unittest.TestCase):
                     patch.object(builder, 'check_no_mounts', side_effect=check_mounts), \
                     patch.object(builder, 'audit_archive', return_value={'fixture': True}), \
                     patch.object(builder, 'run', side_effect=readonly), \
-                    patch.object(builder, 'managed_command', side_effect=command):
+                    patch.object(builder, 'managed_command', side_effect=command), \
+                    patch.object(builder, 'shifted_root_owner', return_value=[builder.UID_BASE] * 2):
                 if mode == 'success':
                     builder.construct(seed, output, repo)
                 else:
