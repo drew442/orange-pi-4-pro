@@ -21,8 +21,10 @@ remain mandatory before and after compilation.
 The source caches are registered at `/home/drew/orange-pi-4-pro-build` on the
 Ubuntu 22.04 builder. Both vendor and kernel caches are deliberately shallow
 checkouts of their pinned commits; this property is recorded. The private kernel
-checkout shares the cached Git object database, then checks out the pinned
-commit into new files. Existing object files and the original `.config` are
+checkout requests a shared clone from the cached source, then checks out the
+pinned commit into new files. Inspection found local Git packs and no alternates
+in the generated replay checkouts; the failed-tree archive's restored Git metadata
+also passes a full object check without access to the original builder path. Existing object files and the original `.config` are
 not copied into the private checkout. This establishes a fresh compilation,
 not independent source acquisition or an immutable clean builder.
 

@@ -57,11 +57,13 @@ was removed, recovering 5,274,927,104 bytes and leaving 15,358,078,976 bytes fre
 at that moment. Later builds consume this headroom. The full-kernel 15 GB guard
 and NVMe assembly's separate 22 GiB guard remain unchanged.
 
-The archive retains borrowed Git object references to the original pinned kernel
-cache, which remains present. Preserve that cache or restore equivalent pinned
-metadata before using the archived Git checkout. No full archive restoration
-procedure is claimed exercised here; archive/tree comparison and off-host byte
-retention are the verified scope. This is independent of physical recovery.
+Direct archive inspection corrects the earlier claim about borrowed Git objects:
+there is no alternates member, and a local 316,118,371-byte Git pack is retained.
+Restoring only archived Git metadata on codex resolves the pinned shallow commit
+and passes `git fsck --full --no-reflogs`, without the original builder path.
+Original source caches remain retained for existing recipes. Full working-tree
+restoration and rebuilding were not exercised by this metadata check. This is
+independent of physical recovery.
 
 ## Retained source and images
 
