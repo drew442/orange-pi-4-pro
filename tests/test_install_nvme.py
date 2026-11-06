@@ -176,6 +176,42 @@ class PolicyTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             INSTALL.authorize(plan, TTY(exact), io.StringIO())
 
+    def test_discard_requires_its_exact_confirmation_and_tty(self):
+        plan = {'target': {'serial': 'SERIAL', 'size_bytes': 123}, 'plan_sha256': 'a'*64,
+                'existing_data_policy': 'discard-authorized'}
+        exact = 'DISCARD EXISTING DATA\nERASE SERIAL 123 ' + 'a'*64 + '\n'
+        output = TTY()
+        INSTALL.authorize(plan, TTY(exact), output)
+        self.assertIn('No backup is claimed.', output.getvalue())
+        self.assertNotIn('verified off-device backup', output.getvalue())
+        for wrong in ('BACKUP VERIFIED\n' + exact.split('\n', 1)[1],
+                      exact.replace('DISCARD EXISTING DATA', 'DISCARD EXISTING DATA '),
+                      exact.replace('SERIAL', 'OTHER'), exact.replace('123', '124'),
+                      exact.replace('a'*64, 'b'*64)):
+            with self.subTest(wrong=wrong), self.assertRaisesRegex(ValueError, 'phrase'):
+                INSTALL.authorize(plan, TTY(wrong), TTY())
+        for input_stream, output_stream in ((io.StringIO(exact), TTY()),
+                                             (TTY(exact), io.StringIO())):
+            with self.assertRaisesRegex(ValueError, 'interactive TTY'):
+                INSTALL.authorize(plan, input_stream, output_stream)
+        with self.assertRaisesRegex(ValueError, 'phrase'):
+            INSTALL.authorize({**plan, 'existing_data_policy': 'verified-backup'}, TTY(exact), TTY())
+
+    @patch.object(INSTALL.os, 'geteuid', return_value=0)
+    def test_apply_policy_mismatch_and_invalid_values_prevent_authorization(self, uid):
+        for selected, reviewed in (('verified-backup', 'discard-authorized'),
+                                   ('discard-authorized', 'verified-backup'),
+                                   ('invalid', 'verified-backup'),
+                                   ('verified-backup', 'invalid')):
+            with self.subTest(selected=selected, reviewed=reviewed), \
+                    patch.object(INSTALL, 'authorize') as authorize, \
+                    patch.object(INSTALL.os, 'open') as opened:
+                with self.assertRaisesRegex(ValueError, 'policy'):
+                    INSTALL.apply(SimpleNamespace(existing_data_policy=selected), Mock(),
+                                  {'existing_data_policy': reviewed})
+                authorize.assert_not_called()
+                opened.assert_not_called()
+
     def test_source_authentication_raw_gzip_and_mutation(self):
         data = b'payload' + bytes(65536)
         for compressed in (False, True):
@@ -226,10 +262,18 @@ class PolicyTests(unittest.TestCase):
                 patch.object(INSTALL.os, 'open', return_value=99), patch.object(INSTALL.os, 'close'), \
                 patch.object(INSTALL, 'validate_fd'), \
                 patch.object(INSTALL, 'metadata_hashes', return_value={'first_mib':'old', 'last_mib':'old'}) as metadata:
-            first = INSTALL.make_plan(Mock(), source)
-            self.assertEqual(first, INSTALL.make_plan(Mock(), source))
+            first = INSTALL.make_plan(SimpleNamespace(), source)
+            self.assertEqual(first, INSTALL.make_plan(SimpleNamespace(), source))
+            self.assertEqual(first, INSTALL.make_plan(SimpleNamespace(existing_data_policy='verified-backup'), source))
+            self.assertNotIn('existing_data_policy', first)
+            discard = INSTALL.make_plan(SimpleNamespace(existing_data_policy='discard-authorized'), source)
+            self.assertEqual(discard['existing_data_policy'], 'discard-authorized')
+            self.assertIn('no backup is claimed', discard['warning'])
+            self.assertNotEqual(first['plan_sha256'], discard['plan_sha256'])
+            with self.assertRaisesRegex(ValueError, 'invalid existing-data policy'):
+                INSTALL.make_plan(SimpleNamespace(existing_data_policy='invalid'), source)
             metadata.return_value = {'first_mib':'changed', 'last_mib':'old'}
-            changed = INSTALL.make_plan(Mock(), source)
+            changed = INSTALL.make_plan(SimpleNamespace(), source)
         self.assertNotEqual(first['plan_sha256'], changed['plan_sha256'])
         unsigned = dict(first)
         unsigned.pop('plan_sha256')
@@ -330,9 +374,55 @@ class PolicyTests(unittest.TestCase):
                 patch.object(INSTALL, 'authorize') as authorization, \
                 patch.object(INSTALL.os, 'open') as opened:
             with self.assertRaisesRegex(ValueError, 'apply requires root'):
-                INSTALL.apply(Mock(), Mock(), Mock())
+                INSTALL.apply(SimpleNamespace(), Mock(), Mock())
             authorization.assert_not_called()
             opened.assert_not_called()
+
+    @patch.object(INSTALL.os, 'geteuid', return_value=0)
+    def test_main_binds_selected_policy_to_reviewed_plan_before_apply(self, uid):
+        argv = ['apply', '--image', 'nvme.img', '--manifest', 'manifest.json',
+                '--manifest-sha256', 'a'*64, '--target', '/dev/nvme0n1',
+                '--expected-model', 'SSD', '--expected-serial', 'SERIAL',
+                '--expected-bytes', '250000000000', '--plan', 'plan.json']
+        for selected, reviewed in (('verified-backup', None),
+                                   ('discard-authorized', 'discard-authorized'),
+                                   ('verified-backup', 'discard-authorized'),
+                                   ('discard-authorized', None),
+                                   ('verified-backup', 'invalid')):
+            matches = selected == (reviewed or 'verified-backup')
+            plan = {'target': {'major_minor': '259:0'}}
+            saved = copy.deepcopy(plan)
+            if selected != 'verified-backup':
+                plan['existing_data_policy'] = selected
+            if reviewed is not None:
+                saved['existing_data_policy'] = reviewed
+            saved_file = io.BytesIO(json.dumps(saved).encode())
+            saved_file.fileno = lambda: 99
+            output = io.StringIO()
+            def applied(args, source, plan, report):
+                report['success'] = True
+            with self.subTest(selected=selected, reviewed=reviewed), \
+                    patch.object(INSTALL, 'Source'), \
+                    patch.object(INSTALL, 'make_plan', return_value=plan), \
+                    patch.object(INSTALL, 'open_regular', return_value=saved_file), \
+                    patch.object(INSTALL, 'source_off_target'), \
+                    patch.object(INSTALL, 'apply', side_effect=applied) as apply, \
+                    patch.object(INSTALL.sys, 'stdout', output), \
+                    patch.object(INSTALL.sys, 'stderr', io.StringIO()):
+                self.assertEqual(INSTALL.main(argv + ['--existing-data-policy', selected]),
+                                 0 if matches else 1)
+            result = json.loads(output.getvalue())
+            self.assertEqual(result['existing_data_policy'], selected)
+            self.assertEqual(apply.call_count, int(matches))
+            if not matches:
+                self.assertFalse(result['target_modified'])
+                self.assertIn('policy', result['error'])
+        with patch.object(INSTALL, 'Source') as source, \
+                patch.object(INSTALL.sys, 'stderr', io.StringIO()):
+            with self.assertRaises(SystemExit) as error:
+                INSTALL.main(argv + ['--existing-data-policy', 'invalid'])
+            self.assertEqual(error.exception.code, 2)
+            source.assert_not_called()
 
     @patch.object(INSTALL.os, 'geteuid', return_value=0)
     def test_outer_main_interruption_preserves_shared_write_report(self, uid):
@@ -360,6 +450,7 @@ class PolicyTests(unittest.TestCase):
         self.assertEqual(result['bytes_attempted'], 4096)
         self.assertEqual(result['bytes_written'], 1024)
         self.assertEqual(result['bytes_verified'], 512)
+        self.assertEqual(result['existing_data_policy'], 'verified-backup')
         self.assertIs(handler.call_args_list[0].args[1], INSTALL.interrupted)
         with self.assertRaises(InterruptedError):
             INSTALL.interrupted(INSTALL.signal.SIGTERM, None)
@@ -384,14 +475,17 @@ class PolicyTests(unittest.TestCase):
     @patch.object(INSTALL.os, 'geteuid', return_value=0)
     def test_apply_full_path_and_failure_reports_hold_exclusive_fd(self, uid):
         payload = b'payload' + bytes(4096)
-        for fault in (None, 'refresh', 'close', 'interrupt', 'source'):
-            with self.subTest(fault=fault), tempfile.TemporaryFile() as file:
+        for policy, fault in ((policy, fault) for policy in ('verified-backup', 'discard-authorized')
+                              for fault in (None, 'refresh', 'close', 'interrupt', 'source')):
+            with self.subTest(policy=policy, fault=fault), tempfile.TemporaryFile() as file:
                 file.write(b'x'*len(payload))
                 file.flush()
                 source = SimpleNamespace(image=io.BytesIO(payload), encoded_expected=record(payload),
                     decoded_expected=record(payload), check=Mock(), decoded=lambda:io.BytesIO(payload))
                 target = {'canonical_path':'/dev/nvme0n1','size_bytes':len(payload)}
                 plan = {'target':target, 'old_metadata':{'first_mib':'old', 'last_mib':'old'}}
+                if policy == 'discard-authorized':
+                    plan['existing_data_policy'] = policy
                 events = []
                 def authorize(value):
                     events.append('authorize')
@@ -419,8 +513,9 @@ class PolicyTests(unittest.TestCase):
                         patch.object(INSTALL.fcntl, 'flock', side_effect=lambda fd,flags:events.append('lock')), \
                         patch.object(INSTALL.fcntl, 'ioctl', side_effect=ioctl), \
                         patch.object(INSTALL.sys, 'stderr', io.StringIO()):
-                    result = INSTALL.apply(Mock(), source, plan)
+                    result = INSTALL.apply(SimpleNamespace(existing_data_policy=policy), source, plan)
                 self.assertEqual(result['success'], fault is None)
+                self.assertEqual(result['existing_data_policy'], policy)
                 self.assertTrue(result['target_modified'])
                 self.assertEqual(events[:5], ['authorize','probe-open','validate','metadata','close'])
                 self.assertLess(events.index('exclusive-open'), events.index('lock'))
@@ -446,10 +541,10 @@ class PolicyTests(unittest.TestCase):
                     patch.object(INSTALL, 'stream_copy_verify') as engine:
                 if fault == 'metadata':
                     with self.assertRaisesRegex(ValueError, 'metadata changed'):
-                        INSTALL.apply(Mock(), Mock(), plan)
+                        INSTALL.apply(SimpleNamespace(), Mock(), plan)
                     self.assertEqual(opened.call_count, 1)
                 else:
-                    result = INSTALL.apply(Mock(), Mock(), plan)
+                    result = INSTALL.apply(SimpleNamespace(), Mock(), plan)
                     self.assertFalse(result['success'])
                     self.assertFalse(result['target_modified'])
                 engine.assert_not_called()
@@ -463,7 +558,7 @@ class PolicyTests(unittest.TestCase):
         target = {'serial':'SERIAL'}
         with patch.object(INSTALL, 'authorize'), patch.object(INSTALL, 'inspect_target', return_value={'serial':'CHANGED'}), patch.object(INSTALL.os, 'open') as opened:
             with self.assertRaises(ValueError):
-                INSTALL.apply(Mock(), Mock(), {'target':target})
+                INSTALL.apply(SimpleNamespace(), Mock(), {'target':target})
             opened.assert_not_called()
 
 

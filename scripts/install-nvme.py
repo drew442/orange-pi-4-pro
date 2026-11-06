@@ -275,7 +275,17 @@ def metadata_hashes(fd, size):
     return values
 
 
+def existing_data_policy(value):
+    require(value in ('verified-backup', 'discard-authorized'), 'invalid existing-data policy')
+    return value
+
+
+def plan_data_policy(plan):
+    return existing_data_policy(plan.get('existing_data_policy', 'verified-backup'))
+
+
 def make_plan(args, source):
+    policy = existing_data_policy(getattr(args, 'existing_data_policy', 'verified-backup'))
     target = inspect_target(args, source)
     fd = os.open(target['canonical_path'], os.O_RDONLY | os.O_NONBLOCK | os.O_NOFOLLOW)
     try:
@@ -288,6 +298,11 @@ def make_plan(args, source):
               'target': target, 'layout': source.manifest['layout'], 'old_metadata': old,
               'deployment_intent': source.manifest['deployment_intent'],
               'warning': 'This plan is neither authorization nor a lock. Verify an off-device backup before erasure.'}
+    # Preserve the default plan bytes/digest so reviewed legacy plans remain valid.
+    if policy == 'discard-authorized':
+        result['existing_data_policy'] = policy
+        result['warning'] = ('This plan is neither authorization nor a lock. Existing data will be '
+                             'discarded with explicit authorization; no backup is claimed.')
     result['plan_sha256'] = digest(canonical_json(result))
     return result
 
@@ -296,9 +311,14 @@ def authorize(plan, input_stream=None, output_stream=None):
     input_stream = sys.stdin if input_stream is None else input_stream
     output_stream = sys.stderr if output_stream is None else output_stream
     require(input_stream.isatty() and output_stream.isatty(), 'apply requires an interactive TTY')
+    policy = plan_data_policy(plan)
+    data_confirmation = ('Confirm an independently verified off-device backup: ', 'BACKUP VERIFIED')
+    if policy == 'discard-authorized':
+        data_confirmation = ('No backup is claimed. Confirm authorized discard of existing data: ',
+                             'DISCARD EXISTING DATA')
     target = plan['target']
     for prompt, expected in (
-            ('Confirm an independently verified off-device backup: ', 'BACKUP VERIFIED'),
+            data_confirmation,
             ('Confirm complete, irreversible target erasure: ',
              f"ERASE {target['serial']} {target['size_bytes']} {plan['plan_sha256']}")):
         output_stream.write(prompt)
@@ -390,6 +410,9 @@ def apply(args, source, plan, report=None):
     if report is None:
         report = {'success': False, 'target_modified': False, 'bytes_attempted': 0,
                   'bytes_written': 0, 'bytes_verified': 0}
+    policy = existing_data_policy(getattr(args, 'existing_data_policy', 'verified-backup'))
+    report['existing_data_policy'] = policy
+    require(policy == plan_data_policy(plan), 'existing-data policy differs from reviewed plan')
     authorize(plan)
     target = plan['target']
     require(inspect_target(args, source) == target, 'target changed after authorization')
@@ -446,10 +469,14 @@ def main(argv=None):
     parser.add_argument('--expected-serial', required=True)
     parser.add_argument('--expected-bytes', type=int, required=True)
     parser.add_argument('--plan', help='Previously reviewed JSON plan; required for apply')
+    parser.add_argument('--existing-data-policy', choices=('verified-backup', 'discard-authorized'),
+                        default='verified-backup',
+                        help='Existing data confirmation policy; must match the reviewed plan')
     args = parser.parse_args(argv)
     source = None
     result = {'success': False, 'target_modified': False, 'bytes_attempted': 0,
-              'bytes_written': 0, 'bytes_verified': 0}
+              'bytes_written': 0, 'bytes_verified': 0,
+              'existing_data_policy': args.existing_data_policy}
     previous_sigterm = signal.signal(signal.SIGTERM, interrupted)
     try:
         require(args.expected_model.strip() and args.expected_serial.strip() and args.expected_bytes > 0,
@@ -467,6 +494,8 @@ def main(argv=None):
         with open_regular(args.plan) as saved:
             _, reviewed = read_json(saved)
             source_off_target(saved.fileno(), plan['target']['major_minor'])
+        require(plan_data_policy(reviewed) == args.existing_data_policy,
+                'existing-data policy differs from reviewed plan')
         require(reviewed == plan, 'current preflight differs from reviewed plan')
         print(json.dumps(plan, indent=2, sort_keys=True), file=sys.stderr)
         apply(args, source, plan, report=result)

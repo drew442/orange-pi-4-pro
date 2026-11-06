@@ -25,9 +25,9 @@ receive positive readback checks. This declares candidate intent; it proves
 neither key ownership nor hardware success and authorizes no physical write.
 Create a fresh per-installation state rather than editing a fixture manifest.
 
-Before producing a real candidate, obtain the board's actual wired MAC, the
-operator's Ed25519 public key, exact SSD model/serial/byte capacity and sector
-sizes. Preserve its compatible kernel/DTB/bootstrap and state UUID together.
+The [recorded operator inputs](evidence/operator-inputs-20261105.json) now supply
+the real MAC, RSA3072 and Ed25519 keys, exact NVMe model/serial/capacity and
+512/512 sector geometry. Preserve its compatible kernel/DTB/bootstrap and state UUID together.
 The [provisioning guide](nvme-provisioning.md) describes the image layout and
 builder inputs. No deployable candidate using these real inputs exists yet.
 
@@ -70,11 +70,13 @@ image. Arguments are deliberately mandatory:
 | `--expected-serial` | Exact displayed serial |
 | `--expected-bytes` | Exact measured byte capacity, not nominal “250 GB” |
 | `--plan` | Saved reviewed JSON plan; required by `apply` |
+| `--existing-data-policy` | `verified-backup` (default) or explicitly authorized `discard-authorized`; use the same policy for prepare/apply |
 
-No device-specific `apply` command is published here: the actual target and
-user authorization have not been supplied. Exact deployment commands must be
-prepared and validated for that identified hardware. Use the read-only planner
-and [diagnostic inventory guide](diagnostic-image.md) first.
+The exact physical target is now recorded and its data may be discarded:
+`SPCC M.2 PCIe SSD`, serial `134807190FC700149277`, 256,060,514,304 bytes.
+This authorization does not apply to SPI or another NVMe. Concrete `apply`
+commands still require the completed authenticated installation candidate and
+fresh reviewed identity/idle plan. Do not use the historical fixture payloads.
 
 `prepare` authenticates the entire held source and manifest, including expanded
 gzip bytes, before describing the target. It requires a whole NVMe with matching
@@ -91,16 +93,25 @@ off-target storage. Whole-image authentication can take several minutes.
 ## Authorization and write protocol
 
 Before erasure, identify the exact device and obtain the user's explicit
-approval. Complete and independently verify off-device backups first. The CLI
-creates no backup and does not validate a backup archive; its first confirmation
-records the operator's assertion.
+approval. Existing authorization persists for the matching recorded drive. The
+CLI creates no backup and cannot independently verify one.
+
+Default `--existing-data-policy verified-backup` requires an off-device backup
+and the truthful operator confirmation `BACKUP VERIFIED`. If the user explicitly
+authorizes discarding the existing data, use `--existing-data-policy
+discard-authorized` on both `prepare` and `apply`; the reviewed plan binds this
+policy into its digest. Its first confirmation is `DISCARD EXISTING DATA`, and
+the report states that no backup is claimed. A policy mismatch is rejected before
+authorization or writes. Legacy plans lacking the field retain backup-required
+behavior. The newly added discard route requires a refreshed installer; the
+previously published preparation image does not include this flag.
 
 `apply` repeats source/target preparation and requires an exact match with the
-saved plan. It requires root and interactive stdin/stderr terminals. At its
-first prompt enter exactly `BACKUP VERIFIED`. At the second enter
-`ERASE SERIAL BYTES PLAN_SHA256`, replacing the last three values with the
-reviewed plan's exact serial, byte count and digest. There is no `--yes`, force,
-loop-device or environment-variable authorization bypass.
+saved plan. It requires root and interactive stdin/stderr terminals. After the
+policy-specific first confirmation, enter `ERASE SERIAL BYTES PLAN_SHA256`,
+using the reviewed plan's exact serial, byte count and digest. There is no
+`--yes`, force, loop-device or environment-variable authorization bypass. The
+TTY target-confirmation checks remain mandatory for an already authorized drive.
 
 After confirmation it rechecks target identity, busy indicators and sampled
 metadata, then opens the canonical whole device with exclusive block access.
