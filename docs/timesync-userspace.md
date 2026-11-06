@@ -53,8 +53,12 @@ including CAP_SYS_TIME; no time daemon or clock-setting operation is permitted
 during the build.
 
 For this separate future profile, automatic time on host boot is an explicit
-policy. The package post-install script enables the unit; an exit-101 startup
-policy and disable-all preset do not prevent that explicit enablement. The recipe
+policy. Actual isolated installation showed that the suppression policy leaves
+the required links absent. The recipe now creates only the contract's declared
+future-boot links explicitly after package/account audits, without invoking a
+daemon or systemctl. It walks physical root-owned parents through no-follow
+directory descriptors, creates missing parents as 0755 despite restrictive
+umasks, accepts identical links and refuses conflicting files or aliases. The recipe
 requires the exact sysinit and D-Bus alias links and pinned unit/daemon payloads,
 and rejects masks or overrides. Its receipt records the enablement only after
 validation. These are requirements for a future built artifact, not claims that
@@ -74,18 +78,19 @@ remain unchanged; unit/daemon pins match the package tar directly. Full discover
 passes 1,231 cases with 97 environment skips, four assembly cases and all five
 shell suites. ARM execution and namespace setup are mocked in these tests.
 
-This recipe has not installed a package or produced a configured 221-package
-tree. The [derived exporter](timesync-export.md) now passes independent
-source/host review. The [outer launcher](timesync-outer-launcher.md) now passes
-review, the actual propagation prelude and capacity refusal. Full execution,
-output inspection and archive-profile binding remain open.
-Independent source review does not establish successful package configuration or boot.
+The [actual attempt](evidence/timesync-execution-attempt-20261106.json) installed
+the package and passed inventory/account/audit checks, then failed on missing
+service enablement. The [explicit link correction](evidence/timesync-enablement-fix-20261106.json) passes independent Sol/high
+review and 34 focused tests; its exporter dependency pin is updated to the new
+recipe. A successful fresh complete configuration/export remains required.
+No new archive/profile or physical service startup is claimed.
 
 A real run requires the pinned frozen Ubuntu 22.04 AMD64 environment, private
 UID/GID/network namespaces, read-only inputs and disk-backed work. Its 4 GiB
 free-space floor remains separate from larger production image guards. The
-builder currently has about 3.25 GB free; the prepared
-[20 GiB expansion](build-host-capacity-plan.md) awaits approval. No resize or
+failed clone leaves about 5.35 GB free, just below the outer launcher's separate
+5 GiB initial guard. Reclaim only verified redundant generated files before retry.
+The prepared [20 GiB expansion](build-host-capacity-plan.md) awaits approval. No resize or
 capacity guard reduction has occurred.
 
 After actual installation and export, authenticate the new archive explicitly,

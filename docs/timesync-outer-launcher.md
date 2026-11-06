@@ -3,9 +3,13 @@
 [`launch-timesync-userspace.py`](../build/launch-timesync-userspace.py) connects
 the separate [package step](timesync-userspace.md) and [export adapter](timesync-export.md).
 Its source, plan and capacity-refusal checks pass independent review. A small
-propagation-only diagnostic also passes on the actual builder. **The complete
-configuration/export sequence has not run; no new userspace archive or image
-has been produced or registered.** Published installation files remain unchanged.
+propagation-only diagnostic also passes on the actual builder. The subsequent
+[full attempt](evidence/timesync-execution-attempt-20261106.json) passed base
+authentication, clone, private propagation, API setup, package installation,
+inventory, account-preservation and package audits, then failed because the
+required future-boot service link was absent. Export did not run; no new archive
+or image was produced or registered. Host inventory and process/mount cleanup
+checks pass. Published installation files remain unchanged.
 
 ## Inputs and read-only plan
 
@@ -100,8 +104,11 @@ identity. Twenty-three focused tests and the full native suite pass: 1,273 cases
 97 environment skips, four assembly cases and five shell suites. These establish
 source/host behavior and the propagation step only.
 
-Next execute the tracked normalized base, then the complete time-profile
-configuration/export after sufficient capacity is available. Authenticate the
+The tracked normalized base now passes with tag `retained-01`. The explicit
+guarded offline service enablement correction passes independent source review.
+Next retry time-profile configuration/export with a fresh tag after capacity
+recheck. The failed clone remains
+retained, consuming capacity; do not lower the 5 GiB initial guard. Authenticate the
 actual output and register it explicitly before composing matching root/state/
 NVMe images. Full artifact readback, independent deployment and physical boot,
 SSH, NTP, KVM, SD-write, endurance, update/rollback and recovery results remain

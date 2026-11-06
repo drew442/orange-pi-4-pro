@@ -16,6 +16,7 @@ SPEC.loader.exec_module(m)
 PREFLIGHT = m.preflight
 ENVIRONMENT = m.environment
 VALIDATE_SERVICE = m.validate_service
+ENABLE_SERVICE_LINKS = m.enable_service_links
 
 
 class Locks(unittest.TestCase):
@@ -104,6 +105,110 @@ class Sources(unittest.TestCase):
             m.sources()
 
 
+class ServiceEnablement(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name) / 'arm-root'
+        self.root.mkdir(mode=0o755)
+        self.contract = json.loads((PROJECT / m.CONTRACT).read_text())
+        self.link = self.root / next(iter(self.contract['service']['links']))
+        self.target = self.contract['service']['links'][str(self.link.relative_to(self.root))]
+        # Model mapped-root ownership without privileged chown. Preserve real
+        # types, permissions and link counts for descriptor-based traversal.
+        original_stat, original_fstat = os.stat, os.fstat
+        original_lstat = Path.lstat
+        def mapped(info):
+            values = list(info)
+            values[4] = values[5] = 0
+            return os.stat_result(values)
+        for p in (patch.object(m, 'ROOT', self.root),
+                  patch.object(Path, 'lstat', lambda path: mapped(original_lstat(path))),
+                  patch.object(m.os, 'stat', side_effect=lambda *a, **kw: mapped(original_stat(*a, **kw))),
+                  patch.object(m.os, 'fstat', side_effect=lambda *a: mapped(original_fstat(*a)))):
+            p.start()
+            self.addCleanup(p.stop)
+
+    def test_missing_parents_and_restrictive_umask(self):
+        previous = os.umask(0o077)
+        try:
+            ENABLE_SERVICE_LINKS(self.contract)
+        finally:
+            os.umask(previous)
+        for name, target in self.contract['service']['links'].items():
+            path = self.root / name
+            self.assertEqual(os.readlink(path), target)
+            for parent in path.parents:
+                if parent == self.root:
+                    break
+                self.assertEqual(parent.stat().st_mode & 0o7777, 0o755)
+        self.assertEqual(set(p.name for p in self.link.parent.iterdir()), {'systemd-timesyncd.service'})
+
+    def test_identical_links_preserve_identity(self):
+        ENABLE_SERVICE_LINKS(self.contract)
+        before = os.lstat(self.link)
+        ENABLE_SERVICE_LINKS(self.contract)
+        self.assertEqual(os.lstat(self.link), before)
+
+    def test_conflicting_file_or_alias_is_unchanged(self):
+        self.link.parent.mkdir(parents=True)
+        for parent in self.link.parents:
+            if parent == self.root:
+                break
+            parent.chmod(0o755)
+        for target in (None, '/dev/null', '../other.service'):
+            with self.subTest(target=target):
+                if target is None:
+                    self.link.write_bytes(b'keep')
+                else:
+                    self.link.symlink_to(target)
+                before = os.lstat(self.link)
+                with self.assertRaisesRegex(ValueError, 'conflicting'):
+                    ENABLE_SERVICE_LINKS(self.contract)
+                self.assertEqual(os.lstat(self.link), before)
+                self.link.unlink()
+
+    def test_symlink_parent_is_not_followed(self):
+        outside = self.root.parent / 'outside'
+        outside.mkdir()
+        (self.root / 'etc').symlink_to(outside, target_is_directory=True)
+        with self.assertRaises(OSError):
+            ENABLE_SERVICE_LINKS(self.contract)
+        self.assertEqual(list(outside.iterdir()), [])
+
+    def test_unsafe_parent_modes_and_owners_are_rejected(self):
+        for parent in (self.root, self.link.parent):
+            parent.mkdir(parents=True, exist_ok=True)
+            for ancestor in parent.parents:
+                if ancestor == self.root:
+                    break
+                if self.root in ancestor.parents:
+                    ancestor.chmod(0o755)
+            parent.chmod(0o777)
+            with self.subTest(parent=parent), self.assertRaisesRegex(ValueError, 'owner/mode'):
+                ENABLE_SERVICE_LINKS(self.contract)
+            parent.chmod(0o755)
+        original = os.fstat
+        def nonroot(fd):
+            values = list(original(fd))
+            values[4] = values[5] = 1000
+            return os.stat_result(values)
+        with patch.object(m.os, 'fstat', side_effect=nonroot), self.assertRaisesRegex(ValueError, 'owner/mode'):
+            ENABLE_SERVICE_LINKS(self.contract)
+
+    def test_existing_link_metadata_is_required(self):
+        ENABLE_SERVICE_LINKS(self.contract)
+        original = os.stat
+        for index, value in ((4, 1000), (5, 1000), (3, 2)):
+            def changed(*args, **kwargs):
+                values = list(original(*args, **kwargs))
+                values[index] = value
+                return os.stat_result(values)
+            with self.subTest(index=index), patch.object(m.os, 'stat', side_effect=changed):
+                with self.assertRaisesRegex(ValueError, 'conflicting'):
+                    ENABLE_SERVICE_LINKS(self.contract)
+
+
 class Derivation(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
@@ -139,6 +244,7 @@ class Derivation(unittest.TestCase):
         for p in (patch.object(m, 'WORK', self.work), patch.object(m, 'ROOT', self.root),
                   patch.object(m, 'SOURCE_MANIFEST', self.root / 'etc/passwd'),
                   patch.object(m, 'preflight', return_value=self.facts), patch.object(m, 'validate_service', return_value={'enabled': True}),
+                  patch.object(m, 'enable_service_links', side_effect=lambda contract: self.events.append('enable-service')),
                   patch.object(m, 'environment', return_value={}),
                   patch.object(Path, 'iterdir', iterdir)):
             p.start()
@@ -156,6 +262,7 @@ class Derivation(unittest.TestCase):
         self.assertLess(self.events.index('etc/sysusers.d/systemd-timesync.conf'), self.events.index('timesync-install'))
         self.assertLess(self.events.index('api'), self.events.index('timesync-install'))
         self.assertEqual([x for x in self.events if x.startswith('timesync-')], list(m.COMMAND_NAMES))
+        self.assertLess(self.events.index('timesync-check'), self.events.index('enable-service'))
         self.assertTrue((self.work / 'timesync-package-state.json').exists())
         self.assertFalse((self.work / 'configure-receipt.json').exists())
         self.identity.compare_accounts.assert_called_once_with(self.work / 'identity-before', self.root)
@@ -280,6 +387,7 @@ class Derivation(unittest.TestCase):
         with patch.object(m, 'arm', side_effect=arm), self.assertRaisesRegex(ValueError, 'audit'):
             m.derive(self.c, None, self.h, self.identity)
         self.assertFalse(json.loads((self.work / 'timesync-receipt.json').read_text())['success'])
+        self.assertNotIn('enable-service', self.events)
 
     def test_clock_state_prevents_success(self):
         def arm(h, report, args, name):

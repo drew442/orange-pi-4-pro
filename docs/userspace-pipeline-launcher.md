@@ -11,9 +11,14 @@ commit `87b2544`, independent Sol/high review and 1,159 native cases (97
 environment skips), four assembly cases and all five shell suites. The actual
 root preflight on the builder rejected 3,278,569,472 free bytes before phase
 creation; its plan passed and before/after package inventories match.
-Its actual three-phase execution remains pending builder capacity;
-the prior successful [fresh pipeline](userspace-fresh-pipeline.md) used retained
-outer wrappers. Do not treat those results as execution of this launcher.
+The subsequent [actual tracked execution](evidence/userspace-tracked-execution-20261106.json)
+passes all three phases from pinned raw packages using commit `4d89cd6` and tag
+`retained-01`. Its 138,025,729-byte archive matches SHA-256
+`98d6a57bbb70ff55bef32b6bd051ebfcb6bc0fad4f6c8b3167e8619b5a9d961e`.
+Minimum sampled disk free was 5,961,830,400 bytes and available RAM
+7,327,219,712 bytes. Host inventory and final process/mount checks pass. Complete
+records, BOM and authenticated archive copies remain on codex under
+`out/userspace-tracked-20261106/`. The earlier wrapper pipeline is separate evidence.
 
 ## Inputs and plan
 
@@ -66,13 +71,21 @@ unchanged outer package inventory and no remaining mapped processes or builder
 mounts. The exported archive must match the committed normalized userspace
 profile before the pipeline can report success.
 
-The complete root invocation retained in the evidence returned the expected
-capacity error. No successful build invocation is documented for this launcher
-yet. Once sufficient capacity is available, first stage an authenticated checkout
-of reviewed source commit `26cba70` or later, then execute it with a fresh tag and
-preserve all records. [Shared process cleanup](timesync-export.md) has since been
-repaired. The older protected checkout used for the capacity-refusal probe is a
-historical record and must not be used for execution.
+The successful root invocation used the protected committed checkout at
+`/var/lib/a733-timesync-launcher-project-20261106/project`:
+
+```sh
+sudo /usr/bin/python3 -I -B \
+  /var/lib/a733-timesync-launcher-project-20261106/project/build/launch-userspace-pipeline.py \
+  --tag retained-01 \
+  --project /var/lib/a733-timesync-launcher-project-20261106/project
+```
+
+That tag now exists; use a fresh tag for another construction. Source commit
+`4d89cd6` includes the repaired [shared process cleanup](timesync-export.md).
+The older protected checkout used for the capacity-refusal probe is a historical
+record and must not be used for execution. Verified historical image retention
+provided capacity; no LV resize or guard reduction was used.
 
 The output will be `work/export-result/rootfs.tar.gz` beneath that fresh phase.
 It is a userspace archive, not an SD image. Root/state composition still requires

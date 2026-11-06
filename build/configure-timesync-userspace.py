@@ -344,6 +344,48 @@ def arm(h, report, arguments, name):
     return read_checked(WORK / (name + '.stdout'), 16 * 1024**2).decode()
 
 
+def enable_service_links(contract):
+    """Enable only pinned future-boot links without running systemd or a daemon."""
+    physical_directory(ROOT, 0)
+    flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
+    for name, target in contract['service']['links'].items():
+        parts = name.split('/')
+        require(parts[:3] == ['etc', 'systemd', 'system'] and len(parts) >= 4
+                and all(part not in ('', '.', '..') for part in parts), 'unsafe service link path')
+        fd = os.open(ROOT, flags)
+        try:
+            for part in parts[:-1]:
+                info = os.fstat(fd)
+                require(info.st_uid == info.st_gid == 0 and not info.st_mode & 0o022,
+                        'unsafe service parent owner/mode')
+                created = False
+                try:
+                    child = os.open(part, flags, dir_fd=fd)
+                except FileNotFoundError:
+                    os.mkdir(part, mode=0o755, dir_fd=fd)
+                    created = True
+                    child = os.open(part, flags, dir_fd=fd)
+                os.close(fd)
+                fd = child
+                if created:
+                    info = os.fstat(fd)
+                    require(info.st_uid == info.st_gid == 0, 'unsafe new service parent owner')
+                    os.fchmod(fd, 0o755)  # The builder may use a restrictive umask.
+            info = os.fstat(fd)
+            require(info.st_uid == info.st_gid == 0 and not info.st_mode & 0o022,
+                    'unsafe service parent owner/mode')
+            try:
+                info = os.stat(parts[-1], dir_fd=fd, follow_symlinks=False)
+            except FileNotFoundError:
+                os.symlink(target, parts[-1], dir_fd=fd)
+                info = os.stat(parts[-1], dir_fd=fd, follow_symlinks=False)
+            require(stat.S_ISLNK(info.st_mode) and info.st_uid == info.st_gid == 0
+                    and info.st_nlink == 1 and os.readlink(parts[-1], dir_fd=fd) == target,
+                    'conflicting service enablement link')
+        finally:
+            os.close(fd)
+
+
 def validate_service(contract, c):
     service = contract['service']
     lib = ROOT / 'lib'
@@ -418,6 +460,7 @@ def derive(c, e, h, identity):
         require(status_inventory(status) == facts['expected'], 'final package state differs')
         package_state = dict(schema=1, packages=221, inventory=actual,
                              dpkg_status={'bytes': len(status), 'sha256': hashlib.sha256(status).hexdigest()})
+        enable_service_links(facts['contract'])
         service = validate_service(facts['contract'], c)
         h.write_new(WORK / 'timesync-package-state.json', package_state)
         report.update(service_enablement=service, package_state=record(WORK / 'timesync-package-state.json'), inventory=actual,

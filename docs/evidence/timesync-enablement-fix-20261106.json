@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Reviewed source correction; actual fresh retry and physical service startup pending",
+  "trigger": "Actual isolated221-package attempt passed install/inventory/accounts/audits but lacked required boot enablement links.",
+  "changes": [
+    "Create only contract-declared future-boot links after package checks using root-owned nofollow directory descriptors.",
+    "Reject conflicts and unsafe parent/link metadata; explicitly set new directory mode0755 under restrictive umasks.",
+    "Update exporter deriver pin; preserve immutable220-package export backend."
+  ],
+  "sources": {
+    "build/configure-timesync-userspace.py": {
+      "bytes": 26348,
+      "sha256": "eb41dae44c46ef5cb9aaa4a319ac17eedaedd9447b28e0f2120e17b68ab651c5"
+    },
+    "build/export-timesync-userspace.py": {
+      "bytes": 11762,
+      "sha256": "8bddb7a0500b160c1772c30dbac0ca0ab7cac6e3f1e6de8464b743513d65716a"
+    },
+    "tests/test_configure_timesync_userspace.py": {
+      "bytes": 26506,
+      "sha256": "b171c07f8ece74131ec50625ae82005f915c112e4fdeb08d650d98667e4f8421"
+    }
+  },
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "verdict": "pass including exporter deriver-pin integration"
+  },
+  "validation": {
+    "focused_cases": 34,
+    "native_cases": 1279,
+    "native_environment_skips": 97,
+    "assembly_cases": 4,
+    "shell_suites": 5,
+    "toml_parsed": 5,
+    "git_diff_check": "pass"
+  },
+  "actual_retry_performed": false,
+  "capacity": "Failed clone retained; approximately5.35GBfree, belowunchanged5GiBstartupguard.",
+  "no_lvm_resize": true,
+  "hardware_acceptance": false
+}

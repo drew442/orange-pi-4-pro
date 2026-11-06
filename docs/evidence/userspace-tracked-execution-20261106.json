@@ -1,0 +1,82 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Actual tracked isolated userspace construction; no hardware acceptance",
+  "host": "build.drewnet.online",
+  "source_commit": "4d89cd6fde6a1e35a19c7ccd609be63197c529e3",
+  "command": [
+    "python3",
+    "-I",
+    "-B",
+    "/var/lib/a733-timesync-launcher-project-20261106/project/build/launch-userspace-pipeline.py",
+    "--tag",
+    "retained-01",
+    "--project",
+    "/var/lib/a733-timesync-launcher-project-20261106/project"
+  ],
+  "phase": "/var/lib/a733-clean-replay-20261106/userspace-pipeline-retained-01",
+  "returncode": 0,
+  "success": true,
+  "phases": [
+    {
+      "name": "foreign",
+      "returncode": 0,
+      "success": true,
+      "recipe_receipt_sha256": "1a1ac6a40c93646c099b85e8b0ef28e08b21e2ca5697b68682c8dccadd5a08f1"
+    },
+    {
+      "name": "configure",
+      "returncode": 0,
+      "success": true,
+      "recipe_receipt_sha256": "67f0fddcc6f0adb1a975a63c9a309c347b7808f107e0c0c9799d171f3e847118"
+    },
+    {
+      "name": "export",
+      "returncode": 0,
+      "success": true,
+      "recipe_receipt_sha256": "20596b8ab092fd7fa2199e270e248ed67f7071662619f7d71554e817c799c44b"
+    }
+  ],
+  "archive": {
+    "bytes": 138025729,
+    "sha256": "98d6a57bbb70ff55bef32b6bd051ebfcb6bc0fad4f6c8b3167e8619b5a9d961e"
+  },
+  "minimum_free_bytes": 5961830400,
+  "minimum_available_memory_bytes": 7327219712,
+  "host_inventory_unchanged": true,
+  "mapped_processes_final": [],
+  "output_mounts_final": [],
+  "offhost_archive_full_hash_passed": true,
+  "raw_records": "out/userspace-tracked-20261106/records",
+  "record_pins": {
+    "receipt.json": {
+      "bytes": 32036,
+      "sha256": "1ae5badf7337102509d9f57705c20e62b76904b5d390ccedb91e2e08d80ffcb2"
+    },
+    "source-manifest.json": {
+      "bytes": 2372,
+      "sha256": "4484686be2d51b17584b3a386f03b8d07d4fcded551196d8d23c736fc7f4a224"
+    },
+    "work/foreign-receipt.json": {
+      "bytes": 6064,
+      "sha256": "1a1ac6a40c93646c099b85e8b0ef28e08b21e2ca5697b68682c8dccadd5a08f1"
+    },
+    "work/configure-receipt.json": {
+      "bytes": 11183,
+      "sha256": "67f0fddcc6f0adb1a975a63c9a309c347b7808f107e0c0c9799d171f3e847118"
+    },
+    "work/export-result/receipt.json": {
+      "bytes": 2175,
+      "sha256": "20596b8ab092fd7fa2199e270e248ed67f7071662619f7d71554e817c799c44b"
+    },
+    "work/export-result/rootfs-bom.json": {
+      "bytes": 4337400,
+      "sha256": "1c415ad29e297260b89f199c48c0185e8c9987be5c336fd553cff5e5c38aaa72"
+    }
+  },
+  "limits": [
+    "No historical configured root or archive seeded this pipeline.",
+    "No LV resize or capacity guard reduction was used.",
+    "This is not a root/state/NVMe reconstruction or independently reproduced physical deployment."
+  ]
+}

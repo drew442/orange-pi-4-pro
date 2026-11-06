@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Actual isolated failed time-profile derivation; no new output or hardware acceptance",
+  "phase": "/var/lib/a733-clean-replay-20261106/userspace-timesync-retained-01",
+  "source_commit": "4d89cd6fde6a1e35a19c7ccd609be63197c529e3",
+  "base_tag": "retained-01",
+  "returncode": 1,
+  "success": false,
+  "commands": [
+    {
+      "name": "timesync-install",
+      "status": 0
+    },
+    {
+      "name": "timesync-inventory",
+      "status": 0
+    },
+    {
+      "name": "timesync-audit",
+      "status": 0
+    },
+    {
+      "name": "timesync-check",
+      "status": 0
+    }
+  ],
+  "accounts_preserved": true,
+  "propagation_passed": true,
+  "api_helper_returncode": 0,
+  "failure": "Required etc/systemd/system/sysinit.target.wants/systemd-timesyncd.service link absent after offline package install.",
+  "host_inventory_unchanged": true,
+  "mapped_processes_final": [],
+  "output_mounts_final": [],
+  "raw_records": "out/timesync-execution-20261106/failed-records",
+  "receipt_sha256": "0e4e12e6c3cb0c5a4a6780a27c81a5deb20065be503255fc47493e2d518ca7fa",
+  "recipe_receipt_sha256": "698b73ef8424857d6c46834e82838ea8d458f3888d371ea13f53a9e39cdf44ae",
+  "next_action": "Explicit guarded offline service links, independent review, then fresh-tag retry after capacity recheck."
+}

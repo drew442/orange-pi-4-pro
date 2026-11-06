@@ -44,7 +44,8 @@ by subsequent clean-build work.
   authenticated. The [time-profile preparation](timesync-outer-launcher.md) includes
   reviewed package/export/outer recipes, identity and file-state fixtures, an
   actual private-propagation prelude and capacity refusal. Full 221-package
-  execution, artifact composition, installed transitions and NTP remain open.
+  attempt passed package/account audits but failed on a missing boot enablement
+  link; export, artifact composition, installed transitions and NTP remain open.
 - [Operator inputs](evidence/operator-inputs-20261105.json): RSA3072 and Ed25519
   keys, DHCP hostname `a733-host`, any source/subnet. Require public-key-only SSH.
   [ARM SSH-policy checks](evidence/ssh-console-management-arm-20261106.json) pass;
@@ -90,9 +91,10 @@ by subsequent clean-build work.
   packages and matches the [normalized export pair](userspace-export-reproducibility.md):
   138,025,729 compressed bytes, 15,876 entries. [Explicit profile selection](userspace-profiles.md)
   and complete staging pass for eight package-state components and the closed
-  39-file runtime. Tracked base/time launchers pass review, plans and capacity
-  refusals; full tracked execution and production root/state/NVMe reconstruction
-  remain open. Latest native discovery: **1,273 cases, 97 environment skips**,
+  39-file runtime. The [tracked base pipeline](userspace-pipeline-launcher.md)
+  now passes all three phases and matches the normalized archive. The time-profile
+  attempt failed before export; production root/state/NVMe reconstruction remains
+  open. Latest native discovery: **1,279 cases, 97 environment skips**,
   four assembly cases and all five shell suites. These checks establish no
   physical acceptance or independently reproduced deployment.
 
@@ -106,8 +108,9 @@ by subsequent clean-build work.
 2. Validate NVMe host boot and SSH with both keys. Run [the first KVM guest](kvm-first-guest.md)
    for CPU/disk/network, clean shutdown/restart and persisted disk marker. Return
    its console/log evidence; `/dev/kvm` alone cannot satisfy the gate.
-3. Continue [clean-build work](build-reproduction-status.md): execute the reviewed
-   outer pipeline launcher, now running after [verified historical root retention](historical-root-retention.md)
+3. Continue [clean-build work](build-reproduction-status.md): retry the reviewed
+   time-service boot-link correction with a fresh tag after capacity recheck. The tracked
+   base passes after [verified historical root retention](historical-root-retention.md)
    raised builder free space to 6.77 GB. Then reconstruct production roots/state/NVMe
    with the normalized profile and complete image readback. Full production capacity
    guards remain separate. The reviewed [20 GiB builder LVM growth](build-host-capacity-plan.md)
