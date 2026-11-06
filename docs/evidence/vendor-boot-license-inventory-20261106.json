@@ -1,0 +1,198 @@
+{
+  "schema": 1,
+  "inventory_date": "2026-11-06",
+  "vendor": {
+    "url": "https://github.com/orangepi-xunlong/orangepi-build.git",
+    "commit": "a95129bf30ea11886cc35f08ebb3e69695a26656"
+  },
+  "inventory_basis": {
+    "pins": "configs/vendor-boot-inputs.sha256",
+    "pin_count": 26,
+    "hashes_rechecked_against_local_checkout": "tmp/vendor-build at pinned commit",
+    "scope": "Only the 26 pinned vendor boot/tool inputs."
+  },
+  "evidence_review": {
+    "searched_paths": [
+      "tmp/vendor-build/LICENSE",
+      "tmp/vendor-build/README.md",
+      "tmp/vendor-build/external/packages/pack-uboot/",
+      "tmp/vendor-build/external/config/sources/families/sun60iw2.conf",
+      "licenses/README.md",
+      "docs/diagnostic-image.md"
+    ],
+    "positive_evidence": [
+      "README.md lists Allwinner A733 / Orange Pi 4Pro as supported. sun60iw2.conf wires pack-uboot tools and selects board-family boot artifacts. These are provenance/build-use facts, not redistribution grants.",
+      "The vendor-tree root LICENSE is GPL-2.0 text. No inspected text expressly maps the opaque boot blobs or proprietary pack tools to it."
+    ],
+    "missing_or_open": [
+      "No component-specific permission/source-offer record located for pinned boot0/monitor/SCP artifacts or pack-uboot tools.",
+      "No explicit licensing or source provenance record found for the pinned sys_config.fex or boot_package.cfg; their source/derivation remains unestablished here.",
+      "The pinned u-boot-current.dts is a text input, but this inventory found no nearby per-file license attribution. U-Boot upstream source is separately pinned; applicability to this file requires review.",
+      "No legal conclusion is made. Public binary redistribution remains an open release gate pending component/family evidence."
+    ]
+  },
+  "inputs": [
+    {
+      "path": "external/packages/pack-uboot/sun60iw2/bin/boot0_sdcard.fex",
+      "sha256": "a1ed6f1b8c4f5d98c29febefdc7203e5c442c2d1b841d204278b62ad56a70fd2",
+      "family": "opaque_vendor_firmware_or_packaging_input",
+      "license_or_source_evidence": "No component-specific LICENSE/COPYING/README or explicit per-file-family redistribution/source offer located in the pinned vendor tree. Vendor root LICENSE is GPL-2.0 text but does not identify this file/family as covered. Nearby vendor README identifies A733 / Orange Pi 4Pro support only."
+    },
+    {
+      "path": "external/packages/pack-uboot/sun60iw2/bin/boot0_sdcard_a733.fex",
+      "sha256": "9213f1c56ef932930d43b5751e8937bea0e9ae7460ec16187cc1b0dffdb75345",
+      "family": "opaque_vendor_firmware_or_packaging_input",
+      "license_or_source_evidence": "No component-specific LICENSE/COPYING/README or explicit per-file-family redistribution/source offer located in the pinned vendor tree. Vendor root LICENSE is GPL-2.0 text but does not identify this file/family as covered. Nearby vendor README identifies A733 / Orange Pi 4Pro support only."
+    },
+    {
+      "path": "external/packages/pack-uboot/sun60iw2/bin/boot0_sdcard_orangepizero3w.fex",
+      "sha256": "829ea8e3b65d71a02f2d0e094bc073de3a10869f948f62db49dbf023d07fabe3",
+      "family": "opaque_vendor_firmware_or_packaging_input",
+      "license_or_source_evidence": "No component-specific LICENSE/COPYING/README or explicit per-file-family redistribution/source offer located in the pinned vendor tree. Vendor root LICENSE is GPL-2.0 text but does not identify this file/family as covered. Nearby vendor README identifies A733 / Orange Pi 4Pro support only."
+    },
+    {
+      "path": "external/packages/pack-uboot/sun60iw2/bin/boot0_sdcard_orangepizero3w_1800M.fex",
+      "sha256": "d2a9bcccf012dce554c4613cf3e2e4256fe9863f6215afbe979aca891d4a6e27",
+      "family": "opaque_vendor_firmware_or_packaging_input",
+      "license_or_source_evidence": "No component-specific LICENSE/COPYING/README or explicit per-file-family redistribution/source offer located in the pinned vendor tree. Vendor root LICENSE is GPL-2.0 text but does not identify this file/family as covered. Nearby vendor README identifies A733 / Orange Pi 4Pro support only."
+    },
+    {
+      "path": "external/packages/pack-uboot/sun60iw2/bin/boot0_spinor_a733.fex",
+      "sha256": "7f0babc242c1e4614c7243bd2c45a980e4385727ffbb544a7c8f2d324cf8dc07",
+      "family": "opaque_vendor_firmware_or_packaging_input",
+      "license_or_source_evidence": "No component-specific LICENSE/COPYING/README or explicit per-file-family redistribution/source offer located in the pinned vendor tree. Vendor root LICENSE is GPL-2.0 text but does not identify this file/family as covered. Nearby vendor README identifies A733 / Orange Pi 4Pro support only."
+    },
+    {
+      "path": "external/packages/pack-uboot/sun60iw2/bin/boot0_ufs_a733.fex",
+      "sha256": "c5729d90686acfe7db9c649010c8026355fec212e72455e9eda6d17087c0942f",
+      "family": "opaque_vendor_firmware_or_packaging_input",
+      "license_or_source_evidence": "No component-specific LICENSE/COPYING/README or explicit per-file-family redistribution/source offer located in the pinned vendor tree. Vendor root LICENSE is GPL-2.0 text but does not identify this file/family as covered. Nearby vendor README identifies A733 / Orange Pi 4Pro support only."
+    },
+    {
+      "path": "external/packages/pack-uboot/sun60iw2/bin/boot0_ufs_orangepizero3w.fex",
+      "sha256": "7046c43d43b3b2e47452ccb6d5db935e109dc9ca7bde7d2ab90105e7901998b3",
+      "family": "opaque_vendor_firmware_or_packaging_input",
+      "license_or_source_evidence": "No component-specific LICENSE/COPYING/README or explicit per-file-family redistribution/source offer located in the pinned vendor tree. Vendor root LICENSE is GPL-2.0 text but does not identify this file/family as covered. Nearby vendor README identifies A733 / Orange Pi 4Pro support only."
+    },
+    {
+      "path": "external/packages/pack-uboot/sun60iw2/bin/boot_package.cfg",
+      "sha256": "09bd43f68e54c0746b5130a3acf37fd38191d9187e329e2b78711561b6f9d918",
+      "family": "packaging_configuration",
+      "license_or_source_evidence": "No component-specific LICENSE/COPYING/README or explicit per-file-family redistribution/source offer located in the pinned vendor tree. Vendor root LICENSE is GPL-2.0 text but does not identify this file/family as covered. Nearby vendor README identifies A733 / Orange Pi 4Pro support only."
+    },
+    {
+      "path": "external/packages/pack-uboot/sun60iw2/bin/dts/u-boot-current.dts",
+      "sha256": "bd8e32740bc1c25532f28cae7860c61f07506dfc53a672d9726d2fd7ea71ff0c",
+      "family": "device_tree_source_input",
+      "license_or_source_evidence": "No component-specific LICENSE/COPYING/README or explicit per-file-family redistribution/source offer located in the pinned vendor tree. Vendor root LICENSE is GPL-2.0 text but does not identify this file/family as covered. Nearby vendor README identifies A733 / Orange Pi 4Pro support only."
+    },
+    {
+      "path": "external/packages/pack-uboot/sun60iw2/bin/monitor.fex",
+      "sha256": "8af16b86ae8e2eff634a3ebca76a8cdf3c10b3540387573d46c3d785545b2632",
+      "family": "opaque_vendor_firmware_or_packaging_input",
+      "license_or_source_evidence": "No component-specific LICENSE/COPYING/README or explicit per-file-family redistribution/source offer located in the pinned vendor tree. Vendor root LICENSE is GPL-2.0 text but does not identify this file/family as covered. Nearby vendor README identifies A733 / Orange Pi 4Pro support only."
+    },
+    {
+      "path": "external/packages/pack-uboot/sun60iw2/bin/scp.fex",
+      "sha256": "07e6b97628101963e7944e012948c4bdf721f914bad347acd7dfbde89db42749",
+      "family": "opaque_vendor_firmware_or_packaging_input",
+      "license_or_source_evidence": "No component-specific LICENSE/COPYING/README or explicit per-file-family redistribution/source offer located in the pinned vendor tree. Vendor root LICENSE is GPL-2.0 text but does not identify this file/family as covered. Nearby vendor README identifies A733 / Orange Pi 4Pro support only."
+    },
+    {
+      "path": "external/packages/pack-uboot/sun60iw2/bin/sys_config/sys_config.fex",
+      "sha256": "eb598823d947fa39d0cf2102051b921d10f41b26538103b9fa3a266c6a486a29",
+      "family": "board_configuration_blob",
+      "license_or_source_evidence": "No component-specific LICENSE/COPYING/README or explicit per-file-family redistribution/source offer located in the pinned vendor tree. Vendor root LICENSE is GPL-2.0 text but does not identify this file/family as covered. Nearby vendor README identifies A733 / Orange Pi 4Pro support only."
+    },
+    {
+      "path": "external/packages/pack-uboot/tools/dragonsecboot",
+      "sha256": "e5f9076504a0ccde29c5978bcfc341c1c5ac02d947c47b849a5e8d26433545f6",
+      "family": "packaging_tool_binary",
+      "license_or_source_evidence": "No component-specific LICENSE/COPYING/README or explicit per-file-family redistribution/source offer located in the pinned vendor tree. Vendor root LICENSE is GPL-2.0 text but does not identify this file/family as covered. Nearby vendor README identifies A733 / Orange Pi 4Pro support only."
+    },
+    {
+      "path": "external/packages/pack-uboot/tools/dtc",
+      "sha256": "18061084fa0c0f4c067c904ab05f7ca9642bf9d9511a18bcbc5250ef1e099f01",
+      "family": "packaging_tool_binary",
+      "license_or_source_evidence": "No component-specific LICENSE/COPYING/README or explicit per-file-family redistribution/source offer located in the pinned vendor tree. Vendor root LICENSE is GPL-2.0 text but does not identify this file/family as covered. Nearby vendor README identifies A733 / Orange Pi 4Pro support only."
+    },
+    {
+      "path": "external/packages/pack-uboot/tools/genchecksum_uboot",
+      "sha256": "f4025c64574829a1f74c462c24ac4749c1437f29a333f6e8178cbb5e22e5cc12",
+      "family": "packaging_tool_binary",
+      "license_or_source_evidence": "No component-specific LICENSE/COPYING/README or explicit per-file-family redistribution/source offer located in the pinned vendor tree. Vendor root LICENSE is GPL-2.0 text but does not identify this file/family as covered. Nearby vendor README identifies A733 / Orange Pi 4Pro support only."
+    },
+    {
+      "path": "external/packages/pack-uboot/tools/merge_full_img",
+      "sha256": "c19d539a07b7b158244966f421736da38358802b1508221a1c063ae79492b7f5",
+      "family": "packaging_tool_binary",
+      "license_or_source_evidence": "No component-specific LICENSE/COPYING/README or explicit per-file-family redistribution/source offer located in the pinned vendor tree. Vendor root LICENSE is GPL-2.0 text but does not identify this file/family as covered. Nearby vendor README identifies A733 / Orange Pi 4Pro support only."
+    },
+    {
+      "path": "external/packages/pack-uboot/tools/merge_package",
+      "sha256": "fb9c40be1c111cc02f003f58472ebd1b4f10d347974a7723f54adca517c04ce7",
+      "family": "packaging_tool_binary",
+      "license_or_source_evidence": "No component-specific LICENSE/COPYING/README or explicit per-file-family redistribution/source offer located in the pinned vendor tree. Vendor root LICENSE is GPL-2.0 text but does not identify this file/family as covered. Nearby vendor README identifies A733 / Orange Pi 4Pro support only."
+    },
+    {
+      "path": "external/packages/pack-uboot/tools/merge_uboot",
+      "sha256": "39f53d597bed4f38684993ce1f5dc3fb4f9fd8038ef102fbc3887336a5f26239",
+      "family": "packaging_tool_binary",
+      "license_or_source_evidence": "No component-specific LICENSE/COPYING/README or explicit per-file-family redistribution/source offer located in the pinned vendor tree. Vendor root LICENSE is GPL-2.0 text but does not identify this file/family as covered. Nearby vendor README identifies A733 / Orange Pi 4Pro support only."
+    },
+    {
+      "path": "external/packages/pack-uboot/tools/script",
+      "sha256": "c1c790ffaa432aaed06e6a984c15d8046f989ebb4b32bcc84b4b8107671e2dad",
+      "family": "packaging_tool_binary",
+      "license_or_source_evidence": "No component-specific LICENSE/COPYING/README or explicit per-file-family redistribution/source offer located in the pinned vendor tree. Vendor root LICENSE is GPL-2.0 text but does not identify this file/family as covered. Nearby vendor README identifies A733 / Orange Pi 4Pro support only."
+    },
+    {
+      "path": "external/packages/pack-uboot/tools/update_boot0",
+      "sha256": "5a3c53802f75f0dd6619aa416d6b9b670f32eee51b60639642108a1184777753",
+      "family": "packaging_tool_binary",
+      "license_or_source_evidence": "No component-specific LICENSE/COPYING/README or explicit per-file-family redistribution/source offer located in the pinned vendor tree. Vendor root LICENSE is GPL-2.0 text but does not identify this file/family as covered. Nearby vendor README identifies A733 / Orange Pi 4Pro support only."
+    },
+    {
+      "path": "external/packages/pack-uboot/tools/update_boot1",
+      "sha256": "22c797c5916416537d9c5460ea4f3485edae3691d748d2f3660dbdb42e64a7de",
+      "family": "packaging_tool_binary",
+      "license_or_source_evidence": "No component-specific LICENSE/COPYING/README or explicit per-file-family redistribution/source offer located in the pinned vendor tree. Vendor root LICENSE is GPL-2.0 text but does not identify this file/family as covered. Nearby vendor README identifies A733 / Orange Pi 4Pro support only."
+    },
+    {
+      "path": "external/packages/pack-uboot/tools/update_chip",
+      "sha256": "1e524b189bc5e38312a64a0499d3be9fc22a5f8b0626c060212b57228e4e9a00",
+      "family": "packaging_tool_binary",
+      "license_or_source_evidence": "No component-specific LICENSE/COPYING/README or explicit per-file-family redistribution/source offer located in the pinned vendor tree. Vendor root LICENSE is GPL-2.0 text but does not identify this file/family as covered. Nearby vendor README identifies A733 / Orange Pi 4Pro support only."
+    },
+    {
+      "path": "external/packages/pack-uboot/tools/update_dtb",
+      "sha256": "67196a69c24a3640ec913e3de4d1d8eea6286edc074ca94260efa7e2c5c5308e",
+      "family": "packaging_tool_binary",
+      "license_or_source_evidence": "No component-specific LICENSE/COPYING/README or explicit per-file-family redistribution/source offer located in the pinned vendor tree. Vendor root LICENSE is GPL-2.0 text but does not identify this file/family as covered. Nearby vendor README identifies A733 / Orange Pi 4Pro support only."
+    },
+    {
+      "path": "external/packages/pack-uboot/tools/update_scp",
+      "sha256": "a97d281216f3ac0f1c153bd4ef51461ffaa5d013e1e8d6a3f6a05a4c7d4d45c7",
+      "family": "packaging_tool_binary",
+      "license_or_source_evidence": "No component-specific LICENSE/COPYING/README or explicit per-file-family redistribution/source offer located in the pinned vendor tree. Vendor root LICENSE is GPL-2.0 text but does not identify this file/family as covered. Nearby vendor README identifies A733 / Orange Pi 4Pro support only."
+    },
+    {
+      "path": "external/packages/pack-uboot/tools/update_uboot",
+      "sha256": "e98aeeae539ca292dea866e026456f5ad83888c13bd897433322052b089f90e7",
+      "family": "packaging_tool_binary",
+      "license_or_source_evidence": "No component-specific LICENSE/COPYING/README or explicit per-file-family redistribution/source offer located in the pinned vendor tree. Vendor root LICENSE is GPL-2.0 text but does not identify this file/family as covered. Nearby vendor README identifies A733 / Orange Pi 4Pro support only."
+    },
+    {
+      "path": "external/packages/pack-uboot/tools/update_uboot_fdt",
+      "sha256": "0e49db9d3cf95c1b5dbf011addc2ec00963607e69aa125c3ab98230bc6331032",
+      "family": "packaging_tool_binary",
+      "license_or_source_evidence": "No component-specific LICENSE/COPYING/README or explicit per-file-family redistribution/source offer located in the pinned vendor tree. Vendor root LICENSE is GPL-2.0 text but does not identify this file/family as covered. Nearby vendor README identifies A733 / Orange Pi 4Pro support only."
+    }
+  ],
+  "separate_toolchain_note": {
+    "filename": "gcc-linaro-7.4.1-2019.02-x86_64_arm-linux-gnueabi.tar.xz",
+    "sha256": "42ccb2ed99d65b7090499e6f5ad65c4c94ae6bd022decfea102d50109557c7d2",
+    "source": "configs/diagnostic-sources.lock.json",
+    "note": "Separate builder input, not one of the 26 pins and not included in image. licenses/README.md records embedded per-component license documentation and source archive acquisition as an open provenance task."
+  }
+}
