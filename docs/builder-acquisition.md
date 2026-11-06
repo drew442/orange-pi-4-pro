@@ -70,11 +70,12 @@ the target inventory. The archive remains at `out/builder-base-20261106/` on cod
 It is an AMD64 builder seed, not an Orange Pi installation image. It has not been
 extracted into an operating root or executed.
 
-[Capacity planning](evidence/clean-builder-capacity-20261106.json) records about
-9.0 GB free after acquisition and 3,752,392 KiB of reported installed package
-files. Recover verified generated-cache headroom before constructing the root;
-target at least 25 GB free as a project planning allowance for root/source/output
-staging. The existing kernel and NVMe assembly guards remain unchanged.
+[Capacity planning](evidence/clean-builder-capacity-20261106.json) records
+3,752,392 KiB of reported installed package files. Subsequent
+[verified output retention](evidence/build-output-retention-20261106.json) now
+provides 25,061,138,432 bytes free before seed staging, meeting the 25 GB planning
+allowance. Recheck capacity during root/source/output staging. The existing
+kernel and NVMe assembly guards remain unchanged.
 
 Next, construct a fresh isolated Jammy root with the exact package versions,
 controlled maintainer scripts/services and no physical device access. Pin the

@@ -40,11 +40,13 @@ initial two-job compilation limit. Physical acceptance is independent of these c
 
 [Builder package acquisition](evidence/builder-packages-acquired-20261106.json)
 now retains all 842 exact archives on the builder and codex. The latest measured
-free space after compilation/acquisition is about 9.0 GB, below the unchanged
-kernel and NVMe assembly start guards. [Clean-builder planning](evidence/clean-builder-capacity-20261106.json)
-requires verified generated-cache archival before root construction; target
-25 GB free for that staging allowance. The current deployment artifacts are
-already built and must remain available.
+free space after compilation/acquisition fell to about 9.0 GB. Subsequent
+[verified output-tree retention](evidence/build-output-retention-20261106.json)
+left 25,061,138,432 bytes free, meeting the 25 GB construction planning target.
+Six complete generated trees and their raw records are retained on codex.
+Current deployment artifacts and original source caches remain available;
+historical output paths require restoration using the retention map. Recheck
+capacity as new seed/root files consume space; existing build guards remain mandatory.
 
 ## Local host assessment
 
