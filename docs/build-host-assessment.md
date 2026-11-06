@@ -48,6 +48,11 @@ Current deployment artifacts and original source caches remain available;
 historical output paths require restoration using the retention map. Recheck
 capacity as new seed/root files consume space; existing build guards remain mandatory.
 
+The [actual clean seed isolation probe](clean-builder.md) now passes on Jammy,
+with no host inventory drift or remaining mapped processes/mounts. It ended
+with 24.53 GB free after seed staging and retained failed attempts. Installing
+the complete locked package inventory and freezing the builder remain open.
+
 ## Local host assessment
 
 Checked 2026-11-04 against vendor build commit `a95129bf30ea11886cc35f08ebb3e69695a26656`. **Local host only: suitable for source investigation, not an unmodified vendor image build.** No local dependencies were installed; remote provisioning is described above.

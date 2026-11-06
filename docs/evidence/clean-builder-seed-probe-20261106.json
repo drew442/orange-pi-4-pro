@@ -1,0 +1,199 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Actual AMD64 Ubuntu builder seed extraction and namespace isolation probe; not A733 hardware validation",
+  "builder": "drew@build.drewnet.online",
+  "source_commit": "76906800e1ff6553dcc1fd908ae4e59ffb1593fc",
+  "recipe_sha256": "172d7ddd62d685f07e3ad55828eafc1bde4e86fa3d181819d9919fe6f51a1d84",
+  "test_sha256": "1d12ee7d1140fbda769f640a78df7756be5bdd01c3dd090e0c01036820838b72",
+  "seed": {
+    "bytes": 29832285,
+    "sha256": "242cd8898b33ea806ef5f13b1076ed7c76f9f989d18384452f7166692438ff1a"
+  },
+  "builder_output": "/var/lib/a733-clean-builder/seed-probe-20261106-04",
+  "native_records_directory": "/home/drew/orange-pi-4-pro/out/clean-builder-seed-20261106/seed-probe-04",
+  "raw_records": [
+    {
+      "name": "receipt.json",
+      "bytes": 6353,
+      "sha256": "a86a58f0ebdd1146807ee915fbab1da70d59c812d04903e00ca4d109a9302985"
+    },
+    {
+      "name": "provenance.json",
+      "bytes": 5170,
+      "sha256": "e442604e40828b1318a6da6bb3846f2f99722ccae622dc88cce5ccb5e3cd5f25"
+    },
+    {
+      "name": "probe.log",
+      "bytes": 3046,
+      "sha256": "8e71fdc1cdd2085defe58c9e983d5f5d7d908d63b2b7325568ca2127314a1449"
+    },
+    {
+      "name": "extract.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "probe.sh",
+      "bytes": 1280,
+      "sha256": "ce565b23ac0b927e54fbfc057bee69ae95d12ba930a5c5421699538e9da14fea"
+    },
+    {
+      "name": "source-lock.json",
+      "bytes": 2892,
+      "sha256": "0159c812f4e9f9b7f761f230ff04901f8a2ac9eb06f481ede1e87920d72a7452"
+    },
+    {
+      "name": "host-inventory-before.tsv",
+      "bytes": 32546,
+      "sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425"
+    },
+    {
+      "name": "nspawn-help.txt",
+      "bytes": 7330,
+      "sha256": "dda1f76477d41bdb104fed475699fbdddab3dbd01cee26c2de740d9cc8cc85af"
+    },
+    {
+      "name": "nspawn-option-probe.txt",
+      "bytes": 7330,
+      "sha256": "dda1f76477d41bdb104fed475699fbdddab3dbd01cee26c2de740d9cc8cc85af"
+    }
+  ],
+  "archive_audit": {
+    "members": 3506,
+    "special_nodes": 0,
+    "symlink_parent_writes": 0
+  },
+  "actual_probe": {
+    "success": true,
+    "uid_map": "0 1048576 65536",
+    "gid_map": "0 1048576 65536",
+    "capability_sets": {
+      "CapEff": "00000000f58cafff",
+      "CapPrm": "00000000f58cafff",
+      "CapBnd": "00000000f58cafff"
+    },
+    "prohibited_mask": "0xa631000",
+    "no_new_privileges": 1,
+    "interfaces": [
+      "lo"
+    ],
+    "ipv4_routes": [],
+    "ipv6_routes": "loopback only, including unreachable defaults",
+    "block_or_kvm_devices": [],
+    "firmware_contents": [],
+    "firmware_mount_options": "ro,relatime",
+    "mknod_block_device_attempt": "Operation not permitted; no device opened",
+    "ordinary_private_write": "passed",
+    "persistent_host_rootfs_uid_gid": [
+      1048576,
+      1048576
+    ]
+  },
+  "host_inventory": {
+    "bytes": 32546,
+    "sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425"
+  },
+  "post_checks": {
+    "success": true,
+    "errors": []
+  },
+  "resources_before": {
+    "free_bytes": 24646590464,
+    "available_memory_bytes": 7561859072
+  },
+  "resources_after": {
+    "free_bytes": 24529219584,
+    "available_memory_bytes": 7559249920
+  },
+  "command": [
+    "/usr/bin/systemd-nspawn",
+    "--directory=/var/lib/a733-clean-builder/seed-probe-20261106-04/rootfs",
+    "--settings=no",
+    "--as-pid2",
+    "--register=no",
+    "--keep-unit",
+    "--console=pipe",
+    "--private-users=1048576:65536",
+    "--private-users-ownership=chown",
+    "--private-network",
+    "--no-new-privileges=yes",
+    "--drop-capability=CAP_SYS_ADMIN,CAP_SYS_MODULE,CAP_SYS_RAWIO,CAP_SYS_BOOT,CAP_SYS_TIME,CAP_MKNOD,CAP_NET_ADMIN",
+    "--resolv-conf=off",
+    "--timezone=off",
+    "--link-journal=no",
+    "--bind-ro=/var/lib/a733-clean-builder/seed-probe-20261106-04/probe.sh:/a733-probe.sh",
+    "--bind-ro=/var/lib/a733-clean-builder/seed-probe-20261106-04/firmware-empty:/sys/firmware",
+    "/bin/sh",
+    "/a733-probe.sh"
+  ],
+  "launcher": [
+    "sudo",
+    "-n",
+    "env",
+    "-i",
+    "PATH=/usr/bin:/bin",
+    "HOME=/nonexistent",
+    "LC_ALL=C",
+    "TZ=UTC",
+    "/usr/bin/python3",
+    "-I",
+    "-B"
+  ],
+  "project_stage": {
+    "root": "/var/lib/a733-clean-builder-project-20261106-04",
+    "head": "76906800e1ff6553dcc1fd908ae4e59ffb1593fc",
+    "bundle_sha256": "fa065ddcf27fe9af1f28a8e9220487d4e6a2e1b340154fd059ee6add52c832bf"
+  },
+  "review": {
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "result": "cleared exact source hashes before execution",
+    "fixtures_native_and_jammy_python3_10": 23,
+    "full_native_python_cases": 888,
+    "native_skips": 95,
+    "shell_regressions": 5,
+    "diagnostic_assembly_cases": 4
+  },
+  "failed_attempts": {
+    "count": 3,
+    "all_terminal": true,
+    "payload_executed": false,
+    "host_post_checks": "passed for each",
+    "causes": [
+      "systemd249 boolean requires explicit =yes; full argv parse preflight added",
+      "inaccessible firmware target hidden by nspawn API /sys mount, including after creating seed directory"
+    ],
+    "raw_native_record": "/home/drew/orange-pi-4-pro/out/clean-builder-seed-20261106/failed-runs.json",
+    "bytes": 46100,
+    "sha256": "2aed7ea1ef6bc4ed3ac6458c6f401a30639b800d6eda3bd1c7dd5246fbeaa731"
+  },
+  "source_diagnosis": {
+    "upstream_mount_code": "https://github.com/systemd/systemd-stable/blob/v249.11/src/nspawn/nspawn-mount.c",
+    "upstream_execution_order": "https://github.com/systemd/systemd-stable/blob/v249.11/src/nspawn/nspawn.c",
+    "ubuntu_source_archives": [
+      {
+        "filename": "systemd_249.11.orig.tar.gz",
+        "bytes": 10622702,
+        "sha256": "305ba81cc33593bc2e8e9d6dc7f964b1c0a9303155fced5e6b1d236577441bf2"
+      },
+      {
+        "filename": "systemd_249.11-0ubuntu3.23.debian.tar.xz",
+        "bytes": 276508,
+        "sha256": "149803061ffbd7b5deb82747a58fe482d9ff23849bfbed40aac19ccae1462c81"
+      }
+    ],
+    "scope": "Source-code comparison for mount ordering; existing authenticated binary package lock remains the execution pin."
+  },
+  "remaining": [
+    "Install all842 exact packages offline with controlled service startup and maintainer-script privileges.",
+    "Freeze/pin an authenticated final builder filesystem and independently acquire sources/toolchains.",
+    "Reproduce boot/kernel/root/image artifacts in clean environments.",
+    "All A733 installed boot, SSH, KVM guest, SD-write, rollback/recovery/endurance and deployment reproduction acceptance."
+  ],
+  "limits": [
+    "No downloaded package maintainer script was executed by this phase.",
+    "Normal termination/process/mount/inventory cleanup passed; real signal-injection cleanup was not exercised.",
+    "This is an AMD64 build environment, not an A733 host/guest and not KVM acceptance."
+  ]
+}

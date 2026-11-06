@@ -67,8 +67,10 @@ The [pinned seed](../configs/builder-base-20261106.lock.json) is the official
 Its detached manifest signature verifies against the trusted Ubuntu CD-image
 key. Read-only tar inspection found 101 installed package names, all present in
 the target inventory. The archive remains at `out/builder-base-20261106/` on codex.
-It is an AMD64 builder seed, not an Orange Pi installation image. It has not been
-extracted into an operating root or executed.
+It is an AMD64 builder seed. Its [actual seed/isolation run](clean-builder.md)
+now passes on the prepared host, including mapped ownership, capability and
+device restrictions, private networking and clean host post-checks. No downloaded
+package maintainer script ran in that phase; the complete builder remains open.
 
 [Capacity planning](evidence/clean-builder-capacity-20261106.json) records
 3,752,392 KiB of reported installed package files. Subsequent
@@ -77,9 +79,9 @@ provides 25,061,138,432 bytes free before seed staging, meeting the 25 GB planni
 allowance. Recheck capacity during root/source/output staging. The existing
 kernel and NVMe assembly guards remain unchanged.
 
-Next, construct a fresh isolated Jammy root with the exact package versions,
-controlled maintainer scripts/services and no physical device access. Pin the
+Next, install the exact package versions in the proven isolated Jammy seed,
+with controlled maintainer scripts/services and no physical device access. Pin the
 final builder filesystem digest, independently acquire sources/toolchains, and
 run the reviewed build recipes in fresh environments. Record commands and
 end-to-end comparisons before claiming clean-builder reproducibility. No such
-constructed environment or fresh-builder execution is claimed here.
+complete builder or fresh artifact rebuild is claimed here.

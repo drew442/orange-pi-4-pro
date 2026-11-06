@@ -186,7 +186,11 @@ backup/recovery and SPI-specific programming authorization remain outstanding.
    now leaves 25,061,138,432 bytes free, meeting the 25 GB construction planning
    target. Six complete archives and raw reports are retained on codex; historical
    generated paths require restoration using the [retention map](build-cache-retention.md#replay-and-prototype-output-retention).
-   Construct and validate the isolated immutable builder next; that gate remains open.
+   The [seed isolation probe](clean-builder.md) now passes on actual Jammy:
+   mapped UID/GID ownership, prohibited capabilities absent, private loopback-only
+   networking, no block/KVM devices, empty read-only firmware and clean host
+   inventory/process/mount post-checks. Install the 842 packages offline and freeze
+   the final builder next; full builder/artifact reproducibility remains open.
    The [26-input license inventory](evidence/vendor-boot-license-inventory-20261106.json)
    records available/missing attribution. All [479 userspace source archives](evidence/userspace-sources-acquired-20261106.json)
    for the 220 binary packages are acquired and independently rehashed.
