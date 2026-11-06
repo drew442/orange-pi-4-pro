@@ -1,0 +1,148 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "source-only offline 221-package derivation preparation and native input inspection; no ARM package execution or artifact construction",
+  "source_commit": "574a3107de98df1c33c962e4f6146939af5bb606",
+  "validation_passed": true,
+  "package_configuration_performed": false,
+  "derived_archive_produced": false,
+  "artifact_profile_registered": false,
+  "source_files": {
+    "build/configure-timesync-userspace.py": {
+      "bytes": 24229,
+      "sha256": "fb1ebc6512317658982022df22cd0f349791b9d5145e6ad48694c97d775264a9"
+    },
+    "tests/test_configure_timesync_userspace.py": {
+      "bytes": 21379,
+      "sha256": "4c2cceec41c43b423619829c661eeb49d5d4189b7b08ffbaa1182263845418a8"
+    },
+    "configs/host-timesync-inputs.lock.json": {
+      "bytes": 3837,
+      "sha256": "b183b9df1c19241420c6939c4487dcf4894ae60daa3827d73589a6e112918a5f"
+    },
+    "configs/host-timesync-packages.lock.tsv": {
+      "bytes": 6712,
+      "sha256": "2e97a93bfa02ebd89b7d437df1c9c946a5e14f76b40823d54a3f1a59ab3d0d43"
+    },
+    "configs/host-timesync-package-hashes.lock.tsv": {
+      "bytes": 28789,
+      "sha256": "58f2027166e566f485e9fabccb6a7259c05ad1d882193a8392ee93d60652ebff"
+    }
+  },
+  "input_inspection": {
+    "classification": "native read-only package/input inspection only; no installation or ARM execution",
+    "validation_passed": true,
+    "base_packages": 220,
+    "derived_packages": 221,
+    "preserved_all_base_tuples_and_hashes": true,
+    "addition_control": {
+      "Package": "systemd-timesyncd",
+      "Version": "252.39-1~deb12u2",
+      "Architecture": "arm64",
+      "Source": "systemd"
+    },
+    "deb": {
+      "bytes": 62172,
+      "sha256": "700be69248209d27e58ee0736f1460bc8acb10c1e717efc985ebd23dd5fd7714"
+    },
+    "contract": {
+      "bytes": 3837,
+      "sha256": "b183b9df1c19241420c6939c4487dcf4894ae60daa3827d73589a6e112918a5f"
+    },
+    "installed_files_verified_from_deb_tar": {
+      "usr/lib/systemd/system/systemd-timesyncd.service": {
+        "bytes": 1764,
+        "sha256": "0e2cc5ea697a01cf8eef93cbadaaa029d23fb9759af459315ee0b3a349214303",
+        "mode": "0644"
+      },
+      "usr/lib/systemd/systemd-timesyncd": {
+        "bytes": 67656,
+        "sha256": "2aa831ae71fd9fc5d0aad09c5d25364c806a2527653897b4f96802934b13df39",
+        "mode": "0755"
+      }
+    }
+  },
+  "retained_records": {
+    "out/timesync-derivation-preparation-20261106/input-inspection.json": {
+      "bytes": 1043,
+      "sha256": "c4efe865fc6cd10a292891fd02f8dc4881c5babac523ab5ee743d550a96c6787"
+    },
+    "out/timesync-derivation-preparation-20261106/verification-code/inspect-inputs.py": {
+      "bytes": 2153,
+      "sha256": "7e86f0240f15902bfd585f586f769f903873ad1b7e8b543abc0e5fe7b0c747de"
+    }
+  },
+  "test_logs": {
+    "tmp/timesync-derivation-assembly-20261106.log": {
+      "bytes": 592,
+      "sha256": "68da8d60491f567042d1e4bb45aeeeb47f950f8a4797873d9bccc1c991818436"
+    },
+    "tmp/timesync-derivation-discovery-20261106.log": {
+      "bytes": 1918,
+      "sha256": "d17a19766258a342cdef5597ccc6d45c1329c767efc4f75a3179f2e1a0f19f4a"
+    },
+    "tmp/timesync-derivation-test-diagnostic-initramfs.sh.log": {
+      "bytes": 303,
+      "sha256": "b167e4daa7646375d6668de2a05ae860971e320cc16a177712e4a9ff80ffc2b6"
+    },
+    "tmp/timesync-derivation-test-guest-fixture.sh.log": {
+      "bytes": 93,
+      "sha256": "4a00dd8b70af15f965d4e22586b43b3377dc5059c996ee85632ef50a5bf71375"
+    },
+    "tmp/timesync-derivation-test-host-init.sh.log": {
+      "bytes": 67,
+      "sha256": "1140ccbb0211f94dbafc0cda93fc5475694bb863682cad1f38b51860209ca382"
+    },
+    "tmp/timesync-derivation-test-host-storage-resolver.sh.log": {
+      "bytes": 109,
+      "sha256": "c126ee779bb8b80ee63a08f59a5b322a45ef59a0cf8144a160e6fd7c0cc56892"
+    },
+    "tmp/timesync-derivation-test-host-userspace.sh.log": {
+      "bytes": 86,
+      "sha256": "bafcce50723cd1421cf680cfff091897461967cc32747361e2d6a3f433ac20c1"
+    }
+  },
+  "validation": {
+    "focused_cases": 28,
+    "native_discovery_cases": 1231,
+    "environment_skips": 97,
+    "assembly_cases": 4,
+    "bash_suites": 5,
+    "toml_files_parsed": 5,
+    "diff_check": true,
+    "arm_and_namespace_operations_mocked": true
+  },
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "passed_for_source_only_integration": true,
+    "remaining_blocking_findings": 0,
+    "resolved_findings": [
+      "preflight repository is native/unmounted before trusted helper makes read-only binds",
+      "exercise actual preflight branches with controlled host fixtures rather than replacing preflight wholesale",
+      "declare required future boot enablement explicitly; preset and exit101 policy do not prevent post-install unit enablement",
+      "validate exact enable links, merged-usr alias, immutable unit/daemon pins, absence of masks/overrides and failure receipts"
+    ],
+    "independent_deb_data_inspection": true
+  },
+  "source_only_contract": {
+    "base_packages": 220,
+    "derived_packages": 221,
+    "only_addition": "systemd-timesyncd 252.39-1~deb12u2 arm64",
+    "minimum_free_bytes": 4294967296,
+    "separate_receipt": "timesync-receipt.json",
+    "service_enablement": "required in future derived profile; prohibited startup during build",
+    "fixed_identity": {
+      "uid": 996,
+      "gid": 996
+    },
+    "existing220_producers_locks_profiles_images_changed": false
+  },
+  "remaining": [
+    "Implement and review outer launcher and derived exporter.",
+    "Obtain pending build-host growth approval or satisfy unchanged capacity guards otherwise; no resize performed.",
+    "Run actual ARM package configuration in fresh private clone and verify221 installed packages, account/policy/service checks and audits.",
+    "Export and authenticate new archive, register explicit artifact profile and regenerate root/state package metadata.",
+    "Build/readback matching production artifacts, independently reproduce deployment, and complete all physical KVM/boot/endurance/SD-write/update/rollback/recovery/backup acceptance."
+  ]
+}

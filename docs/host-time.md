@@ -32,10 +32,11 @@ no timesync account or daemon. The [checkpoint guard and private view fixture](t
 now verify file-backed ownership and timestamp preservation. Installed root
 transitions and physical synchronization remain unproven.
 
-Before enabling it in a future payload, introduce a separate pinned userspace
-profile and regenerate its per-root package metadata. Audit the added service
-user and state ownership across A/B updates and rollback. Enable/configure the
-unit deliberately, verify actual DNS/NTP reachability on the board, and capture
+The [separate offline recipe](timesync-userspace.md) now declares the exact
+221-package addition and boot-enablement policy, with independent source/input
+review. Actual package configuration/export and per-root metadata regeneration
+remain required. Audit installed service state across real A/B updates and
+rollback, verify DNS/NTP reachability on the board, and capture
 cold-boot time establishment and clock persistence alongside SD hashes/write
 counters. Those integration and hardware steps remain unperformed; package staging and
 account fixtures do not pass them.
