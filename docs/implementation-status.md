@@ -205,8 +205,12 @@ backup/recovery and SPI-specific programming authorization remain outstanding.
    [Root reconstruction preparation](root-reconstruction-preparation.md) proves
    virtual device metadata without real nodes. The complete 15,892-member
    userspace archive now passes staging content/metadata checks and selected
-   diagnostic-image probes with independent review. Production 4 GiB roots,
-   complete image readback remain open. The optional
+   diagnostic-image probes with independent review. A subsequent
+   [complete diagnostic-image readback](evidence/full-root-image-readback-20261106.json)
+   verifies all 15,892 paths and 518,081,083 regular-file bytes, plus ownership,
+   permissions, links, devices and attributes. It records the pinned creator's
+   whole-second/root-epoch modification-time conversion; image hashes are unchanged.
+   Production 4 GiB roots and their complete image readback remain open. The optional
    [root/state metadata backend](evidence/root-metadata-backend-20261106.json)
    now passes independent software review and an actual full-archive extraction
    through the payload interface in the frozen builder; all 15,892 staged entries

@@ -35,9 +35,25 @@ these execution/probe records and the complete image hash.
 
 This is not a production root slot or full NVMe test. The staging tree was not
 copied to codex; its complete comparison is supported by execution records and
-reviewed code. Image checks are selected metadata probes and consistency, not
-complete content readback. Production 4 GiB A/B slots and their existing staging
-guards remain unchanged and unexercised.
+reviewed code. Its original image checks were selected metadata probes and
+consistency. A subsequent [complete diagnostic-image readback](evidence/full-root-image-readback-20261106.json)
+now checks every expected path and all 518,081,083 regular-file bytes against
+the authenticated source record. It verifies 12,302 unique regular inodes,
+1,842 symlink targets (including 99 stored outside the inode), all three hardlink
+groups, eight device identities and the raw capability. The only additional path
+is the expected empty, root-owned `0700` lost+found directory. Image hashes
+before and after remain identical. Production 4 GiB A/B slots and their existing
+staging guards remain unchanged and unexercised.
+
+Metadata comparisons account explicitly for the pinned creator: mke2fs 1.46.5
+copies child modification times at whole-second resolution and leaves the root
+at the fixed filesystem creation epoch. The source has 2,774 fractional-second
+modification times, including the root; this is not nanosecond preservation.
+Access/change/creation times and image directory sizes are generated metadata
+outside this comparison. The [pinned population source](https://github.com/tytso/e2fsprogs/blob/v1.46.5/misc/create_inode.c#L111)
+explains the time conversion. Independent code, Unicode-fixture and execution
+reviews pass. Verification code and raw records remain under the ignored
+`out/full-root-image-readback-20261106/` directory with recorded code hashes.
 
 The optional `fakeroot-raw-xattrs-v1` backend is now integrated into both root
 and state recipes; their default remains `native`. It requires the pinned
@@ -52,8 +68,9 @@ executes `host-payload.extract_rootfs` on the entire authenticated archive insid
 the frozen namespace. All 15,892 members pass, including eight virtual devices
 and the raw capability; the outside-fakeroot actual-device scan is empty. Eight
 resource samples remain above 6.04 GB free disk and 7.42 GB available RAM.
-Independent software and execution-evidence reviews and 24 focused tests pass. Complete payload/state
-builder paths have unit coverage; their production image runs remain pending.
+Independent software and execution-evidence reviews and 24 focused tests pass.
+Complete payload/state builder paths have unit coverage; their production image
+runs remain pending.
 This probe creates no filesystem image. Existing published images are unchanged;
 replay their historical source revision as specified in
 [SD image reproduction](sd-image-reproduction.md). New recipe source/provenance

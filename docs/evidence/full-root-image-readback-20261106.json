@@ -1,0 +1,132 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Complete read-only content and selected metadata verification of retained 1 GiB diagnostic filesystem; no production or hardware acceptance",
+  "success": true,
+  "inputs_prior_evidence": "full-root-metadata-fixture-20261106.json",
+  "reader_version": "debugfs 1.47.0 (5-Feb-2023)\n\tUsing EXT2FS Library version 1.47.0",
+  "receipt": {
+    "allowed_extra_empty_directory": "lost+found",
+    "character_devices": 8,
+    "classification": "Independent full readback of existing diagnostic image only",
+    "fast_symlinks": 1743,
+    "hardlink_groups": [
+      [
+        "usr/bin/gunzip",
+        "usr/bin/uncompress"
+      ],
+      [
+        "usr/bin/perl",
+        "usr/bin/perl5.36.0"
+      ],
+      [
+        "usr/bin/perlbug",
+        "usr/bin/perlthanks"
+      ]
+    ],
+    "hardware_acceptance": false,
+    "header": {
+      "bytes": 4696621,
+      "sha256": "bb956e03f87018b6fed7d3a7977da5fa82d0a2fe44137812ae3a41be6f040d1b"
+    },
+    "image_after": {
+      "bytes": 1073741824,
+      "sha256": "744ad9dc411e8342fc0f45038595adbcaa3e90e9276b70725a72e6cea4bb6bb6"
+    },
+    "image_before": {
+      "bytes": 1073741824,
+      "sha256": "744ad9dc411e8342fc0f45038595adbcaa3e90e9276b70725a72e6cea4bb6bb6"
+    },
+    "image_mtime_policy": "source seconds only; root explicitly 1793750400 (2026-11-04T00:00:00Z)",
+    "long_symlinks_dumped": 99,
+    "namespace_members": 15892,
+    "out_of_scope_metadata": [
+      "atime",
+      "ctime",
+      "crtime"
+    ],
+    "passed": true,
+    "production_build_acceptance": false,
+    "raw_xattrs": 1,
+    "regular_bytes_read": 518081083,
+    "source_fractional_mtime_members": 2774,
+    "source_nanosecond_metadata_preserved": false,
+    "symlinks": 1842,
+    "unique_regular_inodes": 12302
+  },
+  "verification_code": {
+    "out/full-root-image-readback-20261106/verification-code/verify-full-root-image-20261106.py": {
+      "bytes": 17648,
+      "sha256": "569f106b2979c664f1e0d7d58d27cdd1918b3887e606c3420512d01bce0b5876"
+    },
+    "out/full-root-image-readback-20261106/verification-code/test-full-root-image-readback-20261106.py": {
+      "bytes": 6361,
+      "sha256": "db02ac1d02fee37748113259be29a7563e614361fe259c8a87562a9a88542025"
+    }
+  },
+  "raw_records": "out/full-root-image-readback-20261106/",
+  "small_fixture_tests": {
+    "cases": 3,
+    "passed": true,
+    "coverage": [
+      "regular bytes and hardlink identity",
+      "binary xattr",
+      "fast and long symlinks",
+      "UTF-8 filename/content",
+      "wrong contents, target, timestamp and namespace rejected",
+      "controls, DEL and invalid UTF-8 surrogate text rejected",
+      "debugfs error with status zero rejected",
+      "symlink image input rejected"
+    ]
+  },
+  "review": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "software_and_unicode_delta": "passed with no outstanding findings",
+    "actual_execution_postreview": "passed with no findings: independently rehashed input/code anchors, reconstructed full namespace and compared all raw inode metadata; reviewed content/xattr checks and complete command coverage",
+    "raw_command_coverage": {
+      "debugfs_batches": 178,
+      "directory_listings": 1738,
+      "inode_stats_and_xattr_lists": 15890,
+      "regular_file_dumps": 12302,
+      "long_symlink_dumps": 99,
+      "raw_xattr_exports": 1
+    }
+  },
+  "preserved_failed_attempt": {
+    "directory": "run-01",
+    "reason": "ASCII-only preflight rejected two valid UTF-8 Hungarian certificate names",
+    "image_hash_unchanged": true
+  },
+  "creator_reference": {
+    "version": "e2fsprogs 1.46.5",
+    "sources": {
+      "debugfs/debugfs.c": {
+        "sha256": "62a88629f1e5f2dc4c12fb2ee268fe26000bae91c669784c3ea0094b543348b6"
+      },
+      "debugfs/dump.c": {
+        "sha256": "a24bd9d66a26296238add4062415cdbc25e994cd69badfc110821723e77196d2"
+      },
+      "debugfs/ls.c": {
+        "sha256": "355999d561974f652f0086fac2857b1469fd3192d047d6a7abb89fd010920e33"
+      },
+      "misc/create_inode.c": {
+        "sha256": "0a0062a736ca8f22a21f8c0822e7e5b0e87378d7183aa84906c1ae4f15602a5f"
+      }
+    },
+    "timestamp_transform_source": "https://github.com/tytso/e2fsprogs/blob/v1.46.5/misc/create_inode.c#L111"
+  },
+  "limitations": [
+    "The expected source-header record is authenticated by prior evidence, not newly regenerated from the source archive in this run.",
+    "Image directory sizes and generated access/change/creation times are not compared with source archive metadata.",
+    "Modification times follow documented second-resolution conversion and fixed filesystem-root epoch; nanoseconds are not preserved.",
+    "Only the existing diagnostic image was read; production 4 GiB roots, 8 GiB state and complete NVMe reconstruction remain open.",
+    "No installation, SSH login, real KVM guest execution, SD-write, endurance, rollback, restore or SPI test was performed."
+  ],
+  "raw_records_manifest": {
+    "path": "out/full-root-image-readback-20261106/records-manifest.json",
+    "files": 364,
+    "bytes": 50832,
+    "sha256": "4dbc0bdc404e361d4ef9913fe8bc74f51ed1346f640257c4ed4aac36fee239cc"
+  }
+}
