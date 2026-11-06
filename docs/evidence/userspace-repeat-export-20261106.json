@@ -1,0 +1,212 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Second configured userspace export and byte/metadata comparison; physical acceptance pending",
+  "success": true,
+  "configuration_evidence": "docs/evidence/userspace-configuration-recipe-20261106.json",
+  "export_phase": "/var/lib/a733-clean-replay-20261106/userspace-export-recipe-01",
+  "raw_records": "out/userspace-export-recipe-20261106/",
+  "export": {
+    "schema": 1,
+    "phase": "final-userspace-export",
+    "success": true,
+    "configure_receipt_sha256": "4909edee32b176823b068febeffc21eb6a4b296db9c78bd626d304df668d0aa4",
+    "exporter_sha256": "a07beca46cd34e9aa5cda3169ad1636383cf4a40c986d8cd50eafb90f5223138",
+    "inventory": {
+      "packages": 220,
+      "lock_sha256": "f2abf03d0d6e7fd506560689093220514cbf1acc678f7560562026d6ca6564a6"
+    },
+    "cleanup": {
+      "root_mode": {
+        "before": 493,
+        "after": 493
+      },
+      "removed_paths": [
+        "a733-repo",
+        "etc/ssh/ssh_host_ecdsa_key",
+        "etc/ssh/ssh_host_ecdsa_key.pub",
+        "etc/ssh/ssh_host_ed25519_key",
+        "etc/ssh/ssh_host_ed25519_key.pub",
+        "etc/ssh/ssh_host_rsa_key",
+        "etc/ssh/ssh_host_rsa_key.pub",
+        "usr/bin/qemu-aarch64-static",
+        "usr/sbin/policy-rc.d",
+        "var/lib/dbus/machine-id"
+      ],
+      "pruned_child_counts": {
+        "var/lib/apt/lists": 5,
+        "var/cache/apt/archives": 101,
+        "var/log": 12,
+        "run": 9,
+        "tmp": 0
+      },
+      "machine_id_emptied": true,
+      "root_password_locked": true
+    },
+    "archive": {
+      "bytes": 165686672,
+      "sha256": "c2059eccac59534bac627eb9b9864225e2bc35a012697d11e66b76a8b0c6688b"
+    },
+    "raw_tar": {
+      "bytes": 539678720,
+      "sha256": "24bc36e323d7ae9f0097b88d8c0d1e0d473a0dc6f52a4051bd8ef3614279782e"
+    },
+    "members": 15881,
+    "character_headers": 8,
+    "classification": "interim userspace only; no physical boot, KVM, NVMe or SD-write acceptance",
+    "metadata": "native same-UID-map xattrs; no original-rootfs binary-equivalence claim"
+  },
+  "resource_minima": {
+    "samples": 64,
+    "free_disk_bytes": 3607056384,
+    "available_memory_bytes": 7436947456
+  },
+  "postconditions": {
+    "host_packages_unchanged": true,
+    "mapped_processes_after": [],
+    "output_mounts_after": []
+  },
+  "comparison": {
+    "previous_evidence": "docs/evidence/userspace-configured-export-20261106.json",
+    "path_sets_equal": true,
+    "entries_with_mtime_differences": 2690,
+    "entries_with_data_differences": 4,
+    "data_difference_paths": [
+      "etc/nvme/hostid",
+      "etc/nvme/hostnqn",
+      "var/cache/ldconfig/aux-cache",
+      "var/cache/apt/pkgcache.bin"
+    ],
+    "all_other_metadata_and_content_equal": true,
+    "byte_identical": false,
+    "remaining_work": "Define generic-base cleanup of generated NVMe identity and regenerable caches, and explicit timestamp policy; repeat complete foreign construction and deployment before claiming reproducibility."
+  },
+  "retained_files": {
+    "out/userspace-export-recipe-20261106/rootfs.tar.gz": {
+      "bytes": 165686672,
+      "sha256": "c2059eccac59534bac627eb9b9864225e2bc35a012697d11e66b76a8b0c6688b"
+    },
+    "out/userspace-export-recipe-20261106/rootfs-bom.json": {
+      "bytes": 4338804,
+      "sha256": "656183b0bbc2816a661938c789e2d24e3a5078fae4cc2d2a8cfdb2248fc3f76c"
+    },
+    "out/userspace-export-recipe-20261106/receipt.json": {
+      "bytes": 1555,
+      "sha256": "8310d69566268396fd7d34d1a021406d921df0617ac868ee92bf7351bf60aebd"
+    },
+    "out/userspace-export-recipe-20261106/phase-records.tar": {
+      "bytes": 102400,
+      "sha256": "b0e7ed856b02d88577572d59eaf69944570e24a3b3e09cfa7c68998da4e9976a"
+    },
+    "out/userspace-export-recipe-20261106/bom-difference-summary.json": {
+      "bytes": 306399,
+      "sha256": "470a144163fbc75c99823aea79757a3b35fe21069a70d0f59d38a207f4263765"
+    },
+    "out/userspace-export-recipe-20261106/verification-code/launch-userspace-export-recipe-20261106.py": {
+      "bytes": 4218,
+      "sha256": "92b25474d0489aeeef55bacb26615d0ecfe66f0e39014c61ad37d342b0194cef"
+    },
+    "out/userspace-export-recipe-20261106/verification-code/run.py": {
+      "bytes": 386,
+      "sha256": "465d26045699dcb1b6b31c65b6fd5f84000d07d89b00fd9badbd67a53de6e2e4"
+    },
+    "out/userspace-export-recipe-20261106/independent-repeat-readback-review.json": {
+      "bytes": 3096,
+      "sha256": "e96151ed21fdb34118582c0693b84b732edea848a1f4ca48be0c7d00e9516834"
+    },
+    "out/userspace-export-recipe-20261106/verification-code/independent-repeat-readback.py": {
+      "bytes": 11210,
+      "sha256": "80a030928efe40541d153b7d05bc3a817943afa13cae09f1b9aae47d39218f51"
+    }
+  },
+  "independent_review": "Sol high standalone raw tar/PAX full readback of both complete archives and difference classification passes; no findings beyond documented remaining reproducibility work",
+  "limits": [
+    "Both configurations start from the same authenticated retained foreign data stage.",
+    "No byte-identity claim for configured userspace or complete deployment.",
+    "Published installation images remain unchanged.",
+    "No new physical boot/KVM/NVMe/SD evidence, build-host resize or physical storage writes."
+  ],
+  "independent_readback": {
+    "success": true,
+    "classification": "Independent raw archive/BOM build-evidence readback only; no byte reproducibility or hardware acceptance claim",
+    "new": {
+      "archive": {
+        "bytes": 165686672,
+        "sha256": "c2059eccac59534bac627eb9b9864225e2bc35a012697d11e66b76a8b0c6688b"
+      },
+      "raw_tar": {
+        "bytes": 539678720,
+        "sha256": "24bc36e323d7ae9f0097b88d8c0d1e0d473a0dc6f52a4051bd8ef3614279782e"
+      },
+      "members": 15881,
+      "types": {
+        "dir": 1720,
+        "symlink": 1850,
+        "char": 8,
+        "file": 12300,
+        "hardlink": 3
+      },
+      "root_locked": true,
+      "machine_id_empty": true,
+      "forbidden_build_and_identity_paths_absent": true,
+      "inventory_exact": 220
+    },
+    "prior": {
+      "archive": {
+        "bytes": 165687301,
+        "sha256": "1034908833bd6faf934114a6c0c96840db815ba077166438159dcca54a1fe1a7"
+      },
+      "raw_tar": {
+        "bytes": 539678720,
+        "sha256": "2adb2a05e00df632d057eb812f17202efc84cef5fc86a16efb8e87dd829b81ef"
+      },
+      "members": 15881,
+      "types": {
+        "dir": 1720,
+        "symlink": 1850,
+        "char": 8,
+        "file": 12300,
+        "hardlink": 3
+      },
+      "root_locked": true,
+      "machine_id_empty": true,
+      "forbidden_build_and_identity_paths_absent": true,
+      "inventory_exact": 220
+    },
+    "differences": {
+      "paths_equal": true,
+      "changed_entries": 2690,
+      "fields": {
+        "mtime_ns": 2690,
+        "data": 4
+      },
+      "changed_data_paths": [
+        "etc/nvme/hostid",
+        "etc/nvme/hostnqn",
+        "var/cache/apt/pkgcache.bin",
+        "var/cache/ldconfig/aux-cache"
+      ]
+    },
+    "phase": {
+      "success": true,
+      "host_inventory_identical": true,
+      "mapped_processes_after": [],
+      "output_mounts_after": [],
+      "resource_samples": 64,
+      "minimum_free_bytes": 3607056384,
+      "minimum_available_memory_bytes": 7436947456
+    },
+    "pinned_exporter_sha256": "a07beca46cd34e9aa5cda3169ad1636383cf4a40c986d8cd50eafb90f5223138",
+    "reviewer_script_sha256": "80a030928efe40541d153b7d05bc3a817943afa13cae09f1b9aae47d39218f51",
+    "source_artifacts": {
+      "rootfs-bom.json": "656183b0bbc2816a661938c789e2d24e3a5078fae4cc2d2a8cfdb2248fc3f76c",
+      "receipt.json": "8310d69566268396fd7d34d1a021406d921df0617ac868ee92bf7351bf60aebd",
+      "phase-records/receipt.json": "3453540c5e4106a73762f5794eb8a832a4a0914ec31194eb8563e7fe9442c700",
+      "phase-records/host-packages.before.tsv": "446b7eb3364a6f196390c698c1c133086fee5eb3b080ec4483cc1d8584b39b15",
+      "phase-records/host-packages.after.tsv": "446b7eb3364a6f196390c698c1c133086fee5eb3b080ec4483cc1d8584b39b15"
+    },
+    "interpretation": "nvme-cli postinst generates absent NVMe host identity; apt binary package cache and ldconfig auxiliary cache survive current limited cache cleanup. Timestamp policy preserves source ns rather than normalizing. Export cleanup omits those two identity files and two caches; second export is not byte-identical.",
+    "configure_receipt_sha256": "4909edee32b176823b068febeffc21eb6a4b296db9c78bd626d304df668d0aa4",
+    "nvme_cli_postinst_sha256": "7d5151c4d9832a6efd618071d30abc8c31e10500f09cb538906a51d6e04c71fb"
+  }
+}

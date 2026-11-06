@@ -110,8 +110,11 @@ processes/mounts. Resource minima and exact driver hashes are in the evidence.
 Actual input snapshots, driver/launcher code, command logs and receipts remain
 under `out/userspace-configure-20261106/` and
 `out/userspace-export-20261106/`. The evidence binds their hashes. These ignored
-records supplement the tracked helper/exporter recipes; consolidation of the
-configuration orchestration into a reusable entry point remains work. To repeat
+records supplement the tracked helper/exporter recipes. The subsequent
+[tracked configuration replay](userspace-configuration-replay.md) now passes an
+actual second configuration with committed source snapshots and no APT fallback
+warnings. Its second archive has the same path set but differing timestamps and
+four generated identity/cache files; the comparison is documented there. To repeat
 the export in an identically prepared namespace, stage the exporter under a
 project directory containing the pinned package lock, then run:
 

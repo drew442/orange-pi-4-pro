@@ -57,6 +57,8 @@ by subsequent clean-build work.
   `2ac08e8c` (6.6.98), U-Boot `b791be84` (2018.07), pinned toolchains and boot inputs.
   Preserve compatible boot0/monitor/SCP/kernel/DTB. Actual diagnostic and reviewed
   EL2 handoff boots are recorded in [board diagnostics](board-diagnostic-20261104.md).
+  The [modalias whitespace correction](ethernet-diagnostics.md) passes source/ARM
+  checks and independent review; that source correction remains unbooted.
 - [Minimal interim userspace](host-userspace.md): 220 locked packages, QEMU 7.2.22,
   OpenSSH/storage tools, approximately 531 MiB unpacked. Choose the release base
   after measuring the working KVM host; Debian alone supplies no board support.
@@ -81,7 +83,10 @@ by subsequent clean-build work.
   source U-Boot/kernel replays and both SD image reproductions pass. A new
   [userspace configuration/export](evidence/userspace-configured-export-20261106.json)
   configures all 220 packages and independently verifies all 15,881 archive entries.
-  Latest native discovery: **1,090 cases, 96 environment skips**, plus four assembly
+  The [tracked replay](userspace-configuration-replay.md) also configures all 220
+  with no APT fallback warnings; its second export has the same paths but differs
+  in timestamps and four generated identity/cache files. Byte reproducibility
+  remains open. Latest native discovery: **1,090 cases, 96 environment skips**, plus four assembly
   cases and all five shell suites. These are software checks, not hardware acceptance.
 
 ## Next actions and blockers
@@ -94,9 +99,9 @@ by subsequent clean-build work.
 2. Validate NVMe host boot and SSH with both keys. Run [the first KVM guest](kvm-first-guest.md)
    for CPU/disk/network, clean shutdown/restart and persisted disk marker. Return
    its console/log evidence; `/dev/kvm` alone cannot satisfy the gate.
-3. Continue [clean-build work](build-reproduction-status.md): reusable userspace
-   configuration, repeated construction/difference analysis, production root/state/
-   NVMe reconstruction and complete readback. The reviewed [20 GiB builder LVM growth](build-host-capacity-plan.md)
+3. Continue [clean-build work](build-reproduction-status.md): settle generic-base
+   identity/cache cleanup and timestamp policy, repeat complete foreign construction,
+   then production root/state/NVMe reconstruction and complete readback. The reviewed [20 GiB builder LVM growth](build-host-capacity-plan.md)
    awaits approval; no resize occurred and capacity guards remain unchanged.
    [Firmware license evidence](evidence/vendor-boot-license-inventory-20261106.json)
    remains incomplete; all 479 userspace source archives are acquired, not compiled.

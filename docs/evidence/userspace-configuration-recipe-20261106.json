@@ -1,0 +1,479 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Actual tracked userspace configuration replay in frozen namespace; physical acceptance pending",
+  "success": true,
+  "builder": "build.drewnet.online",
+  "source_revision": "02bb4084bf9135a53dd38ffeaab7c1ac4399ba64",
+  "phase": "/var/lib/a733-clean-replay-20261106/userspace-configure-recipe-01",
+  "raw_records": "out/userspace-configuration-recipe-20261106/",
+  "source_inputs": {
+    "build/configure-host-userspace.py": {
+      "bytes": 22122,
+      "git_blob": "768f64362b2653206409df0735cb00ba7764a040",
+      "sha256": "0ff4f8538723ac1a4fe6f43d1ff6d73b6e0e36f22daa8eb31fa97d8553b8c95f"
+    },
+    "build/launch-userspace-configuration.py": {
+      "bytes": 25142,
+      "git_blob": "79ff84615f83920da644aff6f555726cc786fc22",
+      "sha256": "e5708c3d998159c194bccaad9b157b9d3190c7b6018ad1dc7480124ed66bb158"
+    },
+    "build/userspace-bootstrap-api.py": {
+      "bytes": 27185,
+      "git_blob": "d743e639cdca51ba3adb5a796a090a3589e47e1f",
+      "sha256": "365fd1681e5b5fbce8062771d54082862482995b48ef6b42f6f2b05464b26964"
+    },
+    "configs/builder-replay-packages-20261106.lock.tsv": {
+      "bytes": 32546,
+      "git_blob": "17518b78511b6fa86474aa62a2a575b53895c549",
+      "sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425"
+    },
+    "configs/host-userspace-package-hashes.lock.tsv": {
+      "bytes": 28638,
+      "git_blob": "529b39aad256fbe28188c6c724c60bfb9edee698",
+      "sha256": "f2f613e79d9c1abc1689e19cfe81b624d9d2ac3beeb322fd5788980d919f7d86"
+    },
+    "configs/host-userspace-packages.lock.tsv": {
+      "bytes": 6671,
+      "git_blob": "640af83be6bb0939d56d11b7b62f256e03ba05f9",
+      "sha256": "f2abf03d0d6e7fd506560689093220514cbf1acc678f7560562026d6ca6564a6"
+    }
+  },
+  "configure_input_contract": {
+    "adapter_manifest_sha256": "dc1c4bee9855197e0c39a9e1e00e1a7802e13f054ee60ff2fca9d8ed33d6c52e",
+    "foreign_receipt_sha256": "c4a45a4c6bfb26422859c57a9b15ce87476af5c1cab35da7ba3996e0e8322cd1"
+  },
+  "configuration": {
+    "receipt_sha256": "4909edee32b176823b068febeffc21eb6a4b296db9c78bd626d304df668d0aa4",
+    "commands": [
+      {
+        "name": "second-stage",
+        "argv": [
+          "/usr/sbin/chroot",
+          "/a733-export-output/arm-root",
+          "/usr/bin/qemu-aarch64-static",
+          "/bin/sh",
+          "/debootstrap/debootstrap",
+          "--second-stage"
+        ],
+        "status": 0
+      },
+      {
+        "name": "base-inventory",
+        "argv": [
+          "/usr/sbin/chroot",
+          "/a733-export-output/arm-root",
+          "/usr/bin/qemu-aarch64-static",
+          "/usr/bin/dpkg-query",
+          "-W",
+          "-f=${Package}\t${Version}\t${Architecture}\t${db:Status-Status}\n"
+        ],
+        "status": 0
+      },
+      {
+        "name": "apt-update",
+        "argv": [
+          "/usr/sbin/chroot",
+          "/a733-export-output/arm-root",
+          "/usr/bin/qemu-aarch64-static",
+          "/usr/bin/apt-get",
+          "update"
+        ],
+        "status": 0
+      },
+      {
+        "name": "apt-install",
+        "argv": [
+          "/usr/sbin/chroot",
+          "/a733-export-output/arm-root",
+          "/usr/bin/qemu-aarch64-static",
+          "/usr/bin/apt-get",
+          "--yes",
+          "--no-install-recommends",
+          "install",
+          "adduser=3.134",
+          "apt=2.6.1",
+          "base-files=12.4+deb12u15",
+          "base-passwd=3.6.1",
+          "bash=5.2.15-2+b13",
+          "bsdutils=1:2.38.1-5+deb12u3",
+          "ca-certificates=20230311+deb12u1",
+          "coreutils=9.1-1",
+          "curl=7.88.1-10+deb12u15",
+          "dash=0.5.12-2",
+          "dbus=1.14.10-1~deb12u1",
+          "dbus-bin=1.14.10-1~deb12u1",
+          "dbus-daemon=1.14.10-1~deb12u1",
+          "dbus-session-bus-common=1.14.10-1~deb12u1",
+          "dbus-system-bus-common=1.14.10-1~deb12u1",
+          "debconf=1.5.82",
+          "debian-archive-keyring=2023.3+deb12u2",
+          "debianutils=5.7-0.5~deb12u1",
+          "diffutils=1:3.8-4",
+          "dmsetup=2:1.02.185-2",
+          "dpkg=1.21.23",
+          "e2fsprogs=1.47.0-2+b2",
+          "findutils=4.9.0-4",
+          "gcc-12-base=12.2.0-14+deb12u1",
+          "gpgv=2.2.40-1.1+deb12u2",
+          "grep=3.8-5",
+          "gzip=1.12-1",
+          "hostname=3.23+nmu1",
+          "init-system-helpers=1.65.2+deb12u1",
+          "iproute2=6.1.0-3",
+          "iso-codes=4.15.0-1",
+          "kmod=30+20221128-1",
+          "libacl1=2.3.1-3",
+          "libaio1=0.3.113-4",
+          "libapparmor1=3.0.8-3",
+          "libapt-pkg6.0=2.6.1",
+          "libargon2-1=0~20171227-0.3+deb12u1",
+          "libasound2=1.2.8-1+b1",
+          "libasound2-data=1.2.8-1",
+          "libattr1=1:2.5.1-4",
+          "libaudit-common=1:3.0.9-1",
+          "libaudit1=1:3.0.9-1",
+          "libblkid1=2.38.1-5+deb12u3",
+          "libbpf1=1:1.1.2-0+deb12u1",
+          "libbrlapi0.8=6.5-7+deb12u1",
+          "libbrotli1=1.0.9-2+b6",
+          "libbsd0=0.11.7-2",
+          "libbz2-1.0=1.0.8-5+b1",
+          "libc-bin=2.36-9+deb12u14",
+          "libc6=2.36-9+deb12u14",
+          "libcacard0=1:2.8.0-3",
+          "libcap-ng0=0.8.3-1+b3",
+          "libcap2=1:2.66-4+deb12u3+b1",
+          "libcap2-bin=1:2.66-4+deb12u3+b1",
+          "libcapstone4=4.0.2-5",
+          "libcbor0.8=0.8.0-2+b1",
+          "libcom-err2=1.47.0-2+b2",
+          "libcrypt1=1:4.4.33-2",
+          "libcryptsetup12=2:2.6.1-4~deb12u2",
+          "libcurl4=7.88.1-10+deb12u15",
+          "libdaxctl1=76.1-1",
+          "libdb5.3=5.3.28+dfsg2-1",
+          "libdbus-1-3=1.14.10-1~deb12u1",
+          "libdebconfclient0=0.270",
+          "libdevmapper1.02.1=2:1.02.185-2",
+          "libdrm-common=2.4.114-1",
+          "libdrm2=2.4.114-1+b1",
+          "libdw1=0.188-2.1",
+          "libedit2=3.1-20221030-2",
+          "libelf1=0.188-2.1",
+          "libepoxy0=1.5.10-1",
+          "libexecs0=1.3-2",
+          "libexpat1=2.5.0-1+deb12u2",
+          "libext2fs2=1.47.0-2+b2",
+          "libfdisk1=2.38.1-5+deb12u3",
+          "libfdt1=1.6.1-4+b1",
+          "libffi8=3.4.4-1",
+          "libfido2-1=1.12.0-2+b1",
+          "libfile-find-rule-perl=0.34-4~deb12u1",
+          "libfuse3-3=3.14.0-4",
+          "libgbm1=22.3.6-1+deb12u2",
+          "libgcc-s1=12.2.0-14+deb12u1",
+          "libgcrypt20=1.10.1-3+deb12u1",
+          "libgdbm-compat4=1.23-3",
+          "libgdbm6=1.23-3",
+          "libglib2.0-0=2.74.6-2+deb12u9",
+          "libgmp10=2:6.2.1+dfsg1-1.1",
+          "libgnutls30=3.7.9-2+deb12u7",
+          "libgpg-error0=1.46-1",
+          "libgssapi-krb5-2=1.20.1-2+deb12u5",
+          "libgstreamer-plugins-base1.0-0=1.22.0-3+deb12u6",
+          "libgstreamer1.0-0=1.22.0-2+deb12u1",
+          "libhogweed6=3.8.1-2",
+          "libibverbs1=44.0-2",
+          "libidn2-0=2.3.3-1+b1",
+          "libip4tc2=1.8.9-2",
+          "libjpeg62-turbo=1:2.1.5-2",
+          "libjson-c5=0.16-2",
+          "libk5crypto3=1.20.1-2+deb12u5",
+          "libkeyutils1=1.6.3-2",
+          "libkmod2=30+20221128-1",
+          "libkrb5-3=1.20.1-2+deb12u5",
+          "libkrb5support0=1.20.1-2+deb12u5",
+          "libldap-2.5-0=2.5.13+dfsg-5",
+          "liblz4-1=1.9.4-1",
+          "liblzma5=5.4.1-1+deb12u1",
+          "libmd0=1.0.4-2",
+          "libmnl0=1.0.4-3",
+          "libmount1=2.38.1-5+deb12u3",
+          "libncursesw6=6.4-4",
+          "libndctl6=76.1-1",
+          "libnettle8=3.8.1-2",
+          "libnghttp2-14=1.52.0-1+deb12u3",
+          "libnl-3-200=3.7.0-0.2+b1",
+          "libnl-route-3-200=3.7.0-0.2+b1",
+          "libnsl2=1.3.0-2",
+          "libnspr4=2:4.35-1",
+          "libnss3=2:3.87.1-1+deb12u2",
+          "libnuma1=2.0.16-1",
+          "libnumber-compare-perl=0.03-3",
+          "libnvme1=1.3-1+deb12u1",
+          "libopus0=1.3.1-3",
+          "liborc-0.4-0=1:0.4.33-2",
+          "libp11-kit0=0.24.1-2",
+          "libpam-modules=1.5.2-6+deb12u2",
+          "libpam-modules-bin=1.5.2-6+deb12u2",
+          "libpam-runtime=1.5.2-6+deb12u2",
+          "libpam0g=1.5.2-6+deb12u2",
+          "libpcre2-8-0=10.42-1",
+          "libpcsclite1=1.9.9-2",
+          "libperl5.36=5.36.0-7+deb12u3",
+          "libpixman-1-0=0.42.2-1",
+          "libpmem1=1.12.1-2",
+          "libpng16-16=1.6.39-2+deb12u5",
+          "libproc2-0=2:4.0.2-3",
+          "libpsl5=0.21.2-1",
+          "libpython3-stdlib=3.11.2-1+b1",
+          "libpython3.11-minimal=3.11.2-6+deb12u8",
+          "libpython3.11-stdlib=3.11.2-6+deb12u8",
+          "librdmacm1=44.0-2",
+          "libreadline8=8.2-1.3",
+          "librtmp1=2.4+20151223.gitfa8646d.1-2+b2",
+          "libsasl2-2=2.1.28+dfsg-10",
+          "libsasl2-modules-db=2.1.28+dfsg-10",
+          "libseccomp2=2.5.4-1+deb12u1",
+          "libselinux1=3.4-1+b6",
+          "libsemanage-common=3.4-1",
+          "libsemanage2=3.4-1+b5",
+          "libsepol2=3.4-2.1",
+          "libslirp0=4.7.0-1",
+          "libsmartcols1=2.38.1-5+deb12u3",
+          "libsndio7.0=1.9.0-0.3+b2",
+          "libspice-server1=0.15.1-1",
+          "libsqlite3-0=3.40.1-2+deb12u2",
+          "libss2=1.47.0-2+b2",
+          "libssh2-1=1.10.0-3+b1",
+          "libssl3=3.0.20-1~deb12u2",
+          "libstdc++6=12.2.0-14+deb12u1",
+          "libsystemd-shared=252.39-1~deb12u2",
+          "libsystemd0=252.39-1~deb12u2",
+          "libtasn1-6=4.19.0-2+deb12u1",
+          "libtext-glob-perl=0.11-3",
+          "libtinfo6=6.4-4",
+          "libtirpc-common=1.3.3+ds-1",
+          "libtirpc3=1.3.3+ds-1",
+          "libudev1=252.39-1~deb12u2",
+          "libunistring2=1.0-2",
+          "libunwind8=1.6.2-3",
+          "liburing2=2.3-3",
+          "libusb-1.0-0=2:1.0.26-1",
+          "libusbredirparser1=0.13.0-2",
+          "libuuid1=2.38.1-5+deb12u3",
+          "libvdeplug2=4.0.1-4",
+          "libwayland-server0=1.21.0-1",
+          "libwrap0=7.6.q-32",
+          "libxtables12=1.8.9-2",
+          "libxxhash0=0.8.1-1",
+          "libzstd1=1.5.4+dfsg2-5",
+          "login=1:4.13+dfsg1-1+deb12u2",
+          "logsave=1.47.0-2+b2",
+          "mawk=1.3.4.20200120-3.1",
+          "media-types=10.0.0",
+          "mount=2.38.1-5+deb12u3",
+          "ncurses-base=6.4-4",
+          "ncurses-bin=6.4-4",
+          "nvme-cli=2.4+really2.3-3",
+          "openssh-client=1:9.2p1-2+deb12u10",
+          "openssh-server=1:9.2p1-2+deb12u10",
+          "openssh-sftp-server=1:9.2p1-2+deb12u10",
+          "openssl=3.0.20-1~deb12u2",
+          "passwd=1:4.13+dfsg1-1+deb12u2",
+          "perl=5.36.0-7+deb12u3",
+          "perl-base=5.36.0-7+deb12u3",
+          "perl-modules-5.36=5.36.0-7+deb12u3",
+          "procps=2:4.0.2-3",
+          "python3=3.11.2-1+b1",
+          "python3-minimal=3.11.2-1+b1",
+          "python3.11=3.11.2-6+deb12u8",
+          "python3.11-minimal=3.11.2-6+deb12u8",
+          "qemu-system-arm=1:7.2+dfsg-7+deb12u18+b3",
+          "qemu-system-common=1:7.2+dfsg-7+deb12u18+b3",
+          "qemu-system-data=1:7.2+dfsg-7+deb12u18",
+          "qemu-utils=1:7.2+dfsg-7+deb12u18+b3",
+          "readline-common=8.2-1.3",
+          "runit-helper=2.15.2",
+          "sed=4.9-1+deb12u1",
+          "sensible-utils=0.0.17+nmu1",
+          "systemd=252.39-1~deb12u2",
+          "systemd-resolved=252.39-1~deb12u2",
+          "systemd-sysv=252.39-1~deb12u2",
+          "sysvinit-utils=3.06-4",
+          "tar=1.34+dfsg-1.2+deb12u1",
+          "tzdata=2026b-0+deb12u1",
+          "ucf=3.0043+nmu1+deb12u1",
+          "udev=252.39-1~deb12u2",
+          "usrmerge=37~deb12u1",
+          "util-linux=2.38.1-5+deb12u3",
+          "util-linux-extra=2.38.1-5+deb12u3",
+          "uuid-runtime=2.38.1-5+deb12u3",
+          "zlib1g=1:1.2.13.dfsg-1"
+        ],
+        "status": 0
+      },
+      {
+        "name": "full-inventory",
+        "argv": [
+          "/usr/sbin/chroot",
+          "/a733-export-output/arm-root",
+          "/usr/bin/qemu-aarch64-static",
+          "/usr/bin/dpkg-query",
+          "-W",
+          "-f=${Package}\t${Version}\t${Architecture}\t${db:Status-Status}\n"
+        ],
+        "status": 0
+      },
+      {
+        "name": "dpkg-audit",
+        "argv": [
+          "/usr/sbin/chroot",
+          "/a733-export-output/arm-root",
+          "/usr/bin/qemu-aarch64-static",
+          "/usr/bin/dpkg",
+          "--audit"
+        ],
+        "status": 0
+      },
+      {
+        "name": "apt-check",
+        "argv": [
+          "/usr/sbin/chroot",
+          "/a733-export-output/arm-root",
+          "/usr/bin/qemu-aarch64-static",
+          "/usr/bin/apt-get",
+          "check"
+        ],
+        "status": 0
+      }
+    ],
+    "base_packages": 99,
+    "final_packages": 220,
+    "inventory_match": true,
+    "dpkg_audit_clean": true,
+    "apt_check_passed": true,
+    "namespace_pids": [
+      1,
+      2
+    ],
+    "root_stat": {
+      "path": "/var/lib/a733-clean-replay-20261106/userspace-configure-recipe-01/work/arm-root",
+      "time": 1793996736.7512715,
+      "uid": 1048576,
+      "gid": 1048576,
+      "mode": 493,
+      "is_directory": true,
+      "dev": 64512,
+      "ino": 1181749
+    },
+    "apt_unsandboxed_permission_warnings": false
+  },
+  "isolation": {
+    "probe": {
+      "ipv6_loopback_routes": [
+        "00000000000000000000000000000001 80 00000000000000000000000000000000 00 00000000000000000000000000000000 00000100 00000001 00000000 00000001       lo",
+        "00000000000000000000000000000000 00 00000000000000000000000000000000 00 00000000000000000000000000000000 ffffffff 00000001 00000000 00200200       lo",
+        "00000000000000000000000000000001 80 00000000000000000000000000000000 00 00000000000000000000000000000000 00000000 00000002 00000000 80200001       lo",
+        "00000000000000000000000000000000 00 00000000000000000000000000000000 00 00000000000000000000000000000000 ffffffff 00000001 00000000 00200200       lo"
+      ],
+      "network_interfaces": [
+        "lo"
+      ],
+      "prohibited_capability_mask": "0xa631000",
+      "uid_base": 1048576,
+      "uid_count": 65536
+    },
+    "qemu_sha256_by_path": {
+      "/usr/bin/qemu-aarch64-static": "92c4aeb8dd898de7152c184370ab22f09ae7c5b7279fd300081c76cee3f78a80",
+      "/var/lib/a733-frozen-builders/freeze-20261106-01/restored-rootfs/usr/bin/qemu-aarch64-static": "92c4aeb8dd898de7152c184370ab22f09ae7c5b7279fd300081c76cee3f78a80"
+    },
+    "helper_receipt_sha256": "d9f7fa1a5ff8d51852ff430916c50199432f738eb5bc90469d5736f41c8ba98d",
+    "helper_operations": 54,
+    "host_package_inventory_unchanged": true,
+    "mapped_processes_after": [],
+    "output_mounts_after": []
+  },
+  "resource_minima": {
+    "samples": 157,
+    "free_disk_bytes": 3675967488,
+    "available_memory_bytes": 7278411776
+  },
+  "retained_files": {
+    "out/userspace-configuration-recipe-20261106/records.tar": {
+      "bytes": 542720,
+      "sha256": "e3139e7cc26f4f0fb8e7dd1991df9fcbd88454b447483ace8294b2ffae2bdd76"
+    },
+    "out/userspace-configuration-recipe-20261106/receipt.json": {
+      "bytes": 20035,
+      "sha256": "f128afb0756461b05e78f236ce98fae70d791c59a2f3bb7aa38b29572813e215"
+    },
+    "out/userspace-configuration-recipe-20261106/source-root-stat.json": {
+      "bytes": 217,
+      "sha256": "33432338f8a717eccf06638cb85e4bac29d3064b07a44521ef38d8f3f8618c9f"
+    },
+    "out/userspace-configuration-recipe-20261106/work/configure-receipt.json": {
+      "bytes": 11183,
+      "sha256": "4909edee32b176823b068febeffc21eb6a4b296db9c78bd626d304df668d0aa4"
+    },
+    "out/userspace-configuration-recipe-20261106/independent-review.json": {
+      "bytes": 599,
+      "sha256": "0f0d7a527ad4d5bc23da2f633c69817e73c5343911838c907c4cc8c18a89eaa4"
+    },
+    "out/userspace-configuration-recipe-20261106/independent-review.py": {
+      "bytes": 7511,
+      "sha256": "a9301e85704506342992d8786d3208eb5607d309bc4513bb1835123d34f6b5d3"
+    }
+  },
+  "validation": {
+    "native_cases": 1090,
+    "environment_skips": 96,
+    "assembly_cases": 4,
+    "shell_suites": 5,
+    "project_toml_files": 5,
+    "independent_review": "Sol high source/fixtures and actual-record review clear; no remaining findings",
+    "actual_review": {
+      "schema": 1,
+      "success": true,
+      "source_commit": "02bb4084bf9135a53dd38ffeaab7c1ac4399ba64",
+      "configured_packages": 220,
+      "base_packages": 99,
+      "host_packages": 842,
+      "helper_operations": 54,
+      "samples": 157,
+      "minimum_free_bytes": 3675967488,
+      "minimum_available_memory_bytes": 7278411776,
+      "root_mode": "0755",
+      "apt_fallback_warnings": 0,
+      "no_hardware_acceptance": true,
+      "cleared_export_launcher_sha256": "92b25474d0489aeeef55bacb26615d0ecfe66f0e39014c61ad37d342b0194cef",
+      "cleared_export_runner_sha256": "465d26045699dcb1b6b31c65b6fd5f84000d07d89b00fd9badbd67a53de6e2e4"
+    }
+  },
+  "routing": [
+    {
+      "task": "payload implementation",
+      "model": "gpt-6.1-sol",
+      "effort": "medium"
+    },
+    {
+      "task": "host launcher implementation",
+      "model": "gpt-6.1-sol",
+      "effort": "medium"
+    },
+    {
+      "task": "independent review",
+      "model": "gpt-6.1-sol",
+      "effort": "high"
+    }
+  ],
+  "cost_accounting": "Per-child token usage and account charges are not exposed; no measured savings claimed. Coordinator found and corrected one mapped-ownership preflight mismatch before actual execution.",
+  "limits": [
+    "Repeated configuration from a clone of the same authenticated foreign-stage output; not two complete foreign or OS constructions.",
+    "The historical rootfs archive was not used as construction seed.",
+    "QEMU-user performs package setup only; actual hardware KVM guest execution remains unproven.",
+    "Production root/state/NVMe reconstruction and full release criteria remain open.",
+    "No build-host resize, physical disk erase or SPI programming; published installation artifacts unchanged."
+  ]
+}
