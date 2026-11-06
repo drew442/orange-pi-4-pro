@@ -203,8 +203,10 @@ backup/recovery and SPI-specific programming authorization remain outstanding.
    published images remain unchanged. Reconstructing the complete NVMe roots/state/
    disk and userspace base in this environment remains open; preserve all guards.
    [Root reconstruction preparation](root-reconstruction-preparation.md) proves
-   virtual device metadata without real nodes. A two-phase ACL/capability fixture
-   passes independent postchecks, but complete root/image validation remains open. The builder has 66.54 GB unallocated in LVM;
+   virtual device metadata without real nodes. The complete 15,892-member
+   userspace archive now passes staging content/metadata checks and selected
+   diagnostic-image probes with independent review. Production 4 GiB roots,
+   complete image readback and root/state backend integration remain open. The builder has 66.54 GB unallocated in LVM;
    a reviewed/dry-run [20 GiB root-volume growth](build-host-capacity-plan.md)
    is prepared with metadata backup and awaits approval. No resize has occurred.
    The [26-input license inventory](evidence/vendor-boot-license-inventory-20261106.json)

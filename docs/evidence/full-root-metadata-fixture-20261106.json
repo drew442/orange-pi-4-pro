@@ -1,0 +1,199 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Complete authenticated userspace archive staging validation plus selected diagnostic 1 GiB image metadata probes; no production root/NVMe/hardware acceptance",
+  "success": true,
+  "builder": "build.drewnet.online",
+  "builder_phase": "/var/lib/a733-clean-replay-20261106/full-root-metadata-fixture-02",
+  "source_archive": {
+    "bytes": 169852145,
+    "sha256": "1967e76c0c831c1c0bab432e7116457d4372c15b413090c054f8958b72dcb392"
+  },
+  "archive_audit": {
+    "character_nodes": 8,
+    "maximum_name_list_bytes": 20,
+    "maximum_name_value_bytes": 40,
+    "members": 15892,
+    "members_with_raw_xattrs": 1,
+    "raw_attributes": 1,
+    "textual_acl": 0,
+    "unpacked_regular_bytes": 518081083
+  },
+  "member_types": {
+    "dir": 1737,
+    "symlink": 1842,
+    "char": 8,
+    "file": 12302,
+    "hardlink": 3
+  },
+  "staging_validation": {
+    "all_regular_and_hardlink_bytes_sha256_checked": true,
+    "members": 15892,
+    "passed": true
+  },
+  "image_probes": {
+    "capability_binary_match": true,
+    "capability_file": "usr/lib/aarch64-linux-gnu/gstreamer1.0/gstreamer-1.0/gst-ptp-helper",
+    "character_nodes": 8,
+    "complete_image_data_readback_performed": false,
+    "image": {
+      "bytes": 1073741824,
+      "sha256": "744ad9dc411e8342fc0f45038595adbcaa3e90e9276b70725a72e6cea4bb6bb6"
+    },
+    "nonroot_file": "etc/shadow-",
+    "passed": true
+  },
+  "actual_host_special_nodes": 0,
+  "mapped_processes_remaining": [],
+  "namespace_command": [
+    "/usr/bin/systemd-nspawn",
+    "--directory=/var/lib/a733-frozen-builders/freeze-20261106-01/restored-rootfs",
+    "--settings=no",
+    "--as-pid2",
+    "--register=no",
+    "--keep-unit",
+    "--console=pipe",
+    "--private-users=1048576:65536",
+    "--private-users-ownership=off",
+    "--private-network",
+    "--no-new-privileges=yes",
+    "--drop-capability=CAP_SYS_ADMIN,CAP_SYS_MODULE,CAP_SYS_RAWIO,CAP_SYS_BOOT,CAP_SYS_TIME,CAP_MKNOD,CAP_NET_ADMIN",
+    "--resolv-conf=off",
+    "--timezone=off",
+    "--link-journal=no",
+    "--bind-ro=/var/lib/a733-clean-builder/seed-probe-20261106-05/probe.sh:/a733-probe.sh",
+    "--bind-ro=/var/lib/a733-clean-builder/seed-probe-20261106-05/firmware-empty:/sys/firmware",
+    "--read-only",
+    "--bind-ro=/var/lib/a733-clean-replay-20261106/home:/home",
+    "--bind=/var/lib/a733-clean-replay-20261106/full-root-metadata-fixture-02/work:/a733-export-output",
+    "--bind=/var/lib/a733-clean-replay-20261106/full-root-metadata-fixture-02/scratch:/var/tmp",
+    "--bind-ro=/var/lib/a733-sd-replay-inputs-20261106:/a733-debs",
+    "--bind-ro=/var/lib/a733-clean-replay-20261106/sd-run-formal-02/work/project:/a733-sources",
+    "--bind-ro=/var/lib/a733-sd-replay-inputs-20261106/run-full-root-metadata-fixture-20261106.sh:/a733-install.sh",
+    "/bin/sh",
+    "-c",
+    "/bin/sh /a733-probe.sh && exec /bin/bash /a733-install.sh"
+  ],
+  "namespace_probe": {
+    "uid_base": 1048576,
+    "uid_count": 65536,
+    "network_interfaces": [
+      "lo"
+    ],
+    "ipv6_loopback_routes": [
+      "00000000000000000000000000000001 80 00000000000000000000000000000000 00 00000000000000000000000000000000 00000100 00000001 00000000 00000001       lo",
+      "00000000000000000000000000000000 00 00000000000000000000000000000000 00 00000000000000000000000000000000 ffffffff 00000001 00000000 00200200       lo",
+      "00000000000000000000000000000001 80 00000000000000000000000000000000 00 00000000000000000000000000000000 00000000 00000002 00000000 80200001       lo",
+      "00000000000000000000000000000000 00 00000000000000000000000000000000 00 00000000000000000000000000000000 ffffffff 00000001 00000000 00200200       lo"
+    ],
+    "prohibited_capability_mask": "0xa631000"
+  },
+  "resources": {
+    "samples": 13,
+    "minimum_disk_free_bytes": 6708346880,
+    "minimum_available_memory_bytes": 7375982592
+  },
+  "scripts": {
+    "tmp/full-root-metadata-fixture-20261106.py": {
+      "bytes": 16690,
+      "sha256": "c5e0d921aebf341ec00e4ab723dbfebe6e5e700e5e8fe62e1f404076c7cd2364"
+    },
+    "tmp/run-full-root-metadata-fixture-20261106.sh": {
+      "bytes": 1117,
+      "sha256": "131cc9ba47b9356dfc8899a71435cc39cceef22c1d4711949e6a63897600e975"
+    },
+    "tmp/launch-full-root-metadata-fixture-20261106.py": {
+      "bytes": 2823,
+      "sha256": "2f87bc1219e2abcfb76ffc3178ee65a4ffc925e660d44e93e22972aa02800270"
+    }
+  },
+  "native_records_directory": "/home/drew/orange-pi-4-pro/out/full-root-metadata-fixture-20261106",
+  "raw_records": {
+    "out/full-root-metadata-fixture-20261106/fixture-receipt.json": {
+      "bytes": 3975,
+      "sha256": "d343e5da8aed0221e7f764d286efeaa471db398acacd6282a838ca280e8e8e6c"
+    },
+    "out/full-root-metadata-fixture-20261106/fixture.log": {
+      "bytes": 3094,
+      "sha256": "c59ca2b164b85493968cd3807adcc72224f157b045a14e9fe5251afa5245e029"
+    },
+    "out/full-root-metadata-fixture-20261106/work/full-root-fixture/physical-special-nodes.json": {
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    "out/full-root-metadata-fixture-20261106/work/full-root-fixture/mke2fs.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/full-root-metadata-fixture-20261106/work/full-root-fixture/image-probes.json": {
+      "bytes": 380,
+      "sha256": "61a0bafd7ca3c5f3d42252e490765e31462470cbfe80f1696e74ec1884474549"
+    },
+    "out/full-root-metadata-fixture-20261106/work/full-root-fixture/restore.log": {
+      "bytes": 216,
+      "sha256": "46192208c0ce9f42c49fec334aacdff44c53c5fe1161efd16963348cbe5f0d24"
+    },
+    "out/full-root-metadata-fixture-20261106/work/full-root-fixture/tar.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/full-root-metadata-fixture-20261106/work/full-root-fixture/diagnostic-1g.ext4": {
+      "bytes": 1073741824,
+      "sha256": "744ad9dc411e8342fc0f45038595adbcaa3e90e9276b70725a72e6cea4bb6bb6"
+    },
+    "out/full-root-metadata-fixture-20261106/work/full-root-fixture/e2fsck.log": {
+      "bytes": 345,
+      "sha256": "939783b3c2461033bf193b40af43715839342049d96c0155dd6b3b5e1407f0af"
+    },
+    "out/full-root-metadata-fixture-20261106/work/full-root-fixture/image-security.capability": {
+      "bytes": 20,
+      "sha256": "7befd77a29ed62d77496acabd7415491c7239ae6b9e013fa0470153fe072d766"
+    },
+    "out/full-root-metadata-fixture-20261106/work/full-root-fixture/preflight.json": {
+      "bytes": 76,
+      "sha256": "999ec8ea6bdd5bb377fe5dab25ab3fb5be866ad0c7eb03ed93edcf25e32b5bf8"
+    },
+    "out/full-root-metadata-fixture-20261106/work/full-root-fixture/image-stat.log": {
+      "bytes": 6115,
+      "sha256": "58ce432357e2cc1ea08a7555185d0a8ffa67a507483fed243499ee6fdcce15ae"
+    },
+    "out/full-root-metadata-fixture-20261106/work/full-root-fixture/postcheck.log": {
+      "bytes": 113,
+      "sha256": "d986c3e929370f0acb0acf1c6df51df4dc17431e8ac0ce3ddf38f20f5258611b"
+    },
+    "out/full-root-metadata-fixture-20261106/work/full-root-fixture/result.json": {
+      "bytes": 462,
+      "sha256": "074e77967bd19be9f765cac408ac754f797e01a051e57ed7cb7ef8dd359527a1"
+    },
+    "out/full-root-metadata-fixture-20261106/work/full-root-fixture/restored-check.json": {
+      "bytes": 98,
+      "sha256": "feb0bee87418e8d898c206b35c8bbd36903b3c43de7e1e3d9df0ccd3a1c17ea0"
+    },
+    "out/full-root-metadata-fixture-20261106/work/full-root-fixture/source-header-expected.json": {
+      "bytes": 4696621,
+      "sha256": "bb956e03f87018b6fed7d3a7977da5fa82d0a2fe44137812ae3a41be6f040d1b"
+    },
+    "out/full-root-metadata-fixture-20261106/work/full-root-fixture/image-ea.log": {
+      "bytes": 29,
+      "sha256": "c0eda8e792b06ab4531f47cc421ca68489490dd5a9aa7c1eeae93b4d3193ef44"
+    }
+  },
+  "remote_record_hashes_match_native": true,
+  "native_regular_files_fsynced": true,
+  "restored_expanded_tree_copied_to_native": false,
+  "initial_launcher_failure": "Phase01 invoked Bash wrapper with /bin/sh and stopped on pipefail before extraction. Corrected launcher /bin/bash; phase02 is a new workspace.",
+  "limits": [
+    "The 1 GiB image is diagnostic. Production 4 GiB A/B roots and full NVMe staging guards are unchanged and unexercised.",
+    "All archive members received staging content/metadata checks. Image checks cover selected device/ownership/capability metadata and e2fsck; complete image data readback is not performed.",
+    "The real source archive is retained; expanded staging metadata exists virtually only during the fakeroot session.",
+    "No live hardware, guest execution, SD-write or deployment acceptance is established."
+  ],
+  "hardware_acceptance": false,
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "result": "Passed reviewed execution and retained data checks; native image hash, all eight devices, nonroot group ownership, capability and filesystem consistency confirmed.",
+    "expanded_staging_tree_independently_rechecked_on_native": false,
+    "native_image_sha256": "744ad9dc411e8342fc0f45038595adbcaa3e90e9276b70725a72e6cea4bb6bb6"
+  }
+}

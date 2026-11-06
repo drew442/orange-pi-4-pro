@@ -15,8 +15,9 @@ VM's existing `/dev/sda3`; the Orange Pi's NVMe is a different machine/target.
 Allocate 20 GiB (21,474,836,480 bytes) from that existing VG to the root LV,
 then grow its mounted ext4 filesystem. The resulting LV size is exactly
 88,017,469,440 bytes (81.97 GiB); 45,067,796,480 bytes remain unallocated in the
-VG. Filesystem free space should rise from about 7.68 GB to about 29 GB, subject
-to filesystem metadata overhead and later builds. Recheck all build guards.
+VG. At preparation, filesystem free space was about 7.68 GB; the full archive
+diagnostic later consumed about 1 GiB. Growth should add 20 GiB less filesystem
+metadata overhead; verify actual free space after applying it. Recheck all build guards.
 This keeps the existing partitions and volume/filesystem identities.
 
 [Ubuntu's lvextend manual](https://manpages.ubuntu.com/manpages/jammy/man8/lvextend.8.html)

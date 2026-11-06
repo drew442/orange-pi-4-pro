@@ -47,6 +47,6 @@
     "reasoning_effort": "high",
     "result": "Cleared proposal for separate approval; target and arithmetic verified. Apply block enforces fail-fast baseline/identity checks and exact LV size verification before filesystem growth."
   },
-  "plan_sha256": "7d93bd3fca21e2adc4f1da940e6741a38073d74cde2962ff96328f41012b706a",
+  "plan_sha256": "8fc6276f8ffc1d2b1e3003b1c9493cf3216c3b3cc2254da771270234148ea6fe",
   "live_preconditions_passed": true
 }

@@ -23,14 +23,31 @@ Source/restored snapshots match, and image attributes match an ordinary
 are normalized by e2fsprogs during export. Capabilities and binary user xattrs
 match exactly. Full-root integration/verification remains pending.
 
+The [complete archive diagnostic](evidence/full-root-metadata-fixture-20261106.json)
+now restores and validates all 15,892 members: 12,302 regular files, three
+hardlinks, 1,737 directories, 1,842 symlinks and eight character nodes. The
+staging comparison covers namespace, types, modes, UID/GID, nanosecond mtimes,
+file lengths/hashes/bytes, hardlink topology, link targets, xattrs and device
+identities. A regular 1 GiB diagnostic image retains all eight device records,
+nonroot group ownership and the exact capability value; e2fsck passes and an
+outside-fakeroot scan finds no real host devices. Independent review confirms
+these execution/probe records and the complete image hash.
+
+This is not a production root slot or full NVMe test. The staging tree was not
+copied to codex; its complete comparison is supported by execution records and
+reviewed code. Image checks are selected metadata probes and consistency, not
+complete content readback. Production 4 GiB A/B slots and their existing staging
+guards remain unchanged and unexercised. Integrating and validating this metadata
+backend in the root/state recipes is still necessary.
+
 Preserved failures explain the method: the first fixture used an invalid empty
-xattr baseline; direct tar xattr restoration then exposed a tar/fakeroot zero-type
-interaction; the final checker also needed to distinguish Linux/debugfs ACL
-export formats. The raw evidence records these failures and corrected postchecks.
-The actual pinned userspace archive has 15,892 members, eight character nodes
-and one raw `security.capability` attribute. No inspected attribute exceeds
-fakeroot's 1,024-byte IPC limits, and no textual ACL lacks a raw counterpart.
-This header audit does not replace complete archive/image verification.
+xattr baseline; direct tar xattr restoration exposed a tar/fakeroot zero-type
+interaction; the checker needed to distinguish Linux/debugfs ACL export formats.
+The full archive's first launcher also stopped before extraction because Bash
+was invoked as sh; a new Bash-launched workspace completed successfully. No
+failed result was accepted or overwritten. The actual archive contains one raw
+capability xattr, no missing raw ACL counterpart and no attribute exceeding the
+pinned fakeroot IPC limits.
 
 Capacity is a separate issue. The filesystem has about 7.68 GB free, below the
 unchanged root/NVMe build guards, while its VG has 66.54 GB unallocated. The
