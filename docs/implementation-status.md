@@ -41,13 +41,10 @@ by subsequent clean-build work.
   `192.168.1.1` and verified HTTPS are observed on the preparation boot. The clock
   starts in 1970; HTTPS passed after manual UTC correction. Repeated installed-host
   networking and automatic time remain open. [Time-sync input](host-time.md) is
-  authenticated; the [fixed identity gate](timesync-identity.md) passes ARM checks.
-  The [checkpoint guard/private views](timesync-state.md) verify file-backed
-  ownership and timestamp preservation. An [offline 221-package recipe](timesync-userspace.md)
-  and explicit service policy pass source/input review. The [export adapter](timesync-export.md)
-  also passes source/host review; outer orchestration, actual configuration/export,
-  package-state composition, installed transitions and synchronization
-  remain pending.
+  authenticated. The [time-profile preparation](timesync-outer-launcher.md) includes
+  reviewed package/export/outer recipes, identity and file-state fixtures, an
+  actual private-propagation prelude and capacity refusal. Full 221-package
+  execution, artifact composition, installed transitions and NTP remain open.
 - [Operator inputs](evidence/operator-inputs-20261105.json): RSA3072 and Ed25519
   keys, DHCP hostname `a733-host`, any source/subnet. Require public-key-only SSH.
   [ARM SSH-policy checks](evidence/ssh-console-management-arm-20261106.json) pass;
@@ -88,23 +85,16 @@ by subsequent clean-build work.
   [HTTPS restore](guest-restore-delivery.md) and [networking](guest-networking.md)
   pass host/packaged checks. **No guest has booted.** Acceleration fallback is forbidden.
 - [Clean-build progress](build-reproduction-status.md): frozen builder, fresh
-  source U-Boot/kernel replays and both SD image reproductions pass. A new
-  [userspace configuration/export](evidence/userspace-configured-export-20261106.json)
-  configures all 220 packages and independently verifies all 15,881 archive entries.
-  The [tracked replay](userspace-configuration-replay.md) also configures all 220
-  with no APT fallback warnings. The [normalized export pair](userspace-export-reproducibility.md)
-  now matches compressed/raw/BOM bytes: 138,025,729 bytes compressed, 15,876 entries.
-  Generated NVMe IDs/caches are removed and later archive timestamps clamped to
-  the pinned snapshot. The [fresh raw-package pipeline](userspace-fresh-pipeline.md)
-  now authenticates/extracts/configures anew and matches those bytes, with complete
-  independent readback. The [explicit normalized profile](userspace-profiles.md) now integrates root/state
-  selection and passes actual complete staging: 15,876 base entries, 220 packages,
-  eight package-state components and the unchanged 39-file runtime. Latest native
-  discovery: **1,250 cases, 97 environment skips**,
-  four assembly cases and all five shell suites. The [tracked outer launcher](userspace-pipeline-launcher.md)
-  passes review and read-only plans; actual root preflight refuses insufficient
-  capacity before output creation. Its full execution, production composition and
-  independent deployment remain open; these checks establish no hardware acceptance.
+  source U-Boot/kernel replays and both SD image reproductions pass. The
+  [fresh raw-package pipeline](userspace-fresh-pipeline.md) configures 220 locked
+  packages and matches the [normalized export pair](userspace-export-reproducibility.md):
+  138,025,729 compressed bytes, 15,876 entries. [Explicit profile selection](userspace-profiles.md)
+  and complete staging pass for eight package-state components and the closed
+  39-file runtime. Tracked base/time launchers pass review, plans and capacity
+  refusals; full tracked execution and production root/state/NVMe reconstruction
+  remain open. Latest native discovery: **1,273 cases, 97 environment skips**,
+  four assembly cases and all five shell suites. These checks establish no
+  physical acceptance or independently reproduced deployment.
 
 ## Next actions and blockers
 

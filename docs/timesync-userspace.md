@@ -76,8 +76,9 @@ shell suites. ARM execution and namespace setup are mocked in these tests.
 
 This recipe has not installed a package or produced a configured 221-package
 tree. The [derived exporter](timesync-export.md) now passes independent
-source/host review. Outer orchestration, actual configuration/export, full output
-inspection and archive-profile binding still need implementation/execution.
+source/host review. The [outer launcher](timesync-outer-launcher.md) now passes
+review, the actual propagation prelude and capacity refusal. Full execution,
+output inspection and archive-profile binding remain open.
 Independent source review does not establish successful package configuration or boot.
 
 A real run requires the pinned frozen Ubuntu 22.04 AMD64 environment, private

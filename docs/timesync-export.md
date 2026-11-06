@@ -63,9 +63,10 @@ checkout from the earlier capacity-refusal probe predates this repair and is a
 historical record, not the source to execute. The current checkout's read-only
 base-pipeline plan passes; this is not a completed builder preflight or build.
 
-Next implement/review the outer configuration/export launcher, stage the current
-committed sources, satisfy all capacity guards, and execute the real package and
-export phases. The [reviewed builder expansion](build-host-capacity-plan.md)
+The [outer launcher](timesync-outer-launcher.md) now passes source review, an
+actual propagation-only probe and capacity refusal. Next satisfy all capacity
+guards, stage the current committed sources and execute the real package/export
+phases. The [reviewed builder expansion](build-host-capacity-plan.md)
 remains unapproved. Then authenticate/register the actual output profile,
 rebuild and inspect matching root/state/NVMe images, reproduce deployment and
 complete physical time, KVM, boot, SD-write and recovery acceptance.
