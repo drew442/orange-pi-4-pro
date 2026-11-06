@@ -1,0 +1,268 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Actual fresh AMD64 seed and exact offline842-package installation; mutable builder root, not A733 validation",
+  "builder": "drew@build.drewnet.online",
+  "source_commit": "150055f582e428cf522cb9c2767d8fe359044fa6",
+  "recipe_sha256": "bb1d6eae3c6ef1e6e62229dca6527cff1f80a33cc8ec56c23f3e62ebc4982102",
+  "test_sha256": "2a6fec631859eb52558595616fc1f93817492628ee9878a49cb59aac650b5111",
+  "seed_output": "/var/lib/a733-clean-builder/seed-probe-20261106-05",
+  "package_phase": "/var/lib/a733-clean-builder/seed-probe-20261106-05/package-install",
+  "original_acquisition_cache": "/home/drew/orange-pi-4-pro-build/builder-package-acquisition-20261106/out/builder-packages-20261106-02",
+  "seed_probe_success": true,
+  "seed_post_checks": {
+    "success": true,
+    "errors": []
+  },
+  "install_success": true,
+  "install_exit": 0,
+  "fully_installed_exact_packages": 842,
+  "package_lock_sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425",
+  "installed_inventory": {
+    "bytes": 50228,
+    "sha256": "491549c326d626e92de1c001bee3346215a707e9a63635584ede5085bde60faf"
+  },
+  "package_checks": {
+    "dpkg_audit": "empty output required by successful script",
+    "apt_get_check": "passed offline",
+    "apt_get_clean": "private root only"
+  },
+  "post_checks": {
+    "success": true,
+    "errors": []
+  },
+  "raw_records_directory": "/home/drew/orange-pi-4-pro/out/builder-offline-install-20261106/success-05",
+  "raw_records": [
+    {
+      "group": "seed",
+      "name": "receipt.json",
+      "bytes": 6353,
+      "sha256": "d8f6ea823c816477f67d26a465244f828a7637c26007ddb1164a341f1f596e3f"
+    },
+    {
+      "group": "seed",
+      "name": "provenance.json",
+      "bytes": 5170,
+      "sha256": "7db3444ba434be75f629ef9165af464a45b412b2bdd900b43d29f30110325bdc"
+    },
+    {
+      "group": "seed",
+      "name": "probe.log",
+      "bytes": 3046,
+      "sha256": "6cc01443950234d4556f490e9e2424c1056b489442acb71dabcf1b248b1e2fc1"
+    },
+    {
+      "group": "seed",
+      "name": "probe.sh",
+      "bytes": 1280,
+      "sha256": "ce565b23ac0b927e54fbfc057bee69ae95d12ba930a5c5421699538e9da14fea"
+    },
+    {
+      "group": "seed",
+      "name": "source-lock.json",
+      "bytes": 2892,
+      "sha256": "0159c812f4e9f9b7f761f230ff04901f8a2ac9eb06f481ede1e87920d72a7452"
+    },
+    {
+      "group": "seed",
+      "name": "host-inventory-before.tsv",
+      "bytes": 32546,
+      "sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425"
+    },
+    {
+      "group": "seed",
+      "name": "nspawn-option-probe.txt",
+      "bytes": 7330,
+      "sha256": "dda1f76477d41bdb104fed475699fbdddab3dbd01cee26c2de740d9cc8cc85af"
+    },
+    {
+      "group": "install",
+      "name": "receipt.json",
+      "bytes": 1152120,
+      "sha256": "13d3d06e3e0690ed2de233daf47580c2091003327dff0d94a27544e7c7a1b219"
+    },
+    {
+      "group": "install",
+      "name": "provenance.json",
+      "bytes": 1143431,
+      "sha256": "ec1a686b119f46eb08669e1a34ee36bb5bd7f95509513ac86aac2e3a24ba1fa9"
+    },
+    {
+      "group": "install",
+      "name": "install.log",
+      "bytes": 455232,
+      "sha256": "02615684da3b0e7c25aca7e0d2d0566829bb12dfa75ee3049d8dfbfd3441b7c9"
+    },
+    {
+      "group": "install",
+      "name": "resources.jsonl",
+      "bytes": 6272,
+      "sha256": "de0bbf8a52b7174655e0e7ced8b51dd078a5bdae5d547ffa6b70ffba95dee50a"
+    },
+    {
+      "group": "install",
+      "name": "packages.list",
+      "bytes": 43106,
+      "sha256": "147b9f372331561517aa02bd030163e9b801596f47254709a6dd8b3b854930fd"
+    },
+    {
+      "group": "install",
+      "name": "install.sh",
+      "bytes": 3550,
+      "sha256": "f8847f868e1a6496ee87932af369bca55433dee3373579bd4f295194e758a2ce"
+    },
+    {
+      "group": "install",
+      "name": "installed.tsv",
+      "bytes": 50228,
+      "sha256": "491549c326d626e92de1c001bee3346215a707e9a63635584ede5085bde60faf"
+    },
+    {
+      "group": "install",
+      "name": "host-inventory-before.tsv",
+      "bytes": 32546,
+      "sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425"
+    },
+    {
+      "group": "install",
+      "name": "host-inventory-after.tsv",
+      "bytes": 32546,
+      "sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425"
+    },
+    {
+      "group": "install",
+      "name": "nspawn-help.txt",
+      "bytes": 7330,
+      "sha256": "dda1f76477d41bdb104fed475699fbdddab3dbd01cee26c2de740d9cc8cc85af"
+    },
+    {
+      "group": "install",
+      "name": "nspawn-option-probe.txt",
+      "bytes": 7330,
+      "sha256": "dda1f76477d41bdb104fed475699fbdddab3dbd01cee26c2de740d9cc8cc85af"
+    },
+    {
+      "group": "install",
+      "name": "sources/sources.list",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "project_stage": {
+    "root": "/var/lib/a733-builder-corrected-install-project-20261106",
+    "head": "150055f582e428cf522cb9c2767d8fe359044fa6",
+    "bundle_sha256": "1b0c44da936619536de1cf8ba77e672eaf47eeabffe6a7b3e3106e83a329c704"
+  },
+  "isolation": {
+    "uid_base": 1048576,
+    "uid_count": 65536,
+    "prohibited_capabilities": "SYS_ADMIN,SYS_MODULE,SYS_RAWIO,SYS_BOOT,SYS_TIME,MKNOD,NET_ADMIN",
+    "no_new_privileges": true,
+    "network": "private loopback only",
+    "devices": "no block or KVM; block mknod denied",
+    "firmware": "private empty read-only bind",
+    "boundary_checks": "shell assertions before debconf/maintainers; probe parsed afterward",
+    "package_inputs": "all842 private copies full-hashed, read-only bind",
+    "apt_sources": "empty regular list and empty parts directory on fixed read-only bind",
+    "service_start": "private policy-rc.d exit101"
+  },
+  "resources": {
+    "sample_count": 64,
+    "minimum_free_bytes": 18526777344,
+    "minimum_available_memory_bytes": 7244427264,
+    "sampled_cancel_thresholds": {
+      "disk_bytes": 3221225472,
+      "memory_bytes": 536870912
+    }
+  },
+  "review": {
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "scope": "root import/source/cache/namespace/maintainer preconditions, complete inventory, failure/cancellation and postchecks",
+    "targeted_fixtures_native_and_jammy": 21,
+    "full_native_python_cases": 909,
+    "native_skips": 95,
+    "shell_regressions": 5,
+    "diagnostic_assembly_cases": 4,
+    "independent_shell_boundary_cases": "valid plus nine unsafe cases"
+  },
+  "first_failed_install": {
+    "source_commit": "2a4a1fde3493de08c71fbdeffc9b423ec0ded89d",
+    "phase": "/var/lib/a733-clean-builder/seed-probe-20261106-04/package-install",
+    "error": "APT2.4.13 --no-download prevents local acquisition completing; relative pathname reaches dpkgPM.Go",
+    "raw_native_records": "/home/drew/orange-pi-4-pro/out/builder-offline-install-20261106/failed-01",
+    "post_checks": {
+      "success": true,
+      "errors": []
+    },
+    "seed_dpkg_status_unchanged": true,
+    "status_sha256": "207f78c769cad712eaad8447bf7dddc3dc16fa2b012e4f1fcc1d52ccf40e5d88",
+    "scope": "Exact source, unchanged dpkg status/log and empty preconfiguration path support no downloaded package scripts in this run; this error is not generically pre-hook.",
+    "cache_retention_evidence": "docs/evidence/builder-install-cache-retention-20261106.json"
+  },
+  "apt_source_diagnosis": {
+    "archive_url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/apt/2.4.13/apt_2.4.13.tar.xz",
+    "bytes": 2323800,
+    "sha256": "8bdb54d6bf07185c8687d4ab8eb66690cdbbea31d1b0afa8778598f1ae9dc8a7",
+    "matching_upstream_commit": "c37792be25062eaa1c1631d10ddecca7c56ac450",
+    "source": "https://github.com/Debian/apt/blob/c37792be25062eaa1c1631d10ddecca7c56ac450/apt-private/private-install.cc",
+    "correction": "Permit only local-file acquisition from explicit verified paths; no external repository sources or network added."
+  },
+  "immutable_export": false,
+  "complete_clean_builder": false,
+  "hardware_acceptance": false,
+  "remaining": [
+    "Freeze, hash and validate a final builder image with ownership/metadata preserved.",
+    "Independently acquire locked upstream sources/toolchains.",
+    "Reproduce complete artifacts in fresh builder environments.",
+    "Complete all actual A733 release acceptance and deployment reproduction."
+  ],
+  "limits": [
+    "Normal cleanup passed; real cancellation injection was not run.",
+    "Host APT/configuration content, owner/mode and inventory checks passed; timestamps/atimes are not a zero-write claim.",
+    "Compilation and actual KVM guest execution were not performed by this installation."
+  ],
+  "export_preparation": {
+    "root_entries": 91575,
+    "owner_groups": 22,
+    "outside_mapping": [
+      {
+        "path": "a733-packages.list",
+        "uid": 0,
+        "gid": 0,
+        "mode": "0o100644"
+      },
+      {
+        "path": "a733-install.sh",
+        "uid": 0,
+        "gid": 0,
+        "mode": "0o100644"
+      },
+      {
+        "path": "a733-probe.sh",
+        "uid": 0,
+        "gid": 0,
+        "mode": "0o100644"
+      },
+      {
+        "path": "a733-debs",
+        "uid": 0,
+        "gid": 0,
+        "mode": "0o40755"
+      },
+      {
+        "path": "a733-sources",
+        "uid": 0,
+        "gid": 0,
+        "mode": "0o40755"
+      }
+    ],
+    "special_nodes": [],
+    "raw_metadata": {
+      "path": "/home/drew/orange-pi-4-pro/out/builder-offline-install-20261106/success-05/root-ownership.json",
+      "bytes": 1412,
+      "sha256": "bdbbe9b1c5dd92865c072aae5807b07791605d381fd0fbe3b804b563e0e45982"
+    },
+    "scope": "Ownership metadata only; private key contents not read. Canonical export/restore remains unperformed."
+  }
+}

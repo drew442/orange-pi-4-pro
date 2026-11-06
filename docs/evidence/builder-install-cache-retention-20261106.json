@@ -1,0 +1,78 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Verified off-host retention of duplicate package inputs from failed builder installation; failed rootfs/logs retained",
+  "source": "/var/lib/a733-clean-builder/seed-probe-20261106-04/package-install/debs",
+  "original_files": 842,
+  "original_file_bytes": 983768778,
+  "original_allocated_bytes": 985522176,
+  "archive": "/var/lib/a733-builder-retained-20261106/build-output-trees/builder-install-cache-01.tar.gz",
+  "archive_bytes": 982972646,
+  "archive_sha256": "c6e7994a519af6401dce5dda4a8a601652d4cee2194e38eef1d6f879ae9a35c6",
+  "exact_archive_entries": 843,
+  "tar_compare_before_retirement_and_after_quarantine": "passed",
+  "native_held_full_hash_fsync_before_after": "passed",
+  "source_removed_after_verified_archival": true,
+  "redundant_builder_archive_removed": true,
+  "measured_free_after_caller_closed_bytes": 24505769984,
+  "raw_builder_records": "/var/lib/a733-install-cache-retention-20261106",
+  "raw_native_records": "/var/lib/a733-builder-retained-20261106/build-output-trees/builder-install-cache-01-records",
+  "raw_record_manifest": [
+    {
+      "name": "builder-install-cache-01.archive-compare.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "builder-install-cache-01.archive.json",
+      "bytes": 252776,
+      "sha256": "10a777a548adedc68ec602e604a8bf7f0ff03926a1aff9cba05fa5d04bbfa60d"
+    },
+    {
+      "name": "builder-install-cache-01.create.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "builder-install-cache-01.quarantine-compare.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "builder-install-cache-01.retire-compare.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "builder-install-cache-01.retire-intent.json",
+      "bytes": 1041,
+      "sha256": "5f5cef7dbbe4c9e0ce1365de5ddfe3bf3e033fb472fc0c0fac059b46bf3d5c47"
+    },
+    {
+      "name": "builder-install-cache-01.retire.json",
+      "bytes": 1671,
+      "sha256": "d2cd9306efd52c30e93429d322afd0b76afcd2bbafa99a4910b8f10ab236d5bc"
+    },
+    {
+      "name": "retain-build-output-trees-20261106.py",
+      "bytes": 24711,
+      "sha256": "eb5c6cb11e0a50cec301f442ce226af2cccda106cc288f6b674e177636ae26e1"
+    }
+  ],
+  "review": {
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "scope": "Only fixed ROOT/SOURCES/directory-name guard and caller REMOTE/TAGS adapted; reviewed retention algorithms unchanged",
+    "helper_sha256": "eb5c6cb11e0a50cec301f442ce226af2cccda106cc288f6b674e177636ae26e1",
+    "caller_sha256": "45051dde3df847083e71a1364ceafe38f75742493bba6bcef48ac9a4dbae5dd9"
+  },
+  "preserved": [
+    "Failed seed-probe-20261106-04/rootfs and package-install logs/provenance/receipts",
+    "Original842-package acquisition cache and independent codex pool",
+    "Current board deployment artifacts and all physical storage"
+  ],
+  "limits": [
+    "Restore the retained archive to the original parent before using historical commands naming its debs directory.",
+    "This is cache retention, not physical installation or recovery acceptance."
+  ]
+}

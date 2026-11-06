@@ -172,3 +172,22 @@ image operation is using the directory. Leave the verified archive intact.
 These are builder source-cache recovery checks. They do not replace SPI backup,
 physical host rollback, off-device guest restoration or reproduced deployment.
 No board storage was erased, and no SPI programming occurred.
+
+## Failed builder installation cache
+
+The first offline builder installation stopped at APT's local-acquisition error.
+Its rootfs, logs, provenance and receipts remain on the builder. Only the
+verified duplicate `package-install/debs/` cache was archived and retired to
+recover space for a fresh seed. The
+[retention record](evidence/builder-install-cache-retention-20261106.json) pins
+all 842 original inputs, exact archive size/hash and before/after checks.
+
+The original builder path was
+`/var/lib/a733-clean-builder/seed-probe-20261106-04/package-install/debs`.
+Its 982,972,646-byte archive is retained on codex at
+`/var/lib/a733-builder-retained-20261106/build-output-trees/builder-install-cache-01.tar.gz`,
+SHA-256 `c6e7994a519af6401dce5dda4a8a601652d4cee2194e38eef1d6f879ae9a35c6`.
+Restore it into the exact original parent before using historical commands that
+name that cache. Apply the same absent-destination, size/hash and full tar
+comparison checks described above. The original acquisition cache and native
+842-package pool remain available separately. No board storage was touched.

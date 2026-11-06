@@ -162,39 +162,28 @@ backup/recovery and SPI-specific programming authorization remain outstanding.
    necessary before programming authorization.
    [Pinned SPI investigation](spi-boot-investigation.md) records its distinct
    layout, fixed erase-count concern and the diagnostic's SD-only boot target.
-4. Full clean-build reproducibility remains open: vendor U-Boot generates a
-   random 128-byte challenge, retained with exact provenance. A separate
-   [exact-artifact replay investigation](uboot-reproducibility.md) preserves
-   fresh-build randomness. [Two fresh private replays](evidence/uboot-replay-20261106.json)
-   now match the original unpacked U-Boot and EL2 package, under an explicit
-   full-inventory replay profile. A [mapped kernel replay](evidence/kernel-replay-mapped-20261106.json)
-   now reproduces the complete original Image, DTB and configuration. Independent
-   readback anchors all 332 regular module files to the original initramfs.
-   Explicit original debug paths and umask 0002 restore the earlier differing
-   build IDs without patching bytes. Source caches and the prepared builder were
-   reused; independent clean-builder construction remains open.
-   [Verified archival](evidence/failed-kernel-source-retention-20261106.json)
-   recovered 5.27 GB before launch. Its restored Git metadata now passes a full
-   object check on codex without the original builder path, correcting the earlier
-   borrowed-object dependency claim; full working-tree recovery is not claimed.
-   [Builder archive pins](../configs/builder-package-archives-20261106.lock.json)
-   cover all 842 locked versions. [All indexed pins are authenticated](evidence/builder-index-signatures-20261106.json),
-   and [all 842 archives are acquired](evidence/builder-packages-acquired-20261106.json)
-   with complete on/off-host readback and unchanged installed inventory. The
-   [signed AMD64 build seed](../configs/builder-base-20261106.lock.json) is retained.
-   [Verified output-tree retention](evidence/build-output-retention-20261106.json)
-   now leaves 25,061,138,432 bytes free, meeting the 25 GB construction planning
-   target. Six complete archives and raw reports are retained on codex; historical
-   generated paths require restoration using the [retention map](build-cache-retention.md#replay-and-prototype-output-retention).
-   The [seed isolation probe](clean-builder.md) now passes on actual Jammy:
-   mapped UID/GID ownership, prohibited capabilities absent, private loopback-only
-   networking, no block/KVM devices, empty read-only firmware and clean host
-   inventory/process/mount post-checks. Install the 842 packages offline and freeze
-   the final builder next; full builder/artifact reproducibility remains open.
+4. Full clean-build reproducibility remains open. The prepared-host
+   [U-Boot replays](evidence/uboot-replay-20261106.json) and
+   [mapped kernel replay](evidence/kernel-replay-mapped-20261106.json) reproduce
+   the retained artifacts, including all 332 regular module files anchored to
+   the original initramfs. U-Boot's original random challenge is retained only
+   under explicit replay; fresh-build randomness remains the default. Kernel
+   replay uses original debug paths and umask 0002. Those runs reused source
+   caches and the prepared host.
+   All [842 exact package archives](evidence/builder-packages-acquired-20261106.json)
+   and the [signed AMD64 seed](../configs/builder-base-20261106.lock.json) are
+   authenticated and retained. The [actual seed isolation](clean-builder.md)
+   and [fresh offline installation](evidence/builder-offline-install-20261106.json)
+   now pass: exact fully configured inventory, package audits, namespace/device
+   restrictions and unchanged host/cache checks. Failed inputs remain archived;
+   current deployment artifacts are preserved. Next freeze and restore the
+   builder with metadata intact, independently acquire sources/toolchains, and
+   rebuild in clean environments. Recheck disk/RAM and retain two compilation
+   jobs and existing kernel/NVMe guards.
    The [26-input license inventory](evidence/vendor-boot-license-inventory-20261106.json)
-   records available/missing attribution. All [479 userspace source archives](evidence/userspace-sources-acquired-20261106.json)
+   records missing attribution/grants. All [479 userspace source archives](evidence/userspace-sources-acquired-20261106.json)
    for the 220 binary packages are acquired and independently rehashed.
-   Firmware/source/license audit and independent deployment remain gates.
+   Firmware/source/license audit and independently reproduced deployment remain gates.
 5. Automatic time is absent from the current 220-package candidate. The
    [time-sync input](host-time.md) is authenticated and its existing dependencies
    verified, but requires a new package/payload profile, NVMe-state compatibility

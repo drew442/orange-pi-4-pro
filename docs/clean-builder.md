@@ -3,8 +3,9 @@
 The signed Ubuntu Base seed now passes an actual isolation probe on
 `drew@build.drewnet.online`. This is the AMD64 build environment. The current
 Orange Pi installation continues to use the [personalized deployment](deploy-personalized-20261106.md).
-Full package installation, the frozen builder digest and clean artifact rebuilds
-remain open; this probe supplies no A733 guest or deployment acceptance.
+The [fresh offline installation of 842 packages](evidence/builder-offline-install-20261106.json)
+now passes. The frozen builder digest and clean artifact rebuilds remain open;
+these builder checks supply no A733 guest or deployment acceptance.
 
 ## Verified seed and isolation
 
@@ -63,13 +64,46 @@ are under `out/clean-builder-seed-20261106/seed-probe-04/` on codex. Three faile
 pre-payload attempts remain separate; their receipts record clean host checks.
 No downloaded package maintainer script ran in this phase.
 
+## Verified offline package installation
+
+A fresh `seed-probe-20261106-05` passed the same isolation checks, then installed
+all 842 pinned archives. Its complete installed tuples match the lock and every
+package is fully configured. Private-root `dpkg --audit`, offline `apt-get check`
+and checks of host configuration, caches, processes and mounts pass. Sixty-four samples
+record at least 18,526,777,344 bytes free and 7,244,427,264 bytes available RAM.
+
+The [runtime evidence](evidence/builder-offline-install-20261106.json) binds the
+run to commit `150055f582e428cf522cb9c2767d8fe359044fa6`. This exact command
+completed on the builder:
+
+```sh
+sudo -n env -i PATH=/usr/bin:/bin HOME=/nonexistent LC_ALL=C TZ=UTC \
+  /usr/bin/python3 -I -B \
+  /var/lib/a733-builder-corrected-install-project-20261106/build/install-builder-packages.py \
+  --seed-output /var/lib/a733-clean-builder/seed-probe-20261106-05 \
+  --package-cache /home/drew/orange-pi-4-pro-build/builder-package-acquisition-20261106/out/builder-packages-20261106-02
+```
+
+The existing phase is not resumable or overwriteable. The installer verifies
+and privately copies every input, checks the boundary inside the child before
+maintainers, supplies a private `policy-rc.d` returning 101, and binds an empty
+regular APT source list and empty source directory read-only. The successful
+run's 19 records have verified copies under
+`out/builder-offline-install-20261106/success-05/` on codex.
+
+APT 2.4.13's `--no-download` shuts down local acquisition before absolute archive
+paths are assigned. INSTALL therefore permits local-file acquisition from the
+explicit verified paths; external repositories remain absent and networking
+private. The [pinned APT implementation](https://github.com/Debian/apt/blob/c37792be25062eaa1c1631d10ddecca7c56ac450/apt-private/private-install.cc#L151)
+explains the correction. The first failed run remains separate, including its
+[retained input cache](build-cache-retention.md#failed-builder-installation-cache).
+The corrected installation used a fresh seed.
+
 ## Remaining construction
 
-Install the exact [842 package archives](builder-acquisition.md) offline inside
-this validated boundary. Suppress service startup, retain capability/device and
-network restrictions, and require the complete installed inventory and package
-checks to pass. Preserve any failed maintainer-script run for diagnosis.
-Then freeze and hash the final builder filesystem, independently acquire the
-locked sources/toolchains, and reproduce artifacts in fresh environments.
+Freeze and hash the installed builder filesystem with its namespace ownership
+and metadata preserved, validate restoration, independently acquire the locked
+sources/toolchains, and reproduce artifacts in fresh environments. Keep service,
+capability/device and network restrictions throughout those operations.
 Hardware KVM execution and all [release gates](hardware-validation.md) remain
 separate requirements.

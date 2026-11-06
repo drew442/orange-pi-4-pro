@@ -70,7 +70,10 @@ the target inventory. The archive remains at `out/builder-base-20261106/` on cod
 It is an AMD64 builder seed. Its [actual seed/isolation run](clean-builder.md)
 now passes on the prepared host, including mapped ownership, capability and
 device restrictions, private networking and clean host post-checks. No downloaded
-package maintainer script ran in that phase; the complete builder remains open.
+package maintainer script ran in that seed-only phase. The subsequent fresh
+[offline package installation](evidence/builder-offline-install-20261106.json)
+now installs all 842 exact versions with successful package and host postchecks;
+the frozen builder and fresh artifact rebuilds remain open.
 
 [Capacity planning](evidence/clean-builder-capacity-20261106.json) records
 3,752,392 KiB of reported installed package files. Subsequent
@@ -79,9 +82,8 @@ provides 25,061,138,432 bytes free before seed staging, meeting the 25 GB planni
 allowance. Recheck capacity during root/source/output staging. The existing
 kernel and NVMe assembly guards remain unchanged.
 
-Next, install the exact package versions in the proven isolated Jammy seed,
-with controlled maintainer scripts/services and no physical device access. Pin the
-final builder filesystem digest, independently acquire sources/toolchains, and
+Next, pin and validate the final builder filesystem digest and metadata,
+independently acquire sources/toolchains, and
 run the reviewed build recipes in fresh environments. Record commands and
 end-to-end comparisons before claiming clean-builder reproducibility. No such
 complete builder or fresh artifact rebuild is claimed here.
