@@ -11,6 +11,7 @@ RestartSec=10s
 RuntimeDirectory=sshd
 RuntimeDirectoryMode=0755
 UMask=0077
+StandardOutput=journal+console
 
 [Install]
 WantedBy=multi-user.target

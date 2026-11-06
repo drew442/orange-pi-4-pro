@@ -152,6 +152,10 @@ manifest_path=pathlib.Path('/fixture-manifest.json');manifest_path.write_text(js
 refusal=subprocess.run(['/usr/bin/python3','-I','-B','/usr/lib/a733-installer/install-nvme.py','prepare','--image','/missing/nvme.img','--manifest',str(manifest_path),'--manifest-sha256',hashlib.sha256(manifest_path.read_bytes()).hexdigest(),'--target','/dev/no-target','--expected-model','NO-TARGET','--expected-serial','NO-TARGET','--expected-bytes','250000000000'],capture_output=True,text=True,timeout=20)
 assert refusal.returncode==1 and 'fixture' in json.loads(refusal.stdout)['error']
 assert json.loads(refusal.stdout)['target_modified'] is False
+discard_refusal=subprocess.run(refusal.args+['--existing-data-policy','discard-authorized'],capture_output=True,text=True,timeout=20)
+assert discard_refusal.returncode==1 and 'fixture' in json.loads(discard_refusal.stdout)['error']
+assert json.loads(discard_refusal.stdout)['target_modified'] is False
+assert json.loads(discard_refusal.stdout)['existing_data_policy']=='discard-authorized'
 copy=pathlib.Path('/fixture-copy.img')
 with copy.open('xb') as target:
     for _ in range(32):target.write(b'X'*1024**2)

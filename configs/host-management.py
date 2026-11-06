@@ -365,6 +365,17 @@ def ensure_host_key(directory):
     return private
 
 
+def log_host_identity(address, private):
+    """Expose only the verified host identity and selected address before SSH starts."""
+    address = usable_address(address)
+    require(address is not None, 'invalid management IPv4')
+    private = Path(private)
+    public, fingerprint = CONFIG.validate_public_key(
+        read_secure(private.with_name(private.name + '.pub'), 16384))
+    require(public.startswith(b'ssh-ed25519 '), 'host identity must be Ed25519')
+    print(f'A733 SSH host key for {address}: ED25519 {fingerprint}', flush=True)
+
+
 def usable_address(value):
     try:
         ip = ipaddress.IPv4Address(value)
@@ -450,8 +461,9 @@ def supervise(config, stopped):
             if address is None:
                 require(time.monotonic() < deadline, 'management IPv4 unavailable after 60 seconds')
             elif child is None:
-                ensure_host_key(STATE / 'identity/ssh')
+                private = ensure_host_key(STATE / 'identity/ssh')
                 atomic_write(RUNTIME / 'sshd_config', ssh_config(address, config))
+                log_host_identity(address, private)
                 child = subprocess.Popen(['/usr/sbin/sshd', '-D', '-e', '-f', str(RUNTIME / 'sshd_config')])
                 active = address
             time.sleep(5)

@@ -13,6 +13,31 @@ Raw records and the one-off scripts remain outside Git on the builder at
 `/var/lib/a733-cache-retention-20261104/`. Readable copies of the records are at
 `/home/drew/orange-pi-4-pro-build/cache-retention-evidence-20261104/`.
 
+## Current off-builder retention
+
+The [2026-11-06 relocation](evidence/builder-relocation-20261106.json) moves six
+optional archives and two old nondeployable raw NVMe fixtures to
+`codex.drewnet.online:/home/drew/orange-pi-4-pro/out/builder-retained-20261106/`.
+Every logical byte and hash was verified before removing its builder copy.
+Newly observed builder free space is 26,116,837,376 bytes, above the 22 GiB
+assembly guard; later builds consume this headroom. Original manifests remain
+on the builder, but the eight original file paths in older records are now
+absent. Follow the exact old/new path mapping in the new evidence record.
+
+Restore one retained file to its original builder path before using a historical
+command that names it. Authenticate its size/hash against the record, refuse an
+existing destination, preserve sparse holes for the two raw images, and verify
+the restored bytes before use. The two raw fixtures retain their original
+250,000,000,000-byte sizes; they are not the actual-geometry installation image.
+Restoring raw fixtures requires sparse transfer and sufficient free allocation.
+
+The existing recovery commands below describe the historical builder locations.
+For example, the fixed-seed archive is now retained under `seed-source/` and the
+compiler-object archive under `kernel-object-cache/` within the codex directory.
+Transfer and authenticate them at their original paths before those commands.
+The reviewed relocation script and durable verification/acknowledgment records
+are retained beside the copies. No physical NVMe or SPI operation occurred.
+
 ## Retained source and images
 
 Five guest kernel `src/` working trees, including two failed-build trees, were

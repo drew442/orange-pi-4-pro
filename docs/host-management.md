@@ -43,9 +43,11 @@ Host private keys are generated only in selected NVMe state, never embedded in
 root images. Publication uses atomic `renameat2(RENAME_NOREPLACE)`, with no
 replacement fallback. Existing valid keys are reused; a missing public key can
 be regenerated from the private key. Files and directories are synchronized.
-The installer still needs to expose a trusted public fingerprint for first
-connection verification. Never treat the test fingerprint in evidence as a
-board identity.
+The SSH supervisor prints `A733 SSH host key for ADDRESS: ED25519 SHA256:...`
+to journal and the configured serial console before launching the listener.
+Compare the first SSH prompt against that physical-console fingerprint; actual
+serial visibility and SSH login remain hardware checks. Never treat a generated
+test fingerprint in evidence as the board identity.
 
 Persistent journals are capped at 128 MiB, volatile journals at 16 MiB, with
 256 MiB free-space reserve and seven-day retention. `/var`, operator home and

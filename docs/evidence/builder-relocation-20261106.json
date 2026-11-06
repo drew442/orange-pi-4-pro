@@ -1,0 +1,87 @@
+{
+  "schema": 1,
+  "classification": "verified relocation of optional builder archives and historical nondeployable fixtures; no hardware writes",
+  "date": "2026-11-06",
+  "source_host": "build.drewnet.online",
+  "destination_host": "codex.drewnet.online",
+  "destination_root": "/home/drew/orange-pi-4-pro/out/builder-retained-20261106",
+  "free_bytes_before_sample": 20749090816,
+  "free_bytes_after_sample": 26116837376,
+  "sample_note": "Live df observations around relocation; unrelated filesystem activity can affect delta.",
+  "files": [
+    {
+      "tag": "kernel-object-cache",
+      "source": "/var/lib/a733-cache-retention-20261104/kernel-object-cache.tar.gz",
+      "retained_copy": "/home/drew/orange-pi-4-pro/out/builder-retained-20261106/kernel-object-cache/kernel-object-cache.tar.gz",
+      "bytes": 893430589,
+      "sha256": "11a3282b5049e1587754109a0075a1af899245f0370c606af50105b538a4e5e3",
+      "source_unlinked_after_full_hash": true
+    },
+    {
+      "tag": "seed-source",
+      "source": "/var/lib/a733-el2-checks-20261104/out/guest-fixture-seed-20261104-01/src-working-tree.tar.gz",
+      "retained_copy": "/home/drew/orange-pi-4-pro/out/builder-retained-20261106/seed-source/src-working-tree.tar.gz",
+      "bytes": 418658656,
+      "sha256": "534c0ff2b1e210a92284df6cc30868983bd46a00effb6de06907561f7c0800ff",
+      "source_unlinked_after_full_hash": true
+    },
+    {
+      "tag": "network-source",
+      "source": "/var/lib/a733-guest-network-work-20261104/out/guest-fixture-network-20261104-01/src-working-tree.tar.gz",
+      "retained_copy": "/home/drew/orange-pi-4-pro/out/builder-retained-20261106/network-source/src-working-tree.tar.gz",
+      "bytes": 418657795,
+      "sha256": "35a1593ebf53fdc20a1d4ba9e51fc4fbf533be21730f133dcba122265f7d9b50",
+      "source_unlinked_after_full_hash": true
+    },
+    {
+      "tag": "guest-source-01",
+      "source": "/home/drew/orange-pi-4-pro-build/recipe/out/guest-fixture-20261104-01/src-working-tree.tar.gz",
+      "retained_copy": "/home/drew/orange-pi-4-pro/out/builder-retained-20261106/guest-source-01/src-working-tree.tar.gz",
+      "bytes": 407488359,
+      "sha256": "4933453d9ac418dd240d8ffd6aafaee3a844b095005d8a4780a20452e4755ded",
+      "source_unlinked_after_full_hash": true
+    },
+    {
+      "tag": "guest-source-02",
+      "source": "/home/drew/orange-pi-4-pro-build/recipe/out/guest-fixture-20261104-02/src-working-tree.tar.gz",
+      "retained_copy": "/home/drew/orange-pi-4-pro/out/builder-retained-20261106/guest-source-02/src-working-tree.tar.gz",
+      "bytes": 409625653,
+      "sha256": "3774d11164e1b213341dbd602daf50d5c975339b28d762dd8e305fefe3309c03",
+      "source_unlinked_after_full_hash": true
+    },
+    {
+      "tag": "guest-source-03",
+      "source": "/home/drew/orange-pi-4-pro-build/recipe/out/guest-fixture-20261104-03/src-working-tree.tar.gz",
+      "retained_copy": "/home/drew/orange-pi-4-pro/out/builder-retained-20261106/guest-source-03/src-working-tree.tar.gz",
+      "bytes": 418713234,
+      "sha256": "6463540518334a402ee50f9c9b5d7460ad97ac3a72ff77268cf9c918fc2a6c83",
+      "source_unlinked_after_full_hash": true
+    },
+    {
+      "tag": "old-nvme-fixture-01",
+      "source": "/home/drew/orange-pi-4-pro-build/nvme-work-20261104/out/nvme-image-250GB-20261104-01/nvme.img",
+      "retained_copy": "/home/drew/orange-pi-4-pro/out/builder-retained-20261106/old-nvme-fixture-01/nvme.img",
+      "bytes": 250000000000,
+      "sha256": "1240abe267b9099467c8cdb6d2c4963070620cebd07bf0c43e2f6771adb2bb30",
+      "source_unlinked_after_full_hash": true
+    },
+    {
+      "tag": "old-nvme-fixture-02",
+      "source": "/home/drew/orange-pi-4-pro-build/nvme-clean-20261104/out/nvme-image-250GB-repeat-20261104/nvme.img",
+      "retained_copy": "/home/drew/orange-pi-4-pro/out/builder-retained-20261106/old-nvme-fixture-02/nvme.img",
+      "bytes": 250000000000,
+      "sha256": "6aa51794bf82b3814568a526c9242b5abbe041af603255d2b3b9438847fc4d98",
+      "source_unlinked_after_full_hash": true
+    }
+  ],
+  "procedure": {
+    "copy": "rsync for six archives; GNU sparse pax tar for two historical raw fixtures, preserving complete logical bytes",
+    "verification": "Every retained copy full length and SHA256 checked against prior pins. Archives live-hashed remotely; raw fixtures full-hashed again through held remote descriptors before source unlink.",
+    "durability": "Retained files read-only; file and directory fsync including destination parent. Held retained descriptor/path metadata revalidated after source hash; explicit unlink handshake. Source parent fsync and per-file durable acknowledgments.",
+    "exclusions": "No active operator/deployment root/state/bootstrap, toolchain, pinned vendor Image/config/modules or current payload input relocated. Old raw fixtures remain nondeployable.",
+    "recovery": "Do not rerun partial transactions blindly. All eight completed with durable per-file acknowledgments; restore exact retained bytes to prior path on demand.",
+    "review": "gpt-6.1-sol high; durability/handshake/nonoptimized-interpreter corrections independently cleared before deletion",
+    "script_sha256": "9efcb8a1307e754b72f4fb8280faf0bb877adac302db7e998ef6394473cd10a3",
+    "retained_script": "out/builder-retained-20261106/retention-script.py"
+  }
+}

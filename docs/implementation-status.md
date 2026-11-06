@@ -59,13 +59,12 @@ unbooted. No extra diagnostic-only reflash is required for the successful checks
   SCP and copied kernel/DTB/initramfs/boot0 hashes pass; physical EL2/KVM
   initialization are observed, with actual guest execution still pending.
 - [Jammy builder](build-host-assessment.md): actual builds with two compilation
-  jobs, GCC 11 kernel/Linaro 7.4.1 U-Boot; 4 GiB swap. Latest idle sample after
-  [verified cache retention](build-cache-retention.md) and root refresh: about
-  21.19 GB free disk before the latest preparation regression run; the most
-  recent memory sample showed about 7.0 GiB available.
-  This is below the 22 GiB full NVMe staging guard: reclaim only verified
-  disposable staging or expand the filesystem before a full NVMe image build.
-  Source/compiler-cache archives and prior published image bytes remain retained.
+  jobs, GCC 11 kernel/Linaro 7.4.1 U-Boot; 4 GiB swap.
+  [Verified relocation](evidence/builder-relocation-20261106.json) recovered
+  26.12 GB free before the fresh deployment build, passing the 22 GiB guard.
+  Optional archives/old fixtures are retained on codex with exact byte hashes;
+  current operator inputs remain on the builder. The latest sample showed
+  about 7.0 GiB available RAM; recheck disk and memory during staging.
 - [Network helper correction](ethernet-diagnostics.md): two fresh builds produce
   identical 268,435,456-byte raw images and 16,188,752-byte gzip files. Independent
   review, module-byte/mode preservation and standalone inspection pass. The
@@ -86,7 +85,9 @@ unbooted. No extra diagnostic-only reflash is required for the successful checks
   at `/usr/lib/a733-tools`, including optional networking. Native content/ownership,
   actual ARM 220-package queries and the fixed-seed packaged workflow pass.
   Guest fixture/state/bootstrap/full-disk artifacts remain separately bound.
-  [Management](host-management.md) has ARM sshd/key/unit checks; no real SSH login.
+  [Management](host-management.md) has ARM sshd/key/unit and serial fingerprint
+  checks; no real SSH login. [HTTPS delivery helper](deployment-delivery.md) has nine native TLS cases
+  and independent review; actual board delivery remains pending.
 - [Updates](host-updates.md), [selection journals](host-root-selection.md) and
   [RAM recovery](host-recovery.md) pass private-loop interruption/readback tests.
   Physical update, dirty-journal recovery and rollback remain untested.
@@ -111,7 +112,7 @@ unbooted. No extra diagnostic-only reflash is required for the successful checks
   remain unbooted preparations; host state is a fixture. Actual historical images
   still verify, and new EL2 images refuse default baseline verification. A fresh
   committed-source checkout reproduced both images and installer initramfs bytes.
-- Jammy: 756 discovery cases without skips, four diagnostic assembly cases and
+- Jammy: 773 discovery cases without skips, four diagnostic assembly cases and
   all five shell regressions pass. Independent Sol high reviews cover boot,
   installation/selection and rollback changes. [Detailed implementation evidence](implementation-evidence.md)
   separates builds, software probes and physical results.
@@ -124,9 +125,13 @@ command is required to repeat those successful observations. Real keys/source
 policy and [ARM SSH-policy checks](evidence/operator-management-arm-20261105.json)
 are prepared. [Personalized roots/state](evidence/operator-build-20261105.json)
 and matching 256 MiB EL2 bootstrap pass host inspection. Remaining preparation:
-recover builder headroom without losing artifacts, assemble the actual-geometry
-NVMe candidate, and refresh installation tools/image with multi-key support and
-the modalias scan correction. Neither full-disk installation nor payload transfer
+assemble the actual-geometry NVMe candidate and refresh installation tools/image
+with multi-key support, explicit discard policy and the modalias scan correction.
+Builder headroom was recovered without losing retained bytes; the fresh
+roots/state/bootstrap/full-disk build chain was stopped before publication to
+add trusted first-SSH fingerprint output. The serial output change passes
+[actual ARM software checks](evidence/ssh-console-management-arm-20261106.json)
+and independent review; final build is restarting from committed source. Neither full-disk installation nor payload transfer
 has occurred. Actual SSH, KVM guest execution and release gates remain open.
 NVMe erase authorization for the recorded drive persists; no additional erase
 permission is being requested. SPI identity/geometry are directly observed as

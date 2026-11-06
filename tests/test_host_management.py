@@ -1,6 +1,8 @@
 """Management fixtures only: never mount, start listeners or touch host config."""
 import base64
+from contextlib import redirect_stdout
 import importlib.util
+import io
 import json
 from pathlib import Path
 import struct
@@ -101,6 +103,10 @@ class ValidationTests(unittest.TestCase):
                 M.prepare()
             write.assert_not_called()
             link.assert_not_called()
+
+    def test_identity_output_reaches_journal_and_console(self):
+        unit = (Path(__file__).resolve().parents[1] / 'configs/a733-management-ssh.service').read_text()
+        self.assertIn('\nStandardOutput=journal+console\n', unit)
 
     def test_prepare_only_ram_paths_and_fixed_masks(self):
         with patch.object(M, 'runtime_guard', return_value=CONFIG), patch.object(M, 'ram_directory'), patch.object(M, 'atomic_write') as write, patch.object(M, 'ram_link') as link, patch.object(M.subprocess, 'run') as command:
@@ -214,6 +220,10 @@ class AdministrationBundleTests(unittest.TestCase):
                     patch.object(M.subprocess, 'run', return_value=Mock(stdout=self.keys[0])):
                 with self.assertRaisesRegex(ValueError, 'Ed25519'):
                     M.ensure_host_key(Path(temp))
+        with patch.object(M, 'read_secure', return_value=self.keys[0]), redirect_stdout(io.StringIO()) as output:
+            with self.assertRaisesRegex(ValueError, 'Ed25519'):
+                M.log_host_identity('192.0.2.20', Path('/fixture') / M.KEY_NAME)
+            self.assertEqual(output.getvalue(), '')
 
 
 class AddressTests(unittest.TestCase):
@@ -264,12 +274,61 @@ class KeyTests(unittest.TestCase):
             with patch.object(M.subprocess, 'run', side_effect=command) as run:
                 key = M.ensure_host_key(directory)
                 original = key.read_bytes()
+                expected = f'A733 SSH host key for 192.0.2.20: ED25519 {M.CONFIG.validate_public_key(PUBLIC)[1]}\n'
+                with redirect_stdout(io.StringIO()) as output:
+                    M.log_host_identity('192.0.2.20', key)
+                self.assertEqual(output.getvalue(), expected)
+                self.assertNotIn(original.decode(), output.getvalue())
+                self.assertNotIn(PUBLIC.decode().strip(), output.getvalue())
                 key.with_name(key.name + '.pub').unlink()
                 M.ensure_host_key(directory)
+                with redirect_stdout(io.StringIO()) as output:
+                    M.log_host_identity('192.0.2.20', key)
+                self.assertEqual(output.getvalue(), expected)
                 self.assertEqual(key.read_bytes(), original)
                 self.assertEqual(sum('-t' in c.args[0] for c in run.call_args_list), 1)
                 self.assertEqual(key.stat().st_nlink, 1)
                 self.assertEqual(key.with_name(key.name + '.pub').read_bytes(), PUBLIC)
+
+    def test_invalid_public_identity_never_logged(self):
+        key = Path('/run/a733-state/identity/ssh') / M.KEY_NAME
+        for value in (b'not-a-key', PUBLIC + PUBLIC, b'-----BEGIN OPENSSH PRIVATE KEY-----\n'):
+            with self.subTest(value=value), patch.object(M, 'read_secure', return_value=value) as read, \
+                    redirect_stdout(io.StringIO()) as output:
+                with self.assertRaises(ValueError):
+                    M.log_host_identity('192.0.2.20', key)
+                read.assert_called_once_with(key.with_name(key.name + '.pub'), 16384)
+                self.assertEqual(output.getvalue(), '')
+        with patch.object(M, 'read_secure', side_effect=ValueError('unsafe metadata')), \
+                redirect_stdout(io.StringIO()) as output:
+            with self.assertRaises(ValueError):
+                M.log_host_identity('192.0.2.20', key)
+            self.assertEqual(output.getvalue(), '')
+        with patch.object(M, 'read_secure') as read, redirect_stdout(io.StringIO()) as output:
+            with self.assertRaises(ValueError):
+                M.log_host_identity('192.0.2.20\nready', key)
+            read.assert_not_called()
+            self.assertEqual(output.getvalue(), '')
+
+    def test_public_private_mismatch_never_replaces_identity(self):
+        with tempfile.TemporaryDirectory() as temp, patch.object(M, 'secure_path', side_effect=self.fixture_secure):
+            key = Path(temp) / M.KEY_NAME
+            key.write_bytes(b'keep-identity')
+            key.chmod(0o600)
+            public = key.with_name(key.name + '.pub')
+            public.write_bytes(b'ssh-ed25519 ' + base64.b64encode(BLOB[:-32] + b'l' * 32) + b'\n')
+            with patch.object(M.subprocess, 'run', return_value=Mock(stdout=PUBLIC)), \
+                    redirect_stdout(io.StringIO()) as output:
+                with self.assertRaises(ValueError):
+                    M.ensure_host_key(Path(temp))
+                self.assertEqual(output.getvalue(), '')
+            self.assertEqual(key.read_bytes(), b'keep-identity')
+
+    def test_identity_log_flushes_before_returning(self):
+        with patch.object(M, 'read_secure', return_value=PUBLIC), patch('builtins.print') as printed:
+            M.log_host_identity('192.0.2.20', Path('/fixture') / M.KEY_NAME)
+        printed.assert_called_once_with(
+            f'A733 SSH host key for 192.0.2.20: ED25519 {M.CONFIG.validate_public_key(PUBLIC)[1]}', flush=True)
 
     def test_atomic_publication_cannot_replace_existing_identity(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -347,6 +406,7 @@ class SupervisorTests(unittest.TestCase):
         contexts = [patch.object(M, 'runtime_guard', return_value=CONFIG),
                     patch.object(M, 'current_address', side_effect=addresses),
                     patch.object(M, 'ensure_host_key'), patch.object(M, 'atomic_write'),
+                    patch.object(M, 'log_host_identity', side_effect=lambda address, key: events.append('identity ' + address)),
                     patch.object(M.subprocess, 'Popen', side_effect=spawn),
                     patch.object(M.time, 'sleep'), patch.object(M.time, 'monotonic', side_effect=clock or [0] * 30)]
         from contextlib import ExitStack
@@ -358,20 +418,31 @@ class SupervisorTests(unittest.TestCase):
 
     def test_dhcp_change_stops_before_restart_and_term_cleanup(self):
         events, _ = self.run_loop(['192.0.2.20', '192.0.2.21'], [False, False, True])
-        self.assertEqual(events, ['start', 'stop', 'start', 'stop'])
+        self.assertEqual(events, ['identity 192.0.2.20', 'start', 'stop', 'identity 192.0.2.21', 'start', 'stop'])
 
     def test_dhcp_loss_stops_listener_until_address_returns(self):
         events, _ = self.run_loop(['192.0.2.20', None, '192.0.2.21'], [False, False, False, True])
-        self.assertEqual(events, ['start', 'stop', 'start', 'stop'])
+        self.assertEqual(events, ['identity 192.0.2.20', 'start', 'stop', 'identity 192.0.2.21', 'start', 'stop'])
 
     def test_missing_ip_is_bounded(self):
         with self.assertRaises(ValueError):
             self.run_loop([None], [False], clock=[0, 61])
 
+    def test_invalid_identity_stops_before_listener(self):
+        for failing in ('ensure_host_key', 'log_host_identity'):
+            with self.subTest(failing=failing), patch.object(M, 'runtime_guard', return_value=CONFIG), \
+                    patch.object(M, 'current_address', return_value='192.0.2.20'), \
+                    patch.object(M, 'ensure_host_key'), patch.object(M, 'atomic_write'), \
+                    patch.object(M, 'log_host_identity'), patch.object(M.subprocess, 'Popen') as spawn, \
+                    patch.object(M, failing, side_effect=ValueError('invalid identity')):
+                with self.assertRaises(ValueError):
+                    M.supervise(CONFIG, lambda: False)
+                spawn.assert_not_called()
+
     def test_guard_failure_terminates_existing_listener(self):
         child = Mock()
         child.poll.return_value = None
-        with patch.object(M, 'runtime_guard', side_effect=[CONFIG, ValueError('lost state')]), patch.object(M, 'current_address', return_value='192.0.2.20'), patch.object(M, 'ensure_host_key'), patch.object(M, 'atomic_write'), patch.object(M.subprocess, 'Popen', return_value=child), patch.object(M.time, 'sleep'):
+        with patch.object(M, 'runtime_guard', side_effect=[CONFIG, ValueError('lost state')]), patch.object(M, 'current_address', return_value='192.0.2.20'), patch.object(M, 'ensure_host_key'), patch.object(M, 'atomic_write'), patch.object(M, 'log_host_identity'), patch.object(M.subprocess, 'Popen', return_value=child), patch.object(M.time, 'sleep'):
             with self.assertRaises(ValueError):
                 M.supervise(CONFIG, lambda: False)
         child.terminate.assert_called_once()

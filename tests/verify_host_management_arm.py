@@ -44,7 +44,7 @@ def verify(rootfs):
             target = root / path
             target.mkdir(parents=True, exist_ok=True)
             target.chmod(mode)
-        program = r'''import ctypes,hashlib,importlib.util,json,os,pathlib,subprocess
+        program = r'''import contextlib,ctypes,hashlib,importlib.util,io,json,os,pathlib,subprocess
 path=pathlib.Path('/usr/lib/orangepi-hypervisor/host-management.py')
 spec=importlib.util.spec_from_file_location('management',path)
 M=importlib.util.module_from_spec(spec); spec.loader.exec_module(M)
@@ -53,14 +53,22 @@ for name in ('/usr/sbin/ip','/sbin/blkid','/usr/bin/python3','/usr/bin/ssh-keyge
 cfg={'schema':1,'hostname':'a733-arm-fixture','management_mac':'02:73:30:00:00:01','management_cidr':'0.0.0.0/0','dhcp':True}
 key=M.ensure_host_key(M.STATE/'identity/ssh')
 first=hashlib.sha256(key.read_bytes()).digest()
+with contextlib.redirect_stdout(io.StringIO()) as identity_output:
+    M.log_host_identity('192.0.2.10',key)
+first_identity_log=identity_output.getvalue()
 assert key.stat().st_nlink==1
 assert M.ensure_host_key(M.STATE/'identity/ssh')==key
 assert hashlib.sha256(key.read_bytes()).digest()==first
+with contextlib.redirect_stdout(io.StringIO()) as identity_output:
+    M.log_host_identity('192.0.2.10',key)
+assert identity_output.getvalue()==first_identity_log
 public=key.with_name(key.name+'.pub')
 public_bytes=public.read_bytes(); public.unlink()
 M.ensure_host_key(M.STATE/'identity/ssh')
 assert public.read_bytes()==public_bytes and hashlib.sha256(key.read_bytes()).digest()==first
 _,fingerprint=M.CONFIG.validate_public_key(public_bytes)
+assert first_identity_log=='A733 SSH host key for 192.0.2.10: ED25519 '+fingerprint+'\n'
+assert key.read_bytes().decode() not in first_identity_log and public_bytes.decode().strip() not in first_identity_log
 rsa=pathlib.Path('/run/a733-management/test-admin-rsa')
 subprocess.run(['/usr/bin/ssh-keygen','-q','-t','rsa','-b','3072','-N','','-f',str(rsa)],check=True,capture_output=True)
 rsa_public=rsa.with_name(rsa.name+'.pub')
@@ -122,6 +130,7 @@ assert 'MACAddress='+cfg['management_mac'] in pathlib.Path('/etc/systemd/network
 for name in ('ssh.service','sshd.service','ssh.socket','sshd.socket','apt-daily.service','apt-daily.timer','apt-daily-upgrade.service','apt-daily-upgrade.timer','dpkg-db-backup.service','dpkg-db-backup.timer','systemd-journal-catalog-update.service'):
     assert os.readlink('/etc/systemd/system/'+name)=='/dev/null'
 assert os.readlink('/etc/systemd/system/multi-user.target.wants/a733-management-ssh.service')=='/lib/systemd/system/a733-management-ssh.service'
+assert '\nStandardOutput=journal+console\n' in pathlib.Path('/usr/lib/systemd/system/a733-management-ssh.service').read_text()
 assert hashlib.sha256(key.read_bytes()).digest()==first
 unit=subprocess.run(['/usr/bin/systemd-analyze','verify','/usr/lib/systemd/system/a733-management-ssh.service'],capture_output=True,text=True)
 assert unit.returncode==0,unit.stderr

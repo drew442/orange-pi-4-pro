@@ -1,0 +1,60 @@
+{
+  "key_generation_noreplace": "passed",
+  "private_key_single_link": true,
+  "private_key_reused": true,
+  "missing_public_key_recovered": true,
+  "test_host_public_key_fingerprint": "SHA256:lp8e6zHv2JLfUKOQ5u8VNo5CR32fJ8rw2fbbSl5GRVE",
+  "test_administration_public_key_fingerprints": [
+    "SHA256:to6rQYpJ0Cxhiujgc5xH2RFF98TCG++QWefXJ+obIFM",
+    "SHA256:lp8e6zHv2JLfUKOQ5u8VNo5CR32fJ8rw2fbbSl5GRVE"
+  ],
+  "sshd_syntax": "passed",
+  "sshd_effective_policy": {
+    "addressfamily": "inet",
+    "listenaddress": "192.0.2.10:22",
+    "authenticationmethods": "publickey",
+    "passwordauthentication": "no",
+    "kbdinteractiveauthentication": "no",
+    "usepam": "yes",
+    "allowusers": "root@0.0.0.0/0",
+    "disableforwarding": "yes",
+    "authorizedkeysfile": "/root/.ssh/authorized_keys"
+  },
+  "locked_root_pam_account_check": 0,
+  "password_locked_root_public_key_login": "not performed",
+  "prepare_guard_without_NVMe": "rejected before configuration writes",
+  "private_file_preparation": "passed; guard mocked only inside disposable chroot",
+  "unit_verify_returncode": 0,
+  "unit_verify_diagnostics": "",
+  "classification": "ARM64 binfmt/chroot software checks; no board boot, SSH connection or KVM acceptance",
+  "runtime": {
+    "profile": "a733-management-v1",
+    "files": {
+      "usr/lib/orangepi-hypervisor/package_state.py": {
+        "bytes": 13113,
+        "sha256": "809630ebba9d927b6ad5034899a88a8a8fcf3401f94ff6f223f92f6fbfa9c6eb"
+      },
+      "usr/lib/orangepi-hypervisor/host-management.py": {
+        "bytes": 23404,
+        "sha256": "b6f3907d0423542543e6accfb3c5112b6a4ceaa9d7e74aa39104b7fe86a479dd"
+      },
+      "usr/lib/orangepi-hypervisor/host_config.py": {
+        "bytes": 5090,
+        "sha256": "db661a276e46cfa924b51c159b6afec5eacfaef9d83291edc6a5269c50c4f29a"
+      },
+      "usr/lib/systemd/system/a733-management-ssh.service": {
+        "bytes": 391,
+        "sha256": "f1aa1611777b9f91f4c1b731e0c8aaf286bfa61baaf373eb866d08abe20c2e37"
+      }
+    }
+  },
+  "verifier_source": {
+    "bytes": 9973,
+    "sha256": "d6dbbe14cd24fd97791c7591efdc9b8ad01c7d48a19aa2e35650a180f06d5870"
+  },
+  "private_fixture_keys": "deleted with temporary chroot",
+  "userspace": {
+    "bytes": 169852145,
+    "sha256": "1967e76c0c831c1c0bab432e7116457d4372c15b413090c054f8958b72dcb392"
+  }
+}
