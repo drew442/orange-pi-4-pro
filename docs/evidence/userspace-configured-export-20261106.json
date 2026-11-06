@@ -1,0 +1,218 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Pinned binary-package userspace configuration and cleaned archive export in frozen builder; no hardware acceptance",
+  "success": true,
+  "builder": "build.drewnet.online",
+  "configuration_phase": "/var/lib/a733-clean-replay-20261106/userspace-configure-01",
+  "export_phase": "/var/lib/a733-clean-replay-20261106/userspace-export-01",
+  "raw_configuration_records": "out/userspace-configure-20261106/",
+  "raw_export_records": "out/userspace-export-20261106/",
+  "source": "Authenticated 220-package offline mirror from userspace-foreign-01; no original rootfs archive used as construction seed",
+  "configuration": {
+    "commands": [
+      "second-stage",
+      "base-inventory",
+      "apt-update",
+      "apt-install",
+      "full-inventory",
+      "dpkg-audit",
+      "apt-check"
+    ],
+    "all_exit_statuses": 0,
+    "configured_base_packages": 99,
+    "configured_final_packages": 220,
+    "inventory_matches_lock": true,
+    "dpkg_audit_clean": true,
+    "apt_check_passed": true,
+    "services": "policy-rc.d exit 101 restored after stock debootstrap removes it; disable-all systemd preset; final namespace PIDs [1,2]",
+    "apt_warnings": "Two _apt permission warnings because source root was 0700; downloads fell back to container root with signatures enforced. Export normalizes root to 0755; future configuration should do so before APT."
+  },
+  "isolation": {
+    "uid_gid_map": "0 1048576 65536",
+    "read_only_frozen_os": true,
+    "private_network": true,
+    "no_new_privileges": true,
+    "dropped_capabilities": [
+      "SYS_ADMIN",
+      "SYS_MODULE",
+      "SYS_RAWIO",
+      "SYS_BOOT",
+      "SYS_TIME",
+      "MKNOD",
+      "NET_ADMIN"
+    ],
+    "helper": "Trusted initial-userns root helper enters other payload namespaces, performs 54 mount operations, then exits before ARM continuation. Seven character handles, private pts/shm, read-only repo and filtered proc/sys; console remains regular placeholder.",
+    "helper_receipt_sha256": "15d41b9b4ffe304dffe23c008a9d1b084f611979179700017ef69a172577cd6b",
+    "host_packages_unchanged": true,
+    "remaining_mapped_processes": [],
+    "remaining_output_mounts": []
+  },
+  "resource_minima": {
+    "configuration": {
+      "samples": 156,
+      "disk_free_bytes": 4553916416,
+      "available_memory_bytes": 7305666560
+    },
+    "export": {
+      "samples": 64,
+      "disk_free_bytes": 4484993024,
+      "available_memory_bytes": 7439765504
+    }
+  },
+  "export": {
+    "schema": 1,
+    "phase": "final-userspace-export",
+    "success": true,
+    "configure_receipt_sha256": "94fe0ea170430035802b4a64c46b7dc4639ba7cf8f17fb45f84cddf9ba97c11f",
+    "exporter_sha256": "a07beca46cd34e9aa5cda3169ad1636383cf4a40c986d8cd50eafb90f5223138",
+    "inventory": {
+      "packages": 220,
+      "lock_sha256": "f2abf03d0d6e7fd506560689093220514cbf1acc678f7560562026d6ca6564a6"
+    },
+    "cleanup": {
+      "root_mode": {
+        "before": 448,
+        "after": 493
+      },
+      "removed_paths": [
+        "a733-repo",
+        "etc/ssh/ssh_host_ecdsa_key",
+        "etc/ssh/ssh_host_ecdsa_key.pub",
+        "etc/ssh/ssh_host_ed25519_key",
+        "etc/ssh/ssh_host_ed25519_key.pub",
+        "etc/ssh/ssh_host_rsa_key",
+        "etc/ssh/ssh_host_rsa_key.pub",
+        "usr/bin/qemu-aarch64-static",
+        "usr/sbin/policy-rc.d",
+        "var/lib/dbus/machine-id"
+      ],
+      "pruned_child_counts": {
+        "var/lib/apt/lists": 5,
+        "var/cache/apt/archives": 101,
+        "var/log": 12,
+        "run": 9,
+        "tmp": 0
+      },
+      "machine_id_emptied": true,
+      "root_password_locked": true
+    },
+    "archive": {
+      "bytes": 165687301,
+      "sha256": "1034908833bd6faf934114a6c0c96840db815ba077166438159dcca54a1fe1a7"
+    },
+    "raw_tar": {
+      "bytes": 539678720,
+      "sha256": "2adb2a05e00df632d057eb812f17202efc84cef5fc86a16efb8e87dd829b81ef"
+    },
+    "members": 15881,
+    "character_headers": 8,
+    "classification": "interim userspace only; no physical boot, KVM, NVMe or SD-write acceptance",
+    "metadata": "native same-UID-map xattrs; no original-rootfs binary-equivalence claim"
+  },
+  "retained_files": {
+    "out/userspace-export-20261106/rootfs.tar.gz": {
+      "bytes": 165687301,
+      "sha256": "1034908833bd6faf934114a6c0c96840db815ba077166438159dcca54a1fe1a7"
+    },
+    "out/userspace-export-20261106/rootfs-bom.json": {
+      "bytes": 4338804,
+      "sha256": "86e5e06fbf7c8585c51c4a7ba6fdb2bff284ebc75d163a091ad7605f2a8e9347"
+    },
+    "out/userspace-export-20261106/receipt.json": {
+      "bytes": 1555,
+      "sha256": "0fd3b033e0b859a30db634429b293b6543345b1499528a0c2321a36d0fbfd8ff"
+    },
+    "out/userspace-export-20261106/phase-records/receipt.json": {
+      "bytes": 10026,
+      "sha256": "a01a07e4b1622b08ef4bb7a9764217df5eb9e55dfbf98072e0126dcbe5b99234"
+    },
+    "out/userspace-configure-20261106/receipt.json": {
+      "bytes": 26748,
+      "sha256": "0fcbb0d68503543accb9e69106a241a2027dc1e6aa1ae0faacc7e2b24e11d88d"
+    },
+    "out/userspace-configure-20261106/work/configure-receipt.json": {
+      "bytes": 11183,
+      "sha256": "94fe0ea170430035802b4a64c46b7dc4639ba7cf8f17fb45f84cddf9ba97c11f"
+    },
+    "out/userspace-export-20261106/independent-review.json": {
+      "bytes": 830,
+      "sha256": "9efbcf29ea98c952262ed80472ae3b802e7cb6fc768e38968ccb0329312d2cf7"
+    }
+  },
+  "code": {
+    "build/userspace-bootstrap-api.py": {
+      "bytes": 27185,
+      "sha256": "365fd1681e5b5fbce8062771d54082862482995b48ef6b42f6f2b05464b26964"
+    },
+    "build/export-host-userspace.py": {
+      "bytes": 26211,
+      "sha256": "a07beca46cd34e9aa5cda3169ad1636383cf4a40c986d8cd50eafb90f5223138"
+    },
+    "out/userspace-export-20261106/verification-code/launch-userspace-configure-20261106.py": {
+      "bytes": 10107,
+      "sha256": "08d5deff4976c6fdbadd08f30fd4d34c2db36871b41da7b5537b2feb7ffd43fc"
+    },
+    "out/userspace-export-20261106/verification-code/launch-userspace-export-20261106.py": {
+      "bytes": 4197,
+      "sha256": "296e46df58cc6b9fdb244f3aa24dabfb18d6c65f867ddca6329de4bf4b35a501"
+    },
+    "out/userspace-export-20261106/verification-code/run-userspace-configure-20261106.py": {
+      "bytes": 7950,
+      "sha256": "6c9a675f3b1f983e8343ac5e91bfd06bb11ade749718d2c1d89368b2345d9236"
+    },
+    "out/userspace-export-20261106/verification-code/run-userspace-export-20261106.py": {
+      "bytes": 388,
+      "sha256": "a7a268655834bf69a8bb5857a02231f075e688e22fa88df2ad8324e33f6b4c69"
+    }
+  },
+  "validation": {
+    "native_discovery": {
+      "cases": 1046,
+      "environment_skips": 95,
+      "passed": true
+    },
+    "assembly_cases": 4,
+    "shell_suites": 5,
+    "independent_review": "Sol high exporter, launcher, configuration and standalone complete retained-archive readback clear; no findings",
+    "syntax_and_diff": "Python AST and all five project TOML files parse; git diff --check passes",
+    "independent_archive_readback": {
+      "success": true,
+      "classification": "independent retained archive/records readback; no physical acceptance",
+      "members": 15881,
+      "types": {
+        "dir": 1720,
+        "symlink": 1850,
+        "char": 8,
+        "file": 12300,
+        "hardlink": 3
+      },
+      "xattr_entries": 1,
+      "xattr_names": [
+        "security.capability"
+      ],
+      "archive": {
+        "bytes": 165687301,
+        "sha256": "1034908833bd6faf934114a6c0c96840db815ba077166438159dcca54a1fe1a7"
+      },
+      "raw_tar": {
+        "bytes": 539678720,
+        "sha256": "2adb2a05e00df632d057eb812f17202efc84cef5fc86a16efb8e87dd829b81ef"
+      },
+      "exact_configured_packages": 220,
+      "root_password_locked": true,
+      "cleanup_verified": true,
+      "phase_postconditions_verified": true,
+      "resource_samples": 64,
+      "minimum_free_bytes": 4484993024,
+      "minimum_available_memory_bytes": 7439765504,
+      "findings": []
+    }
+  },
+  "limits": [
+    "One new configuration and export; no independent duplicate userspace construction or byte-equivalence to historical archive claimed.",
+    "QEMU-user runs package setup only; no KVM guest boot or board hardware test.",
+    "Production root/state/NVMe reconstruction, physical deployment and release gates remain open.",
+    "Published deployment artifacts unchanged; no physical erase, SPI programming or build-host LVM resize."
+  ]
+}

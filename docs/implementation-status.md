@@ -211,8 +211,17 @@ backup/recovery and SPI-specific programming authorization remain outstanding.
    now pass real signature verification and foreign data extraction: 220 inputs
    authenticated, 99 packages cached, 96 extracted, and target status still empty.
    Independent review, complete retained-repository checks and 1,004 discovery
-   cases (95 skips), four assembly cases and all shell suites pass. Integrating
-   second-stage devices/APIs and configuring the complete userspace remain next.
+   cases (95 skips), four assembly cases and all shell suites pass. Subsequent
+   [ARM configuration and export](evidence/userspace-configured-export-20261106.json)
+   now configure all 220 exact packages, pass dpkg/APT audits, strip generated
+   identity/build state and verify all 15,881 archive entries. The new gzip is
+   165,687,301 bytes with pinned compressed/raw hashes. Trusted API setup exits
+   before restricted payload continuation; host inventories and namespace cleanup
+   pass. APT's two `_apt` fallback warnings are recorded; export normalizes the
+   root to `0755`. Native discovery now passes 1,046 cases (95 skips), four
+   assembly cases and all five shell suites. Reusable configuration orchestration,
+   independent duplicate userspace construction and production root/state/NVMe
+   reconstruction remain open. Published deployment images are unchanged.
    [Root reconstruction preparation](root-reconstruction-preparation.md) proves
    virtual device metadata without real nodes. The complete 15,892-member
    userspace archive now passes staging content/metadata checks and selected
