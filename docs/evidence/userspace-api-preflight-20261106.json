@@ -1,0 +1,198 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Trusted private API setup and restricted ARM read preflight; no configured userspace or hardware acceptance",
+  "success": true,
+  "builder": "build.drewnet.online",
+  "builder_runtime_kernel": "6.8.0-138-generic",
+  "successful_phase": "/var/lib/a733-clean-replay-20261106/userspace-api-preflight-03",
+  "raw_records": "out/userspace-api-preflight-20261106/",
+  "code": {
+    "out/userspace-api-preflight-20261106/verification-code/launch-userspace-api-preflight-20261106.py": {
+      "bytes": 10455,
+      "sha256": "048995f41596d95550e744cb2f03a801543b5bdf0ad0839ba23ffd1424efc992"
+    },
+    "out/userspace-api-preflight-20261106/verification-code/userspace-api-helper-20261106.py": {
+      "bytes": 14406,
+      "sha256": "ec19572ed58ec84d1b293589364287f2adc298c61871f1aaa925c7d77a4fe500"
+    },
+    "out/userspace-api-preflight-20261106/verification-code/userspace-api-probe-20261106.py": {
+      "bytes": 6435,
+      "sha256": "971e3edeb14a383a3ec94f8b18baa08346f0461a24773c4b4182f6e297bad3ef"
+    },
+    "out/userspace-api-preflight-20261106/verification-code/userspace-api-tests-20261106.py": {
+      "bytes": 14918,
+      "sha256": "e0c8562bf57fe4f3304c6cca618b2c0da4cd93dd919cd45b4d3cfc30ac5c0979"
+    }
+  },
+  "staged_inputs": {
+    "api-helper.py": {
+      "bytes": 14406,
+      "sha256": "ec19572ed58ec84d1b293589364287f2adc298c61871f1aaa925c7d77a4fe500"
+    },
+    "api-probe.py": {
+      "bytes": 6435,
+      "sha256": "971e3edeb14a383a3ec94f8b18baa08346f0461a24773c4b4182f6e297bad3ef"
+    },
+    "configs/host-userspace-package-hashes.lock.tsv": {
+      "bytes": 28638,
+      "sha256": "f2f613e79d9c1abc1689e19cfe81b624d9d2ac3beeb322fd5788980d919f7d86"
+    },
+    "configs/host-userspace-packages.lock.tsv": {
+      "bytes": 6671,
+      "sha256": "f2abf03d0d6e7fd506560689093220514cbf1acc678f7560562026d6ca6564a6"
+    },
+    "launcher.py": {
+      "bytes": 10455,
+      "sha256": "048995f41596d95550e744cb2f03a801543b5bdf0ad0839ba23ffd1424efc992"
+    },
+    "probe.py": {
+      "bytes": 12074,
+      "sha256": "911e1687848e748acfac437a936335f294c1c2624add560fa7dc1e12ed6b5a92"
+    }
+  },
+  "trusted_setup": {
+    "privilege": "Temporary host-root helper retains the initial host user namespace; setup completes and exits before continuation. No package maintainer scripts run in this preflight.",
+    "entered_payload_namespaces": [
+      "mnt",
+      "pid",
+      "net",
+      "uts",
+      "ipc",
+      "cgroup"
+    ],
+    "helper_namespaces": {
+      "mnt": 4026532197,
+      "pid": 4026532200,
+      "net": 4026532189,
+      "user": 4026531837,
+      "uts": 4026532198,
+      "ipc": 4026532199,
+      "cgroup": 4026532296
+    },
+    "payload_namespaces": {
+      "mnt": 4026532197,
+      "pid": 4026532200,
+      "net": 4026532189,
+      "user": 4026532196,
+      "uts": 4026532198,
+      "ipc": 4026532199,
+      "cgroup": 4026532296
+    },
+    "operations": 21,
+    "explicit_proc_masks": [
+      "/proc/kcore",
+      "/proc/keys",
+      "/proc/kallsyms",
+      "/proc/sysrq-trigger",
+      "/proc/timer_list"
+    ],
+    "absent_proc_paths": [],
+    "destination_mounts": 26,
+    "destination_policy": [
+      "read-only",
+      "nosuid",
+      "nodev",
+      "noexec",
+      "private propagation"
+    ],
+    "privileged_pid1_namespace_check": "verified_by_trusted_helper",
+    "source_stable_after_masks_during_copy": true
+  },
+  "restricted_result": {
+    "proc_root_identity": [
+      58,
+      1,
+      16384
+    ],
+    "pid1_namespace_check": "not_queried_by_restricted_payload",
+    "self_pid": 2,
+    "proc_namespace_inode": 4026532200,
+    "final_status": {
+      "Uid": "0\t0\t0\t0",
+      "Gid": "0\t0\t0\t0",
+      "NSpid": "2",
+      "CapInh": "00000000f58cafff",
+      "CapPrm": "00000000f58cafff",
+      "CapEff": "00000000f58cafff",
+      "CapBnd": "00000000f58cafff",
+      "CapAmb": "0000000000000000",
+      "NoNewPrivs": "1"
+    },
+    "arm_command_statuses": [
+      0
+    ],
+    "arm_stderr_empty": true,
+    "arm_success_marker": true,
+    "verification": "Authenticated helper proc-root/PID anchors, private self PID/link/status/namespace, matching mount/mask records and ENOENT-only host-driver absence; no PID1 namespace query by restricted payload."
+  },
+  "outer_boundary": {
+    "all_phase_probes_passed": true,
+    "payload_prohibited_capability_mask": "0xa631000",
+    "host_packages_unchanged": true,
+    "mapped_processes_final": [],
+    "output_mounts_final": []
+  },
+  "resources": {
+    "samples": 5,
+    "minimum_free_bytes": 5809790976,
+    "minimum_available_memory_bytes": 7474872320
+  },
+  "preserved_failures": [
+    {
+      "directory": "failure-01",
+      "reason": "Default nspawn setup did not establish the required proc-file masks; helper rejected before any mount operation.",
+      "clean_termination": true
+    },
+    {
+      "directory": "failure-02",
+      "reason": "Trusted setup succeeded; restricted payload could not read PID1 namespace link. No permission or capability was added.",
+      "clean_termination": true
+    }
+  ],
+  "tests": {
+    "nonmount_cases": 12,
+    "passed": true,
+    "independently_repeated": true
+  },
+  "review": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "result": "Pre-execution and independent actual-record postreview pass; all staged code/lock and archive records checked."
+  },
+  "primary_source_records": {
+    "tmp/proc-pid-reference-6.8-20261106/self.c": {
+      "bytes": 1717,
+      "sha256": "bc63da0ade07f44b79933eef4e4f5f1c23b1b2582b601f2bb09107b61113144a"
+    },
+    "tmp/proc-pid-reference-6.8-20261106/array.c": {
+      "bytes": 23234,
+      "sha256": "23fa35a9e22158c2bee2bf183c748b82438e4919571eac9c04a4028d24764549"
+    },
+    "tmp/proc-pid-reference-6.8-20261106/shmem.c": {
+      "bytes": 131850,
+      "sha256": "cc6389bec2ce60dd04aad3236f318e4532a6b4e93ffb80d7f4cb441f9714554f"
+    },
+    "tmp/nspawn-api-reference-20261106/nspawn-mount.c": {
+      "bytes": 49600,
+      "sha256": "6fa3193052b4a882e729df99baea5693d142995ef300dcff03ac92e9c52b419b"
+    },
+    "tmp/nspawn-api-reference-20261106/systemd-nspawn.xml": {
+      "bytes": 105231,
+      "sha256": "749d0a1e2e48efebfb66ec9f9bc92d853659238aa8a0575b196dbc94f44c2985"
+    }
+  },
+  "limitations": [
+    "This prepares API filesystems only; no debootstrap stage or package maintainer script has run.",
+    "The trusted setup helper is privileged; the build payload retains its seven prohibited-capability drops, private UID/network and no-new-privileges policy.",
+    "Complete 220-package userspace reconstruction and production root/state/NVMe images remain open.",
+    "Production staging capacity is insufficient; build-host root-volume growth remains approval-pending and unperformed.",
+    "No physical installation, SSH login, real KVM guest, endurance, SD-write, rollback, restore or SPI acceptance is established."
+  ],
+  "raw_records_manifest": {
+    "path": "out/userspace-api-preflight-20261106/records-manifest.json",
+    "files": 53,
+    "bytes": 7621,
+    "sha256": "92e9eb91204e0b7d7443e54b37b0367eee359ebde72bd2b03e32486805be9bff"
+  }
+}

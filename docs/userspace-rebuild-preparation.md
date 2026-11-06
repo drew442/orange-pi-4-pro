@@ -34,6 +34,11 @@ The authenticated ARM64 binary Packages index is already retained under
 [earlier index verification](evidence/time-sync-package-input-20261106.json).
 Do not confuse that binary index with the separately retained Sources index.
 
+The [private API setup](userspace-api-preflight.md) now passes an actual test inside
+the frozen builder and independent review. It supplies read-only private proc/sysfs
+views to ARM commands without restoring payload capabilities. A trusted setup helper running as host root exits before the restricted payload continues; no maintainer script
+has run. Stock bootstrap integration remains open.
+
 The next step is a reviewed offline bootstrap adapter. Pinned debootstrap
 1.0.126+nmu1ubuntu0.9 still assumes it can create a test device and mount API
 filesystems. Its `functions` file, retained from the frozen builder under
@@ -42,8 +47,8 @@ line 1635 and device setup near lines 1299–1330. The setup also expects full,
 tty and ptmx. Additional disk space does not fix these assumptions. Replace
 only the necessary checks/setup with verified prebound devices and appropriate
 private API filesystems; do not pretend to be a different container type or
-restore prohibited capabilities. Verify that API mounts expose the intended
-namespace before any package maintainer scripts run.
+restore prohibited capabilities. Preserve the verified private API setup and verify the complete adapted device
+and mount lifecycle before any package maintainer scripts run.
 
 After that adapter passes review and execution, compare the complete configured
 inventory, package audits and source/cache/host postchecks; strip per-machine
