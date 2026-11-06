@@ -1,0 +1,78 @@
+{
+  "schema": 1,
+  "profiles": {
+    "baseline-20261104": {
+      "archive": {
+        "bytes": 169852145,
+        "sha256": "1967e76c0c831c1c0bab432e7116457d4372c15b413090c054f8958b72dcb392"
+      },
+      "evidence": {
+        "docs/evidence/host-userspace-20261104.json": {
+          "bytes": 1118,
+          "sha256": "370ee0bdb625f4dd10943c2cefb9f0e85d4c70b9b9b279be81697108b1558353"
+        }
+      },
+      "sources": {}
+    },
+    "normalized-20261106": {
+      "archive": {
+        "bytes": 138025729,
+        "sha256": "98d6a57bbb70ff55bef32b6bd051ebfcb6bc0fad4f6c8b3167e8619b5a9d961e"
+      },
+      "evidence": {
+        "docs/evidence/userspace-fresh-pipeline-20261106.json": {
+          "bytes": 26977,
+          "sha256": "71a6388eeca35ba1c5c33c106750f070219df438fef63284c6813383c22b4bf0"
+        },
+        "docs/evidence/userspace-canonical-export-20261106.json": {
+          "bytes": 15668,
+          "sha256": "28cecd8b3221090bceefca54ed9af41ef1114d393d6e3c2078725bf0c9fade10"
+        }
+      },
+      "sources": {
+        "build/prepare-host-userspace.py": {
+          "bytes": 18830,
+          "sha256": "86a3432aea83ae408a38d18f07eb48b2d2a8b59adb7b23b14bfcadfdf6a772a9"
+        },
+        "build/configure-host-userspace.py": {
+          "bytes": 22122,
+          "sha256": "0ff4f8538723ac1a4fe6f43d1ff6d73b6e0e36f22daa8eb31fa97d8553b8c95f"
+        },
+        "build/export-host-userspace.py": {
+          "bytes": 28217,
+          "sha256": "1cd49563c43fe7ddd78d309ef2d9fe48b2ad1d1d29ee6d7050374db12be118ed"
+        },
+        "build/debootstrap-adapter.py": {
+          "bytes": 18308,
+          "sha256": "d10f8a8ea1e83a0b659582d895e98bf8553165dbfc2469aab54eab82e1c501ea"
+        },
+        "build/offline-userspace-repo.py": {
+          "bytes": 19197,
+          "sha256": "bb8a4c71595f9867e4f7cf2958a2bf5bca6e0d81c49819eb1b7483957b0a4911"
+        },
+        "configs/host-userspace-packages.lock.tsv": {
+          "bytes": 6671,
+          "sha256": "f2abf03d0d6e7fd506560689093220514cbf1acc678f7560562026d6ca6564a6"
+        },
+        "configs/host-userspace-package-hashes.lock.tsv": {
+          "bytes": 28638,
+          "sha256": "f2f613e79d9c1abc1689e19cfe81b624d9d2ac3beeb322fd5788980d919f7d86"
+        },
+        "configs/host-userspace-source-archives.lock.json": {
+          "bytes": 122443,
+          "sha256": "f75bae857ffcfdfcfe5b7062880850d14b9f40bcdc7296f1999aa6a901fd6185"
+        }
+      },
+      "raw_tar": {
+        "bytes": 468398080,
+        "sha256": "a3b1ccfb69c24844d50cf60fb4c4286eb366dc6ba8da0f77ff672c8202b6e730"
+      },
+      "members": 15876,
+      "epoch": 1790812800,
+      "inventory": {
+        "packages": 220,
+        "lock_sha256": "f2abf03d0d6e7fd506560689093220514cbf1acc678f7560562026d6ca6564a6"
+      }
+    }
+  }
+}

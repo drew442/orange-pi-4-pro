@@ -215,8 +215,9 @@ def compress_image(image, output):
             shutil.copyfileobj(source, compressed, length=1024**2)
 
 
-def build(rootfs, config_path, public_key_path, output, boot_selection, state_uuid=None, metadata_profile='native'):
+def build(rootfs, config_path, public_key_path, output, boot_selection, state_uuid=None, metadata_profile='native', userspace_profile=PAYLOAD.DEFAULT_USERSPACE_PROFILE):
     backend = PAYLOAD.validate_metadata_profile(metadata_profile)
+    userspace = PAYLOAD.userspace_binding(userspace_profile, repo=REPO)
     if os.geteuid() != 0:
         raise ValueError('root required to preserve userspace metadata')
     os.umask(0o077)
@@ -232,9 +233,16 @@ def build(rootfs, config_path, public_key_path, output, boot_selection, state_uu
     selection_data = bounded_input(boot_selection, 4096)
     selection = SELECTION.parse(selection_data)
     state_uuid = validate_uuid(state_uuid or str(uuid.uuid4()))
-    evidence = REPO / 'docs/evidence/host-userspace-20261104.json'
-    evidence_data = bounded_input(evidence, 1024**2)
-    expected = json.loads(evidence_data)['files']['rootfs.tar.gz']
+    evidence = userspace['evidence']
+    expected = userspace['archive']
+    paths = PAYLOAD.provenance_paths((evidence, *userspace['provenance'], Path(__file__).resolve(), REPO / 'build/host-payload.py', REPO / 'build/root-selection.py',
+                 REPO / 'build/host-initramfs.py', REPO / 'build/host-storage-tools.py',
+                 REPO / 'configs/builder-packages.lock.tsv',
+                 REPO / 'configs/host-userspace-packages.lock.tsv',
+                 REPO / 'configs/host-userspace-package-hashes.lock.tsv',
+                 REPO / 'build/host-userspace.sh', REPO / 'configs/host_config.py',
+                 REPO / 'configs/package_state.py',
+                 *((REPO / 'build/rootfs-metadata.py', backend.LOCK) if backend is not None else ())))
     # Hold the authenticated source descriptor; copy and reauthenticate its bytes
     # into the private output to use the existing GNU metadata extraction helper.
     with regular_input(rootfs) as source:
@@ -261,22 +269,17 @@ def build(rootfs, config_path, public_key_path, output, boot_selection, state_uu
         PAYLOAD.authenticate(snapshot, expected)
     provenance = output / 'provenance'
     provenance.mkdir(mode=0o700)
-    for path in (Path(__file__).resolve(), REPO / 'build/host-payload.py', REPO / 'build/root-selection.py',
-                 REPO / 'build/host-initramfs.py', REPO / 'build/host-storage-tools.py',
-                 REPO / 'configs/builder-packages.lock.tsv',
-                 REPO / 'configs/host-userspace-packages.lock.tsv',
-                 REPO / 'configs/host-userspace-package-hashes.lock.tsv',
-                 REPO / 'build/host-userspace.sh', REPO / 'configs/host_config.py',
-                 REPO / 'configs/package_state.py'):
+    for path in paths:
         write_private(provenance / path.name, bounded_input(path, 8 * 1024**2))
+    for path in userspace['provenance']:
+        PAYLOAD.authenticate(provenance / path.name, userspace['provenance_records'][str(path)])
     metadata_sources = {}
+    if userspace_profile != PAYLOAD.DEFAULT_USERSPACE_PROFILE:
+        metadata_sources['userspace_profile'] = userspace['binding']
     if backend is not None:
         helper = REPO / 'build/rootfs-metadata.py'
-        write_private(provenance / helper.name, bounded_input(helper, 8 * 1024**2))
-        write_private(provenance / backend.LOCK.name, bounded_input(backend.LOCK, 8 * 1024**2))
         metadata_sources['rootfs_metadata'] = {'profile': metadata_profile,
                                              'helper': PAYLOAD.file_record(provenance / helper.name)}
-    write_private(provenance / evidence.name, evidence_data)
     with tempfile.TemporaryDirectory(prefix='.staging-', dir=output) as temporary:
         stage = Path(temporary)
         extracted = stage / 'userspace'
@@ -329,9 +332,10 @@ def main():
                         help='initial selector prepared from a verified compatible root image')
     parser.add_argument('--state-uuid', help='explicit per-installation UUID for recovery/fixtures; defaults to fresh UUID4')
     parser.add_argument('--metadata-profile', choices=PAYLOAD.METADATA_PROFILES, default='native')
+    parser.add_argument('--userspace-profile', choices=PAYLOAD.USERSPACE_PROFILES, default=PAYLOAD.DEFAULT_USERSPACE_PROFILE)
     args = parser.parse_args()
     try:
-        build(args.rootfs_tar, args.config_json, args.admin_public_key, args.output, args.boot_selection, args.state_uuid, args.metadata_profile)
+        build(args.rootfs_tar, args.config_json, args.admin_public_key, args.output, args.boot_selection, args.state_uuid, args.metadata_profile, args.userspace_profile)
     except (ValueError, OSError, tarfile.TarError, subprocess.CalledProcessError) as error:
         parser.exit(1, f'host state: {error}\n')
 

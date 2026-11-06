@@ -1,10 +1,14 @@
 """Regular-file tests only; no mount, chroot or hardware access."""
+from contextlib import ExitStack
+import gzip
 import importlib.util
+import json
 import os
 from pathlib import Path
 import shutil
 import stat
 import struct
+import sys
 import subprocess
 import tarfile
 import tempfile
@@ -207,6 +211,142 @@ class ArchiveTests(unittest.TestCase):
             (root / 'escape').symlink_to('/tmp')
             with self.assertRaises(ValueError):
                 payload.within_root(root, 'escape/file')
+
+
+class UserspaceProfiles(unittest.TestCase):
+    def test_resolver_delegation_and_repository_override(self):
+        backend = mock.Mock()
+        backend.resolve.return_value = {'selected': True}
+        with mock.patch.object(payload, 'userspace_backend', return_value=backend):
+            resolve = backend.resolve
+            self.assertEqual(payload.userspace_binding(), {'selected': True})
+            resolve.assert_called_once_with(payload.DEFAULT_USERSPACE_PROFILE, repo=payload.REPO)
+            resolve.reset_mock()
+            payload.userspace_binding('normalized-20261106', repo=Path('/fixture'))
+            resolve.assert_called_once_with('normalized-20261106', repo=Path('/fixture'))
+
+    def test_shared_runtime_import_does_not_load_source_only_profile_helper(self):
+        with mock.patch.object(payload.importlib.util, 'spec_from_file_location', wraps=importlib.util.spec_from_file_location) as load:
+            module = importlib.util.module_from_spec(SPEC)
+            SPEC.loader.exec_module(module)
+            self.assertFalse(any(Path(call.args[1]).name == 'userspace-profiles.py' for call in load.call_args_list))
+        backend = payload.userspace_backend()
+        self.assertEqual(backend.DEFAULT, payload.DEFAULT_USERSPACE_PROFILE)
+        self.assertEqual(backend.PROFILES, payload.USERSPACE_PROFILES)
+
+    def test_cli_default_and_explicit_profiles(self):
+        for options, profile, metadata in (([], payload.DEFAULT_USERSPACE_PROFILE, 'native'),
+                (['--userspace-profile', 'normalized-20261106', '--metadata-profile', 'fakeroot-raw-xattrs-v1'],
+                 'normalized-20261106', 'fakeroot-raw-xattrs-v1')):
+            with mock.patch.object(sys, 'argv', ['host-payload.py', 'rootfs', 'diag', 'output', *options]), mock.patch.object(payload, 'build') as build:
+                payload.main()
+                self.assertEqual(build.call_args.args, (Path('rootfs'), Path('diag'), Path('output'), metadata, profile))
+
+    def test_profiles_rejected_before_output_validation(self):
+        with mock.patch.object(payload, 'userspace_binding', side_effect=ValueError('profile rejected')), mock.patch.object(payload, 'validate_output') as output:
+            with self.assertRaisesRegex(ValueError, 'profile rejected'):
+                payload.build('missing', 'missing', 'missing', userspace_profile='unknown')
+            output.assert_not_called()
+
+    def test_wrong_profile_archive_fails_before_output_mutation(self):
+        with tempfile.TemporaryDirectory() as temporary, ExitStack() as stack:
+            work = Path(temporary)
+            archive = work / 'wrong.tar'
+            archive.write_bytes(b'wrong profile')
+            diagnostic = work / 'diag'
+            diagnostic.mkdir()
+            output = work / 'absent/host-payload-wrong'
+            stack.enter_context(mock.patch.object(payload, 'userspace_binding', return_value={
+                'evidence': payload.REPO / 'docs/evidence/host-userspace-20261104.json',
+                'archive': {'bytes': 1, 'sha256': '0' * 64}}))
+            stack.enter_context(mock.patch.object(payload, 'validate_output', return_value=output))
+            stack.enter_context(mock.patch.object(payload, 'validate_builder_packages', return_value={}))
+            stack.enter_context(mock.patch.object(payload.os, 'geteuid', return_value=0))
+            stack.enter_context(mock.patch.object(payload.shutil, 'which', return_value='/tool'))
+            with self.assertRaisesRegex(ValueError, 'hash or size mismatch'):
+                payload.build(archive, diagnostic, output, userspace_profile='normalized-20261106')
+            self.assertFalse(output.parent.exists())
+
+    def test_flat_provenance_rejects_collisions(self):
+        self.assertEqual(payload.provenance_paths((Path('/a/proof'), Path('/a/proof'))), (Path('/a/proof'),))
+        with self.assertRaisesRegex(ValueError, 'basename collision'):
+            payload.provenance_paths((Path('/a/proof'), Path('/b/proof')))
+
+    def test_profile_markers_manifest_provenance_and_metadata_pin(self):
+        cases = [(metadata, 'normalized-20261106', False, False) for metadata in payload.METADATA_PROFILES] + [
+            ('native', payload.DEFAULT_USERSPACE_PROFILE, False, False),
+            ('native', 'normalized-20261106', True, False), ('native', 'normalized-20261106', False, True)]
+        for metadata, userspace_profile, changed_provenance, no_space in cases:
+            with self.subTest(metadata=metadata, changed_provenance=changed_provenance, no_space=no_space), tempfile.TemporaryDirectory() as temporary, ExitStack() as stack:
+                work = Path(temporary)
+                archive = work / 'rootfs.tar'
+                with tarfile.open(archive, 'w') as target:
+                    target.addfile(tar_member('.', tarfile.DIRTYPE))
+                expected = payload.file_record(archive)
+                proof = work / 'normalized-proof.json'
+                proof.write_text('{}')
+                binding = {'profile': 'normalized-20261106', 'source_pins': {'fixture': expected}}
+                helper = payload.REPO / 'build/userspace-profiles.py'
+                lock = payload.REPO / 'configs/host-userspace-profiles.lock.json'
+                selected = {'archive': expected, 'evidence': proof, 'provenance': (proof, helper, lock), 'binding': binding}
+                selected['provenance_records'] = {str(path): payload.file_record(path) for path in selected['provenance']}
+                if changed_provenance:
+                    proof.write_text('{"changed": true}')
+                diagnostic = work / 'diag'
+                diagnostic.mkdir()
+                for name in payload.BOOT_FILES:
+                    (diagnostic / name).write_bytes(gzip.compress(b'fixture') if name == 'initramfs.cpio.gz' else b'fixture')
+                output = work / 'output'
+                backend = mock.Mock(LOCK=payload.REPO / 'configs/rootfs-metadata.lock.json') if metadata != 'native' else None
+                # Use the actual metadata lock path, independently of userspace choice.
+                if backend is not None:
+                    backend.LOCK = payload.metadata_backend(metadata).LOCK
+                receipt = {'helper': payload.file_record(payload.REPO / 'build/rootfs-metadata.py')}
+                extract = mock.Mock(return_value=receipt)
+                markers = []
+                def image(root, destination, slot):
+                    markers.append(json.loads((root / 'usr/lib/orangepi-hypervisor/payload.json').read_text()))
+                    destination.write_bytes(b'image')
+                patches = {'userspace_binding': mock.Mock(return_value=selected),
+                    'validate_metadata_profile': mock.Mock(return_value=backend),
+                    'validate_output': mock.Mock(return_value=output),
+                    'validate_builder_packages': mock.Mock(return_value={}),
+                    'validate_kernel': mock.Mock(), 'module_entries': mock.Mock(return_value={}),
+                    'extract_rootfs': extract, 'import_modules': mock.Mock(return_value={}),
+                    'install_management': mock.Mock(return_value={}), 'maintenance_entries': mock.Mock(return_value={}),
+                    'install_maintenance': mock.Mock(return_value={}), 'make_image': mock.Mock(side_effect=image),
+                    'tool_version': mock.Mock(return_value='fixture')}
+                # Archive authentication is real; diagnostic blobs are independent mocked fixtures.
+                authenticate = payload.authenticate
+                patches['authenticate'] = mock.Mock(side_effect=lambda path, pin: authenticate(path, pin) if Path(path) == archive or Path(path).parent.name == 'provenance' else None)
+                for name, value in patches.items():
+                    stack.enter_context(mock.patch.object(payload, name, value))
+                stack.enter_context(mock.patch.object(payload.os, 'geteuid', return_value=0))
+                stack.enter_context(mock.patch.object(payload.shutil, 'which', return_value='/tool'))
+                stack.enter_context(mock.patch.object(payload.shutil, 'disk_usage', return_value=mock.Mock(free=0 if no_space else 10**15)))
+                stack.enter_context(mock.patch.object(payload.PACKAGE, 'snapshot', return_value={}))
+                stack.enter_context(mock.patch.object(payload.PACKAGE, 'prune_caches', return_value=[]))
+                if changed_provenance or no_space:
+                    with self.assertRaisesRegex(ValueError, 'hash or size mismatch' if changed_provenance else 'insufficient free space'):
+                        payload.build(archive, diagnostic, output, metadata, userspace_profile)
+                    extract.assert_not_called()
+                    patches['make_image'].assert_not_called()
+                    if no_space:
+                        self.assertFalse(output.exists())
+                    continue
+                payload.build(archive, diagnostic, output, metadata, userspace_profile)
+                manifest = json.loads((output / 'manifest.json').read_text())
+                if userspace_profile == payload.DEFAULT_USERSPACE_PROFILE:
+                    self.assertNotIn('userspace_profile', manifest['sources'])
+                else:
+                    self.assertEqual(manifest['sources']['userspace_profile'], binding)
+                self.assertEqual([marker['sources'] for marker in markers], [manifest['sources']] * 2)
+                for source in selected['provenance']:
+                    self.assertEqual((output / 'provenance' / source.name).read_bytes(), source.read_bytes())
+                if backend is not None:
+                    self.assertEqual(extract.call_args.args[2:], (metadata, expected))
+                else:
+                    self.assertEqual(len(extract.call_args.args), 2)
 
 
 @unittest.skipUnless(all(shutil.which(tool) for tool in ('mke2fs', 'tune2fs', 'e2fsck', 'debugfs')), 'e2fsprogs required')

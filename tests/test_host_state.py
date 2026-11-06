@@ -1,5 +1,6 @@
 """Host-only state payload checks; no mounts, devices or hardware claims."""
 import base64
+from contextlib import ExitStack
 import gzip
 import importlib.util
 import json
@@ -8,6 +9,7 @@ from pathlib import Path
 import shutil
 import stat
 import struct
+import sys
 import subprocess
 import tarfile
 import tempfile
@@ -215,6 +217,110 @@ class Validators(unittest.TestCase):
                 with self.assertRaises(OSError):
                     STATE.make_image(root, path, str(uuid.uuid4()), size=32 * 1024**2)
             self.assertEqual((root / 'existing').read_bytes(), b'keep')
+
+
+class UserspaceProfiles(unittest.TestCase):
+    def setUp(self):
+        # build() deliberately tightens the process umask. Restore the runner's
+        # mask even when an authenticated-input or capacity subcase rejects.
+        original_umask = os.umask(0o077)
+        os.umask(original_umask)
+        self.addCleanup(os.umask, original_umask)
+
+    def test_cli_default_and_explicit_profiles(self):
+        for options, profile, metadata in (([], STATE.PAYLOAD.DEFAULT_USERSPACE_PROFILE, 'native'),
+                (['--userspace-profile', 'normalized-20261106', '--metadata-profile', 'fakeroot-raw-xattrs-v1'],
+                 'normalized-20261106', 'fakeroot-raw-xattrs-v1')):
+            with mock.patch.object(sys, 'argv', ['host-state.py', 'rootfs', 'config', 'key', 'output', '--boot-selection', 'selection', *options]), mock.patch.object(STATE, 'build') as build:
+                STATE.main()
+                self.assertEqual(build.call_args.args, (Path('rootfs'), Path('config'), Path('key'), Path('output'), Path('selection'), None, metadata, profile))
+
+    def test_resolver_uses_state_repository_before_output_validation(self):
+        with mock.patch.object(STATE, 'REPO', Path('/fixture')), mock.patch.object(STATE.PAYLOAD, 'userspace_binding', side_effect=ValueError('profile rejected')) as resolve, mock.patch.object(STATE, 'validate_output') as output:
+            with self.assertRaisesRegex(ValueError, 'profile rejected'):
+                STATE.build('rootfs', 'config', 'key', 'output', 'selection', userspace_profile='normalized-20261106')
+            resolve.assert_called_once_with('normalized-20261106', repo=Path('/fixture'))
+            output.assert_not_called()
+
+    def test_profile_archive_authentication_provenance_and_metadata_pin(self):
+        cases = [(metadata, 'normalized-20261106', False, False, False) for metadata in STATE.PAYLOAD.METADATA_PROFILES] + [
+            ('native', STATE.PAYLOAD.DEFAULT_USERSPACE_PROFILE, False, False, False),
+            ('native', 'normalized-20261106', True, False, False),
+            ('native', 'normalized-20261106', False, True, False), ('native', 'normalized-20261106', False, False, True)]
+        for metadata, userspace_profile, wrong_archive, changed_provenance, no_space in cases:
+            with self.subTest(metadata=metadata, wrong_archive=wrong_archive, changed_provenance=changed_provenance, no_space=no_space), tempfile.TemporaryDirectory() as temporary, ExitStack() as stack:
+                work = Path(temporary)
+                archive = work / 'rootfs.tar'
+                with tarfile.open(archive, 'w'):
+                    pass
+                expected = STATE.PAYLOAD.file_record(archive)
+                if wrong_archive:
+                    expected = {**expected, 'sha256': '0' * 64}
+                proof = work / 'normalized-proof.json'
+                proof.write_text('{}')
+                selected = {'archive': expected, 'evidence': proof,
+                    'provenance': (proof, REPO / 'build/userspace-profiles.py', REPO / 'configs/host-userspace-profiles.lock.json'),
+                    'binding': {'profile': 'normalized-20261106', 'source_pins': {'fixture': expected}}}
+                selected['provenance_records'] = {str(path): STATE.PAYLOAD.file_record(path) for path in selected['provenance']}
+                if changed_provenance:
+                    proof.write_text('{"changed": true}')
+                for name, data in (('config', json.dumps(CONFIG).encode()), ('key', KEY), ('selection', SELECTION)):
+                    (work / name).write_bytes(data)
+                output = work / 'absent/output'
+                backend = STATE.PAYLOAD.metadata_backend(metadata)
+                receipt = {'helper': STATE.PAYLOAD.file_record(REPO / 'build/rootfs-metadata.py')}
+                extract = mock.Mock(return_value=receipt)
+                def seed(extracted, target, *args):
+                    target.mkdir()
+                    return 'fixture-machine-id'
+                def image(root, target, state_uuid):
+                    target.write_bytes(b'image')
+                    return []
+                patches = {'validate_output': mock.Mock(return_value=output),
+                    'validate_workspace_storage': mock.Mock(return_value={}),
+                    'seed_state': mock.Mock(side_effect=seed), 'contents': mock.Mock(return_value=[]),
+                    'make_image': mock.Mock(side_effect=image),
+                    'compress_image': mock.Mock(side_effect=lambda source, dest: dest.write_bytes(b'gzip'))}
+                for name, value in patches.items():
+                    stack.enter_context(mock.patch.object(STATE, name, value))
+                stack.enter_context(mock.patch.object(STATE.os, 'geteuid', return_value=0))
+                stack.enter_context(mock.patch.object(STATE.shutil, 'which', return_value='/tool'))
+                stack.enter_context(mock.patch.object(STATE.shutil, 'disk_usage', return_value=mock.Mock(free=0 if no_space else 10**15)))
+                stack.enter_context(mock.patch.object(STATE.PAYLOAD, 'userspace_binding', return_value=selected))
+                stack.enter_context(mock.patch.object(STATE.PAYLOAD, 'validate_metadata_profile', return_value=backend))
+                stack.enter_context(mock.patch.object(STATE.PAYLOAD, 'validate_builder_packages', return_value={}))
+                stack.enter_context(mock.patch.object(STATE.PAYLOAD, 'tool_version', return_value='fixture'))
+                stack.enter_context(mock.patch.object(STATE.PAYLOAD, 'extract_rootfs', extract))
+                stack.enter_context(mock.patch.object(STATE.PAYLOAD.PACKAGE, 'prune_caches', return_value=[]))
+                if wrong_archive:
+                    with self.assertRaisesRegex(ValueError, 'archive hash/size differs'):
+                        STATE.build(archive, work / 'config', work / 'key', output, work / 'selection', metadata_profile=metadata, userspace_profile=userspace_profile)
+                    self.assertFalse(output.parent.exists())
+                    extract.assert_not_called()
+                    continue
+                if changed_provenance or no_space:
+                    with self.assertRaisesRegex(ValueError, 'hash or size mismatch' if changed_provenance else 'insufficient space'):
+                        STATE.build(archive, work / 'config', work / 'key', output, work / 'selection', metadata_profile=metadata, userspace_profile=userspace_profile)
+                    extract.assert_not_called()
+                    patches['make_image'].assert_not_called()
+                    if no_space:
+                        self.assertFalse(output.exists())
+                    continue
+                STATE.build(archive, work / 'config', work / 'key', output, work / 'selection', metadata_profile=metadata, userspace_profile=userspace_profile)
+                manifest = json.loads((output / 'manifest.json').read_text())
+                if userspace_profile == STATE.PAYLOAD.DEFAULT_USERSPACE_PROFILE:
+                    self.assertNotIn('userspace_profile', manifest['sources'])
+                else:
+                    self.assertEqual(manifest['sources']['userspace_profile'], selected['binding'])
+                self.assertEqual(manifest['sources']['rootfs.tar.gz'], expected)
+                for source in selected['provenance']:
+                    self.assertEqual((output / 'provenance' / source.name).read_bytes(), source.read_bytes())
+                self.assertFalse((output / '.rootfs-input.tar.gz').exists())
+                self.assertNotEqual(extract.call_args.args[0], archive)
+                if backend is not None:
+                    self.assertEqual(extract.call_args.args[2:], (metadata, expected))
+                else:
+                    self.assertEqual(len(extract.call_args.args), 2)
 
 
 @unittest.skipUnless(os.geteuid() == 0, 'root required for ownership-preserving state fixture')

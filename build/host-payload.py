@@ -24,6 +24,11 @@ package_spec = importlib.util.spec_from_file_location('payload_package_state', R
 PACKAGE = importlib.util.module_from_spec(package_spec)
 package_spec.loader.exec_module(PACKAGE)
 
+# These shared modules are also packaged for runtime readers. Profile policy is
+# source-only and loaded only when a production build explicitly resolves it.
+DEFAULT_USERSPACE_PROFILE = 'baseline-20261104'
+USERSPACE_PROFILES = (DEFAULT_USERSPACE_PROFILE, 'normalized-20261106')
+
 SLOT_BYTES = 4 * 1024**3
 KERNEL_RELEASE = '6.6.98-a733-diag'
 SLOT_UUIDS = {'A': 'a7330000-0000-4000-8000-00000000000a',
@@ -44,6 +49,31 @@ def file_record(path):
         for data in iter(lambda: stream.read(1024 * 1024), b''):
             digest.update(data)
     return {'bytes': Path(path).stat().st_size, 'sha256': digest.hexdigest()}
+
+
+def userspace_backend():
+    spec = importlib.util.spec_from_file_location('payload_userspace_profiles', REPO / 'build/userspace-profiles.py')
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    if module.DEFAULT != DEFAULT_USERSPACE_PROFILE or module.PROFILES != USERSPACE_PROFILES:
+        raise ValueError('userspace profile interface differs from production builders')
+    return module
+
+
+def userspace_binding(profile=DEFAULT_USERSPACE_PROFILE, repo=None):
+    """Resolve source-only profile policy against the caller's repository."""
+    return userspace_backend().resolve(profile, repo=REPO if repo is None else repo)
+
+
+def provenance_paths(paths):
+    """Deduplicate identical paths, rejecting ambiguous flattened names."""
+    selected = {}
+    for path in paths:
+        path = Path(path)
+        if path.name in selected and selected[path.name] != path:
+            raise ValueError(f'provenance basename collision: {path.name}')
+        selected[path.name] = path
+    return tuple(selected.values())
 
 
 def require_regular(path):
@@ -360,8 +390,9 @@ def validate_builder_packages(lock_path):
             for name, (version, architecture) in sorted(actual.items())}
 
 
-def build(rootfs, diagnostic, output, metadata_profile='native'):
+def build(rootfs, diagnostic, output, metadata_profile='native', userspace_profile=DEFAULT_USERSPACE_PROFILE):
     backend = validate_metadata_profile(metadata_profile)
+    userspace = userspace_binding(userspace_profile)
     if os.geteuid() != 0:
         raise ValueError('root required to preserve rootfs ownership and device nodes')
     for tool in ('mke2fs', 'tune2fs', 'e2fsck', 'tar'):
@@ -373,11 +404,11 @@ def build(rootfs, diagnostic, output, metadata_profile='native'):
     diagnostic = Path(diagnostic)
     if not diagnostic.is_dir() or diagnostic.is_symlink():
         raise ValueError('diagnostic input must be a real directory')
-    user_evidence = REPO / 'docs/evidence/host-userspace-20261104.json'
+    user_evidence = userspace['evidence']
     diag_evidence = REPO / 'docs/evidence/diagnostic-20261104.json'
-    user_lock = json.loads(user_evidence.read_text())['files']
+    expected = userspace['archive']
     diag_lock = json.loads(diag_evidence.read_text())['files']
-    authenticate(rootfs, user_lock['rootfs.tar.gz'])
+    authenticate(rootfs, expected)
     for name in BOOT_FILES:
         authenticate(diagnostic / name, diag_lock[name])
     validate_kernel((diagnostic / 'kernel.config').read_text())
@@ -389,29 +420,33 @@ def build(rootfs, diagnostic, output, metadata_profile='native'):
         unpacked = sum(m.size for m in members if m.isfile())
     if unpacked > SLOT_BYTES * 3 // 4:
         raise ValueError('rootfs exceeds conservative slot budget')
-    # Two full images, worst-case compressed copies, staging and safety reserve.
-    required = 4 * SLOT_BYTES + unpacked + 1024**3
-    output.parent.mkdir(exist_ok=True)
-    if shutil.disk_usage(output.parent).free < required:
-        raise ValueError(f'insufficient free space: require {required} bytes')
-    output.mkdir(mode=0o700)
-    sources = {'rootfs.tar.gz': user_lock['rootfs.tar.gz'],
-               **{name: diag_lock[name] for name in BOOT_FILES}}
-    provenance = output / 'provenance'
-    provenance.mkdir()
-    for path in (user_evidence, diag_evidence, Path(__file__).resolve(),
+    paths = provenance_paths((user_evidence, *userspace['provenance'], diag_evidence, Path(__file__).resolve(),
                  REPO / 'configs/diagnostic-sources.lock.json',
                  REPO / 'configs/builder-packages.lock.tsv',
                  REPO / 'build/host-userspace.sh',
                  REPO / 'configs/host-userspace-packages.txt',
                  REPO / 'configs/host-userspace-packages.lock.tsv',
                  REPO / 'configs/host-userspace-package-hashes.lock.tsv',
-                 *(REPO / source for source in MANAGEMENT_FILES)):
+                 *(REPO / source for source in MANAGEMENT_FILES),
+                 *((REPO / 'build/rootfs-metadata.py', backend.LOCK) if backend is not None else ())))
+    # Two full images, worst-case compressed copies, staging and safety reserve.
+    required = 4 * SLOT_BYTES + unpacked + 1024**3
+    output.parent.mkdir(exist_ok=True)
+    if shutil.disk_usage(output.parent).free < required:
+        raise ValueError(f'insufficient free space: require {required} bytes')
+    output.mkdir(mode=0o700)
+    sources = {'rootfs.tar.gz': expected,
+               **{name: diag_lock[name] for name in BOOT_FILES}}
+    if userspace_profile != DEFAULT_USERSPACE_PROFILE:
+        sources['userspace_profile'] = userspace['binding']
+    provenance = output / 'provenance'
+    provenance.mkdir()
+    for path in paths:
         shutil.copyfile(path, provenance / path.name)
+    for path in userspace['provenance']:
+        authenticate(provenance / path.name, userspace['provenance_records'][str(path)])
     if backend is not None:
         helper = REPO / 'build/rootfs-metadata.py'
-        shutil.copyfile(helper, provenance / helper.name)
-        shutil.copyfile(backend.LOCK, provenance / backend.LOCK.name)
         sources['rootfs_metadata'] = {'profile': metadata_profile,
                                      'helper': file_record(provenance / helper.name)}
     for name in BOOT_FILES:
@@ -422,7 +457,7 @@ def build(rootfs, diagnostic, output, metadata_profile='native'):
         if backend is None:
             extract_rootfs(rootfs, root)
         else:
-            metadata_extraction = extract_rootfs(rootfs, root, metadata_profile, user_lock['rootfs.tar.gz'])
+            metadata_extraction = extract_rootfs(rootfs, root, metadata_profile, expected)
             if metadata_extraction['helper'] != sources['rootfs_metadata']['helper']:
                 raise ValueError('metadata helper changed during build')
         cache_pruning = PACKAGE.prune_caches(root)
@@ -476,9 +511,10 @@ def main():
     parser.add_argument('diagnostic_artifact_dir', type=Path)
     parser.add_argument('output', type=Path)
     parser.add_argument('--metadata-profile', choices=METADATA_PROFILES, default='native')
+    parser.add_argument('--userspace-profile', choices=USERSPACE_PROFILES, default=DEFAULT_USERSPACE_PROFILE)
     args = parser.parse_args()
     try:
-        build(args.rootfs_tar, args.diagnostic_artifact_dir, args.output, args.metadata_profile)
+        build(args.rootfs_tar, args.diagnostic_artifact_dir, args.output, args.metadata_profile, args.userspace_profile)
     except (ValueError, OSError, tarfile.TarError, subprocess.CalledProcessError) as error:
         parser.exit(1, f'host payload: {error}\n')
 

@@ -382,6 +382,9 @@ class WiringTests(unittest.TestCase):
                 stack.enter_context(mock.patch.object(STATE.PAYLOAD, 'validate_builder_packages', return_value={}))
                 stack.enter_context(mock.patch.object(STATE.PAYLOAD, 'tool_version', return_value='fixture'))
                 stack.enter_context(mock.patch.object(STATE.PAYLOAD.PACKAGE, 'prune_caches', return_value={}))
+                stack.enter_context(mock.patch.object(STATE.PAYLOAD, 'userspace_binding', return_value={
+                    'archive': expected, 'evidence': REPO / 'docs/evidence/host-userspace-20261104.json',
+                    'provenance': (), 'binding': {}}))
                 extract = stack.enter_context(mock.patch.object(STATE.PAYLOAD, 'extract_rootfs', return_value=receipt))
                 STATE.build(archive, work / 'config', work / 'key', output, work / 'selection', metadata_profile=profile)
                 manifest = json.loads((output / 'manifest.json').read_text())
