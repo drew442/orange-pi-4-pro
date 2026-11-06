@@ -16,6 +16,11 @@ immutable modes. The artifact records below retain the earlier package-state
 components; they have not been silently replaced. The images remain prototypes: they are not
 installed or hardware-booted, and establish no KVM or SD-write acceptance.
 
+The optional `--userspace-profile normalized-20261106` selects the authenticated
+normalized archive; omission preserves the baseline. See [profile selection and
+actual staging evidence](userspace-profiles.md). This does not replace the
+published installation artifacts.
+
 ## Format and provenance
 
 Each image has a distinct slot UUID, no journal and ext4 `read-only` feature.

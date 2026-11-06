@@ -1,0 +1,292 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "actual frozen-builder userspace profile staging; no production image or hardware acceptance",
+  "source_commit": "4d8ddd1465382c40981d0decd9a7218790587791",
+  "success": true,
+  "profile": {
+    "profile": "normalized-20261106",
+    "archive": {
+      "bytes": 138025729,
+      "sha256": "98d6a57bbb70ff55bef32b6bd051ebfcb6bc0fad4f6c8b3167e8619b5a9d961e"
+    },
+    "evidence": {
+      "docs/evidence/userspace-fresh-pipeline-20261106.json": {
+        "bytes": 26977,
+        "sha256": "71a6388eeca35ba1c5c33c106750f070219df438fef63284c6813383c22b4bf0"
+      },
+      "docs/evidence/userspace-canonical-export-20261106.json": {
+        "bytes": 15668,
+        "sha256": "28cecd8b3221090bceefca54ed9af41ef1114d393d6e3c2078725bf0c9fade10"
+      }
+    },
+    "sources": {
+      "build/prepare-host-userspace.py": {
+        "bytes": 18830,
+        "sha256": "86a3432aea83ae408a38d18f07eb48b2d2a8b59adb7b23b14bfcadfdf6a772a9"
+      },
+      "build/configure-host-userspace.py": {
+        "bytes": 22122,
+        "sha256": "0ff4f8538723ac1a4fe6f43d1ff6d73b6e0e36f22daa8eb31fa97d8553b8c95f"
+      },
+      "build/export-host-userspace.py": {
+        "bytes": 28217,
+        "sha256": "1cd49563c43fe7ddd78d309ef2d9fe48b2ad1d1d29ee6d7050374db12be118ed"
+      },
+      "build/debootstrap-adapter.py": {
+        "bytes": 18308,
+        "sha256": "d10f8a8ea1e83a0b659582d895e98bf8553165dbfc2469aab54eab82e1c501ea"
+      },
+      "build/offline-userspace-repo.py": {
+        "bytes": 19197,
+        "sha256": "bb8a4c71595f9867e4f7cf2958a2bf5bca6e0d81c49819eb1b7483957b0a4911"
+      },
+      "configs/host-userspace-packages.lock.tsv": {
+        "bytes": 6671,
+        "sha256": "f2abf03d0d6e7fd506560689093220514cbf1acc678f7560562026d6ca6564a6"
+      },
+      "configs/host-userspace-package-hashes.lock.tsv": {
+        "bytes": 28638,
+        "sha256": "f2f613e79d9c1abc1689e19cfe81b624d9d2ac3beeb322fd5788980d919f7d86"
+      },
+      "configs/host-userspace-source-archives.lock.json": {
+        "bytes": 122443,
+        "sha256": "f75bae857ffcfdfcfe5b7062880850d14b9f40bcdc7296f1999aa6a901fd6185"
+      }
+    },
+    "raw_tar": {
+      "bytes": 468398080,
+      "sha256": "a3b1ccfb69c24844d50cf60fb4c4286eb366dc6ba8da0f77ff672c8202b6e730"
+    },
+    "members": 15876,
+    "epoch": 1790812800,
+    "inventory": {
+      "packages": 220,
+      "lock_sha256": "f2abf03d0d6e7fd506560689093220514cbf1acc678f7560562026d6ca6564a6"
+    },
+    "profile_lock": {
+      "bytes": 2781,
+      "sha256": "ffa155f51cca41d4c791594f53829b79cc6c255cde06880137ed0c52cab40d58"
+    },
+    "resolver": {
+      "bytes": 9156,
+      "sha256": "45af74a960e829c6d31b23ceb7e9610322fc2bdfed6cf6c6f0d63f2a4785de67"
+    }
+  },
+  "checks": {
+    "baseline_default": "baseline-20261104",
+    "cross_profile_archive_rejected": true,
+    "state_and_root_bindings_equal": true,
+    "backend": {
+      "profile": "fakeroot-raw-xattrs-v1",
+      "archive": {
+        "bytes": 138025729,
+        "sha256": "98d6a57bbb70ff55bef32b6bd051ebfcb6bc0fad4f6c8b3167e8619b5a9d961e"
+      },
+      "audit": {
+        "members": 15876,
+        "character_nodes": 8,
+        "raw_attributes": 1,
+        "members_with_raw_xattrs": 1,
+        "textual_acl": 0,
+        "maximum_name_list_bytes": 20,
+        "maximum_name_value_bytes": 40,
+        "unpacked_regular_bytes": 440778438
+      },
+      "expected_metadata_sha256": "b96e226a3f260d9227349cdc52c6de7a98744d5a3d0c20e7a2152c6c3b25e4b6",
+      "helper": {
+        "bytes": 12414,
+        "sha256": "b08095583bf53ddc37d445fe9f86d0ab924647b90d5ecd343efed9321f6fff2f"
+      },
+      "tool_packages": {
+        "fakeroot": {
+          "version": "1.28-1ubuntu1",
+          "architecture": "amd64"
+        },
+        "libfakeroot:amd64": {
+          "version": "1.28-1ubuntu1",
+          "architecture": "amd64"
+        }
+      },
+      "validation": {
+        "passed": true,
+        "members": 15876,
+        "all_regular_and_hardlink_bytes_sha256_checked": true
+      }
+    },
+    "package_components": 8,
+    "installed_package_count": 220,
+    "source_archive_members": 15876,
+    "unpacked_bytes": 440778438,
+    "staging_required_bytes": 3729112774,
+    "production_slot_bytes": 4294967296,
+    "production_state_bytes": 8589934592
+  },
+  "provenance_files": 12,
+  "resources": {
+    "samples": 13,
+    "minimum_free_bytes": 3290382336,
+    "minimum_available_memory_bytes": 7097884672,
+    "reserve_bytes": 3221225472
+  },
+  "isolation": {
+    "command": [
+      "/usr/bin/systemd-nspawn",
+      "--directory=/var/lib/a733-frozen-builders/freeze-20261106-01/restored-rootfs",
+      "--settings=no",
+      "--as-pid2",
+      "--register=no",
+      "--keep-unit",
+      "--console=pipe",
+      "--private-users=1048576:65536",
+      "--private-users-ownership=off",
+      "--private-network",
+      "--no-new-privileges=yes",
+      "--drop-capability=CAP_SYS_ADMIN,CAP_SYS_MODULE,CAP_SYS_RAWIO,CAP_SYS_BOOT,CAP_SYS_TIME,CAP_MKNOD,CAP_NET_ADMIN",
+      "--resolv-conf=off",
+      "--timezone=off",
+      "--link-journal=no",
+      "--bind-ro=/var/lib/a733-clean-builder/seed-probe-20261106-05/probe.sh:/a733-probe.sh",
+      "--bind-ro=/var/lib/a733-clean-builder/seed-probe-20261106-05/firmware-empty:/sys/firmware",
+      "--read-only",
+      "--bind=/var/lib/a733-clean-replay-20261106/normalized-profile-03/work:/a733-export-output",
+      "--bind=/var/lib/a733-clean-replay-20261106/normalized-profile-03/scratch:/var/tmp",
+      "--bind-ro=/var/lib/a733-normalized-profile-inputs-20261106:/a733-sources",
+      "--bind-ro=/var/lib/a733-clean-replay-20261106/userspace-foreign-recipe-01/work/export-fresh-01:/a733-debs",
+      "/bin/sh",
+      "-c",
+      "/bin/sh /a733-probe.sh && exec /bin/bash /a733-sources/run3.sh"
+    ],
+    "probe": {
+      "uid_base": 1048576,
+      "uid_count": 65536,
+      "network_interfaces": [
+        "lo"
+      ],
+      "ipv6_loopback_routes": [
+        "00000000000000000000000000000001 80 00000000000000000000000000000000 00 00000000000000000000000000000000 00000100 00000001 00000000 00000001       lo",
+        "00000000000000000000000000000000 00 00000000000000000000000000000000 00 00000000000000000000000000000000 ffffffff 00000001 00000000 00200200       lo",
+        "00000000000000000000000000000001 80 00000000000000000000000000000000 00 00000000000000000000000000000000 00000000 00000002 00000000 80200001       lo",
+        "00000000000000000000000000000000 00 00000000000000000000000000000000 00 00000000000000000000000000000000 ffffffff 00000001 00000000 00200200       lo"
+      ],
+      "prohibited_capability_mask": "0xa631000"
+    },
+    "returncode": 0,
+    "host_packages_unchanged": true,
+    "mapped_processes_after": [],
+    "output_mounts_after": [],
+    "outer_inventory_matches": "configs/builder-replay-packages-20261106.lock.tsv"
+  },
+  "validation": {
+    "native_discovery": {
+      "cases": 1145,
+      "environment_skips": 96,
+      "success": true
+    },
+    "assembly_cases": 4,
+    "bash_suites": 5,
+    "independent_focused_cases": 92,
+    "focused_environment_skips": 2,
+    "independent_reviewer": {
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "high"
+    },
+    "toml_files_parsed": 5,
+    "diff_check": true
+  },
+  "retained_records": {
+    "out/normalized-profile-20261106/receipt.json": {
+      "bytes": 3957,
+      "sha256": "3c9b9fdf55259870f0d251f515bf842072eac9c05c7cff20626d05bc9d8c73c3"
+    },
+    "out/normalized-profile-20261106/runtime.log": {
+      "bytes": 3157,
+      "sha256": "6dae4adf4536292d698b5735890074c74b1ce284e45d1f87a85311f293392d31"
+    },
+    "out/normalized-profile-20261106/work/probe-receipt.json": {
+      "bytes": 13730,
+      "sha256": "20389164a2efebf55a1605a926f7da0c12b7eb987b726c66598ed5ea35bc7ae0"
+    },
+    "out/normalized-profile-20261106/work/actual-devices.json": {
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    "out/normalized-profile-20261106/host-packages.before.tsv": {
+      "bytes": 40966,
+      "sha256": "446b7eb3364a6f196390c698c1c133086fee5eb3b080ec4483cc1d8584b39b15"
+    },
+    "out/normalized-profile-20261106/host-packages.after.tsv": {
+      "bytes": 40966,
+      "sha256": "446b7eb3364a6f196390c698c1c133086fee5eb3b080ec4483cc1d8584b39b15"
+    },
+    "out/normalized-profile-20261106/independent-review.json": {
+      "bytes": 3481,
+      "sha256": "a591d541735da1006ea6fdba9d8dd7fc509c827935d45e4b84a7d4b391a21a48"
+    },
+    "out/normalized-profile-20261106/failed-phase-02/discard-intent.json": {
+      "bytes": 406,
+      "sha256": "f52461b4052f40eec536be9bf416d3460cfe1461ea200e14743c733cba623a99"
+    },
+    "out/normalized-profile-20261106/failed-phase-02/discard-complete.json": {
+      "bytes": 425,
+      "sha256": "3299c58e5d6e06357ee98877cd2bb1bcd37997e5bbbe98d3caa5dd3a2c32f4df"
+    },
+    "out/normalized-profile-20261106/verification-code/discard-profile-fixture-02-20261106.py": {
+      "bytes": 3552,
+      "sha256": "2dd5b7faee25e2767217a404792ae466b24d0e6fef57fb1a38fd7c6c82b29f79"
+    },
+    "out/normalized-profile-20261106/verification-code/launch-normalized-profile-probe-03-20261106.py": {
+      "bytes": 4179,
+      "sha256": "2b7365811d6d84eeedc9688315f5a25389a2da79a71e18767fae5919b073df19"
+    },
+    "out/normalized-profile-20261106/verification-code/probe3.py": {
+      "bytes": 3851,
+      "sha256": "60ca00fc024294220349fc0bc7cec84bb06eba30beb31d06e7697123a9e9e8a5"
+    },
+    "out/normalized-profile-20261106/verification-code/run3.sh": {
+      "bytes": 749,
+      "sha256": "4929f7990ec9def2d1b50494348aa260fa959f049b976d418b266da072c7899c"
+    }
+  },
+  "source_files": {
+    "build/userspace-profiles.py": {
+      "bytes": 9156,
+      "sha256": "45af74a960e829c6d31b23ceb7e9610322fc2bdfed6cf6c6f0d63f2a4785de67"
+    },
+    "configs/host-userspace-profiles.lock.json": {
+      "bytes": 2781,
+      "sha256": "ffa155f51cca41d4c791594f53829b79cc6c255cde06880137ed0c52cab40d58"
+    },
+    "build/host-payload.py": {
+      "bytes": 24386,
+      "sha256": "457e02ecb71c465f4b13f21dcd066e3af74dd159296c38ba9c05c32c486dc70d"
+    },
+    "build/host-state.py": {
+      "bytes": 17670,
+      "sha256": "104592ee684ef12de45360efb6a9c5cd502f6d51356bf6fbbe7ccbf9fd7f6bb7"
+    }
+  },
+  "attempts": [
+    {
+      "phase": 1,
+      "result": "nspawn failed before payload because a bind destination was absent in the read-only OS; changed to existing /a733-debs scaffold"
+    },
+    {
+      "phase": 2,
+      "result": "full extraction completed; harness omitted management installation required before package-state snapshot; corrected production staging order in phase 3",
+      "cleanup": "independently reviewed fixed-path full-BOM-verified discard of generated restored tree only; inputs, proofs and failure logs retained"
+    },
+    {
+      "phase": 3,
+      "result": "terminal zero; full metadata extraction, four management files, 39 maintenance files, eight package-state components; no actual device nodes outside fakeroot"
+    }
+  ],
+  "limitations": [
+    "No 4 GiB root, 8 GiB state or complete NVMe image was built in this probe.",
+    "Complete metadata was verified inside the fakeroot session; native metadata after session exit was not independently reread.",
+    "Production validate_builder_packages was not invoked; it checks four archive/filesystem packages, not all inventory rows. Outer inventories match the replay lock; five versions differ from the older builder-packages lock.",
+    "Published deployment images are unchanged. Physical boot, installed SSH, real KVM, zero SD writes and independent deployment remain pending.",
+    "Full production image capacity guards are unchanged; root-LV growth remains unauthorized.",
+    "Outer pipeline orchestration remains a retained verification harness rather than a tracked end-to-end production recipe."
+  ]
+}

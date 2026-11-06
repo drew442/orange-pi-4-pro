@@ -89,7 +89,10 @@ by subsequent clean-build work.
   Generated NVMe IDs/caches are removed and later archive timestamps clamped to
   the pinned snapshot. The [fresh raw-package pipeline](userspace-fresh-pipeline.md)
   now authenticates/extracts/configures anew and matches those bytes, with complete
-  independent readback. Latest native discovery: **1,121 cases, 96 environment skips**,
+  independent readback. The [explicit normalized profile](userspace-profiles.md) now integrates root/state
+  selection and passes actual complete staging: 15,876 base entries, 220 packages,
+  eight package-state components and the unchanged 39-file runtime. Latest native
+  discovery: **1,145 cases, 96 environment skips**,
   four assembly cases and all five shell suites. Production composition and
   independent deployment remain open; these checks establish no hardware acceptance.
 
@@ -104,7 +107,7 @@ by subsequent clean-build work.
    for CPU/disk/network, clean shutdown/restart and persisted disk marker. Return
    its console/log evidence; `/dev/kvm` alone cannot satisfy the gate.
 3. Continue [clean-build work](build-reproduction-status.md): consolidate outer
-   pipeline orchestration, explicitly adopt the normalized userspace profile, then
+   pipeline orchestration, then use the explicit normalized profile to
    reconstruct production roots/state/NVMe and complete image readback. The reviewed [20 GiB builder LVM growth](build-host-capacity-plan.md)
    awaits approval; no resize occurred and capacity guards remain unchanged.
    [Firmware license evidence](evidence/vendor-boot-license-inventory-20261106.json)

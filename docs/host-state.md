@@ -18,6 +18,11 @@ contract, management configuration, machine-id, filesystem UUID, and
 `boot/selected.conf`. Selection is bound to a full root payload using the
 manifest-checked preparer; see [root selection](nvme-root-selection.md).
 
+The optional `--userspace-profile normalized-20261106` selects the authenticated
+normalized archive; omission preserves the baseline. See [profile selection and
+actual staging evidence](userspace-profiles.md). This does not replace the
+published installation artifacts.
+
 ## Inputs and creation
 
 `build/host-state.py ROOTFS_TAR CONFIG_JSON ADMIN_PUBLIC_KEY NEW_OUTPUT_DIR`

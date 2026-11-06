@@ -78,7 +78,8 @@ reconstruction remains open; recheck all guards before further staging.
 Read-only LVM inventory on 2026-11-06 identifies 66,542,632,960 bytes of unused
 extents in `ubuntu-vg`, equal to the current root LV allocation. Current filesystem
 free space was about 7.68 GB after the earlier replay builds; the latest sample
-after the fresh userspace pipeline is about 3.79 GB. The
+after the fresh userspace pipeline was about 3.79 GB; subsequent
+[normalized profile staging](userspace-profiles.md) left about 3.29 GB. The
 [prepared 20 GiB growth proposal](build-host-capacity-plan.md) has an exact target,
 metadata backup, successful allocation test and independently reviewed guards.
 It awaits separate approval because it changes the build host root filesystem;
