@@ -215,7 +215,8 @@ def compress_image(image, output):
             shutil.copyfileobj(source, compressed, length=1024**2)
 
 
-def build(rootfs, config_path, public_key_path, output, boot_selection, state_uuid=None):
+def build(rootfs, config_path, public_key_path, output, boot_selection, state_uuid=None, metadata_profile='native'):
+    backend = PAYLOAD.validate_metadata_profile(metadata_profile)
     if os.geteuid() != 0:
         raise ValueError('root required to preserve userspace metadata')
     os.umask(0o077)
@@ -268,12 +269,25 @@ def build(rootfs, config_path, public_key_path, output, boot_selection, state_uu
                  REPO / 'build/host-userspace.sh', REPO / 'configs/host_config.py',
                  REPO / 'configs/package_state.py'):
         write_private(provenance / path.name, bounded_input(path, 8 * 1024**2))
+    metadata_sources = {}
+    if backend is not None:
+        helper = REPO / 'build/rootfs-metadata.py'
+        write_private(provenance / helper.name, bounded_input(helper, 8 * 1024**2))
+        write_private(provenance / backend.LOCK.name, bounded_input(backend.LOCK, 8 * 1024**2))
+        metadata_sources['rootfs_metadata'] = {'profile': metadata_profile,
+                                             'helper': PAYLOAD.file_record(provenance / helper.name)}
     write_private(provenance / evidence.name, evidence_data)
     with tempfile.TemporaryDirectory(prefix='.staging-', dir=output) as temporary:
         stage = Path(temporary)
         extracted = stage / 'userspace'
         extracted.mkdir()
-        PAYLOAD.extract_rootfs(snapshot, extracted)
+        metadata_extraction = None
+        if backend is None:
+            PAYLOAD.extract_rootfs(snapshot, extracted)
+        else:
+            metadata_extraction = PAYLOAD.extract_rootfs(snapshot, extracted, metadata_profile, expected)
+            if metadata_extraction['helper'] != metadata_sources['rootfs_metadata']['helper']:
+                raise ValueError('metadata helper changed during build')
         cache_pruning = PAYLOAD.PACKAGE.prune_caches(extracted)
         state = stage / 'state'
         machine_id = seed_state(extracted, state, state_uuid, config, public_key, selection_data)
@@ -291,7 +305,8 @@ def build(rootfs, config_path, public_key_path, output, boot_selection, state_uu
         'contents_scope': 'staging-contents.json records the pre-mke2fs source tree only; not an exact filesystem BOM',
         'filesystem_directories': filesystem_metadata,
         'staging_storage_guard_limit': 'kernel sdX/removable=0 cannot identify every USB SD reader; operator must use known fixed builder storage',
-        'sources': {'rootfs.tar.gz': expected,
+        **({'metadata_extraction': metadata_extraction} if backend is not None else {}),
+        'sources': {'rootfs.tar.gz': expected, **metadata_sources,
                     'boot_selection_input': {'bytes': len(selection_data), 'sha256': hashlib.sha256(selection_data).hexdigest()},
                     'operator_config': {'bytes': len(config_data), 'sha256': hashlib.sha256(config_data).hexdigest()},
                     'operator_public_key': {'bytes': len(key_data), 'sha256': hashlib.sha256(key_data).hexdigest()}},
@@ -313,9 +328,10 @@ def main():
     parser.add_argument('--boot-selection', type=Path, required=True,
                         help='initial selector prepared from a verified compatible root image')
     parser.add_argument('--state-uuid', help='explicit per-installation UUID for recovery/fixtures; defaults to fresh UUID4')
+    parser.add_argument('--metadata-profile', choices=PAYLOAD.METADATA_PROFILES, default='native')
     args = parser.parse_args()
     try:
-        build(args.rootfs_tar, args.config_json, args.admin_public_key, args.output, args.boot_selection, args.state_uuid)
+        build(args.rootfs_tar, args.config_json, args.admin_public_key, args.output, args.boot_selection, args.state_uuid, args.metadata_profile)
     except (ValueError, OSError, tarfile.TarError, subprocess.CalledProcessError) as error:
         parser.exit(1, f'host state: {error}\n')
 

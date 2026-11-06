@@ -21,7 +21,7 @@ restoration, then applies validated raw PAX xattrs after inode types exist.
 Source/restored snapshots match, and image attributes match an ordinary
 `mke2fs` reference. Named/default ACL semantics match the source; basic ACL IDs
 are normalized by e2fsprogs during export. Capabilities and binary user xattrs
-match exactly. Full-root integration/verification remains pending.
+match exactly. Production root/state image verification remains pending.
 
 The [complete archive diagnostic](evidence/full-root-metadata-fixture-20261106.json)
 now restores and validates all 15,892 members: 12,302 regular files, three
@@ -37,8 +37,27 @@ This is not a production root slot or full NVMe test. The staging tree was not
 copied to codex; its complete comparison is supported by execution records and
 reviewed code. Image checks are selected metadata probes and consistency, not
 complete content readback. Production 4 GiB A/B slots and their existing staging
-guards remain unchanged and unexercised. Integrating and validating this metadata
-backend in the root/state recipes is still necessary.
+guards remain unchanged and unexercised.
+
+The optional `fakeroot-raw-xattrs-v1` backend is now integrated into both root
+and state recipes; their default remains `native`. It requires the pinned
+Ubuntu 22.04 amd64 fakeroot session and authenticates a held archive descriptor
+before and after extraction. It preflights the complete namespace and raw
+attribute limits, then checks all staged content, metadata and hardlink groups.
+Selected-profile manifests retain the receipt, helper and package-lock provenance.
+The helper is build-only; the closed maintenance runtime remains unchanged.
+
+The [backend integration probe](evidence/root-metadata-backend-20261106.json)
+executes `host-payload.extract_rootfs` on the entire authenticated archive inside
+the frozen namespace. All 15,892 members pass, including eight virtual devices
+and the raw capability; the outside-fakeroot actual-device scan is empty. Eight
+resource samples remain above 6.04 GB free disk and 7.42 GB available RAM.
+Independent software and execution-evidence reviews and 24 focused tests pass. Complete payload/state
+builder paths have unit coverage; their production image runs remain pending.
+This probe creates no filesystem image. Existing published images are unchanged;
+replay their historical source revision as specified in
+[SD image reproduction](sd-image-reproduction.md). New recipe source/provenance
+will produce a distinct future artifact profile.
 
 Preserved failures explain the method: the first fixture used an invalid empty
 xattr baseline; direct tar xattr restoration exposed a tar/fakeroot zero-type
@@ -49,8 +68,9 @@ failed result was accepted or overwritten. The actual archive contains one raw
 capability xattr, no missing raw ACL counterpart and no attribute exceeding the
 pinned fakeroot IPC limits.
 
-Capacity is a separate issue. The filesystem has about 7.68 GB free, below the
-unchanged root/NVMe build guards, while its VG has 66.54 GB unallocated. The
+Capacity is a separate issue. Before the backend probe, the filesystem had about
+6.60 GB free, below the unchanged root/NVMe build guards, while its VG has
+66.54 GB unallocated. The
 [reviewed growth proposal](build-host-capacity-plan.md) would allocate 20 GiB to
 the builder's existing root LV and enlarge ext4. Inventory, metadata backup,
 allocation dry-runs and live precondition checks pass. Operator approval is

@@ -1,0 +1,124 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "optional metadata backend full-archive extraction in frozen builder; no production image or hardware acceptance",
+  "builder": "build.drewnet.online",
+  "phase": "/var/lib/a733-clean-replay-20261106/root-metadata-backend-01",
+  "backend": {
+    "profile": "fakeroot-raw-xattrs-v1",
+    "archive": {
+      "bytes": 169852145,
+      "sha256": "1967e76c0c831c1c0bab432e7116457d4372c15b413090c054f8958b72dcb392"
+    },
+    "audit": {
+      "members": 15892,
+      "character_nodes": 8,
+      "raw_attributes": 1,
+      "members_with_raw_xattrs": 1,
+      "textual_acl": 0,
+      "maximum_name_list_bytes": 20,
+      "maximum_name_value_bytes": 40,
+      "unpacked_regular_bytes": 518081083
+    },
+    "expected_metadata_sha256": "5043ddaa4a6bf493f3d755f765733a6a18ffb3c427e520d94caa7ab881f083f0",
+    "helper": {
+      "bytes": 12414,
+      "sha256": "b08095583bf53ddc37d445fe9f86d0ab924647b90d5ecd343efed9321f6fff2f"
+    },
+    "tool_packages": {
+      "fakeroot": {
+        "version": "1.28-1ubuntu1",
+        "architecture": "amd64"
+      },
+      "libfakeroot:amd64": {
+        "version": "1.28-1ubuntu1",
+        "architecture": "amd64"
+      }
+    },
+    "validation": {
+      "passed": true,
+      "members": 15892,
+      "all_regular_and_hardlink_bytes_sha256_checked": true
+    },
+    "classification": "full archive staging backend integration only; no production image or hardware test"
+  },
+  "input_files": {
+    "build/host-payload.py": {
+      "bytes": 22652,
+      "sha256": "d887c71a3a9df4d2b8e4bfb0d195ea48bd358054e45b3e6a1d9c6e55bc2b19bc"
+    },
+    "build/rootfs-metadata.py": {
+      "bytes": 12414,
+      "sha256": "b08095583bf53ddc37d445fe9f86d0ab924647b90d5ecd343efed9321f6fff2f"
+    },
+    "configs/builder-replay-packages-20261106.lock.tsv": {
+      "bytes": 32546,
+      "sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425"
+    },
+    "configs/package_state.py": {
+      "bytes": 13113,
+      "sha256": "809630ebba9d927b6ad5034899a88a8a8fcf3401f94ff6f223f92f6fbfa9c6eb"
+    },
+    "probe.py": {
+      "bytes": 723,
+      "sha256": "dbf0b96a8827fe1fe4485001f0c358d04ed06e10f28b9431387d66a02a777260"
+    },
+    "run.sh": {
+      "bytes": 759,
+      "sha256": "1c65f002e80ca1e70f76bc615cf8bf1993e2c16527dfb497b9f92174c48899ea"
+    }
+  },
+  "isolation_probe": {
+    "uid_base": 1048576,
+    "uid_count": 65536,
+    "network_interfaces": [
+      "lo"
+    ],
+    "ipv6_loopback_routes": [
+      "00000000000000000000000000000001 80 00000000000000000000000000000000 00 00000000000000000000000000000000 00000100 00000001 00000000 00000001       lo",
+      "00000000000000000000000000000000 00 00000000000000000000000000000000 00 00000000000000000000000000000000 ffffffff 00000001 00000000 00200200       lo",
+      "00000000000000000000000000000001 80 00000000000000000000000000000000 00 00000000000000000000000000000000 00000000 00000002 00000000 80200001       lo",
+      "00000000000000000000000000000000 00 00000000000000000000000000000000 00 00000000000000000000000000000000 ffffffff 00000001 00000000 00200200       lo"
+    ],
+    "prohibited_capability_mask": "0xa631000"
+  },
+  "outside_fakeroot_actual_device_nodes": [],
+  "resource_samples": 8,
+  "minimum_free_bytes": 6046773248,
+  "minimum_available_memory_bytes": 7429713920,
+  "raw_records": "out/root-metadata-backend-20261106/",
+  "review": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "software_findings": "no outstanding findings",
+    "execution_postreview": "passed: six input hashes match current code/scripts; metadata digest matches prior authenticated full-archive record; isolation, resource floors and outside-fakeroot scan confirmed"
+  },
+  "limitations": [
+    "Complete staging comparison uses execution records; staging tree remains on builder.",
+    "PAYLOAD.extract_rootfs optional branch was executed; full payload.build and state.build optional branches have unit coverage only.",
+    "No production 4 GiB roots, 8 GiB state, full image readback or NVMe reconstruction performed.",
+    "No physical installation, SSH login, KVM guest, endurance, SD-write or SPI result."
+  ],
+  "regressions": {
+    "discovery": {
+      "cases": 963,
+      "skipped": 95,
+      "passed": true,
+      "log": "tmp/root-metadata-discovery-tests-20261106.log"
+    },
+    "diagnostic_assembly": {
+      "cases": 4,
+      "passed": true,
+      "log": "tmp/root-metadata-assembly-tests-20261106.log"
+    },
+    "shell_suites": {
+      "count": 5,
+      "passed": true,
+      "log": "tmp/root-metadata-shell-tests-20261106.log"
+    },
+    "focused_metadata": {
+      "cases": 24,
+      "passed": true
+    }
+  }
+}

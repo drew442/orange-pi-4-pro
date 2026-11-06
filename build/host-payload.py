@@ -103,7 +103,31 @@ def validate_tar(members):
     return entries
 
 
-def extract_rootfs(archive, root):
+METADATA_PROFILES = ('native', 'fakeroot-raw-xattrs-v1')
+
+
+def metadata_backend(profile):
+    if profile not in METADATA_PROFILES:
+        raise ValueError('unknown metadata profile: ' + str(profile))
+    if profile == 'native':
+        return None
+    spec = importlib.util.spec_from_file_location('payload_rootfs_metadata', REPO / 'build/rootfs-metadata.py')
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def validate_metadata_profile(profile):
+    backend = metadata_backend(profile)
+    if backend is not None:
+        backend.validate_profile()
+    return backend
+
+
+def extract_rootfs(archive, root, metadata_profile='native', expected=None):
+    backend = metadata_backend(metadata_profile)
+    if backend is not None:
+        return backend.extract(archive, root, expected, validate_tar)
     with tarfile.open(archive, 'r:*') as source:
         members = source.getmembers()
         validate_tar(members)
@@ -336,7 +360,8 @@ def validate_builder_packages(lock_path):
             for name, (version, architecture) in sorted(actual.items())}
 
 
-def build(rootfs, diagnostic, output):
+def build(rootfs, diagnostic, output, metadata_profile='native'):
+    backend = validate_metadata_profile(metadata_profile)
     if os.geteuid() != 0:
         raise ValueError('root required to preserve rootfs ownership and device nodes')
     for tool in ('mke2fs', 'tune2fs', 'e2fsck', 'tar'):
@@ -383,11 +408,23 @@ def build(rootfs, diagnostic, output):
                  REPO / 'configs/host-userspace-package-hashes.lock.tsv',
                  *(REPO / source for source in MANAGEMENT_FILES)):
         shutil.copyfile(path, provenance / path.name)
+    if backend is not None:
+        helper = REPO / 'build/rootfs-metadata.py'
+        shutil.copyfile(helper, provenance / helper.name)
+        shutil.copyfile(backend.LOCK, provenance / backend.LOCK.name)
+        sources['rootfs_metadata'] = {'profile': metadata_profile,
+                                     'helper': file_record(provenance / helper.name)}
     for name in BOOT_FILES:
         shutil.copyfile(diagnostic / name, output / name)
     with tempfile.TemporaryDirectory(prefix='.staging-', dir=output) as stage:
         root = Path(stage)
-        extract_rootfs(rootfs, root)
+        metadata_extraction = None
+        if backend is None:
+            extract_rootfs(rootfs, root)
+        else:
+            metadata_extraction = extract_rootfs(rootfs, root, metadata_profile, user_lock['rootfs.tar.gz'])
+            if metadata_extraction['helper'] != sources['rootfs_metadata']['helper']:
+                raise ValueError('metadata helper changed during build')
         cache_pruning = PACKAGE.prune_caches(root)
         module_bom = import_modules(root, modules)
         management = install_management(root)
@@ -427,6 +464,7 @@ def build(rootfs, diagnostic, output):
         'management_runtime': management, 'maintenance_runtime': maintenance,
         'package_state': package_state,
         'cache_pruning': cache_pruning,
+        **({'metadata_extraction': metadata_extraction} if backend is not None else {}),
         'builder_packages': builder_packages,
         'reproducibility': 'not established; filesystem/package-generated metadata may vary',
         'tools': {tool: tool_version(tool) for tool in ('mke2fs', 'tune2fs', 'e2fsck')}})
@@ -437,9 +475,10 @@ def main():
     parser.add_argument('rootfs_tar', type=Path)
     parser.add_argument('diagnostic_artifact_dir', type=Path)
     parser.add_argument('output', type=Path)
+    parser.add_argument('--metadata-profile', choices=METADATA_PROFILES, default='native')
     args = parser.parse_args()
     try:
-        build(args.rootfs_tar, args.diagnostic_artifact_dir, args.output)
+        build(args.rootfs_tar, args.diagnostic_artifact_dir, args.output, args.metadata_profile)
     except (ValueError, OSError, tarfile.TarError, subprocess.CalledProcessError) as error:
         parser.exit(1, f'host payload: {error}\n')
 

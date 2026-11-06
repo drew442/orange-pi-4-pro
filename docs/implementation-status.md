@@ -206,7 +206,15 @@ backup/recovery and SPI-specific programming authorization remain outstanding.
    virtual device metadata without real nodes. The complete 15,892-member
    userspace archive now passes staging content/metadata checks and selected
    diagnostic-image probes with independent review. Production 4 GiB roots,
-   complete image readback and root/state backend integration remain open. The builder has 66.54 GB unallocated in LVM;
+   complete image readback remain open. The optional
+   [root/state metadata backend](evidence/root-metadata-backend-20261106.json)
+   now passes independent software review and an actual full-archive extraction
+   through the payload interface in the frozen builder; all 15,892 staged entries
+   pass and no actual device nodes are created. Its 24 focused cases and the
+   963-case native discovery suite pass (95 environment skips), along with four
+   assembly cases and all five shell suites. Full root/state image builds remain
+   pending. Published deployment artifacts are unchanged. The builder has
+   66.54 GB unallocated in LVM;
    a reviewed/dry-run [20 GiB root-volume growth](build-host-capacity-plan.md)
    is prepared with metadata backup and awaits approval. No resize has occurred.
    The [26-input license inventory](evidence/vendor-boot-license-inventory-20261106.json)
