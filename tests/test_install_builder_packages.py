@@ -129,7 +129,8 @@ class BoundaryTests(unittest.TestCase):
         self.assertEqual([arg for arg in command[len(original):] if arg.startswith('--bind')],
                          ['--bind-ro=/private/seed/package-install/debs:/a733-debs',
                           '--bind-ro=/private/seed/package-install/packages.list:/a733-packages.list',
-                          '--bind-ro=/private/seed/package-install/install.sh:/a733-install.sh'])
+                          '--bind-ro=/private/seed/package-install/install.sh:/a733-install.sh',
+                          '--bind-ro=/private/seed/package-install/sources:/a733-sources'])
         self.assertFalse(any(arg.startswith('--capability=') for arg in command))
 
     def test_script_probe_before_maintainers_and_single_apt_install(self):
@@ -139,7 +140,14 @@ class BoundaryTests(unittest.TestCase):
         self.assertLess(script.index(b'debconf-set-selections'), script.index(b' --yes install'))
         self.assertEqual(script.count(b' --yes install "$@"'), 1)
         self.assertIn(b'[ "$#" -eq 842 ]', script)
-        self.assertIn(b'--no-download --no-install-recommends --no-remove --allow-downgrades --reinstall', script)
+        install_line = next(line for line in script.splitlines() if b' --yes install' in line)
+        self.assertNotIn(b'--no-download', install_line)
+        self.assertIn(b'--no-install-recommends --no-remove --allow-downgrades --reinstall', install_line)
+        self.assertIn(b'Dir::Etc::sourcelist=/a733-sources/sources.list', install_line)
+        self.assertIn(b'Dir::Etc::sourceparts=/a733-sources/parts', install_line)
+        self.assertIn(b'--no-download check', script)
+        self.assertNotIn(b'Dir::Etc::sourcelist=/dev/null', script)
+        self.assertNotIn(b'Dir::Etc::sourceparts=-', script)
         self.assertNotIn(b'apt-get update', script)
         self.assertNotIn(b'--force', script)
         self.assertIn(b'grub2/update_nvram boolean false', script)
@@ -162,6 +170,27 @@ class BoundaryTests(unittest.TestCase):
         for data in bad:
             with self.subTest(data=data[-90:]), self.assertRaises(ValueError):
                 install.validate_installed(data, expected_inventory())
+
+    def test_empty_sources_readable_under_umask077_and_tampering_refused(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            phase = Path(tmp)
+            previous = os.umask(0o077)
+            try:
+                record = install.stage_sources(phase)
+            finally:
+                os.umask(previous)
+            directory = phase / 'sources'
+            self.assertEqual(record['sources.list'], facts(b''))
+            self.assertEqual(directory.stat().st_mode & 0o777, 0o555)
+            self.assertEqual((directory / 'parts').stat().st_mode & 0o777, 0o555)
+            source = directory / 'sources.list'
+            self.assertEqual(source.stat().st_mode & 0o777, 0o444)
+            self.assertEqual(source.read_bytes(), b'')
+            source.chmod(0o644)
+            source.write_bytes(b'deb https://example.invalid jammy main\n')
+            source.chmod(0o444)
+            with self.assertRaisesRegex(ValueError, 'remain empty'):
+                install.source_facts(directory)
 
     def test_policy_refuses_existing_and_assigns_mapped_owner(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -288,7 +317,7 @@ class MonitorTests(unittest.TestCase):
 
 
 class ReceiptTests(unittest.TestCase):
-    def exercise(self, root, failure=None, post_failure=False, success_before_failure=False):
+    def exercise(self, root, failure=None, post_failure=False, success_before_failure=False, mutate_sources=False):
         output = root / 'seed-probe-fixture'
         output.mkdir(mode=0o700)
         cache = root / 'cache'
@@ -299,6 +328,11 @@ class ReceiptTests(unittest.TestCase):
             (target / 'a.deb').write_bytes(b'archive')
         def monitor(args, log, phase, report):
             log.write(installed_log())
+            if mutate_sources:
+                source = phase / 'sources/sources.list'
+                source.chmod(0o644)
+                source.write_bytes(b'changed')
+                source.chmod(0o444)
             if failure:
                 if success_before_failure:
                     report['success'] = True
@@ -344,7 +378,10 @@ class ReceiptTests(unittest.TestCase):
             self.assertIn('maintainer failed', str(error))
             self.assertFalse(receipt['success'])
             self.assertIn('install_log', receipt)
-            self.assertTrue((root / 'seed-probe-fixture/package-install/debs/a.deb').is_file())
+            phase = root / 'seed-probe-fixture/package-install'
+            self.assertEqual((phase / 'debs/a.deb').read_bytes(), b'archive')
+            self.assertEqual((phase / 'sources/sources.list').read_bytes(), b'')
+            self.assertEqual(receipt['sources']['sources.list'], facts(b''))
 
     def test_cancellation_retains_failure_receipt(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -369,6 +406,13 @@ class ReceiptTests(unittest.TestCase):
             self.assertIn('Postchecks', str(error))
             self.assertFalse(receipt['success'])
             self.assertFalse(receipt['post_checks']['success'])
+
+    def test_source_mutation_revokes_success(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            error, receipt = self.exercise(Path(tmp), mutate_sources=True)
+            self.assertIn('Postchecks', str(error))
+            self.assertFalse(receipt['success'])
+            self.assertTrue(any('sources:' in error for error in receipt['post_checks']['errors']))
 
     def test_success_limited_to_mutable_root(self):
         with tempfile.TemporaryDirectory() as tmp:

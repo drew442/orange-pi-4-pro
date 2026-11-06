@@ -48,8 +48,8 @@ seed = load_seed()
 require = seed.require
 FILES = tuple(dict.fromkeys((*seed.FILES, LOCK, INVENTORY, RECIPE)))
 POLICY = b'#!/bin/sh\nexit 101\n'
-APT = ('apt-get', '-o', 'Dir::Etc::sourcelist=/dev/null', '-o',
-       'Dir::Etc::sourceparts=-', '-o', 'APT::Get::List-Cleanup=0')
+APT = ('apt-get', '-o', 'Dir::Etc::sourcelist=/a733-sources/sources.list', '-o',
+       'Dir::Etc::sourceparts=/a733-sources/parts', '-o', 'APT::Get::List-Cleanup=0')
 
 
 def read(path):
@@ -240,7 +240,7 @@ done < /a733-packages.list
 [ "$#" -eq 842 ]
 '''
     apt = ' '.join(APT)
-    tail = '\n' + apt + ' --no-download --no-install-recommends --no-remove --allow-downgrades --reinstall --yes install "$@"\n'
+    tail = '\n' + apt + ' --no-install-recommends --no-remove --allow-downgrades --reinstall --yes install "$@"\n'
     tail += apt + ' clean\n'
     tail += "audit=$(dpkg --audit)\n[ -z \"$audit\" ] || { printf '%s\\n' \"$audit\"; exit 1; }\n"
     tail += apt + ' --no-download check\n'
@@ -253,6 +253,7 @@ def command(output, phase):
     args += ['--bind-ro=' + str(phase / 'debs') + ':/a733-debs',
              '--bind-ro=' + str(phase / 'packages.list') + ':/a733-packages.list',
              '--bind-ro=' + str(phase / 'install.sh') + ':/a733-install.sh',
+             '--bind-ro=' + str(phase / 'sources') + ':/a733-sources',
              '--setenv=DEBIAN_FRONTEND=noninteractive', '--setenv=DEBCONF_NONINTERACTIVE_SEEN=true',
              '--setenv=LC_ALL=C', '--setenv=TZ=UTC']
     return args + ['/bin/sh', '/a733-install.sh']
@@ -283,6 +284,36 @@ def write_private(path, data, mode=0o600):
         stream.flush()
         os.fsync(stream.fileno())
     path.chmod(mode)
+
+
+def source_facts(directory):
+    """Only the fixed empty source file and empty source-parts directory exist."""
+    seed.safe_path(directory)
+    require(directory.is_dir() and stat.S_IMODE(directory.stat().st_mode) == 0o555 and
+            {path.name for path in directory.iterdir()} == {'sources.list', 'parts'},
+            'Unexpected APT source directory entries/mode')
+    parts = directory / 'parts'
+    seed.safe_path(parts)
+    require(parts.is_dir() and stat.S_IMODE(parts.stat().st_mode) == 0o555 and
+            not list(parts.iterdir()), 'APT source parts must remain empty and 0555')
+    source = directory / 'sources.list'
+    record = seed.facts(source)
+    require(record == {'bytes': 0, 'sha256': hashlib.sha256(b'').hexdigest()} and
+            stat.S_IMODE(source.stat().st_mode) == 0o444,
+            'APT source list must remain empty and 0444')
+    return {'sources.list': record, 'directory_mode': 0o555,
+            'parts_mode': 0o555, 'sources_list_mode': 0o444}
+
+
+def stage_sources(phase):
+    directory = phase / 'sources'
+    directory.mkdir(mode=0o700)
+    write_private(directory / 'sources.list', b'', 0o444)
+    parts = directory / 'parts'
+    parts.mkdir(mode=0o555)
+    parts.chmod(0o555)
+    directory.chmod(0o555)
+    return source_facts(directory)
 
 
 def policy(rootfs):
@@ -402,6 +433,7 @@ def install(output, cache, repo=REPO):
             write_private(phase / 'nspawn-help.txt', seed.run(['/usr/bin/systemd-nspawn', '--help']))
             write_private(phase / 'nspawn-option-probe.txt', seed.run(smoke))
             report['resources_before_staging'] = capacity(phase, sum(r['bytes'] for r in records.values()))
+            report['sources'] = stage_sources(phase)
             copy_cache(cache, phase / 'debs', records)
             package_list = ''.join('/a733-debs/' + Path(name).name + '\n' for name in records).encode()
             # Linux exec argument limit is at least 128 KiB. Leave room for apt/env.
@@ -452,6 +484,9 @@ def install(output, cache, repo=REPO):
                 checks.append(('private_cache', lambda: require(all(
                     seed.facts(phase / 'debs' / name) == value for name, value in
                     report['private_archives'].items()), 'Private archives changed')))
+            if 'sources' in report:
+                checks.append(('sources', lambda: require(source_facts(phase / 'sources') ==
+                    report['sources'], 'APT sources changed')))
             if 'staged' in report:
                 checks.append(('staged', lambda: require(all(seed.facts(phase / name) == value
                     for name, value in report['staged'].items()), 'Staged records changed')))
