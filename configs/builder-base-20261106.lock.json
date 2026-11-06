@@ -1,0 +1,54 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Signed AMD64 Ubuntu build-environment seed acquired; no clean builder constructed or executed",
+  "distribution": "Ubuntu Base 22.04.5 LTS",
+  "architecture": "amd64",
+  "url": "https://cdimage.ubuntu.com/ubuntu-base/releases/22.04/release/ubuntu-base-22.04.5-base-amd64.tar.gz",
+  "archive": {
+    "bytes": 29832285,
+    "sha256": "242cd8898b33ea806ef5f13b1076ed7c76f9f989d18384452f7166692438ff1a"
+  },
+  "retained_directory": "/home/drew/orange-pi-4-pro/out/builder-base-20261106",
+  "signed_manifest": {
+    "url": "https://cdimage.ubuntu.com/ubuntu-base/releases/22.04/release/SHA256SUMS",
+    "bytes": 3756,
+    "sha256": "95db44e3128ce9eddd62774baabfc65b4b7de5bd58a956e1215bfcc77d18569d"
+  },
+  "detached_signature": {
+    "url": "https://cdimage.ubuntu.com/ubuntu-base/releases/22.04/release/SHA256SUMS.gpg",
+    "bytes": 833,
+    "sha256": "e35bb63f78f13ba5b6d15831c66ba193e204b797c086c7fd7658063e3a893433"
+  },
+  "gpgv": {
+    "good_signing_key": "843938DF228D22F7B3742BC0D94AA3F0EFE21092",
+    "identity": "Ubuntu CD Image Automatic Signing Key (2012)",
+    "keyring": {
+      "path": "/usr/share/keyrings/ubuntu-archive-keyring.gpg",
+      "bytes": 3607,
+      "sha256": "80a36b0a6de2f69f49d2df75ef473ccde121e9e190b9ea01d20a4f63778d5c31"
+    },
+    "log": {
+      "bytes": 220,
+      "sha256": "98321f5cfab852db59016b66fde5c8845721c624526f34d368a1a82825137cfd"
+    }
+  },
+  "read_only_archive_inspection": {
+    "installed_packages": 101,
+    "package_names_outside_replay_inventory": [],
+    "inventory": {
+      "bytes": 10027,
+      "sha256": "abf18f9f1c7a2859bb38f007d18d481bfb0796bf96803213957ebfe87269b95b"
+    },
+    "os_release": "PRETTY_NAME=\"Ubuntu 22.04.5 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"22.04\"\nVERSION=\"22.04.5 LTS (Jammy Jellyfish)\"\nVERSION_CODENAME=jammy\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=jammy\n",
+    "extraction_or_execution": "None. Read only the package-status and OS metadata members in memory."
+  },
+  "intended_role": "AMD64 seed for an isolated Ubuntu 22.04 builder on build.drewnet.online; not an A733 SD or NVMe image.",
+  "integration_remaining": [
+    "Construct a fresh isolated root with exact 842 locked package versions and controlled services/devices/capabilities.",
+    "Pin its final filesystem/image digest and validate package/file inventory.",
+    "Independently acquire pinned upstream sources/toolchains and reproduce artifacts using the validated builder.",
+    "Retain all actual hardware acceptance and deployment reproduction gates."
+  ],
+  "original_verification_directory": "/home/drew/orange-pi-4-pro/tmp/builder-base-20261106"
+}

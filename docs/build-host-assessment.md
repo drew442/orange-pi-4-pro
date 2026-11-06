@@ -38,6 +38,14 @@ archives and historical nondeployable fixtures to codex recovered a measured
 retained paths and hashes are recorded; later builds consume this headroom. Recheck before each build and keep the
 initial two-job compilation limit. Physical acceptance is independent of these checks.
 
+[Builder package acquisition](evidence/builder-packages-acquired-20261106.json)
+now retains all 842 exact archives on the builder and codex. The latest measured
+free space after compilation/acquisition is about 9.0 GB, below the unchanged
+kernel and NVMe assembly start guards. [Clean-builder planning](evidence/clean-builder-capacity-20261106.json)
+requires verified generated-cache archival before root construction; target
+25 GB free for that staging allowance. The current deployment artifacts are
+already built and must remain available.
+
 ## Local host assessment
 
 Checked 2026-11-04 against vendor build commit `a95129bf30ea11886cc35f08ebb3e69695a26656`. **Local host only: suitable for source investigation, not an unmodified vendor image build.** No local dependencies were installed; remote provisioning is described above.

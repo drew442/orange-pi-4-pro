@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Read-only clean-builder capacity planning; no archival, deletion, package installation or root construction in this assessment",
+  "installed_packages": 842,
+  "package_states": {
+    "install_ok_installed": 842
+  },
+  "reported_installed_size_kib": 3752392,
+  "reported_installed_size_bytes": 3842449408,
+  "measured_free_bytes_after_package_acquisition": 9008234496,
+  "next_construction_planning_target_free_bytes": 25000000000,
+  "planning_basis": "Allow configured root files/metadata, independently fetched source caches, retained builder archive and unchanged >15GB full-kernel compilation start guard. 25GB is a project planning allowance, not a vendor requirement.",
+  "allocation_report": {
+    "path": "/home/drew/orange-pi-4-pro/tmp/builder-allocation-assessment-20261106.txt",
+    "bytes": 37294,
+    "sha256": "79a64f12d5b5ec61b120ff192fe2b3fc76cefd7a326e8adb924845e55895cb84"
+  },
+  "safe_next_action": "Identify superseded generated fixture/replay trees, independently review exact retirement boundaries, archive and compare every member, verify durable off-host copies and retained manifests, then release only idle generated copies. Do not remove current deployment artifacts or original pinned Git dependencies blindly.",
+  "guards": "Full-kernel >15GB start, 3GB monitor threshold and NVMe assembly 22GiB remain unchanged."
+}

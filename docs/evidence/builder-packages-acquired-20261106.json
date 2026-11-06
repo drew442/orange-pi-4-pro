@@ -1,0 +1,110 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Complete signed-input builder binary acquisition with independent on-host and off-host rehash; clean builder not yet constructed",
+  "source_commit": "5499a8a09850d00a3420fefd565cf8bbc1b75519",
+  "builder_directory": "/home/drew/orange-pi-4-pro-build/builder-package-acquisition-20261106/out/builder-packages-20261106-02",
+  "offhost_directory": "/home/drew/orange-pi-4-pro/out/builder-packages-20261106",
+  "archive_count": 842,
+  "total_bytes": 983768778,
+  "metadata_authentication": "docs/evidence/builder-index-signatures-20261106.json plus historical xfsprogs snapshot proof",
+  "receipt_file": {
+    "bytes": 441044,
+    "sha256": "5df679ff656a69d0204d6ba43c80549b86466a2296e8d5985de0736f21e8ad54"
+  },
+  "report_file": {
+    "bytes": 441044,
+    "sha256": "5df679ff656a69d0204d6ba43c80549b86466a2296e8d5985de0736f21e8ad54"
+  },
+  "aria2_log": {
+    "bytes": 562303,
+    "sha256": "f10e2c43c47d957ce398036eb03079c0daf13b428906fb1a5bee96ae2e2c0f15"
+  },
+  "input_bindings": {
+    "build/fetch-builder-packages.py": {
+      "bytes": 16558,
+      "sha256": "78ee73a861aa8d3a3f934d1b51582ec922ce109e157dac6138a928a97d4680a6"
+    },
+    "build/fetch-userspace-sources.py": {
+      "bytes": 18845,
+      "sha256": "4b76f0b999c462ab6fc78c330777db804dd5782512f923965f5e28baa5c6807f"
+    },
+    "build/uboot-replay.py": {
+      "bytes": 27413,
+      "sha256": "3558c6b75d0fdfa731eaff925b101a136b288953364996f72b8a6bcd3fcb1cfd"
+    },
+    "configs/builder-package-archives-20261106.lock.json": {
+      "bytes": 479812,
+      "sha256": "d42bb151845d01dc3cb1bcde95adfb5e9add97a5d34e8ab9f5c4d27bae5bb141"
+    },
+    "configs/builder-packages.lock.tsv": {
+      "bytes": 32519,
+      "sha256": "35c2faf42a936168098b1f54239825a3c42fc56c825fc0b2078bbd753425f48b"
+    },
+    "configs/builder-replay-packages-20261106.lock.tsv": {
+      "bytes": 32546,
+      "sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425"
+    },
+    "docs/evidence/builder-index-signatures-20261106.json": {
+      "bytes": 5911,
+      "sha256": "0054520de7693965be7a678956f3949570396dc9b9d92119c538e0f73097ec73"
+    }
+  },
+  "aria2_version": "aria2 version 1.36.0\nCopyright (C) 2006, 2019 Tatsuhiro Tsujikawa\n\nThis program is free software; you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation; either version 2 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\n** Configuration **\nEnabled Features: Async DNS, BitTorrent, Firefox3 Cookie, GZip, HTTPS, Message Digest, Metalink, XML-RPC, SFTP\nHash Algorithms: sha-1, sha-224, sha-256, sha-384, sha-512, md5, adler32\nLibraries: zlib/1.2.11 libxml2/2.9.12 sqlite3/3.36.0 GnuTLS/3.7.1 nettle GMP/6.2.1 c-ares/1.17.1 libssh2/1.10.0\nCompiler: gcc 11.2.0\n  built by  x86_64-pc-linux-gnu\n  on        Aug 21 2021 15:26:28\nSystem: Linux 6.8.0-138-generic #138~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Fri Aug  7 13:43:15 UTC  x86_64\n\nReport bugs to https://github.com/aria2/aria2/issues\nVisit https://aria2.github.io/\n",
+  "jobs": 2,
+  "aria2_exit": 0,
+  "aria2_option_smoke": {
+    "command": [
+      "/usr/bin/aria2c",
+      "--no-conf=true",
+      "--input-file=/home/drew/orange-pi-4-pro-build/builder-package-acquisition-20261106/out/builder-packages-20261106-02/aria2-input.txt",
+      "--max-concurrent-downloads=2",
+      "--split=1",
+      "--max-connection-per-server=1",
+      "--check-certificate=true",
+      "--follow-torrent=false",
+      "--follow-metalink=false",
+      "--check-integrity=true",
+      "--continue=true",
+      "--auto-file-renaming=false",
+      "--allow-overwrite=false",
+      "--file-allocation=none",
+      "--max-tries=2",
+      "--retry-wait=2",
+      "--connect-timeout=30",
+      "--timeout=60",
+      "--summary-interval=0",
+      "--console-log-level=notice",
+      "--download-result=full",
+      "--help=#basic"
+    ],
+    "exit": 0,
+    "stdout_sha256": "a37f4e62141862397879eef20005a82b06348a2c254a36efd9e0c4d34bfc87b5"
+  },
+  "redirect_policy": "Native aria2 1.36.0 redirects; no redirect restriction. Fixed initial HTTPS origins, certificate checks and immutable final SHA256.",
+  "independent_readback": {
+    "archives": 842,
+    "bytes": 983768778,
+    "mismatches": 0,
+    "partials": 0,
+    "current_package_inventory_sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425"
+  },
+  "offhost_readback": {
+    "archives": 842,
+    "bytes": 983768778,
+    "mismatches": 0,
+    "file_and_directory_fsync": "passed",
+    "archives_read_only": true,
+    "copied_receipt_sha256": "5df679ff656a69d0204d6ba43c80549b86466a2296e8d5985de0736f21e8ad54"
+  },
+  "builder_inventory": {
+    "before_equals_after": true,
+    "current_sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425"
+  },
+  "package_installation_or_extraction": "none",
+  "limits": [
+    "This is the build-environment binary set, not an A733 SD/NVMe image.",
+    "An isolated configured root, final builder image digest and fresh-environment artifact reproduction remain unperformed.",
+    "Hardware acceptance and reproduced deployment remain open."
+  ]
+}
