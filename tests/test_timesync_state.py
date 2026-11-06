@@ -1,0 +1,374 @@
+"""Clock-state compatibility behavior on ordinary, private host fixtures.
+
+Ownership alone is mocked for unprivileged execution; real inode/type/mode,
+links, timestamps, path traversal and descriptor reads remain exercised.
+"""
+
+from contextlib import ExitStack, redirect_stderr, redirect_stdout
+import importlib.util
+import io
+import json
+import os
+from pathlib import Path
+import stat
+import sys
+import tempfile
+import unittest
+from unittest import mock
+
+SCRIPT = Path(__file__).resolve().parents[1] / 'build/timesync-state.py'
+spec = importlib.util.spec_from_file_location('timesync_state', SCRIPT)
+state = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(state)
+UUID = '64504c34-85b4-4035-9618-d86b298f8349'
+MARKER = f'a733-state-v1\n{UUID}\n'.encode()
+
+
+class Ownership:
+    def __init__(self, original, owner):
+        self.original = original
+        self.st_uid, self.st_gid = owner
+
+    def __getattr__(self, name):
+        return getattr(self.original, name)
+
+
+class TimesyncStateTests(unittest.TestCase):
+    def setUp(self):
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        self.base = Path(temporary.name)
+        self.root = self.base / 'state'
+        self.systemd = self.root / 'var/lib/systemd'
+        self.systemd.mkdir(parents=True)
+        self.root.chmod(0o700)
+        self.marker = self.root / '.a733-state'
+        self.marker.write_bytes(MARKER)
+        self.marker.chmod(0o600)
+        self.timesync = self.systemd / 'timesync'
+        self.clock = self.timesync / 'clock'
+        self.owners = {}
+        for path in (self.root, self.root / 'var', self.root / 'var/lib',
+                     self.systemd, self.marker):
+            if path.is_dir() and path != self.root:
+                path.chmod(0o755)
+            self.set_owner(path, 0)
+
+    def set_owner(self, path, uid, gid=None):
+        info = path.lstat()
+        self.owners[(info.st_dev, info.st_ino)] = (uid, uid if gid is None else gid)
+
+    def initialized(self, clock=True):
+        self.timesync.mkdir(mode=0o755)
+        self.timesync.chmod(0o755)
+        self.set_owner(self.timesync, 996)
+        if clock:
+            self.clock.touch()
+            self.clock.chmod(0o644)
+            self.set_owner(self.clock, 996)
+
+    def ownership(self):
+        original_stat, original_fstat = os.stat, os.fstat
+
+        def wrap(info):
+            owner = self.owners.get((info.st_dev, info.st_ino))
+            return info if owner is None else Ownership(info, owner)
+
+        stack = ExitStack()
+        stack.enter_context(mock.patch.object(state.os, 'stat',
+                                             side_effect=lambda *a, **k: wrap(original_stat(*a, **k))))
+        stack.enter_context(mock.patch.object(state.os, 'fstat',
+                                             side_effect=lambda *a, **k: wrap(original_fstat(*a, **k))))
+        return stack
+
+    def audit(self, require=False, root=None):
+        with self.ownership():
+            return state.audit(self.root if root is None else root, require)
+
+    def reject(self, require=False, root=None):
+        with self.assertRaises((OSError, ValueError)):
+            self.audit(require, root)
+
+    def test_optional_absent_and_required_absent(self):
+        report = self.audit()
+        self.assertEqual(report['state_uuid'], UUID)
+        self.assertEqual(report['status'], 'uninitialized')
+        self.assertIsNone(report['clock_mtime_ns'])
+        self.reject(require=True)
+        self.assertFalse(self.timesync.exists())
+
+    def test_empty_existing_directory_is_optional(self):
+        self.initialized(clock=False)
+        self.assertEqual(self.audit()['status'], 'uninitialized')
+        self.reject(require=True)
+        self.assertFalse(self.clock.exists())
+
+    def test_future_timestamp_and_all_metadata_unchanged(self):
+        self.initialized()
+        future = 2147483640123456789
+        os.utime(self.clock, ns=(future - 12345, future))
+        paths = (self.root, self.marker, self.root / 'var', self.root / 'var/lib',
+                 self.systemd, self.timesync, self.clock)
+        before = [tuple(p.lstat()) + (p.lstat().st_atime_ns, p.lstat().st_mtime_ns,
+                                     p.lstat().st_ctime_ns) for p in paths]
+        for _ in range(2):
+            report = self.audit(require=True)
+            self.assertEqual(report['clock_mtime_ns'], future)
+            self.assertEqual(report['status'], 'initialized')
+            self.assertEqual(report['metadata']['clock']['mode'], '0644')
+        after = [tuple(p.lstat()) + (p.lstat().st_atime_ns, p.lstat().st_mtime_ns,
+                                    p.lstat().st_ctime_ns) for p in paths]
+        self.assertEqual(before, after)
+        self.assertEqual(self.clock.read_bytes(), b'')
+
+    def test_marker_framing_and_canonical_nonzero_uuid(self):
+        for bad in (MARKER[:-1], MARKER + b'\n', b'x' * 51,
+                    MARKER.replace(b'a733-state-v1', b'a733-state-v2'),
+                    MARKER.upper(), b'a733-state-v1\n00000000-0000-0000-0000-000000000000\n',
+                    MARKER.replace(b'64504c34', b'64504C34'), b'\x00' * 51):
+            with self.subTest(marker=bad):
+                self.marker.write_bytes(bad)
+                self.reject()
+
+    def test_marker_symlink_hardlink_and_unsafe_mode(self):
+        self.marker.chmod(0o666)
+        self.reject()
+        self.marker.chmod(0o600)
+        alias = self.root / 'alias'
+        os.link(self.marker, alias)
+        self.reject()
+        alias.unlink()
+        self.marker.rename(alias)
+        self.marker.symlink_to(alias)
+        self.reject()
+
+    def test_symlink_each_parent_is_rejected(self):
+        for path in (self.root / 'var', self.root / 'var/lib', self.systemd):
+            with self.subTest(parent=path):
+                target = path.with_name(path.name + '-real')
+                path.rename(target)
+                path.symlink_to(target)
+                self.reject()
+                path.unlink()
+                target.rename(path)
+        alias = self.base / 'state-link'
+        alias.symlink_to(self.root)
+        self.reject(root=alias)
+        outside = self.base / 'base-link'
+        outside.symlink_to(self.base)
+        self.reject(root=outside / 'state')
+
+    def test_parent_traversal_rejected(self):
+        self.reject(root=self.root / 'var/..')
+
+    def test_parent_ownership_group_and_unsafe_modes(self):
+        for path in (self.root, self.root / 'var', self.root / 'var/lib', self.systemd):
+            for owner in ((996, 996), (0, 996)):
+                with self.subTest(path=path, owner=owner):
+                    self.set_owner(path, *owner)
+                    self.reject()
+                    self.set_owner(path, 0)
+            original = stat.S_IMODE(path.stat().st_mode)
+            for mode in (0o777, 0o2775, 0o1755):
+                with self.subTest(path=path, mode=mode):
+                    path.chmod(mode)
+                    self.reject()
+            path.chmod(original)
+
+    def test_reserved_ownership_is_exact_for_directory_and_clock(self):
+        self.initialized()
+        for path in (self.timesync, self.clock):
+            for owner in ((0, 0), (996, 0), (997, 996)):
+                with self.subTest(path=path, owner=owner):
+                    self.set_owner(path, *owner)
+                    self.reject()
+            self.set_owner(path, 996)
+
+    def test_exact_modes(self):
+        self.initialized()
+        for path, correct, invalid in ((self.timesync, 0o755, (0o700, 0o775, 0o2755)),
+                                      (self.clock, 0o644, (0o600, 0o664, 0o4644, 0o755))):
+            for mode in invalid:
+                with self.subTest(path=path, mode=mode):
+                    path.chmod(mode)
+                    self.reject()
+            path.chmod(correct)
+
+    def test_symlink_directory_and_clock_rejected(self):
+        self.initialized()
+        self.clock.unlink()
+        self.clock.symlink_to(self.marker)
+        self.reject()
+        self.clock.unlink()
+        real = self.systemd / 'timesync-real'
+        self.timesync.rename(real)
+        self.timesync.symlink_to(real)
+        self.reject()
+
+    def test_nonregular_and_hardlinked_clock_rejected(self):
+        self.initialized()
+        os.link(self.clock, self.root / 'clock-alias')
+        self.reject()
+        (self.root / 'clock-alias').unlink()
+        self.clock.unlink()
+        self.clock.mkdir()
+        self.reject()
+        self.clock.rmdir()
+        os.mkfifo(self.clock)
+        self.reject()
+
+    def test_nonempty_or_negative_timestamp_clock_rejected(self):
+        self.initialized()
+        self.clock.write_bytes(b'not a timestamp')
+        self.reject()
+        self.clock.write_bytes(b'')
+        os.utime(self.clock, ns=(-1000000000, -1000000000))
+        self.reject()
+
+    def test_extraneous_children_are_rejected(self):
+        self.initialized()
+        for name in ('private-secret', 'clock.bak'):
+            extra = self.timesync / name
+            extra.write_bytes(b'secret')
+            self.reject()
+            extra.unlink()
+
+    def test_concurrent_marker_change_is_rejected(self):
+        original_read = os.read
+
+        def changed(fd, size):
+            result = original_read(fd, size)
+            self.marker.write_bytes(MARKER.replace(b'64504c34', b'74504c34'))
+            return result
+
+        with mock.patch.object(state.os, 'read', side_effect=changed):
+            self.reject()
+
+    def test_concurrent_directory_replacement_is_rejected(self):
+        self.initialized()
+        original_scandir = os.scandir
+
+        def replace(fd):
+            result = original_scandir(fd)
+            self.timesync.rename(self.systemd / 'old')
+            self.timesync.mkdir(mode=0o755)
+            self.set_owner(self.timesync, 996)
+            return result
+
+        with mock.patch.object(state.os, 'scandir', side_effect=replace):
+            self.reject()
+
+    def test_clock_mutation_during_audit_is_rejected(self):
+        self.initialized()
+        original_fstat = os.fstat
+        seen = 0
+        clock_inode = self.clock.stat().st_ino
+
+        def mutate(fd):
+            nonlocal seen
+            info = original_fstat(fd)
+            if info.st_ino == clock_inode:
+                seen += 1
+                if seen == 2:
+                    self.clock.write_bytes(b'concurrent change')
+                    info = original_fstat(fd)
+            return info
+
+        with mock.patch.object(state.os, 'fstat', side_effect=mutate):
+            self.reject()
+
+    def test_absent_clock_created_during_audit_is_rejected(self):
+        self.initialized(clock=False)
+        original_stat = os.stat
+
+        def appear(name, *args, **kwargs):
+            if name == 'clock':
+                self.clock.touch()
+                self.clock.chmod(0o644)
+            return original_stat(name, *args, **kwargs)
+
+        with mock.patch.object(state.os, 'stat', side_effect=appear):
+            self.reject()
+
+    def test_marker_reserved_owner_is_rejected(self):
+        self.set_owner(self.marker, 996)
+        self.reject()
+
+    def test_zero_timestamp_is_valid(self):
+        self.initialized()
+        os.utime(self.clock, ns=(0, 0))
+        self.assertEqual(self.audit(require=True)['clock_mtime_ns'], 0)
+
+    def test_nonregular_marker_never_receives_readable_open(self):
+        self.marker.unlink()
+        os.mkfifo(self.marker)
+        self.marker.chmod(0o600)
+        self.set_owner(self.marker, 0)
+        original_open = os.open
+        marker_flags = []
+
+        def record(name, flags, *args, **kwargs):
+            if name == '.a733-state':
+                marker_flags.append(flags)
+                self.assertTrue(flags & os.O_PATH)
+            return original_open(name, flags, *args, **kwargs)
+
+        with mock.patch.object(state.os, 'open', side_effect=record):
+            self.reject()
+        self.assertEqual(len(marker_flags), 1)
+
+    def test_marker_name_replacement_cannot_redirect_readable_open(self):
+        original_open = os.open
+        read_results = []
+        original_read = os.read
+        replaced = False
+
+        def replace(name, flags, *args, **kwargs):
+            nonlocal replaced
+            if name == '.a733-state':
+                self.assertTrue(flags & os.O_PATH)
+                descriptor = original_open(name, flags, *args, **kwargs)
+                if not replaced:
+                    replaced = True
+                    self.marker.rename(self.root / 'original-marker')
+                    os.mkfifo(self.marker)
+                return descriptor
+            return original_open(name, flags, *args, **kwargs)
+
+        def record(fd, size):
+            result = original_read(fd, size)
+            read_results.append(result)
+            return result
+
+        with mock.patch.object(state.os, 'open', side_effect=replace), \
+                mock.patch.object(state.os, 'read', side_effect=record):
+            self.reject()
+        self.assertEqual(read_results, [MARKER])
+
+    def test_unavailable_procfs_verification_fails_closed(self):
+        with mock.patch.object(state.ctypes, 'CDLL', return_value=object()):
+            self.reject()
+
+    def test_procfs_pid_namespace_mismatch_fails_closed(self):
+        with mock.patch.object(state.os, 'readlink', return_value='different-pid'):
+            self.reject()
+
+    def test_cli_reports_only_evidence_or_generic_failure(self):
+        self.initialized()
+        stdout, stderr = io.StringIO(), io.StringIO()
+        with self.ownership(), redirect_stdout(stdout), redirect_stderr(stderr), \
+                mock.patch.object(sys, 'argv', [str(SCRIPT), str(self.root), '--require-clock']):
+            self.assertEqual(state.main(), 0)
+        self.assertEqual(json.loads(stdout.getvalue())['state_uuid'], UUID)
+        self.assertNotIn(str(self.root), stdout.getvalue())
+        self.clock.write_bytes(b'private-secret')
+        stdout, stderr = io.StringIO(), io.StringIO()
+        with self.ownership(), redirect_stdout(stdout), redirect_stderr(stderr), \
+                mock.patch.object(sys, 'argv', [str(SCRIPT), str(self.root)]):
+            self.assertEqual(state.main(), 1)
+        self.assertEqual(stdout.getvalue(), '')
+        self.assertEqual(stderr.getvalue(), 'timesync state audit failed\n')
+
+
+if __name__ == '__main__':
+    unittest.main()
