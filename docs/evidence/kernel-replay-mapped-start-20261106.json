@@ -1,0 +1,165 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Full mapped private kernel compilation started; final comparisons pending",
+  "output_directory": "/var/lib/a733-kernel-replay-work-20261106/out/kernel-replay-mapped-20261106-01",
+  "source_provenance": {
+    "build_environment": {
+      "GIT_CONFIG_GLOBAL": "/dev/null",
+      "GIT_CONFIG_NOSYSTEM": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "HOME": "/nonexistent",
+      "KBUILD_BUILD_HOST": "jammy",
+      "KBUILD_BUILD_TIMESTAMP": "2026-11-04 00:00:00 UTC",
+      "KBUILD_BUILD_USER": "builder",
+      "KBUILD_BUILD_VERSION": "1",
+      "LC_ALL": "C",
+      "PATH": "/usr/bin:/bin",
+      "SOURCE_DATE_EPOCH": "1793750400",
+      "TZ": "UTC"
+    },
+    "build_settings": {
+      "caller_umask": "0022",
+      "debug_path_profile": "original-20261104",
+      "kaflags": "-Wa,--debug-prefix-map=/var/lib/a733-kernel-replay-work-20261106/out/kernel-replay-mapped-20261106-01/kernel-source=/home/drew/orange-pi-4-pro-build/kernel",
+      "kcflags": "-fdebug-prefix-map=/var/lib/a733-kernel-replay-work-20261106/out/kernel-replay-mapped-20261106-01/kernel-source=/home/drew/orange-pi-4-pro-build/kernel",
+      "make_command": [
+        "make",
+        "-j2",
+        "ARCH=arm64",
+        "CROSS_COMPILE=aarch64-linux-gnu-",
+        "KCFLAGS=-fdebug-prefix-map=/var/lib/a733-kernel-replay-work-20261106/out/kernel-replay-mapped-20261106-01/kernel-source=/home/drew/orange-pi-4-pro-build/kernel",
+        "KAFLAGS=-Wa,--debug-prefix-map=/var/lib/a733-kernel-replay-work-20261106/out/kernel-replay-mapped-20261106-01/kernel-source=/home/drew/orange-pi-4-pro-build/kernel"
+      ],
+      "umask": "0002"
+    },
+    "expected_utsrelease": "6.6.98-a733-diag",
+    "jobs": 2,
+    "localversion": "-a733-diag",
+    "original_kernel": {
+      "commit": "2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f",
+      "git_status_porcelain": "",
+      "shallow": true
+    },
+    "original_scmversion": "absent",
+    "original_vendor": {
+      "commit": "a95129bf30ea11886cc35f08ebb3e69695a26656",
+      "git_status_porcelain": "",
+      "shallow": true
+    },
+    "private_source_before": {
+      "commit": "2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f",
+      "git_status_porcelain": "",
+      "shallow": true
+    },
+    "project": {
+      "commit": "2d20b25b53de2c1eb3f5fc0b250d9cb55608b229",
+      "git_status_porcelain": "",
+      "inputs": {
+        "build/diagnostic.sh": {
+          "bytes": 10531,
+          "sha256": "2e33783159dbcf758b780564dbf82a1ad07e38e951c0bae5c96570bcc0f9d17a"
+        },
+        "build/kernel-replay.py": {
+          "bytes": 24602,
+          "sha256": "4ab6b9caa09d326e24d4e1f283246c29e64cec8b29ecd35534726ce66cb6af46"
+        },
+        "build/uboot-replay.py": {
+          "bytes": 27413,
+          "sha256": "3558c6b75d0fdfa731eaff925b101a136b288953364996f72b8a6bcd3fcb1cfd"
+        },
+        "configs/builder-packages.lock.tsv": {
+          "bytes": 32519,
+          "sha256": "35c2faf42a936168098b1f54239825a3c42fc56c825fc0b2078bbd753425f48b"
+        },
+        "configs/builder-replay-packages-20261106.lock.tsv": {
+          "bytes": 32546,
+          "sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425"
+        },
+        "configs/diagnostic-sources.lock.json": {
+          "bytes": 2273,
+          "sha256": "aa39f5fca29244ca961fc3f422d7110adca6975d2c6a29f80afd9d1d2f4b4821"
+        },
+        "docs/evidence/diagnostic-20261104.json": {
+          "bytes": 2224,
+          "sha256": "6d743d81ee27ced3b55cbcd218bbf0693743be66e85d074e59a052c8819fde1c"
+        }
+      }
+    },
+    "source_method": "git clone --shared --no-checkout; detached pinned commit"
+  },
+  "resource_samples": [
+    {
+      "utc": "2026-11-06T10:45:36Z",
+      "available_ram_bytes": 7358144512,
+      "free_disk_bytes": {
+        "/home/drew/orange-pi-4-pro-build": 15355572224,
+        "/var/lib/a733-kernel-replay-work-20261106/out/kernel-replay-mapped-20261106-01": 15355572224
+      },
+      "phase": "start"
+    },
+    {
+      "utc": "2026-11-06T10:46:06Z",
+      "available_ram_bytes": 7069114368,
+      "free_disk_bytes": {
+        "/home/drew/orange-pi-4-pro-build": 12943638528,
+        "/var/lib/a733-kernel-replay-work-20261106/out/kernel-replay-mapped-20261106-01": 12943638528
+      },
+      "phase": "periodic"
+    },
+    {
+      "utc": "2026-11-06T10:46:36Z",
+      "available_ram_bytes": 7174029312,
+      "free_disk_bytes": {
+        "/home/drew/orange-pi-4-pro-build": 12903837696,
+        "/var/lib/a733-kernel-replay-work-20261106/out/kernel-replay-mapped-20261106-01": 12903837696
+      },
+      "phase": "periodic"
+    },
+    {
+      "utc": "2026-11-06T10:47:06Z",
+      "available_ram_bytes": 7174594560,
+      "free_disk_bytes": {
+        "/home/drew/orange-pi-4-pro-build": 12846301184,
+        "/var/lib/a733-kernel-replay-work-20261106/out/kernel-replay-mapped-20261106-01": 12846301184
+      },
+      "phase": "periodic"
+    },
+    {
+      "utc": "2026-11-06T10:47:36Z",
+      "available_ram_bytes": 7057387520,
+      "free_disk_bytes": {
+        "/home/drew/orange-pi-4-pro-build": 12803923968,
+        "/var/lib/a733-kernel-replay-work-20261106/out/kernel-replay-mapped-20261106-01": 12803923968
+      },
+      "phase": "periodic"
+    }
+  ],
+  "process_observed": {
+    "replay_pid": 1360921,
+    "make_pid": 1361695,
+    "state": "Both live with make compiling Image/modules/dtbs at the coordinator check."
+  },
+  "regressions": {
+    "path": "/tmp/a733-kernel-mapped-regressions-20261106.log",
+    "bytes": 2843,
+    "sha256": "96a0329f27fcda34fff26c46c8a53f18707d9c351c5d2a52dc4dcc0f681dcdd7",
+    "discovery_cases": 849,
+    "discovery_skips": 0,
+    "assembly_cases": 4,
+    "shell_scripts": 5,
+    "result_lines": [
+      "Ran 849 tests in 35.275s",
+      "OK",
+      "Ran 4 tests in 5.095s",
+      "OK",
+      "PASS: deterministic packaging, static AArch64 checks, module safety, archive metadata and diagnostic policy (host only)",
+      "PASS host-only guest guards, exact packaging sections and disposable ext4 seed; KVM untested",
+      "host init: 113 fixtures passed (no real mounts or hardware checks)",
+      "host storage resolver: 41 fixture checks passed (bash)",
+      "host storage resolver: 41 fixture checks passed (ash)",
+      "host-userspace guard, namespace, mount lifecycle and source verification tests passed"
+    ]
+  },
+  "acceptance_limit": "No matching full kernel result yet; fresh builder/source acquisition and physical KVM/deployment acceptance remain separate."
+}

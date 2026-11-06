@@ -1,0 +1,205 @@
+{
+  "result": {
+    "actual_commands": {
+      "note": {
+        "bytes": 7286,
+        "sha256": "57af06605cf901c48658e052391f7b6c918c3177f31c26fe990af35637ec315d"
+      },
+      "sigreturn": {
+        "bytes": 7268,
+        "sha256": "367ee4ab56a42c650c096fec5fcc81e0f7e834418b46d38962a15d1741195bb7"
+      },
+      "vgettimeofday": {
+        "bytes": 8487,
+        "sha256": "5db998aa16fffa685fb7175f26499c56cb2d0a3996db1fa631fa44b56176b5af"
+      }
+    },
+    "comparison": {
+      "actual": {
+        "bytes": 3296,
+        "sha256": "f6b2803e8e4a17782f4d0cf089366c3a06f2bf2284ff245212ee2ac378168f94"
+      },
+      "equal": true,
+      "expected": {
+        "bytes": 3296,
+        "sha256": "f6b2803e8e4a17782f4d0cf089366c3a06f2bf2284ff245212ee2ac378168f94"
+      }
+    },
+    "debug_comparison_unanchored": {
+      "actual": {
+        "bytes": 22384,
+        "sha256": "b9670aad2f4a6a9e69fe64785008c92aa08a82a38af7b59e909e57e613f1a8a7"
+      },
+      "equal": true,
+      "expected": {
+        "bytes": 22384,
+        "sha256": "b9670aad2f4a6a9e69fe64785008c92aa08a82a38af7b59e909e57e613f1a8a7"
+      }
+    },
+    "hardware_acceptance": "Not established; actual KVM guest remains required",
+    "limitations": "Cached shallow sources and registered builder; optional debug comparison is unanchored",
+    "schema": 1,
+    "scope": "vDSO-only; no Image, modules or dtbs targets",
+    "shared_inputs_unchanged": true,
+    "success": true,
+    "target": "diagnostic-20261104",
+    "umask": "0002"
+  },
+  "source_provenance": {
+    "build_environment": {
+      "GIT_CONFIG_GLOBAL": "/dev/null",
+      "GIT_CONFIG_NOSYSTEM": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "HOME": "/nonexistent",
+      "KBUILD_BUILD_HOST": "jammy",
+      "KBUILD_BUILD_TIMESTAMP": "2026-11-04 00:00:00 UTC",
+      "KBUILD_BUILD_USER": "builder",
+      "KBUILD_BUILD_VERSION": "1",
+      "LC_ALL": "C",
+      "PATH": "/usr/bin:/bin",
+      "SOURCE_DATE_EPOCH": "1793750400",
+      "TZ": "UTC"
+    },
+    "flag_source": "Pinned Makefile:1034-1035 appends KAFLAGS/KCFLAGS; arch/arm64/Makefile:192-195 prepare builds vDSO",
+    "jobs": 2,
+    "make_command": [
+      "make",
+      "-j2",
+      "V=1",
+      "ARCH=arm64",
+      "CROSS_COMPILE=aarch64-linux-gnu-",
+      "LOCALVERSION=-a733-diag",
+      "KCFLAGS=-fdebug-prefix-map=/var/lib/a733-kernel-replay-work-20261106/out/vdso-replay-debugmap-20261106-01/kernel-source=/home/drew/orange-pi-4-pro-build/kernel",
+      "KAFLAGS=-Wa,--debug-prefix-map=/var/lib/a733-kernel-replay-work-20261106/out/vdso-replay-debugmap-20261106-01/kernel-source=/home/drew/orange-pi-4-pro-build/kernel"
+    ],
+    "original_kernel": {
+      "commit": "2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f",
+      "git_status_porcelain": "",
+      "shallow": true
+    },
+    "original_vendor": {
+      "commit": "a95129bf30ea11886cc35f08ebb3e69695a26656",
+      "git_status_porcelain": "",
+      "shallow": true
+    },
+    "private_source_before": {
+      "commit": "2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f",
+      "git_status_porcelain": "",
+      "shallow": true
+    },
+    "project": {
+      "commit": "158a45a379017e3aa238cc18290db07dd0a099cc",
+      "git_status_porcelain": "",
+      "inputs": {
+        "build/diagnostic.sh": {
+          "bytes": 10531,
+          "sha256": "2e33783159dbcf758b780564dbf82a1ad07e38e951c0bae5c96570bcc0f9d17a"
+        },
+        "build/kernel-replay.py": {
+          "bytes": 20547,
+          "sha256": "7c4e52ce70c75245197527b96271801f97b71e8eabc281f4c19a797d25002f6a"
+        },
+        "build/uboot-replay.py": {
+          "bytes": 27413,
+          "sha256": "3558c6b75d0fdfa731eaff925b101a136b288953364996f72b8a6bcd3fcb1cfd"
+        },
+        "build/vdso-replay.py": {
+          "bytes": 13096,
+          "sha256": "bffeb426d6ad829f5d526c33035d400689f7c5a5cfe34750501a1b71667963ef"
+        },
+        "configs/builder-packages.lock.tsv": {
+          "bytes": 32519,
+          "sha256": "35c2faf42a936168098b1f54239825a3c42fc56c825fc0b2078bbd753425f48b"
+        },
+        "configs/builder-replay-packages-20261106.lock.tsv": {
+          "bytes": 32546,
+          "sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425"
+        },
+        "configs/diagnostic-sources.lock.json": {
+          "bytes": 2273,
+          "sha256": "aa39f5fca29244ca961fc3f422d7110adca6975d2c6a29f80afd9d1d2f4b4821"
+        },
+        "docs/evidence/diagnostic-20261104.json": {
+          "bytes": 2224,
+          "sha256": "6d743d81ee27ced3b55cbcd218bbf0693743be66e85d074e59a052c8819fde1c"
+        },
+        "tests/test_vdso_replay.py": {
+          "bytes": 10617,
+          "sha256": "671b0421dc60d420dc9f1b4fe61122eff909cf848d95abf8a2b79b2ebaf6ccb6"
+        }
+      }
+    },
+    "source_method": "git clone --shared --no-checkout; detached pinned commit",
+    "targets": [
+      "olddefconfig",
+      "prepare"
+    ],
+    "umask": "0002"
+  },
+  "evidence_files": {
+    "replay-manifest.json": {
+      "bytes": 374423,
+      "sha256": "e5f9ea1424dba179368d1f0b36face6f76cd89730598e8271ac74a1a4b91b83a"
+    },
+    "artifacts/replay-result.json": {
+      "bytes": 1400,
+      "sha256": "a2897108b1ba4b607d49c5bcb53168d76f012850268ee2b053f7efd10b37487d"
+    },
+    "artifacts/source-provenance.json": {
+      "bytes": 3176,
+      "sha256": "19fe2304730ce6e210e8aeffe8a24abafe04b1e3289259a42b0075ab36aaa95d"
+    },
+    "artifacts/input-snapshot.json": {
+      "bytes": 78972,
+      "sha256": "6dec8ab9915a14896e54ad6c7d7876a2b95f9cd59be6c2a8301bf401f6bbb904"
+    },
+    "artifacts/input-snapshot-after.json": {
+      "bytes": 78972,
+      "sha256": "6dec8ab9915a14896e54ad6c7d7876a2b95f9cd59be6c2a8301bf401f6bbb904"
+    },
+    "logs/resources.jsonl": {
+      "bytes": 498,
+      "sha256": "e0a04846fba9d94efcabbad0281c14b3a9166ea109bf289bfe0d0b212630523b"
+    },
+    "logs/vdso-build.log": {
+      "bytes": 40557,
+      "sha256": "2fb58ab442a11cc2b680f3e4eec80087bf805082482db92e33540e7ae28cf699"
+    }
+  },
+  "resources": {
+    "start": {
+      "utc": "2026-11-06T10:35:29Z",
+      "available_ram_bytes": 7317364736,
+      "free_disk_bytes": {
+        "/home/drew/orange-pi-4-pro-build": 12452601856,
+        "/var/lib/a733-kernel-replay-work-20261106/out/vdso-replay-debugmap-20261106-01": 12452601856
+      },
+      "phase": "start"
+    },
+    "end": {
+      "utc": "2026-11-06T10:35:52Z",
+      "available_ram_bytes": 7325401088,
+      "free_disk_bytes": {
+        "/home/drew/orange-pi-4-pro-build": 10083561472,
+        "/var/lib/a733-kernel-replay-work-20261106/out/vdso-replay-debugmap-20261106-01": 10083561472
+      },
+      "phase": "end"
+    },
+    "samples": 2,
+    "minimum_available_ram_bytes": 7317364736,
+    "minimum_free_disk_bytes": 10083561472
+  },
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Fresh private vDSO reproduction with explicit debug-path mappings; full kernel and hardware gates separate",
+  "output_directory": "/var/lib/a733-kernel-replay-work-20261106/out/vdso-replay-debugmap-20261106-01",
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "manifest_entries_rehashed": 2221,
+    "mismatches": 0,
+    "project_inputs_bound_to_commit": "158a45a379017e3aa238cc18290db07dd0a099cc",
+    "observations": "Whole authenticated vDSO and GNU build ID restored; optional debug ELF matches unanchored original. Actual C and both assembler command mappings present. C and AS debug comp_dir resolves to original source directory, with matching GCC 11.4.0/GNU AS 2.38 producers. Before/after inputs equal."
+  },
+  "acceptance_limit": "Only this complete vDSO was reproduced. Full Image, module tree, independent source/builder acquisition and hardware acceptance remain open."
+}

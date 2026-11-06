@@ -57,12 +57,50 @@ Exactly 40 bytes differ: the 20-byte arm64 vDSO GNU build ID at raw Image offset
 raw Image bytes match. Independent ELF/readback review confirms those records.
 Retained original vDSO debug records contain the original source directory;
 new records contain the private source directory, with matching compiler
-producer strings. A fresh private vDSO-only experiment with explicit debug-path
-mapping is the next test against unchanged original bytes. This cause has not
-yet been demonstrated by rebuilding. One stripped module also differs in its
+producer strings. The [fresh private vDSO experiment](evidence/vdso-replay-20261106.json)
+now reproduces the complete unchanged vDSO with explicit compiler/assembler
+debug-path mappings and recorded umask 0002. Full-kernel reproduction remains
+a separate comparison. One stripped module also differs in its
 build ID, with retained/new modes 0664/0644; the original umask was not pinned.
 
-No target hashes or output bytes were patched. The complete failed build and
-evidence remain available. Sampled minimum available RAM was 7,085,875,200 bytes;
+No target hashes or output bytes were patched. The failed build source/object tree is now retained in
+[verified archives](evidence/failed-kernel-source-retention-20261106.json); all
+final artifacts and evidence remain in their original output directory. Sampled minimum available RAM was 7,085,875,200 bytes;
 end free disk was 14,032,269,312 bytes. Another fresh build must first satisfy
 the unchanged greater-than-15-GB disk guard.
+
+## Verified vDSO experiment and full-kernel opt-in
+
+At project commit `158a45a379017e3aa238cc18290db07dd0a099cc`, the fresh private
+vDSO experiment completed from 10:35:29 to 10:35:52 UTC. The complete 3,296-byte
+ELF matches SHA-256
+`f6b2803e8e4a17782f4d0cf089366c3a06f2bf2284ff245212ee2ac378168f94`.
+The target is authenticated through its unique unchanged embedding in the
+pinned baseline Image. Its GNU build ID and optional debug ELF also match; the
+latter is an unanchored comparison. Independent review rehashed all 2,221
+manifest entries and verified actual compiler/assembler commands and debug paths.
+
+The command ran in `/var/lib/a733-kernel-replay-work-20261106` on the builder:
+
+```sh
+python3 -I -B build/vdso-replay.py --target diagnostic-20261104 \
+  --builder-profile replay-20261106 \
+  --output "$PWD/out/vdso-replay-debugmap-20261106-01"
+```
+
+The full-kernel recipe now has an explicit `--debug-path-profile original-20261104`
+opt-in. It maps private compiler and assembler debug directories to the original
+recorded directory and pins umask 0002. Native mode remains the default and pins
+umask 0022 without mappings. Both modes retain the same complete Image/DTB/config
+hash gates, private source checkout, two jobs and greater-than-15-GB start guard.
+Actual Kbuild commands and generated metadata are retained. Caller umask is
+restored on success and failure. No output bytes or target hashes are patched.
+
+The successful vDSO result supports testing this profile against the full kernel;
+it does not establish that the complete Image or all modules reproduce.
+
+A [full mapped replay](evidence/kernel-replay-mapped-start-20261106.json) is now
+compiling from clean project commit `2d20b25b53de2c1eb3f5fc0b250d9cb55608b229`.
+Its preflight/configuration checks and all 849 privileged discovery tests pass;
+final Image/DTB/config and module comparisons are pending. The earlier failure
+remains a failure, with its source tree retained in verified archives.

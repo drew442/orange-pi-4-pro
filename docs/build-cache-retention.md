@@ -19,7 +19,7 @@ The [2026-11-06 relocation](evidence/builder-relocation-20261106.json) moves six
 optional archives and two old nondeployable raw NVMe fixtures to
 `codex.drewnet.online:/home/drew/orange-pi-4-pro/out/builder-retained-20261106/`.
 Every logical byte and hash was verified before removing its builder copy.
-Newly observed builder free space is 26,116,837,376 bytes, above the 22 GiB
+At relocation time, builder free space was 26,116,837,376 bytes, above the 22 GiB
 assembly guard; later builds consume this headroom. Original manifests remain
 on the builder, but the eight original file paths in older records are now
 absent. Follow the exact old/new path mapping in the new evidence record.
@@ -37,6 +37,31 @@ compiler-object archive under `kernel-object-cache/` within the codex directory.
 Transfer and authenticate them at their original paths before those commands.
 The reviewed relocation script and durable verification/acknowledgment records
 are retained beside the copies. No physical NVMe or SPI operation occurred.
+
+## Failed full-kernel source retention
+
+The [failed replay working tree](evidence/failed-kernel-source-retention-20261106.json)
+was archived in full before its expanded `kernel-source/` directory was retired.
+All 118,420 entry names match the archive; GNU tar compared every member against
+the live tree. The 1,576,567,651-byte archive has SHA-256
+`ed2f6e10fa9e16130381f29d273a9c6a7b380a8b0debb1f5828db4dd3bca84d7`
+and remains in both locations:
+
+- Builder: `/var/lib/a733-kernel-source-retention-20261106/kernel-source.tar.gz`.
+- Codex: `out/builder-retained-20261106/failed-kernel-source/kernel-source.tar.gz`.
+
+Both copies passed full hashes and durability checks. Retirement held the verified
+off-host descriptor, excluded active/open/mapped users and mounts, and rechecked
+all 356 final artifact/log hashes. Only the fixed failed generated source tree
+was removed, recovering 5,274,927,104 bytes and leaving 15,358,078,976 bytes free
+at that moment. Later builds consume this headroom. The full-kernel 15 GB guard
+and NVMe assembly's separate 22 GiB guard remain unchanged.
+
+The archive retains borrowed Git object references to the original pinned kernel
+cache, which remains present. Preserve that cache or restore equivalent pinned
+metadata before using the archived Git checkout. No full archive restoration
+procedure is claimed exercised here; archive/tree comparison and off-host byte
+retention are the verified scope. This is independent of physical recovery.
 
 ## Retained source and images
 
@@ -64,8 +89,9 @@ contents and full gzip readback. This does not establish a new physical boot.
 A subsequent [compiler-object retention](evidence/kernel-object-retention-20261104.json)
 archived 11,149 generated, untracked kernel cache files before removing their
 expanded copies. All tracked source plus 323 protected configuration/Image/map/
-module files retain their hashes. The compared archive remains at
-`/var/lib/a733-cache-retention-20261104/kernel-object-cache.tar.gz`. Restore it
+module files retain their hashes. The archive originally lived at
+`/var/lib/a733-cache-retention-20261104/kernel-object-cache.tar.gz`; its current
+verified copy is under `kernel-object-cache/` in the codex retention directory. Restore it
 only against matching source/configuration with no newer objects to overwrite;
 otherwise let the next two-job kernel build regenerate its cache. This creates
 headroom for refreshed roots without discarding compiled evidence.

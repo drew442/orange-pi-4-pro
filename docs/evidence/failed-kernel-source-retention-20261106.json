@@ -1,0 +1,31 @@
+{
+  "source": "/var/lib/a733-kernel-replay-work-20261106/out/kernel-replay-20261106-01/kernel-source",
+  "archive": "/var/lib/a733-kernel-source-retention-20261106/kernel-source.tar.gz",
+  "archive_bytes": 1576567651,
+  "archive_sha256": "ed2f6e10fa9e16130381f29d273a9c6a7b380a8b0debb1f5828db4dd3bca84d7",
+  "tar_compare_final": "passed",
+  "exact_archive_tree_entries": 118420,
+  "retained_manifest_files": 356,
+  "process_and_mount_exclusions": "passed",
+  "expanded_tree_removed": true,
+  "free_before_bytes": 10083151872,
+  "free_after_bytes": 15358078976,
+  "offhost_held_copy": "/home/drew/orange-pi-4-pro/out/builder-retained-20261106/failed-kernel-source/kernel-source.tar.gz",
+  "offhost_hash_fsync_verified_before_after": true,
+  "reviewed_helper_sha256": "09904d8b4ce8a4dc1d63ed0d6c13cda86916cfa88a54bd8ddbfc178e654944e0",
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Verified archival and retirement of failed generated source working tree only",
+  "apparent_source_tree_bytes": 5015999615,
+  "archive_start_utc": "2026-11-06T10:29:13Z",
+  "archive_end_utc": "2026-11-06T10:31:59Z",
+  "review": "Independent Sol high review required exact archive/tree membership before retirement; corrected helper re-reviewed and cleared.",
+  "script_local_path": "/home/drew/orange-pi-4-pro/tmp/retire-failed-kernel-source-20261106.py",
+  "restoration_dependency": "The working-tree archive retains .git/objects/info/alternates referencing /home/drew/orange-pi-4-pro-build/kernel/.git/objects. Original pinned Git object cache remains in place. Retain that cache or restore equivalent pinned Git metadata before Git operations.",
+  "scope_limits": [
+    "Complete generated source/objects retained in verified builder and off-host archives; no source bytes discarded.",
+    "Final failed-build artifacts and logs retain all 356 manifest hashes.",
+    "No physical board storage, deployment image, NVMe or SPI operation performed.",
+    "This cache retention does not satisfy physical recovery or guest backup/restore acceptance."
+  ]
+}

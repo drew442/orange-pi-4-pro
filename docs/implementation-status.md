@@ -122,7 +122,7 @@ unbooted. No extra diagnostic-only reflash is required for the successful checks
   remain unbooted preparations; host state is a fixture. Actual historical images
   still verify, and new EL2 images refuse default baseline verification. A fresh
   committed-source checkout reproduced both images and installer initramfs bytes.
-- Jammy: 811 discovery cases without skips, four diagnostic assembly cases and
+- Jammy: 849 discovery cases without skips, four diagnostic assembly cases and
   all five shell regressions pass. Independent Sol high reviews cover boot,
   installation/selection and rollback changes. [Detailed implementation evidence](implementation-evidence.md)
   separates builds, software probes and physical results.
@@ -170,8 +170,13 @@ backup/recovery and SPI-specific programming authorization remain outstanding.
    full-inventory replay profile. Source caches were reused; full clean-builder
    acquisition and kernel reproduction remain open. A reviewed [kernel replay](kernel-reproducibility.md)
    [completed compilation but failed exact Image reproduction](evidence/kernel-replay-20261106.json):
-   DTB/config match; only two 20-byte GNU build IDs differ in the Image. Debug-path
-   and umask reproduction need an actual experiment; target bytes remain unchanged. The [26-input license inventory](evidence/vendor-boot-license-inventory-20261106.json)
+   DTB/config match; only two 20-byte GNU build IDs differ in the Image. A
+   [fresh vDSO experiment](evidence/vdso-replay-20261106.json) now reproduces the
+   complete authenticated vDSO with explicit debug mappings and umask 0002. A
+   [full mapped replay is compiling](evidence/kernel-replay-mapped-start-20261106.json)
+   with unchanged target hashes and two jobs; comparisons remain pending.
+   [Verified failed-source archival](evidence/failed-kernel-source-retention-20261106.json)
+   recovered 5.27 GB before launch, satisfying the unchanged 15 GB guard. The [26-input license inventory](evidence/vendor-boot-license-inventory-20261106.json)
    now maps every pinned path/hash and its available/missing attribution evidence.
    All [479 userspace source archives](evidence/userspace-sources-acquired-20261106.json)
    for the 220 binary packages have been acquired and independently rehashed.
