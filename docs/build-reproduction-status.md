@@ -1,0 +1,44 @@
+# Build reproduction status
+
+Updated 2026-11-06. This index records build evidence; physical release acceptance
+remains in [hardware validation](hardware-validation.md). Published installation
+artifacts remain bound to [the deployment guide](deploy-personalized-20261106.md).
+
+| Stage | Verified evidence | Remaining limit |
+| --- | --- | --- |
+| Prepared Jammy host | [Assessment](build-host-assessment.md), pinned package inventories, two compilation jobs | Prepared-host builds alone are insufficient |
+| Builder inputs | [842 package archives](evidence/builder-packages-acquired-20261106.json), [signed AMD64 seed](../configs/builder-base-20261106.lock.json) | Source recompilation is separate |
+| Fresh builder installation | [Isolation](clean-builder.md), [offline installation](evidence/builder-offline-install-20261106.json): configured inventory/audits, unchanged host/cache | One installed construction |
+| Frozen builder | [Two identical exports and restoration](evidence/builder-frozen-20261106.json), independent complete codex readback | Two exports are not two OS constructions |
+| Fresh sources | [Acquisition](evidence/rebuild-sources-acquired-20261106.json), [import](evidence/frozen-source-import-20261106.json): exact vendor/kernel/U-Boot commits, Linaro toolchain and 26 boot inputs | Firmware licensing remains open |
+| U-Boot | [Two frozen-builder replays](evidence/frozen-uboot-replay-20261106.json): unpacked binary and packed boot package match | Historical challenge replay is explicit; fresh randomness remains default |
+| Kernel | [Fresh frozen-builder replay](evidence/frozen-kernel-replay-20261106.json): Image/DTB/config and all 332 regular modules match; independent 2,556-entry manifest rehash | Original debug paths and umask are deliberate replay inputs |
+| Deployment SD images | [Tracked clean-checkout recipe](sd-image-reproduction.md): both 256 MiB raw/gzip images match; regenerated runtime and independent inspections pass | Physical boot of refreshed images remains pending |
+| ARM userspace inputs | [220 authenticated binary packages](userspace-rebuild-preparation.md), [479 source archives](evidence/userspace-sources-acquired-20261106.json) | Source archives are acquired, not recompiled |
+| Foreign userspace stage | [Authenticated mirror and pinned adapter](offline-userspace-reconstruction.md), [actual records](evidence/userspace-foreign-20261106.json): all 669 mirror files checked, 99 packages cached, 96 extracted, empty target status | Native data stage only |
+| ARM userspace configuration/export | [Actual configuration/export](evidence/userspace-configured-export-20261106.json): 220 exact configured packages, clean dpkg/APT audits, identity cleanup; all 15,881 archive members independently verified | One configuration/export; tracked orchestration passes fixtures and awaits actual replay; duplicate construction remains open |
+| Device metadata | [Fixture](evidence/fakeroot-device-metadata-20261106.json), [two-phase candidate](evidence/fakeroot-metadata-candidate-20261106.json) | Virtual archive/image devices do not prove hardware access |
+| Complete historical root archive | [Full staging comparison](evidence/full-root-metadata-fixture-20261106.json), [complete diagnostic image readback](evidence/full-root-image-readback-20261106.json): 15,892 paths, 518,081,083 regular-file bytes, links/devices/attributes | Diagnostic 1 GiB image; production 4 GiB slots remain open |
+| Root/state recipe integration | [Optional metadata backend](evidence/root-metadata-backend-20261106.json), [preparation](root-reconstruction-preparation.md): full extraction through payload interface, no real nodes | Complete root/state/NVMe reconstruction and image readback remain open |
+| Guest fixture | [Fixed seed fixture](evidence/guest-seed-fixture-20261104.json): root/drew byte-identical Jammy builds | No guest has booted; real KVM is mandatory |
+| Distribution inputs | [26-input license inventory](evidence/vendor-boot-license-inventory-20261106.json) | Attribution/grants unresolved; no public redistribution clearance claimed |
+
+The pinned mke2fs creator copies child modification times at whole-second
+resolution and sets the filesystem root to its creation epoch; diagnostic image
+comparison explicitly accounts for this transformation. Nanosecond archive
+preservation is not nanosecond image preservation.
+
+Capacity recovery is documented in [retention](build-cache-retention.md),
+[relocation](evidence/builder-relocation-20261106.json),
+[output retention](evidence/build-output-retention-20261106.json),
+[scratch retirement](evidence/builder-scratch-retirement-20261106.json) and
+[kernel retention](evidence/kernel-space-retention-20261106.json). Retired bytes
+remain authenticated on codex; restore paths using their maps. Recheck actual
+free disk/RAM before every run. The reviewed [20 GiB LVM growth](build-host-capacity-plan.md)
+has a metadata backup and successful dry run, but awaits authorization. No resize
+has occurred; production capacity guards remain mandatory.
+
+Next: finish reusable userspace configuration, repeat construction and explain
+binary differences, then reconstruct and fully inspect production roots/state/
+NVMe after capacity permits. A second agent/operator must reproduce the complete
+deployment from the guide; build proofs cannot satisfy physical release gates.
