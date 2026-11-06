@@ -303,17 +303,23 @@ def payload_command(builder, phase):
 
 
 def stop_process(proc):
-    if proc is None:
+    if proc is None or proc.returncode is not None:
         return
-    # Terminate the session's process group even when its leader has exited.
+    # An unreaped child reserves its PID/PGID while group signals are sent.
+    # Never signal a completed, reaped leader: that numeric ID can be reused.
+    require(type(proc.pid) is int and proc.pid > 1, 'invalid process handle')
+    os.waitid(os.P_PID, proc.pid, os.WEXITED | os.WNOHANG | os.WNOWAIT)
+    require(os.getpgid(proc.pid) == proc.pid, 'process is not its session group leader')
     try:
         os.killpg(proc.pid, signal.SIGTERM)
     except ProcessLookupError:
         pass
-    try:
-        proc.wait(timeout=15)
-    except subprocess.TimeoutExpired:
-        pass
+    deadline = time.monotonic() + 15
+    while time.monotonic() < deadline:
+        if os.waitid(os.P_PID, proc.pid,
+                     os.WEXITED | os.WNOHANG | os.WNOWAIT) is not None:
+            break
+        time.sleep(0.05)
     try:
         os.killpg(proc.pid, signal.SIGKILL)
     except ProcessLookupError:

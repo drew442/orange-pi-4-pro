@@ -2,6 +2,8 @@
 import importlib.util
 import json
 import os
+import select
+import signal
 import stat
 from types import SimpleNamespace
 from pathlib import Path
@@ -271,6 +273,72 @@ class LauncherTests(unittest.TestCase):
              mock.patch.object(launcher, 'stop_process'):
             launcher.bootstrap_api(phase, self.ready, self.profile, self.host_ns, {})
         self.assertEqual(events, ['api-setup-request.json', 'wait', 'api-continue.json'])
+
+
+class ProcessCleanupTests(unittest.TestCase):
+    def child(self, ignore_term=False):
+        code = ('import signal,time; '
+                + ('signal.signal(signal.SIGTERM,signal.SIG_IGN); ' if ignore_term else '')
+                + 'print("ready",flush=True); time.sleep(30)')
+        proc = subprocess.Popen(['/usr/bin/python3', '-I', '-B', '-c', code],
+                                start_new_session=True, stdout=subprocess.PIPE)
+        def finish():
+            if proc.poll() is None:
+                proc.kill()
+            proc.wait(timeout=5)
+            proc.stdout.close()
+        self.addCleanup(finish)
+        self.assertTrue(select.select([proc.stdout], [], [], 5)[0])
+        self.assertEqual(proc.stdout.readline(), b'ready\n')
+        return proc
+
+    def test_reaped_leader_is_never_signaled(self):
+        proc = subprocess.Popen(['/usr/bin/python3', '-I', '-B', '-c', 'pass'],
+                                start_new_session=True)
+        proc.wait(timeout=5)
+        with mock.patch.object(launcher.os, 'killpg') as kill, \
+             mock.patch.object(launcher.os, 'waitid') as wait:
+            launcher.stop_process(proc)
+        kill.assert_not_called()
+        wait.assert_not_called()
+        launcher.stop_process(None)
+
+    def stop_and_check_reservation(self, proc, immediate=False):
+        original = os.killpg
+        signals = []
+        def checked(pid, sig):
+            self.assertEqual(pid, proc.pid)
+            self.assertIsNone(proc.returncode)
+            # A successful WNOWAIT lookup proves the leader is still our child.
+            os.waitid(os.P_PID, pid, os.WEXITED | os.WNOHANG | os.WNOWAIT)
+            signals.append(sig)
+            original(pid, sig)
+        with mock.patch.object(launcher.os, 'killpg', side_effect=checked):
+            if immediate:
+                with mock.patch.object(launcher.time, 'monotonic', side_effect=[0, 16]):
+                    launcher.stop_process(proc)
+            else:
+                launcher.stop_process(proc)
+        self.assertEqual(signals, [signal.SIGTERM, signal.SIGKILL])
+        with self.assertRaises(ChildProcessError):
+            os.waitid(os.P_PID, proc.pid, os.WEXITED | os.WNOHANG | os.WNOWAIT)
+
+    def test_running_child_is_reserved_until_group_signals_finish(self):
+        proc = self.child()
+        self.stop_and_check_reservation(proc)
+        self.assertEqual(proc.returncode, -signal.SIGTERM)
+
+    def test_term_resistant_child_is_killed_and_reaped(self):
+        proc = self.child(ignore_term=True)
+        self.stop_and_check_reservation(proc, immediate=True)
+        self.assertEqual(proc.returncode, -signal.SIGKILL)
+
+    def test_unowned_pid_cannot_trigger_group_signals(self):
+        fake = SimpleNamespace(pid=os.getpid(), returncode=None)
+        with mock.patch.object(launcher.os, 'killpg') as kill:
+            with self.assertRaises(ChildProcessError):
+                launcher.stop_process(fake)
+        kill.assert_not_called()
 
 
 if __name__ == '__main__':
