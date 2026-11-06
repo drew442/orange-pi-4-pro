@@ -204,7 +204,8 @@ class ReplayTests(unittest.TestCase):
         with self.assertRaisesRegex(InterruptedError, 'signal'):
             replay.interrupted(15, None)
 
-    def simulated_build(self, mismatch=False, changed_after=False, interrupted=False):
+    def simulated_build(self, mismatch=False, changed_after=False, interrupted=False,
+                        debug_path_profile='native', missing_map=False):
         config = b'CONFIG_KVM=y\n'
         products = {'Image': b'kernel', 'board.dtb': b'dtb', 'kernel.config': config}
         for name, content in products.items():
@@ -231,8 +232,19 @@ class ReplayTests(unittest.TestCase):
                     path = cwd / relative
                     path.parent.mkdir(parents=True, exist_ok=True)
                     path.write_bytes(b'mismatch' if mismatch and name == 'Image' else products[name])
-                (cwd / 'include/config').mkdir(parents=True)
+                for relative in ('include/generated', 'include/config', 'arch/arm64/include/generated'):
+                    (cwd / relative).mkdir(parents=True, exist_ok=True)
+                    (cwd / relative / 'fixture.h').write_text('generated header')
                 (cwd / 'include/config/kernel.release').write_text('6.6.98-a733-diag\n')
+                flags = dict(arg.split('=', 1) for arg in args if '=' in str(arg))
+                for relative, kind in (('arch/arm64/kernel/vdso/.vgettimeofday.o.cmd', 'KCFLAGS'),
+                                       ('arch/arm64/kernel/vdso/.note.o.cmd', 'KAFLAGS'),
+                                       ('arch/arm64/kernel/vdso/.sigreturn.o.cmd', 'KAFLAGS'),
+                                       ('init/.main.o.cmd', 'KCFLAGS')):
+                    path = cwd / relative
+                    path.parent.mkdir(parents=True, exist_ok=True)
+                    observed = '' if missing_map == kind or (missing_map is True and kind == 'KAFLAGS') else flags.get(kind, '')
+                    path.write_text(f'cmd_fixture := aarch64-linux-gnu-gcc -g {observed} -c source\n')
             elif 'modules_install' in args:
                 root = Path(next(arg.split('=', 1)[1] for arg in args if str(arg).startswith('INSTALL_MOD_PATH=')))
                 release = root / 'lib/modules/6.6.98-a733-diag'
@@ -245,11 +257,11 @@ class ReplayTests(unittest.TestCase):
         with patch.object(replay.Monitor, 'command', command), \
                 patch.object(replay, 'source_state', return_value={'commit': replay.KERNEL_HEAD}), \
                 patch.object(replay, 'snapshot', return_value=(after, config)):
-            if mismatch or changed_after or interrupted:
+            if mismatch or changed_after or interrupted or missing_map:
                 with self.assertRaises((ValueError, InterruptedError)):
-                    replay.build(self.repo, self.workspace, self.output, before, config)
+                    replay.build(self.repo, self.workspace, self.output, before, config, debug_path_profile)
             else:
-                replay.build(self.repo, self.workspace, self.output, before, config)
+                replay.build(self.repo, self.workspace, self.output, before, config, debug_path_profile)
         return commands, json.loads((self.output / 'artifacts/replay-result.json').read_text())
 
     def test_simulated_replay_matches_registered_products_and_preserves_inputs(self):
@@ -285,6 +297,81 @@ class ReplayTests(unittest.TestCase):
         self.assertTrue((self.output / 'replay-manifest.json').exists())
         samples = [json.loads(line) for line in (self.output / 'logs/resources.jsonl').read_text().splitlines()]
         self.assertEqual(samples[-1]['phase'], 'end')
+
+    def test_native_profile_has_no_mapping_and_preserves_caller_umask(self):
+        caller = os.umask(0o027)
+        try:
+            commands, result = self.simulated_build()
+            observed = os.umask(0o027)
+            self.assertEqual(observed, 0o027)
+        finally:
+            os.umask(caller)
+        self.assertEqual(result['build_settings']['debug_path_profile'], 'native')
+        self.assertEqual(result['build_settings']['caller_umask'], '0027')
+        self.assertEqual((result['umask_before'], result['umask_after']), ('0022', '0022'))
+        self.assertTrue(all(not any(arg.startswith(('KCFLAGS=', 'KAFLAGS=')) for arg in command)
+                            for command in commands))
+        self.assertEqual(len(result['actual_commands']), 4)
+        self.assertEqual((self.output / 'artifacts/modules/lib/modules/6.6.98-a733-diag/test.ko').stat().st_mode & 0o777, 0o644)
+
+    def test_mapped_profile_flags_apply_to_all_make_stages_and_actual_commands(self):
+        commands, result = self.simulated_build(debug_path_profile='original-20261104')
+        settings = result['build_settings']
+        mapping = f'{self.output / "kernel-source"}={self.workspace / "kernel"}'
+        self.assertEqual(settings['kcflags'], '-fdebug-prefix-map=' + mapping)
+        self.assertEqual(settings['kaflags'], '-Wa,--debug-prefix-map=' + mapping)
+        stages = [command for command in commands if command[0] == 'make']
+        self.assertEqual(len(stages), 3)
+        for command in stages:
+            self.assertIn('KCFLAGS=' + settings['kcflags'], command)
+            self.assertIn('KAFLAGS=' + settings['kaflags'], command)
+            self.assertIn('-j2', command)
+        self.assertEqual((result['umask_before'], result['umask_after']), ('0002', '0002'))
+        self.assertEqual((self.output / 'artifacts/modules/lib/modules/6.6.98-a733-diag/test.ko').stat().st_mode & 0o777, 0o664)
+        self.assertEqual(result['build_environment_before'], result['build_environment_after'])
+        self.assertEqual(len(result['actual_commands']), 4)
+        self.assertTrue((self.output / 'artifacts/generated/include/generated/fixture.h').is_file())
+        self.assertTrue((self.output / 'artifacts/generated/arch/arm64/include/generated/fixture.h').is_file())
+
+    def test_missing_actual_assembler_map_fails_with_metadata_and_restores_umask(self):
+        caller = os.umask(0o077)
+        try:
+            _, result = self.simulated_build(debug_path_profile='original-20261104', missing_map=True)
+            observed = os.umask(0o077)
+            self.assertEqual(observed, 0o077)
+        finally:
+            os.umask(caller)
+        self.assertFalse(result['success'])
+        self.assertIn('lacks explicit debug-path mapping', result['error'])
+        self.assertEqual(result['build_settings']['debug_path_profile'], 'original-20261104')
+        self.assertEqual(result['umask_after'], '0002')
+        self.assertTrue((self.output / 'artifacts/commands/arch/arm64/kernel/vdso/.note.o.cmd').exists())
+
+    def test_missing_actual_compiler_map_also_fails(self):
+        _, result = self.simulated_build(debug_path_profile='original-20261104', missing_map='KCFLAGS')
+        self.assertFalse(result['success'])
+        self.assertIn('.vgettimeofday.o.cmd', result['error'])
+
+    def test_cli_mapping_is_explicit_opt_in(self):
+        for options, profile in (([], 'native'), (['--debug-path-profile', 'original-20261104'], 'original-20261104')):
+            argv = ['kernel-replay.py', '--target', replay.TARGET, '--builder-profile', replay.PROFILE,
+                    '--output', str(self.output), *options]
+            with patch.object(sys, 'argv', argv), patch.object(replay, 'validate_output'), \
+                    patch.object(replay, 'initial_resources'), patch.object(replay, 'snapshot', return_value=({}, b'')), \
+                    patch.object(replay.signal, 'signal'), patch.object(replay, 'build') as build, \
+                    patch('builtins.print'):
+                self.assertEqual(replay.main(), 0)
+            self.assertEqual(build.call_args.args[-1], profile)
+
+    def test_umask_restored_if_output_initialization_fails(self):
+        self.output.mkdir()
+        caller = os.umask(0o027)
+        try:
+            with self.assertRaises(FileExistsError):
+                replay.build(self.repo, self.workspace, self.output, {}, b'', 'original-20261104')
+            self.assertEqual(os.umask(0o027), 0o027)
+        finally:
+            os.umask(caller)
 
     def test_cli_explicit_profile_required(self):
         base = ['python3', replay.__file__, '--target', replay.TARGET, '--output', self.output]

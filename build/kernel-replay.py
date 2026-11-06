@@ -30,6 +30,7 @@ REPO = Path(__file__).resolve().parent.parent
 WORKSPACE = Path('/home/drew/orange-pi-4-pro-build')
 PROFILE = 'replay-20261106'
 TARGET = 'diagnostic-20261104'
+DEBUG_PATH_PROFILES = ('native', 'original-20261104')
 KERNEL_HEAD = '2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f'
 VENDOR_HEAD = 'a95129bf30ea11886cc35f08ebb3e69695a26656'
 CONFIG = 'external/config/kernel/linux-sun60iw2-current-a733.config'
@@ -255,12 +256,70 @@ def write_json(path, value):
     path.write_text(json.dumps(value, indent=2, sort_keys=True) + '\n')
 
 
-def build(repo, workspace, output, before, config):
+def build_settings(tree, workspace, debug_path_profile='native'):
+    require(debug_path_profile in DEBUG_PATH_PROFILES, 'Unknown debug-path profile')
+    make = ['make', '-j2', 'ARCH=arm64', 'CROSS_COMPILE=aarch64-linux-gnu-']
+    kcflags, kaflags = None, None
+    if debug_path_profile == 'original-20261104':
+        source, original = str(safe_path(tree)), str(safe_path(workspace / 'kernel'))
+        require(re.fullmatch(r'[A-Za-z0-9/._-]+', source + original), 'Unsafe Make mapping spelling')
+        kcflags = f'-fdebug-prefix-map={source}={original}'
+        kaflags = f'-Wa,--debug-prefix-map={source}={original}'
+        make += [f'KCFLAGS={kcflags}', f'KAFLAGS={kaflags}']
+    return {'debug_path_profile': debug_path_profile, 'kcflags': kcflags, 'kaflags': kaflags,
+            'umask': '0002' if debug_path_profile == 'original-20261104' else '0022',
+            'make_command': make}
+
+
+def capture_generated(tree, artifacts, settings):
+    """Retain actual Kbuild commands and generated headers; validate observed maps."""
+    for relative in ('include/generated', 'include/config', 'arch/arm64/include/generated'):
+        root = safe_path(tree / relative)
+        require(root.is_dir(), f'Missing generated headers directory: {relative}')
+        for directory, directories, files in os.walk(root, followlinks=False):
+            for name in directories:
+                safe_path(Path(directory) / name)
+            for name in files:
+                source = Path(directory) / name
+                destination = artifacts / 'generated' / source.relative_to(tree)
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                destination.write_bytes(read_regular(source))
+    commands = {}
+    for relative, flag in (('arch/arm64/kernel/vdso/.vgettimeofday.o.cmd', settings['kcflags']),
+                           ('arch/arm64/kernel/vdso/.note.o.cmd', settings['kaflags']),
+                           ('arch/arm64/kernel/vdso/.sigreturn.o.cmd', settings['kaflags']),
+                           ('init/.main.o.cmd', settings['kcflags'])):
+        content = read_regular(tree / relative)
+        destination = artifacts / 'commands' / relative
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_bytes(content)
+        commands[relative] = facts(destination)
+        if flag is None:
+            require(b'-fdebug-prefix-map=' not in content and b'--debug-prefix-map=' not in content,
+                    f'Native actual command unexpectedly maps debug paths: {relative}')
+        else:
+            require(flag.encode() in content, f'Actual command lacks explicit debug-path mapping: {relative}')
+    return commands
+
+
+def build(repo, workspace, output, before, config, debug_path_profile='native'):
+    settings = build_settings(output / 'kernel-source', workspace, debug_path_profile)
+    caller_umask = os.umask(int(settings['umask'], 8))
+    settings['caller_umask'] = f'{caller_umask:04o}'
+    try:
+        return _build(repo, workspace, output, before, config, settings)
+    finally:
+        # Includes failures before output initialization, signals and postchecks.
+        os.umask(caller_umask)
+
+
+def _build(repo, workspace, output, before, config, settings):
     output.mkdir()  # Never reuse, delete, or recursively clean any existing tree.
     artifacts, logs, tree = output / 'artifacts', output / 'logs', output / 'kernel-source'
     artifacts.mkdir()
     logs.mkdir()
-    result = {'schema': 1, 'target': TARGET, 'success': False,
+    result = {'schema': 1, 'target': TARGET, 'success': False, 'build_settings': settings,
+              'build_environment_before': environment(), 'umask_before': settings['umask'],
               'hardware_acceptance': 'Not established; actual KVM guest remains required',
               'limitations': 'Reuses cached sources and registered builder; not a fresh-builder acquisition. Modules baseline comparison is unanchored.'}
     with (logs / 'resources.jsonl').open('w') as resource_log:
@@ -288,10 +347,11 @@ def build(repo, workspace, output, before, config):
                 'project': before['project'], 'original_kernel': before['kernel'],
                 'original_vendor': before['vendor'], 'private_source_before': private_before,
                 'source_method': 'git clone --shared --no-checkout; detached pinned commit',
-                'build_environment': environment(), 'jobs': 2, 'localversion': '-a733-diag',
+                'build_environment': environment(), 'build_settings': settings,
+                'jobs': 2, 'localversion': '-a733-diag',
                 'original_scmversion': 'absent', 'expected_utsrelease': '6.6.98-a733-diag'})
             (tree / '.config').write_bytes(config)
-            make = ['make', '-j2', 'ARCH=arm64', 'CROSS_COMPILE=aarch64-linux-gnu-']
+            make = settings['make_command']
             with (logs / 'kernel-config.log').open('wb') as log:
                 monitor.command([tree / 'scripts/config', '--file', tree / '.config', '--enable', 'VIRTUALIZATION',
                                  '--enable', 'KVM', '--enable', 'IKCONFIG', '--enable', 'IKCONFIG_PROC',
@@ -304,6 +364,7 @@ def build(repo, workspace, output, before, config):
             require(b'CONFIG_KVM=y\n' in read_regular(tree / '.config'), 'KVM must remain enabled')
             with (logs / 'kernel-build.log').open('wb') as log:
                 monitor.command(make + ['LOCALVERSION=-a733-diag', 'Image', 'modules', 'dtbs'], tree, log)
+            result['actual_commands'] = capture_generated(tree, artifacts, settings)
             require(read_regular(tree / 'include/config/kernel.release').strip() == b'6.6.98-a733-diag',
                     'Unexpected kernel SCM/localversion release')
             modules = artifacts / 'modules'
@@ -339,6 +400,12 @@ def build(repo, workspace, output, before, config):
             except Exception as exc:
                 result['success'] = False
                 result['postcheck_error'] = str(exc)
+            result['build_environment_after'] = environment()
+            observed_umask = os.umask(int(settings['umask'], 8))
+            result['umask_after'] = f'{observed_umask:04o}'
+            if result['umask_after'] != settings['umask']:
+                result['success'] = False
+                result['umask_error'] = 'Build umask changed during replay'
             monitor.stop.set()
             monitor.thread.join()
             monitor.sample('end')
@@ -363,6 +430,8 @@ def main():
     parser.add_argument('--target', required=True, choices=[TARGET])
     parser.add_argument('--builder-profile', required=True, choices=[PROFILE])
     parser.add_argument('--output', required=True, type=Path)
+    parser.add_argument('--debug-path-profile', choices=DEBUG_PATH_PROFILES, default='native',
+                        help='Opt into original debug directories and umask 0002; default native uses umask 0022')
     args = parser.parse_args()
     try:
         validate_output(REPO, WORKSPACE, args.output)
@@ -370,7 +439,7 @@ def main():
         before, config = snapshot(REPO, WORKSPACE)
         signal.signal(signal.SIGTERM, interrupted)
         signal.signal(signal.SIGHUP, interrupted)
-        build(REPO, WORKSPACE, args.output, before, config)
+        build(REPO, WORKSPACE, args.output, before, config, args.debug_path_profile)
     except (ValueError, OSError, subprocess.CalledProcessError, KeyError, UnicodeError) as exc:
         print(f'Kernel replay refused/failed: {exc}', file=sys.stderr)
         return 1
