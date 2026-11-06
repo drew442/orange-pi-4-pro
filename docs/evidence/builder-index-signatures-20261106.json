@@ -1,0 +1,131 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Signed-index authentication of builder archive pins; complete acquisition and fresh builder remain separate",
+  "archive_pin_lock_sha256": "d42bb151845d01dc3cb1bcde95adfb5e9add97a5d34e8ab9f5c4d27bae5bb141",
+  "verified_live_index_packages": 841,
+  "verified_live_index_records": 1200,
+  "snapshot_package": "xfsprogs",
+  "snapshot_proof": "docs/evidence/builder-xfs-acquired-20261106.json",
+  "trusted_installed_keyring": {
+    "path": "/usr/share/keyrings/ubuntu-archive-keyring.gpg",
+    "bytes": 3607,
+    "sha256": "80a36b0a6de2f69f49d2df75ef473ccde121e9e190b9ea01d20a4f63778d5c31"
+  },
+  "releases": [
+    {
+      "source": "/var/lib/apt/lists/au.archive.ubuntu.com_ubuntu_dists_jammy-updates_InRelease",
+      "InRelease": {
+        "bytes": 128049,
+        "sha256": "59c3f7a6909297ad3ab410aa9c75f0bf3e36f3090a3cee8112493fa681a0f826"
+      },
+      "decoded": {
+        "bytes": 127167,
+        "sha256": "a7209e5da7efec9bb17226e6efb4d8d563e7f2afe06b7a97db43fe0d008dbd34"
+      },
+      "verification_log": {
+        "bytes": 221,
+        "sha256": "5e4000cad7ca27357415e33fafad2e65a1b79c8ca4012aa6af1e0b2e42c8c0dc"
+      }
+    },
+    {
+      "source": "/var/lib/apt/lists/au.archive.ubuntu.com_ubuntu_dists_jammy_InRelease",
+      "InRelease": {
+        "bytes": 270087,
+        "sha256": "c14060cd8c6d625874dfcb9523a35a395bf4865c28b6b6a82569ef326fe92dc6"
+      },
+      "decoded": {
+        "bytes": 269219,
+        "sha256": "6883c1cb0fcfeefc2ad2e99746fcbb28cf8b2df66ce49904765d883dbf94a1ca"
+      },
+      "verification_log": {
+        "bytes": 197,
+        "sha256": "61fd4b0626d2b7e735f58e2492d05704f4f2b772b32150dd0227290d8f17d8ee"
+      }
+    },
+    {
+      "source": "/var/lib/apt/lists/security.ubuntu.com_ubuntu_dists_jammy-security_InRelease",
+      "InRelease": {
+        "bytes": 128927,
+        "sha256": "a2e510c6d7c4f43f10b4986adae83eae4243d57c2ad3f2b7e37c360e26ab534b"
+      },
+      "decoded": {
+        "bytes": 128045,
+        "sha256": "67c72dbb30377dd2a41e150c81aa931959a98be1c439f2d90f3a95615811967b"
+      },
+      "verification_log": {
+        "bytes": 221,
+        "sha256": "a134a6033c161d0b8bdcb233e386b88ef04cfae9cd1c0bf9a6376345f5b5eb7f"
+      }
+    }
+  ],
+  "indexes": [
+    {
+      "source": "/var/lib/apt/lists/au.archive.ubuntu.com_ubuntu_dists_jammy_main_binary-amd64_Packages",
+      "signed_release": "/var/lib/apt/lists/au.archive.ubuntu.com_ubuntu_dists_jammy_InRelease",
+      "signed_path": "main/binary-amd64/Packages",
+      "bytes": 6779186,
+      "sha256": "12ce0797a6ed39a1fee1321985976c6b78872a8fe4c7ef2fb712f2364c9839a3",
+      "matched_locked_records": 312
+    },
+    {
+      "source": "/var/lib/apt/lists/au.archive.ubuntu.com_ubuntu_dists_jammy-updates_main_binary-amd64_Packages",
+      "signed_release": "/var/lib/apt/lists/au.archive.ubuntu.com_ubuntu_dists_jammy-updates_InRelease",
+      "signed_path": "main/binary-amd64/Packages",
+      "bytes": 22417465,
+      "sha256": "4a2c2967d7df044c7e19f4cedbc683730a11f922a2b6cf63b125d9480c4053d2",
+      "matched_locked_records": 449
+    },
+    {
+      "source": "/var/lib/apt/lists/security.ubuntu.com_ubuntu_dists_jammy-security_main_binary-amd64_Packages",
+      "signed_release": "/var/lib/apt/lists/security.ubuntu.com_ubuntu_dists_jammy-security_InRelease",
+      "signed_path": "main/binary-amd64/Packages",
+      "bytes": 20885859,
+      "sha256": "7b49bddd1e2bc6c1e7121df9b4a9571804e8d4864e24062ecc4e93b279fb55ca",
+      "matched_locked_records": 326
+    },
+    {
+      "source": "/var/lib/apt/lists/au.archive.ubuntu.com_ubuntu_dists_jammy-updates_universe_binary-amd64_Packages",
+      "signed_release": "/var/lib/apt/lists/au.archive.ubuntu.com_ubuntu_dists_jammy-updates_InRelease",
+      "signed_path": "universe/binary-amd64/Packages",
+      "bytes": 7307183,
+      "sha256": "6f701dc877c0b3b3db42728705595907bb46b3a67a994b602ac1e99ec0b20f00",
+      "matched_locked_records": 40
+    },
+    {
+      "source": "/var/lib/apt/lists/security.ubuntu.com_ubuntu_dists_jammy-security_universe_binary-amd64_Packages",
+      "signed_release": "/var/lib/apt/lists/security.ubuntu.com_ubuntu_dists_jammy-security_InRelease",
+      "signed_path": "universe/binary-amd64/Packages",
+      "bytes": 6223994,
+      "sha256": "4b1da20f5332482fcf10105de84476bd0ec614f9e3d9dc83bdda80336e45bd6e",
+      "matched_locked_records": 37
+    },
+    {
+      "source": "/var/lib/apt/lists/au.archive.ubuntu.com_ubuntu_dists_jammy_universe_binary-amd64_Packages",
+      "signed_release": "/var/lib/apt/lists/au.archive.ubuntu.com_ubuntu_dists_jammy_InRelease",
+      "signed_path": "universe/binary-amd64/Packages",
+      "bytes": 64332414,
+      "sha256": "6b8cc68643d18250ab297c4f6d427a8778b1d1534e1a3033fff0f221fa20a419",
+      "matched_locked_records": 35
+    },
+    {
+      "source": "/var/lib/apt/lists/au.archive.ubuntu.com_ubuntu_dists_jammy-updates_restricted_binary-amd64_Packages",
+      "signed_release": "/var/lib/apt/lists/au.archive.ubuntu.com_ubuntu_dists_jammy-updates_InRelease",
+      "signed_path": "restricted/binary-amd64/Packages",
+      "bytes": 39702137,
+      "sha256": "05807348e2e096fcf85477b270eab4e7a2242b77b0623d53179d8ce7b14d22bf",
+      "matched_locked_records": 1
+    }
+  ],
+  "retained_metadata_directory": "/home/drew/orange-pi-4-pro/tmp/builder-index-signatures-20261106",
+  "verifier_script": {
+    "path": "/home/drew/orange-pi-4-pro/tmp/verify-builder-indexes-20261106.py",
+    "bytes": 5038,
+    "sha256": "53f19725c25f448c940b866fb32151c736769f42bb75a80a668a4ddd1ffcd577"
+  },
+  "limits": [
+    "Historical metadata authentication does not assert current security freshness.",
+    "No downloaded builder packages other than the recorded xfsprogs acquisition are established by this metadata receipt.",
+    "No installed package, active APT source/index, generated deployment image or board storage changed."
+  ]
+}
