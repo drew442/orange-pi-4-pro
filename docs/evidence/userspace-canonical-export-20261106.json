@@ -1,0 +1,371 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Identical normalized userspace exports from two configured clones sharing one foreign source; full independent construction and physical acceptance pending",
+  "success": true,
+  "source_commit": "9964f938411cd85fcc6778de54f4bdd22d2a5641",
+  "exporter": {
+    "bytes": 28217,
+    "sha256": "1cd49563c43fe7ddd78d309ef2d9fe48b2ad1d1d29ee6d7050374db12be118ed"
+  },
+  "archive_bytes_identical": true,
+  "raw_tar_hashes_identical": true,
+  "bom_bytes_identical": true,
+  "historical_comparison": "Each normalized BOM equals its previously independently verified historical BOM, minus exactly five generated files and with mtimes clamped. All other fields/content unchanged.",
+  "runs": [
+    {
+      "raw_records": "out/userspace-export-canonical-01-20261106/",
+      "builder_phase": "/var/lib/a733-clean-replay-20261106/userspace-export-canonical-01",
+      "export": {
+        "schema": 1,
+        "phase": "final-userspace-export",
+        "success": true,
+        "configure_receipt_sha256": "94fe0ea170430035802b4a64c46b7dc4639ba7cf8f17fb45f84cddf9ba97c11f",
+        "exporter_sha256": "1cd49563c43fe7ddd78d309ef2d9fe48b2ad1d1d29ee6d7050374db12be118ed",
+        "inventory": {
+          "packages": 220,
+          "lock_sha256": "f2abf03d0d6e7fd506560689093220514cbf1acc678f7560562026d6ca6564a6"
+        },
+        "cleanup": {
+          "root_mode": {
+            "before": 493,
+            "after": 493
+          },
+          "removed_paths": [
+            "etc/nvme/hostid",
+            "etc/nvme/hostnqn",
+            "var/cache/apt/pkgcache.bin",
+            "var/cache/apt/srcpkgcache.bin",
+            "var/cache/ldconfig/aux-cache"
+          ],
+          "pruned_child_counts": {
+            "var/lib/apt/lists": 0,
+            "var/cache/apt/archives": 0,
+            "var/log": 0,
+            "run": 0,
+            "tmp": 0
+          },
+          "generic_base_generated_paths": [
+            "etc/nvme/hostid",
+            "etc/nvme/hostnqn",
+            "var/cache/apt/pkgcache.bin",
+            "var/cache/apt/srcpkgcache.bin",
+            "var/cache/ldconfig/aux-cache"
+          ],
+          "machine_id_emptied": true,
+          "root_password_locked": true
+        },
+        "archive": {
+          "bytes": 138025729,
+          "sha256": "98d6a57bbb70ff55bef32b6bd051ebfcb6bc0fad4f6c8b3167e8619b5a9d961e"
+        },
+        "raw_tar": {
+          "bytes": 468398080,
+          "sha256": "a3b1ccfb69c24844d50cf60fb4c4286eb366dc6ba8da0f77ff672c8202b6e730"
+        },
+        "members": 15876,
+        "character_headers": 8,
+        "timestamps": {
+          "policy": "clamp archive/BOM mtime_ns to min(native, epoch); preserve earlier nanoseconds",
+          "epoch": 1790812800,
+          "clamped_entries": 2763,
+          "native_source_metadata_verified": true
+        },
+        "classification": "interim userspace only; no physical boot, KVM, NVMe or SD-write acceptance",
+        "metadata": "normalized archive timestamps; native same-UID-map xattrs; no original-rootfs binary-equivalence claim"
+      },
+      "resource_minima": {
+        "samples": 52,
+        "free_disk_bytes": 3535699968,
+        "available_memory_bytes": 7425536000
+      },
+      "postconditions": {
+        "host_packages_unchanged": true,
+        "mapped_processes_after": [],
+        "output_mounts_after": []
+      },
+      "files": {
+        "out/userspace-export-canonical-01-20261106/rootfs.tar.gz": {
+          "bytes": 138025729,
+          "sha256": "98d6a57bbb70ff55bef32b6bd051ebfcb6bc0fad4f6c8b3167e8619b5a9d961e"
+        },
+        "out/userspace-export-canonical-01-20261106/rootfs-bom.json": {
+          "bytes": 4337400,
+          "sha256": "1c415ad29e297260b89f199c48c0185e8c9987be5c336fd553cff5e5c38aaa72"
+        },
+        "out/userspace-export-canonical-01-20261106/receipt.json": {
+          "bytes": 1825,
+          "sha256": "0ffc2218c9c9276a0f2edfc6622ed15b050b94f32f0f5a1427cb16642d2fe06f"
+        },
+        "out/userspace-export-canonical-01-20261106/phase-records.tar": {
+          "bytes": 102400,
+          "sha256": "64fa061859a6ff3e0e918cb01cc072f24862da546afb05b5a0c0de39b2040a51"
+        },
+        "out/userspace-export-canonical-01-20261106/coordinator-readback.json": {
+          "bytes": 852,
+          "sha256": "90b1048a41f7aabddb77457fdd3a68c1239e1ccb563def99dcc9958f87d5c1e2"
+        },
+        "out/userspace-export-canonical-01-20261106/verification-code/launch-userspace-export-canonical-01-20261106.py": {
+          "bytes": 4220,
+          "sha256": "7fe0f0b48db39db4668d7f999fbcdb77f1bd13f71ae39428112873c6d24c5569"
+        },
+        "out/userspace-export-canonical-01-20261106/verification-code/readback-canonical-userspace-20261106.py": {
+          "bytes": 9113,
+          "sha256": "a2f08e8b0603c69a4658c48a98a0ccf5299281e39209ced61b0bd381bdad8620"
+        },
+        "out/userspace-export-canonical-01-20261106/verification-code/run.py": {
+          "bytes": 389,
+          "sha256": "e9e0773c44fe2a5ac38f16fc3de8efb7342b15e16a4c7eb34f3540a4193ee22a"
+        }
+      },
+      "builder_output": "/var/lib/a733-clean-replay-20261106/userspace-configure-01/work/export-canonical-01"
+    },
+    {
+      "raw_records": "out/userspace-export-canonical-02-20261106/",
+      "builder_phase": "/var/lib/a733-clean-replay-20261106/userspace-export-canonical-02",
+      "export": {
+        "schema": 1,
+        "phase": "final-userspace-export",
+        "success": true,
+        "configure_receipt_sha256": "4909edee32b176823b068febeffc21eb6a4b296db9c78bd626d304df668d0aa4",
+        "exporter_sha256": "1cd49563c43fe7ddd78d309ef2d9fe48b2ad1d1d29ee6d7050374db12be118ed",
+        "inventory": {
+          "packages": 220,
+          "lock_sha256": "f2abf03d0d6e7fd506560689093220514cbf1acc678f7560562026d6ca6564a6"
+        },
+        "cleanup": {
+          "root_mode": {
+            "before": 493,
+            "after": 493
+          },
+          "removed_paths": [
+            "etc/nvme/hostid",
+            "etc/nvme/hostnqn",
+            "var/cache/apt/pkgcache.bin",
+            "var/cache/apt/srcpkgcache.bin",
+            "var/cache/ldconfig/aux-cache"
+          ],
+          "pruned_child_counts": {
+            "var/lib/apt/lists": 0,
+            "var/cache/apt/archives": 0,
+            "var/log": 0,
+            "run": 0,
+            "tmp": 0
+          },
+          "generic_base_generated_paths": [
+            "etc/nvme/hostid",
+            "etc/nvme/hostnqn",
+            "var/cache/apt/pkgcache.bin",
+            "var/cache/apt/srcpkgcache.bin",
+            "var/cache/ldconfig/aux-cache"
+          ],
+          "machine_id_emptied": true,
+          "root_password_locked": true
+        },
+        "archive": {
+          "bytes": 138025729,
+          "sha256": "98d6a57bbb70ff55bef32b6bd051ebfcb6bc0fad4f6c8b3167e8619b5a9d961e"
+        },
+        "raw_tar": {
+          "bytes": 468398080,
+          "sha256": "a3b1ccfb69c24844d50cf60fb4c4286eb366dc6ba8da0f77ff672c8202b6e730"
+        },
+        "members": 15876,
+        "character_headers": 8,
+        "timestamps": {
+          "policy": "clamp archive/BOM mtime_ns to min(native, epoch); preserve earlier nanoseconds",
+          "epoch": 1790812800,
+          "clamped_entries": 2763,
+          "native_source_metadata_verified": true
+        },
+        "classification": "interim userspace only; no physical boot, KVM, NVMe or SD-write acceptance",
+        "metadata": "normalized archive timestamps; native same-UID-map xattrs; no original-rootfs binary-equivalence claim"
+      },
+      "resource_minima": {
+        "samples": 52,
+        "free_disk_bytes": 3464351744,
+        "available_memory_bytes": 7417167872
+      },
+      "postconditions": {
+        "host_packages_unchanged": true,
+        "mapped_processes_after": [],
+        "output_mounts_after": []
+      },
+      "files": {
+        "out/userspace-export-canonical-02-20261106/rootfs.tar.gz": {
+          "bytes": 138025729,
+          "sha256": "98d6a57bbb70ff55bef32b6bd051ebfcb6bc0fad4f6c8b3167e8619b5a9d961e"
+        },
+        "out/userspace-export-canonical-02-20261106/rootfs-bom.json": {
+          "bytes": 4337400,
+          "sha256": "1c415ad29e297260b89f199c48c0185e8c9987be5c336fd553cff5e5c38aaa72"
+        },
+        "out/userspace-export-canonical-02-20261106/receipt.json": {
+          "bytes": 1825,
+          "sha256": "d5a8881422fcb35bf722b6b2784042d2fbe11e57a6ab5e123d858a475e65333d"
+        },
+        "out/userspace-export-canonical-02-20261106/phase-records.tar": {
+          "bytes": 102400,
+          "sha256": "0b15df1b66b5abe1f6c644f65440128c8f5cd48d0bc6cc5d29fbcbf691269ed3"
+        },
+        "out/userspace-export-canonical-02-20261106/coordinator-readback.json": {
+          "bytes": 852,
+          "sha256": "6fa0e2edd6023d05dd6ac9da1cf458abcc6100e8e692221df042710317d53180"
+        },
+        "out/userspace-export-canonical-02-20261106/verification-code/launch-userspace-export-canonical-02-20261106.py": {
+          "bytes": 4227,
+          "sha256": "f2d212064e4e2ec4348182cb80cef639464a0ffa5aad2fedc6560cfcf5eebee5"
+        },
+        "out/userspace-export-canonical-02-20261106/verification-code/readback-canonical-userspace-20261106.py": {
+          "bytes": 9113,
+          "sha256": "a2f08e8b0603c69a4658c48a98a0ccf5299281e39209ced61b0bd381bdad8620"
+        },
+        "out/userspace-export-canonical-02-20261106/verification-code/run.py": {
+          "bytes": 389,
+          "sha256": "ede9db84e93484f556f097183eb05103272fe6bf5ee3d8d41df5cbdc458bbbfb"
+        }
+      },
+      "builder_output": "/var/lib/a733-clean-replay-20261106/userspace-configure-recipe-01/work/export-canonical-02"
+    }
+  ],
+  "independent_review": {
+    "success": true,
+    "classification": "Independent raw-stream archive/BOM review: two separately configured clones from the same foreign source; no full independent foreign construction or hardware acceptance",
+    "compressed_bytes_identical": true,
+    "raw_tar_digests_identical": true,
+    "bom_bytes_identical": true,
+    "runs": [
+      {
+        "archive": {
+          "bytes": 138025729,
+          "sha256": "98d6a57bbb70ff55bef32b6bd051ebfcb6bc0fad4f6c8b3167e8619b5a9d961e"
+        },
+        "raw_tar": {
+          "bytes": 468398080,
+          "sha256": "a3b1ccfb69c24844d50cf60fb4c4286eb366dc6ba8da0f77ff672c8202b6e730"
+        },
+        "members": 15876,
+        "types": {
+          "dir": 1720,
+          "symlink": 1850,
+          "char": 8,
+          "file": 12295,
+          "hardlink": 3
+        },
+        "root_locked": true,
+        "machine_id_empty": true,
+        "forbidden_build_and_identity_paths_absent": true,
+        "inventory_exact": 220,
+        "configure_receipt_sha256": "94fe0ea170430035802b4a64c46b7dc4639ba7cf8f17fb45f84cddf9ba97c11f",
+        "exporter_sha256": "1cd49563c43fe7ddd78d309ef2d9fe48b2ad1d1d29ee6d7050374db12be118ed",
+        "canonical_bom_exactly_matches_normalized_historical": true,
+        "generated_paths_absent": true,
+        "source_native_metadata_verified_flag": true,
+        "epoch": 1790812800,
+        "clamped_entries": 2763,
+        "python_source_files_pre_epoch": 556,
+        "phase": {
+          "success": true,
+          "host_inventory_unchanged": true,
+          "mapped_processes_after": [],
+          "output_mounts_after": [],
+          "samples": 52,
+          "minimum_free_bytes": 3535699968,
+          "minimum_available_memory_bytes": 7425536000
+        },
+        "artifacts": {
+          "rootfs-bom.json": "1c415ad29e297260b89f199c48c0185e8c9987be5c336fd553cff5e5c38aaa72",
+          "receipt.json": "0ffc2218c9c9276a0f2edfc6622ed15b050b94f32f0f5a1427cb16642d2fe06f",
+          "phase-records/receipt.json": "fde2acc1c04ca962e101f7b15345d8d901acc77d9a3e3dcae86eea5a0c50e719",
+          "phase-records/host-packages.before.tsv": "446b7eb3364a6f196390c698c1c133086fee5eb3b080ec4483cc1d8584b39b15",
+          "phase-records/host-packages.after.tsv": "446b7eb3364a6f196390c698c1c133086fee5eb3b080ec4483cc1d8584b39b15"
+        }
+      },
+      {
+        "archive": {
+          "bytes": 138025729,
+          "sha256": "98d6a57bbb70ff55bef32b6bd051ebfcb6bc0fad4f6c8b3167e8619b5a9d961e"
+        },
+        "raw_tar": {
+          "bytes": 468398080,
+          "sha256": "a3b1ccfb69c24844d50cf60fb4c4286eb366dc6ba8da0f77ff672c8202b6e730"
+        },
+        "members": 15876,
+        "types": {
+          "dir": 1720,
+          "symlink": 1850,
+          "char": 8,
+          "file": 12295,
+          "hardlink": 3
+        },
+        "root_locked": true,
+        "machine_id_empty": true,
+        "forbidden_build_and_identity_paths_absent": true,
+        "inventory_exact": 220,
+        "configure_receipt_sha256": "4909edee32b176823b068febeffc21eb6a4b296db9c78bd626d304df668d0aa4",
+        "exporter_sha256": "1cd49563c43fe7ddd78d309ef2d9fe48b2ad1d1d29ee6d7050374db12be118ed",
+        "canonical_bom_exactly_matches_normalized_historical": true,
+        "generated_paths_absent": true,
+        "source_native_metadata_verified_flag": true,
+        "epoch": 1790812800,
+        "clamped_entries": 2763,
+        "python_source_files_pre_epoch": 556,
+        "phase": {
+          "success": true,
+          "host_inventory_unchanged": true,
+          "mapped_processes_after": [],
+          "output_mounts_after": [],
+          "samples": 52,
+          "minimum_free_bytes": 3464351744,
+          "minimum_available_memory_bytes": 7417167872
+        },
+        "artifacts": {
+          "rootfs-bom.json": "1c415ad29e297260b89f199c48c0185e8c9987be5c336fd553cff5e5c38aaa72",
+          "receipt.json": "d5a8881422fcb35bf722b6b2784042d2fbe11e57a6ab5e123d858a475e65333d",
+          "phase-records/receipt.json": "63768a5c536f5342fc30d1854adcbd03af00bab67d707c6cb92567c302a73a69",
+          "phase-records/host-packages.before.tsv": "446b7eb3364a6f196390c698c1c133086fee5eb3b080ec4483cc1d8584b39b15",
+          "phase-records/host-packages.after.tsv": "446b7eb3364a6f196390c698c1c133086fee5eb3b080ec4483cc1d8584b39b15"
+        }
+      }
+    ],
+    "reviewer_script_sha256": "caf6ccba268088b155b795d595f5954348cacb1be03e19c24214313534fb8faf"
+  },
+  "review_files": {
+    "out/userspace-export-canonical-independent-review-20261106.json": {
+      "bytes": 4223,
+      "sha256": "8ce95a24283d2561e86dd9e29aadf887c9872678f9d86f9fc2ef1dfe06569d40"
+    },
+    "out/userspace-export-canonical-independent-review-20261106.py": {
+      "bytes": 13243,
+      "sha256": "caf6ccba268088b155b795d595f5954348cacb1be03e19c24214313534fb8faf"
+    }
+  },
+  "validation": {
+    "discovery_cases": 1098,
+    "environment_skips": 96,
+    "assembly_cases": 4,
+    "shell_suites": 5,
+    "exporter_focused_cases": 30,
+    "toml_files": 5,
+    "diff_check_passed": true
+  },
+  "routing": [
+    {
+      "task": "bounded implementation",
+      "model": "gpt-6.1-sol",
+      "effort": "medium"
+    },
+    {
+      "task": "source, wrappers and full readback review",
+      "model": "gpt-6.1-sol",
+      "effort": "high"
+    }
+  ],
+  "account_cost": "Per-child usage/charges not exposed; unknown. One targeted root readback harness correction replaced historical member count15881 with actual normalized count15876; no exporter retry.",
+  "limits": [
+    "Both ARM configurations reused the same authenticated foreign source; independent foreign construction remains open.",
+    "The new exports reuse existing configured/audited trees; no fresh complete pipeline run is claimed here.",
+    "No production root/state/NVMe reconstruction or new physical boot/KVM/SSH/SD-write evidence.",
+    "Published installation images unchanged; no artifact retirement, builder resize, physical erase or SPI programming."
+  ]
+}

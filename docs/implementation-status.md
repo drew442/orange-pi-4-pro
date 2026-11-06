@@ -84,10 +84,12 @@ by subsequent clean-build work.
   [userspace configuration/export](evidence/userspace-configured-export-20261106.json)
   configures all 220 packages and independently verifies all 15,881 archive entries.
   The [tracked replay](userspace-configuration-replay.md) also configures all 220
-  with no APT fallback warnings; its second export has the same paths but differs
-  in timestamps and four generated identity/cache files. Byte reproducibility
-  remains open. Latest native discovery: **1,090 cases, 96 environment skips**, plus four assembly
-  cases and all five shell suites. These are software checks, not hardware acceptance.
+  with no APT fallback warnings. The [normalized export pair](userspace-export-reproducibility.md)
+  now matches compressed/raw/BOM bytes: 138,025,729 bytes compressed, 15,876 entries.
+  Generated NVMe IDs/caches are removed and later archive timestamps clamped to
+  the pinned snapshot. Full independent construction remains open. Latest native
+  discovery: **1,098 cases, 96 environment skips**, four assembly cases and all five
+  shell suites. These are software checks, not hardware acceptance.
 
 ## Next actions and blockers
 
@@ -99,9 +101,9 @@ by subsequent clean-build work.
 2. Validate NVMe host boot and SSH with both keys. Run [the first KVM guest](kvm-first-guest.md)
    for CPU/disk/network, clean shutdown/restart and persisted disk marker. Return
    its console/log evidence; `/dev/kvm` alone cannot satisfy the gate.
-3. Continue [clean-build work](build-reproduction-status.md): settle generic-base
-   identity/cache cleanup and timestamp policy, repeat complete foreign construction,
-   then production root/state/NVMe reconstruction and complete readback. The reviewed [20 GiB builder LVM growth](build-host-capacity-plan.md)
+3. Continue [clean-build work](build-reproduction-status.md): repeat complete foreign
+   extraction/configuration/export from pinned inputs, then production root/state/
+   NVMe reconstruction and complete readback. The reviewed [20 GiB builder LVM growth](build-host-capacity-plan.md)
    awaits approval; no resize occurred and capacity guards remain unchanged.
    [Firmware license evidence](evidence/vendor-boot-license-inventory-20261106.json)
    remains incomplete; all 479 userspace source archives are acquired, not compiled.

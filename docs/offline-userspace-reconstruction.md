@@ -3,7 +3,9 @@
 The [authenticated mirror and foreign extraction run](evidence/userspace-foreign-20261106.json)
 passes inside the frozen Ubuntu 22.04 builder. The subsequent
 [configuration and cleaned export](evidence/userspace-configured-export-20261106.json)
-now also pass for all 220 locked packages. Current installation images and the
+now also pass for all 220 locked packages. The latest
+[normalized export pair](userspace-export-reproducibility.md) is byte-identical
+from the two configured trees; independent complete construction remains open. Current installation images and the
 [operator deployment procedure](deploy-personalized-20261106.md) are unchanged.
 
 [`offline-userspace-repo.py`](../build/offline-userspace-repo.py) privately copies
@@ -84,14 +86,16 @@ clone; device placeholders remain ordinary files on disk.
 
 The exporter emits eight character-device **archive headers** without creating
 real nodes. Its deterministic streaming PAX/gzip writer preserves native
-ownership, modes, nanosecond timestamps, hardlinks, symlinks and raw xattrs. It
+ownership, modes, hardlinks, symlinks and raw xattrs. The latest
+[timestamp policy](userspace-export-reproducibility.md#timestamp-contract) preserves
+earlier nanoseconds and clamps later build timestamps to the pinned snapshot. It
 compares every member's metadata/content to a complete BOM, consumes the entire
 compressed stream, rechecks the source, and publishes only after verification.
-The 3 GiB free-space floor remains enforced. This establishes one verified export,
-not repeatable byte identity across independently configured roots: package setup
-can generate timestamps and other transient state.
+The 3 GiB free-space floor remains enforced. The first export preserved all native
+timestamps; the later normalized pair resolves the differences observed between
+the two configured trees. A complete independent pipeline remains open.
 
-The new archive is retained on codex at
+The first export archive is retained on codex at
 `out/userspace-export-20261106/rootfs.tar.gz`:
 
 - Compressed: **165,687,301 bytes**, SHA-256
@@ -114,7 +118,10 @@ records supplement the tracked helper/exporter recipes. The subsequent
 [tracked configuration replay](userspace-configuration-replay.md) now passes an
 actual second configuration with committed source snapshots and no APT fallback
 warnings. Its second archive has the same path set but differing timestamps and
-four generated identity/cache files; the comparison is documented there. To repeat
+four generated identity/cache files; the historical comparison is documented there.
+The [normalized exporter](userspace-export-reproducibility.md) now removes five
+generated files and clamps newer archive timestamps, producing a matching pair.
+To repeat
 the export in an identically prepared namespace, stage the exporter under a
 project directory containing the pinned package lock, then run:
 

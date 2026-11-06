@@ -104,12 +104,12 @@ contents of these four files:
 | `var/cache/ldconfig/aux-cache` | Build-generated dynamic-linker cache |
 | `var/cache/apt/pkgcache.bin` | Build-generated package cache |
 
-The exporter preserves source timestamps and currently strips only the named
-identity/cache paths in its recipe. These four paths fall outside that cleanup.
-The gzip header is fixed; the differing source metadata and file content explain
-why the exports are not byte-identical. Generic-base cleanup, explicit per-host
-identity policy and timestamp handling must be settled before a reproducibility
-claim. Both runs reused the same foreign extraction, so complete independent
+That exporter revision preserved source timestamps and omitted these four paths
+from cleanup. The fixed gzip header did not hide the differing source metadata
+and contents. The subsequent [normalized export pair](userspace-export-reproducibility.md)
+now removes the generated NVMe identifiers and three caches and clamps later
+archive timestamps, producing matching compressed/raw/BOM bytes. Both
+configurations still reused one foreign extraction; complete independent
 construction remains a separate requirement.
 
 ## Evidence and failures

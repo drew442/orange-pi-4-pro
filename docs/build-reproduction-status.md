@@ -16,7 +16,7 @@ artifacts remain bound to [the deployment guide](deploy-personalized-20261106.md
 | Deployment SD images | [Tracked clean-checkout recipe](sd-image-reproduction.md): both 256 MiB raw/gzip images match; regenerated runtime and independent inspections pass | Physical boot of refreshed images remains pending |
 | ARM userspace inputs | [220 authenticated binary packages](userspace-rebuild-preparation.md), [479 source archives](evidence/userspace-sources-acquired-20261106.json) | Source archives are acquired, not recompiled |
 | Foreign userspace stage | [Authenticated mirror and pinned adapter](offline-userspace-reconstruction.md), [actual records](evidence/userspace-foreign-20261106.json): all 669 mirror files checked, 99 packages cached, 96 extracted, empty target status | Native data stage only |
-| ARM userspace configuration/export | [Actual configuration/export](evidence/userspace-configured-export-20261106.json): 220 exact configured packages, clean dpkg/APT audits, identity cleanup; all 15,881 archive members independently verified | [Tracked configuration replay](userspace-configuration-replay.md) also passes; second export differs only in timestamps and four generated identity/cache files; complete duplicate construction remains open |
+| ARM userspace configuration/export | [Actual configuration/export](evidence/userspace-configured-export-20261106.json): 220 exact configured packages, clean dpkg/APT audits, identity cleanup; all 15,881 archive members independently verified | [Tracked configuration replay](userspace-configuration-replay.md) passes; the [normalized export pair](userspace-export-reproducibility.md) now matches compressed/raw/BOM bytes from both configured trees; complete duplicate construction remains open |
 | Device metadata | [Fixture](evidence/fakeroot-device-metadata-20261106.json), [two-phase candidate](evidence/fakeroot-metadata-candidate-20261106.json) | Virtual archive/image devices do not prove hardware access |
 | Complete historical root archive | [Full staging comparison](evidence/full-root-metadata-fixture-20261106.json), [complete diagnostic image readback](evidence/full-root-image-readback-20261106.json): 15,892 paths, 518,081,083 regular-file bytes, links/devices/attributes | Diagnostic 1 GiB image; production 4 GiB slots remain open |
 | Root/state recipe integration | [Optional metadata backend](evidence/root-metadata-backend-20261106.json), [preparation](root-reconstruction-preparation.md): full extraction through payload interface, no real nodes | Complete root/state/NVMe reconstruction and image readback remain open |
@@ -38,7 +38,7 @@ free disk/RAM before every run. The reviewed [20 GiB LVM growth](build-host-capa
 has a metadata backup and successful dry run, but awaits authorization. No resize
 has occurred; production capacity guards remain mandatory.
 
-Next: settle generated identity/cache cleanup and timestamp policy, repeat complete
-foreign construction, then reconstruct and fully inspect production roots/state/
+Next: repeat complete foreign extraction/configuration/export from pinned inputs,
+then reconstruct and fully inspect production roots/state/
 NVMe after capacity permits. A second agent/operator must reproduce the complete
 deployment from the guide; build proofs cannot satisfy physical release gates.
