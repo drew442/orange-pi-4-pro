@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Complete userspace source archive acquisition and independent rehash; license closure separate",
+  "directory": "/home/drew/orange-pi-4-pro/out/userspace-sources-20261106",
+  "source_commit": "321005217540d0725ee3728af0d7151b0a2d0883",
+  "source_versions": 149,
+  "binary_packages": 220,
+  "archives": 479,
+  "total_bytes": 570785529,
+  "origins": {
+    "https://deb.debian.org/debian/": 479
+  },
+  "fallback_errors": 0,
+  "receipt": {
+    "path": "receipt.json",
+    "bytes": 141049,
+    "sha256": "b043ca441f7c79cbf1d296603c6b418720bb7d0a517f609133f3671d6ccee624"
+  },
+  "locked_inputs": {
+    "build/fetch-userspace-sources.py": {
+      "bytes": 18845,
+      "sha256": "4b76f0b999c462ab6fc78c330777db804dd5782512f923965f5e28baa5c6807f"
+    },
+    "configs/host-userspace-package-hashes.lock.tsv": {
+      "bytes": 28638,
+      "sha256": "f2f613e79d9c1abc1689e19cfe81b624d9d2ac3beeb322fd5788980d919f7d86"
+    },
+    "configs/host-userspace-packages.lock.tsv": {
+      "bytes": 6671,
+      "sha256": "f2abf03d0d6e7fd506560689093220514cbf1acc678f7560562026d6ca6564a6"
+    },
+    "configs/host-userspace-source-archives.lock.json": {
+      "bytes": 122443,
+      "sha256": "f75bae857ffcfdfcfe5b7062880850d14b9f40bcdc7296f1999aa6a901fd6185"
+    },
+    "docs/evidence/host-userspace-source-map-20261106.json": {
+      "bytes": 119328,
+      "sha256": "96ae654fc20d014ad7b72729ccb335815d6df06fe761552ffd352baca9251eb6"
+    }
+  },
+  "verification": "Fetcher completed all expected length/hash checks then full-cache revalidation; coordinator independently read and SHA256-checked all 479 complete files against both receipt and signed-index-derived lock. No missing or duplicate archive paths.",
+  "extraction_or_execution": "none; source archives retained as authenticated files",
+  "limitations": [
+    "Package copyright/source-obligation audit remains open.",
+    "Vendor kernel/U-Boot/BusyBox/toolchain/opaque firmware provenance is separate.",
+    "No fresh-builder or hardware release acceptance established."
+  ]
+}

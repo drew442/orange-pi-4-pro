@@ -88,8 +88,9 @@ The tar archive was checked for those secret/state files and mounted proc/sys
 content. Runtime unique keys, management authorization/network policy and machine
 identity must be provisioned before enabling services. Component copyright files
 remain in the filesystem. The [source mapping and archive lock](userspace-sources.md)
-now account for all 220 packages and their 149 source versions; complete source
-acquisition and the corresponding-source/license audit remain separate release tasks.
+now account for all 220 packages and their 149 source versions. All 479 selected
+source archives have been acquired and independently rehashed; the
+corresponding-source/license audit remains a separate release task.
 
 The tarball is not a bootable image. Separate integrated recipes provide NVMe state
 bindings, immutable roots, guest supervision, updates/rollback and installation;

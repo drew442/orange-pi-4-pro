@@ -18,11 +18,28 @@ hashes. The source index was retrieved from Debian's live by-hash location after
 snapshot gateway errors; its bytes exactly match the original signed snapshot
 release. The target snapshot and versions were not changed.
 
-Archive acquisition is being prepared separately. A source lock or a successful
-index download does not establish that all source archives have been retained,
-that package source obligations have been satisfied, or that a release is ready.
-Archive downloads must match the complete expected length and SHA-256 before
-publication. Keep all downloaded packages and source trees outside Git.
+[Acquisition and independent readback](evidence/userspace-sources-acquired-20261106.json)
+now pass for all 479 files. All came from Debian's primary archive with exact
+length/SHA-256 matches; no fallback was used. The complete retained set is at
+`out/userspace-sources-20261106/pool/`. Its receipt is 141,049 bytes, SHA-256
+`b043ca441f7c79cbf1d296603c6b418720bb7d0a517f609133f3671d6ccee624`.
+No source archive was extracted or executed. Keep these generated files outside Git.
+
+The actual acquisition ran from clean project commit
+`321005217540d0725ee3728af0d7151b0a2d0883`:
+
+```sh
+python3 -I -B build/fetch-userspace-sources.py \
+  --output "$PWD/out/userspace-sources-20261106"
+```
+
+For another acquisition, use a new `out/userspace-sources-NAME` directory.
+`--resume` requires the original clean commit and input hashes, verifies all
+existing archives, refuses corrupt files and only fetches missing ones. Two
+workers verify each file before publishing it, and the complete cache is hashed
+again before a success receipt. A changed checkout requires a separate output.
+Archive acquisition does not establish that package source obligations have
+been satisfied or that the release is ready.
 
 This inventory covers the interim Debian userspace. Vendor kernel/U-Boot,
 BusyBox and opaque firmware/tool inputs have separate provenance and license

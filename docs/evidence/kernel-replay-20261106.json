@@ -1,0 +1,216 @@
+{
+  "result": {
+    "comparisons": {
+      "Image": {
+        "actual": {
+          "bytes": 27283464,
+          "sha256": "a920654a5bce4b3346bb18d69a43a521b39927edee700144aa00885b007bba16"
+        },
+        "equal": false,
+        "expected": {
+          "bytes": 27283464,
+          "sha256": "9df974c55fa61a77e8fe812652780dad471527eb9615c27838f481887d4c50e7"
+        }
+      },
+      "board.dtb": {
+        "actual": {
+          "bytes": 209320,
+          "sha256": "4d7d964a54668cf5dc12cd4bf7e72a625c79883541272aeba1a91adbbedb86ed"
+        },
+        "equal": true,
+        "expected": {
+          "bytes": 209320,
+          "sha256": "4d7d964a54668cf5dc12cd4bf7e72a625c79883541272aeba1a91adbbedb86ed"
+        }
+      },
+      "kernel.config": {
+        "actual": {
+          "bytes": 212080,
+          "sha256": "8a29d9c36e52db7e8a7d6ff757dc69e660f4273c99e5f00c5dbc5a9b7e060675"
+        },
+        "equal": true,
+        "expected": {
+          "bytes": 212080,
+          "sha256": "8a29d9c36e52db7e8a7d6ff757dc69e660f4273c99e5f00c5dbc5a9b7e060675"
+        }
+      }
+    },
+    "config_before_build": {
+      "actual": {
+        "bytes": 212080,
+        "sha256": "8a29d9c36e52db7e8a7d6ff757dc69e660f4273c99e5f00c5dbc5a9b7e060675"
+      },
+      "expected": {
+        "bytes": 212080,
+        "sha256": "8a29d9c36e52db7e8a7d6ff757dc69e660f4273c99e5f00c5dbc5a9b7e060675"
+      }
+    },
+    "error": "ValueError: Kernel replay differs from retained authenticated target",
+    "hardware_acceptance": "Not established; actual KVM guest remains required",
+    "limitations": "Reuses cached sources and registered builder; not a fresh-builder acquisition. Modules baseline comparison is unanchored.",
+    "modules_match_unanchored_retained_baseline": false,
+    "schema": 1,
+    "shared_inputs_unchanged": true,
+    "success": false,
+    "target": "diagnostic-20261104"
+  },
+  "source_provenance": {
+    "build_environment": {
+      "GIT_CONFIG_GLOBAL": "/dev/null",
+      "GIT_CONFIG_NOSYSTEM": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "HOME": "/nonexistent",
+      "KBUILD_BUILD_HOST": "jammy",
+      "KBUILD_BUILD_TIMESTAMP": "2026-11-04 00:00:00 UTC",
+      "KBUILD_BUILD_USER": "builder",
+      "KBUILD_BUILD_VERSION": "1",
+      "LC_ALL": "C",
+      "PATH": "/usr/bin:/bin",
+      "SOURCE_DATE_EPOCH": "1793750400",
+      "TZ": "UTC"
+    },
+    "expected_utsrelease": "6.6.98-a733-diag",
+    "jobs": 2,
+    "localversion": "-a733-diag",
+    "original_kernel": {
+      "commit": "2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f",
+      "git_status_porcelain": "",
+      "shallow": true
+    },
+    "original_scmversion": "absent",
+    "original_vendor": {
+      "commit": "a95129bf30ea11886cc35f08ebb3e69695a26656",
+      "git_status_porcelain": "",
+      "shallow": true
+    },
+    "private_source_before": {
+      "commit": "2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f",
+      "git_status_porcelain": "",
+      "shallow": true
+    },
+    "project": {
+      "commit": "581a3101362bdb3c4bd596d9d01fccf284f27a9a",
+      "git_status_porcelain": "",
+      "inputs": {
+        "build/diagnostic.sh": {
+          "bytes": 10531,
+          "sha256": "2e33783159dbcf758b780564dbf82a1ad07e38e951c0bae5c96570bcc0f9d17a"
+        },
+        "build/kernel-replay.py": {
+          "bytes": 20547,
+          "sha256": "7c4e52ce70c75245197527b96271801f97b71e8eabc281f4c19a797d25002f6a"
+        },
+        "build/uboot-replay.py": {
+          "bytes": 27413,
+          "sha256": "3558c6b75d0fdfa731eaff925b101a136b288953364996f72b8a6bcd3fcb1cfd"
+        },
+        "configs/builder-packages.lock.tsv": {
+          "bytes": 32519,
+          "sha256": "35c2faf42a936168098b1f54239825a3c42fc56c825fc0b2078bbd753425f48b"
+        },
+        "configs/builder-replay-packages-20261106.lock.tsv": {
+          "bytes": 32546,
+          "sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425"
+        },
+        "configs/diagnostic-sources.lock.json": {
+          "bytes": 2273,
+          "sha256": "aa39f5fca29244ca961fc3f422d7110adca6975d2c6a29f80afd9d1d2f4b4821"
+        },
+        "docs/evidence/diagnostic-20261104.json": {
+          "bytes": 2224,
+          "sha256": "6d743d81ee27ced3b55cbcd218bbf0693743be66e85d074e59a052c8819fde1c"
+        }
+      }
+    },
+    "source_method": "git clone --shared --no-checkout; detached pinned commit"
+  },
+  "evidence_files": {
+    "replay-manifest.json": {
+      "bytes": 72712,
+      "sha256": "5a4ae028311872ebb74c1c34a4c2520fdf9fbf8dbc45e8b48b8199e031b4d6d8"
+    },
+    "artifacts/replay-result.json": {
+      "bytes": 1752,
+      "sha256": "271aa248421d83e091f644961e8801b8eab01844cddef8116a6a33eb82f1669d"
+    },
+    "artifacts/source-provenance.json": {
+      "bytes": 2306,
+      "sha256": "dedbb8d631c1009c7a8ad975ac511bdd89a2835fcf5f7172caf53a9f7a5e50aa"
+    },
+    "artifacts/input-snapshot.json": {
+      "bytes": 78123,
+      "sha256": "f9a1b9026c6196c125ed762a0a5dec3f41ffefa04b735de798f48a1692234547"
+    },
+    "artifacts/input-snapshot-after.json": {
+      "bytes": 78123,
+      "sha256": "f9a1b9026c6196c125ed762a0a5dec3f41ffefa04b735de798f48a1692234547"
+    },
+    "logs/resources.jsonl": {
+      "bytes": 8110,
+      "sha256": "d02b37cebd7dfc5f29c0224ee12a1c527f33d93450546b1bc47d7fb61ce904da"
+    },
+    "logs/kernel-build.log": {
+      "bytes": 238573,
+      "sha256": "081b3f632a88e1df13a607fc46974af3e160d5fce7bbb8e01900a68bf3722ba8"
+    }
+  },
+  "resources": {
+    "start": {
+      "utc": "2026-11-06T10:05:25Z",
+      "available_ram_bytes": 7492415488,
+      "free_disk_bytes": {
+        "/home/drew/orange-pi-4-pro-build": 19373920256,
+        "/var/lib/a733-kernel-replay-work-20261106/out/kernel-replay-20261106-01": 19373920256
+      },
+      "phase": "start"
+    },
+    "end": {
+      "utc": "2026-11-06T10:21:09Z",
+      "available_ram_bytes": 7483015168,
+      "free_disk_bytes": {
+        "/home/drew/orange-pi-4-pro-build": 14032269312,
+        "/var/lib/a733-kernel-replay-work-20261106/out/kernel-replay-20261106-01": 14032269312
+      },
+      "phase": "end"
+    },
+    "samples": 33,
+    "minimum_available_ram_bytes": 7085875200,
+    "minimum_free_disk_bytes": 14032269312
+  },
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Fresh private kernel compilation completed; exact Image replay FAILED",
+  "builder": "drew@build.drewnet.online; Ubuntu 22.04 amd64",
+  "output_directory": "/var/lib/a733-kernel-replay-work-20261106/out/kernel-replay-20261106-01",
+  "image_difference": {
+    "differing_bytes": 40,
+    "ranges": [
+      {
+        "offset": 16290424,
+        "bytes": 20,
+        "record": "arm64 vDSO GNU build ID",
+        "old": "174df7ac8d469b9a521ec02517a1938b73c4cbe7",
+        "new": "950482a6c8546cb18e79438707019bbb92c87b37"
+      },
+      {
+        "offset": 21656516,
+        "bytes": 20,
+        "record": "vmlinux .notes GNU build ID",
+        "old": "af3d8047022fd7aca1581e830c1f3c38b67bb143",
+        "new": "699d8e04d0373768c7915e3504e0ace657b93c34"
+      }
+    ],
+    "remaining_image_bytes": "identical"
+  },
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "result": "All 356 replay-manifest entries authenticated; no mismatches. Project inputs and before/after snapshots match. ELF notes map both differing raw Image ranges. Original/private compile.h and utsrelease.h match.",
+    "path_evidence": "Private init/main.o DW_AT_comp_dir records the private source path; command has -g and only -fmacro-prefix-map=./=, no debug-prefix-map. Original vmlinux and compiler objects are no longer expanded; debug-path causality remains an inference pending experiment.",
+    "module_sample": "One stripped devfreq module differs in 20 build-ID bytes; retained mode 0664 versus new 0644. Full baseline module comparison is unanchored.",
+    "direct_debug_evidence": "Retained original vDSO debug file (22384 bytes) records /home/drew/orange-pi-4-pro-build/kernel; private file (22520 bytes) records the private kernel-source directory. Both compiler and assembler units differ in comp_dir but producer strings match. Original/private unstripped devfreq module debug records likewise contain the respective source paths.",
+    "module_inventory": "Both inventories contain 332 files and 319 .ko files. Every file size matches; all 319 module hashes differ and all non-module hashes match. All 322 mode differences are 0664 to 0644. Installation copies the source module mode subject to umask; original umask was not recorded."
+  },
+  "next_action": "Run a fresh private vDSO-only debug-path mapping experiment against unchanged complete original vDSO bytes. Address module modes through explicit recorded umask. Recover verified builder headroom before a further full kernel replay; end free disk is below the unchanged 15 GB full-build start guard.",
+  "hardware_acceptance": "Not established; deployment candidate unchanged."
+}

@@ -2,8 +2,9 @@
 
 The separate `build/kernel-replay.py` recipe rebuilds the retained A733 kernel
 in a fresh private source checkout. It leaves the published installation images
-and original cached build tree in place. Actual execution results will be
-recorded separately; the presence of this recipe is not a successful rebuild.
+and original cached build tree in place. The [actual private build](evidence/kernel-replay-20261106.json)
+completed compilation but **failed exact Image reproduction**. The device tree
+and configuration match their targets. No successful kernel replay is claimed.
 
 The target is the `Image`, board DTB and final kernel configuration pinned in
 [evidence/diagnostic-20261104.json](evidence/diagnostic-20261104.json). The source
@@ -41,3 +42,27 @@ The result, source/input snapshots, resource samples and build logs remain under
 the new output directory. Generated sources, objects and binaries stay out of
 Git. Build success does not establish physical boot, KVM guest execution,
 independently reproduced deployment or the remaining release acceptance gates.
+
+## First execution result
+
+The private build at project commit `581a3101362bdb3c4bd596d9d01fccf284f27a9a`
+ran from 10:05:25 to 10:21:09 UTC on 2026-11-06. Both sources, the complete
+package inventory and retained inputs passed before/after checks. The generated
+Image has the expected 27,283,464-byte size but SHA-256
+`a920654a5bce4b3346bb18d69a43a521b39927edee700144aa00885b007bba16`,
+instead of the retained target's hash. The recipe returned failure.
+
+Exactly 40 bytes differ: the 20-byte arm64 vDSO GNU build ID at raw Image offset
+16,290,424 and the 20-byte main kernel build ID at offset 21,656,516. All other
+raw Image bytes match. Independent ELF/readback review confirms those records.
+Retained original vDSO debug records contain the original source directory;
+new records contain the private source directory, with matching compiler
+producer strings. A fresh private vDSO-only experiment with explicit debug-path
+mapping is the next test against unchanged original bytes. This cause has not
+yet been demonstrated by rebuilding. One stripped module also differs in its
+build ID, with retained/new modes 0664/0644; the original umask was not pinned.
+
+No target hashes or output bytes were patched. The complete failed build and
+evidence remain available. Sampled minimum available RAM was 7,085,875,200 bytes;
+end free disk was 14,032,269,312 bytes. Another fresh build must first satisfy
+the unchanged greater-than-15-GB disk guard.

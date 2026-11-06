@@ -169,10 +169,13 @@ backup/recovery and SPI-specific programming authorization remain outstanding.
    now match the original unpacked U-Boot and EL2 package, under an explicit
    full-inventory replay profile. Source caches were reused; full clean-builder
    acquisition and kernel reproduction remain open. A reviewed [kernel replay](kernel-reproducibility.md)
-   has [started a fresh private two-job compilation](evidence/kernel-replay-start-20261106.json)
-   after exact preflight/config checks; final artifact comparisons are pending. The [26-input license inventory](evidence/vendor-boot-license-inventory-20261106.json)
+   [completed compilation but failed exact Image reproduction](evidence/kernel-replay-20261106.json):
+   DTB/config match; only two 20-byte GNU build IDs differ in the Image. Debug-path
+   and umask reproduction need an actual experiment; target bytes remain unchanged. The [26-input license inventory](evidence/vendor-boot-license-inventory-20261106.json)
    now maps every pinned path/hash and its available/missing attribution evidence.
-   Clean package/source acquisition and firmware/source/license audit remain gates.
+   All [479 userspace source archives](evidence/userspace-sources-acquired-20261106.json)
+   for the 220 binary packages have been acquired and independently rehashed.
+   Fresh builder acquisition, kernel reproduction and firmware/source/license audit remain gates.
 
 ## Completion rule
 
