@@ -140,20 +140,34 @@ builder with reused pinned source caches. Independent source acquisition,
 a fresh immutable builder, whole-image assembly and physical release acceptance
 remain separate. The deployment images were not replaced.
 
-## Fresh-source build in the frozen environment
+## Fresh-source reproduction in the frozen environment
 
-[Verified off-host retention](evidence/kernel-space-retention-20261106.json)
-recovered enough space without removing either builder OS root or current
-deployment images. The original cache, including its complete Git metadata,
-restores on codex and passes full archive comparison and object checks.
-[The fresh kernel launch](evidence/frozen-kernel-started-20261106.json) passed
-the unchanged 15 GB disk/3 GB RAM start checks and has observed compiler
-progress with two jobs, original debug-path mapping and umask 0002.
+[The completed fresh-source replay](evidence/frozen-kernel-replay-20261106.json)
+reproduces the authenticated Image, DTB and configuration exactly. Independent
+review also authenticates the original compressed initramfs and compares all
+332 regular module files: paths, permission modes, lengths, hashes and actual
+bytes match. All 2,556 manifest entries pass rehashing with no missing or extra
+files. This does not assert equality of generated directory metadata.
 
-The frozen OS and independently imported source home are read-only. The
-new project/output tree provides writable build space. Three authenticated original
-Image/DTB/config files serve solely as comparison baselines. Original object
-files and the modules directory were not copied. The original compressed
-initramfs has also been authenticated on codex for the later independent
-332-file module comparison. Final artifacts, postchecks and module equality
-are still pending; launch and compiler progress establish no hardware result.
+The frozen OS and independently imported source home were read-only; a new
+project/output tree provided writable build space. Three original Image/DTB/
+config files served as authenticated comparison baselines. Original object
+files and the modules directory were not copied. The recipe's optional retained
+modules comparison is therefore null; the separate initramfs audit supplies the
+stronger anchored check. Generic reused-cache/prepared-builder wording in the
+recipe result is interpreted alongside the linked fresh-source and frozen-OS
+records; the acquisition boundary differs from the earlier prepared-host runs.
+
+Both input snapshots and the exact 842-package profile match before and after
+execution. Two-job compilation used original debug-path mapping and umask 0002;
+all four captured compiler/assembler command files contain the expected maps.
+Resource minima were 10,134,110,208 bytes disk free and 6,483,652,608 bytes RAM
+available across inner/outer sampling. The namespace exits with no mapped UID
+processes left. Complete native artifact/log copies pass hash and fsync checks.
+
+[Capacity recovery](evidence/kernel-space-retention-20261106.json) preserved both
+builder OS trees and current deployment images. The old source cache restores
+on codex with complete archive comparison and standalone Git object checks.
+Whole-image assembly/reproduction, firmware licensing and physical release
+acceptance remain open. This run establishes neither two independent OS
+constructions nor actual KVM guest execution.

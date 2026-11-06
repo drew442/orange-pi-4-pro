@@ -131,9 +131,10 @@ two exports of one installed tree, not two independent OS builds or source
 rebuilds. Fresh source acquisition/import is complete;
 [two actual U-Boot replays](evidence/frozen-uboot-replay-20261106.json) in this
 environment now reproduce the authenticated binary and boot package exactly.
-[The kernel build](evidence/frozen-kernel-started-20261106.json) is now compiling
-from the fresh imported source checkout after passing resource/isolation guards;
-its result and complete-image rebuilds remain pending.
+[The kernel replay](evidence/frozen-kernel-replay-20261106.json) now matches
+Image, DTB, configuration and all 332 regular module files from the original
+authenticated initramfs. Independent manifest review, complete package/source
+postchecks and namespace cleanup pass. Complete-image rebuilds remain pending.
 Keep service, capability/device and network restrictions throughout the remaining
 build work. Hardware KVM execution and all
 [release gates](hardware-validation.md) remain separate requirements; no

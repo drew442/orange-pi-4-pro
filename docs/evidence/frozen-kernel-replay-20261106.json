@@ -1,0 +1,142 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Actual kernel/DTB/config and module reproduction using fresh upstream sources in the frozen AMD64 Ubuntu builder; no hardware acceptance",
+  "success": true,
+  "producer_commit": "345ad9d3cfa4ec7c08b3baaf1d8173d1d12a64ba",
+  "builder_image_lock": {
+    "path": "configs/builder-image-20261106.lock.json",
+    "bytes": 1368,
+    "sha256": "c2f9cd2fcbe4124eeaffea2ce5695de562006615233fe45d05d964f926e148a6"
+  },
+  "source_input_lock": {
+    "path": "configs/rebuild-source-inputs-20261106.lock.json",
+    "bytes": 2248,
+    "sha256": "bef25fb1db15c2af93071f208d9b59a0c1c860728fb0d35508b8852101cd738e"
+  },
+  "source_import_evidence": "frozen-source-import-20261106.json",
+  "launch_evidence": "frozen-kernel-started-20261106.json",
+  "builder_host": "build.drewnet.online",
+  "builder_output": "/var/lib/a733-clean-replay-20261106/kernel-run-01/work/project/out/kernel-replay-frozen-20261106-01",
+  "retained_native_output": "/home/drew/orange-pi-4-pro/out/frozen-kernel-replay-20261106/complete/work/project/out/kernel-replay-frozen-20261106-01",
+  "products": {
+    "Image": {
+      "bytes": 27283464,
+      "sha256": "9df974c55fa61a77e8fe812652780dad471527eb9615c27838f481887d4c50e7"
+    },
+    "board.dtb": {
+      "bytes": 209320,
+      "sha256": "4d7d964a54668cf5dc12cd4bf7e72a625c79883541272aeba1a91adbbedb86ed"
+    },
+    "kernel.config": {
+      "bytes": 212080,
+      "sha256": "8a29d9c36e52db7e8a7d6ff757dc69e660f4273c99e5f00c5dbc5a9b7e060675"
+    }
+  },
+  "build_settings": {
+    "caller_umask": "0002",
+    "debug_path_profile": "original-20261104",
+    "kaflags": "-Wa,--debug-prefix-map=/a733-export-output/project/out/kernel-replay-frozen-20261106-01/kernel-source=/home/drew/orange-pi-4-pro-build/kernel",
+    "kcflags": "-fdebug-prefix-map=/a733-export-output/project/out/kernel-replay-frozen-20261106-01/kernel-source=/home/drew/orange-pi-4-pro-build/kernel",
+    "make_command": [
+      "make",
+      "-j2",
+      "ARCH=arm64",
+      "CROSS_COMPILE=aarch64-linux-gnu-",
+      "KCFLAGS=-fdebug-prefix-map=/a733-export-output/project/out/kernel-replay-frozen-20261106-01/kernel-source=/home/drew/orange-pi-4-pro-build/kernel",
+      "KAFLAGS=-Wa,--debug-prefix-map=/a733-export-output/project/out/kernel-replay-frozen-20261106-01/kernel-source=/home/drew/orange-pi-4-pro-build/kernel"
+    ],
+    "umask": "0002"
+  },
+  "shared_inputs_unchanged": true,
+  "recipe_module_baseline_comparison": null,
+  "independent_module_authentication": {
+    "original_archive": "out/frozen-kernel-replay-20261106/original-initramfs.cpio.gz",
+    "original_archive_facts": {
+      "bytes": 3650395,
+      "sha256": "e2b09f56f4df8cfd52b98c0f1fe018c92a0806d8cac6ee065c6ac31b15e6ca30"
+    },
+    "anchor": "docs/evidence/diagnostic-20261104.json",
+    "method": "Authenticate gzip; parse newc through build/host-payload.py::module_entries; compare every regular module-file path, permission mode, size, hash and actual bytes to the replay inventory and actual copied files.",
+    "regular_files": 332,
+    "kernel_modules": 319,
+    "metadata_files": 13,
+    "parsed_module_directories": 63,
+    "regular_file_mismatches": 0,
+    "inventory": {
+      "bytes": 69911,
+      "sha256": "d11f28d4453416d0a4e3feeb0a716adc936859de27b256b1c021edd19d175085"
+    },
+    "canonical_inventory_sha256": "3244bd1cd0573d429a51d98d90c0cdfc3dfa2b988331d4cf632f26b889d98455",
+    "scope": "Regular-file content and permission modes only; no directory-metadata equality claim."
+  },
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "manifest_entries_rehashed": 2556,
+    "mismatches": 0,
+    "missing_or_unmanifested_files": 0,
+    "before_after_input_snapshots_equal": true,
+    "exact_builder_packages": 842,
+    "package_lock_sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425",
+    "captured_mapping_command_files_verified": 4,
+    "core_anchors_match": true,
+    "module_comparison_match": true,
+    "no_error_resource_postcheck_umask_error": true
+  },
+  "native_postchecks": {
+    "remote_manifest_log_receipt_hashes_match_native": true,
+    "all_native_files_fsynced": true,
+    "mapped_uid_processes_remaining": [],
+    "outer_success": true,
+    "minimum_free_bytes": 10134122496,
+    "minimum_available_memory_bytes": 6483652608
+  },
+  "resources": {
+    "outer_samples": 459,
+    "outer_minimum_free_bytes": 10134122496,
+    "outer_minimum_available_memory_bytes": 6483652608,
+    "inner_samples": 32,
+    "inner_minimum_free_bytes": 10134110208,
+    "inner_minimum_available_memory_bytes": 6892564480
+  },
+  "raw_records": {
+    "out/frozen-kernel-replay-20261106/complete/kernel-replay-receipt.json": {
+      "bytes": 58486,
+      "sha256": "58308b374cfdc7a43f3618c510a83fd608de741a42a11869446fb705fc2f6c9f"
+    },
+    "out/frozen-kernel-replay-20261106/complete/kernel-replay.log": {
+      "bytes": 3222,
+      "sha256": "91b46f1c2a992fd4b861730548a7f01e8727369982b9252e8e5302dc4ce990e7"
+    },
+    "out/frozen-kernel-replay-20261106/complete/work/project/out/kernel-replay-frozen-20261106-01/replay-manifest.json": {
+      "bytes": 443850,
+      "sha256": "c6553c091963cdce02e6e8b1c78fab8c360d5445e76cbc8863d1dfd82bab52c5"
+    },
+    "out/frozen-kernel-replay-20261106/complete/work/project/out/kernel-replay-frozen-20261106-01/artifacts/replay-result.json": {
+      "bytes": 4087,
+      "sha256": "c9cff2d82dd7f742695b73bbfdbdef2daa11520064e352ba631159491708ecf1"
+    },
+    "out/frozen-kernel-replay-20261106/complete/work/project/out/kernel-replay-frozen-20261106-01/artifacts/source-provenance.json": {
+      "bytes": 3175,
+      "sha256": "1846fe02adeb03025fc68a0c3c2e30299439a0995b24ace81c7b91334c9fa7fd"
+    },
+    "out/frozen-kernel-replay-20261106/complete/work/project/out/kernel-replay-frozen-20261106-01/artifacts/input-snapshot.json": {
+      "bytes": 4231,
+      "sha256": "1338b30c5b481b124e986376a5e75230a5823ebfc1bc16280f4bb7a57332e4a6"
+    },
+    "out/frozen-kernel-replay-20261106/complete/work/project/out/kernel-replay-frozen-20261106-01/artifacts/input-snapshot-after.json": {
+      "bytes": 4231,
+      "sha256": "1338b30c5b481b124e986376a5e75230a5823ebfc1bc16280f4bb7a57332e4a6"
+    }
+  },
+  "hardware_acceptance": false,
+  "limits": [
+    "This proves kernel component reproduction against the original artifacts with fresh sources and the restored frozen builder.",
+    "Whole diagnostic/host image assembly and independently reproduced physical deployment remain open.",
+    "One frozen OS installation was used; two independent OS constructions are not established.",
+    "Generic recipe text describes a reused-cache/prepared-builder baseline; linked fresh-input and frozen-builder evidence establishes this run context.",
+    "No new physical boot, installed NVMe/SSH/KVM guest, endurance, SD-write, update/rollback/recovery or guest-restore acceptance is claimed.",
+    "No ELF files were copied, so build IDs were not independently extracted."
+  ]
+}

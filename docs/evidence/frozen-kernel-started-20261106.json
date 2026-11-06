@@ -131,5 +131,6 @@
     }
   },
   "comparison_baselines": "Three authenticated original Image/DTB/config comparison files only; no original object files or modules baseline copied.",
-  "independent_review": "Sol high cleared exact wrapper bytes before launch."
+  "independent_review": "Sol high cleared exact wrapper bytes before launch.",
+  "subsequent_result": "frozen-kernel-replay-20261106.json; final component/module reproduction and postchecks passed."
 }

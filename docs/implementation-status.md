@@ -191,10 +191,12 @@ backup/recovery and SPI-specific programming authorization remain outstanding.
    codex. [Further verified retention](evidence/kernel-space-retention-20261106.json)
    left 15.48 GB free before launch. The old kernel cache restores on codex
    with full archive comparison and Git object checks passing. The
-   [fresh kernel build](evidence/frozen-kernel-started-20261106.json) has passed
-   its 15 GB disk/3 GB RAM start guards and is compiling with two jobs in the
-   frozen environment. Final Image/DTB/config/module comparisons and full-image
-   reproduction remain open. Existing kernel/NVMe guards remain mandatory.
+   [fresh kernel replay](evidence/frozen-kernel-replay-20261106.json) now matches
+   Image, DTB, configuration and all 332 regular module files against original
+   authenticated anchors. Independent review rehashed all 2,556 manifest
+   entries with zero mismatches; package/source postchecks and namespace cleanup
+   pass. Two-job compilation stayed above 10.13 GB free disk and 6.48 GB available
+   RAM. Whole-image reproduction remains open; kernel/NVMe guards remain mandatory.
    The [26-input license inventory](evidence/vendor-boot-license-inventory-20261106.json)
    records missing attribution/grants. All [479 userspace source archives](evidence/userspace-sources-acquired-20261106.json)
    for the 220 binary packages are acquired and independently rehashed.
