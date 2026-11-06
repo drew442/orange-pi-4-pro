@@ -107,8 +107,10 @@ by subsequent clean-build work.
    for CPU/disk/network, clean shutdown/restart and persisted disk marker. Return
    its console/log evidence; `/dev/kvm` alone cannot satisfy the gate.
 3. Continue [clean-build work](build-reproduction-status.md): execute the reviewed
-   outer pipeline launcher once capacity permits, then use the normalized profile to
-   reconstruct production roots/state/NVMe and complete image readback. The reviewed [20 GiB builder LVM growth](build-host-capacity-plan.md)
+   outer pipeline launcher, now running after [verified historical root retention](historical-root-retention.md)
+   raised builder free space to 6.77 GB. Then reconstruct production roots/state/NVMe
+   with the normalized profile and complete image readback. Full production capacity
+   guards remain separate. The reviewed [20 GiB builder LVM growth](build-host-capacity-plan.md)
    awaits approval after [target/backup recheck](evidence/build-host-capacity-recheck-20261106.json);
    no resize occurred and capacity guards remain unchanged.
    [Firmware license evidence](evidence/vendor-boot-license-inventory-20261106.json)

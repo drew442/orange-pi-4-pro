@@ -15,6 +15,11 @@ Raw records and the one-off scripts remain outside Git on the builder at
 
 ## Current off-builder retention
 
+The later [historical root image retention](historical-root-retention.md)
+preserves twelve fixed root-image files in two protected codex copies and
+recovers about 3.53 GB on the builder. Its exact old/new path map supersedes
+those twelve historical artifact locations. Current deployment files are excluded.
+
 The [2026-11-06 relocation](evidence/builder-relocation-20261106.json) moves six
 optional archives and two old nondeployable raw NVMe fixtures to
 `codex.drewnet.online:/home/drew/orange-pi-4-pro/out/builder-retained-20261106/`.

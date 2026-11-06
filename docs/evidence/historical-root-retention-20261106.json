@@ -1,0 +1,274 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Historical generated-file retention only; no device write or hardware acceptance",
+  "native_host": "codex.drewnet.online",
+  "builder_host": "build.drewnet.online",
+  "native_root": "/var/lib/a733-historical-root-retention-20261106",
+  "files": [
+    {
+      "builder_path": "/var/lib/a733-current-roots-work-20261104/out/host-payload-current-20261104-01/root-A.ext4",
+      "retained_name": "current-A.ext4",
+      "bytes": 4294967296,
+      "sha256": "0fab98a8548a9c1f02e11845bc036710ce9b9aca8ed1fbc1a8c6c41f2622c838",
+      "historical_evidence": "docs/evidence/current-roots-20261104.json",
+      "native_copies": [
+        {
+          "allocated_bytes": 444182528,
+          "path": "/var/lib/a733-historical-root-retention-20261106/primary/current-A.ext4"
+        },
+        {
+          "allocated_bytes": 444182528,
+          "path": "/var/lib/a733-historical-root-retention-20261106/secondary/current-A.ext4"
+        }
+      ]
+    },
+    {
+      "builder_path": "/var/lib/a733-current-roots-work-20261104/out/host-payload-current-20261104-01/root-A.ext4.gz",
+      "retained_name": "current-A.ext4.gz",
+      "bytes": 143415593,
+      "sha256": "c80955d80719d4bba239158356645db87be7afc0948b5542207c9c42b208e92c",
+      "historical_evidence": "docs/evidence/current-roots-20261104.json",
+      "native_copies": [
+        {
+          "allocated_bytes": 143417344,
+          "path": "/var/lib/a733-historical-root-retention-20261106/primary/current-A.ext4.gz"
+        },
+        {
+          "allocated_bytes": 143417344,
+          "path": "/var/lib/a733-historical-root-retention-20261106/secondary/current-A.ext4.gz"
+        }
+      ]
+    },
+    {
+      "builder_path": "/var/lib/a733-current-roots-work-20261104/out/host-payload-current-20261104-01/root-B.ext4",
+      "retained_name": "current-B.ext4",
+      "bytes": 4294967296,
+      "sha256": "a7443a85a44f39eee29ff7d93810bdddaac13a9b29f7c79d10570d1ee9319132",
+      "historical_evidence": "docs/evidence/current-roots-20261104.json",
+      "native_copies": [
+        {
+          "allocated_bytes": 444182528,
+          "path": "/var/lib/a733-historical-root-retention-20261106/primary/current-B.ext4"
+        },
+        {
+          "allocated_bytes": 444182528,
+          "path": "/var/lib/a733-historical-root-retention-20261106/secondary/current-B.ext4"
+        }
+      ]
+    },
+    {
+      "builder_path": "/var/lib/a733-current-roots-work-20261104/out/host-payload-current-20261104-01/root-B.ext4.gz",
+      "retained_name": "current-B.ext4.gz",
+      "bytes": 143415652,
+      "sha256": "8a21d898de41a3b29d16bba313321d0d3b7afa662e85844fe940be64a385a89c",
+      "historical_evidence": "docs/evidence/current-roots-20261104.json",
+      "native_copies": [
+        {
+          "allocated_bytes": 143417344,
+          "path": "/var/lib/a733-historical-root-retention-20261106/primary/current-B.ext4.gz"
+        },
+        {
+          "allocated_bytes": 143417344,
+          "path": "/var/lib/a733-historical-root-retention-20261106/secondary/current-B.ext4.gz"
+        }
+      ]
+    },
+    {
+      "builder_path": "/var/lib/a733-guest-tools-work-20261104/out/host-payload-guest-tools-20261104-01/root-A.ext4",
+      "retained_name": "guest-A.ext4",
+      "bytes": 4294967296,
+      "sha256": "6329177322737505220da66b082b126e4ed66fd618e039c8b2e012214c0bbfda",
+      "historical_evidence": "docs/evidence/guest-tools-payload-20261104.json",
+      "native_copies": [
+        {
+          "allocated_bytes": 444182528,
+          "path": "/var/lib/a733-historical-root-retention-20261106/primary/guest-A.ext4"
+        },
+        {
+          "allocated_bytes": 444182528,
+          "path": "/var/lib/a733-historical-root-retention-20261106/secondary/guest-A.ext4"
+        }
+      ]
+    },
+    {
+      "builder_path": "/var/lib/a733-guest-tools-work-20261104/out/host-payload-guest-tools-20261104-01/root-A.ext4.gz",
+      "retained_name": "guest-A.ext4.gz",
+      "bytes": 143416603,
+      "sha256": "d7e5b509118a18fed19efb447fffac12da635582f896020b93b09009a1810105",
+      "historical_evidence": "docs/evidence/guest-tools-payload-20261104.json",
+      "native_copies": [
+        {
+          "allocated_bytes": 143417344,
+          "path": "/var/lib/a733-historical-root-retention-20261106/primary/guest-A.ext4.gz"
+        },
+        {
+          "allocated_bytes": 143417344,
+          "path": "/var/lib/a733-historical-root-retention-20261106/secondary/guest-A.ext4.gz"
+        }
+      ]
+    },
+    {
+      "builder_path": "/var/lib/a733-guest-tools-work-20261104/out/host-payload-guest-tools-20261104-01/root-B.ext4",
+      "retained_name": "guest-B.ext4",
+      "bytes": 4294967296,
+      "sha256": "a07015569e3c2b8fcd9094f1e462929c93be481ba6f1dd94426ee9b70eb9acfe",
+      "historical_evidence": "docs/evidence/guest-tools-payload-20261104.json",
+      "native_copies": [
+        {
+          "allocated_bytes": 444182528,
+          "path": "/var/lib/a733-historical-root-retention-20261106/primary/guest-B.ext4"
+        },
+        {
+          "allocated_bytes": 444182528,
+          "path": "/var/lib/a733-historical-root-retention-20261106/secondary/guest-B.ext4"
+        }
+      ]
+    },
+    {
+      "builder_path": "/var/lib/a733-guest-tools-work-20261104/out/host-payload-guest-tools-20261104-01/root-B.ext4.gz",
+      "retained_name": "guest-B.ext4.gz",
+      "bytes": 143415900,
+      "sha256": "641b207c8f077a5f0332f4ba78e7dd1228b2c4bac31559ba810c66e0ebecd3e8",
+      "historical_evidence": "docs/evidence/guest-tools-payload-20261104.json",
+      "native_copies": [
+        {
+          "allocated_bytes": 143417344,
+          "path": "/var/lib/a733-historical-root-retention-20261106/primary/guest-B.ext4.gz"
+        },
+        {
+          "allocated_bytes": 143417344,
+          "path": "/var/lib/a733-historical-root-retention-20261106/secondary/guest-B.ext4.gz"
+        }
+      ]
+    },
+    {
+      "builder_path": "/var/lib/a733-operator-work-20261105/out/host-payload-operator-20261105-01/root-A.ext4",
+      "retained_name": "operator-A.ext4",
+      "bytes": 4294967296,
+      "sha256": "1f5eeeeaf2570262da052654743506445279747cc92f08e54e89aaaff2aeebf8",
+      "historical_evidence": "docs/evidence/operator-build-20261105.json",
+      "native_copies": [
+        {
+          "allocated_bytes": 444190720,
+          "path": "/var/lib/a733-historical-root-retention-20261106/primary/operator-A.ext4"
+        },
+        {
+          "allocated_bytes": 444190720,
+          "path": "/var/lib/a733-historical-root-retention-20261106/secondary/operator-A.ext4"
+        }
+      ]
+    },
+    {
+      "builder_path": "/var/lib/a733-operator-work-20261105/out/host-payload-operator-20261105-01/root-A.ext4.gz",
+      "retained_name": "operator-A.ext4.gz",
+      "bytes": 143413586,
+      "sha256": "adc704a4098b481492c620c04a0c8461d5b7738df0bd4d5a653c62f7cbfd4256",
+      "historical_evidence": "docs/evidence/operator-build-20261105.json",
+      "native_copies": [
+        {
+          "allocated_bytes": 143417344,
+          "path": "/var/lib/a733-historical-root-retention-20261106/primary/operator-A.ext4.gz"
+        },
+        {
+          "allocated_bytes": 143417344,
+          "path": "/var/lib/a733-historical-root-retention-20261106/secondary/operator-A.ext4.gz"
+        }
+      ]
+    },
+    {
+      "builder_path": "/var/lib/a733-operator-work-20261105/out/host-payload-operator-20261105-01/root-B.ext4",
+      "retained_name": "operator-B.ext4",
+      "bytes": 4294967296,
+      "sha256": "4325eb4692432ee66d09dbd827a2fb49b1c1856426000ffdfc5081d6cdcac885",
+      "historical_evidence": "docs/evidence/operator-build-20261105.json",
+      "native_copies": [
+        {
+          "allocated_bytes": 444190720,
+          "path": "/var/lib/a733-historical-root-retention-20261106/primary/operator-B.ext4"
+        },
+        {
+          "allocated_bytes": 444190720,
+          "path": "/var/lib/a733-historical-root-retention-20261106/secondary/operator-B.ext4"
+        }
+      ]
+    },
+    {
+      "builder_path": "/var/lib/a733-operator-work-20261105/out/host-payload-operator-20261105-01/root-B.ext4.gz",
+      "retained_name": "operator-B.ext4.gz",
+      "bytes": 143413606,
+      "sha256": "263c87d2c9e87e114c651cfa78a15a1027615a9f523a6fa25be569b2b82c8e76",
+      "historical_evidence": "docs/evidence/operator-build-20261105.json",
+      "native_copies": [
+        {
+          "allocated_bytes": 143417344,
+          "path": "/var/lib/a733-historical-root-retention-20261106/primary/operator-B.ext4.gz"
+        },
+        {
+          "allocated_bytes": 143417344,
+          "path": "/var/lib/a733-historical-root-retention-20261106/secondary/operator-B.ext4.gz"
+        }
+      ]
+    }
+  ],
+  "preparation": {
+    "returncode": 0,
+    "source_sha256": "2c96014fa24433d8ce6c1660db769928b2eea763c20d2961d688ae6921b95865",
+    "free_before_bytes": 13626236928,
+    "free_after_bytes": 6573400064,
+    "allocated_copy_bytes": 7051231232
+  },
+  "retirement_performed": true,
+  "retirement_returncode": 0,
+  "retirement_source_sha256": "404607d4d22db254e3cad1200f9f4c8c03e1742864bd52a8cb47e109ff2fd844",
+  "builder_free_before_bytes": 3240075264,
+  "builder_free_after_closed_descriptors_bytes": 6765948928,
+  "builder_journal_phases": {
+    "start": 1,
+    "verified": 1,
+    "intent": 12,
+    "removed": 12,
+    "complete": 1
+  },
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "code_verdict": "pass after loop backing inode and per-thread idle corrections",
+    "actual_copy_verification_exit_code": 0,
+    "actual_copies_verified": 24,
+    "verifier_sha256": "288bf2e8b41e1ca1e4aeddc465e0f80a909a2819aa910fc8c1fec465f8722443"
+  },
+  "tests": {
+    "root_fixture_cases": 30,
+    "root_fixture_skips": 0
+  },
+  "native_postcheck": {
+    "files": 12,
+    "copies": 24,
+    "free_bytes": 6575255552
+  },
+  "limits": [
+    "Only fixed historical generated root images were retired; current deployment images, SD, NVMe, SPI and original source caches were excluded.",
+    "Builder LV and filesystem were not resized. Full production assembly guards remain unchanged.",
+    "No hardware boot, KVM guest, installation or release acceptance result follows from this retention."
+  ],
+  "raw_records_root": "out/historical-root-retention-20261106",
+  "raw_record_pins": {
+    "preparation.json": {
+      "bytes": 9637,
+      "sha256": "998ef5f79ef3774517906e143af4d1ddd3a6fa60d0b2adc98a9edc7c3db85815"
+    },
+    "independent-review.json": {
+      "bytes": 15868,
+      "sha256": "4660046c6cc49630cadb342560ab3ef9c61278eca041d15ea5d774800f24b8ed"
+    },
+    "builder-receipt.jsonl": {
+      "bytes": 13815,
+      "sha256": "0abe24d3a976e3458fffea5fa944a424e1a17440117b3529dd03d2bb7f1187ab"
+    },
+    "retirement.jsonl": {
+      "bytes": 12188,
+      "sha256": "1f1cbedc2441b94a77b9e0344cc4a0d5358a25e372a77c6f6f40b90f50e916c6"
+    }
+  }
+}

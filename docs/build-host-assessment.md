@@ -93,6 +93,12 @@ It awaits separate approval because it changes the build host root filesystem;
 no LV/filesystem growth has been performed. This does not involve Orange Pi
 storage or change its existing NVMe erase/SPI authorization boundaries.
 
+Subsequent [historical root retention](historical-root-retention.md) preserves
+twelve old generated files in two protected codex copies. Complete hashes and
+independent review pass; after retirement the builder had **6,765,948,928 bytes
+free**. This permits the tracked userspace pipeline to start, while production
+image assembly retains its larger capacity guards. No LVM growth occurred.
+
 ## Local host assessment
 
 Checked 2026-11-04 against vendor build commit `a95129bf30ea11886cc35f08ebb3e69695a26656`. **Local host only: suitable for source investigation, not an unmodified vendor image build.** No local dependencies were installed; remote provisioning is described above.
