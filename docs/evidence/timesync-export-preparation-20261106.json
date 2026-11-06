@@ -1,0 +1,143 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "timesync export source/host preparation and native launcher regressions only; no actual221package configuration/export or hardware acceptance",
+  "source_commit": "265352fd587fba0abee98bda1208fb67b025f63f",
+  "cleanup_commit": "26cba70f05261aeae7a3aaf4a863bdf1ef6e0d3c",
+  "validation_passed": true,
+  "actual_221_package_export_performed": false,
+  "source_files": {
+    "build/export-timesync-userspace.py": {
+      "bytes": 11762,
+      "sha256": "a5c4de8b635bc6d68cfc440df23ea075766375eb68520c58017aa79a84b90be7"
+    },
+    "tests/test_export_timesync_userspace.py": {
+      "bytes": 14064,
+      "sha256": "d6457cf5e6c3d40b8676ce215a4b968f3c4019cbd1ce17bad51c5cfa518e6b7d"
+    },
+    "build/launch-userspace-configuration.py": {
+      "bytes": 25631,
+      "sha256": "08a8bb767987f2a9496ee92d03260fdb5b61bd1f486b9ab00fd04f7ad4633598"
+    },
+    "tests/test_launch_userspace_configuration.py": {
+      "bytes": 18240,
+      "sha256": "141ed973c2f35a69d32893ef75167e11f16c8419a47e264c2440a3bade6f2ba0"
+    },
+    "build/export-host-userspace.py": {
+      "bytes": 28217,
+      "sha256": "1cd49563c43fe7ddd78d309ef2d9fe48b2ad1d1d29ee6d7050374db12be118ed"
+    },
+    "build/configure-timesync-userspace.py": {
+      "bytes": 24229,
+      "sha256": "fb1ebc6512317658982022df22cd0f349791b9d5145e6ad48694c97d775264a9"
+    },
+    "configs/host-timesync-inputs.lock.json": {
+      "bytes": 3837,
+      "sha256": "b183b9df1c19241420c6939c4487dcf4894ae60daa3827d73589a6e112918a5f"
+    }
+  },
+  "retained_records": {
+    "out/timesync-export-preparation-20261106/base-pipeline-plan.json": {
+      "bytes": 3977,
+      "sha256": "67221b56d8185a384d75d1d7a2dbf531f81caa4fba50cc029608fb9fa2c55f62"
+    },
+    "out/timesync-export-preparation-20261106/builder-process-cleanup.json": {
+      "bytes": 670,
+      "sha256": "c8a8874839a7e3aa30bf6f743ae1c729ef43717a465b83aac8542da5b18c0609"
+    },
+    "out/timesync-export-preparation-20261106/local-launcher-tests.log": {
+      "bytes": 135,
+      "sha256": "d6aaabb8cdb8aab4ad909263267648dd6131dd4c16b62ff06ca1abbbc300e4c4"
+    },
+    "out/timesync-export-preparation-20261106/verification-code/check-builder-process-cleanup.py": {
+      "bytes": 1431,
+      "sha256": "d1c0e3e84bfd7cce4b161a383a23007bc45ecd28b2f33dfab61a723ae9dcc6cc"
+    }
+  },
+  "test_logs": {
+    "tmp/timesync-export-assembly-20261106.log": {
+      "bytes": 592,
+      "sha256": "0435c57e0f6829f7f55bed89876035a09617c1ad148a2e1832c9dfdebd592a2e"
+    },
+    "tmp/timesync-export-discovery-20261106.log": {
+      "bytes": 1937,
+      "sha256": "c010e9afe67dea94c3c9a72279f80c0784e4cefb754418c0e12cd6a131f1e311"
+    },
+    "tmp/timesync-export-test-diagnostic-initramfs.sh.log": {
+      "bytes": 303,
+      "sha256": "b98a0fd87dffaa5af1c6a5d70aab0e4f2df620e73ed93e6d1c3752c2f9675a14"
+    },
+    "tmp/timesync-export-test-guest-fixture.sh.log": {
+      "bytes": 93,
+      "sha256": "4a00dd8b70af15f965d4e22586b43b3377dc5059c996ee85632ef50a5bf71375"
+    },
+    "tmp/timesync-export-test-host-init.sh.log": {
+      "bytes": 67,
+      "sha256": "1140ccbb0211f94dbafc0cda93fc5475694bb863682cad1f38b51860209ca382"
+    },
+    "tmp/timesync-export-test-host-storage-resolver.sh.log": {
+      "bytes": 109,
+      "sha256": "c126ee779bb8b80ee63a08f59a5b322a45ef59a0cf8144a160e6fd7c0cc56892"
+    },
+    "tmp/timesync-export-test-host-userspace.sh.log": {
+      "bytes": 86,
+      "sha256": "bafcce50723cd1421cf680cfff091897461967cc32747361e2d6a3f433ac20c1"
+    }
+  },
+  "validation": {
+    "adapter_focused_cases": 15,
+    "native_discovery_cases": 1250,
+    "environment_skips": 97,
+    "assembly_cases": 4,
+    "bash_suites": 5,
+    "toml_files_parsed": 5,
+    "diff_check": true,
+    "adapter_fixtures": "synthetic archive/BOM staging; namespace/live receipt-state dependencies mocked; no actual configured221tree",
+    "actual_ubuntu22_launcher_check": {
+      "classification": "native Ubuntu22 process/launcher host regressions only; no root namespace/image/hardware execution",
+      "source_files": {
+        "build/launch-userspace-configuration.py": "08a8bb767987f2a9496ee92d03260fdb5b61bd1f486b9ab00fd04f7ad4633598",
+        "tests/test_launch_userspace_configuration.py": "141ed973c2f35a69d32893ef75167e11f16c8419a47e264c2440a3bade6f2ba0"
+      },
+      "returncode": 0,
+      "host_inventory_unchanged": true,
+      "free_before_bytes": 3246632960,
+      "free_after_bytes": 3246628864,
+      "test_summary": "s.......................\n----------------------------------------------------------------------\nRan 24 tests in 0.139s\n\nOK (skipped=1)\n"
+    },
+    "read_only_base_pipeline_plan_passed": true
+  },
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "passed": true,
+    "blocking_findings_remaining": 0,
+    "resolved_findings": [
+      "bind derivation receipt to exact common project source manifest before cleanup and publication",
+      "validate build DEB before cleanup, exclude removed transient input from postcleanup checks"
+    ],
+    "checks": [
+      "immutable source pins and private backend instances",
+      "exact221package status/descriptor/identity/service bindings",
+      "all source/receipt checks before private cleanup/publication",
+      "enriched receipt and BOM/archive/provenance pins before exclusive atomic publish",
+      "no mutation or failable readback after publication",
+      "held child identity until group signals finish; no signals to reaped or unowned leader"
+    ]
+  },
+  "constraints": {
+    "common_project_manifest_required_for_configuration_and_export": true,
+    "original220_backend_unchanged": true,
+    "published_images_unchanged": true,
+    "artifact_profile_registered": false,
+    "builder_expansion_authorized": false,
+    "builder_resize_applied": false
+  },
+  "limits": [
+    "No actual221package tree, normalized archive or production image constructed.",
+    "Native synthetic fixtures and process regressions establish no physical boot, installed SSH, NTP, KVM, zeroSDwrites or update/rollback acceptance.",
+    "Outer timesync launcher remains to implement/review; actual configuration/export awaits capacity.",
+    "The earlier protected pipeline checkout predates process cleanup repair and must not be executed for future runs.",
+    "Surviving descendants after reaped leader reject final checks; cleanup timeout may prevent final receipt."
+  ]
+}

@@ -75,9 +75,10 @@ passes 1,231 cases with 97 environment skips, four assembly cases and all five
 shell suites. ARM execution and namespace setup are mocked in these tests.
 
 This recipe has not installed a package or produced a configured 221-package
-tree. The new outer orchestration, derived exporter, full output inspection and
-archive-profile binding still need implementation/execution. Independent source
-review does not establish successful package configuration or boot.
+tree. The [derived exporter](timesync-export.md) now passes independent
+source/host review. Outer orchestration, actual configuration/export, full output
+inspection and archive-profile binding still need implementation/execution.
+Independent source review does not establish successful package configuration or boot.
 
 A real run requires the pinned frozen Ubuntu 22.04 AMD64 environment, private
 UID/GID/network namespaces, read-only inputs and disk-backed work. Its 4 GiB

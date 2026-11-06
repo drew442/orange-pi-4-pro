@@ -44,8 +44,9 @@ by subsequent clean-build work.
   authenticated; the [fixed identity gate](timesync-identity.md) passes ARM checks.
   The [checkpoint guard/private views](timesync-state.md) verify file-backed
   ownership and timestamp preservation. An [offline 221-package recipe](timesync-userspace.md)
-  and explicit service policy pass source/input review; actual configuration,
-  export, package-state composition, installed transitions and synchronization
+  and explicit service policy pass source/input review. The [export adapter](timesync-export.md)
+  also passes source/host review; outer orchestration, actual configuration/export,
+  package-state composition, installed transitions and synchronization
   remain pending.
 - [Operator inputs](evidence/operator-inputs-20261105.json): RSA3072 and Ed25519
   keys, DHCP hostname `a733-host`, any source/subnet. Require public-key-only SSH.
@@ -99,7 +100,7 @@ by subsequent clean-build work.
   independent readback. The [explicit normalized profile](userspace-profiles.md) now integrates root/state
   selection and passes actual complete staging: 15,876 base entries, 220 packages,
   eight package-state components and the unchanged 39-file runtime. Latest native
-  discovery: **1,231 cases, 97 environment skips**,
+  discovery: **1,250 cases, 97 environment skips**,
   four assembly cases and all five shell suites. The [tracked outer launcher](userspace-pipeline-launcher.md)
   passes review and read-only plans; actual root preflight refuses insufficient
   capacity before output creation. Its full execution, production composition and

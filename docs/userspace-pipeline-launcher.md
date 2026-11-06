@@ -68,8 +68,11 @@ profile before the pipeline can report success.
 
 The complete root invocation retained in the evidence returned the expected
 capacity error. No successful build invocation is documented for this launcher
-yet. Once sufficient capacity is available, execute its committed prepared copy
-with a fresh tag and preserve all resulting records.
+yet. Once sufficient capacity is available, first stage an authenticated checkout
+of reviewed source commit `26cba70` or later, then execute it with a fresh tag and
+preserve all records. [Shared process cleanup](timesync-export.md) has since been
+repaired. The older protected checkout used for the capacity-refusal probe is a
+historical record and must not be used for execution.
 
 The output will be `work/export-result/rootfs.tar.gz` beneath that fresh phase.
 It is a userspace archive, not an SD image. Root/state composition still requires
