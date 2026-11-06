@@ -48,8 +48,12 @@ for p in /dev/mem /dev/kmem /dev/port /dev/kvm /dev/nvme*; do
 done
 printf 'A733_END devices\\n'
 printf 'A733_BEGIN firmware\\n'
-if [ -e /sys/firmware/efi ] || [ -L /sys/firmware/efi ]; then printf 'EFI present\\n'; fi
+[ -d /sys/firmware ]
+find /sys/firmware -mindepth 1 -print
 printf 'A733_END firmware\\n'
+printf 'A733_BEGIN firmware_mount\\n'
+awk '$5 == "/sys/firmware" { print $6 }' /proc/self/mountinfo
+printf 'A733_END firmware_mount\\n'
 command -v mknod >/dev/null || { echo 'mknod binary missing' >&2; exit 1; }
 mknod --version >/dev/null
 [ ! -e /tmp/a733-probe-block ] && [ ! -L /tmp/a733-probe-block ]
@@ -286,15 +290,14 @@ def audit_archive(path):
     return {'members': len(members), 'special_nodes': 0, 'symlink_parent_writes': 0}
 
 
-def nspawn_command(rootfs, probe, mask_firmware):
+def nspawn_command(rootfs, probe):
     command = ['/usr/bin/systemd-nspawn', '--directory=' + str(rootfs), '--settings=no',
                '--as-pid2', '--register=no', '--keep-unit', '--console=pipe',
                '--private-users=1048576:65536', '--private-users-ownership=chown',
                '--private-network', '--no-new-privileges=yes', '--drop-capability=' + ','.join(CAPABILITIES),
                '--resolv-conf=off', '--timezone=off', '--link-journal=no',
-               '--bind-ro=' + str(probe) + ':/a733-probe.sh']
-    if mask_firmware:
-        command.append('--inaccessible=/sys/firmware')
+               '--bind-ro=' + str(probe) + ':/a733-probe.sh',
+               '--bind-ro=' + str(probe.parent / 'firmware-empty') + ':/sys/firmware']
     return command + ['/bin/sh', '/a733-probe.sh']
 
 
@@ -302,7 +305,7 @@ def validate_probe(data):
     text = data.decode('utf-8')
     sections = {}
     for name in ('uid_map', 'gid_map', 'status', 'interfaces', 'routes', 'routes6',
-                 'devices', 'firmware', 'mknod', 'sentinel'):
+                 'devices', 'firmware', 'firmware_mount', 'mknod', 'sentinel'):
         pattern = r'^A733_BEGIN ' + name + r'\n(.*?)^A733_END ' + name + r'\n'
         matches = re.findall(pattern, text, re.MULTILINE | re.DOTALL)
         require(len(matches) == 1, 'Missing/duplicate probe section: ' + name)
@@ -324,6 +327,9 @@ def validate_probe(data):
                 fields[4] == '0' * 32 and fields[1] in ('00', '80'), 'IPv6 external route present')
     require(not sections['devices'].strip(), 'Forbidden device visible')
     require(not sections['firmware'].strip(), 'EFI firmware visible')
+    firmware_mount = sections['firmware_mount'].splitlines()
+    require(len(firmware_mount) == 1 and 'ro' in firmware_mount[0].split(','),
+            'Firmware mask must be one read-only mount')
     require(sections['mknod'].strip() == 'denied', 'Block mknod was not denied')
     require(sections['sentinel'].strip() == 'passed', 'Private ordinary write failed')
     return {'uid_base': UID_BASE, 'uid_count': UID_COUNT, 'network_interfaces': interfaces,
@@ -388,8 +394,7 @@ def construct(seed, output, repo=REPO):
     require(facts(seed) == SEED, 'Seed archive full hash/size mismatch')
     check_range_unused()
     help_text = run(['/usr/bin/systemd-nspawn', '--help'])
-    mask_firmware = b'--inaccessible=' in help_text and Path('/sys/firmware').exists()
-    option_probe_command = nspawn_command(output / 'rootfs', output / 'probe.sh', mask_firmware)[:-2] + ['--help']
+    option_probe_command = nspawn_command(output / 'rootfs', output / 'probe.sh')[:-2] + ['--help']
     option_probe_help = run(option_probe_command)
     if not WORKSPACE.exists():
         WORKSPACE.mkdir(mode=0o700)
@@ -420,15 +425,16 @@ def construct(seed, output, repo=REPO):
             managed_command(['/usr/bin/tar', '--extract', '--gzip', '--file=' + str(private_seed),
                              '--directory=' + str(rootfs), '--numeric-owner', '--same-owner',
                              '--same-permissions', '--keep-old-files', '--delay-directory-restore'], log)
-        if mask_firmware:
-            firmware_target = safe_path(rootfs / 'sys/firmware')
-            firmware_target.mkdir(mode=0o755, exist_ok=True)
+        firmware_empty = output / 'firmware-empty'
+        firmware_empty.mkdir(mode=0o555)
+        firmware_empty.chmod(0o555)
         probe = output / 'probe.sh'
         probe.write_bytes(PROBE)
         probe.chmod(0o444)
         report['probe_payload'] = facts(probe)
-        report['firmware_mask'] = mask_firmware
-        command = nspawn_command(rootfs, probe, mask_firmware)
+        report['firmware_mask'] = {'method': 'read-only empty directory bind',
+                                   'source': str(firmware_empty), 'destination': '/sys/firmware'}
+        command = nspawn_command(rootfs, probe)
         report['command'] = command
         write_json(output / 'provenance.json', report)
         check_range_unused()

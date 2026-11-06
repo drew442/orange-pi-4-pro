@@ -2,6 +2,7 @@
 import importlib.util
 import io
 import json
+import os
 from pathlib import Path
 import signal
 import subprocess
@@ -27,7 +28,8 @@ def probe_output(**changes):
         'routes': 'Iface Destination Gateway Flags RefCnt Use Metric Mask MTU Window IRTT\n',
         'routes6': '0' * 32 + ' 00 ' + '0' * 32 + ' 00 ' + '0' * 32 +
                    ' ffffffff 00000001 00000000 00200200 lo\n',
-        'devices': '', 'firmware': '', 'mknod': 'denied\n', 'sentinel': 'passed\n',
+        'devices': '', 'firmware': '', 'firmware_mount': 'ro,nosuid,nodev\n',
+        'mknod': 'denied\n', 'sentinel': 'passed\n',
     }
     sections.update(changes)
     return ''.join('A733_BEGIN ' + key + '\n' + value + 'A733_END ' + key + '\n'
@@ -90,7 +92,9 @@ class ProbeTests(unittest.TestCase):
                  {'routes6': '0' * 32 + ' 00 ' + '0' * 32 + ' 00 ' + '0' * 32 +
                              ' 00000000 00000001 00000000 00000000 eth0\n'},
                  {'devices': '/dev/kvm\n'}, {'devices': '/dev/loop0\n'},
-                 {'firmware': 'EFI present\n'}, {'mknod': 'allowed\n'}, {'sentinel': 'failed\n'}]
+                 {'firmware': 'EFI present\n'}, {'firmware_mount': ''},
+                 {'firmware_mount': 'rw,nodev\n'}, {'firmware_mount': 'ro\nro\n'},
+                 {'mknod': 'allowed\n'}, {'sentinel': 'failed\n'}]
         for change in cases:
             with self.subTest(change=change), self.assertRaises(ValueError):
                 builder.validate_probe(probe_output(**change))
@@ -112,15 +116,15 @@ class ProbeTests(unittest.TestCase):
                 builder.validate_probe(bad)
 
     def test_fixed_command_and_readonly_single_bind(self):
-        command = builder.nspawn_command(Path('/private/rootfs'), Path('/private/probe.sh'), True)
+        command = builder.nspawn_command(Path('/private/rootfs'), Path('/private/probe.sh'))
         self.assertIn('--private-users=1048576:65536', command)
         self.assertIn('--private-users-ownership=chown', command)
         self.assertIn('--private-network', command)
         self.assertIn('--no-new-privileges=yes', command)
         self.assertIn('--settings=no', command)
-        self.assertIn('--inaccessible=/sys/firmware', command)
         self.assertEqual([x for x in command if x.startswith('--bind')],
-                         ['--bind-ro=/private/probe.sh:/a733-probe.sh'])
+                         ['--bind-ro=/private/probe.sh:/a733-probe.sh',
+                          '--bind-ro=/private/firmware-empty:/sys/firmware'])
         self.assertEqual(command[-2:], ['/bin/sh', '/a733-probe.sh'])
 
 
@@ -282,8 +286,10 @@ class ReceiptTests(unittest.TestCase):
                     (output / 'rootfs/tmp').mkdir()
                     (output / 'rootfs/sys').mkdir()
                 else:
-                    if '--inaccessible=/sys/firmware' in argv:
-                        self.assertTrue((output / 'rootfs/sys/firmware').is_dir())
+                    firmware = output / 'firmware-empty'
+                    self.assertTrue(firmware.is_dir())
+                    self.assertFalse(list(firmware.iterdir()))
+                    self.assertEqual(firmware.stat().st_mode & 0o777, 0o555)
                     log.write(probe_output())
                     if mode == 'probe_failure':
                         raise ValueError('fixture probe failure')
@@ -325,6 +331,13 @@ class ReceiptTests(unittest.TestCase):
         receipt = self.construct_fixture('success')
         self.assertTrue(receipt['success'])
         self.assertTrue(receipt['ownership_shift']['persistent'])
+
+    def test_firmware_bind_source_remains_searchable_under_private_umask(self):
+        previous = os.umask(0o077)
+        try:
+            self.assertTrue(self.construct_fixture('success')['success'])
+        finally:
+            os.umask(previous)
 
     def test_probe_failure_keeps_evidence_and_checks_host_inventory(self):
         receipt = self.construct_fixture('probe_failure')
