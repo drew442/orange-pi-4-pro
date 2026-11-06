@@ -134,7 +134,9 @@ environment now reproduce the authenticated binary and boot package exactly.
 [The kernel replay](evidence/frozen-kernel-replay-20261106.json) now matches
 Image, DTB, configuration and all 332 regular module files from the original
 authenticated initramfs. Independent manifest review, complete package/source
-postchecks and namespace cleanup pass. Complete-image rebuilds remain pending.
+postchecks and namespace cleanup pass. [Both full deployment SD images](sd-image-reproduction.md)
+now reproduce their raw/gzip bytes with regenerated initramfs files and a tracked
+recipe. NVMe/root/userspace reconstruction remains pending.
 Keep service, capability/device and network restrictions throughout the remaining
 build work. Hardware KVM execution and all
 [release gates](hardware-validation.md) remain separate requirements; no

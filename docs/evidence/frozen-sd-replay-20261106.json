@@ -1,0 +1,235 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Whole host/installer SD reproduction in the restored frozen Ubuntu builder using authenticated fresh compiled boot components and a retained binary userspace archive; no hardware acceptance",
+  "success": true,
+  "producer_commit": "de5eb78d02869de0ac0f02b7a26a2d97e9e07cf6",
+  "recipe": {
+    "path": "build/replay-sd-images.py",
+    "bytes": 16589,
+    "sha256": "b41b29c52e53cde1979da73984fc9f25249141ef0d475c95e6239f81205bddcd"
+  },
+  "builder_image_lock": "configs/builder-image-20261106.lock.json",
+  "fresh_kernel_evidence": "frozen-kernel-replay-20261106.json",
+  "fresh_uboot_evidence": "frozen-uboot-replay-20261106.json",
+  "products": {
+    "host": {
+      "raw": {
+        "bytes": 268435456,
+        "sha256": "2d22d84ada37a5b5d3696cc913caddcb31c0e681e65185005ea56ca0b8396329"
+      },
+      "gzip": {
+        "bytes": 17272170,
+        "sha256": "f6c7a421dec4acb6a5c00a02cf8ff7c9291116de9bbfc6204229965f40c9ca0a"
+      }
+    },
+    "installer": {
+      "raw": {
+        "bytes": 268435456,
+        "sha256": "2e16dea5e2941823bf8b40f1687ac417a67c91cecd87173b109fed23ca932499"
+      },
+      "gzip": {
+        "bytes": 39265814,
+        "sha256": "5e3a006a4e60d853e8282284c8d0968702ff84842ceb7f9fca43ae1347cf84ff"
+      }
+    }
+  },
+  "comparisons": {
+    "host": true,
+    "installer": true
+  },
+  "boot_profile": "experimental-el2",
+  "state_uuid": "00fd936c-49fb-4fea-87c8-928b9c1599e0",
+  "legacy_module_carrier": {
+    "bytes": 3650395,
+    "sha256": "e2b09f56f4df8cfd52b98c0f1fe018c92a0806d8cac6ee065c6ac31b15e6ca30"
+  },
+  "uImage": {
+    "bytes": 27283528,
+    "sha256": "6f9269755c4c2bc196c094899fa1ff20292f4d762c4000f77fcbb0887d5f154a"
+  },
+  "legacy_recipe_source": {
+    "archive": {
+      "bytes": 28423,
+      "sha256": "7ebf42a6b87ca785cc3f2866316fbae8a20948de7771947ba60d7c2a2e8c43a2"
+    },
+    "git_commit": "d869c818d14fb3c6ad15fe8146e39613f1e7a45b",
+    "inherited_umask": "0002",
+    "archived_modes_preserved": true
+  },
+  "current_packaging_umask": "0022",
+  "reused_binary_userspace": {
+    "bytes": 169852145,
+    "sha256": "1967e76c0c831c1c0bab432e7116457d4372c15b413090c054f8958b72dcb392"
+  },
+  "core_inputs": {
+    "/a733-debs/rootfs.tar.gz": {
+      "bytes": 169852145,
+      "sha256": "1967e76c0c831c1c0bab432e7116457d4372c15b413090c054f8958b72dcb392"
+    },
+    "/a733-debs/busybox": {
+      "bytes": 1794520,
+      "sha256": "0a41864f87a0737804f0f4a68a1cfa1ed22374f4f75a1be3eb376e2659ce1316"
+    },
+    "/a733-debs/baseline-build-recipe.tar.gz": {
+      "bytes": 28423,
+      "sha256": "7ebf42a6b87ca785cc3f2866316fbae8a20948de7771947ba60d7c2a2e8c43a2"
+    },
+    "/a733-debs/boot_package.fex": {
+      "bytes": 1392640,
+      "sha256": "b20c3d1133aee6474416bc9846b0bf94d5439aa12d7f7555b44607105ddab3b6"
+    },
+    "/home/drew/orange-pi-4-pro-build/vendor/external/packages/pack-uboot/sun60iw2/bin/boot0_sdcard_a733.fex": {
+      "bytes": 245760,
+      "sha256": "9213f1c56ef932930d43b5751e8937bea0e9ae7460ec16187cc1b0dffdb75345"
+    },
+    "/a733-sources/Image": {
+      "bytes": 27283464,
+      "sha256": "9df974c55fa61a77e8fe812652780dad471527eb9615c27838f481887d4c50e7"
+    },
+    "/a733-sources/board.dtb": {
+      "bytes": 209320,
+      "sha256": "4d7d964a54668cf5dc12cd4bf7e72a625c79883541272aeba1a91adbbedb86ed"
+    },
+    "/a733-sources/kernel.config": {
+      "bytes": 212080,
+      "sha256": "8a29d9c36e52db7e8a7d6ff757dc69e660f4273c99e5f00c5dbc5a9b7e060675"
+    }
+  },
+  "builder_profile_before_after_equal": true,
+  "exact_builder_packages": 842,
+  "commands_returning_zero": 9,
+  "builder_directory": "/var/lib/a733-clean-replay-20261106/sd-run-formal-02",
+  "native_directory": "/home/drew/orange-pi-4-pro/out/frozen-sd-replay-20261106/formal-complete",
+  "outer_command": [
+    "/usr/bin/systemd-nspawn",
+    "--directory=/var/lib/a733-frozen-builders/freeze-20261106-01/restored-rootfs",
+    "--settings=no",
+    "--as-pid2",
+    "--register=no",
+    "--keep-unit",
+    "--console=pipe",
+    "--private-users=1048576:65536",
+    "--private-users-ownership=off",
+    "--private-network",
+    "--no-new-privileges=yes",
+    "--drop-capability=CAP_SYS_ADMIN,CAP_SYS_MODULE,CAP_SYS_RAWIO,CAP_SYS_BOOT,CAP_SYS_TIME,CAP_MKNOD,CAP_NET_ADMIN",
+    "--resolv-conf=off",
+    "--timezone=off",
+    "--link-journal=no",
+    "--bind-ro=/var/lib/a733-clean-builder/seed-probe-20261106-05/probe.sh:/a733-probe.sh",
+    "--bind-ro=/var/lib/a733-clean-builder/seed-probe-20261106-05/firmware-empty:/sys/firmware",
+    "--read-only",
+    "--bind-ro=/var/lib/a733-clean-replay-20261106/home:/home",
+    "--bind=/var/lib/a733-clean-replay-20261106/sd-run-formal-02/work:/a733-export-output",
+    "--bind=/var/lib/a733-clean-replay-20261106/sd-run-formal-02/scratch:/var/tmp",
+    "--bind-ro=/var/lib/a733-sd-replay-inputs-20261106:/a733-debs",
+    "--bind-ro=/var/lib/a733-clean-replay-20261106/kernel-run-01/work/project/out/kernel-replay-frozen-20261106-01/artifacts:/a733-sources",
+    "--bind-ro=/var/lib/a733-sd-replay-inputs-20261106/frozen-sd-formal-inner.py:/a733-install.sh",
+    "/bin/sh",
+    "-c",
+    "/bin/sh /a733-probe.sh && exec /usr/bin/python3 -I -B /a733-install.sh"
+  ],
+  "namespace_probe": {
+    "uid_base": 1048576,
+    "uid_count": 65536,
+    "network_interfaces": [
+      "lo"
+    ],
+    "ipv6_loopback_routes": [
+      "00000000000000000000000000000001 80 00000000000000000000000000000000 00 00000000000000000000000000000000 00000100 00000001 00000000 00000001       lo",
+      "00000000000000000000000000000000 00 00000000000000000000000000000000 00 00000000000000000000000000000000 ffffffff 00000001 00000000 00200200       lo",
+      "00000000000000000000000000000001 80 00000000000000000000000000000000 00 00000000000000000000000000000000 00000000 00000002 00000000 80200001       lo",
+      "00000000000000000000000000000000 00 00000000000000000000000000000000 00 00000000000000000000000000000000 ffffffff 00000001 00000000 00200200       lo"
+    ],
+    "prohibited_capability_mask": "0xa631000"
+  },
+  "resources": {
+    "samples": 19,
+    "minimum_free_bytes": 7572463616,
+    "minimum_available_memory_bytes": 7153242112
+  },
+  "native_postchecks": {
+    "remote_log_receipt_result_hashes_match": true,
+    "regular_files_fsynced": 1502,
+    "mapped_processes_remaining": []
+  },
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "recipe_hash": "b41b29c52e53cde1979da73984fc9f25249141ef0d475c95e6239f81205bddcd",
+    "native_sd_inspectors": "Both pass for final formal replay and preceding successful one-off; four raw/gzip products rehashed against committed anchors.",
+    "runtime_entries_validated": 1462,
+    "formal_project_records": 440,
+    "authenticated_core_inputs": 8,
+    "all_legacy_source_modes_verified": true,
+    "formal_replay_postchecks": "Passed: nine command returncodes zero, 842-package profiles equal, successful isolation probe, input reauthentication and golden raw/gzip files."
+  },
+  "regressions": {
+    "unittest_cases": 939,
+    "native_skips": 95,
+    "assembly_cases": 4,
+    "shell_suites": 5,
+    "focused_recipe_tests": 10
+  },
+  "first_successful_replay": {
+    "source_commit": "a60157cdba0839957f7ba7b18e4cd46c8c96cae8",
+    "builder_directory": "/var/lib/a733-clean-replay-20261106/sd-run-03",
+    "native_directory": "out/frozen-sd-replay-20261106/success-03",
+    "both_raw_and_gzip_images_match": true
+  },
+  "preserved_failed_attempts": [
+    {
+      "run": "sd-run-01",
+      "reason": "Missing /usr/sbin in child PATH; stopped at mkfs.ext4 lookup after initramfs regeneration.",
+      "native_records": "out/frozen-sd-replay-20261106/failed-01"
+    },
+    {
+      "run": "sd-run-02",
+      "reason": "Host SD matches target, inspector stopped at read-only /var/tmp; supplied private disk scratch bind in new run.",
+      "native_records": "out/frozen-sd-replay-20261106/failed-02"
+    },
+    {
+      "run": "sd-run-formal-01",
+      "commit": "70a0b0e58a4f975217578755f8f38fa8c43a6b20",
+      "reason": "Formal extraction normalized GPL notice 0664 to0644; pinned cpio comparison stopped. Fixed authenticated mode preservation and added regression before new committed run.",
+      "native_records": "out/frozen-sd-replay-20261106/formal-failed-01"
+    }
+  ],
+  "raw_records": {
+    "out/frozen-sd-replay-20261106/formal-complete/sd-replay-receipt.json": {
+      "bytes": 4720,
+      "sha256": "43681873c5b6bc46f004b1a9fb572846d47817b5bb62e3dffcbd002ffd091966"
+    },
+    "out/frozen-sd-replay-20261106/formal-complete/sd-replay.log": {
+      "bytes": 72767,
+      "sha256": "e018883c7c4c7a56ae1cfe46eca087a79ea132eb556a77ebdc1117c30aa5ecf7"
+    },
+    "out/frozen-sd-replay-20261106/formal-complete/work/project/out/sd-replay-frozen-formal-20261106-01/result.json": {
+      "bytes": 85649,
+      "sha256": "235e0795660d0ccac04d845e9b33071f6677c86265761ec438f5af3413c24635"
+    },
+    "out/frozen-sd-replay-20261106/formal-complete/work/project/out/sd-replay-frozen-formal-20261106-01/logs/commands.json": {
+      "bytes": 4504,
+      "sha256": "04ba9877a860db62b5931ea31056005e4f220fd231ac10b62ebec0334323e559"
+    },
+    "out/frozen-sd-replay-20261106/formal-complete/work/project/out/host-sd-frozen-formal-20261106-01/manifest.json": {
+      "bytes": 9100,
+      "sha256": "621b89ff0c814866afdca0423739de7edd7cb8a99f854236762066523ff5b932"
+    },
+    "out/frozen-sd-replay-20261106/formal-complete/work/project/out/installer-sd-frozen-formal-20261106-01/manifest.json": {
+      "bytes": 15436,
+      "sha256": "52c337b49950362385cd023c9a2289e378a557981766f4d07dfae537454a043d"
+    }
+  },
+  "actual_sd_bytes": 1977614336,
+  "spare_bytes_per_raw_image": 1709178880,
+  "physical_target_writes": false,
+  "hardware_acceptance": false,
+  "limits": [
+    "The binary ARM64 rootfs archive is an authenticated retained input, not reconstructed by this SD recipe.",
+    "Full NVMe root/state/disk reconstruction in the frozen environment remains open.",
+    "No SD reflash is needed for this reproduction: existing published image bytes and paths are unchanged.",
+    "Actual physical deployment, both-key SSH, KVM guest, endurance, zero routine SD writes, update/rollback/recovery/restore and reproduced operator deployment remain open."
+  ]
+}

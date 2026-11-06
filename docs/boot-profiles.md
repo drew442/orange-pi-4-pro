@@ -67,11 +67,14 @@ installer initramfs and installer raw/gzip/initrd byte for byte. Both independen
 SD inspections passed again. This repeats packaging with authenticated cached
 inputs; it is not a clean-builder acquisition or physical deployment reproduction.
 
-Both raw SD images are 268,435,456 bytes and fit the actual 1,977,614,336-byte card.
-**The host bootstrap is a fixture**, referencing state UUID
-`cbc5029f-e3e3-45b6-a4ed-5a5cad32f3db` with test management inputs. Neither image
-has booted on the board. Keep using the diagnostic test instructions until EL2
-is observed; do not substitute these preparation images for a real installation.
+Those historical 256 MiB images fit the actual 1,977,614,336-byte card, but
+the host bootstrap references fixture state UUID
+`cbc5029f-e3e3-45b6-a4ed-5a5cad32f3db`. Use the current
+[personalized deployment](deploy-personalized-20261106.md), which pairs the host
+SD with actual state UUID `00fd936c-49fb-4fea-87c8-928b9c1599e0`. EL2/VHE has
+been observed physically; installed-host boot and guest execution remain pending.
+[Both current SD images](sd-image-reproduction.md) now reproduce byte for byte
+inside the frozen builder with freshly rebuilt boot components.
 
 ## NVMe pairing and compatibility
 
@@ -87,9 +90,9 @@ images with absent profile metadata, provided all boot pins and baseline evidenc
 provenance match. An EL2 image cannot pass the default baseline verification.
 The explicit flag is required for both construction and inspection of EL2 images.
 
-A new complete NVMe image with this profile has not been assembled. It awaits
-real administrator/network configuration and measured logical/physical sector
-geometry, then adequate staging space and complete image/readback validation.
-Published 250,000,000,000-byte disk fixtures remain nondeployable. Profile tests
-and file inspection do not establish board networking, NVMe installation, SPI
-boot, zero routine SD writes or actual KVM guest execution.
+The [personalized NVMe candidate](evidence/personalized-nvme-20261106.json) uses
+this profile, both real administration keys, actual 512/512 geometry and the
+256,060,514,304-byte capacity. Complete software inspection passes; physical
+installation remains pending. Historical 250,000,000,000-byte fixtures remain
+nondeployable. Neither packaging nor inspection establishes installed-host
+network reliability, SPI boot, zero routine SD writes or actual KVM execution.

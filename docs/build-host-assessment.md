@@ -64,8 +64,11 @@ Image/DTB/configuration and all 332 regular module files. Independent review
 verifies all 2,556 manifest entries and postchecks. Two-job compilation sampled
 minima of 10.13 GB disk free and 6.48 GB RAM available. The old kernel cache is
 retained on codex, where full restoration, archive comparison and Git object
-checks pass. Whole-image reproduction remains open; recheck resources before
-further staging and preserve the existing guards.
+checks pass. [Both full SD images](sd-image-reproduction.md) now reproduce
+inside the frozen builder, including standalone inspections. The final formal
+run stayed above 7.57 GB disk free and 7.15 GB RAM available. NVMe/root/userspace
+reconstruction remains open; recover capacity and recheck all guards before
+further staging.
 
 ## Local host assessment
 

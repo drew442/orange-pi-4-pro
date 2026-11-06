@@ -196,7 +196,12 @@ backup/recovery and SPI-specific programming authorization remain outstanding.
    authenticated anchors. Independent review rehashed all 2,556 manifest
    entries with zero mismatches; package/source postchecks and namespace cleanup
    pass. Two-job compilation stayed above 10.13 GB free disk and 6.48 GB available
-   RAM. Whole-image reproduction remains open; kernel/NVMe guards remain mandatory.
+   RAM. [Both deployment SD images](sd-image-reproduction.md) now reproduce
+   raw/gzip bytes in a clean committed checkout inside the frozen builder;
+   regenerated initramfs/runtime and independent inspections pass. The tracked
+   replay recipe passes ten focused tests and an actual end-to-end run. Current
+   published images remain unchanged. Reconstructing the complete NVMe roots/state/
+   disk and userspace base in this environment remains open; preserve all guards.
    The [26-input license inventory](evidence/vendor-boot-license-inventory-20261106.json)
    records missing attribution/grants. All [479 userspace source archives](evidence/userspace-sources-acquired-20261106.json)
    for the 220 binary packages are acquired and independently rehashed.
