@@ -1,5 +1,10 @@
 # NVMe root/state handoff prototype
 
+Historical generated paths below may have been archived. Consult the
+[retention map](build-cache-retention.md#replay-and-prototype-output-retention)
+before reusing them; use the [personalized deployment](deploy-personalized-20261106.md)
+for the current installation.
+
 The current generic host initramfs is 4,762,380 bytes, SHA-256
 `e310593ef5a5cfa433be7a7b46b86231c134a3008694bfb86f8a6e14b920c0ef`. Its
 immutable `/etc/a733-boot.conf` identifies state UUID

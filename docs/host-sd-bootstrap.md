@@ -1,9 +1,14 @@
 # SD bootstrap for the NVMe host
 
+Historical generated paths below may have been archived. Consult the
+[retention map](build-cache-retention.md#replay-and-prototype-output-retention)
+before reusing them; use the [personalized deployment](deploy-personalized-20261106.md)
+for the current installation.
+
 The [explicit EL2 packaging profile](boot-profiles.md) prepares the locked
-experimental handoff without changing the baseline artifacts below. The next
-physical action remains the [EL2 diagnostic test](el2-diagnostic.md); hardware
-KVM and deployment acceptance are still open.
+experimental handoff without changing the baseline artifacts below. Physical
+EL2/KVM initialization is now observed; the current installation uses the
+personalized deployment above. Guest execution and deployment acceptance remain open.
 
 
 A complete 256 MiB host SD candidate has been assembled and inspected as an

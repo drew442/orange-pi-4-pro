@@ -1,5 +1,10 @@
 # Host updates and manual rollback
 
+Historical generated paths below may have been archived. Consult the
+[retention map](build-cache-retention.md#replay-and-prototype-output-retention)
+before reusing them; use the [personalized deployment](deploy-personalized-20261106.md)
+for the current installation.
+
 Routine updates must replace the inactive 4 GiB NVMe root, verify its complete
 contents, and then explicitly publish its selector on NVMe state. The current
 implementation prepares authenticated **files on the builder** and provides a

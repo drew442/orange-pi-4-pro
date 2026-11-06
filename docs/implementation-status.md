@@ -174,13 +174,19 @@ backup/recovery and SPI-specific programming authorization remain outstanding.
    build IDs without patching bytes. Source caches and the prepared builder were
    reused; independent clean-builder construction remains open.
    [Verified archival](evidence/failed-kernel-source-retention-20261106.json)
-   recovered 5.27 GB before launch. [Builder archive pins](../configs/builder-package-archives-20261106.lock.json)
+   recovered 5.27 GB before launch. Its restored Git metadata now passes a full
+   object check on codex without the original builder path, correcting the earlier
+   borrowed-object dependency claim; full working-tree recovery is not claimed.
+   [Builder archive pins](../configs/builder-package-archives-20261106.lock.json)
    cover all 842 locked versions. [All indexed pins are authenticated](evidence/builder-index-signatures-20261106.json),
    and [all 842 archives are acquired](evidence/builder-packages-acquired-20261106.json)
    with complete on/off-host readback and unchanged installed inventory. The
    [signed AMD64 build seed](../configs/builder-base-20261106.lock.json) is retained.
-   Recover [measured cache headroom](evidence/clean-builder-capacity-20261106.json),
-   then construct and validate the isolated immutable builder; that gate remains open.
+   [Verified output-tree retention](evidence/build-output-retention-20261106.json)
+   now leaves 25,061,138,432 bytes free, meeting the 25 GB construction planning
+   target. Six complete archives and raw reports are retained on codex; historical
+   generated paths require restoration using the [retention map](build-cache-retention.md#replay-and-prototype-output-retention).
+   Construct and validate the isolated immutable builder next; that gate remains open.
    The [26-input license inventory](evidence/vendor-boot-license-inventory-20261106.json)
    records available/missing attribution. All [479 userspace source archives](evidence/userspace-sources-acquired-20261106.json)
    for the 220 binary packages are acquired and independently rehashed.

@@ -1,5 +1,10 @@
 # Explicit boot profiles for prepared host and installer images
 
+Historical generated paths below may have been archived. Consult the
+[retention map](build-cache-retention.md#replay-and-prototype-output-retention)
+before reusing them; use the [personalized deployment](deploy-personalized-20261106.md)
+for the current installation.
+
 The original board boot reached Linux at EL1 and could not initialize KVM.
 The [separate EL2 diagnostic](el2-diagnostic.md) has physically entered EL2 on all eight CPUs with KVM VHE initialization; actual guest execution remains pending.
 Host/installer/NVMe packaging now accepts an **explicit** locked profile so

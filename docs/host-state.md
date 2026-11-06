@@ -1,11 +1,17 @@
 # Per-installation NVMe state payload
 
-The current state image is an 8 GiB journaled ext4 per-installation fixture. It
-has not been written to NVMe or booted. Its test MAC/CIDR and operator public
+Historical generated paths below may have been archived. Consult the
+[retention map](build-cache-retention.md#replay-and-prototype-output-retention)
+before reusing them; use the [personalized deployment](deploy-personalized-20261106.md)
+for the current installation.
+
+The historical state image below is an 8 GiB journaled ext4 per-installation
+fixture. It has not been written to NVMe or booted. Its test MAC/CIDR and operator public
 key are unsuitable for deployment; the corresponding temporary private key was
 deleted. The [real operator inputs](evidence/operator-inputs-20261105.json) now supply
-the Ethernet identity, two keys and any-source SSH policy. Fresh installation
-artifacts remain required. Never clone prepared state across hosts.
+the Ethernet identity, two keys and any-source SSH policy. The personalized
+deployment supplies the current installation artifacts. Never clone prepared
+state across hosts.
 
 The recipe copies `/var` from authenticated userspace and seeds the state
 contract, management configuration, machine-id, filesystem UUID, and

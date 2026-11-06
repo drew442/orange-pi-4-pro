@@ -16,6 +16,12 @@
     "bytes": 37294,
     "sha256": "79a64f12d5b5ec61b120ff192fe2b3fc76cefd7a326e8adb924845e55895cb84"
   },
-  "safe_next_action": "Identify superseded generated fixture/replay trees, independently review exact retirement boundaries, archive and compare every member, verify durable off-host copies and retained manifests, then release only idle generated copies. Do not remove current deployment artifacts or original pinned Git dependencies blindly.",
-  "guards": "Full-kernel >15GB start, 3GB monitor threshold and NVMe assembly 22GiB remain unchanged."
+  "safe_next_action": "Construct and validate the isolated builder using authenticated base/package inputs. Recheck actual disk/memory before each stage; package maintainer scripts require isolation from host devices and services. Existing build guards remain mandatory.",
+  "guards": "Full-kernel >15GB start, 3GB monitor threshold and NVMe assembly 22GiB remain unchanged.",
+  "subsequent_verified_retention": {
+    "evidence": "docs/evidence/build-output-retention-20261106.json",
+    "measured_free_bytes": 25061138432,
+    "planning_target_met": true,
+    "scope": "Six generated output trees retained off-host; current deployment, operator inputs, binary package archives and original pinned source caches excluded."
+  }
 }

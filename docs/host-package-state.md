@@ -1,5 +1,10 @@
 # Package metadata across A/B roots
 
+Historical generated paths below may have been archived. Consult the
+[retention map](build-cache-retention.md#replay-and-prototype-output-retention)
+before reusing them; use the [personalized deployment](deploy-personalized-20261106.md)
+for the current installation.
+
 The interim Debian host now keeps version-owned package metadata with each
 immutable root. Software fixtures and artifact checks pass; no installed update,
 real rollback, systemd boot or hardware acceptance has been demonstrated.

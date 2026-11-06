@@ -1,10 +1,15 @@
 # Management runtime prototype
 
+Historical generated paths below may have been archived. Consult the
+[retention map](build-cache-retention.md#replay-and-prototype-output-retention)
+before reusing them; use the [personalized deployment](deploy-personalized-20261106.md)
+for the current installation.
+
 Managed roots contain `a733-management-v1`. This interim Debian prototype has
 passed file and ARM userspace checks, but has not booted on the A733 or accepted
-an SSH connection. The [diagnostic image](diagnostic-image.md) remains the first
-hardware boot. Buildroot and the release-base decision follow baseline hardware
-validation as specified in the [plan](hypervisor-plan.md).
+an SSH connection. The installer-preparation image has physically booted; use
+the personalized deployment above for installation. Buildroot and the release-base
+decision follow baseline hardware validation in the [plan](hypervisor-plan.md).
 
 ## Persistent inputs and activation
 

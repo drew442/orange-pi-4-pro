@@ -38,6 +38,56 @@ Transfer and authenticate them at their original paths before those commands.
 The reviewed relocation script and durable verification/acknowledgment records
 are retained beside the copies. No physical NVMe or SPI operation occurred.
 
+## Replay and prototype output retention
+
+The [2026-11-06 output-tree record](evidence/build-output-retention-20261106.json)
+identifies six generated trees retained on **codex**, under the root-private
+`/var/lib/a733-builder-retained-20261106/build-output-trees/` directory.
+Each archive is named `TAG.tar.gz`; the evidence records its exact length/hash.
+After all archive descriptors closed, the builder had **25,061,138,432 bytes
+free**, meeting the 25 GB construction planning allowance. Recheck before each
+stage; full-kernel and NVMe assembler guards remain unchanged. These archives
+replace the following expanded **builder** paths:
+
+| Tag | Original builder output directory |
+| --- | --- |
+| `kernel-replay` | `/var/lib/a733-kernel-replay-work-20261106/out` |
+| `uboot-replay` | `/var/lib/a733-uboot-replay-work-20261106/out` |
+| `management` | `/home/drew/orange-pi-4-pro-build/management-work-20261104/out` |
+| `package-state` | `/home/drew/orange-pi-4-pro-build/package-state-work-20261104/out` |
+| `package-state-clean` | `/home/drew/orange-pi-4-pro-build/package-state-clean-20261104/out` |
+| `project` | `/home/drew/orange-pi-4-pro-build/project/out` |
+
+Historical manifests keep their original paths and bytes. Before rerunning a
+historical command using a retired path, copy its archive into a fresh private
+ordinary-file staging directory on the builder and authenticate its complete
+size/hash against the record. Stop all users of the target and require its
+`out` directory to be absent. As root, extract into the exact original parent
+using GNU tar with `--keep-old-files --same-owner --acls --xattrs
+--xattrs-include='*'`; preserve sparse files and refuse an existing destination.
+Run GNU tar comparison against the restored tree before use. Do not overlay a
+newer build. Allow at least the recorded original allocation plus staging and
+operating headroom. Full restoration of these actual trees has not been
+exercised; disposable restoration tests cover sparse files, links, ACLs, xattrs,
+ownership and device metadata.
+
+Each live tree passed exact archive-member-set and GNU tar comparisons. The
+coordinator fully hashed and fsynced a root-owned off-host copy, held its file
+descriptor through retirement, and repeated the hash afterward. Retirement
+moved the selected tree into private quarantine, checked its identity/facts
+and contents again, then removed it through a pinned directory descriptor.
+Only afterward was the redundant builder archive unlinked. All 43 raw builder
+records also have verified off-host copies under `builder-records/`. Reports
+remain at `/var/lib/a733-clean-builder-retention-20261106/`; native before/after
+receipts and the reviewed tool/test files remain beside the retained copies.
+Independent Sol high review and actual Jammy/Python 3.10 disposable tests pass.
+The 3 GiB sampled cancellation threshold is not a guaranteed continuous floor.
+
+Current deployment work under `/var/lib/a733-deployment-work-20261106`, operator
+inputs, package archives and original pinned source caches were excluded.
+The current installer/host SD images and personalized NVMe bundle are unchanged.
+This archival does not establish physical boot, installation or recovery.
+
 ## Failed full-kernel source retention
 
 The [failed replay working tree](evidence/failed-kernel-source-retention-20261106.json)

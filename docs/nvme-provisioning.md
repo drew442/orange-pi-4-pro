@@ -1,5 +1,10 @@
 # NVMe provisioning preparation
 
+Historical generated paths below may have been archived. Consult the
+[retention map](build-cache-retention.md#replay-and-prototype-output-retention)
+before reusing them; use the [personalized deployment](deploy-personalized-20261106.md)
+for the current installation.
+
 The [personalized candidate](evidence/personalized-nvme-20261106.json) now uses
 actual 256,060,514,304-byte geometry, 512/512 sectors, both real keys and the
 physically proven EL2 boot stack. Its complete raw/encoded software verification

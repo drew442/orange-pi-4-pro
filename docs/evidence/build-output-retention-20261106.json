@@ -1,0 +1,378 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Verified off-host archival and retirement of six idle generated output trees; no board storage operation",
+  "builder": "drew@build.drewnet.online",
+  "native_host": "codex.drewnet.online",
+  "initial_free_bytes": 9008193536,
+  "final_free_bytes_after_all_descriptors_closed": 25061138432,
+  "final_resource_sample_utc": "2026-11-06T12:52:22.385669+00:00",
+  "final_resources": {
+    "MemAvailable": 7441981440,
+    "SwapFree": 4140683264
+  },
+  "planning_target_free_bytes": 25000000000,
+  "planning_target_met": true,
+  "archives": [
+    {
+      "tag": "kernel-replay",
+      "original_builder_source": "/var/lib/a733-kernel-replay-work-20261106/out",
+      "native_archive": "/var/lib/a733-builder-retained-20261106/build-output-trees/kernel-replay.tar.gz",
+      "archive_bytes": 2274799905,
+      "archive_sha256": "8db3e034991dc05720e287f2eb9bdf9b82ca54776e088ff4b44f07889d574b47",
+      "exact_entries": 228786,
+      "original_allocated_bytes": 7779495936,
+      "manifest_files_bound_without_schema_validation": 20,
+      "sampled_min_free_bytes_during_compression": 6735147008,
+      "tar_compare_before_archive_retirement_and_after_quarantine": "passed",
+      "native_full_hash_fsync_before_after": "passed",
+      "source_and_redundant_builder_archive_removed": true,
+      "public_source_path_exists_after_retirement": false,
+      "retirement_utc_epoch": 1793968783.3657136
+    },
+    {
+      "tag": "uboot-replay",
+      "original_builder_source": "/var/lib/a733-uboot-replay-work-20261106/out",
+      "native_archive": "/var/lib/a733-builder-retained-20261106/build-output-trees/uboot-replay.tar.gz",
+      "archive_bytes": 820757853,
+      "archive_sha256": "662e0f8f094aa970229a2208defcdd50a8aed06c8094b1bde69ff5b708d86958",
+      "exact_entries": 52935,
+      "original_allocated_bytes": 2467012608,
+      "manifest_files_bound_without_schema_validation": 8,
+      "sampled_min_free_bytes_during_compression": 15886192640,
+      "tar_compare_before_archive_retirement_and_after_quarantine": "passed",
+      "native_full_hash_fsync_before_after": "passed",
+      "source_and_redundant_builder_archive_removed": true,
+      "public_source_path_exists_after_retirement": false,
+      "retirement_utc_epoch": 1793968936.151119
+    },
+    {
+      "tag": "management",
+      "original_builder_source": "/home/drew/orange-pi-4-pro-build/management-work-20261104/out",
+      "native_archive": "/var/lib/a733-builder-retained-20261106/build-output-trees/management.tar.gz",
+      "archive_bytes": 757527686,
+      "archive_sha256": "f4e0d8321513ae31c2c3e0e73deeed6599214af125925cd62c48ea1605df92da",
+      "exact_entries": 47,
+      "original_allocated_bytes": 1556840448,
+      "manifest_files_bound_without_schema_validation": 3,
+      "sampled_min_free_bytes_during_compression": 18397933568,
+      "tar_compare_before_archive_retirement_and_after_quarantine": "passed",
+      "native_full_hash_fsync_before_after": "passed",
+      "source_and_redundant_builder_archive_removed": true,
+      "public_source_path_exists_after_retirement": false,
+      "retirement_utc_epoch": 1793969091.705735
+    },
+    {
+      "tag": "package-state",
+      "original_builder_source": "/home/drew/orange-pi-4-pro-build/package-state-work-20261104/out",
+      "native_archive": "/var/lib/a733-builder-retained-20261106/build-output-trees/package-state.tar.gz",
+      "archive_bytes": 774101920,
+      "archive_sha256": "4a9843802c8c435617085ded4b19cde3d9b701a7efa90367a47b0411443d976d",
+      "exact_entries": 1850,
+      "original_allocated_bytes": 1510932480,
+      "manifest_files_bound_without_schema_validation": 7,
+      "sampled_min_free_bytes_during_compression": 19939794944,
+      "tar_compare_before_archive_retirement_and_after_quarantine": "passed",
+      "native_full_hash_fsync_before_after": "passed",
+      "source_and_redundant_builder_archive_removed": true,
+      "public_source_path_exists_after_retirement": false,
+      "retirement_utc_epoch": 1793969256.7733278
+    },
+    {
+      "tag": "package-state-clean",
+      "original_builder_source": "/home/drew/orange-pi-4-pro-build/package-state-clean-20261104/out",
+      "native_archive": "/var/lib/a733-builder-retained-20261106/build-output-trees/package-state-clean.tar.gz",
+      "archive_bytes": 746880302,
+      "archive_sha256": "d477b5eb01df6359125527df7233a6ef07ed70edbbb6d949e7279718bdb4d0c0",
+      "exact_entries": 44,
+      "original_allocated_bytes": 1412853760,
+      "manifest_files_bound_without_schema_validation": 5,
+      "sampled_min_free_bytes_during_compression": 21480738816,
+      "tar_compare_before_archive_retirement_and_after_quarantine": "passed",
+      "native_full_hash_fsync_before_after": "passed",
+      "source_and_redundant_builder_archive_removed": true,
+      "public_source_path_exists_after_retirement": false,
+      "retirement_utc_epoch": 1793969365.6882353
+    },
+    {
+      "tag": "project",
+      "original_builder_source": "/home/drew/orange-pi-4-pro-build/project/out",
+      "native_archive": "/var/lib/a733-builder-retained-20261106/build-output-trees/project.tar.gz",
+      "archive_bytes": 696043715,
+      "archive_sha256": "e6c116c7cb0745974125e041b8cc4702780f453ce9ccc9eed8829db368edf9db",
+      "exact_entries": 41,
+      "original_allocated_bytes": 1426006016,
+      "manifest_files_bound_without_schema_validation": 3,
+      "sampled_min_free_bytes_during_compression": 22945206272,
+      "tar_compare_before_archive_retirement_and_after_quarantine": "passed",
+      "native_full_hash_fsync_before_after": "passed",
+      "source_and_redundant_builder_archive_removed": true,
+      "public_source_path_exists_after_retirement": false,
+      "retirement_utc_epoch": 1793969474.414277
+    }
+  ],
+  "raw_builder_reports": "/var/lib/a733-clean-builder-retention-20261106",
+  "raw_native_verified_builder_report_copies": "/var/lib/a733-builder-retained-20261106/build-output-trees/builder-records",
+  "raw_report_manifest": [
+    {
+      "name": "kernel-replay.archive-compare.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "kernel-replay.archive.json",
+      "bytes": 78863280,
+      "sha256": "9aea01c16aa3402b1050efecc2eca6b319741904de2a774e8685f432e220f244"
+    },
+    {
+      "name": "kernel-replay.create.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "kernel-replay.quarantine-compare.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "kernel-replay.retire-compare.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "kernel-replay.retire-intent.json",
+      "bytes": 948,
+      "sha256": "ca77d398c2e17d70e56d447290c1e9b11e0f60a52bd48cfcad88bde7b42ed4f7"
+    },
+    {
+      "name": "kernel-replay.retire.json",
+      "bytes": 1566,
+      "sha256": "7f615bd29643965c880c078b86e4af181dd9232c61670394dee8526a286412be"
+    },
+    {
+      "name": "management.archive-compare.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "management.archive.json",
+      "bytes": 15759,
+      "sha256": "6b2cd2e845edbdd7b5fea9c6256a5e9049e6d2cf1bf95e1b30385aa1e880e147"
+    },
+    {
+      "name": "management.create.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "management.quarantine-compare.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "management.retire-compare.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "management.retire-intent.json",
+      "bytes": 965,
+      "sha256": "5575c6c4aa6bec880c65ec5835f116d4de4960c55a1e4080963e7f5df5950039"
+    },
+    {
+      "name": "management.retire.json",
+      "bytes": 1580,
+      "sha256": "8e574ef29788c91daefa78a2b975db34768657975a9e7d73435ae9cfbba32567"
+    },
+    {
+      "name": "package-state-clean.archive-compare.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "package-state-clean.archive.json",
+      "bytes": 14874,
+      "sha256": "4430966c771139c8629e2624a8e69f241b5e67ee3f2f60e78e1133a883fa63d1"
+    },
+    {
+      "name": "package-state-clean.create.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "package-state-clean.quarantine-compare.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "package-state-clean.retire-compare.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "package-state-clean.retire-intent.json",
+      "bytes": 1010,
+      "sha256": "9429f3402a4ee871e1f9cd71f2c9d7e7067a9bc19c171cab46d695a80713493e"
+    },
+    {
+      "name": "package-state-clean.retire.json",
+      "bytes": 1635,
+      "sha256": "2678230a766b11d37c7b76e72a8f372148ca4ff9c2e42e731674491e63d6ef02"
+    },
+    {
+      "name": "package-state.archive-compare.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "package-state.archive.json",
+      "bytes": 646711,
+      "sha256": "b4ad3230f3f3f66990dbd019ee225734a5f5123282d2268e84e2df55c4f62896"
+    },
+    {
+      "name": "package-state.create.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "package-state.quarantine-compare.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "package-state.retire-compare.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "package-state.retire-intent.json",
+      "bytes": 984,
+      "sha256": "fc3aa6d18f63a62cc2cb7e9ff3a2f3da4320d1d949105aba9f502865c536cef1"
+    },
+    {
+      "name": "package-state.retire.json",
+      "bytes": 1603,
+      "sha256": "34a7efa751c64627c6cd2695195e33e97eb645d9bafd84e4a8f6ed9eb427e6f2"
+    },
+    {
+      "name": "project.archive-compare.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "project.archive.json",
+      "bytes": 14152,
+      "sha256": "9b12a820dbcf67009a20c3f89c8bf5fbb6c4e24618e1074e8822672cf7c071b3"
+    },
+    {
+      "name": "project.create.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "project.quarantine-compare.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "project.retire-compare.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "project.retire-intent.json",
+      "bytes": 918,
+      "sha256": "1de66798542b5078fe46476bc5ce8b7953078968adf5188043284b40b56b0237"
+    },
+    {
+      "name": "project.retire.json",
+      "bytes": 1530,
+      "sha256": "d77f1728925c10e8c49e84eee04979080fec9aab37b5b57f7ec6e2bfedbd884e"
+    },
+    {
+      "name": "retain-build-output-trees-20261106.py",
+      "bytes": 25089,
+      "sha256": "3a2999dbead490bcfc9a7c10a2cb6422ade5d981719a3d81d012f0e54ef096dd"
+    },
+    {
+      "name": "uboot-replay.archive-compare.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "uboot-replay.archive.json",
+      "bytes": 18430600,
+      "sha256": "47ebe21aa6141ade5159933f68d606591a671d744186373ad38855a1c8a7635d"
+    },
+    {
+      "name": "uboot-replay.create.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "uboot-replay.quarantine-compare.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "uboot-replay.retire-compare.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "uboot-replay.retire-intent.json",
+      "bytes": 940,
+      "sha256": "44fa539107be3bfd968d949db03d563c32ca53a4b0e72ed705b8e69b37c41acc"
+    },
+    {
+      "name": "uboot-replay.retire.json",
+      "bytes": 1557,
+      "sha256": "777bd2361eb58b7de833b6f53e8d8c83defce37df7ef83af401c92d8a5205e23"
+    }
+  ],
+  "review": {
+    "independent_model": "gpt-6.1-sol",
+    "effort": "high",
+    "fixed_findings": [
+      "Public-path substitution before deletion: atomically quarantine and verify moved identity/content before pinned removal.",
+      "Native retention parent durability: fsync its parent before retirement."
+    ],
+    "helper_sha256": "3a2999dbead490bcfc9a7c10a2cb6422ade5d981719a3d81d012f0e54ef096dd",
+    "caller_sha256": "befee95854fa1cd890c7e0938182073fc31f0ddd524ac1b7b84c7113d8c31588",
+    "durable_tools": "/var/lib/a733-builder-retained-20261106/build-output-trees/tools",
+    "jammy_22_04_python_3_10_12_optimized_fixture_tests": 20,
+    "native_mock_ssh_caller_tests": 3
+  },
+  "limits": [
+    "Compression checks a sampled 3 GiB cancellation threshold; no continuous free-space floor is claimed.",
+    "Current deployment, operator inputs, package archives and original pinned source caches excluded.",
+    "No full restoration of these actual trees was performed; disposable sparse/metadata restoration tests pass.",
+    "Hardware boot, installation, KVM guest, SD-write, rollback and recovery acceptance remain open.",
+    "Report free_after fields made while an unlinked archive descriptor was open understate available space; the final statvfs sample is after caller completion."
+  ],
+  "repository_checks": {
+    "shell_regressions": 5,
+    "diagnostic_assembly_cases": 4,
+    "native_python_cases": 865,
+    "native_python_skips": 95,
+    "result": "passed",
+    "limitations": "Native host checks, not hardware validation. No tracked executable code changes in this commit."
+  },
+  "durable_check_logs": [
+    {
+      "path": "/var/lib/a733-builder-retained-20261106/build-output-trees/tools/repository-checks.log",
+      "bytes": 2742,
+      "sha256": "8ed9d4b18f8d05c9ae45a7b43115136ab3ab85d2ace0c0c45749fcf609dab381"
+    },
+    {
+      "path": "/var/lib/a733-builder-retained-20261106/build-output-trees/tools/independent-helper-tests.log",
+      "bytes": 2330,
+      "sha256": "864376a57cdac46e45871ccf2237eec33a03ba1d22a0c35ceb99aac448bc32bc"
+    },
+    {
+      "path": "/var/lib/a733-builder-retained-20261106/build-output-trees/tools/independent-caller-tests.log",
+      "bytes": 263,
+      "sha256": "8b7ae60498fdec0acce4c930e0bd308857a08aeb813388c2f6f84de6fba374ae"
+    }
+  ]
+}

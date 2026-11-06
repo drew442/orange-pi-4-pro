@@ -1,5 +1,10 @@
 # Immutable A/B host payload prototype
 
+Historical generated paths below may have been archived. Consult the
+[retention map](build-cache-retention.md#replay-and-prototype-output-retention)
+before reusing them; use the [personalized deployment](deploy-personalized-20261106.md)
+for the current installation.
+
 The builder produced two raw 4 GiB ext4 root-slot images from the authenticated
 [interim ARM64 userspace](host-userspace.md) and matching A733 kernel modules.
 They include management runtime profile `a733-management-v1`: the management
