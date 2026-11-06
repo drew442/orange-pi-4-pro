@@ -2,8 +2,8 @@
 
 The current deployment candidate remains pinned and unchanged. This investigation
 addresses a separate release gate: reproducing an existing U-Boot/package from
-its recorded build inputs. No new firmware has been flashed, and no replay
-build result is claimed here yet.
+its recorded build inputs. No new firmware has been flashed. [Two fresh private builds](evidence/uboot-replay-20261106.json)
+now reproduce the existing unpacked U-Boot and boot package exactly.
 
 ## Pinned source facts
 
@@ -39,10 +39,10 @@ challenge for every future release. Fresh-build vendor randomness remains the
 default. No conclusion about the complete firmware security role is implied.
 
 The separate `build/uboot-replay.py` recipe is implemented and independently
-reviewed, with 22 guard regressions. Actual reproduction builds remain pending.
+reviewed, with 22 guard regressions and successful actual reproduction builds.
 It authenticates retained provenance against committed
-trusted evidence, parse the C as canonical data with exactly 128 bytes, and
-compile only a private validated copy. Its generator patch applies only inside
+trusted evidence, parses the C as canonical data with exactly 128 bytes, and
+compiles only a private validated copy. Its generator patch applies only inside
 a fresh private source tree, fails on unknown context, and preserves the original
 random-generation branch. Version suffix, dirty state and timestamp are explicit
 inputs; the existing target records `-gb791be8-dirty` and epoch `1772630733`.
@@ -81,3 +81,38 @@ selected and must match in full before and after a build. There is no automatic
 fallback or package-version exception. Original target binary/package hashes
 remain the reproduction criterion under the newly recorded environment.
 This is still the prepared builder, not a newly acquired clean builder image.
+
+## Verified execution
+
+From the protected clean full Git clone
+`/var/lib/a733-uboot-replay-work-20261106` at
+`e827858e056e9047764bce5265f23fc926cbe90c`, the following commands ran successfully
+as root on the recorded builder, sequentially:
+
+```sh
+python3 -I -B build/uboot-replay.py --target el2-diagnostic-20261104 \
+  --builder-profile replay-20261106 \
+  --output "$PWD/out/uboot-replay-20261106-01"
+python3 -I -B build/uboot-replay.py --target el2-diagnostic-20261104 \
+  --builder-profile replay-20261106 \
+  --output "$PWD/out/uboot-replay-20261106-02"
+```
+
+Existing outputs are refused. For another run, use fresh `uboot-replay-NAME`
+output names and a clean committed checkout on protected fixed builder storage.
+Profile selection is mandatory; unregistered profiles or any installed-package
+drift fail before compilation. Neither invocation downloads or installs packages.
+
+Both resulting unpacked binaries are 1,192,546 bytes, SHA-256
+`f552def6c493e39e40951c2b82db73fb41f2fa678271d6a259b15f83e0cb1c7c`.
+Both boot packages are 1,392,640 bytes, SHA-256
+`b20c3d1133aee6474416bc9846b0bf94d5439aa12d7f7555b44607105ddab3b6`.
+Those match the original authenticated EL2 artifact, not only the other replay.
+Independent readback checked the small outputs, challenge/config, recipe and
+patch records. Source Git status stayed clean. Logs retain nonfatal vendor
+messages about missing unused legacy compiler archives; the actual compiler
+record is pinned Linaro GCC 7.4.1.
+
+The active diagnostic/deployment images were not replaced. This result resolves
+the retained-challenge U-Boot/package reproduction experiment; it does not close
+the separate full clean-builder, kernel, license or hardware release gates.

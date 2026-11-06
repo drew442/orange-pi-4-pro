@@ -71,5 +71,5 @@
     }
   ],
   "policy": "Explicit profile selection and exact full inventory match required before/after replay. No package downgrade, broad exception or target binary/hash change. Same retained artifact must match under this separately pinned environment.",
-  "actual_replay_builds": "not yet run with this profile"
+  "actual_replay_builds": "Two sequential fresh private U-Boot/package builds matched the original EL2 target under this profile; see uboot-replay-20261106.json"
 }

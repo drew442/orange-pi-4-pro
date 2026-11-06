@@ -1,0 +1,394 @@
+{
+  "schema": 1,
+  "classification": "two fresh private U-Boot/package replays on prepared builder; no hardware or fresh-builder claim",
+  "builds": [
+    {
+      "directory": "/var/lib/a733-uboot-replay-work-20261106/out/uboot-replay-20261106-01",
+      "result": {
+        "schema": 1,
+        "target": "el2-diagnostic-20261104",
+        "comparisons": {
+          "uboot-unpacked.bin": true,
+          "boot_package.fex": true
+        },
+        "success": true,
+        "hardware_acceptance": "Not established by replay",
+        "limitations": "Reused pinned source caches/kernel; not a full clean builder. Logs/manifests are not claimed bit-identical. Opaque challenge header consumer security audit remains open."
+      },
+      "source_provenance": {
+        "schema": 1,
+        "project": {
+          "commit": "e827858e056e9047764bce5265f23fc926cbe90c",
+          "git_status_porcelain": "",
+          "inputs": {
+            "build/uboot-replay.py": {
+              "bytes": 27413,
+              "sha256": "3558c6b75d0fdfa731eaff925b101a136b288953364996f72b8a6bcd3fcb1cfd"
+            },
+            "configs/diagnostic-sources.lock.json": {
+              "bytes": 2273,
+              "sha256": "aa39f5fca29244ca961fc3f422d7110adca6975d2c6a29f80afd9d1d2f4b4821"
+            },
+            "configs/vendor-boot-inputs.sha256": {
+              "bytes": 3149,
+              "sha256": "c516276f8f7896975f7e1adb272e37b45edc8e5280de5612b85a9da302a9b768"
+            },
+            "configs/builder-packages.lock.tsv": {
+              "bytes": 32519,
+              "sha256": "35c2faf42a936168098b1f54239825a3c42fc56c825fc0b2078bbd753425f48b"
+            },
+            "configs/builder-replay-packages-20261106.lock.tsv": {
+              "bytes": 32546,
+              "sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425"
+            },
+            "docs/evidence/el2-diagnostic-20261104.json": {
+              "bytes": 6582,
+              "sha256": "9c30d5d873fa8ad154b8068cdebfc7f40f6487ce6a79f76a52da4dd44ba1b5f8"
+            },
+            "build/patches/uboot-env-nowhere-size.patch": {
+              "bytes": 266,
+              "sha256": "29617f37e189d5c2a9181793a4ef3c0a85fc84693e9b414e1f5b4ab6e3daaaba"
+            },
+            "build/patches/uboot-a733-el2-handoff.patch": {
+              "bytes": 1031,
+              "sha256": "be261e0fb43845bbc999a5d3a7f22147eac9c93154a951b04cb2f9573aa8d1bf"
+            }
+          }
+        },
+        "builder_profile": {
+          "name": "replay-20261106",
+          "lock_file": "configs/builder-replay-packages-20261106.lock.tsv",
+          "lock": {
+            "bytes": 32546,
+            "sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425"
+          },
+          "original_lock": {
+            "bytes": 32519,
+            "sha256": "35c2faf42a936168098b1f54239825a3c42fc56c825fc0b2078bbd753425f48b"
+          },
+          "package_delta_from_original": [
+            {
+              "package": "apt",
+              "original": {
+                "version": "2.4.14",
+                "architecture": "amd64"
+              },
+              "selected": {
+                "version": "2.4.15ubuntu0.1",
+                "architecture": "amd64"
+              }
+            },
+            {
+              "package": "apt-utils",
+              "original": {
+                "version": "2.4.14",
+                "architecture": "amd64"
+              },
+              "selected": {
+                "version": "2.4.15ubuntu0.1",
+                "architecture": "amd64"
+              }
+            },
+            {
+              "package": "ca-certificates",
+              "original": {
+                "version": "20260816ubuntu0.22.04.1",
+                "architecture": "all"
+              },
+              "selected": {
+                "version": "20260816ubuntu0.22.04.2",
+                "architecture": "all"
+              }
+            },
+            {
+              "package": "libapt-pkg6.0:amd64",
+              "original": {
+                "version": "2.4.14",
+                "architecture": "amd64"
+              },
+              "selected": {
+                "version": "2.4.15ubuntu0.1",
+                "architecture": "amd64"
+              }
+            },
+            {
+              "package": "python3-twisted",
+              "original": {
+                "version": "22.1.0-2ubuntu2.7",
+                "architecture": "all"
+              },
+              "selected": {
+                "version": "22.1.0-2ubuntu2.8",
+                "architecture": "all"
+              }
+            }
+          ]
+        },
+        "recipe": {
+          "bytes": 27413,
+          "sha256": "3558c6b75d0fdfa731eaff925b101a136b288953364996f72b8a6bcd3fcb1cfd"
+        },
+        "registered_target": "el2-diagnostic-20261104",
+        "authenticated_full_manifest_sha256": "749d5ba0e95a516edfc4bf671b51d2533fb0588bc0d3abcdce090d1a081b3a32",
+        "original_uboot_head": "b791be842935b27268ae3d00e943a9075495f30a",
+        "source_date_epoch": 1772630733,
+        "scm_suffix": "-gb791be8-dirty",
+        "make_dirty": "dirty",
+        "applied_patches": {
+          "uboot-env-nowhere-size.patch": {
+            "bytes": 266,
+            "sha256": "29617f37e189d5c2a9181793a4ef3c0a85fc84693e9b414e1f5b4ab6e3daaaba"
+          },
+          "uboot-a733-el2-handoff.patch": {
+            "bytes": 1031,
+            "sha256": "be261e0fb43845bbc999a5d3a7f22147eac9c93154a951b04cb2f9573aa8d1bf"
+          },
+          "uboot-challenge-replay.patch": {
+            "bytes": 646,
+            "sha256": "ab17724971e1d5a26304c8098773b0cd3f5c89e0af2d4024de44d829d9abfea0"
+          }
+        },
+        "replay_challenge_c": {
+          "bytes": 930,
+          "sha256": "2068f81ec8e7a4ad41543223ab5f3bdaccfad22a9ccfcdb529982ee1827d2784"
+        },
+        "challenge_classification": "Authenticated public retained input; opaque header consumer security audit remains open"
+      },
+      "files": {
+        "uboot-unpacked.bin": {
+          "bytes": 1192546,
+          "sha256": "f552def6c493e39e40951c2b82db73fb41f2fa678271d6a259b15f83e0cb1c7c"
+        },
+        "boot_package.fex": {
+          "bytes": 1392640,
+          "sha256": "b20c3d1133aee6474416bc9846b0bf94d5439aa12d7f7555b44607105ddab3b6"
+        },
+        "uboot-sunxi-challenge.c": {
+          "bytes": 930,
+          "sha256": "2068f81ec8e7a4ad41543223ab5f3bdaccfad22a9ccfcdb529982ee1827d2784"
+        },
+        "uboot.config": {
+          "bytes": 35703,
+          "sha256": "253f9c77878c20e9146bfb35d5d80819f5314dd30ec489e5551f02e518002bb9"
+        },
+        "source-provenance.json": {
+          "bytes": 4389,
+          "sha256": "eeda0d3ff88101c84ed9d11d81c7b3867515ae29379874a451caf2d81cce2a29"
+        },
+        "uboot-challenge-replay.patch": {
+          "bytes": 646,
+          "sha256": "ab17724971e1d5a26304c8098773b0cd3f5c89e0af2d4024de44d829d9abfea0"
+        }
+      },
+      "resource_log": "/var/lib/a733-uboot-replay-work-20261106/out/uboot-replay-20261106-01/logs/resource-samples.txt"
+    },
+    {
+      "directory": "/var/lib/a733-uboot-replay-work-20261106/out/uboot-replay-20261106-02",
+      "result": {
+        "schema": 1,
+        "target": "el2-diagnostic-20261104",
+        "comparisons": {
+          "uboot-unpacked.bin": true,
+          "boot_package.fex": true
+        },
+        "success": true,
+        "hardware_acceptance": "Not established by replay",
+        "limitations": "Reused pinned source caches/kernel; not a full clean builder. Logs/manifests are not claimed bit-identical. Opaque challenge header consumer security audit remains open."
+      },
+      "source_provenance": {
+        "schema": 1,
+        "project": {
+          "commit": "e827858e056e9047764bce5265f23fc926cbe90c",
+          "git_status_porcelain": "",
+          "inputs": {
+            "build/uboot-replay.py": {
+              "bytes": 27413,
+              "sha256": "3558c6b75d0fdfa731eaff925b101a136b288953364996f72b8a6bcd3fcb1cfd"
+            },
+            "configs/diagnostic-sources.lock.json": {
+              "bytes": 2273,
+              "sha256": "aa39f5fca29244ca961fc3f422d7110adca6975d2c6a29f80afd9d1d2f4b4821"
+            },
+            "configs/vendor-boot-inputs.sha256": {
+              "bytes": 3149,
+              "sha256": "c516276f8f7896975f7e1adb272e37b45edc8e5280de5612b85a9da302a9b768"
+            },
+            "configs/builder-packages.lock.tsv": {
+              "bytes": 32519,
+              "sha256": "35c2faf42a936168098b1f54239825a3c42fc56c825fc0b2078bbd753425f48b"
+            },
+            "configs/builder-replay-packages-20261106.lock.tsv": {
+              "bytes": 32546,
+              "sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425"
+            },
+            "docs/evidence/el2-diagnostic-20261104.json": {
+              "bytes": 6582,
+              "sha256": "9c30d5d873fa8ad154b8068cdebfc7f40f6487ce6a79f76a52da4dd44ba1b5f8"
+            },
+            "build/patches/uboot-env-nowhere-size.patch": {
+              "bytes": 266,
+              "sha256": "29617f37e189d5c2a9181793a4ef3c0a85fc84693e9b414e1f5b4ab6e3daaaba"
+            },
+            "build/patches/uboot-a733-el2-handoff.patch": {
+              "bytes": 1031,
+              "sha256": "be261e0fb43845bbc999a5d3a7f22147eac9c93154a951b04cb2f9573aa8d1bf"
+            }
+          }
+        },
+        "builder_profile": {
+          "name": "replay-20261106",
+          "lock_file": "configs/builder-replay-packages-20261106.lock.tsv",
+          "lock": {
+            "bytes": 32546,
+            "sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425"
+          },
+          "original_lock": {
+            "bytes": 32519,
+            "sha256": "35c2faf42a936168098b1f54239825a3c42fc56c825fc0b2078bbd753425f48b"
+          },
+          "package_delta_from_original": [
+            {
+              "package": "apt",
+              "original": {
+                "version": "2.4.14",
+                "architecture": "amd64"
+              },
+              "selected": {
+                "version": "2.4.15ubuntu0.1",
+                "architecture": "amd64"
+              }
+            },
+            {
+              "package": "apt-utils",
+              "original": {
+                "version": "2.4.14",
+                "architecture": "amd64"
+              },
+              "selected": {
+                "version": "2.4.15ubuntu0.1",
+                "architecture": "amd64"
+              }
+            },
+            {
+              "package": "ca-certificates",
+              "original": {
+                "version": "20260816ubuntu0.22.04.1",
+                "architecture": "all"
+              },
+              "selected": {
+                "version": "20260816ubuntu0.22.04.2",
+                "architecture": "all"
+              }
+            },
+            {
+              "package": "libapt-pkg6.0:amd64",
+              "original": {
+                "version": "2.4.14",
+                "architecture": "amd64"
+              },
+              "selected": {
+                "version": "2.4.15ubuntu0.1",
+                "architecture": "amd64"
+              }
+            },
+            {
+              "package": "python3-twisted",
+              "original": {
+                "version": "22.1.0-2ubuntu2.7",
+                "architecture": "all"
+              },
+              "selected": {
+                "version": "22.1.0-2ubuntu2.8",
+                "architecture": "all"
+              }
+            }
+          ]
+        },
+        "recipe": {
+          "bytes": 27413,
+          "sha256": "3558c6b75d0fdfa731eaff925b101a136b288953364996f72b8a6bcd3fcb1cfd"
+        },
+        "registered_target": "el2-diagnostic-20261104",
+        "authenticated_full_manifest_sha256": "749d5ba0e95a516edfc4bf671b51d2533fb0588bc0d3abcdce090d1a081b3a32",
+        "original_uboot_head": "b791be842935b27268ae3d00e943a9075495f30a",
+        "source_date_epoch": 1772630733,
+        "scm_suffix": "-gb791be8-dirty",
+        "make_dirty": "dirty",
+        "applied_patches": {
+          "uboot-env-nowhere-size.patch": {
+            "bytes": 266,
+            "sha256": "29617f37e189d5c2a9181793a4ef3c0a85fc84693e9b414e1f5b4ab6e3daaaba"
+          },
+          "uboot-a733-el2-handoff.patch": {
+            "bytes": 1031,
+            "sha256": "be261e0fb43845bbc999a5d3a7f22147eac9c93154a951b04cb2f9573aa8d1bf"
+          },
+          "uboot-challenge-replay.patch": {
+            "bytes": 646,
+            "sha256": "ab17724971e1d5a26304c8098773b0cd3f5c89e0af2d4024de44d829d9abfea0"
+          }
+        },
+        "replay_challenge_c": {
+          "bytes": 930,
+          "sha256": "2068f81ec8e7a4ad41543223ab5f3bdaccfad22a9ccfcdb529982ee1827d2784"
+        },
+        "challenge_classification": "Authenticated public retained input; opaque header consumer security audit remains open"
+      },
+      "files": {
+        "uboot-unpacked.bin": {
+          "bytes": 1192546,
+          "sha256": "f552def6c493e39e40951c2b82db73fb41f2fa678271d6a259b15f83e0cb1c7c"
+        },
+        "boot_package.fex": {
+          "bytes": 1392640,
+          "sha256": "b20c3d1133aee6474416bc9846b0bf94d5439aa12d7f7555b44607105ddab3b6"
+        },
+        "uboot-sunxi-challenge.c": {
+          "bytes": 930,
+          "sha256": "2068f81ec8e7a4ad41543223ab5f3bdaccfad22a9ccfcdb529982ee1827d2784"
+        },
+        "uboot.config": {
+          "bytes": 35703,
+          "sha256": "253f9c77878c20e9146bfb35d5d80819f5314dd30ec489e5551f02e518002bb9"
+        },
+        "source-provenance.json": {
+          "bytes": 4389,
+          "sha256": "eeda0d3ff88101c84ed9d11d81c7b3867515ae29379874a451caf2d81cce2a29"
+        },
+        "uboot-challenge-replay.patch": {
+          "bytes": 646,
+          "sha256": "ab17724971e1d5a26304c8098773b0cd3f5c89e0af2d4024de44d829d9abfea0"
+        }
+      },
+      "resource_log": "/var/lib/a733-uboot-replay-work-20261106/out/uboot-replay-20261106-02/logs/resource-samples.txt"
+    }
+  ],
+  "project_git_status": "",
+  "date": "2026-11-06",
+  "builder": "Ubuntu 22.04.5 amd64 at build.drewnet.online",
+  "builder_profile": "replay-20261106",
+  "compilation_jobs": 2,
+  "execution": "Two sequential fresh private U-Boot trees, exact retained challenge, pinned source/toolchain/vendor inputs; no active candidate replacements.",
+  "independent_review": "gpt-6.1-sol high independently read back both results/source/patches/config/challenge, hashed small binaries/packages against original target and manifests; protected source checkout remained clean.",
+  "resources_observed": {
+    "available_ram_bytes_approx": [
+      7450000000,
+      7570000000
+    ],
+    "free_disk_bytes_approx": [
+      19400000000,
+      21900000000
+    ],
+    "sample_note": "Approximate range from retained resource logs; not peak RSS or a hardware capacity claim."
+  },
+  "warnings": "Nonfatal vendor attempts to extract missing legacy RISC-V/GCC7.2 archives are retained in logs. Actual compiler record identifies hash-pinned Linaro GCC7.4.1; original target hashes match.",
+  "not_established": [
+    "fresh builder image/package/source acquisition",
+    "kernel reproduction",
+    "complete opaque firmware security/license audit",
+    "physical NVMe installation/boot",
+    "SSH authentication",
+    "actual KVM guest execution",
+    "SD policy and remaining release gates"
+  ]
+}

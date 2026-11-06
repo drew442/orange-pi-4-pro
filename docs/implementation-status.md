@@ -165,9 +165,10 @@ backup/recovery and SPI-specific programming authorization remain outstanding.
 4. Full clean-build reproducibility remains open: vendor U-Boot generates a
    random 128-byte challenge, retained with exact provenance. A separate
    [exact-artifact replay investigation](uboot-reproducibility.md) preserves
-   fresh-build randomness. Its separate recipe passes independent review and
-   guard/integration tests; two fresh reproduction builds are next. No successful
-   replay claim yet. The [26-input license inventory](evidence/vendor-boot-license-inventory-20261106.json)
+   fresh-build randomness. [Two fresh private replays](evidence/uboot-replay-20261106.json)
+   now match the original unpacked U-Boot and EL2 package, under an explicit
+   full-inventory replay profile. Source caches were reused; full clean-builder
+   acquisition and kernel reproduction remain open. The [26-input license inventory](evidence/vendor-boot-license-inventory-20261106.json)
    now maps every pinned path/hash and its available/missing attribution evidence.
    Clean package/source acquisition and firmware/source/license audit remain gates.
 
