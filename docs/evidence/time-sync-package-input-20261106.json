@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "classification": "Authenticated optional time-sync package input; not installed or enabled in current candidate",
+  "snapshot": "20261001T000000Z",
+  "package": {
+    "Package": "systemd-timesyncd",
+    "Version": "252.39-1~deb12u2",
+    "Architecture": "arm64",
+    "Source": "systemd",
+    "Depends": "libc6 (>= 2.34), libsystemd-shared (= 252.39-1~deb12u2), systemd",
+    "Conflicts": "time-daemon",
+    "Provides": "time-daemon",
+    "Filename": "pool/main/s/systemd/systemd-timesyncd_252.39-1~deb12u2_arm64.deb",
+    "SHA256": "700be69248209d27e58ee0736f1460bc8acb10c1e717efc985ebd23dd5fd7714"
+  },
+  "package_bytes": 62172,
+  "url": "https://deb.debian.org/debian/pool/main/s/systemd/systemd-timesyncd_252.39-1~deb12u2_arm64.deb",
+  "binary_index": {
+    "compressed_bytes": 8689464,
+    "compressed_sha256": "2ddb1737692e8c45c53e8d57c0ce4cd21c78c5703b830c3226b1423566a06c00",
+    "expanded_bytes": 49434864,
+    "expanded_sha256": "c7c883a61f348283050d3a754e7c8119117c4019bf65da804c78fdae315866f1",
+    "inrelease_sha256": "77737fa4b34f2693e982cc9ee35736816c35a7778fc2d326cc1bbf5b301fe1aa"
+  },
+  "base_binary_lock": {
+    "path": "configs/host-userspace-packages.lock.tsv",
+    "sha256": "f2abf03d0d6e7fd506560689093220514cbf1acc678f7560562026d6ca6564a6"
+  },
+  "dependency_check": {
+    "libc6": {
+      "installed": "2.36-9+deb12u14",
+      "constraint": ">= 2.34",
+      "dpkg_compare": "pass"
+    },
+    "libsystemd-shared": {
+      "installed": "252.39-1~deb12u2",
+      "constraint": "= 252.39-1~deb12u2",
+      "result": "pass"
+    },
+    "systemd": {
+      "installed": "252.39-1~deb12u2",
+      "result": "present, same source version"
+    },
+    "locked_binary_records_matched_in_signed_index": 220,
+    "conflicting_time_daemon_providers": []
+  },
+  "source_archives": "Exact systemd source version is already included in the 149-version source archive lock; no new source version inferred or downloaded.",
+  "retained_directory": "/home/drew/orange-pi-4-pro/tmp/time-sync-inputs-20261106",
+  "execution": "Package extracted as data only. No maintainer script, daemon or clock-setting operation ran.",
+  "integration_remaining": [
+    "Update an explicit userspace profile and per-root package metadata; current 220-package locks remain unchanged.",
+    "Audit service user and NVMe-only /var/lib/systemd/timesync state across A/B update and rollback.",
+    "Enable/configure the unit only in a reviewed future payload; establish and observe network time on physical hardware.",
+    "Reproduce cold boot and clock persistence with SD full-card hashes and write counters."
+  ]
+}

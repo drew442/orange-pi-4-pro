@@ -3,8 +3,10 @@
 The separate `build/kernel-replay.py` recipe rebuilds the retained A733 kernel
 in a fresh private source checkout. It leaves the published installation images
 and original cached build tree in place. The [actual private build](evidence/kernel-replay-20261106.json)
-completed compilation but **failed exact Image reproduction**. The device tree
-and configuration match their targets. No successful kernel replay is claimed.
+now [reproduces the complete Image, DTB and configuration](evidence/kernel-replay-mapped-20261106.json)
+with explicit original debug paths and umask 0002. Independent verification also
+authenticates all regular module files against the original initramfs. The
+earlier native-path build remains a recorded failure.
 
 The target is the `Image`, board DTB and final kernel configuration pinned in
 [evidence/diagnostic-20261104.json](evidence/diagnostic-20261104.json). The source
@@ -33,10 +35,12 @@ for investigation; do not reuse their output names.
 
 Successful artifact reproduction requires all three anchored targets to match
 exactly. The recipe also installs stripped modules into its private artifacts
-and records their relative paths, modes, sizes and SHA-256 hashes. Its comparison
-with the retained modules directory is explicitly **unanchored**: the existing
-committed diagnostic evidence does not contain a modules-tree hash. That
-comparison must not be presented as authenticated module reproduction.
+and records their relative paths, modes, sizes and SHA-256 hashes. The recipe's
+comparison with the retained modules directory is explicitly **unanchored**.
+A separate independent audit authenticates the original compressed initramfs
+and compares all 332 regular module files, including permission modes. That
+stronger proof covers regular files; it does not claim generated directory
+metadata is identical.
 
 The result, source/input snapshots, resource samples and build logs remain under
 the new output directory. Generated sources, objects and binaries stay out of
@@ -96,11 +100,37 @@ hash gates, private source checkout, two jobs and greater-than-15-GB start guard
 Actual Kbuild commands and generated metadata are retained. Caller umask is
 restored on success and failure. No output bytes or target hashes are patched.
 
-The successful vDSO result supports testing this profile against the full kernel;
-it does not establish that the complete Image or all modules reproduce.
+## Successful full mapped replay
 
-A [full mapped replay](evidence/kernel-replay-mapped-start-20261106.json) is now
-compiling from clean project commit `2d20b25b53de2c1eb3f5fc0b250d9cb55608b229`.
-Its preflight/configuration checks and all 849 privileged discovery tests pass;
-final Image/DTB/config and module comparisons are pending. The earlier failure
-remains a failure, with its source tree retained in verified archives.
+The [complete replay](evidence/kernel-replay-mapped-20261106.json) ran from
+10:45:36 to 11:01:25 UTC at clean project commit
+`2d20b25b53de2c1eb3f5fc0b250d9cb55608b229`. On the builder, in
+`/var/lib/a733-kernel-replay-work-20261106`, this command passed:
+
+```sh
+python3 -I -B build/kernel-replay.py --target diagnostic-20261104 \
+  --builder-profile replay-20261106 \
+  --debug-path-profile original-20261104 \
+  --output "$PWD/out/kernel-replay-mapped-20261106-01"
+```
+
+The Image is 27,283,464 bytes, SHA-256
+`9df974c55fa61a77e8fe812652780dad471527eb9615c27838f481887d4c50e7`.
+DTB and configuration also match their committed byte hashes. Both original
+kernel/vDSO build IDs are restored naturally by compilation; no target bytes
+were patched. Independent review rehashed all 2,556 manifest entries and checked
+actual command mappings, source snapshots and the complete 842-package inventory.
+All 849 privileged tests, four assembly cases and five shell regressions passed.
+
+The independent module audit authenticates the original 3,650,395-byte initramfs
+at its committed SHA-256, then compares all 332 regular files: 319 modules and
+13 metadata files. Every path, byte hash and permission mode matches the replay,
+with no missing/extra regular files. Its canonical inventory digest is
+`3244bd1cd0573d429a51d98d90c0cdfc3dfa2b988331d4cf632f26b889d98455`.
+The runtime recipe's separate directory comparison remains labeled unanchored.
+
+Sampled minimum available RAM was 6,971,584,512 bytes and minimum free disk
+10,012,741,632 bytes. This establishes artifact reproduction on the prepared
+builder with reused pinned source caches. Independent source acquisition,
+a fresh immutable builder, whole-image assembly and physical release acceptance
+remain separate. The deployment images were not replaced.

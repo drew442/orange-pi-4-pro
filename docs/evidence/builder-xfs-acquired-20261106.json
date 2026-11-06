@@ -1,0 +1,58 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Exact historical builder package acquired from signed Ubuntu snapshot; no package or APT state changed",
+  "package": "xfsprogs",
+  "version": "5.13.0-1ubuntu2.1",
+  "architecture": "amd64",
+  "url": "https://snapshot.ubuntu.com/ubuntu/20261001T000000Z/pool/main/x/xfsprogs/xfsprogs_5.13.0-1ubuntu2.1_amd64.deb",
+  "snapshot": "20261001T000000Z",
+  "retained_directory": "/home/drew/orange-pi-4-pro/tmp/builder-xfs-acquisition-20261106",
+  "evidence_files": {
+    "InRelease": {
+      "bytes": 128049,
+      "sha256": "5d154c58ef3090c747267371cf34daf0e832e239460cb0a71babfd4a3150c512"
+    },
+    "Release": {
+      "bytes": 127167,
+      "sha256": "ebf32b24b42fb2054370aabcb93a57e4f3a2c221c754993e7d2120a54a65cfa1"
+    },
+    "Packages.xz": {
+      "bytes": 3874796,
+      "sha256": "ffc71d80f7b53269a6477370d9159de3cb2af837d2262810572d3f3974971a8d"
+    },
+    "Packages": {
+      "bytes": 21905833,
+      "sha256": "e4985e66bc009e5c11ff12d6a1c5d2364c8cc50d71a9e955e9dbc42d49808f7d"
+    },
+    "package-stanza.json": {
+      "bytes": 1525,
+      "sha256": "d35fbfe4bd5b90b556ff7adfcce7fb3ea8c438de991988e8d014f6142ccfce97"
+    },
+    "signatures.txt": {
+      "bytes": 221,
+      "sha256": "73d3a9170705bc1c1807dd763626e089742b13044c34369f71275c02d8278854"
+    },
+    "xfsprogs_5.13.0-1ubuntu2.1_amd64.deb": {
+      "bytes": 870292,
+      "sha256": "efe2119fec8c0cc7010afbf036b3b6aa60fa2d546e3adb5abe881ff3dac63634"
+    }
+  },
+  "signature_verification": {
+    "tool": "gpgv",
+    "trusted_installed_keyring": "/usr/share/keyrings/ubuntu-archive-keyring.gpg",
+    "keyring": {
+      "bytes": 3607,
+      "sha256": "80a36b0a6de2f69f49d2df75ef473ccde121e9e190b9ea01d20a4f63778d5c31"
+    },
+    "good_signing_key": "F6ECB3762474EDA9D21B7022871920D1991BC93C",
+    "identity": "Ubuntu Archive Automatic Signing Key (2018)"
+  },
+  "trust_chain": "gpgv validates the snapshot InRelease; decoded SHA256 entries authenticate both index forms; exact Package/Version/Architecture stanza supplies the complete archive length and SHA256; downloaded package matches before dpkg-deb control metadata is read.",
+  "package_control_check": "Package xfsprogs, Version 5.13.0-1ubuntu2.1, Architecture amd64; exact locked tuple. No executable or maintainer script ran.",
+  "closes": "The single status-only repository lookup gap in the 842-row prepared builder inventory.",
+  "limits": [
+    "841 other binary archive pins currently rely on cached APT metadata; downloads and independent signature-chain audit remain pending.",
+    "No fresh root, immutable builder image or new build was created by this acquisition."
+  ]
+}

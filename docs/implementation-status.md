@@ -167,20 +167,26 @@ backup/recovery and SPI-specific programming authorization remain outstanding.
    [exact-artifact replay investigation](uboot-reproducibility.md) preserves
    fresh-build randomness. [Two fresh private replays](evidence/uboot-replay-20261106.json)
    now match the original unpacked U-Boot and EL2 package, under an explicit
-   full-inventory replay profile. Source caches were reused; full clean-builder
-   acquisition and kernel reproduction remain open. A reviewed [kernel replay](kernel-reproducibility.md)
-   [completed compilation but failed exact Image reproduction](evidence/kernel-replay-20261106.json):
-   DTB/config match; only two 20-byte GNU build IDs differ in the Image. A
-   [fresh vDSO experiment](evidence/vdso-replay-20261106.json) now reproduces the
-   complete authenticated vDSO with explicit debug mappings and umask 0002. A
-   [full mapped replay is compiling](evidence/kernel-replay-mapped-start-20261106.json)
-   with unchanged target hashes and two jobs; comparisons remain pending.
-   [Verified failed-source archival](evidence/failed-kernel-source-retention-20261106.json)
-   recovered 5.27 GB before launch, satisfying the unchanged 15 GB guard. The [26-input license inventory](evidence/vendor-boot-license-inventory-20261106.json)
-   now maps every pinned path/hash and its available/missing attribution evidence.
-   All [479 userspace source archives](evidence/userspace-sources-acquired-20261106.json)
-   for the 220 binary packages have been acquired and independently rehashed.
-   Fresh builder acquisition, kernel reproduction and firmware/source/license audit remain gates.
+   full-inventory replay profile. A [mapped kernel replay](evidence/kernel-replay-mapped-20261106.json)
+   now reproduces the complete original Image, DTB and configuration. Independent
+   readback anchors all 332 regular module files to the original initramfs.
+   Explicit original debug paths and umask 0002 restore the earlier differing
+   build IDs without patching bytes. Source caches and the prepared builder were
+   reused; independent clean-builder construction remains open.
+   [Verified archival](evidence/failed-kernel-source-retention-20261106.json)
+   recovered 5.27 GB before launch. [Builder archive pins](../configs/builder-package-archives-20261106.lock.json)
+   cover all 842 locked versions: 841 from cached APT metadata and the exact
+   [historical xfsprogs archive](evidence/builder-xfs-acquired-20261106.json) from
+   a signed snapshot. Remaining downloads, index-signature audit and a pinned
+   clean base/build environment remain required. The [26-input license inventory](evidence/vendor-boot-license-inventory-20261106.json)
+   records available/missing attribution. All [479 userspace source archives](evidence/userspace-sources-acquired-20261106.json)
+   for the 220 binary packages are acquired and independently rehashed.
+   Firmware/source/license audit and independent deployment remain gates.
+5. Automatic time is absent from the current 220-package candidate. The
+   [time-sync input](host-time.md) is authenticated and its existing dependencies
+   verified, but requires a new package/payload profile, NVMe-state compatibility
+   review and physical validation. Current installation instructions retain manual
+   UTC correction; the prepared images and their hashes are unchanged.
 
 ## Completion rule
 

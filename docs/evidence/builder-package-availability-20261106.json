@@ -1,0 +1,579 @@
+{
+  "apt_sources": {
+    "/etc/apt/sources.list": {
+      "mtime_ns": 1793766640685534700,
+      "sha256": "d567d5d70d2ae8288e9596c207ddcfcdc89f3a4e52802106d8228e26115c058c",
+      "size": 2445
+    }
+  },
+  "builder": {
+    "apt_pkg_version": "2.4.15",
+    "architecture": "x86_64",
+    "hostname": "build"
+  },
+  "classification": "local APT metadata availability only; not downloaded, freshly resolved, or signature-audited",
+  "counts": {
+    "downloadable_index_record": 841,
+    "installed_status_only_no_downloadable_index_record": 1
+  },
+  "current_inventory": {
+    "actual_canonical_sha256": "69a5403d5f50340c99a9f32c9122ebb5eeeba8617e413ab4914ad986cfcdc205",
+    "diff_sample": {
+      "actual_only": [],
+      "expected_only": []
+    },
+    "expected_replay_canonical_sha256": "69a5403d5f50340c99a9f32c9122ebb5eeeba8617e413ab4914ad986cfcdc205",
+    "historical_prepared_inventory_sha256": "35c2faf42a936168098b1f54239825a3c42fc56c825fc0b2078bbd753425f48b",
+    "matches_expected": true,
+    "package_count": 842
+  },
+  "locked_package_count": 842,
+  "metadata_unchanged": true,
+  "missing_or_untraceable": [
+    {
+      "arch": "amd64",
+      "name": "xfsprogs",
+      "records": [
+        {
+          "component": "now",
+          "filename": null,
+          "index": "/var/lib/dpkg/status",
+          "index_site": "",
+          "inrelease": null,
+          "label": null,
+          "origin": null,
+          "sha256": null,
+          "size": null,
+          "suite": "now",
+          "traceable": false
+        }
+      ],
+      "status": "installed_status_only_no_downloadable_index_record",
+      "version": "5.13.0-1ubuntu2.1"
+    }
+  ],
+  "observation": {
+    "builder_resources_before_audit": {
+      "available_ram_bytes": 7138566144,
+      "free_disk_bytes_on_root": 12569473024
+    },
+    "context": "Read-only APT cache inspection while the remote kernel compile was running; no apt update/install or index writes.",
+    "date": "2026-11-06",
+    "fingerprint_method": "APT package/release list metadata file path, size, and nanosecond mtime before and after; supporting source, package index, and InRelease SHA-256 hashes captured."
+  },
+  "replay_lock_sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425",
+  "required_86_manifest_names_plus_2_crossgcc": {
+    "audited_name_count": 88,
+    "items": [
+      {
+        "locked": true,
+        "name": "acl",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "aptly",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "aria2",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "bc",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "binfmt-support",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "bison",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "btrfs-progs",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "build-essential",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "ca-certificates",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "ccache",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "cpio",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "cryptsetup",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "curl",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "debian-archive-keyring",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "debian-keyring",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "debootstrap",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "device-tree-compiler",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "dialog",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "dirmngr",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "distcc",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "dosfstools",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "dwarves",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "f2fs-tools",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "fakeroot",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "fatattr",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "flex",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "gawk",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "gcc-arm-linux-gnueabihf",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "gcc-riscv64-linux-gnu",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "gdisk",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "git",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "git-lfs",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "gnupg",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "gpg",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "imagemagick",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "jq",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "kmod",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "lib32ncurses-dev",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "lib32stdc++6",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "libbison-dev",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "libc6-dev-armhf-cross",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "libc6-i386",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "libelf-dev",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "libfdt-dev",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "libfile-fcntllock-perl",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "libfl-dev",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "liblz4-tool",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "libncurses-dev",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "libpython2.7-dev",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "libssl-dev",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "libusb-1.0-0-dev",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "linux-base",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "locales",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "lzop",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "mtools",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "ncurses-base",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "ncurses-term",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "nfs-kernel-server",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "ntpdate",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "p7zip-full",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "parted",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "patchutils",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "pigz",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "pixz",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "pkg-config",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "psmisc",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "pv",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "python2",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "python3",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "python3-dev",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "python3-distutils",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "qemu-user-static",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "rsync",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "scons",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "swig",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "systemd-container",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "u-boot-tools",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "udev",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "unzip",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "uuid",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "uuid-dev",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "uuid-runtime",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "wget",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "whiptail",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "zip",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "zlib1g-dev",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "gcc-aarch64-linux-gnu",
+        "status": "downloadable_index_record"
+      },
+      {
+        "locked": true,
+        "name": "gcc-arm-linux-gnueabi",
+        "status": "downloadable_index_record"
+      }
+    ],
+    "manifest_name_count": 86
+  },
+  "schema": 1,
+  "supporting_source_and_index_hashes": {
+    "/etc/apt/sources.list": {
+      "mtime_ns": 1793766640685534700,
+      "sha256": "d567d5d70d2ae8288e9596c207ddcfcdc89f3a4e52802106d8228e26115c058c",
+      "size": 2445
+    },
+    "/var/lib/apt/lists/au.archive.ubuntu.com_ubuntu_dists_jammy-updates_InRelease": {
+      "mtime_ns": 1793937899000000000,
+      "sha256": "59c3f7a6909297ad3ab410aa9c75f0bf3e36f3090a3cee8112493fa681a0f826",
+      "size": 128049
+    },
+    "/var/lib/apt/lists/au.archive.ubuntu.com_ubuntu_dists_jammy-updates_main_binary-amd64_Packages": {
+      "mtime_ns": 1793932867000000000,
+      "sha256": "4a2c2967d7df044c7e19f4cedbc683730a11f922a2b6cf63b125d9480c4053d2",
+      "size": 22417465
+    },
+    "/var/lib/apt/lists/au.archive.ubuntu.com_ubuntu_dists_jammy-updates_restricted_binary-amd64_Packages": {
+      "mtime_ns": 1793932867000000000,
+      "sha256": "05807348e2e096fcf85477b270eab4e7a2242b77b0623d53179d8ce7b14d22bf",
+      "size": 39702137
+    },
+    "/var/lib/apt/lists/au.archive.ubuntu.com_ubuntu_dists_jammy-updates_universe_binary-amd64_Packages": {
+      "mtime_ns": 1793932867000000000,
+      "sha256": "6f701dc877c0b3b3db42728705595907bb46b3a67a994b602ac1e99ec0b20f00",
+      "size": 7307183
+    },
+    "/var/lib/apt/lists/au.archive.ubuntu.com_ubuntu_dists_jammy_InRelease": {
+      "mtime_ns": 1650561399000000000,
+      "sha256": "c14060cd8c6d625874dfcb9523a35a395bf4865c28b6b6a82569ef326fe92dc6",
+      "size": 270087
+    },
+    "/var/lib/apt/lists/au.archive.ubuntu.com_ubuntu_dists_jammy_main_binary-amd64_Packages": {
+      "mtime_ns": 1650329530000000000,
+      "sha256": "12ce0797a6ed39a1fee1321985976c6b78872a8fe4c7ef2fb712f2364c9839a3",
+      "size": 6779186
+    },
+    "/var/lib/apt/lists/au.archive.ubuntu.com_ubuntu_dists_jammy_universe_binary-amd64_Packages": {
+      "mtime_ns": 1650557762000000000,
+      "sha256": "6b8cc68643d18250ab297c4f6d427a8778b1d1534e1a3033fff0f221fa20a419",
+      "size": 64332414
+    },
+    "/var/lib/apt/lists/security.ubuntu.com_ubuntu_dists_jammy-security_InRelease": {
+      "mtime_ns": 1793937734000000000,
+      "sha256": "a2e510c6d7c4f43f10b4986adae83eae4243d57c2ad3f2b7e37c360e26ab534b",
+      "size": 128927
+    },
+    "/var/lib/apt/lists/security.ubuntu.com_ubuntu_dists_jammy-security_main_binary-amd64_Packages": {
+      "mtime_ns": 1793890814000000000,
+      "sha256": "7b49bddd1e2bc6c1e7121df9b4a9571804e8d4864e24062ecc4e93b279fb55ca",
+      "size": 20885859
+    },
+    "/var/lib/apt/lists/security.ubuntu.com_ubuntu_dists_jammy-security_universe_binary-amd64_Packages": {
+      "mtime_ns": 1793890814000000000,
+      "sha256": "4b1da20f5332482fcf10105de84476bd0ec614f9e3d9dc83bdda80336e45bd6e",
+      "size": 6223994
+    }
+  },
+  "traceable_index_record_count": 1200,
+  "traceable_package_count": 841,
+  "full_metadata_report": {
+    "retained_path": "/home/drew/orange-pi-4-pro/tmp/builder-package-availability-20261106-full.json",
+    "bytes": 788451,
+    "sha256": "8761266eb385e02224892adee4d3fe5b28facf692e2ff2aae7ee6663270293b2"
+  },
+  "archive_pin_lock": "configs/builder-package-archives-20261106.lock.json",
+  "historical_lookup_gap_resolution": "The sole xfsprogs version was subsequently acquired from a signed Ubuntu snapshot; see builder-xfs-acquired-20261106.json. The original read-only cache observation remains 841/842.",
+  "limits": "Metadata lookup is not artifact acquisition or an immutable/fresh builder. All 841 cached-index artifacts still require download and independent signature-chain audit."
+}

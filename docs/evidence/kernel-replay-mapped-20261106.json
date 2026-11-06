@@ -1,0 +1,300 @@
+{
+  "result": {
+    "actual_commands": {
+      "arch/arm64/kernel/vdso/.note.o.cmd": {
+        "bytes": 7286,
+        "sha256": "b0b7b5839c8f119bb0f1ba71b916f50250b465a10d19a66ca7c5823916d7b05d"
+      },
+      "arch/arm64/kernel/vdso/.sigreturn.o.cmd": {
+        "bytes": 7268,
+        "sha256": "db1e3bff795efea86c3869738108e513a78928f906b37007669da1265dd2eb69"
+      },
+      "arch/arm64/kernel/vdso/.vgettimeofday.o.cmd": {
+        "bytes": 8487,
+        "sha256": "e09dee91ea7faa7db9bb8b7ac665447819dcbd88f614ac9e9683b05dc6981b1b"
+      },
+      "init/.main.o.cmd": {
+        "bytes": 71116,
+        "sha256": "cbb8d9dd8c74141e900fe439c1f0e973f5d0e14b648b8cdc71d051eb8327815c"
+      }
+    },
+    "build_environment_after": {
+      "GIT_CONFIG_GLOBAL": "/dev/null",
+      "GIT_CONFIG_NOSYSTEM": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "HOME": "/nonexistent",
+      "KBUILD_BUILD_HOST": "jammy",
+      "KBUILD_BUILD_TIMESTAMP": "2026-11-04 00:00:00 UTC",
+      "KBUILD_BUILD_USER": "builder",
+      "KBUILD_BUILD_VERSION": "1",
+      "LC_ALL": "C",
+      "PATH": "/usr/bin:/bin",
+      "SOURCE_DATE_EPOCH": "1793750400",
+      "TZ": "UTC"
+    },
+    "build_environment_before": {
+      "GIT_CONFIG_GLOBAL": "/dev/null",
+      "GIT_CONFIG_NOSYSTEM": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "HOME": "/nonexistent",
+      "KBUILD_BUILD_HOST": "jammy",
+      "KBUILD_BUILD_TIMESTAMP": "2026-11-04 00:00:00 UTC",
+      "KBUILD_BUILD_USER": "builder",
+      "KBUILD_BUILD_VERSION": "1",
+      "LC_ALL": "C",
+      "PATH": "/usr/bin:/bin",
+      "SOURCE_DATE_EPOCH": "1793750400",
+      "TZ": "UTC"
+    },
+    "build_settings": {
+      "caller_umask": "0022",
+      "debug_path_profile": "original-20261104",
+      "kaflags": "-Wa,--debug-prefix-map=/var/lib/a733-kernel-replay-work-20261106/out/kernel-replay-mapped-20261106-01/kernel-source=/home/drew/orange-pi-4-pro-build/kernel",
+      "kcflags": "-fdebug-prefix-map=/var/lib/a733-kernel-replay-work-20261106/out/kernel-replay-mapped-20261106-01/kernel-source=/home/drew/orange-pi-4-pro-build/kernel",
+      "make_command": [
+        "make",
+        "-j2",
+        "ARCH=arm64",
+        "CROSS_COMPILE=aarch64-linux-gnu-",
+        "KCFLAGS=-fdebug-prefix-map=/var/lib/a733-kernel-replay-work-20261106/out/kernel-replay-mapped-20261106-01/kernel-source=/home/drew/orange-pi-4-pro-build/kernel",
+        "KAFLAGS=-Wa,--debug-prefix-map=/var/lib/a733-kernel-replay-work-20261106/out/kernel-replay-mapped-20261106-01/kernel-source=/home/drew/orange-pi-4-pro-build/kernel"
+      ],
+      "umask": "0002"
+    },
+    "comparisons": {
+      "Image": {
+        "actual": {
+          "bytes": 27283464,
+          "sha256": "9df974c55fa61a77e8fe812652780dad471527eb9615c27838f481887d4c50e7"
+        },
+        "equal": true,
+        "expected": {
+          "bytes": 27283464,
+          "sha256": "9df974c55fa61a77e8fe812652780dad471527eb9615c27838f481887d4c50e7"
+        }
+      },
+      "board.dtb": {
+        "actual": {
+          "bytes": 209320,
+          "sha256": "4d7d964a54668cf5dc12cd4bf7e72a625c79883541272aeba1a91adbbedb86ed"
+        },
+        "equal": true,
+        "expected": {
+          "bytes": 209320,
+          "sha256": "4d7d964a54668cf5dc12cd4bf7e72a625c79883541272aeba1a91adbbedb86ed"
+        }
+      },
+      "kernel.config": {
+        "actual": {
+          "bytes": 212080,
+          "sha256": "8a29d9c36e52db7e8a7d6ff757dc69e660f4273c99e5f00c5dbc5a9b7e060675"
+        },
+        "equal": true,
+        "expected": {
+          "bytes": 212080,
+          "sha256": "8a29d9c36e52db7e8a7d6ff757dc69e660f4273c99e5f00c5dbc5a9b7e060675"
+        }
+      }
+    },
+    "config_before_build": {
+      "actual": {
+        "bytes": 212080,
+        "sha256": "8a29d9c36e52db7e8a7d6ff757dc69e660f4273c99e5f00c5dbc5a9b7e060675"
+      },
+      "expected": {
+        "bytes": 212080,
+        "sha256": "8a29d9c36e52db7e8a7d6ff757dc69e660f4273c99e5f00c5dbc5a9b7e060675"
+      }
+    },
+    "hardware_acceptance": "Not established; actual KVM guest remains required",
+    "limitations": "Reuses cached sources and registered builder; not a fresh-builder acquisition. Modules baseline comparison is unanchored.",
+    "modules_match_unanchored_retained_baseline": true,
+    "schema": 1,
+    "shared_inputs_unchanged": true,
+    "success": true,
+    "target": "diagnostic-20261104",
+    "umask_after": "0002",
+    "umask_before": "0002"
+  },
+  "source_provenance": {
+    "build_environment": {
+      "GIT_CONFIG_GLOBAL": "/dev/null",
+      "GIT_CONFIG_NOSYSTEM": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "HOME": "/nonexistent",
+      "KBUILD_BUILD_HOST": "jammy",
+      "KBUILD_BUILD_TIMESTAMP": "2026-11-04 00:00:00 UTC",
+      "KBUILD_BUILD_USER": "builder",
+      "KBUILD_BUILD_VERSION": "1",
+      "LC_ALL": "C",
+      "PATH": "/usr/bin:/bin",
+      "SOURCE_DATE_EPOCH": "1793750400",
+      "TZ": "UTC"
+    },
+    "build_settings": {
+      "caller_umask": "0022",
+      "debug_path_profile": "original-20261104",
+      "kaflags": "-Wa,--debug-prefix-map=/var/lib/a733-kernel-replay-work-20261106/out/kernel-replay-mapped-20261106-01/kernel-source=/home/drew/orange-pi-4-pro-build/kernel",
+      "kcflags": "-fdebug-prefix-map=/var/lib/a733-kernel-replay-work-20261106/out/kernel-replay-mapped-20261106-01/kernel-source=/home/drew/orange-pi-4-pro-build/kernel",
+      "make_command": [
+        "make",
+        "-j2",
+        "ARCH=arm64",
+        "CROSS_COMPILE=aarch64-linux-gnu-",
+        "KCFLAGS=-fdebug-prefix-map=/var/lib/a733-kernel-replay-work-20261106/out/kernel-replay-mapped-20261106-01/kernel-source=/home/drew/orange-pi-4-pro-build/kernel",
+        "KAFLAGS=-Wa,--debug-prefix-map=/var/lib/a733-kernel-replay-work-20261106/out/kernel-replay-mapped-20261106-01/kernel-source=/home/drew/orange-pi-4-pro-build/kernel"
+      ],
+      "umask": "0002"
+    },
+    "expected_utsrelease": "6.6.98-a733-diag",
+    "jobs": 2,
+    "localversion": "-a733-diag",
+    "original_kernel": {
+      "commit": "2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f",
+      "git_status_porcelain": "",
+      "shallow": true
+    },
+    "original_scmversion": "absent",
+    "original_vendor": {
+      "commit": "a95129bf30ea11886cc35f08ebb3e69695a26656",
+      "git_status_porcelain": "",
+      "shallow": true
+    },
+    "private_source_before": {
+      "commit": "2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f",
+      "git_status_porcelain": "",
+      "shallow": true
+    },
+    "project": {
+      "commit": "2d20b25b53de2c1eb3f5fc0b250d9cb55608b229",
+      "git_status_porcelain": "",
+      "inputs": {
+        "build/diagnostic.sh": {
+          "bytes": 10531,
+          "sha256": "2e33783159dbcf758b780564dbf82a1ad07e38e951c0bae5c96570bcc0f9d17a"
+        },
+        "build/kernel-replay.py": {
+          "bytes": 24602,
+          "sha256": "4ab6b9caa09d326e24d4e1f283246c29e64cec8b29ecd35534726ce66cb6af46"
+        },
+        "build/uboot-replay.py": {
+          "bytes": 27413,
+          "sha256": "3558c6b75d0fdfa731eaff925b101a136b288953364996f72b8a6bcd3fcb1cfd"
+        },
+        "configs/builder-packages.lock.tsv": {
+          "bytes": 32519,
+          "sha256": "35c2faf42a936168098b1f54239825a3c42fc56c825fc0b2078bbd753425f48b"
+        },
+        "configs/builder-replay-packages-20261106.lock.tsv": {
+          "bytes": 32546,
+          "sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425"
+        },
+        "configs/diagnostic-sources.lock.json": {
+          "bytes": 2273,
+          "sha256": "aa39f5fca29244ca961fc3f422d7110adca6975d2c6a29f80afd9d1d2f4b4821"
+        },
+        "docs/evidence/diagnostic-20261104.json": {
+          "bytes": 2224,
+          "sha256": "6d743d81ee27ced3b55cbcd218bbf0693743be66e85d074e59a052c8819fde1c"
+        }
+      }
+    },
+    "source_method": "git clone --shared --no-checkout; detached pinned commit"
+  },
+  "evidence_files": {
+    "replay-manifest.json": {
+      "bytes": 443852,
+      "sha256": "97f5d36e9bc865dcf55f1c008390331039ce4b688580993f8a6a671a23fa1d67"
+    },
+    "artifacts/replay-result.json": {
+      "bytes": 4143,
+      "sha256": "b0a14cc312589d77fcb0d5c7fad78fc74506bb5a2cf310574d9f1f7293c21675"
+    },
+    "artifacts/source-provenance.json": {
+      "bytes": 3231,
+      "sha256": "c0b97dcb111f0ff8fc3a5d40aa81337442c35d86dd7a6823fd812f75bff6de5e"
+    },
+    "artifacts/input-snapshot.json": {
+      "bytes": 78123,
+      "sha256": "69730e4fcc2ab17b287f0c70ac3bda4925af5d595a1d1e021cbf39579969c79d"
+    },
+    "artifacts/input-snapshot-after.json": {
+      "bytes": 78123,
+      "sha256": "69730e4fcc2ab17b287f0c70ac3bda4925af5d595a1d1e021cbf39579969c79d"
+    },
+    "artifacts/modules-inventory.json": {
+      "bytes": 69911,
+      "sha256": "d11f28d4453416d0a4e3feeb0a716adc936859de27b256b1c021edd19d175085"
+    },
+    "logs/resources.jsonl": {
+      "bytes": 8341,
+      "sha256": "8b30052c57dc53b647d6930ada49c19b0ffd3fce4919825e8fe4fb76e82adf2e"
+    },
+    "logs/kernel-build.log": {
+      "bytes": 238573,
+      "sha256": "feb1a55d5e27bc5415c31ae1cc1768010614d7778f0fbe9a4be2dfb5207e0795"
+    }
+  },
+  "resources": {
+    "start": {
+      "utc": "2026-11-06T10:45:36Z",
+      "available_ram_bytes": 7358144512,
+      "free_disk_bytes": {
+        "/home/drew/orange-pi-4-pro-build": 15355572224,
+        "/var/lib/a733-kernel-replay-work-20261106/out/kernel-replay-mapped-20261106-01": 15355572224
+      },
+      "phase": "start"
+    },
+    "end": {
+      "utc": "2026-11-06T11:01:25Z",
+      "available_ram_bytes": 7523352576,
+      "free_disk_bytes": {
+        "/home/drew/orange-pi-4-pro-build": 10012741632,
+        "/var/lib/a733-kernel-replay-work-20261106/out/kernel-replay-mapped-20261106-01": 10012741632
+      },
+      "phase": "end"
+    },
+    "samples": 33,
+    "minimum_available_ram_bytes": 6971584512,
+    "minimum_free_disk_bytes": 10012741632
+  },
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Successful prepared-builder kernel artifact reproduction with explicit original debug paths; no fresh-builder or hardware claim",
+  "output_directory": "/var/lib/a733-kernel-replay-work-20261106/out/kernel-replay-mapped-20261106-01",
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "manifest_entries_rehashed": 2556,
+    "mismatches": 0,
+    "cached_sources_private_source_and_package_profile": "Pinned, clean, before/after equal; all 842 actual Ubuntu packages exactly match replay inventory 92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425.",
+    "restored_build_ids": {
+      "kernel": "af3d8047022fd7aca1581e830c1f3c38b67bb143",
+      "vdso": "174df7ac8d469b9a521ec02517a1938b73c4cbe7"
+    }
+  },
+  "independent_module_authentication": {
+    "target_archive": "/home/drew/orange-pi-4-pro-build/artifacts/initramfs.cpio.gz",
+    "committed_anchor": "docs/evidence/diagnostic-20261104.json",
+    "archive_bytes": 3650395,
+    "archive_sha256": "e2b09f56f4df8cfd52b98c0f1fe018c92a0806d8cac6ee065c6ac31b15e6ca30",
+    "method": "Authenticate compressed archive; parse newc in RAM using host-payload.module_entries; compare every regular module-file path, byte hash and permission mode against actual replay inventory.",
+    "regular_files": 332,
+    "kernel_modules": 319,
+    "metadata_files": 13,
+    "parsed_directories": 63,
+    "regular_file_mismatches": 0,
+    "inventory_pretty_json": {
+      "bytes": 69911,
+      "sha256": "d11f28d4453416d0a4e3feeb0a716adc936859de27b256b1c021edd19d175085"
+    },
+    "canonical_inventory_sha256": "3244bd1cd0573d429a51d98d90c0cdfc3dfa2b988331d4cf632f26b889d98455",
+    "canonical_format": "UTF-8 json.dumps(entries, sort_keys=True, separators=(',', ':')), followed by exactly one LF byte",
+    "scope": "Anchors all regular file content and permission modes; no equality claim for generated directory metadata. Recipe retained-baseline comparison remains separately unanchored."
+  },
+  "acceptance_limits": [
+    "Cached sources and prepared builder reused; independent source acquisition and immutable clean-builder image not established.",
+    "No complete new diagnostic/deployment image was assembled or flashed by this replay.",
+    "Actual installed boot, SSH, KVM guest, endurance, SD policy, update/rollback/recovery/restore and reproduced deployment remain open."
+  ]
+}
