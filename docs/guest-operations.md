@@ -32,13 +32,18 @@ and reports that omission; dry-run reads can update atime. Run builder checks
 on fixed builder storage, never use SD for routine guest work.
 
 [Explicit activation controllers](guest-activation.md) now prepare and apply the
-p5 mount and locked service accounts. They are not installed in current images
-or invoked automatically. The mount controller grants root-directory traversal
-only after validating the mounted device.
+p5 mount and locked service accounts. The prepared personalized root artifacts
+include these controllers in the complete maintenance tree at
+`/usr/lib/a733-tools/scripts/`; the current-root manifest records their
+contents. The artifacts have not been installed or booted on the board and do
+not invoke activation automatically. The mount controller grants root-directory
+traversal only after validating the mounted device.
 [Explicit enrollment](guest-enrollment.md) now publishes protected per-guest
 directories and working disks; KVM device access and runtime integration remain. The account helper recreates fixed,
 locked identities in RAM `/etc` without administration or disk memberships.
 Neither procedure has been reproduced on hardware.
+See [current managed host roots](current-host-roots.md) for prepared-artifact
+status and hardware gates.
 
 ## Input lifetime and launch
 
@@ -46,8 +51,10 @@ Keep a trusted immutable fixture seed off the writable working path. Copy the
 raw seed to the chosen NVMe guest directory. Supply trusted hashes and measured
 CPU/RAM budgets using the [fixture procedure](guest-fixture.md). Retain both
 `scripts/launch-kvm-guest.py` and its adjacent `guest-storage.py` when staging
-these tools. They are not included in the previously published maintenance
-archive or installed host roots.
+these tools. The prepared personalized root artifacts include both in the
+complete maintenance tree at `/usr/lib/a733-tools/scripts/`. See
+[current managed host roots](current-host-roots.md). These artifacts have not
+been installed or booted on the board.
 
 Input leaves must be nonempty regular files with one hard link. Verification
 reads exactly the captured size, rejects inode/size/mode/timestamp/link changes,
@@ -78,8 +85,8 @@ Upstream references: [QEMU 7.2 invocation and file backends](https://gitlab.com/
 
 ## Remaining operational work
 
-Package the explicit activation controllers and exercise them on the board.
-Integrate boot activation, supervised launch/shutdown, bounded logs/resource
+Exercise the packaged explicit activation controllers on the board. Integrate
+boot activation, supervised launch/shutdown, bounded logs/resource
 limits and isolated network policy. The explicit
 [checkpoint controller](guest-checkpoints.md) now records stopped-disk hashes;
 actual clean shutdown and restart remain unproven. Implement consistent off-device backup and restore for stopped guest

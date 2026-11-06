@@ -1,0 +1,83 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Fresh deployment installer SD; regular-file and ARM64 software verification only; no physical boot or installation acceptance",
+  "source_commit": "18affa1ad108d749de0a92505b3f33b394411aa7",
+  "builder_source": "/var/lib/a733-deployment-work-20261106",
+  "boot_profile": "experimental-el2",
+  "runtime_reused": "out/installer-runtime-deployment-20261106-01; complete source/policy/provenance/namespace/content validation passed in installer-initramfs.py before allocation",
+  "builder_outputs": {
+    "initramfs": "out/installer-initramfs-deployment-20261106-02",
+    "sd": "out/installer-sd-deployment-20261106-02",
+    "publication": "/home/drew/orange-pi-4-pro-build/installer-deployment-20261106"
+  },
+  "local_image": "/home/drew/orange-pi-4-pro/out/installer-deployment-20261106/a733-installer-prep.img",
+  "files": {
+    "a733-installer-prep.img": {
+      "bytes": 268435456,
+      "sha256": "2e16dea5e2941823bf8b40f1687ac417a67c91cecd87173b109fed23ca932499"
+    },
+    "a733-installer-prep.img.gz": {
+      "bytes": 39265814,
+      "sha256": "5e3a006a4e60d853e8282284c8d0968702ff84842ceb7f9fca43ae1347cf84ff"
+    }
+  },
+  "manifest": {
+    "bytes": 15452,
+    "sha256": "86eac8bec6f9882a218eee06682334015461fe704b3d373e7c1a74481c970a17"
+  },
+  "initramfs": {
+    "bytes": 26965428,
+    "sha256": "f0f22dd1ec4fc772b937786519e6993fcabc85492c9dd94396b4a969d5b62a4b"
+  },
+  "required_content": {
+    "quoted_modalias_scan": true,
+    "discard_policy": true,
+    "both_key_validator": true
+  },
+  "checks": {
+    "build_installer_initramfs": "passed; reused runtime provenance matches",
+    "verify_installer_runtime_arm": "passed; includes discard-authorized fixture refusal before target access",
+    "verify_acquisition_https_arm": "passed; production transport/stream verification with private loopback TLS fixture",
+    "assemble_installer": "passed; experimental-el2",
+    "verify_installer_sd": "passed; independent image/wrapper/boot-input/CRC/hash/expansion inspection",
+    "local_download": "compressed hash/size verified before expansion; expanded full raw hash/size verified"
+  },
+  "probe_outputs": {
+    "runtime-arm.json": {
+      "local": "/home/drew/orange-pi-4-pro/out/installer-deployment-20261106/probes/runtime-arm.json",
+      "builder": "/var/lib/a733-deployment-work-20261106/out/installer-initramfs-deployment-20261106-02/runtime-arm.json",
+      "bytes": 2157,
+      "sha256": "1f97caa4dd76b719b4afc42c8584c064abbb763d981bee27a77f9df02c45454a"
+    },
+    "acquisition-https-arm.json": {
+      "local": "/home/drew/orange-pi-4-pro/out/installer-deployment-20261106/probes/acquisition-https-arm.json",
+      "builder": "/var/lib/a733-deployment-work-20261106/out/installer-initramfs-deployment-20261106-02/acquisition-https-arm.json",
+      "bytes": 1427,
+      "sha256": "541bb6ce2853d8106c925cf0da27b62f5e4b4ffd01013f77855234d2b4e8a89b"
+    },
+    "sd-inspection.json": {
+      "local": "/home/drew/orange-pi-4-pro/out/installer-deployment-20261106/probes/sd-inspection.json",
+      "builder": "/var/lib/a733-deployment-work-20261106/out/installer-initramfs-deployment-20261106-02/sd-inspection.json",
+      "bytes": 806,
+      "sha256": "f885c47d3154afe084d375fc55a8379bc410ff9843e929d7892f1ee423d4b4df"
+    },
+    "required-content.json": {
+      "local": "/home/drew/orange-pi-4-pro/out/installer-deployment-20261106/probes/required-content.json",
+      "builder": "/var/lib/a733-deployment-work-20261106/out/installer-initramfs-deployment-20261106-02/required-content.json",
+      "bytes": 91,
+      "sha256": "3ce59be35366234418a698c5750f87bf5ff7fad4941f7da71b4457e0227dc9ec"
+    }
+  },
+  "resources": {
+    "builder_free_before_sd_bytes": 24540475392,
+    "builder_free_final_bytes": 24242995200,
+    "builder_available_RAM_final_bytes": 7583703040,
+    "local_free_final_bytes": 43312992256
+  },
+  "physical_storage_writes": false,
+  "limitations": [
+    "No physical SD flash, board boot, NVMe installation or KVM guest was performed.",
+    "Generated images remain ignored; source and prior outputs were not changed."
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "classification": "operator-supplied equipment description; no electrical or thermal measurement",
+  "date": "2026-11-06",
+  "power_adapter": {
+    "interface": "USB-PD",
+    "rated_maximum_watts": 67,
+    "model": "not supplied",
+    "voltage_current_profiles": "not supplied",
+    "board_negotiated_profile": "not measured"
+  },
+  "board_heatsink": {
+    "material": "copper sheet",
+    "layers": 6,
+    "coverage": "whole board",
+    "fan_presence": "not specified",
+    "reported_dimension_mm": 10.4
+  },
+  "nvme_heatsink": "Operator previously reported one already attached; no removal required.",
+  "acceptance_limits": [
+    "Adapter nameplate maximum is not measured board input power.",
+    "No under-load voltage/current, throttling, temperature or 24-hour endurance result is claimed.",
+    "Leave heatsinks attached; use diagnostic/operating outputs for further evidence."
+  ]
+}

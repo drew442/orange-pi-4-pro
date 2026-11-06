@@ -26,7 +26,9 @@ unbooted. No extra diagnostic-only reflash is required for the successful checks
   `134807190FC700149277`, firmware `EDFM20.0`; both logical and physical sectors are **512 bytes**.
   Use actual NVMe geometry.
 - Heatsinks remain attached. Diagnostic outputs supply component identities;
-  chip markings are unnecessary. Power rating/thermal endurance remain open.
+  chip markings are unnecessary. [Equipment description](evidence/power-cooling-20261106.json):
+  67 W USB-PD adapter and 10.4 mm, six-layer copper heatsink covering the board.
+  Negotiated power, fan configuration and thermal endurance remain unmeasured.
 - User explicitly authorized discarding that exact NVMe's data. Revalidate its
   identity/idle state immediately before the concrete installation; do not ask
   again for matching-device erase permission. No coordinator NVMe erase or SPI
@@ -91,12 +93,18 @@ unbooted. No extra diagnostic-only reflash is required for the successful checks
 - [Updates](host-updates.md), [selection journals](host-root-selection.md) and
   [RAM recovery](host-recovery.md) pass private-loop interruption/readback tests.
   Physical update, dirty-journal recovery and rollback remain untested.
-- [Host SD bootstrap](host-sd-bootstrap.md), [preparation runtime](installer-preparation.md),
-  [NVMe assembly](nvme-provisioning.md), [guarded writer](nvme-installation.md) and
-  [authenticated compressed delivery](nvme-distribution.md) have actual file/ARM/
-  loop/HTTPS checks. Published full-disk images remain **nondeployable fixtures**
-  with earlier package ABI/test identities and 250,000,000,000-byte geometry.
-  Build a fresh per-installation image using actual capacity/key/network inputs.
+- [Personalized NVMe candidate](evidence/personalized-nvme-20261106.json):
+  256,060,514,304 bytes, 512/512 sectors, both real keys and state UUID
+  `00fd936c-49fb-4fea-87c8-928b9c1599e0`. Raw build and independent full logical
+  hash/GPT/filesystem/root-selection inspection pass. Component/source bindings
+  pass independent Sol high review. Historical 250 GB fixtures remain nondeployable.
+- [Refreshed installer](evidence/deployment-installer-20261106.json) is staged at
+  `out/installer-deployment-20261106/a733-installer-prep.img`; matching host
+  bootstrap is at `out/host-deployment-20261106/a733-host-sd.img`. Both are
+  256 MiB and local full hashes pass. Installer ARM/TLS/SD probes pass, including
+  both-key/discard-policy support. No board boot of these new artifacts is claimed.
+  The encoded NVMe bundle is running complete-stream verification; the pinned
+  delivery endpoint and final operator procedure are not yet published.
 - [Guest fixture](guest-fixture.md), [KVM-only launch](guest-operations.md),
   [activation](guest-activation.md), [enrollment](guest-enrollment.md),
   [checkpoints](guest-checkpoints.md), [backup](guest-backups.md),
@@ -122,17 +130,13 @@ unbooted. No extra diagnostic-only reflash is required for the successful checks
 The preparation boot resolves first-boot vendor PHY binding, DHCP, route/DNS and
 verified HTTPS delivery after manual clock correction. No further diagnostic
 command is required to repeat those successful observations. Real keys/source
-policy and [ARM SSH-policy checks](evidence/operator-management-arm-20261105.json)
-are prepared. [Personalized roots/state](evidence/operator-build-20261105.json)
-and matching 256 MiB EL2 bootstrap pass host inspection. Remaining preparation:
-assemble the actual-geometry NVMe candidate and refresh installation tools/image
-with multi-key support, explicit discard policy and the modalias scan correction.
-Builder headroom was recovered without losing retained bytes; the fresh
-roots/state/bootstrap/full-disk build chain was stopped before publication to
-add trusted first-SSH fingerprint output. The serial output change passes
-[actual ARM software checks](evidence/ssh-console-management-arm-20261106.json)
-and independent review; final build is restarting from committed source. Neither full-disk installation nor payload transfer
-has occurred. Actual SSH, KVM guest execution and release gates remain open.
+policy and [ARM SSH-policy checks](evidence/ssh-console-management-arm-20261106.json)
+are prepared. [The actual-geometry candidate](evidence/personalized-nvme-20261106.json)
+and matching 256 MiB EL2 bootstrap pass software inspection. Builder headroom
+was recovered without losing retained bytes. Complete encoded verification,
+start pinned HTTPS delivery and finish the reviewed operator procedure before
+requesting another SD flash. No physical installation or payload transfer to
+the board has occurred. Actual SSH, KVM guest execution and release gates remain open.
 NVMe erase authorization for the recorded drive persists; no additional erase
 permission is being requested. SPI identity/geometry are directly observed as
 XM25QU128C, JEDEC `204118`, 16 MiB, erase 65,536 bytes, write 1 byte; verified

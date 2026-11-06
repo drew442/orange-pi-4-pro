@@ -1,0 +1,183 @@
+{
+  "schema": 1,
+  "classification": "personalized full NVMe candidate; software inspection passed, physical deployment untested",
+  "date": "2026-11-06",
+  "source_commit": "18affa1ad108d749de0a92505b3f33b394411aa7",
+  "builder": "Ubuntu 22.04.5 amd64 at build.drewnet.online",
+  "builder_directory": "/var/lib/a733-deployment-work-20261106/out/nvme-image-deployment-20261106-02",
+  "raw_manifest": {
+    "bytes": 8713,
+    "sha256": "38447236dfc9c520f4d2f2dbb381832bcafa6d51e4d606daf41eaf862e60d4f5"
+  },
+  "raw_image": {
+    "bytes": 256060514304,
+    "sha256": "74f3c6f9c66df8e125148b7a7d06ebc521d1c0fd5ae8e53de4a90c740e5224fc"
+  },
+  "allocated_bytes": 975032320,
+  "state_uuid": "00fd936c-49fb-4fea-87c8-928b9c1599e0",
+  "deployment_intent": {
+    "for_installation": true,
+    "administration_public_key_fingerprints": [
+      "SHA256:WVU8wsBgfy5mGFNAZMdrvf+a3cTYo85B8llJlHIhUKA",
+      "SHA256:Dw9WPpqQ741skiDShdwAP3qXQtpgxgbUSlCp2hmod7k"
+    ],
+    "management_mac": "10:f4:ae:90:5e:57",
+    "management_cidr": "0.0.0.0/0"
+  },
+  "logical_sector_bytes": 512,
+  "physical_sector_bytes": 512,
+  "layout": {
+    "table": "gpt",
+    "alignment_bytes": 1048576,
+    "front_reserved_bytes": 1048576,
+    "tail_reserved_bytes": 352256,
+    "partitions": [
+      {
+        "number": 1,
+        "name": "boot",
+        "start_bytes": 1048576,
+        "size_bytes": 536870912,
+        "start_lba": 2048,
+        "end_lba": 1050623
+      },
+      {
+        "number": 2,
+        "name": "root-a",
+        "start_bytes": 537919488,
+        "size_bytes": 4294967296,
+        "start_lba": 1050624,
+        "end_lba": 9439231
+      },
+      {
+        "number": 3,
+        "name": "root-b",
+        "start_bytes": 4832886784,
+        "size_bytes": 4294967296,
+        "start_lba": 9439232,
+        "end_lba": 17827839
+      },
+      {
+        "number": 4,
+        "name": "state",
+        "start_bytes": 9127854080,
+        "size_bytes": 8589934592,
+        "start_lba": 17827840,
+        "end_lba": 34605055
+      },
+      {
+        "number": 5,
+        "name": "guests",
+        "start_bytes": 17717788672,
+        "size_bytes": 238342373376,
+        "start_lba": 34605056,
+        "end_lba": 500117503
+      }
+    ]
+  },
+  "filesystem_uuids": {
+    "boot": "4d95ea4d-3d22-4913-aed0-65b28aaaef44",
+    "root-a": "a7330000-0000-4000-8000-00000000000a",
+    "root-b": "a7330000-0000-4000-8000-00000000000b",
+    "state": "00fd936c-49fb-4fea-87c8-928b9c1599e0",
+    "guests": "3dd7373a-c4b2-42e2-867a-bc5f39039285"
+  },
+  "component_manifest_hashes": {
+    "host-payload-deployment-20261106-02": "d89bcf206906c6044052c34874ee3e0592c3ccdf2f8a840681d362a55e65db67",
+    "host-state-deployment-20261106-02": "ee6128b874403c1f70df60d9bf8fcd4a4521022f4c00d752165d2eabe0aada9c",
+    "host-initramfs-deployment-20261106-02": "72549b62c2357800df6c742c66a80cfe6de23da58b5bcf745dfc5cd4cd24dde1",
+    "host-sd-deployment-20261106-02": "b5af23b9f1a1604e4635bcce98c819328797104e2efe46b447343fe1124edcc0"
+  },
+  "component_images": {
+    "host-initramfs-deployment-20261106-02": {
+      "initramfs.cpio.gz": {
+        "bytes": 4762380,
+        "sha256": "01403221d2e8ec5a077faa139ea1628e6c39f846a6787d2d6c1928154ceec05c"
+      }
+    },
+    "host-sd-deployment-20261106-02": {
+      "a733-host-sd.img": {
+        "bytes": 268435456,
+        "sha256": "2d22d84ada37a5b5d3696cc913caddcb31c0e681e65185005ea56ca0b8396329"
+      },
+      "a733-host-sd.img.gz": {
+        "bytes": 17272170,
+        "sha256": "f6c7a421dec4acb6a5c00a02cf8ff7c9291116de9bbfc6204229965f40c9ca0a"
+      },
+      "uInitrd": {
+        "bytes": 4762444,
+        "sha256": "60e7de7b83ee0c751084445f74c716bd1266ac08834bb64ba121a01c0eaee37c"
+      },
+      "assembly.log": {
+        "bytes": 4174,
+        "sha256": "441231e3ad5131dd648e76a202f5c3123b8ba457de81d3f2e4cad7380c74cfd3"
+      }
+    }
+  },
+  "independent_inspection": {
+    "classification": "independent regular-file NVMe inspection; no hardware acceptance",
+    "manifest": {
+      "bytes": 8713,
+      "sha256": "38447236dfc9c520f4d2f2dbb381832bcafa6d51e4d606daf41eaf862e60d4f5"
+    },
+    "image": {
+      "bytes": 256060514304,
+      "sha256": "74f3c6f9c66df8e125148b7a7d06ebc521d1c0fd5ae8e53de4a90c740e5224fc"
+    },
+    "logical_sector_bytes": 512,
+    "gpt_primary_backup_and_geometry": true,
+    "filesystem_uuids_and_features": {
+      "boot": "4d95ea4d-3d22-4913-aed0-65b28aaaef44",
+      "root-a": "a7330000-0000-4000-8000-00000000000a",
+      "root-b": "a7330000-0000-4000-8000-00000000000b",
+      "state": "00fd936c-49fb-4fea-87c8-928b9c1599e0",
+      "guests": "3dd7373a-c4b2-42e2-867a-bc5f39039285"
+    },
+    "partition_payloads": {
+      "root-a": {
+        "bytes": 4294967296,
+        "sha256": "dff84d1c04e4814a24f8ee12049d47ee046cf067ee585cb88128d8c7cccce232"
+      },
+      "root-b": {
+        "bytes": 4294967296,
+        "sha256": "f2f021da64b1bddfd087b3cbd1abfdf677fb4afddfa10e5a647c4ad97ec82d7e"
+      },
+      "state": {
+        "bytes": 8589934592,
+        "sha256": "1883b89e6ab0e5cb620eaaa7c1bcb9c0bda8c71687436b522fb5a4a22220978e"
+      }
+    },
+    "boot_file_hashes": {
+      "boot/boot.scr": {
+        "bytes": 1187,
+        "sha256": "f1ba10868782026d6fa4392b5e5f60db7953e8a340539f750ad710fb2b2032f1"
+      },
+      "boot/uInitrd": {
+        "bytes": 4762444,
+        "sha256": "60e7de7b83ee0c751084445f74c716bd1266ac08834bb64ba121a01c0eaee37c"
+      },
+      "boot/uImage": {
+        "bytes": 27283528,
+        "sha256": "6f9269755c4c2bc196c094899fa1ff20292f4d762c4000f77fcbb0887d5f154a"
+      },
+      "boot/boot.cmd": {
+        "bytes": 1115,
+        "sha256": "d65f4dc811150fed3ab9b67722e6b327341d388b0263907380c9bf59497fd93f"
+      },
+      "boot/dtb/allwinner/sun60i-a733-orangepi-4-pro.dtb": {
+        "bytes": 209320,
+        "sha256": "4d7d964a54668cf5dc12cd4bf7e72a625c79883541272aeba1a91adbbedb86ed"
+      }
+    },
+    "root_markers_and_state_selection": true,
+    "boot_and_guests_root_metadata": true,
+    "image_metadata_unchanged": true,
+    "limitations": [
+      "Trusted manifest required; no signature authentication.",
+      "Whole logical image hashed once; final dev/inode/size/mtime/ctime compared on a quiescent builder.",
+      "No physical installation, SPI/NVMe boot, zero SD writes, or KVM guest demonstrated."
+    ]
+  },
+  "independent_review": "gpt-6.1-sol high verified manifests, actual component identity/key/rootmarker contents and source closure; no binding defect",
+  "publication_state": "Encoded bundle and final procedure still pending; no physical writes",
+  "hardware_acceptance": "No physical installation, SSH login, guest execution, boot reliability, SD policy or recovery proof claimed."
+}

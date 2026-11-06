@@ -1,11 +1,15 @@
 # Guest storage and account activation
 
 Explicit controllers now prepare and apply guest-storage mounting and locked
-service identities. Stage the trusted maintenance tree on NVMe or RAM first.
-The new immutable A/B root includes the complete tree at `/usr/lib/a733-tools`;
-the authenticated portable archive can stage the same complete versioned tree.
-The published recovery SD image is an older subset and has not been refreshed.
-See [guest tools availability](guest-tools-package.md) for paths. No board has
+service identities. The prepared personalized A/B root artifacts include the
+current 39-file maintenance tree at `/usr/lib/a733-tools`, including these
+controllers; the authoritative manifest records its contents. See
+[current managed host roots](current-host-roots.md). Stage a trusted tree on
+NVMe or RAM only after actual installation planning. The documented portable
+archive is an earlier build, and the published recovery SD image is an older
+subset; neither has been refreshed to this prepared artifact. See
+[guest tools availability](guest-tools-package.md) for the earlier portable
+package details. The managed host has not
 been installed or booted and no KVM guest has passed. [Guest enrollment](guest-enrollment.md) now publishes the private directory
 and protected assets. Automatic boot integration and production supervision
 remain work in progress. No physical

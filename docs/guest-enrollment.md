@@ -12,8 +12,11 @@ First complete [storage/account activation](guest-activation.md) on the actual
 managed host. The configured locked identity must already exist exactly as
 specified. Use the complete installed tree at `/usr/lib/a733-tools` on the new
 immutable A/B root, or stage a trusted complete portable tool tree on NVMe or
-RAM. The older published recovery SD image has not been refreshed. See
-[guest tools availability](guest-tools-package.md). No board installation,
+RAM. Prepared personalized root artifacts include the enrollment and account
+controllers at `/usr/lib/a733-tools/scripts/`; see
+[current managed host roots](current-host-roots.md). The older published
+recovery SD image has not been refreshed. See
+[guest tools availability](guest-tools-package.md). No managed-host installation,
 boot or KVM guest pass has been demonstrated.
 
 Supply a root:root, single-link `0400` configuration file on RAM or selected
@@ -119,9 +122,11 @@ retrying; an existing guest is never silently reused or replaced.
 
 `configs/guest_config.py` renders a manually started systemd unit from the
 validated config, a trusted readable launcher path and the actual KVM group
-ID. It does not install or enable the unit. Packaging must make the launcher
-and its adjacent `guest-storage.py` readable to the guest identity through
-root-controlled ancestors before a unit can run. The actual `/dev/kvm` identity,
+ID. It does not install or enable the unit. The prepared personalized root
+artifacts include the launcher and adjacent `guest-storage.py` under
+`/usr/lib/a733-tools/scripts/`; the selected launcher path must still be
+readable to the guest identity through root-controlled ancestors in the actual
+installation before a unit can run. The actual `/dev/kvm` identity,
 permissions and group still need validation on the board.
 
 The rendered unit uses the locked guest user/group, explicit KVM supplementary

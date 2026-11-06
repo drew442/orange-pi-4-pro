@@ -26,7 +26,7 @@ for boot0/U-Boot writes.
 | Gate | Required observation | Status |
 | --- | --- | --- |
 | Diagnostic SD | Actual 2 GB card, serial boot through Linux shell | Observed: 1,977,614,336-byte card; RAM shell |
-| Inventory | Board/RAM/SSD/power/cooling and exact capacities | RAM/CPU/SD/SSD recorded; power/cooling operating tests pending |
+| Inventory | Board/RAM/SSD/power/cooling and exact capacities | RAM/CPU/SD/SSD and 67 W USB-PD/copper heatsink description recorded; operating power/thermal tests pending |
 | NVMe | PCIe/NVMe enumeration, errors and stable repeated access | Enumerates/live; repeated access and warning investigation pending |
 | KVM | EL2 messages plus guest execution with KVM explicitly required | EL2/VHE and /dev/kvm observed; no guest execution |
 | Ethernet | Vendor binding, DHCP, route/DNS/TLS and repeatable cold boot | Preparation boot: automatic YT8531/DHCP, route/DNS and verified HTTPS after manual time correction; repeatability pending |

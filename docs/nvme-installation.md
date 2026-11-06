@@ -4,8 +4,9 @@
 full-disk write. The writer is included in the current
 [installer preparation image](installer-preparation.md). Native loop tests,
 ARM software probes and independent review passed. No physical NVMe installation
-has been performed or authorized; the deployment procedure remains unvalidated
-on the A733.
+has been performed. The user has authorized discarding the exact recorded SPCC
+NVMe; revalidate identity/idle state before writing. Actual deployment remains
+unvalidated on the A733.
 
 Full-disk installation overwrites every partition, including guest storage.
 Routine inactive-slot updates, rollback and backup/restore are separate work.
