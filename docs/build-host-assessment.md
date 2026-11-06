@@ -70,6 +70,17 @@ run stayed above 7.57 GB disk free and 7.15 GB RAM available. NVMe/root/userspac
 reconstruction remains open; recover capacity and recheck all guards before
 further staging.
 
+## Available volume-group capacity
+
+Read-only LVM inventory on 2026-11-06 identifies 66,542,632,960 bytes of unused
+extents in `ubuntu-vg`, equal to the current root LV allocation. Current filesystem
+free space is about 7.68 GB after replay builds. The
+[prepared 20 GiB growth proposal](build-host-capacity-plan.md) has an exact target,
+metadata backup, successful allocation test and independently reviewed guards.
+It awaits separate approval because it changes the build host root filesystem;
+no LV/filesystem growth has been performed. This does not involve Orange Pi
+storage or change its existing NVMe erase/SPI authorization boundaries.
+
 ## Local host assessment
 
 Checked 2026-11-04 against vendor build commit `a95129bf30ea11886cc35f08ebb3e69695a26656`. **Local host only: suitable for source investigation, not an unmodified vendor image build.** No local dependencies were installed; remote provisioning is described above.

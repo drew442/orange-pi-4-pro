@@ -1,0 +1,204 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Actual frozen-builder fakeroot/mke2fs device-metadata fixture; no real device creation or hardware acceptance",
+  "success": true,
+  "builder": "build.drewnet.online",
+  "builder_directory": "/var/lib/a733-clean-replay-20261106/fakeroot-node-fixture-01",
+  "packages": {
+    "fakeroot": "1.28-1ubuntu1",
+    "libfakeroot:amd64": "1.28-1ubuntu1"
+  },
+  "package_lock": "configs/builder-replay-packages-20261106.lock.tsv",
+  "host_files": 8,
+  "host_special_nodes": 0,
+  "image_character_nodes": [
+    {
+      "name": "null",
+      "major": 1,
+      "minor": 3,
+      "mode": "0666",
+      "uid": 0,
+      "gid": 0
+    },
+    {
+      "name": "console",
+      "major": 5,
+      "minor": 1,
+      "mode": "0666",
+      "uid": 0,
+      "gid": 0
+    },
+    {
+      "name": "urandom",
+      "major": 1,
+      "minor": 9,
+      "mode": "0666",
+      "uid": 0,
+      "gid": 0
+    },
+    {
+      "name": "tty",
+      "major": 5,
+      "minor": 0,
+      "mode": "0666",
+      "uid": 0,
+      "gid": 0
+    },
+    {
+      "name": "ptmx",
+      "major": 5,
+      "minor": 2,
+      "mode": "0666",
+      "uid": 0,
+      "gid": 0
+    },
+    {
+      "name": "full",
+      "major": 1,
+      "minor": 7,
+      "mode": "0666",
+      "uid": 0,
+      "gid": 0
+    },
+    {
+      "name": "zero",
+      "major": 1,
+      "minor": 5,
+      "mode": "0666",
+      "uid": 0,
+      "gid": 0
+    },
+    {
+      "name": "random",
+      "major": 1,
+      "minor": 8,
+      "mode": "0666",
+      "uid": 0,
+      "gid": 0
+    }
+  ],
+  "checks": [
+    "Actual namespace mknod probe fails outside fakeroot.",
+    "Fakeroot creates eight ordinary host files; no real character/block node appears.",
+    "mke2fs imports virtual types/device numbers and uid/gid/modes into a regular 16 MiB ext4 image.",
+    "debugfs confirms all eight image nodes; e2fsck -fn exits zero."
+  ],
+  "outer_command": [
+    "/usr/bin/systemd-nspawn",
+    "--directory=/var/lib/a733-frozen-builders/freeze-20261106-01/restored-rootfs",
+    "--settings=no",
+    "--as-pid2",
+    "--register=no",
+    "--keep-unit",
+    "--console=pipe",
+    "--private-users=1048576:65536",
+    "--private-users-ownership=off",
+    "--private-network",
+    "--no-new-privileges=yes",
+    "--drop-capability=CAP_SYS_ADMIN,CAP_SYS_MODULE,CAP_SYS_RAWIO,CAP_SYS_BOOT,CAP_SYS_TIME,CAP_MKNOD,CAP_NET_ADMIN",
+    "--resolv-conf=off",
+    "--timezone=off",
+    "--link-journal=no",
+    "--bind-ro=/var/lib/a733-clean-builder/seed-probe-20261106-05/probe.sh:/a733-probe.sh",
+    "--bind-ro=/var/lib/a733-clean-builder/seed-probe-20261106-05/firmware-empty:/sys/firmware",
+    "--read-only",
+    "--bind-ro=/var/lib/a733-clean-replay-20261106/home:/home",
+    "--bind=/var/lib/a733-clean-replay-20261106/fakeroot-node-fixture-01/work:/a733-export-output",
+    "--bind=/var/lib/a733-clean-replay-20261106/fakeroot-node-fixture-01/scratch:/var/tmp",
+    "--bind-ro=/var/lib/a733-sd-replay-inputs-20261106:/a733-debs",
+    "--bind-ro=/var/lib/a733-clean-replay-20261106/kernel-run-01/work/project/out/kernel-replay-frozen-20261106-01/artifacts:/a733-sources",
+    "--bind-ro=/var/lib/a733-sd-replay-inputs-20261106/fakeroot-node-fixture.sh:/a733-install.sh",
+    "/bin/sh",
+    "-c",
+    "/bin/sh /a733-probe.sh && exec /bin/sh /a733-install.sh"
+  ],
+  "resources": {
+    "minimum_free_bytes": 7682711552,
+    "minimum_available_memory_bytes": 7520231424
+  },
+  "raw_records": {
+    "out/fakeroot-node-fixture-20261106/fixture-receipt.json": {
+      "bytes": 2527,
+      "sha256": "b102ec75cc3cf1f43217fad3ab281cb4d62f34768da1906ebdc2575d3058f24e"
+    },
+    "out/fakeroot-node-fixture-20261106/fixture.log": {
+      "bytes": 3131,
+      "sha256": "4722db23089cea2df6bfa750fe3ce1efb5d583cfad488024b4dad631cc1a6ac4"
+    },
+    "out/fakeroot-node-fixture-20261106/work/fixture/e2fsck.txt": {
+      "bytes": 298,
+      "sha256": "5bd8f2c4be6f25453de0a07849a7c69b08cc762bb1ed19d3010f1fde3cefdac0"
+    },
+    "out/fakeroot-node-fixture-20261106/work/fixture/ordinary-files.txt": {
+      "bytes": 183,
+      "sha256": "ac51f9a815446136273c287d768f7b6dd18c9e905d1e804834a15042a19ca294"
+    },
+    "out/fakeroot-node-fixture-20261106/work/fixture/fakeroot-version.txt": {
+      "bytes": 22,
+      "sha256": "950c0ec2ee46ff8dd34a85cfc6d74a333ea59aa764505e10526731e53dcdd852"
+    },
+    "out/fakeroot-node-fixture-20261106/work/fixture/inside.sh": {
+      "bytes": 537,
+      "sha256": "f07fdde2bc2b3904b2aa9ff5ba9216ccf0a4a414e0d220ad21d910b4b40a9a99"
+    },
+    "out/fakeroot-node-fixture-20261106/work/fixture/virtual-stat.txt": {
+      "bytes": 399,
+      "sha256": "d94ebc25aebca070dcc3b8f1be82c3ba730cc94ee8fc6b6e3554ab1bcf0d1a6f"
+    },
+    "out/fakeroot-node-fixture-20261106/work/fixture/physical-nodes.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/fakeroot-node-fixture-20261106/work/fixture/image-nodes.txt": {
+      "bytes": 4824,
+      "sha256": "f979ec759067c2c4031332ac3a8671ab626d375509511a1a664a6750cd7c40d6"
+    },
+    "out/fakeroot-node-fixture-20261106/work/fixture/nodes.ext4": {
+      "bytes": 16777216,
+      "sha256": "5637d69d4c178da0beb46f3104f02aa3d0b5fd81f6ebcbaf089da3a72c0a289f"
+    },
+    "out/fakeroot-node-fixture-20261106/work/fixture/fakeroot.state": {
+      "bytes": 599,
+      "sha256": "c87e6a799592a8c87384603b50e3f86ae8b5a6ad06a4f588722ef827ff82154a"
+    },
+    "out/fakeroot-node-fixture-20261106/work/fixture/root/dev/zero": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/fakeroot-node-fixture-20261106/work/fixture/root/dev/null": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/fakeroot-node-fixture-20261106/work/fixture/root/dev/urandom": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/fakeroot-node-fixture-20261106/work/fixture/root/dev/random": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/fakeroot-node-fixture-20261106/work/fixture/root/dev/console": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/fakeroot-node-fixture-20261106/work/fixture/root/dev/ptmx": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/fakeroot-node-fixture-20261106/work/fixture/root/dev/full": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/fakeroot-node-fixture-20261106/work/fixture/root/dev/tty": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "limits": [
+    "This fixture does not validate the complete ARM64 archive or named ownership/ACL/xattr/file-capability preservation.",
+    "Full root/state/NVMe reconstruction remains pending; storage guards are unchanged.",
+    "No actual KVM guest or board test is established."
+  ],
+  "hardware_acceptance": false
+}

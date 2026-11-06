@@ -202,6 +202,11 @@ backup/recovery and SPI-specific programming authorization remain outstanding.
    replay recipe passes ten focused tests and an actual end-to-end run. Current
    published images remain unchanged. Reconstructing the complete NVMe roots/state/
    disk and userspace base in this environment remains open; preserve all guards.
+   [Root reconstruction preparation](root-reconstruction-preparation.md) proves
+   virtual device metadata without real nodes. A two-phase ACL/capability fixture
+   passes independent postchecks, but complete root/image validation remains open. The builder has 66.54 GB unallocated in LVM;
+   a reviewed/dry-run [20 GiB root-volume growth](build-host-capacity-plan.md)
+   is prepared with metadata backup and awaits approval. No resize has occurred.
    The [26-input license inventory](evidence/vendor-boot-license-inventory-20261106.json)
    records missing attribution/grants. All [479 userspace source archives](evidence/userspace-sources-acquired-20261106.json)
    for the 220 binary packages are acquired and independently rehashed.

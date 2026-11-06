@@ -1,0 +1,52 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Read-only inventory, LVM metadata backup and test-mode preparation; actual resize not performed",
+  "build_host": "build.drewnet.online",
+  "target_lv": "/dev/ubuntu-vg/ubuntu-lv",
+  "target_lv_uuid": "Wacdne-hf6p-osvg-5IiF-iVD0-Dlgt-6iflHh",
+  "root_fstype": "ext4",
+  "lv_bytes_before": 66542632960,
+  "vg_free_bytes_before": 66542632960,
+  "proposed_increment_bytes": 21474836480,
+  "proposed_lv_bytes_after": 88017469440,
+  "proposed_vg_free_bytes_after": 45067796480,
+  "lv_resized": false,
+  "filesystem_resized": false,
+  "approval": "pending",
+  "metadata_backup": {
+    "builder_path": "/var/lib/a733-builder-lvm-preparation-20261106/ubuntu-vg.before.vg",
+    "sha256": "2b21a23134c124fab4bfbc9c7d2cf3d28e825df83e7a6c9337f16b0eeaf6815f"
+  },
+  "raw_records": {
+    "out/build-host-capacity-preparation-20261106/post-dry-run.txt": {
+      "bytes": 365,
+      "sha256": "2bb59d0bd442ed2b6c80e8e2c3b22a661e4b0d4d7143720055b0e525e9d70ba8"
+    },
+    "out/build-host-capacity-preparation-20261106/inventory.txt": {
+      "bytes": 820,
+      "sha256": "18fe55cdc4257d98d40294417ab4d5962bdb93976e767f3c944fcc86fdbdea44"
+    },
+    "out/build-host-capacity-preparation-20261106/dry-run.txt": {
+      "bytes": 438,
+      "sha256": "299c7c7633dab17ef5b8b1f80d5227e984748ef8b4793ac1d51440596097c6cc"
+    },
+    "out/build-host-capacity-preparation-20261106/absolute-size-test-and-backup.txt": {
+      "bytes": 1777,
+      "sha256": "34d793d686bc71013d54ed089f0caa4f7d1ffbec18eab56ea4767cc0e707c166"
+    },
+    "out/build-host-capacity-preparation-20261106/preconditions.txt": {
+      "bytes": 13,
+      "sha256": "1725c55370750e1c220690bf9e0477f8e8b631905fc48c619028158e3e95d258"
+    }
+  },
+  "plan": "docs/build-host-capacity-plan.md",
+  "hardware_acceptance": false,
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "result": "Cleared proposal for separate approval; target and arithmetic verified. Apply block enforces fail-fast baseline/identity checks and exact LV size verification before filesystem growth."
+  },
+  "plan_sha256": "7d93bd3fca21e2adc4f1da940e6741a38073d74cde2962ff96328f41012b706a",
+  "live_preconditions_passed": true
+}
