@@ -38,6 +38,10 @@ SOURCES = (b'deb [signed-by=/usr/share/keyrings/debian-archive-keyring.gpg] '
 MAX_UNPACKED = 2 * 1024**3
 MAX_COMPRESSED = 512 * 1024**2
 MIN_FREE = 3 * 1024**3
+ARCHIVE_EPOCH = 1790812800  # Pinned snapshot source: 2026-10-01T00:00:00Z.
+GENERATED_FILES = ('etc/nvme/hostid', 'etc/nvme/hostnqn',
+                   'var/cache/apt/pkgcache.bin', 'var/cache/apt/srcpkgcache.bin',
+                   'var/cache/ldconfig/aux-cache')
 
 
 def require(value, message):
@@ -237,6 +241,29 @@ def physical_directory(path):
     require(stat.S_ISDIR(path.lstat().st_mode), 'physical directory required: ' + str(path))
 
 
+def generated_file(path):
+    """Validate optional generated files and every physical in-tree parent."""
+    physical(path.parent)
+    for parent in path.parents:
+        if parent == ROOT:
+            break
+        if os.path.lexists(parent):
+            info = parent.lstat()
+            require(stat.S_ISDIR(info.st_mode) and (info.st_uid, info.st_gid) == ROOT_OWNER,
+                    'unsafe generated file parent: ' + str(parent.relative_to(ROOT)))
+    if os.path.lexists(path):
+        info = path.lstat()
+        require(stat.S_ISREG(info.st_mode) and info.st_nlink == 1
+                and (info.st_uid, info.st_gid) == ROOT_OWNER,
+                'unsafe generated file: ' + str(path.relative_to(ROOT)))
+
+
+def canonicalize(records):
+    """Copy native scan records, clamping only archive/BOM modification times."""
+    return {name: dict(item, mtime_ns=min(item['mtime_ns'], ARCHIVE_EPOCH * 10**9))
+            for name, item in records.items()}
+
+
 def atomic_replace(path, data):
     physical(path.parent)
     if os.path.lexists(path):
@@ -275,6 +302,8 @@ def cleanup():
     require(stat.S_ISDIR(root_info.st_mode) and (root_info.st_uid, root_info.st_gid) == ROOT_OWNER,
             'source root must be namespace-root owned physical directory')
     require(stat.S_IMODE(root_info.st_mode) in (0o700, 0o755), 'unexpected source root mode')
+    for name in GENERATED_FILES:
+        generated_file(ROOT / name)
     for name in ('etc/apt/sources.list', 'etc/machine-id'):
         path = ROOT / name
         physical(path.parent)
@@ -341,7 +370,7 @@ def cleanup():
     atomic_replace(ROOT / 'etc/apt/sources.list', SOURCES)
     if ''.join(lines) != shadow:
         atomic_replace(shadow_path, ''.join(lines).encode())
-    for path in candidates + [policy, qemu]:
+    for path in candidates + [ROOT / name for name in GENERATED_FILES] + [policy, qemu]:
         if os.path.lexists(path):
             path.unlink()
             removed.append(str(path.relative_to(ROOT)))
@@ -362,6 +391,7 @@ def cleanup():
             removed.append(str(path.relative_to(ROOT)))
     return {'root_mode': {'before': stat.S_IMODE(root_info.st_mode), 'after': 0o755},
             'removed_paths': sorted(removed), 'pruned_child_counts': counts,
+            'generic_base_generated_paths': list(GENERATED_FILES),
             'machine_id_emptied': True, 'root_password_locked': True}
 
 
@@ -389,6 +419,7 @@ def write_archive(path, records, identities):
                     require(identity(source.lstat()) == identities[name], 'source changed before archive: ' + name)
                     member = tarfile.TarInfo(name)
                     member.mode, member.uid, member.gid = item['mode'], item['uid'], item['gid']
+                    member.uname = member.gname = ''
                     member.mtime = item['mtime_ns'] // 10**9
                     member.pax_headers['mtime'] = str(Decimal(item['mtime_ns']) / Decimal(10**9))
                     for key, value in item['xattrs'].items():
@@ -494,14 +525,15 @@ def export(output: Path, configure_receipt_sha256: str) -> dict:
     package_facts = inventory()
     scan(root)  # Reject special files/external hardlinks before any cleanup.
     cleanup_facts = cleanup()
-    records, identities = scan(root)
+    native_records, identities = scan(root)
+    records = canonicalize(native_records)
     staging = Path(tempfile.mkdtemp(prefix='.export-staging-', dir=WORK))
     try:
         archive = staging / 'rootfs.tar.gz'
         raw_facts = write_archive(archive, records, identities)
         require(verify_archive(archive, records) == raw_facts, 'raw tar readback digest differs')
         current, current_ids = scan(root)
-        require(current == records and current_ids == identities, 'source tree changed during export')
+        require(current == native_records and current_ids == identities, 'source tree changed during export')
         require(read_checked(RECEIPT) == receipt_bytes, 'configure receipt changed')
         require(read_checked(code_path) == code_bytes, 'exporter code changed')
         require(inventory() == package_facts, 'inventory changed')
@@ -513,8 +545,13 @@ def export(output: Path, configure_receipt_sha256: str) -> dict:
                   'exporter_sha256': hashlib.sha256(code_bytes).hexdigest(), 'inventory': package_facts,
                   'cleanup': cleanup_facts, 'archive': compressed_facts, 'raw_tar': raw_facts,
                   'members': len(records), 'character_headers': len(DEVICES),
+                  'timestamps': {'policy': 'clamp archive/BOM mtime_ns to min(native, epoch); preserve earlier nanoseconds',
+                                 'epoch': ARCHIVE_EPOCH,
+                                 'clamped_entries': sum(records[name]['mtime_ns'] != item['mtime_ns']
+                                                        for name, item in native_records.items()),
+                                 'native_source_metadata_verified': True},
                   'classification': 'interim userspace only; no physical boot, KVM, NVMe or SD-write acceptance',
-                  'metadata': 'native same-UID-map xattrs; no original-rootfs binary-equivalence claim'}
+                  'metadata': 'normalized archive timestamps; native same-UID-map xattrs; no original-rootfs binary-equivalence claim'}
         for name, value in (('receipt.json', report),):
             (staging / name).write_text(json.dumps(value, indent=2) + '\n')
         for path in staging.iterdir():

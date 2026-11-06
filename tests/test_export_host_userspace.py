@@ -123,6 +123,140 @@ class ExportTests(unittest.TestCase):
         self.assertEqual(stat.S_IMODE(self.root.stat().st_mode), 0o755)
         self.assertEqual(report['cleanup']['root_mode'], {'before': 0o700, 'after': 0o755})
 
+    def test_generated_files_removed_and_unrelated_configuration_preserved(self):
+        for name in exporter.GENERATED_FILES:
+            self.put(name, b'private generated value')
+        self.put('etc/nvme/discovery.conf', b'keep nvme policy')
+        self.put('var/cache/ldconfig/unrelated', b'keep unrelated')
+        report = self.run_export()
+        bom = json.loads((self.work / 'export-test/rootfs-bom.json').read_text())
+        for name in exporter.GENERATED_FILES:
+            self.assertFalse((self.root / name).exists())
+            self.assertNotIn(name, bom)
+            self.assertIn(name, report['cleanup']['removed_paths'])
+        self.assertEqual((self.root / 'etc/nvme/discovery.conf').read_bytes(), b'keep nvme policy')
+        self.assertEqual((self.root / 'var/cache/ldconfig/unrelated').read_bytes(), b'keep unrelated')
+        self.assertNotIn('private generated value', json.dumps(report))
+
+    def assert_cleanup_not_started(self):
+        self.assertEqual((self.root / 'etc/machine-id').read_bytes(), b'generated-machine')
+        self.assertEqual((self.root / 'etc/apt/sources.list').read_bytes(), b'deb file:/a733-repo bookworm main\n')
+        self.assertTrue((self.root / 'etc/ssh/ssh_host_ed25519_key').exists())
+        self.assertFalse((self.work / 'export-test').exists())
+
+    def test_generated_aliases_rejected_before_cleanup(self):
+        for name in exporter.GENERATED_FILES:
+            with self.subTest(name=name):
+                path = self.put(name, b'generated')
+                outside = self.work / 'keep'
+                outside.write_bytes(b'keep')
+                path.unlink()
+                path.symlink_to(outside)
+                with self.assertRaisesRegex(ValueError, 'unsafe generated file'):
+                    self.run_export()
+                self.assert_cleanup_not_started()
+                self.assertEqual(outside.read_bytes(), b'keep')
+                path.unlink()
+                path.write_bytes(b'generated')
+                os.link(path, path.with_name(path.name + '-alias'))
+                with self.assertRaisesRegex(ValueError, 'unsafe generated file'):
+                    self.run_export()
+                self.assert_cleanup_not_started()
+                path.with_name(path.name + '-alias').unlink()
+                path.unlink()
+
+    def test_optional_generated_parent_cannot_alias(self):
+        outside = self.work / 'outside'
+        outside.mkdir()
+        (outside / 'hostid').write_bytes(b'keep')
+        (self.root / 'etc/nvme').symlink_to(outside, target_is_directory=True)
+        with self.assertRaisesRegex(ValueError, 'symlink ancestor'):
+            self.run_export()
+        self.assert_cleanup_not_started()
+        self.assertEqual((outside / 'hostid').read_bytes(), b'keep')
+
+    def test_optional_generated_parent_must_be_directory(self):
+        self.put('etc/nvme', b'keep this regular file')
+        with self.assertRaisesRegex(ValueError, 'unsafe generated file parent'):
+            self.run_export()
+        self.assert_cleanup_not_started()
+        self.assertEqual((self.root / 'etc/nvme').read_bytes(), b'keep this regular file')
+
+    def test_generated_file_and_parent_ownership_rejected_before_cleanup(self):
+        path = self.put('etc/nvme/hostid', b'generated')
+        original = Path.lstat
+        for wrong in (path, path.parent):
+            with self.subTest(wrong=wrong):
+                def wrong_owner(candidate, *args, **kwargs):
+                    info = original(candidate, *args, **kwargs)
+                    if candidate != wrong:
+                        return info
+                    values = list(info)
+                    values[4] = exporter.ROOT_OWNER[0] + 1
+                    return os.stat_result(values)
+                # Exercise cleanup preflight directly: this fixture isolates owner checks
+                # without altering real ownership or inventing scan timestamp fields.
+                with patch.object(Path, 'lstat', wrong_owner):
+                    with self.assertRaisesRegex(ValueError, 'unsafe generated file'):
+                        exporter.cleanup()
+                self.assert_cleanup_not_started()
+
+    def test_archive_timestamp_policy_preserves_native_and_earlier_nanoseconds(self):
+        old = 1234567890123456789
+        newer = exporter.ARCHIVE_EPOCH * 10**9 + 123456789
+        data = self.root / 'usr/share/data'
+        old_path = self.put('usr/share/old', b'old')
+        os.utime(data, ns=(newer, newer))
+        os.utime(old_path, ns=(old, old))
+        report = self.run_export()
+        bom = json.loads((self.work / 'export-test/rootfs-bom.json').read_text())
+        self.assertEqual(bom['usr/share/data']['mtime_ns'], exporter.ARCHIVE_EPOCH * 10**9)
+        self.assertEqual(bom['usr/share/old']['mtime_ns'], old)
+        self.assertEqual(data.stat().st_mtime_ns, newer)
+        self.assertEqual(old_path.stat().st_mtime_ns, old)
+        self.assertEqual(report['timestamps']['epoch'], exporter.ARCHIVE_EPOCH)
+        self.assertGreater(report['timestamps']['clamped_entries'], 0)
+        self.assertTrue(report['timestamps']['native_source_metadata_verified'])
+
+    def test_equivalent_generated_variations_produce_identical_bytes(self):
+        native_snapshots = []
+        original = exporter.canonicalize
+        def capture(records):
+            snapshot = json.loads(json.dumps(records))
+            result = original(records)
+            self.assertEqual(records, snapshot)
+            native_snapshots.append(snapshot)
+            return result
+        reports = []
+        for iteration in (1, 2):
+            for name in exporter.GENERATED_FILES:
+                self.put(name, ('generated variant ' + str(iteration)).encode())
+            newer = (exporter.ARCHIVE_EPOCH + iteration * 100) * 10**9 + iteration
+            for path in [self.root, *self.root.rglob('*')]:
+                os.utime(path, ns=(newer, newer), follow_symlinks=False)
+            with patch.object(exporter, 'canonicalize', side_effect=capture):
+                reports.append(self.run_export(output=self.work / ('export-' + str(iteration))))
+        for name in ('rootfs.tar.gz', 'rootfs-bom.json'):
+            self.assertEqual((self.work / 'export-1' / name).read_bytes(),
+                             (self.work / 'export-2' / name).read_bytes())
+        self.assertEqual(reports[0]['raw_tar'], reports[1]['raw_tar'])
+        self.assertEqual(reports[0]['archive'], reports[1]['archive'])
+        self.assertNotEqual(native_snapshots[0]['usr/share/data']['mtime_ns'],
+                            native_snapshots[1]['usr/share/data']['mtime_ns'])
+        self.assertGreater(native_snapshots[0]['usr/share/data']['mtime_ns'], exporter.ARCHIVE_EPOCH * 10**9)
+
+    def test_clamped_native_timestamp_change_still_rejected(self):
+        original = exporter.write_archive
+        def change(*args):
+            result = original(*args)
+            newer = (exporter.ARCHIVE_EPOCH + 1000) * 10**9
+            os.utime(self.root / 'usr/share/data', ns=(newer, newer))
+            return result
+        with patch.object(exporter, 'write_archive', side_effect=change):
+            with self.assertRaisesRegex(ValueError, 'tree changed'):
+                self.run_export()
+        self.assertFalse((self.work / 'export-test').exists())
+
     def test_wrong_receipt_hash_prevents_cleanup(self):
         with self.assertRaisesRegex(ValueError, 'authentication'):
             self.run_export(receipt_hash='0' * 64)
