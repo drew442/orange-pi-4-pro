@@ -1,0 +1,188 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Authenticated binary-package extraction plus ARM ABI/character-device preflight in frozen builder; not rebuilt userspace or hardware acceptance",
+  "success": true,
+  "builder": "build.drewnet.online",
+  "phase": "/var/lib/a733-clean-replay-20261106/userspace-arm-preflight-01",
+  "raw_records": "out/userspace-arm-preflight-20261106/",
+  "code": {
+    "out/userspace-arm-preflight-20261106/verification-code/userspace-arm-preflight-20261106.py": {
+      "bytes": 12074,
+      "sha256": "911e1687848e748acfac437a936335f294c1c2624add560fa7dc1e12ed6b5a92"
+    },
+    "out/userspace-arm-preflight-20261106/verification-code/userspace-arm-preflight-tests-20261106.py": {
+      "bytes": 4346,
+      "sha256": "3f87949e8938c7f549fad4be6ba52975a0ad4ce0e73e760bcbaf8e996020d221"
+    },
+    "out/userspace-arm-preflight-20261106/verification-code/launch-userspace-arm-preflight-20261106.py": {
+      "bytes": 5447,
+      "sha256": "de251a8912ecb391cfcddb4d185ed81ce1233303737a07517a1280d5ac397a1c"
+    }
+  },
+  "authenticated_deb_count": 220,
+  "selected_private_inputs": {
+    "path": "/a733-export-output/verified-debs",
+    "uid": 0,
+    "packages": {
+      "coreutils": {
+        "path": "/a733-export-output/verified-debs/coreutils_9.1-1_arm64.deb",
+        "sha256": "ec8f090a14c684879dce251254d8d9ed0876d4480f750d5807ef04e5435e1c4d"
+      },
+      "dash": {
+        "path": "/a733-export-output/verified-debs/dash_0.5.12-2_arm64.deb",
+        "sha256": "c1358e2a8054eb93efd460adf480224a16ea9e0b4d7b4c6cbcf8c8c91902a1d7"
+      },
+      "libc6": {
+        "path": "/a733-export-output/verified-debs/libc6_2.36-9+deb12u14_arm64.deb",
+        "sha256": "01f4330719fd4f65580e16ea5a0527f372fca750e8f588d26deaf09f2d3b1cf4"
+      }
+    }
+  },
+  "selected_unpacked_bytes": 44014641,
+  "qemu": {
+    "/usr/bin/qemu-aarch64-static": "92c4aeb8dd898de7152c184370ab22f09ae7c5b7279fd300081c76cee3f78a80",
+    "/var/lib/a733-frozen-builders/freeze-20261106-01/restored-rootfs/usr/bin/qemu-aarch64-static": "92c4aeb8dd898de7152c184370ab22f09ae7c5b7279fd300081c76cee3f78a80"
+  },
+  "binfmt": "enabled\ninterpreter /usr/libexec/qemu-binfmt/aarch64-binfmt-P\nflags: PF\noffset 0\nmagic 7f454c460201010000000000000000000200b700\nmask ffffffffffffff00fffffffffffffffffeffffff\n",
+  "character_devices": {
+    "null": {
+      "major": 1,
+      "minor": 3,
+      "uid": 65534,
+      "gid": 65534
+    },
+    "zero": {
+      "major": 1,
+      "minor": 5,
+      "uid": 65534,
+      "gid": 65534
+    },
+    "random": {
+      "major": 1,
+      "minor": 8,
+      "uid": 65534,
+      "gid": 65534
+    },
+    "urandom": {
+      "major": 1,
+      "minor": 9,
+      "uid": 65534,
+      "gid": 65534
+    }
+  },
+  "arm_results": {
+    "explicit_true": true,
+    "nested_shell_and_external_true": true,
+    "device_checks_and_null_write": true,
+    "device_reads": {
+      "zero": {
+        "hex": "00000000000000000000000000000000",
+        "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+      },
+      "random": {
+        "hex": "4aec081ac5cf9f8cebfb3d16c21a40bc",
+        "sha256": "1e0a72f7c8168c003b818431ecf0b05bbe5c8fd16485851d11513b2a061ab5a2"
+      },
+      "urandom": {
+        "hex": "7a4ab3e8b9c67633d515dba3d5e86fb7",
+        "sha256": "4a55599c039fc7410f60d7c908cb37ae8b37c89c9c66fb418ee36729de027428"
+      }
+    }
+  },
+  "boundaries": {
+    "steps": [
+      {
+        "mode": "prepare",
+        "probe": {
+          "uid_base": 1048576,
+          "uid_count": 65536,
+          "network_interfaces": [
+            "lo"
+          ],
+          "ipv6_loopback_routes": [
+            "00000000000000000000000000000001 80 00000000000000000000000000000000 00 00000000000000000000000000000000 00000100 00000001 00000000 00000001       lo",
+            "00000000000000000000000000000000 00 00000000000000000000000000000000 00 00000000000000000000000000000000 ffffffff 00000001 00000000 00200200       lo",
+            "00000000000000000000000000000001 80 00000000000000000000000000000000 00 00000000000000000000000000000000 00000000 00000002 00000000 80200001       lo",
+            "00000000000000000000000000000000 00 00000000000000000000000000000000 00 00000000000000000000000000000000 ffffffff 00000001 00000000 00200200       lo"
+          ],
+          "prohibited_capability_mask": "0xa631000"
+        },
+        "returncode": 0,
+        "mapped_processes_after": [],
+        "output_mounts_after": []
+      },
+      {
+        "mode": "devices",
+        "probe": {
+          "uid_base": 1048576,
+          "uid_count": 65536,
+          "network_interfaces": [
+            "lo"
+          ],
+          "ipv6_loopback_routes": [
+            "00000000000000000000000000000001 80 00000000000000000000000000000000 00 00000000000000000000000000000000 00000100 00000001 00000000 00000001       lo",
+            "00000000000000000000000000000000 00 00000000000000000000000000000000 00 00000000000000000000000000000000 ffffffff 00000001 00000000 00200200       lo",
+            "00000000000000000000000000000001 80 00000000000000000000000000000000 00 00000000000000000000000000000000 00000000 00000002 00000000 80200001       lo",
+            "00000000000000000000000000000000 00 00000000000000000000000000000000 00 00000000000000000000000000000000 ffffffff 00000001 00000000 00200200       lo"
+          ],
+          "prohibited_capability_mask": "0xa631000"
+        },
+        "returncode": 0,
+        "mapped_processes_after": [],
+        "output_mounts_after": []
+      }
+    ],
+    "host_package_inventory_unchanged": true,
+    "no_new_capabilities": true,
+    "real_mknod_denied": true,
+    "no_block_or_kvm_device_exposure": true
+  },
+  "resources": {
+    "samples": 3,
+    "minimum_free_bytes": 5989744640,
+    "minimum_available_memory_bytes": 7474208768
+  },
+  "tests": {
+    "cases": 13,
+    "passed": true,
+    "independently_repeated": true
+  },
+  "review": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "pre_execution": "cleared after private-input-copy, command-status and path-ancestry corrections",
+    "actual_execution_postreview": "passed: reviewed code and locks match; exact package tuples and selected-input hashes, ARM commands and samples, isolation/resource/cleanup records, and byte-identical 842-row host inventory verified; private archive contents supported by execution receipts"
+  },
+  "frozen_debootstrap": {
+    "version": "1.0.126+nmu1ubuntu0.9",
+    "files": {
+      "usr/sbin/debootstrap": {
+        "bytes": 25026,
+        "sha256": "e5ec6d523bdbf9287305609009c7acc5fbdd64f0b2ad95a6810ed70dc85577de"
+      },
+      "usr/share/debootstrap/functions": {
+        "bytes": 48952,
+        "sha256": "2fe03b61a02659d131f541aabd51a8eecc658b87b9f5e279addfd6e44de5ce37"
+      },
+      "usr/share/debootstrap/scripts/sid": {
+        "bytes": 508,
+        "sha256": "578da6cee38e4d0558f11f37876273c9b22f2b583457377f86c54a7e9c76b11e"
+      }
+    },
+    "required_adapter": "Stock device sanity checks and device/proc/sys mount lifecycle require a reviewed prebound-device/API-filesystem adapter; do not spoof container type."
+  },
+  "limitations": [
+    "No package maintainer scripts, debootstrap stages or full root configuration executed.",
+    "Only three raw package archives populated the ABI fixture; original rootfs archive was not used as a construction seed.",
+    "ARM userspace interpretation here is build-time tooling and is not KVM hardware execution.",
+    "No source recompilation, production roots/state/NVMe reconstruction, physical installation or release acceptance established.",
+    "Build-host LV/filesystem remains unchanged; production image staging capacity is still insufficient."
+  ],
+  "raw_records_manifest": {
+    "path": "out/userspace-arm-preflight-20261106/records-manifest.json",
+    "files": 12,
+    "bytes": 1697,
+    "sha256": "b08a8e9550cf430e0f5e777da4ca3dd15157af46410f64af7454126739320720"
+  }
+}

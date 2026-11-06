@@ -202,6 +202,10 @@ backup/recovery and SPI-specific programming authorization remain outstanding.
    replay recipe passes ten focused tests and an actual end-to-end run. Current
    published images remain unchanged. Reconstructing the complete NVMe roots/state/
    disk and userspace base in this environment remains open; preserve all guards.
+   [Userspace reconstruction preparation](userspace-rebuild-preparation.md) now
+   authenticates all 220 packages and passes ARM ABI/device execution from three
+   raw package inputs inside the frozen builder. No maintainer scripts ran; a
+   reviewed offline device/API-filesystem adapter is the next userspace step.
    [Root reconstruction preparation](root-reconstruction-preparation.md) proves
    virtual device metadata without real nodes. The complete 15,892-member
    userspace archive now passes staging content/metadata checks and selected
