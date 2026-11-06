@@ -195,7 +195,9 @@ def extract_legacy(archive_path, destination):
             target = destination / name
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(data)
-            target.chmod(0o755 if name.endswith('.sh') else 0o644)
+            # The whole archive hash authenticates these modes. In particular,
+            # GPL-2.0.txt must retain 0664 for byte-identical legacy cpio output.
+            target.chmod(members[name].mode & 0o777)
     return {name: facts(destination / name) for name in sorted(LEGACY_FILES)}
 
 

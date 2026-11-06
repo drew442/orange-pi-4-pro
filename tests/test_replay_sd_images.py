@@ -87,13 +87,13 @@ class ReplayTests(unittest.TestCase):
         self.assertEqual(pins['expected']['host']['sha256'], '2d22d84ada37a5b5d3696cc913caddcb31c0e681e65185005ea56ca0b8396329')
         self.assertEqual(pins['expected']['installer']['sha256'], '2e16dea5e2941823bf8b40f1687ac417a67c91cecd87173b109fed23ca932499')
 
-    def archive(self, extras=(), source=b'legacy'):
+    def archive(self, extras=(), source=b'legacy', modes=None):
         path = self.inputs / 'recipe.tar.gz'
         with tarfile.open(path, 'w:gz') as archive:
             for name in sorted(replay.LEGACY_FILES):
                 item = tarfile.TarInfo(name)
                 item.size = len(source)
-                item.mode = 0o7777
+                item.mode = (modes or {}).get(name, 0o7777)
                 archive.addfile(item, io.BytesIO(source))
             for name, kind in extras:
                 item = tarfile.TarInfo(name)
@@ -121,8 +121,19 @@ class ReplayTests(unittest.TestCase):
             result = replay.extract_legacy(self.archive(), self.root / 'good')
         self.assertEqual(set(result), replay.LEGACY_FILES)
         for name in replay.LEGACY_FILES:
-            expected_mode = 0o755 if name.endswith('.sh') else 0o644
-            self.assertEqual((self.root / 'good' / name).stat().st_mode & 0o7777, expected_mode)
+            self.assertEqual((self.root / 'good' / name).stat().st_mode & 0o7777, 0o777)
+
+    def test_legacy_archive_modes_preserve_authenticated_cpio_metadata(self):
+        modes = {'licenses/GPL-2.0.txt': 0o664,
+                 'licenses/busybox-copyright.txt': 0o644,
+                 'configs/diagnostic-init': 0o775,
+                 'build/diagnostic-initramfs.sh': 0o775}
+        hashes = {name: record(b'legacy')['sha256'] for name in replay.LEGACY_HASHES}
+        with patch.object(replay, 'LEGACY_HASHES', hashes):
+            replay.extract_legacy(self.archive(modes=modes), self.root / 'modes')
+        for name, expected in modes.items():
+            with self.subTest(name=name):
+                self.assertEqual((self.root / 'modes' / name).stat().st_mode & 0o7777, expected)
 
     def test_private_environment_and_umask_restore_on_failure(self):
         original = dict(os.environ)
