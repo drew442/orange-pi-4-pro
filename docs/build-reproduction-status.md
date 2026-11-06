@@ -17,6 +17,7 @@ artifacts remain bound to [the deployment guide](deploy-personalized-20261106.md
 | ARM userspace inputs | [220 authenticated binary packages](userspace-rebuild-preparation.md), [479 source archives](evidence/userspace-sources-acquired-20261106.json) | Source archives are acquired, not recompiled |
 | Foreign userspace stage | [Authenticated mirror and pinned adapter](offline-userspace-reconstruction.md), [actual records](evidence/userspace-foreign-20261106.json): all 669 mirror files checked, 99 packages cached, 96 extracted, empty target status | Native data stage only |
 | ARM userspace configuration/export | [Actual configuration/export](evidence/userspace-configured-export-20261106.json): 220 exact configured packages, clean dpkg/APT audits, identity cleanup; all 15,881 archive members independently verified | [Tracked configuration replay](userspace-configuration-replay.md), [normalized pair](userspace-export-reproducibility.md) and [fresh raw-package pipeline](userspace-fresh-pipeline.md) match compressed/raw/BOM bytes; production composition and independent deployment remain open |
+| Tracked userspace orchestration | [Launcher](userspace-pipeline-launcher.md): committed source snapshots, closed phase inputs, normalized output binding, independent review, actual read-only plan and capacity refusal | Three-phase launcher execution pending capacity; successful prior wrappers are separate evidence |
 | Device metadata | [Fixture](evidence/fakeroot-device-metadata-20261106.json), [two-phase candidate](evidence/fakeroot-metadata-candidate-20261106.json) | Virtual archive/image devices do not prove hardware access |
 | Complete historical root archive | [Full staging comparison](evidence/full-root-metadata-fixture-20261106.json), [complete diagnostic image readback](evidence/full-root-image-readback-20261106.json): 15,892 paths, 518,081,083 regular-file bytes, links/devices/attributes | Diagnostic 1 GiB image; production 4 GiB slots remain open |
 | Authenticated userspace profiles | [Explicit selection and actual staging](userspace-profiles.md): normalized/default pins, 12 provenance files, complete 15,876-entry extraction, 220 packages, eight package-state components and closed runtime | No production images; source-side resolver only |
@@ -40,7 +41,7 @@ free disk/RAM before every run. The reviewed [20 GiB LVM growth](build-host-capa
 has a metadata backup and successful dry run, but awaits authorization. No resize
 has occurred; production capacity guards remain mandatory.
 
-Next: consolidate outer userspace orchestration, use the explicit normalized profile,
+Next: execute the tracked userspace launcher after capacity permits, use the explicit normalized profile,
 then reconstruct and fully inspect production roots/state/
 NVMe after capacity permits. A second agent/operator must reproduce the complete
 deployment from the guide; build proofs cannot satisfy physical release gates.

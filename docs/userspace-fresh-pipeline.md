@@ -38,9 +38,10 @@ under the corresponding ignored codex output directories:
 `out/userspace-foreign-recipe-20261106/`,
 `out/userspace-configure-fresh-20261106/` and
 `out/userspace-export-fresh-20261106/`. These commands record this prepared run;
-the fixed phases now exist and must not be overwritten. Consolidating the outer
-staging/phase sequencing into a tracked fresh-tag launcher remains work before
-a clean-checkout build guide is complete.
+the fixed phases now exist and must not be overwritten. A
+[tracked fresh-tag launcher](userspace-pipeline-launcher.md) now consolidates
+staging and phase sequencing; its actual execution is still pending capacity
+before a clean-checkout build guide can be declared reproduced.
 
 The new work tree is
 `/var/lib/a733-clean-replay-20261106/userspace-foreign-recipe-01/work`.
@@ -111,9 +112,11 @@ Capacity was recovered through [verified file retention](userspace-rebuild-capac
 no disk resize or guard reduction occurred. All 1,121 native discovery cases pass
 with 96 environment skips, plus four assembly cases and all five shell suites.
 
-Next: consolidate outer orchestration, select the normalized base explicitly in
-the production payload profile, rebuild and completely inspect roots/state/NVMe,
-and reproduce the deployment procedure independently. Current production recipes
-still bind their historical archive; published installation files are unchanged.
+The [explicit userspace profile](userspace-profiles.md) now permits both root
+and state builders to select the normalized archive, with full staging evidence.
+Their default remains the historical archive; published installation files are
+unchanged. Next: execute the tracked outer launcher once capacity permits, rebuild
+and completely inspect production roots/state/NVMe, and reproduce deployment
+independently.
 Follow the [existing deployment procedure](deploy-personalized-20261106.md) for
 physical NVMe boot, SSH and actual KVM tests; those results remain pending.

@@ -92,8 +92,10 @@ by subsequent clean-build work.
   independent readback. The [explicit normalized profile](userspace-profiles.md) now integrates root/state
   selection and passes actual complete staging: 15,876 base entries, 220 packages,
   eight package-state components and the unchanged 39-file runtime. Latest native
-  discovery: **1,145 cases, 96 environment skips**,
-  four assembly cases and all five shell suites. Production composition and
+  discovery: **1,159 cases, 97 environment skips**,
+  four assembly cases and all five shell suites. The [tracked outer launcher](userspace-pipeline-launcher.md)
+  passes review and read-only plans; actual root preflight refuses insufficient
+  capacity before output creation. Its full execution, production composition and
   independent deployment remain open; these checks establish no hardware acceptance.
 
 ## Next actions and blockers
@@ -106,8 +108,8 @@ by subsequent clean-build work.
 2. Validate NVMe host boot and SSH with both keys. Run [the first KVM guest](kvm-first-guest.md)
    for CPU/disk/network, clean shutdown/restart and persisted disk marker. Return
    its console/log evidence; `/dev/kvm` alone cannot satisfy the gate.
-3. Continue [clean-build work](build-reproduction-status.md): consolidate outer
-   pipeline orchestration, then use the explicit normalized profile to
+3. Continue [clean-build work](build-reproduction-status.md): execute the reviewed
+   outer pipeline launcher once capacity permits, then use the normalized profile to
    reconstruct production roots/state/NVMe and complete image readback. The reviewed [20 GiB builder LVM growth](build-host-capacity-plan.md)
    awaits approval; no resize occurred and capacity guards remain unchanged.
    [Firmware license evidence](evidence/vendor-boot-license-inventory-20261106.json)

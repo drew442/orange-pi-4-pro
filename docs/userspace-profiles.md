@@ -78,6 +78,8 @@ source-only resolver.
 
 No production root/state/NVMe images were built by this probe, and no physical
 boot, SSH login, KVM guest or SD-write acceptance is established. Complete
-production composition, tracked outer orchestration and independently reproduced
-deployment remain open. Builder capacity is about 3.29 GB free; the
+production composition and independently reproduced deployment remain open.
+The [tracked outer launcher](userspace-pipeline-launcher.md) now passes review,
+plans and capacity refusal; its complete execution remains pending. Builder
+capacity after its protected source staging is about 3.28 GB free; the
 [reviewed growth proposal](build-host-capacity-plan.md) still awaits authorization.

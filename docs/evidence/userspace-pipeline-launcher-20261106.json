@@ -1,0 +1,195 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "tracked pipeline source, tests, read-only plans and actual capacity refusal only; full pipeline execution pending",
+  "source_commit": "87b254419e4f1569f242ee2233a14a7920e4c8c3",
+  "source_manifest": {
+    "files": {
+      "build/configure-host-userspace.py": {
+        "bytes": 22122,
+        "git_blob": "768f64362b2653206409df0735cb00ba7764a040",
+        "sha256": "0ff4f8538723ac1a4fe6f43d1ff6d73b6e0e36f22daa8eb31fa97d8553b8c95f"
+      },
+      "build/debootstrap-adapter.py": {
+        "bytes": 18308,
+        "git_blob": "8fcebf8d99be90b868df37c0965c3c4780bf7901",
+        "sha256": "d10f8a8ea1e83a0b659582d895e98bf8553165dbfc2469aab54eab82e1c501ea"
+      },
+      "build/export-host-userspace.py": {
+        "bytes": 28217,
+        "git_blob": "3a3f94a2cb582455d82a624160e94f7b7067ea24",
+        "sha256": "1cd49563c43fe7ddd78d309ef2d9fe48b2ad1d1d29ee6d7050374db12be118ed"
+      },
+      "build/launch-userspace-configuration.py": {
+        "bytes": 25142,
+        "git_blob": "79ff84615f83920da644aff6f555726cc786fc22",
+        "sha256": "e5708c3d998159c194bccaad9b157b9d3190c7b6018ad1dc7480124ed66bb158"
+      },
+      "build/launch-userspace-pipeline.py": {
+        "bytes": 20436,
+        "git_blob": "ce87ad6137dd3ae8b09c6bdc677bac2c553b61d1",
+        "sha256": "3338fe97521287124cae5c61b2631deee977ad575e5d713b6ab4d1a6385c22e7"
+      },
+      "build/offline-userspace-repo.py": {
+        "bytes": 19197,
+        "git_blob": "5d2b02920e1d470367b1d4672f5e25b4e894a344",
+        "sha256": "bb8a4c71595f9867e4f7cf2958a2bf5bca6e0d81c49819eb1b7483957b0a4911"
+      },
+      "build/prepare-host-userspace.py": {
+        "bytes": 18830,
+        "git_blob": "361d66ec4cb22e67c2f23eb2962fdb838062f9ae",
+        "sha256": "86a3432aea83ae408a38d18f07eb48b2d2a8b59adb7b23b14bfcadfdf6a772a9"
+      },
+      "build/userspace-bootstrap-api.py": {
+        "bytes": 27185,
+        "git_blob": "d743e639cdca51ba3adb5a796a090a3589e47e1f",
+        "sha256": "365fd1681e5b5fbce8062771d54082862482995b48ef6b42f6f2b05464b26964"
+      },
+      "configs/builder-replay-packages-20261106.lock.tsv": {
+        "bytes": 32546,
+        "git_blob": "17518b78511b6fa86474aa62a2a575b53895c549",
+        "sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425"
+      },
+      "configs/host-userspace-package-hashes.lock.tsv": {
+        "bytes": 28638,
+        "git_blob": "529b39aad256fbe28188c6c724c60bfb9edee698",
+        "sha256": "f2f613e79d9c1abc1689e19cfe81b624d9d2ac3beeb322fd5788980d919f7d86"
+      },
+      "configs/host-userspace-packages.lock.tsv": {
+        "bytes": 6671,
+        "git_blob": "640af83be6bb0939d56d11b7b62f256e03ba05f9",
+        "sha256": "f2abf03d0d6e7fd506560689093220514cbf1acc678f7560562026d6ca6564a6"
+      },
+      "configs/host-userspace-profiles.lock.json": {
+        "bytes": 2781,
+        "git_blob": "db0887493e039dae0f7c759fe7de0114584b9079",
+        "sha256": "ffa155f51cca41d4c791594f53829b79cc6c255cde06880137ed0c52cab40d58"
+      }
+    },
+    "revision": "87b254419e4f1569f242ee2233a14a7920e4c8c3"
+  },
+  "validation": {
+    "native_discovery": {
+      "cases": 1159,
+      "environment_skips": 97,
+      "success": true
+    },
+    "assembly_cases": 4,
+    "bash_suites": 5,
+    "focused_pipeline_cases": 14,
+    "focused_pipeline_environment_skips": 1,
+    "diff_check": true,
+    "toml_files_parsed": 5
+  },
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "blocking_findings_remaining": 0,
+    "corrected_finding": "WorkSlot originally mishandled compound work/api paths; corrected with regression exercising unchanged bootstrap_api via adapter.",
+    "checked": [
+      "closed phase source sets and committed snapshots",
+      "new shared work, three isolated phases, no historical tree clone",
+      "existing API handshake and fixed namespace restrictions",
+      "unchanged start/runtime floors and timeouts",
+      "preflight capacity before phase creation",
+      "final streaming archive binding to committed normalized profile",
+      "failure receipts, phase cleanup and unchanged host inventory"
+    ],
+    "scope": "read-only source review and host tests; no privileged pipeline execution"
+  },
+  "actual_root_preflight": {
+    "schema": 1,
+    "classification": "actual root preflight refusal only; no phase execution or hardware acceptance",
+    "source_commit": "87b254419e4f1569f242ee2233a14a7920e4c8c3",
+    "command": [
+      "/usr/bin/python3",
+      "-I",
+      "-B",
+      "/var/lib/a733-userspace-pipeline-project-20261106/project/build/launch-userspace-pipeline.py",
+      "--tag",
+      "tracked-01",
+      "--project",
+      "/var/lib/a733-userspace-pipeline-project-20261106/project"
+    ],
+    "plan_returncode": 0,
+    "returncode": 1,
+    "expected_error": "need more than 4 GB free before staging",
+    "free_before_bytes": 3278569472,
+    "free_after_bytes": 3278520320,
+    "phase_absent": true,
+    "host_inventory_unchanged": true,
+    "capacity_refusal_verified": true
+  },
+  "retained_records": {
+    "out/userspace-pipeline-launcher-20261106/capacity-check.json": {
+      "bytes": 730,
+      "sha256": "6a6091393a8121ee4420f8115d331bcb8d82327264344347db00ccf99703fc13"
+    },
+    "out/userspace-pipeline-launcher-20261106/capacity.stderr": {
+      "bytes": 815,
+      "sha256": "c81c7cfbe8a437a6e2640e3acef3cf36bb60925f89e62a6b0fa5f21cce9cf4fd"
+    },
+    "out/userspace-pipeline-launcher-20261106/capacity.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/userspace-pipeline-launcher-20261106/host-packages.after.tsv": {
+      "bytes": 40966,
+      "sha256": "446b7eb3364a6f196390c698c1c133086fee5eb3b080ec4483cc1d8584b39b15"
+    },
+    "out/userspace-pipeline-launcher-20261106/host-packages.before.tsv": {
+      "bytes": 40966,
+      "sha256": "446b7eb3364a6f196390c698c1c133086fee5eb3b080ec4483cc1d8584b39b15"
+    },
+    "out/userspace-pipeline-launcher-20261106/plan.json": {
+      "bytes": 3975,
+      "sha256": "3ebc671d4b1d13a33c39c064179427b8a3949a5c85e9bdd428a51ee5ce33cba6"
+    },
+    "out/userspace-pipeline-launcher-20261106/records.tar": {
+      "bytes": 102400,
+      "sha256": "2b7bf5b0e7d3c3a8c479cf0abbbfcc399d312015f52cddda5a9997d8094f55e4"
+    }
+  },
+  "verification_code": {
+    "tmp/check-userspace-pipeline-capacity-20261106.py": {
+      "bytes": 2822,
+      "sha256": "2f23271265e7fc989657310b8c16c67d9adf6f710e064bffe4344f6887d0915c"
+    }
+  },
+  "test_logs": {
+    "tmp/userspace-pipeline-assembly-20261106.log": {
+      "bytes": 592,
+      "sha256": "2414f76dc3ed9dd46a3c78645ce60b2d443cd55379239c93d0384af1cbf6d3b5"
+    },
+    "tmp/userspace-pipeline-discovery-20261106.log": {
+      "bytes": 1846,
+      "sha256": "01e2a5abdd8f9080a7f2b5fdf8e2596b9b6e6f9db2cb3f6388450484a78e0006"
+    },
+    "tmp/userspace-pipeline-test-diagnostic-initramfs.sh.log": {
+      "bytes": 303,
+      "sha256": "96a7cc570ad3440ed15467c1b1ac444044ff574fd0fea6b4339e36d95b61c596"
+    },
+    "tmp/userspace-pipeline-test-guest-fixture.sh.log": {
+      "bytes": 93,
+      "sha256": "4a00dd8b70af15f965d4e22586b43b3377dc5059c996ee85632ef50a5bf71375"
+    },
+    "tmp/userspace-pipeline-test-host-init.sh.log": {
+      "bytes": 67,
+      "sha256": "1140ccbb0211f94dbafc0cda93fc5475694bb863682cad1f38b51860209ca382"
+    },
+    "tmp/userspace-pipeline-test-host-storage-resolver.sh.log": {
+      "bytes": 109,
+      "sha256": "c126ee779bb8b80ee63a08f59a5b322a45ef59a0cf8144a160e6fd7c0cc56892"
+    },
+    "tmp/userspace-pipeline-test-host-userspace.sh.log": {
+      "bytes": 86,
+      "sha256": "bafcce50723cd1421cf680cfff091897461967cc32747361e2d6a3f433ac20c1"
+    }
+  },
+  "limitations": [
+    "No phase of the new tracked launcher ran: actual root invocation stopped at the unchanged capacity preflight.",
+    "Prior successful three-phase construction used retained wrappers, not this new launcher.",
+    "Builder LV growth remains separately unapproved; no resize, cleanup or capacity-guard reduction occurred.",
+    "No new production root/state/NVMe image, physical boot, installed SSH, real KVM guest, endurance, SD-write or independent deployment acceptance is claimed."
+  ]
+}
