@@ -2,10 +2,12 @@
 
 A minimal Debian userspace prototype built successfully on the prepared Jammy
 builder on 2026-11-04. It contains QEMU, OpenSSH, Python, systemd/network tools
-and NVMe/filesystem tools. It has no board boot integration, installer or enabled
-management services. The [diagnostic SD](diagnostic-image.md) remains the physical
-first-boot artifact. The release base still needs the plan's Buildroot/interim
-comparison after board bring-up.
+and NVMe/filesystem tools. This document describes the base userspace archive.
+[Integrated roots](current-host-roots.md), mutable state, management and installation
+are built separately; follow the [current deployment guide](deploy-personalized-20261106.md)
+for the prepared physical installation. Installed-host boot and actual KVM guest
+execution remain unproven. The release base still needs the plan's Buildroot/interim
+comparison after a working hardware baseline.
 
 ## Source and package locks
 
@@ -85,11 +87,13 @@ Generated SSH host keys, machine ID and random seeds were removed; root is locke
 The tar archive was checked for those secret/state files and mounted proc/sys
 content. Runtime unique keys, management authorization/network policy and machine
 identity must be provisioned before enabling services. Component copyright files
-remain in the filesystem, but a complete corresponding-source/license inventory
-is still a release task.
+remain in the filesystem. The [source mapping and archive lock](userspace-sources.md)
+now account for all 220 packages and their 149 source versions; complete source
+acquisition and the corresponding-source/license audit remain separate release tasks.
 
-The tarball is not a bootable image. NVMe state bindings, immutable root policy,
-guest supervision, updates/rollback and the actual installer remain unfinished.
+The tarball is not a bootable image. Separate integrated recipes provide NVMe state
+bindings, immutable roots, guest supervision, updates/rollback and installation;
+their host checks do not establish physical deployment acceptance.
 The payload must be streamed from network/USB during provisioning rather than
 staged on SD. Timestamps and package-generated data have not been compared across
 clean builders; no byte-reproducibility claim is made.

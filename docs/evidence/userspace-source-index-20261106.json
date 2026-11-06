@@ -1,0 +1,63 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Authenticated source index and complete selected archive lock; source archive acquisition not yet established",
+  "snapshot": "20261001T000000Z",
+  "retained_directory": "/home/drew/orange-pi-4-pro/tmp/userspace-source-acquisition-20261106",
+  "metadata": {
+    "InRelease": {
+      "bytes": 151075,
+      "sha256": "77737fa4b34f2693e982cc9ee35736816c35a7778fc2d326cc1bbf5b301fe1aa"
+    },
+    "keyring.deb": {
+      "bytes": 178572,
+      "sha256": "f699e2f88dca05212f2a452b58475f2993cb6993dfbafb1d0205a3291eb8b4b8"
+    },
+    "Release": {
+      "bytes": 149266,
+      "sha256": "abcf5882746e0f68171f41adbb4ac01b74b49d62d203379befb9265804311a4f"
+    },
+    "Sources.xz": {
+      "bytes": 9491888,
+      "sha256": "92d11a035571df011f06f28c61cb9825130ef1d92abb2f2e0525e8674dc44af8"
+    },
+    "Sources": {
+      "bytes": 50724597,
+      "sha256": "92d75d23e1757f7a0a21ccb8612cd8a63c64d4020241a31b234b2a2be9653844"
+    },
+    "signature-verification.txt": {
+      "bytes": 684,
+      "sha256": "f015ec9be8131f4b876e857036cac087adcd5671b44cbd71a877172525788875"
+    }
+  },
+  "trust_chain": "Pinned InRelease and keyring package SHA256 match existing host-userspace recipe; keyring extracted only after package authentication; gpgv verified all three release signatures; both source-index forms match SHA256/length entries in signed Release.",
+  "good_signature_keys": [
+    "4CB50190207B4758A3F73A796ED0E7B82643E131",
+    "B8E5F13176D2A7A75220028078DBA3BC47EF2265",
+    "4D64FEC119C2029067D6E791F8D2585B8783D481"
+  ],
+  "source_index_retrieval": {
+    "url": "https://deb.debian.org/debian/dists/bookworm/main/source/by-hash/SHA256/92d11a035571df011f06f28c61cb9825130ef1d92abb2f2e0525e8674dc44af8",
+    "result": "verified",
+    "prior_snapshot_attempts": "Sources.xz returned HTTP 503/504 after bounded retries; Sources.gz returned HTTP 504. No failed response accepted."
+  },
+  "selection": {
+    "locked_binaries": 220,
+    "source_versions": 149,
+    "missing_source_versions": [],
+    "archive_files": 479,
+    "archive_bytes": 570785529
+  },
+  "source_map": {
+    "bytes": 119328,
+    "sha256": "96ae654fc20d014ad7b72729ccb335815d6df06fe761552ffd352baca9251eb6"
+  },
+  "archive_lock": {
+    "bytes": 122443,
+    "sha256": "f75bae857ffcfdfcfe5b7062880850d14b9f40bcdc7296f1999aa6a901fd6185"
+  },
+  "limitations": [
+    "No source archive download or extracted-source audit established by this index receipt.",
+    "No complete license/source obligation or hardware release acceptance established."
+  ]
+}

@@ -1,0 +1,3346 @@
+{
+  "accounting": {
+    "cache_files_seen": 220,
+    "complete": true,
+    "distinct_effective_source_package_versions": 149,
+    "locked_binary_packages": 220,
+    "records": 220
+  },
+  "claims": {
+    "license_closure_established": false,
+    "source_archives_downloaded": false
+  },
+  "fields_scope": {
+    "Built-Using": "raw control value recorded if present; not resolved",
+    "Source": "interpreted per stated Debian Policy rules",
+    "Static-Built-Using": "raw control value recorded if present; not resolved"
+  },
+  "packages": [
+    {
+      "architecture": "all",
+      "binary_package": "adduser",
+      "binary_version": "3.134",
+      "built_using_raw": null,
+      "filename": "adduser_3.134_all.deb",
+      "sha256": "c24fe4eb8e60d8632d72ed104cce7c92cff200847c897dc8ba764b6c47b519e0",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "adduser",
+        "version": "3.134"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "apt",
+      "binary_version": "2.6.1",
+      "built_using_raw": null,
+      "filename": "apt_2.6.1_arm64.deb",
+      "sha256": "c5a6f225715aa2ae5e025695acc205d9eedd2abc3d2393965418e19cde6a9e15",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "apt",
+        "version": "2.6.1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "base-files",
+      "binary_version": "12.4+deb12u15",
+      "built_using_raw": null,
+      "filename": "base-files_12.4+deb12u15_arm64.deb",
+      "sha256": "b1272fbdc197f7d5bd22c05b741a03840f8bec66ca68c8d797f567ff2c99d42d",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "base-files",
+        "version": "12.4+deb12u15"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "base-passwd",
+      "binary_version": "3.6.1",
+      "built_using_raw": null,
+      "filename": "base-passwd_3.6.1_arm64.deb",
+      "sha256": "8c4ed6254eab324563644fb81317ee2ab345cb7c1d846f9583832423e40449f4",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "base-passwd",
+        "version": "3.6.1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "bash",
+      "binary_version": "5.2.15-2+b13",
+      "built_using_raw": null,
+      "filename": "bash_5.2.15-2+b13_arm64.deb",
+      "sha256": "fdb470b5ec1773b90014138bfc1deda4505c1c23e7f5731e8b527c636ac03385",
+      "source_control_field": "bash (5.2.15-2)",
+      "source_effective": {
+        "classification": "explicit-source-version",
+        "package": "bash",
+        "version": "5.2.15-2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "bsdutils",
+      "binary_version": "1:2.38.1-5+deb12u3",
+      "built_using_raw": null,
+      "filename": "bsdutils_1%3a2.38.1-5+deb12u3_arm64.deb",
+      "sha256": "d3aef8318c0d72d06141968a764a544a4f41a7cc10e4a87fd2ef932d6557b5ef",
+      "source_control_field": "util-linux (2.38.1-5+deb12u3)",
+      "source_effective": {
+        "classification": "explicit-source-version",
+        "package": "util-linux",
+        "version": "2.38.1-5+deb12u3"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "all",
+      "binary_package": "ca-certificates",
+      "binary_version": "20230311+deb12u1",
+      "built_using_raw": null,
+      "filename": "ca-certificates_20230311+deb12u1_all.deb",
+      "sha256": "0d5f444f594e48c1e16a41d8fc628a09b24c658916a1274025c2330f2a802bed",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "ca-certificates",
+        "version": "20230311+deb12u1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "coreutils",
+      "binary_version": "9.1-1",
+      "built_using_raw": null,
+      "filename": "coreutils_9.1-1_arm64.deb",
+      "sha256": "ec8f090a14c684879dce251254d8d9ed0876d4480f750d5807ef04e5435e1c4d",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "coreutils",
+        "version": "9.1-1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "curl",
+      "binary_version": "7.88.1-10+deb12u15",
+      "built_using_raw": null,
+      "filename": "curl_7.88.1-10+deb12u15_arm64.deb",
+      "sha256": "880d20cb636d2c36b2f57c58ab284b442a1680365b488d3e696c147c4d84ef25",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "curl",
+        "version": "7.88.1-10+deb12u15"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "dash",
+      "binary_version": "0.5.12-2",
+      "built_using_raw": null,
+      "filename": "dash_0.5.12-2_arm64.deb",
+      "sha256": "c1358e2a8054eb93efd460adf480224a16ea9e0b4d7b4c6cbcf8c8c91902a1d7",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "dash",
+        "version": "0.5.12-2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "dbus-bin",
+      "binary_version": "1.14.10-1~deb12u1",
+      "built_using_raw": null,
+      "filename": "dbus-bin_1.14.10-1~deb12u1_arm64.deb",
+      "sha256": "021cdcbd12add5edb56bb3227048308154c607361094ca05d1ba442f98ab466a",
+      "source_control_field": "dbus",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "dbus",
+        "version": "1.14.10-1~deb12u1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "dbus-daemon",
+      "binary_version": "1.14.10-1~deb12u1",
+      "built_using_raw": null,
+      "filename": "dbus-daemon_1.14.10-1~deb12u1_arm64.deb",
+      "sha256": "04aa8cb00681189675046bd05dc4f29b587583c8b911c971c86989b4e8d9782d",
+      "source_control_field": "dbus",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "dbus",
+        "version": "1.14.10-1~deb12u1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "all",
+      "binary_package": "dbus-session-bus-common",
+      "binary_version": "1.14.10-1~deb12u1",
+      "built_using_raw": null,
+      "filename": "dbus-session-bus-common_1.14.10-1~deb12u1_all.deb",
+      "sha256": "b19cb8e3581d6b09ff3f46fee23de2813811353228c666c9d1ad885598062e43",
+      "source_control_field": "dbus",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "dbus",
+        "version": "1.14.10-1~deb12u1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "all",
+      "binary_package": "dbus-system-bus-common",
+      "binary_version": "1.14.10-1~deb12u1",
+      "built_using_raw": null,
+      "filename": "dbus-system-bus-common_1.14.10-1~deb12u1_all.deb",
+      "sha256": "2111d3d0c98ac68ee973274058447e6fab1c359fec1d4bb195f5fcc5833a19e2",
+      "source_control_field": "dbus",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "dbus",
+        "version": "1.14.10-1~deb12u1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "dbus",
+      "binary_version": "1.14.10-1~deb12u1",
+      "built_using_raw": null,
+      "filename": "dbus_1.14.10-1~deb12u1_arm64.deb",
+      "sha256": "ecff25d50f09d05f0a378769b36996272dc6a6da55b88005af5fb6c3a7fa5156",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "dbus",
+        "version": "1.14.10-1~deb12u1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "all",
+      "binary_package": "debconf",
+      "binary_version": "1.5.82",
+      "built_using_raw": null,
+      "filename": "debconf_1.5.82_all.deb",
+      "sha256": "74ab14194a3762b2fc717917dcfda42929ab98e3c59295a063344dc551cd7cc8",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "debconf",
+        "version": "1.5.82"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "all",
+      "binary_package": "debian-archive-keyring",
+      "binary_version": "2023.3+deb12u2",
+      "built_using_raw": null,
+      "filename": "debian-archive-keyring_2023.3+deb12u2_all.deb",
+      "sha256": "f699e2f88dca05212f2a452b58475f2993cb6993dfbafb1d0205a3291eb8b4b8",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "debian-archive-keyring",
+        "version": "2023.3+deb12u2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "debianutils",
+      "binary_version": "5.7-0.5~deb12u1",
+      "built_using_raw": null,
+      "filename": "debianutils_5.7-0.5~deb12u1_arm64.deb",
+      "sha256": "0fc03c548293aee2359af53bd03b30ab42ca3493afcb65bed2f3caee90ffd46a",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "debianutils",
+        "version": "5.7-0.5~deb12u1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "diffutils",
+      "binary_version": "1:3.8-4",
+      "built_using_raw": null,
+      "filename": "diffutils_1%3a3.8-4_arm64.deb",
+      "sha256": "d2a65fa215001e84c26e2fbe08b44746c6b64be51878ae1d79d5263365e244ec",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "diffutils",
+        "version": "1:3.8-4"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "dmsetup",
+      "binary_version": "2:1.02.185-2",
+      "built_using_raw": null,
+      "filename": "dmsetup_2%3a1.02.185-2_arm64.deb",
+      "sha256": "5c838de946282ee64c8483886c8bc68276d3fc5a9a28ce23bbfa6577fe0ddac2",
+      "source_control_field": "lvm2 (2.03.16-2)",
+      "source_effective": {
+        "classification": "explicit-source-version",
+        "package": "lvm2",
+        "version": "2.03.16-2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "dpkg",
+      "binary_version": "1.21.23",
+      "built_using_raw": null,
+      "filename": "dpkg_1.21.23_arm64.deb",
+      "sha256": "00b2b9d112ecbfe99d8f0c3de56dd33bc242f71c8ae51c3fd1e154ab2e2eb07a",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "dpkg",
+        "version": "1.21.23"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "e2fsprogs",
+      "binary_version": "1.47.0-2+b2",
+      "built_using_raw": null,
+      "filename": "e2fsprogs_1.47.0-2+b2_arm64.deb",
+      "sha256": "9842c31d32c897e3414168c4fab34cddd1633adacbc7858896e7a797d1be1b24",
+      "source_control_field": "e2fsprogs (1.47.0-2)",
+      "source_effective": {
+        "classification": "explicit-source-version",
+        "package": "e2fsprogs",
+        "version": "1.47.0-2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "findutils",
+      "binary_version": "4.9.0-4",
+      "built_using_raw": null,
+      "filename": "findutils_4.9.0-4_arm64.deb",
+      "sha256": "cc8792e769ff4a1280ff1a43b11a1858a72d858fb6eb871ec327ec8eebe99eaa",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "findutils",
+        "version": "4.9.0-4"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "gcc-12-base",
+      "binary_version": "12.2.0-14+deb12u1",
+      "built_using_raw": null,
+      "filename": "gcc-12-base_12.2.0-14+deb12u1_arm64.deb",
+      "sha256": "674cf6cba6d432bd200c45fe866c1652c7a53523cc2e7a613e05bc4abf7b5440",
+      "source_control_field": "gcc-12",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "gcc-12",
+        "version": "12.2.0-14+deb12u1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "gpgv",
+      "binary_version": "2.2.40-1.1+deb12u2",
+      "built_using_raw": null,
+      "filename": "gpgv_2.2.40-1.1+deb12u2_arm64.deb",
+      "sha256": "0c47babb0cd4798328300b2d5446848209ef46383ed5eecf551984197e739abe",
+      "source_control_field": "gnupg2",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "gnupg2",
+        "version": "2.2.40-1.1+deb12u2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "grep",
+      "binary_version": "3.8-5",
+      "built_using_raw": null,
+      "filename": "grep_3.8-5_arm64.deb",
+      "sha256": "2caf08393ef6ea18a52e7e4609a7bd13811ff53733b4e45d2c7b0957e8d592cf",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "grep",
+        "version": "3.8-5"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "gzip",
+      "binary_version": "1.12-1",
+      "built_using_raw": null,
+      "filename": "gzip_1.12-1_arm64.deb",
+      "sha256": "cf0f383667fb65f0b0fd730198efc67c8c23582542bcb3c2b61f240c62e43ba9",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "gzip",
+        "version": "1.12-1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "hostname",
+      "binary_version": "3.23+nmu1",
+      "built_using_raw": null,
+      "filename": "hostname_3.23+nmu1_arm64.deb",
+      "sha256": "bca52b7f2e41ce01e28036be755442f04b6795885c361ed4f8d28648622c399e",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "hostname",
+        "version": "3.23+nmu1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "all",
+      "binary_package": "init-system-helpers",
+      "binary_version": "1.65.2+deb12u1",
+      "built_using_raw": null,
+      "filename": "init-system-helpers_1.65.2+deb12u1_all.deb",
+      "sha256": "afab482524c64e4e256eb5cab43c1a96dc493ec476d94f19f1a5ec3de5fa0fef",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "init-system-helpers",
+        "version": "1.65.2+deb12u1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "iproute2",
+      "binary_version": "6.1.0-3",
+      "built_using_raw": null,
+      "filename": "iproute2_6.1.0-3_arm64.deb",
+      "sha256": "58fad55c5a29be6c1e6301d0c572f2ac5e5962ff244e7da3784c1b29ffc6c6bf",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "iproute2",
+        "version": "6.1.0-3"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "all",
+      "binary_package": "iso-codes",
+      "binary_version": "4.15.0-1",
+      "built_using_raw": null,
+      "filename": "iso-codes_4.15.0-1_all.deb",
+      "sha256": "b1beb869303229c38288d4ddacfd582c91f594759b5767c9cecebd87f16ff70e",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "iso-codes",
+        "version": "4.15.0-1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "kmod",
+      "binary_version": "30+20221128-1",
+      "built_using_raw": null,
+      "filename": "kmod_30+20221128-1_arm64.deb",
+      "sha256": "641057647e90b035148a40a56da51f030838f7b614e6f7896d36a18a316ef2c4",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "kmod",
+        "version": "30+20221128-1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libacl1",
+      "binary_version": "2.3.1-3",
+      "built_using_raw": null,
+      "filename": "libacl1_2.3.1-3_arm64.deb",
+      "sha256": "2b0eef11a2e271e7355adaf1f6cbf8d2e83835ae1b6cf15165d59b8289c08342",
+      "source_control_field": "acl",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "acl",
+        "version": "2.3.1-3"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libaio1",
+      "binary_version": "0.3.113-4",
+      "built_using_raw": null,
+      "filename": "libaio1_0.3.113-4_arm64.deb",
+      "sha256": "a65da7470d336eea146ae2e33640be5309103d2013e8b3e98db7c81b95a756f3",
+      "source_control_field": "libaio",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "libaio",
+        "version": "0.3.113-4"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libapparmor1",
+      "binary_version": "3.0.8-3",
+      "built_using_raw": null,
+      "filename": "libapparmor1_3.0.8-3_arm64.deb",
+      "sha256": "ea2e8b0f63cf35acc93f2f24784bd4b1784133837f31e6c1f2fd2767e252831b",
+      "source_control_field": "apparmor",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "apparmor",
+        "version": "3.0.8-3"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libapt-pkg6.0",
+      "binary_version": "2.6.1",
+      "built_using_raw": null,
+      "filename": "libapt-pkg6.0_2.6.1_arm64.deb",
+      "sha256": "78f637a952efcb7b6260ffac0833bf3b434e017da92472e5821180e5d799a966",
+      "source_control_field": "apt",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "apt",
+        "version": "2.6.1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libargon2-1",
+      "binary_version": "0~20171227-0.3+deb12u1",
+      "built_using_raw": null,
+      "filename": "libargon2-1_0~20171227-0.3+deb12u1_arm64.deb",
+      "sha256": "a578aff3a7704058105b9cfed8ca3c8be2e5975c804d23c19191a9822b57fef3",
+      "source_control_field": "argon2",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "argon2",
+        "version": "0~20171227-0.3+deb12u1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "all",
+      "binary_package": "libasound2-data",
+      "binary_version": "1.2.8-1",
+      "built_using_raw": null,
+      "filename": "libasound2-data_1.2.8-1_all.deb",
+      "sha256": "fe0780d2d3674b2977e0acb0d48b448ad72ba1642564b7dc537f55e839984c2d",
+      "source_control_field": "alsa-lib",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "alsa-lib",
+        "version": "1.2.8-1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libasound2",
+      "binary_version": "1.2.8-1+b1",
+      "built_using_raw": null,
+      "filename": "libasound2_1.2.8-1+b1_arm64.deb",
+      "sha256": "9fa889400fcee4b92c8f4a2fafbb7f2cd33444d9ec1665a71002ab67c06114bb",
+      "source_control_field": "alsa-lib (1.2.8-1)",
+      "source_effective": {
+        "classification": "explicit-source-version",
+        "package": "alsa-lib",
+        "version": "1.2.8-1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libattr1",
+      "binary_version": "1:2.5.1-4",
+      "built_using_raw": null,
+      "filename": "libattr1_1%3a2.5.1-4_arm64.deb",
+      "sha256": "481e1c3fcad6773ba1c9d7f1de59e4fc80d95326c9b20192e13b7111013c932a",
+      "source_control_field": "attr",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "attr",
+        "version": "1:2.5.1-4"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "all",
+      "binary_package": "libaudit-common",
+      "binary_version": "1:3.0.9-1",
+      "built_using_raw": null,
+      "filename": "libaudit-common_1%3a3.0.9-1_all.deb",
+      "sha256": "17d0341ca6ce604ce59c296780ac2c2a24141a769823c50669af942c025e6591",
+      "source_control_field": "audit",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "audit",
+        "version": "1:3.0.9-1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libaudit1",
+      "binary_version": "1:3.0.9-1",
+      "built_using_raw": null,
+      "filename": "libaudit1_1%3a3.0.9-1_arm64.deb",
+      "sha256": "619606427a334cba955e0afb18bf4a636df4141d32ea474a79cc512b5ca358e7",
+      "source_control_field": "audit",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "audit",
+        "version": "1:3.0.9-1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libblkid1",
+      "binary_version": "2.38.1-5+deb12u3",
+      "built_using_raw": null,
+      "filename": "libblkid1_2.38.1-5+deb12u3_arm64.deb",
+      "sha256": "6c462ce69d08f1ddaa9a77bbdad4af8e289267095599eb8e92a9ab3ea21cdc41",
+      "source_control_field": "util-linux",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "util-linux",
+        "version": "2.38.1-5+deb12u3"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libbpf1",
+      "binary_version": "1:1.1.2-0+deb12u1",
+      "built_using_raw": null,
+      "filename": "libbpf1_1%3a1.1.2-0+deb12u1_arm64.deb",
+      "sha256": "c9929839798e7d8e66b212f345ecf1653ba7f1a9e1b753d0eb67bd521b0b5511",
+      "source_control_field": "libbpf (1.1.2-0+deb12u1)",
+      "source_effective": {
+        "classification": "explicit-source-version",
+        "package": "libbpf",
+        "version": "1.1.2-0+deb12u1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libbrlapi0.8",
+      "binary_version": "6.5-7+deb12u1",
+      "built_using_raw": null,
+      "filename": "libbrlapi0.8_6.5-7+deb12u1_arm64.deb",
+      "sha256": "468ce938baf2ebd3cf1f7f041a432a964040c7bfe797436d482590a52c844b1a",
+      "source_control_field": "brltty",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "brltty",
+        "version": "6.5-7+deb12u1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libbrotli1",
+      "binary_version": "1.0.9-2+b6",
+      "built_using_raw": null,
+      "filename": "libbrotli1_1.0.9-2+b6_arm64.deb",
+      "sha256": "3137de7f71952e710ee9f0df05026b3c6f463be9369a502d57c7696732f1ed22",
+      "source_control_field": "brotli (1.0.9-2)",
+      "source_effective": {
+        "classification": "explicit-source-version",
+        "package": "brotli",
+        "version": "1.0.9-2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libbsd0",
+      "binary_version": "0.11.7-2",
+      "built_using_raw": null,
+      "filename": "libbsd0_0.11.7-2_arm64.deb",
+      "sha256": "ef00f132ddd268ee67d756998723ee18543db27ab34930c0a9f1cff75cf55382",
+      "source_control_field": "libbsd",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "libbsd",
+        "version": "0.11.7-2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libbz2-1.0",
+      "binary_version": "1.0.8-5+b1",
+      "built_using_raw": null,
+      "filename": "libbz2-1.0_1.0.8-5+b1_arm64.deb",
+      "sha256": "d3a96ece03326498b39ff093a76800dfcbcb1d4049d6ae6e9f6fa1aa7a590ad6",
+      "source_control_field": "bzip2 (1.0.8-5)",
+      "source_effective": {
+        "classification": "explicit-source-version",
+        "package": "bzip2",
+        "version": "1.0.8-5"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libc-bin",
+      "binary_version": "2.36-9+deb12u14",
+      "built_using_raw": null,
+      "filename": "libc-bin_2.36-9+deb12u14_arm64.deb",
+      "sha256": "65166ea54c05213c4f48d889138179f1b7345edd05031a9af276aa5fb4a45c05",
+      "source_control_field": "glibc",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "glibc",
+        "version": "2.36-9+deb12u14"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libc6",
+      "binary_version": "2.36-9+deb12u14",
+      "built_using_raw": null,
+      "filename": "libc6_2.36-9+deb12u14_arm64.deb",
+      "sha256": "01f4330719fd4f65580e16ea5a0527f372fca750e8f588d26deaf09f2d3b1cf4",
+      "source_control_field": "glibc",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "glibc",
+        "version": "2.36-9+deb12u14"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libcacard0",
+      "binary_version": "1:2.8.0-3",
+      "built_using_raw": null,
+      "filename": "libcacard0_1%3a2.8.0-3_arm64.deb",
+      "sha256": "4b1fe7786969adf69db33c5653ffea1ec6a5689625396a4cb5b5d08a2d00e571",
+      "source_control_field": "libcacard",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "libcacard",
+        "version": "1:2.8.0-3"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libcap-ng0",
+      "binary_version": "0.8.3-1+b3",
+      "built_using_raw": null,
+      "filename": "libcap-ng0_0.8.3-1+b3_arm64.deb",
+      "sha256": "24e74ad29a37d2a3940b8977d11298a7afc77379ef414b561d79c64147d740e0",
+      "source_control_field": "libcap-ng (0.8.3-1)",
+      "source_effective": {
+        "classification": "explicit-source-version",
+        "package": "libcap-ng",
+        "version": "0.8.3-1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libcap2-bin",
+      "binary_version": "1:2.66-4+deb12u3+b1",
+      "built_using_raw": null,
+      "filename": "libcap2-bin_1%3a2.66-4+deb12u3+b1_arm64.deb",
+      "sha256": "139adf54b27522e838f3ce895c10d27a5fb406809b7b12d477dd5c13d2b2d286",
+      "source_control_field": "libcap2 (1:2.66-4+deb12u3)",
+      "source_effective": {
+        "classification": "explicit-source-version",
+        "package": "libcap2",
+        "version": "1:2.66-4+deb12u3"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libcap2",
+      "binary_version": "1:2.66-4+deb12u3+b1",
+      "built_using_raw": null,
+      "filename": "libcap2_1%3a2.66-4+deb12u3+b1_arm64.deb",
+      "sha256": "b3a21ae1cef9c2f3fa340007100fb0aa934ab6a4d8aed131660de9713db2bb6e",
+      "source_control_field": "libcap2 (1:2.66-4+deb12u3)",
+      "source_effective": {
+        "classification": "explicit-source-version",
+        "package": "libcap2",
+        "version": "1:2.66-4+deb12u3"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libcapstone4",
+      "binary_version": "4.0.2-5",
+      "built_using_raw": null,
+      "filename": "libcapstone4_4.0.2-5_arm64.deb",
+      "sha256": "80f8a46aeb0ac7f9f7b355729ba571a58aed31b98d0dbcba634f80c7b49d2663",
+      "source_control_field": "capstone",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "capstone",
+        "version": "4.0.2-5"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libcbor0.8",
+      "binary_version": "0.8.0-2+b1",
+      "built_using_raw": null,
+      "filename": "libcbor0.8_0.8.0-2+b1_arm64.deb",
+      "sha256": "6a4b71cbcb9fe1aa289aea983c7af80bef53bc63b217e39e24fef31c7491325f",
+      "source_control_field": "libcbor (0.8.0-2)",
+      "source_effective": {
+        "classification": "explicit-source-version",
+        "package": "libcbor",
+        "version": "0.8.0-2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libcom-err2",
+      "binary_version": "1.47.0-2+b2",
+      "built_using_raw": null,
+      "filename": "libcom-err2_1.47.0-2+b2_arm64.deb",
+      "sha256": "36c15f933a965b50f4c9558d792d9556934c84e532703935d8ae7e69dd3fa863",
+      "source_control_field": "e2fsprogs (1.47.0-2)",
+      "source_effective": {
+        "classification": "explicit-source-version",
+        "package": "e2fsprogs",
+        "version": "1.47.0-2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libcrypt1",
+      "binary_version": "1:4.4.33-2",
+      "built_using_raw": null,
+      "filename": "libcrypt1_1%3a4.4.33-2_arm64.deb",
+      "sha256": "eea0ad76ea5eb507127fea0c291622ea4ecdbb71c4b9a8ed9c76ae33fc1a0127",
+      "source_control_field": "libxcrypt",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "libxcrypt",
+        "version": "1:4.4.33-2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libcryptsetup12",
+      "binary_version": "2:2.6.1-4~deb12u2",
+      "built_using_raw": null,
+      "filename": "libcryptsetup12_2%3a2.6.1-4~deb12u2_arm64.deb",
+      "sha256": "a1687103570ec60ce5104b2b9716f83a18c38a43edbbf94e0d8b5993c003976e",
+      "source_control_field": "cryptsetup",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "cryptsetup",
+        "version": "2:2.6.1-4~deb12u2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libcurl4",
+      "binary_version": "7.88.1-10+deb12u15",
+      "built_using_raw": null,
+      "filename": "libcurl4_7.88.1-10+deb12u15_arm64.deb",
+      "sha256": "e54bdd269c960b643ded903c3dbde36fe5d4d5f5b6389b47a0344d4a711cf70a",
+      "source_control_field": "curl",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "curl",
+        "version": "7.88.1-10+deb12u15"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libdaxctl1",
+      "binary_version": "76.1-1",
+      "built_using_raw": null,
+      "filename": "libdaxctl1_76.1-1_arm64.deb",
+      "sha256": "9d1a37648021afdfaa65c01a3a57f6559ad2dc711a862765a2a60fa66a3b1c98",
+      "source_control_field": "ndctl",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "ndctl",
+        "version": "76.1-1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libdb5.3",
+      "binary_version": "5.3.28+dfsg2-1",
+      "built_using_raw": null,
+      "filename": "libdb5.3_5.3.28+dfsg2-1_arm64.deb",
+      "sha256": "344367608d622298a3d916f4cee3dc3173286f3b21f8f497ab21e7178ba930f9",
+      "source_control_field": "db5.3",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "db5.3",
+        "version": "5.3.28+dfsg2-1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libdbus-1-3",
+      "binary_version": "1.14.10-1~deb12u1",
+      "built_using_raw": null,
+      "filename": "libdbus-1-3_1.14.10-1~deb12u1_arm64.deb",
+      "sha256": "2a423794f44ee756f70fda67c6e47b15afe3dd22cd69e51f5d14d2ec9538f806",
+      "source_control_field": "dbus",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "dbus",
+        "version": "1.14.10-1~deb12u1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libdebconfclient0",
+      "binary_version": "0.270",
+      "built_using_raw": null,
+      "filename": "libdebconfclient0_0.270_arm64.deb",
+      "sha256": "87a7e4cf5c8cf77eb2f8728b7536c9cba201f29b0f38c4f84e2a784b817bbcec",
+      "source_control_field": "cdebconf",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "cdebconf",
+        "version": "0.270"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libdevmapper1.02.1",
+      "binary_version": "2:1.02.185-2",
+      "built_using_raw": null,
+      "filename": "libdevmapper1.02.1_2%3a1.02.185-2_arm64.deb",
+      "sha256": "0b4ffad17467a043dd1cb9cdbbcf8cbaf2ab88e902ae4c110a0b08d74753589b",
+      "source_control_field": "lvm2 (2.03.16-2)",
+      "source_effective": {
+        "classification": "explicit-source-version",
+        "package": "lvm2",
+        "version": "2.03.16-2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "all",
+      "binary_package": "libdrm-common",
+      "binary_version": "2.4.114-1",
+      "built_using_raw": null,
+      "filename": "libdrm-common_2.4.114-1_all.deb",
+      "sha256": "32f9664138b38b224383c6986457d5ad2ec8efd559b1a0ce7749405f7a451aad",
+      "source_control_field": "libdrm",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "libdrm",
+        "version": "2.4.114-1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libdrm2",
+      "binary_version": "2.4.114-1+b1",
+      "built_using_raw": null,
+      "filename": "libdrm2_2.4.114-1+b1_arm64.deb",
+      "sha256": "f5f15a46d02cf5d9fa52d4f1c54b8cf80c398711ad771a9938b12399b8d8090c",
+      "source_control_field": "libdrm (2.4.114-1)",
+      "source_effective": {
+        "classification": "explicit-source-version",
+        "package": "libdrm",
+        "version": "2.4.114-1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libdw1",
+      "binary_version": "0.188-2.1",
+      "built_using_raw": null,
+      "filename": "libdw1_0.188-2.1_arm64.deb",
+      "sha256": "3b403c886653e2ea496b74cf3b5c89aa0f50a7c2af9eda343be185970d3f440d",
+      "source_control_field": "elfutils",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "elfutils",
+        "version": "0.188-2.1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libedit2",
+      "binary_version": "3.1-20221030-2",
+      "built_using_raw": null,
+      "filename": "libedit2_3.1-20221030-2_arm64.deb",
+      "sha256": "6ca1e355586ebfcfe8122b4d317fcaad4a9a10ca455c6a9bbd36f55bf4be85d3",
+      "source_control_field": "libedit",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "libedit",
+        "version": "3.1-20221030-2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libelf1",
+      "binary_version": "0.188-2.1",
+      "built_using_raw": null,
+      "filename": "libelf1_0.188-2.1_arm64.deb",
+      "sha256": "32971952d8f5d563447bf275f24e26057500924da2d855c1edb53b0f0400bd11",
+      "source_control_field": "elfutils",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "elfutils",
+        "version": "0.188-2.1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libepoxy0",
+      "binary_version": "1.5.10-1",
+      "built_using_raw": null,
+      "filename": "libepoxy0_1.5.10-1_arm64.deb",
+      "sha256": "f9cf8272b5abbcc872999347dc086dbacb4fb5896024f6d9d466369c26c1b9eb",
+      "source_control_field": "libepoxy",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "libepoxy",
+        "version": "1.5.10-1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libexecs0",
+      "binary_version": "1.3-2",
+      "built_using_raw": null,
+      "filename": "libexecs0_1.3-2_arm64.deb",
+      "sha256": "3403e11b13183d59ca81ae57b9ec0f12d6ea269ace7185d35f204cf6b353620f",
+      "source_control_field": "libexecs",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "libexecs",
+        "version": "1.3-2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libexpat1",
+      "binary_version": "2.5.0-1+deb12u2",
+      "built_using_raw": null,
+      "filename": "libexpat1_2.5.0-1+deb12u2_arm64.deb",
+      "sha256": "8dc1976735acf825e3a922d82f171e20feec7394da2b8c616091983e38706275",
+      "source_control_field": "expat",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "expat",
+        "version": "2.5.0-1+deb12u2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libext2fs2",
+      "binary_version": "1.47.0-2+b2",
+      "built_using_raw": null,
+      "filename": "libext2fs2_1.47.0-2+b2_arm64.deb",
+      "sha256": "c1d2551a6238d6a1c64601a0d68183573ca2b5dbd213068d50eaa0747ac1b406",
+      "source_control_field": "e2fsprogs (1.47.0-2)",
+      "source_effective": {
+        "classification": "explicit-source-version",
+        "package": "e2fsprogs",
+        "version": "1.47.0-2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libfdisk1",
+      "binary_version": "2.38.1-5+deb12u3",
+      "built_using_raw": null,
+      "filename": "libfdisk1_2.38.1-5+deb12u3_arm64.deb",
+      "sha256": "386a52631ca076b25069ab50e55f9b6d544dba1a386866af0ce9c26165417138",
+      "source_control_field": "util-linux",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "util-linux",
+        "version": "2.38.1-5+deb12u3"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libfdt1",
+      "binary_version": "1.6.1-4+b1",
+      "built_using_raw": null,
+      "filename": "libfdt1_1.6.1-4+b1_arm64.deb",
+      "sha256": "63f9608ac653f65ef57596ca18b97c399ff37792eb4f8a35e6ec1f8ee49a5dd0",
+      "source_control_field": "device-tree-compiler (1.6.1-4)",
+      "source_effective": {
+        "classification": "explicit-source-version",
+        "package": "device-tree-compiler",
+        "version": "1.6.1-4"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libffi8",
+      "binary_version": "3.4.4-1",
+      "built_using_raw": null,
+      "filename": "libffi8_3.4.4-1_arm64.deb",
+      "sha256": "80b5c36177dc0e29d531c7eddbed3cc7355cb490e49f8cfa5959572d161f27b3",
+      "source_control_field": "libffi",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "libffi",
+        "version": "3.4.4-1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libfido2-1",
+      "binary_version": "1.12.0-2+b1",
+      "built_using_raw": null,
+      "filename": "libfido2-1_1.12.0-2+b1_arm64.deb",
+      "sha256": "fc5373ec91102e4dac0f1d8fca5943c230fe9abbf348362f8956cda556dd22fd",
+      "source_control_field": "libfido2 (1.12.0-2)",
+      "source_effective": {
+        "classification": "explicit-source-version",
+        "package": "libfido2",
+        "version": "1.12.0-2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "all",
+      "binary_package": "libfile-find-rule-perl",
+      "binary_version": "0.34-4~deb12u1",
+      "built_using_raw": null,
+      "filename": "libfile-find-rule-perl_0.34-4~deb12u1_all.deb",
+      "sha256": "d941143c65e47eff192195ed1b8367d3d74e5a0de668fc5ae9d787383ec48c23",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "libfile-find-rule-perl",
+        "version": "0.34-4~deb12u1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libfuse3-3",
+      "binary_version": "3.14.0-4",
+      "built_using_raw": null,
+      "filename": "libfuse3-3_3.14.0-4_arm64.deb",
+      "sha256": "6928a77e354bf66ddae04f070c5e5bd6f3d177b9189fc91d0b15e35500dd1dba",
+      "source_control_field": "fuse3",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "fuse3",
+        "version": "3.14.0-4"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libgbm1",
+      "binary_version": "22.3.6-1+deb12u2",
+      "built_using_raw": null,
+      "filename": "libgbm1_22.3.6-1+deb12u2_arm64.deb",
+      "sha256": "f5c8fdddbf365259d74af270fb10f30d7fddb3fbe7b2ff62f0fdd556f8db0dc8",
+      "source_control_field": "mesa",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "mesa",
+        "version": "22.3.6-1+deb12u2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libgcc-s1",
+      "binary_version": "12.2.0-14+deb12u1",
+      "built_using_raw": null,
+      "filename": "libgcc-s1_12.2.0-14+deb12u1_arm64.deb",
+      "sha256": "576926b283613db80168ddf76380a3bd877602778cf0d226caa7bfbfa71eacf3",
+      "source_control_field": "gcc-12",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "gcc-12",
+        "version": "12.2.0-14+deb12u1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libgcrypt20",
+      "binary_version": "1.10.1-3+deb12u1",
+      "built_using_raw": null,
+      "filename": "libgcrypt20_1.10.1-3+deb12u1_arm64.deb",
+      "sha256": "140af58350c9b15bfa611000d9e0205528bbed2cba39271bf12bd36de2678f2e",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "libgcrypt20",
+        "version": "1.10.1-3+deb12u1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libgdbm-compat4",
+      "binary_version": "1.23-3",
+      "built_using_raw": null,
+      "filename": "libgdbm-compat4_1.23-3_arm64.deb",
+      "sha256": "acc13a12acbf3b17dbacc77e3c22c6c273a552150cd50fdc9bd70cdb5169af73",
+      "source_control_field": "gdbm",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "gdbm",
+        "version": "1.23-3"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libgdbm6",
+      "binary_version": "1.23-3",
+      "built_using_raw": null,
+      "filename": "libgdbm6_1.23-3_arm64.deb",
+      "sha256": "3c704feaf89c5f2709a76b84126ac8affe4ddff69dc0b91af0ca9910c7e75714",
+      "source_control_field": "gdbm",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "gdbm",
+        "version": "1.23-3"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libglib2.0-0",
+      "binary_version": "2.74.6-2+deb12u9",
+      "built_using_raw": null,
+      "filename": "libglib2.0-0_2.74.6-2+deb12u9_arm64.deb",
+      "sha256": "61d92fffada7e27fc0ed9d23e047b45bca3b2e3bfe1a918f4ec16559282859f4",
+      "source_control_field": "glib2.0",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "glib2.0",
+        "version": "2.74.6-2+deb12u9"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libgmp10",
+      "binary_version": "2:6.2.1+dfsg1-1.1",
+      "built_using_raw": null,
+      "filename": "libgmp10_2%3a6.2.1+dfsg1-1.1_arm64.deb",
+      "sha256": "9906387c1dd806518c915bd8616d072c741061d7fa26b222e52763456060b31a",
+      "source_control_field": "gmp",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "gmp",
+        "version": "2:6.2.1+dfsg1-1.1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libgnutls30",
+      "binary_version": "3.7.9-2+deb12u7",
+      "built_using_raw": null,
+      "filename": "libgnutls30_3.7.9-2+deb12u7_arm64.deb",
+      "sha256": "84f7f70084c9179d6670f4a6ebdf32adc36c6e4741a3a118104377e18cfa977f",
+      "source_control_field": "gnutls28",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "gnutls28",
+        "version": "3.7.9-2+deb12u7"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libgpg-error0",
+      "binary_version": "1.46-1",
+      "built_using_raw": null,
+      "filename": "libgpg-error0_1.46-1_arm64.deb",
+      "sha256": "aff6ce011ae9abf7090e906f0cf6bc2b447bbc4cc7e03ff117f9d73528857352",
+      "source_control_field": "libgpg-error",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "libgpg-error",
+        "version": "1.46-1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libgssapi-krb5-2",
+      "binary_version": "1.20.1-2+deb12u5",
+      "built_using_raw": null,
+      "filename": "libgssapi-krb5-2_1.20.1-2+deb12u5_arm64.deb",
+      "sha256": "a00678963f692a929312968f19b77a61a8fc0011690d7dc909a8a2c4810fc7b3",
+      "source_control_field": "krb5",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "krb5",
+        "version": "1.20.1-2+deb12u5"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libgstreamer-plugins-base1.0-0",
+      "binary_version": "1.22.0-3+deb12u6",
+      "built_using_raw": null,
+      "filename": "libgstreamer-plugins-base1.0-0_1.22.0-3+deb12u6_arm64.deb",
+      "sha256": "f13ebb0f684bb788cdc232d8297e999bc1e316e600e02646c5036376d8734d36",
+      "source_control_field": "gst-plugins-base1.0",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "gst-plugins-base1.0",
+        "version": "1.22.0-3+deb12u6"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libgstreamer1.0-0",
+      "binary_version": "1.22.0-2+deb12u1",
+      "built_using_raw": null,
+      "filename": "libgstreamer1.0-0_1.22.0-2+deb12u1_arm64.deb",
+      "sha256": "4844db7e485a8d850895707add3d941d818403176d06fb566dd8ce48e8cbd065",
+      "source_control_field": "gstreamer1.0",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "gstreamer1.0",
+        "version": "1.22.0-2+deb12u1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libhogweed6",
+      "binary_version": "3.8.1-2",
+      "built_using_raw": null,
+      "filename": "libhogweed6_3.8.1-2_arm64.deb",
+      "sha256": "e653a1a7e5a44be0f7b6443dc6ac865d2504e49149660fc253655245965e157f",
+      "source_control_field": "nettle",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "nettle",
+        "version": "3.8.1-2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libibverbs1",
+      "binary_version": "44.0-2",
+      "built_using_raw": null,
+      "filename": "libibverbs1_44.0-2_arm64.deb",
+      "sha256": "b0714d72740d1552550d1bee67d3ea437a128083c6f1db57c6780e15f3e26946",
+      "source_control_field": "rdma-core",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "rdma-core",
+        "version": "44.0-2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libidn2-0",
+      "binary_version": "2.3.3-1+b1",
+      "built_using_raw": null,
+      "filename": "libidn2-0_2.3.3-1+b1_arm64.deb",
+      "sha256": "12a3efc056671bf1c1bed4c3444c2559c8d5e0c158a13316fc728f263b83ddc4",
+      "source_control_field": "libidn2 (2.3.3-1)",
+      "source_effective": {
+        "classification": "explicit-source-version",
+        "package": "libidn2",
+        "version": "2.3.3-1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libip4tc2",
+      "binary_version": "1.8.9-2",
+      "built_using_raw": null,
+      "filename": "libip4tc2_1.8.9-2_arm64.deb",
+      "sha256": "fc5b488a30f697d13c8547ca32cebf53880141af77ec36c58b04f899b5708208",
+      "source_control_field": "iptables",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "iptables",
+        "version": "1.8.9-2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libjpeg62-turbo",
+      "binary_version": "1:2.1.5-2",
+      "built_using_raw": null,
+      "filename": "libjpeg62-turbo_1%3a2.1.5-2_arm64.deb",
+      "sha256": "de66f186f3ff3c1d10c2e75ae056b019b3f7f091f51096a06cade48b2dea875b",
+      "source_control_field": "libjpeg-turbo",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "libjpeg-turbo",
+        "version": "1:2.1.5-2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libjson-c5",
+      "binary_version": "0.16-2",
+      "built_using_raw": null,
+      "filename": "libjson-c5_0.16-2_arm64.deb",
+      "sha256": "5a35fd9ca1482bb39207aaf43730e12d63ba3311b5fb3d9832243e560ca67ab5",
+      "source_control_field": "json-c",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "json-c",
+        "version": "0.16-2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libk5crypto3",
+      "binary_version": "1.20.1-2+deb12u5",
+      "built_using_raw": null,
+      "filename": "libk5crypto3_1.20.1-2+deb12u5_arm64.deb",
+      "sha256": "8ae2c31cde0b3e6f80c573a495b0f90bf6d9efb4455d900728278bb54d9092e5",
+      "source_control_field": "krb5",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "krb5",
+        "version": "1.20.1-2+deb12u5"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libkeyutils1",
+      "binary_version": "1.6.3-2",
+      "built_using_raw": null,
+      "filename": "libkeyutils1_1.6.3-2_arm64.deb",
+      "sha256": "aac46cb6faec4e737502b3c2290b7b02f8ba04e8accd5af7fd07934df0c867b1",
+      "source_control_field": "keyutils",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "keyutils",
+        "version": "1.6.3-2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libkmod2",
+      "binary_version": "30+20221128-1",
+      "built_using_raw": null,
+      "filename": "libkmod2_30+20221128-1_arm64.deb",
+      "sha256": "a3d13b1a5d01fff740356d3a8dad6c13f34988180a5d68a9a2e095995054d828",
+      "source_control_field": "kmod",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "kmod",
+        "version": "30+20221128-1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libkrb5-3",
+      "binary_version": "1.20.1-2+deb12u5",
+      "built_using_raw": null,
+      "filename": "libkrb5-3_1.20.1-2+deb12u5_arm64.deb",
+      "sha256": "c3c7227f5db903a7a8b8936d47d1d79643edcda36365c4c992e1a96bcc2d4c7e",
+      "source_control_field": "krb5",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "krb5",
+        "version": "1.20.1-2+deb12u5"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libkrb5support0",
+      "binary_version": "1.20.1-2+deb12u5",
+      "built_using_raw": null,
+      "filename": "libkrb5support0_1.20.1-2+deb12u5_arm64.deb",
+      "sha256": "3043fd4a54b945a1b503170749527f825dcfc7add2f8bf5abb4a329deeb48f4a",
+      "source_control_field": "krb5",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "krb5",
+        "version": "1.20.1-2+deb12u5"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libldap-2.5-0",
+      "binary_version": "2.5.13+dfsg-5",
+      "built_using_raw": null,
+      "filename": "libldap-2.5-0_2.5.13+dfsg-5_arm64.deb",
+      "sha256": "71e6ae4291a20db999c62cd0a4f30a92a799c46b99205d5e787d4acd7c343b91",
+      "source_control_field": "openldap",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "openldap",
+        "version": "2.5.13+dfsg-5"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "liblz4-1",
+      "binary_version": "1.9.4-1",
+      "built_using_raw": null,
+      "filename": "liblz4-1_1.9.4-1_arm64.deb",
+      "sha256": "f061216ce11aabba8f032dfd6c75c181e782fef7493033b9621a8c3b2953b87e",
+      "source_control_field": "lz4",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "lz4",
+        "version": "1.9.4-1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "liblzma5",
+      "binary_version": "5.4.1-1+deb12u1",
+      "built_using_raw": null,
+      "filename": "liblzma5_5.4.1-1+deb12u1_arm64.deb",
+      "sha256": "647ce9d81e41c30071ce6ac0d3324579216a33aaa1d28971d6952315f6a95a75",
+      "source_control_field": "xz-utils",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "xz-utils",
+        "version": "5.4.1-1+deb12u1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libmd0",
+      "binary_version": "1.0.4-2",
+      "built_using_raw": null,
+      "filename": "libmd0_1.0.4-2_arm64.deb",
+      "sha256": "99a8c7dd591fae9fb37d8bf8dfdffa850e207fa405b3198c5b24711a5f972381",
+      "source_control_field": "libmd",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "libmd",
+        "version": "1.0.4-2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libmnl0",
+      "binary_version": "1.0.4-3",
+      "built_using_raw": null,
+      "filename": "libmnl0_1.0.4-3_arm64.deb",
+      "sha256": "d63aafb6f2c07db8fcb135b00ff915baf72ef8a3397e773c9c24d67950c6a46c",
+      "source_control_field": "libmnl",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "libmnl",
+        "version": "1.0.4-3"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libmount1",
+      "binary_version": "2.38.1-5+deb12u3",
+      "built_using_raw": null,
+      "filename": "libmount1_2.38.1-5+deb12u3_arm64.deb",
+      "sha256": "b48877c1e60c2589d9e17f72d782cd2ab8a3fdaeda54f05920bcb26c9404b1e8",
+      "source_control_field": "util-linux",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "util-linux",
+        "version": "2.38.1-5+deb12u3"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libncursesw6",
+      "binary_version": "6.4-4",
+      "built_using_raw": null,
+      "filename": "libncursesw6_6.4-4_arm64.deb",
+      "sha256": "cf32cb6751718872c6def448b82211eec494f688e2f1a3e6c71bfdaf6b0722c5",
+      "source_control_field": "ncurses",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "ncurses",
+        "version": "6.4-4"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libndctl6",
+      "binary_version": "76.1-1",
+      "built_using_raw": null,
+      "filename": "libndctl6_76.1-1_arm64.deb",
+      "sha256": "230dcedd0cde738ac1d64e5c0ac539997ab8714f843376b4d2b8e70ea27416f8",
+      "source_control_field": "ndctl",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "ndctl",
+        "version": "76.1-1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libnettle8",
+      "binary_version": "3.8.1-2",
+      "built_using_raw": null,
+      "filename": "libnettle8_3.8.1-2_arm64.deb",
+      "sha256": "c945ff210df69cf7b95e935b8fa936e81c1c1f475355e3d5db83510b174f0cd6",
+      "source_control_field": "nettle",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "nettle",
+        "version": "3.8.1-2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libnghttp2-14",
+      "binary_version": "1.52.0-1+deb12u3",
+      "built_using_raw": null,
+      "filename": "libnghttp2-14_1.52.0-1+deb12u3_arm64.deb",
+      "sha256": "7767833033739adb2e2e374f2c4b36134d9f36fcdfe8e2aab7029bf850146da9",
+      "source_control_field": "nghttp2",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "nghttp2",
+        "version": "1.52.0-1+deb12u3"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libnl-3-200",
+      "binary_version": "3.7.0-0.2+b1",
+      "built_using_raw": null,
+      "filename": "libnl-3-200_3.7.0-0.2+b1_arm64.deb",
+      "sha256": "72b85c8d07ddfd135a9a372f156500961f95ce109474e95a76e4de2a96f94401",
+      "source_control_field": "libnl3 (3.7.0-0.2)",
+      "source_effective": {
+        "classification": "explicit-source-version",
+        "package": "libnl3",
+        "version": "3.7.0-0.2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libnl-route-3-200",
+      "binary_version": "3.7.0-0.2+b1",
+      "built_using_raw": null,
+      "filename": "libnl-route-3-200_3.7.0-0.2+b1_arm64.deb",
+      "sha256": "1131eb75cce6f3942e67e0461f88ed507d43442ec1307c10ab75bcf3e2f7dcab",
+      "source_control_field": "libnl3 (3.7.0-0.2)",
+      "source_effective": {
+        "classification": "explicit-source-version",
+        "package": "libnl3",
+        "version": "3.7.0-0.2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libnsl2",
+      "binary_version": "1.3.0-2",
+      "built_using_raw": null,
+      "filename": "libnsl2_1.3.0-2_arm64.deb",
+      "sha256": "8f9ba58b219779b43c4ccc78c79b0a23f721fc96323c202abb31e02f942104b3",
+      "source_control_field": "libnsl",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "libnsl",
+        "version": "1.3.0-2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libnspr4",
+      "binary_version": "2:4.35-1",
+      "built_using_raw": null,
+      "filename": "libnspr4_2%3a4.35-1_arm64.deb",
+      "sha256": "3aa6bc5a1a3f83627f735b9712eed74ed2c345ae9148e9d876887a97982ae28d",
+      "source_control_field": "nspr",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "nspr",
+        "version": "2:4.35-1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libnss3",
+      "binary_version": "2:3.87.1-1+deb12u2",
+      "built_using_raw": null,
+      "filename": "libnss3_2%3a3.87.1-1+deb12u2_arm64.deb",
+      "sha256": "2e5af2fc3d1015674a674b48149a342f1922d74c82f16c0cdc2d6a6bee27f154",
+      "source_control_field": "nss",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "nss",
+        "version": "2:3.87.1-1+deb12u2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libnuma1",
+      "binary_version": "2.0.16-1",
+      "built_using_raw": null,
+      "filename": "libnuma1_2.0.16-1_arm64.deb",
+      "sha256": "b4ed2547f387eb2e97d13c0b423b034d2a4d052b2131dfe043e45a84915452c5",
+      "source_control_field": "numactl",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "numactl",
+        "version": "2.0.16-1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "all",
+      "binary_package": "libnumber-compare-perl",
+      "binary_version": "0.03-3",
+      "built_using_raw": null,
+      "filename": "libnumber-compare-perl_0.03-3_all.deb",
+      "sha256": "cf95662e27037d92c582647400bb1ca7a6dfd2eb26eee5b968b23263cd4976dc",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "libnumber-compare-perl",
+        "version": "0.03-3"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libnvme1",
+      "binary_version": "1.3-1+deb12u1",
+      "built_using_raw": null,
+      "filename": "libnvme1_1.3-1+deb12u1_arm64.deb",
+      "sha256": "52317ba29941e5b0bf11f643021e17fbd99afaef12c774c40839f22ea68068cd",
+      "source_control_field": "libnvme",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "libnvme",
+        "version": "1.3-1+deb12u1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libopus0",
+      "binary_version": "1.3.1-3",
+      "built_using_raw": null,
+      "filename": "libopus0_1.3.1-3_arm64.deb",
+      "sha256": "a7efb06da15cc7f1ffff62bfdd77ba43f2a2065b8b59185ad1d14031c5a9e354",
+      "source_control_field": "opus",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "opus",
+        "version": "1.3.1-3"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "liborc-0.4-0",
+      "binary_version": "1:0.4.33-2",
+      "built_using_raw": null,
+      "filename": "liborc-0.4-0_1%3a0.4.33-2_arm64.deb",
+      "sha256": "d62af7b9a49f5858c6c3d8da9115059e52af4770d34abdee3cf132a52bd2407e",
+      "source_control_field": "orc",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "orc",
+        "version": "1:0.4.33-2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libp11-kit0",
+      "binary_version": "0.24.1-2",
+      "built_using_raw": null,
+      "filename": "libp11-kit0_0.24.1-2_arm64.deb",
+      "sha256": "d1f1f55023e9fc085b9ebfc9c4113d2d2dab2dc6b81a337f274b75c95ad8dc0a",
+      "source_control_field": "p11-kit",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "p11-kit",
+        "version": "0.24.1-2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libpam-modules-bin",
+      "binary_version": "1.5.2-6+deb12u2",
+      "built_using_raw": null,
+      "filename": "libpam-modules-bin_1.5.2-6+deb12u2_arm64.deb",
+      "sha256": "82dcd30add63288c86becb14edec0a0ba7df74b07c9267f5a4cb9a28d023d65e",
+      "source_control_field": "pam",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "pam",
+        "version": "1.5.2-6+deb12u2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libpam-modules",
+      "binary_version": "1.5.2-6+deb12u2",
+      "built_using_raw": null,
+      "filename": "libpam-modules_1.5.2-6+deb12u2_arm64.deb",
+      "sha256": "f6a8cc6a384205fb5bce79a0261c1c1974d587f048cfb1f0d1d2ade8c2c1ae77",
+      "source_control_field": "pam",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "pam",
+        "version": "1.5.2-6+deb12u2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "all",
+      "binary_package": "libpam-runtime",
+      "binary_version": "1.5.2-6+deb12u2",
+      "built_using_raw": null,
+      "filename": "libpam-runtime_1.5.2-6+deb12u2_all.deb",
+      "sha256": "7a4f26d54c1e3ee8c68095f9d9013d13dd89a33ff78ef87330d21f21235fc278",
+      "source_control_field": "pam",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "pam",
+        "version": "1.5.2-6+deb12u2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libpam0g",
+      "binary_version": "1.5.2-6+deb12u2",
+      "built_using_raw": null,
+      "filename": "libpam0g_1.5.2-6+deb12u2_arm64.deb",
+      "sha256": "f04916b56a3225cb109e1c283ebfb163524797a406148875a6871816dc8939cd",
+      "source_control_field": "pam",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "pam",
+        "version": "1.5.2-6+deb12u2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libpcre2-8-0",
+      "binary_version": "10.42-1",
+      "built_using_raw": null,
+      "filename": "libpcre2-8-0_10.42-1_arm64.deb",
+      "sha256": "b2448d0a8a3db7fbeac231e7ef93811346c1fb5f96ccf6f631701d8a4eb39206",
+      "source_control_field": "pcre2",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "pcre2",
+        "version": "10.42-1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libpcsclite1",
+      "binary_version": "1.9.9-2",
+      "built_using_raw": null,
+      "filename": "libpcsclite1_1.9.9-2_arm64.deb",
+      "sha256": "df60212d5ebcdc179d6e6398bbf8bb6f56e575afef733cf09b04e2c41de9f153",
+      "source_control_field": "pcsc-lite",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "pcsc-lite",
+        "version": "1.9.9-2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libperl5.36",
+      "binary_version": "5.36.0-7+deb12u3",
+      "built_using_raw": null,
+      "filename": "libperl5.36_5.36.0-7+deb12u3_arm64.deb",
+      "sha256": "9f88187766759ddc21b4b2fe2956929c4883a6674884cedde261e3ccf9a32d5c",
+      "source_control_field": "perl",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "perl",
+        "version": "5.36.0-7+deb12u3"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libpixman-1-0",
+      "binary_version": "0.42.2-1",
+      "built_using_raw": null,
+      "filename": "libpixman-1-0_0.42.2-1_arm64.deb",
+      "sha256": "a18db1a3bdbad168c7168b528bbb07b47316ff9fe977206a780dcc21b376e501",
+      "source_control_field": "pixman",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "pixman",
+        "version": "0.42.2-1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libpmem1",
+      "binary_version": "1.12.1-2",
+      "built_using_raw": null,
+      "filename": "libpmem1_1.12.1-2_arm64.deb",
+      "sha256": "d0a6aa8854a8f5bc8a3a1c3a2141dfb95bab5777a35178420a75f2ad537365d2",
+      "source_control_field": "pmdk",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "pmdk",
+        "version": "1.12.1-2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libpng16-16",
+      "binary_version": "1.6.39-2+deb12u5",
+      "built_using_raw": null,
+      "filename": "libpng16-16_1.6.39-2+deb12u5_arm64.deb",
+      "sha256": "69aba3963ddfb11b98e5bf4b0d022f76b797436568884b10f2da32e0f4b8c2dd",
+      "source_control_field": "libpng1.6",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "libpng1.6",
+        "version": "1.6.39-2+deb12u5"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libproc2-0",
+      "binary_version": "2:4.0.2-3",
+      "built_using_raw": null,
+      "filename": "libproc2-0_2%3a4.0.2-3_arm64.deb",
+      "sha256": "d2d31e0f862dd60a813e245024d00cf47deb6465fd42122543824652487224be",
+      "source_control_field": "procps",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "procps",
+        "version": "2:4.0.2-3"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libpsl5",
+      "binary_version": "0.21.2-1",
+      "built_using_raw": null,
+      "filename": "libpsl5_0.21.2-1_arm64.deb",
+      "sha256": "90a68e4a6d9eb95abee32595762dbf67974f13c158e4ce4a05c7c2b54440db73",
+      "source_control_field": "libpsl",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "libpsl",
+        "version": "0.21.2-1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libpython3-stdlib",
+      "binary_version": "3.11.2-1+b1",
+      "built_using_raw": null,
+      "filename": "libpython3-stdlib_3.11.2-1+b1_arm64.deb",
+      "sha256": "3ceea13a9d2eff6e850d47b4f03ebd0162acb2aa5646a84ccbe77783be104302",
+      "source_control_field": "python3-defaults (3.11.2-1)",
+      "source_effective": {
+        "classification": "explicit-source-version",
+        "package": "python3-defaults",
+        "version": "3.11.2-1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libpython3.11-minimal",
+      "binary_version": "3.11.2-6+deb12u8",
+      "built_using_raw": null,
+      "filename": "libpython3.11-minimal_3.11.2-6+deb12u8_arm64.deb",
+      "sha256": "c48bac178c0fc43a2bf8ace784c762b5ee83e2b981894a991dc3ccfd3ec7cd4b",
+      "source_control_field": "python3.11",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "python3.11",
+        "version": "3.11.2-6+deb12u8"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libpython3.11-stdlib",
+      "binary_version": "3.11.2-6+deb12u8",
+      "built_using_raw": null,
+      "filename": "libpython3.11-stdlib_3.11.2-6+deb12u8_arm64.deb",
+      "sha256": "e79876de55c6c2dca10d044b2fa69ccd863950ea01714220c1982d16008105f9",
+      "source_control_field": "python3.11",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "python3.11",
+        "version": "3.11.2-6+deb12u8"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "librdmacm1",
+      "binary_version": "44.0-2",
+      "built_using_raw": null,
+      "filename": "librdmacm1_44.0-2_arm64.deb",
+      "sha256": "b218b8794be027ee96d7496563bc6e06d2f68bc7eedcd0602be3d9e90533ad20",
+      "source_control_field": "rdma-core",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "rdma-core",
+        "version": "44.0-2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libreadline8",
+      "binary_version": "8.2-1.3",
+      "built_using_raw": null,
+      "filename": "libreadline8_8.2-1.3_arm64.deb",
+      "sha256": "f3b162b7c1e05430607e792ebdbfc417cbd1f1d32cf83664133ae63d811a72d2",
+      "source_control_field": "readline",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "readline",
+        "version": "8.2-1.3"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "librtmp1",
+      "binary_version": "2.4+20151223.gitfa8646d.1-2+b2",
+      "built_using_raw": null,
+      "filename": "librtmp1_2.4+20151223.gitfa8646d.1-2+b2_arm64.deb",
+      "sha256": "a3a1a6e4b02bcd3254e932b1972ed744082fd7dd5cc1545eec3dd3d539ce6c93",
+      "source_control_field": "rtmpdump (2.4+20151223.gitfa8646d.1-2)",
+      "source_effective": {
+        "classification": "explicit-source-version",
+        "package": "rtmpdump",
+        "version": "2.4+20151223.gitfa8646d.1-2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libsasl2-2",
+      "binary_version": "2.1.28+dfsg-10",
+      "built_using_raw": null,
+      "filename": "libsasl2-2_2.1.28+dfsg-10_arm64.deb",
+      "sha256": "61dcbb6560e2eb20bff256f1b445ac9af13aa61c6a6ae115ad8cb96c9c50ea38",
+      "source_control_field": "cyrus-sasl2",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "cyrus-sasl2",
+        "version": "2.1.28+dfsg-10"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libsasl2-modules-db",
+      "binary_version": "2.1.28+dfsg-10",
+      "built_using_raw": null,
+      "filename": "libsasl2-modules-db_2.1.28+dfsg-10_arm64.deb",
+      "sha256": "56d9c35ac6729b02f78900175557dd36bef26611dab89584f29da15631628869",
+      "source_control_field": "cyrus-sasl2",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "cyrus-sasl2",
+        "version": "2.1.28+dfsg-10"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libseccomp2",
+      "binary_version": "2.5.4-1+deb12u1",
+      "built_using_raw": null,
+      "filename": "libseccomp2_2.5.4-1+deb12u1_arm64.deb",
+      "sha256": "be675cf3b7778d88e8f6156c501d32fcbe77636b3dcf18bf2bc7e5daf3dde256",
+      "source_control_field": "libseccomp",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "libseccomp",
+        "version": "2.5.4-1+deb12u1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libselinux1",
+      "binary_version": "3.4-1+b6",
+      "built_using_raw": null,
+      "filename": "libselinux1_3.4-1+b6_arm64.deb",
+      "sha256": "29201edf23ebae40844d6c289afdb9bba52f927d55096ed1b1cd37e040135edc",
+      "source_control_field": "libselinux (3.4-1)",
+      "source_effective": {
+        "classification": "explicit-source-version",
+        "package": "libselinux",
+        "version": "3.4-1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "all",
+      "binary_package": "libsemanage-common",
+      "binary_version": "3.4-1",
+      "built_using_raw": null,
+      "filename": "libsemanage-common_3.4-1_all.deb",
+      "sha256": "835f806c21ae25e39053bd3057051640341b0cf08e1db9746fd82e370d82fa30",
+      "source_control_field": "libsemanage",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "libsemanage",
+        "version": "3.4-1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libsemanage2",
+      "binary_version": "3.4-1+b5",
+      "built_using_raw": null,
+      "filename": "libsemanage2_3.4-1+b5_arm64.deb",
+      "sha256": "6d1958b29ac622d352e00f9de55d9de8aea12bd0c27dee8b522e052ace3c67bd",
+      "source_control_field": "libsemanage (3.4-1)",
+      "source_effective": {
+        "classification": "explicit-source-version",
+        "package": "libsemanage",
+        "version": "3.4-1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libsepol2",
+      "binary_version": "3.4-2.1",
+      "built_using_raw": null,
+      "filename": "libsepol2_3.4-2.1_arm64.deb",
+      "sha256": "22b0041a04af364f643ff2e7ff88eaaecdf0714dcfd253e8c99a6a952ae1fec6",
+      "source_control_field": "libsepol",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "libsepol",
+        "version": "3.4-2.1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libslirp0",
+      "binary_version": "4.7.0-1",
+      "built_using_raw": null,
+      "filename": "libslirp0_4.7.0-1_arm64.deb",
+      "sha256": "54baa3272a0aad6413186a7e6ab2762b8181f3573e65aa82eecbec9a55a9dfe2",
+      "source_control_field": "libslirp",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "libslirp",
+        "version": "4.7.0-1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libsmartcols1",
+      "binary_version": "2.38.1-5+deb12u3",
+      "built_using_raw": null,
+      "filename": "libsmartcols1_2.38.1-5+deb12u3_arm64.deb",
+      "sha256": "802c366408ebdf55ba8fe441975552925c65ce3f142f00e4b2045d3059e6dec7",
+      "source_control_field": "util-linux",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "util-linux",
+        "version": "2.38.1-5+deb12u3"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libsndio7.0",
+      "binary_version": "1.9.0-0.3+b2",
+      "built_using_raw": null,
+      "filename": "libsndio7.0_1.9.0-0.3+b2_arm64.deb",
+      "sha256": "e7c787895eacf8363a4dea6a0cb3237a78857691d8d53f60a1a3ffeea3819808",
+      "source_control_field": "sndio (1.9.0-0.3)",
+      "source_effective": {
+        "classification": "explicit-source-version",
+        "package": "sndio",
+        "version": "1.9.0-0.3"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libspice-server1",
+      "binary_version": "0.15.1-1",
+      "built_using_raw": null,
+      "filename": "libspice-server1_0.15.1-1_arm64.deb",
+      "sha256": "9e00960c9dc4013ce2691172f1b6d3eaa71c97d0fc215ac7de33761d50370340",
+      "source_control_field": "spice",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "spice",
+        "version": "0.15.1-1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libsqlite3-0",
+      "binary_version": "3.40.1-2+deb12u2",
+      "built_using_raw": null,
+      "filename": "libsqlite3-0_3.40.1-2+deb12u2_arm64.deb",
+      "sha256": "a690f7f2aa6435bd1fd7cbbd2216acb9acbb8c48c9721f2c195766375439eb13",
+      "source_control_field": "sqlite3",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "sqlite3",
+        "version": "3.40.1-2+deb12u2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libss2",
+      "binary_version": "1.47.0-2+b2",
+      "built_using_raw": null,
+      "filename": "libss2_1.47.0-2+b2_arm64.deb",
+      "sha256": "e7e5f0cae495b330697b963f375e468130c2f39511d4cbcb4593e5944090f26a",
+      "source_control_field": "e2fsprogs (1.47.0-2)",
+      "source_effective": {
+        "classification": "explicit-source-version",
+        "package": "e2fsprogs",
+        "version": "1.47.0-2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libssh2-1",
+      "binary_version": "1.10.0-3+b1",
+      "built_using_raw": null,
+      "filename": "libssh2-1_1.10.0-3+b1_arm64.deb",
+      "sha256": "390538001122ff03bdabe3689f5b13dafbf2012dd55e3e1e26bd7a6109717250",
+      "source_control_field": "libssh2 (1.10.0-3)",
+      "source_effective": {
+        "classification": "explicit-source-version",
+        "package": "libssh2",
+        "version": "1.10.0-3"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libssl3",
+      "binary_version": "3.0.20-1~deb12u2",
+      "built_using_raw": null,
+      "filename": "libssl3_3.0.20-1~deb12u2_arm64.deb",
+      "sha256": "a256e03cc3abd7243ac5c6ee91a9deb56478221ef0d3c2b0748551e13140c0bf",
+      "source_control_field": "openssl",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "openssl",
+        "version": "3.0.20-1~deb12u2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libstdc++6",
+      "binary_version": "12.2.0-14+deb12u1",
+      "built_using_raw": null,
+      "filename": "libstdc++6_12.2.0-14+deb12u1_arm64.deb",
+      "sha256": "26e138c677a985775331373828a6c286c551ff397cb735d00e2383cb273d1cb2",
+      "source_control_field": "gcc-12",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "gcc-12",
+        "version": "12.2.0-14+deb12u1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libsystemd-shared",
+      "binary_version": "252.39-1~deb12u2",
+      "built_using_raw": null,
+      "filename": "libsystemd-shared_252.39-1~deb12u2_arm64.deb",
+      "sha256": "becce3a94bbe97bec11e19aa267f6a99674898e018df56d1f523a3e202b33d8c",
+      "source_control_field": "systemd",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "systemd",
+        "version": "252.39-1~deb12u2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libsystemd0",
+      "binary_version": "252.39-1~deb12u2",
+      "built_using_raw": null,
+      "filename": "libsystemd0_252.39-1~deb12u2_arm64.deb",
+      "sha256": "293ab474b90276dae9ebc03ed01e622e0c1f2578e83ed3aa926ae1eaf84dda9c",
+      "source_control_field": "systemd",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "systemd",
+        "version": "252.39-1~deb12u2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libtasn1-6",
+      "binary_version": "4.19.0-2+deb12u1",
+      "built_using_raw": null,
+      "filename": "libtasn1-6_4.19.0-2+deb12u1_arm64.deb",
+      "sha256": "7e80513007e8a71b5e737d3307dedbb06712f9cfed05ec2fad6fc00de460cc5f",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "libtasn1-6",
+        "version": "4.19.0-2+deb12u1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "all",
+      "binary_package": "libtext-glob-perl",
+      "binary_version": "0.11-3",
+      "built_using_raw": null,
+      "filename": "libtext-glob-perl_0.11-3_all.deb",
+      "sha256": "b0f1a40c5b26f4e4c83a4f8e1768fcf50ae9aac84b7f807ccb38123b50396f64",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "libtext-glob-perl",
+        "version": "0.11-3"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libtinfo6",
+      "binary_version": "6.4-4",
+      "built_using_raw": null,
+      "filename": "libtinfo6_6.4-4_arm64.deb",
+      "sha256": "baef0f6776f84c7eed4f1146d6e5774689567dad43216894d41da02e6608e4b3",
+      "source_control_field": "ncurses",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "ncurses",
+        "version": "6.4-4"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "all",
+      "binary_package": "libtirpc-common",
+      "binary_version": "1.3.3+ds-1",
+      "built_using_raw": null,
+      "filename": "libtirpc-common_1.3.3+ds-1_all.deb",
+      "sha256": "3e3ef129b4bf61513144236e15e1b4ec57fa5ae3dc8a72137abdbefb7a63af85",
+      "source_control_field": "libtirpc",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "libtirpc",
+        "version": "1.3.3+ds-1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libtirpc3",
+      "binary_version": "1.3.3+ds-1",
+      "built_using_raw": null,
+      "filename": "libtirpc3_1.3.3+ds-1_arm64.deb",
+      "sha256": "deaf9ea54f74cab6690b4bc0b427f05cbe62cc073580d84f5f18a8d9e2ece401",
+      "source_control_field": "libtirpc",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "libtirpc",
+        "version": "1.3.3+ds-1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libudev1",
+      "binary_version": "252.39-1~deb12u2",
+      "built_using_raw": null,
+      "filename": "libudev1_252.39-1~deb12u2_arm64.deb",
+      "sha256": "b76444b0259abfa416f8c1d9a652d208a24770667a1181aa52317b74d12a7a72",
+      "source_control_field": "systemd",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "systemd",
+        "version": "252.39-1~deb12u2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libunistring2",
+      "binary_version": "1.0-2",
+      "built_using_raw": null,
+      "filename": "libunistring2_1.0-2_arm64.deb",
+      "sha256": "05b0b7700bfe269ff7af61f45e92055d7ef4c532c9584e4e2a352cf0bd4de5b1",
+      "source_control_field": "libunistring",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "libunistring",
+        "version": "1.0-2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libunwind8",
+      "binary_version": "1.6.2-3",
+      "built_using_raw": null,
+      "filename": "libunwind8_1.6.2-3_arm64.deb",
+      "sha256": "f83ce7c58caaf15cfb0b6ced538751ea11ded920443aecfe617049ae184b715e",
+      "source_control_field": "libunwind",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "libunwind",
+        "version": "1.6.2-3"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "liburing2",
+      "binary_version": "2.3-3",
+      "built_using_raw": null,
+      "filename": "liburing2_2.3-3_arm64.deb",
+      "sha256": "840486327052df397d78966e9d65d35404cfe0c1eaa2953842cffba427f8ffdf",
+      "source_control_field": "liburing",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "liburing",
+        "version": "2.3-3"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libusb-1.0-0",
+      "binary_version": "2:1.0.26-1",
+      "built_using_raw": null,
+      "filename": "libusb-1.0-0_2%3a1.0.26-1_arm64.deb",
+      "sha256": "e0648086b231c9204514d31480d517cb1b51e301ac39e69335a67d01ec785608",
+      "source_control_field": "libusb-1.0",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "libusb-1.0",
+        "version": "2:1.0.26-1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libusbredirparser1",
+      "binary_version": "0.13.0-2",
+      "built_using_raw": null,
+      "filename": "libusbredirparser1_0.13.0-2_arm64.deb",
+      "sha256": "23ceddac2018a2beafb9692c30eeaa4266b841e9474937ece1e66b747665f620",
+      "source_control_field": "usbredir",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "usbredir",
+        "version": "0.13.0-2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libuuid1",
+      "binary_version": "2.38.1-5+deb12u3",
+      "built_using_raw": null,
+      "filename": "libuuid1_2.38.1-5+deb12u3_arm64.deb",
+      "sha256": "3b2d19df0f3190108cf54228c4cfc822226c06d8f3615a5ab16a7dffb1f58aed",
+      "source_control_field": "util-linux",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "util-linux",
+        "version": "2.38.1-5+deb12u3"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libvdeplug2",
+      "binary_version": "4.0.1-4",
+      "built_using_raw": null,
+      "filename": "libvdeplug2_4.0.1-4_arm64.deb",
+      "sha256": "1f5d0e434b0dfb4ba7c0d7eb9bdbf98ac88b29362f61357d1869cfc03677b3d1",
+      "source_control_field": "vdeplug4",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "vdeplug4",
+        "version": "4.0.1-4"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libwayland-server0",
+      "binary_version": "1.21.0-1",
+      "built_using_raw": null,
+      "filename": "libwayland-server0_1.21.0-1_arm64.deb",
+      "sha256": "4d99e7e0503fdaa999e67d47d8612c0465e775eafa47819573da50bdb09064f2",
+      "source_control_field": "wayland",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "wayland",
+        "version": "1.21.0-1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libwrap0",
+      "binary_version": "7.6.q-32",
+      "built_using_raw": null,
+      "filename": "libwrap0_7.6.q-32_arm64.deb",
+      "sha256": "c5f02a234b481e7016d10188822b8d84420cc5978db19c0d253eb222452cffe7",
+      "source_control_field": "tcp-wrappers",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "tcp-wrappers",
+        "version": "7.6.q-32"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libxtables12",
+      "binary_version": "1.8.9-2",
+      "built_using_raw": null,
+      "filename": "libxtables12_1.8.9-2_arm64.deb",
+      "sha256": "8884a42f98b989e5ba2e91d931b5c6e9eb72568e5d3001d97d73d7913890a7b3",
+      "source_control_field": "iptables",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "iptables",
+        "version": "1.8.9-2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libxxhash0",
+      "binary_version": "0.8.1-1",
+      "built_using_raw": null,
+      "filename": "libxxhash0_0.8.1-1_arm64.deb",
+      "sha256": "a3eed3901eb1804f2882dc7676f174d619745539e66ac9e92e09cd96ca0cfd73",
+      "source_control_field": "xxhash",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "xxhash",
+        "version": "0.8.1-1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "libzstd1",
+      "binary_version": "1.5.4+dfsg2-5",
+      "built_using_raw": null,
+      "filename": "libzstd1_1.5.4+dfsg2-5_arm64.deb",
+      "sha256": "95e173c9538f96ede4fc275ec7863f395a97dd0ea62454be9bc914efa1b9be93",
+      "source_control_field": "libzstd",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "libzstd",
+        "version": "1.5.4+dfsg2-5"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "login",
+      "binary_version": "1:4.13+dfsg1-1+deb12u2",
+      "built_using_raw": null,
+      "filename": "login_1%3a4.13+dfsg1-1+deb12u2_arm64.deb",
+      "sha256": "6699d4656365b1fd955e51514ff9fc784aa9f9904e763db39283b1f89c29d276",
+      "source_control_field": "shadow",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "shadow",
+        "version": "1:4.13+dfsg1-1+deb12u2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "logsave",
+      "binary_version": "1.47.0-2+b2",
+      "built_using_raw": null,
+      "filename": "logsave_1.47.0-2+b2_arm64.deb",
+      "sha256": "a1f985bedd57af42a53c95e1e85ab1663acdb3eabde240d6fc08345d30c1a102",
+      "source_control_field": "e2fsprogs (1.47.0-2)",
+      "source_effective": {
+        "classification": "explicit-source-version",
+        "package": "e2fsprogs",
+        "version": "1.47.0-2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "mawk",
+      "binary_version": "1.3.4.20200120-3.1",
+      "built_using_raw": null,
+      "filename": "mawk_1.3.4.20200120-3.1_arm64.deb",
+      "sha256": "af76445b28d3de5b9587b231893d5fc594a6eecdc842cc9a7f401f788cc0288f",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "mawk",
+        "version": "1.3.4.20200120-3.1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "all",
+      "binary_package": "media-types",
+      "binary_version": "10.0.0",
+      "built_using_raw": null,
+      "filename": "media-types_10.0.0_all.deb",
+      "sha256": "aaa46dcb3b39948ae2e0fdb72cfcb2f48c0b59f19785a3da8045c05eb19955dd",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "media-types",
+        "version": "10.0.0"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "mount",
+      "binary_version": "2.38.1-5+deb12u3",
+      "built_using_raw": null,
+      "filename": "mount_2.38.1-5+deb12u3_arm64.deb",
+      "sha256": "b073b381d1568f1b409ee8bd1df491b2e3ad231209ff4a1badbab61b57039570",
+      "source_control_field": "util-linux",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "util-linux",
+        "version": "2.38.1-5+deb12u3"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "all",
+      "binary_package": "ncurses-base",
+      "binary_version": "6.4-4",
+      "built_using_raw": null,
+      "filename": "ncurses-base_6.4-4_all.deb",
+      "sha256": "bfd1d89f833c09a28b062ee916495cf69649ca2bf529532476c7b69d75d24909",
+      "source_control_field": "ncurses",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "ncurses",
+        "version": "6.4-4"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "ncurses-bin",
+      "binary_version": "6.4-4",
+      "built_using_raw": null,
+      "filename": "ncurses-bin_6.4-4_arm64.deb",
+      "sha256": "59a56e4bfd04716771bcae67465e6bb87e535da0b232b04d30cf1a920a869b40",
+      "source_control_field": "ncurses",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "ncurses",
+        "version": "6.4-4"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "nvme-cli",
+      "binary_version": "2.4+really2.3-3",
+      "built_using_raw": null,
+      "filename": "nvme-cli_2.4+really2.3-3_arm64.deb",
+      "sha256": "26b38420a3c963540008c78b9dbda7003e680bd99d99af00be87fe0a8d9aaeb0",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "nvme-cli",
+        "version": "2.4+really2.3-3"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "openssh-client",
+      "binary_version": "1:9.2p1-2+deb12u10",
+      "built_using_raw": null,
+      "filename": "openssh-client_1%3a9.2p1-2+deb12u10_arm64.deb",
+      "sha256": "72f7cb7eb432038a62cd89e0552b352a514e880fe3907e73dc50ca2ef6d088d7",
+      "source_control_field": "openssh",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "openssh",
+        "version": "1:9.2p1-2+deb12u10"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "openssh-server",
+      "binary_version": "1:9.2p1-2+deb12u10",
+      "built_using_raw": null,
+      "filename": "openssh-server_1%3a9.2p1-2+deb12u10_arm64.deb",
+      "sha256": "63ea95107e522de7a8da9a841f3b9442875f9d064087d6ef8e5b4d21291016a9",
+      "source_control_field": "openssh",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "openssh",
+        "version": "1:9.2p1-2+deb12u10"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "openssh-sftp-server",
+      "binary_version": "1:9.2p1-2+deb12u10",
+      "built_using_raw": null,
+      "filename": "openssh-sftp-server_1%3a9.2p1-2+deb12u10_arm64.deb",
+      "sha256": "d2a4eb41629bbc929318cdccac043f2f5934c2e4c12f72d7f9c73b3668feab6f",
+      "source_control_field": "openssh",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "openssh",
+        "version": "1:9.2p1-2+deb12u10"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "openssl",
+      "binary_version": "3.0.20-1~deb12u2",
+      "built_using_raw": null,
+      "filename": "openssl_3.0.20-1~deb12u2_arm64.deb",
+      "sha256": "e7ba824de1e659c12e81f885bc0757a50c4d7a9f71de02687ad63d5a9e936e00",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "openssl",
+        "version": "3.0.20-1~deb12u2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "passwd",
+      "binary_version": "1:4.13+dfsg1-1+deb12u2",
+      "built_using_raw": null,
+      "filename": "passwd_1%3a4.13+dfsg1-1+deb12u2_arm64.deb",
+      "sha256": "680144df37766acb90253caaa9144cd00e78e0a76a2e171ecfb4277ec231922e",
+      "source_control_field": "shadow",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "shadow",
+        "version": "1:4.13+dfsg1-1+deb12u2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "perl-base",
+      "binary_version": "5.36.0-7+deb12u3",
+      "built_using_raw": null,
+      "filename": "perl-base_5.36.0-7+deb12u3_arm64.deb",
+      "sha256": "8257ca5f2debe0b4229d98667fe0ed24a8b3b9421c96f847f4f48e9012659174",
+      "source_control_field": "perl",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "perl",
+        "version": "5.36.0-7+deb12u3"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "all",
+      "binary_package": "perl-modules-5.36",
+      "binary_version": "5.36.0-7+deb12u3",
+      "built_using_raw": null,
+      "filename": "perl-modules-5.36_5.36.0-7+deb12u3_all.deb",
+      "sha256": "3d237ccb1ea32727b6573d43c67d78337aa928a81148d36cef54b369a07c240a",
+      "source_control_field": "perl",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "perl",
+        "version": "5.36.0-7+deb12u3"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "perl",
+      "binary_version": "5.36.0-7+deb12u3",
+      "built_using_raw": null,
+      "filename": "perl_5.36.0-7+deb12u3_arm64.deb",
+      "sha256": "a11f259b6768c8eae0d8d2b1127621ff60dfbce7ae4f6cfc5e55e10a7cb15be4",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "perl",
+        "version": "5.36.0-7+deb12u3"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "procps",
+      "binary_version": "2:4.0.2-3",
+      "built_using_raw": null,
+      "filename": "procps_2%3a4.0.2-3_arm64.deb",
+      "sha256": "94414d947f009b55d50e2adf19d92038998bf7fa9ec553b1b6167fb02b5c1855",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "procps",
+        "version": "2:4.0.2-3"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "python3-minimal",
+      "binary_version": "3.11.2-1+b1",
+      "built_using_raw": null,
+      "filename": "python3-minimal_3.11.2-1+b1_arm64.deb",
+      "sha256": "f01c94963ace8a6fec59300427c95fc4ac204d752567dd2e4b36ee930755110f",
+      "source_control_field": "python3-defaults (3.11.2-1)",
+      "source_effective": {
+        "classification": "explicit-source-version",
+        "package": "python3-defaults",
+        "version": "3.11.2-1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "python3.11-minimal",
+      "binary_version": "3.11.2-6+deb12u8",
+      "built_using_raw": null,
+      "filename": "python3.11-minimal_3.11.2-6+deb12u8_arm64.deb",
+      "sha256": "6a07dd571f1a15af2f855d64571766fe44b73a57cc3b5ca79502bc89156a5e12",
+      "source_control_field": "python3.11",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "python3.11",
+        "version": "3.11.2-6+deb12u8"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "python3.11",
+      "binary_version": "3.11.2-6+deb12u8",
+      "built_using_raw": null,
+      "filename": "python3.11_3.11.2-6+deb12u8_arm64.deb",
+      "sha256": "76b445c9428db92fb8f17a322a99e3e54b3f8d0eeac76d80d5d6fff95f5dd526",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "python3.11",
+        "version": "3.11.2-6+deb12u8"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "python3",
+      "binary_version": "3.11.2-1+b1",
+      "built_using_raw": null,
+      "filename": "python3_3.11.2-1+b1_arm64.deb",
+      "sha256": "d31a6f8bdea49711f221baee0e27197c314d0cbe748c020262d32650aca5f017",
+      "source_control_field": "python3-defaults (3.11.2-1)",
+      "source_effective": {
+        "classification": "explicit-source-version",
+        "package": "python3-defaults",
+        "version": "3.11.2-1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "qemu-system-arm",
+      "binary_version": "1:7.2+dfsg-7+deb12u18+b3",
+      "built_using_raw": null,
+      "filename": "qemu-system-arm_1%3a7.2+dfsg-7+deb12u18+b3_arm64.deb",
+      "sha256": "f72e0d0c182be7a3f32282e08c93038a3a06ecc9e95553baf82116bf3a09ed04",
+      "source_control_field": "qemu (1:7.2+dfsg-7+deb12u18)",
+      "source_effective": {
+        "classification": "explicit-source-version",
+        "package": "qemu",
+        "version": "1:7.2+dfsg-7+deb12u18"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "qemu-system-common",
+      "binary_version": "1:7.2+dfsg-7+deb12u18+b3",
+      "built_using_raw": null,
+      "filename": "qemu-system-common_1%3a7.2+dfsg-7+deb12u18+b3_arm64.deb",
+      "sha256": "15be3e22effb0b9f43d04702677979951ff8157de545ff52977b5ec486cc71ff",
+      "source_control_field": "qemu (1:7.2+dfsg-7+deb12u18)",
+      "source_effective": {
+        "classification": "explicit-source-version",
+        "package": "qemu",
+        "version": "1:7.2+dfsg-7+deb12u18"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "all",
+      "binary_package": "qemu-system-data",
+      "binary_version": "1:7.2+dfsg-7+deb12u18",
+      "built_using_raw": null,
+      "filename": "qemu-system-data_1%3a7.2+dfsg-7+deb12u18_all.deb",
+      "sha256": "8d7647370573fe9871949acf60d0c000546c2c089008a70accb3d015781e6bf1",
+      "source_control_field": "qemu",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "qemu",
+        "version": "1:7.2+dfsg-7+deb12u18"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "qemu-utils",
+      "binary_version": "1:7.2+dfsg-7+deb12u18+b3",
+      "built_using_raw": null,
+      "filename": "qemu-utils_1%3a7.2+dfsg-7+deb12u18+b3_arm64.deb",
+      "sha256": "ba18b98c2f5d5cbc142f1c79990e7c23064e39cf117451f24ac4930de5e0c77f",
+      "source_control_field": "qemu (1:7.2+dfsg-7+deb12u18)",
+      "source_effective": {
+        "classification": "explicit-source-version",
+        "package": "qemu",
+        "version": "1:7.2+dfsg-7+deb12u18"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "all",
+      "binary_package": "readline-common",
+      "binary_version": "8.2-1.3",
+      "built_using_raw": null,
+      "filename": "readline-common_8.2-1.3_all.deb",
+      "sha256": "69317523fe56429aa361545416ad339d138c1500e5a604856a80dd9074b4e35c",
+      "source_control_field": "readline",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "readline",
+        "version": "8.2-1.3"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "all",
+      "binary_package": "runit-helper",
+      "binary_version": "2.15.2",
+      "built_using_raw": null,
+      "filename": "runit-helper_2.15.2_all.deb",
+      "sha256": "fd08121947a1ea340d07e1b523591035419552ac151dfe6e241e8a748e15c36b",
+      "source_control_field": "dh-runit",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "dh-runit",
+        "version": "2.15.2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "sed",
+      "binary_version": "4.9-1+deb12u1",
+      "built_using_raw": null,
+      "filename": "sed_4.9-1+deb12u1_arm64.deb",
+      "sha256": "a0ba2ac0e2f4fe2bfe9d74793b66061dbdf3a89a007e85c5277d6232e087e4e4",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "sed",
+        "version": "4.9-1+deb12u1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "all",
+      "binary_package": "sensible-utils",
+      "binary_version": "0.0.17+nmu1",
+      "built_using_raw": null,
+      "filename": "sensible-utils_0.0.17+nmu1_all.deb",
+      "sha256": "e0e66f783996ec4670ed5041c446160ec671c723d4be47d3bc27af93c2958a76",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "sensible-utils",
+        "version": "0.0.17+nmu1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "systemd-resolved",
+      "binary_version": "252.39-1~deb12u2",
+      "built_using_raw": null,
+      "filename": "systemd-resolved_252.39-1~deb12u2_arm64.deb",
+      "sha256": "ba02bffe7dadef3dc68e725a3fea30b6b44529e4a7105f0d94223379d319bf5b",
+      "source_control_field": "systemd",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "systemd",
+        "version": "252.39-1~deb12u2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "systemd-sysv",
+      "binary_version": "252.39-1~deb12u2",
+      "built_using_raw": null,
+      "filename": "systemd-sysv_252.39-1~deb12u2_arm64.deb",
+      "sha256": "a54e6735c2fb5171981b3aa47892f0c76ed0f1e3bd2a89e90ddf3bb72fe083c5",
+      "source_control_field": "systemd",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "systemd",
+        "version": "252.39-1~deb12u2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "systemd",
+      "binary_version": "252.39-1~deb12u2",
+      "built_using_raw": null,
+      "filename": "systemd_252.39-1~deb12u2_arm64.deb",
+      "sha256": "df5a67c54ed1aaa70f7f862628e4aced7dd32f33cf470629f3cef2ab27460a2d",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "systemd",
+        "version": "252.39-1~deb12u2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "sysvinit-utils",
+      "binary_version": "3.06-4",
+      "built_using_raw": null,
+      "filename": "sysvinit-utils_3.06-4_arm64.deb",
+      "sha256": "cb75b312466d8b208444f99c9743e1f9846d7f9debccabccdda65123c611c2db",
+      "source_control_field": "sysvinit",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "sysvinit",
+        "version": "3.06-4"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "tar",
+      "binary_version": "1.34+dfsg-1.2+deb12u1",
+      "built_using_raw": null,
+      "filename": "tar_1.34+dfsg-1.2+deb12u1_arm64.deb",
+      "sha256": "04a945d4f24068f9d4c44294014ef5a33fc6179a57021978afc7d08358e13df3",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "tar",
+        "version": "1.34+dfsg-1.2+deb12u1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "all",
+      "binary_package": "tzdata",
+      "binary_version": "2026b-0+deb12u1",
+      "built_using_raw": null,
+      "filename": "tzdata_2026b-0+deb12u1_all.deb",
+      "sha256": "0edb49f4dffe0d5608069f7e4ba4d69544d3b9e86fc314dd8b75e9958d8e5e98",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "tzdata",
+        "version": "2026b-0+deb12u1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "all",
+      "binary_package": "ucf",
+      "binary_version": "3.0043+nmu1+deb12u1",
+      "built_using_raw": null,
+      "filename": "ucf_3.0043+nmu1+deb12u1_all.deb",
+      "sha256": "928f2d5d327ef0f8d1b9c03a506134f56564cd2acf3e9f041df3dbdc68b00525",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "ucf",
+        "version": "3.0043+nmu1+deb12u1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "udev",
+      "binary_version": "252.39-1~deb12u2",
+      "built_using_raw": null,
+      "filename": "udev_252.39-1~deb12u2_arm64.deb",
+      "sha256": "ac2560c727b4a5c0c6b293bc98ed7550ca97a94d88f3e7f1f587d00d98144b02",
+      "source_control_field": "systemd",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "systemd",
+        "version": "252.39-1~deb12u2"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "all",
+      "binary_package": "usrmerge",
+      "binary_version": "37~deb12u1",
+      "built_using_raw": null,
+      "filename": "usrmerge_37~deb12u1_all.deb",
+      "sha256": "8a25318213244f075b56363408c87a519ed8cef24b270c3d045ef35d695de13a",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "usrmerge",
+        "version": "37~deb12u1"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "util-linux-extra",
+      "binary_version": "2.38.1-5+deb12u3",
+      "built_using_raw": null,
+      "filename": "util-linux-extra_2.38.1-5+deb12u3_arm64.deb",
+      "sha256": "95a531ddba4e6e10f440146a695d5b886dadec8766982096350f8d810e7a069b",
+      "source_control_field": "util-linux",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "util-linux",
+        "version": "2.38.1-5+deb12u3"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "util-linux",
+      "binary_version": "2.38.1-5+deb12u3",
+      "built_using_raw": null,
+      "filename": "util-linux_2.38.1-5+deb12u3_arm64.deb",
+      "sha256": "c30366915d4dc21106d69c3d5a2bf6b010c4c2ff508a1231ede4620aed9874fc",
+      "source_control_field": null,
+      "source_effective": {
+        "classification": "implicit-binary-package-and-version",
+        "package": "util-linux",
+        "version": "2.38.1-5+deb12u3"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "uuid-runtime",
+      "binary_version": "2.38.1-5+deb12u3",
+      "built_using_raw": null,
+      "filename": "uuid-runtime_2.38.1-5+deb12u3_arm64.deb",
+      "sha256": "ec80577364ed7bdd1dfcd8d0db9a7878f1c335d17867b20822077aa6242de411",
+      "source_control_field": "util-linux",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "util-linux",
+        "version": "2.38.1-5+deb12u3"
+      },
+      "static_built_using_raw": null
+    },
+    {
+      "architecture": "arm64",
+      "binary_package": "zlib1g",
+      "binary_version": "1:1.2.13.dfsg-1",
+      "built_using_raw": null,
+      "filename": "zlib1g_1%3a1.2.13.dfsg-1_arm64.deb",
+      "sha256": "52b8b8a145bbe1956bba82034f77022cbef0c3d0885c9e32d9817a7932fe1913",
+      "source_control_field": "zlib",
+      "source_effective": {
+        "classification": "source-name-uses-binary-version",
+        "package": "zlib",
+        "version": "1:1.2.13.dfsg-1"
+      },
+      "static_built_using_raw": null
+    }
+  ],
+  "provenance": {
+    "binary_hash_lock": "configs/host-userspace-package-hashes.lock.tsv",
+    "binary_hash_lock_sha256": "f2f613e79d9c1abc1689e19cfe81b624d9d2ac3beeb322fd5788980d919f7d86",
+    "binary_version_lock": "configs/host-userspace-packages.lock.tsv",
+    "binary_version_lock_sha256": "f2abf03d0d6e7fd506560689093220514cbf1acc678f7560562026d6ca6564a6",
+    "builder_workspace": "/home/drew/orange-pi-4-pro-build/recipe/out/host-userspace-bookworm-20261001-01",
+    "cache_path": "debs/*.deb",
+    "cache_verified_on": "drew@build.drewnet.online",
+    "rootfs_artifact": {
+      "bytes": 169852145,
+      "path": "rootfs.tar.gz",
+      "sha256": "1967e76c0c831c1c0bab432e7116457d4372c15b413090c054f8958b72dcb392"
+    }
+  },
+  "purpose": "Debian binary-to-source control-field mapping for retained package archives; not source archive acquisition or license closure",
+  "schema": 1,
+  "snapshot": "20261001T000000Z",
+  "source_control_semantics": {
+    "policy_url": "https://www.debian.org/doc/debian-policy/ch-controlfields.html#source",
+    "rules": [
+      "Source absent: effective source package/version are binary package/version.",
+      "Source package name only: effective source version is binary version.",
+      "Source package name plus parenthesized version: explicit source version is authoritative."
+    ],
+    "version_stripping": "none; no inferred binNMU suffix removal"
+  }
+}
