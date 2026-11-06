@@ -11,6 +11,8 @@ Automatic YT8531 binding/DHCP, routing/DNS and verified HTTPS work after manual
 UTC correction. The exact-device NVMe planner reports 512/512 sectors and no busy
 indicators, with **no writes**. **Installed NVMe boot, SSH login and actual KVM
 guest execution remain unproven.** No newer physical result has been received.
+A [LAN access check](evidence/board-access-observer-20261106.json) sees the recorded
+MAC answering ICMP with SSH refused; no serial device is attached to codex.
 
 The reviewed [personalized deployment procedure](deploy-personalized-20261106.md)
 is ready for the operator. Its 256 MiB installer and host SD images fit the actual
@@ -40,8 +42,9 @@ by subsequent clean-build work.
   starts in 1970; HTTPS passed after manual UTC correction. Repeated installed-host
   networking and automatic time remain open. [Time-sync input](host-time.md) is
   authenticated; the [fixed identity gate](timesync-identity.md) passes ARM checks.
-  A new package/state profile, clock-state compatibility and physical validation
-  remain pending.
+  The [checkpoint guard/private views](timesync-state.md) verify file-backed
+  ownership and timestamp preservation. A new package/state profile, installed
+  root transitions and physical synchronization remain pending.
 - [Operator inputs](evidence/operator-inputs-20261105.json): RSA3072 and Ed25519
   keys, DHCP hostname `a733-host`, any source/subnet. Require public-key-only SSH.
   [ARM SSH-policy checks](evidence/ssh-console-management-arm-20261106.json) pass;
@@ -94,7 +97,7 @@ by subsequent clean-build work.
   independent readback. The [explicit normalized profile](userspace-profiles.md) now integrates root/state
   selection and passes actual complete staging: 15,876 base entries, 220 packages,
   eight package-state components and the unchanged 39-file runtime. Latest native
-  discovery: **1,178 cases, 97 environment skips**,
+  discovery: **1,203 cases, 97 environment skips**,
   four assembly cases and all five shell suites. The [tracked outer launcher](userspace-pipeline-launcher.md)
   passes review and read-only plans; actual root preflight refuses insufficient
   capacity before output creation. Its full execution, production composition and
@@ -113,7 +116,8 @@ by subsequent clean-build work.
 3. Continue [clean-build work](build-reproduction-status.md): execute the reviewed
    outer pipeline launcher once capacity permits, then use the normalized profile to
    reconstruct production roots/state/NVMe and complete image readback. The reviewed [20 GiB builder LVM growth](build-host-capacity-plan.md)
-   awaits approval; no resize occurred and capacity guards remain unchanged.
+   awaits approval after [target/backup recheck](evidence/build-host-capacity-recheck-20261106.json);
+   no resize occurred and capacity guards remain unchanged.
    [Firmware license evidence](evidence/vendor-boot-license-inventory-20261106.json)
    remains incomplete; all 479 userspace source archives are acquired, not compiled.
 4. Finish automatic time/state compatibility and prove physical reliability:

@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "read-only target and backup recheck; expansion requested but unapproved and unperformed",
+  "builder": "build.drewnet.online",
+  "inventory": {
+    "hostname": "build",
+    "lv": "{\n      \"report\": [\n          {\n              \"lv\": [\n                  {\"lv_path\":\"/dev/ubuntu-vg/ubuntu-lv\", \"lv_uuid\":\"Wacdne-hf6p-osvg-5IiF-iVD0-Dlgt-6iflHh\", \"lv_size\":\"66542632960\"}\n              ]\n          }\n      ]\n  }",
+    "vg": "{\n      \"report\": [\n          {\n              \"vg\": [\n                  {\"vg_name\":\"ubuntu-vg\", \"vg_free\":\"66542632960\"}\n              ]\n          }\n      ]\n  }",
+    "root": "{\n   \"filesystems\": [\n      {\n         \"source\": \"/dev/mapper/ubuntu--vg-ubuntu--lv\",\n         \"fstype\": \"ext4\",\n         \"maj:min\": \"252:0\",\n         \"options\": \"rw,relatime\"\n      }\n   ]\n}",
+    "backup": "2b21a23134c124fab4bfbc9c7d2cf3d28e825df83e7a6c9337f16b0eeaf6815f  /var/lib/a733-builder-lvm-preparation-20261106/ubuntu-vg.before.vg",
+    "free_bytes": 3247046656,
+    "mem_available_bytes": 7477456896,
+    "active_processes": ""
+  },
+  "raw_record": {
+    "path": "out/build-host-capacity-recheck-20261106/inventory.json",
+    "sha256": "5ca2d5f0e43ca924e54594d5e9d69111abae06487706427d9d4ec3e743f0f6db"
+  },
+  "proposed_lv_bytes": 88017469440,
+  "growth_bytes": 21474836480,
+  "authorized": false,
+  "applied": false
+}

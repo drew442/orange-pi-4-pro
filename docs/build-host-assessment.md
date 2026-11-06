@@ -81,7 +81,8 @@ free space was about 7.68 GB after the earlier replay builds; the latest sample
 after the fresh userspace pipeline was about 3.79 GB; subsequent
 [normalized profile staging](userspace-profiles.md) left about 3.29 GB. A subsequent
 [small ARM identity fixture](timesync-identity.md) left 3,247,067,136 bytes
-free, above its 3 GiB reserve but below the full-build guards. The
+free. The subsequent [private state-view fixture](timesync-state.md) left
+3,246,751,744 bytes, above its 3 GiB reserve but below full-build guards. The
 [prepared 20 GiB growth proposal](build-host-capacity-plan.md) has an exact target,
 metadata backup, successful allocation test and independently reviewed guards.
 It awaits separate approval because it changes the build host root filesystem;

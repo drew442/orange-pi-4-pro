@@ -68,6 +68,10 @@ an unsupported library alias before execution; the corrected fixture selects
 only the sysusers ELF dependency closure. Its retained records identify both
 preparation scripts; no failed attempt is counted as a successful run.
 
+The separate [checkpoint guard and private view fixture](timesync-state.md) now
+verify file-backed ownership and timestamp preservation. They do not establish
+installed boot or actual updater/rollback behavior.
+
 ## Remaining integration
 
 Build a separately pinned 221-package profile with systemd-timesyncd installed

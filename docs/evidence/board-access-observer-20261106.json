@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "non-destructive LAN/console observer only; no installed host or hardware acceptance",
+  "address": "192.168.1.115",
+  "icmp_reply": true,
+  "observed_neighbor_mac": "10:f4:ae:90:5e:57",
+  "mac_matches_recorded_wired_mac": true,
+  "ssh_port22": "connection refused",
+  "local_serial_devices": "none present under /dev/serial/by-id, /dev/serial/by-path, /dev/ttyUSB*, /dev/ttyACM*",
+  "new_operator_boot_logs_received": false,
+  "limits": [
+    "Neighbor MAC is not cryptographic identity or proof of installed boot.",
+    "No console commands or board-storage writes performed.",
+    "Serial installation/readback/host boot logs and real KVM evidence still required."
+  ]
+}

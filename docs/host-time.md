@@ -28,8 +28,9 @@ synchronization result, with offline behavior handled explicitly.
 The [stable identity policy and read-only gates](timesync-identity.md) now pass
 actual pinned ARM sysusers creation/repeat checks on the builder, with independent
 review. UID/GID 996 is reserved for a future profile; published images still have
-no timesync account or daemon. Clock-state ownership and A/B transitions remain
-unproven.
+no timesync account or daemon. The [checkpoint guard and private view fixture](timesync-state.md)
+now verify file-backed ownership and timestamp preservation. Installed root
+transitions and physical synchronization remain unproven.
 
 Before enabling it in a future payload, introduce a separate pinned userspace
 profile and regenerate its per-root package metadata. Audit the added service

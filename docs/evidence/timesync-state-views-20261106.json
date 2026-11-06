@@ -1,0 +1,641 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "private file-backed clock-state view/UID permissions only; no full roots, installed boot, actual updater/rollback, time service, NTP or hardware acceptance",
+  "source_commit": "091950c65fa8bd6001f2331b9cb09c28fde7efdf",
+  "success": true,
+  "inner_run": {
+    "schema": 1,
+    "classification": "private file-backed clock-state view/UID permissions only; no full roots, installed boot, actual updater/rollback, time service, NTP or hardware acceptance",
+    "namespace": {
+      "initial_mount_inode": 4026531841,
+      "fixture_mount_inode": 4026532189,
+      "private_propagation_verified": true
+    },
+    "success": true,
+    "resources": {
+      "free_before_bytes": 3246858240,
+      "free_after_bytes": 3246751744
+    },
+    "views": [
+      {
+        "view": "old",
+        "before": {
+          "device": 64512,
+          "inode": 449592,
+          "uid": 996,
+          "gid": 996,
+          "mode": 420,
+          "size": 0,
+          "mtime_ns": 1800000001000000000
+        },
+        "account": {
+          "phase": "before",
+          "account": "systemd-timesync",
+          "uid": 996,
+          "gid": 996,
+          "reservation": "unused",
+          "sha256": {
+            "passwd": "27c2f35b3c3030dec127edfa49a7d4f8fbecb990d72c48f31f4d1410ca8ab14e",
+            "group": "02025770f81f4413ae5c0e162c9fbb3939022d6f28a250c38d9fabbf00b2e9cb",
+            "sysusers_policy": "d3873e161fa2ba8cee53de2a675b1ed8af9145c7151ba7a2775634c480766079"
+          }
+        },
+        "after": {
+          "device": 64512,
+          "inode": 449592,
+          "uid": 996,
+          "gid": 996,
+          "mode": 420,
+          "size": 0,
+          "mtime_ns": 1800000001000000000
+        },
+        "audit": {
+          "state_uuid": "11111111-2222-4333-8444-555555555555",
+          "marker_sha256": "ca2cbde903fa0b12394ea6f402e8455a028c00f5328bf90b20fb15da253b651b",
+          "status": "initialized",
+          "clock_mtime_ns": 1800000001000000000,
+          "metadata": {
+            "state_root": {
+              "uid": 0,
+              "gid": 0,
+              "mode": "0700",
+              "size": 4096,
+              "nlink": 3,
+              "device": 64512,
+              "inode": 449585
+            },
+            "marker": {
+              "uid": 0,
+              "gid": 0,
+              "mode": "0600",
+              "size": 51,
+              "nlink": 1,
+              "device": 64512,
+              "inode": 449589
+            },
+            "timesync": {
+              "uid": 996,
+              "gid": 996,
+              "mode": "0755",
+              "size": 4096,
+              "nlink": 2,
+              "device": 64512,
+              "inode": 449591
+            },
+            "clock": {
+              "uid": 996,
+              "gid": 996,
+              "mode": "0644",
+              "size": 0,
+              "nlink": 1,
+              "device": 64512,
+              "inode": 449592
+            }
+          }
+        }
+      },
+      {
+        "view": "new",
+        "before": {
+          "device": 64512,
+          "inode": 449592,
+          "uid": 996,
+          "gid": 996,
+          "mode": 420,
+          "size": 0,
+          "mtime_ns": 1800000001000000000
+        },
+        "account": {
+          "phase": "after",
+          "account": "systemd-timesync",
+          "uid": 996,
+          "gid": 996,
+          "reservation": "exact",
+          "sha256": {
+            "passwd": "12038b45df80da2ee29f15fb9d37f2ab89b9d4c4c733b6e48a5721b23407fe93",
+            "group": "bae50d9e4c73080daaca1ee7697b9813be43bdcc155539884a23a6c22a935637",
+            "sysusers_policy": "d3873e161fa2ba8cee53de2a675b1ed8af9145c7151ba7a2775634c480766079"
+          }
+        },
+        "writer": {
+          "uid": 996,
+          "gid": 996,
+          "NoNewPrivs": "1",
+          "CapEff": "0000000000000000",
+          "mtime_ns": 1800000002000000000
+        },
+        "after": {
+          "device": 64512,
+          "inode": 449592,
+          "uid": 996,
+          "gid": 996,
+          "mode": 420,
+          "size": 0,
+          "mtime_ns": 1800000002000000000
+        },
+        "audit": {
+          "state_uuid": "11111111-2222-4333-8444-555555555555",
+          "marker_sha256": "ca2cbde903fa0b12394ea6f402e8455a028c00f5328bf90b20fb15da253b651b",
+          "status": "initialized",
+          "clock_mtime_ns": 1800000002000000000,
+          "metadata": {
+            "state_root": {
+              "uid": 0,
+              "gid": 0,
+              "mode": "0700",
+              "size": 4096,
+              "nlink": 3,
+              "device": 64512,
+              "inode": 449585
+            },
+            "marker": {
+              "uid": 0,
+              "gid": 0,
+              "mode": "0600",
+              "size": 51,
+              "nlink": 1,
+              "device": 64512,
+              "inode": 449589
+            },
+            "timesync": {
+              "uid": 996,
+              "gid": 996,
+              "mode": "0755",
+              "size": 4096,
+              "nlink": 2,
+              "device": 64512,
+              "inode": 449591
+            },
+            "clock": {
+              "uid": 996,
+              "gid": 996,
+              "mode": "0644",
+              "size": 0,
+              "nlink": 1,
+              "device": 64512,
+              "inode": 449592
+            }
+          }
+        }
+      },
+      {
+        "view": "old",
+        "before": {
+          "device": 64512,
+          "inode": 449592,
+          "uid": 996,
+          "gid": 996,
+          "mode": 420,
+          "size": 0,
+          "mtime_ns": 1800000002000000000
+        },
+        "account": {
+          "phase": "before",
+          "account": "systemd-timesync",
+          "uid": 996,
+          "gid": 996,
+          "reservation": "unused",
+          "sha256": {
+            "passwd": "27c2f35b3c3030dec127edfa49a7d4f8fbecb990d72c48f31f4d1410ca8ab14e",
+            "group": "02025770f81f4413ae5c0e162c9fbb3939022d6f28a250c38d9fabbf00b2e9cb",
+            "sysusers_policy": "d3873e161fa2ba8cee53de2a675b1ed8af9145c7151ba7a2775634c480766079"
+          }
+        },
+        "after": {
+          "device": 64512,
+          "inode": 449592,
+          "uid": 996,
+          "gid": 996,
+          "mode": 420,
+          "size": 0,
+          "mtime_ns": 1800000002000000000
+        },
+        "audit": {
+          "state_uuid": "11111111-2222-4333-8444-555555555555",
+          "marker_sha256": "ca2cbde903fa0b12394ea6f402e8455a028c00f5328bf90b20fb15da253b651b",
+          "status": "initialized",
+          "clock_mtime_ns": 1800000002000000000,
+          "metadata": {
+            "state_root": {
+              "uid": 0,
+              "gid": 0,
+              "mode": "0700",
+              "size": 4096,
+              "nlink": 3,
+              "device": 64512,
+              "inode": 449585
+            },
+            "marker": {
+              "uid": 0,
+              "gid": 0,
+              "mode": "0600",
+              "size": 51,
+              "nlink": 1,
+              "device": 64512,
+              "inode": 449589
+            },
+            "timesync": {
+              "uid": 996,
+              "gid": 996,
+              "mode": "0755",
+              "size": 4096,
+              "nlink": 2,
+              "device": 64512,
+              "inode": 449591
+            },
+            "clock": {
+              "uid": 996,
+              "gid": 996,
+              "mode": "0644",
+              "size": 0,
+              "nlink": 1,
+              "device": 64512,
+              "inode": 449592
+            }
+          }
+        }
+      },
+      {
+        "view": "new",
+        "before": {
+          "device": 64512,
+          "inode": 449592,
+          "uid": 996,
+          "gid": 996,
+          "mode": 420,
+          "size": 0,
+          "mtime_ns": 1800000002000000000
+        },
+        "account": {
+          "phase": "after",
+          "account": "systemd-timesync",
+          "uid": 996,
+          "gid": 996,
+          "reservation": "exact",
+          "sha256": {
+            "passwd": "12038b45df80da2ee29f15fb9d37f2ab89b9d4c4c733b6e48a5721b23407fe93",
+            "group": "bae50d9e4c73080daaca1ee7697b9813be43bdcc155539884a23a6c22a935637",
+            "sysusers_policy": "d3873e161fa2ba8cee53de2a675b1ed8af9145c7151ba7a2775634c480766079"
+          }
+        },
+        "writer": {
+          "uid": 996,
+          "gid": 996,
+          "NoNewPrivs": "1",
+          "CapEff": "0000000000000000",
+          "mtime_ns": 1800000003000000000
+        },
+        "after": {
+          "device": 64512,
+          "inode": 449592,
+          "uid": 996,
+          "gid": 996,
+          "mode": 420,
+          "size": 0,
+          "mtime_ns": 1800000003000000000
+        },
+        "audit": {
+          "state_uuid": "11111111-2222-4333-8444-555555555555",
+          "marker_sha256": "ca2cbde903fa0b12394ea6f402e8455a028c00f5328bf90b20fb15da253b651b",
+          "status": "initialized",
+          "clock_mtime_ns": 1800000003000000000,
+          "metadata": {
+            "state_root": {
+              "uid": 0,
+              "gid": 0,
+              "mode": "0700",
+              "size": 4096,
+              "nlink": 3,
+              "device": 64512,
+              "inode": 449585
+            },
+            "marker": {
+              "uid": 0,
+              "gid": 0,
+              "mode": "0600",
+              "size": 51,
+              "nlink": 1,
+              "device": 64512,
+              "inode": 449589
+            },
+            "timesync": {
+              "uid": 996,
+              "gid": 996,
+              "mode": "0755",
+              "size": 4096,
+              "nlink": 2,
+              "device": 64512,
+              "inode": 449591
+            },
+            "clock": {
+              "uid": 996,
+              "gid": 996,
+              "mode": "0644",
+              "size": 0,
+              "nlink": 1,
+              "device": 64512,
+              "inode": 449592
+            }
+          }
+        }
+      }
+    ],
+    "negative_checks": [
+      "require-clock-while-uninitialized",
+      "wrong-clock-owner",
+      "clock-hardlink",
+      "clock-symlink",
+      "unexpected-service-state",
+      "wrong-clock-mode"
+    ],
+    "uninitialized": {
+      "state_uuid": "11111111-2222-4333-8444-555555555555",
+      "marker_sha256": "ca2cbde903fa0b12394ea6f402e8455a028c00f5328bf90b20fb15da253b651b",
+      "status": "uninitialized",
+      "clock_mtime_ns": null,
+      "metadata": {
+        "state_root": {
+          "uid": 0,
+          "gid": 0,
+          "mode": "0700",
+          "size": 4096,
+          "nlink": 3,
+          "device": 64512,
+          "inode": 449585
+        },
+        "marker": {
+          "uid": 0,
+          "gid": 0,
+          "mode": "0600",
+          "size": 51,
+          "nlink": 1,
+          "device": 64512,
+          "inode": 449589
+        }
+      }
+    },
+    "initial_writer": {
+      "uid": 996,
+      "gid": 996,
+      "NoNewPrivs": "1",
+      "CapEff": "0000000000000000",
+      "mtime_ns": 1800000001000000000
+    },
+    "initialized": {
+      "state_uuid": "11111111-2222-4333-8444-555555555555",
+      "marker_sha256": "ca2cbde903fa0b12394ea6f402e8455a028c00f5328bf90b20fb15da253b651b",
+      "status": "initialized",
+      "clock_mtime_ns": 1800000001000000000,
+      "metadata": {
+        "state_root": {
+          "uid": 0,
+          "gid": 0,
+          "mode": "0700",
+          "size": 4096,
+          "nlink": 3,
+          "device": 64512,
+          "inode": 449585
+        },
+        "marker": {
+          "uid": 0,
+          "gid": 0,
+          "mode": "0600",
+          "size": 51,
+          "nlink": 1,
+          "device": 64512,
+          "inode": 449589
+        },
+        "timesync": {
+          "uid": 996,
+          "gid": 996,
+          "mode": "0755",
+          "size": 4096,
+          "nlink": 2,
+          "device": 64512,
+          "inode": 449591
+        },
+        "clock": {
+          "uid": 996,
+          "gid": 996,
+          "mode": "0644",
+          "size": 0,
+          "nlink": 1,
+          "device": 64512,
+          "inode": 449592
+        }
+      }
+    },
+    "account_tuples_preserved": true,
+    "final": {
+      "state_uuid": "11111111-2222-4333-8444-555555555555",
+      "marker_sha256": "ca2cbde903fa0b12394ea6f402e8455a028c00f5328bf90b20fb15da253b651b",
+      "status": "initialized",
+      "clock_mtime_ns": 1800000003000000000,
+      "metadata": {
+        "state_root": {
+          "uid": 0,
+          "gid": 0,
+          "mode": "0700",
+          "size": 4096,
+          "nlink": 3,
+          "device": 64512,
+          "inode": 449585
+        },
+        "marker": {
+          "uid": 0,
+          "gid": 0,
+          "mode": "0600",
+          "size": 51,
+          "nlink": 1,
+          "device": 64512,
+          "inode": 449589
+        },
+        "timesync": {
+          "uid": 996,
+          "gid": 996,
+          "mode": "0755",
+          "size": 4096,
+          "nlink": 2,
+          "device": 64512,
+          "inode": 449591
+        },
+        "clock": {
+          "uid": 996,
+          "gid": 996,
+          "mode": "0644",
+          "size": 0,
+          "nlink": 1,
+          "device": 64512,
+          "inode": 449592
+        }
+      }
+    },
+    "future_timestamp_preserved": true,
+    "fixture_mounts_remaining": [],
+    "host_inventory_unchanged": true
+  },
+  "outer_run": {
+    "schema": 1,
+    "classification": "private tiny state-view fixture wrapper; no physical acceptance",
+    "command": [
+      "/usr/bin/unshare",
+      "--mount",
+      "--propagation",
+      "private",
+      "--fork",
+      "/usr/bin/python3",
+      "-I",
+      "-B",
+      "/var/lib/a733-timesync-state-tools-20261106/verify.py",
+      "4026531841"
+    ],
+    "source_tar_sha256": "950fc33bc9bde9c63aa3ddfe1ef7cff76a28d010cf17dcc2a49dd76441804140",
+    "inputs_manifest_sha256": "fa446a16404701a301e89900f67bb748657fd7c9e6600f527ef88a503f969bbc",
+    "initial_mount_inode": 4026531841,
+    "success": true,
+    "returncode": 0,
+    "terminal_returncode": 0,
+    "initial_mount_inode_after": 4026531841,
+    "outer_fixture_mounts_after": []
+  },
+  "source_files": {
+    "build/timesync-state.py": {
+      "bytes": 8886,
+      "sha256": "5e15816c6381b86577cc458051bd622f3f7b83fc487d953f0d04c280befafa00"
+    },
+    "tests/test_timesync_state.py": {
+      "bytes": 14372,
+      "sha256": "2db8dc64aa4354b9af973f089dde8ae41c0e55404c2079c00ef3015fc5439e8c"
+    },
+    "build/timesync-identity.py": {
+      "bytes": 8173,
+      "sha256": "5ee1f6d3a2b3211189d0f45a2c007a45c1a950fb960cb7b75b5fe2a47a767909"
+    },
+    "configs/host-timesync-sysusers.conf": {
+      "bytes": 170,
+      "sha256": "d3873e161fa2ba8cee53de2a675b1ed8af9145c7151ba7a2775634c480766079"
+    }
+  },
+  "retained_records": {
+    "out/timesync-state-views-20261106/inner/host-packages.after.tsv": {
+      "bytes": 40966,
+      "sha256": "446b7eb3364a6f196390c698c1c133086fee5eb3b080ec4483cc1d8584b39b15"
+    },
+    "out/timesync-state-views-20261106/inner/host-packages.before.tsv": {
+      "bytes": 40966,
+      "sha256": "446b7eb3364a6f196390c698c1c133086fee5eb3b080ec4483cc1d8584b39b15"
+    },
+    "out/timesync-state-views-20261106/inner/initial-write.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/timesync-state-views-20261106/inner/initial-write.stdout": {
+      "bytes": 107,
+      "sha256": "25e2f03e71f2009bc01642db0d37571e84cb4fa6e6c3062460909b41d45cd1a2"
+    },
+    "out/timesync-state-views-20261106/inner/receipt.json": {
+      "bytes": 12075,
+      "sha256": "7939f99c463a71a9c62e67b986781beb97ff5ca083954014dd00f2570ff86a02"
+    },
+    "out/timesync-state-views-20261106/inner/view-1.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/timesync-state-views-20261106/inner/view-1.stdout": {
+      "bytes": 107,
+      "sha256": "f43501b98ef0a370f79ee2b70cf4b55004fa28f895c3b35ce24007a668967a6b"
+    },
+    "out/timesync-state-views-20261106/inner/view-3.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/timesync-state-views-20261106/inner/view-3.stdout": {
+      "bytes": 107,
+      "sha256": "c33483c8d29fa1a0686d30c45984d6b8a5fb884d76d231d615f844ed877f39bf"
+    },
+    "out/timesync-state-views-20261106/inner-records.tar": {
+      "bytes": 102400,
+      "sha256": "68c7421bb663357262d07fc12a0a61fa0e199ce520374af7ab30a11ef4f545ea"
+    },
+    "out/timesync-state-views-20261106/outer/fixture.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/timesync-state-views-20261106/outer/fixture.stdout": {
+      "bytes": 91,
+      "sha256": "42d77bafffb02b16464d70033911c09ad56daac5ca6be5731a10631181a1598a"
+    },
+    "out/timesync-state-views-20261106/outer/inputs.json": {
+      "bytes": 571,
+      "sha256": "fa446a16404701a301e89900f67bb748657fd7c9e6600f527ef88a503f969bbc"
+    },
+    "out/timesync-state-views-20261106/outer/outer-receipt.json": {
+      "bytes": 705,
+      "sha256": "c93c27d3e373defed823ff72d80a78cff6aa818762c499e3f25ea42c80fbad16"
+    },
+    "out/timesync-state-views-20261106/outer-records.tar": {
+      "bytes": 10240,
+      "sha256": "a6a2371acbf524e27da85c7f3be5364e862fd3820822ca6d726abb811b090653"
+    },
+    "out/timesync-state-views-20261106/verification-code/launch-timesync-state-views-20261106.py": {
+      "bytes": 5040,
+      "sha256": "39548c3c424687aeca38a8395bad6b8de65594f05f665e1e1cec16383c0af8b0"
+    },
+    "out/timesync-state-views-20261106/verification-code/test-timesync-state-wrapper-cleanup-20261106.py": {
+      "bytes": 2231,
+      "sha256": "19b3818ec704f45ab919780255a5b14ff2470fdad34472550f662714a2ce9682"
+    },
+    "out/timesync-state-views-20261106/verification-code/verify-timesync-state-views-20261106.py": {
+      "bytes": 7703,
+      "sha256": "cb530d41ba2a10b1cca2e498f9795d35ad552a0b74e6c6c7c57eb92c05b7a0e6"
+    },
+    "out/timesync-state-views-20261106/wrapper-cleanup.json": {
+      "bytes": 374,
+      "sha256": "0dd243019b4c8d26d8c18e9074342d406fc559324f010c5670f4304d58c69621"
+    }
+  },
+  "input_tar": {
+    "path": "tmp/timesync-state-inputs-20261106.tar",
+    "bytes": 30720,
+    "sha256": "950fc33bc9bde9c63aa3ddfe1ef7cff76a28d010cf17dcc2a49dd76441804140"
+  },
+  "validation": {
+    "native_discovery_cases": 1203,
+    "environment_skips": 97,
+    "focused_cases": 25,
+    "assembly_cases": 4,
+    "bash_suites": 5,
+    "native_wrapper_cleanup_cases": 2,
+    "toml_files_parsed": 5,
+    "diff_check": true
+  },
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "source_and_privileged_script_review_passed": true,
+    "retained_records_and_read_only_remote_review_passed": true,
+    "resolved_findings": [
+      "marker must be safe pinned regular inode before readable open",
+      "explicit directory modes independent of umask",
+      "bounded stable uploaded input reads",
+      "avoid signaling a reaped/reusable process group ID"
+    ],
+    "postchecks": [
+      "protected source and receipt hashes",
+      "prior receipt and account hashes",
+      "actual checkpoint inode/ownership/mode/length/timestamp",
+      "six negative cases",
+      "host inventory unchanged",
+      "initial mount namespace unchanged and no fixture mounts",
+      "reserve retained"
+    ]
+  },
+  "limitations": [
+    "Tiny account/root views, not complete host roots or real updater/rollback execution.",
+    "No daemon/package installation, NTP, host clock-setting operation or physical hardware acceptance.",
+    "Published220package images/profile/producer pins unchanged; separate221profile remains required.",
+    "Linux procfs verification is required by the new read-only marker implementation.",
+    "Builder root-LV expansion remains unapproved; no resize occurred."
+  ]
+}
