@@ -13,10 +13,12 @@ echo 'A733 installer preparation: unrestricted physical root console.'
 echo 'No disk filesystem, swap, network listener or automatic physical writer is started.'
 echo 'Keep payloads on identified fixed/external storage, not in /run, /tmp or SD.'
 modprobe nvme 2>/dev/null || :
-for alias_file in $(find /sys/devices -name modalias 2>/dev/null); do
-    read -r alias < "$alias_file"
-    modprobe "$alias" 2>/dev/null || :
-done
+# Pass sysfs paths as arguments: names such as Fixed MDIO bus.0 contain spaces.
+find /sys/devices -name modalias -exec sh -c '
+    if read -r alias < "$1"; then
+        modprobe "$alias" 2>/dev/null || :
+    fi
+' sh {} \; 2>/dev/null
 uname -a
 cat /proc/cmdline
 lsblk -b -o NAME,SIZE,MODEL,SERIAL,TYPE,FSTYPE,MOUNTPOINTS || :

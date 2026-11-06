@@ -14,10 +14,12 @@ echo 'No disk filesystems, swap, persistent networking or network listeners are 
 # Module failure is diagnostic evidence; it must not prevent a console.
 if command -v modprobe >/dev/null 2>&1; then
     modprobe nvme 2>/dev/null || :
-    for alias_file in $(find /sys/devices -name modalias 2>/dev/null); do
-        read -r alias < "$alias_file"
-        modprobe "$alias" 2>/dev/null || :
-    done
+    # Pass sysfs paths as arguments: names such as Fixed MDIO bus.0 contain spaces.
+    find /sys/devices -name modalias -exec sh -c '
+        if read -r alias < "$1"; then
+            modprobe "$alias" 2>/dev/null || :
+        fi
+    ' sh {} \; 2>/dev/null
 fi
 uname -a
 cat /proc/cmdline

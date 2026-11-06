@@ -2,7 +2,7 @@
 
 ## Purpose and Current State
 
-Build a minimal KVM/QEMU host for the **Orange Pi 4 Pro A733**, using a 2 GB SD card and nominal 250 GB NVMe. Read `docs/implementation-status.md` first, then relevant sections of `docs/hypervisor-plan.md`. Diagnostic SD boot now enters EL2 on all eight CPUs; KVM initializes, but guest execution is pending. Read the status for Ethernet/installation gates.
+Build a minimal KVM/QEMU host for the **Orange Pi 4 Pro A733**, using a 2 GB SD card and nominal 250 GB NVMe. Read `docs/implementation-status.md` first, then relevant sections of `docs/hypervisor-plan.md`. Diagnostic/preparation SD boots enter EL2 on all eight CPUs; KVM initializes, but guest execution is pending. Preparation DHCP and verified HTTPS work; read the status for installation gates.
 
 Vendor images exceed the available SD capacity. Use diagnostic outputs for inventory; leave attached heatsinks in place. Prefer SPI-to-NVMe boot; otherwise keep SD boot files read-only with zero routine writes. Require an actual KVM guest for hardware acceptance.
 

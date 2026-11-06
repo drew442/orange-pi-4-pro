@@ -46,9 +46,9 @@ supports investigating SPI plus NVMe but does not prove the user's SPCC SSD work
 
 The pinned
 [A733 U-Boot configuration](https://github.com/orangepi-xunlong/u-boot-orangepi/blob/b791be842935b27268ae3d00e943a9075495f30a/configs/sun60iw2p1_t736_defconfig#L127)
-enables `CMD_NVME`, `NVME`, PCI and the Allwinner PCIe root complex. This is source
-support, not an observed U-Boot NVMe scan/read. Linux has enumerated the actual
-SPCC namespace, which does not establish the firmware driver or boot script.
+enables `CMD_NVME`, `NVME`, PCI and the Allwinner PCIe root complex. The [preparation boot](evidence/installer-prep-physical-20261106.json) now shows
+U-Boot enumerating the exact SPCC serial/capacity at Gen3. It still loads boot
+files from SD; NVMe file reads and SPI-to-NVMe boot remain unproven.
 
 The reviewed diagnostic U-Boot explicitly restricts `boot_targets` to `mmc0`.
 Copying its boot package into SPI would not by itself implement NVMe-first boot.

@@ -2,8 +2,9 @@
 
 The [EL2 diagnostic](el2-diagnostic.md) has physically initialized KVM. The
 [next preparation image](#next-physical-boot) includes the module-helper fix and
-retains the proven EL2 boot package. One live RAM-session DHCP lease is recorded;
-cold-boot network reliability and actual KVM guest execution remain open.
+retains the proven EL2 boot package. The [physical preparation boot](evidence/installer-prep-physical-20261106.json)
+now confirms automatic PHY/DHCP, route/DNS and verified HTTPS after manual UTC
+correction. Repeated boot reliability and actual KVM guest execution remain open.
 
 
 The A733 preparation image now provides Python, storage tools and an HTTPS
@@ -180,7 +181,12 @@ Use this current candidate rather than the historical baseline table above.
 [Build evidence](evidence/installer-helper-20261105.json) records the pinned EL2
 boot package, corrected `/sbin/modprobe`, ARM runtime probe and independent SD
 inspection. It is a preparation RAM shell, with no automatic disk installation.
-This exact image has not booted on the board.
+This exact image has now booted to its RAM shell on the board; the
+[physical record](evidence/installer-prep-physical-20261106.json) confirms automatic
+YT8531 binding, DHCP, routing/DNS and HTTPS after manual UTC correction. The
+modalias scan emitted errors for a path containing spaces; source now corrects
+that scan, but the corrected source has not been reflashed or physically tested.
+The successful checks do not require another diagnostic-only reflash.
 
 On `codex.drewnet.online`, the current image is already staged and hash-verified at
 `/home/drew/orange-pi-4-pro/out/installer-helper-20261105/a733-installer-prep.img`.

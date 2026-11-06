@@ -1,0 +1,210 @@
+{
+  "evidence_type": "physical installer-preparation console capture",
+  "capture_date": "2026-11-06",
+  "raw_log": {
+    "path": "tmp/06112026-1612-installer-prep.txt",
+    "bytes": 93645,
+    "sha256": "984a1f6a3430e77639de1f96731367c09c34d6a39f077188f53a270b3b93863c"
+  },
+  "observations": {
+    "boot": {
+      "uboot": "2018.07-gb791be8-dirty",
+      "uboot_nvme_enumeration": "SPCC M.2 PCIe SSD, serial 134807190FC700149277, 244198.3 MB / 238.4 GB (500118192 x 512); U-Boot selected embedded boot.bmp after NVMe/UFS detection.",
+      "meaning": "NVMe enumeration is observed; it does not establish SPI-to-NVMe boot or that boot files were read from NVMe. Capture shows boot.scr/kernel/initramfs read from MMC 0.",
+      "spsr": "BL3-1 next-image SPSR: 0x3c9.",
+      "kernel": "Linux 6.6.98-a733-diag; all CPUs started at EL2; online CPUs 0-7; KVM VHE initialized and /dev/kvm exists. No guest execution shown.",
+      "source_lines": [
+        44,
+        98,
+        100,
+        102,
+        109,
+        111,
+        149,
+        256,
+        382,
+        383,
+        1156,
+        1169,
+        1222,
+        1225
+      ]
+    },
+    "ethernet": {
+      "phy_id": "0x4f51e91b",
+      "driver": "YT8531 Gigabit Ethernet",
+      "mac": "10:f4:ae:90:5e:57",
+      "link": "1 Gbps full duplex",
+      "dhcp": {
+        "address": "192.168.1.115",
+        "prefix": 24,
+        "lease_seconds": 7200
+      },
+      "default_route": "192.168.1.1 via eth0",
+      "resolver": "192.168.1.1",
+      "interface_counters": {
+        "rx_bytes": 1698445,
+        "rx_packets": 20031,
+        "rx_errors": 0,
+        "rx_drops": 6740,
+        "tx_bytes": 1722,
+        "tx_packets": 11,
+        "tx_errors": 0,
+        "tx_drops": 0
+      },
+      "source_lines": [
+        1170,
+        1176,
+        1178,
+        1181,
+        1182,
+        1197,
+        1198,
+        1199,
+        1201,
+        1227,
+        1230,
+        1234,
+        1238,
+        1241,
+        1251
+      ]
+    },
+    "sd": {
+      "device": "/dev/mmcblk1",
+      "capacity_bytes": 1977614336,
+      "read_only_flag": 0,
+      "stat_fields": [
+        1,
+        0,
+        8,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        4,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "interpretation": "Linux block stat field index 4 (writes completed) is 0 and field index 6 (sectors written) is 0 in this snapshot. Device is not marked read-only. A single snapshot does not prove zero routine writes.",
+      "source_lines": [
+        1161,
+        1252,
+        1254
+      ]
+    },
+    "nvme_plan": {
+      "operation": "plan-only",
+      "target": "/dev/nvme0n1",
+      "model": "SPCC M.2 PCIe SSD",
+      "serial": "134807190FC700149277",
+      "capacity_bytes": 256060514304,
+      "logical_sector_bytes": 512,
+      "physical_sector_bytes": 512,
+      "busy_checks": "Whole namespace and partitions 259:0 through 259:4 reported no holders, mounts, read-only state or swap; checks cover current mount namespace and do not detect open raw-device users.",
+      "proposed_gpt_layout_bytes": {
+        "boot": 536870912,
+        "root-a": 4294967296,
+        "root-b": 4294967296,
+        "state": 8589934592,
+        "guests": 238342373376
+      },
+      "writes_performed": false,
+      "limitations": "Observation is not a lock; revalidate before action. Plan itself says it does not authorize installation and proposed layout requires bootloader filesystem validation.",
+      "source_lines": [
+        1255,
+        1257,
+        1259,
+        1261,
+        1297,
+        1300,
+        1305,
+        1312,
+        1321,
+        1329,
+        1337,
+        1342,
+        1345,
+        1353,
+        1356,
+        1359,
+        1363,
+        1366
+      ]
+    },
+    "time_and_tls": {
+      "initial_utc_clock": "1970-01-01 03:45:50",
+      "manual_corrections": [
+        "2026-11-06 16:15:00",
+        "2026-11-06 05:17:00"
+      ],
+      "curl": "HTTPS HEAD to https://deb.debian.org/debian/ returned HTTP/2 200; response Date: Fri, 06 Nov 2026 05:18:01 GMT.",
+      "source_lines": [
+        1368,
+        1369,
+        1370,
+        1371,
+        1372,
+        1373,
+        1374,
+        1375,
+        1376,
+        1388
+      ]
+    },
+    "warnings": {
+      "init_fixed_mdio_path_split": "The /init line 17 command path appears split on spaces into Fixed, MDIO, and bus.0/modalias, each reported as an open failure.",
+      "other_boot_warnings": [
+        "U-Boot: No ethernet found.",
+        "BL31: No DTB found.",
+        "Kernel reports sound simple_parse_of failures; Goodix touchscreen I2C probe fails."
+      ],
+      "source_lines": [
+        72,
+        1100,
+        1101,
+        1102,
+        1144,
+        1151
+      ]
+    }
+  },
+  "capture_quality_notes": [
+    "The console transcript interleaves asynchronous kernel output with typed commands and includes visibly mangled prompt/command fragments (for example around lines 1220-1224, 1236-1243, and 1255-1256). Values above are taken from identifiable command output or kernel/U-Boot output, not treated as reliable shell-command text where interleaved.",
+    "No gateway ping result, image/card hash, repeated-boot reliability, SSH login, KVM guest, installation, or SD zero-write acceptance is established by this capture."
+  ],
+  "schema": 1,
+  "candidate_identity": {
+    "operator_process": "docs/installer-preparation.md#next-physical-boot",
+    "expected_image_bytes": 268435456,
+    "expected_image_sha256": "0144c6dc8eefd285496923e0b3cf538854a6e444565ef32c4ced7df266009d9b",
+    "limit": "Operator reports following that process; no image readback or full-card hashes are included in this capture."
+  },
+  "coordinator_assessment": {
+    "passed_observations": [
+      "preparation RAM shell",
+      "all CPUs EL2 and VHE initialization",
+      "automatic YT8531 binding and DHCP",
+      "route/DNS and verified HTTPS after manual UTC correction",
+      "read-only target planner with exact known NVMe identity and geometry"
+    ],
+    "remaining": [
+      "actual KVM guest execution",
+      "installed NVMe boot and SSH with both keys",
+      "automatic clock establishment",
+      "repeat boot and workload acceptance",
+      "full SD-write/firmware/card-hash evidence",
+      "SPI backup/recovery/authorization before programming"
+    ],
+    "modalias_fix": "Both source init scripts now pass sysfs paths as quoted find -exec arguments. New whitespace/failure regression passes; independent Sol high review and pinned ARM BusyBox find/ash compatibility pass. This correction has not booted on hardware.",
+    "host_regressions": "756 privileged Jammy discovery cases without skips; 4 assembly cases; all 5 shell scripts passed.",
+    "storage_actions": "No coordinator physical storage write; captured planner says writes_performed=false."
+  }
+}

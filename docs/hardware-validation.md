@@ -29,7 +29,7 @@ for boot0/U-Boot writes.
 | Inventory | Board/RAM/SSD/power/cooling and exact capacities | RAM/CPU/SD/SSD recorded; power/cooling operating tests pending |
 | NVMe | PCIe/NVMe enumeration, errors and stable repeated access | Enumerates/live; repeated access and warning investigation pending |
 | KVM | EL2 messages plus guest execution with KVM explicitly required | EL2/VHE and /dev/kvm observed; no guest execution |
-| Ethernet | Vendor binding, DHCP, route/DNS/TLS and repeatable cold boot | YT8531 binding and one DHCP lease observed; repeatability/delivery pending |
+| Ethernet | Vendor binding, DHCP, route/DNS/TLS and repeatable cold boot | Preparation boot: automatic YT8531/DHCP, route/DNS and verified HTTPS after manual time correction; repeatability pending |
 | Installation | Fresh deployment on actual card and nominal 250 GB SSD | Pending |
 | Boot reliability | 10 cold boots and 10 warm reboots, matched firmware/SSD | Pending |
 | Workload | 24 hours: CPU/disk/network, temperatures/memory/NVMe errors | Pending |
