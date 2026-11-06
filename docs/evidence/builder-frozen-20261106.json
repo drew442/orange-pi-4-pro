@@ -11,7 +11,7 @@
   "hardware_acceptance": false,
   "lock": {
     "path": "configs/builder-image-20261106.lock.json",
-    "sha256": "8c18f055a5b876192f2b930523810d85493454b878495b5c5ba495e65dbe9800"
+    "sha256": "c2f9cd2fcbe4124eeaffea2ce5695de562006615233fe45d05d964f926e148a6"
   },
   "raw_receipt": {
     "path": "build.drewnet.online:/var/lib/a733-frozen-builders/freeze-20261106-01/receipt.json",
@@ -183,5 +183,6 @@
       }
     ],
     "remote_hashes_match": true
-  }
+  },
+  "subsequent_retention": "builder-scratch-retirement-20261106.json; raw exports and builder-side gzip retired after verified native retention. Source and restored rootfs remain."
 }

@@ -54,8 +54,11 @@ with 24.53 GB free after seed staging and retained failed attempts. The subseque
 now configures all 842 exact versions in a fresh seed, with package audits and
 unchanged host/cache postchecks. [Builder freeze and restoration](evidence/builder-frozen-20261106.json) now pass,
 including complete metadata and restored 842-package/isolation checks. The freeze
-left approximately 5.3 GB free; retire verified redundant scratch before source
-builds, keeping all existing disk guards. Fresh artifact rebuilds remain open.
+left approximately 5.3 GB free. [Verified duplicate retirement](evidence/builder-scratch-retirement-20261106.json)
+recovered 11.25 GB of logical files; [fresh source checkout/import](evidence/frozen-source-import-20261106.json)
+then passed in the restored builder. Approximately 11.8 GB remains, below the
+kernel’s 15 GB start guard. U-Boot replay can proceed; recover more verified
+capacity before kernel compilation. Fresh artifact rebuilds remain open.
 
 ## Local host assessment
 

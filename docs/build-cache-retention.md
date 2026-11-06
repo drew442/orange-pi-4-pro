@@ -97,7 +97,8 @@ the live tree. The 1,576,567,651-byte archive has SHA-256
 `ed2f6e10fa9e16130381f29d273a9c6a7b380a8b0debb1f5828db4dd3bca84d7`
 and remains in both locations:
 
-- Builder: `/var/lib/a733-kernel-source-retention-20261106/kernel-source.tar.gz`.
+- Historical builder path (subsequently retired after verified codex retention):
+  `/var/lib/a733-kernel-source-retention-20261106/kernel-source.tar.gz`.
 - Codex: `out/builder-retained-20261106/failed-kernel-source/kernel-source.tar.gz`.
 
 Both copies passed full hashes and durability checks. Retirement held the verified
@@ -191,3 +192,17 @@ Restore it into the exact original parent before using historical commands that
 name that cache. Apply the same absent-destination, size/hash and full tar
 comparison checks described above. The original acquisition cache and native
 842-package pool remain available separately. No board storage was touched.
+
+## Frozen-builder duplicate archives
+
+The [verified retirement](evidence/builder-scratch-retirement-20261106.json)
+removed both raw export tars, the builder-side frozen gzip and its duplicate
+failed-kernel source gzip, recovering 11,247,031,929 logical bytes. The frozen
+image is retained on codex at
+`/var/lib/a733-frozen-builder-retention-20261106/builder-root.tar.gz`;
+expand it to recover either raw export. The failed source archive remains at
+`out/builder-retained-20261106/failed-kernel-source/kernel-source.tar.gz`
+and now also at `/var/lib/a733-scratch-retirement-20261106/kernel-source.tar.gz`
+on codex. Earlier builder archive paths are historical and require restoration.
+Current deployment artifacts, source checkouts and both builder rootfs trees
+remain untouched. This operation establishes no hardware acceptance.

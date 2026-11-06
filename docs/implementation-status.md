@@ -181,8 +181,12 @@ backup/recovery and SPI-specific programming authorization remain outstanding.
    842-package inventory and isolation checks. A separate codex copy passes full
    expansion/hash verification. [Fresh upstream sources and Linaro toolchain](evidence/rebuild-sources-acquired-20261106.json)
    are acquired and hash-pinned, including all 26 firmware/tool blobs. These are
-   two exports of one installed root, not independent OS constructions. Next
-   recover verified scratch capacity and rebuild artifacts in clean environments. Recheck disk/RAM and retain two compilation
+   two exports of one installed root, not independent OS constructions.
+   [Verified retirement](evidence/builder-scratch-retirement-20261106.json) recovered
+   11.25 GB of redundant archives. [Fresh source import](evidence/frozen-source-import-20261106.json)
+   passes inside the restored builder; all three Git checkouts match pins and
+   pass integrity/no-alternates checks. Next replay U-Boot, then recover further
+   capacity to meet the kernel’s unchanged 15 GB start guard. Retain two compilation
    jobs and existing kernel/NVMe guards.
    The [26-input license inventory](evidence/vendor-boot-license-inventory-20261106.json)
    records missing attribution/grants. All [479 userspace source archives](evidence/userspace-sources-acquired-20261106.json)

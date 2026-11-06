@@ -1,0 +1,107 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Actual fresh source checkout/import in frozen AMD64 Ubuntu builder; no compilation or hardware acceptance",
+  "success": true,
+  "namespace_command": [
+    "/usr/bin/systemd-nspawn",
+    "--directory=/var/lib/a733-frozen-builders/freeze-20261106-01/restored-rootfs",
+    "--settings=no",
+    "--as-pid2",
+    "--register=no",
+    "--keep-unit",
+    "--console=pipe",
+    "--private-users=1048576:65536",
+    "--private-users-ownership=off",
+    "--private-network",
+    "--no-new-privileges=yes",
+    "--drop-capability=CAP_SYS_ADMIN,CAP_SYS_MODULE,CAP_SYS_RAWIO,CAP_SYS_BOOT,CAP_SYS_TIME,CAP_MKNOD,CAP_NET_ADMIN",
+    "--resolv-conf=off",
+    "--timezone=off",
+    "--link-journal=no",
+    "--bind-ro=/var/lib/a733-clean-builder/seed-probe-20261106-05/probe.sh:/a733-probe.sh",
+    "--bind-ro=/var/lib/a733-clean-builder/seed-probe-20261106-05/firmware-empty:/sys/firmware",
+    "--read-only",
+    "--bind=/var/lib/a733-clean-replay-20261106/home:/home",
+    "--bind-ro=/var/lib/a733-fresh-source-inputs-20261106:/a733-debs",
+    "--bind-ro=/var/lib/a733-fresh-source-inputs-20261106/import-sources.py:/a733-install.sh",
+    "/bin/sh",
+    "-c",
+    "/bin/sh /a733-probe.sh && exec /usr/bin/python3 -I -B /a733-install.sh"
+  ],
+  "namespace_probe": {
+    "uid_base": 1048576,
+    "uid_count": 65536,
+    "network_interfaces": [
+      "lo"
+    ],
+    "ipv6_loopback_routes": [
+      "00000000000000000000000000000001 80 00000000000000000000000000000000 00 00000000000000000000000000000000 00000100 00000001 00000000 00000001       lo",
+      "00000000000000000000000000000000 00 00000000000000000000000000000000 00 00000000000000000000000000000000 ffffffff 00000001 00000000 00200200       lo",
+      "00000000000000000000000000000001 80 00000000000000000000000000000000 00 00000000000000000000000000000000 00000000 00000002 00000000 80200001       lo",
+      "00000000000000000000000000000000 00 00000000000000000000000000000000 00 00000000000000000000000000000000 ffffffff 00000001 00000000 00200200       lo"
+    ],
+    "prohibited_capability_mask": "0xa631000"
+  },
+  "sources": [
+    {
+      "name": "vendor",
+      "head": "a95129bf30ea11886cc35f08ebb3e69695a26656",
+      "tree": "346695303ab2375580a1060a07445ab4f5a5a957",
+      "clean": true,
+      "no_alternates": true,
+      "fsck": true
+    },
+    {
+      "name": "kernel",
+      "head": "2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f",
+      "tree": "7c30b4d7ddba799527ef056b98359a41fc824277",
+      "clean": true,
+      "no_alternates": true,
+      "fsck": true
+    },
+    {
+      "name": "u-boot",
+      "head": "b791be842935b27268ae3d00e943a9075495f30a",
+      "tree": "eb452cd22546eca6904a1cba4ab7ab84acbe0c05",
+      "clean": true,
+      "no_alternates": true,
+      "fsck": true
+    }
+  ],
+  "toolchain": {
+    "bytes": 109519380,
+    "sha256": "42ccb2ed99d65b7090499e6f5ad65c4c94ae6bd022decfea102d50109557c7d2"
+  },
+  "resources": {
+    "minimum_free_bytes": 11965304832,
+    "minimum_available_memory_bytes": 7232561152
+  },
+  "retained_records": {
+    "out/frozen-source-import-20261106/sources.json": {
+      "bytes": 886,
+      "sha256": "46852097f723b165e7611351f3e71054fb2826ca89efb7459f3cc0a62729dcbc"
+    },
+    "out/frozen-source-import-20261106/import.log": {
+      "bytes": 3766,
+      "sha256": "98cf536e574591da6f0799af77f07afda0ce1bc904c567e2e8f307357230c428"
+    },
+    "out/frozen-source-import-20261106/receipt.json": {
+      "bytes": 4758,
+      "sha256": "b16e24d6736145a8282ce3935e1c0b3e6984161a71c4103d23df716296c930bb"
+    }
+  },
+  "scripts": {
+    "tmp/import-fresh-source-trees-20261106.py": {
+      "bytes": 2412,
+      "sha256": "ce79d662e99d0737f615c44d2af979ec7ae849fe0512a2608dcc3dc7ed4e3ebc"
+    },
+    "tmp/run-frozen-source-import-20261106.py": {
+      "bytes": 2540,
+      "sha256": "44164510c4ba26eb31e8e305f4f14d7c7d2f15c9bee73ab6c0853cd0ce86cc4c"
+    }
+  },
+  "compilation": false,
+  "hardware_acceptance": false,
+  "retained_records_verified_against_remote": true
+}

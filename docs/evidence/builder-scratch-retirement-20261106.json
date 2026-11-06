@@ -1,0 +1,63 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Verified redundant generated-file retirement; no physical storage operation",
+  "success": true,
+  "builder": "build.drewnet.online",
+  "removed": [
+    {
+      "path": "/var/lib/a733-frozen-builders/freeze-20261106-01/run1/builder-root.tar",
+      "sha256": "2a8c6f66c1614e3b25e7ba51f3225790132ddca35cb34649afbf5c738adb2d6b",
+      "size": 4033443840
+    },
+    {
+      "path": "/var/lib/a733-frozen-builders/freeze-20261106-01/run2/builder-root.tar",
+      "sha256": "2a8c6f66c1614e3b25e7ba51f3225790132ddca35cb34649afbf5c738adb2d6b",
+      "size": 4033443840
+    },
+    {
+      "path": "/var/lib/a733-frozen-builders/freeze-20261106-01/builder-root.tar.gz",
+      "sha256": "40ddaba53179d76b80f2804207533970f34eac07c2e7e88665ff395e4b5d3930",
+      "size": 1603576598
+    },
+    {
+      "path": "/var/lib/a733-kernel-source-retention-20261106/kernel-source.tar.gz",
+      "sha256": "ed2f6e10fa9e16130381f29d273a9c6a7b380a8b0debb1f5828db4dd3bca84d7",
+      "size": 1576567651
+    }
+  ],
+  "logical_bytes_removed": 11247031929,
+  "measured_free_bytes_after": 15867604992,
+  "available_memory_bytes_after": 7567974400,
+  "recovery": {
+    "frozen_gzip": "codex.drewnet.online:/var/lib/a733-frozen-builder-retention-20261106/builder-root.tar.gz",
+    "kernel_source_gzip": "codex.drewnet.online:/var/lib/a733-scratch-retirement-20261106/kernel-source.tar.gz",
+    "original_kernel_source_copy": "codex.drewnet.online:/home/drew/orange-pi-4-pro/out/builder-retained-20261106/failed-kernel-source/kernel-source.tar.gz"
+  },
+  "checks": [
+    "Native full compressed size/hash and complete frozen expansion/raw hash verified before and after remote removal; native descriptors held throughout.",
+    "Root-private native kernel archive fsynced and hash verified before removal.",
+    "All four remote regular files pinned and verified before first unlink; no symlinks/hardlinks/changed inode-content accepted.",
+    "Open descriptor/mapping, mount and loop checks passed; parent directories fsynced after unlink.",
+    "Independent Sol high review cleared exact script; all 11 disposable root fixtures pass."
+  ],
+  "tools": {
+    "tmp/retire-frozen-scratch-20261106.py": {
+      "bytes": 10523,
+      "sha256": "2fd135de0a5a3c509b336934b54f7a94c2c6d257292ab8ad4f8360fb9bfba370"
+    },
+    "tmp/test-retire-frozen-scratch-20261106.py": {
+      "bytes": 6639,
+      "sha256": "bb695579d97d7770e11e0c8b1d06f4d884f605917c11be060e7650212282af0a"
+    }
+  },
+  "receipt": {
+    "remote": "/var/lib/a733-scratch-retirement-20261106/receipt.json",
+    "local": "out/scratch-retirement-20261106/receipt.json"
+  },
+  "limitations": [
+    "Receipt is rewritten after each unlink; an interruption can lose earlier receipt content, so inspect fixed target paths after failure.",
+    "Successful deletion verifies cache relocation only; no build or hardware acceptance is established."
+  ],
+  "hardware_acceptance": false
+}

@@ -37,7 +37,6 @@
     "read_only_runtime": true
   },
   "retained_locations": [
-    "build.drewnet.online:/var/lib/a733-frozen-builders/freeze-20261106-01/builder-root.tar.gz",
     "codex.drewnet.online:/var/lib/a733-frozen-builder-retention-20261106/builder-root.tar.gz"
   ]
 }
