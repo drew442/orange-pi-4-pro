@@ -128,7 +128,10 @@ gzip copy was fully expanded and hash-verified under
 Namespace restoration preserved full file metadata; package inventory, isolation
 probes, and unchanged host inventory/configuration checks passed. This verifies
 two exports of one installed tree, not two independent OS builds or source
-rebuilds. Fresh source acquisition is complete; artifact builds remain pending.
+rebuilds. Fresh source acquisition/import is complete;
+[two actual U-Boot replays](evidence/frozen-uboot-replay-20261106.json) in this
+environment now reproduce the authenticated binary and boot package exactly.
+Kernel and complete-image rebuilds remain pending.
 Keep service, capability/device and network restrictions throughout the remaining
 build work. Hardware KVM execution and all
 [release gates](hardware-validation.md) remain separate requirements; no

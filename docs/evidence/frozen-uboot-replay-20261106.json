@@ -1,0 +1,145 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "Two actual U-Boot/package replays with fresh upstream sources and a frozen AMD64 builder; no hardware acceptance",
+  "success": true,
+  "producer_commit": "345ad9d3cfa4ec7c08b3baaf1d8173d1d12a64ba",
+  "builder_image_lock": "configs/builder-image-20261106.lock.json",
+  "source_input_lock": "configs/rebuild-source-inputs-20261106.lock.json",
+  "source_import_evidence": "docs/evidence/frozen-source-import-20261106.json",
+  "namespace_command": [
+    "/usr/bin/systemd-nspawn",
+    "--directory=/var/lib/a733-frozen-builders/freeze-20261106-01/restored-rootfs",
+    "--settings=no",
+    "--as-pid2",
+    "--register=no",
+    "--keep-unit",
+    "--console=pipe",
+    "--private-users=1048576:65536",
+    "--private-users-ownership=off",
+    "--private-network",
+    "--no-new-privileges=yes",
+    "--drop-capability=CAP_SYS_ADMIN,CAP_SYS_MODULE,CAP_SYS_RAWIO,CAP_SYS_BOOT,CAP_SYS_TIME,CAP_MKNOD,CAP_NET_ADMIN",
+    "--resolv-conf=off",
+    "--timezone=off",
+    "--link-journal=no",
+    "--bind-ro=/var/lib/a733-clean-builder/seed-probe-20261106-05/probe.sh:/a733-probe.sh",
+    "--bind-ro=/var/lib/a733-clean-builder/seed-probe-20261106-05/firmware-empty:/sys/firmware",
+    "--read-only",
+    "--bind-ro=/var/lib/a733-clean-replay-20261106/home:/home",
+    "--bind=/var/lib/a733-clean-replay-20261106/uboot-run-02/work:/a733-export-output",
+    "--bind-ro=/var/lib/a733-el2-work-20261104/out/el2-diagnostic-20261104-03/artifacts:/var/lib/a733-el2-work-20261104/out/el2-diagnostic-20261104-03/artifacts",
+    "--bind-ro=/var/lib/a733-fresh-source-inputs-20261106:/a733-debs",
+    "--bind-ro=/var/lib/a733-fresh-source-inputs-20261106/frozen-uboot-inner.py:/a733-install.sh",
+    "/bin/sh",
+    "-c",
+    "/bin/sh /a733-probe.sh && exec /usr/bin/python3 -I -B /a733-install.sh"
+  ],
+  "namespace_probe": {
+    "uid_base": 1048576,
+    "uid_count": 65536,
+    "network_interfaces": [
+      "lo"
+    ],
+    "ipv6_loopback_routes": [
+      "00000000000000000000000000000001 80 00000000000000000000000000000000 00 00000000000000000000000000000000 00000100 00000001 00000000 00000001       lo",
+      "00000000000000000000000000000000 00 00000000000000000000000000000000 00 00000000000000000000000000000000 ffffffff 00000001 00000000 00200200       lo",
+      "00000000000000000000000000000001 80 00000000000000000000000000000000 00 00000000000000000000000000000000 00000000 00000002 00000000 80200001       lo",
+      "00000000000000000000000000000000 00 00000000000000000000000000000000 00 00000000000000000000000000000000 ffffffff 00000001 00000000 00200200       lo"
+    ],
+    "prohibited_capability_mask": "0xa631000"
+  },
+  "runtime_anchors": [
+    "var/lib/a733-el2-work-20261104",
+    "var/lib/a733-el2-work-20261104/out",
+    "var/lib/a733-el2-work-20261104/out/el2-diagnostic-20261104-03",
+    "var/lib/a733-el2-work-20261104/out/el2-diagnostic-20261104-03/artifacts"
+  ],
+  "outer_receipt": {
+    "bytes": 6373,
+    "sha256": "4b51b6712e7fa7f19e51a186fb1cb19194518b280b51938e6fe354006552fc87"
+  },
+  "resources": {
+    "minimum_free_bytes": 9437011968,
+    "minimum_available_memory_bytes": 7382650880
+  },
+  "runs": [
+    {
+      "name": "uboot-replay-frozen-20261106-01",
+      "binaries": {
+        "uboot-unpacked.bin": {
+          "bytes": 1192546,
+          "sha256": "f552def6c493e39e40951c2b82db73fb41f2fa678271d6a259b15f83e0cb1c7c"
+        },
+        "boot_package.fex": {
+          "bytes": 1392640,
+          "sha256": "b20c3d1133aee6474416bc9846b0bf94d5439aa12d7f7555b44607105ddab3b6"
+        }
+      },
+      "retained_directory": "/home/drew/orange-pi-4-pro/out/frozen-uboot-replay-20261106/success-02/work/project/out/uboot-replay-frozen-20261106-01",
+      "manifest": {
+        "bytes": 8288,
+        "sha256": "a73d68bb89992f1c2d5a320704878894ba4031e66a70f7d36d138054cf5bca0e"
+      },
+      "all_artifact_log_hashes_verified": true,
+      "result": {
+        "bytes": 405,
+        "sha256": "3c28cc7228673d8183ae49f906b416fd9061dd164b1e06e31fb2aca1a0dfd966"
+      },
+      "authenticated_original_manifest": {
+        "bytes": 15974,
+        "sha256": "749d5ba0e95a516edfc4bf671b51d2533fb0588bc0d3abcdce090d1a081b3a32"
+      }
+    },
+    {
+      "name": "uboot-replay-frozen-20261106-02",
+      "binaries": {
+        "uboot-unpacked.bin": {
+          "bytes": 1192546,
+          "sha256": "f552def6c493e39e40951c2b82db73fb41f2fa678271d6a259b15f83e0cb1c7c"
+        },
+        "boot_package.fex": {
+          "bytes": 1392640,
+          "sha256": "b20c3d1133aee6474416bc9846b0bf94d5439aa12d7f7555b44607105ddab3b6"
+        }
+      },
+      "retained_directory": "/home/drew/orange-pi-4-pro/out/frozen-uboot-replay-20261106/success-02/work/project/out/uboot-replay-frozen-20261106-02",
+      "manifest": {
+        "bytes": 8288,
+        "sha256": "bee3e8ac6e4e3d723ee23ec1c310e34b463a99418bfea482c0e42dda0f1a800c"
+      },
+      "all_artifact_log_hashes_verified": true,
+      "result": {
+        "bytes": 405,
+        "sha256": "3c28cc7228673d8183ae49f906b416fd9061dd164b1e06e31fb2aca1a0dfd966"
+      },
+      "authenticated_original_manifest": {
+        "bytes": 15974,
+        "sha256": "749d5ba0e95a516edfc4bf671b51d2533fb0588bc0d3abcdce090d1a081b3a32"
+      }
+    }
+  ],
+  "scripts": {
+    "tmp/run-frozen-uboot-20261106.py": {
+      "bytes": 3254,
+      "sha256": "a9072514a2915f119755f05f186d1284832cabc37b7cced8a6f50493ca3a1aed"
+    },
+    "tmp/frozen-uboot-inner-20261106.py": {
+      "bytes": 628,
+      "sha256": "603b3e620b48c35ab2f8cc709392b438838243097b64c91c81f2d4401bea948a"
+    }
+  },
+  "hardware_acceptance": false,
+  "limitations": [
+    "Both runs use one frozen OS installation and one freshly acquired immutable source/toolchain set; independent OS reconstructions remain unproved.",
+    "Original authenticated random challenge is an explicit replay input; fresh-build default randomness remains unchanged.",
+    "Generic replay-result.json includes a conservative reused-cache disclaimer; fresh acquisition/import is independently established by linked input evidence.",
+    "Kernel/full-image/deployment reproduction, opaque-firmware licensing and actual hardware acceptance remain open."
+  ],
+  "independent_launch_review": "Sol high: outer a9072514a2915f119755f05f186d1284832cabc37b7cced8a6f50493ca3a1aed / inner 603b3e620b48c35ab2f8cc709392b438838243097b64c91c81f2d4401bea948a",
+  "failed_launch_01": {
+    "reason": "Git bundle clone omitted --branch main; no checkout and no compilation. Corrected explicit branch passed local checkout and independent review before fresh launch02.",
+    "records": "out/frozen-uboot-replay-20261106/failed-launch-01"
+  },
+  "remote_receipt_log_and_manifest_hashes_match_native": true
+}

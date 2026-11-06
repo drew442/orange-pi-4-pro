@@ -56,9 +56,10 @@ unchanged host/cache postchecks. [Builder freeze and restoration](evidence/build
 including complete metadata and restored 842-package/isolation checks. The freeze
 left approximately 5.3 GB free. [Verified duplicate retirement](evidence/builder-scratch-retirement-20261106.json)
 recovered 11.25 GB of logical files; [fresh source checkout/import](evidence/frozen-source-import-20261106.json)
-then passed in the restored builder. Approximately 11.8 GB remains, below the
-kernel’s 15 GB start guard. U-Boot replay can proceed; recover more verified
-capacity before kernel compilation. Fresh artifact rebuilds remain open.
+then passed in the restored builder. [Two U-Boot replays](evidence/frozen-uboot-replay-20261106.json)
+now match the retained binary and boot package. Approximately 9.38 GB remains,
+below the kernel’s 15 GB start guard; recover more verified capacity before
+kernel compilation. Kernel and full-image rebuilds remain open.
 
 ## Local host assessment
 

@@ -116,3 +116,23 @@ record is pinned Linaro GCC 7.4.1.
 The active diagnostic/deployment images were not replaced. This result resolves
 the retained-challenge U-Boot/package reproduction experiment; it does not close
 the separate full clean-builder, kernel, license or hardware release gates.
+
+## Frozen-builder replays with fresh upstream inputs
+
+[Two further actual replays](evidence/frozen-uboot-replay-20261106.json) now match
+the authenticated original U-Boot binary and boot package inside the restored
+Ubuntu 22.04 builder. Their vendor/kernel/U-Boot Git snapshots and Linaro archive
+were independently acquired from upstream and imported into a fresh workspace;
+no original source checkout or compiled kernel objects were borrowed. Both runs
+compile a private U-Boot tree sequentially with two jobs. Original challenge bytes
+remain an explicit, authenticated replay input. Both complete artifact/log sets
+were copied to codex and rehashed against their manifests; core binaries also
+match the committed original-manifest anchor.
+
+The first launch stopped before compilation because bundle cloning omitted an
+explicit branch. The corrected launch selects `main`, checks its exact project
+commit and preserves the failed log. Empty provenance bind directories are
+declared runtime scaffolding in the restored OS; source inputs and the OS are
+read-only during builds. This proves the U-Boot/package replay with the frozen
+environment and fresh sources, not two independent OS constructions, kernel/full
+image reproduction, opaque-firmware licensing or physical acceptance.
