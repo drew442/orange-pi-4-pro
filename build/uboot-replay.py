@@ -40,6 +40,17 @@ REPLAY_GENERATOR = GENERATOR.replace(
     '\t@cp -- "$(A733_REPLAY_CHALLENGE)" board/sunxi/sunxi_challenge.c\n'
     'else\n\t@dd if=').replace(
     'prepare: board/', 'endif\nprepare: board/')
+BUILDER_PROFILES = {
+    'original-20261104': 'builder-packages.lock.tsv',
+    'replay-20261106': 'builder-replay-packages-20261106.lock.tsv',
+}
+REPLAY_PACKAGE_CHANGES = {
+    'apt': ('2.4.14', '2.4.15ubuntu0.1', 'amd64'),
+    'apt-utils': ('2.4.14', '2.4.15ubuntu0.1', 'amd64'),
+    'libapt-pkg6.0:amd64': ('2.4.14', '2.4.15ubuntu0.1', 'amd64'),
+    'ca-certificates': ('20260816ubuntu0.22.04.1', '20260816ubuntu0.22.04.2', 'all'),
+    'python3-twisted': ('22.1.0-2ubuntu2.7', '22.1.0-2ubuntu2.8', 'all'),
+}
 RETAINED = ('uboot-sunxi-challenge.c', 'uboot-unpacked.bin', 'uboot.config',
             'boot_package.fex', 'uboot-build.log', 'uboot-provenance.sha256',
             'uboot-env-nowhere-size.patch', 'uboot-a733-el2-handoff.patch')
@@ -140,6 +151,7 @@ def run(command, cwd=None, env=None, log=None):
 PROJECT_INPUTS = (
     'build/uboot-replay.py', 'configs/diagnostic-sources.lock.json',
     'configs/vendor-boot-inputs.sha256', 'configs/builder-packages.lock.tsv',
+    'configs/builder-replay-packages-20261106.lock.tsv',
     'docs/evidence/el2-diagnostic-20261104.json',
     'build/patches/uboot-env-nowhere-size.patch',
     'build/patches/uboot-a733-el2-handoff.patch',
@@ -171,9 +183,9 @@ def project_source(repo):
     return {'commit': head, 'git_status_porcelain': status, 'inputs': inputs}
 
 
-def replay_source_provenance(project, artifacts):
+def replay_source_provenance(project, artifacts, builder_profile):
     return {
-        'schema': 1, 'project': project,
+        'schema': 1, 'project': project, 'builder_profile': builder_profile,
         'recipe': project['inputs']['build/uboot-replay.py'],
         'registered_target': TARGET, 'authenticated_full_manifest_sha256': MANIFEST_SHA,
         'original_uboot_head': UBOOT_HEAD, 'source_date_epoch': 1772630733,
@@ -193,6 +205,7 @@ def trusted_provenance(repo, provenance):
     raw = read_regular(manifest_path)
     require(hashlib.sha256(raw).hexdigest() == MANIFEST_SHA, 'Unauthenticated provenance manifest')
     manifest = json.loads(raw)
+    authenticate(repo / 'configs/builder-packages.lock.tsv', manifest['files']['builder-packages.lock.tsv'])
     for name in ('boot_package.fex', 'uboot.config'):
         require(manifest['files'][name] == evidence['files'][name], 'Core manifest disagrees with committed evidence')
     for name in RETAINED:
@@ -203,12 +216,13 @@ def trusted_provenance(repo, provenance):
     return manifest
 
 
-def validate_inputs(repo, workspace, provenance, manifest):
+def validate_inputs(repo, workspace, provenance, manifest, builder_profile):
     """Return complete authenticated mutable-input snapshot; repeat before success."""
     lock = json.loads(read_regular(repo / 'configs/diagnostic-sources.lock.json'))
     require(lock['uboot']['commit'] == UBOOT_HEAD, 'Unexpected U-Boot revision')
-    snapshot = {'project_source': project_source(repo)}
-    for name in ('diagnostic-sources.lock.json', 'vendor-boot-inputs.sha256', 'builder-packages.lock.tsv'):
+    snapshot = {'project_source': project_source(repo), 'builder_profile': builder_metadata(repo, builder_profile)}
+    authenticate(repo / 'configs/builder-packages.lock.tsv', manifest['files']['builder-packages.lock.tsv'])
+    for name in ('diagnostic-sources.lock.json', 'vendor-boot-inputs.sha256', *BUILDER_PROFILES.values()):
         path = repo / 'configs' / name
         snapshot[str(path)] = facts(path)
     for key, directory in (('vendor', 'vendor'), ('uboot', 'u-boot'), ('kernel', 'kernel')):
@@ -251,12 +265,52 @@ def validate_inputs(repo, workspace, provenance, manifest):
     return snapshot, lock
 
 
-def check_builder(repo):
+
+def package_rows(data):
+    rows = {}
+    for line in data.decode('utf-8').splitlines():
+        fields = line.split('\t')
+        require(len(fields) == 3 and all(fields), 'Malformed package inventory row')
+        name, version, architecture = fields
+        require(name not in rows, 'Duplicate package inventory row')
+        rows[name] = {'version': version, 'architecture': architecture}
+    return rows
+
+
+def package_delta(original, selected):
+    old, new = package_rows(original), package_rows(selected)
+    return [{'package': name, 'original': old.get(name), 'selected': new.get(name)}
+            for name in sorted(old.keys() | new.keys()) if old.get(name) != new.get(name)]
+
+
+def builder_metadata(repo, profile):
+    require(profile in BUILDER_PROFILES, 'Unknown builder profile')
+    original = read_regular(repo / 'configs' / BUILDER_PROFILES['original-20261104'])
+    selected_path = repo / 'configs' / BUILDER_PROFILES[profile]
+    selected = read_regular(selected_path)
+    delta = package_delta(original, selected)
+    expected = [] if profile == 'original-20261104' else [
+        {'package': name, 'original': {'version': old, 'architecture': architecture},
+         'selected': {'version': new, 'architecture': architecture}}
+        for name, (old, new, architecture) in sorted(REPLAY_PACKAGE_CHANGES.items())]
+    require(delta == expected, 'Builder profile differs from its exact registered package delta')
+    return {'name': profile, 'lock_file': 'configs/' + selected_path.name,
+            'lock': facts(selected_path), 'original_lock': facts(repo / 'configs' / BUILDER_PROFILES['original-20261104']),
+            'package_delta_from_original': delta}
+
+
+def validate_inventory(repo, profile, actual):
+    metadata = builder_metadata(repo, profile)
+    require(actual == read_regular(repo / metadata['lock_file']),
+            f'Builder package inventory differs from selected profile {profile}')
+    return metadata
+
+
+def check_builder(repo, profile):
     release = dict(line.split('=', 1) for line in read_regular(Path('/usr/lib/os-release')).decode().splitlines() if '=' in line)
     require(release.get('ID', '').strip('"') == 'ubuntu' and release.get('VERSION_ID', '').strip('"') == '22.04'
             and platform.machine() == 'x86_64', 'Requires recorded Ubuntu 22.04 x86_64 builder')
-    require(run(['dpkg-query', '-W', '-f=${binary:Package}\t${Version}\t${Architecture}\n']) ==
-            read_regular(repo / 'configs/builder-packages.lock.tsv'), 'Builder package inventory differs')
+    return validate_inventory(repo, profile, run(['dpkg-query', '-W', '-f=${binary:Package}\t${Version}\t${Architecture}\n']))
 
 
 def build(repo, workspace, provenance, output, manifest, before, lock):
@@ -293,7 +347,7 @@ def build(repo, workspace, provenance, output, manifest, before, lock):
                 require(facts(destination)['sha256'] == MANIFEST_SHA, 'Copied provenance manifest mismatch')
         challenge = artifacts / 'original-uboot-sunxi-challenge.c'
         validate_challenge(read_regular(challenge))
-        for name in ('diagnostic-sources.lock.json', 'vendor-boot-inputs.sha256', 'builder-packages.lock.tsv'):
+        for name in ('diagnostic-sources.lock.json', 'vendor-boot-inputs.sha256', *BUILDER_PROFILES.values()):
             shutil.copyfile(repo / 'configs' / name, artifacts / name)
             authenticate(artifacts / name, before[str(repo / 'configs' / name)])
         for relative, destination in [('docs/evidence/el2-diagnostic-20261104.json', 'registered-target.json'),
@@ -320,7 +374,7 @@ def build(repo, workspace, provenance, output, manifest, before, lock):
                                                    fromfile='a/Makefile', tofile='b/Makefile'))
         (artifacts / 'uboot-challenge-replay.patch').write_text(replay_patch)
         run(['git', '-C', tree, 'apply', artifacts / 'uboot-challenge-replay.patch'])
-        source_provenance = replay_source_provenance(before['project_source'], artifacts)
+        source_provenance = replay_source_provenance(before['project_source'], artifacts, before['builder_profile'])
         (artifacts / 'source-provenance.json').write_text(json.dumps(source_provenance, indent=2) + '\n')
         compiler_root = output / 'toolchain-private'
         compiler_root.mkdir()
@@ -380,9 +434,9 @@ def build(repo, workspace, provenance, output, manifest, before, lock):
                 ['busybox', 'unix2dos', 'boot_package.cfg'], ['dragonsecboot', '-pack', 'boot_package.cfg']]:
                 run(command, cwd=pack, env=env, log=log)
         shutil.copyfile(pack / 'boot_package.fex', artifacts / 'boot_package.fex')
-        after, _ = validate_inputs(repo, workspace, provenance, manifest)
+        after, _ = validate_inputs(repo, workspace, provenance, manifest, before['builder_profile']['name'])
         require(after == before, 'Shared inputs changed during replay')
-        check_builder(repo)
+        require(check_builder(repo, before['builder_profile']['name']) == before['builder_profile'], 'Builder profile changed during replay')
         comparisons = {name: facts(artifacts / name) == manifest['files'][name]
                        for name in ('uboot-unpacked.bin', 'boot_package.fex')}
         result = {'schema': 1, 'target': TARGET, 'comparisons': comparisons,
@@ -402,6 +456,7 @@ def build(repo, workspace, provenance, output, manifest, before, lock):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--target', required=True, choices=[TARGET])
+    parser.add_argument('--builder-profile', required=True, choices=BUILDER_PROFILES)
     parser.add_argument('--workspace', type=Path, default=WORKSPACE)
     parser.add_argument('--provenance', type=Path, default=PROVENANCE)
     parser.add_argument('--output', required=True, type=Path)
@@ -410,8 +465,8 @@ def main():
         require(args.workspace == WORKSPACE and args.provenance == PROVENANCE, 'Only registered workspace/provenance paths accepted')
         validate_output(REPO, args.workspace, args.provenance, args.output)
         manifest = trusted_provenance(REPO, args.provenance)
-        before, lock = validate_inputs(REPO, args.workspace, args.provenance, manifest)
-        check_builder(REPO)
+        before, lock = validate_inputs(REPO, args.workspace, args.provenance, manifest, args.builder_profile)
+        require(check_builder(REPO, args.builder_profile) == before['builder_profile'], 'Builder profile changed before replay')
         build(REPO, args.workspace, args.provenance, args.output, manifest, before, lock)
     except (ValueError, OSError, subprocess.CalledProcessError, KeyError, UnicodeError) as exc:
         print(f'Replay refused/failed: {exc}', file=sys.stderr)

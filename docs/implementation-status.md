@@ -122,7 +122,7 @@ unbooted. No extra diagnostic-only reflash is required for the successful checks
   remain unbooted preparations; host state is a fixture. Actual historical images
   still verify, and new EL2 images refuse default baseline verification. A fresh
   committed-source checkout reproduced both images and installer initramfs bytes.
-- Jammy: 791 discovery cases without skips, four diagnostic assembly cases and
+- Jammy: 795 discovery cases without skips, four diagnostic assembly cases and
   all five shell regressions pass. Independent Sol high reviews cover boot,
   installation/selection and rollback changes. [Detailed implementation evidence](implementation-evidence.md)
   separates builds, software probes and physical results.

@@ -132,6 +132,10 @@ class FileGuards(unittest.TestCase):
             content = challenge() if name.endswith('challenge.c') else b'retained\n'
             (self.provenance / name).write_bytes(content)
             entries[name] = replay.facts(self.provenance / name)
+        (self.repo / 'configs').mkdir()
+        original_lock = self.repo / 'configs/builder-packages.lock.tsv'
+        original_lock.write_bytes(b'original inventory\n')
+        entries['builder-packages.lock.tsv'] = replay.facts(original_lock)
         manifest = json.dumps({'files': entries}).encode()
         anchor = hashlib.sha256(manifest).hexdigest()
         (self.provenance / 'artifact-manifest.json').write_bytes(manifest)
@@ -140,6 +144,10 @@ class FileGuards(unittest.TestCase):
         with patch.object(replay, 'MANIFEST_SHA', anchor):
             self.assertEqual(replay.trusted_provenance(self.repo, self.provenance)['files'], entries)
             (self.provenance / 'uboot-unpacked.bin').write_bytes(b'changed')
+            with self.assertRaisesRegex(ValueError, 'Untrusted input'):
+                replay.trusted_provenance(self.repo, self.provenance)
+            (self.provenance / 'uboot-unpacked.bin').write_bytes(b'retained\n')
+            original_lock.write_bytes(b'changed original inventory\n')
             with self.assertRaisesRegex(ValueError, 'Untrusted input'):
                 replay.trusted_provenance(self.repo, self.provenance)
 
@@ -194,7 +202,8 @@ class FileGuards(unittest.TestCase):
                      'uboot-challenge-replay.patch'):
             (artifacts / name).write_text('actual applied patch: ' + name)
         (artifacts / 'original-uboot-sunxi-challenge.c').write_bytes(challenge())
-        record = replay.replay_source_provenance(project, artifacts)
+        record = replay.replay_source_provenance(project, artifacts, {'name': 'original-20261104'})
+        self.assertEqual(record['builder_profile'], {'name': 'original-20261104'})
         self.assertEqual(record['project']['commit'], actual_head)
         self.assertEqual(record['recipe'], project['inputs']['build/uboot-replay.py'])
         self.assertEqual(record['registered_target'], replay.TARGET)
@@ -214,10 +223,58 @@ class FileGuards(unittest.TestCase):
         unknown = subprocess.run(['python3', script, '--target', 'other', '--output', self.output], capture_output=True)
         self.assertNotEqual(unknown.returncode, 0)
         self.assertIn(b'invalid choice', unknown.stderr)
-        bad_path = subprocess.run(['python3', script, '--target', replay.TARGET,
+        bad_path = subprocess.run(['python3', script, '--target', replay.TARGET, '--builder-profile', 'original-20261104',
                                    '--workspace', self.workspace, '--output', self.output], capture_output=True)
         self.assertNotEqual(bad_path.returncode, 0)
         self.assertIn(b'Only registered', bad_path.stderr)
+
+
+class BuilderProfileTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+        self.repo = Path(self.temp.name)
+        (self.repo / 'configs').mkdir()
+        real_repo = Path(replay.__file__).resolve().parents[1]
+        for filename in replay.BUILDER_PROFILES.values():
+            (self.repo / 'configs' / filename).write_bytes((real_repo / 'configs' / filename).read_bytes())
+
+    def inventory(self, profile):
+        return (self.repo / 'configs' / replay.BUILDER_PROFILES[profile]).read_bytes()
+
+    def test_explicit_profiles_and_mechanical_delta(self):
+        original = replay.validate_inventory(self.repo, 'original-20261104', self.inventory('original-20261104'))
+        self.assertEqual(original['package_delta_from_original'], [])
+        current = replay.validate_inventory(self.repo, 'replay-20261106', self.inventory('replay-20261106'))
+        self.assertEqual(current['lock'], replay.facts(self.repo / current['lock_file']))
+        self.assertEqual(len(current['package_delta_from_original']), 5)
+        self.assertEqual({row['package'] for row in current['package_delta_from_original']}, set(replay.REPLAY_PACKAGE_CHANGES))
+        self.assertEqual(current['original_lock'], original['lock'])
+
+    def test_unknown_profile_and_inventory_changes_refused(self):
+        with self.assertRaisesRegex(ValueError, 'Unknown builder profile'):
+            replay.builder_metadata(self.repo, '/tmp/arbitrary-lock')
+        data = self.inventory('replay-20261106')
+        for modified in (data + b'extra-package\t1.0\tall\n',
+                         data.replace(b'apt\t2.4.15ubuntu0.1\t', b'apt\t9.9\t'),
+                         self.inventory('original-20261104')):
+            with self.subTest(modified=modified[:80]), self.assertRaisesRegex(ValueError, 'inventory differs'):
+                replay.validate_inventory(self.repo, 'replay-20261106', modified)
+
+    def test_registered_profile_lock_mutation_refused(self):
+        path = self.repo / 'configs' / replay.BUILDER_PROFILES['replay-20261106']
+        for changed in (path.read_bytes() + b'extra-package\t1.0\tall\n',
+                        path.read_bytes().replace(b'apt\t2.4.15ubuntu0.1\t', b'apt\t9.9\t')):
+            path.write_bytes(changed)
+            with self.assertRaisesRegex(ValueError, 'exact registered package delta'):
+                replay.builder_metadata(self.repo, 'replay-20261106')
+
+    def test_profile_required_and_unknown_cli_refused(self):
+        base = ['python3', replay.__file__, '--target', replay.TARGET, '--output', self.repo / 'out/uboot-replay-test']
+        for suffix in ([], ['--builder-profile', 'arbitrary']):
+            result = subprocess.run(base + suffix, capture_output=True)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn(b'--builder-profile', result.stderr)
 
 
 if __name__ == '__main__':

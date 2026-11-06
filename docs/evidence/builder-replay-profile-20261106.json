@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "date": "2026-11-06",
+  "classification": "explicit prepared-builder replay profile; original target inventory unchanged",
+  "original": {
+    "path": "configs/builder-packages.lock.tsv",
+    "bytes": 32519,
+    "sha256": "35c2faf42a936168098b1f54239825a3c42fc56c825fc0b2078bbd753425f48b"
+  },
+  "replay": {
+    "path": "configs/builder-replay-packages-20261106.lock.tsv",
+    "bytes": 32546,
+    "sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425"
+  },
+  "package_count": 842,
+  "differences": [
+    {
+      "package": "apt",
+      "original": [
+        "2.4.14",
+        "amd64"
+      ],
+      "replay": [
+        "2.4.15ubuntu0.1",
+        "amd64"
+      ]
+    },
+    {
+      "package": "apt-utils",
+      "original": [
+        "2.4.14",
+        "amd64"
+      ],
+      "replay": [
+        "2.4.15ubuntu0.1",
+        "amd64"
+      ]
+    },
+    {
+      "package": "ca-certificates",
+      "original": [
+        "20260816ubuntu0.22.04.1",
+        "all"
+      ],
+      "replay": [
+        "20260816ubuntu0.22.04.2",
+        "all"
+      ]
+    },
+    {
+      "package": "libapt-pkg6.0:amd64",
+      "original": [
+        "2.4.14",
+        "amd64"
+      ],
+      "replay": [
+        "2.4.15ubuntu0.1",
+        "amd64"
+      ]
+    },
+    {
+      "package": "python3-twisted",
+      "original": [
+        "22.1.0-2ubuntu2.7",
+        "all"
+      ],
+      "replay": [
+        "22.1.0-2ubuntu2.8",
+        "all"
+      ]
+    }
+  ],
+  "policy": "Explicit profile selection and exact full inventory match required before/after replay. No package downgrade, broad exception or target binary/hash change. Same retained artifact must match under this separately pinned environment.",
+  "actual_replay_builds": "not yet run with this profile"
+}

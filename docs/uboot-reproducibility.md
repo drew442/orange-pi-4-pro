@@ -39,7 +39,7 @@ challenge for every future release. Fresh-build vendor randomness remains the
 default. No conclusion about the complete firmware security role is implied.
 
 The separate `build/uboot-replay.py` recipe is implemented and independently
-reviewed, with 18 guard regressions. Actual reproduction builds remain pending.
+reviewed, with 22 guard regressions. Actual reproduction builds remain pending.
 It authenticates retained provenance against committed
 trusted evidence, parse the C as canonical data with exactly 128 bytes, and
 compile only a private validated copy. Its generator patch applies only inside
@@ -68,3 +68,16 @@ repository/license/provenance evidence and missing component-specific records.
 The vendor root's GPL text is not treated as proof of attribution or a source
 offer for every opaque input. It makes no legal conclusion. Required source,
 license notices and redistribution terms still need their release audit.
+
+## Prepared-builder package drift
+
+The first invocation refused before creating build output because five package
+versions differed from the original full inventory. The compiler and target
+hashes were unchanged. The [profile record](evidence/builder-replay-profile-20261106.json)
+retains both complete inventory hashes and the exact APT/CA/Twisted differences.
+The original `configs/builder-packages.lock.tsv` remains immutable. A separate
+versioned replay profile records all 842 actual packages; it is explicitly
+selected and must match in full before and after a build. There is no automatic
+fallback or package-version exception. Original target binary/package hashes
+remain the reproduction criterion under the newly recorded environment.
+This is still the prepared builder, not a newly acquired clean builder image.
