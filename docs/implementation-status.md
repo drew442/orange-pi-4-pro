@@ -122,7 +122,7 @@ unbooted. No extra diagnostic-only reflash is required for the successful checks
   remain unbooted preparations; host state is a fixture. Actual historical images
   still verify, and new EL2 images refuse default baseline verification. A fresh
   committed-source checkout reproduced both images and installer initramfs bytes.
-- Jammy: 795 discovery cases without skips, four diagnostic assembly cases and
+- Jammy: 811 discovery cases without skips, four diagnostic assembly cases and
   all five shell regressions pass. Independent Sol high reviews cover boot,
   installation/selection and rollback changes. [Detailed implementation evidence](implementation-evidence.md)
   separates builds, software probes and physical results.
@@ -168,7 +168,9 @@ backup/recovery and SPI-specific programming authorization remain outstanding.
    fresh-build randomness. [Two fresh private replays](evidence/uboot-replay-20261106.json)
    now match the original unpacked U-Boot and EL2 package, under an explicit
    full-inventory replay profile. Source caches were reused; full clean-builder
-   acquisition and kernel reproduction remain open. The [26-input license inventory](evidence/vendor-boot-license-inventory-20261106.json)
+   acquisition and kernel reproduction remain open. A reviewed [kernel replay](kernel-reproducibility.md)
+   has [started a fresh private two-job compilation](evidence/kernel-replay-start-20261106.json)
+   after exact preflight/config checks; final artifact comparisons are pending. The [26-input license inventory](evidence/vendor-boot-license-inventory-20261106.json)
    now maps every pinned path/hash and its available/missing attribution evidence.
    Clean package/source acquisition and firmware/source/license audit remain gates.
 

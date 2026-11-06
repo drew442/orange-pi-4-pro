@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "classification": "fresh private kernel compilation started; final artifact comparisons pending",
+  "date": "2026-11-06",
+  "builder": "drew@build.drewnet.online; Ubuntu 22.04 amd64",
+  "project_commit": "581a3101362bdb3c4bd596d9d01fccf284f27a9a",
+  "output_directory": "/var/lib/a733-kernel-replay-work-20261106/out/kernel-replay-20261106-01",
+  "builder_profile": "replay-20261106",
+  "compilation_jobs": 2,
+  "preflight": "Registered source HEADs, shallow state, baseline artifact hashes, generated kernel config and exact full package inventory passed before make Image/modules/dtbs.",
+  "process_observed": {
+    "kernel_replay_pid": 1242172,
+    "make_pid": 1242876,
+    "resource_sample_utc": "2026-11-06T10:05:55Z",
+    "available_ram_bytes": 7300030464,
+    "free_disk_bytes": 16963948544
+  },
+  "checks": {
+    "discovery_cases": 811,
+    "discovery_skips": 0,
+    "diagnostic_assembly_cases": 4,
+    "shell_scripts": 5,
+    "result": "pass",
+    "log": "/tmp/a733-kernel-replay-owner-root-regressions-20261106.log",
+    "log_bytes": 2805,
+    "log_sha256": "b6e0ea63b2884ac04c09850533891586fb79aabb06ea0aca6dadae206c76e632"
+  },
+  "review": "Independent Sol high review cleared recipe and subsequent exact-path Git ownership correction; 16 focused regressions pass.",
+  "result": "pending; inspect retained replay-result.json and actual process state before claiming success",
+  "limitations": [
+    "Cached source acquisition and prepared builder reused.",
+    "Module baseline comparison is unanchored.",
+    "No hardware, KVM guest or deployment acceptance is established."
+  ]
+}
