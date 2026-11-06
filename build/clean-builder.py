@@ -283,7 +283,7 @@ def nspawn_command(rootfs, probe, mask_firmware):
     command = ['/usr/bin/systemd-nspawn', '--directory=' + str(rootfs), '--settings=no',
                '--as-pid2', '--register=no', '--keep-unit', '--console=pipe',
                '--private-users=1048576:65536', '--private-users-ownership=chown',
-               '--private-network', '--no-new-privileges', '--drop-capability=' + ','.join(CAPABILITIES),
+               '--private-network', '--no-new-privileges=yes', '--drop-capability=' + ','.join(CAPABILITIES),
                '--resolv-conf=off', '--timezone=off', '--link-journal=no',
                '--bind-ro=' + str(probe) + ':/a733-probe.sh']
     if mask_firmware:
@@ -382,6 +382,8 @@ def construct(seed, output, repo=REPO):
     check_range_unused()
     help_text = run(['/usr/bin/systemd-nspawn', '--help'])
     mask_firmware = b'--inaccessible=' in help_text and Path('/sys/firmware').exists()
+    option_probe_command = nspawn_command(output / 'rootfs', output / 'probe.sh', mask_firmware)[:-2] + ['--help']
+    option_probe_help = run(option_probe_command)
     if not WORKSPACE.exists():
         WORKSPACE.mkdir(mode=0o700)
     output.mkdir(mode=0o700)
@@ -397,6 +399,8 @@ def construct(seed, output, repo=REPO):
         (output / 'host-inventory-before.tsv').write_bytes(
             (repo / 'configs/builder-replay-packages-20261106.lock.tsv').read_bytes())
         (output / 'nspawn-help.txt').write_bytes(help_text)
+        (output / 'nspawn-option-probe.txt').write_bytes(option_probe_help)
+        report['option_probe_command'] = option_probe_command
         private_seed = output / 'seed.tar.gz'
         with regular(seed) as source, private_seed.open('xb') as target:
             shutil.copyfileobj(source, target)

@@ -116,6 +116,7 @@ class ProbeTests(unittest.TestCase):
         self.assertIn('--private-users=1048576:65536', command)
         self.assertIn('--private-users-ownership=chown', command)
         self.assertIn('--private-network', command)
+        self.assertIn('--no-new-privileges=yes', command)
         self.assertIn('--settings=no', command)
         self.assertIn('--inaccessible=/sys/firmware', command)
         self.assertEqual([x for x in command if x.startswith('--bind')],
@@ -277,13 +278,19 @@ class ReceiptTests(unittest.TestCase):
             def check_mounts(path):
                 if mode == 'mount_failure':
                     raise ValueError('fixture surviving mount')
+            def readonly(argv):
+                if argv[0] == '/usr/bin/systemd-nspawn' and len(argv) > 2:
+                    self.assertFalse(output.exists(), 'Parse options before extracting seed')
+                    self.assertEqual(argv[-1], '--help')
+                    self.assertIn('--no-new-privileges=yes', argv)
+                return b'GNU tar' if '--version' in argv else b'--inaccessible='
             with patch.multiple(builder, WORKSPACE=workspace, SEED=seed_facts), \
                     patch.object(builder, 'validate_output', return_value={'free_bytes': 25000000001}), patch.object(builder, 'binding', return_value={'head': 'fixture'}), \
                     patch.object(builder, 'load_helper', return_value=helper), patch.object(builder.os, 'geteuid', return_value=0), \
                     patch.object(builder, 'check_range_unused'), patch.object(builder, 'check_process_ranges'), \
                     patch.object(builder, 'check_no_mounts', side_effect=check_mounts), \
                     patch.object(builder, 'audit_archive', return_value={'fixture': True}), \
-                    patch.object(builder, 'run', side_effect=lambda argv: b'GNU tar' if '--version' in argv else b'--inaccessible='), \
+                    patch.object(builder, 'run', side_effect=readonly), \
                     patch.object(builder, 'managed_command', side_effect=command):
                 if mode == 'success':
                     builder.construct(seed, output, repo)
