@@ -5,6 +5,7 @@ The pinned distro macros retain their broader partition/prefix search behavior.
 A successful component build establishes neither SPI boot nor hardware acceptance.
 """
 import argparse
+import difflib
 import hashlib
 import importlib.util
 import json
@@ -27,6 +28,10 @@ BOOTCOMMAND = 'setenv boot_targets nvme; run distro_bootcmd'
 BASE_COMMAND = b'CONFIG_BOOTCOMMAND="setenv boot_targets mmc0; run distro_bootcmd"\n'
 NEW_COMMAND = ('CONFIG_BOOTCOMMAND="' + BOOTCOMMAND + '"\n').encode()
 OWN_INPUTS = ('build/uboot-nvme-candidate.py', POLICY)
+REGISTRY = 'configs/uboot-nvme-candidate-targets.lock.json'
+NVME_EVIDENCE = 'docs/evidence/uboot-nvme-candidate-20261107.json'
+REGISTERED_TARGET = 'nvme-candidate-20261107-ram02'
+REGISTRY_PIN = {'bytes': 4035, 'sha256': 'abb6f3136f6df22c3da0b7a205b7d2b968e3faad7a3589a3fb69c1c2689117c5'}
 SPI_BOOT0 = {'bytes': 237568, 'sha256': '7f0babc242c1e4614c7243bd2c45a980e4385727ffbb544a7c8f2d324cf8dc07'}
 
 
@@ -53,6 +58,122 @@ def load_core(repo):
 
 core = load_core(REPO)
 require = core.require
+
+
+def pinned_read(path, expected, retain=True):
+    """Hash a held descriptor, opening every parent without following links."""
+    path = core.safe_path(path)
+    directory = os.open('/', os.O_RDONLY | os.O_DIRECTORY)
+    try:
+        for part in path.parts[1:-1]:
+            following = os.open(part, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW,
+                                dir_fd=directory)
+            os.close(directory)
+            directory = following
+        fd = os.open(path.name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=directory)
+    finally:
+        os.close(directory)
+    with os.fdopen(fd, 'rb') as stream:
+        before = os.fstat(stream.fileno())
+        require(before.st_size == expected['bytes'], f'Replay input size mismatch: {path}')
+        require(stat.S_ISREG(before.st_mode) and before.st_nlink == 1,
+                f'Replay input must be a single-link regular file: {path}')
+        checksum, size, chunks = hashlib.sha256(), 0, []
+        for chunk in iter(lambda: stream.read(1048576), b''):
+            checksum.update(chunk)
+            size += len(chunk)
+            if retain:
+                chunks.append(chunk)
+        after = os.fstat(stream.fileno())
+        require((before.st_size, before.st_mtime_ns, before.st_ctime_ns, before.st_nlink) ==
+                (after.st_size, after.st_mtime_ns, after.st_ctime_ns, after.st_nlink),
+                f'Replay input mutated: {path}')
+        require({'bytes': size, 'sha256': checksum.hexdigest()} == expected,
+                f'Untrusted registered replay input: {path}')
+        return b''.join(chunks) if retain else None
+
+
+def load_registered_target(repo, target_id, inputs):
+    """Validate the closed target, full original manifest and retained challenge.
+
+    Returned challenge bytes came from the same held descriptor that was hashed;
+    no later build opens an unverified challenge pathname.
+    """
+    require(target_id == REGISTERED_TARGET, 'Unregistered NVMe replay target')
+    inputs = core.safe_path(inputs)
+    require(inputs.is_dir(), 'Replay inputs directory missing')
+    registry_bytes = pinned_read(repo / REGISTRY, REGISTRY_PIN)
+    committed = core.run(['git', '--no-optional-locks', '-C', repo, 'show', f'HEAD:{REGISTRY}'],
+                         env=controlled_env())
+    require(committed == registry_bytes, 'Replay registry differs from Git')
+    registry = json.loads(registry_bytes)
+    require(registry['schema'] == 1 and set(registry['targets']) == {REGISTERED_TARGET},
+            'Unregistered NVMe target registry')
+    target = registry['targets'][target_id]
+    evidence = target['evidence']
+    evidence_pin = {key: evidence[key] for key in ('bytes', 'sha256')}
+    evidence_bytes = pinned_read(repo / evidence['path'], evidence_pin)
+    require(core.run(['git', '--no-optional-locks', '-C', repo, 'show',
+                      f"HEAD:{evidence['path']}"], env=controlled_env()) == evidence_bytes,
+            'Replay evidence differs from Git')
+    recorded = json.loads(evidence_bytes)
+    require(recorded['success'] is True and recorded['source_revision'] == target['parent_source_revision']
+            and recorded['components'] == target['required_artifacts'], 'Replay evidence binding mismatch')
+    manifest_bytes = pinned_read(inputs / 'candidate-manifest.json', target['manifest'])
+    manifest = json.loads(manifest_bytes)
+    require(manifest['schema'] == 1 and manifest['hardware_acceptance'] is False,
+            'Invalid registered candidate manifest')
+    retained = {}
+    wanted = {'artifacts/uboot-sunxi-challenge.c', 'artifacts/source-provenance.json',
+              'artifacts/uboot.config', 'artifacts/original-uboot.config'}
+    for relative, pin in manifest['files'].items():
+        member = Path(relative)
+        require(not member.is_absolute() and '..' not in member.parts and
+                member.as_posix() == relative, 'Unsafe replay manifest member')
+        # The whole manifest is pinned above; the outer launcher can stage a
+        # small read-only subset. Authenticate every file actually consumed here.
+        if relative in wanted:
+            retained[relative] = pinned_read(inputs / member, pin)
+    require(all(manifest['files'].get(name) == pin for name, pin in target['required_artifacts'].items()),
+            'Registered target artifact pins differ from manifest')
+    challenge = retained['artifacts/uboot-sunxi-challenge.c']
+    core.validate_challenge(challenge)
+    original = json.loads(retained['artifacts/source-provenance.json'])
+    require(manifest['files']['artifacts/source-provenance.json'] == target['source_provenance'] and
+            original['project']['commit'] == target['parent_source_revision'] and
+            original['project']['inputs'] == target['original_project_inputs'] and
+            original['builder_profile']['name'] == PROFILE and
+            original['core_recipe_sha256'] == CORE_SHA and
+            original['baseline_manifest_sha256'] == core.MANIFEST_SHA and
+            original['policy'] == validate_policy(repo), 'Original replay provenance mismatch')
+    for relative, pin in target['original_project_inputs'].items():
+        # Only the adapter itself is new. All build-affecting baseline inputs,
+        # including the policy, locks, patches, firmware inventory and core stay exact.
+        if relative != target['original_producer']:
+            pinned_read(repo / relative, pin, retain=False)
+    validate_config(retained['artifacts/uboot.config'], retained['artifacts/original-uboot.config'])
+    return {'target_id': target_id, 'registry_pin': dict(REGISTRY_PIN),
+            'original_manifest_pin': target['manifest'], 'target': target,
+            'required_artifacts': target['required_artifacts'], 'original_manifest': manifest,
+            'manifest_files': manifest['files'], 'challenge_bytes': challenge,
+            'source_provenance': original, 'original_provenance': original, 'inputs': str(inputs)}
+
+
+def replay_record(contract):
+    return {key: contract[key] for key in ('target_id', 'registry_pin', 'original_manifest_pin')}
+
+
+def verify_replay_outputs(artifacts, contract):
+    pinned_read(artifacts / 'registered-challenge.c',
+                contract['target']['required_artifacts']['artifacts/uboot-sunxi-challenge.c'], retain=False)
+    matched = {}
+    for relative in ('artifacts/uboot-unpacked.bin', 'artifacts/boot_package.fex',
+                     'artifacts/uboot.config', 'artifacts/uboot-sunxi-challenge.c',
+                     'artifacts/boot0_spinor_a733.fex'):
+        pin = contract['target']['required_artifacts'][relative]
+        pinned_read(artifacts / Path(relative).name, pin, retain=False)
+        matched[relative] = pin
+    return matched
 
 
 def controlled_env():
@@ -82,10 +203,10 @@ def validate_output(repo, workspace, provenance, output):
             'Source/provenance overlap forbidden')
 
 
-def project_source(repo):
+def project_source(repo, replay=False):
     project = core.project_source(repo)
     command = ['git', '--no-optional-locks', '-C', repo, 'show']
-    for relative in OWN_INPUTS:
+    for relative in OWN_INPUTS + ((REGISTRY, NVME_EVIDENCE) if replay else ()):
         actual = core.facts(repo / relative)
         committed = core.run(command + [f'{project["commit"]}:{relative}'], env=controlled_env())
         require(actual == {'bytes': len(committed), 'sha256': hashlib.sha256(committed).hexdigest()},
@@ -130,9 +251,9 @@ def validate_config(actual, retained):
     require(actual == candidate_config(retained), 'Candidate config differs beyond the one BOOTCOMMAND line')
 
 
-def snapshot(repo, workspace, provenance, manifest):
+def snapshot(repo, workspace, provenance, manifest, replay=False):
     before, lock = core.validate_inputs(repo, workspace, provenance, manifest, PROFILE)
-    before['project_source'] = project_source(repo)
+    before['project_source'] = project_source(repo, replay=True) if replay else project_source(repo)
     before['candidate_policy'] = validate_policy(repo)
     require(core.check_builder(repo, PROFILE) == before['builder_profile'], 'Builder inventory mismatch')
     return before, lock
@@ -306,7 +427,13 @@ def write_json(path, data):
     path.write_text(json.dumps(data, indent=2) + '\n')
 
 
-def build(repo, workspace, provenance, output, manifest, before, lock):
+def build(repo, workspace, provenance, output, manifest, before, lock, replay_contract=None):
+    if replay_contract is not None:
+        # Reauthenticate before any generator patch or build command.
+        replay_contract = load_registered_target(repo, replay_contract['target_id'],
+                                                 Path(replay_contract['inputs']))
+        require(before['builder_profile'] == replay_contract['original_provenance']['builder_profile'],
+                'Registered replay builder profile changed')
     budget = capacity_budget(workspace, lock)
     check_capacity(workspace, output, budget)
     output.mkdir()
@@ -349,6 +476,18 @@ def build(repo, workspace, provenance, output, manifest, before, lock):
         require(makefile.count(core.GENERATOR) == 1 and 'A733_REPLAY_CHALLENGE' not in makefile,
                 'Fresh vendor random generator changed')
         require(not (tree / 'board/sunxi/sunxi_challenge.c').exists(), 'Unexpected pregenerated challenge')
+        if replay_contract is not None:
+            original_makefile = makefile
+            makefile = core.patch_generator(original_makefile)
+            replay_patch = ''.join(difflib.unified_diff(
+                original_makefile.splitlines(True), makefile.splitlines(True),
+                fromfile='a/Makefile', tofile='b/Makefile'))
+            (artifacts / 'uboot-challenge-replay.patch').write_text(replay_patch)
+            (tree / 'Makefile').write_text(makefile)
+            (artifacts / 'registered-challenge.c').write_bytes(replay_contract['challenge_bytes'])
+            pinned_read(artifacts / 'registered-challenge.c',
+                        replay_contract['target']['required_artifacts']['artifacts/uboot-sunxi-challenge.c'])
+            write_json(artifacts / 'registered-target.json', replay_record(replay_contract))
         compiler_root = output / 'toolchain-private'
         compiler_root.mkdir()
         compiler_archive = artifacts / lock['uboot_toolchain']['filename']
@@ -360,6 +499,9 @@ def build(repo, workspace, provenance, output, manifest, before, lock):
         (logs / 'uboot-compiler.txt').write_bytes(run([str(cross) + 'gcc', '--version']))
         (tree / 'vendor-export/bin').mkdir(parents=True)
         make = make_command(tree, cross)
+        if replay_contract is not None:
+            # Keep -j2 last, as in the original fresh build command.
+            make.insert(-1, f'A733_REPLAY_CHALLENGE={artifacts}/registered-challenge.c')
         retained = core.read_regular(artifacts / 'original-uboot.config')
         with (logs / 'uboot-build.log').open('wb') as log:
             run(make + ['sun60iw2p1_t736_defconfig'], cwd=tree, log=log)
@@ -395,15 +537,29 @@ def build(repo, workspace, provenance, output, manifest, before, lock):
         verify_firmware(pack, artifacts, firmware)
         shutil.copyfile(pack / 'boot_package.fex', artifacts / 'boot_package.fex')
         require(core.facts(artifacts / 'boot_package.fex')['bytes'] > 0, 'Empty boot package')
-        after, _ = snapshot(repo, workspace, provenance, manifest)
+        if replay_contract is not None:
+            matched_artifacts = verify_replay_outputs(artifacts, replay_contract)
+            after, _ = snapshot(repo, workspace, provenance, manifest, replay=True)
+        else:
+            after, _ = snapshot(repo, workspace, provenance, manifest)
         require(after == before, 'Shared inputs or builder inventory changed during candidate build')
-        write_json(artifacts / 'source-provenance.json', {
+        source_provenance = {
             'schema': 1, 'project': before['project_source'], 'builder_profile': before['builder_profile'],
             'policy': before['candidate_policy'], 'configuration': core.facts(artifacts / 'uboot.config'),
-            'fresh_generated_challenge': core.facts(artifacts / 'uboot-sunxi-challenge.c'),
+            'challenge_mode': 'registered' if replay_contract is not None else 'fresh',
+            'challenge': core.facts(artifacts / 'uboot-sunxi-challenge.c'),
             'baseline_manifest_sha256': core.MANIFEST_SHA, 'core_recipe_sha256': CORE_SHA,
             'firmware_unchanged': firmware,
-            'limitations': 'Component candidate only; no SPI image, programming or hardware acceptance. Fresh challenge retained for a separate registered reproduction.'})
+            'limitations': 'Component candidate only; no SPI image, programming or hardware acceptance.'}
+        if replay_contract is not None:
+            binding = replay_record(replay_contract)
+            binding['exact_matches_verified'] = True
+            binding['matched_artifacts'] = matched_artifacts
+            source_provenance['registered_replay'] = binding
+            source_provenance['generator_patch'] = core.facts(artifacts / 'uboot-challenge-replay.patch')
+        write_json(artifacts / 'source-provenance.json', source_provenance)
+        if replay_contract is not None:
+            result['registered_replay'] = binding
         result['component_build_success'] = True
     except BaseException as exc:
         result['failure'] = f'{type(exc).__name__}: {exc}'
@@ -422,7 +578,11 @@ def main():
     parser.add_argument('--provenance', required=True, type=Path)
     parser.add_argument('--output', required=True, type=Path)
     parser.add_argument('--builder-profile', required=True, choices=[PROFILE])
+    parser.add_argument('--replay-target', choices=[REGISTERED_TARGET])
+    parser.add_argument('--replay-inputs', type=Path)
     args = parser.parse_args()
+    if bool(args.replay_target) != bool(args.replay_inputs):
+        parser.error('--replay-target and --replay-inputs must be supplied together')
     # No inherited make/compiler, dynamic-loader, Python or Git overrides reach
     # helpers or subprocesses. The fixed outer launcher provides paths explicitly.
     os.environ.clear()
@@ -432,8 +592,11 @@ def main():
         project_source(REPO)
         validate_policy(REPO)
         manifest = core.trusted_provenance(REPO, args.provenance)
-        before, lock = snapshot(REPO, args.workspace, args.provenance, manifest)
-        build(REPO, args.workspace, args.provenance, args.output, manifest, before, lock)
+        replay = (load_registered_target(REPO, args.replay_target, args.replay_inputs)
+                  if args.replay_target else None)
+        before, lock = snapshot(REPO, args.workspace, args.provenance, manifest, replay=bool(replay))
+        build(REPO, args.workspace, args.provenance, args.output, manifest, before, lock,
+              replay_contract=replay)
     except (ValueError, OSError, subprocess.CalledProcessError, KeyError, UnicodeError) as exc:
         print(f'NVMe component candidate refused/failed: {exc}', file=sys.stderr)
         return 1

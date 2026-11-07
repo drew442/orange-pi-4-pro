@@ -104,8 +104,10 @@ class CandidateGuards(unittest.TestCase):
         self.assertFalse(any('CHALLENGE' in item for item in make))
         self.assertIn('DIRTY=dirty', make)
 
-    def test_cli_has_no_replay_or_arbitrary_profile(self):
-        for options in (['--replay-challenge', '/tmp/old'], ['--builder-profile', 'original-20261104']):
+    def test_cli_rejects_arbitrary_challenge_profile_and_unpaired_replay(self):
+        for options in (['--replay-challenge', '/tmp/old'], ['--builder-profile', 'original-20261104'],
+                        ['--replay-target', 'unknown'], ['--replay-target', candidate.REGISTERED_TARGET],
+                        ['--replay-inputs', '/tmp/inputs']):
             result = subprocess.run(['python3', candidate.__file__, '--workspace', '/tmp/w',
                                      '--provenance', '/tmp/p', '--output', '/tmp/o'] + options,
                                     capture_output=True)
@@ -288,10 +290,167 @@ class CandidateGuards(unittest.TestCase):
                 candidate.capacity_budget(workspace, lock)
 
 
+class RegisteredTargetGuards(unittest.TestCase):
+    """Synthetic pinned data exercises input guards, never a real compiler."""
+    def fixture(self, root, malformed_challenge=False):
+        repo, inputs = root / 'repo', root / 'inputs'
+        inputs.mkdir()
+        policy = candidate.validate_policy(ROOT)
+        def pin(data):
+            return {'bytes': len(data), 'sha256': hashlib.sha256(data).hexdigest()}
+        def write(relative, data, base=inputs):
+            path = base / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(data)
+            return pin(data)
+        write(candidate.POLICY, json.dumps(policy).encode(), repo)
+        core_bytes = (ROOT / 'build/uboot-replay.py').read_bytes()
+        original_inputs = {'build/uboot-replay.py': write('build/uboot-replay.py', core_bytes, repo),
+                           'build/uboot-nvme-candidate.py': pin(b'original producer')}
+        original = {'project': {'commit': '1' * 40, 'inputs': original_inputs},
+                    'builder_profile': {'name': candidate.PROFILE},
+                    'core_recipe_sha256': candidate.CORE_SHA,
+                    'baseline_manifest_sha256': core.MANIFEST_SHA, 'policy': policy}
+        files = {}
+        nonce = challenge().replace(b'0x00', b'0x80', 1)
+        if malformed_challenge:
+            nonce = nonce.replace(b'0x80', b'0X80', 1)
+        for relative, data in {
+                'artifacts/uboot-sunxi-challenge.c': nonce,
+                'artifacts/uboot.config': candidate.candidate_config(config()),
+                'artifacts/original-uboot.config': config(),
+                'artifacts/source-provenance.json': json.dumps(original).encode()}.items():
+            files[relative] = write(relative, data)
+        # A full manifest may reference large original artifacts that the outer
+        # launcher does not copy into its small namespace input snapshot.
+        files['artifacts/uboot-unpacked.bin'] = pin(b'original binary')
+        required = {name: files[name] for name in ('artifacts/uboot-sunxi-challenge.c',
+                                                 'artifacts/uboot.config', 'artifacts/uboot-unpacked.bin')}
+        manifest = {'schema': 1, 'hardware_acceptance': False, 'files': files}
+        target = {'parent_source_revision': '1' * 40,
+                  'original_producer': 'build/uboot-nvme-candidate.py',
+                  'manifest': write('candidate-manifest.json', json.dumps(manifest).encode()),
+                  'required_artifacts': required, 'original_project_inputs': original_inputs,
+                  'source_provenance': files['artifacts/source-provenance.json']}
+        evidence_path = 'docs/evidence/original.json'
+        evidence = {'success': True, 'source_revision': '1' * 40, 'components': required}
+        target['evidence'] = {'path': evidence_path,
+                              **write(evidence_path, json.dumps(evidence).encode(), repo)}
+        registry = {'schema': 1, 'targets': {candidate.REGISTERED_TARGET: target}}
+        registry_pin = write(candidate.REGISTRY, json.dumps(registry).encode(), repo)
+        def git(command, **kwargs):
+            self.assertEqual(command[-2], 'show')
+            return (repo / command[-1].removeprefix('HEAD:')).read_bytes()
+        return repo, inputs, registry_pin, git
+
+    def test_registry_matches_actual_candidate_evidence(self):
+        # These tracked pins refer to the built 01372ec candidate, not the SD replay.
+        registry_bytes = (ROOT / candidate.REGISTRY).read_bytes()
+        self.assertEqual({'bytes': len(registry_bytes), 'sha256': hashlib.sha256(registry_bytes).hexdigest()},
+                         candidate.REGISTRY_PIN)
+        registry = json.loads(registry_bytes)
+        self.assertEqual(set(registry['targets']), {candidate.REGISTERED_TARGET})
+        target = registry['targets'][candidate.REGISTERED_TARGET]
+        evidence = json.loads((ROOT / target['evidence']['path']).read_bytes())
+        self.assertEqual(target['required_artifacts'], evidence['components'])
+        self.assertEqual(target['manifest'], evidence['raw_pins']['component-retained/candidate-manifest.json'])
+        self.assertEqual(target['parent_source_revision'], evidence['source_revision'])
+
+    def test_small_snapshot_consumes_pinned_bytes_and_returns_outer_contract(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo, inputs, pin, git = self.fixture(Path(tmp))
+            with patch.object(candidate, 'REGISTRY_PIN', pin), patch.object(core, 'run', side_effect=git):
+                contract = candidate.load_registered_target(repo, candidate.REGISTERED_TARGET, inputs)
+            self.assertEqual(contract['challenge_bytes'], challenge().replace(b'0x00', b'0x80', 1))
+            self.assertEqual(contract['required_artifacts'], contract['target']['required_artifacts'])
+            self.assertEqual(contract['source_provenance']['project']['commit'], '1' * 40)
+            self.assertIn('artifacts/uboot-unpacked.bin', contract['original_manifest']['files'])
+            self.assertFalse((inputs / 'artifacts/uboot-unpacked.bin').exists())
+
+    def test_unregistered_target_rejected_before_input_or_build(self):
+        with patch.object(core, 'run') as run, patch.object(core, 'patch_generator') as generator:
+            with self.assertRaisesRegex(ValueError, 'Unregistered NVMe'):
+                candidate.load_registered_target(ROOT, 'arbitrary', Path('/missing'))
+            run.assert_not_called()
+            generator.assert_not_called()
+
+    def test_wrong_manifest_challenge_provenance_and_current_core_refused(self):
+        for relative in ('candidate-manifest.json', 'artifacts/uboot-sunxi-challenge.c',
+                         'artifacts/source-provenance.json', 'artifacts/uboot.config',
+                         'artifacts/original-uboot.config', 'build/uboot-replay.py'):
+            with self.subTest(relative=relative), tempfile.TemporaryDirectory() as tmp:
+                repo, inputs, pin, git = self.fixture(Path(tmp))
+                path = (repo if relative.startswith('build/') else inputs) / relative
+                path.write_bytes(path.read_bytes() + b'altered')
+                with patch.object(candidate, 'REGISTRY_PIN', pin), patch.object(core, 'run', side_effect=git), \
+                        patch.object(core, 'patch_generator') as generator, self.assertRaises(ValueError):
+                    candidate.load_registered_target(repo, candidate.REGISTERED_TARGET, inputs)
+                generator.assert_not_called()
+
+    def test_canonical_format_required_even_when_challenge_hash_matches(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo, inputs, pin, git = self.fixture(Path(tmp), malformed_challenge=True)
+            with patch.object(candidate, 'REGISTRY_PIN', pin), patch.object(core, 'run', side_effect=git), \
+                    self.assertRaisesRegex(ValueError, 'Noncanonical'):
+                candidate.load_registered_target(repo, candidate.REGISTERED_TARGET, inputs)
+
+    def test_git_and_registry_pin_are_both_required(self):
+        for defect in ('git', 'registry'):
+            with self.subTest(defect=defect), tempfile.TemporaryDirectory() as tmp:
+                repo, inputs, pin, git = self.fixture(Path(tmp))
+                if defect == 'registry':
+                    (repo / candidate.REGISTRY).write_bytes(b'untrusted')
+                with patch.object(candidate, 'REGISTRY_PIN', pin), \
+                        patch.object(core, 'run', side_effect=git if defect == 'registry' else lambda *a, **k: b'wrong'), \
+                        self.assertRaises(ValueError):
+                    candidate.load_registered_target(repo, candidate.REGISTERED_TARGET, inputs)
+
+    def test_each_exact_output_and_retained_input_mismatch_is_refused(self):
+        names = ('uboot-unpacked.bin', 'boot_package.fex', 'uboot.config',
+                 'uboot-sunxi-challenge.c', 'boot0_spinor_a733.fex', 'registered-challenge.c')
+        with tempfile.TemporaryDirectory() as tmp:
+            artifacts = Path(tmp)
+            for name in names:
+                (artifacts / name).write_bytes(b'expected')
+            expected = core.facts(artifacts / names[0])
+            contract = {'target': {'required_artifacts': {
+                'artifacts/' + name: expected for name in names[:-1]}}}
+            candidate.verify_replay_outputs(artifacts, contract)
+            for name in names:
+                with self.subTest(name=name):
+                    (artifacts / name).write_bytes(b'mismatch')
+                    with self.assertRaises(ValueError):
+                        candidate.verify_replay_outputs(artifacts, contract)
+                    (artifacts / name).write_bytes(b'expected')
+
+    def test_safe_held_reads_refuse_symlinks_hardlinks_and_parent_aliases(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            source = root / 'source'
+            source.write_bytes(b'input')
+            pin = core.facts(source)
+            self.assertEqual(candidate.pinned_read(source, pin), b'input')
+            alias = root / 'alias'
+            alias.symlink_to(source)
+            with self.assertRaises(ValueError):
+                candidate.pinned_read(alias, pin)
+            alias.unlink()
+            alias.hardlink_to(source)
+            with self.assertRaises(ValueError):
+                candidate.pinned_read(source, pin)
+            alias.unlink()
+            directory = root / 'dir-alias'
+            directory.symlink_to(root, target_is_directory=True)
+            with self.assertRaises(ValueError):
+                candidate.pinned_read(directory / 'source', pin)
+
+
 class SimulatedBuild(unittest.TestCase):
     """Exercise candidate orchestration with simulated compiler/vendor tools."""
     def test_failed_and_successful_component_records(self):
-        for fail in ('compile', 'shared-change', None):
+        for scenario in ('compile', 'shared-change', 'fresh', 'replay', 'replay-mismatch'):
+            replaying = scenario.startswith('replay')
+            fail = scenario if scenario in ('compile', 'shared-change', 'replay-mismatch') else None
             with self.subTest(fail=fail), tempfile.TemporaryDirectory() as tmp:
                 root = Path(tmp)
                 repo, workspace, provenance = root / 'repo', root / 'workspace', root / 'provenance'
@@ -319,6 +478,20 @@ class SimulatedBuild(unittest.TestCase):
                 archive.write_bytes(b'compiler')
                 before[str(archive)] = core.facts(archive)
                 lock = {'uboot_toolchain': {'filename': archive.name}}
+                registered_challenge = challenge().replace(b'0x00', b'0x80', 1)
+                def pin(data):
+                    return {'bytes': len(data), 'sha256': hashlib.sha256(data).hexdigest()}
+                contract = {'target_id': candidate.REGISTERED_TARGET, 'inputs': '/fixture/inputs',
+                            'registry_pin': {'sha256': 'fixture-registry'},
+                            'original_manifest_pin': {'sha256': 'fixture-manifest'},
+                            'original_provenance': {'builder_profile': before['builder_profile']},
+                            'challenge_bytes': registered_challenge,
+                            'target': {'required_artifacts': {
+                                'artifacts/uboot-unpacked.bin': pin(b'other-candidate' if fail == 'replay-mismatch' else b'new-candidate'),
+                                'artifacts/boot_package.fex': pin(b'new-package'),
+                                'artifacts/uboot.config': pin(candidate.candidate_config(config())),
+                                'artifacts/boot0_spinor_a733.fex': pin(b'firmware'),
+                                'artifacts/uboot-sunxi-challenge.c': pin(registered_challenge)}}}
                 commands = []
                 def run(command, cwd=None, env=None, log=None):
                     command = list(map(str, command))
@@ -338,7 +511,8 @@ class SimulatedBuild(unittest.TestCase):
                             raise subprocess.CalledProcessError(1, command)
                         for relative in ('u-boot.bin', 'u-boot', 'u-boot.map', 'arch/arm/lib/bootm.o'):
                             (tree / relative).write_bytes(b'new-candidate')
-                        (tree / 'board/sunxi/sunxi_challenge.c').write_bytes(challenge())
+                        (tree / 'board/sunxi/sunxi_challenge.c').write_bytes(
+                            (output / 'artifacts/registered-challenge.c').read_bytes() if replaying else challenge())
                     if command[0] == 'dragonsecboot':
                         (cwd / 'boot_package.fex').write_bytes(b'new-package')
                     return b''
@@ -355,6 +529,7 @@ class SimulatedBuild(unittest.TestCase):
                 with patch.object(candidate, 'capacity_budget', return_value={'required_free_bytes': 0}), \
                         patch.object(candidate, 'check_capacity'), \
                         patch.object(candidate, 'Runner', return_value=SimpleNamespace(run=run)), \
+                        patch.object(candidate, 'load_registered_target', return_value=contract), \
                         patch.object(candidate, 'private_pack', side_effect=private_pack), \
                         patch.object(candidate, 'snapshot', return_value=({'mutated': True} if fail == 'shared-change' else before, lock)), \
                         patch.object(candidate, 'SPI_BOOT0', {'bytes': 8, 'sha256': hashlib.sha256(b'firmware').hexdigest()}), \
@@ -362,21 +537,40 @@ class SimulatedBuild(unittest.TestCase):
                     if fail:
                         error = subprocess.CalledProcessError if fail == 'compile' else ValueError
                         with self.assertRaises(error):
-                            candidate.build(repo, workspace, provenance, output, manifest, before, lock)
+                            candidate.build(repo, workspace, provenance, output, manifest, before, lock,
+                                            replay_contract=contract if replaying else None)
                     else:
-                        candidate.build(repo, workspace, provenance, output, manifest, before, lock)
+                        candidate.build(repo, workspace, provenance, output, manifest, before, lock,
+                                            replay_contract=contract if replaying else None)
                 result = json.loads((output / 'artifacts/candidate-result.json').read_text())
                 self.assertEqual(result['component_build_success'], not fail)
                 self.assertFalse(result['hardware_acceptance'])
                 self.assertFalse(result['deployment_authorized'])
                 self.assertTrue((output / 'candidate-manifest.json').is_file())
                 self.assertTrue((output / 'uboot-source/Makefile').exists())
-                self.assertEqual((output / 'uboot-source/Makefile').read_text(), core.GENERATOR)
+                self.assertEqual((output / 'uboot-source/Makefile').read_text(),
+                                 core.REPLAY_GENERATOR if replaying else core.GENERATOR)
                 makes = [command for command in commands if command[0] == 'make']
                 self.assertEqual([command[-1] for command in makes], ['sun60iw2p1_t736_defconfig', 'olddefconfig', '-j2'])
                 self.assertTrue(all('-j2' in command for command in makes))
-                self.assertFalse(any('A733_REPLAY_CHALLENGE' in item for command in commands for item in command))
+                self.assertEqual(any('A733_REPLAY_CHALLENGE' in item for command in commands for item in command), replaying)
+                if fail:
+                    self.assertNotIn('registered_replay', result)
+                self.assertEqual((output / 'artifacts/uboot-challenge-replay.patch').exists(), replaying)
+                if replaying:
+                    self.assertEqual((output / 'artifacts/registered-challenge.c').read_bytes(), registered_challenge)
+                    self.assertIn(core.GENERATOR.split('\n')[3], (output / 'uboot-source/Makefile').read_text())
                 if not fail:
+                    provenance_result = json.loads((output / 'artifacts/source-provenance.json').read_text())
+                    self.assertEqual(provenance_result['challenge_mode'], 'registered' if replaying else 'fresh')
+                    self.assertNotIn('fresh_generated_challenge', provenance_result)
+                    if replaying:
+                        self.assertTrue(result['registered_replay']['exact_matches_verified'])
+                        self.assertEqual(set(result['registered_replay']['matched_artifacts']),
+                                         set(contract['target']['required_artifacts']))
+                        self.assertEqual(provenance_result['registered_replay'], result['registered_replay'])
+                    else:
+                        self.assertNotIn('registered_replay', result)
                     self.assertTrue((output / 'artifacts/bootm.disassembly').exists())
                     self.assertEqual((output / 'artifacts/uboot-unpacked.bin').read_bytes(), b'new-candidate')
                     self.assertEqual((output / 'artifacts/original-uboot-unpacked.bin').read_bytes(), b'original')
