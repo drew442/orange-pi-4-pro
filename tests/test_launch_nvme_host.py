@@ -42,6 +42,86 @@ POLICY = n.contract(r, REPO, CONTENTS)
 
 
 class NVMeLauncherTests(unittest.TestCase):
+    def test_namespace_access_rejects_unmapped_private_diagnostic_directory(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            root.chmod(0o700)
+            with self.assertRaisesRegex(ValueError, 'exclude mapped builder'):
+                n.namespace_source_access(root, root.stat().st_uid + 100000)
+
+    def test_namespace_access_accepts_public_inputs_and_mapped_private_inputs(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            parent = Path(temporary)
+            parent.chmod(0o700)  # Host ancestors are bypassed by the source bind.
+            root = parent / 'diagnostic'
+            root.mkdir()
+            leaf = root / 'uImage'
+            leaf.write_bytes(b'boot payload')
+            leaf.chmod(0o444)
+            root.chmod(0o555)
+            n.namespace_source_access(root, root.stat().st_uid + 100000, leaf)
+            root.chmod(0o500)
+            leaf.chmod(0o400)
+            n.namespace_source_access(root, root.stat().st_uid, leaf)
+
+    def test_namespace_access_rejects_private_leaf_symlink_and_access_acl(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            root.chmod(0o755)
+            leaf = root / 'uImage'
+            leaf.write_bytes(b'boot payload')
+            leaf.chmod(0o600)
+            mapped = root.stat().st_uid + 100000
+            with self.assertRaisesRegex(ValueError, 'exclude mapped builder'):
+                n.namespace_source_access(root, mapped, leaf)
+            leaf.unlink()
+            leaf.symlink_to('/dev/null')
+            with self.assertRaisesRegex(ValueError, 'physical namespace-readable'):
+                n.namespace_source_access(root, mapped, leaf)
+            leaf.unlink()
+            leaf.write_bytes(b'boot payload')
+            leaf.chmod(0o444)
+            with mock.patch.object(n.os, 'listxattr', return_value=['system.posix_acl_access']):
+                with self.assertRaisesRegex(ValueError, 'unmodeled source access ACL'):
+                    n.namespace_source_access(root, mapped, leaf)
+            with self.assertRaises(ValueError):
+                n.namespace_source_access(root, mapped, root.parent / 'outside')
+
+    def test_main_rejects_private_component_manifest_before_holding_inputs(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            inputs = {}
+            for name in n.INPUTS:
+                root = Path(temporary) / name
+                root.mkdir()
+                if name != 'diagnostic':
+                    manifest = root / 'manifest.json'
+                    manifest.write_bytes(b'{}')
+                    manifest.chmod(0o600 if name == 'roots' else 0o444)
+                root.chmod(0o555)
+                inputs[name] = root
+            held = mock.Mock(side_effect=AssertionError('held input opened'))
+            modules = {n.STATE: types.SimpleNamespace(held_class=lambda verifier: held),
+                       n.BOOTSTRAP: object(), n.VERIFIER: object(),
+                       r.SHARED: types.SimpleNamespace(UID_BASE=os.getuid() + 100000),
+                       r.CANDIDATE: object()}
+            contents = {key: b'' for key in modules}
+            contents.update({n.SELF: b'controller', n.ROOTS: b''})
+            fake = types.ModuleType('access_roots')
+            fake.SHARED, fake.CANDIDATE = r.SHARED, r.CANDIDATE
+            fake.module = lambda name, data: modules[name]
+            fake.physical = r.physical
+            fake.committed_sources = lambda project: ({'revision': 'a' * 40}, contents)
+            fake.read_source = lambda path: b'controller'
+            with mock.patch.object(n.types, 'ModuleType', return_value=fake), \
+                    mock.patch.object(n.subprocess, 'check_output', return_value=b''), \
+                    mock.patch.object(n.sys, 'flags', types.SimpleNamespace(isolated=True, dont_write_bytecode=True)), \
+                    mock.patch.object(n, 'contract', return_value=POLICY), \
+                    mock.patch.object(n, 'admit_descriptor_limit', return_value={}), \
+                    mock.patch.object(n, 'INPUTS', inputs):
+                with self.assertRaisesRegex(ValueError, 'exclude mapped builder.*manifest.json'):
+                    n.main(['--project', str(REPO), '--tag', 'tiny'])
+            held.assert_not_called()
+
     def test_plan_never_touches_runtime(self):
         with mock.patch.object(Path, 'lstat', side_effect=AssertionError('runtime access')), \
              mock.patch.object(Path, 'open', side_effect=AssertionError('runtime access')), \

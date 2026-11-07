@@ -108,6 +108,26 @@ def admit_descriptor_limit():
             'hard': hard, 'scope': 'current producer process only'}
 
 
+def namespace_source_access(root, uid_base, leaf=None):
+    """Check DAC permissions visible through the bind, excluding host ancestors."""
+    paths = [root]
+    if leaf is not None:
+        relative = leaf.relative_to(root)
+        require(relative.parts and '..' not in relative.parts, 'source leaf outside binding')
+        paths.extend(root.joinpath(*relative.parts[:index]) for index in range(1, len(relative.parts) + 1))
+    for path in paths:
+        info = path.lstat()
+        directory = path != leaf
+        require(stat.S_ISDIR(info.st_mode) if directory else stat.S_ISREG(info.st_mode),
+                'physical namespace-readable source required: ' + str(path))
+        require('system.posix_acl_access' not in os.listxattr(path, follow_symlinks=False),
+                'unmodeled source access ACL: ' + str(path))
+        shift = 6 if info.st_uid == uid_base else 3 if info.st_gid == uid_base else 0
+        required = 5 if directory else 4
+        require((info.st_mode >> shift) & required == required,
+                'source permissions exclude mapped builder: ' + str(path))
+
+
 def records(policy):
     p = policy['producers']
     result = {}
@@ -381,6 +401,11 @@ def main(argv=None):
     state = roots.module(STATE, contents[STATE]); bootstrap = roots.module(BOOTSTRAP, contents[BOOTSTRAP])
     verifier = roots.module(VERIFIER, contents[VERIFIER]); Held = state.held_class(verifier)
     shared = roots.module(roots.SHARED, contents[roots.SHARED]); candidate = roots.module(roots.CANDIDATE, contents[roots.CANDIDATE])
+    for component, source in INPUTS.items():
+        roots.physical(source)
+        namespace_source_access(source, shared.UID_BASE)
+        if component in ('roots', 'state', 'sd'):
+            namespace_source_access(source, shared.UID_BASE, source / 'manifest.json')
     payload = payload_program(roots, options.tag, policy); run = roots.inner_program(manifest['revision'], options.tag)
     with contextlib.ExitStack() as stack:
         held = {name: stack.enter_context(Held(path, pin)) for name,(path,pin) in records(policy).items()}
@@ -388,8 +413,10 @@ def main(argv=None):
             value = verifier.json_fd(held[component + '-manifest'])
             for name,pin in value['files'].items():
                 candidate.safe_member(name)
+                namespace_source_access(INPUTS[component], shared.UID_BASE, INPUTS[component] / name)
                 held[component + '/' + name] = stack.enter_context(Held(INPUTS[component] / name,pin))
         for name,pin in policy['parent']['diagnostic'].items():
+            namespace_source_access(INPUTS['diagnostic'], shared.UID_BASE, INPUTS['diagnostic'] / name)
             held['diagnostic/' + name] = stack.enter_context(Held(INPUTS['diagnostic'] / name,pin))
         authenticate(verifier,state,bootstrap,held,policy)
         required = budget(roots,options.project,manifest,payload,run); report['initial_budget'] = required
