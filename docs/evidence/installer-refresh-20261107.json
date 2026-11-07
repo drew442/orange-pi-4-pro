@@ -1,0 +1,372 @@
+{
+  "schema": 1,
+  "date": "2026-11-07",
+  "classification": "Prepared Jammy packaging refresh and independent artifact/ARM verification; no physical boot or release acceptance",
+  "source_commit": "151a532c482b6c067ea48bf2d1f88c074a553a5e",
+  "source_snapshot": {
+    "path": "tmp/installer-refresh-20261107/source.tar",
+    "bytes": 6041600,
+    "sha256": "ff6124bb315dcaf8ef16b7dd9e1d9e17ef24681d905f81659df483bb32001155"
+  },
+  "builder": "drew@build.drewnet.online",
+  "builder_project": "/var/lib/a733-installer-refresh-20261107",
+  "local_image": "/home/drew/orange-pi-4-pro/out/installer-refresh-20261107/a733-installer-prep.img",
+  "files": {
+    "a733-installer-prep.img": {
+      "bytes": 268435456,
+      "sha256": "265752f020212e73998a869e6098a1bc850a4d2ade4092a72ea3338e64157794"
+    },
+    "a733-installer-prep.img.gz": {
+      "bytes": 39270669,
+      "sha256": "7c0910a089644f23388d09b1f21ea0e1213069e5de5498bc285401cac47fbadb"
+    },
+    "uInitrd": {
+      "bytes": 26977647,
+      "sha256": "90b23f893723a901877973831eccc1395b654380a56372680718da86d31ca03e"
+    },
+    "assembly.log": {
+      "bytes": 4208,
+      "sha256": "2d50f37ba6c23345ef42de16029e35dd49953778d63e15c2af89784adb5084ae"
+    }
+  },
+  "initramfs": {
+    "bytes": 26977583,
+    "sha256": "55cfb5ed7b7e7f423ad1ef528e2d926caf29159730ff6b696e0750a8e906f2fd"
+  },
+  "boot_profile": {
+    "name": "experimental-el2",
+    "target_service": "0x8000ff40",
+    "expected_spsr": "0x3c9",
+    "physical_acceptance_pending": true,
+    "evidence": {
+      "path": "docs/evidence/el2-diagnostic-20261104.json",
+      "bytes": 6582,
+      "sha256": "9c30d5d873fa8ad154b8068cdebfc7f40f6487ce6a79f76a52da4dd44ba1b5f8"
+    }
+  },
+  "boot_inputs": {
+    "boot0_sdcard.fex": {
+      "bytes": 245760,
+      "sha256": "9213f1c56ef932930d43b5751e8937bea0e9ae7460ec16187cc1b0dffdb75345"
+    },
+    "boot_package.fex": {
+      "bytes": 1392640,
+      "sha256": "b20c3d1133aee6474416bc9846b0bf94d5439aa12d7f7555b44607105ddab3b6"
+    },
+    "uImage": {
+      "bytes": 27283528,
+      "sha256": "6f9269755c4c2bc196c094899fa1ff20292f4d762c4000f77fcbb0887d5f154a"
+    },
+    "Image": {
+      "bytes": 27283464,
+      "sha256": "9df974c55fa61a77e8fe812652780dad471527eb9615c27838f481887d4c50e7"
+    },
+    "board.dtb": {
+      "bytes": 209320,
+      "sha256": "4d7d964a54668cf5dc12cd4bf7e72a625c79883541272aeba1a91adbbedb86ed"
+    },
+    "kernel.config": {
+      "bytes": 212080,
+      "sha256": "8a29d9c36e52db7e8a7d6ff757dc69e660f4273c99e5f00c5dbc5a9b7e060675"
+    }
+  },
+  "steps": [
+    {
+      "name": "runtime",
+      "command": [
+        "/usr/bin/python3",
+        "-I",
+        "-B",
+        "/var/lib/a733-installer-refresh-20261107/build/installer-runtime.py",
+        "/home/drew/orange-pi-4-pro-build/recipe/out/host-userspace-bookworm-20261001-01/rootfs.tar.gz",
+        "/var/lib/a733-installer-refresh-20261107/out/installer-runtime-refresh-20261107-01"
+      ],
+      "returncode": 0,
+      "seconds": 10.01054699497763
+    },
+    {
+      "name": "initramfs",
+      "command": [
+        "/usr/bin/python3",
+        "-I",
+        "-B",
+        "/var/lib/a733-installer-refresh-20261107/build/installer-initramfs.py",
+        "/var/lib/a733-installer-refresh-20261107/out/installer-runtime-refresh-20261107-01",
+        "/home/drew/orange-pi-4-pro-build/artifacts",
+        "/home/drew/orange-pi-4-pro-build/busybox/bin/busybox",
+        "/var/lib/a733-installer-refresh-20261107/out/installer-initramfs-refresh-20261107-01"
+      ],
+      "returncode": 0,
+      "seconds": 10.01101580800605
+    },
+    {
+      "name": "runtime-arm",
+      "command": [
+        "/usr/bin/python3",
+        "-I",
+        "-B",
+        "/var/lib/a733-installer-refresh-20261107/tests/verify_installer_runtime_arm.py",
+        "/var/lib/a733-installer-refresh-20261107/out/installer-initramfs-refresh-20261107-01"
+      ],
+      "returncode": 0,
+      "seconds": 20.02097894399776
+    },
+    {
+      "name": "acquisition-arm",
+      "command": [
+        "/usr/bin/python3",
+        "-I",
+        "-B",
+        "/var/lib/a733-installer-refresh-20261107/tests/verify_acquisition_https_arm.py",
+        "/var/lib/a733-installer-refresh-20261107/out/installer-initramfs-refresh-20261107-01"
+      ],
+      "returncode": 0,
+      "seconds": 10.010759233002318
+    },
+    {
+      "name": "sd",
+      "command": [
+        "/usr/bin/python3",
+        "-I",
+        "-B",
+        "/var/lib/a733-installer-refresh-20261107/build/assemble-installer.py",
+        "/var/lib/a733-el2-work-20261104/out/el2-diagnostic-20261104-03/artifacts",
+        "/var/lib/a733-installer-refresh-20261107/out/installer-initramfs-refresh-20261107-01",
+        "/var/lib/a733-installer-refresh-20261107/out/installer-sd-refresh-20261107-01",
+        "--boot-profile",
+        "experimental-el2"
+      ],
+      "returncode": 0,
+      "seconds": 10.010715937009081
+    },
+    {
+      "name": "sd-inspection",
+      "command": [
+        "/usr/bin/python3",
+        "-I",
+        "-B",
+        "/var/lib/a733-installer-refresh-20261107/tests/verify_installer_sd.py",
+        "/var/lib/a733-installer-refresh-20261107/out/installer-sd-refresh-20261107-01",
+        "/var/lib/a733-installer-refresh-20261107/out/installer-initramfs-refresh-20261107-01",
+        "--boot-profile",
+        "experimental-el2"
+      ],
+      "returncode": 0,
+      "seconds": 10.010771439003292
+    }
+  ],
+  "resources": {
+    "minimum_sampled_free_bytes": 3889745920,
+    "minimum_sampled_available_memory_bytes": 7205289984,
+    "minimum_runtime_guard_free_bytes": 2147483648,
+    "minimum_runtime_guard_available_memory_bytes": 1073741824,
+    "sampling_seconds": 10,
+    "installed_builder_packages": 842,
+    "host_inventory_unchanged": true,
+    "lvm_resize_performed": false
+  },
+  "checks": {
+    "runtime_restaged": "Changed source provenance required fresh selection from the original authenticated baseline archive; no old runtime manifest was edited.",
+    "initramfs_recipe_blobs_match_commit": 48,
+    "sd_recipe_blobs_match_commit": 7,
+    "recorded_runtime_ARM": "Actual packaged ARM Python/modules/CLI startup, fixture refusal and regular-file engine with explicit readback; no physical block callbacks.",
+    "recorded_HTTPS_ARM": "Loopback TLS/CA/redirect checks and small encoded/expanded stream fixture; not production acquisition or physical network.",
+    "independent_archive_entries": 2252,
+    "maintenance_regular_files": 40,
+    "maintenance_source_files": 39,
+    "both_installer_tool_copies": "Exact Git151a532 bytes",
+    "independent_ARM": {
+      "architecture": "aarch64",
+      "yes_responses_accepted": [
+        "y",
+        "yes",
+        "YES"
+      ],
+      "no_responses_rejected": [
+        "n",
+        "no",
+        "blank",
+        "garbage"
+      ],
+      "nonTTY_refused": true,
+      "CLI_default_verify_readback": false,
+      "CLI_opt_in_verify_readback": true,
+      "CLI_scope": "main parser captured; deliberately stopped before source/device access",
+      "default_engine_result": {
+        "success": true,
+        "target_modified": true,
+        "bytes_attempted": 4992,
+        "bytes_written": 4992,
+        "bytes_verified": 0,
+        "readback_requested": false,
+        "source_sha256": "9df251bd9518c679953ba40917304a660585b3eed6c3442be999945ed44c3664"
+      },
+      "default_engine_pread_calls": 0,
+      "fixture_bytes_match": true,
+      "limits": [
+        "synthetic TTY for authorization helper",
+        "small regular-file fixture only",
+        "physical flush/partition callbacks stubbed",
+        "no device access or hardware acceptance"
+      ]
+    },
+    "SD_fit": {
+      "actual_card_bytes": 1977614336,
+      "image_bytes": 268435456,
+      "spare_bytes": 1709178880,
+      "below_1800000000_target": true
+    },
+    "independent_SD": {
+      "classification": "regular-file installer SD inspection; no physical boot or installation acceptance",
+      "image": {
+        "bytes": 268435456,
+        "sha256": "265752f020212e73998a869e6098a1bc850a4d2ade4092a72ea3338e64157794"
+      },
+      "legacy_ext4_features": [
+        "ext_attr",
+        "resize_inode",
+        "dir_index",
+        "filetype",
+        "extent",
+        "flex_bg",
+        "sparse_super",
+        "large_file",
+        "huge_file",
+        "dir_nlink",
+        "extra_isize"
+      ],
+      "mbr_and_vendor_blob_offsets": "passed",
+      "pinned_kernel_DTB": "passed",
+      "script_and_initrd_wrappers_CRCs": "passed",
+      "checked_installer_archive_payload": {
+        "bytes": 26977583,
+        "sha256": "55cfb5ed7b7e7f423ad1ef528e2d926caf29159730ff6b696e0750a8e906f2fd"
+      },
+      "compressed_hash_and_expansion": "passed",
+      "physical_storage_writes": false
+    }
+  },
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "report": {
+      "path": "out/installer-refresh-20261107/independent-review.json",
+      "bytes": 7255,
+      "sha256": "5da073821b43c268aeca642e164b6c1d0ecc3955bc4f8e6fce48220cd373c70f"
+    },
+    "findings": [],
+    "operator_guide": "Independent follow-up review passed exact image paths/hashes, flashing identity/capacity/unmounted guards and yes/no confirmation, compatible NVMe arguments, readback/report semantics, and old-bundle repair/no-reinstall distinction."
+  },
+  "raw_records": {
+    "out/installer-refresh-20261107/records/acquisition-arm.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/installer-refresh-20261107/records/acquisition-arm.stdout": {
+      "bytes": 1427,
+      "sha256": "58f413257305635616ba017ffeff4ed50de8fececbe4722cb9a4dd80d02d05ec"
+    },
+    "out/installer-refresh-20261107/records/host-packages.after.tsv": {
+      "bytes": 50228,
+      "sha256": "491549c326d626e92de1c001bee3346215a707e9a63635584ede5085bde60faf"
+    },
+    "out/installer-refresh-20261107/records/host-packages.before.tsv": {
+      "bytes": 50228,
+      "sha256": "491549c326d626e92de1c001bee3346215a707e9a63635584ede5085bde60faf"
+    },
+    "out/installer-refresh-20261107/records/initramfs.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/installer-refresh-20261107/records/initramfs.stdout": {
+      "bytes": 10360,
+      "sha256": "6643e5e9eed5fd303b34840214846c54d05ef16a6f230ca127ea3b076afed388"
+    },
+    "out/installer-refresh-20261107/records/receipt.json": {
+      "bytes": 4675,
+      "sha256": "f9f8a581d529b74b009d4a4096c0fcf6ee0620331e499b72c9fe37a0a748a449"
+    },
+    "out/installer-refresh-20261107/records/review/a733-independent-installer-arm-20261107.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/installer-refresh-20261107/records/review/a733-independent-installer-arm-20261107.stdout": {
+      "bytes": 810,
+      "sha256": "8fa5764b4ef796dcec899d62229428d3ab25539ffd8b688d59b906e0ab4777e9"
+    },
+    "out/installer-refresh-20261107/records/review/a733-independent-installer-review-20261107.py": {
+      "bytes": 11570,
+      "sha256": "96483a6e694ba7201dc9ac8deb3a244f2178db6da751467cea3c9731b07d4868"
+    },
+    "out/installer-refresh-20261107/records/review/a733-independent-installer-review-20261107.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/installer-refresh-20261107/records/review/a733-independent-installer-review-20261107.stdout": {
+      "bytes": 1170,
+      "sha256": "12fa80cae64502dd7b6e5cc42490cd9ad4fe01e190e85e08c8b3a6eb6b5e9610"
+    },
+    "out/installer-refresh-20261107/records/review/a733-independent-installer-sd-20261107.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/installer-refresh-20261107/records/review/a733-independent-installer-sd-20261107.stdout": {
+      "bytes": 806,
+      "sha256": "88b40f08f710cccffcf3e0ad64163fed7e93ff3b65c84edf57d8d49270fd387c"
+    },
+    "out/installer-refresh-20261107/records/run.py": {
+      "bytes": 3275,
+      "sha256": "93335502658f3e2d762809ff80deed6bbf2bed167fc2488a613c40cedde1bc6e"
+    },
+    "out/installer-refresh-20261107/records/runtime-arm.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/installer-refresh-20261107/records/runtime-arm.stdout": {
+      "bytes": 2157,
+      "sha256": "e98879034c302afd074bca983d549753e264c160303e08d187fc7b8bd1ef3765"
+    },
+    "out/installer-refresh-20261107/records/runtime.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/installer-refresh-20261107/records/runtime.stdout": {
+      "bytes": 67,
+      "sha256": "6205845eb0c9e86e37fce2db8c1bcaae5ab09dba4ee25f111c8eba016afdf75f"
+    },
+    "out/installer-refresh-20261107/records/sd-inspection.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/installer-refresh-20261107/records/sd-inspection.stdout": {
+      "bytes": 806,
+      "sha256": "88b40f08f710cccffcf3e0ad64163fed7e93ff3b65c84edf57d8d49270fd387c"
+    },
+    "out/installer-refresh-20261107/records/sd.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/installer-refresh-20261107/records/sd.stdout": {
+      "bytes": 15595,
+      "sha256": "3f60172b74b9750aca6f606814db17e617d28b3bf2ccb161e10d455d56d4bdc5"
+    }
+  },
+  "manifests": {
+    "out/installer-refresh-20261107/manifest.json": {
+      "bytes": 15595,
+      "sha256": "3f60172b74b9750aca6f606814db17e617d28b3bf2ccb161e10d455d56d4bdc5"
+    },
+    "out/installer-refresh-20261107/initramfs/manifest.json": {
+      "bytes": 435222,
+      "sha256": "cff0895973bfeadb8599e5434ee847be361332e683b8dee3cab988593136c199"
+    }
+  },
+  "operator_guide": "docs/installer-refresh-20261107.md",
+  "limits": [
+    "This new SD image has not booted on the A733; published November6 host SD and NVMe bundle remain unchanged.",
+    "Existing installed host still needs the documented one-file machine-id repair, not full reinstallation.",
+    "The November6 bundle still has machine-id0600; when deliberately installing it with this image, perform the same permission repair before switching to host SD. Newly built state uses0644.",
+    "No physical benchmark, NVMe erase, SPI programming or build-host LVM resize was performed.",
+    "Boot cycles/endurance, physical SD-write evidence, actual SSH/KVM guest, update/rollback/recovery, full clean production reconstruction and independently reproduced deployment remain open."
+  ]
+}

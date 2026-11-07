@@ -19,11 +19,12 @@ remain private. Use the [existing-install repair](installed-host-repair-20261107
 which changes one NVMe file's permissions without reinstalling. Physical repair
 and successful DHCP/SSH still await operator results.
 
-Published November 6 images remain unchanged. The [deployment guide](deploy-personalized-20261106.md)
-identifies their exact paths. Source now uses one exact-target yes/no prompt,
-removes expanded-image pre-scans and makes full NVMe readback opt-in, with
-progress feedback. A refreshed installer image is still needed for those changes.
-Do not repeat NVMe installation to address the present management failure.
+The [refreshed installer](installer-refresh-20261107.md) is now built from
+`151a532`: 256 MiB, exact-target yes/no, one expanded write pass, optional readback
+and progress feedback. Packaged ARM tests, independent image/source-BOM inspection
+and a separate ARM default-no-readback probe pass. This new image is unbooted;
+it does not automatically repair installed state. November 6 host SD/NVMe artifacts
+remain unchanged. **Do not repeat NVMe installation to fix management.**
 
 ## Decisions and physical evidence
 
@@ -125,7 +126,8 @@ Do not repeat NVMe installation to address the present management failure.
    and complete image readback. Source integration is enabled; component execution
    does not satisfy these full-image gates. [Verified single-archive retirement](evidence/builder-deb-retention-20261107.json)
    enabled the successful build; the later component run sampled a 4.35 GB minimum
-   free. Recheck current resources before staging. Full production capacity
+   free. The later installer refresh sampled 3.89 GB minimum free. Recheck current
+   resources before staging. Full production capacity
    guards remain separate. The reviewed [20 GiB builder LVM growth](build-host-capacity-plan.md)
    awaits approval after [target/backup recheck](evidence/build-host-capacity-recheck-20261106.json);
    no resize occurred and capacity guards remain unchanged.

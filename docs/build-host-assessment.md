@@ -107,6 +107,13 @@ remained unchanged and mapped processes/mounts were cleared. Full root/state/NVM
 capacity guards are unchanged; the 20 GiB LV growth remains unapproved.
 Recheck current resources before further staging.
 
+The [November 7 installer refresh](evidence/installer-refresh-20261107.json)
+restaged runtime and packaged initramfs/SD with all guards intact. Six stages,
+packaged ARM checks and independent artifact review pass. Sampled minima were
+3,889,745,920 bytes free disk and 7,205,289,984 bytes available RAM; all 842 host
+packages were unchanged. Full production reconstruction retains its larger
+capacity requirements; no LV resize occurred.
+
 ## Local host assessment
 
 Checked 2026-11-04 against vendor build commit `a95129bf30ea11886cc35f08ebb3e69695a26656`. **Local host only: suitable for source investigation, not an unmodified vendor image build.** No local dependencies were installed; remote provisioning is described above.

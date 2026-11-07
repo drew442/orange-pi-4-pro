@@ -71,9 +71,11 @@ and `0444` files; the containing directory stays `0700`. These are prospective
 host staging instructions, not evidence of a reproduced board deployment.
 
 The current source recipe stages its 40-file package at `/usr/lib/a733-tools`
-(including `/usr/lib/a733-tools/scripts`). The published recovery initramfs
-still contains the older 39-file package. Neither package is physically
-installed or validated on the board. Host update and
+(including `/usr/lib/a733-tools/scripts`). The November 6 recovery initramfs
+contains the older 39-file package; the [November 7 installer refresh](installer-refresh-20261107.md)
+contains the 40-file package. The older package is present in the physically
+booted installation; that does not validate every entrypoint. The new package
+has not booted on the board. Host update and
 root-selection documents use `A733_TOOLS` for the explicitly staged host package. Package
 staging does not authorize a physical write. Preserve the
 A733 target, 2 GB SD, nominal 250 GB NVMe, minimal host and zero routine SD

@@ -10,7 +10,8 @@ completed its write/readback and booted installed root A; management needs the
 
 Current source simplifies confirmation and installation work as described below.
 Published November 6 installer images retain the older prompts/readback behavior;
-a refreshed image is required to use the new behavior.
+the [refreshed installer image](installer-refresh-20261107.md) includes the new
+behavior and passes artifact/ARM checks, with physical boot still pending.
 
 Full-disk installation overwrites every partition, including guest storage.
 Routine inactive-slot updates, rollback and backup/restore are separate work.

@@ -15,8 +15,9 @@ writer. The [verified payload acquisition tool](nvme-distribution.md) and comple
 The [writer procedure](nvme-installation.md) requires a real installation
 candidate and exact-target authorization. The deployment preparation image has now completed a physical NVMe
 installation/readback; see the [November 7 record](evidence/installed-host-first-boot-20261107.json).
-The new source installer reduces installation work and uses yes/no confirmation
-and optional readback; its refreshed image has not yet been published. The
+The [refreshed installer image](installer-refresh-20261107.md) reduces installation
+work and uses yes/no confirmation with optional readback. It passes software/ARM
+checks and independent artifact review; physical boot remains pending. The
 [diagnostic candidate](diagnostic-image.md) remains the first hardware baseline.
 
 ## Historical prototype artifacts and behavior

@@ -9,8 +9,8 @@ NVMe installation.** Actual SSH and KVM guest execution remain pending.
 The commands below record the existing pinned November 6 installer. That image
 still uses the old typed confirmations and mandatory readback. Updated source
 uses an exact-target yes/no prompt, one expanded-image pass during writing, and
-optional readback; those changes require a refreshed installer image. Do not
-assume changing these instructions updates the old image's behavior.
+optional readback; use the [refreshed installer guide](installer-refresh-20261107.md)
+for that image. The old image retains its old behavior.
 
 This installation is for the recorded **SPCC M.2 PCIe SSD**, serial
 **134807190FC700149277**, **256,060,514,304 bytes**, logical/physical sectors

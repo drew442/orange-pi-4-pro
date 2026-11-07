@@ -147,8 +147,8 @@ size/hash while downloading and publishes `encoded_verified=true` and
 `decoded_verified=false`. It performs no decompression or stored-file readback.
 Expanded size/hash and gzip CRC are checked during the writer's single write
 pass. Download and authentication progress appear on stderr. Older published
-installer images still perform the earlier full expansion; refresh the image
-to use this faster behavior. It retains the
+installer images still perform the earlier full expansion; the
+[refreshed installer](installer-refresh-20261107.md) includes the faster behavior. It retains the
 manifest's exact authenticated bytes. Receipt URLs omit query strings, which
 may contain credentials. Keep credentials out of URL paths as well.
 
