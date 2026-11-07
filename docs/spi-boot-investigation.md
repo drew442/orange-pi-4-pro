@@ -86,8 +86,9 @@ The current host script resets `boot_targets` to `mmc0`, uses implicit partition
 and loops on load failure; its candidate revision must carry the discovered
 partition explicitly and document manual recovery. The [separate component recipe](uboot-nvme-candidate.md) now implements this
 policy and a guarded NVMe host script without changing existing diagnostic
-producers. Independent source review and focused fixtures pass. Actual
-compilation is the next step; no firmware has been programmed. Its full budget
+producers. Independent source review and focused fixtures pass. [Actual compilation and independent artifact inspection](evidence/uboot-nvme-candidate-20261107.json)
+now pass, including the linked ARM EL2 call and complete packed payload bindings.
+No firmware has been programmed. Its full budget
 preserves the final >4 GB guard, with unchanged runtime floors.
 
 After installed management works, a serial-only **read test** can establish the

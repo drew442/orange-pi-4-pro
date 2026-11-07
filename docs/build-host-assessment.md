@@ -29,6 +29,16 @@ Package logs remain on the builder at `/tmp/orangepi-apt-update.log` and `/tmp/o
 
 ## Current cache capacity
 
+The latest [candidate build](evidence/uboot-nvme-candidate-20261107.json) used
+RAM for its temporary workspace and retained a verified full archive plus review
+artifacts on disk. It passes with a 4.05 GB host disk minimum and 6.08 GB memory
+minimum. Current disk free is about **4.05 GB**, below both production staging and
+another complete retained build's budget. No LVM growth occurred. Before this run,
+[three generated SD copies](evidence/candidate-sd-sparsification-20261107.json)
+were converted to sparse allocation, recovering 663,117,824 bytes while preserving
+their full hashes and logical sizes. Physical media and operator images on codex
+were untouched.
+
 Latest November 7 evidence: [completed kernel replay retention](kernel-run-retention.md)
 and a subsequent fresh userspace attempt leave about **6.84 GB** on the builder.
 That attempt failed the exact archive pin because account dates changed across

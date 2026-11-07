@@ -15,6 +15,14 @@ Raw records and the one-off scripts remain outside Git on the builder at
 
 ## Current off-builder retention
 
+[Three November 7 generated SD copies](evidence/candidate-sd-sparsification-20261107.json)
+now use sparse allocation, recovering 663,117,824 bytes. Full before/after hashes,
+fixed identities, per-thread/loop checks and independent review pass. Their paths,
+logical sizes, bytes, owners, modes and mtimes are unchanged; allocation and ctime
+change. The conversion concerns builder files, with no Orange Pi storage writes.
+The later RAM candidate build consumed part of the recovered space; recheck
+capacity and all existing guards before new staging.
+
 The [completed kernel replay retention](kernel-run-retention.md) now replaces
 the expanded `kernel-run-01` builder tree with fully verified archives on codex
 and the builder. Follow its exact restoration map before historical commands.

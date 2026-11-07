@@ -114,3 +114,33 @@ architecture/type, timestamp, CRCs, size table and exact source bytes. Host
 fixtures and source review precede an actual component build; build results are
 recorded separately. Neither component compilation nor script packaging proves
 SPI boot, recovery, KVM guest execution or zero routine SD writes.
+
+## Actual candidate build
+
+[The RAM build from `01372ec`](evidence/uboot-nvme-candidate-20261107.json)
+passes all compilation, packaging and retention checks. U-Boot is **1,192,546
+bytes**, its boot package **1,392,640 bytes**, and the separate unchanged SPI
+boot0 **237,568 bytes**. The independent review verifies the exact configuration
+derivative, fresh challenge, unchanged generator, linked ARM instructions calling
+SMC with `0x8000ff40`, executable bytes, packed firmware payloads and host script.
+All 72 artifact-manifest file hashes pass independent native readback.
+
+The complete RAM workspace is retained on the builder and codex as a
+**412,929,105-byte** archive with SHA-256
+`436e35cd9b6e16ccef0a991f88b8afb4a57c21bcd3e374c0946cd6c77635b49a`.
+Detailed copies, paths, hashes and restoration mapping are in the evidence. The
+original empty `work/` directory is unmounted; private source/compiler paths
+listed by the original component manifest require archive restoration before
+reuse. The review files remain directly available under `component-retained/`.
+
+Minimum host disk free and available RAM were **4.05 GB** and **6.08 GB**.
+Live postchecks show no mapped build processes or phase mounts; package inventory
+is unchanged. RAM mode still needs disk for the archive and review copies: this
+run retained approximately 706 MB. Current space is insufficient to repeat that
+retention while preserving the final >4 GB reserve. Do not rerun blindly or
+lower the guards; the separate production capacity proposal remains pending.
+
+This first candidate's generated challenge is now an authenticated retained
+input. Exact candidate reproduction still needs a separately registered replay
+using that same input. No flash image, SPI programming, NVMe file-read test,
+physical boot or KVM guest test is established by this software build.

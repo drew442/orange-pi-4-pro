@@ -1,0 +1,424 @@
+{
+  "schema": 1,
+  "date": "2026-11-07",
+  "classification": "Actual isolated NVMe-first U-Boot component build and independent software inspection; no flash image, programming or hardware acceptance",
+  "success": true,
+  "source_revision": "01372ec717c0d6e5266d6e50a659377aa9e7a16e",
+  "builder_project": "/var/lib/a733-spi-candidate-ram-project-20261107/project",
+  "builder_phase": "/var/lib/a733-clean-replay-20261106/uboot-nvme-component-ram-02",
+  "returncode": 0,
+  "component_result": {
+    "candidate": "a733-nvme-v1",
+    "component_build_success": true,
+    "deployment_authorized": false,
+    "hardware_acceptance": false,
+    "schema": 1
+  },
+  "bootcommand": "setenv boot_targets nvme; run distro_bootcmd",
+  "configuration_policy": "Exactly the authenticated retained configuration with one BOOTCOMMAND substitution. Unknown OTA symbol absent; no value assignment allowed.",
+  "compiled_el2": {
+    "elf32_arm_exec": true,
+    "bootm_object_matches_linked_function_except_relocations": true,
+    "service_literal": "0x8000ff40",
+    "service_ldr_address": "0x4a0015a0",
+    "blx_address": "0x4a0015a2",
+    "resolved_smc_callee": "0x4a000b58",
+    "callee_arm_smc_opcode": "0xe1600070",
+    "text_rodata_data_match_unpacked": true,
+    "packaged_executable_body_matches": true,
+    "vendor_pack_header_changed_bytes": 41
+  },
+  "challenge": {
+    "canonical_bytes": 128,
+    "different_from_authenticated_original": true,
+    "facts": {
+      "bytes": 930,
+      "sha256": "c5767cbc5eba6e525b0d1a36ea7783bb7c1f85178fe1e308bf5fba032964e86d"
+    },
+    "linked_data_matches": true,
+    "private_makefile_exact_pinned_vendor": true,
+    "generator": "unchanged /dev/urandom branch; no replay injection"
+  },
+  "components": {
+    "artifacts/uboot-unpacked.bin": {
+      "bytes": 1192546,
+      "sha256": "4171ad95268694e35e9a3c2ae827e4feaeeb75fb67e42bd058b1ff64122fe22f"
+    },
+    "artifacts/boot_package.fex": {
+      "bytes": 1392640,
+      "sha256": "bdfe070a2c358de9dd0061b39609f604c0c12e9c25140903505f88799cc343be"
+    },
+    "artifacts/boot0_spinor_a733.fex": {
+      "bytes": 237568,
+      "sha256": "7f0babc242c1e4614c7243bd2c45a980e4385727ffbb544a7c8f2d324cf8dc07"
+    },
+    "artifacts/uboot-sunxi-challenge.c": {
+      "bytes": 930,
+      "sha256": "c5767cbc5eba6e525b0d1a36ea7783bb7c1f85178fe1e308bf5fba032964e86d"
+    },
+    "artifacts/uboot.config": {
+      "bytes": 35703,
+      "sha256": "0b8837e27ec4edf9e2b28d48d38fffbf43ee4f1f9add2779f3d42cd5ffaf2f97"
+    },
+    "artifacts/uboot.elf": {
+      "bytes": 8150616,
+      "sha256": "68392a54090cbfad6a825d8c69149061cc73c20cc1ec54ecd7761f8c1ce7a6df"
+    },
+    "artifacts/bootm.c": {
+      "bytes": 14189,
+      "sha256": "f4fd89a93c1c779e9a4abbce431452788db52c1206841f4d627b1440fec773f7"
+    },
+    "artifacts/bootm.o": {
+      "bytes": 43752,
+      "sha256": "8488f62f446a4107bb12e4c1738a7c309806e3cb715a53fd6de10e92d3119572"
+    },
+    "artifacts/bootm.disassembly": {
+      "bytes": 10224,
+      "sha256": "6c4770eb4f24d1fec2a8912b83d8c2463a499143d36221d7937ad54a04222c2b"
+    }
+  },
+  "host_script": {
+    "crc_verified": true,
+    "epoch": 1793750400,
+    "script": {
+      "bytes": 1387,
+      "sha256": "d82fd8c465f12aa539146ee0843e1badb3eb983f243dc241c04c63b0db56c938"
+    },
+    "source": {
+      "bytes": 1315,
+      "sha256": "c9f0db913fb49bbc5c54c5287049b8c56aaf17406fcdccf1b9fe0847ccce6c26"
+    }
+  },
+  "source_manifest": {
+    "files": {
+      "build/launch-uboot-nvme-candidate.py": {
+        "bytes": 25163,
+        "git_blob": "b0d0ebaae00151e5d634992f08acec629a4cb81e",
+        "sha256": "b69558df7a1f557d76af810fb26d33ab8fee07a9b46475d31d11c69ebc3bef66"
+      },
+      "build/launch-userspace-configuration.py": {
+        "bytes": 25631,
+        "git_blob": "5f56acbe086e1bedafc539b75d4024b39cb5761a",
+        "sha256": "08a8bb767987f2a9496ee92d03260fdb5b61bd1f486b9ab00fd04f7ad4633598"
+      },
+      "build/patches/uboot-a733-el2-handoff.patch": {
+        "bytes": 1031,
+        "git_blob": "6242ff631f220c1cbb7866983b583118528a7afb",
+        "sha256": "be261e0fb43845bbc999a5d3a7f22147eac9c93154a951b04cb2f9573aa8d1bf"
+      },
+      "build/patches/uboot-env-nowhere-size.patch": {
+        "bytes": 266,
+        "git_blob": "2350ca51a08583be49dd5007497e9aeee423ad6f",
+        "sha256": "29617f37e189d5c2a9181793a4ef3c0a85fc84693e9b414e1f5b4ab6e3daaaba"
+      },
+      "build/uboot-nvme-candidate.py": {
+        "bytes": 24759,
+        "git_blob": "d187fe32f0047c89fa71471b4962fa68123bb11d",
+        "sha256": "81715e7b6bbb706fccf7aa8f0c59a0572bdc89adc94c4dd42f7452c772cf7a21"
+      },
+      "build/uboot-replay.py": {
+        "bytes": 27413,
+        "git_blob": "e94d80e60ede35318edde6a2bf49f9e74da60739",
+        "sha256": "3558c6b75d0fdfa731eaff925b101a136b288953364996f72b8a6bcd3fcb1cfd"
+      },
+      "configs/builder-packages.lock.tsv": {
+        "bytes": 32519,
+        "git_blob": "419f4b0fa9a6fa384cadf08bea5d366524e05bec",
+        "sha256": "35c2faf42a936168098b1f54239825a3c42fc56c825fc0b2078bbd753425f48b"
+      },
+      "configs/builder-replay-packages-20261106.lock.tsv": {
+        "bytes": 32546,
+        "git_blob": "17518b78511b6fa86474aa62a2a575b53895c549",
+        "sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425"
+      },
+      "configs/diagnostic-sources.lock.json": {
+        "bytes": 2273,
+        "git_blob": "738fbd674fe6aaadeff9c61790c04d9f366c2a27",
+        "sha256": "aa39f5fca29244ca961fc3f422d7110adca6975d2c6a29f80afd9d1d2f4b4821"
+      },
+      "configs/spi-nvme-host-boot.cmd": {
+        "bytes": 1315,
+        "git_blob": "aaec58e07fa0db4a31a4ed574ba26e83ce674c7e",
+        "sha256": "c9f0db913fb49bbc5c54c5287049b8c56aaf17406fcdccf1b9fe0847ccce6c26"
+      },
+      "configs/uboot-nvme-candidate-v1.json": {
+        "bytes": 724,
+        "git_blob": "dd3b10dc6b14782dfced8767c51e67fd190c16ca",
+        "sha256": "86cc254a4d628befd242bdb2999f3fb2b322625154e8ea02b76c3f712e19cdf5"
+      },
+      "configs/vendor-boot-inputs.sha256": {
+        "bytes": 3149,
+        "git_blob": "1bb61c034641b7ba7615b534284cd54405e33f83",
+        "sha256": "c516276f8f7896975f7e1adb272e37b45edc8e5280de5612b85a9da302a9b768"
+      },
+      "docs/evidence/el2-diagnostic-20261104.json": {
+        "bytes": 6582,
+        "git_blob": "0583eab2c5ff1c54748f461ccd33fb58624985c3",
+        "sha256": "9c30d5d873fa8ad154b8068cdebfc7f40f6487ce6a79f76a52da4dd44ba1b5f8"
+      }
+    },
+    "revision": "01372ec717c0d6e5266d6e50a659377aa9e7a16e"
+  },
+  "all_manifest_file_hashes_verified_native": 72,
+  "independent_artifact_review": {
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "result": true,
+    "configuration": {
+      "exact_single_bootcommand_change": true,
+      "facts": {
+        "bytes": 35703,
+        "sha256": "0b8837e27ec4edf9e2b28d48d38fffbf43ee4f1f9add2779f3d42cd5ffaf2f97"
+      },
+      "immutable_safeguards_checked": [
+        "CONFIG_ENV_IS_NOWHERE=y",
+        "# CONFIG_CMD_SAVEENV is not set",
+        "CONFIG_BOOTCMD_SKIP_MISC=y",
+        "# CONFIG_SUNXI_SWITCH_SYSTEM is not set",
+        "# CONFIG_BOOTCOUNT_LIMIT is not set"
+      ],
+      "ota_symbol": "absent; no value assignment"
+    },
+    "packed_components": {
+      "unpacked": {
+        "bytes": 1192546,
+        "sha256": "4171ad95268694e35e9a3c2ae827e4feaeeb75fb67e42bd058b1ff64122fe22f"
+      },
+      "boot_package": {
+        "bytes": 1392640,
+        "sha256": "bdfe070a2c358de9dd0061b39609f604c0c12e9c25140903505f88799cc343be"
+      },
+      "toc1_entries": {
+        "u-boot": {
+          "offset": 2048,
+          "bytes": 1196032,
+          "sha256": "2d366b88faa70de4c1b5a4f85d697e9ead30b999cf1889dbdf2215e3a3a3a8c9"
+        },
+        "monitor": {
+          "offset": 1198080,
+          "bytes": 78609,
+          "sha256": "8af16b86ae8e2eff634a3ebca76a8cdf3c10b3540387573d46c3d785545b2632"
+        },
+        "scp": {
+          "offset": 1276928,
+          "bytes": 105912,
+          "sha256": "07e6b97628101963e7944e012948c4bdf721f914bad347acd7dfbde89db42749"
+        }
+      },
+      "opaque_monitor_scp_match_vendor_pins": true,
+      "separate_spi_boot0": {
+        "bytes": 237568,
+        "sha256": "7f0babc242c1e4614c7243bd2c45a980e4385727ffbb544a7c8f2d324cf8dc07"
+      }
+    },
+    "retention": {
+      "whole_archive": {
+        "bytes": 412929105,
+        "sha256": "436e35cd9b6e16ccef0a991f88b8afb4a57c21bcd3e374c0946cd6c77635b49a"
+      },
+      "archive_members_scanned": 27105,
+      "critical_archive_bindings_checked": 18,
+      "critical_manifest_files_checked": 12,
+      "complete_tar_compare": "Recorded successful builder tar comparison; not rerun against now-unmounted RAM",
+      "host_inventory_unchanged": "Reported by terminal launcher receipt; no live builder reinspection",
+      "no_mapped_processes_or_phase_mounts": "Reported by terminal launcher receipt; no live builder reinspection",
+      "minimum_recorded_disk_bytes": 4052271104,
+      "minimum_recorded_memavailable_bytes": 6081662976,
+      "final_recorded_root_free_bytes": 4052271104
+    }
+  },
+  "resources": {
+    "compilation_jobs": 2,
+    "work_mode": "RAM",
+    "tmpfs_limit_bytes": 8589934592,
+    "initial_available_memory_minimum_bytes": 4294967296,
+    "minimum_host_disk_bytes": 4052291584,
+    "minimum_available_memory_bytes": 6081662976,
+    "component_budget": {
+      "schema": 1,
+      "parts": {
+        "source_archive_upper_bytes": 165854248,
+        "source_expansion_allocation_bytes": 310366208,
+        "compiler_archive_copy_bytes": 109519380,
+        "compiler_expansion_allocation_bytes": 673882112,
+        "objects_and_compiler_outputs_allowance_bytes": 268435456,
+        "private_pack_and_outputs_allowance_bytes": 70851126,
+        "logs_and_provenance_allowance_bytes": 67108864
+      },
+      "source_members": 14806,
+      "compiler_members": 7491,
+      "estimated_construction_bytes": 1666017394,
+      "required_free_bytes": 5666017395,
+      "final_validation_disk_reserve_bytes": 4000000001,
+      "runtime_disk_floor_bytes": 3000000000,
+      "runtime_ram_floor_bytes": 1000000000,
+      "scope": "One component construction; outer source staging is additional. Fixed allowances are estimates guarded by live sampling."
+    },
+    "lvm_resized": false,
+    "existing_capacity_guards_lowered": false
+  },
+  "retention": {
+    "archive": "/var/lib/a733-clean-replay-20261106/uboot-nvme-component-ram-02/work.tar.gz",
+    "bytes": 412929105,
+    "full_tar_compare_verified": true,
+    "review_files": "/var/lib/a733-clean-replay-20261106/uboot-nvme-component-ram-02/component-retained",
+    "sha256": "436e35cd9b6e16ccef0a991f88b8afb4a57c21bcd3e374c0946cd6c77635b49a"
+  },
+  "archive_native_copy": {
+    "path": "out/spi-candidate-ram-02-20261107/work.tar.gz",
+    "bytes": 412929105,
+    "sha256": "436e35cd9b6e16ccef0a991f88b8afb4a57c21bcd3e374c0946cd6c77635b49a",
+    "verified_against_builder": true
+  },
+  "postconditions": {
+    "host_inventory_unchanged": true,
+    "mapped_processes_final": [],
+    "phase_mounts_final": [],
+    "mounted_work_path": null,
+    "live": {
+      "mapped_processes": [],
+      "phase_mounts": [],
+      "work_directory_empty": true,
+      "free_bytes": 4052230144,
+      "available_memory_bytes": 7452307456
+    }
+  },
+  "validation": {
+    "new_candidate_launcher_script_cases": 37,
+    "historical_replay_cases": 22,
+    "shell_suites_passed": 5,
+    "assembly_cases_passed": 4,
+    "latest_native_discovery": {
+      "cases": 1436,
+      "skips": 113,
+      "failures": 1,
+      "errors": 4,
+      "limit": "Five existing EL2/kernel/vDSO disk-capacity checks exceed native free space; no full-suite green claim."
+    },
+    "parse_checks": "Python3.10 AST, project TOML, policy/evidence JSON and Bash script syntax pass"
+  },
+  "raw_root": "out/spi-candidate-ram-02-20261107",
+  "raw_pins": {
+    "receipt.json": {
+      "bytes": 16974,
+      "sha256": "b6d5ab91f9be0c77376606ebc480fb758ed3f90dfb5415674fe16711538d62a2"
+    },
+    "retained-awaiting-unmount.json": {
+      "bytes": 16855,
+      "sha256": "b7f5ad9aadfe2579c9ffa1fe281f150c22f586c918591dd5f82b935ed4f830a4"
+    },
+    "source-manifest.json": {
+      "bytes": 2555,
+      "sha256": "8ec0bef5c9634cc6d529546baad81f2c1353063b32de6471f47fb30cc5147e9a"
+    },
+    "runtime.log": {
+      "bytes": 3569,
+      "sha256": "bb6121f5f48b2dd533d31f858fcb1dfdea7193412e1f34f9955e476c8acb94dc"
+    },
+    "retention-archive.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "retention-compare.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "retention-sha256.log": {
+      "bytes": 142,
+      "sha256": "e22a2574f29249825dcf6d3b9cac15c49e8d7b80960282fba25cd053edf5ea6d"
+    },
+    "inputs/manifest.json": {
+      "bytes": 2555,
+      "sha256": "8ec0bef5c9634cc6d529546baad81f2c1353063b32de6471f47fb30cc5147e9a"
+    },
+    "inputs/run.py": {
+      "bytes": 1581,
+      "sha256": "37a5dabdec879b88e2d9fdb3674925cc046eff4d4cb376221df5507af7f7db3c"
+    },
+    "component-retained/candidate-manifest.json": {
+      "bytes": 11439,
+      "sha256": "5d04b63f4db1faa75a3e64275dbcbaca4d7ba4bb8c5f085ec7edf3baf356fb4f"
+    },
+    "component-retained/artifacts/candidate-result.json": {
+      "bytes": 150,
+      "sha256": "d68c418e552f3938f42aba9830a293b918afd55c7d0ed245096b9e290b1fce65"
+    },
+    "component-retained/artifacts/capacity-budget.json": {
+      "bytes": 815,
+      "sha256": "6c191c68a154aa38a063a655a8c91c32bca815a120b73563cc3c1cd6ac6c1052"
+    },
+    "component-retained/artifacts/source-provenance.json": {
+      "bytes": 5366,
+      "sha256": "dbc20264a7a69c825c2ee5bc1555f3efb3c27c15d5c3d231892a9c54dbaeb98e"
+    },
+    "independent-review.json": {
+      "bytes": 4327,
+      "sha256": "61c252fb5e1945b20245b27b6c5cb4cabb287fd4d482df0bae6f3fece2aa973c"
+    },
+    "live-postcheck.json": {
+      "bytes": 151,
+      "sha256": "9fb1a6c4c4fe8808df5d27849ea51b8a33a2c63b344f2566abbf2915401efe30"
+    }
+  },
+  "validation_raw_pins": {
+    "ram-source-bundle.sha256": {
+      "bytes": 105,
+      "sha256": "582bd48f553fa413d580fa508463c5a2abd1cde211551b008beb1ed4bda81f61"
+    },
+    "ram-source-clone.log": {
+      "bytes": 146,
+      "sha256": "7be3471f6f6f9b605198d513d975ca04eb3e19da6924d46322982580ba92058a"
+    },
+    "ram-plan.json": {
+      "bytes": 3465,
+      "sha256": "cb60c130592c0bb09347b4c35896083d87b12113c01cef60d9e8128587d4bc49"
+    },
+    "ram-execution.log": {
+      "bytes": 94,
+      "sha256": "c48c2a1b4d7ebf82db33da0e2982728e760fb1b2c00c3e5be070a33649c48473"
+    },
+    "component-corrected-tests.log": {
+      "bytes": 116,
+      "sha256": "bb0fe7e4dc451b07f0b65b7b0530730f86c879c3b12c911081ed739e517c8ea7"
+    },
+    "launcher-corrected-tests.log": {
+      "bytes": 114,
+      "sha256": "d6d34298a3fe7d80f2420d65dcc94a8f78cecfcb1bc70c5d2a766ab228848a98"
+    },
+    "script-tests.log": {
+      "bytes": 103,
+      "sha256": "c1dffb70dba98c39f6d3160dd8d69611f73e43edb30cec9880171bd2fc48adf8"
+    },
+    "discovery.log": {
+      "bytes": 8588,
+      "sha256": "2f71d344f083e0b05e93bc5a8e2c1d5495d2f9fdb195f177d0bfd8fbfeed14bd"
+    },
+    "shell-suites.log": {
+      "bytes": 658,
+      "sha256": "c560df3cadf27d00063d73e088ae5c7db9227d98055b4e048605e617d2c42d4a"
+    },
+    "assembly-tests.log": {
+      "bytes": 592,
+      "sha256": "838ed30f52959951d2676c025eb004ae009e015029091b5e84bea698fece1ac6"
+    }
+  },
+  "remaining": [
+    "Register this unique candidate challenge and prove exact independent component replay.",
+    "Obtain physical SPI backup and off-device verification; demonstrate recovery and U-Boot NVMe file reads.",
+    "Inspect reviewed boot-partition whitelist/GPT flags and prepare a backup-preserving SPI image/write plan.",
+    "Exact physical target plus yes/no before any SPI programming.",
+    "Physical SD-removed SPI cold/warm boots, actual KVM guest, endurance, zero SD writes, rollback/recovery/backup restore.",
+    "Production image reconstruction and independent deployment remain open."
+  ],
+  "deployment_authorized": false,
+  "hardware_acceptance": false,
+  "restoration": {
+    "archive_member_root": ". corresponds to original builder_phase/work",
+    "component_relative_root": "project/out/uboot-nvme-candidate-01",
+    "direct_review_copy_relative_to_phase": "component-retained",
+    "requirements": "Authenticate complete archive size/hash; use a fresh empty physical destination and adequate full-construction space plus existing guards. Extract numeric owners/modes/ns mtimes/links/ACLs/xattrs with GNU tar; compare archive against restored tree before historical-path use. Never overlay a live/newer build.",
+    "original_work_directory_empty_unmounted": true,
+    "actual_full_restore_tested": false,
+    "fixtures_and_live_tar_compare_only": true
+  }
+}

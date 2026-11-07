@@ -66,8 +66,10 @@ remain unchanged. **Do not repeat NVMe installation to fix management.**
   reviewed candidate remain required; no SPI write has occurred. The
   [read-only backup tool](spi-backup.md) passes 27 safety cases and independent
   review; its original-flash backup/off-device retention are not yet performed.
-  Pinned U-Boot supports target `nvme`; a distinct candidate policy and provenance
-  are specified in the investigation, not built or programmed.
+  The [NVMe-first component candidate](evidence/uboot-nvme-candidate-20261107.json)
+  now compiles in the frozen builder. Independent linked-code/package/script
+  inspection passes, including EL2 service `0x8000ff40` and unchanged firmware
+  blobs. No SPI image has been assembled or programmed; physical boot is untested.
 
 ## Implemented and verified in software
 
@@ -112,10 +114,11 @@ remain unchanged. **Do not repeat NVMe installation to fix management.**
   require management ABI v2; updated tools retain v1 rollback support. Production
   4 GiB roots/8 GiB state/NVMe reconstruction remains open. Earlier complete native discovery:
   **1,353 cases, 100 environment skips**,
-  four assembly cases and all five shell suites. Latest discovery has 1,399 cases,
+  four assembly cases and all five shell suites. Latest discovery has 1,436 cases,
   113 skips and five existing disk-capacity failures/errors; affected modules
   pass 47 cases with temporary fixture space. All 46 account-date cases pass
-  under root. See [validation limits](evidence/account-date-time-execution-20261107.json). These checks establish no
+  under root; 37 new candidate/script/launcher cases and 22 historical U-Boot
+  cases also pass. See [validation limits](evidence/uboot-nvme-candidate-20261107.json). These checks establish no
   physical acceptance or independently reproduced deployment.
 
 ## Next actions and blockers
@@ -136,11 +139,17 @@ remain unchanged. **Do not repeat NVMe installation to fix management.**
    tests under root pass. Reconstruct production roots/state/NVMe next; software
    reproduction does not establish physical deployment acceptance.
    [Kernel replay retention](kernel-run-retention.md) preserves the expanded tree
-   as verified archives on two hosts. Builder free space is now **5.25 GB**;
+   as verified archives on two hosts. [Byte-preserving conversion](evidence/candidate-sd-sparsification-20261107.json)
+   recovered 663 MB from three generated image copies. The compiled candidate
+   and its full RAM-work archive now leave **4.05 GB** free on the builder;
    production's 22 GiB staging guard remains unmet. The reviewed
    [20 GiB builder LVM growth](build-host-capacity-plan.md) awaits approval;
-   no resize occurred. Continue SPI candidate source/build preparation while
-   capacity and physical repair results await input; do not program SPI.
+   no resize occurred. The [candidate build](uboot-nvme-candidate.md) and
+   independent inspection pass; register its unique challenge for exact replay
+   and prepare the remaining read-only hardware handoff. Current space is
+   insufficient for another fully retained build with its final >4 GB reserve.
+   Keep the existing installation repair as the next operator action; do not
+   program SPI or repeat NVMe installation.
    [Firmware license evidence](evidence/vendor-boot-license-inventory-20261106.json)
    remains incomplete; all 479 userspace source archives are acquired, not compiled.
 4. Prove installed automatic time/state transitions and physical reliability:
