@@ -7,6 +7,9 @@ records a **256 MiB** immutable SD bootstrap bound to the new
 this image has not booted on the board. Published deployment images remain
 unchanged. The matching [full NVMe composition](production-nvme-composition.md)
 now passes software inspection; clean reconstruction repeats remain required.
+The [second matching bootstrap](production-host-bootstrap-repeat.md) now passes
+frozen construction and independent artifact review for the second state UUID
+`feaa…`; its full NVMe repeat is still pending.
 
 **Do not flash this component over the current host SD.** Its state UUID is
 `fc8bbef6-9385-4ddb-90ba-e41eaccc035b`; the installed NVMe state UUID is

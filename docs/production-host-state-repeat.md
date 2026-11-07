@@ -11,7 +11,7 @@ The new state UUID is `feaaee34-d782-4c18-bd04-1029540ab26a`. Its machine-id is
 newly generated; SSH host-key storage is empty. Never clone this identity to a
 second installation. Both authorized administration keys and the existing
 management configuration are preserved. The root-owned machine-id is `0644`;
-private keys/configuration paths retain their original restrictive modes. Clock
+authorized-key and configuration files retain restrictive `0600` modes. Clock
 storage is empty, owned by 996:996 with mode `0755`.
 
 ## Executed construction and readback

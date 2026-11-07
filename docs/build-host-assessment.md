@@ -47,6 +47,12 @@ Subsequent [encoded raw-candidate retention](nvme-raw-retention.md) recovers
 staging consumes that headroom. The original raw path now requires restoration.
 The [second state construction](production-host-state-repeat.md) completes with
 **24,086,933,504 bytes free**; recheck before its matching bootstrap and composition.
+The [second bootstrap](production-host-bootstrap-repeat.md) then completes with
+**23,760,064,512 bytes free**. Full NVMe admission still adds fresh project/capsule
+staging to its 22 GiB recipe guard; do not assume the small remaining margin fits.
+Codex retains this raw/gzip bootstrap sparsely and has **306,089,984 bytes free**
+after transfer. Another full candidate copy requires native capacity preparation
+above the unchanged 256 MiB floor.
 
 The [operator-approved 20 GiB root-LV growth](evidence/build-host-capacity-execution-20261107.json)
 now completes successfully, including online ext4 enlargement. The LV is
