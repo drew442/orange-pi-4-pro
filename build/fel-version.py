@@ -44,10 +44,25 @@ def digest(data):
     return hashlib.sha256(data).hexdigest()
 
 
-def run(args, cwd=None, binary=False):
-    result = subprocess.run([str(arg) for arg in args], cwd=cwd, env=ENV,
-                            check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+def run(args, cwd=None, binary=False, diagnostics=None):
+    try:
+        result = subprocess.run([str(arg) for arg in args], cwd=cwd, env=ENV,
+                                check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    except subprocess.CalledProcessError as error:
+        if diagnostics is not None:
+            diagnostics.write_bytes(b'stdout:\n' + (error.stdout or b'') + b'\nstderr:\n' + (error.stderr or b''))
+        raise
+    if diagnostics is not None:
+        diagnostics.write_bytes(b'stdout:\n' + result.stdout + b'\nstderr:\n' + result.stderr)
     return result.stdout if binary else result.stdout.decode()
+
+
+def compiler_command(output, retained, usb_flags):
+    return ['/usr/bin/gcc-11', *CFLAGS, '-ffile-prefix-map=' + str(output) + '=/fel-version',
+            '-I' + str(retained), '-I' + str(retained / 'include'),
+            str(output / 'fel-version.c'),
+            *(str(retained / name) for name in ('fel_lib.c', 'soc_info.c', 'progress.c')),
+            *usb_flags, '-o', str(output / 'fel-version')]
 
 
 def check_source(source):
@@ -141,11 +156,8 @@ def build(source, output):
     usb_flags = run(['/usr/bin/pkg-config', '--cflags', '--libs', 'libusb-1.0']).split()
     require(all(flag.startswith(('-I/usr/include/', '-L/usr/lib/', '-lusb-1.0')) for flag in usb_flags),
             'unexpected pkg-config flags')
-    command = ['/usr/bin/gcc-11', *CFLAGS, '-ffile-prefix-map=' + str(output) + '=/fel-version',
-               '-I' + str(retained),
-               str(output / 'fel-version.c'), *(str(retained / name) for name in ('fel_lib.c', 'soc_info.c', 'progress.c')),
-               *usb_flags, '-o', str(output / 'fel-version')]
-    run(command)
+    command = compiler_command(output, retained, usb_flags)
+    run(command, diagnostics=output / 'compiler.log')
     symbols, dynamic, needed = check_symbols(output / 'fel-version')
     (output / 'nm.txt').write_text(symbols)
     (output / 'readelf-dynamic.txt').write_text(dynamic)

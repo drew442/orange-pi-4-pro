@@ -193,6 +193,22 @@ class RecipeGuardTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'runtime'):
                 recipe.check_symbols(Path('fake'))
 
+    def test_compiler_uses_both_upstream_header_directories(self):
+        output = self.root / 'out/fel-version-fixture'
+        source = output / 'source'
+        command = recipe.compiler_command(output, source, ['-I/usr/include/libusb-1.0', '-lusb-1.0'])
+        self.assertIn('-I' + str(source), command)
+        self.assertIn('-I' + str(source / 'include'), command)
+        self.assertNotIn(str(source / 'fel.c'), command)
+
+    def test_failed_compiler_diagnostics_are_retained(self):
+        log = self.root / 'compiler.log'
+        error = subprocess.CalledProcessError(1, ['compiler'], output=b'', stderr=b'missing header')
+        with mock.patch.object(recipe.subprocess, 'run', side_effect=error):
+            with self.assertRaises(subprocess.CalledProcessError):
+                recipe.run(['compiler'], diagnostics=log)
+        self.assertIn(b'missing header', log.read_bytes())
+
     def test_wrong_builder_package_refused(self):
         def fake_run(args, **kwargs):
             if '--print-architecture' in args:

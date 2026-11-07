@@ -13,6 +13,7 @@ import types
 SELF = 'build/launch-fel-version.py'
 ROOTS = 'build/launch-host-roots.py'
 VERIFIER = 'build/verify-host-roots.py'
+STATE = 'build/launch-host-state.py'
 COMMIT = '34dfa20f8284273085666436e4cac09af19646c8'
 TREE = '9394e0d05f62c99645cbd6ebd5189d81d5635e97'
 BUNDLE = {'bytes': 763416, 'sha256': 'b1692eb0752c8e930fadd715d783ff40ef5ef4003f2497c1a3e9efc44ccedb3d'}
@@ -47,6 +48,12 @@ assert r.COMMIT==@COMMIT@
 r.build(u,p/OUTPUT)
 '''.replace('@COMMIT@', repr(COMMIT)).replace('@TREE@', repr(TREE))
         .replace('OUTPUT', repr('out/fel-version-' + tag))).encode()
+
+
+def input_held_class(roots, project, contents):
+    verifier = roots.module(str(project / VERIFIER), contents[VERIFIER])
+    state = roots.module(str(project / STATE), contents[STATE])
+    return state.held_class(verifier)
 
 
 def verify_output(roots, candidate, output, contents):
@@ -107,11 +114,11 @@ def main(argv=None):
               'work_mode': 'disk', 'timeout_seconds': roots.TIMEOUT}
     if options.plan:
         print(json.dumps(report, sort_keys=True)); return
-    verifier = roots.module(str(options.project / VERIFIER), contents[VERIFIER])
+    Held = input_held_class(roots, options.project, contents)
     shared = roots.module(roots.SHARED, contents[roots.SHARED])
     candidate = roots.module(roots.CANDIDATE, contents[roots.CANDIDATE])
     with contextlib.ExitStack() as stack:
-        upstream = stack.enter_context(verifier.Held(options.upstream_bundle, BUNDLE))
+        upstream = stack.enter_context(Held(options.upstream_bundle, BUNDLE))
         objects = sum(int(row.split()[2]) for row in roots.git(options.project, 'cat-file', '--batch-all-objects',
                       '--batch-check=%(objectname) %(objecttype) %(objectsize)').decode().splitlines())
         require(objects <= 512 * 1024**2, 'Git staging bound exceeded')
@@ -139,7 +146,7 @@ def main(argv=None):
             for path in inputs.iterdir(): os.chown(path, 0, 0); os.chmod(path, 0o444)
             os.chmod(inputs, 0o555)
             for path in c.regular_tree_files(inputs):
-                capsule[str(path.relative_to(inputs))] = stack.enter_context(verifier.Held(path))
+                capsule[str(path.relative_to(inputs))] = stack.enter_context(Held(path))
             final_check()
             return c.authenticated_file(inputs / 'project.bundle')[0]
         output = phase / 'work/project/out' / ('fel-version-' + options.tag)

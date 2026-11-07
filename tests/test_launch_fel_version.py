@@ -31,6 +31,34 @@ class LauncherTests(unittest.TestCase):
         self.assertNotIn('--dev', source)
         self.assertNotIn('usb_access', source)
 
+    def test_input_guard_allows_siblings_but_refuses_leaf_or_parent_replacement(self):
+        from unittest.mock import Mock
+        import tempfile
+        import os
+        import types
+        def module(name, data):
+            value = types.ModuleType(name); value.__file__ = name
+            exec(compile(data, name, 'exec'), value.__dict__)
+            return value
+        contents = {name: (ROOT / name).read_bytes() for name in (M.VERIFIER, M.STATE)}
+        Held = M.input_held_class(SimpleNamespace(module=module), ROOT, contents)
+        with tempfile.TemporaryDirectory() as tmp:
+            parent = Path(tmp) / 'inputs'; parent.mkdir()
+            leaf = parent / 'bundle'; leaf.write_bytes(b'original')
+            held = Held(leaf)
+            try:
+                (parent / 'receipt.json').write_bytes(b'sibling')
+                held.unchanged()
+                before = leaf.stat(); leaf.write_bytes(b'mutated!')
+                os.utime(leaf, ns=(before.st_atime_ns, before.st_mtime_ns + 1000000000))
+                with self.assertRaises(ValueError): held.unchanged()
+            finally: held.close()
+            held = Held(leaf)
+            try:
+                parent.rename(parent.with_name('old-inputs')); parent.mkdir()
+                with self.assertRaises(ValueError): held.unchanged()
+            finally: held.close()
+
     def test_existing_execute_accepts_prefix_without_changing_lifecycle(self):
         spec = importlib.util.spec_from_file_location('fel_roots', ROOT / M.ROOTS)
         roots = importlib.util.module_from_spec(spec); spec.loader.exec_module(roots)
