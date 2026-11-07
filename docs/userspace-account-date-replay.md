@@ -27,7 +27,8 @@ Jammy/Python 3.10, and independent Sol/high review found no blocking issue.
 full-suite capacity limits, affected-module reruns and successful shell/assembly
 checks. Both historical archive account sets
 and the fixed time account identity were separately inspected. **The helper is
-not yet integrated into a build producer; no corrected fresh archive is claimed.**
+wired into a [separate replay driver](account-date-replay-driver.md); no corrected
+fresh archive is claimed until actual execution and complete comparison pass.**
 
 A global `SOURCE_DATE_EPOCH` is unsuitable for preserving these historical
 bytes: pinned Python 3.11 `py_compile` selects hash-based bytecode when that

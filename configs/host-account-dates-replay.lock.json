@@ -1,0 +1,97 @@
+{
+  "schema": 1,
+  "components": {
+    "build/export-host-userspace.py": {
+      "bytes": 28217,
+      "sha256": "1cd49563c43fe7ddd78d309ef2d9fe48b2ad1d1d29ee6d7050374db12be118ed"
+    },
+    "build/export-timesync-userspace.py": {
+      "bytes": 11762,
+      "sha256": "8bddb7a0500b160c1772c30dbac0ca0ab7cac6e3f1e6de8464b743513d65716a"
+    },
+    "build/account-dates.py": {
+      "bytes": 9114,
+      "sha256": "a9bad51aeeb113dc66d1050550e0ec5eceb6e3cb7ec8c4c524934b5915165114"
+    },
+    "configs/host-userspace-profiles.lock.json": {
+      "bytes": 7337,
+      "sha256": "5e5317a5bf1449125f1fb4b10a767b39162f27b0f729411337900ba0b7c3b380"
+    },
+    "configs/host-timesync-inputs.lock.json": {
+      "bytes": 3837,
+      "sha256": "b183b9df1c19241420c6939c4487dcf4894ae60daa3827d73589a6e112918a5f"
+    }
+  },
+  "policy": {
+    "baseline_day": "20763",
+    "time_day": "20764",
+    "base_names": [
+      "root",
+      "daemon",
+      "bin",
+      "sys",
+      "sync",
+      "games",
+      "man",
+      "lp",
+      "mail",
+      "news",
+      "uucp",
+      "proxy",
+      "www-data",
+      "backup",
+      "list",
+      "irc",
+      "_apt",
+      "nobody",
+      "systemd-network",
+      "uuidd",
+      "messagebus",
+      "systemd-resolve",
+      "sshd"
+    ],
+    "time_passwd": "systemd-timesync:x:996:996:systemd Time Synchronization:/:/usr/sbin/nologin"
+  },
+  "profiles": {
+    "baseline": {
+      "archive": {
+        "bytes": 138025729,
+        "sha256": "98d6a57bbb70ff55bef32b6bd051ebfcb6bc0fad4f6c8b3167e8619b5a9d961e"
+      },
+      "raw_tar": {
+        "bytes": 468398080,
+        "sha256": "a3b1ccfb69c24844d50cf60fb4c4286eb366dc6ba8da0f77ff672c8202b6e730"
+      },
+      "members": 15876,
+      "inventory": {
+        "packages": 220,
+        "lock_sha256": "f2abf03d0d6e7fd506560689093220514cbf1acc678f7560562026d6ca6564a6"
+      },
+      "epoch": 1790812800,
+      "bom": {
+        "bytes": 4337400,
+        "sha256": "1c415ad29e297260b89f199c48c0185e8c9987be5c336fd553cff5e5c38aaa72"
+      }
+    },
+    "time": {
+      "archive": {
+        "bytes": 138093095,
+        "sha256": "0ead62c982344bfa3a796027e2f07ce0d8402e7033122707e01a9a3f8860f248"
+      },
+      "raw_tar": {
+        "bytes": 468592640,
+        "sha256": "7559c4c1247e3598d3d879b4e2d0cb385a0216d60aabefa5519391a47386c86e"
+      },
+      "members": 15909,
+      "inventory": {
+        "packages": 221,
+        "lock_sha256": "2e97a93bfa02ebd89b7d437df1c9c946a5e14f76b40823d54a3f1a59ab3d0d43"
+      },
+      "epoch": 1790812800,
+      "bom": {
+        "bytes": 4346433,
+        "sha256": "dd5064e28d8b2751ce7285b83b649e94121dd04b6d70e0650ac2439bd32d79d7"
+      }
+    }
+  }
+}

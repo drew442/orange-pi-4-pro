@@ -128,8 +128,10 @@ remain unchanged. **Do not repeat NVMe installation to fix management.**
    repeat completed all three child phases but **failed** its outer archive pin:
    [45 account dates across two files](userspace-account-date-replay.md) changed
    across days; the other 15,874 entries match. A closed build-only helper passes
-   17 focused tests and independent review; it is not integrated yet. Add a
-   truthful replay adapter/contract, reproduce unchanged baseline/time pins, then
+   17 focused tests and independent review. A separately authenticated
+   [replay driver](account-date-replay-driver.md) now integrates it; eight driver
+   and ten adapter tests plus independent review pass. Actual fresh baseline/time
+   reproduction is pending; reproduce the unchanged pins, then
    reconstruct production roots/state/NVMe. Do not reuse the failed base receipt.
    [Completed kernel replay retention](kernel-run-retention.md) preserves the
    removed expanded tree as verified archives on two hosts. After the fresh base
