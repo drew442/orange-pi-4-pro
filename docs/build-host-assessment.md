@@ -45,6 +45,8 @@ Subsequent [encoded raw-candidate retention](nvme-raw-retention.md) recovers
 975,032,320 bytes while preserving exact gzip copies on both hosts. It leaves
 24,332,972,032 bytes free before the second state construction; subsequent
 staging consumes that headroom. The original raw path now requires restoration.
+The [second state construction](production-host-state-repeat.md) completes with
+**24,086,933,504 bytes free**; recheck before its matching bootstrap and composition.
 
 The [operator-approved 20 GiB root-LV growth](evidence/build-host-capacity-execution-20261107.json)
 now completes successfully, including online ext4 enlargement. The LV is

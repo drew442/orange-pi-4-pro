@@ -9,6 +9,9 @@ now also passes construction and software inspection. The
 [full NVMe candidate](production-nvme-composition.md) now also passes software
 checks; repeat-build validation and physical deployment remain open. Published
 deployment images are unchanged.
+The [second personalized state construction](production-host-state-repeat.md)
+now passes complete readback and independent review against the second roots,
+with a fresh UUID/machine-id. Its matching bootstrap and NVMe repeat remain open.
 Use the [existing-install repair](installed-host-repair-20261107.md) for the board.
 This component is not an SD or whole-drive installation image.
 

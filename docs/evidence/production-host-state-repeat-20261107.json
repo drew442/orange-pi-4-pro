@@ -1,0 +1,394 @@
+{
+  "admin_public_key_fingerprints": [
+    "SHA256:WVU8wsBgfy5mGFNAZMdrvf+a3cTYo85B8llJlHIhUKA",
+    "SHA256:Dw9WPpqQ741skiDShdwAP3qXQtpgxgbUSlCp2hmod7k"
+  ],
+  "boot_selection": {
+    "KERNEL_RELEASE": "6.6.98-a733-diag",
+    "ROOT_MARKER_SHA256": "6e1c691f49b0b46ac8d6a3a8ec53fecee21ef9f8b365724a86ae1a02f23f4d57",
+    "ROOT_UUID": "a7330000-0000-4000-8000-00000000000a",
+    "SCHEMA": "1",
+    "SLOT": "A"
+  },
+  "builder": "drew@build.drewnet.online",
+  "classification": "Second frozen-builder production personalized time-enabled state and complete regular-file readback; fresh installation identity, no physical acceptance",
+  "critical_metadata": {
+    "boot/selected.conf": {
+      "data": {
+        "bytes": 179,
+        "sha256": "dc2a3bcf01e82836571910885f586eaff462b0b0bc76a80cac7f282a033efe16"
+      },
+      "gid": 0,
+      "mode": 384,
+      "mtime_ns": 1794050190313977218,
+      "type": "file",
+      "uid": 0,
+      "xattrs": {}
+    },
+    "config": {
+      "gid": 0,
+      "mode": 448,
+      "mtime_ns": 1794050190313977218,
+      "type": "dir",
+      "uid": 0,
+      "xattrs": {}
+    },
+    "config/management.json": {
+      "data": {
+        "bytes": 115,
+        "sha256": "02da91818fe26e2d7d6feb9e5bbb9b08c32faa855feb73c3872589cdb1eb2565"
+      },
+      "gid": 0,
+      "mode": 384,
+      "mtime_ns": 1794050190313977218,
+      "type": "file",
+      "uid": 0,
+      "xattrs": {}
+    },
+    "identity": {
+      "gid": 0,
+      "mode": 448,
+      "mtime_ns": 1794050190313977218,
+      "type": "dir",
+      "uid": 0,
+      "xattrs": {}
+    },
+    "identity/machine-id": {
+      "data": {
+        "bytes": 33,
+        "sha256": "0f54d44b175dfea4be839a14755a051af35fe29f125a859ab54bc57c0f910aa6"
+      },
+      "gid": 0,
+      "mode": 420,
+      "mtime_ns": 1794050190313977218,
+      "type": "file",
+      "uid": 0,
+      "xattrs": {}
+    },
+    "identity/ssh": {
+      "gid": 0,
+      "mode": 448,
+      "mtime_ns": 1794050190297977225,
+      "type": "dir",
+      "uid": 0,
+      "xattrs": {}
+    },
+    "root/.ssh": {
+      "gid": 0,
+      "mode": 448,
+      "mtime_ns": 1794050190313977218,
+      "type": "dir",
+      "uid": 0,
+      "xattrs": {}
+    },
+    "root/.ssh/authorized_keys": {
+      "data": {
+        "bytes": 634,
+        "sha256": "b7b77f991b1285ff1054fb32edd0b4e7416014c1ce3eaf32a81a365700df28c1"
+      },
+      "gid": 0,
+      "mode": 384,
+      "mtime_ns": 1794050190313977218,
+      "type": "file",
+      "uid": 0,
+      "xattrs": {}
+    },
+    "var/lib/systemd/timesync": {
+      "gid": 996,
+      "mode": 493,
+      "mtime_ns": 1794050190299977224,
+      "type": "dir",
+      "uid": 996,
+      "xattrs": {}
+    }
+  },
+  "date": "2026-11-07",
+  "deployment_authorized": false,
+  "expected_tree": {
+    "character_devices": 0,
+    "expected": {
+      "bytes": 279128,
+      "sha256": "d6961ec2938f941891dc279ecf3123c2bad74de1a9b9ca653eac8de6ad0bc9e7"
+    },
+    "independent_image_readback": false,
+    "members": 1172,
+    "stability": {
+      "bytes": 98,
+      "sha256": "e9a4198633803b38d5f2cf331ba45f57908b93a52cde7e0a60c31e025ea93566"
+    }
+  },
+  "hardware_acceptance": false,
+  "identity_policy": "Fresh UUID and nonzero machine-id; no pre-generated SSH host keys; private empty host-key storage, empty clock directory996:9960755; never clone this identity to another installation.",
+  "independent_review": {
+    "bytes": 36618,
+    "findings": [],
+    "path": "out/host-state-timesync-repeat-01-20261107/independent-review.json",
+    "scope": [
+      "No source modifications, builds, device access, flash, commit or push were performed by reviewer. SSH sudo was used only for read-only regular-file and Git inspection.",
+      "No physical boot, management/DHCP/SSH, automatic time, guest execution, NVMe installation, SPI recovery, fallback behavior, SD-write behavior, endurance or deployment acceptance is established.",
+      "The full reader validates whole-second mtime with actual root mkfs time. Fractional source mtimes are not preserved; atime, ctime and crtime remain outside its claim.",
+      "Independent expected-stage correctness is not established by reading an image against its producer expected tree. Critical state semantics and the authenticated parent marker binding were separately checked.",
+      "Existing installed 00fd and first-candidate fc8 state/bootstrap/NVMe chains and current published images remain separate; this approval is for the new STATE component only.",
+      "A733, actual 1977614336-byte SD, nominal 250 GB NVMe, minimal host, zero routine SD writes and an actual physical KVM guest remain mandatory. No model review or emulation substitutes for hardware acceptance."
+    ],
+    "sha256": "21d22b5836b904f49bb76ffd488d0e994abb601835b4f7e7dd60bf781c7fbd8f",
+    "verdict": "approve this fresh STATE component construction and authenticated full-reader result for coordinator integration; no deployment or physical acceptance"
+  },
+  "initial_budget": {
+    "capsule_bytes": 138093894,
+    "git_staging_bound_bytes": 130522967,
+    "required_free_bytes": 19101229258,
+    "selector_peak_bytes": 5368709120,
+    "state_recipe_bytes": 18832612397,
+    "unpacked_bytes": 440908294
+  },
+  "isolation": {
+    "host_inventory_unchanged": true,
+    "mapped_processes_final": [],
+    "phase_mounts_final": []
+  },
+  "limits": [
+    "This is a component semantic repeat with intentionally fresh identity, not byte-identical state reproduction.",
+    "Matching bootstrap and full NVMe second-chain construction/readback remain pending.",
+    "Installed00fd repair/SSH, KVM guest, SPI/recovery, zero routine SD writes, boot/endurance and deployment reproduction remain mandatory physical gates."
+  ],
+  "management": {
+    "dhcp": true,
+    "hostname": "a733-host",
+    "management_cidr": "0.0.0.0/0",
+    "management_mac": "10:f4:ae:90:5e:57",
+    "schema": 1
+  },
+  "metadata_profile": "fakeroot-raw-xattrs-v1",
+  "native_retention": {
+    "all_nonraw_payloads_copied": true,
+    "compressed_stream_independently_expands_to_raw_pin": true,
+    "producer": "out/host-state-timesync-repeat-01-20261107",
+    "raw_image_copied": false,
+    "readback": "out/host-state-timesync-repeat-01-20261107/readback"
+  },
+  "output": "work/project/out/host-state-timesync-repeat-01",
+  "parent_roots": {
+    "evidence": {
+      "bytes": 25380,
+      "path": "docs/evidence/production-host-roots-repeat-20261107.json",
+      "sha256": "4595d68a5077a9b6ac79a1aac37f6b5a1c081cefd08b4bbb64af0a670284f673"
+    },
+    "readback_expected": {
+      "marker": {
+        "bytes": 16217,
+        "sha256": "6e1c691f49b0b46ac8d6a3a8ec53fecee21ef9f8b365724a86ae1a02f23f4d57"
+      },
+      "proof": {
+        "bytes": 3744357,
+        "sha256": "e5fa532c994a1a77dccfce850b8c1813841d504e863c729c0c31ed11dd13553c"
+      },
+      "scope": "bound parent expected tree previously checked by independent full root readback"
+    },
+    "receipt_sha256": "64e413bbdd158da4e998a193e32d40c8a62c65d3051c6cb2f6aa4b955ab2efbc"
+  },
+  "phase": "/var/lib/a733-clean-replay-20261106/host-state-timesync-repeat-01",
+  "physical_storage_written": false,
+  "producer_records": {
+    "receipt.json": {
+      "bytes": 169115,
+      "sha256": "01a03e382d90105863285c8625e5f9744cec8ffb535124afd6d9520c7c022c42"
+    },
+    "runtime.log": {
+      "bytes": 3479,
+      "sha256": "5f87ef168f8b3d97e354aeb260ea9d65c4ef7e0e2901f773242b0b40b07c1f2a"
+    },
+    "source-manifest.json": {
+      "bytes": 130590,
+      "sha256": "f0e0c1d5466f2a41d168e65c8dc794b2785511c2e9470c79802858b2541265b5"
+    },
+    "staged.json": {
+      "bytes": 159105,
+      "sha256": "0f4d376522b28a9af5fe574446f034e12d28b61b7d24b912e6c732e1e81e89ae"
+    }
+  },
+  "profile": "timesync-20261106",
+  "published_deployment_images_changed": false,
+  "readback": {
+    "artifact_files_authenticated": 38,
+    "controller": {
+      "bytes": 8520,
+      "sha256": "3a31b48f463ce5fa0f8e0c343f6f939dbb3ead30a2870bbff1ac29ffbcbff95d"
+    },
+    "filesystem": {
+      "allowed_extra_empty_directory": "lost+found",
+      "character_devices": 0,
+      "expected": {
+        "bytes": 279128,
+        "sha256": "d6961ec2938f941891dc279ecf3123c2bad74de1a9b9ca653eac8de6ad0bc9e7"
+      },
+      "fast_symlinks": 3,
+      "filesystem_root_metadata": {
+        "gid": 0,
+        "mode": "0755",
+        "type": "directory",
+        "uid": 0
+      },
+      "full_namespace_metadata_content_readback": true,
+      "hardlink_groups": [],
+      "hardware_acceptance": false,
+      "image": {
+        "bytes": 8589934592,
+        "sha256": "218f0c8dcceb18651e334d130834026ced970657e941a4ab3254cfbe4d159656"
+      },
+      "image_mtime_policy": "source whole seconds; root from actual superblock s_mkfs_time",
+      "input_identity_unchanged": true,
+      "long_symlinks_dumped": 0,
+      "namespace_members": 1172,
+      "out_of_scope_metadata": [
+        "atime",
+        "ctime",
+        "crtime"
+      ],
+      "production_build_acceptance": false,
+      "raw_xattrs": 0,
+      "regular_bytes_read": 7337572,
+      "root_creation_time_seconds": 1794050190,
+      "root_metadata_policy": "mkfs root 0755 root:root; source/staging root 0700 root:root",
+      "source_fractional_mtime_members": 15,
+      "source_nanosecond_metadata_preserved": false,
+      "source_root_metadata": {
+        "gid": 0,
+        "mode": 448,
+        "uid": 0
+      },
+      "stability": {
+        "bytes": 98,
+        "sha256": "e9a4198633803b38d5f2cf331ba45f57908b93a52cde7e0a60c31e025ea93566"
+      },
+      "symlinks": 3,
+      "unique_regular_inodes": 1115
+    },
+    "input_identity_unchanged": true,
+    "output": "/var/lib/a733-host-state-repeat-readback-20261107-01",
+    "reader": {
+      "bytes": 33471,
+      "sha256": "80e843d499bcc2f6d299d6022dc7edf83d73842405e95b38b0f32eee72dcda30"
+    },
+    "receipt": {
+      "bytes": 198808,
+      "sha256": "940c28722accd9810f5f9953c7dc08194b1417491437d7cfff7023b1ede2dcea"
+    },
+    "repeat_controller": {
+      "historical_template": {
+        "bytes": 25945,
+        "sha256": "f4375efa014dabac6e68d192ffa0627e8c0645a9b5b4675f8fd95b82504f70e6"
+      },
+      "registered_parent": "docs/evidence/production-host-roots-repeat-20261107.json",
+      "registered_parent_canonical_sha256": "a92e4e387abb8bb6fef7ccbb956104f0dac531305278c60b72085cd922a3a6f3",
+      "registered_parent_pin": {
+        "bytes": 25380,
+        "sha256": "4595d68a5077a9b6ac79a1aac37f6b5a1c081cefd08b4bbb64af0a670284f673"
+      }
+    }
+  },
+  "repeat_controller": {
+    "historical_template": {
+      "bytes": 28805,
+      "sha256": "68bdbb52c81c41cf97e11b1298c3c04ff64bf4671574550dd4f7ffaad9f405e1"
+    },
+    "registered_parent": "docs/evidence/production-host-roots-repeat-20261107.json",
+    "registered_parent_canonical_sha256": "a92e4e387abb8bb6fef7ccbb956104f0dac531305278c60b72085cd922a3a6f3",
+    "registered_parent_pin": {
+      "bytes": 25380,
+      "sha256": "4595d68a5077a9b6ac79a1aac37f6b5a1c081cefd08b4bbb64af0a670284f673"
+    }
+  },
+  "resources": {
+    "final": {
+      "available_memory_bytes": 7604084736,
+      "free_bytes": 24086933504,
+      "time": 1794050232.9005318
+    },
+    "minimum_available_memory_bytes": 7314558976,
+    "minimum_free_bytes": 23479717888
+  },
+  "schema": 1,
+  "semantic_comparison": {
+    "all_other_regular_contents_types_links_modes_ownership_and_attributes_identical": true,
+    "all_provenance_file_pins_identical": true,
+    "byte_identical_reproduction_expected": false,
+    "construction_superblock": {
+      "created_seconds": 1794050190,
+      "directory_hash_seed_hex": "523c0c8f51994310bf6f2e0922c749d7",
+      "journal_enabled": true,
+      "writable": true
+    },
+    "fresh_UUID_machine_id_and_filesystem_construction_metadata_intentionally_differ": true,
+    "members": 1172,
+    "members_differing": 15,
+    "mtime_only_members": 13,
+    "namespaces_identical": true,
+    "non_mtime_differences": {
+      ".a733-state": [
+        "data"
+      ],
+      "identity/machine-id": [
+        "data"
+      ]
+    },
+    "original_manifest_and_expected_tree_authenticated_against_original_receipt": true,
+    "original_phase": "/var/lib/a733-clean-replay-20261106/host-state-timesync-02",
+    "original_producer_receipt_authenticated_against_committed_evidence": true,
+    "selector_note": "Root payload marker bytes are unchanged across root constructions; exact different parent root image/proof/receipt pins bind the new chain.",
+    "selector_unchanged": true
+  },
+  "source_revision": "3221a1cf9f589576f875a3c742ac819998a140c0",
+  "state_bytes": 8589934592,
+  "state_compressed": {
+    "bytes": 10009260,
+    "sha256": "703a21d9db90c0d10b9ea1de6971c26cacaf673b71867cfe8980d2b11d4cf73d"
+  },
+  "state_image": {
+    "bytes": 8589934592,
+    "sha256": "218f0c8dcceb18651e334d130834026ced970657e941a4ab3254cfbe4d159656"
+  },
+  "state_uuid": "feaaee34-d782-4c18-bd04-1029540ab26a",
+  "tracked_source_records": 621,
+  "validation": {
+    "assembly_cases": 5,
+    "bash_toml_diff_checks": true,
+    "committed_cli_plan": {
+      "bytes": 158721,
+      "path": "tmp/state-repeat-20261107/plan.json",
+      "sha256": "6fc8aebbf0136b2ada68f0af4fa0c901b5f3065d4432776d4d54902bb4c754fb"
+    },
+    "full_reader_terminal_exit_code": 0,
+    "log": {
+      "bytes": 6441,
+      "path": "tmp/state-repeat-20261107/full-validation.log",
+      "sha256": "33f9c73e8febf02fc190992ad2ffd1702840696b710edde98b2ba4b046f8ee7c"
+    },
+    "privileged_ubuntu_unit_tests": 1621,
+    "producer_terminal_exit_code": 0,
+    "shell_suites": 5,
+    "skips": 0
+  },
+  "verification": {
+    "boot_selection": {
+      "pin": {
+        "bytes": 179,
+        "sha256": "dc2a3bcf01e82836571910885f586eaff462b0b0bc76a80cac7f282a033efe16"
+      },
+      "selector": {
+        "KERNEL_RELEASE": "6.6.98-a733-diag",
+        "ROOT_MARKER_SHA256": "6e1c691f49b0b46ac8d6a3a8ec53fecee21ef9f8b365724a86ae1a02f23f4d57",
+        "ROOT_UUID": "a7330000-0000-4000-8000-00000000000a",
+        "SCHEMA": "1",
+        "SLOT": "A"
+      }
+    },
+    "files_verified": 38,
+    "full_filesystem_readback": false,
+    "image_allocated_bytes": 83042304,
+    "manifest": {
+      "bytes": 15468,
+      "sha256": "fdc27d36f68916336ee951b56ea5fc858b55e6e815bcc220c76c99cff67726e7"
+    }
+  }
+}

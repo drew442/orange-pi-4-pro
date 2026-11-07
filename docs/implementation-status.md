@@ -53,7 +53,7 @@ Physical repair, SSH and an actual KVM guest are still unproven.
 | Existing deployment | [Published guide](deploy-personalized-20261106.md) retains original SD/NVMe images and state UUID `00fd936c-49fb-4fea-87c8-928b9c1599e0`. Management repair is next. |
 | Installer refresh | [Source `151a532`](installer-refresh-20261107.md): 256 MiB, exact-target yes/no, optional readback/progress; packaged ARM/default-no-readback checks pass. New image unbooted; it does not automatically repair installed state. |
 | Time-enabled userspace | [Actual offline build](timesync-outer-launcher.md) configures 221 pinned packages; complete archive readback and [dated repeat](account-date-replay-driver.md) pass. Fixed clock UID/GID 996, package/management ABI integration; installed NTP remains untested. |
-| Production components | [4 GiB roots](production-host-roots.md), [8 GiB personalized state](production-host-state.md) and [256 MiB bootstrap](production-host-bootstrap.md) pass frozen construction/full readback or boot-file inspection and independent review. A [second root construction](production-host-roots-repeat.md) passes full readback and matches contents/metadata except 463 mtimes per slot; raw/gzip bytes differ. State/bootstrap repeats remain open; first new state UUID `fc8bbef6-9385-4ddb-90ba-e41eaccc035b`. |
+| Production components | [First roots](production-host-roots.md), [state](production-host-state.md) and [bootstrap](production-host-bootstrap.md) pass frozen construction/readback and review. [Second roots](production-host-roots-repeat.md) match content with timestamp variations; [second state](production-host-state-repeat.md) passes full readback/review with fresh UUID `feaaee34-d782-4c18-bd04-1029540ab26a`. Matching bootstrap/NVMe repeats remain open; first-candidate UUID is `fc8…`. |
 | Full NVMe candidate | [Complete composition](production-nvme-composition.md) passes BOOT/GUESTS readback, all parent root/state bytes and independent full gzip/raw/GPT verification. [545.6 MB gzip and derived manifest](nvme-candidate-retention.md) retained on codex; [encoded retention](nvme-raw-retention.md) retires only the generated raw file, preserving both gzip copies. Active endpoint unchanged; clean repeat and matched deployment remain open. |
 | NVMe-first firmware | [Compiled and exactly replayed U-Boot](uboot-nvme-candidate.md); [SD transport](nvme-firmware-test-sd.md) builds and passes independent inspection. Entire SD is identical to production bootstrap outside the boot package. Unbooted, paired only with new `fc8…` state; do not use with installed `00fd…` state. |
 | SPI preparation | [Read-only backup tool](spi-backup.md) and [file assembler](spi-file-candidate.md) pass tests/review; only synthetic baseline assemblies exist. Synthetic files must never be flashed. Actual backup/candidate/programmer/recovery remain open. |
@@ -70,9 +70,9 @@ These results establish no physical boot, guest, SD-write or recovery acceptance
 The [authorized 20 GiB builder growth](build-host-capacity-plan.md) completed;
 LV size is 88,017,469,440 bytes. [Further verified retention](repeat-build-retention.md)
 preserves eleven superseded expanded leaves on both hosts and recovers about
-5.17 GB. Builder free immediately afterward is **24,798,740,480 bytes**. A fresh
-root construction (`timesync-repeat-01`, source `626e322`) and full readback pass;
-it ends with **23,399,813,120 bytes** free, below the next full-NVMe initial guard.
+5.17 GB. [Encoded retention](nvme-raw-retention.md) then recovers another 975 MB
+without changing either gzip copy. The second state construction ends with
+**24,086,933,504 bytes** free, before matching bootstrap and NVMe staging.
 Downstream repeats remain open. New regular-file SD packaging stays
 sparse and matches the prior SD raw/gzip bytes in the frozen builder. Recheck
 staging overhead and the unchanged full-NVMe **22 GiB** initial guard before any
@@ -80,8 +80,9 @@ composition; **no guard reduction or additional LV growth is authorized**.
 See [host assessment](build-host-assessment.md).
 
 The [registered state repeat adapters](state-repeat-controller.md) pass independent
-source review, committed-source planning and the full privileged test suite.
-Actual state construction/readback and new downstream bindings remain open.
+source review, committed-source planning, full privileged tests, actual state
+construction/full readback and independent artifact review. New downstream
+bindings remain open.
 
 [Verified retention](composition-retention.md) preserves retired work trees on
 both hosts. Native sparse conversion preserves generated image bytes and leaves

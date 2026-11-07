@@ -4,13 +4,14 @@ The new `build/launch-host-state-repeat.py` and
 `build/verify-host-state-repeat.py` entry points bind a fresh state construction
 to the [second production root build](production-host-roots-repeat.md). The
 [controller review](evidence/state-repeat-controller-20261107.json) approves
-source integration; frozen construction and full readback are separate gates.
+source integration. The [actual state repeat](production-host-state-repeat.md)
+now also passes frozen construction, full readback and independent artifact review.
 The historical state controllers and their original evidence remain unchanged.
 
 The actual committed-source `--plan` for revision `3221a1c` passes on the builder.
 Privileged Ubuntu validation passes **1,621 unit tests without skips**, five shell
-suites, five SD assembly cases, Bash syntax and TOML parsing. These checks do not
-establish construction or hardware acceptance.
+suites, five SD assembly cases, Bash syntax and TOML parsing. These checks
+establish no hardware acceptance.
 
 Each adapter authenticates its entire historical controller template by SHA-256,
 holds its physical ancestors and single regular-file descriptor, and checks its
