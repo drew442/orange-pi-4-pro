@@ -35,8 +35,10 @@ artifacts on disk. It passes with a 4.05 GB host disk minimum and 6.08 GB memory
 minimum. A [registered replay](evidence/uboot-nvme-replay-20261107.json) subsequently
 retains changed files and verified original references without a second full
 archive, matching all five required artifacts. Current disk free is about
-**4.04 GB**, below production staging and another complete retained build's
-budget. No LVM growth occurred. Before this run,
+**4.01 GB** after a separate [16 MiB synthetic SPI assembly fixture](evidence/spi-file-assembly-20261107.json),
+below production staging and another complete retained build's budget. That
+fixture uses real components and matches a codex repeat; it is not a physical
+backup or board firmware. No LVM growth occurred. Before this run,
 [three generated SD copies](evidence/candidate-sd-sparsification-20261107.json)
 were converted to sparse allocation, recovering 663,117,824 bytes while preserving
 their full hashes and logical sizes. Physical media and operator images on codex

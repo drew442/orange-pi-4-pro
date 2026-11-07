@@ -29,8 +29,8 @@ for boot0/U-Boot writes.
 | Inventory | Board/RAM/SSD/power/cooling and exact capacities | RAM/CPU/SD/SSD and 67 W USB-PD/copper heatsink description recorded; operating power/thermal tests pending |
 | NVMe | PCIe/NVMe enumeration, errors and stable repeated access | Enumerates/live; repeated access and warning investigation pending |
 | KVM | EL2 messages plus guest execution with KVM explicitly required | EL2/VHE and /dev/kvm observed; no guest execution |
-| Ethernet | Vendor binding, DHCP, route/DNS/TLS and repeatable cold boot | Preparation boot: automatic YT8531/DHCP, route/DNS and verified HTTPS after manual time correction; repeatability pending |
-| Installation | Fresh deployment on actual card and nominal 250 GB SSD | Pending |
+| Ethernet | Vendor binding, DHCP, route/DNS/TLS and repeatable cold boot | Preparation DHCP/DNS/TLS observed; installed link is 1 Gbps but DHCP/SSH needs [machine-id permission repair](installed-host-repair-20261107.md); repeatability pending |
+| Installation | Fresh deployment on actual card and nominal 250 GB SSD | [November 7 write/readback and installed root A boot observed](evidence/installed-host-first-boot-20261107.json); management repair and independent deployment pending |
 | Boot reliability | 10 cold boots and 10 warm reboots, matched firmware/SSD | Pending |
 | Workload | 24 hours: CPU/disk/network, temperatures/memory/NVMe errors | Pending |
 | SD policy | SD removed, or full-card hashes plus write counters/firmware audit | No mounted SD; one zero-write snapshot; full gate pending |

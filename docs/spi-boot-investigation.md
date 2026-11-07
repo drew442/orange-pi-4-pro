@@ -91,6 +91,12 @@ now pass, including the linked ARM EL2 call and complete packed payload bindings
 No firmware has been programmed. Its full budget
 preserves the final >4 GB guard, with unchanged runtime floors.
 
+The [file-only SPI assembler](spi-file-candidate.md) now combines the pinned
+components with an authenticated backup while preserving all other bytes,
+including gaps and partial erase units. A [synthetic-baseline fixture](evidence/spi-file-assembly-20261107.json)
+produces identical files/manifests on the Jammy builder and codex. No physical
+backup-derived board candidate or programmer exists; never flash these fixtures.
+
 After installed management works, a serial-only **read test** can establish the
 NVMe file path without programming SPI. Interrupt U-Boot autoboot and capture:
 

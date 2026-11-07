@@ -50,8 +50,30 @@ component ranges, preservation and erase-unit hashes. All hardware acceptance,
 recovery and programming authorization fields remain false. A generated file
 is not permission to program SPI.
 
-The exact executed fixture commands and their results will be recorded in
-separate assembly evidence. A production invocation cannot be completed until
+The [executed assembly evidence](evidence/spi-file-assembly-20261107.json) records
+source `4cc78e0`, exact commands and a deliberately synthetic 16 MiB input
+(`bytes(range(256)) * 65536`). The Jammy builder and codex produce identical
+candidate bytes and manifests; all 256 erase-unit entries and preserved ranges
+are checked independently. The fixture output SHA-256 is
+`5866447dc4d836da5e67cbc5dacacd57a20fe3a1e76264a573316bc705fdd238`.
+This hash identifies a **synthetic test file, never board firmware**.
+
+The builder's executed commands were the following, first with `--plan` and
+then without it, redirecting each JSON result to a separate file. Progress is
+printed on stderr. Plan mode creates no output directory.
+
+```sh
+sudo python3 -I -B \
+  /var/lib/a733-spi-file-project-20261107/project/build/assemble-spi-nvme.py \
+  --backup-dir /run/a733-spi-file-synthetic-20261107 \
+  --components /var/lib/a733-clean-replay-20261106/uboot-nvme-component-ram-02/component-retained \
+  --output /var/lib/a733-spi-file-project-20261107/project/out/spi-nvme-synthetic-20261107 \
+  --plan
+```
+
+The existing fixture output is retained, so this exact output name now refuses
+reuse. These are development fixture records, not instructions to prepare the
+board. A production invocation cannot be completed until
 the physical backup is retained and verified off-device. Keep that original
 backup and manifest immutable, alongside the candidate and source provenance.
 
