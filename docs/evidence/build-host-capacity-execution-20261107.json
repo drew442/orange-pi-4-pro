@@ -1,0 +1,58 @@
+{
+  "after_lv_bytes": 88017469440,
+  "authorization": "Operator: go ahead and expand; prepared exact20GiB proposal approved.",
+  "backup_after": {
+    "path": "/var/lib/a733-builder-lvm-preparation-20261106/ubuntu-vg.after-20261107.vg",
+    "sha256": "9ef217bf83a00ed67eece6c31416cca68e7a3c3c136d9faf946719562d2dd149"
+  },
+  "backup_before": {
+    "path": "/var/lib/a733-builder-lvm-preparation-20261106/ubuntu-vg.before.vg",
+    "sha256": "2b21a23134c124fab4bfbc9c7d2cf3d28e825df83e7a6c9337f16b0eeaf6815f"
+  },
+  "before_lv_bytes": 66542632960,
+  "classification": "User-authorized Ubuntu build-host root LV and mounted ext4 growth; no Orange Pi storage operation",
+  "date": "2026-11-07",
+  "dpkg_audit": "No findings",
+  "filesystem_size_after_bytes": 86308691968,
+  "free_bytes_after_resize": 24284876800,
+  "free_bytes_postcheck": 24284868608,
+  "growth_bytes": 21474836480,
+  "guard_passed_after_resize": true,
+  "hardware_acceptance": false,
+  "headroom_above_guard_postcheck_bytes": 662548480,
+  "host": "drew@build.drewnet.online",
+  "limitations": [
+    "Only about663MB headroom above the final22GiB guard: production component outputs can consume it. Preserve all guards; reassess allocation between root/state/final NVMe phases.",
+    "No production root/state/NVMe reconstruction has run as part of this expansion.",
+    "Installed DHCP/SSH repair, actual KVM guest and SPI/release acceptance remain pending.",
+    "Do not restore pre-growth LVM metadata or shrink the LV after filesystem growth."
+  ],
+  "logical_volume": "/dev/ubuntu-vg/ubuntu-lv",
+  "logical_volume_uuid": "Wacdne-hf6p-osvg-5IiF-iVD0-Dlgt-6iflHh",
+  "nvme_staging_guard_bytes": 23622320128,
+  "orange_pi_storage_written": false,
+  "raw_records": {
+    "postchecks.log": {
+      "path": "/home/drew/orange-pi-4-pro/out/build-host-capacity-execution-20261107/postchecks.log",
+      "pin": {
+        "bytes": 455,
+        "sha256": "d3c0d612f9c914bdda28405c6835ae9a27e9518e74b56ebdd6a376cd56c0e478"
+      }
+    },
+    "resize.log": {
+      "path": "/home/drew/orange-pi-4-pro/out/build-host-capacity-execution-20261107/resize.log",
+      "pin": {
+        "bytes": 1084,
+        "sha256": "76dee0c57827e8d0abf6cc4e7c7fe60b848b81b67d0bca42623e0ca5168503b7"
+      }
+    }
+  },
+  "root_filesystem_uuid_observed_after": "bb90e190-be63-4324-a020-c80583437401",
+  "root_fstype": "ext4",
+  "root_major_minor": "252:0",
+  "root_source": "/dev/mapper/ubuntu--vg-ubuntu--lv",
+  "schema": 1,
+  "success": true,
+  "vg_free_after_bytes": 45067796480,
+  "vg_free_before_bytes": 66542632960
+}

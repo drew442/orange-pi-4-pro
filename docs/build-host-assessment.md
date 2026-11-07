@@ -29,29 +29,38 @@ Package logs remain on the builder at `/tmp/orangepi-apt-update.log` and `/tmp/o
 
 ## Current cache capacity
 
+The [operator-approved 20 GiB root-LV growth](evidence/build-host-capacity-execution-20261107.json)
+now completes successfully, including online ext4 enlargement. The LV is
+88,017,469,440 bytes and free space is **24.28 GB**, above the unchanged 22 GiB
+staging guard by about **663 MB**. Check allocations between production phases;
+this initial pass does not reserve space for all component outputs. The LV UUID,
+root source and filesystem type are unchanged. No Orange Pi storage was touched.
+
+
 The latest [candidate build](evidence/uboot-nvme-candidate-20261107.json) used
 RAM for its temporary workspace and retained a verified full archive plus review
 artifacts on disk. It passes with a 4.05 GB host disk minimum and 6.08 GB memory
 minimum. A [registered replay](evidence/uboot-nvme-replay-20261107.json) subsequently
 retains changed files and verified original references without a second full
-archive, matching all five required artifacts. Current disk free is about
+archive, matching all five required artifacts. Before the approved growth, disk free was
 **4.01 GB** after a separate [16 MiB synthetic SPI assembly fixture](evidence/spi-file-assembly-20261107.json),
 below production staging and another complete retained build's budget. That
 fixture uses real components and matches a codex repeat; it is not a physical
-backup or board firmware. No LVM growth occurred. Before this run,
+backup or board firmware. Those earlier runs did not resize the LV. Before that run,
 [three generated SD copies](evidence/candidate-sd-sparsification-20261107.json)
 were converted to sparse allocation, recovering 663,117,824 bytes while preserving
 their full hashes and logical sizes. Physical media and operator images on codex
 were untouched.
 
-Latest November 7 evidence: [completed kernel replay retention](kernel-run-retention.md)
+Earlier November 7 evidence: [completed kernel replay retention](kernel-run-retention.md)
 and a subsequent fresh userspace attempt leave about **6.84 GB** on the builder.
 That attempt failed the exact archive pin because account dates changed across
 days. The later [corrected fresh baseline](account-date-replay-driver.md) passed and
 left about **6.04 GB** free. The subsequent
 [time repeat](evidence/account-date-time-execution-20261107.json) passes and leaves
 **5,249,044,480 bytes** free. Production 22 GiB staging
-remains blocked by capacity. The proposed LV growth remains unapproved.
+was capacity-blocked at that point. The subsequently approved growth above now
+clears the initial staging guard.
 
 [Verified cache retention](build-cache-retention.md) recovered working space
 without changing generated image bytes. Five complete guest working trees are
@@ -113,9 +122,10 @@ records, free space was 3,240,124,416 bytes, above the small-probe 3 GiB reserve
 but below full-build guards. The
 [prepared 20 GiB growth proposal](build-host-capacity-plan.md) has an exact target,
 metadata backup, successful allocation test and independently reviewed guards.
-It awaits separate approval because it changes the build host root filesystem;
-no LV/filesystem growth has been performed. This does not involve Orange Pi
-storage or change its existing NVMe erase/SPI authorization boundaries.
+The operator subsequently approved the host root-volume change, and the
+[execution evidence](evidence/build-host-capacity-execution-20261107.json) now
+records successful growth. It does not involve Orange Pi storage or change its
+existing NVMe erase/SPI authorization boundaries.
 
 Subsequent [historical root retention](historical-root-retention.md) preserves
 twelve old generated files in two protected codex copies. Complete hashes and
@@ -128,7 +138,7 @@ passed in the frozen builder with minima of **4,345,155,584 bytes free disk** an
 **7,260,938,240 bytes available RAM**. This staged the complete 221-package archive
 and a 256 MiB nondeployable state fixture, not production images. Host inventory
 remained unchanged and mapped processes/mounts were cleared. Full root/state/NVMe
-capacity guards are unchanged; the 20 GiB LV growth remains unapproved.
+capacity guards are unchanged; approved growth now clears the initial guard.
 Recheck current resources before further staging.
 
 The [November 7 installer refresh](evidence/installer-refresh-20261107.json)
@@ -136,7 +146,7 @@ restaged runtime and packaged initramfs/SD with all guards intact. Six stages,
 packaged ARM checks and independent artifact review pass. Sampled minima were
 3,889,745,920 bytes free disk and 7,205,289,984 bytes available RAM; all 842 host
 packages were unchanged. Full production reconstruction retains its larger
-capacity requirements; no LV resize occurred.
+capacity requirements; this refresh preceded the approved LV growth.
 
 ## Local host assessment
 

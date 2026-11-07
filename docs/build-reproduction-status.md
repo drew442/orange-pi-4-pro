@@ -71,6 +71,8 @@ time opt-in profile, package state, and clock-state seed/boot/update guards, but
 does not build time-enabled production artifacts. The [dated baseline and time constructions](account-date-replay-driver.md) now
 pass with preserved closure checks and unchanged historical output pins. Time-enabled 4 GiB roots, 8 GiB state,
 and NVMe reconstruction/readback remain open; baseline artifacts remain unchanged.
-The proposed 20 GiB builder growth is unapproved; no resize occurred and production
-capacity guards remain unchanged. A second operator must
+The [approved 20 GiB builder growth](evidence/build-host-capacity-execution-20261107.json)
+now succeeds and leaves 24.28 GB free, above the unchanged 22 GiB staging guard.
+Only about 663 MB of headroom remains before component staging, so recheck between
+phases and retain outputs safely. A second operator must
 reproduce deployment from the guide; build proofs cannot satisfy physical release gates.

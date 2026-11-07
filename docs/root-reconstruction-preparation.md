@@ -85,13 +85,12 @@ failed result was accepted or overwritten. The actual archive contains one raw
 capability xattr, no missing raw ACL counterpart and no attribute exceeding the
 pinned fakeroot IPC limits.
 
-Capacity is a separate issue. Before the backend probe, the filesystem had about
-6.60 GB free, below the unchanged root/NVMe build guards, while its VG has
-66.54 GB unallocated. The
-[reviewed growth proposal](build-host-capacity-plan.md) would allocate 20 GiB to
-the builder's existing root LV and enlarge ext4. Inventory, metadata backup,
-allocation dry-runs and live precondition checks pass. Operator approval is
-pending; no LV or filesystem resize has been performed.
+The [approved 20 GiB builder growth](build-host-capacity-plan.md) has now been
+executed. Online ext4 enlargement leaves 24.28 GB free, passing the unchanged
+22 GiB staging guard by about 663 MB. Production A/B roots can be constructed
+next; their allocated data and compressed copies will consume that headroom.
+Measure allocations and retain verified outputs safely before state/final NVMe
+composition. No production image or deployment success follows from expansion.
 
 No fixture or storage preparation establishes installation, actual KVM guest
 execution, SD-write/endurance behavior, SPI boot or release acceptance.

@@ -1,16 +1,19 @@
 # Build-host root-volume capacity proposal
 
-Status: prepared and dry-run only; execution requires operator approval.
-No logical-volume or filesystem resize has been performed.
+Status: **approved and executed on 2026-11-07**. The operator authorized the
+prepared 20 GiB change. [Execution evidence](evidence/build-host-capacity-execution-20261107.json)
+records successful LV growth and online ext4 enlargement. Current LV size is
+88,017,469,440 bytes; observed free space is 24,284,868,608 bytes, above the
+unchanged 22 GiB NVMe staging guard. No Orange Pi storage was written.
 
-The Ubuntu 22.04 builder at `build.drewnet.online` has a 133,085,265,920-byte
+Before execution, the Ubuntu 22.04 builder at `build.drewnet.online` has a 133,085,265,920-byte
 `ubuntu-vg` volume group, with 66,542,632,960 bytes unallocated. Its root ext4
-filesystem currently uses `/dev/ubuntu-vg/ubuntu-lv`, size 66,542,632,960 bytes,
+filesystem uses `/dev/ubuntu-vg/ubuntu-lv`, size 66,542,632,960 bytes,
 LV UUID `Wacdne-hf6p-osvg-5IiF-iVD0-Dlgt-6iflHh`. `findmnt /` confirms ext4 on
 `/dev/mapper/ubuntu--vg-ubuntu--lv`, major/minor `252:0`. The VG is on the build
 VM's existing `/dev/sda3`; the Orange Pi's NVMe is a different machine/target.
 
-## Proposed change
+## Approved change
 
 Allocate 20 GiB (21,474,836,480 bytes) from that existing VG to the root LV,
 then grow its mounted ext4 filesystem. The resulting LV size is exactly
@@ -43,12 +46,13 @@ This backs up LVM metadata, not filesystem data. It must not be blindly restored
 with the old LV size after the filesystem has grown. Existing build/source/image
 archives remain available on codex.
 
-## Concrete application sequence after approval
+## Executed application sequence
 
-Before applying, stop compilation/packaging jobs and revalidate hostname,
+The following guarded sequence was applied after confirming no compilation or
+packaging jobs were active. It revalidates hostname,
 LV UUID, root mount, ext4 type, original LV size and at least 20 GiB free in the
 same VG. Stop on any mismatch; this plan is for the recorded volume only.
-Then run on `build.drewnet.online`:
+It ran on `build.drewnet.online`; the old-size guard now prevents reuse:
 
 ```bash
 set -euo pipefail
@@ -74,3 +78,18 @@ threshold. If LV growth succeeds but filesystem growth fails, retain the larger
 LV and diagnose the error; do not reduce it or restore old volume metadata.
 This proposal authorizes no Orange Pi NVMe write or SPI programming. Hardware
 installation, actual KVM execution and release acceptance remain pending.
+
+
+## Verified result
+
+The LV UUID and root source/type remained unchanged, and the LV reached the exact
+88,017,469,440-byte target. Ext4 grew online to 21,488,640 blocks of 4,096 bytes.
+VG free space is now 45,067,796,480 bytes. `dpkg --audit` reports no findings.
+The original metadata backup is retained unchanged; a new private post-growth
+backup and its hash are recorded in the execution evidence.
+
+Free space clears the final staging guard by only about **663 MB**. Building
+roots/state will consume some of this, so check allocated space and preserve
+verified component outputs before final composition. Do not lower any guard or
+assume that one initial check proves enough space for the entire sequence.
+Physical management, KVM and SPI acceptance remain open.

@@ -79,7 +79,8 @@ remain unchanged. **Do not repeat NVMe installation to fix management.**
   programming or SPI boot is established. The retained candidate workspace also
   passes [full temporary-path restoration](evidence/uboot-nvme-restoration-20261107.json):
   all 27,105 entries and 72 manifest hashes, followed by clean unmount. No
-  restored-source rebuild is claimed; builder free remains about 4.01 GB.
+  restored-source rebuild is claimed. The approved [builder expansion](build-host-capacity-plan.md)
+  now leaves 24.28 GB free; component allocations still need staged checks.
 
 ## Implemented and verified in software
 
@@ -150,14 +151,13 @@ remain unchanged. **Do not repeat NVMe installation to fix management.**
    [Kernel replay retention](kernel-run-retention.md) preserves the expanded tree
    as verified archives on two hosts. [Byte-preserving conversion](evidence/candidate-sd-sparsification-20261107.json)
    recovered 663 MB from three generated image copies. The compiled candidate
-   and subsequent file-assembly fixture now leave **4.01 GB** free on the builder;
-   production's 22 GiB staging guard remains unmet. The reviewed
-   [20 GiB builder LVM growth](build-host-capacity-plan.md) awaits approval;
-   no resize occurred. The [candidate build and exact replay](uboot-nvme-candidate.md)
+   and subsequent file-assembly fixture left 4.01 GB free before expansion. The
+   operator-approved [20 GiB builder LVM growth](build-host-capacity-plan.md) now
+   succeeds: **24.28 GB** free, passing the unchanged 22 GiB staging guard by
+   about 663 MB. Construct/read back the actual 4 GiB A/B roots next, then
+   reassess allocated space before state and final NVMe composition. The [candidate build and exact replay](uboot-nvme-candidate.md)
    pass independent inspection. The file-only SPI assembler passes synthetic
    fixtures; its actual board backup/candidate and hardware handoff remain open.
-   Current space is
-   insufficient for another fully retained build with its final >4 GB reserve.
    Keep the existing installation repair as the next operator action; do not
    program SPI or repeat NVMe installation.
    [Firmware license evidence](evidence/vendor-boot-license-inventory-20261106.json)
