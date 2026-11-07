@@ -9,18 +9,22 @@ for the board installation.
 | --- | ---: | --- |
 | `baseline-20261104` (default) | 169,852,145 | `1967e76c0c831c1c0bab432e7116457d4372c15b413090c054f8958b72dcb392` |
 | `normalized-20261106` (opt-in) | 138,025,729 | `98d6a57bbb70ff55bef32b6bd051ebfcb6bc0fad4f6c8b3167e8619b5a9d961e` |
+| `timesync-20261106` (opt-in) | 138,093,095 | `0ead62c982344bfa3a796027e2f07ce0d8402e7033122707e01a9a3f8860f248` |
 
 The normalized archive comes from the [fresh raw-package pipeline](userspace-fresh-pipeline.md)
 and matches the independently checked [normalized pair](userspace-export-reproducibility.md).
-Both profiles contain the same locked 220-package inventory. This selection does
-not add automatic time synchronization or change the package/state ABI.
+The baseline and normalized profiles retain their locked 220-package inventory;
+the time profile has 221 packages and adds systemd-timesyncd plus its UID/GID 996
+identity. The time profile is source-integrated as an opt-in. Omission still
+selects the unchanged baseline, and published deployment artifacts are unchanged.
 
 ## Build interface
 
-Append `--userspace-profile normalized-20261106` to either documented builder
+Append `--userspace-profile normalized-20261106` or
+`--userspace-profile timesync-20261106` to either documented builder
 command in [root payloads](host-payload.md) or [state payloads](host-state.md),
-using the normalized archive as `ROOTFS_TAR`. Use matching profile selections for
-root and state. `--metadata-profile fakeroot-raw-xattrs-v1` remains a separate,
+using the archive selected by that profile as `ROOTFS_TAR`. Use matching profile
+selections for root and state. `--metadata-profile fakeroot-raw-xattrs-v1` remains a separate,
 explicit metadata backend choice; it does not select archive bytes.
 
 The retained normalized archive on codex is
@@ -37,16 +41,23 @@ selected evidence and producer sources, and checks normalized pipeline success,
 archive/BOM/inventory/epoch agreement. Bounded, no-follow reads reject malformed,
 duplicate or mutated inputs before output creation. Builders authenticate the
 archive and copied provenance against the resolved snapshot before extraction.
-Normalized manifests and root markers include `sources.userspace_profile` with
+Normalized and time-profile manifests/root markers include `sources.userspace_profile` with
 archive, lock and resolver bindings. Baseline archive binding remains unchanged.
+The time profile authenticates its single complete construction/readback record
+and 21 producer inputs; the global profile lock is pinned separately to avoid
+a self-reference. Its component staging retains 25 provenance files, including
+the clock helper. A second time-profile construction is still required.
 
-The resolver and its lock are source-side build inputs, imported lazily. They do
-not enlarge the closed 39-file installed maintenance tree. Selected source
-provenance is retained with build outputs, distinct from installed runtime files.
+The resolver and its lock are source-side build inputs, imported lazily. Selected
+source provenance is retained with build outputs, distinct from installed runtime
+files. The time profile adds a helper to the installed maintenance package, which
+now contains 40 files from 39 source files. Its roots require management profile
+`a733-management-v2-timesync`; old management tools reject v2, while the new
+tools accept v1 for rollback.
 
 ## Verification and limits
 
-[Recorded evidence](evidence/normalized-userspace-profile-20261106.json) binds
+[Normalized-profile evidence](evidence/normalized-userspace-profile-20261106.json) binds
 source commit `4d8ddd1`, retained harness code, receipts, resource samples and
 independent Sol/high review. The actual frozen-builder component probe resolved
 both builder profiles, rejected the normalized archive under the baseline pin,
@@ -76,10 +87,17 @@ cases and all five shell suites pass. Independent focused review ran 92 cases
 with two environment skips and checked relocated runtime imports without the
 source-only resolver.
 
-No production root/state/NVMe images were built by this probe, and no physical
-boot, SSH login, KVM guest or SD-write acceptance is established. Complete
-production composition and independently reproduced deployment remain open.
-The [tracked outer launcher](userspace-pipeline-launcher.md) now passes review,
-plans and capacity refusal; its complete execution remains pending. Builder
-capacity after its protected source staging is about 3.28 GB free; the
-[reviewed growth proposal](build-host-capacity-plan.md) still awaits authorization.
+[Time-profile archive evidence](evidence/timesync-execution-20261107.json)
+records one actual frozen-builder configuration/export and independent complete
+archive readback: 221 packages, 15,909 members, archive size/hash above. The
+[integration component evidence](evidence/time-profile-integration-20261107.json)
+records extraction, eight package-state components, four management files, 40
+maintenance files, and a 256 MiB nondeployable state fixture. These are
+component checks, not complete production roots/state/NVMe images. No physical
+boot, SSH login, KVM guest or SD-write acceptance is established. A second full
+time-profile construction and complete production image reconstruction remain open.
+The published installer/host SD images and personalized NVMe bundle are unchanged.
+The tracked baseline pipeline is complete. The time-profile component run sampled
+at least 4.35 GB free; full production image capacity guards remain separate.
+The [reviewed growth proposal](build-host-capacity-plan.md) still awaits
+authorization.

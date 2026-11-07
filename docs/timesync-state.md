@@ -1,9 +1,11 @@
-# Persisted time-state compatibility preparation
+# Persisted time-state compatibility
 
-The future time-service profile must keep its clock checkpoint on NVMe through
-writable `/var`, with the [fixed 996:996 identity](timesync-identity.md). Published
-images still contain neither the daemon nor this new build-time guard. No
-physical time synchronization or installed rollback has passed.
+The opt-in `timesync-20261106` source profile includes systemd-timesyncd and
+keeps its clock checkpoint on NVMe through writable `/var`, with the
+[fixed 996:996 identity](timesync-identity.md). The default baseline and
+normalized profiles are unchanged. Published installation images still use the
+older 39-file maintenance package; they have not been rebuilt with this profile.
+No physical time synchronization or installed rollback has passed.
 
 The `audit()` function and CLI in [`timesync-state.py`](../build/timesync-state.py)
 inspect private, quiescent installation state without changing it. They recognize the
@@ -35,11 +37,14 @@ no mutating CLI. Failure can leave private partial output; it never removes an
 untrusted path. Directory-link checks support ordinary incrementing link counts
 and Btrfs's stable count of one. Btrfs coverage is mocked, not an actual filesystem test.
 
-The internal `host-state.seed_state(..., timesync=True)` hook now invokes this
-initializer. Its default remains false. Production `build()` and CLI profile
-selection do not enable it yet; boot/updater checks and provenance integration
-must be connected before permitting new time-profile images. The installed
-maintenance tree remains closed at 39 files.
+The internal `host-state.seed_state(..., timesync=True)` hook invokes this
+initializer. Production state construction enables it only for the explicit
+time profile and authenticates the initializer hash before moving generated
+files. The maintenance helper is installed at
+`/usr/lib/a733-tools/build/timesync-state.py` and its authenticated hash is
+recorded in profile provenance. No existing state is automatically migrated.
+The new management profile is `a733-management-v2-timesync`; old management
+tools reject v2 metadata, while new tools accept the old v1 profile for rollback.
 
 [Initialization evidence](evidence/timesync-state-initialization-20261107.json)
 records 35 focused cases and independent source review. Five root-owned fixtures
@@ -51,7 +56,13 @@ Source snapshots, images and records remain under
 `/var/lib/a733-timesync-state-seed-fixture-20261107` on the builder, with
 authenticated copies in `out/time-state-initialize-20261107/` on codex. Host
 inventory is unchanged and free space remains above 4.86 GB. These are component
-fixtures, not production state images or physical rollback results.
+fixtures, not production state images or physical rollback results. The actual
+frozen-builder [integration component evidence](evidence/time-profile-integration-20261107.json)
+also exercised archive extraction,
+all eight package-state components, four management files, 40 maintenance files
+and a 256 MiB nondeployable state fixture; it did not build production roots,
+state or NVMe images. The archive build/readback is recorded separately in
+[time-profile execution evidence](evidence/timesync-execution-20261107.json).
 
 ## Read-only interface
 
@@ -67,6 +78,12 @@ second requires an initialized checkpoint. Neither checks NTP or proves that the
 state tree is backed by the intended physical NVMe. Existing installation and
 mount-identity guards remain necessary. Do not audit a running daemon's mutable
 state with this quiescent-input interface.
+
+The boot guard performs the full quiescent `audit()` before PID 1. Live update
+and selector checks call `directory_ready()`: they confirm state UUID, path and
+directory inode/device/mode/ownership bindings, but intentionally ignore clock
+file contents and timestamps while the daemon may update them. Root and state
+metadata must agree on the time profile and authenticated helper provenance.
 
 The implementation pins all path components and rechecks metadata before
 returning. Data/directory reads require `O_NOATIME`; clock inspection uses
@@ -109,7 +126,6 @@ This fixture establishes checkpoint metadata, UID permission and file-backed
 view behavior only. It does not execute the installed initramfs, management
 service, root updater or rollback procedure. A separate pinned 221-package
 profile now passes package configuration/export and complete archive readback.
-Production profile/initializer provenance, package-state regeneration, boot/update
-guards, actual root/state composition and full image readback remain open. Hardware must then prove
+Actual production root/state/NVMe composition and full image readback remain open. Hardware must then prove
 service startup, DNS/NTP, cold/offline clock behavior, real rollback and zero
 routine SD writes. Physical KVM and all other release gates remain mandatory.

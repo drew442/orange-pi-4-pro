@@ -3,7 +3,8 @@
 `build/maintenance-tools.py` packages the closed maintenance and guest source set
 for later staging by an installed host or recovery runtime. It does not install,
 execute or authorize the package. The package contains a read-only `tree/`,
-`tools.tar.gz` and `manifest.json`. The current package has 16 entrypoints,
+`tools.tar.gz` and `manifest.json`. The source-integrated package contains 40
+installed files from 39 source files and has 16 entrypoints,
 covering installation, host maintenance and guest operations; see the
 [current package and installed-root guide](guest-tools-package.md). Adjacent Python
 imports are retained under `tree/scripts`, `tree/build` and `tree/configs`;
@@ -69,10 +70,11 @@ build record. The tar root is `a733-tools/`, with root-owned `0555` directories
 and `0444` files; the containing directory stays `0700`. These are prospective
 host staging instructions, not evidence of a reproduced board deployment.
 
-The existing recovery initramfs recipe stages this package at
-`/usr/lib/a733-tools` (including `/usr/lib/a733-tools/scripts`). It is not yet
-physically installed or validated on the board. Host update and root-selection
-documents use `A733_TOOLS` for the explicitly staged host package. Package
+The current source recipe stages its 40-file package at `/usr/lib/a733-tools`
+(including `/usr/lib/a733-tools/scripts`). The published recovery initramfs
+still contains the older 39-file package. Neither package is physically
+installed or validated on the board. Host update and
+root-selection documents use `A733_TOOLS` for the explicitly staged host package. Package
 staging does not authorize a physical write. Preserve the
 A733 target, 2 GB SD, nominal 250 GB NVMe, minimal host and zero routine SD
 writes. Physical acceptance still requires actual hardware boot, NVMe operation

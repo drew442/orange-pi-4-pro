@@ -5,7 +5,13 @@ Historical generated paths below may have been archived. Consult the
 before reusing them; use the [personalized deployment](deploy-personalized-20261106.md)
 for the current installation.
 
-Managed roots contain `a733-management-v1`. This interim Debian prototype has
+Baseline managed roots contain `a733-management-v1`. The opt-in time profile
+uses `a733-management-v2-timesync`; its source-integrated boot guard performs a
+quiescent clock-state audit before PID 1. Live update and selector checks use
+the read-only `directory_ready()` binding check, which ignores clock-file
+contents and timestamps while checking directory identity, device, mode,
+ownership and state UUID. Old tools reject v2, and new tools accept v1 for
+rollback. This interim Debian prototype has
 passed file and ARM userspace checks, but has not booted on the A733 or accepted
 an SSH connection. The installer-preparation image has physically booted; use
 the personalized deployment above for installation. Buildroot and the release-base

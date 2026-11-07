@@ -18,17 +18,19 @@ contract, management configuration, machine-id, filesystem UUID, and
 `boot/selected.conf`. Selection is bound to a full root payload using the
 manifest-checked preparer; see [root selection](nvme-root-selection.md).
 
-The optional `--userspace-profile normalized-20261106` selects the authenticated
-normalized archive; omission preserves the baseline. See [profile selection and
-actual staging evidence](userspace-profiles.md). This does not replace the
+The optional `--userspace-profile normalized-20261106` or
+`--userspace-profile timesync-20261106` selects the matching authenticated
+archive; omission preserves the baseline. See [profile selection and actual
+staging evidence](userspace-profiles.md). This does not replace the
 published installation artifacts.
 
-The internal `seed_state(..., timesync=True)` API now supports guarded creation
-of an empty clock directory owned by 996:996 with mode 0755; default seeding does not load that helper.
-[Private initializer and ext4 fixture checks](timesync-state.md) pass independent
-review. This option is not exposed by the production CLI or current profiles.
-Time-profile selection, helper provenance and installed boot/update checks remain
-required before a production time-enabled state image can be built.
+The source-integrated opt-in `timesync-20261106` profile calls
+`seed_state(..., timesync=True)` to create an absent, empty clock directory
+owned by 996:996 with mode 0755. Baseline and normalized profile seeding does
+not initialize it. Production initialization authenticates the helper hash
+before file moves. Existing state is never automatically migrated. The
+[initializer and fixture evidence](timesync-state.md) covers components, not a
+complete production state image or physical rollback.
 
 ## Inputs and creation
 

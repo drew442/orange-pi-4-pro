@@ -1,0 +1,18 @@
+{
+  "address": "192.168.1.115",
+  "ping_returncode": 1,
+  "ssh_port": "[Errno 113] No route to host",
+  "neighbour": "192.168.1.115 dev eth0 FAILED",
+  "serial_ports": [],
+  "schema": 1,
+  "date": "2026-11-07",
+  "classification": "LAN observer check from codex; no new physical boot record",
+  "recorded_board_mac": "10:f4:ae:90:5e:57",
+  "raw_record": {
+    "path": "out/time-profile-component-20261107/board-observer.json",
+    "bytes": 173,
+    "sha256": "a6fe2f99866c0dd43a3e798e5d5253dc69ce2a0edf56781545dcd6182db3be0f"
+  },
+  "interpretation": "Previously recorded address is unreachable; current board power, address and boot state are unknown. No serial adapter is attached to codex.",
+  "hardware_acceptance": false
+}

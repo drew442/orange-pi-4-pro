@@ -2,14 +2,19 @@
 
 [`launch-timesync-userspace.py`](../build/launch-timesync-userspace.py) connects
 the separate [package step](timesync-userspace.md) and [export adapter](timesync-export.md).
+The profile is now registered as an explicit opt-in source profile in
+[`userspace-profiles.py`](../build/userspace-profiles.py); baseline remains the
+default and normalized selection is unchanged.
 The [actual complete execution](evidence/timesync-execution-20261107.json) passes
 configuration and export from the tracked normalized base, using commit `719146c`
 and fresh tag `retained-02`. It produces a 138,093,095-byte archive with SHA-256
 `0ead62c982344bfa3a796027e2f07ce0d8402e7033122707e01a9a3f8860f248`.
 Independent readback verifies all 15,909 entries, metadata, complete 221-package
 inventory, fixed 996:996 identity, preserved old accounts and required boot links.
-The artifact is not yet registered for production composition. Published
-installation files remain unchanged.
+Published installation files remain unchanged. Source integration at `bb411e3`
+now wires profile selection, matching root/package/clock-state metadata,
+initialization, and boot/update guards; this does not mean production artifacts
+have been built.
 
 ## Inputs and read-only plan
 
@@ -120,11 +125,15 @@ unchanged host inventory and no mapped processes or phase/base mounts.
 capacity; no resize or guard reduction occurred. The earlier failed attempt
 and its clone remain retained; its missing boot-link issue is corrected.
 
-Next integrate explicit profile provenance, matching 221-package root metadata
-and persistent clock-state seeding/guards before permitting image composition.
-Current builders accept only baseline/normalized profiles; the clock-state audit
-is not yet a state-initialization or updater hook. A second fresh construction
-and comparison, production root/state/NVMe readback, independent deployment and
-physical boot, SSH, NTP, KVM, SD-write, endurance, update/rollback and recovery
-results remain required. Follow the [existing deployment guide](deploy-personalized-20261106.md)
-for current installation images; this launcher does not replace them.
+The source integration changes the management ABI to
+`a733-management-v2-timesync` for time-enabled roots. New tooling recognizes
+that ABI and retains v1 rollback support; old tooling rejects the new ABI.
+Time-enabled production root/state/NVMe construction and readback, installed transitions,
+NTP, and physical boot/SSH/KVM/SD-write/recovery acceptance remain open. The
+next full time-profile construction must first rebuild the tracked base under
+the changed closed profile manifest, then replay the time profile while retaining
+all closure checks. No resize occurred and production capacity guards remain unchanged.
+A second construction and comparison, independent deployment, endurance, and
+update/rollback results also remain required. See [integration evidence](evidence/time-profile-integration-20261107.json).
+Follow the [existing deployment guide](deploy-personalized-20261106.md) for
+current installation images; this launcher does not replace them.

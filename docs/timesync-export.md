@@ -4,9 +4,10 @@
 export of the separately configured 221-package profile. It does not run ARM
 programs, install packages, start a daemon or set a clock. The
 [actual complete execution](evidence/timesync-execution-20261107.json) now passes
-configuration/export and independent full archive/BOM readback. Production
-profile/state/image integration and physical startup remain open; published
-installation images are unchanged.
+configuration/export and independent full archive/BOM readback. Source profile
+and state-policy integration is now wired at `bb411e3`. Production root/state/NVMe
+construction and physical startup remain open; published installation images
+are unchanged.
 
 The adapter authenticates the pinned [package-step source](timesync-userspace.md),
 then its closed source manifest before loading dependencies. It compiles the
@@ -68,11 +69,16 @@ historical record, not the source to execute. The current checkout's read-only
 base pipeline and complete time-profile run now pass; the old capacity-refusal
 checkout remains unsuitable for execution.
 
-The [outer launcher](timesync-outer-launcher.md) now passes complete actual
+The [outer launcher](timesync-outer-launcher.md) passes complete actual
 configuration/export and independent artifact readback at source commit `719146c`.
-Next integrate explicit production profile selection, matching package-state and
-persistent clock-state initialization/guards before image composition. Repeat
-construction and production root/state/NVMe inspection remain required, followed
-by independent deployment and physical time, KVM, boot, SD-write and recovery
-acceptance. The [reviewed builder expansion](build-host-capacity-plan.md) remains
-unapproved; capacity guards remain unchanged.
+Source integration at `bb411e3` connects the explicit profile, matching
+package-state metadata, clock-state initialization and guards. Existing baseline
+deployment artifacts remain unchanged. A fresh time
+construction must rebuild the tracked base under the changed closed profile
+manifest before replaying the time profile. Time-enabled production roots, state
+and NVMe have not been built or fully read back. No resize occurred and
+production capacity guards remain unchanged. The [reviewed builder expansion](build-host-capacity-plan.md)
+remains unapproved.
+
+Installed time, real KVM, boot, SD-write and recovery evidence remain required
+under [hardware acceptance](hardware-validation.md).

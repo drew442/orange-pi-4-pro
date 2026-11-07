@@ -35,12 +35,17 @@ no timesync account or daemon. The [checkpoint guard and private view fixture](t
 now verify file-backed ownership and timestamp preservation. Installed root
 transitions and physical synchronization remain unproven.
 
-The [separate offline recipe](timesync-userspace.md) now declares the exact
-221-package addition and boot-enablement policy, with independent source/input
-review. Configuration/export now passes, including exact boot links. Production
-profile selection, per-root metadata regeneration and persistent clock-state
-initialization/guards remain required. Audit installed service state across real A/B updates and
-rollback, verify DNS/NTP reachability on the board, and capture
-cold-boot time establishment and clock persistence alongside SD hashes/write
-counters. Those integration and hardware steps remain unperformed; package staging and
-account fixtures do not pass them.
+The [separate offline recipe](timesync-userspace.md) declares the exact
+221-package addition and boot-enablement policy, and complete configuration/export
+with readback passes. The opt-in profile and matching package/clock-state policy
+are now source-integrated. [`host-state.py`](../build/host-state.py) wires the
+private clock initializer; [`host-management.py`](../configs/host-management.py)
+audits it at boot, while [`update-host.py`](../scripts/update-host.py) checks the
+state directory during updates. Time-enabled roots use ABI
+`a733-management-v2-timesync`; new tooling supports v1 rollback, and old tooling
+rejects v2. These are source-level integrations: time-enabled production roots,
+state and NVMe have not been built; current baseline deployment artifacts remain
+unchanged. Rebuild the tracked base under the changed closed profile
+manifest before a fresh time-profile replay. Installed A/B transitions and
+rollback, DNS/NTP reachability, cold-boot clock establishment, persistence, and
+physical SD hash/write-counter evidence remain unproven.

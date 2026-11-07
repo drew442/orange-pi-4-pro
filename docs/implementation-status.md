@@ -11,8 +11,9 @@ Automatic YT8531 binding/DHCP, routing/DNS and verified HTTPS work after manual
 UTC correction. The exact-device NVMe planner reports 512/512 sectors and no busy
 indicators, with **no writes**. **Installed NVMe boot, SSH login and actual KVM
 guest execution remain unproven.** No newer physical result has been received.
-A [LAN access check](evidence/board-access-observer-20261106.json) sees the recorded
-MAC answering ICMP with SSH refused; no serial device is attached to codex.
+The latest [LAN access check](evidence/board-access-observer-20261107.json) cannot
+reach the recorded address; current power/address/boot state is unknown. No serial
+device is attached to codex.
 
 The reviewed [personalized deployment procedure](deploy-personalized-20261106.md)
 is ready for the operator. Its 256 MiB installer and host SD images fit the actual
@@ -43,9 +44,9 @@ by subsequent clean-build work.
   networking and automatic time remain open. [Time-sync input](host-time.md) is
   authenticated. The [time-profile build](timesync-outer-launcher.md) now passes
   actual 221-package configuration/export and independent complete archive
-  readback, including boot links and fixed 996:996 identity. Profile registration,
-  matching root/package/clock-state integration, installed transitions and NTP
-  remain open; current installation images are unchanged.
+  readback, including boot links and fixed 996:996 identity. Opt-in profile and
+  matching root/package/clock-state source integration now pass; actual installed
+  transitions and NTP remain open. Current installation images are unchanged.
 - [Operator inputs](evidence/operator-inputs-20261105.json): RSA3072 and Ed25519
   keys, DHCP hostname `a733-host`, any source/subnet. Require public-key-only SSH.
   [ARM SSH-policy checks](evidence/ssh-console-management-arm-20261106.json) pass;
@@ -90,14 +91,16 @@ by subsequent clean-build work.
   [fresh raw-package pipeline](userspace-fresh-pipeline.md) configures 220 locked
   packages and matches the [normalized export pair](userspace-export-reproducibility.md):
   138,025,729 compressed bytes, 15,876 entries. [Explicit profile selection](userspace-profiles.md)
-  and complete staging pass for eight package-state components and the closed
-  39-file runtime. The [tracked base pipeline](userspace-pipeline-launcher.md)
-  now passes all three phases and matches the normalized archive. The complete time-profile
-  build/readback now passes; production root/state/NVMe reconstruction remains
-  open. [Private clock-state initialization](timesync-state.md) and five actual
-  builder root/32 MiB image fixtures now pass independent review. Production profile,
-  provenance and installed boot/update hooks remain open. Latest native discovery:
-  **1,293 cases, 100 environment skips**,
+  and complete staging pass. The [tracked base pipeline](userspace-pipeline-launcher.md)
+  passes all three phases and matches the normalized archive. The complete time-profile
+  build/readback passes. [Time-profile integration](evidence/time-profile-integration-20261107.json)
+  now authenticates matching root/state provenance, seeds private clock state and
+  guards boot/update/rollback. Independent source review and an actual frozen-builder
+  component pass: 221 packages, eight package-state components, four management
+  files, 40 maintenance files and a nondeployable 256 MiB state image. New time roots
+  require management ABI v2; updated tools retain v1 rollback support. Production
+  4 GiB roots/8 GiB state/NVMe reconstruction remains open. Latest native discovery:
+  **1,323 cases, 100 environment skips**,
   four assembly cases and all five shell suites. These checks establish no
   physical acceptance or independently reproduced deployment.
 
@@ -111,19 +114,19 @@ by subsequent clean-build work.
 2. Validate NVMe host boot and SSH with both keys. Run [the first KVM guest](kvm-first-guest.md)
    for CPU/disk/network, clean shutdown/restart and persisted disk marker. Return
    its console/log evidence; `/dev/kvm` alone cannot satisfy the gate.
-3. Continue [clean-build work](build-reproduction-status.md): integrate explicit
-   time-profile provenance, 221-package root metadata and the tested private clock
-   initializer into production seeding and boot/update guards before enabling
-   composition. Repeat the fresh time
-   build and compare outputs, then reconstruct production roots/state/NVMe and
-   complete image readback. [Verified single-archive retirement](evidence/builder-deb-retention-20261107.json)
-   enabled the successful build; about 4.88 GB remains free. Full production capacity
+3. Continue [clean-build work](build-reproduction-status.md): rebuild the tracked
+   base with the current closed source manifest/profile lock, repeat the time
+   construction and compare outputs, then reconstruct production roots/state/NVMe
+   and complete image readback. Source integration is enabled; component execution
+   does not satisfy these full-image gates. [Verified single-archive retirement](evidence/builder-deb-retention-20261107.json)
+   enabled the successful build; the later component run sampled a 4.35 GB minimum
+   free. Recheck current resources before staging. Full production capacity
    guards remain separate. The reviewed [20 GiB builder LVM growth](build-host-capacity-plan.md)
    awaits approval after [target/backup recheck](evidence/build-host-capacity-recheck-20261106.json);
    no resize occurred and capacity guards remain unchanged.
    [Firmware license evidence](evidence/vendor-boot-license-inventory-20261106.json)
    remains incomplete; all 479 userspace source archives are acquired, not compiled.
-4. Finish automatic time/state compatibility and prove physical reliability:
+4. Prove installed automatic time/state transitions and physical reliability:
    10 cold/10 warm boots, 24-hour CPU/disk/network/thermal workload, zero routine SD
    writes, interrupted update/manual rollback, dirty-journal and missing-NVMe
    recovery, and off-device guest backup restoration. Establish SPI backup/recovery

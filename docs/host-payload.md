@@ -7,19 +7,26 @@ for the current installation.
 
 The builder produced two raw 4 GiB ext4 root-slot images from the authenticated
 [interim ARM64 userspace](host-userspace.md) and matching A733 kernel modules.
-They include management runtime profile `a733-management-v1`: the management
-helper, configuration and package-state modules, and systemd SSH service.
-Marker and manifest records hash all four files. The
-[current root build](guest-tools-package.md) also includes the complete closed
-maintenance/guest tree at `/usr/lib/a733-tools`, with its own exact BOM and
-immutable modes. The artifact records below retain the earlier package-state
-components; they have not been silently replaced. The images remain prototypes: they are not
+Baseline roots include management runtime profile `a733-management-v1`: the
+management helper, configuration and package-state modules, and systemd SSH
+service. The opt-in `timesync-20261106` profile uses
+`a733-management-v2-timesync` and includes authenticated clock-state helper
+provenance. Old management tools reject v2 metadata; new tools accept v1 for
+rollback.
+Marker and manifest records hash all four files. The source recipe also stages
+the complete closed maintenance/guest tree at `/usr/lib/a733-tools`, with its
+own exact BOM and immutable modes: 40 installed files from 39 source files,
+including the time-state helper. No complete time-profile root image was built
+in the recorded component test. The artifact records below describe earlier v1
+package-state components; they have not been silently replaced. The images
+remain prototypes: they are not
 installed or hardware-booted, and establish no KVM or SD-write acceptance.
 
-The optional `--userspace-profile normalized-20261106` selects the authenticated
-normalized archive; omission preserves the baseline. See [profile selection and
-actual staging evidence](userspace-profiles.md). This does not replace the
-published installation artifacts.
+The optional `--userspace-profile normalized-20261106` or
+`--userspace-profile timesync-20261106` selects its authenticated archive;
+omission preserves the baseline. See [profile selection and actual staging
+evidence](userspace-profiles.md). The current published installation artifacts
+remain unchanged.
 
 ## Format and provenance
 

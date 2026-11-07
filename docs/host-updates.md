@@ -15,6 +15,13 @@ and failed-boot recovery remain unvalidated.
 Do not copy a prepared selector into live state by hand. Physical update and
 interruption testing remain release gates.
 
+For the opt-in `timesync-20261106` source profile, root and state profile,
+package-state, clock-helper provenance and state UUID must agree. The time-aware
+management tools reject mismatched provenance and old management tools reject
+the `a733-management-v2-timesync` profile. New tools accept v1 roots for
+rollback. These source checks have passed component testing; no complete
+production root/state/NVMe build or installed update has been tested.
+
 ## Prepare a compatible root candidate
 
 Use the trusted checkout staged under the root-owned `0700` directory

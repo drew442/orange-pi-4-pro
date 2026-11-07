@@ -1,12 +1,15 @@
 # Offline time-service userspace derivation
 
-The separate input contract
+The `timesync-20261106` profile is now a source-integrated, explicit opt-in in
+[`userspace-profiles.py`](../build/userspace-profiles.py). Baseline remains the
+default and normalized behavior is unchanged. The separate input contract
 [`host-timesync-inputs.lock.json`](../configs/host-timesync-inputs.lock.json)
 adds only ARM64 `systemd-timesyncd` 252.39-1~deb12u2 to the normalized 220-package
 base. A [complete actual build](evidence/timesync-execution-20261107.json) now
-produces and independently verifies the new archive. It is not yet accepted by
-production profile selection or image composition. Published images and
-default/normalized archive pins remain unchanged.
+produces and independently verifies the new archive. Published images and
+default/normalized archive pins remain unchanged. The source integration binds
+matching profile provenance, package-state metadata, and clock-state policy for
+later root/state construction; those production artifacts have not been built.
 
 The two new locks explicitly preserve every existing tuple and binary hash:
 
@@ -83,9 +86,9 @@ The [actual attempt](evidence/timesync-execution-attempt-20261106.json) installe
 the package and passed inventory/account/audit checks, then failed on missing
 service enablement. The [explicit link correction](evidence/timesync-enablement-fix-20261106.json) passes independent Sol/high
 review and 34 focused tests; its exporter dependency pin is updated to the new
-recipe. A subsequent fresh complete configuration/export now passes, with
-independent full artifact readback. Production profile registration, state
-integration and physical service startup remain open.
+recipe. A subsequent fresh complete configuration/export passes with independent
+full artifact readback. Source registration and state hooks are now integrated
+at `bb411e3`; installed service startup remains unproven.
 
 A real run requires the pinned frozen Ubuntu 22.04 AMD64 environment, private
 UID/GID/network namespaces, read-only inputs and disk-backed work. Its 4 GiB
@@ -96,9 +99,11 @@ redundant generated files before another build.
 The prepared [20 GiB expansion](build-host-capacity-plan.md) awaits approval. No resize or
 capacity guard reduction has occurred.
 
-After actual installation and export, authenticate the new archive explicitly,
-regenerate per-root package-state metadata, compose matching root/state/NVMe
-artifacts and complete full readback. Installed service startup,
-clock-state/rollback behavior, NTP readiness and physical zero-SD-write tests
-remain necessary. The [existing deployment guide](deploy-personalized-20261106.md)
-continues to identify the images for physical NVMe boot, SSH and real KVM testing.
+The next full construction must rebuild the tracked base against the changed
+closed profile manifest before replaying the time profile, preserving all source
+closure checks. Time-enabled production roots (4 GiB each), state (8 GiB), and NVMe have not
+been built; existing baseline artifacts remain unchanged. Clock-state initialization, quiescent boot audit, and live directory
+guard are source-wired, but actual installed transitions, rollback, NTP readiness,
+physical zero-SD-write checks, and hardware acceptance remain unproven. No resize
+occurred and production capacity guards remain unchanged. The [existing deployment guide](deploy-personalized-20261106.md)
+continues to identify current images for physical NVMe boot, SSH and actual KVM testing.

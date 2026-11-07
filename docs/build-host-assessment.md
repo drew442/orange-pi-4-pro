@@ -99,6 +99,14 @@ independent review pass; after retirement the builder had **6,765,948,928 bytes
 free**. This permits the tracked userspace pipeline to start, while production
 image assembly retains its larger capacity guards. No LVM growth occurred.
 
+The later [time-profile component run](evidence/time-profile-integration-20261107.json)
+passed in the frozen builder with minima of **4,345,155,584 bytes free disk** and
+**7,260,938,240 bytes available RAM**. This staged the complete 221-package archive
+and a 256 MiB nondeployable state fixture, not production images. Host inventory
+remained unchanged and mapped processes/mounts were cleared. Full root/state/NVMe
+capacity guards are unchanged; the 20 GiB LV growth remains unapproved.
+Recheck current resources before further staging.
+
 ## Local host assessment
 
 Checked 2026-11-04 against vendor build commit `a95129bf30ea11886cc35f08ebb3e69695a26656`. **Local host only: suitable for source investigation, not an unmodified vendor image build.** No local dependencies were installed; remote provisioning is described above.

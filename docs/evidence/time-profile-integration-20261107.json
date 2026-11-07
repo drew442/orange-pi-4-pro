@@ -1,0 +1,243 @@
+{
+  "schema": 1,
+  "date": "2026-11-07",
+  "classification": "Source integration and actual frozen-builder component execution; no production image or physical acceptance",
+  "source_commit": "bb411e34df015488113e3113a1cb615a6d583681",
+  "source_manifest_entries_verified_against_commit": 77,
+  "profile": "timesync-20261106",
+  "baseline_default_unchanged": true,
+  "normalized_profile_unchanged": true,
+  "archive": {
+    "bytes": 138093095,
+    "sha256": "0ead62c982344bfa3a796027e2f07ce0d8402e7033122707e01a9a3f8860f248"
+  },
+  "bom": {
+    "bytes": 4346433,
+    "sha256": "dd5064e28d8b2751ce7285b83b649e94121dd04b6d70e0650ac2439bd32d79d7"
+  },
+  "package_count": 221,
+  "archive_members": 15909,
+  "builder": {
+    "host": "drew@build.drewnet.online",
+    "phase": "/var/lib/a733-clean-replay-20261106/time-profile-component-02",
+    "source_inputs": "/var/lib/a733-time-profile-component-inputs-02-20261107",
+    "frozen_root": "--directory=/var/lib/a733-frozen-builders/freeze-20261106-01/restored-rootfs",
+    "returncode": 0,
+    "staging_required_bytes": 4273450102,
+    "minimum_free_bytes": 4345155584,
+    "minimum_available_memory_bytes": 7260938240,
+    "host_inventory_packages": 842,
+    "host_inventory_unchanged": true,
+    "mapped_processes_final": [],
+    "mounts_final": []
+  },
+  "component_results": {
+    "metadata_extraction": {
+      "passed": true,
+      "members": 15909,
+      "all_regular_and_hardlink_bytes_sha256_checked": true
+    },
+    "unpacked_regular_bytes": 440908294,
+    "package_state_components": 8,
+    "package_state_entries": 1131,
+    "management_profile": "a733-management-v2-timesync",
+    "management_files": 4,
+    "maintenance_files": 40,
+    "provenance_files": 25,
+    "clock_policy": {
+      "schema": 1,
+      "identity": 996,
+      "directory": "var/lib/systemd/timesync",
+      "helper": {
+        "bytes": 17588,
+        "sha256": "2ab686430f5e794aad7a55ebee348356c624315055ba2e9230e911cd00cc82e5"
+      }
+    },
+    "state_uuid": "feac4067-320e-49a2-b674-a51f1869c122",
+    "state_fixture": {
+      "bytes": 268435456,
+      "sha256": "92df3798520305233a65f95d3d69ef0e95b42d67dd76448b5f1670b877964ce0"
+    },
+    "state_image_independent_readback": {
+      "record": {
+        "bytes": 268435456,
+        "sha256": "92df3798520305233a65f95d3d69ef0e95b42d67dd76448b5f1670b877964ce0"
+      },
+      "state_uuid": "feac4067-320e-49a2-b674-a51f1869c122",
+      "journaled_ext4": true,
+      "read_only_feature": false,
+      "state_marker_uuid_matches": true,
+      "e2fsck_read_only_returncode": 0,
+      "e2fsck_output": "Pass 1: Checking inodes, blocks, and sizes\nPass 2: Checking directory structure\nPass 3: Checking directory connectivity\nPass 4: Checking reference counts\nPass 5: Checking group summary information\na733-state: 1182/65536 files (0.1% non-contiguous), 11013/65536 blocks\ne2fsck 1.47.0 (5-Feb-2023)\n",
+      "clock_directories": {
+        "/var": {
+          "type": "directory",
+          "mode": "0755",
+          "uid": 0,
+          "gid": 0,
+          "nlink": 11
+        },
+        "/var/lib": {
+          "type": "directory",
+          "mode": "0755",
+          "uid": 0,
+          "gid": 0,
+          "nlink": 12
+        },
+        "/var/lib/systemd": {
+          "type": "directory",
+          "mode": "0755",
+          "uid": 0,
+          "gid": 0,
+          "nlink": 7
+        },
+        "/var/lib/systemd/timesync": {
+          "type": "directory",
+          "mode": "0755",
+          "uid": 996,
+          "gid": 996,
+          "nlink": 2
+        }
+      },
+      "clock_leaf_listing_names": [
+        ".",
+        ".."
+      ],
+      "initial_saved_clock_absent": true,
+      "whole_image_hash_unchanged_after_review": true
+    },
+    "live_clock_changes_preserve_proof": true,
+    "invalid_clock_refused_at_boot": true,
+    "legacy_validator_rejects_v2": true,
+    "v1_rollback_validator_agreement": true,
+    "actual_device_scan": []
+  },
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "composition_review": "Passed after captured source-binding checks were added to root selection, NVMe assembly and update preparation. Typed archive/profile/clock-policy mismatches reject.",
+    "activation_review": "Passed after live directory proof stopped depending on ancestor link counts and update/selector checks bound the directory device to the active state partition.",
+    "artifact_review": "Independent Python content/schema checks and read-only e2fsck/debugfs. Project sources were read but not imported/executed; only this report was written.",
+    "limitations": [
+      "Copied restored-tree files have transport ownership/modes (observed UID/GID 1000:1000 and helper 0644). Hashes/topology were verified; original fakeroot virtual ownership/modes were not independently reobserved.",
+      "Clock directory metadata and empty initial state were independently read from physical ext4 image bytes, separately from copied-tree metadata. This image snapshot precedes later saved-clock staging tests.",
+      "Full extraction, /var metadata equality, live-clock behavior, invalid-clock rejection and legacy ABI execution are reviewed script/receipt claims; the reviewer did not rerun the frozen builder or reobserve its live namespaces.",
+      "The state image is 268435456 bytes, not the 8589934592-byte production state image. No 4294967296-byte root slot image, kernel-module import or integrated NVMe image was built/reviewed here.",
+      "No installed boot, SSH, NTP exchange, real NVMe installation, actual KVM guest, zero routine SD writes, interruption or endurance acceptance is established.",
+      "Second complete userspace construction/comparison and full production capacity gates remain separate."
+    ]
+  },
+  "failed_attempt": {
+    "phase": "time-profile-component-01",
+    "cause": "Missing build/nvme-image.py in isolated probe source closure; import failed before archive extraction or state construction.",
+    "correction": "Fresh 77-file snapshot includes all assembler/payload dependencies; unchanged feature sources retried in a new phase.",
+    "returncode": 1,
+    "host_inventory_unchanged": true,
+    "mapped_processes_final": [],
+    "mounts_final": []
+  },
+  "validation": {
+    "native_tests": 1323,
+    "environment_skips": 100,
+    "shell_suites": 5,
+    "assembly_cases": 4,
+    "toml_files_parsed": 5,
+    "bash_syntax": "passed",
+    "git_diff_check": "passed",
+    "logs": {
+      "tmp/time-profile-integration-assembly-20261107.log": {
+        "bytes": 592,
+        "sha256": "59a1e76c17a030f09582afc8857fdbab7e773b13e4b4db0d7a1dc4ff55f5fc9f"
+      },
+      "tmp/time-profile-integration-discovery-20261107.log": {
+        "bytes": 2011,
+        "sha256": "e1c9359363903795360590a43ea1d9fd9c72cdedf70316eff8d259cd3bf268f7"
+      },
+      "tmp/time-profile-integration-test-diagnostic-initramfs.sh.log": {
+        "bytes": 303,
+        "sha256": "ba4c538aa65dd10fd6c0bccc7f16d0b52f7e996b6578fa4a1bf65d721004454b"
+      },
+      "tmp/time-profile-integration-test-guest-fixture.sh.log": {
+        "bytes": 93,
+        "sha256": "4a00dd8b70af15f965d4e22586b43b3377dc5059c996ee85632ef50a5bf71375"
+      },
+      "tmp/time-profile-integration-test-host-init.sh.log": {
+        "bytes": 67,
+        "sha256": "1140ccbb0211f94dbafc0cda93fc5475694bb863682cad1f38b51860209ca382"
+      },
+      "tmp/time-profile-integration-test-host-storage-resolver.sh.log": {
+        "bytes": 109,
+        "sha256": "c126ee779bb8b80ee63a08f59a5b322a45ef59a0cf8144a160e6fd7c0cc56892"
+      },
+      "tmp/time-profile-integration-test-host-userspace.sh.log": {
+        "bytes": 86,
+        "sha256": "bafcce50723cd1421cf680cfff091897461967cc32747361e2d6a3f433ac20c1"
+      }
+    }
+  },
+  "raw_records": {
+    "out/time-profile-component-20261107/records/receipt.json": {
+      "bytes": 3537,
+      "sha256": "9b22f4c96f21b695a868d65d0f3f4fe3b80378b48414578c561ae04265ce35ba"
+    },
+    "out/time-profile-component-20261107/records/source-manifest.json": {
+      "bytes": 10021,
+      "sha256": "7eab7a61999b916f7fced0ede731b255d6d65a8b8260f066133f962fb54603e4"
+    },
+    "out/time-profile-component-20261107/records/work/probe-receipt.json": {
+      "bytes": 16948,
+      "sha256": "eaa03cbd247280096c01d56fa2bfbb6873f85f9bf4659ac71c25e06ce4f7c78e"
+    },
+    "out/time-profile-component-20261107/records/runtime.log": {
+      "bytes": 3467,
+      "sha256": "98bb24cb191deba60366514461dfb8f2e363014832dcfd41d33e8314d6911b0f"
+    },
+    "out/time-profile-component-20261107/records/host-packages.before.tsv": {
+      "bytes": 40966,
+      "sha256": "446b7eb3364a6f196390c698c1c133086fee5eb3b080ec4483cc1d8584b39b15"
+    },
+    "out/time-profile-component-20261107/records/host-packages.after.tsv": {
+      "bytes": 40966,
+      "sha256": "446b7eb3364a6f196390c698c1c133086fee5eb3b080ec4483cc1d8584b39b15"
+    },
+    "out/time-profile-component-20261107/independent-review.json": {
+      "bytes": 7456,
+      "sha256": "5d63dcaed198249a6ffa6a1d699471260124a9813f297f8f0848e8e0e864f78c"
+    },
+    "out/time-profile-component-20261107/failed-records/receipt.json": {
+      "bytes": 1655,
+      "sha256": "978b280411bb54bc54997981efcb426b7dba7b90cc03eebaa73879e5e4eb83ea"
+    },
+    "out/time-profile-component-20261107/failed-records/runtime.log": {
+      "bytes": 3711,
+      "sha256": "2f1dfc40eb00509d0a3b1e725969aba944efd123e1890db10d02c72ceb1a463f"
+    },
+    "out/time-profile-component-20261107/failed-records/source-manifest.json": {
+      "bytes": 9017,
+      "sha256": "1d1004649f084c61e36ba63510f1cb05fae06334ed7c4a37c1f30d38ab10102e"
+    },
+    "out/time-profile-component-20261107/probe-sources/probe.py": {
+      "bytes": 8076,
+      "sha256": "12ab60b122316dc9fd405359e03ba224d003ac882a8077116762345a716a4379"
+    },
+    "out/time-profile-component-20261107/probe-sources/run.sh": {
+      "bytes": 748,
+      "sha256": "7baa9c39ba68176127fcd2eb3340b3073fb4d7aa957fff68819339ef54a00491"
+    },
+    "out/time-profile-component-20261107/probe-sources/legacy-prepare.py": {
+      "bytes": 13372,
+      "sha256": "c1c0528aab579d1583627af0069736cf25b27714975532e99f642eb4c98f8bdb"
+    },
+    "tmp/time-profile-component-20261107/launch-02.py": {
+      "bytes": 1626052,
+      "sha256": "8987bb76725400c83ad64151a6c87d8a7fbcd602b9e29e96a9c5d200905a649e"
+    }
+  },
+  "remaining": [
+    "Second complete userspace construction and comparison: rebuild tracked base under the current profile-lock source closure before replaying time derivation.",
+    "Full 4 GiB root slots, 8 GiB state and integrated NVMe production reconstruction/readback; full capacity guards unchanged.",
+    "Reviewed 20 GiB builder LV growth remains unapproved; no resize performed.",
+    "Installed boot/SSH/NTP/update/rollback and actual KVM guest, reliability, zero routine SD writes, recovery and independently reproduced deployment.",
+    "Published personalized deployment images remain unchanged."
+  ]
+}
