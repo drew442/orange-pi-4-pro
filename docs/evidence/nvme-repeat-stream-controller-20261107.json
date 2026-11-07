@@ -1,0 +1,40 @@
+{
+  "classification": "Reviewed independent repeat stream reader; actual constructed-artifact streaming not established by source tests",
+  "date": "2026-11-07",
+  "hardware_acceptance": false,
+  "historical_reader": {
+    "bytes": 20922,
+    "sha256": "02b04bce52597d9a4ca00f19f4c520fe357e3ba437de43aa1bef38978474684d"
+  },
+  "independent_review": {
+    "bytes": 8780,
+    "path": "out/nvme-repeat-stream-controller-20261107/independent-review.json",
+    "sha256": "4dadd7307f677afac3699705293ab3b2f938461708a26245b5d61bc273be2f16"
+  },
+  "inspection_helper": {
+    "bytes": 15781,
+    "sha256": "d9e9342136af125df2eb9dfe1d832183244f13cd28c7ac3e2a4d7f1ca976b8fb"
+  },
+  "limits": "Whole wire/decoded/GPT/root-state partition checks require actual completed artifact. BOOT/GUESTS namespaces remain producer-attributed; physical acceptance stays open.",
+  "producer_phase": "/var/lib/a733-clean-replay-20261106/nvme-timesync-repeat-01",
+  "producer_revision": "339eef1ffcd1370dffc65fec81861f7081cb2daf",
+  "schema": 1,
+  "source_files": {
+    "build/verify-nvme-repeat-stream.py": {
+      "bytes": 7463,
+      "sha256": "d2caa36d30b41d0100ba488dd789a86a55133ac88aec74d3d0483015defa0950"
+    },
+    "tests/test_verify_nvme_repeat_stream.py": {
+      "bytes": 12780,
+      "sha256": "3b13560d7087ace2d287614dc2d3aeb5692d5725bd3e7208918c50d027ec2425"
+    }
+  },
+  "state_uuid": "feaaee34-d782-4c18-bd04-1029540ab26a",
+  "validation": {
+    "actual_stream_pass": false,
+    "focused_skips": 0,
+    "focused_tests": 53,
+    "full_privileged_suite_with_new_reader": false,
+    "python310_grammar": true
+  }
+}
