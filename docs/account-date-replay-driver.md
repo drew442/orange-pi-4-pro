@@ -37,9 +37,8 @@ phase logs and receipts under
 Never reuse the earlier failed repeat receipt or overlay its tree.
 
 The adapter also composes with the unchanged time-profile exporter and retains
-its original identity/service/derivation validations. A separate outer validator
-for consuming the new baseline replay source manifest is still required before
-fresh time-profile construction. The historical time launcher deliberately
+its original identity/service/derivation validations. The separate outer consumer described below authenticates the new baseline
+replay source manifest before fresh time-profile construction. The historical time launcher deliberately
 rejects this changed source closure; do not relax it or edit old receipts.
 
 Eight driver tests and ten adapter tests pass, including real mapped-owner
@@ -48,6 +47,32 @@ reader that incorrectly required readonly mode. [Actual fresh baseline execution
 now passes from `b133454`: all 220 packages, unchanged archive/raw/BOM pins and
 independent complete 15,876-entry raw PAX/BOM readback. Host inventory is unchanged
 and no mapped processes or mounts remain; minimum disk/RAM were 6.02 GB/7.25 GB.
-Time-profile outer integration and production construction remain pending.
+Actual time-profile repetition and production construction remain pending.
 The baseline proof establishes no deployment success. Full roots/state/NVMe construction,
 physical SSH/KVM and independent deployment remain required.
+
+## Repeat the time profile
+
+The separate `build/launch-account-dated-timesync.py` consumer now retains the
+historical time launcher's full base, clone, namespace and receipt checks. It
+also requires the successful dated baseline's marked provenance, exact source
+closure, phase runners and archive/BOM verification. Export uses the reviewed
+adapter's `time` policy; original time-adapter attribution remains accurate.
+Eleven focused regressions and independent Sol/high review pass. Actual execution
+must still establish reproduction.
+
+After the baseline succeeds and the hash-pinned additional package described in
+[time inputs](host-time.md) is available on the builder:
+
+```sh
+sudo python3 -I -B build/launch-account-dated-timesync.py \
+  --project "$PWD" --base-tag account-dates-01 --tag account-dates-01 \
+  --extra-deb /tmp/a733-timesync-input.deb --plan
+sudo python3 -I -B build/launch-account-dated-timesync.py \
+  --project "$PWD" --base-tag account-dates-01 --tag account-dates-01 \
+  --extra-deb /tmp/a733-timesync-input.deb
+```
+
+The plan performs no builder staging. Actual execution retains the existing
+5 GiB initial floor and full clone/configuration budget; it must refuse inadequate
+capacity before staging. Keep historical successful and failed receipts intact.
