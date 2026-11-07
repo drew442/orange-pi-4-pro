@@ -1,0 +1,31 @@
+{
+  "classification": "Reviewed registered file-only full NVMe repeat adapter; actual construction and independent stream verification pending",
+  "date": "2026-11-07",
+  "hardware_acceptance": false,
+  "limits": "Actual file-artifact checks and physical acceptance remain separate; original controllers/evidence unchanged.",
+  "physical_storage_written": false,
+  "schema": 1,
+  "source_review": {
+    "bytes": 11586,
+    "path": "out/nvme-repeat-controller-20261107/independent-review.json",
+    "sha256": "e31b0e0f78a4a6477c68ebba68428a6d188845b7cc723500c5b7d40621ef3f4b"
+  },
+  "sources": {
+    "build/launch-nvme-host-repeat.py": {
+      "bytes": 12116,
+      "sha256": "19917ac211b6bb1f2b729f29e91c140796b3006e382c4f4b367c5b63445338db"
+    },
+    "tests/test_nvme_host_repeat.py": {
+      "bytes": 16136,
+      "sha256": "c589e2825cb2c82f9c150c457bfedc4edb2022b80a2d9a9941c89afac1c73a52"
+    }
+  },
+  "validation": {
+    "actual_construction": false,
+    "committed_cli_plan": false,
+    "full_privileged_suite": false,
+    "independent_stream_pass": false,
+    "independent_targeted_tests": 53,
+    "skips": 0
+  }
+}
