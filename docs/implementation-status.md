@@ -63,7 +63,11 @@ remain unchanged. **Do not repeat NVMe installation to fix management.**
   [Investigation](spi-boot-investigation.md) records the distinct boot layout and
   erase-count concern. The user permits SPI preparation with exact target/write details and yes/no
   confirmation before programming. Verified backup/recovery and a compatible
-  reviewed candidate remain required; no SPI write has occurred.
+  reviewed candidate remain required; no SPI write has occurred. The
+  [read-only backup tool](spi-backup.md) passes 27 safety cases and independent
+  review; its original-flash backup/off-device retention are not yet performed.
+  Pinned U-Boot supports target `nvme`; a distinct candidate policy and provenance
+  are specified in the investigation, not built or programmed.
 
 ## Implemented and verified in software
 
@@ -107,7 +111,7 @@ remain unchanged. **Do not repeat NVMe installation to fix management.**
   files, 40 maintenance files and a nondeployable 256 MiB state image. New time roots
   require management ABI v2; updated tools retain v1 rollback support. Production
   4 GiB roots/8 GiB state/NVMe reconstruction remains open. Latest native discovery:
-  **1,326 cases, 100 environment skips**,
+  **1,353 cases, 100 environment skips**,
   four assembly cases and all five shell suites. These checks establish no
   physical acceptance or independently reproduced deployment.
 
@@ -137,7 +141,9 @@ remain unchanged. **Do not repeat NVMe installation to fix management.**
    10 cold/10 warm boots, 24-hour CPU/disk/network/thermal workload, zero routine SD
    writes, interrupted update/manual rollback, dirty-journal and missing-NVMe
    recovery, and off-device guest backup restoration. Establish SPI backup/recovery
-   before considering SPI programming.
+   before considering SPI programming. After SSH works, follow the
+   [SPI backup procedure](spi-backup.md) and return plan/backup/off-device
+   verification output. Do not program SPI yet.
 
 ## Completion rule
 

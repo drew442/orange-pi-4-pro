@@ -58,6 +58,70 @@ A separately reviewed SPI/NVMe boot policy must preserve the compatible firmware
 read-only environment and EL2 handoff while selecting NVMe boot files. The [EL2 diagnostic](el2-diagnostic.md) has physically initialized KVM, but
 SPI boot and guest execution remain untested.
 
+## Resolved source policy and remaining candidate work
+
+The pinned [sunxi target definition](https://github.com/orangepi-xunlong/u-boot-orangepi/blob/b791be842935b27268ae3d00e943a9075495f30a/include/configs/sunxi-common.h#L357)
+registers **`nvme`**, not `nvme0`. Its
+[distro command](https://github.com/orangepi-xunlong/u-boot-orangepi/blob/b791be842935b27268ae3d00e943a9075495f30a/include/config_distro_bootcmd.h#L67)
+runs PCI enumeration, NVMe scan and device 0 selection, then searches bootable
+partitions (default partition 1) and `/` then `/boot/`. SPI itself is not a distro
+boot target: it supplies firmware/U-Boot, which then reads Linux files from NVMe.
+
+The NVMe image recipe already creates legacy-compatible `A733BOOT` partition 1
+with `/boot/boot.scr`, `uImage`, `uInitrd` and the matching DTB. This is source
+compatibility evidence, not an observed U-Boot NVMe file read. A separate candidate
+should retain `ENV_IS_NOWHERE=y`, disabled `saveenv`, misc/system switching,
+bootcount/OTA writes, both reviewed patches and EL2 service `0x8000ff40`.
+Coordinator policy for that candidate is:
+
+```text
+setenv boot_targets nvme; run distro_bootcmd
+```
+
+Manual SD selection remains `run bootcmd_mmc0` at the interrupted U-Boot prompt.
+No distro-macro source patch is needed. Do not alter the registered diagnostic
+replay target: its `.config` and binary hashes prove a different, SD-only build.
+The separate candidate needs its own configuration provenance, build and review.
+The current host script resets `boot_targets` to `mmc0`, uses implicit partition 1
+and loops on load failure; its candidate revision must carry the discovered
+partition explicitly and document manual recovery. No candidate firmware has
+been built or programmed. The builder currently has about 3.89 GB free, below
+the existing U-Boot recipe's 4 GB guard; guards remain unchanged.
+
+After installed management works, a serial-only **read test** can establish the
+NVMe file path without programming SPI. Interrupt U-Boot autoboot and capture:
+
+```text
+printenv boot_targets scriptaddr
+pci enum
+nvme scan
+nvme dev 0
+ls nvme 0:1 /boot/
+```
+
+The recorded SD boot loads scripts at `0x43100000`. If `scriptaddr` reports that
+same value and the listing contains `/boot/boot.scr`, also capture:
+
+```text
+load nvme 0:1 ${scriptaddr} /boot/boot.scr
+```
+
+This loads the small script into RAM without executing it. Do not run `source`,
+`saveenv`, `sf`, erase or write commands. Return the complete serial transcript;
+this is a file-read test, not SPI boot acceptance.
+
+## Backup and recovery gate
+
+The [read-only backup tool and procedure](spi-backup.md) now provide exact-device
+inspection and a two-read, verified 16 MiB RAM backup with progress. Only private
+tmpfs output is accepted, and active swap is refused. Transfer and verify the
+backup off-device before poweroff. Host fixtures and independent review do not
+establish that a physical backup has been made.
+
+The manual lists a BOOT button, but a recovery route for corrupted SPI has not
+been demonstrated. Do not infer that SD boot or button presence proves ROM/USB
+recovery. That hardware result remains required before programming.
+
 Before proposing any SPI write:
 
 1. Revalidate the recorded software identity and geometry immediately before

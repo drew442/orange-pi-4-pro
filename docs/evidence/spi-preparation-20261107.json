@@ -1,0 +1,183 @@
+{
+  "schema": 1,
+  "date": "2026-11-07",
+  "classification": "Read-only SPI preparation source/host checks and pinned boot-source trace; no physical backup or programming",
+  "source_commit": "fdedaf389c72dd3ff28a0eece8869c3146ee7e47",
+  "tool_sources": {
+    "scripts/backup-spi.py": {
+      "bytes": 10111,
+      "sha256": "b160e3fe8e421e18e35aad34aff909e10b4dfca027178d80a4b202c711e2147d"
+    },
+    "tests/test_backup_spi.py": {
+      "bytes": 16620,
+      "sha256": "43a8e35bd2ff9879631cd496e5f3e8bcf050fb79be7aa23c4a054275c8cbd09f"
+    }
+  },
+  "target": {
+    "character_device": "/dev/mtd0",
+    "name": "spi0.0",
+    "type": "nor",
+    "partname": "XM25QU128C",
+    "jedec_id": "204118",
+    "bytes": 16777216,
+    "erasesize": 65536,
+    "writesize": 1,
+    "physical_identity_evidence": "docs/evidence/board-el2-20261104.json"
+  },
+  "contract": {
+    "flash_operations": "O_RDONLY|O_NOFOLLOW|O_NONBLOCK descriptor, fstat/sysfs ancestry/major-minor/full map and MEMGETINFO only. No write/erase/programming operation.",
+    "output": "New private root-owned0700 directory strictly under/run on kernel-confirmed tmpfs, >=24MiB available; exclusive0600 backup and manifest. Active swap refused, including file/block/zram.",
+    "integrity": "Two complete source reads matching size/SHA256, stable identity/maps/ioctl/swap checks, fsynced file and matching complete output hash before manifest.",
+    "manifest": "Local-RAM status only; off-device retention/recovery explicitly false.",
+    "distribution": "Standalone script; published40-file maintenance tree and installer artifacts unchanged."
+  },
+  "boot_source_findings": {
+    "uboot_commit": "b791be842935b27268ae3d00e943a9075495f30a",
+    "source": "drew@build.drewnet.online:/home/drew/orange-pi-4-pro-build/u-boot",
+    "nvme_target": "nvme, not nvme0; PCI enumeration, NVMe scan and devnum0 before distro filesystem search.",
+    "boot_file_layout": "NVMe recipe already populates partition1 A733BOOT/boot with boot.scr/uImage/uInitrd/matchingDTB; physical U-Boot NVMe file read unproven.",
+    "coordinator_candidate_policy": "setenv boot_targets nvme; run distro_bootcmd; manual SD selection run bootcmd_mmc0. Candidate is not yet built or registered.",
+    "preserved_requirements": [
+      "ENV_IS_NOWHERE, disabled saveenv and misc/system/OTA/bootcount write paths",
+      "Both reviewed U-Boot patches and EL2 service0x8000ff40",
+      "Compatible pinned boot0/monitor/SCP/kernel/DTB",
+      "Distinct candidate config provenance; do not weaken historical replay hashes"
+    ],
+    "next_candidate_work": "Explicit discovered partition in host boot script, failure/manual recovery behavior, registered separate U-Boot configuration and regular-file candidate build/review.",
+    "capacity": "Builder observed3889651712B free, below unchanged4000000000B U-Boot guard. LV growth unapproved; no resize or compilation attempted.",
+    "retained_sources": {
+      "tmp/spi-boot-source-20261107/configs/sun60iw2p1_t736_defconfig": {
+        "bytes": 3263,
+        "sha256": "41f8d6d60de149d81a94bfb969b87362aa7938d21e7dfc3ae2789da5fab515bf"
+      },
+      "tmp/spi-boot-source-20261107/include/config_distro_bootcmd.h": {
+        "bytes": 17323,
+        "sha256": "1f94119bbae366ffa7d0d20200dde3c0c2427c30e6e325790ded4ccdc3a31a91"
+      },
+      "tmp/spi-boot-source-20261107/include/configs/sun60iw2p1.h": {
+        "bytes": 899,
+        "sha256": "5d0269828c15e37aa32ccfd8d887b51cd871e3d5c141c05cd351a37c8fe64983"
+      },
+      "tmp/spi-boot-source-20261107/include/configs/sunxi-common.h": {
+        "bytes": 15031,
+        "sha256": "82329754014e6d7d731ac6dfac8fc9a877ad67a8b0b163fec4f8e6dab28e4946"
+      },
+      "tmp/spi-boot-source-20261107/manifest.json": {
+        "bytes": 683,
+        "sha256": "a45bc4cef22dca8d5f3a1a70615ed5d3c201a7235bde28224c34a7144c2ef900"
+      }
+    }
+  },
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "outcome": "Passed final source/test and operator guide review.",
+    "resolved_findings": [
+      "Explicit no-active-swap checks prevent accepting tmpfs that can spill to disk.",
+      "Require bounded tmpfs only; ramfs zero capacity did not meet contract.",
+      "Added positive output traversal and actual symlink/wrong ancestry/dev-char/extra-MTD refusal tests.",
+      "Retained-copy guide fails fast before overwriting an existing directory or treating failed transfer as success."
+    ]
+  },
+  "validation": {
+    "focused_tests": 27,
+    "native_cases": 1353,
+    "environment_skips": 100,
+    "native_seconds": 30.094,
+    "shell_suites": 5,
+    "assembly_cases": 4,
+    "python_toml_bash_syntax": "passed",
+    "diff_check": "passed",
+    "real_host_guard": "Actual host active swap refused by output helper before output creation; no device opened.",
+    "initial_discovery": "Initial parallel run failed existing diagnostic4GBspace guard. After shell/assembly tasks terminated, sequential full discovery passed with guards unchanged.",
+    "raw_logs": {
+      "tmp/spi-backup-assembly-20261107.log": {
+        "bytes": 592,
+        "sha256": "bdf1d095ef1e29bd3346224f4f7809061da97dbdec5eba4903e00d8154c01bf0"
+      },
+      "tmp/spi-backup-discovery-02-20261107.log": {
+        "bytes": 2602,
+        "sha256": "9f37ce574077bb53299a2023a5e7a662b744a79c6c06dfa844650fd899562738"
+      },
+      "tmp/spi-backup-discovery-20261107.log": {
+        "bytes": 3225,
+        "sha256": "131dc5b39f99372c4bcbce5c2c1bff89654e29018ec03971c8dbccdf15f07423"
+      },
+      "tmp/spi-backup-real-swap-refusal-20261107.log": {
+        "bytes": 174,
+        "sha256": "433870c8d2ea1ce61ed3716e365a2e1feb89111f33feae3105a0c2f63e068a8f"
+      },
+      "tmp/spi-backup-test-diagnostic-initramfs.sh.log": {
+        "bytes": 303,
+        "sha256": "3e914d0eabf3c5fd739afabbfa27705d54f66c1d8562c6b9bcdca582c3770d2d"
+      },
+      "tmp/spi-backup-test-guest-fixture.sh.log": {
+        "bytes": 93,
+        "sha256": "4a00dd8b70af15f965d4e22586b43b3377dc5059c996ee85632ef50a5bf71375"
+      },
+      "tmp/spi-backup-test-host-init.sh.log": {
+        "bytes": 67,
+        "sha256": "1140ccbb0211f94dbafc0cda93fc5475694bb863682cad1f38b51860209ca382"
+      },
+      "tmp/spi-backup-test-host-storage-resolver.sh.log": {
+        "bytes": 109,
+        "sha256": "c126ee779bb8b80ee63a08f59a5b322a45ef59a0cf8144a160e6fd7c0cc56892"
+      },
+      "tmp/spi-backup-test-host-userspace.sh.log": {
+        "bytes": 86,
+        "sha256": "bafcce50723cd1421cf680cfff091897461967cc32747361e2d6a3f433ac20c1"
+      },
+      "tmp/spi-backup-tests.log": {
+        "bytes": 126,
+        "sha256": "4e30ce63bda79192f538396d67cc42b0b916de2df7c61e22c50010482c91fa33"
+      },
+      "tmp/spi-backup-review/additional-identity-guards.log": {
+        "bytes": 235,
+        "sha256": "7af2e044b8e380aa789698733589ff0fc0a6b4d879504811d3558b8a982898ed"
+      },
+      "tmp/spi-backup-review/focused-tests-final-delta.log": {
+        "bytes": 126,
+        "sha256": "180eef77324b8d24c1e907a11268013cc310c37ec2c344c5c247c0eac8d4c48a"
+      },
+      "tmp/spi-backup-review/focused-tests-final.log": {
+        "bytes": 121,
+        "sha256": "7a565e7ac9ad12e4cff5f9325993bae8b0d682f4be1f38a3dce551f9f2a70338"
+      },
+      "tmp/spi-backup-review/focused-tests.log": {
+        "bytes": 116,
+        "sha256": "eb3afbcf22bf62c6314844f07cc67ec46338777907e79bd56bf92e9b526a15ae"
+      },
+      "tmp/spi-backup-review/pinned-source-check.log": {
+        "bytes": 17701,
+        "sha256": "13933cb836d18d83a08935766ae298447fef523bfa06bae9aea3ce2330c936aa"
+      },
+      "tmp/spi-backup-review/readonly-source-symlink.log": {
+        "bytes": 125,
+        "sha256": "478009e11d5a7001053a9d2643cf54cd25b9001144188602d06876fb3bb60f77"
+      }
+    }
+  },
+  "operator_guide": "docs/spi-backup.md",
+  "limits": [
+    "Physical SPI backup, off-device copy and recovery not performed.",
+    "No concrete firmware candidate/programming plan or yes/no SPI write confirmation; no physical SPI write.",
+    "Installed DHCP/SSH permission repair and actual KVM guest remain pending.",
+    "Boot cycles, endurance, SD-write evidence, update/rollback/recovery and independently reproduced clean production deployment remain open."
+  ],
+  "agent_routing": {
+    "implementation": {
+      "model": "gpt-6.1-sol",
+      "effort": "medium"
+    },
+    "source_trace": {
+      "model": "gpt-6.1-sol",
+      "effort": "medium"
+    },
+    "review": {
+      "model": "gpt-6.1-sol",
+      "effort": "high"
+    },
+    "maximum_active_children": 2,
+    "usage_and_cost": "Not exposed; no measured cost saving claimed."
+  }
+}
