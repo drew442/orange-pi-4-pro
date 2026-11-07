@@ -398,7 +398,9 @@ class TimesyncStateTests(unittest.TestCase):
             fd = original_open(name, flags, *args, **kwargs)
             if name == '.' and not changed:
                 changed = True
+                before = self.marker.stat()
                 self.marker.write_bytes(MARKER.replace(b'64504c34', b'74504c34'))
+                os.utime(self.marker, ns=(before.st_atime_ns, before.st_mtime_ns + 1_000_000_000))
             return fd
 
         with mock.patch.object(state.os, 'open', side_effect=change), \
