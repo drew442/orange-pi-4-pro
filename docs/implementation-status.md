@@ -124,17 +124,19 @@ remain unchanged. **Do not repeat NVMe installation to fix management.**
 2. Validate SSH with both keys, then run [the first KVM guest](kvm-first-guest.md)
    for CPU/disk/network, clean shutdown/restart and persisted disk marker. Return
    its console/log evidence; `/dev/kvm` alone cannot satisfy the gate.
-3. Continue [clean-build work](build-reproduction-status.md): rebuild the tracked
-   base with the current closed source manifest/profile lock, repeat the time
-   construction and compare outputs, then reconstruct production roots/state/NVMe
-   and complete image readback. Source integration is enabled; component execution
-   does not satisfy these full-image gates. [Verified single-archive retirement](evidence/builder-deb-retention-20261107.json)
-   enabled the successful build; the later component run sampled a 4.35 GB minimum
-   free. The later installer refresh sampled 3.89 GB minimum free. Recheck current
-   resources before staging. Full production capacity
-   guards remain separate. The reviewed [20 GiB builder LVM growth](build-host-capacity-plan.md)
-   awaits approval after [target/backup recheck](evidence/build-host-capacity-recheck-20261106.json);
-   no resize occurred and capacity guards remain unchanged.
+3. Continue [clean-build work](build-reproduction-status.md). The fresh November 7
+   repeat completed all three child phases but **failed** its outer archive pin:
+   [45 account dates across two files](userspace-account-date-replay.md) changed
+   across days; the other 15,874 entries match. A closed build-only helper passes
+   17 focused tests and independent review; it is not integrated yet. Add a
+   truthful replay adapter/contract, reproduce unchanged baseline/time pins, then
+   reconstruct production roots/state/NVMe. Do not reuse the failed base receipt.
+   [Completed kernel replay retention](kernel-run-retention.md) preserves the
+   removed expanded tree as verified archives on two hosts. After the fresh base
+   attempt and archive mirror, builder free space was **6.84 GB**; codex was
+   **2.75 GB**. Recheck before staging. Full production capacity guards remain.
+   The reviewed [20 GiB builder LVM growth](build-host-capacity-plan.md) awaits
+   approval; no resize occurred.
    [Firmware license evidence](evidence/vendor-boot-license-inventory-20261106.json)
    remains incomplete; all 479 userspace source archives are acquired, not compiled.
 4. Prove installed automatic time/state transitions and physical reliability:

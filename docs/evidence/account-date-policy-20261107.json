@@ -1,0 +1,108 @@
+{
+  "schema": 1,
+  "date": "2026-11-07",
+  "classification": "Unintegrated internal build-only account-date helper; no artifact reproduction or hardware acceptance",
+  "policy": {
+    "baseline_day": 20763,
+    "baseline_active_accounts": 23,
+    "baseline_backup_accounts": 22,
+    "time_active_accounts": 24,
+    "time_backup_accounts": 23,
+    "time_additional_account": "systemd-timesync",
+    "time_additional_account_day": 20764,
+    "time_uid_gid": [
+      996,
+      996
+    ]
+  },
+  "sources": "Authenticated historical baseline and time archives; see docs/userspace-account-date-replay.md",
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "result": "No blocking findings; caller must enforce private clone/namespace provenance and discard any failed clone"
+  },
+  "validation": {
+    "native_root_focused_cases": 17,
+    "native_root_focused_pass": true,
+    "jammy_python310_root_focused_cases": 17,
+    "jammy_python310_root_focused_pass": true,
+    "python310_ast_parse": true,
+    "toml_parse": true,
+    "shell_suites_passed": 5,
+    "assembly_cases_passed": 4,
+    "original_discovery": {
+      "cases": 1370,
+      "skipped": 112,
+      "failures": 1,
+      "errors": 4,
+      "reason": "Existing EL2 4 GB and kernel/vDSO 3 GB resource checks exceed available native filesystem space"
+    },
+    "capacity_affected_module_reruns": {
+      "environment": "Temporary6GiBtmpfs at ordinary workspace path; production guards unchanged; unmounted afterward",
+      "el2_cases": 15,
+      "kernel_cases": 22,
+      "vdso_cases": 10,
+      "all_passed": true
+    },
+    "unsuitable_full_suite_tmpfs_attempts": "Preserved both logs: /dev/shm paths rejected by device-path guards; ordinary-path tmpfs rejected by disk-filesystem guards. Neither establishes a full-suite pass."
+  },
+  "pins": {
+    "build/account-dates.py": {
+      "bytes": 9114,
+      "sha256": "a9bad51aeeb113dc66d1050550e0ec5eceb6e3cb7ec8c4c524934b5915165114"
+    },
+    "tests/test_account_dates.py": {
+      "bytes": 11789,
+      "sha256": "f57b27e1ab344b3a9c9938d31109be0e34e8407da5fd9a7b0538f1a2d7c40ac1"
+    },
+    "tmp/account-dates/tests-root.log": {
+      "bytes": 116,
+      "sha256": "201d2b14a4653a455545529c4f88525371103a602e8467e48ab13e0bef680b32"
+    },
+    "tmp/account-dates/jammy-root-tests.log": {
+      "bytes": 1420,
+      "sha256": "e91df51fbce61aaaa546ee4f1bec6576e038ca79efbff2d2fb681e9aa6ceea50"
+    },
+    "tmp/account-dates/retained-archive-policy-check.log": {
+      "bytes": 144,
+      "sha256": "27cdb06af0e5b36fba32d888e20d76d7591329e4b1e110f7f3bada96d3bfc0f3"
+    },
+    "tmp/account-dates/discovery.log": {
+      "bytes": 8522,
+      "sha256": "9a1263bd93369692a6df012836a388a004e64018d7f2a0dccc2b204658cb88fe"
+    },
+    "tmp/account-dates/discovery-memory-fixtures.log": {
+      "bytes": 226112,
+      "sha256": "77bceb2e1072055acc7666a584549adc4487a0f104f70e2e12874497afac37a9"
+    },
+    "tmp/account-dates/discovery-private-tmpfs.log": {
+      "bytes": 39090,
+      "sha256": "8357ffc6ef07095b992070d05fe9b7015d93daefd9807e0d55aa7b19bb6b9b46"
+    },
+    "tmp/account-dates/capacity-el2.log": {
+      "bytes": 114,
+      "sha256": "ab57c647cb56f6a9fbea2f33a800c0cd88f62d32dbbede4a6276d175969880c4"
+    },
+    "tmp/account-dates/capacity-kernel.log": {
+      "bytes": 121,
+      "sha256": "52381e20abf43bd04cacd3e44589a013cec8403ecd99277f0207f1c8e7c85ab7"
+    },
+    "tmp/account-dates/capacity-vdso.log": {
+      "bytes": 109,
+      "sha256": "7bf47306e042abc4675e71a0d606f74587647258c43ee9390962f3ef404134e5"
+    },
+    "tmp/account-dates/shell-suites.log": {
+      "bytes": 658,
+      "sha256": "3a4977ec0fdaba47b40fc05902c5628154fd536f7da4981efa191c6983640fcd"
+    },
+    "tmp/account-dates/assembly.log": {
+      "bytes": 592,
+      "sha256": "269e0fb9f9d116d8c7811fda7e7c73e44457da918b79e6c9ec1186166a798018"
+    }
+  },
+  "remaining": [
+    "Authenticated replay adapter/driver integration and independent review",
+    "Fresh baseline/time reproduction matching unchanged archive/raw-tar/BOM pins",
+    "Physical management/KVM/reliability and deployment acceptance"
+  ]
+}

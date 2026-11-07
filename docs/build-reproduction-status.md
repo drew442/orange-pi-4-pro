@@ -31,6 +31,13 @@ artifacts remain bound to [the deployment guide](deploy-personalized-20261106.md
 | Time-profile outer orchestration | [Tracked launcher and actual prelude](timesync-outer-launcher.md): base/source/namespace chain, private-propagation handshake, common manifest, guarded clone and measured output contracts; actual early 5 GiB refusal | Actual complete 221-package configuration/export and independent artifact readback pass; repeat build requires tracked-base rebuild under the changed closed manifest; time-enabled production images and hardware acceptance remain open |
 | Distribution inputs | [26-input license inventory](evidence/vendor-boot-license-inventory-20261106.json) | Attribution/grants unresolved; no public redistribution clearance claimed |
 
+The November 7 [fresh repeat attempt](userspace-account-date-replay.md) failed
+its exact normalized archive check: only 45 locked-account date fields in two
+files changed across days. All three child phases passed, but the outer build
+failed. A narrow helper passes focused review/tests; producer integration and
+new baseline/time builds remain pending. Earlier same-day successes stand as
+recorded, without establishing cross-day reproduction.
+
 The pinned mke2fs creator copies child modification times at whole-second
 resolution and sets the filesystem root to its creation epoch; diagnostic image
 comparison explicitly accounts for this transformation. Nanosecond archive
@@ -54,9 +61,9 @@ passes after [one more verified cache retirement](evidence/builder-deb-retention
 Source integration is recorded at commit `bb411e3`; its detailed evidence is
 [here](evidence/time-profile-integration-20261107.json). The source now binds the
 time opt-in profile, package state, and clock-state seed/boot/update guards, but
-does not build time-enabled production artifacts. Repeat construction is pending: rebuild the
-tracked base against the changed closed profile manifest, then replay the time
-profile while preserving all closure checks. Time-enabled 4 GiB roots, 8 GiB state,
+does not build time-enabled production artifacts. Repeat construction is pending: integrate the reviewed account-date policy in
+a separately authenticated replay contract, reproduce the unchanged baseline
+pins, then replay the time profile while preserving all closure checks. Time-enabled 4 GiB roots, 8 GiB state,
 and NVMe reconstruction/readback remain open; baseline artifacts remain unchanged.
 The proposed 20 GiB builder growth is unapproved; no resize occurred and production
 capacity guards remain unchanged. A second operator must

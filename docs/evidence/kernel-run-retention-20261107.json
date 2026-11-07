@@ -1,0 +1,151 @@
+{
+  "schema": 1,
+  "date": "2026-11-07",
+  "classification": "Completed generated kernel replay retained on two hosts; no physical storage or deployment artifact change",
+  "original": {
+    "host": "build.drewnet.online",
+    "path": "/var/lib/a733-clean-replay-20261106/kernel-run-01",
+    "device": 64512,
+    "inode": 679407,
+    "entries": 121554,
+    "regular_files": 114348,
+    "directories": 6995,
+    "symlinks": 211,
+    "allocated_bytes": 5350162432,
+    "facts_sha256": "1d912f277944f81b6be9d39321a833194bdd3b4ae392356ea08d1128ac14d4f1",
+    "entry_set_sha256": "921b50202dbb90d629b3885fe0b34a73f28ba2b5d1d001bf66c223f426839c78",
+    "removed": true
+  },
+  "archive": {
+    "bytes": 1612368790,
+    "sha256": "dca31cae45cad28a5022917a31da0f4c4834f7f51ef069873275ca87cb429b7c",
+    "copies": [
+      {
+        "host": "codex.drewnet.online",
+        "path": "/var/lib/a733-kernel-run-retention-20261107/primary/kernel-run-01.tar.gz",
+        "device": 64512,
+        "inode": 4496509
+      },
+      {
+        "host": "build.drewnet.online",
+        "path": "/var/lib/a733-kernel-run-retention-20261107/mirror/kernel-run-01.tar.gz",
+        "device": 64512,
+        "inode": 578537
+      }
+    ],
+    "file_mode": "0600",
+    "private_directory_mode": "0700"
+  },
+  "verification": {
+    "full_gzip_tar_integrity": true,
+    "gnu_tar_compare_before_and_after_source_quarantine": true,
+    "independent_complete_restorable_metadata_comparison": true,
+    "preserved_metadata": "Names/types, numeric owners, modes, nanosecond mtimes, links, xattrs/ACLs; no regular hardlinks or nonempty xattrs in this tree",
+    "original_terminal_receipt_sha256": "58308b374cfdc7a43f3618c510a83fd608de741a42a11869446fb705fc2f6c9f",
+    "original_terminal_log_sha256": "91b46f1c2a992fd4b861730548a7f01e8727369982b9252e8e5302dc4ce990e7",
+    "full_actual_restore_exercised": false
+  },
+  "retirements": {
+    "original_reviewed_readiness_sha256": "9316a3484fc3829b6a3263697caf340553345789f47aee0960a6e2615a342175",
+    "original_complete_receipt_sha256": "de22bb3af2da3be42cffb37595b918e7e0c177da05214c6526a1fd3ba25904ce",
+    "temporary_native_secondary_removed": true,
+    "secondary_original_inode": 4496511,
+    "secondary_reviewed_readiness_sha256": "611a7b6131549084ad32ec40a06daa1e5423e9b1ae36602e90988b700e0110d5",
+    "original_tree_returncode": 0,
+    "mirror_returncode": 0,
+    "secondary_returncode": 0,
+    "guards": "Held descriptors, repeated complete hashes, durable attestations/fsync, exact identities and private fixed-child quarantines; per-PID/TID references and namespaces plus loop-device checks before mutation",
+    "independent_review": {
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "result": "pass for exact reviewed readiness and tool pins"
+    },
+    "disposable_cases": {
+      "original_native": 38,
+      "original_jammy_python310": 38,
+      "secondary_native": 37,
+      "secondary_jammy_python310": 37
+    }
+  },
+  "resources": {
+    "native_hard_floor_bytes": 1073741824,
+    "initial_additional_planning_allowance_bytes": 67108864,
+    "native_minimum_sampled_bytes": 1139376128,
+    "builder_free_after_original_retirement_bytes": 9228218368,
+    "builder_free_after_new_base_build_and_archive_mirror_bytes": 6837583872,
+    "native_free_after_secondary_descriptors_closed_bytes": 2747215872,
+    "lvm_resized": false,
+    "production_capacity_guards_changed": false
+  },
+  "raw_records": {
+    "workspace": "tmp/kernel-run-retention-20261107/",
+    "workspace_readiness_and_review": "out/kernel-run-retention-20261107/",
+    "native_private_root": "/var/lib/a733-kernel-run-retention-20261107/",
+    "builder_private_root": "/var/lib/a733-kernel-run-retention-20261107/",
+    "pins": {
+      "retirement-execution.log": {
+        "bytes": 871,
+        "sha256": "5bb4f3bd57eadb6ccaadb84c77b37cc6cd7a12af0a48a00e89f92358c4b7276d"
+      },
+      "mirror-execution-02.log": {
+        "bytes": 331,
+        "sha256": "909aa907cfb075bd8b328a5b68eea4b9f95df28709c8b0a9f62c28717efe6fea"
+      },
+      "secondary-retirement-execution.log": {
+        "bytes": 476,
+        "sha256": "877248d187390b38fe3985be34e772bb26804c93f99e0c139ea1975cb9e1f71d"
+      },
+      "retirement-tests.log": {
+        "bytes": 5195,
+        "sha256": "a8eb123a66f244edf883dbb3afe1f1969ae909bef0ba8abfefddcfa8c6256972"
+      },
+      "jammy-retirement-tests-v2.log": {
+        "bytes": 3492,
+        "sha256": "1067732f2613a9b5b4c2a02b12c6040ceccb5eb34c2d81fea2a66a1ba22765af"
+      },
+      "secondary-tests.log": {
+        "bytes": 4273,
+        "sha256": "7ec2060fb3a02e6e5ad1f73d10526ba5c8475c5a8f63e7413aab066ec4ca64ed"
+      },
+      "secondary-jammy-tests.log": {
+        "bytes": 2755,
+        "sha256": "2bb30e450e8cea1724a87e75540c5321a672bd07683088bc503f514b4899b357"
+      },
+      "retire-controller.py": {
+        "bytes": 11008,
+        "sha256": "4be30c4be6af2e1b5c87ee8b71db09c77c8d84f670cdf53eee8d34d7b8e61bbb"
+      },
+      "retire-remote.py": {
+        "bytes": 23231,
+        "sha256": "754cad38f280261409db10acc29814d96b7a3a88d93bfe320e7c8889bb481729"
+      },
+      "test-retirement.py": {
+        "bytes": 19882,
+        "sha256": "087de09212a82b4dc9a0af840f93750c6e92261ed558e68cb80ac4b093869dd8"
+      },
+      "retire-native-secondary.py": {
+        "bytes": 23759,
+        "sha256": "c2733612a3c1fbcf7729be13a2579a11dbbeddd9f0e2d4ac7592ef75e67d32fa"
+      },
+      "test-retire-native-secondary.py": {
+        "bytes": 17958,
+        "sha256": "4b9b0284f69329267eef83319dc24e369ff3aeb95221db79c67740d1ca0925d3"
+      },
+      "mirror-controller-02.py": {
+        "bytes": 1488,
+        "sha256": "dac4c413e15167571bc43fff5b5483ac84d4a22cef6dfea0349b924f9b3719ee"
+      },
+      "mirror-receiver-02.py": {
+        "bytes": 3210,
+        "sha256": "3424939bbe7c8b493674c6f189b147b0e820bf4c792ac0468b8c23a07b00bf93"
+      }
+    }
+  },
+  "limits": [
+    "Initial archive preparation checked process leaders only; corrected per-thread checks and regressions passed before either real retirement.",
+    "Initial root SSH host-key refusal and first mirror destination-exists refusal occurred before data transfer; logs retained, no host-key verification bypass.",
+    "Two hosts are not proof of independent physical failure domains.",
+    "Full restoration/rebuild from this archive remains untested.",
+    "Original sources, frozen builder, current deployment artifacts and Orange Pi devices were excluded."
+  ]
+}

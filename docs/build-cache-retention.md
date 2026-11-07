@@ -15,6 +15,12 @@ Raw records and the one-off scripts remain outside Git on the builder at
 
 ## Current off-builder retention
 
+The [completed kernel replay retention](kernel-run-retention.md) now replaces
+the expanded `kernel-run-01` builder tree with fully verified archives on codex
+and the builder. Follow its exact restoration map before historical commands.
+The later measured builder free space was 6.84 GB; full production guards remain
+unchanged and no LVM growth occurred.
+
 The [2026-11-07 single-archive retention](evidence/builder-deb-retention-20261107.json)
 retires the 316,373,280-byte Ubuntu `linux-firmware` DEB from the historical
 builder package acquisition directory. Its original codex acquisition copy and

@@ -29,6 +29,12 @@ Package logs remain on the builder at `/tmp/orangepi-apt-update.log` and `/tmp/o
 
 ## Current cache capacity
 
+Latest November 7 evidence: [completed kernel replay retention](kernel-run-retention.md)
+and a subsequent fresh userspace attempt leave about **6.84 GB** on the builder.
+The attempt failed the exact archive pin because account dates changed across
+days; see [diagnosis](userspace-account-date-replay.md). Production 22 GiB staging
+remains blocked by capacity. The proposed LV growth remains unapproved.
+
 [Verified cache retention](build-cache-retention.md) recovered working space
 without changing generated image bytes. Five complete guest working trees are
 retained as compared archives; all 41 sparsified images retain their manifest

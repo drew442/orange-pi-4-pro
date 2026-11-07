@@ -1,0 +1,143 @@
+{
+  "classification": "Cross-day reproducibility failure; no password fields copied into this report",
+  "old_phase": "/var/lib/a733-clean-replay-20261106/userspace-pipeline-retained-01/work/export-result",
+  "new_phase": "/var/lib/a733-clean-replay-20261106/userspace-pipeline-repeat-01/work/export-result",
+  "archive_records": [
+    {
+      "bytes": 138025729,
+      "sha256": "98d6a57bbb70ff55bef32b6bd051ebfcb6bc0fad4f6c8b3167e8619b5a9d961e"
+    },
+    {
+      "bytes": 138025729,
+      "sha256": "05a6bb6640e1484e8eb0cc4b91758c4a68cb6e9c2c1514d20fe20f7e59d763f9"
+    }
+  ],
+  "BOM_records": [
+    {
+      "bytes": 4337400,
+      "sha256": "1c415ad29e297260b89f199c48c0185e8c9987be5c336fd553cff5e5c38aaa72"
+    },
+    {
+      "bytes": 4337400,
+      "sha256": "5b9a11702be1b89e90d704e4a50ab40b5ef65e147125e30fff329cdecb637525"
+    }
+  ],
+  "BOM_entries": 15876,
+  "changed_paths": [
+    "etc/shadow",
+    "etc/shadow-"
+  ],
+  "per_path": {
+    "etc/shadow": {
+      "all_password_fields_locked_and_unchanged": true,
+      "all_other_fields_unchanged": true,
+      "old_metadata": {
+        "mode": 416,
+        "uid": 0,
+        "gid": 42,
+        "mtime_ns": 1790812800000000000,
+        "xattrs": {},
+        "data": {
+          "bytes": 600,
+          "sha256": "dd3aae9dcb6dc8be3e8fc6639662430917dbd9d14cffa05e4f729e7bf76a1908"
+        },
+        "type": "file"
+      },
+      "new_metadata": {
+        "mode": 416,
+        "uid": 0,
+        "gid": 42,
+        "mtime_ns": 1790812800000000000,
+        "xattrs": {},
+        "data": {
+          "bytes": 600,
+          "sha256": "b76718a9f135deab1f731349fbbc62241d2ab63be2fabcec1950bf8a8b9bd706"
+        },
+        "type": "file"
+      },
+      "changed_account_count": 23,
+      "old_day": 20763,
+      "new_day": 20764
+    },
+    "etc/shadow-": {
+      "all_password_fields_locked_and_unchanged": true,
+      "all_other_fields_unchanged": true,
+      "old_metadata": {
+        "mode": 416,
+        "uid": 0,
+        "gid": 42,
+        "mtime_ns": 1790812800000000000,
+        "xattrs": {},
+        "data": {
+          "bytes": 581,
+          "sha256": "a9517cc11d3d789da84abfc161816f9cb639b77ad2e308fa0bb503d871053fce"
+        },
+        "type": "file"
+      },
+      "new_metadata": {
+        "mode": 416,
+        "uid": 0,
+        "gid": 42,
+        "mtime_ns": 1790812800000000000,
+        "xattrs": {},
+        "data": {
+          "bytes": 581,
+          "sha256": "27644cc9bcfcdfe8571c94e9d51da5f393b26813f8ff93850e1a14f25d1ea82d"
+        },
+        "type": "file"
+      },
+      "changed_account_count": 22,
+      "old_day": 20763,
+      "new_day": 20764
+    }
+  },
+  "execution": {
+    "success": false,
+    "error": "ValueError('export receipt differs from normalized profile')",
+    "phases": [
+      {
+        "name": "foreign",
+        "success": true,
+        "returncode": 0
+      },
+      {
+        "name": "configure",
+        "success": true,
+        "returncode": 0
+      },
+      {
+        "name": "export",
+        "success": true,
+        "returncode": 0
+      }
+    ],
+    "host_inventory_unchanged": true,
+    "mapped_processes_final": [],
+    "output_mounts_final": [],
+    "minimum_disk_bytes": 8424169472,
+    "minimum_memory_bytes": 7276462080
+  },
+  "schema": 1,
+  "date": "2026-11-07",
+  "source_revision": "443b9f2115e0db3130ca26b9c80d2f1e4ed1faa0",
+  "source_project": "build.drewnet.online:/var/lib/a733-replay-project-20261107/project",
+  "configured_packages": 220,
+  "unchanged_other_entries": 15874,
+  "raw_tar": {
+    "bytes": 468398080,
+    "sha256": "8d458b6c7ef405d960c659c933f705a84a24c2bebd4b9117d07019224579400a"
+  },
+  "second_time_construction_started": false,
+  "historical_pins_changed": false,
+  "raw_record_pins": {
+    "userspace-repeat-difference.json": {
+      "bytes": 8837,
+      "sha256": "d538c3c7a55b104b7f0d98beea76ed0962f4eb5a33773a0abf6bc09587555eca"
+    },
+    "userspace-repeat-execution.log": {
+      "bytes": 971,
+      "sha256": "bd4480a08a462181829dc4848de08819348ecf9824ed4551934a942e564a4eae"
+    }
+  },
+  "decision": "Preserve failed outer receipt and historical archive pins. Implement a narrow build-only account-date policy; integration and fresh exact reproduction remain pending. Global SOURCE_DATE_EPOCH would change pinned Python bytecode format."
+}
