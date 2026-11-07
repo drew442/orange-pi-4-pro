@@ -30,6 +30,16 @@ the later authorized LV expansion is recorded below.
 
 ## Current cache capacity
 
+Latest [production-repeat retention](repeat-build-retention.md) preserves eleven
+historical expanded leaves as complete, independently verified archives on build
+and codex. Retirement recovers about **5.17 GB**, leaving **24,798,740,480 bytes**
+free before the fresh root repeat. Seven native SD files also retain identical
+bytes while recovering **1.54 GB** through sparse allocation; codex still keeps
+its separate 256 MiB reserve. The new regular-file SD recipe produces identical
+raw/gzip bytes with only 36,704,256 allocated bytes per new raw copy. Recheck
+resources before subsequent staging; full-NVMe guards remain unchanged, and no
+further LV expansion is authorized. Earlier capacity samples below are historical.
+
 The [operator-approved 20 GiB root-LV growth](evidence/build-host-capacity-execution-20261107.json)
 now completes successfully, including online ext4 enlargement. The LV is
 88,017,469,440 bytes; free space immediately after growth was **24.28 GB**, above

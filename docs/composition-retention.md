@@ -1,5 +1,9 @@
 # Verified workspace retention before composition
 
+The later [production-repeat retention](repeat-build-retention.md) has a separate
+eleven-leaf catalog and recovery location. Keep both catalogs; the paths below
+describe only the earlier three-tree operation.
+
 The [November 7 retention evidence](evidence/composition-retention-20261107.json)
 records complete archives on **both build and codex** before retiring three
 terminal generated work directories. All original phase records outside `work`

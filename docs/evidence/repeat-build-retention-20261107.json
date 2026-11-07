@@ -1,0 +1,705 @@
+{
+  "archive_and_inventory_total_bytes": 1609440455,
+  "builder_store": "/var/lib/a733-repeat-retention-20261107",
+  "codex_mirror": "/var/lib/a733-repeat-retention-20261107/mirror",
+  "controls": {
+    "finalize-preparation.py": {
+      "bytes": 2292,
+      "sha256": "f18cb0d1e120a05298a83a4c0776aafb387f6f4c6e8f2bf5c2bc6b3b3de27d30"
+    },
+    "post-check.py": {
+      "bytes": 1673,
+      "sha256": "69f1672d77ff1518250cc080cbd4de1c5cc455b6eb6a8a415a7737cc0b6fa334"
+    },
+    "prepare.py": {
+      "bytes": 13654,
+      "sha256": "672fe0f151de723404c633487be2c42807f7baf6cdefa3d4df5b409ab9965286"
+    },
+    "receive-mirror.py": {
+      "bytes": 2997,
+      "sha256": "9ef92d69db769e7e393a0310a2c57c4eaf6b009af6cdca32fa01f4768e05f73a"
+    },
+    "retire.py": {
+      "bytes": 9051,
+      "sha256": "0171af8e6b4951055115ad0198a9af64bae5a6cfba1e185fb9ffc32541fd4e47"
+    },
+    "sparsify.py": {
+      "bytes": 8156,
+      "sha256": "c0610bfe5c9059a0ad64d1ce60831a07161d7e6b24f20457ecd2058b5195a9b6"
+    },
+    "test-retention.py": {
+      "bytes": 11805,
+      "sha256": "64b1b451bd43ff922ba8607de9a0dd779f686afeb8cceb4bd1bbaa099d8c5600"
+    },
+    "verify-mirror.py": {
+      "bytes": 3427,
+      "sha256": "c7029f15db2ca4fb1f7005f0ddffd1710af688c269d6559b6528ea2a47475da9"
+    }
+  },
+  "date": "2026-11-07",
+  "hardware_acceptance": false,
+  "independent_review": {
+    "builder_check": {
+      "behavior": "Reviewed check performs complete live source/retained archive/content/metadata/receipt/code/idle comparisons with held root-protected phase and work descriptors; no journal/removal on --check.",
+      "log": "/home/drew/orange-pi-4-pro/tmp/repeat-retention-20261107/retire-check.log",
+      "log_sha256": "23b964b76eab30e66e360b148a42843318030e2b79b5ce4d761a8f387eff298a",
+      "result": {
+        "mirror_proof_sha256": "e8b4fbb4fd3b676a2cf57478aa7ff4ce8242ba796581875f6764f76cc3f4399a",
+        "operation": "check",
+        "prepared_sha256": "8c477508c153c9b6db8d6e2ccf017e235ea7568e07c3b12fa6bef993fa2d38e7",
+        "removed": [],
+        "schema": 2,
+        "targets": {
+          "normalized-profile-03": "restored",
+          "root-metadata-backend-01": "restored",
+          "time-profile-component-02": "restored",
+          "userspace-configure-01": "arm-root",
+          "userspace-configure-recipe-01": "arm-root",
+          "userspace-foreign-01": "arm-root",
+          "userspace-foreign-recipe-01": "arm-root",
+          "userspace-pipeline-repeat-01": "arm-root",
+          "userspace-pipeline-retained-01": "arm-root",
+          "userspace-timesync-retained-01": "arm-root",
+          "userspace-timesync-retained-02": "arm-root"
+        }
+      },
+      "terminal_exit_code": 0,
+      "terminal_exit_evidence": "Coordinator confirmed read-only check process session55845 returned exit0; independent reviewer read complete eleven-target log and final matching-pin JSON."
+    },
+    "decision": "approved_exact_guarded_retirement",
+    "findings": [],
+    "native_audit": {
+      "archive_and_inventory_full_hashes": "All11 archives and11 inventories independently rehashed in full and matched both prepared receipt and mirror proof.",
+      "archive_validation": "Every archive independently passed exact namespace and every member content/size/type/owner/mode/nanosecond mtime/symlink/xattr/internal-hardlink topology against pinned inventories using reviewed verifier.",
+      "mirror": "/var/lib/a733-repeat-retention-20261107/mirror",
+      "physical_controls": "Root-owned physical protected ancestors, private0700 mirror, singly linked regular root-owned0400 prepared/code/proof/archive/inventory files, exact26-file mirror catalog including transfer/proof.",
+      "prepared_and_mirror_proof_full_hashes": "Exact bytes and SHA256 independently verified.",
+      "proof_free_bytes_after_mirror": 434700288,
+      "terminal_exit_code": 0
+    },
+    "record": {
+      "bytes": 12181,
+      "sha256": "86f01612d90904c153fa5ec237f9f98d244db1f185673f65a42982ade47fc0d1"
+    }
+  },
+  "mirror_proof": {
+    "bytes": 6013,
+    "sha256": "e8b4fbb4fd3b676a2cf57478aa7ff4ce8242ba796581875f6764f76cc3f4399a"
+  },
+  "native_records": "out/repeat-retention-20261107",
+  "native_sparsification": {
+    "complete": {
+      "bytes": 5401,
+      "sha256": "7ba2572f7d27fb0ee5dcd02c8fd267f4fd5091236d491aaa2882dec7de36b429"
+    },
+    "controller": {
+      "bytes": 8156,
+      "sha256": "c0610bfe5c9059a0ad64d1ce60831a07161d7e6b24f20457ecd2058b5195a9b6"
+    },
+    "files": 7,
+    "free_bytes_after": 2051436544,
+    "full_hash_size_and_mtime_preserved": true,
+    "readiness": {
+      "bytes": 5542,
+      "sha256": "dfbb8a431d67145a8aee5c6e8bcd348e8674f98ac91a0cbbe6bdde204a454532"
+    },
+    "recovered_bytes": 1540018176
+  },
+  "physical_device_operations": false,
+  "preparation_interruption": {
+    "correction": "Coordinator changed only controller ownership to root; code SHA256 remained reviewed.",
+    "finalize_log": "/home/drew/orange-pi-4-pro/tmp/repeat-retention-20261107/finalize.log",
+    "finalizer": "Pinned original prepare/log; required exact eleven completed rows and absent prepared/journal; independently revalidated actual source inventories/terminal receipts/full archives/metadata/pins/combined idle and resource floor before publishing original schema2 prepared receipt.",
+    "original_failure": "All eleven archive/inventory preparation rows completed; final prepared publication refused controller UID/GID1000. No deletion path exists in preparation.",
+    "original_log_sha256": "a1fc7a71a952db874ffa019382c3a0e804d4f0d1a815182be7bb94ce721bee30"
+  },
+  "prepared": {
+    "bytes": 9903,
+    "sha256": "8c477508c153c9b6db8d6e2ccf017e235ea7568e07c3b12fa6bef993fa2d38e7"
+  },
+  "purpose": "Retain superseded expanded build leaves on both hosts before clean production repeats",
+  "records": {
+    "normalized-profile-03": {
+      "archive": {
+        "bytes": 140184852,
+        "sha256": "dee178baad6321578c04e90afaa7b32f0fe5056a4f4792e9e27b7cdef6653541"
+      },
+      "inventory": {
+        "bytes": 6087160,
+        "sha256": "c05157517c2c24e1894e60f27f27cb740a8004cb818125b626697bc570b13e8c"
+      },
+      "members": 15937,
+      "source": "/var/lib/a733-clean-replay-20261106/normalized-profile-03/work/restored",
+      "source_device": 64512,
+      "source_inode": 1199514,
+      "terminal": {
+        "bytes": 3957,
+        "path": "/var/lib/a733-clean-replay-20261106/normalized-profile-03/receipt.json",
+        "sha256": "3c9b9fdf55259870f0d251f515bf842072eac9c05c7cff20626d05bc9d8c73c3",
+        "terminal_state": "complete"
+      },
+      "unique_inode_allocated_bytes": 479744000
+    },
+    "root-metadata-backend-01": {
+      "archive": {
+        "bytes": 169773747,
+        "sha256": "04e7a99cce73efd092cf21b8cb90258f0410e98e644ca4743a3857a03c4ba733"
+      },
+      "inventory": {
+        "bytes": 6031050,
+        "sha256": "06d10539551e8095c0f2ed02041007975144b24de0d7faeb257c9f0a607f5ddc"
+      },
+      "members": 15892,
+      "source": "/var/lib/a733-clean-replay-20261106/root-metadata-backend-01/work/restored",
+      "source_device": 64512,
+      "source_inode": 969570,
+      "terminal": {
+        "bytes": 3316,
+        "path": "/var/lib/a733-clean-replay-20261106/root-metadata-backend-01/fixture-receipt.json",
+        "sha256": "0cf0c049c0ad9e0c8712198034c82c284866a99b452d5913fd9a776126275ef9",
+        "terminal_state": "complete"
+      },
+      "unique_inode_allocated_bytes": 556298240
+    },
+    "time-profile-component-02": {
+      "archive": {
+        "bytes": 140284121,
+        "sha256": "860763c99a648d549bdd1d71ca6769efc3d6b57601277e7e452f0c984053cd17"
+      },
+      "inventory": {
+        "bytes": 6100403,
+        "sha256": "7579266e187389fb5049a671f837af2b2831bc01b64f7745b0287ee599108544"
+      },
+      "members": 15971,
+      "source": "/var/lib/a733-clean-replay-20261106/time-profile-component-02/work/restored",
+      "source_device": 64512,
+      "source_inode": 1359526,
+      "terminal": {
+        "bytes": 3537,
+        "path": "/var/lib/a733-clean-replay-20261106/time-profile-component-02/receipt.json",
+        "sha256": "9b22f4c96f21b695a868d65d0f3f4fe3b80378b48414578c561ae04265ce35ba",
+        "terminal_state": "complete"
+      },
+      "unique_inode_allocated_bytes": 479997952
+    },
+    "userspace-configure-01": {
+      "archive": {
+        "bytes": 140134719,
+        "sha256": "1ede55471b4294bde6443406307113e18a7e9f86047a25e2d14730bafcf88af9"
+      },
+      "inventory": {
+        "bytes": 6026964,
+        "sha256": "5089c516b83212885687810c3f765b9f7cd15205c0596622eac4777a35ee0165"
+      },
+      "members": 15876,
+      "source": "/var/lib/a733-clean-replay-20261106/userspace-configure-01/work/arm-root",
+      "source_device": 64512,
+      "source_inode": 1085786,
+      "terminal": {
+        "bytes": 26748,
+        "path": "/var/lib/a733-clean-replay-20261106/userspace-configure-01/receipt.json",
+        "sha256": "0fcbb0d68503543accb9e69106a241a2027dc1e6aa1ae0faacc7e2b24e11d88d",
+        "terminal_state": "complete"
+      },
+      "unique_inode_allocated_bytes": 479072256
+    },
+    "userspace-configure-recipe-01": {
+      "archive": {
+        "bytes": 140127533,
+        "sha256": "ae4842401b25f4f39814be7612fe7e96dda31fcb357d8d692f4c6416a14adc44"
+      },
+      "inventory": {
+        "bytes": 6026964,
+        "sha256": "0a375e045b7143595c7ee9be52146eedf42c3c9b3770b5159db923d4bb3d8eed"
+      },
+      "members": 15876,
+      "source": "/var/lib/a733-clean-replay-20261106/userspace-configure-recipe-01/work/arm-root",
+      "source_device": 64512,
+      "source_inode": 1181749,
+      "terminal": {
+        "bytes": 20035,
+        "path": "/var/lib/a733-clean-replay-20261106/userspace-configure-recipe-01/receipt.json",
+        "sha256": "f128afb0756461b05e78f236ce98fae70d791c59a2f3bb7aa38b29572813e215",
+        "terminal_state": "complete"
+      },
+      "unique_inode_allocated_bytes": 479080448
+    },
+    "userspace-foreign-01": {
+      "archive": {
+        "bytes": 112663372,
+        "sha256": "7a1eb13800c218a1aaedac97d72a00a0af7e1f1aa2b8d8e60fb14ee9869a402b"
+      },
+      "inventory": {
+        "bytes": 3121922,
+        "sha256": "9a77147ea0638189dd2a75b6396f8742b3a89fcba57c4d31738c186d2489f49b"
+      },
+      "members": 8264,
+      "source": "/var/lib/a733-clean-replay-20261106/userspace-foreign-01/work/arm-root",
+      "source_device": 64512,
+      "source_inode": 1077517,
+      "terminal": {
+        "bytes": 3944,
+        "path": "/var/lib/a733-clean-replay-20261106/userspace-foreign-01/receipt.json",
+        "sha256": "2fbb26d270a2f326079a3436f9aff32c233e49d52eb3a380698d3c038d2a327f",
+        "terminal_state": "complete"
+      },
+      "unique_inode_allocated_bytes": 295403520
+    },
+    "userspace-foreign-recipe-01": {
+      "archive": {
+        "bytes": 140125236,
+        "sha256": "a5577edcacbf07b21589efd04b2b8b52c5614ea71af24fb7cb39a059b435bc38"
+      },
+      "inventory": {
+        "bytes": 6026964,
+        "sha256": "64fe06028cf95e790546317343d93902b27e5e5d1fbc86d2dbf90db023e13654"
+      },
+      "members": 15876,
+      "source": "/var/lib/a733-clean-replay-20261106/userspace-foreign-recipe-01/work/arm-root",
+      "source_device": 64512,
+      "source_inode": 1199447,
+      "terminal": {
+        "bytes": 4089,
+        "path": "/var/lib/a733-clean-replay-20261106/userspace-foreign-recipe-01/receipt.json",
+        "sha256": "185ee236cec33790d99b38e38f1082db191de4cd0925a1ce27d9b19c723745ec",
+        "terminal_state": "complete"
+      },
+      "unique_inode_allocated_bytes": 479076352
+    },
+    "userspace-pipeline-repeat-01": {
+      "archive": {
+        "bytes": 140121199,
+        "sha256": "07fed4c7958ccd2ef7fe7cfdc9fa6d48314478d8ed061dbee6514f5e7fa46062"
+      },
+      "inventory": {
+        "bytes": 6026964,
+        "sha256": "827c4a5172dfe78475630bf330bb88829fe14231945072e5c439dc995603053b"
+      },
+      "members": 15876,
+      "source": "/var/lib/a733-clean-replay-20261106/userspace-pipeline-repeat-01/work/arm-root",
+      "source_device": 64512,
+      "source_inode": 1483761,
+      "terminal": {
+        "bytes": 31986,
+        "path": "/var/lib/a733-clean-replay-20261106/userspace-pipeline-repeat-01/receipt.json",
+        "sha256": "63f043ec1f41da1774b819fe22d36d0577a4fff03fd5cd4f3271bbdf2854e62c",
+        "terminal_state": "failed"
+      },
+      "unique_inode_allocated_bytes": 479072256
+    },
+    "userspace-pipeline-retained-01": {
+      "archive": {
+        "bytes": 140133792,
+        "sha256": "97e1fee34bcae7b0b556888f69f4ad75b49ed04117d888f3c151ecea2b03758f"
+      },
+      "inventory": {
+        "bytes": 6026964,
+        "sha256": "a52451a5c688208df4959fad5178a823f2d449054747feeab2dd94e9406424c6"
+      },
+      "members": 15876,
+      "source": "/var/lib/a733-clean-replay-20261106/userspace-pipeline-retained-01/work/arm-root",
+      "source_device": 64512,
+      "source_inode": 1310959,
+      "terminal": {
+        "bytes": 32036,
+        "path": "/var/lib/a733-clean-replay-20261106/userspace-pipeline-retained-01/receipt.json",
+        "sha256": "1ae5badf7337102509d9f57705c20e62b76904b5d390ccedb91e2e08d80ffcb2",
+        "terminal_state": "complete"
+      },
+      "unique_inode_allocated_bytes": 479080448
+    },
+    "userspace-timesync-retained-01": {
+      "archive": {
+        "bytes": 142197592,
+        "sha256": "26c31bdda45489122d9245fa7f66229b50a337c1136ba92787d72f5742dec350"
+      },
+      "inventory": {
+        "bytes": 6041325,
+        "sha256": "5868ef9120d99500fd94881beaa98a876538058b49092b5b86237d90e73303d7"
+      },
+      "members": 15914,
+      "source": "/var/lib/a733-clean-replay-20261106/userspace-timesync-retained-01/work/arm-root",
+      "source_device": 64512,
+      "source_inode": 1238434,
+      "terminal": {
+        "bytes": 9322,
+        "path": "/var/lib/a733-clean-replay-20261106/userspace-timesync-retained-01/receipt.json",
+        "sha256": "0e4e12e6c3cb0c5a4a6780a27c81a5deb20065be503255fc47493e2d518ca7fa",
+        "terminal_state": "failed"
+      },
+      "unique_inode_allocated_bytes": 488251392
+    },
+    "userspace-timesync-retained-02": {
+      "archive": {
+        "bytes": 140138066,
+        "sha256": "c0ce8af17668db368a6fd645c954c9af1511fb50a52add2572dec3750109f308"
+      },
+      "inventory": {
+        "bytes": 6039546,
+        "sha256": "6e8c64ec5f24c4288a26c6e3575a152b1de603bbd560ca8ff474c68bde7dbe85"
+      },
+      "members": 15909,
+      "source": "/var/lib/a733-clean-replay-20261106/userspace-timesync-retained-02/work/arm-root",
+      "source_device": 64512,
+      "source_inode": 1342581,
+      "terminal": {
+        "bytes": 18553,
+        "path": "/var/lib/a733-clean-replay-20261106/userspace-timesync-retained-02/receipt.json",
+        "sha256": "e539ae869fad4a4976f3484384e3d48cf5f87f20f349d689f9c08a8cfbbd140c",
+        "terminal_state": "complete"
+      },
+      "unique_inode_allocated_bytes": 479092736
+    }
+  },
+  "release_limits": "No physical boot/SSH/KVM/SPI/SD-write/endurance/recovery acceptance added; full production component repeat and deployment reproduction remain open.",
+  "restoration_limit": "Actual eleven archives fully verified against sources and independently on codex; full extraction/restoration of these actual archives not executed. Disposable root E2E passed.",
+  "retirement": {
+    "all_eleven_removed_and_quarantines_absent": true,
+    "all_local_archive_inventory_pins_unchanged": true,
+    "current_userspace_sha256": "0ead62c982344bfa3a796027e2f07ce0d8402e7033122707e01a9a3f8860f248",
+    "free_bytes_after": 24798740480,
+    "free_bytes_before_observation": 19624583168,
+    "journal": {
+      "bytes": 7548,
+      "sha256": "1065ea5c33a7b836d952cc9892dff7291a78aa722f9d597df7ce6754fa428a1b"
+    },
+    "log": {
+      "bytes": 1584,
+      "sha256": "2f8686682c4f8b6486671ffde800cd1f1dd9fcb2ce6fff10f4efe02142f585e3"
+    },
+    "observed_free_space_increase_bytes": 5174157312,
+    "post_check": {
+      "bytes": 12770,
+      "sha256": "169be9a92b2d508602355bf8c7a18d7bb5e7ac9acc0e4bd5b54ac776b2cdc3b3"
+    },
+    "remaining_work_entries": {
+      "normalized-profile-03": [
+        "actual-devices.json",
+        "probe-receipt.json",
+        "provenance"
+      ],
+      "root-metadata-backend-01": [
+        "actual-devices.json",
+        "backend-receipt.json"
+      ],
+      "time-profile-component-02": [
+        "actual-devices.json",
+        "probe-receipt.json",
+        "provenance",
+        "state",
+        "state-fixture.ext4",
+        "state-input"
+      ],
+      "userspace-configure-01": [
+        "adapter",
+        "api-continue.json",
+        "api-inaccessible-file",
+        "api-mount-receipt.json",
+        "api-ready.json",
+        "api-setup-request.json",
+        "apt-check-started.json",
+        "apt-check.stderr",
+        "apt-check.stdout",
+        "apt-install-started.json",
+        "apt-install.stderr",
+        "apt-install.stdout",
+        "apt-update-started.json",
+        "apt-update.stderr",
+        "apt-update.stdout",
+        "base-inventory-started.json",
+        "base-inventory.stderr",
+        "base-inventory.stdout",
+        "configure-receipt.json",
+        "dpkg-audit-started.json",
+        "dpkg-audit.stderr",
+        "dpkg-audit.stdout",
+        "export-20261106-01",
+        "export-canonical-01",
+        "foreign-receipt.json",
+        "full-inventory-started.json",
+        "full-inventory.stderr",
+        "full-inventory.stdout",
+        "repo",
+        "second-stage-started.json",
+        "second-stage.stderr",
+        "second-stage.stdout"
+      ],
+      "userspace-configure-recipe-01": [
+        "adapter",
+        "api-continue.json",
+        "api-inaccessible-file",
+        "api-mount-receipt.json",
+        "api-ready.json",
+        "api-setup-request.json",
+        "apt-check-started.json",
+        "apt-check.stderr",
+        "apt-check.stdout",
+        "apt-install-started.json",
+        "apt-install.stderr",
+        "apt-install.stdout",
+        "apt-update-started.json",
+        "apt-update.stderr",
+        "apt-update.stdout",
+        "base-inventory-started.json",
+        "base-inventory.stderr",
+        "base-inventory.stdout",
+        "configure-receipt.json",
+        "dpkg-audit-started.json",
+        "dpkg-audit.stderr",
+        "dpkg-audit.stdout",
+        "export-canonical-02",
+        "export-recipe-01",
+        "foreign-receipt.json",
+        "full-inventory-started.json",
+        "full-inventory.stderr",
+        "full-inventory.stdout",
+        "repo",
+        "second-stage-started.json",
+        "second-stage.stderr",
+        "second-stage.stdout"
+      ],
+      "userspace-foreign-01": [
+        "adapter",
+        "foreign-receipt.json",
+        "foreign.stderr",
+        "foreign.stdout",
+        "repo"
+      ],
+      "userspace-foreign-recipe-01": [
+        "adapter",
+        "api-continue.json",
+        "api-inaccessible-file",
+        "api-mount-receipt.json",
+        "api-ready.json",
+        "api-setup-request.json",
+        "apt-check-started.json",
+        "apt-check.stderr",
+        "apt-check.stdout",
+        "apt-install-started.json",
+        "apt-install.stderr",
+        "apt-install.stdout",
+        "apt-update-started.json",
+        "apt-update.stderr",
+        "apt-update.stdout",
+        "base-inventory-started.json",
+        "base-inventory.stderr",
+        "base-inventory.stdout",
+        "configure-receipt.json",
+        "dpkg-audit-started.json",
+        "dpkg-audit.stderr",
+        "dpkg-audit.stdout",
+        "export-fresh-01",
+        "foreign-receipt.json",
+        "foreign.stderr",
+        "foreign.stdout",
+        "full-inventory-started.json",
+        "full-inventory.stderr",
+        "full-inventory.stdout",
+        "repo",
+        "second-stage-started.json",
+        "second-stage.stderr",
+        "second-stage.stdout"
+      ],
+      "userspace-pipeline-repeat-01": [
+        "adapter",
+        "api-continue.json",
+        "api-inaccessible-file",
+        "api-mount-receipt.json",
+        "api-ready.json",
+        "api-setup-request.json",
+        "apt-check-started.json",
+        "apt-check.stderr",
+        "apt-check.stdout",
+        "apt-install-started.json",
+        "apt-install.stderr",
+        "apt-install.stdout",
+        "apt-update-started.json",
+        "apt-update.stderr",
+        "apt-update.stdout",
+        "base-inventory-started.json",
+        "base-inventory.stderr",
+        "base-inventory.stdout",
+        "configure-receipt.json",
+        "dpkg-audit-started.json",
+        "dpkg-audit.stderr",
+        "dpkg-audit.stdout",
+        "export-result",
+        "foreign-receipt.json",
+        "foreign.stderr",
+        "foreign.stdout",
+        "full-inventory-started.json",
+        "full-inventory.stderr",
+        "full-inventory.stdout",
+        "repo",
+        "second-stage-started.json",
+        "second-stage.stderr",
+        "second-stage.stdout"
+      ],
+      "userspace-pipeline-retained-01": [
+        "adapter",
+        "api-continue.json",
+        "api-inaccessible-file",
+        "api-mount-receipt.json",
+        "api-ready.json",
+        "api-setup-request.json",
+        "apt-check-started.json",
+        "apt-check.stderr",
+        "apt-check.stdout",
+        "apt-install-started.json",
+        "apt-install.stderr",
+        "apt-install.stdout",
+        "apt-update-started.json",
+        "apt-update.stderr",
+        "apt-update.stdout",
+        "base-inventory-started.json",
+        "base-inventory.stderr",
+        "base-inventory.stdout",
+        "configure-receipt.json",
+        "dpkg-audit-started.json",
+        "dpkg-audit.stderr",
+        "dpkg-audit.stdout",
+        "export-result",
+        "foreign-receipt.json",
+        "foreign.stderr",
+        "foreign.stdout",
+        "full-inventory-started.json",
+        "full-inventory.stderr",
+        "full-inventory.stdout",
+        "repo",
+        "second-stage-started.json",
+        "second-stage.stderr",
+        "second-stage.stdout"
+      ],
+      "userspace-timesync-retained-01": [
+        "api-continue.json",
+        "api-inaccessible-file",
+        "api-mount-receipt.json",
+        "api-ready.json",
+        "api-setup-request.json",
+        "identity-before",
+        "propagation-configure-continue.json",
+        "propagation-configure-ready.json",
+        "propagation-configure-receipt.json",
+        "repo",
+        "timesync-audit-started.json",
+        "timesync-audit.stderr",
+        "timesync-audit.stdout",
+        "timesync-check-started.json",
+        "timesync-check.stderr",
+        "timesync-check.stdout",
+        "timesync-install-started.json",
+        "timesync-install.stderr",
+        "timesync-install.stdout",
+        "timesync-inventory-started.json",
+        "timesync-inventory.stderr",
+        "timesync-inventory.stdout",
+        "timesync-receipt.json"
+      ],
+      "userspace-timesync-retained-02": [
+        "api-continue.json",
+        "api-inaccessible-file",
+        "api-mount-receipt.json",
+        "api-ready.json",
+        "api-setup-request.json",
+        "export-timesync-result",
+        "identity-before",
+        "propagation-configure-continue.json",
+        "propagation-configure-ready.json",
+        "propagation-configure-receipt.json",
+        "propagation-export-continue.json",
+        "propagation-export-ready.json",
+        "propagation-export-receipt.json",
+        "repo",
+        "timesync-audit-started.json",
+        "timesync-audit.stderr",
+        "timesync-audit.stdout",
+        "timesync-check-started.json",
+        "timesync-check.stderr",
+        "timesync-check.stdout",
+        "timesync-install-started.json",
+        "timesync-install.stderr",
+        "timesync-install.stdout",
+        "timesync-inventory-started.json",
+        "timesync-inventory.stderr",
+        "timesync-inventory.stdout",
+        "timesync-package-state.json",
+        "timesync-receipt.json"
+      ]
+    },
+    "terminal_exit_code": 0
+  },
+  "schema": 1,
+  "source_unique_allocated_bytes": 5174169600,
+  "sparse_sd_recipe": {
+    "final_resources": {
+      "available_memory_bytes": 7497519104,
+      "free_bytes": 21234774016,
+      "time": 1794046368.8739674
+    },
+    "hardware_boot": false,
+    "initial_budget": {
+      "capsule_bytes": 232286652,
+      "git_staging_bound_bytes": 129539993,
+      "recipe_bytes": 4294967296,
+      "required_free_bytes": 4656793941
+    },
+    "inventory_unchanged": true,
+    "manifest": {
+      "a733-host-sd.img": {
+        "bytes": 268435456,
+        "sha256": "1db41fa64748f1fcb275f7ef0cacd5e531e0481e0b514f8f8617b0e7d1f7afdb"
+      },
+      "a733-host-sd.img.gz": {
+        "bytes": 17271916,
+        "sha256": "477d63faf661ccff584e36a968dad6ff85266905419a44ebc848699582fd7dd7"
+      },
+      "assembly.log": {
+        "bytes": 4030,
+        "sha256": "e4e4930ef0a607f3002b36a3bfeefe0c0323c79c17546907606dacc287445fbc"
+      },
+      "uInitrd": {
+        "bytes": 4762428,
+        "sha256": "71fd015c5eaab267e46d9bea5eb0a4aafa24349c2e2dbf81dad7d8a0d31b9290"
+      }
+    },
+    "mapped": [],
+    "minimum_available_memory_bytes": 7351185408,
+    "minimum_free_bytes": 21129883648,
+    "mounts": [],
+    "prior_image_reference": "out/nvme-firmware-sd-20261107/work/project/out/host-sd-nvme-firmware-01",
+    "producer_revision": "626e3222d9d98587179722a925208fdca34127ee",
+    "raw_allocated": 36704256,
+    "raw_and_gzip_identical_to_prior": true,
+    "receipt_sha256": "6b7c06cc2e790186d1d3889f9fe769517dad3ef30dcf3482a9a3305b88083f03",
+    "state": "complete",
+    "success": true
+  },
+  "targets": {
+    "normalized-profile-03": "restored",
+    "root-metadata-backend-01": "restored",
+    "time-profile-component-02": "restored",
+    "userspace-configure-01": "arm-root",
+    "userspace-configure-recipe-01": "arm-root",
+    "userspace-foreign-01": "arm-root",
+    "userspace-foreign-recipe-01": "arm-root",
+    "userspace-pipeline-repeat-01": "arm-root",
+    "userspace-pipeline-retained-01": "arm-root",
+    "userspace-timesync-retained-01": "arm-root",
+    "userspace-timesync-retained-02": "arm-root"
+  },
+  "validation": {
+    "assembly_tests": 5,
+    "e2e_log": {
+      "bytes": 102,
+      "sha256": "cb7a90ef54de05ae910788e9bef9f4edca619814f1e89990fa0fb3787597ddb0"
+    },
+    "full_log": {
+      "bytes": 6434,
+      "sha256": "4b656b636d4f0b6aebdc77f272abbc160e1ab3d3226a55331ba55ba96864b090"
+    },
+    "jammy_root_retention_e2e_tests": 4,
+    "privileged_ubuntu_unit_tests": 1614,
+    "shell_suites": 5,
+    "unit_skips": 0
+  }
+}

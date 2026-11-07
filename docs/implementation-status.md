@@ -62,17 +62,21 @@ Physical repair, SSH and an actual KVM guest are still unproven.
 | Guest operations | [KVM-only first guest](kvm-first-guest.md), [management](guest-operations.md), networking, enrollment, checkpoints and off-device backup/restore have software fixtures. **No guest has booted.** |
 
 Latest privileged Ubuntu discovery: **1,614 tests, no skips/errors/failures**;
-five shell suites, four diagnostic assembly cases and Bash/TOML checks pass.
+five shell suites, five diagnostic assembly cases and Bash/TOML checks pass.
 These results establish no physical boot, guest, SD-write or recovery acceptance.
 
 ## Capacity and reproducibility
 
 The [authorized 20 GiB builder growth](build-host-capacity-plan.md) completed;
-LV size is 88,017,469,440 bytes. After the FEL compilation, builder free is
-**21,557,407,744 bytes**, below the next full-NVMe **22 GiB** initial guard before
-staging overhead. Smaller SD/probe phases passed their separate unchanged
-budgets. Further full composition needs verified retention; **no guard reduction
-or additional LV growth is authorized**. See [host assessment](build-host-assessment.md).
+LV size is 88,017,469,440 bytes. [Further verified retention](repeat-build-retention.md)
+preserves eleven superseded expanded leaves on both hosts and recovers about
+5.17 GB. Builder free immediately afterward is **24,798,740,480 bytes**. A fresh
+root construction (`timesync-repeat-01`, source `626e322`) is running; its full
+readback and downstream repeats remain open. New regular-file SD packaging stays
+sparse and matches the prior SD raw/gzip bytes in the frozen builder. Recheck
+staging overhead and the unchanged full-NVMe **22 GiB** initial guard before any
+composition; **no guard reduction or additional LV growth is authorized**.
+See [host assessment](build-host-assessment.md).
 
 [Verified retention](composition-retention.md) preserves retired work trees on
 both hosts. Native sparse conversion preserves generated image bytes and leaves
