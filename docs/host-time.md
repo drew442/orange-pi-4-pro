@@ -13,7 +13,10 @@ and expanded forms. The archive passed that index's size/hash before extraction.
 Existing libc6, libsystemd-shared and systemd satisfy its dependencies; all 220
 locked binaries were matched against the signed index, with no conflicting
 time-daemon provider. The exact systemd source version is already retained in
-the 149-version source archive set. No package was installed or daemon executed.
+the 149-version source archive set. That input-only check installed no package.
+The later [actual 221-package build](evidence/timesync-execution-20261107.json)
+now passes installation/export and independent complete artifact readback.
+No daemon execution or clock-setting operation is claimed.
 
 Upstream [systemd 252 documentation](https://raw.githubusercontent.com/systemd/systemd/v252/man/systemd-timesyncd.service.xml)
 describes SNTP synchronization and persistent clock state at
@@ -27,15 +30,16 @@ synchronization result, with offline behavior handled explicitly.
 
 The [stable identity policy and read-only gates](timesync-identity.md) now pass
 actual pinned ARM sysusers creation/repeat checks on the builder, with independent
-review. UID/GID 996 is reserved for a future profile; published images still have
+review. UID/GID 996 is reserved in the new archive; published images still have
 no timesync account or daemon. The [checkpoint guard and private view fixture](timesync-state.md)
 now verify file-backed ownership and timestamp preservation. Installed root
 transitions and physical synchronization remain unproven.
 
 The [separate offline recipe](timesync-userspace.md) now declares the exact
 221-package addition and boot-enablement policy, with independent source/input
-review. Actual package configuration/export and per-root metadata regeneration
-remain required. Audit installed service state across real A/B updates and
+review. Configuration/export now passes, including exact boot links. Production
+profile selection, per-root metadata regeneration and persistent clock-state
+initialization/guards remain required. Audit installed service state across real A/B updates and
 rollback, verify DNS/NTP reachability on the board, and capture
 cold-boot time establishment and clock persistence alongside SD hashes/write
 counters. Those integration and hardware steps remain unperformed; package staging and

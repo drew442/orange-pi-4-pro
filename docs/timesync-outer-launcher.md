@@ -1,15 +1,15 @@
-# Time-profile outer launcher preparation
+# Time-profile outer launcher
 
 [`launch-timesync-userspace.py`](../build/launch-timesync-userspace.py) connects
 the separate [package step](timesync-userspace.md) and [export adapter](timesync-export.md).
-Its source, plan and capacity-refusal checks pass independent review. A small
-propagation-only diagnostic also passes on the actual builder. The subsequent
-[full attempt](evidence/timesync-execution-attempt-20261106.json) passed base
-authentication, clone, private propagation, API setup, package installation,
-inventory, account-preservation and package audits, then failed because the
-required future-boot service link was absent. Export did not run; no new archive
-or image was produced or registered. Host inventory and process/mount cleanup
-checks pass. Published installation files remain unchanged.
+The [actual complete execution](evidence/timesync-execution-20261107.json) passes
+configuration and export from the tracked normalized base, using commit `719146c`
+and fresh tag `retained-02`. It produces a 138,093,095-byte archive with SHA-256
+`0ead62c982344bfa3a796027e2f07ce0d8402e7033122707e01a9a3f8860f248`.
+Independent readback verifies all 15,909 entries, metadata, complete 221-package
+inventory, fixed 996:996 identity, preserved old accounts and required boot links.
+The artifact is not yet registered for production composition. Published
+installation files remain unchanged.
 
 ## Inputs and read-only plan
 
@@ -104,13 +104,27 @@ identity. Twenty-three focused tests and the full native suite pass: 1,273 cases
 97 environment skips, four assembly cases and five shell suites. These establish
 source/host behavior and the propagation step only.
 
-The tracked normalized base now passes with tag `retained-01`. The explicit
-guarded offline service enablement correction passes independent source review.
-Next retry time-profile configuration/export with a fresh tag after capacity
-recheck. The failed clone remains
-retained, consuming capacity; do not lower the 5 GiB initial guard. Authenticate the
-actual output and register it explicitly before composing matching root/state/
-NVMe images. Full artifact readback, independent deployment and physical boot,
-SSH, NTP, KVM, SD-write, endurance, update/rollback and recovery results remain
-required. Follow the [existing deployment guide](deploy-personalized-20261106.md)
+The successful full run uses the protected source checkout at
+`/var/lib/a733-timesync-retry-project-20261107/project`, base tag `retained-01`,
+tag `retained-02` and authenticated extra DEB `/tmp/a733-timesync-input.deb`.
+Its output is `work/export-timesync-result/` beneath
+`/var/lib/a733-clean-replay-20261106/userspace-timesync-retained-02`.
+All records and authenticated archive/BOM copies are retained on codex under
+`out/timesync-retry-20261107/`. This archive is a userspace build input, not an SD image.
+
+The run required 5,368,709,120 bytes initially and sampled minima of
+4,877,975,552 bytes disk free and 7,335,288,832 bytes available RAM. Both phases
+pass private propagation, receipts and cleanup. A separate live postcheck sees
+unchanged host inventory and no mapped processes or phase/base mounts.
+[Verified cache retirement](evidence/builder-deb-retention-20261107.json) supplied
+capacity; no resize or guard reduction occurred. The earlier failed attempt
+and its clone remain retained; its missing boot-link issue is corrected.
+
+Next integrate explicit profile provenance, matching 221-package root metadata
+and persistent clock-state seeding/guards before permitting image composition.
+Current builders accept only baseline/normalized profiles; the clock-state audit
+is not yet a state-initialization or updater hook. A second fresh construction
+and comparison, production root/state/NVMe readback, independent deployment and
+physical boot, SSH, NTP, KVM, SD-write, endurance, update/rollback and recovery
+results remain required. Follow the [existing deployment guide](deploy-personalized-20261106.md)
 for current installation images; this launcher does not replace them.

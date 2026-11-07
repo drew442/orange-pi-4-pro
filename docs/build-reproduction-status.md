@@ -1,6 +1,6 @@
 # Build reproduction status
 
-Updated 2026-11-06. This index records build evidence; physical release acceptance
+Updated 2026-11-07. This index records build evidence; physical release acceptance
 remains in [hardware validation](hardware-validation.md). Published installation
 artifacts remain bound to [the deployment guide](deploy-personalized-20261106.md).
 
@@ -23,11 +23,11 @@ artifacts remain bound to [the deployment guide](deploy-personalized-20261106.md
 | Authenticated userspace profiles | [Explicit selection and actual staging](userspace-profiles.md): normalized/default pins, 12 provenance files, complete 15,876-entry extraction, 220 packages, eight package-state components and closed runtime | No production images; source-side resolver only |
 | Root/state recipe integration | [Optional metadata backend](evidence/root-metadata-backend-20261106.json), [preparation](root-reconstruction-preparation.md): full extraction through payload interface, no real nodes | Complete root/state/NVMe reconstruction and image readback remain open |
 | Guest fixture | [Fixed seed fixture](evidence/guest-seed-fixture-20261104.json): root/drew byte-identical Jammy builds | No guest has booted; real KVM is mandatory |
-| Future time-service identity | [Fixed identity gate and ARM fixture](timesync-identity.md): stable996, old tuples unchanged, repeat/collision checks and independent review | Daemon installation, new221-package profile, clock-state/A-B/NTP/hardware unproven |
+| Time-service identity | [Fixed identity gate and ARM fixture](timesync-identity.md): stable996, old tuples unchanged, repeat/collision checks and independent review | Built archive preserves all old accounts and uniquely adds UID/GID 996; production state/A-B/NTP/hardware unproven |
 | Future clock-state contract | [Guard and private old/new views](timesync-state.md): same inode/996 ownership, zero-capability writer, preserved mtime, six refusal cases and independent review | Tiny file-backed roots; actual boot/updater/rollback/NTP remain unproven |
-| Future time-service package step | [Offline derivation preparation](timesync-userspace.md): exact221 input locks, complete base-BOM gate, fixed identity/service policy and independent source/input review | Actual install/inventory/account/audit steps pass; missing boot enablement link prevents successful recipe receipt/export |
-| Future time-profile export | [Authenticated adapter](timesync-export.md): strict source/receipt/state chain, immutable backend, prepublication bindings and independent review; native builder process cleanup regressions | Synthetic artifact fixtures only; timesync outer launcher and actual221configuration/export pending |
-| Time-profile outer orchestration | [Tracked launcher and actual prelude](timesync-outer-launcher.md): base/source/namespace chain, private-propagation handshake, common manifest, guarded clone and measured output contracts; actual early5GiB refusal | Tracked normalized base passes; actual time attempt fails before export on missing service link; no new221artifact or hardware acceptance |
+| Time-service package step | [Offline derivation](timesync-userspace.md): exact221 input locks, complete base-BOM gate, fixed identity/service policy and independent source/input review | Actual complete 221-package configuration and boot-link checks pass; production state integration/boot remain open |
+| Time-profile export | [Authenticated adapter](timesync-export.md): strict source/receipt/state chain, immutable backend, prepublication bindings and independent review; native builder process cleanup regressions | Complete readback of all 15,909 archive/BOM members passes; production profile/image binding remains open |
+| Time-profile outer orchestration | [Tracked launcher and actual prelude](timesync-outer-launcher.md): base/source/namespace chain, private-propagation handshake, common manifest, guarded clone and measured output contracts; actual early5GiB refusal | Actual complete 221-package configuration/export and independent artifact readback pass; second construction, production images and hardware acceptance remain open |
 | Distribution inputs | [26-input license inventory](evidence/vendor-boot-license-inventory-20261106.json) | Attribution/grants unresolved; no public redistribution clearance claimed |
 
 The pinned mke2fs creator copies child modification times at whole-second
@@ -48,7 +48,9 @@ has occurred; production capacity guards remain mandatory.
 
 The [tracked base now passes](userspace-pipeline-launcher.md) after
 [historical root retention](historical-root-retention.md) recovered about 3.53 GB.
-The guarded service-link correction now passes independent review. Recheck
-capacity and retry with a fresh tag, then reconstruct and fully inspect production roots/state/
-NVMe after capacity permits. A second agent/operator must reproduce the complete
+The [complete time-profile build](evidence/timesync-execution-20261107.json) now
+passes after [one more verified cache retirement](evidence/builder-deb-retention-20261107.json).
+Next integrate explicit profile/root package-state and persistent clock-state
+seeding/guards, repeat construction, then reconstruct and fully inspect production
+roots/state/NVMe after capacity permits. A second agent/operator must reproduce the complete
 deployment from the guide; build proofs cannot satisfy physical release gates.

@@ -3,9 +3,10 @@
 The separate input contract
 [`host-timesync-inputs.lock.json`](../configs/host-timesync-inputs.lock.json)
 adds only ARM64 `systemd-timesyncd` 252.39-1~deb12u2 to the normalized 220-package
-base. This is preparation for a new userspace artifact, not a built archive or an
-accepted deployment profile. Published images, default/normalized archive pins
-and existing producer recipes remain unchanged.
+base. A [complete actual build](evidence/timesync-execution-20261107.json) now
+produces and independently verifies the new archive. It is not yet accepted by
+production profile selection or image composition. Published images and
+default/normalized archive pins remain unchanged.
 
 The two new locks explicitly preserve every existing tuple and binary hash:
 
@@ -61,8 +62,8 @@ directory descriptors, creates missing parents as 0755 despite restrictive
 umasks, accepts identical links and refuses conflicting files or aliases. The recipe
 requires the exact sysinit and D-Bus alias links and pinned unit/daemon payloads,
 and rejects masks or overrides. Its receipt records the enablement only after
-validation. These are requirements for a future built artifact, not claims that
-the currently published host contains or runs the service.
+validation. The new archive meets these requirements; the currently published
+host has not been rebuilt with this service and no physical startup is claimed.
 
 A distinct `timesync-receipt.json` records this derivation. It does not replace
 the base configure receipt or certify a new exported archive. Success requires
@@ -82,14 +83,16 @@ The [actual attempt](evidence/timesync-execution-attempt-20261106.json) installe
 the package and passed inventory/account/audit checks, then failed on missing
 service enablement. The [explicit link correction](evidence/timesync-enablement-fix-20261106.json) passes independent Sol/high
 review and 34 focused tests; its exporter dependency pin is updated to the new
-recipe. A successful fresh complete configuration/export remains required.
-No new archive/profile or physical service startup is claimed.
+recipe. A subsequent fresh complete configuration/export now passes, with
+independent full artifact readback. Production profile registration, state
+integration and physical service startup remain open.
 
 A real run requires the pinned frozen Ubuntu 22.04 AMD64 environment, private
 UID/GID/network namespaces, read-only inputs and disk-backed work. Its 4 GiB
 free-space floor remains separate from larger production image guards. The
-failed clone leaves about 5.35 GB free, just below the outer launcher's separate
-5 GiB initial guard. Reclaim only verified redundant generated files before retry.
+successful run leaves about 4.88 GB free, below the outer launcher's separate
+5 GiB initial guard for another fresh construction. Reclaim only verified
+redundant generated files before another build.
 The prepared [20 GiB expansion](build-host-capacity-plan.md) awaits approval. No resize or
 capacity guard reduction has occurred.
 

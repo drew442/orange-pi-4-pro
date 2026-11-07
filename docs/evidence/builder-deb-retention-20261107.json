@@ -1,0 +1,60 @@
+{
+  "schema": 1,
+  "date": "2026-11-07",
+  "classification": "One redundant Ubuntu builder package archive retired; no board storage/firmware or deployment artifact changed",
+  "file": {
+    "builder_path": "/home/drew/orange-pi-4-pro-build/builder-package-acquisition-20261106/out/builder-packages-20261106-02/pool/main/l/linux-firmware/linux-firmware_20220329.git681281e4-0ubuntu3.42_all.deb",
+    "native_path": "/home/drew/orange-pi-4-pro/out/builder-packages-20261106/pool/main/l/linux-firmware/linux-firmware_20220329.git681281e4-0ubuntu3.42_all.deb",
+    "bytes": 316373280,
+    "sha256": "ca7b1966610574959c044476f905761fb37a2cf2c0ea87778286a6f921afdcf1",
+    "pin_source": "configs/builder-package-archives-20261106.lock.json",
+    "acquisition_evidence": "docs/evidence/builder-packages-acquired-20261106.json"
+  },
+  "retained_protected_copy": "/var/lib/a733-builder-deb-retention-20261107/linux-firmware.deb",
+  "native_copy_mode": "0600",
+  "native_parent_mode": "0700",
+  "returncode": 0,
+  "journal_phases": [
+    "start",
+    "verified",
+    "intent",
+    "removed",
+    "complete"
+  ],
+  "full_hash_checks": "Native original and fsynced protected copy before and after remote transaction; remote original before first/only unlink.",
+  "builder_free_before_bytes": 5340618752,
+  "builder_free_after_closed_descriptors_bytes": 5656981504,
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "verdict": "pass",
+    "helper_sha256": "57340c0c94245b6ea18b39ae0b201ceb25787b7beacdde568b22af5ecdbc939a"
+  },
+  "disposable_tests": {
+    "cases": 28,
+    "skips": 0,
+    "returncode": 0
+  },
+  "raw_records_root": "out/builder-deb-retention-20261107",
+  "record_pins": {
+    "retirement.stdout": {
+      "bytes": 411,
+      "sha256": "a35e16146504c6660f61753e1c6104e0c623e237822c7ab9d5e0af2e07a0e794"
+    },
+    "builder-receipt.jsonl": {
+      "bytes": 1862,
+      "sha256": "5635941e86f582432e400870d87e63e31d444f2bc8ff3457044f5a576c876755"
+    },
+    "builder-df-after.txt": {
+      "bytes": 161,
+      "sha256": "663fb99c3c194b874c58cf1c13c1278ae1d41edb659e67bed63dba8473d31a1f"
+    }
+  },
+  "restoration": "Before historical builder reconstruction needs this archive, restore one retained copy to the exact builder_path using an absent destination and authenticate the recorded complete size/SHA256. Existing destinations must not be overwritten.",
+  "limits": [
+    "Two codex copies share one filesystem; they are not independent disaster backups.",
+    "This archive is architecture all from Ubuntu builder acquisition, not A733 boot firmware.",
+    "Other841archive paths, original package pins/manifests and current deployment files remain unchanged.",
+    "No LVM resize, capacity guard reduction or physical boot/KVM acceptance."
+  ]
+}

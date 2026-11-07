@@ -1,6 +1,6 @@
 # Implementation status
 
-Updated 2026-11-06. Decisions and next actions are below; detailed build evidence
+Updated 2026-11-07. Decisions and next actions are below; detailed build evidence
 is indexed in [build reproduction status](build-reproduction-status.md).
 
 ## Current milestone
@@ -41,11 +41,11 @@ by subsequent clean-build work.
   `192.168.1.1` and verified HTTPS are observed on the preparation boot. The clock
   starts in 1970; HTTPS passed after manual UTC correction. Repeated installed-host
   networking and automatic time remain open. [Time-sync input](host-time.md) is
-  authenticated. The [time-profile preparation](timesync-outer-launcher.md) includes
-  reviewed package/export/outer recipes, identity and file-state fixtures, an
-  actual private-propagation prelude and capacity refusal. Full 221-package
-  attempt passed package/account audits but failed on a missing boot enablement
-  link; export, artifact composition, installed transitions and NTP remain open.
+  authenticated. The [time-profile build](timesync-outer-launcher.md) now passes
+  actual 221-package configuration/export and independent complete archive
+  readback, including boot links and fixed 996:996 identity. Profile registration,
+  matching root/package/clock-state integration, installed transitions and NTP
+  remain open; current installation images are unchanged.
 - [Operator inputs](evidence/operator-inputs-20261105.json): RSA3072 and Ed25519
   keys, DHCP hostname `a733-host`, any source/subnet. Require public-key-only SSH.
   [ARM SSH-policy checks](evidence/ssh-console-management-arm-20261106.json) pass;
@@ -92,8 +92,8 @@ by subsequent clean-build work.
   138,025,729 compressed bytes, 15,876 entries. [Explicit profile selection](userspace-profiles.md)
   and complete staging pass for eight package-state components and the closed
   39-file runtime. The [tracked base pipeline](userspace-pipeline-launcher.md)
-  now passes all three phases and matches the normalized archive. The time-profile
-  attempt failed before export; production root/state/NVMe reconstruction remains
+  now passes all three phases and matches the normalized archive. The complete time-profile
+  build/readback now passes; production root/state/NVMe reconstruction remains
   open. Latest native discovery: **1,279 cases, 97 environment skips**,
   four assembly cases and all five shell suites. These checks establish no
   physical acceptance or independently reproduced deployment.
@@ -108,11 +108,12 @@ by subsequent clean-build work.
 2. Validate NVMe host boot and SSH with both keys. Run [the first KVM guest](kvm-first-guest.md)
    for CPU/disk/network, clean shutdown/restart and persisted disk marker. Return
    its console/log evidence; `/dev/kvm` alone cannot satisfy the gate.
-3. Continue [clean-build work](build-reproduction-status.md): retry the reviewed
-   time-service boot-link correction with a fresh tag after capacity recheck. The tracked
-   base passes after [verified historical root retention](historical-root-retention.md)
-   raised builder free space to 6.77 GB. Then reconstruct production roots/state/NVMe
-   with the normalized profile and complete image readback. Full production capacity
+3. Continue [clean-build work](build-reproduction-status.md): integrate explicit
+   time-profile provenance, 221-package root metadata and persistent clock-state
+   seeding/guards before enabling production composition. Repeat the fresh time
+   build and compare outputs, then reconstruct production roots/state/NVMe and
+   complete image readback. [Verified single-archive retirement](evidence/builder-deb-retention-20261107.json)
+   enabled the successful build; about 4.88 GB remains free. Full production capacity
    guards remain separate. The reviewed [20 GiB builder LVM growth](build-host-capacity-plan.md)
    awaits approval after [target/backup recheck](evidence/build-host-capacity-recheck-20261106.json);
    no resize occurred and capacity guards remain unchanged.

@@ -1,0 +1,217 @@
+{
+  "schema": 1,
+  "date": "2026-11-07",
+  "classification": "Actual isolated221-package configuration/export and independent artifact readback; no image or hardware acceptance",
+  "source_commit": "719146c2f6f9f4a7eb74613addf8e47f773d5686",
+  "host": "build.drewnet.online",
+  "phase": "/var/lib/a733-clean-replay-20261106/userspace-timesync-retained-02",
+  "base_phase": "/var/lib/a733-clean-replay-20261106/userspace-pipeline-retained-01/work",
+  "command": [
+    "python3",
+    "-I",
+    "-B",
+    "/var/lib/a733-timesync-retry-project-20261107/project/build/launch-timesync-userspace.py",
+    "--tag",
+    "retained-02",
+    "--base-tag",
+    "retained-01",
+    "--project",
+    "/var/lib/a733-timesync-retry-project-20261107/project",
+    "--extra-deb",
+    "/tmp/a733-timesync-input.deb"
+  ],
+  "returncode": 0,
+  "success": true,
+  "archive": {
+    "bytes": 138093095,
+    "sha256": "0ead62c982344bfa3a796027e2f07ce0d8402e7033122707e01a9a3f8860f248"
+  },
+  "bom": {
+    "bytes": 4346433,
+    "sha256": "dd5064e28d8b2751ce7285b83b649e94121dd04b6d70e0650ac2439bd32d79d7"
+  },
+  "raw_tar": {
+    "bytes": 468592640,
+    "sha256": "7559c4c1247e3598d3d879b4e2d0cb385a0216d60aabefa5519391a47386c86e"
+  },
+  "members": 15909,
+  "inventory": {
+    "packages": 221,
+    "lock_sha256": "2e97a93bfa02ebd89b7d437df1c9c946a5e14f76b40823d54a3f1a59ab3d0d43"
+  },
+  "timestamps": {
+    "policy": "clamp archive/BOM mtime_ns to min(native, epoch); preserve earlier nanoseconds",
+    "epoch": 1790812800,
+    "clamped_entries": 2775,
+    "native_source_metadata_verified": true
+  },
+  "configuration": {
+    "packages": 221,
+    "dpkg_audit_clean": true,
+    "apt_check_passed": true,
+    "accounts_preserved": true,
+    "service_enablement": {
+      "policy": "required in this derived profile; no startup during build",
+      "links": {
+        "etc/systemd/system/sysinit.target.wants/systemd-timesyncd.service": "/lib/systemd/system/systemd-timesyncd.service",
+        "etc/systemd/system/dbus-org.freedesktop.timesync1.service": "/lib/systemd/system/systemd-timesyncd.service"
+      },
+      "files": {
+        "usr/lib/systemd/system/systemd-timesyncd.service": {
+          "bytes": 1764,
+          "sha256": "0e2cc5ea697a01cf8eef93cbadaaa029d23fb9759af459315ee0b3a349214303"
+        },
+        "usr/lib/systemd/systemd-timesyncd": {
+          "bytes": 67656,
+          "sha256": "2aa831ae71fd9fc5d0aad09c5d25364c806a2527653897b4f96802934b13df39"
+        }
+      }
+    }
+  },
+  "phases": [
+    {
+      "name": "configure",
+      "success": true,
+      "returncode": 0,
+      "recipe_receipt_sha256": "9c7be997b9fd3ce61dd260fd49c5d608d7e7b5e8528d91e97d8a4055c21c0b0c",
+      "private_propagation_passed": true
+    },
+    {
+      "name": "export",
+      "success": true,
+      "returncode": 0,
+      "recipe_receipt_sha256": "d4ef3afc9672891360384e4eac40f88632874fc519031a4d2c85a03fe1795883",
+      "private_propagation_passed": true
+    }
+  ],
+  "capacity_required_bytes": 5368709120,
+  "minimum_sampled_free_bytes": 4877975552,
+  "minimum_sampled_available_memory_bytes": 7335288832,
+  "live_postcheck": {
+    "success": true,
+    "mapped_processes": [],
+    "phase_and_base_mounts": [],
+    "inventory_unchanged": true,
+    "inventory_sha256": "446b7eb3364a6f196390c698c1c133086fee5eb3b080ec4483cc1d8584b39b15",
+    "free_bytes": 4877893632,
+    "sample": {
+      "time": 1794010082.9536223,
+      "free_bytes": 4877893632,
+      "available_memory_bytes": 7483183104
+    }
+  },
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "success": true,
+    "result": {
+      "schema": 1,
+      "verdict": "PASS: independent local artifact review; image composition and physical acceptance remain open",
+      "source_revision": "719146c2f6f9f4a7eb74613addf8e47f773d5686",
+      "archive": {
+        "bytes": 138093095,
+        "sha256": "0ead62c982344bfa3a796027e2f07ce0d8402e7033122707e01a9a3f8860f248"
+      },
+      "bom": {
+        "bytes": 4346433,
+        "sha256": "dd5064e28d8b2751ce7285b83b649e94121dd04b6d70e0650ac2439bd32d79d7"
+      },
+      "raw_tar": {
+        "bytes": 468592640,
+        "sha256": "7559c4c1247e3598d3d879b4e2d0cb385a0216d60aabefa5519391a47386c86e"
+      },
+      "members": 15909,
+      "member_types": {
+        "dir": 1725,
+        "symlink": 1854,
+        "char": 8,
+        "file": 12319,
+        "hardlink": 3
+      },
+      "full_archive_bom_content_metadata_topology_match": true,
+      "all_owners_in_private_map": true,
+      "all_timestamps_at_or_before_epoch": true,
+      "configured_inventory_packages": 221,
+      "inventory_matches_lock_receipts_status": true,
+      "service_links": {
+        "etc/systemd/system/sysinit.target.wants/systemd-timesyncd.service": "/lib/systemd/system/systemd-timesyncd.service",
+        "etc/systemd/system/dbus-org.freedesktop.timesync1.service": "/lib/systemd/system/systemd-timesyncd.service"
+      },
+      "service_files_match_contract_pins": true,
+      "accounts": {
+        "passwd": {
+          "base": 23,
+          "derived": 24,
+          "addition": [
+            "systemd-timesync",
+            "x",
+            "996",
+            "996",
+            "systemd Time Synchronization",
+            "/",
+            "/usr/sbin/nologin"
+          ]
+        },
+        "group": {
+          "base": 49,
+          "derived": 50,
+          "addition": [
+            "systemd-timesync",
+            "x",
+            "996",
+            ""
+          ]
+        }
+      },
+      "source_files_verified_against_git_and_both_staged_phases": 22,
+      "receipt_provenance_chains_match": true,
+      "host_inventory_unchanged": true,
+      "outer_and_phase_cleanup_receipts_coherent": true,
+      "export_build_and_identity_cleanup_verified": true,
+      "limitations": [
+        "Local copies and receipts reviewed; builder live process/mount state not reobserved.",
+        "Boot enablement and binary bytes verified; no service execution or NTP exchange tested.",
+        "Profile registration, image composition, installed state compatibility, physical boot, actual KVM guest, NVMe and zero routine SD writes remain separate gates."
+      ],
+      "helper_receipt_digest_and_success_match": true
+    },
+    "record": {
+      "bytes": 2334,
+      "sha256": "bda08cbe73bc220419262e861827439100d1f48a8201d80f91a21c6fc85fe193"
+    }
+  },
+  "raw_records_root": "out/timesync-retry-20261107",
+  "record_pins": {
+    "records/receipt.json": {
+      "bytes": 18553,
+      "sha256": "e539ae869fad4a4976f3484384e3d48cf5f87f20f349d689f9c08a8cfbbd140c"
+    },
+    "records/source-manifest.json": {
+      "bytes": 4314,
+      "sha256": "1c6d5e10f68a9d2db857ad1842691d11ad71f2ff22bcad608ec205c1e2c93a52"
+    },
+    "records/work/timesync-receipt.json": {
+      "bytes": 22674,
+      "sha256": "9c7be997b9fd3ce61dd260fd49c5d608d7e7b5e8528d91e97d8a4055c21c0b0c"
+    },
+    "records/work/timesync-package-state.json": {
+      "bytes": 14189,
+      "sha256": "af63b625eda42a2d4aca8997c7019ee7c1d1cf4b0d0809aea602dabfbf5f43d1"
+    },
+    "records/work/export-timesync-result/receipt.json": {
+      "bytes": 2757,
+      "sha256": "d4ef3afc9672891360384e4eac40f88632874fc519031a4d2c85a03fe1795883"
+    },
+    "live-postcheck.json": {
+      "bytes": 350,
+      "sha256": "a3bf4758e8fca92e26ffebd024438273207a1f4dc7f8392af0b4d2588e1e4844"
+    }
+  },
+  "limits": [
+    "A single fresh construction is recorded; a second complete construction and comparison remain open.",
+    "Profile is not registered for production composition; package-state/clock-state integration and complete root/state/NVMe image readback remain open.",
+    "Published installer/host SD images and personalized NVMe bundle remain unchanged.",
+    "No LV resize or build guard reduction occurred.",
+    "No physical installation, service startup, NTP, KVM guest, endurance, rollback or zero-SD-write acceptance is claimed."
+  ]
+}

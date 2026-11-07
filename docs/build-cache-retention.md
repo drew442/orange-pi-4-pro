@@ -15,6 +15,20 @@ Raw records and the one-off scripts remain outside Git on the builder at
 
 ## Current off-builder retention
 
+The [2026-11-07 single-archive retention](evidence/builder-deb-retention-20261107.json)
+retires the 316,373,280-byte Ubuntu `linux-firmware` DEB from the historical
+builder package acquisition directory. Its original codex acquisition copy and
+an additional root-owned mode0600 copy at
+`/var/lib/a733-builder-deb-retention-20261107/linux-firmware.deb` both pass full
+hashes before and after retirement. Independent Sol/high review and 28 disposable
+tests pass; the durable builder journal confirms the one removal. Builder free
+space after descriptors closed was 5,656,981,504 bytes. This is an Ubuntu builder
+dependency, separate from A733 boot firmware. Before replaying a builder
+construction that needs its original cache path, restore either retained copy
+to the evidence's exact `builder_path`, refuse an existing destination and fully
+verify the recorded size/hash. The other 841 acquired package paths are unchanged.
+No storage resize, build guard reduction or physical-device operation occurred.
+
 The later [historical root image retention](historical-root-retention.md)
 preserves twelve fixed root-image files in two protected codex copies and
 recovers about 3.53 GB on the builder. Its exact old/new path map supersedes

@@ -2,7 +2,7 @@
 
 Automatic host time remains unimplemented in the published 220-package images.
 The [authenticated package input](host-time.md) requests a dynamically assigned
-`systemd-timesync` user. A future, separate userspace profile will reserve
+`systemd-timesync` user. The [new, separately built archive](evidence/timesync-execution-20261107.json) reserves
 **UID/GID 996:996**, keeping persisted NVMe clock-state ownership stable across
 roots. This reservation is verified against the normalized base; it is not an
 account added to the currently published images.
