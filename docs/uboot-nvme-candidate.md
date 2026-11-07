@@ -213,11 +213,54 @@ logs remain local. Resolve native references using
 `out/spi-candidate-registered-01-20261107/component-retained`. The original
 `out/spi-candidate-ram-02-20261107/work.tar.gz` remains the shared full workspace
 archive; keep both sets and the reference map together when transferring them.
-No second complete workspace archive is created. Private source/compiler
-reconstruction and a complete archive restoration have not been exercised.
+No second complete workspace archive is created. The original archive now
+passes the full temporary-path restoration test below. Private source/compiler
+reconstruction and building at the original absolute paths remain untested.
 
 The minimum disk free is **4,037,980,160 bytes**, and available RAM stays above
 **6,090,018,816 bytes**. The final receipt and a separate live observation show
 an empty, unmounted work directory and no mapped build processes. The >4 GB
 retention reserve remains unchanged. This is component reproduction evidence;
 SPI recovery, image assembly, programming and physical boot remain separate gates.
+
+
+## Complete archive restoration test
+
+[Restoration evidence](evidence/uboot-nvme-restoration-20261107.json) records an
+actual fresh extraction of the original full workspace on the Ubuntu 22.04
+builder. The separately reviewed, one-off controller authenticates the archive
+and its observed file identity before creating a fresh private destination:
+`/var/lib/a733-uboot-nvme-restore-20261107-01/tree`.
+
+The archive contains **27,105** entries: 2,315 directories, 24,683 regular files
+(**1,173,312,508 bytes**) and 107 symlinks. A 4 GiB tmpfs mounted with
+`nodev,nosuid,noexec` held the restored tree. GNU tar extracted numeric owners,
+modes, links and timestamps, compared the complete archive against the result,
+and detected no differences. The restored path list matched every archive name,
+and all **72** component-manifest hashes passed. Independent source review and
+post-run archive/member/manifest verification pass. GNU tar checks restorable
+metadata, including nanosecond mtimes; archived ctime is historical information,
+not a timestamp that extraction can restore.
+
+The controller command that completed was:
+
+```sh
+sudo python3 -I -B /var/lib/a733-uboot-restore-controller-20261107/restore.py
+```
+
+Its exact reviewed source, nine fixture tests and durable journals are retained
+under `out/spi-workspace-restore-20261107` on codex, with a root-private controller
+copy and journals on the builder. This one-off command refuses its existing
+destination; it is an execution record, not a reusable operator repair command.
+The archive and deployed images remain unchanged. A separate live postcheck
+confirms matching archive identity/hash, no phase mounts or mapped processes,
+and an empty temporary directory after unmount.
+
+Minimum available RAM was **6,074,494,976 bytes**, and minimum disk free was
+**4,009,005,056 bytes**. Existing swap configuration was preserved; tmpfs was
+allowed to use that swap. No compilation or board operation ran. The original
+absolute build directory remains empty and unmounted. This proves complete
+archive recovery at a temporary location; it does not prove a rebuild from that
+location, ROM recovery, SPI boot or KVM guest execution. The initial candidate
+evidence remains immutable because the replay registry pins it; the newer
+restoration record updates this specific verification result.

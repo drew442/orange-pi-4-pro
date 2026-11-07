@@ -76,7 +76,10 @@ remain unchanged. **Do not repeat NVMe installation to fix management.**
   two identical assemblies using real boot components and an explicitly synthetic
   backup. It preserves every byte outside the two replacement ranges and records
   all 256 erase-unit hashes. No backup-derived board candidate, physical SPI
-  programming or SPI boot is established; builder free is now 4.01 GB.
+  programming or SPI boot is established. The retained candidate workspace also
+  passes [full temporary-path restoration](evidence/uboot-nvme-restoration-20261107.json):
+  all 27,105 entries and 72 manifest hashes, followed by clean unmount. No
+  restored-source rebuild is claimed; builder free remains about 4.01 GB.
 
 ## Implemented and verified in software
 
@@ -119,11 +122,10 @@ remain unchanged. **Do not repeat NVMe installation to fix management.**
   component pass: 221 packages, eight package-state components, four management
   files, 40 maintenance files and a nondeployable 256 MiB state image. New time roots
   require management ABI v2; updated tools retain v1 rollback support. Production
-  4 GiB roots/8 GiB state/NVMe reconstruction remains open. Earlier complete native discovery:
-  **1,353 cases, 100 environment skips**,
-  four assembly cases and all five shell suites. Latest discovery has 1,469 cases,
-  113 skips and six disk-capacity failures/errors; all four affected modules
-  pass 57 cases with temporary fixture space. All 46 account-date cases pass
+  4 GiB roots/8 GiB state/NVMe reconstruction remains open. Latest unittest
+  discovery ran **1,469 cases** with 113 skips and six disk-capacity failures/errors;
+  all four affected modules pass 57 cases with temporary fixture space. Four
+  assembly cases and all five shell suites pass. All 46 account-date cases pass
   under root; 52 candidate/script/launcher cases and 22 historical U-Boot cases
   also pass; 18 SPI assembler cases pass. See [validation limits](evidence/spi-file-assembly-20261107.json). These checks establish no
   physical acceptance or independently reproduced deployment.

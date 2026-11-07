@@ -1,0 +1,266 @@
+{
+  "agent_routing": {
+    "implementation": {
+      "effort": "medium",
+      "model": "gpt-6.1-sol"
+    },
+    "maximum_active_children": 2,
+    "review": {
+      "effort": "high",
+      "model": "gpt-6.1-sol"
+    },
+    "usage_and_cost": "Not exposed; no cost-saving claim."
+  },
+  "archive": {
+    "bytes": 412929105,
+    "identity": [
+      64512,
+      1632269,
+      412929105,
+      1794024578150508377,
+      1794024578150508377,
+      0,
+      0,
+      33188,
+      1
+    ],
+    "native_copy": "/home/drew/orange-pi-4-pro/out/spi-candidate-ram-02-20261107/work.tar.gz",
+    "original_evidence": "docs/evidence/uboot-nvme-candidate-20261107.json",
+    "original_evidence_pin": {
+      "bytes": 16835,
+      "sha256": "da2f319c342beaf692e4f392ef622ab307748d9c586709c186d9f04a1d7ca01c"
+    },
+    "path": "/var/lib/a733-clean-replay-20261106/uboot-nvme-component-ram-02/work.tar.gz",
+    "sha256": "436e35cd9b6e16ccef0a991f88b8afb4a57c21bcd3e374c0946cd6c77635b49a"
+  },
+  "archive_preflight": {
+    "kinds": {
+      "dir": 2315,
+      "file": 24683,
+      "symlink": 107
+    },
+    "member_count": 27105,
+    "metadata_budget": 444088320,
+    "modes": {
+      "0o444": 2,
+      "0o644": 7063,
+      "0o664": 16769,
+      "0o700": 2,
+      "0o755": 993,
+      "0o775": 2169,
+      "0o777": 107
+    },
+    "owners": {
+      "1048576:1048576": 19614,
+      "1060403:1057576": 7491
+    },
+    "pax_keys": {
+      "atime": 27105,
+      "ctime": 27105,
+      "mtime": 3294,
+      "path": 8742
+    },
+    "regular_bytes": 1173312508
+  },
+  "builder": "drew@build.drewnet.online",
+  "classification": "Actual complete U-Boot/NVMe workspace archive restoration to isolated temporary builder tmpfs; no build or hardware acceptance",
+  "component_manifest": {
+    "bytes": 11439,
+    "files_verified": 72,
+    "sha256": "5d04b63f4db1faa75a3e64275dbcbaca4d7ba4bb8c5f085ec7edf3baf356fb4f"
+  },
+  "controller": {
+    "command": [
+      "sudo",
+      "python3",
+      "-I",
+      "-B",
+      "/var/lib/a733-uboot-restore-controller-20261107/restore.py"
+    ],
+    "fixtures": {
+      "passed_jammy": 9,
+      "passed_native": 9,
+      "path": "/home/drew/orange-pi-4-pro/out/spi-workspace-restore-20261107/test_restore.py",
+      "pin": {
+        "bytes": 5748,
+        "sha256": "6f6d22f6907b61d475f1e8e0e99a1f3c7403de70ed7c2ecf9fd80eb5771d5c53"
+      }
+    },
+    "native_copy": "/home/drew/orange-pi-4-pro/out/spi-workspace-restore-20261107/restore.py",
+    "path_on_builder": "/var/lib/a733-uboot-restore-controller-20261107/restore.py",
+    "pin": {
+      "bytes": 17884,
+      "sha256": "f433692e5085268ad4221b79bc8818ca1c089f31bb59cdad7a6191f629d01c60"
+    },
+    "post_run_source_hash_matches": true
+  },
+  "date": "2026-11-07",
+  "full_tar_compare_verified": true,
+  "hardware_acceptance": false,
+  "independent_post_run_review": {
+    "model": "gpt-6.1-sol",
+    "pin": {
+      "bytes": 5972,
+      "sha256": "b5dac57a13d7c99193e00ab95ba7b4cf3225df938b23d5587c50f3096f2bc619"
+    },
+    "reasoning_effort": "high",
+    "report": "/home/drew/orange-pi-4-pro/out/spi-workspace-restore-20261107/independent-review.json",
+    "result": "pass",
+    "scope": "Complete native archive rehash/member rescan, all72 retained file hashes, reviewed-controller receipts/resource/postcheck consistency; no direct post-unmount view of restored content or hardware acceptance."
+  },
+  "independent_source_review": {
+    "model": "gpt-6.1-sol",
+    "pin": {
+      "bytes": 1135,
+      "sha256": "640c3d55364f4f7b53d0377aba53c835e77f857aef55c86ccee45552c4004a56"
+    },
+    "reasoning_effort": "high",
+    "report": "/home/drew/orange-pi-4-pro/tmp/spi-workspace-restore-review-20261107/review.json",
+    "result": "pass after bounded corrections"
+  },
+  "journal_on_builder": "/var/lib/a733-uboot-nvme-restore-20261107-01",
+  "journal_pins": {
+    "complete.json": {
+      "bytes": 13746,
+      "sha256": "f3ff2c6d08550f44fcf3ff1a6a145f19db8b0bbb5687595b0344b72dc88834e4"
+    },
+    "extract.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "full-compare.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "mounted.json": {
+      "bytes": 1724,
+      "sha256": "1ba8540be46ea9b472f1e2312b38113073886f71fa36089820f8b124d5c19eda"
+    },
+    "preflight.json": {
+      "bytes": 1459,
+      "sha256": "f1bd7bfcb883d53952de8f7f4f5f4e2492006c1a7f5589184dd0c9c2a03ee740"
+    },
+    "resources.jsonl": {
+      "bytes": 1480,
+      "sha256": "528afadd5a53e06024c2ee6055710271c9fd63d3f54c21f96c3aa44d2db79893"
+    },
+    "started.json": {
+      "bytes": 898,
+      "sha256": "461d929244070a3253b6d6e61d5a6e35c1fbdd29706951c8d686fcb118284e6d"
+    },
+    "verified-awaiting-unmount.json": {
+      "bytes": 13395,
+      "sha256": "ea041012ad572273f6f405cbf1150f94cc0203fd4c303a02e9a546ce746b3d92"
+    }
+  },
+  "limitations": [
+    "Temporary relocated extraction, not reconstruction/rebuild from restored source or restoration at original absolute build paths.",
+    "GNU tar validates restorable metadata including ns mtime, owners/modes/links and supported ACLs/xattrs. File ctime is not restored; archive records atime/ctime as historical metadata.",
+    "No physical SPI backup, recovery route, programming, NVMe file-read, SD-removed boot or real KVM guest acceptance.",
+    "Production root/state/NVMe rebuild remains capacity gated; full physical release acceptance and independent deployment remain open."
+  ],
+  "mount": {
+    "actual_identity": [
+      "382",
+      "31",
+      "0:51",
+      "/",
+      "/var/lib/a733-uboot-nvme-restore-20261107-01/tree",
+      "rw,nosuid,nodev,noexec,relatime",
+      "shared:340",
+      "-",
+      "tmpfs",
+      "a733-restore",
+      "rw,size=4194304k,mode=700,inode64"
+    ],
+    "flags": [
+      "nodev",
+      "nosuid",
+      "noexec"
+    ],
+    "size_bytes": 4294967296,
+    "swap_configuration_preserved": true,
+    "temporary_filesystem_may_use_existing_swap": true
+  },
+  "namespace_bijection_verified": true,
+  "native_journal": "/home/drew/orange-pi-4-pro/out/spi-workspace-restore-20261107",
+  "operator_guide": "docs/uboot-nvme-candidate.md",
+  "original_path_restored": false,
+  "postcheck": {
+    "active_swap_raw": "Filename\t\t\t\tType\t\tSize\t\tUsed\t\tPriority\n/swap.img                               file\t\t4194300\t\t152968\t\t-2\n",
+    "archive_identity": [
+      64512,
+      1632269,
+      412929105,
+      1794024578150508377,
+      1794024578150508377,
+      0,
+      0,
+      33188,
+      1
+    ],
+    "archive_identity_unchanged": true,
+    "archive_sha256": "436e35cd9b6e16ccef0a991f88b8afb4a57c21bcd3e374c0946cd6c77635b49a",
+    "free_bytes": 4008976384,
+    "mapped_processes": [],
+    "original_work_empty": true,
+    "phase_and_original_work_mounts": [],
+    "success": true,
+    "temporary_tree_empty": true,
+    "temporary_tree_uid": 0
+  },
+  "raw_record_pins": {
+    "archive-layout.json": {
+      "bytes": 3309,
+      "sha256": "4303e0acd2a2524094480b8df20da7a6a6488d221539d60bb0945c5d7d2271d0"
+    },
+    "builder-before.json": {
+      "bytes": 2089,
+      "sha256": "3b133597d68e1bec9bc8365eda2ff03873ede914bf43a55369b2f71b79a1a605"
+    },
+    "builder-controller-post.sha256": {
+      "bytes": 255,
+      "sha256": "d48d84ff2b93f46845235c3c4c7d88e650d70d716ed1e65cdfbd8b3a43fb35b8"
+    },
+    "builder-postcheck.json": {
+      "bytes": 565,
+      "sha256": "0a2c7b7c88fde649e372c6c704ce1c1092c0cad0c13da8b4d23caa664f58fc13"
+    },
+    "builder-run.log": {
+      "bytes": 102,
+      "sha256": "61ef35472be388df0978d882a67d1d2ca4c37d92c80d6c1185bffac638bae1c3"
+    },
+    "builder-stage.log": {
+      "bytes": 232,
+      "sha256": "1a06192ef940989d57ce0f4f1e2475873e3c277a3e4060f2cc0b08cf0c411e89"
+    },
+    "fixtures.log": {
+      "bytes": 107,
+      "sha256": "3a1c4cd02a1576f2aafd89a805ce14566da40f26587c010179bb2611fcfbc795"
+    }
+  },
+  "resources": {
+    "final": {
+      "available_memory_bytes": 7358214144,
+      "free_bytes": 4009005056,
+      "time": 1794027813.9812706
+    },
+    "initial": {
+      "available_memory_bytes": 7475773440,
+      "free_bytes": 4009046016,
+      "time": 1794027798.733951
+    },
+    "initial_disk_guard_exclusive": 4000000000,
+    "initial_memory_guard_bytes": 4294967296,
+    "minimum_available_memory_bytes": 6074494976,
+    "minimum_free_bytes": 4009005056,
+    "runtime_disk_floor": 3000000000,
+    "runtime_memory_floor_bytes": 1073741824,
+    "samples": 16
+  },
+  "restored_namespace_count": 27105,
+  "schema": 1,
+  "source_project_revision_context": "7a38b281037e06ed89b66f1d60bd9e472e3d1ba7",
+  "success": true,
+  "temporary_destination": "/var/lib/a733-uboot-nvme-restore-20261107-01/tree"
+}
