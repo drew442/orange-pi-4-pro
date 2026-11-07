@@ -5,7 +5,8 @@ records a **256 MiB** immutable SD bootstrap bound to the new
 [production state component](production-host-state.md). It fits the actual
 1,977,614,336-byte SD card. Construction and software boot-file inspection pass;
 this image has not booted on the board. Published deployment images remain
-unchanged, and full NVMe reconstruction is still required.
+unchanged. The matching [full NVMe composition](production-nvme-composition.md)
+now passes software inspection; clean reconstruction repeats remain required.
 
 **Do not flash this component over the current host SD.** Its state UUID is
 `fc8bbef6-9385-4ddb-90ba-e41eaccc035b`; the installed NVMe state UUID is
@@ -100,7 +101,8 @@ checks raw headers/firmware regions, wrappers and all newc entries in memory.
 Complete SD filesystem inspection is attributed to the reviewed producer run;
 it was not repeated with a dense native partition copy.
 
-Next compose the matching full NVMe candidate under the unchanged capacity
-guards, validate the entire pairing, and repeat from clean inputs. Actual SSH,
+The matching [full NVMe candidate](production-nvme-composition.md) now passes
+construction and independent wire verification. Next repeat from clean inputs
+and validate physical deployment under the unchanged capacity guards. Actual SSH,
 NTP, KVM guest execution, endurance, SD writes, recovery/rollback and reproduced
 deployment remain physical release gates.

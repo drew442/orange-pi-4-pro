@@ -1,0 +1,329 @@
+{
+  "boot_and_guests_readback": {
+    "boot": {
+      "allowed_extra_empty_directory": "lost+found",
+      "character_devices": 0,
+      "fast_symlinks": 0,
+      "hardlink_groups": [],
+      "hardware_acceptance": false,
+      "image_mtime_policy": "source whole seconds; root from actual superblock s_mkfs_time",
+      "long_symlinks_dumped": 0,
+      "namespace_members": 9,
+      "out_of_scope_metadata": [
+        "atime",
+        "ctime",
+        "crtime"
+      ],
+      "production_build_acceptance": false,
+      "raw_xattrs": 0,
+      "regular_bytes_read": 32257978,
+      "root_creation_time_seconds": 1794038735,
+      "source_fractional_mtime_members": 9,
+      "source_nanosecond_metadata_preserved": false,
+      "symlinks": 0,
+      "unique_regular_inodes": 5
+    },
+    "guests": {
+      "allowed_extra_empty_directory": "lost+found",
+      "character_devices": 0,
+      "fast_symlinks": 0,
+      "hardlink_groups": [],
+      "hardware_acceptance": false,
+      "image_mtime_policy": "source whole seconds; root from actual superblock s_mkfs_time",
+      "long_symlinks_dumped": 0,
+      "namespace_members": 1,
+      "out_of_scope_metadata": [
+        "atime",
+        "ctime",
+        "crtime"
+      ],
+      "production_build_acceptance": false,
+      "raw_xattrs": 0,
+      "regular_bytes_read": 0,
+      "root_creation_time_seconds": 1794038735,
+      "source_fractional_mtime_members": 1,
+      "source_nanosecond_metadata_preserved": false,
+      "symlinks": 0,
+      "unique_regular_inodes": 0
+    }
+  },
+  "boot_command_profile": "spi-nvme-v1",
+  "classification": "One production NVMe file construction with independently verified compressed wire and decoded image; hardware and reproduction pending",
+  "compressed_image": {
+    "bytes": 545633126,
+    "sha256": "9e8be89dbcabe30799744201ea94de93ce343134d0a8e034fa44281c8dd13955"
+  },
+  "compression_producer_pending_field": "Immutable compression.json records pending at producer completion; subsequent independently completed stream report establishes expansion verification without rewriting that original record.",
+  "date": "2026-11-07",
+  "failed_attempts": [
+    {
+      "log": {
+        "bytes": 460,
+        "path": "tmp/nvme-host-20261107/build-timesync-01.log",
+        "sha256": "7384c4f4214ada0ff79459cfa255282ca8fa2dab927b717cff7d771ce938aeb4"
+      },
+      "phase_created": false,
+      "reason": "Process soft descriptor limit 1024 exhausted while holding authenticated inputs; later source admits 4096 without changing hard limit.",
+      "source_revision": "b508d6662061f23ba8a3b910beb13ffab25b7a4f",
+      "tag": "timesync-01"
+    },
+    {
+      "reason": "Mapped namespace could not read diagnostic directory 0700; later source checks effective read/search permissions before construction. No NVMe image produced.",
+      "receipt": {
+        "bytes": 218332,
+        "path": "out/nvme-timesync-02-failed-20261107/receipt.json",
+        "sha256": "cba1112d777b302c2c612cc6ba8593053222dda45c0b972028a12fd4ea1d18ab"
+      },
+      "source_revision": "e600267f2d4d21a5d2a973babccd8b80ffa43310",
+      "tag": "timesync-02"
+    }
+  ],
+  "firmware_search_policy_evidence": "docs/evidence/nvme-firmware-search-policy-20261107.json",
+  "hardware_acceptance": false,
+  "independent_review": {
+    "effort": "high",
+    "findings": [],
+    "model": "gpt-6.1-sol",
+    "record": {
+      "bytes": 12146,
+      "path": "out/nvme-timesync-03-20261107/independent-review.json",
+      "sha256": "00b3cc2e60ad1c847d8f99b72b6ef462cb17aa4ab1286a8a2377710eebade55c"
+    },
+    "scope": "594 immutable Git blobs, parent bindings, retained readbacks/transcripts, script CRC/body, completed stream report, resources and cleanup; no repeated full decode."
+  },
+  "independent_stream_verification": {
+    "checker": {
+      "bytes": 20922,
+      "path": "build/verify-nvme-stream.py",
+      "sha256": "02b04bce52597d9a4ca00f19f4c520fe357e3ba437de43aa1bef38978474684d"
+    },
+    "gpt_and_superblocks": true,
+    "inspection_helper": {
+      "bytes": 15781,
+      "sha256": "d9e9342136af125df2eb9dfe1d832183244f13cd28c7ac3e2a4d7f1ca976b8fb"
+    },
+    "namespace_scope": "Complete BOOT/GUESTS filesystem bytes and metadata are attributed to reviewed producer; this reader independently verifies GPT, superblocks and root/state partition bytes.",
+    "partition_payloads": {
+      "root-a": {
+        "bytes": 4294967296,
+        "sha256": "4f9379aeca0044c6222fb4aa5b60dc65a32b744a4d9562061031a0b742e756d4"
+      },
+      "root-b": {
+        "bytes": 4294967296,
+        "sha256": "d8921d95b96fff500cb9da236c7d2d3071d48326f8120c8dd26bb6a271ec97fd"
+      },
+      "state": {
+        "bytes": 8589934592,
+        "sha256": "460e33bf8859d367c4707adf8adeb37a06a4b779015e8ccf8baf1a3bdf619705"
+      }
+    },
+    "record": {
+      "bytes": 4277,
+      "path": "out/nvme-timesync-03-20261107/stream-verification.json",
+      "sha256": "88d72b266ae76f74aafea25fa1e4e751cdcb76cd066cf51d1ba0a9e919ce8d66"
+    },
+    "whole_wire_and_decoded_hashes": true
+  },
+  "isolation": {
+    "host_inventory_unchanged": true,
+    "mapped_processes_final": [],
+    "phase_mounts_final": []
+  },
+  "limits": [
+    "One construction; clean repeat and independently reproduced deployment remain open.",
+    "New state UUID does not match currently installed state; do not flash matching bootstrap alone. Existing-install machine-id repair remains next operator action.",
+    "SPI-ready BOOT files do not establish SPI programming or physical NVMe-first firmware boot. Original-flash backup, off-device retention, recovery plan and exact-target yes/no confirmation remain required.",
+    "Routine root update and rollback select ROOT/STATE; they do not update NVMe BOOT or SPI. Matched boot-stack maintenance remains separate.",
+    "Actual SSH with both keys, NTP, KVM guest CPU/disk/network/persistence, endurance, zero routine SD writes and physical update/rollback/recovery remain open.",
+    "Further composition requires verified retention to meet unchanged 22 GiB guard; no additional LV growth authorized.",
+    "Full hashes here are builder artifact validation; operator installation readback remains optional and progress remains required."
+  ],
+  "manifest": {
+    "bytes": 9393,
+    "path": "out/nvme-timesync-03-20261107/work/project/out/nvme-image-timesync-03/manifest.json",
+    "sha256": "fa01243f5884bfaf3dae92f5974a2899dd93836b7c6c23d3d0a509d7c572e90c"
+  },
+  "output": "work/project/out/nvme-image-timesync-03",
+  "parents": [
+    "docs/evidence/production-host-roots-20261107.json",
+    "docs/evidence/production-host-state-20261107.json",
+    "docs/evidence/production-host-bootstrap-20261107.json"
+  ],
+  "partitions": [
+    {
+      "end_lba": 1050623,
+      "name": "boot",
+      "number": 1,
+      "size_bytes": 536870912,
+      "start_bytes": 1048576,
+      "start_lba": 2048
+    },
+    {
+      "end_lba": 9439231,
+      "name": "root-a",
+      "number": 2,
+      "size_bytes": 4294967296,
+      "start_bytes": 537919488,
+      "start_lba": 1050624
+    },
+    {
+      "end_lba": 17827839,
+      "name": "root-b",
+      "number": 3,
+      "size_bytes": 4294967296,
+      "start_bytes": 4832886784,
+      "start_lba": 9439232
+    },
+    {
+      "end_lba": 34605055,
+      "name": "state",
+      "number": 4,
+      "size_bytes": 8589934592,
+      "start_bytes": 9127854080,
+      "start_lba": 17827840
+    },
+    {
+      "end_lba": 500117503,
+      "name": "guests",
+      "number": 5,
+      "size_bytes": 238342373376,
+      "start_bytes": 17717788672,
+      "start_lba": 34605056
+    }
+  ],
+  "phase": "/var/lib/a733-clean-replay-20261106/nvme-timesync-03",
+  "physical_storage_written": false,
+  "preparation": {
+    "diagnostic_access_record": {
+      "bytes": 1949,
+      "path": "out/nvme-timesync-03-20261107/diagnostic-input-access.json",
+      "sha256": "afa43ffb81c7672be5e6171ceb4c68c0e25a44a604fa22c8389f48be3c0f03a7"
+    },
+    "effect": "Seven hash-verified public diagnostic leaves mode 0444, directory 0555; ownership and bytes unchanged. No private state/operator files changed.",
+    "namespace_probe_log": {
+      "bytes": 7074,
+      "path": "tmp/nvme-host-20261107/diagnostic-namespace-probe.log",
+      "sha256": "7cdfa3432cf8ffbc769b05129f1e9640b643c5fdd9e0a2701617196169cea83e"
+    },
+    "script": {
+      "bytes": 2430,
+      "path": "tmp/nvme-host-20261107/prepare-readable-diagnostic.py",
+      "sha256": "48cd2f7d307fb5908731011ca4a7f398da9a5a802baca58ded7c711c4e0830fc"
+    }
+  },
+  "producer_records": {
+    "receipt.json": {
+      "bytes": 379034,
+      "path": "out/nvme-timesync-03-20261107/receipt.json",
+      "sha256": "aac0e72bcd58ae7eb8f44b592ee3bccd7f0ada1db9157e8245a88e1a7fc27205"
+    },
+    "runtime.log": {
+      "bytes": 3390,
+      "path": "out/nvme-timesync-03-20261107/runtime.log",
+      "sha256": "538ab446411c333b2e975f7e63235f8234a560b8b9d9e1211347a0343010657c"
+    },
+    "source-manifest.json": {
+      "bytes": 124964,
+      "path": "out/nvme-timesync-03-20261107/source-manifest.json",
+      "sha256": "e691e6cefebd8a5f3b373d59d9679db0f1d0311bda62fc4ea67ed1d39c9a5360"
+    },
+    "staged.json": {
+      "bytes": 210973,
+      "path": "out/nvme-timesync-03-20261107/staged.json",
+      "sha256": "fbac00bd039e9749559d96fcf4a1e8804a3eb6823e80237302bc8f6db409d8c7"
+    }
+  },
+  "published_deployment_images_changed": false,
+  "raw_image": {
+    "bytes": 256060514304,
+    "sha256": "2c7e69cf5f0370b818b47c4d36a6c1eec7cd7258773794ad06de7cd5f5ab499f"
+  },
+  "readback_records": {
+    "boot.expected.json": {
+      "bytes": 1624,
+      "path": "out/nvme-timesync-03-20261107/work/readback/boot.expected.json",
+      "sha256": "d78c447757aa4a15a9f64e6edb5bac5d27eb1c2fb3249bcb9caeebb44693a9a9"
+    },
+    "compression.json": {
+      "bytes": 360,
+      "path": "out/nvme-timesync-03-20261107/work/readback/compression.json",
+      "sha256": "b2d5836c40b9901ab87cff238e55a27d5fbb37cdd156f14893a90977583bfb32"
+    },
+    "guests.expected.json": {
+      "bytes": 159,
+      "path": "out/nvme-timesync-03-20261107/work/readback/guests.expected.json",
+      "sha256": "d6d1a7b6e052600fef397ce4bc1b3cbcadda502c7e22b8b9d9171c61b7ca079c"
+    },
+    "nvme.json": {
+      "bytes": 3454,
+      "path": "out/nvme-timesync-03-20261107/work/readback/nvme.json",
+      "sha256": "e41e1ace72e6535b6a7df8b138130d6bbac28a26b980997265651fe5b60b24d0"
+    }
+  },
+  "reproducibility_established": false,
+  "resources": {
+    "final": {
+      "available_memory_bytes": 7503253504,
+      "free_bytes": 22245568512,
+      "time": 1794040566.8862028
+    },
+    "initial_budget": {
+      "capsule_bytes": 199206,
+      "git_staging_bound_bytes": 127277977,
+      "recipe_bytes": 23622320128,
+      "required_free_bytes": 23749797311
+    },
+    "minimum_available_memory_bytes": 7413485568,
+    "minimum_free_bytes": 20710158336,
+    "next_initial_guard_bytes": 23622320128,
+    "next_initial_guard_passed_at_final": false,
+    "retained_tree": {
+      "actual_block_character_devices": [],
+      "allocated_bytes": 1531138048
+    },
+    "runtime_disk_guard_bytes": 3000000000,
+    "runtime_memory_guard_bytes": 1000000000
+  },
+  "retention": {
+    "raw_allocated_bytes": 975032320,
+    "raw_and_gzip": "Builder only; native stores small records, not the 256 GB raw image or 545 MB gzip."
+  },
+  "schema": 1,
+  "source_revision": "6f46e080b9557dd6d720bb0b07d17b19044a7946",
+  "state_uuid": "fc8bbef6-9385-4ddb-90ba-e41eaccc035b",
+  "tracked_source_records": 594,
+  "validation": {
+    "git_diff_check": "passed",
+    "installer_manifest_compatibility": {
+      "log": {
+        "bytes": 265,
+        "path": "tmp/nvme-host-20261107/installer-manifest-compatibility.log",
+        "sha256": "7446dab80fb08c3514ecb91a4c58ca97bc762ce38191f9394950dc667c2fdf65"
+      },
+      "physical_installation": false,
+      "source_identical_to_refresh_revision": "151a532"
+    },
+    "shell_and_assembly": {
+      "assembly_cases": 4,
+      "bash_syntax": "passed",
+      "log": {
+        "bytes": 1087,
+        "path": "tmp/nvme-host-20261107/builder-shell-assembly.log",
+        "sha256": "195738055edc21441e774858614273f68ad957f812cbb6d89e6ed2e9c7c699a6"
+      },
+      "scope": "No Bash changes after this execution.",
+      "shell_suites": 5
+    },
+    "ubuntu_unittests": {
+      "cases": 1585,
+      "errors": 0,
+      "failures": 0,
+      "log": {
+        "bytes": 5285,
+        "path": "tmp/nvme-host-20261107/builder-full-tests-with-stream.log",
+        "sha256": "d5ebffcd9614adead6b5730006fc31065a8fcd392da1ca1b9bd41eaecfe37389"
+      },
+      "skipped": 0
+    }
+  }
+}

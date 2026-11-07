@@ -131,8 +131,11 @@ remain unchanged. **Do not repeat NVMe installation to fix management.**
   permissions, fixed clock ownership and selected root A. One construction each
   is proved. The matching [256 MiB EL2 bootstrap](production-host-bootstrap.md) now
   also builds and passes boot-file, wrapper/newc/gzip checks and independent
-  artifact review. Repeats and full NVMe reconstruction remain open.
-  Latest privileged Ubuntu unittest discovery runs **1,530 cases, no skips or failures**;
+  artifact review. The matching [full NVMe candidate](production-nvme-composition.md)
+  now passes construction, complete BOOT/GUESTS readback and a separate full gzip
+  wire/decoded-image/GPT/root-state-byte check. Independent artifact review finds
+  no issues. One construction is established; repeats and physical deployment remain open.
+  Latest privileged Ubuntu unittest discovery runs **1,585 cases, no skips or failures**;
   five shell suites and four assembly cases pass. Within-tick mutation fixtures now force observable mtime changes;
   runtime/source guards are unchanged. See [root evidence](evidence/production-host-roots-20261107.json).
   These checks establish no physical acceptance or independent deployment.
@@ -153,8 +156,11 @@ remain unchanged. **Do not repeat NVMe installation to fix management.**
    now pass: 220/221 packages and unchanged compressed/raw/BOM bytes. Independent
    complete 15,876/15,909-entry readbacks, source review and all 46 account-date
    tests under root pass. Production roots and personalized state now pass
-   construction and full readback, and the matching immutable bootstrap now passes. Compose NVMe next; software reproduction
-   does not establish physical deployment acceptance.
+   construction and full readback. The matching immutable bootstrap and
+   [full NVMe composition](production-nvme-composition.md) now pass, including
+   separate verification of the 545.6 MB gzip and its entire 256.06 GB expansion.
+   SPI-ready NVMe BOOT files do not establish physical SPI boot. Prepare clean
+   repeats and delivery next; software checks do not establish deployment acceptance.
    [Kernel replay retention](kernel-run-retention.md) preserves the expanded tree
    as verified archives on two hosts. [Byte-preserving conversion](evidence/candidate-sd-sparsification-20261107.json)
    recovered 663 MB from three generated image copies. The compiled candidate
@@ -163,10 +169,10 @@ remain unchanged. **Do not repeat NVMe installation to fix management.**
    succeeded and initially passed the unchanged 22 GiB staging guard. Production
    A/B roots and personalized 8 GiB state pass complete readback; the matching
    immutable bootstrap now passes software inspection. [Verified workspace retention](composition-retention.md)
-   archives three terminal work trees on both hosts and recovers 2.48 GB; free
-   after bootstrap and byte-preserving sparsification is **23.83 GB**, only
-   **208 MB above** the unchanged 22 GiB guard. Recheck every further staging step. No guard reduction or additional LV
-   growth is authorized.
+   archives three terminal work trees on both hosts and recovers 2.48 GB.
+   After the full NVMe run, free is **22,245,568,512 bytes**, below the unchanged
+   22 GiB admission guard before staging overhead. Further builds require verified
+   retention. No guard reduction or additional LV growth is authorized.
    The [candidate build and exact replay](uboot-nvme-candidate.md)
    pass independent inspection. The file-only SPI assembler passes synthetic
    fixtures; its actual board backup/candidate and hardware handoff remain open.

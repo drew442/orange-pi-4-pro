@@ -5,8 +5,9 @@ records two actual **4 GiB** root components built in the frozen Ubuntu 22.04
 namespace. Both pass complete filesystem readback. This is one construction;
 the matching [8 GiB state](production-host-state.md) now also passes construction
 and complete readback, and the [matching bootstrap](production-host-bootstrap.md)
-passes construction and inspection. Repeat-build reproducibility and the final
-NVMe image remain open. The published deployment images are unchanged, and the
+passes construction and inspection. The [full NVMe candidate](production-nvme-composition.md)
+now also passes software checks; repeat-build reproducibility remains open.
+Published deployment images are unchanged, and the
 [existing-install repair](installed-host-repair-20261107.md) remains the next board
 action. These components are not a replacement SD or whole-drive image.
 
@@ -96,10 +97,11 @@ and 7,217,774,592 bytes available RAM. The host's 842-package inventory is uncha
 with no remaining mapped processes/mounts or real device nodes in the work tree.
 The retained work allocates 1,225,961,472 bytes; each raw root allocates 444,424,192.
 
-After readback, free space is 22,813,622,272 bytes, **808,697,856 bytes below** the
-unchanged 22 GiB final NVMe staging guard. Prepare verified retention/staging of
-components before final composition. The 8 GiB state construction has its own
-budget and remains the next image phase. No additional LV growth is authorized.
+After this root readback, free space was 22,813,622,272 bytes,
+**808,697,856 bytes below** the unchanged 22 GiB final NVMe staging guard.
+Subsequent state/bootstrap construction and verified retention enabled the
+[completed full NVMe run](production-nvme-composition.md), which records current
+capacity. No additional LV growth is authorized.
 
 The final Ubuntu test suite runs 1,491 cases with 112 environment skips and no
 failures; five shell suites and four assembly cases pass. Three mutation fixtures now explicitly

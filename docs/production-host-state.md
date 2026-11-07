@@ -5,8 +5,10 @@ records an actual **8 GiB** journaled state component, built in the frozen Ubunt
 22.04 namespace and checked by complete read-only filesystem readback. It uses
 the real operator configuration and both administration keys. This is one
 construction; the [matching immutable bootstrap](production-host-bootstrap.md)
-now also passes construction and software inspection. Full NVMe composition,
-repeat-build validation and physical deployment remain open. Published deployment images are unchanged.
+now also passes construction and software inspection. The
+[full NVMe candidate](production-nvme-composition.md) now also passes software
+checks; repeat-build validation and physical deployment remain open. Published
+deployment images are unchanged.
 Use the [existing-install repair](installed-host-repair-20261107.md) for the board.
 This component is not an SD or whole-drive installation image.
 
@@ -103,6 +105,7 @@ The retained state work tree allocates about 104 MB. Initial admission requires
 plus authenticated capsule and Git staging. Final composition still requires
 the unchanged **22 GiB** free-space guard. Recheck real allocation and use verified
 retention/staging before composition; the approved LV expansion does not imply
-that every later phase fits simultaneously. The matching immutable bootstrap now passes; next compose the full NVMe
-candidate and repeat from clean inputs. Physical
+that every later phase fits simultaneously. The matching bootstrap and
+[full NVMe candidate](production-nvme-composition.md) now pass software checks;
+next repeat from clean inputs. Physical
 acceptance continues separately with the existing installed-host repair.

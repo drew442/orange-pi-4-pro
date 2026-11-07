@@ -41,8 +41,12 @@ then archives three older terminal work trees on build and codex and retires
 only their generated `work` subtrees. It recovers **2.48 GB**, leaving
 **24,148,152,320 bytes** before the matching bootstrap. Its completed
 [construction and byte-preserving sparsification](production-host-bootstrap.md)
-leave **23,830,810,624 bytes**, only **208,490,496 bytes above** the unchanged
-22 GiB composition guard. Recheck each further staging step; keep every guard.
+left **23,830,810,624 bytes**, admitting the subsequent
+[full NVMe composition](production-nvme-composition.md). It completed with
+20,710,158,336 bytes minimum free and 7,413,485,568 bytes minimum available RAM.
+Final free is **22,245,568,512 bytes**, below the next initial 22 GiB guard before
+staging overhead. Verified retention is needed for further builds; keep every
+guard. No additional LV growth is authorized.
 The LV UUID, root source and filesystem type are unchanged. No Orange Pi storage
 was touched. Codex has a separate 256 MiB free-space minimum for retention copies.
 
