@@ -1,11 +1,21 @@
-# First physical KVM guest after personalized NVMe installation
+# First physical KVM guest for a matched installed profile
 
-This is a prospective operator procedure, reviewed against source `18affa1` and
-its complete 39-file installed tool closure. It has **not been run on the board**.
-Run it only after the personalized NVMe installation, selected read-only root,
-state mounts and trusted public-key SSH login have passed their own checks.
-The coordinator retains hardware acceptance; this procedure supplies evidence
-for one guest and its restart, not release acceptance or SD-write endurance.
+This prospective procedure has **not been run on the board**. The current
+board action remains the [existing-install machine-id repair](installed-host-repair-20261107.md),
+then booting the same deployed host SD and verifying trusted SSH with **both**
+authorized keys. Do not reinstall to repair management. The current installation
+uses `installed-20261106`; the later `candidate-repeat-20261107` profile is only
+for a completed [matched second-candidate deployment](deploy-candidate-20261107.md)
+with its own successful management checks.
+
+Select exactly one profile below, then use the common runtime, activation,
+enrollment and KVM proof sequence. Profiles bind complete tool closures (39
+installed files for the original deployment, 40 for the second candidate),
+package state, state/p5 identities and retained recovery artifacts. Do not mix
+profiles or override individual UUIDs, hashes or tool counts. This changes no
+installed runtime or image. The coordinator retains hardware acceptance;
+one guest and its restart establish neither release acceptance nor SD-write
+endurance.
 
 Stop on any failed command, unexpected role, hash, account, mount or receipt.
 Do not substitute an older root/tool package, TCG, root QEMU, RAM/SD payload
@@ -13,90 +23,124 @@ storage, another block device, or a physical disk as the guest disk. There is
 no automatic guest activation/account/unit boot integration. The manual unit
 below lives in RAM and must be reviewed again after a host reboot.
 
-## Establish trust and check installed tools
+## Select and authenticate the closed profile before touching NVMe
 
-On codex, use Bash from `/home/drew/orange-pi-4-pro`. Set `BOARD_IP` to the
-installed host's actual address. Compare the first SSH host-key prompt with the
-physical serial-console `A733 SSH host key` fingerprint before accepting it.
-Do not use `ssh-keyscan` as independent authentication or disable checking.
-The custom sshd has no SFTP subsystem: file transfers require `scp -O`.
-
-```bash
-set -euo pipefail
-BOARD_IP=192.168.1.115   # Replace if the installed host has another address.
-ssh -i /home/drew/.ssh/id_ed25519 -o IdentitiesOnly=yes \
-  -o StrictHostKeyChecking=ask root@"$BOARD_IP"
-```
-
-In that board root Bash shell, establish the record directory on NVMe state.
-A preexisting directory is a stop, not permission to reuse prior evidence.
+On codex, use Bash from `/home/drew/orange-pi-4-pro`. The native preparation
+helper accepts only the two named profiles and authenticates their pinned local
+source records. It does not accept an arbitrary profile environment, UUID or
+pin. Keep the generated files outside Git. Its absolute output path must be
+new and directly under this checkout’s `out/`; a preexisting output directory is a stop. Preserve its printed hashes in
+the off-device operator record. These commands do not rebuild or repin artifacts.
 
 ```bash
 set -euo pipefail
 umask 077
-set -C
-findmnt -T /
-findmnt -T /root
-findmnt -T /run/a733-state
-cat /run/a733-state/.a733-state
-cat /usr/lib/orangepi-hypervisor/payload.json
-mkdir -m 0700 /root/kvm-first-20261106
-E=/root/kvm-first-20261106
-T=/usr/lib/a733-tools
-export E T
+cd /home/drew/orange-pi-4-pro
+PROFILE_OUT=/home/drew/orange-pi-4-pro/out/first-kvm-installed-20261106
+python3 scripts/prepare-first-kvm.py --profile installed-20261106 --output "$PROFILE_OUT"
 ```
 
-Require the selected `/` to be read-only NVMe p2 (A) or p3 (B), with matching
-root UUID `a7330000-0000-4000-8000-00000000000a` or `...000b`; p4 must be the
-same namespace's writable state. `/root` must bind state `/root`. The state
-marker must be exactly `a733-state-v1` and
-`00fd936c-49fb-4fea-87c8-928b9c1599e0`, each followed by a newline.
-No other storage role is accepted.
-
-Back on codex, derive a small checklist from the trusted final component record
-already bound by the personalized installation review, and verify the fixed
-seed locally. These commands do not rebuild or repin artifacts.
+For a later, already deployed matching second candidate, replace those last two
+lines with this selection; never run both in one shell:
 
 ```bash
-python3 - <<'PY'
-import json
-from pathlib import Path
-m = json.loads(Path('tmp/final-component-manifests-20261106.json').read_text())
-f = m['host-payload-deployment-20261106-02']['manifest']['maintenance_runtime']['files']
-assert len(f) == 39
-out = Path('out/first-kvm-installed-tools.sha256')
-with out.open('x') as stream:
-    for name, record in sorted(f.items()):
-        assert name.startswith('usr/lib/a733-tools/')
-        stream.write(record['sha256'] + '  /' + name + '\n')
-PY
+PROFILE_OUT=/home/drew/orange-pi-4-pro/out/first-kvm-candidate-repeat-20261107
+python3 scripts/prepare-first-kvm.py --profile candidate-repeat-20261107 --output "$PROFILE_OUT"
+```
+
+Inspect `profile.json` and retain it with the printed native hashes. Verify the
+generated checklist, then source only this freshly generated `profile.env`;
+its fixed values are exported and read-only. Keep this native Bash shell for
+all later codex commands so `PROFILE_OUT`, `E` and the selected pins persist.
+
+```bash
+(cd "$PROFILE_OUT" && sha256sum -c SHA256SUMS)
+cat "$PROFILE_OUT/profile.json"
+. "$PROFILE_OUT/profile.env"
+PROFILE_SUMS_SHA=$(sha256sum "$PROFILE_OUT/SHA256SUMS" | cut -d ' ' -f 1)
+export PROFILE_OUT PROFILE_SUMS_SHA
 (cd out/guest-fixture-seed-20261104 && sha256sum -c /dev/stdin <<'HASHES'
 1294959bcaa5a5ad3791913e33cffb8f0893708396aac8be9837c03a0e1f9377  Image
 2f3360a8f6365b84c352cae99949a5ae92a81001efe28dbae221f334805f854b  initramfs.cpio.gz
 ff595fac0b9a7d990f099edc0dd0f9d4859fb9942e185d2f2377088ce32bd577  guest-disk.raw
 HASHES
 )
-scp -O -i /home/drew/.ssh/id_ed25519 -o IdentitiesOnly=yes \
-  -o StrictHostKeyChecking=yes out/first-kvm-installed-tools.sha256 \
-  root@"$BOARD_IP":/root/kvm-first-20261106/installed-tools.sha256
 ```
 
-On the board, verify all 39 installed files, the current package-state pin and
-the runtime guard. The guard checks the selected NVMe roles, kernel ABI, RAM
-`/etc` overlay, state binds and all eight immutable package-state views.
+Set `BOARD_IP` to the installed host's actual address. Compare the first SSH
+host-key prompt with the physical serial-console `A733 SSH host key` fingerprint
+before accepting it. Do not use `ssh-keyscan` as independent authentication or
+disable checking. The custom sshd has no SFTP subsystem: transfers require
+`scp -O`. Create a fresh private **RAM** profile directory, transfer the generated
+records over this authenticated connection, and verify the transferred checksum
+file against its native hash before any NVMe evidence-directory creation.
 
 ```bash
-chmod 0400 "$E/installed-tools.sha256"
-sha256sum -c "$E/installed-tools.sha256" | tee "$E/installed-tools-check.txt"
-printf '%s\n' '682f6ae0293cc8ef1a1e4780e30140fd557ede4de893328c8fc0dec5582dba7d  /usr/lib/orangepi-hypervisor/package-state/manifest.json' \
-  | sha256sum -c -
-/usr/bin/python3 -I -B - <<'PY'
-import importlib.util
+BOARD_IP=192.168.1.115   # Replace if the installed host has another address.
+ssh -i /home/drew/.ssh/id_ed25519 -o IdentitiesOnly=yes \
+  -o StrictHostKeyChecking=ask root@"$BOARD_IP" \
+  'umask 077; test ! -e /run/first-kvm-profile && mkdir -m 0700 /run/first-kvm-profile'
+scp -O -i /home/drew/.ssh/id_ed25519 -o IdentitiesOnly=yes \
+  -o StrictHostKeyChecking=yes "$PROFILE_OUT/profile.env" \
+  "$PROFILE_OUT/profile.json" "$PROFILE_OUT/installed-tools.sha256" \
+  "$PROFILE_OUT/recovery-bundle.sha256" "$PROFILE_OUT/SHA256SUMS" root@"$BOARD_IP":/run/first-kvm-profile/
+ssh -i /home/drew/.ssh/id_ed25519 -o IdentitiesOnly=yes \
+  -o StrictHostKeyChecking=yes root@"$BOARD_IP" \
+  "cd /run/first-kvm-profile && printf '%s  SHA256SUMS\n' '$PROFILE_SUMS_SHA' | sha256sum -c - && sha256sum -c SHA256SUMS && chmod 0400 ./*"
+ssh -i /home/drew/.ssh/id_ed25519 -o IdentitiesOnly=yes \
+  -o StrictHostKeyChecking=yes root@"$BOARD_IP"
+```
+
+In that board root Bash shell, source only the just-authenticated generated
+profile. Verify its read-only declarations, complete installed tool closure,
+package pin, state marker and runtime guard **before** creating `E` on NVMe.
+The guard checks selected NVMe roles, kernel ABI, RAM `/etc` overlay, state binds
+and all eight immutable package-state views. It must pass for the selected
+profile; the original deployment's ABI/tool guard remains mandatory.
+
+```bash
+set -euo pipefail
+umask 077
+set -C
+cd /run/first-kvm-profile
+sha256sum -c SHA256SUMS
+. ./profile.env
+declare -p PROFILE STATE_UUID GUEST_UUID PACKAGE_STATE_SHA TOOL_COUNT E
+[[ $(wc -l < installed-tools.sha256) -eq "$TOOL_COUNT" ]]
+sha256sum -c installed-tools.sha256 | tee /run/first-kvm-installed-tools-check.txt
+printf '%s  %s\n' "$PACKAGE_STATE_SHA" \
+  /usr/lib/orangepi-hypervisor/package-state/manifest.json | sha256sum -c -
+/usr/bin/python3 -I -B - <<'PYGUARD'
+import importlib.util, os
+from pathlib import Path
+assert Path('/run/a733-state/.a733-state').read_bytes() == (
+    'a733-state-v1\n' + os.environ['STATE_UUID'] + '\n').encode('ascii')
 s = importlib.util.spec_from_file_location('first_guest_management', '/usr/lib/a733-tools/configs/host-management.py')
 m = importlib.util.module_from_spec(s)
 s.loader.exec_module(m)
 print(m.runtime_guard())
-PY
+PYGUARD
+findmnt -T /
+findmnt -T /root
+findmnt -T /run/a733-state
+cat /run/a733-state/.a733-state
+cat /usr/lib/orangepi-hypervisor/payload.json
+```
+
+Require read-only NVMe p2 (A) or p3 (B), with root UUID
+`a7330000-0000-4000-8000-00000000000a` or `...000b`; p4 must be the same
+namespace's writable state, with the selected `STATE_UUID`. `/root` must bind
+state `/root`. Verify the declarations above carry Bash's read-only and export
+attributes (`-rx`). No other storage role is accepted. Keep this board shell
+for all later board commands. A preexisting evidence directory is a stop,
+not permission to reuse prior evidence.
+
+```bash
+mkdir -m 0700 "$E"
+T=/usr/lib/a733-tools
+export T
+cp /run/first-kvm-profile/{profile.env,profile.json,installed-tools.sha256,recovery-bundle.sha256,SHA256SUMS} "$E/"
+cp /run/first-kvm-installed-tools-check.txt "$E/installed-tools-check.txt"
 uname -a | tee "$E/host-uname.txt"
 cat /proc/sys/kernel/random/boot_id | tee "$E/host-boot-id.txt"
 cat /proc/cmdline | tee "$E/host-cmdline.txt"
@@ -105,8 +149,8 @@ findmnt --real | tee "$E/host-mounts.txt"
 
 ## Activate the exact p5 and locked identity
 
-This personalized layout has p5 UUID
-`3dd7373a-c4b2-42e2-867a-bc5f39039285`, size 238,342,373,376 bytes,
+The selected closed profile supplies the exact p5 UUID in `GUEST_UUID`. Both
+layouts have p5 size 238,342,373,376 bytes,
 start LBA 34,605,056 and end LBA 500,117,503. The whole NVMe is
 `SPCC M.2 PCIe SSD`, serial `134807190FC700149277`, 256,060,514,304 bytes,
 512-byte logical and physical sectors. Derive its pathname from the guarded
@@ -119,8 +163,6 @@ case "$ROOT_SOURCE" in
   *) printf '%s\n' 'STOP: unknown running-root role' >&2; exit 1 ;;
 esac
 NVME=${ROOT_SOURCE%p[23]}
-GUEST_UUID=3dd7373a-c4b2-42e2-867a-bc5f39039285
-export GUEST_UUID
 mount_args=(--target "$NVME" --expected-model 'SPCC M.2 PCIe SSD' \
   --expected-serial 134807190FC700149277 --expected-bytes 256060514304 \
   --guest-uuid "$GUEST_UUID")
@@ -136,29 +178,26 @@ installed, never-used p5. Before the first mount, establish the backup scope
 truthfully: retain the **verified full compressed NVMe installation bundle on
 another machine**, with its exact encoded and expanded byte counts/SHA-256
 recorded in the installation evidence and complete-stream verification passed.
-The retained codex bundle is
-`out/deployment-delivery-20261106/public/nvme.img.gz`: 547,077,631 bytes,
-SHA-256 `4d1145c5ff8689c1e8ca847e39551eb36f54e703a2843f35fd0ce7ec7574b526`.
-The adjacent `manifest.json` has SHA-256
-`bdd3c8f103e08fc1b759ca97e631ee20255d43aefe42abcce5361614a41b041e`.
-Its already completed bounded, full-stream expansion verification records
-256,060,514,304 bytes, SHA-256
-`74f3c6f9c66df8e125148b7a7d06ebc521d1c0fd5ae8e53de4a90c740e5224fc`;
-see the distribution record in
-[personalized NVMe evidence](evidence/personalized-nvme-20261106.json).
-This is off-device artifact verification, not a physical installation result.
-Do not rerun the 256 GB expansion merely to repeat that recorded check.
+The generated `profile.json` records the selected bundle's exact paths,
+encoded/expanded byte counts and hashes, plus the authenticated source and
+complete-stream verification provenance. `recovery-bundle.sha256` pins only that
+profile's retained gzip and manifest. For the current installation these are
+the original personalized delivery artifacts; for the second candidate they
+are the [retained repeat artifacts](production-nvme-repeat.md) used by its
+[matched deployment](deploy-candidate-20261107.md). This is off-device artifact
+verification, not a physical installation result. Do not rerun the 256 GB
+expansion merely to repeat the already recorded complete-stream check.
 
-Before apply, confirm the retained encoded bytes and manifest on codex:
+Before apply, confirm both retained encoded sizes and hashes on codex using
+the generated closed recovery checklist:
 
 ```bash
-(cd out/deployment-delivery-20261106/public &&
-  [[ $(stat -c %s nvme.img.gz) == 547077631 ]] &&
-  sha256sum -c /dev/stdin <<'HASHES'
-4d1145c5ff8689c1e8ca847e39551eb36f54e703a2843f35fd0ce7ec7574b526  nvme.img.gz
-bdd3c8f103e08fc1b759ca97e631ee20255d43aefe42abcce5361614a41b041e  manifest.json
-HASHES
+(cd "$RECOVERY_DIR" &&
+  [[ $(stat -c %s nvme.img.gz) == "$RECOVERY_WIRE_BYTES" ]] &&
+  [[ $(stat -c %s manifest.json) == "$RECOVERY_MANIFEST_BYTES" ]] &&
+  sha256sum -c "$PROFILE_OUT/recovery-bundle.sha256"
 )
+printf 'expanded bytes=%s sha256=%s\n' "$RECOVERY_RAW_BYTES" "$RECOVERY_RAW_SHA"
 ```
 
 That exact bundle contains the pristine empty p5 built by `build/nvme-image.py`
@@ -184,7 +223,7 @@ import json, os, sys
 p = json.load(open(sys.argv[1]))
 g = p['context']['guest']
 assert p['mounted_before'] is False
-assert g['uuid'] == '3dd7373a-c4b2-42e2-867a-bc5f39039285'
+assert g['uuid'] == os.environ['GUEST_UUID']
 assert g['size_bytes'] == 238342373376
 assert g['partition_number'] == 5
 for line in open('/proc/self/mountinfo'):
@@ -400,8 +439,8 @@ Before starting, run on codex to save the trusted initial receipt and pin:
 ```bash
 scp -O -i /home/drew/.ssh/id_ed25519 -o IdentitiesOnly=yes \
   -o StrictHostKeyChecking=yes \
-  root@"$BOARD_IP":/root/kvm-first-20261106/enrollment-receipt.json \
-  root@"$BOARD_IP":/root/kvm-first-20261106/trusted-manifest-0.sha256 out/
+  root@"$BOARD_IP":"$E/enrollment-receipt.json" \
+  root@"$BOARD_IP":"$E/trusted-manifest-0.sha256" "$PROFILE_OUT/"
 ```
 
 Existing enrollment is never replaced; inspect partial-publication receipts
@@ -591,8 +630,8 @@ Before restart, save the new receipt/pin from codex:
 ```bash
 scp -O -i /home/drew/.ssh/id_ed25519 -o IdentitiesOnly=yes \
   -o StrictHostKeyChecking=yes \
-  root@"$BOARD_IP":/root/kvm-first-20261106/checkpoint-receipt-1.json \
-  root@"$BOARD_IP":/root/kvm-first-20261106/trusted-manifest-1.sha256 out/
+  root@"$BOARD_IP":"$E/checkpoint-receipt-1.json" \
+  root@"$BOARD_IP":"$E/trusted-manifest-1.sha256" "$PROFILE_OUT/"
 ```
 
 Back on the board, with noclobber still set,
@@ -681,9 +720,10 @@ printf '%s\n' "$PIN" > "$E/trusted-manifest-2.sha256"
 Copy the evidence directory off-device from codex with the same trusted key:
 
 ```bash
+test ! -e "$PROFILE_OUT/board-evidence"
 scp -O -r -i /home/drew/.ssh/id_ed25519 -o IdentitiesOnly=yes \
-  -o StrictHostKeyChecking=yes root@"$BOARD_IP":/root/kvm-first-20261106 \
-  out/kvm-first-20261106
+  -o StrictHostKeyChecking=yes root@"$BOARD_IP":"$E" \
+  "$PROFILE_OUT/board-evidence"
 ```
 
 Inspect receipts for success and durability before adopting any new pin.
