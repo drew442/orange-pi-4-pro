@@ -103,7 +103,9 @@ restoration, source kernel/U-Boot replays, SD reproductions, normalized 220/221
 package exports and separate dated repeats. Full new production component repeats
 and independent deployment are unfinished. All 479 userspace source archives
 are acquired, not compiled. [Licensing evidence for the 26 vendor boot inputs](evidence/vendor-boot-license-inventory-20261106.json)
-remains incomplete. No public redistribution clearance is claimed.
+remains incomplete. [Userspace notices](userspace-notices.md) resolve for all 221
+packages; notice presence does not establish legal sufficiency. No public
+redistribution clearance is claimed.
 
 ## Next actions and completion gates
 

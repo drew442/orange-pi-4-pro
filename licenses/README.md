@@ -19,6 +19,12 @@ per-component license documentation. The compiler is a builder input, not part o
 the SD filesystem. Its component source archive acquisition remains a release
 provenance task.
 
+The verified time-enabled production root preserves package copyright notices
+for all 221 locked packages, including seven shared documentation symlinks, and
+14 common-license files. The [coverage inventory](../docs/userspace-notices.md)
+records content pins and the added time-service source mapping. This is notice
+presence evidence, not a complete legal-sufficiency conclusion.
+
 No component-specific permission/source-offer record was located for A733
 `boot0_sdcard_a733.fex`, `monitor.fex`, `scp.fex` or the proprietary pack tools.
 The vendor tree's umbrella GPL notice does not establish those blobs' licensing.

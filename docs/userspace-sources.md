@@ -46,3 +46,9 @@ BusyBox and opaque firmware/tool inputs have separate provenance and license
 records. Source extraction, build instructions, notices and any additional
 corresponding-source requirements remain part of the release audit. Physical
 boot, actual KVM execution and reproduced deployment remain independent gates.
+
+The [221-package notice/source coverage inventory](userspace-notices.md) verifies
+the additional time-service binary against its pinned archive and confirms that
+its systemd source/version is already in the retained source set. The original
+220-row map remains unchanged; every package copyright path resolves in the
+verified production root. This adds coverage evidence, not a legal conclusion.
