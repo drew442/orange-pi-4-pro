@@ -144,3 +144,50 @@ This first candidate's generated challenge is now an authenticated retained
 input. Exact candidate reproduction still needs a separately registered replay
 using that same input. No flash image, SPI programming, NVMe file-read test,
 physical boot or KVM guest test is established by this software build.
+
+## Registered exact replay
+
+`configs/uboot-nvme-candidate-targets.lock.json` registers the retained
+`nvme-candidate-20261107-ram02` artifact. It binds its original manifest,
+immutable evidence, producer inputs, configuration and canonical challenge.
+The loader authenticates the actual retained inputs and committed registry;
+there is no arbitrary challenge override. Fresh builds retain random generation.
+
+The explicit replay path patches only its private Makefile with the conditional
+vendor-generator adapter and supplies the same registered challenge. It retains
+the generator patch, input C and truthful replay provenance. Success requires
+exact unpacked U-Boot, boot package, configuration, challenge and SPI boot0
+hashes. ELF and object debug metadata are outside that reproduction claim.
+
+On the prepared builder with the original retained target available:
+
+```sh
+sudo python3 -I -B build/launch-uboot-nvme-candidate.py \
+  --project "$PWD" --tag registered-01 --ram-work \
+  --replay-target nvme-candidate-20261107-ram02 --plan
+sudo python3 -I -B build/launch-uboot-nvme-candidate.py \
+  --project "$PWD" --tag registered-01 --ram-work \
+  --replay-target nvme-candidate-20261107-ram02
+```
+
+Planning reads only committed sources. Execution authenticates the original
+72-file artifact set and full workspace archive, then stages five small,
+readonly inputs through the existing source bind. Only a successful registered
+RAM replay can retain identical files by reference. Every entry in its new
+artifact/log manifest must resolve to a verified local copy or the same-path
+original file with the expected hash. All logs, producer inputs, replay patch,
+challenge and changed files remain local. The retained reference map binds both
+manifests and the original full workspace archive.
+
+Original references are rehashed; their durability relies on the first run's
+already-fsynced retention. New local files and recovery records are fsynced
+before unmount. The unchanged >4 GB reserve and runtime floors still apply;
+copy budgeting must pass before retention begins. Any payload, proof or retention
+failure leaves RAM mounted, with no fallback discard. Default fresh RAM builds
+continue to retain the complete workspace archive.
+
+The new private source/compiler tree is reconstructable from pinned sources,
+compiler, registered challenge, producer revision and retained patch. Reference
+retention does not claim an exact snapshot of every new cache-file timestamp.
+Actual replay results are recorded separately; source review and fixtures alone
+do not establish matching rebuilt artifacts or hardware acceptance.

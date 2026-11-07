@@ -58,6 +58,12 @@ class LauncherTests(unittest.TestCase):
             self.assertEqual(before, sorted(str(p.relative_to(project)) for p in project.rglob('*')))
             ram_plan = subprocess.run(args + ['--ram-work'], check=True, capture_output=True, text=True)
             self.assertEqual(json.loads(ram_plan.stdout)['work_mode'], 'ram')
+            replay = subprocess.run(args + ['--ram-work', '--replay-target', M.REGISTERED_TARGET],
+                                    check=True, capture_output=True, text=True)
+            registered = json.loads(replay.stdout)
+            self.assertEqual(registered['challenge_mode'], 'registered')
+            self.assertEqual(registered['registered_replay']['target_id'], M.REGISTERED_TARGET)
+            self.assertIn('no second full archive', registered['ram_retention'])
             self.assertEqual(before, sorted(str(p.relative_to(project)) for p in project.rglob('*')))
             (project / M.SCRIPT).write_bytes(b'changed')
             rejected = subprocess.run(args, capture_output=True, text=True)
@@ -387,6 +393,318 @@ class RamWorkTests(unittest.TestCase):
                 mount.assert_not_called()
             self.assertEqual((phase / 'old-result').read_text(), 'preserve me')
             self.assertFalse((phase / 'receipt.json').exists())
+
+
+class RegisteredReplayTests(unittest.TestCase):
+    shared = RamWorkTests.shared
+    mountline = RamWorkTests.mountline
+    sample = RamWorkTests.sample
+
+    def setUp(self):
+        self.temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temporary.cleanup)
+        self.root = Path(self.temporary.name)
+        self.old = self.root / 'original/component-retained'
+        self.old.mkdir(parents=True)
+        self.archive = self.old.parent / 'work.tar.gz'
+        self.archive.write_bytes(b'old full workspace authority')
+        for name, value in [('ORIGINAL_ROOT', self.old), ('ORIGINAL_ARCHIVE', self.archive),
+                            ('ARCHIVE_PIN', M.pin(self.archive.read_bytes()))]:
+            patch = mock.patch.object(M, name, value)
+            patch.start(); self.addCleanup(patch.stop)
+        self.phase = self.root / 'repeat'
+        self.phase.mkdir()
+        self.write(self.phase / 'inputs/project.bundle', b'complete new producer Git bundle')
+        self.write(self.phase / 'inputs/run.py', b'new authenticated runner')
+        self.work = self.phase / 'work'
+        self.component = self.work / 'project/out/uboot-nvme-candidate-01'
+        self.component.mkdir(parents=True)
+        self.source = {'revision': 'a' * 40, 'files': {
+            name: dict(M.pin(('current ' + name).encode()), git_blob='b' * 40)
+            for name in (M.COMPONENT, M.REGISTRY, M.EVIDENCE)}}
+        self.original_provenance = {
+            'builder_profile': {'name': 'replay-20261106'}, 'policy': {'schema': 1},
+            'baseline_manifest_sha256': 'c' * 64, 'core_recipe_sha256': 'd' * 64,
+            'firmware_unchanged': {'monitor.fex': M.pin(b'firmware')}}
+        self.old_files = {name: ('bound ' + name).encode() for name in M.MATCHED_ARTIFACTS}
+        self.old_files.update({'artifacts/original-uboot.config': b'original config',
+                               'artifacts/source-provenance.json': self.json_bytes(self.original_provenance),
+                               'artifacts/uboot.elf': b'old debug ELF', 'artifacts/bootm.o': b'old object',
+                               'artifacts/bootm.disassembly': b'same disassembly', 'logs/make.log': b'same log'})
+        for relative, data in self.old_files.items():
+            self.write(self.old / relative, data)
+        old_manifest = {'schema': 1, 'hardware_acceptance': False,
+                        'files': {name: M.pin(data) for name, data in self.old_files.items()}}
+        old_manifest_raw = self.json_bytes(old_manifest)
+        self.write(self.old / 'candidate-manifest.json', old_manifest_raw)
+        self.contract = {
+            'target_id': M.REGISTERED_TARGET, 'registry_pin': M.pin(b'registry'),
+            'original_manifest_pin': M.pin(old_manifest_raw), 'original_manifest': old_manifest,
+            'required_artifacts': {name: M.pin(self.old_files[name]) for name in M.MATCHED_ARTIFACTS},
+            'source_provenance': self.original_provenance,
+            'target': {'original_project_inputs': {M.COMPONENT: M.pin(b'original producer')}},
+            'inputs': str(self.old)}
+        self.binding = {key: self.contract[key] for key in ('target_id', 'registry_pin', 'original_manifest_pin')}
+        self.binding.update(exact_matches_verified=True, matched_artifacts=self.contract['required_artifacts'])
+        self.result = {'component_build_success': True, 'hardware_acceptance': False,
+                       'deployment_authorized': False, 'registered_replay': self.binding}
+        self.new_files = dict(self.old_files)
+        self.new_files.update({'artifacts/uboot.elf': b'new debug ELF', 'artifacts/bootm.o': b'new object',
+                               'artifacts/uboot-challenge-replay.patch': b'new generator patch',
+                               'artifacts/registered-challenge.c': self.old_files['artifacts/uboot-sunxi-challenge.c'],
+                               'artifacts/registered-target.json': self.json_bytes({
+                                   key: self.contract[key] for key in ('target_id', 'registry_pin', 'original_manifest_pin')}),
+                               'artifacts/candidate-result.json': self.json_bytes(self.result)})
+        for name in (M.COMPONENT, M.REGISTRY, M.EVIDENCE):
+            self.new_files['artifacts/project-inputs/' + name] = ('current ' + name).encode()
+        self.provenance = dict(self.original_provenance, registered_replay=self.binding,
+            challenge_mode='registered', project={'commit': self.source['revision'], 'git_status_porcelain': '',
+            'inputs': {name: M.pin(('current ' + name).encode()) for name in (M.COMPONENT, M.REGISTRY, M.EVIDENCE)}},
+            configuration=self.contract['required_artifacts']['artifacts/uboot.config'],
+            challenge=self.contract['required_artifacts']['artifacts/uboot-sunxi-challenge.c'],
+            generator_patch=M.pin(self.new_files['artifacts/uboot-challenge-replay.patch']))
+        self.new_files['artifacts/source-provenance.json'] = self.json_bytes(self.provenance)
+        self.save_new()
+        self.write(self.work / 'host-script/spi-nvme-host-boot.scr', b'script')
+        self.write(self.work / 'host-script/receipt.json', b'{"success":true}')
+        self.report = {'success': True, 'returncode': 0, 'component_result': self.result,
+                       'mounted_work_path': str(self.work)}
+        self.shared_api = self.shared(self.phase)
+
+    @staticmethod
+    def json_bytes(data):
+        return (json.dumps(data, sort_keys=True) + '\n').encode()
+
+    @staticmethod
+    def write(path, data):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(data)
+
+    def save_new(self):
+        for relative, data in self.new_files.items():
+            self.write(self.component / relative, data)
+        self.new_manifest = {'schema': 1, 'hardware_acceptance': False,
+                             'files': {name: M.pin(data) for name, data in self.new_files.items()}}
+        self.write(self.component / 'candidate-manifest.json', self.json_bytes(self.new_manifest))
+
+    def retain(self):
+        M.retain_registered_ram_work(self.shared_api, self.phase, self.report, ['id'], self.contract, self.source)
+
+    def test_readonly_five_input_subset_and_inner_flags(self):
+        inputs = self.phase / 'inputs'
+        with (mock.patch.object(M.os, 'chown') if os.geteuid() else nullcontext()):
+            M.stage_replay_inputs(inputs, self.contract)
+        staged = inputs / 'replay-target'
+        self.assertEqual({p.relative_to(staged).as_posix() for p in staged.rglob('*') if p.is_file()},
+                         set(M.REPLAY_INPUTS))
+        for path in (staged, *staged.rglob('*')):
+            self.assertEqual(path.stat().st_mode & 0o777, 0o555 if path.is_dir() else 0o444)
+            if os.geteuid() == 0:
+                self.assertEqual((path.stat().st_uid, path.stat().st_gid), (0, 0))
+        runner = M.inner_program('a' * 40, M.REGISTERED_TARGET).decode()
+        compile(runner, '<registered-inner>', 'exec')
+        self.assertIn("'--replay-target', '" + M.REGISTERED_TARGET + "'", runner)
+        self.assertIn("'--replay-inputs', '/a733-debs/replay-target'", runner)
+        self.assertNotIn('--replay-target', M.inner_program('a' * 40).decode())
+        with self.assertRaises(ValueError):
+            M.inner_program('a' * 40, 'unregistered')
+
+    def test_preflight_rehashes_full_manifest_and_archive_with_authenticated_loader(self):
+        contents = {M.COMPONENT: b'authenticated component', M.REGISTRY: self.json_bytes({
+            'schema': 1, 'targets': {M.REGISTERED_TARGET: {'manifest': self.contract['original_manifest_pin']}}})}
+        self.contract['registry_pin'] = M.pin(contents[M.REGISTRY])
+        loader = mock.Mock(return_value=self.contract)
+        with mock.patch.object(M, 'module', return_value=types.SimpleNamespace(load_registered_target=loader)) as module:
+            self.assertIs(M.load_replay_contract(self.root, contents, M.REGISTERED_TARGET), self.contract)
+            module.assert_called_once_with(str(self.root / M.COMPONENT), contents[M.COMPONENT])
+            loader.assert_called_once_with(self.root, M.REGISTERED_TARGET, self.old)
+            # This file is outside the five executable match pins and staged subset.
+            (self.old / 'artifacts/uboot.elf').write_bytes(b'bad debug ELF')
+            with self.assertRaisesRegex(ValueError, 'file (size|hash) differs'):
+                M.load_replay_contract(self.root, contents, M.REGISTERED_TARGET)
+
+    def test_wrong_result_provenance_or_actual_bytes_refuses_before_retention(self):
+        for mutation in ('target', 'matches', 'verified', 'provenance', 'actual', 'manifest', 'unlisted'):
+            with self.subTest(mutation=mutation):
+                result = json.loads(json.dumps(self.result))
+                if mutation == 'target': result['registered_replay']['target_id'] = 'wrong'
+                if mutation == 'matches': result['registered_replay']['matched_artifacts'].pop(M.MATCHED_ARTIFACTS[0])
+                if mutation == 'verified': result['registered_replay']['exact_matches_verified'] = False
+                if mutation == 'provenance':
+                    bad = dict(self.provenance, project={'commit': 'e' * 40})
+                    self.new_files['artifacts/source-provenance.json'] = self.json_bytes(bad)
+                    self.save_new()
+                if mutation == 'actual':
+                    self.write(self.component / M.MATCHED_ARTIFACTS[0], b'bad actual bytes')
+                if mutation == 'manifest':
+                    self.write(self.component / 'candidate-manifest.json', b'{}')
+                if mutation == 'unlisted': self.write(self.component / 'logs/unlisted', b'keep this log')
+                self.report['component_result'] = result
+                with mock.patch.object(M, 'work_mount_identity', return_value=['id']), \
+                     mock.patch.object(M.subprocess, 'run') as run:
+                    with self.assertRaises((ValueError, KeyError)):
+                        self.retain()
+                    run.assert_not_called()
+                self.assertFalse((self.phase / 'component-retained').exists())
+                self.assertEqual(self.report['mounted_work_path'], str(self.work))
+                (self.component / 'logs/unlisted').unlink(missing_ok=True)
+                self.new_files['artifacts/source-provenance.json'] = self.json_bytes(self.provenance)
+                self.save_new()
+
+    def test_mixed_reference_unique_logs_producers_and_durable_recovery_before_unmount(self):
+        self.shared_api.atomic_json = M.module(M.SHARED, (REPO / M.SHARED).read_bytes()).atomic_json
+        retained = self.phase / 'component-retained'
+        events = []
+        real_tree, real_directory = M.fsync_review_tree, M.fsync_directory
+        def tree(path):
+            real_tree(path); events.append('tree-fsynced')
+        def directory(path):
+            real_directory(path); events.append('directory:' + str(path))
+        def unmount(args, **kw):
+            self.assertEqual(args, ['umount', '--', str(self.work)])
+            self.assertIn('tree-fsynced', events)
+            self.assertEqual(events[-1], 'directory:' + str(self.phase.parent))
+            recovery = json.loads((self.phase / 'retained-awaiting-unmount.json').read_text())
+            self.assertFalse(recovery['success'])
+            self.assertEqual(recovery['state'], 'retained-awaiting-unmount')
+            self.assertEqual(recovery['ram_retention']['mode'], 'registered-reference')
+            with self.assertRaises(FileExistsError):
+                self.shared_api.atomic_json(self.phase / 'retained-awaiting-unmount.json', {})
+            return types.SimpleNamespace(returncode=0)
+        with mock.patch.object(M, 'work_mount_identity', return_value=['id']), \
+             mock.patch.object(M.subprocess, 'run', side_effect=unmount) as run, \
+             mock.patch.object(M, 'fsync_review_tree', side_effect=tree), \
+             mock.patch.object(M, 'fsync_directory', side_effect=directory), \
+             (mock.patch.object(M.os, 'fchown') if os.geteuid() else nullcontext()):
+            self.retain()
+            run.assert_called_once()
+            self.shared_api.atomic_json(self.phase / 'receipt.json', dict(self.report, success=True, state='complete'))
+            with self.assertRaises(FileExistsError):
+                self.shared_api.atomic_json(self.phase / 'receipt.json', {})
+        mapping = json.loads((retained / 'reference-map.json').read_text())
+        self.assertEqual(set(mapping['entries']), set(self.new_manifest['files']))
+        for relative, entry in mapping['entries'].items():
+            self.assertEqual(len(entry), 1)
+            if 'copied_local' in entry:
+                self.assertEqual((retained / relative).read_bytes(), self.new_files[relative])
+            else:
+                self.assertEqual(set(entry), {'existing_reference'})
+                self.assertEqual(entry['existing_reference']['root'], str(self.old))
+                self.assertEqual(entry['existing_reference']['manifest'], self.contract['original_manifest_pin'])
+                self.assertEqual(entry['existing_reference']['pin'], self.new_manifest['files'][relative])
+                self.assertFalse((retained / relative).exists())
+        for relative in ('logs/make.log', 'artifacts/uboot.elf', 'artifacts/bootm.o',
+                         'artifacts/source-provenance.json', 'artifacts/registered-challenge.c',
+                         'artifacts/uboot-challenge-replay.patch', 'artifacts/project-inputs/' + M.COMPONENT):
+            self.assertIn('copied_local', mapping['entries'][relative])
+        self.assertIn('existing_reference', mapping['entries']['artifacts/bootm.disassembly'])
+        self.assertEqual((retained / 'host-script/spi-nvme-host-boot.scr').read_bytes(), b'script')
+        self.assertEqual((retained / 'host-script/receipt.json').read_bytes(), b'{"success":true}')
+        self.assertEqual(M.pin((retained / 'candidate-manifest.json').read_bytes()), mapping['new_manifest_pin'])
+        self.assertFalse((self.phase / 'work.tar.gz').exists())
+        self.assertIsNone(self.report['mounted_work_path'])
+
+    def test_reference_hash_manifest_archive_budget_and_fsync_failures_keep_ram(self):
+        for operation in ('reference', 'manifest', 'archive', 'budget', 'tree-fsync', 'record-fsync', 'mount'):
+            with self.subTest(operation=operation):
+                original_hash = M.authenticated_file
+                def authenticate(path, *args, **kw):
+                    if operation == 'reference' and Path(path) == self.old / 'artifacts/bootm.disassembly':
+                        raise ValueError('injected old reference hash mismatch')
+                    if operation == 'manifest' and Path(path) == self.old / 'candidate-manifest.json':
+                        raise ValueError('injected old manifest hash mismatch')
+                    if operation == 'archive' and Path(path) == self.archive:
+                        raise ValueError('injected old archive hash mismatch')
+                    return original_hash(path, *args, **kw)
+                self.shared_api.resource_sample.return_value = dict(self.sample,
+                    free_bytes=4_000_000_001 if operation == 'budget' else 5_000_000_000)
+                def sync_tree(path):
+                    if operation == 'tree-fsync': raise OSError('injected tree fsync')
+                def sync_directory(path):
+                    if operation == 'record-fsync' and (self.phase / 'retained-awaiting-unmount.json').exists():
+                        raise OSError('injected recovery fsync')
+                identities = [['id'], ['changed']] if operation == 'mount' else [['id'], ['id']]
+                with mock.patch.object(M, 'authenticated_file', side_effect=authenticate), \
+                     mock.patch.object(M, 'work_mount_identity', side_effect=identities), \
+                     mock.patch.object(M, 'fsync_review_tree', side_effect=sync_tree), \
+                     mock.patch.object(M, 'fsync_directory', side_effect=sync_directory), \
+                     mock.patch.object(M.subprocess, 'run') as run:
+                    with self.assertRaises((ValueError, OSError)):
+                        self.retain()
+                    run.assert_not_called()
+                self.assertEqual(self.report['mounted_work_path'], str(self.work))
+                if operation == 'budget':
+                    self.assertFalse((self.phase / 'component-retained').exists())
+                    budget = self.report['registered_retention_budget']
+                    self.assertGreater(budget['allocated_upper_bound_bytes'], M.RETENTION_MARGIN)
+                    self.assertEqual(budget['required_free_bytes_exclusive'],
+                                     4_000_000_000 + budget['allocated_upper_bound_bytes'])
+                import shutil
+                shutil.rmtree(self.phase / 'component-retained', ignore_errors=True)
+                (self.phase / 'retained-awaiting-unmount.json').unlink(missing_ok=True)
+
+    def test_held_file_refuses_links_and_metadata_mutation(self):
+        data = self.old / 'artifacts/uboot.elf'
+        expected = M.pin(data.read_bytes())
+        linked = self.root / 'hardlink'; os.link(data, linked)
+        with self.assertRaisesRegex(ValueError, 'single-link'):
+            M.authenticated_file(data, expected)
+        linked.unlink()
+        linked.symlink_to(data)
+        with self.assertRaises(OSError): M.authenticated_file(linked, expected)
+        indirect = self.root / 'indirect'; indirect.symlink_to(self.old, target_is_directory=True)
+        with self.assertRaises(OSError): M.authenticated_file(indirect / 'artifacts/uboot.elf', expected)
+        original = M.hashlib.sha256
+        def checksum():
+            value = original()
+            def update(chunk):
+                value.update(chunk)
+                os.utime(data, ns=(data.stat().st_atime_ns, data.stat().st_mtime_ns + 1))
+            return types.SimpleNamespace(update=update, hexdigest=value.hexdigest)
+        with mock.patch.object(M.hashlib, 'sha256', side_effect=checksum):
+            with self.assertRaisesRegex(ValueError, 'changed during read'):
+                M.authenticated_file(data, expected)
+
+    def test_registered_payload_failure_journals_primary_and_never_archives_or_unmounts(self):
+        import shutil
+        source = b'echo host script\n'
+        self.write(self.work / 'host-script/spi-nvme-host-boot.scr', image(source))
+        self.write(self.work / 'host-script/receipt.json', self.json_bytes({
+            'success': True, 'source': M.pin(source), 'script': M.pin(image(source))}))
+        for failure in ('exit', 'verification'):
+            with self.subTest(failure=failure):
+                phase = self.root / ('failed-' + failure)
+                shared = self.shared(phase)
+                report = {}
+                def mount(shared, phase):
+                    shutil.copytree(self.work, phase / 'work', dirs_exist_ok=True)
+                    return ['id']
+                def run(args, **kw):
+                    self.assertEqual(args[0], 'git')
+                    Path(args[-2]).write_bytes(b'producer bundle')
+                proc = mock.Mock()
+                proc.poll.return_value = proc.wait.return_value = 7 if failure == 'exit' else 0
+                builder = types.SimpleNamespace(validate_probe=lambda raw: {'valid': True})
+                with mock.patch.object(M.os, 'chown'), \
+                     mock.patch.object(M, 'mount_ram_work', side_effect=mount), \
+                     mock.patch.object(M, 'command', return_value=['fixture-payload']), \
+                     mock.patch.object(M.subprocess, 'run', side_effect=run) as run_mock, \
+                     mock.patch.object(M.subprocess, 'Popen', return_value=proc), \
+                     mock.patch.object(M.subprocess, 'check_output', return_value=b'inventory'), \
+                     mock.patch.object(M, 'retain_ram_work') as full_archive, \
+                     mock.patch.object(M, 'verify_registered_result', side_effect=ValueError('bad registered proof')):
+                    with self.assertRaisesRegex(ValueError, 'payload failed' if failure == 'exit' else 'bad registered proof'):
+                        M.execute(shared, builder, self.root, phase, self.source, {M.SCRIPT: source},
+                                  b'inventory', report, True, self.contract)
+                    full_archive.assert_not_called()
+                    self.assertTrue(all(call.args[0][0] == 'git' for call in run_mock.call_args_list))
+                saved = json.loads((phase / 'receipt.json').read_text())
+                self.assertFalse(saved['success'])
+                self.assertEqual(saved['mounted_work_path'], str(phase / 'work'))
+                self.assertIn('requires successful payload', saved['retention_error'])
+                self.assertIn('payload failed' if failure == 'exit' else 'bad registered proof', saved['error'])
+                self.assertFalse((phase / 'work.tar.gz').exists())
+                self.assertTrue((phase / 'work/project/out/uboot-nvme-candidate-01/artifacts/uboot.elf').is_file())
 
 
 if __name__ == '__main__':

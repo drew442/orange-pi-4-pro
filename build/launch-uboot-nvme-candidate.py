@@ -25,6 +25,9 @@ COMPONENT = 'build/uboot-nvme-candidate.py'
 SHARED = 'build/launch-userspace-configuration.py'
 SCRIPT = 'configs/spi-nvme-host-boot.cmd'
 POLICY = 'configs/uboot-nvme-candidate-v1.json'
+REGISTRY = 'configs/uboot-nvme-candidate-targets.lock.json'
+EVIDENCE = 'docs/evidence/uboot-nvme-candidate-20261107.json'
+REGISTERED_TARGET = 'nvme-candidate-20261107-ram02'
 BASE = Path('/var/lib/a733-clean-replay-20261106')
 SOURCE_HOME = BASE / 'home'
 PROVENANCE = Path('/var/lib/a733-el2-work-20261104/out/el2-diagnostic-20261104-03/artifacts')
@@ -34,13 +37,22 @@ CORE_INPUTS = (CORE, 'configs/diagnostic-sources.lock.json', 'configs/vendor-boo
                'configs/builder-packages.lock.tsv', 'configs/builder-replay-packages-20261106.lock.tsv',
                'docs/evidence/el2-diagnostic-20261104.json', 'build/patches/uboot-env-nowhere-size.patch',
                'build/patches/uboot-a733-el2-handoff.patch')
-SOURCE_FILES = tuple(dict.fromkeys((SELF, COMPONENT, SHARED, SCRIPT, POLICY) + CORE_INPUTS))
+SOURCE_FILES = tuple(dict.fromkeys((SELF, COMPONENT, SHARED, SCRIPT, POLICY, REGISTRY, EVIDENCE) + CORE_INPUTS))
 HOST_LOCK = 'configs/builder-replay-packages-20261106.lock.tsv'
 PROBE_SHA = 'ce565b23ac0b927e54fbfc057bee69ae95d12ba930a5c5421699538e9da14fea'
 ENV = {'PATH': '/usr/sbin:/usr/bin:/sbin:/bin', 'HOME': '/nonexistent', 'LC_ALL': 'C', 'TZ': 'UTC'}
 TIMEOUT = 1800
 RAM_LIMIT = 8 * 1024**3
 RAM_ADMISSION = 4 * 1024**3
+ORIGINAL_ROOT = BASE / 'uboot-nvme-component-ram-02/component-retained'
+ORIGINAL_ARCHIVE = ORIGINAL_ROOT.parent / 'work.tar.gz'
+ARCHIVE_PIN = {'bytes': 412929105, 'sha256': '436e35cd9b6e16ccef0a991f88b8afb4a57c21bcd3e374c0946cd6c77635b49a'}
+REPLAY_INPUTS = ('candidate-manifest.json', 'artifacts/uboot-sunxi-challenge.c',
+                 'artifacts/source-provenance.json', 'artifacts/uboot.config', 'artifacts/original-uboot.config')
+MATCHED_ARTIFACTS = ('artifacts/uboot-unpacked.bin', 'artifacts/boot_package.fex',
+                     'artifacts/uboot.config', 'artifacts/uboot-sunxi-challenge.c',
+                     'artifacts/boot0_spinor_a733.fex')
+RETENTION_MARGIN = 8 * 1024**2
 
 
 def require(value, message):
@@ -97,9 +109,19 @@ def phase_path(tag):
     return BASE / ('uboot-nvme-component-' + tag)
 
 
-def plan(tag, manifest, ram_work=False):
+def replay_selection(contents, target_id):
+    """Select from committed bytes only; planning never touches the old run."""
+    require(target_id == REGISTERED_TARGET, 'unregistered replay target')
+    registry = json.loads(contents[REGISTRY])
+    require(registry.get('schema') == 1 and set(registry['targets']) == {REGISTERED_TARGET},
+            'unexpected replay registry')
+    return {'target_id': target_id, 'registry_pin': pin(contents[REGISTRY]),
+            'original_manifest_pin': registry['targets'][target_id]['manifest']}
+
+
+def plan(tag, manifest, ram_work=False, replay=None):
     phase = phase_path(tag)
-    return {'schema': 1, 'classification': 'component candidate only; no flash or hardware acceptance',
+    report = {'schema': 1, 'classification': 'component candidate only; no flash or hardware acceptance',
             'phase': str(phase), 'inputs': manifest, 'work_mode': 'ram' if ram_work else 'disk',
             'ram_work_limit_bytes': RAM_LIMIT if ram_work else None,
             'minimum_initial_available_memory_bytes': RAM_ADMISSION if ram_work else None,
@@ -110,10 +132,16 @@ def plan(tag, manifest, ram_work=False):
             'additional_budget': 'inner recipe must pass complete single-construction budget before output creation',
             'runtime_minimum_free_bytes': 3_000_000_000, 'runtime_minimum_available_memory_bytes': 1_000_000_000,
             'timeout_seconds': TIMEOUT, 'spi_image_or_programmer': False}
+    if replay is not None:
+        report.update(challenge_mode='registered', registered_replay=replay)
+        if ram_work:
+            report['ram_retention'] = 'verified unique files and pinned original references; no second full archive'
+    return report
 
 
-def inner_program(revision):
+def inner_program(revision, replay_target=None):
     require(re.fullmatch('[0-9a-f]{40}', revision), 'invalid inner revision')
+    require(replay_target in (None, REGISTERED_TARGET), 'unregistered inner replay target')
     return ('''import hashlib,json,os,pathlib,subprocess
 os.umask(0o002)
 project=pathlib.Path('/a733-export-output/project')
@@ -125,7 +153,7 @@ output=project/'out/uboot-nvme-candidate-01'
 subprocess.run(['/usr/bin/python3','-I','-B',str(project/'build/uboot-nvme-candidate.py'),
  '--workspace','/home/drew/orange-pi-4-pro-build',
  '--provenance','/var/lib/a733-el2-work-20261104/out/el2-diagnostic-20261104-03/artifacts',
- '--builder-profile','replay-20261106','--output',str(output)],check=True)
+ '--builder-profile','replay-20261106','--output',str(output)]REPLAY_ARGUMENTS,check=True)
 scriptdir=pathlib.Path('/a733-export-output/host-script')
 scriptdir.mkdir(mode=0o700)
 source=project/'configs/spi-nvme-host-boot.cmd'
@@ -136,7 +164,9 @@ def record(p):
  data=p.read_bytes();return {'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()}
 (scriptdir/'receipt.json').write_text(json.dumps({'schema':1,'success':True,'source':record(source),'script':record(script),
  'classification':'separate unbooted NVMe script candidate; never installed'},indent=2)+'\\n')
-'''.replace('REVISION', repr(revision))).encode()
+'''.replace('REVISION', repr(revision)).replace('REPLAY_ARGUMENTS',
+        '' if replay_target is None else " + ['--replay-target', " + repr(replay_target) +
+        ", '--replay-inputs', '/a733-debs/replay-target']")).encode()
 
 
 def check_resources(sample, elapsed):
@@ -259,6 +289,160 @@ def fsync_directory(path):
         os.close(fd)
 
 
+def safe_member(relative):
+    member = Path(relative)
+    require(isinstance(relative, str) and relative and not member.is_absolute()
+            and '..' not in member.parts and member.as_posix() == relative and relative != '.',
+            'unsafe manifest member')
+    return member
+
+
+def authenticated_file(path, expected=None, *, retain=False, destination=None):
+    """Hash/copy one held regular file through physical, held parent directories."""
+    path = Path(path)
+    require(path.is_absolute() and str(path) == os.path.abspath(path), 'absolute physical file required')
+    identity = lambda s: (s.st_dev, s.st_ino, s.st_mode, s.st_uid, s.st_gid, s.st_nlink,
+                          s.st_size, s.st_mtime_ns, s.st_ctime_ns)
+    directory = os.open('/', os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+    parents, stream, output = [(directory, None, None, os.fstat(directory))], None, None
+    try:
+        for name in path.parts[1:-1]:
+            following = os.open(name, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=directory)
+            parents.append((following, directory, name, os.fstat(following)))
+            directory = following
+        fd = os.open(path.name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=directory)
+        stream = os.fdopen(fd, 'rb')
+        before = os.fstat(fd)
+        require(stat.S_ISREG(before.st_mode) and before.st_nlink == 1, 'single-link regular file required')
+        if expected is not None:
+            require(before.st_size == expected['bytes'], 'file size differs: ' + str(path))
+        if retain:
+            require(before.st_size <= 16 * 1024**2, 'bounded retained input required')
+        if destination is not None:
+            output = Path(destination).open('xb')
+        checksum, size, chunks = hashlib.sha256(), 0, []
+        for chunk in iter(lambda: stream.read(1024**2), b''):
+            checksum.update(chunk)
+            size += len(chunk)
+            if retain:
+                chunks.append(chunk)
+            if output is not None:
+                output.write(chunk)
+        actual = {'bytes': size, 'sha256': checksum.hexdigest()}
+        require(size == before.st_size and identity(before) == identity(os.fstat(fd)) ==
+                identity(os.stat(path.name, dir_fd=directory, follow_symlinks=False)), 'file changed during read')
+        if expected is not None:
+            require(actual == expected, 'file hash differs: ' + str(path))
+        for held, parent, name, previous in parents:
+            # Reading may change atime; no other identity/metadata changes are allowed.
+            require(identity(previous) == identity(os.fstat(held)), 'physical parent changed during read')
+            if parent is not None:
+                require(identity(previous) == identity(os.stat(name, dir_fd=parent, follow_symlinks=False)),
+                        'physical parent replaced during read')
+        if output is not None:
+            output.flush()
+            os.fchmod(output.fileno(), 0o444)
+            os.fsync(output.fileno())
+        return actual, b''.join(chunks) if retain else None
+    finally:
+        if output is not None:
+            output.close()
+        if stream is not None:
+            stream.close()
+        for held, _, _, _ in reversed(parents):
+            os.close(held)
+
+
+def load_replay_contract(project, contents, target_id):
+    selected = replay_selection(contents, target_id)
+    component = module(str(project / COMPONENT), contents[COMPONENT])
+    contract = component.load_registered_target(project, target_id, ORIGINAL_ROOT)
+    require(all(contract.get(key) == value for key, value in selected.items()), 'replay contract differs from selection')
+    authenticated_file(ORIGINAL_ROOT / 'candidate-manifest.json', contract['original_manifest_pin'])
+    for relative, expected in contract['original_manifest']['files'].items():
+        authenticated_file(ORIGINAL_ROOT / safe_member(relative), expected)
+    authenticated_file(ORIGINAL_ARCHIVE, ARCHIVE_PIN)
+    return contract
+
+
+def stage_replay_inputs(inputs, contract):
+    destination = inputs / 'replay-target'
+    destination.mkdir(mode=0o700)
+    for relative in REPLAY_INPUTS:
+        expected = (contract['original_manifest_pin'] if relative == 'candidate-manifest.json'
+                    else contract['original_manifest']['files'][relative])
+        target = destination / safe_member(relative)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        authenticated_file(ORIGINAL_ROOT / relative, expected, destination=target)
+        os.chown(target, 0, 0)
+    for directory in sorted((p for p in destination.rglob('*') if p.is_dir()), reverse=True):
+        os.chown(directory, 0, 0)
+        os.chmod(directory, 0o555)
+    os.chown(destination, 0, 0)
+    os.chmod(destination, 0o555)
+
+
+def regular_tree_files(root):
+    """Manifest/review trees contain only physical directories and regular files."""
+    files = []
+    require(stat.S_ISDIR(root.lstat().st_mode), 'physical review directory required')
+    for child in sorted(root.iterdir()):
+        mode = child.lstat().st_mode
+        if stat.S_ISDIR(mode):
+            files.extend(regular_tree_files(child))
+        else:
+            require(stat.S_ISREG(mode), 'special/symlink review file forbidden')
+            files.append(child)
+    return files
+
+
+def verify_registered_result(component, result, contract, source_manifest):
+    """Check actual bytes and new provenance independently of the inner receipt."""
+    binding = {key: contract[key] for key in ('target_id', 'registry_pin', 'original_manifest_pin')}
+    binding.update(exact_matches_verified=True, matched_artifacts={
+        name: contract['required_artifacts'][name] for name in MATCHED_ARTIFACTS})
+    require(result.get('registered_replay') == binding, 'registered result binding differs')
+    manifest_pin, raw = authenticated_file(component / 'candidate-manifest.json', retain=True)
+    manifest = json.loads(raw)
+    require(manifest.get('schema') == 1 and manifest.get('hardware_acceptance') is False,
+            'new candidate manifest differs')
+    entries = manifest['files']
+    actual_files = {p.relative_to(component).as_posix() for root in ('artifacts', 'logs')
+                    for p in regular_tree_files(component / root)}
+    require(actual_files == set(entries), 'new manifest does not cover all artifacts/logs')
+    for relative, expected in entries.items():
+        require(safe_member(relative).parts[0] in ('artifacts', 'logs'), 'unexpected candidate member')
+        authenticated_file(component / relative, expected)
+    _, actual_result = authenticated_file(component / 'artifacts/candidate-result.json',
+                                          entries['artifacts/candidate-result.json'], retain=True)
+    require(json.loads(actual_result) == result, 'actual result changed after payload verification')
+    for relative, expected in binding['matched_artifacts'].items():
+        require(entries.get(relative) == expected, 'new manifest match pin differs')
+        authenticated_file(component / relative, expected)
+    _, provenance_raw = authenticated_file(component / 'artifacts/source-provenance.json',
+                                           entries['artifacts/source-provenance.json'], retain=True)
+    provenance = json.loads(provenance_raw)
+    expected_inputs = {relative: {key: source_manifest['files'][relative][key] for key in ('bytes', 'sha256')}
+                       for relative in (*contract['target']['original_project_inputs'], REGISTRY, EVIDENCE)}
+    require(provenance.get('registered_replay') == binding and provenance.get('challenge_mode') == 'registered'
+            and provenance.get('project') == {'commit': source_manifest['revision'], 'git_status_porcelain': '',
+                                             'inputs': expected_inputs}
+            and provenance.get('builder_profile') == contract['source_provenance']['builder_profile']
+            and provenance.get('policy') == contract['source_provenance']['policy']
+            and provenance.get('baseline_manifest_sha256') == contract['source_provenance']['baseline_manifest_sha256']
+            and provenance.get('core_recipe_sha256') == contract['source_provenance']['core_recipe_sha256']
+            and provenance.get('firmware_unchanged') == contract['source_provenance']['firmware_unchanged']
+            and provenance.get('configuration') == binding['matched_artifacts']['artifacts/uboot.config']
+            and provenance.get('challenge') == binding['matched_artifacts']['artifacts/uboot-sunxi-challenge.c']
+            and provenance.get('generator_patch') == entries.get('artifacts/uboot-challenge-replay.patch'),
+            'registered source provenance differs')
+    require(entries.get('artifacts/registered-challenge.c') ==
+            binding['matched_artifacts']['artifacts/uboot-sunxi-challenge.c'], 'registered challenge copy differs')
+    for relative, expected in expected_inputs.items():
+        require(entries.get('artifacts/project-inputs/' + relative) == expected, 'producer copy differs')
+    return manifest, manifest_pin
+
+
 def fsync_review_tree(path):
     """Durably retain copied files without following symlinks or special files."""
     def descend(directory):
@@ -337,7 +521,113 @@ def retain_ram_work(shared, phase, report, identity):
     report['mounted_work_path'] = None
 
 
-def execute(shared, builder, project, phase, manifest, contents, before, report, ram_work=False):
+def retain_registered_ram_work(shared, phase, report, identity, contract, source_manifest):
+    """Retain a verified repeat by reference; every failure leaves RAM mounted."""
+    work = phase / 'work'
+    start = time.monotonic()
+    def sample_resources():
+        sample = shared.resource_sample()
+        report.setdefault('retention_resources', []).append(sample)
+        check_resources(sample, time.monotonic() - start)
+        return sample
+    sample_resources()
+    require(report.get('success') is True and report.get('returncode') == 0,
+            'registered RAM retention requires successful payload')
+    require(not shared.mapped_processes() and work_mount_identity(work) == identity,
+            'registered RAM work is active or mount changed')
+    mounts = shared.phase_mounts(phase)
+    require(len(mounts) == 1 and mounts[0].split()[4] == str(work), 'unexpected registered work mounts')
+    component = work / 'project/out/uboot-nvme-candidate-01'
+    new_manifest, manifest_pin = verify_registered_result(component, report['component_result'], contract,
+                                                       source_manifest)
+    authenticated_file(ORIGINAL_ROOT / 'candidate-manifest.json', contract['original_manifest_pin'])
+    authenticated_file(ORIGINAL_ARCHIVE, ARCHIVE_PIN)
+    retained = phase / 'component-retained'
+    require(not os.path.lexists(retained) and not os.path.lexists(phase / 'work.tar.gz'),
+            'registered retention output already exists')
+    entries, copies = {}, {}
+    original = contract['original_manifest']['files']
+    forced = {'artifacts/uboot-challenge-replay.patch', 'artifacts/registered-challenge.c',
+              'artifacts/source-provenance.json', 'artifacts/registered-target.json'}
+    for relative, expected in new_manifest['files'].items():
+        sample_resources()
+        unique = (relative.startswith(('logs/', 'artifacts/project-inputs/')) or relative in forced
+                  or original.get(relative) != expected)
+        if unique:
+            copies[relative] = (component / relative, expected)
+            entries[relative] = {'copied_local': {'path': relative, 'pin': expected}}
+        else:
+            authenticated_file(ORIGINAL_ROOT / relative, expected)
+            entries[relative] = {'existing_reference': {
+                'root': str(ORIGINAL_ROOT), 'path': relative, 'pin': expected,
+                'manifest': contract['original_manifest_pin']}}
+    copies['candidate-manifest.json'] = (component / 'candidate-manifest.json', manifest_pin)
+    for source in regular_tree_files(work / 'host-script'):
+        relative = 'host-script/' + source.relative_to(work / 'host-script').as_posix()
+        copies[relative] = (source, authenticated_file(source)[0])
+    reference_map = {'schema': 1, 'target_id': contract['target_id'],
+                     'registry_pin': contract['registry_pin'], 'original_root': str(ORIGINAL_ROOT),
+                     'original_manifest_pin': contract['original_manifest_pin'],
+                     'new_manifest_pin': manifest_pin,
+                     'shared_full_workspace': {'path': str(ORIGINAL_ARCHIVE), 'pin': ARCHIVE_PIN},
+                     'entries': entries}
+    raw_map = (json.dumps(reference_map, sort_keys=True, indent=2) + '\n').encode()
+    directories = {Path('.')}
+    for relative in (*copies, 'reference-map.json'):
+        directories.update(safe_member(relative).parents)
+    rounded = lambda size: ((size + 4095) // 4096) * 4096
+    needed = (sum(rounded(expected['bytes']) for _, expected in copies.values()) + rounded(len(raw_map))
+              + max(65536, 4096 * len(directories)) + RETENTION_MARGIN)
+    report['registered_retention_budget'] = {'allocated_upper_bound_bytes': needed,
+                                           'required_free_bytes_exclusive': 4_000_000_000 + needed}
+    require(sample_resources()['free_bytes'] > 4_000_000_000 + needed,
+            'registered retention would violate 4 GB reserve; RAM retained')
+    retained.mkdir(mode=0o700)
+    for relative, (source, expected) in copies.items():
+        sample_resources()
+        destination = retained / relative
+        destination.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+        authenticated_file(source, expected, destination=destination)
+        authenticated_file(destination, expected)
+    with (retained / 'reference-map.json').open('xb') as stream:
+        stream.write(raw_map)
+        os.fchmod(stream.fileno(), 0o444)
+        stream.flush()
+        os.fsync(stream.fileno())
+    authenticated_file(retained / 'reference-map.json', pin(raw_map))
+    # Resolve the complete map again from durable local files or anchored old files.
+    authenticated_file(retained / 'candidate-manifest.json', manifest_pin)
+    authenticated_file(ORIGINAL_ROOT / 'candidate-manifest.json', contract['original_manifest_pin'])
+    for relative, entry in entries.items():
+        sample_resources()
+        local = 'copied_local' in entry
+        require(set(entry) == ({'copied_local'} if local else {'existing_reference'}), 'ambiguous reference map')
+        authenticated_file((retained if local else ORIGINAL_ROOT) / relative, new_manifest['files'][relative])
+    authenticated_file(ORIGINAL_ARCHIVE, ARCHIVE_PIN)
+    fsync_review_tree(retained)
+    # The staged Git bundle/runner retain the complete new producer revision.
+    fsync_review_tree(phase / 'inputs')
+    report['ram_retention'] = {'mode': 'registered-reference', 'review_files': str(retained),
+                               'new_manifest': manifest_pin, 'reference_map': pin(raw_map),
+                               'copied_files': {name: expected for name, (_, expected) in copies.items()},
+                               'referenced_files': sum('existing_reference' in e for e in entries.values()),
+                               'shared_full_workspace': reference_map['shared_full_workspace']}
+    fsync_directory(phase)
+    shared.atomic_json(phase / 'retained-awaiting-unmount.json',
+                       dict(report, success=False, state='retained-awaiting-unmount'))
+    fsync_directory(phase)
+    fsync_directory(phase.parent)
+    require(sample_resources()['free_bytes'] > 4_000_000_000, 'registered final disk reserve failed')
+    require(not shared.mapped_processes(), 'mapped process appeared before registered RAM unmount')
+    require(work_mount_identity(work) == identity, 'registered RAM mount changed before unmount')
+    mounts = shared.phase_mounts(phase)
+    require(len(mounts) == 1 and mounts[0].split()[4] == str(work), 'unexpected mount before registered unmount')
+    subprocess.run(['umount', '--', str(work)], env=ENV, check=True, timeout=15)
+    report['mounted_work_path'] = None
+
+
+def execute(shared, builder, project, phase, manifest, contents, before, report, ram_work=False,
+            replay_contract=None):
     # Never journal over an old attempt, even when staging fails immediately.
     shared.safe_directory(phase.parent, trusted=True)
     phase.mkdir(mode=0o700)
@@ -362,8 +652,11 @@ def execute(shared, builder, project, phase, manifest, contents, before, report,
         # Bundle plus checkout must fit above the existing 4 GB component start floor.
         require(shared.resource_sample()['free_bytes'] > 4_000_000_000 + 2 * len(raw_bundle), 'bundle/checkout staging budget exceeded')
         shared.atomic_json(inputs / 'manifest.json', manifest)
+        if replay_contract is not None:
+            stage_replay_inputs(inputs, replay_contract)
         with (inputs / 'run.py').open('xb') as stream:
-            stream.write(inner_program(manifest['revision']))
+            stream.write(inner_program(manifest['revision'],
+                         replay_contract['target_id'] if replay_contract is not None else None))
         os.chmod(inputs / 'run.py', 0o444)
         os.chmod(inputs, 0o555)
         shared.atomic_json(phase / 'source-manifest.json', manifest)
@@ -396,6 +689,10 @@ def execute(shared, builder, project, phase, manifest, contents, before, report,
         checked = verify_host_script(image, contents[SCRIPT])
         require(script.get('source') == checked['source'] and script.get('script') == checked['script'],
                 'host script receipt bindings differ')
+        if replay_contract is not None:
+            _, new_manifest_pin = verify_registered_result(
+                phase / 'work/project/out/uboot-nvme-candidate-01', result, replay_contract, manifest)
+            report['verified_replay_manifest'] = new_manifest_pin
         report.update(component_result=result, host_script=script, host_script_inspection=checked, success=True)
     except BaseException as error:
         report['error'] = repr(error)
@@ -407,7 +704,10 @@ def execute(shared, builder, project, phase, manifest, contents, before, report,
                 shared.stop_process(proc)
                 require(not shared.mapped_processes(), 'mapped process remains after candidate stop')
                 if ram_work and ram_identity is not None:
-                    retain_ram_work(shared, phase, report, ram_identity)
+                    if replay_contract is not None:
+                        retain_registered_ram_work(shared, phase, report, ram_identity, replay_contract, manifest)
+                    else:
+                        retain_ram_work(shared, phase, report, ram_identity)
                 elif ram_work and report.get('mounted_work_path'):
                     raise ValueError('RAM mount setup incomplete; inspect work mount before recovery')
             except BaseException as error:
@@ -427,6 +727,9 @@ def execute(shared, builder, project, phase, manifest, contents, before, report,
             report['state'] = 'complete' if report['success'] else 'failed'
             try:
                 shared.atomic_json(phase / 'receipt.json', report)
+                if replay_contract is not None:
+                    fsync_directory(phase)
+                    fsync_directory(phase.parent)
             except BaseException as error:
                 report.update(success=False, receipt_error=repr(error))
         finally:
@@ -441,18 +744,22 @@ def main(argv=None):
     parser.add_argument('--tag', required=True)
     parser.add_argument('--plan', action='store_true')
     parser.add_argument('--ram-work', action='store_true', help='build in bounded 8 GiB tmpfs and retain a verified full archive')
+    parser.add_argument('--replay-target', choices=(REGISTERED_TARGET,),
+                        help='rebuild the closed registered challenge; RAM success retains unique files and references')
     options = parser.parse_args(argv)
     require(sys.flags.isolated and sys.flags.dont_write_bytecode, 'invoke Python with -I -B')
     manifest, contents = committed_sources(options.project)
     require(read_source(Path(__file__).absolute()) == contents[SELF], 'executing launcher differs from committed source')
-    report = plan(options.tag, manifest, options.ram_work)
+    selection = replay_selection(contents, options.replay_target) if options.replay_target else None
+    report = plan(options.tag, manifest, options.ram_work, selection)
     if options.plan:
         print(json.dumps(report, sort_keys=True))
         return
     shared = module(SHARED, contents[SHARED])
     phase = phase_path(options.tag)
     builder, before = preflight(shared, phase, contents, options.ram_work)
-    execute(shared, builder, options.project, phase, manifest, contents, before, report, options.ram_work)
+    replay = load_replay_contract(options.project, contents, options.replay_target) if selection else None
+    execute(shared, builder, options.project, phase, manifest, contents, before, report, options.ram_work, replay)
     print(json.dumps({'success': True, 'phase': str(phase)}))
 
 
