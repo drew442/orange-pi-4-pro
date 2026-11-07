@@ -1,8 +1,35 @@
 {
   "abe": {
+    "acquisition_status": "exact_git_commit_tree_and_blobs_retained",
     "branch": "branch=",
     "configure": "--with-local-snapshots=${local_snapshots} --with-git-reference-dir=/home/tcwg-buildslave/snapshots-ref",
     "filespec": "abe.git",
+    "retained_git_source": {
+      "bare_cache": "/var/lib/a733-toolchain-abe-20261107/abe.git",
+      "commit": "a09711bff8dc7781dd7192b370bdd630b296d45e",
+      "complete_tracked_objects_verified": true,
+      "full_history_retained": false,
+      "origin_kind": "third_party_mirror",
+      "pack_and_index_files": [
+        {
+          "bytes": 5020,
+          "path": "abe.git/objects/pack/pack-cf19569224b191a74e173c2563fb4c7139584bfc.idx",
+          "sha256": "3dec10dde0520694245af738d8d144ee8ba15b83d659040ef3506d129976972d"
+        },
+        {
+          "bytes": 202787,
+          "path": "abe.git/objects/pack/pack-cf19569224b191a74e173c2563fb4c7139584bfc.pack",
+          "sha256": "29b353c3518cf2071767a7b0e208f114b937c54b0a0ac9dde5623e1d1bed123e"
+        }
+      ],
+      "repository_url": "https://github.com/Mi-AIoT/linaro-abe.git",
+      "requested_commit": "a09711bff8dc7781dd7192b370bdd630b296d45e",
+      "shallow_boundary": [
+        "a09711bff8dc7781dd7192b370bdd630b296d45e"
+      ],
+      "source_signature_verified": false,
+      "tree": "6c7a470c318260fc4d14cd75616d40ec57b64725"
+    },
     "revision": "a09711bff8dc7781dd7192b370bdd630b296d45e",
     "url": "https://git-us.linaro.org/toolchain"
   },
@@ -136,12 +163,38 @@
       "url": "http://snapshots.linaro.org/components/toolchain/infrastructure/"
     },
     {
-      "acquisition_status": "git_revision_recorded_sources_not_acquired",
+      "acquisition_status": "exact_git_commit_tree_and_blobs_retained",
       "applies_to_linux": true,
       "branch": "users/linaro/binutils-2_28-branch",
       "filespec": "binutils-gdb.git",
       "mingw_only": "no",
       "name": "binutils",
+      "retained_git_source": {
+        "bare_cache": "/var/lib/a733-toolchain-git-20261107/binutils.git",
+        "commit": "0231dce141801ffcdfef8b7f14cd903a6d3f21ba",
+        "complete_tracked_objects_verified": true,
+        "full_history_retained": false,
+        "origin_kind": "upstream_repository",
+        "pack_and_index_files": [
+          {
+            "bytes": 811392,
+            "path": "binutils.git/objects/pack/pack-77075d22fc560f69d7a2658881d39b54e21aa897.idx",
+            "sha256": "6298b08fcab552a44422ebac941b4920bff8ffd2b047b68edb2484ac0eb6392f"
+          },
+          {
+            "bytes": 66742769,
+            "path": "binutils.git/objects/pack/pack-77075d22fc560f69d7a2658881d39b54e21aa897.pack",
+            "sha256": "983cbdcd57702475b259fb075ce6e235f81417af57f68015efaa276342122a41"
+          }
+        ],
+        "repository_url": "https://sourceware.org/git/binutils-gdb.git",
+        "requested_commit": "0231dce141801ffcdfef8b7f14cd903a6d3f21ba",
+        "shallow_boundary": [
+          "0231dce141801ffcdfef8b7f14cd903a6d3f21ba"
+        ],
+        "source_signature_verified": false,
+        "tree": "193eea30265348d6e413321287ad706953bc11a1"
+      },
       "revision": "0231dce141801ffcdfef8b7f14cd903a6d3f21ba",
       "source_format": "git",
       "staticlink": "yes",
@@ -160,35 +213,113 @@
       "url": "http://git-us.linaro.org/git/toolchain"
     },
     {
-      "acquisition_status": "git_revision_recorded_sources_not_acquired",
+      "acquisition_status": "exact_git_commit_tree_and_blobs_retained",
       "applies_to_linux": true,
       "branch": "release/2.25/master",
       "filespec": "glibc.git",
       "mingw_only": "no",
       "name": "glibc",
+      "retained_git_source": {
+        "bare_cache": "/var/lib/a733-toolchain-git-20261107/glibc.git",
+        "commit": "6b95c49d8e2b0bea8b2edcf13827e37e477fb19e",
+        "complete_tracked_objects_verified": true,
+        "full_history_retained": false,
+        "origin_kind": "upstream_repository",
+        "pack_and_index_files": [
+          {
+            "bytes": 436948,
+            "path": "glibc.git/objects/pack/pack-234a4cfaa0afc6416ca11df920555e5313702eac.idx",
+            "sha256": "b4a2bc1510d044bef643ba24925e44802485cc07dc607be9536cebc8d24c29b1"
+          },
+          {
+            "bytes": 34505971,
+            "path": "glibc.git/objects/pack/pack-234a4cfaa0afc6416ca11df920555e5313702eac.pack",
+            "sha256": "ab1dd870a7b9bbead4217a643ccb191a10b247cd71c486dafcdd5373fafe2adb"
+          }
+        ],
+        "repository_url": "https://sourceware.org/git/glibc.git",
+        "requested_commit": "6b95c49d8e2b0bea8b2edcf13827e37e477fb19e",
+        "shallow_boundary": [
+          "6b95c49d8e2b0bea8b2edcf13827e37e477fb19e"
+        ],
+        "source_signature_verified": false,
+        "tree": "3f389ec45348f0593525c9c019c0b0e9068e5bfb"
+      },
       "revision": "6b95c49d8e2b0bea8b2edcf13827e37e477fb19e",
       "source_format": "git",
       "url": "http://git-us.linaro.org/git/toolchain"
     },
     {
-      "acquisition_status": "git_revision_recorded_sources_not_acquired",
+      "acquisition_status": "exact_git_commit_tree_and_blobs_retained",
       "applies_to_linux": true,
       "branch": "gdb-8.2-branch",
       "filespec": "binutils-gdb.git",
       "mingw_only": "no",
       "name": "gdb",
+      "retained_git_source": {
+        "bare_cache": "/var/lib/a733-toolchain-git-20261107/gdb.git",
+        "commit": "5ed1741ab59763dfaa4ea5ac9ac5ff928f958ce5",
+        "complete_tracked_objects_verified": true,
+        "full_history_retained": false,
+        "origin_kind": "upstream_repository",
+        "pack_and_index_files": [
+          {
+            "bytes": 877136,
+            "path": "gdb.git/objects/pack/pack-9b63ca912517c20ab5d5db911dc1f974e0968684.idx",
+            "sha256": "8ca7ff71e734d604a1dcabeebefde416528a479885ccd22b66cfefe91d0fa676"
+          },
+          {
+            "bytes": 65504933,
+            "path": "gdb.git/objects/pack/pack-9b63ca912517c20ab5d5db911dc1f974e0968684.pack",
+            "sha256": "12c4e9a896b6379ca4baa35bdfcc4b03cecacbc8030be3b867cbf2afc224849d"
+          }
+        ],
+        "repository_url": "https://sourceware.org/git/binutils-gdb.git",
+        "requested_commit": "5ed1741ab59763dfaa4ea5ac9ac5ff928f958ce5",
+        "shallow_boundary": [
+          "5ed1741ab59763dfaa4ea5ac9ac5ff928f958ce5"
+        ],
+        "source_signature_verified": false,
+        "tree": "95668921da5b435e6d5bba3707bcafa8a8bc433c"
+      },
       "revision": "5ed1741ab59763dfaa4ea5ac9ac5ff928f958ce5",
       "source_format": "git",
       "staticlink": "yes",
       "url": "http://git-us.linaro.org/git/toolchain"
     },
     {
-      "acquisition_status": "git_revision_recorded_sources_not_acquired",
+      "acquisition_status": "exact_git_commit_tree_and_blobs_retained",
       "applies_to_linux": true,
       "branch": "gdb-8.2-branch",
       "filespec": "binutils-gdb.git",
       "mingw_only": "no",
       "name": "gdbserver",
+      "retained_git_source": {
+        "bare_cache": "/var/lib/a733-toolchain-git-20261107/gdb.git",
+        "commit": "5ed1741ab59763dfaa4ea5ac9ac5ff928f958ce5",
+        "complete_tracked_objects_verified": true,
+        "full_history_retained": false,
+        "origin_kind": "upstream_repository",
+        "pack_and_index_files": [
+          {
+            "bytes": 877136,
+            "path": "gdb.git/objects/pack/pack-9b63ca912517c20ab5d5db911dc1f974e0968684.idx",
+            "sha256": "8ca7ff71e734d604a1dcabeebefde416528a479885ccd22b66cfefe91d0fa676"
+          },
+          {
+            "bytes": 65504933,
+            "path": "gdb.git/objects/pack/pack-9b63ca912517c20ab5d5db911dc1f974e0968684.pack",
+            "sha256": "12c4e9a896b6379ca4baa35bdfcc4b03cecacbc8030be3b867cbf2afc224849d"
+          }
+        ],
+        "repository_url": "https://sourceware.org/git/binutils-gdb.git",
+        "requested_commit": "5ed1741ab59763dfaa4ea5ac9ac5ff928f958ce5",
+        "shallow_boundary": [
+          "5ed1741ab59763dfaa4ea5ac9ac5ff928f958ce5"
+        ],
+        "source_signature_verified": false,
+        "tree": "95668921da5b435e6d5bba3707bcafa8a8bc433c"
+      },
       "revision": "5ed1741ab59763dfaa4ea5ac9ac5ff928f958ce5",
       "source_format": "git",
       "staticlink": "yes",
@@ -196,6 +327,8 @@
     }
   ],
   "counts": {
+    "acquired_archive_inputs": 4,
+    "acquired_unique_git_inputs_including_abe": 4,
     "components": 13,
     "deduplicated_shared_input_references": [
       "gdb",
@@ -203,11 +336,12 @@
     ],
     "linux_component_references": 10,
     "mingw_only_components": 3,
+    "remaining_unique_git_inputs": 2,
     "total_unique_linux_source_inputs_including_abe": 10,
     "unique_linux_source_inputs": 9
   },
   "manifestid": "93ea85069c542e8a0a12578512ed04fb7c60fcc3",
-  "remaining": "GCC, binutils, glibc, GDB/GDBserver, DejaGNU and ABE Git inputs remain unacquired; host build dependency closure is outside this partial inventory.",
+  "remaining": "Exact GCC and DejaGNU Git sources remain unacquired; host build dependency closure and binary rebuild are outside this partial inventory.",
   "schema": 1,
   "source_signature_verified": false,
   "target": "arm-linux-gnueabi"

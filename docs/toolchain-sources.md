@@ -63,19 +63,55 @@ The acquisition admitted the unchanged builder 3 GiB free-space floor plus all
 no packages and wrote no physical device. Future source acquisition must measure
 capacity again; no further LV growth or guard reduction is authorized.
 
-## Remaining source inputs and limits
+## Exact Git source snapshots
 
-The following exact Git identities are recorded but source acquisition remains
-open. GDBserver shares the GDB row.
+[Additional acquisition evidence](evidence/toolchain-git-20261107.json) now retains
+Binutils, GDB/GDBserver and glibc from the
+[upstream Git service](https://sourceware.org/gdb/current/), and ABE from the
+explicit third-party mirror
+[Mi-AIoT/linaro-abe](https://github.com/Mi-AIoT/linaro-abe). The ABE commit is the
+exact identity in the authenticated binary manifest; no claim of official mirror
+ownership or signature verification is made.
 
-| Input | Manifest revision |
-| --- | --- |
-| GCC | `56ec6f6b99cc167ff0c2f8e1a2eed33b1edc85d4` |
-| Binutils | `0231dce141801ffcdfef8b7f14cd903a6d3f21ba` |
-| glibc | `6b95c49d8e2b0bea8b2edcf13827e37e477fb19e` |
-| GDB/GDBserver | `5ed1741ab59763dfaa4ea5ac9ac5ff928f958ce5` |
-| DejaGNU | `21f2ff7c065d7ead6aec3e5ed528ecb0f9eadbac` |
-| ABE | `a09711bff8dc7781dd7192b370bdd630b296d45e` |
+Each private bare cache contains a permanent `refs/pinned/manifest`, the exact
+requested commit and tree, and all tracked blobs. `git fsck --full --strict`
+passes with a declared depth-one boundary. Full parent ancestry is absent.
+Pack/index SHA-256 values are recorded separately from immutable Git content
+identities. No checkout, source execution or compiler build was performed.
+Thirty-five `COPYING*` paths were read and pinned across the four source caches;
+some share contents between repositories.
+
+| Input | Builder bare cache | Exact tree |
+| --- | --- | --- |
+| Binutils | `/var/lib/a733-toolchain-git-20261107/binutils.git` | `193eea30265348d6e413321287ad706953bc11a1` |
+| GDB/GDBserver | `/var/lib/a733-toolchain-git-20261107/gdb.git` | `95668921da5b435e6d5bba3707bcafa8a8bc433c` |
+| glibc | `/var/lib/a733-toolchain-git-20261107/glibc.git` | `3f389ec45348f0593525c9c019c0b0e9068e5bfb` |
+| ABE | `/var/lib/a733-toolchain-abe-20261107/abe.git` | `6c7a470c318260fc4d14cd75616d40ec57b64725` |
+
+The following read-only cache check passed on the builder; repeat with another
+retained cache path from the table as needed:
+
+```sh
+export GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null
+SOURCE_CACHE=/var/lib/a733-toolchain-git-20261107/gdb.git
+sudo env GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null \
+  git --git-dir="$SOURCE_CACHE" rev-parse 'refs/pinned/manifest^{commit}' 'refs/pinned/manifest^{tree}'
+sudo env GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null \
+  git --git-dir="$SOURCE_CACHE" fsck --full --strict --no-reflogs
+```
+
+The caches use `refs/pinned/manifest`; an unborn default `HEAD` notice is
+expected. The fetched source identities below remain those recorded by the publisher.
+GDBserver shares the GDB row. GCC and DejaGNU remain unacquired.
+
+| Input | Manifest revision | Acquisition |
+| --- | --- | --- |
+| GCC | `56ec6f6b99cc167ff0c2f8e1a2eed33b1edc85d4` | Open |
+| Binutils | `0231dce141801ffcdfef8b7f14cd903a6d3f21ba` | Retained |
+| glibc | `6b95c49d8e2b0bea8b2edcf13827e37e477fb19e` | Retained |
+| GDB/GDBserver | `5ed1741ab59763dfaa4ea5ac9ac5ff928f958ce5` | Retained |
+| DejaGNU | `21f2ff7c065d7ead6aec3e5ed528ecb0f9eadbac` | Open |
+| ABE | `a09711bff8dc7781dd7192b370bdd630b296d45e` | Retained |
 
 On November 7, actual builder GET requests for the historical Linaro GCC source
 archive and its `.asc` URL redirected to `https://www.linaro.org/contact/` and
@@ -83,6 +119,20 @@ returned 60,125-byte HTML pages with HTTP 200. These were recorded and rejected
 as source. A successful HTTP status alone does not establish an archive or
 signature. Locate an exact retained upstream/mirror source and verify its
 relationship to the recorded revision before closing this gap.
+
+The exact GCC commit was also requested from the
+[primary GCC repository](https://gcc.gnu.org/git.html); that fetch failed with
+`upload-pack: not our ref`. The single bounded DejaGNU attempt against
+`gnu-mirror-unofficial/dejagnu` rejected its exact commit the same way. Legacy
+Linaro Git probes timed out or failed TLS handshakes. These failures are retained;
+no alternate revision was substituted. An exact retained source copy is still
+needed for each open row.
+
+The Git phases used at most two concurrent fetches with one pack/index thread
+each, a 3 GiB runtime disk floor and 1 GiB available-memory floor. All jobs are
+terminal, with no deadline or resource-floor termination. After the final probe,
+21,640,597,504 bytes remain free on the builder. Source object caches and small
+proof records remain outside Git.
 
 This inventory does not establish the compiler's complete build-host dependency
 closure, a rebuild of the compiler binary, legal sufficiency or public binary

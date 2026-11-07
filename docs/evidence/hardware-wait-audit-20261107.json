@@ -1,0 +1,60 @@
+{
+  "classification": "Blocked audit after useful off-board preparation; release objective remains incomplete",
+  "condition_snapshots": [
+    {
+      "current_board_action_sha256": "ae5e340e8ac90afa823f6cf662e57a387244ecf2a3d42fc3fd8acfe33c8858d5",
+      "snapshot": "1ed5d5e"
+    },
+    {
+      "current_board_action_sha256": "ae5e340e8ac90afa823f6cf662e57a387244ecf2a3d42fc3fd8acfe33c8858d5",
+      "snapshot": "9381f96"
+    },
+    {
+      "current_board_action_sha256": "ae5e340e8ac90afa823f6cf662e57a387244ecf2a3d42fc3fd8acfe33c8858d5",
+      "snapshot": "current goal turn after exact Git acquisition"
+    }
+  ],
+  "current_goal_turn": "progress: four exact Git source snapshots acquired, verified and documented; required next physical step is unchanged",
+  "goal_complete": false,
+  "goal_objective_unchanged": true,
+  "hardware_acceptance": false,
+  "last_ip_neighbor_observation": [
+    "192.168.1.115 dev eth0 FAILED "
+  ],
+  "last_ip_probe_limit": "One packet to the previously recorded IP did not resolve the known board MAC. This does not prove the board is powered off or absent at another address. No unknown SSH host was trusted.",
+  "last_recorded_board_ip": "192.168.1.115",
+  "local_serial_devices": [],
+  "long_running_delivery_service_role": "Artifact availability only; not a compilation/test wait and not hardware evidence.",
+  "minimum_consecutive_goal_turns_with_same_condition": 3,
+  "new_repair_or_kvm_evidence_recorded": false,
+  "no_computation_job_pending": true,
+  "observed_at_utc": "2026-11-07T14:24:08.066321+00:00",
+  "operator_action": "Follow docs/installed-host-repair-20261107.md with original matching images; supply full serial log path, actual DHCP address and SSH results with both authorized keys. No NVMe reinstall is needed.",
+  "other_external_gaps": [
+    "Exact GCC and DejaGNU source copies unavailable from attempted endpoints; no alternate revisions substituted",
+    "Vendor boot-input licensing/redistribution records remain unresolved"
+  ],
+  "pending_physical_gates": [
+    "Repair and trusted SSH with both keys",
+    "Actual KVM guest CPU/disk/network, VM/vCPU descriptors and restart persistence",
+    "Matched new-candidate boot and independent physical deployment reproduction",
+    "10 cold boots, 10 warm reboots and 24-hour CPU/disk/network/thermal endurance",
+    "SPI original off-device backup and independent recovery before a concrete exact-target yes/no programming proposal; or proven immutable SD fallback with full-card hashes/counters/firmware audit",
+    "Interrupted update, manual rollback, dirty-journal/missing-NVMe recovery and off-device guest restore",
+    "Actual management/time/state/security and NVMe error/role observations"
+  ],
+  "previous_goal_turn": "progress: exact source archives retained and pinned",
+  "provided_hardware_logs": [
+    "05112026-0819-full-boot-and-read-only-checks.txt",
+    "05112026-0833-nvme-info.txt",
+    "05112026-1033-full-boot-and-el2-diagnostic.txt",
+    "05112026-1110-ethernet-diagnostic.txt",
+    "06112026-1612-installer-prep.txt",
+    "07112026-1159-nvme-full-flash.txt",
+    "07112026-1215-a733-host-sd-img-boot.txt"
+  ],
+  "recurring_condition": "Operator has not supplied the existing-install permission-repair/reboot serial log, current DHCP address and verified SSH results. Physical KVM/release tests cannot run through the currently available interfaces.",
+  "release_acceptance": false,
+  "remaining_autonomous_authorized_action_required_now": false,
+  "schema": 1
+}

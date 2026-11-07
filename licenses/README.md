@@ -17,8 +17,8 @@ validated. Archive integrity is checked against the committed lock.
 The Linaro archive contains `gcc-linaro-7.4.1-2019.02-linux-manifest.txt` and
 per-component license documentation. The compiler is a builder input, not part of
 the SD filesystem. [Component-source inventory and acquisition](../docs/toolchain-sources.md)
-now retain four exact manifest-listed archives and eight notice files. Six Git
-source inputs, including GCC and ABE, remain unacquired; full source provenance
+now retain four exact manifest-listed archives and eight notice files. Four additional exact Git snapshots now retain Binutils, GDB/GDBserver, glibc
+and ABE source trees. GCC and DejaGNU remain unacquired; full source provenance
 and compiler rebuild evidence remain open.
 
 The verified time-enabled production root preserves package copyright notices

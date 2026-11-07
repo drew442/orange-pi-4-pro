@@ -1,0 +1,202 @@
+{
+  "acquired_inputs": {
+    "abe": {
+      "bare_cache": "/var/lib/a733-toolchain-abe-20261107/abe.git",
+      "commit": "a09711bff8dc7781dd7192b370bdd630b296d45e",
+      "notice_path_count": 1,
+      "origin_kind": "third_party_mirror",
+      "pack_and_index_files": [
+        {
+          "bytes": 5020,
+          "path": "abe.git/objects/pack/pack-cf19569224b191a74e173c2563fb4c7139584bfc.idx",
+          "sha256": "3dec10dde0520694245af738d8d144ee8ba15b83d659040ef3506d129976972d"
+        },
+        {
+          "bytes": 202787,
+          "path": "abe.git/objects/pack/pack-cf19569224b191a74e173c2563fb4c7139584bfc.pack",
+          "sha256": "29b353c3518cf2071767a7b0e208f114b937c54b0a0ac9dde5623e1d1bed123e"
+        }
+      ],
+      "repository_url": "https://github.com/Mi-AIoT/linaro-abe.git",
+      "shallow_boundary": [
+        "a09711bff8dc7781dd7192b370bdd630b296d45e"
+      ],
+      "tree": "6c7a470c318260fc4d14cd75616d40ec57b64725"
+    },
+    "binutils": {
+      "bare_cache": "/var/lib/a733-toolchain-git-20261107/binutils.git",
+      "commit": "0231dce141801ffcdfef8b7f14cd903a6d3f21ba",
+      "notice_path_count": 16,
+      "origin_kind": "upstream_repository",
+      "pack_and_index_files": [
+        {
+          "bytes": 811392,
+          "path": "binutils.git/objects/pack/pack-77075d22fc560f69d7a2658881d39b54e21aa897.idx",
+          "sha256": "6298b08fcab552a44422ebac941b4920bff8ffd2b047b68edb2484ac0eb6392f"
+        },
+        {
+          "bytes": 66742769,
+          "path": "binutils.git/objects/pack/pack-77075d22fc560f69d7a2658881d39b54e21aa897.pack",
+          "sha256": "983cbdcd57702475b259fb075ce6e235f81417af57f68015efaa276342122a41"
+        }
+      ],
+      "repository_url": "https://sourceware.org/git/binutils-gdb.git",
+      "shallow_boundary": [
+        "0231dce141801ffcdfef8b7f14cd903a6d3f21ba"
+      ],
+      "tree": "193eea30265348d6e413321287ad706953bc11a1"
+    },
+    "gdb": {
+      "bare_cache": "/var/lib/a733-toolchain-git-20261107/gdb.git",
+      "commit": "5ed1741ab59763dfaa4ea5ac9ac5ff928f958ce5",
+      "notice_path_count": 16,
+      "origin_kind": "upstream_repository",
+      "pack_and_index_files": [
+        {
+          "bytes": 877136,
+          "path": "gdb.git/objects/pack/pack-9b63ca912517c20ab5d5db911dc1f974e0968684.idx",
+          "sha256": "8ca7ff71e734d604a1dcabeebefde416528a479885ccd22b66cfefe91d0fa676"
+        },
+        {
+          "bytes": 65504933,
+          "path": "gdb.git/objects/pack/pack-9b63ca912517c20ab5d5db911dc1f974e0968684.pack",
+          "sha256": "12c4e9a896b6379ca4baa35bdfcc4b03cecacbc8030be3b867cbf2afc224849d"
+        }
+      ],
+      "repository_url": "https://sourceware.org/git/binutils-gdb.git",
+      "shallow_boundary": [
+        "5ed1741ab59763dfaa4ea5ac9ac5ff928f958ce5"
+      ],
+      "tree": "95668921da5b435e6d5bba3707bcafa8a8bc433c"
+    },
+    "glibc": {
+      "bare_cache": "/var/lib/a733-toolchain-git-20261107/glibc.git",
+      "commit": "6b95c49d8e2b0bea8b2edcf13827e37e477fb19e",
+      "notice_path_count": 2,
+      "origin_kind": "upstream_repository",
+      "pack_and_index_files": [
+        {
+          "bytes": 436948,
+          "path": "glibc.git/objects/pack/pack-234a4cfaa0afc6416ca11df920555e5313702eac.idx",
+          "sha256": "b4a2bc1510d044bef643ba24925e44802485cc07dc607be9536cebc8d24c29b1"
+        },
+        {
+          "bytes": 34505971,
+          "path": "glibc.git/objects/pack/pack-234a4cfaa0afc6416ca11df920555e5313702eac.pack",
+          "sha256": "ab1dd870a7b9bbead4217a643ccb191a10b247cd71c486dafcdd5373fafe2adb"
+        }
+      ],
+      "repository_url": "https://sourceware.org/git/glibc.git",
+      "shallow_boundary": [
+        "6b95c49d8e2b0bea8b2edcf13827e37e477fb19e"
+      ],
+      "tree": "3f389ec45348f0593525c9c019c0b0e9068e5bfb"
+    }
+  },
+  "alternates_promisor_or_replace_dependencies": false,
+  "classification": "Four exact compiler component Git snapshots retained; no compiler rebuild or hardware acceptance",
+  "compiler_rebuilt": false,
+  "complete_build_dependency_closure": false,
+  "copying_paths_verified": 35,
+  "date": "2026-11-07",
+  "documented-cache-check.log": {
+    "bytes": 82,
+    "path": "out/toolchain-git-20261107/documented-cache-check.log",
+    "sha256": "3d1a584407dec6014b66c5775cbb6152dda9823785ef5d1806459666b4385b98"
+  },
+  "documented-cache-check.stderr": {
+    "bytes": 49,
+    "path": "out/toolchain-git-20261107/documented-cache-check.stderr",
+    "sha256": "0c336371a0e24d5379aa140bf5ff55c1428e625ba9603446f4054ef4184a20ef"
+  },
+  "executed_scripts": {
+    "fetch-abe.py": {
+      "bytes": 5555,
+      "path": "out/toolchain-git-20261107/fetch-abe.py",
+      "sha256": "416c17b3b087a30cd8d385eb541db9705a934b21c1a86674a870d65be04b3f36"
+    },
+    "fetch-dejagnu.py": {
+      "bytes": 5574,
+      "path": "out/toolchain-git-20261107/fetch-dejagnu.py",
+      "sha256": "e2fc70e6e26f431ca61790e940d2686a5ba7d9b2fc6e4974fe6f46ba0add30a2"
+    },
+    "fetch.py": {
+      "bytes": 5736,
+      "path": "out/toolchain-git-20261107/fetch.py",
+      "sha256": "b4ef63bba1bbfcf3aaeb2371c6d72a3a917a2679f64464c2d6de89e454a53287"
+    }
+  },
+  "final_builder_free_bytes": 21640597504,
+  "full_parent_ancestry_retained": false,
+  "full_tracked_tree_objects_verified": true,
+  "gitlinks_or_gitmodules": false,
+  "hardware_acceptance": false,
+  "independent_review": {
+    "bytes": 30548,
+    "model": "gpt-6.1-sol",
+    "path": "out/toolchain-git-20261107/independent-review.json",
+    "reasoning_effort": "high",
+    "result": "pass",
+    "sha256": "9d140c1f92b161199a58f0c3f9f819e28cb26a848eebce471be599cebc54c9c5"
+  },
+  "lfs_attributes_or_pointer_candidates": false,
+  "limits": [
+    "Exact manifest IDs and complete tracked snapshot contents are retained with explicit shallow boundaries; history is incomplete.",
+    "ABE uses an explicitly identified third-party mirror; no official publisher or signature claim.",
+    "GCC and DejaGNU exact-revision requests failed; no alternative revision substituted.",
+    "Vendor firmware redistribution grants, physical repair/SSH/KVM, boot/endurance/recovery and independent deployment remain open."
+  ],
+  "packages_installed": false,
+  "physical_device_writes": false,
+  "prior_binary_manifest_evidence": "docs/evidence/toolchain-sources-20261107.json",
+  "receipts": {
+    "fetch-abe-receipt.json": {
+      "bytes": 4698,
+      "path": "out/toolchain-git-20261107/fetch-abe-receipt.json",
+      "sha256": "7ff091af7f4e180f114bdda69d39d5186db743bf5332a743367c00093a10b279"
+    },
+    "fetch-dejagnu-receipt.json": {
+      "bytes": 2814,
+      "path": "out/toolchain-git-20261107/fetch-dejagnu-receipt.json",
+      "sha256": "46bcac2ed58fe77bd40a7757ef8d4f2ecdfdac1f4dd4a477f386534df773fc03"
+    },
+    "fetch-receipt.json": {
+      "bytes": 23620,
+      "path": "out/toolchain-git-20261107/fetch-receipt.json",
+      "sha256": "385cab33e97cfe10f8dccf3c7c837163f8ec9634ed41a914f3d66419b34f26fe"
+    }
+  },
+  "schema": 1,
+  "source_checkout_or_execution": false,
+  "source_endpoint_probes": {
+    "bytes": 869,
+    "path": "out/toolchain-git-20261107/probes.jsonl",
+    "sha256": "e75595b76c960be53f6bd99536af96058bd60c936f13dec9f30ca3358ef00ff9"
+  },
+  "source_signatures_verified": false,
+  "tracked_source_entries": {
+    "abe": 134,
+    "binutils": 29149,
+    "gdb": 31520,
+    "glibc": 15743
+  },
+  "unacquired_inputs": {
+    "dejagnu": {
+      "error": "fetch failed",
+      "requested_commit": "21f2ff7c065d7ead6aec3e5ed528ecb0f9eadbac",
+      "status": "failed",
+      "url": "https://github.com/gnu-mirror-unofficial/dejagnu.git"
+    },
+    "gcc": {
+      "error": "fetch failed",
+      "requested_commit": "56ec6f6b99cc167ff0c2f8e1a2eed33b1edc85d4",
+      "status": "failed",
+      "url": "https://gcc.gnu.org/git/gcc.git"
+    }
+  },
+  "updated_component_inventory": {
+    "bytes": 13895,
+    "path": "configs/linaro-source-inputs.lock.json",
+    "sha256": "feac3b1883e95473806624f7ee1c6da58e77fa6190536c1ea30586cb5f6e70a0"
+  }
+}

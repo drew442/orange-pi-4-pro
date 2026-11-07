@@ -6,6 +6,10 @@ independently reproduced deployment remain incomplete.
 
 ## Current board action
 
+The coordinator is [blocked on recurring missing hardware evidence](evidence/hardware-wait-audit-20261107.json).
+Off-board preparation has progressed; release acceptance still requires the
+operator's repair/boot log and a trusted current board address.
+
 Apply the [existing-install machine-id repair](installed-host-repair-20261107.md),
 then boot the **same deployed host SD**. Return the complete serial log, DHCP
 address and SSH results with both authorized keys. **Do not reinstall NVMe to
@@ -105,8 +109,8 @@ package exports and separate dated repeats. Second production roots/state/bootst
 timestamp/identity differences; independent deployment remains unfinished. All 479 userspace source archives
 are acquired, not compiled. [Licensing evidence for the 26 vendor boot inputs](evidence/vendor-boot-license-inventory-20261106.json)
 remains incomplete. [Compiler-source inventory](toolchain-sources.md) now pins
-four acquired manifest-listed archives and eight notices; six Git source inputs
-remain unacquired. [Userspace notices](userspace-notices.md) resolve for all 221
+four acquired manifest-listed archives/eight notices and four exact Git
+snapshots/35 notice paths. GCC and DejaGNU source inputs remain unacquired. [Userspace notices](userspace-notices.md) resolve for all 221
 packages; notice presence does not establish legal sufficiency. No public
 redistribution clearance is claimed.
 
