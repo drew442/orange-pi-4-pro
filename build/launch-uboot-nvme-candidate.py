@@ -39,6 +39,8 @@ HOST_LOCK = 'configs/builder-replay-packages-20261106.lock.tsv'
 PROBE_SHA = 'ce565b23ac0b927e54fbfc057bee69ae95d12ba930a5c5421699538e9da14fea'
 ENV = {'PATH': '/usr/sbin:/usr/bin:/sbin:/bin', 'HOME': '/nonexistent', 'LC_ALL': 'C', 'TZ': 'UTC'}
 TIMEOUT = 1800
+RAM_LIMIT = 8 * 1024**3
+RAM_ADMISSION = 4 * 1024**3
 
 
 def require(value, message):
@@ -95,10 +97,14 @@ def phase_path(tag):
     return BASE / ('uboot-nvme-component-' + tag)
 
 
-def plan(tag, manifest):
+def plan(tag, manifest, ram_work=False):
     phase = phase_path(tag)
     return {'schema': 1, 'classification': 'component candidate only; no flash or hardware acceptance',
-            'phase': str(phase), 'inputs': manifest, 'candidate': 'project/out/uboot-nvme-candidate-01',
+            'phase': str(phase), 'inputs': manifest, 'work_mode': 'ram' if ram_work else 'disk',
+            'ram_work_limit_bytes': RAM_LIMIT if ram_work else None,
+            'minimum_initial_available_memory_bytes': RAM_ADMISSION if ram_work else None,
+            'ram_retention': 'verified full work.tar.gz plus component-retained review files' if ram_work else None,
+            'candidate': 'project/out/uboot-nvme-candidate-01',
             'source_home': str(SOURCE_HOME), 'provenance': str(PROVENANCE), 'compilation_jobs': 2,
             'minimum_initial_free_bytes_exclusive': 4_000_000_000,
             'additional_budget': 'inner recipe must pass complete single-construction budget before output creation',
@@ -163,7 +169,7 @@ def command(shared, builder, phase):
     return args + ['/bin/sh', '-c', '/bin/sh /a733-probe.sh && exec /usr/bin/python3 -I -B /a733-install.sh']
 
 
-def preflight(shared, phase, contents):
+def preflight(shared, phase, contents, ram_work=False):
     require(os.getuid() == os.geteuid() == os.getgid() == os.getegid() == 0, 'initial-root required')
     require(Path('/proc/self/uid_map').read_text().split() == ['0', '0', '4294967295'], 'initial user namespace required')
     release = dict(line.split('=', 1) for line in Path('/etc/os-release').read_text().splitlines() if '=' in line)
@@ -171,7 +177,7 @@ def preflight(shared, phase, contents):
             and os.uname().machine == 'x86_64', 'Ubuntu22.04AMD64 required')
     shared.safe_directory(BASE, trusted=True)
     require(not os.path.lexists(phase), 'candidate phase exists')
-    require(shared.resource_sample()['free_bytes'] > 4_000_000_000, 'need more than 4 GB before staging')
+    check_admission(shared.resource_sample(), ram_work)
     shared.frozen_root_directory(shared.ROOT)
     shared.safe_directory(SOURCE_HOME)
     info = SOURCE_HOME.lstat()
@@ -194,30 +200,176 @@ def preflight(shared, phase, contents):
     return module(str(shared.HELPER), helper), before
 
 
-def execute(shared, builder, project, phase, manifest, contents, before, report):
-    phase.mkdir(mode=0o700)
-    (phase / 'work').mkdir(mode=0o700)
-    os.chown(phase / 'work', shared.UID_BASE, shared.UID_BASE)
-    inputs = phase / 'inputs'
-    inputs.mkdir(mode=0o700)
-    bundle = inputs / 'project.bundle'
-    subprocess.run(['git', '-C', str(project), 'bundle', 'create', str(bundle), 'HEAD'], env=ENV, check=True)
-    os.chmod(bundle, 0o444)
-    raw_bundle = shared.regular_bytes(bundle, owner=0)
-    # Bundle plus checkout must fit above the existing4GB component start floor.
-    require(shared.resource_sample()['free_bytes'] > 4_000_000_000 + 2 * len(raw_bundle), 'bundle/checkout staging budget exceeded')
-    shared.atomic_json(inputs / 'manifest.json', manifest)
-    with (inputs / 'run.py').open('xb') as stream:
-        stream.write(inner_program(manifest['revision']))
-    os.chmod(inputs / 'run.py', 0o444)
-    os.chmod(inputs, 0o555)
-    shared.atomic_json(phase / 'source-manifest.json', manifest)
-    shared.atomic_json(phase / 'host-packages.before.json', {'sha256': hashlib.sha256(before).hexdigest()})
-    args = command(shared, builder, phase)
-    report.update(success=False, command=args, bundle=pin(raw_bundle), resources=[])
+def check_admission(sample, ram_work):
+    require(sample['free_bytes'] > 4_000_000_000, 'need more than 4 GB before staging')
+    if ram_work:
+        require(sample['available_memory_bytes'] >= RAM_ADMISSION, 'RAM work needs at least 4 GiB MemAvailable')
+
+
+def monitored(shared, args, phase, report, label):
+    """Bound auxiliary processes with the same resource floors as compilation."""
     proc = None
-    handlers = {s: signal.signal(s, shared.interrupted) for s in (signal.SIGTERM, signal.SIGINT, signal.SIGHUP)}
+    with (phase / (label + '.log')).open('xb') as stream:
+        try:
+            proc = subprocess.Popen(args, stdout=stream, stderr=subprocess.STDOUT,
+                                    env=ENV, start_new_session=True)
+            start = time.monotonic()
+            while True:
+                sample = shared.resource_sample()
+                report.setdefault('auxiliary_resources', []).append(dict(sample, operation=label))
+                check_resources(sample, time.monotonic() - start)
+                if proc.poll() is not None:
+                    break
+                time.sleep(1)
+            require(proc.wait(timeout=15) == 0, label + ' failed; inspect retained log')
+            stream.flush()
+            os.fsync(stream.fileno())
+        finally:
+            shared.stop_process(proc)
+
+
+def work_mount_identity(work):
+    # Tags have no whitespace/escape characters; mountinfo paths are exact here.
+    rows = [line.split() for line in Path('/proc/self/mountinfo').read_text().splitlines()
+            if line.split()[4] == str(work)]
+    require(len(rows) == 1, 'expected exactly one work mount')
+    row = rows[0]
+    require(row[row.index('-') + 1] == 'tmpfs' and row[3] == '/'
+            and {'rw', 'nodev', 'nosuid'} <= set(row[5].split(',')), 'unexpected work mount type/options')
+    return row[:5]
+
+
+def mount_ram_work(shared, phase):
+    work = phase / 'work'
+    shared.safe_directory(phase, trusted=True)
+    shared.safe_directory(work)
+    require(not any(work.iterdir()) and not shared.phase_mounts(phase), 'work must be fresh and unmounted')
+    check_admission(shared.resource_sample(), True)
+    subprocess.run(['mount', '-t', 'tmpfs', '-o',
+                    'size=8G,uid=1048576,gid=1048576,mode=0700,nodev,nosuid',
+                    'tmpfs', str(work)], env=ENV, check=True, timeout=15)
+    return work_mount_identity(work)
+
+
+def fsync_directory(path):
+    fd = os.open(path, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
     try:
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+
+
+def fsync_review_tree(path):
+    """Durably retain copied files without following symlinks or special files."""
+    def descend(directory):
+        for name in os.listdir(directory):
+            before = os.stat(name, dir_fd=directory, follow_symlinks=False)
+            if stat.S_ISLNK(before.st_mode):
+                continue
+            is_directory = stat.S_ISDIR(before.st_mode)
+            require(is_directory or stat.S_ISREG(before.st_mode), 'special file in retained review tree')
+            flags = os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK
+            if is_directory:
+                flags |= os.O_DIRECTORY
+            child = os.open(name, flags, dir_fd=directory)
+            try:
+                opened = os.fstat(child)
+                require((opened.st_dev, opened.st_ino, opened.st_mode) ==
+                        (before.st_dev, before.st_ino, before.st_mode), 'retained review entry changed')
+                if is_directory:
+                    descend(child)
+                else:
+                    os.fsync(child)
+            finally:
+                os.close(child)
+        # Directory entries must follow their durable children.
+        os.fsync(directory)
+    root = os.open(path, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+    try:
+        descend(root)
+    finally:
+        os.close(root)
+
+
+def retain_ram_work(shared, phase, report, identity):
+    """Leave RAM mounted on any retention error; archive is the complete record."""
+    work = phase / 'work'
+    require(not shared.mapped_processes(), 'mapped process remains; cannot retain/unmount RAM work')
+    require(work_mount_identity(work) == identity, 'RAM work mount identity changed')
+    mounts = shared.phase_mounts(phase)
+    require(len(mounts) == 1 and mounts[0].split()[4] == str(work), 'unexpected remaining phase mounts')
+    archive = phase / 'work.tar.gz'
+    require(not os.path.lexists(archive) and not os.path.lexists(phase / 'component-retained'),
+            'retention output already exists')
+    tar = ['tar', '--numeric-owner', '--acls', '--xattrs', '--xattrs-include=*']
+    monitored(shared, tar + ['--format=pax', '--create', '--gzip', '--file', str(archive),
+                             '--directory', str(work), '.'], phase, report, 'retention-archive')
+    monitored(shared, tar + ['--compare', '--gzip', '--file', str(archive),
+                             '--directory', str(work)], phase, report, 'retention-compare')
+    retained = phase / 'component-retained'
+    retained.mkdir(mode=0o700)
+    component = work / 'project/out/uboot-nvme-candidate-01'
+    for index, source in enumerate((component / 'artifacts', component / 'logs',
+                                    component / 'candidate-manifest.json', work / 'host-script')):
+        if os.path.lexists(source):
+            # cp -a preserves numeric ownership, symlinks, hard links, ACLs and xattrs.
+            monitored(shared, ['cp', '-a', '--', str(source), str(retained / source.name)],
+                      phase, report, 'retention-copy-' + str(index))
+    fsync_review_tree(retained)
+    with archive.open('rb') as stream:
+        os.fsync(stream.fileno())
+    fsync_directory(phase)
+    monitored(shared, ['sha256sum', '--', str(archive)], phase, report, 'retention-sha256')
+    digest = (phase / 'retention-sha256.log').read_text().split()[0]
+    require(re.fullmatch('[0-9a-f]{64}', digest), 'invalid archive digest')
+    report['ram_retention'] = {'archive': str(archive), 'bytes': archive.stat().st_size,
+                               'sha256': digest, 'full_tar_compare_verified': True,
+                               'review_files': str(retained)}
+    # Persist the recovery record while the full source tree still exists in RAM.
+    shared.atomic_json(phase / 'retained-awaiting-unmount.json',
+                       dict(report, success=False, state='retained-awaiting-unmount'))
+    fsync_directory(phase)
+    require(not shared.mapped_processes(), 'mapped process appeared before RAM unmount')
+    require(work_mount_identity(work) == identity, 'RAM work mount identity changed before unmount')
+    mounts = shared.phase_mounts(phase)
+    require(len(mounts) == 1 and mounts[0].split()[4] == str(work), 'unexpected mount before RAM unmount')
+    subprocess.run(['umount', '--', str(work)], env=ENV, check=True, timeout=15)
+    report['mounted_work_path'] = None
+
+
+def execute(shared, builder, project, phase, manifest, contents, before, report, ram_work=False):
+    # Never journal over an old attempt, even when staging fails immediately.
+    shared.safe_directory(phase.parent, trusted=True)
+    phase.mkdir(mode=0o700)
+    report.update(success=False, state='staging', resources=[])
+    proc, ram_identity = None, None
+    handlers = {}
+    try:
+        for sig in (signal.SIGTERM, signal.SIGINT, signal.SIGHUP):
+            handlers[sig] = signal.signal(sig, shared.interrupted)
+        (phase / 'work').mkdir(mode=0o700)
+        os.chown(phase / 'work', shared.UID_BASE, shared.UID_BASE)
+        if ram_work:
+            # Set before mount: if mount verification fails, recovery still names the path.
+            report['mounted_work_path'] = str(phase / 'work')
+            ram_identity = mount_ram_work(shared, phase)
+        inputs = phase / 'inputs'
+        inputs.mkdir(mode=0o700)
+        bundle = inputs / 'project.bundle'
+        subprocess.run(['git', '-C', str(project), 'bundle', 'create', str(bundle), 'HEAD'], env=ENV, check=True)
+        os.chmod(bundle, 0o444)
+        raw_bundle = shared.regular_bytes(bundle, owner=0)
+        # Bundle plus checkout must fit above the existing 4 GB component start floor.
+        require(shared.resource_sample()['free_bytes'] > 4_000_000_000 + 2 * len(raw_bundle), 'bundle/checkout staging budget exceeded')
+        shared.atomic_json(inputs / 'manifest.json', manifest)
+        with (inputs / 'run.py').open('xb') as stream:
+            stream.write(inner_program(manifest['revision']))
+        os.chmod(inputs / 'run.py', 0o444)
+        os.chmod(inputs, 0o555)
+        shared.atomic_json(phase / 'source-manifest.json', manifest)
+        shared.atomic_json(phase / 'host-packages.before.json', {'sha256': hashlib.sha256(before).hexdigest()})
+        args = command(shared, builder, phase)
+        report.update(command=args, bundle=pin(raw_bundle), state='running')
         with (phase / 'runtime.log').open('xb') as stream:
             proc = subprocess.Popen(args, stdout=stream, stderr=subprocess.STDOUT, env=ENV, start_new_session=True)
             start = time.monotonic()
@@ -249,16 +401,38 @@ def execute(shared, builder, project, phase, manifest, contents, before, report)
         report['error'] = repr(error)
         raise
     finally:
-        shared.stop_process(proc)
-        report['mapped_processes_final'] = shared.mapped_processes()
-        report['phase_mounts_final'] = shared.phase_mounts(phase)
-        after = subprocess.check_output(shared.INVENTORY, env=ENV)
-        report['host_inventory_unchanged'] = before == after
-        report['success'] = (report['success'] and before == after and not report['mapped_processes_final'] and not report['phase_mounts_final'])
-        shared.atomic_json(phase / 'receipt.json', report)
-        for s, handler in handlers.items():
-            signal.signal(s, handler)
-    require(report['success'], 'candidate final cleanup/inventory checks failed')
+        # Cleanup errors must never mask the original build/staging exception.
+        try:
+            try:
+                shared.stop_process(proc)
+                require(not shared.mapped_processes(), 'mapped process remains after candidate stop')
+                if ram_work and ram_identity is not None:
+                    retain_ram_work(shared, phase, report, ram_identity)
+                elif ram_work and report.get('mounted_work_path'):
+                    raise ValueError('RAM mount setup incomplete; inspect work mount before recovery')
+            except BaseException as error:
+                report['success'] = False
+                report['retention_error' if ram_work else 'cleanup_error'] = repr(error)
+            try:
+                report['mapped_processes_final'] = shared.mapped_processes()
+                report['phase_mounts_final'] = shared.phase_mounts(phase)
+                after = subprocess.check_output(shared.INVENTORY, env=ENV)
+                report['host_inventory_unchanged'] = before == after
+                report['final_resources'] = shared.resource_sample()
+                report['success'] = (report['success'] and before == after
+                                     and not report['mapped_processes_final'] and not report['phase_mounts_final']
+                                     and report['final_resources']['free_bytes'] > 4_000_000_000)
+            except BaseException as error:
+                report.update(success=False, final_check_error=repr(error))
+            report['state'] = 'complete' if report['success'] else 'failed'
+            try:
+                shared.atomic_json(phase / 'receipt.json', report)
+            except BaseException as error:
+                report.update(success=False, receipt_error=repr(error))
+        finally:
+            for s, handler in handlers.items():
+                signal.signal(s, handler)
+    require(report['success'], 'candidate final cleanup/inventory/retention checks failed')
 
 
 def main(argv=None):
@@ -266,18 +440,19 @@ def main(argv=None):
     parser.add_argument('--project', type=Path, required=True)
     parser.add_argument('--tag', required=True)
     parser.add_argument('--plan', action='store_true')
+    parser.add_argument('--ram-work', action='store_true', help='build in bounded 8 GiB tmpfs and retain a verified full archive')
     options = parser.parse_args(argv)
     require(sys.flags.isolated and sys.flags.dont_write_bytecode, 'invoke Python with -I -B')
     manifest, contents = committed_sources(options.project)
     require(read_source(Path(__file__).absolute()) == contents[SELF], 'executing launcher differs from committed source')
-    report = plan(options.tag, manifest)
+    report = plan(options.tag, manifest, options.ram_work)
     if options.plan:
         print(json.dumps(report, sort_keys=True))
         return
     shared = module(SHARED, contents[SHARED])
     phase = phase_path(options.tag)
-    builder, before = preflight(shared, phase, contents)
-    execute(shared, builder, options.project, phase, manifest, contents, before, report)
+    builder, before = preflight(shared, phase, contents, options.ram_work)
+    execute(shared, builder, options.project, phase, manifest, contents, before, report, options.ram_work)
     print(json.dumps({'success': True, 'phase': str(phase)}))
 
 

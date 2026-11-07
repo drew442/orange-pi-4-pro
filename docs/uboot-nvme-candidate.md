@@ -55,6 +55,39 @@ unchanged final input validation. Runtime abort floors remain 3 GB disk and
 Builder resources are independent of Orange Pi performance; no hardware
 benchmark is needed.
 
+## RAM workspace option
+
+The [first actual attempt](evidence/uboot-nvme-first-attempt-20261107.json)
+stopped before full U-Boot compilation: its new validator required a disabled OTA
+comment absent from the authenticated configuration. The corrected validator
+accepts the absent unknown symbol and rejects every value assignment; complete
+configuration equality still permits only the BOOTCOMMAND change. The failed
+attempt's source, compiler, logs and receipts remain intact.
+
+Use `--ram-work` with a fresh tag to construct this small component in builder
+RAM. It requires at least 4 GiB MemAvailable initially, retains the 1 GB runtime
+memory floor, and uses a root-private tmpfs with an 8 GiB maximum size. The pinned
+construction estimate is about 1.67 GB; the maximum is not an allocation.
+Readonly input filesystems retain their >4 GB guard. Construction reservation
+applies to the writable output filesystem, including the unchanged >4 GB final
+reserve. Disk mode retains the same shared-filesystem admission rule.
+
+```sh
+sudo python3 -I -B build/launch-uboot-nvme-candidate.py \
+  --project "$PWD" --tag ram-02 --ram-work --plan
+sudo python3 -I -B build/launch-uboot-nvme-candidate.py \
+  --project "$PWD" --tag ram-02 --ram-work
+```
+
+Before unmounting, the launcher archives the entire workspace as `work.tar.gz`,
+compares it against the live tree, fsyncs it and records its size/hash. Review
+copies are retained under `component-retained/`; they are fsynced as well. The
+immutable recovery record and final receipt have distinct names. If retention
+fails, `mounted_work_path` and `retention_error` identify the still-mounted
+workspace to recover before removing its mount. A source/compiler path inside
+an unmounted RAM workspace must be restored from this archive before reuse.
+Physical SPI and NVMe are unaffected by this build-host option.
+
 ## Separate host script
 
 `configs/spi-nvme-host-boot.cmd` is compiled into a separate, uninstalled legacy

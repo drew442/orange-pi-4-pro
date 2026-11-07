@@ -1,0 +1,113 @@
+{
+  "schema": 1,
+  "date": "2026-11-07",
+  "classification": "Failed first NVMe component preparation, before full U-Boot compilation; no hardware acceptance",
+  "success": false,
+  "source_revision": "9e075606acc1ed3addf2eb712e7597ad0ace3261",
+  "builder_phase": "/var/lib/a733-clean-replay-20261106/uboot-nvme-component-first-01",
+  "outer_returncode": 1,
+  "component_result": {
+    "schema": 1,
+    "candidate": "a733-nvme-v1",
+    "component_build_success": false,
+    "hardware_acceptance": false,
+    "deployment_authorized": false,
+    "failure": "ValueError: Missing immutable boot safeguard: b'# CONFIG_SUNXI_OTA_TURNNING is not set'"
+  },
+  "capacity_budget": {
+    "schema": 1,
+    "parts": {
+      "source_archive_upper_bytes": 165854248,
+      "source_expansion_allocation_bytes": 310366208,
+      "compiler_archive_copy_bytes": 109519380,
+      "compiler_expansion_allocation_bytes": 673882112,
+      "objects_and_compiler_outputs_allowance_bytes": 268435456,
+      "private_pack_and_outputs_allowance_bytes": 70851126,
+      "logs_and_provenance_allowance_bytes": 67108864
+    },
+    "source_members": 14806,
+    "compiler_members": 7491,
+    "estimated_construction_bytes": 1666017394,
+    "required_free_bytes": 5666017395,
+    "final_validation_disk_reserve_bytes": 4000000001,
+    "runtime_disk_floor_bytes": 3000000000,
+    "runtime_ram_floor_bytes": 1000000000,
+    "scope": "One component construction; outer source staging is additional. Fixed allowances are estimates guarded by live sampling."
+  },
+  "failure_cause": "Validator required an explicit disabled OTA comment; authenticated retained config omits this unknown Kconfig symbol. Corrected producer accepts absence while preserving full byte comparison.",
+  "host_inventory_unchanged": true,
+  "mapped_processes_final": [],
+  "phase_mounts_final": [],
+  "retention": "All private source/compiler/artifacts remain in terminal first-01; no restart/overlay or physical writes.",
+  "raw_root": "out/spi-candidate-first-01-20261107",
+  "raw_pins": {
+    "receipt.json": {
+      "bytes": 6403,
+      "sha256": "f2702c307a1e4cc290e3a05e479cf9cccce35fcb3cb7d0324a08b75a296cf350"
+    },
+    "runtime.log": {
+      "bytes": 3999,
+      "sha256": "1dbc9582f2483fee6197ef329c747be91fa2b9f432346be8b4a0de3c566630bd"
+    },
+    "source-manifest.json": {
+      "bytes": 2555,
+      "sha256": "75b4fb4a464383ac4c4b55d668f7b261848c65d76b3422e7137ec9e3d23fc2c5"
+    },
+    "work/project/out/uboot-nvme-candidate-01/artifacts/candidate-result.json": {
+      "bytes": 255,
+      "sha256": "b1f63ecd22795108579f1ac4e2620d9913e23f25e6e17e97c47677e5cb5e42b4"
+    },
+    "work/project/out/uboot-nvme-candidate-01/artifacts/capacity-budget.json": {
+      "bytes": 815,
+      "sha256": "6c191c68a154aa38a063a655a8c91c32bca815a120b73563cc3c1cd6ac6c1052"
+    },
+    "work/project/out/uboot-nvme-candidate-01/candidate-manifest.json": {
+      "bytes": 6699,
+      "sha256": "7c790b2048f8a52274274b28c73ade145e0dbcbbc7ed0a6c866d412cc9b57219"
+    },
+    "work/project/out/uboot-nvme-candidate-01/logs/command-0002.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "work/project/out/uboot-nvme-candidate-01/logs/command-0003.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "work/project/out/uboot-nvme-candidate-01/logs/command-0004.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "work/project/out/uboot-nvme-candidate-01/logs/command-0005.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "work/project/out/uboot-nvme-candidate-01/logs/command-0006.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "work/project/out/uboot-nvme-candidate-01/logs/command-0007.log": {
+      "bytes": 6,
+      "sha256": "910121d8fda1ee513d664110f94bef46c4791698010db514c2a71cc1932bc3cf"
+    },
+    "work/project/out/uboot-nvme-candidate-01/logs/command-0008.log": {
+      "bytes": 335,
+      "sha256": "5e669947a96a934ba7513c6382aff2038af082c8a5c3e899773392f008a19dea"
+    },
+    "work/project/out/uboot-nvme-candidate-01/logs/commands.jsonl": {
+      "bytes": 2319,
+      "sha256": "7967e14dcc648d70008d9e94833ddef6fd773f577b90eca53809c36c243cfbac"
+    },
+    "work/project/out/uboot-nvme-candidate-01/logs/resource-samples.jsonl": {
+      "bytes": 3780,
+      "sha256": "9cde8313c2099747022f72e4868672ac0c8faba3010975db39f3a1fe0964e694"
+    },
+    "work/project/out/uboot-nvme-candidate-01/logs/uboot-build.log": {
+      "bytes": 902,
+      "sha256": "539d63f3419803c39327f499ec56b30f481f6a83b3c92fd3d8f9e25968fbd59a"
+    },
+    "work/project/out/uboot-nvme-candidate-01/logs/uboot-compiler.txt": {
+      "bytes": 335,
+      "sha256": "5e669947a96a934ba7513c6382aff2038af082c8a5c3e899773392f008a19dea"
+    }
+  }
+}

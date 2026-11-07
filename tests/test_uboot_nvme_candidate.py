@@ -24,7 +24,6 @@ def config():
 CONFIG_BOOTCMD_SKIP_MISC=y
 # CONFIG_SUNXI_SWITCH_SYSTEM is not set
 # CONFIG_BOOTCOUNT_LIMIT is not set
-# CONFIG_SUNXI_OTA_TURNNING is not set
 # CONFIG_ENV_IS_IN_EXT4 is not set
 '''
 
@@ -45,6 +44,28 @@ class CandidateGuards(unittest.TestCase):
         for bad in (modified + b'CONFIG_OTHER=y\n', modified.replace(b'NOWHERE=y', b'NOWHERE=n'), original):
             with self.subTest(bad=bad), self.assertRaises(ValueError):
                 candidate.validate_config(bad, original)
+
+    def test_retained_config_with_ota_absent_or_explicitly_disabled(self):
+        # The actual authenticated retained config omits the unknown OTA symbol.
+        absent = config()
+        self.assertNotIn(b'CONFIG_SUNXI_OTA_TURNNING', absent)
+        for retained in (absent, absent + b'# CONFIG_SUNXI_OTA_TURNNING is not set\n'):
+            with self.subTest(retained=retained):
+                expected = retained.replace(candidate.BASE_COMMAND, candidate.NEW_COMMAND)
+                self.assertEqual(candidate.candidate_config(retained), expected)
+                candidate.validate_config(expected, retained)
+                # Adding/removing even a disabled OTA comment is still an extra
+                # config change when it differs from the authenticated baseline.
+                altered = expected + b'# CONFIG_SUNXI_OTA_TURNNING is not set\n'
+                with self.assertRaisesRegex(ValueError, 'differs beyond'):
+                    candidate.validate_config(altered, retained)
+
+    def test_ota_value_assignments_are_all_refused(self):
+        for assignment in (b'CONFIG_SUNXI_OTA_TURNNING=y', b'CONFIG_SUNXI_OTA_TURNNING=m',
+                           b'CONFIG_SUNXI_OTA_TURNNING=n', b'CONFIG_SUNXI_OTA_TURNNING=invalid',
+                           b'CONFIG_SUNXI_OTA_TURNNING=', b' CONFIG_SUNXI_OTA_TURNNING = y'):
+            with self.subTest(assignment=assignment), self.assertRaisesRegex(ValueError, 'OTA value assignment'):
+                candidate.candidate_config(config() + assignment + b'\n')
 
     def test_reject_missing_and_duplicate_safeguards(self):
         for bad in (config() + candidate.BASE_COMMAND, config().replace(candidate.BASE_COMMAND, b''),
@@ -201,6 +222,29 @@ class CandidateGuards(unittest.TestCase):
                 (pack / 'monitor.fex').write_bytes(b'altered')
                 with self.assertRaisesRegex(ValueError, 'Untrusted input'):
                     candidate.verify_firmware(pack, artifacts, expected)
+
+    def test_capacity_reserves_construction_only_on_writable_output_filesystem(self):
+        workspace = Path('/read-only-source/workspace')
+        output = Path('/ram-output/out/uboot-nvme-candidate-test')
+        budget = {'required_free_bytes': 5_666_000_001}
+        def usage(source_free, output_free):
+            return lambda path: SimpleNamespace(free=source_free if path == workspace else output_free)
+        with patch.object(candidate.shutil, 'disk_usage', side_effect=usage(4_100_000_000, 6_000_000_000)):
+            candidate.check_capacity(workspace, output, budget)
+        for source_free in (4_000_000_000, 3_999_999_999):
+            with self.subTest(source_free=source_free), \
+                    patch.object(candidate.shutil, 'disk_usage', side_effect=usage(source_free, 6_000_000_000)), \
+                    self.assertRaisesRegex(ValueError, 'Read-only source workspace'):
+                candidate.check_capacity(workspace, output, budget)
+        for output_free in (budget['required_free_bytes'], budget['required_free_bytes'] - 1):
+            with self.subTest(output_free=output_free), \
+                    patch.object(candidate.shutil, 'disk_usage', side_effect=usage(4_100_000_000, output_free)), \
+                    self.assertRaisesRegex(ValueError, 'Candidate construction'):
+                candidate.check_capacity(workspace, output, budget)
+        # A shared filesystem still needs the complete construction budget.
+        with patch.object(candidate.shutil, 'disk_usage', return_value=SimpleNamespace(free=4_100_000_000)), \
+                self.assertRaisesRegex(ValueError, 'Candidate construction'):
+            candidate.check_capacity(workspace, output, budget)
 
     def test_capacity_counts_authenticated_archive_and_refuses_before_output(self):
         with tempfile.TemporaryDirectory() as tmp:

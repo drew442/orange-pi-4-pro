@@ -114,8 +114,14 @@ def candidate_config(original):
     expected = original.replace(BASE_COMMAND, NEW_COMMAND)
     for line in (b'CONFIG_ENV_IS_NOWHERE=y', b'# CONFIG_CMD_SAVEENV is not set',
                  b'CONFIG_BOOTCMD_SKIP_MISC=y', b'# CONFIG_SUNXI_SWITCH_SYSTEM is not set',
-                 b'# CONFIG_BOOTCOUNT_LIMIT is not set', b'# CONFIG_SUNXI_OTA_TURNNING is not set'):
+                 b'# CONFIG_BOOTCOUNT_LIMIT is not set'):
         require(line in expected.splitlines(), f'Missing immutable boot safeguard: {line!r}')
+    # The pinned vendor Kconfig drops this unknown symbol entirely during
+    # olddefconfig. Absence and an explicit not-set comment both disable it;
+    # no value assignment is accepted. The complete retained config remains
+    # authenticated and the output must still match its one-line derivative.
+    require(not any(re.match(rb'\s*CONFIG_SUNXI_OTA_TURNNING\s*=', line)
+                    for line in expected.splitlines()), 'OTA value assignment forbidden')
     require(b'CONFIG_ENV_IS_IN_EXT4=y' not in expected, 'Writable environment forbidden')
     return expected
 
@@ -188,10 +194,15 @@ def capacity_budget(workspace, lock):
 
 
 def check_capacity(workspace, output, budget):
-    for path in (workspace, output.parent):
-        free = shutil.disk_usage(path).free
-        require(free > budget['required_free_bytes'],
-                f"Candidate construction needs >{budget['required_free_bytes']} free bytes: {path} has {free}")
+    # The workspace supplies read-only inputs. Preserve the core's >4 GB
+    # workspace guard, reserving construction writes on the output filesystem.
+    # If both paths share a filesystem, the larger output requirement governs.
+    source_free = shutil.disk_usage(workspace).free
+    require(source_free > 4_000_000_000,
+            f'Read-only source workspace needs >4000000000 free bytes: {workspace} has {source_free}')
+    output_free = shutil.disk_usage(output.parent).free
+    require(output_free > budget['required_free_bytes'],
+            f"Candidate construction needs >{budget['required_free_bytes']} free bytes: {output.parent} has {output_free}")
 
 
 def make_command(tree, cross):

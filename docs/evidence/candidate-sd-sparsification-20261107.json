@@ -1,0 +1,147 @@
+{
+  "schema": 1,
+  "date": "2026-11-07",
+  "classification": "Builder-only zero-extent conversion; three generated SD image copies retain exact logical bytes",
+  "success": true,
+  "builder": "drew@build.drewnet.online",
+  "method": "fallocate --dig-holes on held no-follow regular descriptors, fixed three-file selection, full pre/post hashes",
+  "reviewed_readiness_sha256": "4242ee323de1cc57e17c11818ad2a46014014eac7783588de5587eda3711f4ed",
+  "script_sha256": "b11c009912bfd76e762b2796c0805f1b7e914bfe5b4b2660ee7e1dcf85ba1ef7",
+  "thread_guard_sha256": "c2733612a3c1fbcf7729be13a2579a11dbbeddd9f0e2d4ac7592ef75e67d32fa",
+  "files": [
+    {
+      "spec": {
+        "path": "/var/lib/a733-clean-replay-20261106/sd-run-formal-02/work/project/out/host-sd-frozen-formal-20261106-01/a733-host-sd.img",
+        "inode": 963140,
+        "bytes": 268435456,
+        "sha256": "2d22d84ada37a5b5d3696cc913caddcb31c0e681e65185005ea56ca0b8396329"
+      },
+      "signature": [
+        64512,
+        963140,
+        33188,
+        1048576,
+        1048576,
+        1,
+        268435456,
+        1793984125718813997,
+        1793984125718813997
+      ],
+      "allocated_before": 268439552,
+      "allocated_after": 32591872,
+      "full_size_and_hash": {
+        "bytes": 268435456,
+        "sha256": "2d22d84ada37a5b5d3696cc913caddcb31c0e681e65185005ea56ca0b8396329"
+      },
+      "mtime_preserved": true
+    },
+    {
+      "spec": {
+        "path": "/var/lib/a733-clean-replay-20261106/sd-run-formal-02/work/project/out/installer-sd-frozen-formal-20261106-01/a733-installer-prep.img",
+        "inode": 963150,
+        "bytes": 268435456,
+        "sha256": "2e16dea5e2941823bf8b40f1687ac417a67c91cecd87173b109fed23ca932499"
+      },
+      "signature": [
+        64512,
+        963150,
+        33188,
+        1048576,
+        1048576,
+        1,
+        268435456,
+        1793984132227817628,
+        1793984132227817628
+      ],
+      "allocated_before": 268439552,
+      "allocated_after": 54796288,
+      "full_size_and_hash": {
+        "bytes": 268435456,
+        "sha256": "2e16dea5e2941823bf8b40f1687ac417a67c91cecd87173b109fed23ca932499"
+      },
+      "mtime_preserved": true
+    },
+    {
+      "spec": {
+        "path": "/var/lib/a733-installer-refresh-20261107/out/installer-sd-refresh-20261107-01/a733-installer-prep.img",
+        "inode": 452432,
+        "bytes": 268435456,
+        "sha256": "265752f020212e73998a869e6098a1bc850a4d2ade4092a72ea3338e64157794"
+      },
+      "signature": [
+        64512,
+        452432,
+        33188,
+        0,
+        0,
+        1,
+        268435456,
+        1794015997091614307,
+        1794015997091614307
+      ],
+      "allocated_before": 268435456,
+      "allocated_after": 54808576,
+      "full_size_and_hash": {
+        "bytes": 268435456,
+        "sha256": "265752f020212e73998a869e6098a1bc850a4d2ade4092a72ea3338e64157794"
+      },
+      "mtime_preserved": true
+    }
+  ],
+  "allocated_bytes_recovered": 663117824,
+  "filesystem_free_before_bytes": 5248917504,
+  "filesystem_free_after_bytes": 5911990272,
+  "preserved": "Logical size/SHA256, path/inode, numeric ownership, mode and mtime; allocation and ctime change",
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "result": "pass for exact code/readiness pins"
+  },
+  "disposable_tests": {
+    "native_root": 5,
+    "actual_jammy_python310_root": 5,
+    "result": "pass including actual zero-hole conversion and invalid inode/hash/alias/busy refusals"
+  },
+  "raw_root": "tmp/spi-candidate-20261107/",
+  "builder_private_journal": "/var/lib/a733-sd-sparse-20261107/",
+  "raw_pins": {
+    "sparsify-selected.py": {
+      "bytes": 7174,
+      "sha256": "b11c009912bfd76e762b2796c0805f1b7e914bfe5b4b2660ee7e1dcf85ba1ef7"
+    },
+    "test-sparsify-selected.py": {
+      "bytes": 2858,
+      "sha256": "54f3bdc721f8bc9a9f21663a56be9d42ded26d0c8175513ef305c975cb0ffa0a"
+    },
+    "sparse-readiness.log": {
+      "bytes": 947,
+      "sha256": "1115c1d0843062908e91b5a95799c5f3d349eb0085ff2f315273446839c4b6ec"
+    },
+    "sparse-readiness-02.log": {
+      "bytes": 2522,
+      "sha256": "4242ee323de1cc57e17c11818ad2a46014014eac7783588de5587eda3711f4ed"
+    },
+    "sparse-execution.log": {
+      "bytes": 3010,
+      "sha256": "4c1305c861485707eb22e4b9b9c32fb145d9fff7e03e792385b9ea65bd8a1bbc"
+    },
+    "sparse-complete.json": {
+      "bytes": 2384,
+      "sha256": "db664f4b2b0a2cb5ed6dd0043184d156c2d4a00592a6410a2377bca232e1b6ba"
+    },
+    "sparse-tests.log": {
+      "bytes": 821,
+      "sha256": "94c80da5d4da2dda19a5c1ebecd2d766d17fa5f85d6ac806507adece1abe2072"
+    },
+    "sparse-jammy-tests.log": {
+      "bytes": 573,
+      "sha256": "b0a38de4cb5b6452ae63f0b14565512be59e3d88a094d74957cd36377f69b0a4"
+    }
+  },
+  "limits": [
+    "Per-thread mount/fd/map and loop checks are snapshots; dedicated builder kept idle and no concurrent writer permitted.",
+    "Initial readonly readiness refused archive-specific parent ownership policy on mapped-owner build directories; original script and failure retained. Corrected wrapper validates fixed root0700 barriers and does not change imported guard code.",
+    "Operator images on codex, physical SD/NVMe/SPI, original input caches and existing capacity guards remain unchanged.",
+    "No LVM resize, artifact-byte change, firmware programming or physical acceptance."
+  ]
+}
