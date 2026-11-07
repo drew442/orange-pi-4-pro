@@ -114,3 +114,9 @@ This state UUID is `64504c34-85b4-4035-9618-d86b298f8349`; it is specific to thi
 installation. These are component images, not whole-disk installation images.
 Do not flash them individually onto the namespace. Full-disk assembly, delivery,
 physical identity revalidation and actual SSH with both keys remain pending.
+
+New state stores `identity/machine-id` as root-owned `0644` because it is bound
+to `/etc/machine-id` and must be readable by unprivileged system services.
+The identity directory remains `0700`; SSH keys and management configuration
+retain their private permissions. Older `0600` machine-id images remain
+recognized; management preparation repairs their bound file before systemd.

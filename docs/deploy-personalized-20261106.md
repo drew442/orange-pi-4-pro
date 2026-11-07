@@ -1,8 +1,16 @@
 # Personalized NVMe deployment
 
-The artifacts and guarded procedure passed software inspection and independent
-review. Actual installation, host boot, SSH and KVM execution remain unperformed.
-Capture the complete serial output so those hardware results can be assessed.
+The [November 7 physical logs](evidence/installed-host-first-boot-20261107.json)
+show successful NVMe installation/readback and installed root A reaching systemd.
+DHCP/SSH failed. **For this existing installation, use the
+[machine-id permission repair](installed-host-repair-20261107.md); do not repeat
+NVMe installation.** Actual SSH and KVM guest execution remain pending.
+
+The commands below record the existing pinned November 6 installer. That image
+still uses the old typed confirmations and mandatory readback. Updated source
+uses an exact-target yes/no prompt, one expanded-image pass during writing, and
+optional readback; those changes require a refreshed installer image. Do not
+assume changing these instructions updates the old image's behavior.
 
 This installation is for the recorded **SPCC M.2 PCIe SSD**, serial
 **134807190FC700149277**, **256,060,514,304 bytes**, logical/physical sectors
@@ -59,12 +67,12 @@ test "$(sudo blockdev --getsize64 "$CARD")" -eq 1977614336
 test -z "$(lsblk -nr -o MOUNTPOINTS "$CARD" | sed '/^[[:space:]]*$/d')"
 sudo dd if="$IMAGE" of="$CARD" bs=4M conv=fsync status=progress
 sudo blockdev --flushbufs "$CARD"
-sudo head -c 268435456 "$CARD" | sha256sum
-sudo sha256sum "$CARD"
 ```
 
-The prefix readback must equal `2e16dea5...932499` in full. Save the full-card
-hash too. Safely remove the card, insert it with board power off, leave Ethernet
+Optional troubleshooting: read back the first 268,435,456 bytes and compare
+with the image hash if you suspect a flashing problem. Full-card hashes/counters
+are separate [SD-write acceptance](hardware-validation.md) measurements, not
+required normal installation steps. Safely remove the card, insert it with board power off, leave Ethernet
 connected, and capture serial from before power-on: existing 3.3 V TTL wiring,
 115200 baud, 8N1, no flow control, adapter VCC disconnected.
 
@@ -216,13 +224,10 @@ cat /sys/class/block/mmcblk1/ro /sys/class/block/mmcblk1/stat
 
 ## Switch the same SD to the matching host bootstrap
 
-Only after the successful full readback, run `poweroff -f`, wait for console
-output to stop and remove board power. Remove the SD and hash the entire card
-on codex before reflashing; compare it with the installer full-card baseline.
-If the post-installer full-card hash differs from its baseline, stop, preserve
-the card and both hashes, and return the complete log before any host reflash
-overwrites that evidence. Matching hashes supply one boot's SD evidence, not
-the final cycle/workload acceptance.
+After successful installation, run `poweroff -f`, wait for console output to
+stop and remove board power. A full-card hash comparison is optional for normal
+installation. If collecting release SD-write evidence, capture it before
+reflashing under the separate hardware validation procedure.
 
 Select the same identified whole-card `CARD` again, and run in Bash on codex:
 
@@ -238,11 +243,9 @@ test "$(sudo blockdev --getsize64 "$CARD")" -eq 1977614336
 test -z "$(lsblk -nr -o MOUNTPOINTS "$CARD" | sed '/^[[:space:]]*$/d')"
 sudo dd if="$IMAGE" of="$CARD" bs=4M conv=fsync status=progress
 sudo blockdev --flushbufs "$CARD"
-sudo head -c 268435456 "$CARD" | sha256sum
-sudo sha256sum "$CARD"
 ```
 
-Require the full prefix hash in the table and preserve the new full-card baseline.
+Optional troubleshooting readback may be compared with the image hash in the table.
 Boot with Ethernet and NVMe connected; capture the entire serial output. The
 expected host is `a733-host`, DHCP, SSH from any IPv4 source using either supplied
 key. The supervisor prints `A733 SSH host key for ADDRESS: ED25519 SHA256:...`
@@ -284,8 +287,8 @@ it would erase state and guest data. Selection repair and interrupted-update
 recovery require their own verified procedure; see [host recovery](host-recovery.md).
 No SPI programming is involved.
 
-Return the flashing prefix/full-card hashes, complete installer boot/acquisition/
+Return any optional flashing readback results, complete installer boot/acquisition/
 plan/apply reports, complete host boot including its public SSH fingerprint,
-and results of both SSH-key tests. Installation, SSH, real KVM guest execution,
+and results of both SSH-key tests. Installation and first installed boot are recorded; SSH, real KVM guest execution,
 10 cold/10 warm boots, workload, SD policy, rollback/recovery/backup and reproduced
 deployment remain open until their actual evidence is recorded.

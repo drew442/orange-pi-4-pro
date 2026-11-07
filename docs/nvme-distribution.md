@@ -142,8 +142,13 @@ A733 Ethernet, DHCP, DNS, TLS, installed boot, zero SD writes or KVM execution.
 `scripts/acquire-nvme.py` downloads into a new private directory and authenticates
 the manifest before parsing it. It requires HTTPS with certificate/hostname
 verification, refuses redirects and ignores ambient proxy variables. Requests
-have bounded reads and a total deadline; encoded size/hash readback and full
-bounded gzip expansion must pass before success is published. It retains the
+have bounded reads and a total deadline. Current source authenticates encoded
+size/hash while downloading and publishes `encoded_verified=true` and
+`decoded_verified=false`. It performs no decompression or stored-file readback.
+Expanded size/hash and gzip CRC are checked during the writer's single write
+pass. Download and authentication progress appear on stderr. Older published
+installer images still perform the earlier full expansion; refresh the image
+to use this faster behavior. It retains the
 manifest's exact authenticated bytes. Receipt URLs omit query strings, which
 may contain credentials. Keep credentials out of URL paths as well.
 

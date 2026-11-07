@@ -5,22 +5,25 @@ is indexed in [build reproduction status](build-reproduction-status.md).
 
 ## Current milestone
 
-The [physical preparation boot](evidence/installer-prep-physical-20261106.json)
-reaches its RAM shell with all eight CPUs at EL2, KVM VHE and `/dev/kvm`.
-Automatic YT8531 binding/DHCP, routing/DNS and verified HTTPS work after manual
-UTC correction. The exact-device NVMe planner reports 512/512 sectors and no busy
-indicators, with **no writes**. **Installed NVMe boot, SSH login and actual KVM
-guest execution remain unproven.** No newer physical result has been received.
-The latest [LAN access check](evidence/board-access-observer-20261107.json) cannot
-reach the recorded address; current power/address/boot state is unknown. No serial
-device is attached to codex.
+The [November 7 physical logs](evidence/installed-host-first-boot-20261107.json)
+confirm successful installation/full readback on the exact NVMe and installed
+root A reaching systemd. All eight CPUs enter EL2 and KVM initializes. Ethernet
+links at 1 Gbps, but DHCP/SSH fails and the normal serial root account is locked.
+**Actual SSH and KVM guest execution remain unproven.**
 
-The reviewed [personalized deployment procedure](deploy-personalized-20261106.md)
-is ready for the operator. Its 256 MiB installer and host SD images fit the actual
-card; the 547,077,631-byte compressed NVMe bundle is authenticated and available
-from pinned HTTPS on codex. The installer has no SSH server. Write the host SD
-only after successful NVMe installation/readback. Published artifacts are unchanged
-by subsequent clean-build work.
+The deployed machine-id is `0600`, blocking unprivileged networkd's default DHCP
+identity generation. The actual pinned ARM library reproduces this permission
+failure. [Reviewed source fixes](evidence/installed-host-fix-20261107.json) seed/upgrade it
+to `0644`; keys and configuration
+remain private. Use the [existing-install repair](installed-host-repair-20261107.md),
+which changes one NVMe file's permissions without reinstalling. Physical repair
+and successful DHCP/SSH still await operator results.
+
+Published November 6 images remain unchanged. The [deployment guide](deploy-personalized-20261106.md)
+identifies their exact paths. Source now uses one exact-target yes/no prompt,
+removes expanded-image pre-scans and makes full NVMe readback opt-in, with
+progress feedback. A refreshed installer image is still needed for those changes.
+Do not repeat NVMe installation to address the present management failure.
 
 ## Decisions and physical evidence
 
@@ -33,7 +36,8 @@ by subsequent clean-build work.
   firmware `EDFM20.0`, logical/physical sectors **512/512**. Use actual geometry.
 - Erase authorization for that exact NVMe persists; revalidate identity and idle
   state immediately before the concrete write. Do not request that permission
-  again. No coordinator physical erase or SPI programming has occurred.
+  again. The operator completed the authorized NVMe installation. No coordinator physical
+  erase or SPI programming has occurred.
 - [Power/cooling](evidence/power-cooling-20261106.json): operator reports 67 W
   USB-PD adapter and 10.4 mm, six-layer whole-board copper heatsink. Leave all
   heatsinks attached; diagnostic identities suffice. Negotiated power, fan
@@ -50,13 +54,15 @@ by subsequent clean-build work.
 - [Operator inputs](evidence/operator-inputs-20261105.json): RSA3072 and Ed25519
   keys, DHCP hostname `a733-host`, any source/subnet. Require public-key-only SSH.
   [ARM SSH-policy checks](evidence/ssh-console-management-arm-20261106.json) pass;
-  real login with both keys remains pending.
+  real login with both keys remains pending; the serial root account has no usable
+  password. The installer physical RAM shell is the current recovery access.
 - SD is unmounted in Linux; one zero-write snapshot has `ro=0`. Full-card offline
   hashes, Linux counters and firmware/cycle/workload observations remain required.
 - SPI is **XM25QU128C**, JEDEC `204118`, 16 MiB, erase 65,536/write 1 byte.
   [Investigation](spi-boot-investigation.md) records the distinct boot layout and
-  erase-count concern. Verified backup/recovery and SPI-specific authorization
-  are required before programming; the current diagnostic selects SD only.
+  erase-count concern. The user permits SPI preparation with exact target/write details and yes/no
+  confirmation before programming. Verified backup/recovery and a compatible
+  reviewed candidate remain required; no SPI write has occurred.
 
 ## Implemented and verified in software
 
@@ -79,8 +85,8 @@ by subsequent clean-build work.
   actual geometry, both keys and state UUID `00fd936c-49fb-4fea-87c8-928b9c1599e0`.
   Complete logical hash/GPT/filesystem/selection inspection and independent
   component-binding review pass. [Installer evidence](evidence/deployment-installer-20261106.json)
-  and [delivery](deployment-delivery.md) pass software/TLS/ARM checks. No board
-  boot or transfer of these refreshed artifacts is claimed.
+  and [delivery](deployment-delivery.md) pass software/TLS/ARM checks. Physical acquisition/install/readback and host root A boot are now recorded;
+  management is blocked by the machine-id permission defect.
 - [Guest operations](guest-operations.md), [activation](guest-activation.md),
   [enrollment](guest-enrollment.md), [checkpoints](guest-checkpoints.md),
   [backup](guest-backups.md), [restore](guest-restoration.md),
@@ -100,18 +106,17 @@ by subsequent clean-build work.
   files, 40 maintenance files and a nondeployable 256 MiB state image. New time roots
   require management ABI v2; updated tools retain v1 rollback support. Production
   4 GiB roots/8 GiB state/NVMe reconstruction remains open. Latest native discovery:
-  **1,323 cases, 100 environment skips**,
+  **1,326 cases, 100 environment skips**,
   four assembly cases and all five shell suites. These checks establish no
   physical acceptance or independently reproduced deployment.
 
 ## Next actions and blockers
 
-1. Operator follows [personalized deployment](deploy-personalized-20261106.md):
-   flash the current installer, correct UTC, authenticate/acquire the bounded-RAM
-   bundle, inspect the exact-device plan, then apply the already authorized NVMe
-   write/readback. Save complete serial logs and offline SD hashes. Switch to the
-   matching host SD only after successful installation.
-2. Validate NVMe host boot and SSH with both keys. Run [the first KVM guest](kvm-first-guest.md)
+1. Operator applies the [machine-id repair](installed-host-repair-20261107.md)
+   using the existing installer RAM shell, then boots the same matching host SD.
+   Return the complete serial log and observed DHCP address/SSH result. Do not
+   repeat acquisition or full-disk installation.
+2. Validate SSH with both keys, then run [the first KVM guest](kvm-first-guest.md)
    for CPU/disk/network, clean shutdown/restart and persisted disk marker. Return
    its console/log evidence; `/dev/kvm` alone cannot satisfy the gate.
 3. Continue [clean-build work](build-reproduction-status.md): rebuild the tracked

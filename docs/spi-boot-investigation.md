@@ -2,8 +2,10 @@
 
 SPI-to-NVMe with the SD removed remains the preferred release mode. The first
 physical diagnostic log identifies SPI as **XM25QU128C, 16 MiB**. No SPI backup,
-programming or SD-removed NVMe boot has been performed. SPI programming is not
-authorized. Leave attached heatsinks in place; software identity is sufficient.
+programming or SD-removed NVMe boot has been performed. The user authorizes SPI
+work with exact-target/proposed-write details and yes/no confirmation before
+programming. No concrete SPI write has been confirmed. Leave attached heatsinks
+in place; software identity is sufficient.
 
 ## Pinned source findings
 
@@ -69,7 +71,9 @@ Before proposing any SPI write:
 4. Demonstrate U-Boot NVMe scan/read and a compatible boot-file layout. Prepare
    and independently inspect a new regular-file SPI candidate and its exact
    byte/erase-unit plan; keep it distinct from SD images.
-5. Identify the exact physical target and obtain SPI-specific authorization.
+5. Present the exact physical target and proposed write, then request yes/no
+   confirmation before programming. The user authorized preparing SPI deployment
+   using this confirmation style; no concrete SPI write has occurred.
    NVMe erase permission does not authorize this operation.
 
 After authorized programming, physically prove SD-removed cold boot, actual KVM

@@ -3,10 +3,14 @@
 `scripts/install-nvme.py` implements read-only preparation and an interactive
 full-disk write. The writer is included in the current
 [installer preparation image](installer-preparation.md). Native loop tests,
-ARM software probes and independent review passed. No physical NVMe installation
-has been performed. The user has authorized discarding the exact recorded SPCC
-NVMe; revalidate identity/idle state before writing. Actual deployment remains
-unvalidated on the A733.
+ARM software probes and independent review passed for the earlier implementation.
+The [November 7 physical installation](evidence/installed-host-first-boot-20261107.json)
+completed its write/readback and booted installed root A; management needs the
+[machine-id repair](installed-host-repair-20261107.md). No reinstall is needed.
+
+Current source simplifies confirmation and installation work as described below.
+Published November 6 installer images retain the older prompts/readback behavior;
+a refreshed image is required to use the new behavior.
 
 Full-disk installation overwrites every partition, including guest storage.
 Routine inactive-slot updates, rollback and backup/restore are separate work.
@@ -37,7 +41,7 @@ The writer accepts an already acquired regular `nvme.img` or `nvme.img.gz` and
 its trusted build manifest. Gzip input requires both compressed and expanded
 size/SHA-256 records in that manifest. The [bundle recipe and acquisition tool](nvme-distribution.md) provide verified
 compressed delivery. Historical bundles remain fixtures; the personalized bundle now passes complete
-verification and native LAN delivery. Actual board acquisition remains pending. Keep payloads on identified
+verification and native LAN delivery. Board acquisition is recorded in the November 7 installation log. Keep payloads on identified
 external storage or suitable RAM storage after measuring capacity; the 2 GB SD
 is an immutable bootstrap, not payload staging. `/run` and `/tmp` in the
 preparation image are each limited to 64 MiB.
@@ -72,6 +76,7 @@ image. Arguments are deliberately mandatory:
 | `--expected-serial` | Exact displayed serial |
 | `--expected-bytes` | Exact measured byte capacity, not nominal “250 GB” |
 | `--plan` | Saved reviewed JSON plan; required by `apply` |
+| `--verify-readback` | Optional full target readback after writing; default off |
 | `--existing-data-policy` | `verified-backup` (default) or explicitly authorized `discard-authorized`; use the same policy for prepare/apply |
 
 The exact physical target is now recorded and its data may be discarded:
@@ -80,8 +85,8 @@ This authorization does not apply to SPI or another NVMe. Concrete `apply`
 commands still require the completed authenticated installation candidate and
 fresh reviewed identity/idle plan. Do not use the historical fixture payloads.
 
-`prepare` authenticates the entire held source and manifest, including expanded
-gzip bytes, before describing the target. It requires a whole NVMe with matching
+`prepare` authenticates the manifest and encoded image before describing the
+target. It does not decompress the image. It requires a whole NVMe with matching
 model, serial, capacity, logical/physical sector geometry and fixed layout.
 Mounted/swap/mapped/read-only or ambiguous targets are refused. Source backing
 is resolved through partitions and mapper slaves to reject target overlap.
@@ -90,7 +95,7 @@ The JSON plan binds source descriptor metadata and digests, target identity,
 layout, deployment intent and first/last MiB hashes to a canonical plan digest.
 Those samples cover target metadata, not all old disk contents. A plan is an
 observation, not a lock, backup or authorization. Save it in RAM or verified
-off-target storage. Whole-image authentication can take several minutes.
+off-target storage. Encoded authentication reports byte progress; it does not scan the expanded disk.
 
 ## Authorization and write protocol
 
@@ -98,25 +103,20 @@ Before erasure, identify the exact device and obtain the user's explicit
 approval. Existing authorization persists for the matching recorded drive. The
 CLI creates no backup and cannot independently verify one.
 
-Default `--existing-data-policy verified-backup` requires an off-device backup
-and the truthful operator confirmation `BACKUP VERIFIED`. If the user explicitly
-authorizes discarding the existing data, use `--existing-data-policy
-discard-authorized` on both `prepare` and `apply`; the reviewed plan binds this
-policy into its digest. Its first confirmation is `DISCARD EXISTING DATA`, and
-the report states that no backup is claimed. A policy mismatch is rejected before
-authorization or writes. Legacy plans lacking the field retain backup-required
-behavior. The newly added discard route requires a refreshed installer; the
-previously published preparation image does not include this flag.
+The data policy remains bound into the plan: use `discard-authorized` when the
+operator permits discarding existing data, otherwise `verified-backup` confirms
+an independently verified off-device backup. The tool prints the exact path,
+model, serial, capacity and sector sizes, then asks **Erase and install? [y/N]**.
+Only `y` or `yes` proceeds; no/empty/EOF declines. There are no typed hashes or
+confirmation phrases. stdin/stderr must be interactive terminals.
 
-`apply` repeats source/target preparation and requires an exact match with the
-saved plan. It requires root and interactive stdin/stderr terminals. After the
-policy-specific first confirmation, enter `ERASE SERIAL BYTES PLAN_SHA256`,
-using the reviewed plan's exact serial, byte count and digest. There is no
-`--yes`, force, loop-device or environment-variable authorization bypass. The
-TTY target-confirmation checks remain mandatory for an already authorized drive.
+`apply` matches the current target/source metadata to the saved plan, obtains
+that confirmation, then authenticates encoded bytes before the first write.
+The default path decompresses only while writing and hashes that same stream;
+expanded size/hash and gzip CRC must pass before success. Malformed authenticated
+input can therefore leave a partial target: retain the failure report and use
+recovery rather than booting it.
 
-After confirmation it rechecks target identity, busy indicators and sampled
-metadata, then opens the canonical whole device with exclusive block access.
 It checks the held descriptor's device number, size, sector sizes and writable
 status, and takes a nonblocking advisory lock. Identity and metadata are checked
 again while the exclusive descriptor is held. Quiesce other privileged raw-device
@@ -124,9 +124,10 @@ users; advisory locks do not constrain programs that ignore them. Run from the
 preparation environment, which starts no automounter.
 
 Every expanded byte is written, including zeros in sparse image holes. Input is
-hashed again during writing. The writer synchronizes, invalidates the block
-cache, hashes the complete target through the held descriptor and only then
-requests a kernel partition-table refresh. Success requires all steps and source
+hashed during writing. The writer synchronizes, invalidates the block
+cache and requests a kernel partition-table refresh. Full target readback is
+skipped by default. Add `--verify-readback` to `apply` for troubleshooting; this
+reads/hashes the entire target and reports progress. Success requires selected steps and source
 cleanup to complete. It performs no automatic boot or activation.
 
 Errors, Ctrl-C and best-effort SIGTERM handling retain conservative
@@ -167,12 +168,17 @@ detached and private files removed.
 [writer-enabled ARM probes](evidence/writer-arm-20261104.json) record results.
 The ARM probe checks isolated CLI startup, fixture refusal before target access,
 and a regular-file byte-engine run with block flush/refresh callbacks stubbed.
-Native loop tests exercise actual Linux block callbacks. Production whole-NVMe
-selection/authorization has mocked regressions and source review; it has not
-been executed against physical NVMe. Neither test satisfies board, firmware,
+Native loop tests exercise actual Linux block callbacks. The earlier implementation completed the physical installation above. The new
+yes/no/default-no-readback behavior has software checks and independent review;
+it has not yet run on the board. Neither test satisfies board, firmware,
 SD-write, installation, rollback or actual KVM acceptance.
 
 The block operations follow [Linux UAPI definitions](https://raw.githubusercontent.com/torvalds/linux/v6.6/include/uapi/linux/fs.h)
 and [Linux exclusive block-device open semantics](https://man7.org/linux/man-pages/man2/open.2.html).
 Physical driver behavior, power-loss durability and the plan's complete
 [hardware acceptance](hardware-validation.md) still require measured evidence.
+
+Default successful reports have `readback_requested=false`, `bytes_verified=0`
+and no `readback_sha256`; `source_sha256` records the stream written. Opt-in
+readback reports actual verified bytes/hash. Neither result substitutes for the
+separate release hardware validation procedure.

@@ -12,8 +12,9 @@ the read-only `directory_ready()` binding check, which ignores clock-file
 contents and timestamps while checking directory identity, device, mode,
 ownership and state UUID. Old tools reject v2, and new tools accept v1 for
 rollback. This interim Debian prototype has
-passed file and ARM userspace checks, but has not booted on the A733 or accepted
-an SSH connection. The installer-preparation image has physically booted; use
+passed file and ARM userspace checks. Its first installed A733 boot reached
+systemd, but DHCP/SSH failed. The [permission repair](installed-host-repair-20261107.md)
+addresses machine-id readability; successful physical SSH remains pending. The installer-preparation image has physically booted; use
 the personalized deployment above for installation. Buildroot and the release-base
 decision follow baseline hardware validation in the [plan](hypervisor-plan.md).
 
@@ -129,3 +130,9 @@ Changing these validation sources requires fresh roots, state and installation
 artifacts. Earlier single-key fixtures and the currently published preparation
 image do not become personalized simply because the inputs have been recorded.
 Actual SSH authentication with both keys remains a board acceptance check.
+
+Machine-id is a public system identity: new state seeds it as `0644`, and
+management preparation upgrades older bound copies after identity/mount guards.
+The containing identity directory remains `0700`; keys/configuration stay private.
+The regular root serial login is locked and has no password. Use the installer
+RAM root shell for the documented recovery procedure.

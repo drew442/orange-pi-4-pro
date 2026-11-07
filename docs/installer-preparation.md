@@ -13,8 +13,10 @@ root console with a read-only NVMe planner and an explicit, guarded full-disk
 writer. The [verified payload acquisition tool](nvme-distribution.md) and complete
 [maintenance/recovery package](maintenance-tools.md) are included.
 The [writer procedure](nvme-installation.md) requires a real installation
-candidate and exact-target authorization. No preparation image has installed an NVMe. The earlier helper variant has
-physically booted; the refreshed deployment variant still awaits its first boot. The
+candidate and exact-target authorization. The deployment preparation image has now completed a physical NVMe
+installation/readback; see the [November 7 record](evidence/installed-host-first-boot-20261107.json).
+The new source installer reduces installation work and uses yes/no confirmation
+and optional readback; its refreshed image has not yet been published. The
 [diagnostic candidate](diagnostic-image.md) remains the first hardware baseline.
 
 ## Historical prototype artifacts and behavior

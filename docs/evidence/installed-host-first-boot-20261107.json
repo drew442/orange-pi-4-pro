@@ -1,0 +1,88 @@
+{
+  "schema": 1,
+  "date": "2026-11-07",
+  "classification": "Operator-provided physical NVMe installation and first installed host boot; management failed, no guest execution",
+  "raw_logs": {
+    "tmp/07112026-1159-nvme-full-flash.txt": {
+      "bytes": 125014,
+      "sha256": "ab90c6aad65ab3359df35c25e7738c8a280e9a338b6488d570bafa9b38483c63"
+    },
+    "tmp/07112026-1215-a733-host-sd-img-boot.txt": {
+      "bytes": 96778,
+      "sha256": "325b9d54952e2e890a0249798f9f7b35209c01950d82f6ac8d18b9cd5521ff83"
+    }
+  },
+  "installation": {
+    "target": {
+      "model": "SPCC M.2 PCIe SSD",
+      "serial": "134807190FC700149277",
+      "bytes": 256060514304,
+      "logical_sector_bytes": 512,
+      "physical_sector_bytes": 512
+    },
+    "initial_confirmation_failure": {
+      "target_modified": false,
+      "bytes_written": 0,
+      "error": "authorization phrase does not match"
+    },
+    "final_apply_exit": 0,
+    "bytes_written": 256060514304,
+    "bytes_verified": 256060514304,
+    "readback_sha256": "74f3c6f9c66df8e125148b7a7d06ebc521d1c0fd5ae8e53de4a90c740e5224fc",
+    "success": true,
+    "result_lines": [
+      2109,
+      2120,
+      2233,
+      2243
+    ],
+    "sd_counter_snapshot": "SD ro=0; stat write counts zero. No full-card cycle acceptance inferred."
+  },
+  "host_boot": {
+    "firmware_boot_source": "SD boot.scr/kernel/initramfs; SPI-to-NVMe boot not established",
+    "cpus": "All eight started at EL2; KVM initializes; no actual guest execution",
+    "state": {
+      "device": "nvme0n1p4",
+      "uuid": "00fd936c-49fb-4fea-87c8-928b9c1599e0",
+      "mounted_rw": true
+    },
+    "root": {
+      "device": "nvme0n1p2",
+      "uuid": "a7330000-0000-4000-8000-00000000000a",
+      "mounted_ro": true
+    },
+    "systemd": "Debian12 reaches multi-user target and serial login prompt",
+    "ethernet": "eth0 renamed end0; YT8531; link1Gbps/full at16.189720s. Renaming alone does not explain failure because management matches MAC.",
+    "management": "ValueError activation failures after about60s waits, repeated. No DHCP lease/SSH connection reported by operator.",
+    "console": "Root password login is locked; no root password was supplied or set.",
+    "source_lines": [
+      1096,
+      1098,
+      1099,
+      1100,
+      1256,
+      1277,
+      1292,
+      1304,
+      1308,
+      1315,
+      1316,
+      1317,
+      1318,
+      1321,
+      1323,
+      1327
+    ]
+  },
+  "operator_preferences": {
+    "destructive_confirmation": "Present exact target and operation; request yes/no instead of typed phrases/hashes.",
+    "readback": "Optional installation troubleshooting, not a required normal installation pass.",
+    "performance": "Eliminate redundant expanded-image scans; provide progress feedback; do not benchmark physical hardware.",
+    "spi": "Prepare compatible exact-target SPI operation and use yes/no confirmation before programming; no physical SPI write has occurred."
+  },
+  "remaining": [
+    "Diagnose/fix installed DHCP and prove actual SSH with both keys.",
+    "Recovery permission repair is not yet performed on the board.",
+    "Actual KVM guest, repeated boot/endurance, zero routine SD writes, rollback/recovery and independently reproduced deployment remain open."
+  ]
+}

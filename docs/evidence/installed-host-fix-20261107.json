@@ -1,0 +1,217 @@
+{
+  "schema": 1,
+  "date": "2026-11-07",
+  "classification": "Source correction and software reproduction of installed machine-id failure; no physical repair/DHCP/SSH acceptance",
+  "source_commits": {
+    "machine_id": "4f8c97b348e40ea8f9378758e92b3601e175bb8f",
+    "installer": "5946d2398662acb7e1193ec80a9dc81c3f4cbbc4"
+  },
+  "physical_evidence": "docs/evidence/installed-host-first-boot-20261107.json",
+  "diagnosis": {
+    "deployed_state_uuid": "00fd936c-49fb-4fea-87c8-928b9c1599e0",
+    "deployed_machine_id": {
+      "uid": 0,
+      "gid": 0,
+      "mode": "0600",
+      "bytes": 33,
+      "nlink": 1
+    },
+    "actual_service": "systemd-networkd runs as systemd-network (998:998); generated MAC-matched DHCPv4 config does not override ClientIdentifier.",
+    "source_chain": "Pinned systemd252.39 DHCP default DUID -> dhcp_identifier_set_duid_en -> sd_id128_get_machine -> /etc/machine-id. host-init bind-mounts state identity onto /etc/machine-id before systemd.",
+    "library_reproduction": {
+      "method": "Worker executed native and deployed ARM libsystemd sd_id128_get_machine in a private mount namespace, with the same file bind and UID/GID998:998; parent identity directory stays0700. ARM library runs under QEMU user mode.",
+      "0600_result": -13,
+      "0644_result": 0,
+      "interpretation": "Confirms machine-id read failure and correction; does not execute networkd DHCP or prove physical lease acquisition."
+    }
+  },
+  "changes": {
+    "new_state_machine_id_mode": "0644",
+    "legacy_upgrade": "Management prepare chmods guarded bound identity before PID1, after all identity/mount guards. No key/config permission change.",
+    "validators": "Accept legacy0600/new0644 only for machine-id; preserve0600 keys/config.",
+    "diagnostics": "Fixed IPv4 timeout text without printing arbitrary exception/secret material.",
+    "recovery": "docs/installed-host-repair-20261107.md checks known idle NVMe and state UUID, changes one file permission, fsyncs/unmounts; no reinstall or SPI write.",
+    "installer": "Exact-target yes/no; acquisition hashes during download; prepare authenticates encoded bytes; apply authenticates encoded bytes after approval then validates expanded size/hash/CRC while writing. No expansion prepasses. Optional --verify-readback defaults off; progress on long phases.",
+    "readback_reporting": "Skipped readback: readback_requested=false, bytes_verified=0, no readback_sha256. Source hash reflects written stream. Inactive-root updater explicitly retains full slot readback before activation_ready.",
+    "accepted_tradeoff": "Malformed authenticated gzip can fail during writing after partially modifying target; report remains failure and partition table is not refreshed."
+  },
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "boot": "Passed after two stale0600-only image validators were corrected.",
+    "installer_recovery": "Passed after restoring verify_stream utility for standalone ARM verifier compatibility.",
+    "integration_delta": "Passed safety review after updater explicitly requested readback; final status wording uses target to avoid implying whole-disk verification for root-slot updates."
+  },
+  "validation": {
+    "native_discovery": {
+      "cases": 1326,
+      "environment_skips": 100,
+      "success": true,
+      "seconds": 29.257
+    },
+    "assembly_cases": 4,
+    "shell_suites": 5,
+    "final_installer_tests": 32,
+    "update_tests": 33,
+    "root_state_cases": 24,
+    "json_toml_python_syntax": "checked",
+    "initial_discovery_failure": "Three updater regressions exposed shared engine default change; fixed production caller to retain explicit readback; complete rerun passed."
+  },
+  "raw_records": {
+    "tmp/installed-network-diagnosis/deployed-machine-id-stat.log": {
+      "bytes": 570,
+      "sha256": "cd3473b88be83f81b3d333c27d0d004cbd529611cf940deb2d430d277be63c20"
+    },
+    "tmp/installed-network-diagnosis/deployed-state-stats.log": {
+      "bytes": 16410,
+      "sha256": "eab78342c6f0ef592e50e24c1d3987fbc81d020c954edc01370940a4df04360e"
+    },
+    "tmp/installed-network-diagnosis/deployed-management.log": {
+      "bytes": 143,
+      "sha256": "a737b38330fa46aac096857d5b4dc5d187bb20b0801030df0cbc5f0ac6faf0a9"
+    },
+    "tmp/installed-network-diagnosis/deployed-host-management.py": {
+      "bytes": 23404,
+      "sha256": "b6f3907d0423542543e6accfb3c5112b6a4ceaa9d7e74aa39104b7fe86a479dd"
+    },
+    "tmp/installed-network-diagnosis/deployed-payload.json": {
+      "bytes": 11176,
+      "sha256": "476f7643fe6e4c5d38c437257898aa33d6f8b80400135af529d5e1fa5bf68eb9"
+    },
+    "tmp/installed-network-diagnosis/deployed-networkd.service": {
+      "bytes": 2446,
+      "sha256": "f241eb7c744396fdf84ec784e559f9c2b35d113e227a3290a7cab5190ee1335d"
+    },
+    "tmp/installed-network-diagnosis/networkd-network.c": {
+      "bytes": 51079,
+      "sha256": "0e801d2fb8c0b95c2aa78ca68d165ee5b60d45d8af5f33f315ee00e0ae4b5f91"
+    },
+    "tmp/installed-network-diagnosis/networkd-dhcp-common.c": {
+      "bytes": 44477,
+      "sha256": "80a329930a1b7a570e15a179877cde6442f9d11258745d5883e53f76f0231c27"
+    },
+    "tmp/installed-network-diagnosis/dhcp-identifier.c": {
+      "bytes": 9083,
+      "sha256": "b1e3ca20f42c7b57c05b3df6e9e26255840c13fadf096afb90932cb464d9cbfc"
+    },
+    "tmp/installed-network-diagnosis/sd-id128.c": {
+      "bytes": 9708,
+      "sha256": "ebd3e9535d48eebed70b4192a818579d035d90f15b5d2652baa63a182c854773"
+    },
+    "tmp/installed-network-diagnosis/machine-id-permissions.py": {
+      "bytes": 1240,
+      "sha256": "9d8387708808e5aac4b228652ab1ae05f3e478a18046211751315f9220fea8f7"
+    },
+    "tmp/installed-network-diagnosis/machine-id-arm.c": {
+      "bytes": 385,
+      "sha256": "c1db9d8067e64a9c173fbb8975fd8b2ad38f161e599844401c7658f993352748"
+    },
+    "tmp/installed-network-diagnosis/machine-id-arm": {
+      "bytes": 70624,
+      "sha256": "6e1258eeecc96feac0d8815e15f92ff9552d8f7abaa5ffa7ad91f07a96e3d6ea"
+    },
+    "tmp/installed-network-diagnosis/machine-id-permissions.log": {
+      "bytes": 226,
+      "sha256": "59753846f6764750a375f802fca3a0f138d6b23769ccd9fc5468076cb6518e7a"
+    },
+    "tmp/installed-network-diagnosis/arm-library-extract.log": {
+      "bytes": 282962,
+      "sha256": "f7fc419e1b260eceb5077f79f8725a0afa9982f02ae67863a8b2da48dfbf305b"
+    },
+    "tmp/installed-network-diagnosis/artifact-extract.log": {
+      "bytes": 72,
+      "sha256": "ec2aab23066c0d42e1d298362bff819db23fed1aafe916f4df84439befc6e090"
+    },
+    "tmp/installed-network-diagnosis/root-artifact-extract.log": {
+      "bytes": 74,
+      "sha256": "55db8b69fe3ea4390d883f57b3f1aa723247b6375e21373da7a9d75ff7b3a871"
+    },
+    "tmp/installed-network-diagnosis/arm-root/usr/lib/aarch64-linux-gnu/libsystemd.so.0.35.0": {
+      "bytes": 923696,
+      "sha256": "e38e0c11131d330c9a49a4a7f9437f8cf9d6a198355a47ecff02bc4aabe52171"
+    },
+    "tmp/installed-network-diagnosis/arm-root/usr/lib/aarch64-linux-gnu/libsystemd.so.0": {
+      "bytes": 923696,
+      "sha256": "e38e0c11131d330c9a49a4a7f9437f8cf9d6a198355a47ecff02bc4aabe52171"
+    },
+    "tmp/nvme-review-install-tests.log": {
+      "bytes": 344,
+      "sha256": "407297ddadc29ab57191b4e766fef7751e130df3fe9955baeecf8278404d553c"
+    },
+    "tmp/nvme-review-acquire-tests.log": {
+      "bytes": 467,
+      "sha256": "22846d621319a87c7baf9dbaf650d565d383674412ace781f9f697f5ebefabdc"
+    },
+    "tmp/nvme-review-repair-syntax.log": {
+      "bytes": 55,
+      "sha256": "115629bd83ab8a4ce2e262b7eccb8568b638967f0aaabc79a44a984914dbb58a"
+    },
+    "tmp/nvme-review-update-tests.log": {
+      "bytes": 132,
+      "sha256": "559e934e4d50fc491daf34e6b479d05241f5388c91ac3cc8e45f5a84ba0c12f1"
+    },
+    "tmp/machine-id-review-management-tests.log": {
+      "bytes": 137,
+      "sha256": "c8a7c6277b0f256c3c3e9ef1a6950f76f62581b1bc2448ba662075adfb5d56f3"
+    },
+    "tmp/machine-id-review-nvme-image-tests.log": {
+      "bytes": 117,
+      "sha256": "f947494f2256dcd2e0e6cc7f669bf1d2b5b42471407f58fed3c9c3223d50aefb"
+    },
+    "tmp/machine-id-review-state-root-tests.log": {
+      "bytes": 703,
+      "sha256": "a4ff3ba6313ca8646c38528422283a0552d36f017381fcb3cb04d51b2993f77e"
+    },
+    "tmp/machine-id-review-state-tests.log": {
+      "bytes": 135,
+      "sha256": "064a54c7d5205d7e6ec2d3077993756f4966b5f174bbec231fa969f38257d949"
+    },
+    "tmp/installed-host-fix-assembly-20261107.log": {
+      "bytes": 592,
+      "sha256": "239bf10052ea80042e03b5df3b904c0794e19d8393612379664604864362d225"
+    },
+    "tmp/installed-host-fix-discovery-02-20261107.log": {
+      "bytes": 2575,
+      "sha256": "213cc096ae0919fc5185594b1a714db5e44a5064312c3d2ee1bd29787c925a63"
+    },
+    "tmp/installed-host-fix-discovery-20261107.log": {
+      "bytes": 4232,
+      "sha256": "c0c8a1cf37c5efff5af2a516c3acf044c5cc9394ae158974eb3a076d8d9e7a0a"
+    },
+    "tmp/installed-host-fix-install-final-tests-20261107.log": {
+      "bytes": 344,
+      "sha256": "f143a6376864a24a7636d521ed418a93e97e1728b8a6f06b06daf4d2fa873e31"
+    },
+    "tmp/installed-host-fix-test-diagnostic-initramfs.sh.log": {
+      "bytes": 303,
+      "sha256": "4f32394712e496acd7af6bd2169139b72fabe25a5b245d036ee2d5e11b6faa8e"
+    },
+    "tmp/installed-host-fix-test-guest-fixture.sh.log": {
+      "bytes": 93,
+      "sha256": "4a00dd8b70af15f965d4e22586b43b3377dc5059c996ee85632ef50a5bf71375"
+    },
+    "tmp/installed-host-fix-test-host-init.sh.log": {
+      "bytes": 67,
+      "sha256": "1140ccbb0211f94dbafc0cda93fc5475694bb863682cad1f38b51860209ca382"
+    },
+    "tmp/installed-host-fix-test-host-storage-resolver.sh.log": {
+      "bytes": 109,
+      "sha256": "c126ee779bb8b80ee63a08f59a5b322a45ef59a0cf8144a160e6fd7c0cc56892"
+    },
+    "tmp/installed-host-fix-test-host-userspace.sh.log": {
+      "bytes": 86,
+      "sha256": "bafcce50723cd1421cf680cfff091897461967cc32747361e2d6a3f433ac20c1"
+    },
+    "tmp/installed-host-fix-update-tests-20261107.log": {
+      "bytes": 132,
+      "sha256": "4c1ac0a7ae110561e3023c7af75aa64e168b5521e69271f03ce4002f4986293e"
+    }
+  },
+  "limits": [
+    "Physical permission repair, DHCP lease and SSH with both keys not yet observed.",
+    "Normal serial root account remains locked with no known password; existing installer RAM console is recovery access.",
+    "Published November6 images remain unchanged and still implement older confirmation/readback behavior; new installer packaging/ARM execution remains pending.",
+    "No hardware benchmark or SPI write occurred.",
+    "Actual KVM guest and all other release acceptance/reproduction gates remain open."
+  ]
+}
