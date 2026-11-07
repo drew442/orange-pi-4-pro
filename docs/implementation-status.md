@@ -134,7 +134,11 @@ remain unchanged. **Do not repeat NVMe installation to fix management.**
   artifact review. The matching [full NVMe candidate](production-nvme-composition.md)
   now passes construction, complete BOOT/GUESTS readback and a separate full gzip
   wire/decoded-image/GPT/root-state-byte check. Independent artifact review finds
-  no issues. One construction is established; repeats and physical deployment remain open.
+  no issues. A [verified encoded delivery copy](nvme-candidate-retention.md)
+  and compatible derived manifest are now retained on codex, after byte-preserving
+  sparse conversion of three generated SD copies recovered 710 MB. The active
+  endpoint and operator procedure remain unchanged. One construction is established;
+  repeats and physical deployment remain open.
   Latest privileged Ubuntu unittest discovery runs **1,585 cases, no skips or failures**;
   five shell suites and four assembly cases pass. Within-tick mutation fixtures now force observable mtime changes;
   runtime/source guards are unchanged. See [root evidence](evidence/production-host-roots-20261107.json).
@@ -159,8 +163,9 @@ remain unchanged. **Do not repeat NVMe installation to fix management.**
    construction and full readback. The matching immutable bootstrap and
    [full NVMe composition](production-nvme-composition.md) now pass, including
    separate verification of the 545.6 MB gzip and its entire 256.06 GB expansion.
-   SPI-ready NVMe BOOT files do not establish physical SPI boot. Prepare clean
-   repeats and delivery next; software checks do not establish deployment acceptance.
+   SPI-ready NVMe BOOT files do not establish physical SPI boot. The gzip and
+   derived delivery manifest now pass off-builder retention and source validation;
+   a tested matched delivery procedure remains open. Prepare clean repeats next; software checks do not establish deployment acceptance.
    [Kernel replay retention](kernel-run-retention.md) preserves the expanded tree
    as verified archives on two hosts. [Byte-preserving conversion](evidence/candidate-sd-sparsification-20261107.json)
    recovered 663 MB from three generated image copies. The compiled candidate

@@ -1,0 +1,221 @@
+{
+  "classification": "Generated-file capacity recovery and off-builder encoded candidate retention; no physical deployment",
+  "control_records": {
+    "bundle-compatibility.log": {
+      "bytes": 512,
+      "path": "out/native-image-sparse-20261107/bundle-compatibility.log",
+      "sha256": "36ba627a2b2e738497d614e89d3e20c9a40f9bcf514f0052ada840e76ec8bbff"
+    },
+    "complete.json": {
+      "bytes": 2251,
+      "path": "out/native-image-sparse-20261107/complete.json",
+      "sha256": "d972e4b8799904bcc00e0184dd9dfa7a038cf194e945bb475134a52984603f2e"
+    },
+    "fixture-tests.log": {
+      "bytes": 821,
+      "path": "out/native-image-sparse-20261107/fixture-tests.log",
+      "sha256": "624df33ba1718dc9dff6e9b1f46560edda08a9af8e6c1f351391b17195c4ee2b"
+    },
+    "intent.json": {
+      "bytes": 822,
+      "path": "out/native-image-sparse-20261107/intent.json",
+      "sha256": "1c2dc5edff23434a95ab1ef51b5e1d3b061c5be7a3bfe83f077cba3ca8bf1633"
+    },
+    "readiness.json": {
+      "bytes": 2388,
+      "path": "out/native-image-sparse-20261107/readiness.json",
+      "sha256": "600b22d635fd0176df869fe8ccc81f774d1c990e03be5e2874a04482ff75eed7"
+    },
+    "retain-candidate.py": {
+      "bytes": 6530,
+      "path": "out/native-image-sparse-20261107/retain-candidate.py",
+      "sha256": "2ca01808daccef2ac7e73016ed537395d390831f7ba20191c78449f830a48d91"
+    },
+    "retention-review.json": {
+      "bytes": 2929,
+      "path": "out/native-image-sparse-20261107/retention-review.json",
+      "sha256": "1e56b56d53fb7e4061c040c41ec16c8e29bca828561ef8261980202962b776d3"
+    },
+    "retention-transfer.log": {
+      "bytes": 1620,
+      "path": "out/native-image-sparse-20261107/retention-transfer.log",
+      "sha256": "0dcc316272f44eea033579ce20b20aae194e5034041c8dc500bd9e9f5e74e854"
+    },
+    "review.json": {
+      "bytes": 2522,
+      "path": "out/native-image-sparse-20261107/review.json",
+      "sha256": "dca820e9fad5daeeea3f69ba73972f7742706988e6e0bec9b109ba530128f08d"
+    },
+    "sparsify.py": {
+      "bytes": 7057,
+      "path": "out/native-image-sparse-20261107/sparsify.py",
+      "sha256": "f959c51827cc7a616799b3012744dd763835a52dde4bebf2350bcc8b47d90fe8"
+    },
+    "test-sparsify.py": {
+      "bytes": 2879,
+      "path": "out/native-image-sparse-20261107/test-sparsify.py",
+      "sha256": "aa0fce1a34ca83e7314c65c6435f7fc7b0782e85538bdaca70c489f8e6939331"
+    },
+    "thread-guard.py": {
+      "bytes": 23759,
+      "path": "out/native-image-sparse-20261107/thread-guard.py",
+      "sha256": "c2733612a3c1fbcf7729be13a2579a11dbbeddd9f0e2d4ac7592ef75e67d32fa"
+    }
+  },
+  "date": "2026-11-07",
+  "delivery_service_changed": false,
+  "hardware_acceptance": false,
+  "independent_review": {
+    "decoded_image_repeated": false,
+    "effort": "high",
+    "encoded_bytes_independently_hashed": 545633126,
+    "findings": [],
+    "model": "gpt-6.1-sol"
+  },
+  "limits": [
+    "New candidate state UUID fc8bbef6-9385-4ddb-90ba-e41eaccc035b differs from currently installed 00fd936c-49fb-4fea-87c8-928b9c1599e0; do not flash matching bootstrap alone.",
+    "Existing-install repair remains next board action; no reinstall needed to repair DHCP.",
+    "The retained compatible manifest is not a tested delivery/deployment procedure.",
+    "No original SPI backup, physical recovery, SPI programming, SD-removed boot or actual KVM guest established.",
+    "Native reserve and builder admission are distinct; no further LV growth or guard reduction authorized."
+  ],
+  "parent_build_evidence": "docs/evidence/production-nvme-20261107.json",
+  "physical_device_writes": false,
+  "reproduced_construction_or_deployment": false,
+  "retained_candidate": {
+    "directory": "out/nvme-candidate-retained-20261107",
+    "encoded_complete_incoming_and_readback_hashes_passed": true,
+    "free_after_bytes": 565215232,
+    "free_before_bytes": 1110913024,
+    "gzip": {
+      "bytes": 545633126,
+      "sha256": "9e8be89dbcabe30799744201ea94de93ce343134d0a8e034fa44281c8dd13955"
+    },
+    "manifest": {
+      "bytes": 10481,
+      "path": "out/nvme-candidate-retained-20261107/manifest.json",
+      "sha256": "b48b237b82281ac61b0c02354430f3d5481badeeef6a24257ebb01fdef1262e0"
+    },
+    "manifest_derivation": "Original producer fields preserved; only files.nvme.img.gz and distribution added from authenticated completed producer/stream proof.",
+    "native_reserve_bytes": 268435456,
+    "raw_image_retained_on_codex": false,
+    "recompressed": false,
+    "retention": {
+      "bytes": 757,
+      "path": "out/nvme-candidate-retained-20261107/retention.json",
+      "sha256": "f956884a449ce1d8a311c740bac4d446e26b8aed421ccdac11e5c89cab4ebe93"
+    },
+    "source_copy_proof": {
+      "bytes": 274,
+      "path": "out/nvme-candidate-retained-20261107/source.log",
+      "sha256": "c5c3145bf44cb4304abb6215932b7cf51f968a023d6795385da6d8db35e734d1"
+    },
+    "source_manifest": {
+      "bytes": 9393,
+      "path": "out/nvme-candidate-retained-20261107/source-manifest.json",
+      "sha256": "fa01243f5884bfaf3dae92f5974a2899dd93836b7c6c23d3d0a509d7c572e90c"
+    },
+    "stream_verification": {
+      "bytes": 4277,
+      "path": "out/nvme-candidate-retained-20261107/stream-verification.json",
+      "sha256": "88d72b266ae76f74aafea25fa1e4e751cdcb76cd066cf51d1ba0a9e919ce8d66"
+    }
+  },
+  "schema": 1,
+  "sparsification": {
+    "allocated_bytes_recovered": 709754880,
+    "approved_code_sha256": "f959c51827cc7a616799b3012744dd763835a52dde4bebf2350bcc8b47d90fe8",
+    "approved_readiness_sha256": "600b22d635fd0176df869fe8ccc81f774d1c990e03be5e2874a04482ff75eed7",
+    "contents_inodes_modes_owners_mtimes_preserved": true,
+    "ctime_changes_expected": true,
+    "files": [
+      {
+        "allocated_after": 31481856,
+        "allocated_before": 268439552,
+        "full_size_and_hash": {
+          "bytes": 268435456,
+          "sha256": "b05086afaab3d2f9da6c33b8e457f3552cce2899c08824d371615008bf66d9fd"
+        },
+        "mtime_preserved": true,
+        "signature": [
+          64512,
+          4103977,
+          33204,
+          1000,
+          1000,
+          1,
+          268435456,
+          1793776554123441948,
+          1793776631753810250
+        ],
+        "spec": {
+          "bytes": 268435456,
+          "inode": 4103977,
+          "path": "/home/drew/orange-pi-4-pro/out/diagnostic-20261104/a733-diagnostic.img",
+          "sha256": "b05086afaab3d2f9da6c33b8e457f3552cce2899c08824d371615008bf66d9fd"
+        }
+      },
+      {
+        "allocated_after": 31481856,
+        "allocated_before": 268435456,
+        "full_size_and_hash": {
+          "bytes": 268435456,
+          "sha256": "08fff0a88c509ee484c2450c58d42629fd90eedb8cd4c57513f98f4f78611b58"
+        },
+        "mtime_preserved": true,
+        "signature": [
+          64512,
+          4105920,
+          33188,
+          1000,
+          1000,
+          1,
+          268435456,
+          1793829641161730476,
+          1793829643587732403
+        ],
+        "spec": {
+          "bytes": 268435456,
+          "inode": 4105920,
+          "path": "/home/drew/orange-pi-4-pro/out/el2-diagnostic-20261104/a733-el2-diagnostic.img",
+          "sha256": "08fff0a88c509ee484c2450c58d42629fd90eedb8cd4c57513f98f4f78611b58"
+        }
+      },
+      {
+        "allocated_after": 32591872,
+        "allocated_before": 268435456,
+        "full_size_and_hash": {
+          "bytes": 268435456,
+          "sha256": "2d22d84ada37a5b5d3696cc913caddcb31c0e681e65185005ea56ca0b8396329"
+        },
+        "mtime_preserved": true,
+        "signature": [
+          64512,
+          4106371,
+          33188,
+          1000,
+          1000,
+          1,
+          268435456,
+          1793952310714463938,
+          1793952311972467052
+        ],
+        "spec": {
+          "bytes": 268435456,
+          "inode": 4106371,
+          "path": "/home/drew/orange-pi-4-pro/out/host-deployment-20261106/a733-host-sd.img",
+          "sha256": "2d22d84ada37a5b5d3696cc913caddcb31c0e681e65185005ea56ca0b8396329"
+        }
+      }
+    ],
+    "free_after_bytes": 1111334912,
+    "physical_board_media_touched": false
+  },
+  "validation": {
+    "acquisition_and_installer_manifest_validation_passed": true,
+    "full_suite": "No tracked executable code changed; prior 1585 passing tests remain attributed to producer/stream changes.",
+    "git_diff_check": "passed",
+    "independent_read_only_parent_policy_cases_passed": 8,
+    "real_fallocate_fixtures_passed": 5
+  }
+}

@@ -49,6 +49,10 @@ staging overhead. Verified retention is needed for further builds; keep every
 guard. No additional LV growth is authorized.
 The LV UUID, root source and filesystem type are unchanged. No Orange Pi storage
 was touched. Codex has a separate 256 MiB free-space minimum for retention copies.
+[Native capacity recovery and candidate retention](nvme-candidate-retention.md)
+now preserve three generated image hashes while reclaiming 710 MB, then retain
+the 545.6 MB gzip with 565 MB free at copy completion. This does not increase
+builder capacity.
 
 
 The latest [candidate build](evidence/uboot-nvme-candidate-20261107.json) used

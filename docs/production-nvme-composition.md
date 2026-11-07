@@ -81,7 +81,9 @@ Builder directory:
 | `manifest.json` | 9,393 | `fa01243f5884bfaf3dae92f5974a2899dd93836b7c6c23d3d0a509d7c572e90c` |
 
 The raw sparse image allocates 975,032,320 bytes. Raw and gzip remain on the
-builder. Native `out/nvme-timesync-03-20261107` retains small receipts, expected
+builder. A [subsequently verified encoded delivery copy](nvme-candidate-retention.md)
+is now retained on codex; no raw image is copied there. Native
+`out/nvme-timesync-03-20261107` retains small receipts, expected
 trees, complete filesystem inspection transcripts, stream proof and independent
 review; images and downloaded sources remain outside Git.
 
