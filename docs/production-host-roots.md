@@ -6,7 +6,9 @@ namespace. Both pass complete filesystem readback. This is one construction;
 the matching [8 GiB state](production-host-state.md) now also passes construction
 and complete readback, and the [matching bootstrap](production-host-bootstrap.md)
 passes construction and inspection. The [full NVMe candidate](production-nvme-composition.md)
-now also passes software checks; repeat-build reproducibility remains open.
+now also passes software checks. A [second root construction](production-host-roots-repeat.md)
+passes full readback with identical contents and metadata except 463 mtimes per
+slot; raw/gzip bytes differ. Downstream repeats remain open.
 Published deployment images are unchanged, and the
 [existing-install repair](installed-host-repair-20261107.md) remains the next board
 action. These components are not a replacement SD or whole-drive image.

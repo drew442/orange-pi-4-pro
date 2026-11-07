@@ -39,6 +39,8 @@ its separate 256 MiB reserve. The new regular-file SD recipe produces identical
 raw/gzip bytes with only 36,704,256 allocated bytes per new raw copy. Recheck
 resources before subsequent staging; full-NVMe guards remain unchanged, and no
 further LV expansion is authorized. Earlier capacity samples below are historical.
+The [completed fresh root repeat](production-host-roots-repeat.md) ends with
+**23,399,813,120 bytes** free, below the full-NVMe guard before more staging.
 
 The [operator-approved 20 GiB root-LV growth](evidence/build-host-capacity-execution-20261107.json)
 now completes successfully, including online ext4 enlargement. The LV is
