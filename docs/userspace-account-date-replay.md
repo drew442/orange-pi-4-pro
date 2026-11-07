@@ -30,8 +30,9 @@ and the fixed time account identity were separately inspected. **The helper is
 wired into a [separate replay driver](account-date-replay-driver.md). Its
 [fresh baseline execution](evidence/account-date-baseline-execution-20261107.json)
 now matches the original archive, raw tar and BOM pins; independent complete
-readback passes. Fresh time-profile outer integration and construction remain
-pending.**
+readback passes. The [time-profile repeat](evidence/account-date-time-execution-20261107.json)
+also matches the original archive/raw/BOM pins; independent complete readback
+and source/receipt checks pass.**
 
 A global `SOURCE_DATE_EPOCH` is unsuitable for preserving these historical
 bytes: pinned Python 3.11 `py_compile` selects hash-based bytecode when that
@@ -43,4 +44,5 @@ all historical closure checks and require exact archive/raw-tar/BOM hashes.
 The time launcher also needs a strict validator for the new replay receipt and
 source manifest; it must not accept the old failed receipt. Baseline integration,
 independent review and actual fresh construction now pass.
-Time-profile outer receipt integration and actual repetition remain next work.
+Time-profile outer receipt integration and actual repetition now pass as well.
+Production image construction and physical acceptance remain open.

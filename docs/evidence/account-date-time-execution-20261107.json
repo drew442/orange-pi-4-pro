@@ -1,0 +1,493 @@
+{
+  "schema": 1,
+  "date": "2026-11-07",
+  "classification": "Repeated 221-package time construction from fresh dated baseline; no physical acceptance",
+  "success": true,
+  "source_revision": "a7e51bef5066bec9756841871e3138a705a6df88",
+  "builder_project": "/var/lib/a733-account-date-time-replay-20261107/project",
+  "builder_phase": "/var/lib/a733-clean-replay-20261106/userspace-timesync-account-dates-01",
+  "base": "/var/lib/a733-clean-replay-20261106/userspace-pipeline-account-dates-01/work",
+  "base_evidence": "docs/evidence/account-date-baseline-execution-20261107.json",
+  "returncode": 0,
+  "inputs": {
+    "build/account-dates.py": {
+      "bytes": 9114,
+      "git_blob": "6fe5dc4539eef8c8ec30c0600694092537e22865",
+      "sha256": "a9bad51aeeb113dc66d1050550e0ec5eceb6e3cb7ec8c4c524934b5915165114"
+    },
+    "build/configure-host-userspace.py": {
+      "bytes": 22122,
+      "git_blob": "768f64362b2653206409df0735cb00ba7764a040",
+      "sha256": "0ff4f8538723ac1a4fe6f43d1ff6d73b6e0e36f22daa8eb31fa97d8553b8c95f"
+    },
+    "build/configure-timesync-userspace.py": {
+      "bytes": 26348,
+      "git_blob": "507fbd42f21f920563c821892ad24018307f52ab",
+      "sha256": "eb41dae44c46ef5cb9aaa4a319ac17eedaedd9447b28e0f2120e17b68ab651c5"
+    },
+    "build/debootstrap-adapter.py": {
+      "bytes": 18308,
+      "git_blob": "8fcebf8d99be90b868df37c0965c3c4780bf7901",
+      "sha256": "d10f8a8ea1e83a0b659582d895e98bf8553165dbfc2469aab54eab82e1c501ea"
+    },
+    "build/export-account-dated-userspace.py": {
+      "bytes": 11393,
+      "git_blob": "75f7073a4af3af696b38663b5d526fdf68111367",
+      "sha256": "269d2aa0390a0a8b41e49e215efd5544c096ca1d94a1c4f85bd09f2b1a2dad0a"
+    },
+    "build/export-host-userspace.py": {
+      "bytes": 28217,
+      "git_blob": "3a3f94a2cb582455d82a624160e94f7b7067ea24",
+      "sha256": "1cd49563c43fe7ddd78d309ef2d9fe48b2ad1d1d29ee6d7050374db12be118ed"
+    },
+    "build/export-timesync-userspace.py": {
+      "bytes": 11762,
+      "git_blob": "89c439e8c8443f7939c74c691a0350b11da3d8ce",
+      "sha256": "8bddb7a0500b160c1772c30dbac0ca0ab7cac6e3f1e6de8464b743513d65716a"
+    },
+    "build/launch-account-dated-timesync.py": {
+      "bytes": 15103,
+      "git_blob": "b5a444142b7b1d3f576c93f49ce6ec85921320d9",
+      "sha256": "6725c9b4e83ddf95ee8e0f15e9895033bb48852030d56303815dc5ca5cadf99a"
+    },
+    "build/launch-account-dated-userspace.py": {
+      "bytes": 8956,
+      "git_blob": "e5c4fc22821458d85a28ee066ccacdcbe7fda5c6",
+      "sha256": "65b507b671ae2fb80a1e72cb47ce06d7833656b2f7e5e5c7613542a10fec0eba"
+    },
+    "build/launch-timesync-userspace.py": {
+      "bytes": 33819,
+      "git_blob": "cd7a752db6c2949eee6d16556b9a0c699fac02bc",
+      "sha256": "12bca34664c99b6621378b43807da69e1265dff4fe0b9d4f42251aa78f1ee787"
+    },
+    "build/launch-userspace-configuration.py": {
+      "bytes": 25631,
+      "git_blob": "5f56acbe086e1bedafc539b75d4024b39cb5761a",
+      "sha256": "08a8bb767987f2a9496ee92d03260fdb5b61bd1f486b9ab00fd04f7ad4633598"
+    },
+    "build/launch-userspace-pipeline.py": {
+      "bytes": 20436,
+      "git_blob": "ce87ad6137dd3ae8b09c6bdc677bac2c553b61d1",
+      "sha256": "3338fe97521287124cae5c61b2631deee977ad575e5d713b6ab4d1a6385c22e7"
+    },
+    "build/offline-userspace-repo.py": {
+      "bytes": 19197,
+      "git_blob": "5d2b02920e1d470367b1d4672f5e25b4e894a344",
+      "sha256": "bb8a4c71595f9867e4f7cf2958a2bf5bca6e0d81c49819eb1b7483957b0a4911"
+    },
+    "build/prepare-host-userspace.py": {
+      "bytes": 18830,
+      "git_blob": "361d66ec4cb22e67c2f23eb2962fdb838062f9ae",
+      "sha256": "86a3432aea83ae408a38d18f07eb48b2d2a8b59adb7b23b14bfcadfdf6a772a9"
+    },
+    "build/timesync-identity.py": {
+      "bytes": 8173,
+      "git_blob": "28165e0fdc76b927659657c9c583a64ed9013ae4",
+      "sha256": "5ee1f6d3a2b3211189d0f45a2c007a45c1a950fb960cb7b75b5fe2a47a767909"
+    },
+    "build/userspace-bootstrap-api.py": {
+      "bytes": 27185,
+      "git_blob": "d743e639cdca51ba3adb5a796a090a3589e47e1f",
+      "sha256": "365fd1681e5b5fbce8062771d54082862482995b48ef6b42f6f2b05464b26964"
+    },
+    "configs/builder-replay-packages-20261106.lock.tsv": {
+      "bytes": 32546,
+      "git_blob": "17518b78511b6fa86474aa62a2a575b53895c549",
+      "sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425"
+    },
+    "configs/host-account-dates-replay.lock.json": {
+      "bytes": 2655,
+      "git_blob": "1ae20cfa807884d572898617259f3ce33230e046",
+      "sha256": "5859c325c938168b6c08612d5071be059d032c520ed017410f3a3941571190bb"
+    },
+    "configs/host-timesync-inputs.lock.json": {
+      "bytes": 3837,
+      "git_blob": "36e964a518fe2dfd8a70d293e5c176ad69745608",
+      "sha256": "b183b9df1c19241420c6939c4487dcf4894ae60daa3827d73589a6e112918a5f"
+    },
+    "configs/host-timesync-package-hashes.lock.tsv": {
+      "bytes": 28789,
+      "git_blob": "58b3a81e3b52c98fcea760f44f7c7f5b50e4c133",
+      "sha256": "58f2027166e566f485e9fabccb6a7259c05ad1d882193a8392ee93d60652ebff"
+    },
+    "configs/host-timesync-packages.lock.tsv": {
+      "bytes": 6712,
+      "git_blob": "9164a93ced5df57b0aeb4fe4307a7fca12f9b89f",
+      "sha256": "2e97a93bfa02ebd89b7d437df1c9c946a5e14f76b40823d54a3f1a59ab3d0d43"
+    },
+    "configs/host-timesync-sysusers.conf": {
+      "bytes": 170,
+      "git_blob": "cf5fe37fcf79503396e2cc2d3c535f9383e360f2",
+      "sha256": "d3873e161fa2ba8cee53de2a675b1ed8af9145c7151ba7a2775634c480766079"
+    },
+    "configs/host-userspace-package-hashes.lock.tsv": {
+      "bytes": 28638,
+      "git_blob": "529b39aad256fbe28188c6c724c60bfb9edee698",
+      "sha256": "f2f613e79d9c1abc1689e19cfe81b624d9d2ac3beeb322fd5788980d919f7d86"
+    },
+    "configs/host-userspace-packages.lock.tsv": {
+      "bytes": 6671,
+      "git_blob": "640af83be6bb0939d56d11b7b62f256e03ba05f9",
+      "sha256": "f2abf03d0d6e7fd506560689093220514cbf1acc678f7560562026d6ca6564a6"
+    },
+    "configs/host-userspace-profiles.lock.json": {
+      "bytes": 7337,
+      "git_blob": "afb0cae0a1844f7c6d99b56bbe5738948b24ae04",
+      "sha256": "5e5317a5bf1449125f1fb4b10a767b39162f27b0f729411337900ba0b7c3b380"
+    },
+    "configs/host-userspace-source-archives.lock.json": {
+      "bytes": 122443,
+      "git_blob": "a688039e9fc02d6bb46c5843e89f1cf4b29451b2",
+      "sha256": "f75bae857ffcfdfcfe5b7062880850d14b9f40bcdc7296f1999aa6a901fd6185"
+    },
+    "docs/evidence/time-sync-package-input-20261106.json": {
+      "bytes": 2617,
+      "git_blob": "a892d3dd7c3ca54f9fc72b72e0b2493fe2521306",
+      "sha256": "acaa7643bd375d58bf68b935b6eb3fbe04c35ede73cd293e94f48dcf87ae55cd"
+    }
+  },
+  "configured_packages": 221,
+  "archive": {
+    "bytes": 138093095,
+    "sha256": "0ead62c982344bfa3a796027e2f07ce0d8402e7033122707e01a9a3f8860f248"
+  },
+  "raw_tar": {
+    "bytes": 468592640,
+    "sha256": "7559c4c1247e3598d3d879b4e2d0cb385a0216d60aabefa5519391a47386c86e"
+  },
+  "bom": {
+    "bytes": 4346433,
+    "sha256": "dd5064e28d8b2751ce7285b83b649e94121dd04b6d70e0650ac2439bd32d79d7"
+  },
+  "members": 15909,
+  "account_date_replay": {
+    "schema": 1,
+    "profile": "time",
+    "adapter": {
+      "bytes": 11393,
+      "sha256": "269d2aa0390a0a8b41e49e215efd5544c096ca1d94a1c4f85bd09f2b1a2dad0a"
+    },
+    "helper": {
+      "bytes": 9114,
+      "sha256": "a9bad51aeeb113dc66d1050550e0ec5eceb6e3cb7ec8c4c524934b5915165114"
+    },
+    "contract": {
+      "bytes": 2655,
+      "sha256": "5859c325c938168b6c08612d5071be059d032c520ed017410f3a3941571190bb"
+    },
+    "source_manifest": {
+      "bytes": 5272,
+      "sha256": "a96af023d02ab6cc0e5b021d12d080aeded190a3bd8b1d9837d7ba6778fdb98f"
+    },
+    "input_receipt_sha256": "76cd689d350416b5c3d5f467663ff8c668f4664b79ec75e52bab29f10488827c",
+    "changed_basenames": [],
+    "before": {
+      "shadow": {
+        "bytes": 632,
+        "sha256": "318a6b00f7b0f35a1c705645da405c2f6f1566f3aba1b24e865a79b8b84ad62e"
+      },
+      "shadow-": {
+        "bytes": 600,
+        "sha256": "dd3aae9dcb6dc8be3e8fc6639662430917dbd9d14cffa05e4f729e7bf76a1908"
+      }
+    },
+    "after": {
+      "shadow": {
+        "bytes": 632,
+        "sha256": "318a6b00f7b0f35a1c705645da405c2f6f1566f3aba1b24e865a79b8b84ad62e"
+      },
+      "shadow-": {
+        "bytes": 600,
+        "sha256": "dd3aae9dcb6dc8be3e8fc6639662430917dbd9d14cffa05e4f729e7bf76a1908"
+      }
+    }
+  },
+  "old_core_provenance": {
+    "adapter": {
+      "bytes": 11762,
+      "sha256": "8bddb7a0500b160c1772c30dbac0ca0ab7cac6e3f1e6de8464b743513d65716a"
+    },
+    "backend": {
+      "bytes": 28217,
+      "sha256": "1cd49563c43fe7ddd78d309ef2d9fe48b2ad1d1d29ee6d7050374db12be118ed"
+    },
+    "deriver": {
+      "bytes": 26348,
+      "sha256": "eb41dae44c46ef5cb9aaa4a319ac17eedaedd9447b28e0f2120e17b68ab651c5"
+    },
+    "contract": {
+      "bytes": 3837,
+      "sha256": "b183b9df1c19241420c6939c4487dcf4894ae60daa3827d73589a6e112918a5f"
+    },
+    "source_manifest": {
+      "bytes": 5272,
+      "sha256": "a96af023d02ab6cc0e5b021d12d080aeded190a3bd8b1d9837d7ba6778fdb98f"
+    }
+  },
+  "historical_archive_raw_bom_and_source_pins_unchanged": true,
+  "phases": [
+    {
+      "name": "configure",
+      "success": true,
+      "returncode": 0,
+      "recipe_receipt_sha256": "76cd689d350416b5c3d5f467663ff8c668f4664b79ec75e52bab29f10488827c",
+      "propagation": {
+        "nonce": "5e7ca0c1dc2d7539dced6a4658db30a26cf9412aa1b69452e16ad6aaeb2b6560",
+        "payload_pid": 1651726,
+        "proof": {
+          "namespace_inodes": {
+            "cgroup": 4026532294,
+            "ipc": 4026532197,
+            "mnt": 4026532195,
+            "net": 4026532189,
+            "pid": 4026532198,
+            "user": 4026531837,
+            "uts": 4026532196
+          },
+          "nonce": "5e7ca0c1dc2d7539dced6a4658db30a26cf9412aa1b69452e16ad6aaeb2b6560",
+          "root": {
+            "dev": 64512,
+            "ino": 134730
+          },
+          "success": true
+        },
+        "success": true
+      },
+      "mapped_processes_final": [],
+      "output_mounts_final": []
+    },
+    {
+      "name": "export",
+      "success": true,
+      "returncode": 0,
+      "recipe_receipt_sha256": "e47ea9b115395df811ab874568a62fc114ccaafc2ea81de3c213df375ef35b19",
+      "propagation": {
+        "nonce": "835ecf2ad0ae361c2395213287de82a9e17c453e24bf064a1a0fad7c63370b72",
+        "payload_pid": 1651818,
+        "proof": {
+          "namespace_inodes": {
+            "cgroup": 4026532295,
+            "ipc": 4026532198,
+            "mnt": 4026532196,
+            "net": 4026532189,
+            "pid": 4026532199,
+            "user": 4026531837,
+            "uts": 4026532197
+          },
+          "nonce": "835ecf2ad0ae361c2395213287de82a9e17c453e24bf064a1a0fad7c63370b72",
+          "root": {
+            "dev": 64512,
+            "ino": 134730
+          },
+          "success": true
+        },
+        "success": true
+      },
+      "mapped_processes_final": [],
+      "output_mounts_final": []
+    }
+  ],
+  "postconditions": {
+    "host_inventory_unchanged": true,
+    "mapped_processes_final": [],
+    "output_mounts_final": []
+  },
+  "resource_minima": {
+    "free_disk_bytes": 5249130496,
+    "available_memory_bytes": 7242838016,
+    "samples": 73,
+    "initial_capacity_required_bytes": 5368709120
+  },
+  "independent_readback": {
+    "archive": {
+      "bytes": 138093095,
+      "sha256": "0ead62c982344bfa3a796027e2f07ce0d8402e7033122707e01a9a3f8860f248"
+    },
+    "raw_tar": {
+      "bytes": 468592640,
+      "sha256": "7559c4c1247e3598d3d879b4e2d0cb385a0216d60aabefa5519391a47386c86e"
+    },
+    "members": 15909,
+    "types": {
+      "dir": 1725,
+      "symlink": 1854,
+      "char": 8,
+      "file": 12319,
+      "hardlink": 3
+    },
+    "root_locked": true,
+    "machine_id_empty": true,
+    "forbidden_build_and_identity_paths_absent": true,
+    "inventory_exact": 221,
+    "success": true,
+    "account_days": {
+      "baseline": 20763,
+      "systemd-timesync": 20764
+    },
+    "locked_account_counts": {
+      "shadow": 24,
+      "shadow-": 23
+    },
+    "time_uid_gid": [
+      996,
+      996
+    ],
+    "service_links": {
+      "etc/systemd/system/sysinit.target.wants/systemd-timesyncd.service": "/lib/systemd/system/systemd-timesyncd.service",
+      "etc/systemd/system/dbus-org.freedesktop.timesync1.service": "/lib/systemd/system/systemd-timesyncd.service"
+    },
+    "service_file_pins_match": true,
+    "bom": {
+      "bytes": 4346433,
+      "sha256": "dd5064e28d8b2751ce7285b83b649e94121dd04b6d70e0650ac2439bd32d79d7"
+    },
+    "script_sha256": "2f96e92e86a1d633144826c216bd9c41df974dffeb43e804b42eab3213a8bbbb",
+    "classification": "Independent complete raw tar/PAX/BOM readback; no physical acceptance"
+  },
+  "independent_source_and_phase_snapshot_check": {
+    "files": 27,
+    "git_blobs_at_recorded_revision": true,
+    "both_phase_snapshots_exact": true,
+    "both_phase_manifests_exact": true,
+    "propagation_nonce_chains_coherent": true
+  },
+  "live_postcheck": {
+    "mapped_processes": [],
+    "phase_mounts": {
+      "/var/lib/a733-clean-replay-20261106/userspace-pipeline-account-dates-01": [],
+      "/var/lib/a733-clean-replay-20261106/userspace-timesync-account-dates-01": []
+    },
+    "free_bytes": 5249044480,
+    "resources": {
+      "time": 1794021888.574066,
+      "free_bytes": 5249044480,
+      "available_memory_bytes": 7419330560
+    }
+  },
+  "independent_source_review": {
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "result": "pass",
+    "new_driver_cases": 11,
+    "historical_time_launcher_cases": 23
+  },
+  "validation": {
+    "all_account_date_tests_root_passed": 46,
+    "latest_native_discovery": {
+      "cases": 1399,
+      "skipped": 113,
+      "failures": 1,
+      "errors": 4,
+      "limitation": "Five existing EL2/kernel/vDSO capacity checks exceed native filesystem free space; no full-suite green claim."
+    },
+    "previous_capacity_affected_modules_passed_in_ordinary_path_tmpfs": 47,
+    "production_guards_changed": false,
+    "lvm_resized": false
+  },
+  "raw_records_root": "out/account-date-time-replay-20261107/records/",
+  "raw_pins": {
+    "receipt.json": {
+      "bytes": 21025,
+      "sha256": "09ef31ee7db314f9562899c0abb7929dd535b87f21b4c14ab000f9bf1fe708a5"
+    },
+    "source-manifest.json": {
+      "bytes": 5272,
+      "sha256": "a96af023d02ab6cc0e5b021d12d080aeded190a3bd8b1d9837d7ba6778fdb98f"
+    },
+    "host-packages.before.tsv": {
+      "bytes": 40966,
+      "sha256": "446b7eb3364a6f196390c698c1c133086fee5eb3b080ec4483cc1d8584b39b15"
+    },
+    "host-packages.after.tsv": {
+      "bytes": 40966,
+      "sha256": "446b7eb3364a6f196390c698c1c133086fee5eb3b080ec4483cc1d8584b39b15"
+    },
+    "configure/runtime.log": {
+      "bytes": 25722,
+      "sha256": "2f00caa542ee9309ce11b915a1f467320039cc58a0dd997df9ff267907819e8b"
+    },
+    "export/runtime.log": {
+      "bytes": 6477,
+      "sha256": "5d99d3e1b96f509fe5d391edcd862e699b669fb80a82e8e8775e45117b8d3ca7"
+    },
+    "configure/inputs/manifest.json": {
+      "bytes": 5272,
+      "sha256": "a96af023d02ab6cc0e5b021d12d080aeded190a3bd8b1d9837d7ba6778fdb98f"
+    },
+    "configure/inputs/run.py": {
+      "bytes": 2962,
+      "sha256": "663b3e828b76b8ff3186fb8d4ffad5df74c73a56d2708b694f7f08a210f220a6"
+    },
+    "export/inputs/manifest.json": {
+      "bytes": 5272,
+      "sha256": "a96af023d02ab6cc0e5b021d12d080aeded190a3bd8b1d9837d7ba6778fdb98f"
+    },
+    "export/inputs/run.py": {
+      "bytes": 3137,
+      "sha256": "3528bd83479b1e954117d1ae254d3421229631373cd011bded1a5139562666c9"
+    },
+    "work/timesync-receipt.json": {
+      "bytes": 22676,
+      "sha256": "76cd689d350416b5c3d5f467663ff8c668f4664b79ec75e52bab29f10488827c"
+    },
+    "work/timesync-package-state.json": {
+      "bytes": 14189,
+      "sha256": "af63b625eda42a2d4aca8997c7019ee7c1d1cf4b0d0809aea602dabfbf5f43d1"
+    },
+    "work/export-timesync-result/receipt.json": {
+      "bytes": 4055,
+      "sha256": "e47ea9b115395df811ab874568a62fc114ccaafc2ea81de3c213df375ef35b19"
+    },
+    "work/export-timesync-result/rootfs-bom.json": {
+      "bytes": 4346433,
+      "sha256": "dd5064e28d8b2751ce7285b83b649e94121dd04b6d70e0650ac2439bd32d79d7"
+    }
+  },
+  "other_raw_pins": {
+    "tmp/account-date-time-replay-20261107/bundle.sha256": {
+      "bytes": 116,
+      "sha256": "4d9c5886c5863f4ebbbaf85b2f2333b2b36c8dd1e8bd95575a5e5f8b88ad54af"
+    },
+    "tmp/account-date-time-replay-20261107/source-clone.log": {
+      "bytes": 157,
+      "sha256": "9b184e6b0c8d40a4eb0f8f0b6f2c8de02a1ab6a66a64354c4b3f3334e0c6ce8d"
+    },
+    "tmp/account-date-time-replay-20261107/plan.json": {
+      "bytes": 7048,
+      "sha256": "2220f81f4062656771afd311db9360a929b14b79bdfed470e64614d0825c0734"
+    },
+    "tmp/account-date-time-replay-20261107/execution.log": {
+      "bytes": 215,
+      "sha256": "7f6515fdd2178ca86035c205b99ba1c0d17e457b9d85dc68799b6f02a8155037"
+    },
+    "tmp/account-date-time-replay-20261107/independent-readback.py": {
+      "bytes": 9597,
+      "sha256": "2f96e92e86a1d633144826c216bd9c41df974dffeb43e804b42eab3213a8bbbb"
+    },
+    "out/account-date-time-replay-20261107/independent-readback.json": {
+      "bytes": 1315,
+      "sha256": "0b839d6b9cf6f7aacaebc75fe24902f2edefcb95fd502eb014a0bc4c272b9a58"
+    },
+    "out/account-date-time-replay-20261107/live-postcheck.json": {
+      "bytes": 371,
+      "sha256": "8308069b5ba80bfe69cf8ddc95ebc35f86bca0fa60c7d80d8e7fd9c0dc4994bb"
+    },
+    "tmp/account-dates/time-pipeline-tests.log": {
+      "bytes": 110,
+      "sha256": "4d01680e123b50f733fd842496c79117d7322354ac9b7f8295d3194efdd74ee7"
+    },
+    "tmp/account-dates/all-date-tests-root.log": {
+      "bytes": 145,
+      "sha256": "5e62138804de0ae8992cb7b8debdabcf5f4cb3b06866f707941f78d670d72e0f"
+    },
+    "tmp/account-dates/discovery-dated-time.log": {
+      "bytes": 8551,
+      "sha256": "e30a48503ef7bb17077a7d352bbd1b2ac504133f46b5fa0f99471c8f21017fd2"
+    }
+  },
+  "remaining": [
+    "Production 4 GiB roots/8 GiB state/NVMe reconstruction and 22 GiB capacity",
+    "Physical repaired DHCP/SSH, both keys, actual KVM guest, time/NTP, endurance, zero SD writes, SPI backup/recovery",
+    "Independent deployment reproduction and incomplete firmware license evidence"
+  ]
+}

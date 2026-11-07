@@ -110,9 +110,12 @@ remain unchanged. **Do not repeat NVMe installation to fix management.**
   component pass: 221 packages, eight package-state components, four management
   files, 40 maintenance files and a nondeployable 256 MiB state image. New time roots
   require management ABI v2; updated tools retain v1 rollback support. Production
-  4 GiB roots/8 GiB state/NVMe reconstruction remains open. Latest native discovery:
+  4 GiB roots/8 GiB state/NVMe reconstruction remains open. Earlier complete native discovery:
   **1,353 cases, 100 environment skips**,
-  four assembly cases and all five shell suites. These checks establish no
+  four assembly cases and all five shell suites. Latest discovery has 1,399 cases,
+  113 skips and five existing disk-capacity failures/errors; affected modules
+  pass 47 cases with temporary fixture space. All 46 account-date cases pass
+  under root. See [validation limits](evidence/account-date-time-execution-20261107.json). These checks establish no
   physical acceptance or independently reproduced deployment.
 
 ## Next actions and blockers
@@ -124,19 +127,20 @@ remain unchanged. **Do not repeat NVMe installation to fix management.**
 2. Validate SSH with both keys, then run [the first KVM guest](kvm-first-guest.md)
    for CPU/disk/network, clean shutdown/restart and persisted disk marker. Return
    its console/log evidence; `/dev/kvm` alone cannot satisfy the gate.
-3. Continue [clean-build work](build-reproduction-status.md). The November 7
-   [cross-day failure](userspace-account-date-replay.md) is now corrected by a
-   separately authenticated replay adapter. [Actual fresh baseline execution](evidence/account-date-baseline-execution-20261107.json)
-   passes all 220 packages and unchanged archive/raw/BOM pins; independent complete
-   15,876-entry readback passes. Independent source review and eight driver/ten
-   adapter cases pass. Integrate the strict time-profile consumer for this new
-   receipt/manifest, repeat time construction, then build production roots/state/
-   NVMe. Historical producers and failed receipts remain unchanged.
+3. Continue [clean-build work](build-reproduction-status.md). Separate authenticated
+   replay adapters correct the cross-day account dates while preserving historical
+   producers, receipts and artifact pins. [Fresh baseline](evidence/account-date-baseline-execution-20261107.json)
+   and [repeated time profile](evidence/account-date-time-execution-20261107.json)
+   now pass: 220/221 packages and unchanged compressed/raw/BOM bytes. Independent
+   complete 15,876/15,909-entry readbacks, source review and all 46 account-date
+   tests under root pass. Reconstruct production roots/state/NVMe next; software
+   reproduction does not establish physical deployment acceptance.
    [Kernel replay retention](kernel-run-retention.md) preserves the expanded tree
-   as verified archives on two hosts. After the fresh baseline, builder free
-   space was **6.04 GB**; recheck before staging. Production capacity guards stay.
-   The reviewed [20 GiB builder LVM growth](build-host-capacity-plan.md) awaits
-   approval; no resize occurred.
+   as verified archives on two hosts. Builder free space is now **5.25 GB**;
+   production's 22 GiB staging guard remains unmet. The reviewed
+   [20 GiB builder LVM growth](build-host-capacity-plan.md) awaits approval;
+   no resize occurred. Continue SPI candidate source/build preparation while
+   capacity and physical repair results await input; do not program SPI.
    [Firmware license evidence](evidence/vendor-boot-license-inventory-20261106.json)
    remains incomplete; all 479 userspace source archives are acquired, not compiled.
 4. Prove installed automatic time/state transitions and physical reliability:

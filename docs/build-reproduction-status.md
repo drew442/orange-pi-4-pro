@@ -28,7 +28,7 @@ artifacts remain bound to [the deployment guide](deploy-personalized-20261106.md
 | Clock-state preparation | [Audit, private initializer and state fixtures](timesync-state.md), plus [integration evidence](evidence/time-profile-integration-20261107.json): preserved future mtime, exact 996 ownership/modes, UUID guards; actual 32 MiB and 256 MiB non-deployable ext4 readbacks and independent review | Time-enabled production state, installed rollback and NTP remain unproven |
 | Time-service package step | [Offline derivation](timesync-userspace.md): exact 221 input locks, complete base-BOM gate, fixed identity/service policy and independent source/input review | Actual complete 221-package configuration and boot-link checks pass; installed startup and physical behavior remain open |
 | Time-profile export | [Authenticated adapter](timesync-export.md): strict source/receipt/state chain, immutable backend, prepublication bindings and independent review; native builder process cleanup regressions | Complete readback of all 15,909 archive/BOM members passes; time-enabled production roots/state/NVMe remain unbuilt |
-| Time-profile outer orchestration | [Tracked launcher and actual prelude](timesync-outer-launcher.md): base/source/namespace chain, private-propagation handshake, common manifest, guarded clone and measured output contracts; actual early 5 GiB refusal | Actual complete 221-package configuration/export and independent artifact readback pass; repeat build requires tracked-base rebuild under the changed closed manifest; time-enabled production images and hardware acceptance remain open |
+| Time-profile outer orchestration | [Tracked launcher and actual prelude](timesync-outer-launcher.md): base/source/namespace chain, private-propagation handshake, common manifest, guarded clone and measured output contracts; actual early 5 GiB refusal | Actual complete 221-package configuration/export and independent artifact readback pass; the [dated repeat](evidence/account-date-time-execution-20261107.json) now passes with the strict new baseline receipt contract; time-enabled production images and hardware acceptance remain open |
 | Distribution inputs | [26-input license inventory](evidence/vendor-boot-license-inventory-20261106.json) | Attribution/grants unresolved; no public redistribution clearance claimed |
 
 The November 7 [cross-day failure](userspace-account-date-replay.md) exposed
@@ -37,7 +37,10 @@ separate authenticated adapter now preserves the historical dates. Its
 [fresh baseline execution](evidence/account-date-baseline-execution-20261107.json)
 passes all 220 packages and unchanged compressed/raw/BOM pins. Independent
 complete 15,876-entry readback and source review pass. The failed attempt remains
-recorded; fresh time-profile receipt integration and repetition are next.
+recorded. [Time-profile repetition](evidence/account-date-time-execution-20261107.json)
+now also passes with unchanged compressed/raw/BOM pins and complete independent
+15,909-entry readback. Both staged source snapshots match all 27 recorded Git
+blobs; live cleanup and unchanged inventory pass. Production images remain open.
 
 The pinned mke2fs creator copies child modification times at whole-second
 resolution and sets the filesystem root to its creation epoch; diagnostic image
@@ -62,8 +65,8 @@ passes after [one more verified cache retirement](evidence/builder-deb-retention
 Source integration is recorded at commit `bb411e3`; its detailed evidence is
 [here](evidence/time-profile-integration-20261107.json). The source now binds the
 time opt-in profile, package state, and clock-state seed/boot/update guards, but
-does not build time-enabled production artifacts. Repeat construction is pending: integrate the strict time-profile consumer for the successful dated baseline
-receipt/manifest, then repeat time construction while preserving all closure checks. Time-enabled 4 GiB roots, 8 GiB state,
+does not build time-enabled production artifacts. The [dated baseline and time constructions](account-date-replay-driver.md) now
+pass with preserved closure checks and unchanged historical output pins. Time-enabled 4 GiB roots, 8 GiB state,
 and NVMe reconstruction/readback remain open; baseline artifacts remain unchanged.
 The proposed 20 GiB builder growth is unapproved; no resize occurred and production
 capacity guards remain unchanged. A second operator must

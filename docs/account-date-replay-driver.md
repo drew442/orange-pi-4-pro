@@ -47,7 +47,8 @@ reader that incorrectly required readonly mode. [Actual fresh baseline execution
 now passes from `b133454`: all 220 packages, unchanged archive/raw/BOM pins and
 independent complete 15,876-entry raw PAX/BOM readback. Host inventory is unchanged
 and no mapped processes or mounts remain; minimum disk/RAM were 6.02 GB/7.25 GB.
-Actual time-profile repetition and production construction remain pending.
+[Actual time-profile repetition](evidence/account-date-time-execution-20261107.json)
+also passes. Production construction remains pending.
 The baseline proof establishes no deployment success. Full roots/state/NVMe construction,
 physical SSH/KVM and independent deployment remain required.
 
@@ -58,8 +59,14 @@ historical time launcher's full base, clone, namespace and receipt checks. It
 also requires the successful dated baseline's marked provenance, exact source
 closure, phase runners and archive/BOM verification. Export uses the reviewed
 adapter's `time` policy; original time-adapter attribution remains accurate.
-Eleven focused regressions and independent Sol/high review pass. Actual execution
-must still establish reproduction.
+Eleven focused regressions and independent Sol/high review pass.
+[Actual execution](evidence/account-date-time-execution-20261107.json) from
+`a7e51be` now repeats the unchanged time archive/raw/BOM pins. Independent raw
+PAX/BOM inspection verifies all 15,909 entries, 221 packages, fixed 996:996
+identity and time-service files/links. Both staged source snapshots match all
+27 recorded Git blobs; postchecks show unchanged host inventory and no mapped
+processes/mounts. Minimum disk/RAM were 5.25 GB/7.24 GB. This proves no installed
+NTP exchange or physical boot.
 
 After the baseline succeeds and the hash-pinned additional package described in
 [time inputs](host-time.md) is available on the builder:
