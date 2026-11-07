@@ -421,7 +421,7 @@ def execute(shared, candidate, builder, project, phase, manifest, policy, before
     verify = verify_output if verify is None else verify
     expectations = verify_expectations if expectations is None else expectations
     output_name = ('host-payload-' + tag) if output_name is None else output_name
-    require(re.fullmatch(r'host-(?:payload|state)-[A-Za-z0-9][A-Za-z0-9_-]{0,63}', output_name),
+    require(re.fullmatch(r'host-(?:payload|state|sd)-[A-Za-z0-9][A-Za-z0-9_-]{0,63}', output_name),
             'unsafe producer output name')
     shared.safe_directory(phase.parent, trusted=True)
     phase.mkdir(mode=0o700)
