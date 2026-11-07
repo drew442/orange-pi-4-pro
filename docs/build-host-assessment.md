@@ -41,6 +41,10 @@ resources before subsequent staging; full-NVMe guards remain unchanged, and no
 further LV expansion is authorized. Earlier capacity samples below are historical.
 The [completed fresh root repeat](production-host-roots-repeat.md) ends with
 **23,399,813,120 bytes** free, below the full-NVMe guard before more staging.
+Subsequent [encoded raw-candidate retention](nvme-raw-retention.md) recovers
+975,032,320 bytes while preserving exact gzip copies on both hosts. It leaves
+24,332,972,032 bytes free before the second state construction; subsequent
+staging consumes that headroom. The original raw path now requires restoration.
 
 The [operator-approved 20 GiB root-LV growth](evidence/build-host-capacity-execution-20261107.json)
 now completes successfully, including online ext4 enlargement. The LV is

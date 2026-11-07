@@ -25,6 +25,12 @@ hashes its local readback. The prior independent stream report already verified
 its full 256,060,514,304-byte expansion. This copy operation does not repeat that
 expensive decode or imply a second construction.
 
+Later [encoded raw-image retention](nvme-raw-retention.md) revalidates both gzip
+copies and the full generated raw file, then retires only the builder raw copy,
+recovering 975,032,320 bytes. The gzip locations and hashes above are unchanged.
+Restore the raw file into a fresh private location before historical raw-reader
+commands; the linked guide records the exact recovery pins and limits.
+
 The delivery manifest preserves every original source-manifest field. It adds
 only `files.nvme.img.gz` and `distribution`, recording the original level-9,
 zero-mtime, empty-filename compression and the completed stream proof. The

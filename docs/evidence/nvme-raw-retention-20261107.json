@@ -1,0 +1,163 @@
+{
+  "actual_prepared_review": {
+    "decision": "approve_exact_execute",
+    "record": {
+      "bytes": 3850,
+      "sha256": "e72a90c89bc03fa6e86e048e4f088b76a63e1bc110a01af2cdcc0b9991a3a64e"
+    }
+  },
+  "allocated_bytes_released": 975032320,
+  "builder_controls": "/var/lib/a733-nvme-raw-retention-20261107",
+  "builder_encoded_path": "/var/lib/a733-clean-replay-20261106/nvme-timesync-03/work/project/out/nvme-image-timesync-03/nvme.img.gz",
+  "classification": "Encoded retention of one generated raw candidate regular file; no physical storage write or hardware acceptance",
+  "complete": {
+    "bytes": 692,
+    "sha256": "9cf1710464c0251efd3af448db883ce02c9620c3b747a2d3b9de0179d63cc91f"
+  },
+  "date": "2026-11-07",
+  "gzip": {
+    "bytes": 545633126,
+    "sha256": "9e8be89dbcabe30799744201ea94de93ce343134d0a8e034fa44281c8dd13955"
+  },
+  "hardware_acceptance": false,
+  "intent": {
+    "bytes": 651,
+    "sha256": "38a138f3ba17a90b1e281806b6b6e4ff0d4e6c2371f8c23c3f5b4a46bd3a1177"
+  },
+  "native_encoded_ownership": "Ordinary drew-owned private file; current full hash verified, not claimed root-immutable",
+  "native_encoded_path": "/home/drew/orange-pi-4-pro/out/nvme-candidate-retained-20261107/nvme.img.gz",
+  "native_records": "out/nvme-raw-retention-20261107",
+  "physical_device_writes": false,
+  "prepared": {
+    "bytes": 1222,
+    "sha256": "ba80de76bd3c036987443fc4abaa2c738914220db91ac81a9e7ebc11a9fcd452"
+  },
+  "preserved": "Both exact gzip copies, source manifest, producer receipt, all parent inputs/current components/published operator images; no LV growth or lowered guards",
+  "proof_reuse": {
+    "native_current_encoded_proof": {
+      "bytes": 809,
+      "sha256": "3c221493291c3ec7ec0c9dff2813d7fd370eba111cb8467446ea784234099e9b"
+    },
+    "new_decode_performed": false,
+    "original_full_stream_proof": {
+      "bytes": 4277,
+      "sha256": "88d72b266ae76f74aafea25fa1e4e751cdcb76cd066cf51d1ba0a9e919ce8d66"
+    },
+    "progress_interval_seconds": 15,
+    "raw_fully_rehashed_in_both_prepare_and_execute": true
+  },
+  "raw": {
+    "bytes": 256060514304,
+    "sha256": "2c7e69cf5f0370b818b47c4d36a6c1eec7cd7258773794ad06de7cd5f5ab499f"
+  },
+  "records": {
+    "complete.json": {
+      "bytes": 692,
+      "sha256": "9cf1710464c0251efd3af448db883ce02c9620c3b747a2d3b9de0179d63cc91f"
+    },
+    "execute.log": {
+      "bytes": 1340,
+      "sha256": "eee2c765e0573af4cb91cf31e43b2b63cd35a5ec35a344e22f61916e9a22b8f8"
+    },
+    "fixture.log": {
+      "bytes": 2766,
+      "sha256": "d7d310b5b462c0bb7310e5549a96023c3e1ec9865aa4cfd88c4df74fcb975949"
+    },
+    "idle-helper.py": {
+      "bytes": 23821,
+      "sha256": "404607d4d22db254e3cad1200f9f4c8c03e1742864bd52a8cb47e109ff2fd844"
+    },
+    "intent.json": {
+      "bytes": 651,
+      "sha256": "38a138f3ba17a90b1e281806b6b6e4ff0d4e6c2371f8c23c3f5b4a46bd3a1177"
+    },
+    "native-proof.json": {
+      "bytes": 809,
+      "sha256": "3c221493291c3ec7ec0c9dff2813d7fd370eba111cb8467446ea784234099e9b"
+    },
+    "postcheck.json": {
+      "bytes": 231,
+      "sha256": "26a059c1277d02e0f82b91732759b64971ebfb22bd3e58ca6d9259682174fa9f"
+    },
+    "prepare.log": {
+      "bytes": 1774,
+      "sha256": "c00b93a9077a9e55e67f6e52d7e7421d1963be9cb41e2b02da5a963b75035d35"
+    },
+    "prepared-review.json": {
+      "bytes": 3850,
+      "sha256": "e72a90c89bc03fa6e86e048e4f088b76a63e1bc110a01af2cdcc0b9991a3a64e"
+    },
+    "prepared.json": {
+      "bytes": 1222,
+      "sha256": "ba80de76bd3c036987443fc4abaa2c738914220db91ac81a9e7ebc11a9fcd452"
+    },
+    "retain-raw.py": {
+      "bytes": 9585,
+      "sha256": "5005c03198125399a66a6d4680df107005680b08bc47775413c0f360b38acfa5"
+    },
+    "review.json": {
+      "bytes": 5073,
+      "sha256": "a64e30a640909065a5dd00ac86e33eb25a2197e74020ff0a3557293d49aa66ed"
+    },
+    "stream-verification.json": {
+      "bytes": 4277,
+      "sha256": "88d72b266ae76f74aafea25fa1e4e751cdcb76cd066cf51d1ba0a9e919ce8d66"
+    },
+    "test-retain-raw.py": {
+      "bytes": 4923,
+      "sha256": "927db21dd72df3aec82a2b715ecee2a742dac0edeebf2680cddb0c38891c166d"
+    },
+    "verify-native.py": {
+      "bytes": 2372,
+      "sha256": "d528a1169f74faf2699034556a72d3e0b34673de881e440d4474070e880277a3"
+    }
+  },
+  "release_limits": "Physical installed management repair/SSH, actual KVM guest, SPI/recovery, boot/endurance/SD-write and independent deployment acceptance remain pending.",
+  "resources": {
+    "builder_disk_floor_bytes": 3221225472,
+    "builder_memavailable_floor_bytes": 1000000000,
+    "complete": {
+      "available_memory_bytes": 7642939392,
+      "free_bytes": 24332972032
+    },
+    "native_free_floor_bytes": 268435456,
+    "observed_free_space_increase_bytes": 975007744,
+    "prepared": {
+      "available_memory_bytes": 7211024384,
+      "free_bytes": 23357964288
+    }
+  },
+  "restoration": {
+    "full_restoration_after_retirement_executed": false,
+    "guide": "docs/nvme-raw-retention.md",
+    "new_regular_sparse_file_required": true
+  },
+  "schema": 1,
+  "source_review": {
+    "decision": "approve_source_for_prepare_with_conditions",
+    "record": {
+      "bytes": 5073,
+      "sha256": "a64e30a640909065a5dd00ac86e33eb25a2197e74020ff0a3557293d49aa66ed"
+    }
+  },
+  "target": "/var/lib/a733-clean-replay-20261106/nvme-timesync-03/work/project/out/nvme-image-timesync-03/nvme.img",
+  "validation": {
+    "execute_terminal_exit_code": 0,
+    "fixture_log": {
+      "bytes": 2766,
+      "sha256": "d7d310b5b462c0bb7310e5549a96023c3e1ec9865aa4cfd88c4df74fcb975949"
+    },
+    "postcheck": {
+      "raw_absent": true,
+      "remaining_payload_entries": [
+        "manifest.json",
+        "nvme.img.gz"
+      ],
+      "retained_gzip_sha256": "9e8be89dbcabe30799744201ea94de93ce343134d0a8e034fa44281c8dd13955",
+      "source_phase_receipt_present": true,
+      "success": true
+    },
+    "prepare_terminal_exit_code": 0,
+    "root_jammy_python310_e2e_tests": 5
+  }
+}

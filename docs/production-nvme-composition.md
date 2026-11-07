@@ -80,9 +80,12 @@ Builder directory:
 | `nvme.img.gz` | 545,633,126 | `9e8be89dbcabe30799744201ea94de93ce343134d0a8e034fa44281c8dd13955` |
 | `manifest.json` | 9,393 | `fa01243f5884bfaf3dae92f5974a2899dd93836b7c6c23d3d0a509d7c572e90c` |
 
-The raw sparse image allocates 975,032,320 bytes. Raw and gzip remain on the
-builder. A [subsequently verified encoded delivery copy](nvme-candidate-retention.md)
-is now retained on codex; no raw image is copied there. Native
+The original raw sparse image allocated 975,032,320 bytes. Later
+[encoded retention](nvme-raw-retention.md) retires that generated raw file after
+complete verification; exact gzip copies remain on build and codex. Historical
+commands opening the raw path require restoration. The
+[verified encoded delivery copy](nvme-candidate-retention.md) retains its pins;
+no raw image is copied to codex. Native
 `out/nvme-timesync-03-20261107` retains small receipts, expected
 trees, complete filesystem inspection transcripts, stream proof and independent
 review; images and downloaded sources remain outside Git.
