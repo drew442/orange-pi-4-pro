@@ -163,7 +163,7 @@ expected={'bytes':image.stat().st_size,'sha256':hashlib.sha256(image.read_bytes(
 fd=os.open(copy,os.O_RDWR)
 try:
     with image.open('rb') as source:
-        copied=writer.stream_copy_verify(source,fd,expected,flush_callback=lambda held:None,refresh_callback=lambda held:None)
+        copied=writer.stream_copy_verify(source,fd,expected,flush_callback=lambda held:None,refresh_callback=lambda held:None,verify_readback=True)
 finally:os.close(fd)
 assert copied['success'] and copied['target_modified'] and copied['bytes_verified']==expected['bytes'],copied
 assert hashlib.sha256(copy.read_bytes()).hexdigest()==expected['sha256']

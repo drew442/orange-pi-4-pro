@@ -267,6 +267,8 @@ class TLSTests(unittest.TestCase):
             with patch.dict(os.environ, {'HTTPS_PROXY': 'http://127.0.0.1:1'}):
                 result = self.acquire(output)
             self.assertFalse(result['deployment_intent']['for_installation'])
+            self.assertTrue(result['encoded_verified'])
+            self.assertFalse(result['decoded_verified'])
             self.assertEqual((output / 'manifest.json').read_bytes(), self.data)
             self.assertEqual((output / 'nvme.img.gz').read_bytes(), self.encoded)
             self.assertNotIn('TOKEN', (output / 'acquisition.json').read_text())
@@ -303,7 +305,7 @@ class TLSTests(unittest.TestCase):
                 self.assertFalse((output / 'acquisition.json').exists())
                 self.assertFalse((output / 'manifest.json').exists())
 
-    def test_authenticated_gzip_bomb_and_raw_hash_mismatch(self):
+    def test_authenticated_expanded_payload_is_deferred_to_writer(self):
         for raw in (b'x' * 100000, b'wrong raw bytes'):
             encoded = gzip.compress(raw)
             self.value['files']['nvme.img.gz'] = record(encoded)
@@ -312,9 +314,9 @@ class TLSTests(unittest.TestCase):
             self.routes['/image'] = (200, [], encoded)
             with tempfile.TemporaryDirectory() as temp:
                 output = Path(temp) / 'new'
-                with self.assertRaises(ValueError):
-                    self.acquire(output)
-                self.assertFalse((output / 'manifest.json').exists())
+                result = self.acquire(output)
+                self.assertTrue(result['success'])
+                self.assertFalse(result['decoded_verified'])
 
     def test_output_symlink_ancestor_and_storage_guard_before_creation(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -353,7 +355,7 @@ class TLSTests(unittest.TestCase):
                         self.assertEqual((output / 'manifest.json').read_bytes(), b'preexisting')
                 self.assertFalse((output / 'acquisition.json').exists())
 
-    def test_authenticated_bad_gzip_crc(self):
+    def test_authenticated_bad_gzip_crc_is_deferred_to_writer(self):
         encoded = self.encoded[:-8] + bytes(8)
         self.value['files']['nvme.img.gz'] = record(encoded)
         self.data = json.dumps(self.value).encode()
@@ -361,9 +363,9 @@ class TLSTests(unittest.TestCase):
         self.routes['/image'] = (200, [], encoded)
         with tempfile.TemporaryDirectory() as temp:
             output = Path(temp) / 'new'
-            with self.assertRaises(OSError):
-                self.acquire(output)
-            self.assertFalse((output / 'manifest.json').exists())
+            result = self.acquire(output)
+            self.assertTrue(result['success'])
+            self.assertFalse(result['decoded_verified'])
 
     def test_owned_alarm_is_disarmed_before_success_or_failure_leaves_cleanup_scope(self):
         actual = ACQUIRE._acquire

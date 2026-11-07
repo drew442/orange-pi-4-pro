@@ -274,7 +274,9 @@ def apply(args, source, plan, report=None, *, plan_check=lambda target: None):
                     source.root, fd, source.expected,
                     flush_callback=lambda held: fcntl.ioctl(held, WRITER.BLKFLSBUF),
                     refresh_callback=lambda held: None, source_check=check,
-                    progress=progress, report=report)
+                    progress=progress, report=report, verify_readback=True,
+                    readback_progress=WRITER.ConsoleProgress(label='Root slot bytes read back'),
+                    status=lambda message: print(message, file=sys.stderr, flush=True))
                 report['activation_ready'] = report['success']
             finally:
                 os.close(fd)

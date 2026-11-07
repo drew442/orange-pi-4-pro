@@ -46,7 +46,8 @@ class EngineTests(unittest.TestCase):
             target.flush()
             result = INSTALL.stream_copy_verify(io.BytesIO(data), target.fileno(), record(data),
                 flush_callback=kwargs.pop('flush_callback', lambda fd: None),
-                refresh_callback=kwargs.pop('refresh_callback', lambda fd: None), **kwargs)
+                refresh_callback=kwargs.pop('refresh_callback', lambda fd: None),
+                verify_readback=kwargs.pop('verify_readback', True), **kwargs)
             target.seek(0)
             return result, target.read()
 
@@ -59,6 +60,24 @@ class EngineTests(unittest.TestCase):
         self.assertEqual(written, data)
         self.assertEqual(result['bytes_verified'], len(data))
         self.assertEqual(result['bytes_written'], len(data))
+
+    def test_default_skips_readback_but_authenticates_written_stream(self):
+        with tempfile.TemporaryFile() as target, patch.object(INSTALL.os, 'pread') as read:
+            result = INSTALL.stream_copy_verify(io.BytesIO(b'payload'), target.fileno(),
+                record(b'payload'), flush_callback=Mock(), refresh_callback=Mock())
+        self.assertTrue(result['success'])
+        self.assertFalse(result['readback_requested'])
+        self.assertEqual(result['bytes_verified'], 0)
+        self.assertNotIn('readback_sha256', result)
+        self.assertEqual(result['source_sha256'], record(b'payload')['sha256'])
+        read.assert_not_called()
+
+    def test_optional_readback_reports_progress(self):
+        progress = Mock()
+        result, _ = self.run_engine(b'payload', chunk_bytes=3, readback_progress=progress)
+        self.assertTrue(result['readback_requested'])
+        self.assertEqual(result['bytes_verified'], 7)
+        self.assertEqual(progress.call_args.args, (7, 7))
 
     def test_first_write_failure_is_conservatively_modified(self):
         for error in (OSError('write failed'), KeyboardInterrupt()):
@@ -166,36 +185,27 @@ class PolicyTests(unittest.TestCase):
                 INSTALL.validate_manifest(changed)
         self.assertEqual(INSTALL.validate_manifest(manifest()), manifest()['files']['nvme.img'])
 
-    def test_tty_and_two_exact_phrases_required(self):
-        plan = {'target': {'serial': 'SERIAL', 'size_bytes': 123}, 'plan_sha256': 'a'*64}
-        exact = 'BACKUP VERIFIED\nERASE SERIAL 123 ' + 'a'*64 + '\n'
-        INSTALL.authorize(plan, TTY(exact), TTY())
-        for stream in (io.StringIO(exact), TTY('yes\n'), TTY(exact.replace('SERIAL', 'OTHER')), TTY(exact.replace('BACKUP VERIFIED', 'BACKUP VERIFIED '))):
-            with self.subTest(stream=stream), self.assertRaises(ValueError):
-                INSTALL.authorize(plan, stream, TTY())
-        with self.assertRaises(ValueError):
-            INSTALL.authorize(plan, TTY(exact), io.StringIO())
-
-    def test_discard_requires_its_exact_confirmation_and_tty(self):
-        plan = {'target': {'serial': 'SERIAL', 'size_bytes': 123}, 'plan_sha256': 'a'*64,
-                'existing_data_policy': 'discard-authorized'}
-        exact = 'DISCARD EXISTING DATA\nERASE SERIAL 123 ' + 'a'*64 + '\n'
-        output = TTY()
-        INSTALL.authorize(plan, TTY(exact), output)
-        self.assertIn('No backup is claimed.', output.getvalue())
-        self.assertNotIn('verified off-device backup', output.getvalue())
-        for wrong in ('BACKUP VERIFIED\n' + exact.split('\n', 1)[1],
-                      exact.replace('DISCARD EXISTING DATA', 'DISCARD EXISTING DATA '),
-                      exact.replace('SERIAL', 'OTHER'), exact.replace('123', '124'),
-                      exact.replace('a'*64, 'b'*64)):
-            with self.subTest(wrong=wrong), self.assertRaisesRegex(ValueError, 'phrase'):
-                INSTALL.authorize(plan, TTY(wrong), TTY())
-        for input_stream, output_stream in ((io.StringIO(exact), TTY()),
-                                             (TTY(exact), io.StringIO())):
-            with self.assertRaisesRegex(ValueError, 'interactive TTY'):
-                INSTALL.authorize(plan, input_stream, output_stream)
-        with self.assertRaisesRegex(ValueError, 'phrase'):
-            INSTALL.authorize({**plan, 'existing_data_policy': 'verified-backup'}, TTY(exact), TTY())
+    def test_exact_target_display_and_yes_no_tty_confirmation(self):
+        target = {'canonical_path': '/dev/nvme0n1', 'model': 'EXACT MODEL',
+                  'serial': 'SERIAL', 'size_bytes': 123, 'logical_sector_bytes': 512,
+                  'physical_sector_bytes': 4096, 'major_minor': '259:0'}
+        for policy in ('verified-backup', 'discard-authorized'):
+            plan = {'target': target, 'plan_sha256': 'a'*64, 'existing_data_policy': policy}
+            for yes in ('y\n', 'yes\n', 'YES\n'):
+                output = TTY()
+                INSTALL.authorize(plan, TTY(yes), output)
+                for value in target.values():
+                    self.assertIn(str(value), output.getvalue())
+                self.assertIn('[y/N]', output.getvalue())
+                self.assertEqual('No backup is claimed.' in output.getvalue(),
+                                 policy == 'discard-authorized')
+            for no in ('', '\n', 'n\n', 'no\n', 'BACKUP VERIFIED\n', 'yes please\n'):
+                with self.subTest(policy=policy, no=no), self.assertRaisesRegex(ValueError, 'declined'):
+                    INSTALL.authorize(plan, TTY(no), TTY())
+            for input_stream, output_stream in ((io.StringIO('yes\n'), TTY()),
+                                                (TTY('yes\n'), io.StringIO())):
+                with self.assertRaisesRegex(ValueError, 'interactive TTY'):
+                    INSTALL.authorize(plan, input_stream, output_stream)
 
     @patch.object(INSTALL.os, 'geteuid', return_value=0)
     def test_apply_policy_mismatch_and_invalid_values_prevent_authorization(self, uid):
@@ -227,8 +237,17 @@ class PolicyTests(unittest.TestCase):
                 path.write_text(json.dumps(value))
                 trusted = hashlib.sha256(path.read_bytes()).hexdigest()
                 # Keep realistic production geometry validation separate from tiny stream fixtures.
-                with patch.object(INSTALL, 'validate_manifest', return_value=record(data)):
+                with patch.object(INSTALL, 'validate_manifest', return_value=record(data)), \
+                        patch.object(INSTALL.gzip, 'GzipFile', side_effect=AssertionError('no decode prepass')), \
+                        patch.object(INSTALL, 'hash_stream', wraps=INSTALL.hash_stream) as hashed:
                     source = INSTALL.Source(image, path, trusted)
+                    self.assertEqual(hashed.call_count, 1)
+                    deferred = INSTALL.Source(image, path, trusted, authenticate_encoded=False)
+                    try:
+                        self.assertEqual(hashed.call_count, 1)
+                        self.assertEqual(deferred.review, source.review)
+                    finally:
+                        deferred.close()
                     try:
                         image.write_bytes(encoded + b'!')
                         with self.assertRaisesRegex(ValueError, 'changed'):
@@ -240,7 +259,7 @@ class PolicyTests(unittest.TestCase):
                     with self.assertRaisesRegex(ValueError, 'manifest SHA'):
                         INSTALL.Source(image, path, '0'*64)
 
-    def test_decoded_source_hash_size_and_gzip_truncation_fail_prewrite(self):
+    def test_decoded_source_validation_occurs_during_write(self):
         for data, expected in ((b'payload!', record(b'payload')), (b'changed', record(b'payload')), (b'payloa', record(b'payload'))):
             with self.subTest(data=data), tempfile.TemporaryDirectory() as temporary:
                 root = Path(temporary)
@@ -252,8 +271,37 @@ class PolicyTests(unittest.TestCase):
                 value['files']['nvme.img'] = expected
                 path = root/'manifest.json'
                 path.write_text(json.dumps(value))
-                with patch.object(INSTALL, 'validate_manifest', return_value=expected), self.assertRaises(ValueError):
-                    INSTALL.Source(image, path, hashlib.sha256(path.read_bytes()).hexdigest())
+                with patch.object(INSTALL, 'validate_manifest', return_value=expected):
+                    source = INSTALL.Source(image, path, hashlib.sha256(path.read_bytes()).hexdigest())
+                    try:
+                        with source.decoded() as stream, tempfile.TemporaryFile() as target:
+                            refresh = Mock()
+                            result = INSTALL.stream_copy_verify(stream, target.fileno(), expected,
+                                flush_callback=Mock(), refresh_callback=refresh)
+                        self.assertFalse(result['success'])
+                        self.assertTrue(result['target_modified'])
+                        self.assertGreater(result['bytes_written'], 0)
+                        self.assertEqual(result['bytes_verified'], 0)
+                        refresh.assert_not_called()
+                    finally:
+                        source.close()
+
+    def test_authenticated_gzip_crc_failure_reports_partial_write(self):
+        payload = b'payload' * 4096
+        encoded = gzip.compress(payload)
+        for broken in (encoded[:-8] + bytes(8), encoded[:-4]):
+            with self.subTest(truncated=len(broken) < len(encoded)), \
+                    gzip.GzipFile(fileobj=io.BytesIO(broken)) as stream, \
+                    tempfile.TemporaryFile() as target:
+                refresh = Mock()
+                result = INSTALL.stream_copy_verify(stream, target.fileno(), record(payload),
+                    flush_callback=Mock(), refresh_callback=refresh, chunk_bytes=1024)
+                self.assertFalse(result['success'])
+                self.assertTrue(result['target_modified'])
+                self.assertGreater(result['bytes_written'], 0)
+                self.assertEqual(result['bytes_verified'], 0)
+                refresh.assert_not_called()
+                self.assertRegex(result['error'], 'BadGzipFile|EOFError')
 
     def test_plan_digest_stable_and_covers_target_metadata(self):
         target = {'canonical_path':'/dev/nvme0n1','size_bytes':250_000_000_000}
@@ -400,17 +448,20 @@ class PolicyTests(unittest.TestCase):
             saved_file.fileno = lambda: 99
             output = io.StringIO()
             def applied(args, source, plan, report):
+                self.assertEqual(args.verify_readback, selected == 'discard-authorized')
                 report['success'] = True
             with self.subTest(selected=selected, reviewed=reviewed), \
-                    patch.object(INSTALL, 'Source'), \
+                    patch.object(INSTALL, 'Source') as source_constructor, \
                     patch.object(INSTALL, 'make_plan', return_value=plan), \
                     patch.object(INSTALL, 'open_regular', return_value=saved_file), \
                     patch.object(INSTALL, 'source_off_target'), \
                     patch.object(INSTALL, 'apply', side_effect=applied) as apply, \
                     patch.object(INSTALL.sys, 'stdout', output), \
                     patch.object(INSTALL.sys, 'stderr', io.StringIO()):
-                self.assertEqual(INSTALL.main(argv + ['--existing-data-policy', selected]),
+                options = ['--verify-readback'] if selected == 'discard-authorized' else []
+                self.assertEqual(INSTALL.main(argv + ['--existing-data-policy', selected] + options),
                                  0 if matches else 1)
+                self.assertEqual(source_constructor.call_args.kwargs, {'authenticate_encoded': False})
             result = json.loads(output.getvalue())
             self.assertEqual(result['existing_data_policy'], selected)
             self.assertEqual(apply.call_count, int(matches))
@@ -513,7 +564,7 @@ class PolicyTests(unittest.TestCase):
                         patch.object(INSTALL.fcntl, 'flock', side_effect=lambda fd,flags:events.append('lock')), \
                         patch.object(INSTALL.fcntl, 'ioctl', side_effect=ioctl), \
                         patch.object(INSTALL.sys, 'stderr', io.StringIO()):
-                    result = INSTALL.apply(SimpleNamespace(existing_data_policy=policy), source, plan)
+                    result = INSTALL.apply(SimpleNamespace(existing_data_policy=policy, verify_readback=True), source, plan)
                 self.assertEqual(result['success'], fault is None)
                 self.assertEqual(result['existing_data_policy'], policy)
                 self.assertTrue(result['target_modified'])

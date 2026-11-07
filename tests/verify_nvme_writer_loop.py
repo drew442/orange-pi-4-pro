@@ -133,7 +133,7 @@ def verify():
                         if case == 'interrupted_then_rewrite':
                             raise KeyboardInterrupt('intentional private-loop interruption')
                     report = WRITER.stream_copy_verify(source, fd, expected,
-                                flush_callback=flush, refresh_callback=refresh,
+                                flush_callback=flush, refresh_callback=refresh, verify_readback=True,
                                 source_check=source_check, progress=progress)
                     if case == 'complete':
                         require(report['success'] and report['target_modified'], 'complete copy failed')
@@ -152,7 +152,7 @@ def verify():
                         require(0 < report['bytes_written'] < SIZE and not calls, 'interruption did not stop before flush')
                         require(os.pread(fd, 4096, 16 * 1024**2) == b'\xa5' * 4096, 'unwritten tail unexpectedly changed')
                         rewritten = WRITER.stream_copy_verify(source, fd, expected,
-                                       flush_callback=flush, refresh_callback=refresh, source_check=source_check)
+                                       flush_callback=flush, refresh_callback=refresh, verify_readback=True, source_check=source_check)
                         require(rewritten['success'] and digest(fd, SIZE) == expected, 'full rewrite failed')
                         results[case] = {'interrupted_report': report, 'unwritten_old_tail_preserved': True,
                                          'explicit_full_rewrite_report': rewritten}

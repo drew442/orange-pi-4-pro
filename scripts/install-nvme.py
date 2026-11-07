@@ -127,7 +127,7 @@ def validate_manifest(value):
     return record
 
 
-def hash_stream(source, expected):
+def hash_stream(source, expected, progress=None):
     source.seek(0)
     result, length = hashlib.sha256(), 0
     while True:
@@ -137,13 +137,15 @@ def hash_stream(source, expected):
         length += len(data)
         require(length <= expected['bytes'], 'source exceeds authenticated size')
         result.update(data)
+        if progress is not None:
+            progress(length, expected['bytes'])
     require(length == expected['bytes'] and result.hexdigest() == expected['sha256'],
             'source size or SHA-256 mismatch')
 
 
 class Source:
-    """Hold authenticated manifest and encoded image descriptors through installation."""
-    def __init__(self, image, manifest, manifest_sha256):
+    """Hold pinned manifest and image descriptors; apply authenticates after approval."""
+    def __init__(self, image, manifest, manifest_sha256, *, authenticate_encoded=True):
         self.stack = contextlib.ExitStack()
         try:
             self.manifest_file = self.stack.enter_context(open_regular(manifest))
@@ -159,9 +161,13 @@ class Source:
             require(name in ('nvme.img', 'nvme.img.gz'), 'image basename must be nvme.img or nvme.img.gz')
             self.compressed = name.endswith('.gz')
             self.encoded_expected = record_valid(self.manifest['files'][name])
-            hash_stream(self.image, self.encoded_expected)
-            with self.decoded() as decoded:
-                hash_stream(decoded, self.decoded_expected)
+            require(self.identity['bytes'] == self.encoded_expected['bytes'],
+                    'source size differs from authenticated size')
+            if authenticate_encoded:
+                hash_stream(self.image, self.encoded_expected,
+                            progress=ConsoleProgress(label='Encoded image bytes authenticated'))
+            # Expanded size, hash and gzip CRC are checked in the write stream.
+            # A malformed authenticated payload can therefore leave a partial target.
             self.check()
             self.review = {'path': os.path.abspath(image), 'identity': self.identity,
                            'encoded_record': self.encoded_expected, 'decoded_record': self.decoded_expected,
@@ -312,23 +318,26 @@ def authorize(plan, input_stream=None, output_stream=None):
     output_stream = sys.stderr if output_stream is None else output_stream
     require(input_stream.isatty() and output_stream.isatty(), 'apply requires an interactive TTY')
     policy = plan_data_policy(plan)
-    data_confirmation = ('Confirm an independently verified off-device backup: ', 'BACKUP VERIFIED')
-    if policy == 'discard-authorized':
-        data_confirmation = ('No backup is claimed. Confirm authorized discard of existing data: ',
-                             'DISCARD EXISTING DATA')
     target = plan['target']
-    for prompt, expected in (
-            data_confirmation,
-            ('Confirm complete, irreversible target erasure: ',
-             f"ERASE {target['serial']} {target['size_bytes']} {plan['plan_sha256']}")):
-        output_stream.write(prompt)
-        output_stream.flush()
-        require(input_stream.readline().rstrip('\n') == expected, 'authorization phrase does not match')
+    output_stream.write('Erase this entire NVMe and install the image:\n')
+    for field in ('canonical_path', 'model', 'serial', 'size_bytes',
+                  'logical_sector_bytes', 'physical_sector_bytes', 'major_minor'):
+        output_stream.write(f"  {field}: {target.get(field, 'unknown')}\n")
+    output_stream.write(f"  plan_sha256: {plan['plan_sha256']}\n")
+    if policy == 'discard-authorized':
+        output_stream.write('No backup is claimed. Existing data will be discarded.\n')
+    else:
+        output_stream.write('Proceeding confirms an independently verified off-device backup.\n')
+    output_stream.write('Erase and install? [y/N]: ')
+    output_stream.flush()
+    require(input_stream.readline().strip().lower() in ('y', 'yes'), 'installation declined')
 
 
 def stream_copy_verify(source_stream, target_fd, decoded_expected, *, flush_callback,
                        refresh_callback, source_check=lambda: None,
-                       progress=lambda done, total: None, chunk_bytes=4*MIB, report=None):
+                       progress=lambda done, total: None, chunk_bytes=4*MIB, report=None,
+                       verify_readback=False, readback_progress=lambda done, total: None,
+                       status=lambda message: None):
     """Bounded byte engine; caller owns device validation and exclusive descriptor.
 
     Tests may supply a regular target descriptor. Production never does. Every
@@ -339,6 +348,9 @@ def stream_copy_verify(source_stream, target_fd, decoded_expected, *, flush_call
         report = {'success': False, 'target_modified': False, 'bytes_attempted': 0,
                   'bytes_written': 0, 'bytes_verified': 0}
     report['success'] = False
+    report['readback_requested'] = verify_readback
+    report['bytes_verified'] = 0
+    report.pop('readback_sha256', None)
     try:
         expected = record_valid(decoded_expected)
         require(type(chunk_bytes) is int and chunk_bytes > 0, 'invalid copy chunk size')
@@ -362,19 +374,25 @@ def stream_copy_verify(source_stream, target_fd, decoded_expected, *, flush_call
         require(not source_stream.read(1), 'decoded image exceeds size')
         require(incoming.hexdigest() == expected['sha256'], 'image changed during writing')
         source_check()
+        report['source_sha256'] = incoming.hexdigest()
+        status('Flushing NVMe writes to storage...')
         os.fsync(target_fd)
         flush_callback(target_fd)
+        status('Starting full target readback...' if verify_readback else 'Target readback skipped.')
         readback = hashlib.sha256()
-        while report['bytes_verified'] < expected['bytes']:
+        while verify_readback and report['bytes_verified'] < expected['bytes']:
             data = os.pread(target_fd, min(chunk_bytes, expected['bytes']-report['bytes_verified']), report['bytes_verified'])
             require(data, 'target readback ended early')
             readback.update(data)
             report['bytes_verified'] += len(data)
-        require(readback.hexdigest() == expected['sha256'], 'target readback SHA-256 mismatch')
+            readback_progress(report['bytes_verified'], expected['bytes'])
+        if verify_readback:
+            require(readback.hexdigest() == expected['sha256'], 'target readback SHA-256 mismatch')
         source_check()
         refresh_callback(target_fd)
         report['success'] = True
-        report['readback_sha256'] = readback.hexdigest()
+        if verify_readback:
+            report['readback_sha256'] = readback.hexdigest()
     except (Exception, KeyboardInterrupt) as error:
         report['success'] = False
         report['error'] = f'{type(error).__name__}: {error}'
@@ -383,11 +401,12 @@ def stream_copy_verify(source_stream, target_fd, decoded_expected, *, flush_call
 
 class ConsoleProgress:
     """Bound serial output by bytes or elapsed time, plus final completion."""
-    def __init__(self, output=None, clock=None):
+    def __init__(self, output=None, clock=None, label='NVMe bytes written'):
         self.output = sys.stderr if output is None else output
         self.clock = time.monotonic if clock is None else clock
         self.last_time = self.clock()
         self.last_bytes = 0
+        self.label = label
 
     def start(self):
         print('Starting full-disk NVMe write; interruption may leave a partial target.',
@@ -396,7 +415,7 @@ class ConsoleProgress:
     def __call__(self, done, total):
         now = self.clock()
         if done == total or done - self.last_bytes >= 1024**3 or now - self.last_time >= 10:
-            print(f'NVMe bytes written: {done}/{total}', file=self.output, flush=True)
+            print(f'{self.label}: {done}/{total}', file=self.output, flush=True)
             self.last_time, self.last_bytes = now, done
 
 
@@ -434,7 +453,8 @@ def apply(args, source, plan, report=None):
         check()
         require(metadata_hashes(fd, target['size_bytes']) == plan['old_metadata'], 'target metadata changed')
         # Reauthenticate encoded bytes after the interactive pause and before any write.
-        hash_stream(source.image, source.encoded_expected)
+        hash_stream(source.image, source.encoded_expected,
+                    progress=ConsoleProgress(label='Encoded image bytes authenticated'))
         check()
         require(metadata_hashes(fd, target['size_bytes']) == plan['old_metadata'], 'target metadata changed')
         with source.decoded() as stream:
@@ -445,6 +465,9 @@ def apply(args, source, plan, report=None):
                 flush_callback=lambda held: fcntl.ioctl(held, BLKFLSBUF),
                 refresh_callback=lambda held: fcntl.ioctl(held, BLKRRPART), source_check=check,
                 progress=progress,
+                verify_readback=getattr(args, 'verify_readback', False),
+                readback_progress=ConsoleProgress(label='NVMe bytes read back'),
+                status=lambda message: print(message, file=sys.stderr, flush=True),
                 report=report)
     except (Exception, KeyboardInterrupt) as error:
         report['success'] = False
@@ -468,6 +491,8 @@ def main(argv=None):
     parser.add_argument('--expected-model', required=True)
     parser.add_argument('--expected-serial', required=True)
     parser.add_argument('--expected-bytes', type=int, required=True)
+    parser.add_argument('--verify-readback', action='store_true',
+                        help='Read and hash the entire target after writing (slow troubleshooting check)')
     parser.add_argument('--plan', help='Previously reviewed JSON plan; required for apply')
     parser.add_argument('--existing-data-policy', choices=('verified-backup', 'discard-authorized'),
                         default='verified-backup',
@@ -484,7 +509,8 @@ def main(argv=None):
         require(args.operation != 'apply' or os.geteuid() == 0,
                 'apply requires root for device writes and cache invalidation')
         require(args.operation != 'apply' or args.plan, 'apply requires --plan')
-        source = Source(args.image, args.manifest, args.manifest_sha256)
+        source = Source(args.image, args.manifest, args.manifest_sha256,
+                        authenticate_encoded=args.operation == 'prepare')
         plan = make_plan(args, source)
         if args.operation == 'prepare':
             source.close()

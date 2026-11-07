@@ -7,7 +7,6 @@ No mounting, extraction to disk, or block-device I/O is performed here.
 """
 import argparse
 import contextlib
-import gzip
 import hashlib
 import importlib.util
 import json
@@ -185,6 +184,7 @@ def fetch(opener, url, destination, cap, deadline, expected=None):
             require(declared <= cap and (expected is None or declared == expected['bytes']),
                     'Content-Length exceeds or differs from authenticated size')
         count, digest = 0, hashlib.sha256()
+        progress = WRITER.ConsoleProgress(label='HTTPS bytes acquired')
         while True:
             timeout = remaining(deadline)
             try:
@@ -201,6 +201,7 @@ def fetch(opener, url, destination, cap, deadline, expected=None):
             require(count <= cap, 'HTTPS body exceeds size limit')
             destination.write(chunk)
             digest.update(chunk)
+            progress(count, cap)
         require(declared is None or count == declared, 'HTTPS body length mismatch')
         record = {'bytes': count, 'sha256': digest.hexdigest()}
         require(expected is None or record == expected, 'encoded size or SHA-256 mismatch')
@@ -321,11 +322,6 @@ def _acquire(manifest_url, image_url, manifest_sha256, output, storage_kind, ca_
                     image.flush()
                     os.fsync(image.fileno())
                     identity = WRITER.file_identity(image.fileno())
-                    image.seek(0)
-                    verify_stream(image, encoded, deadline)
-                    image.seek(0)
-                    with gzip.GzipFile(fileobj=image, mode='rb') as decoded:
-                        verify_stream(decoded, raw, deadline)
                     require(WRITER.file_identity(image.fileno()) == identity, 'image changed')
                     require(WRITER.file_identity(manifest_file.fileno()) == manifest_identity,
                             'manifest changed')
@@ -334,6 +330,7 @@ def _acquire(manifest_url, image_url, manifest_sha256, output, storage_kind, ca_
                     receipt = {'schema': 1, 'success': True, 'storage_kind': storage_kind,
                                'manifest_url': public_url(manifest_url), 'image_url': public_url(image_url),
                                'manifest': manifest_record, 'encoded': encoded, 'decoded': raw,
+                               'encoded_verified': True, 'decoded_verified': False,
                                'deployment_intent': manifest.get('deployment_intent')}
                     # Exclusive regular files also work on FAT/exFAT (no hardlinks).
                     # A failure removes our published names, retaining private partials.
