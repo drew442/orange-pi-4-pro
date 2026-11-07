@@ -1,0 +1,492 @@
+{
+  "builder_preparation_findings": {
+    "correction": "New builder-02 store, explicit file ownership/modes and reserve checks; fresh readiness and independent approval.",
+    "extent_operation_before_correction": false,
+    "issues": [
+      "Missing stated builder reserve check",
+      "Shell wildcard failed to change files inside root-private directory"
+    ],
+    "preserved_review": {
+      "bytes": 6595,
+      "sha256": "e42cf0bee31a54ddf1f9fdc841145b6634c35285f5aa56d7691b82555aadd557"
+    }
+  },
+  "date": "2026-11-07",
+  "fixture_archive": {
+    "actual_prepared_review": {
+      "bytes": 6902,
+      "sha256": "97cb858e92c1386af24e01103d3a0b96c6e1f6d6fe5caccd41bdf33a734bb525"
+    },
+    "ancestor_durability": {
+      "builder": {
+        "bytes": 354,
+        "sha256": "35514baca2834fac0d7a919ae05186c8a60605f3351d6c7a9d727037c5c40f36"
+      },
+      "native": {
+        "bytes": 357,
+        "sha256": "c2b880b51faef530ec493f0748457b01af22a4ed2255da879d5cefb0360e637a"
+      }
+    },
+    "fixture_guard_stub_limit": "Fixture tests isolate real kernel guard; production uses pinned c273 guard and independent real idle checks.",
+    "mirror_proof": {
+      "bytes": 865,
+      "path": "out/native-fixture-retention-20261107/mirror-proof.json",
+      "sha256": "7b91592d864711304af9febd92a68000fcc75e8b4cba0a9a0ff026598bdab12b"
+    },
+    "mirror_value": {
+      "archive": {
+        "bytes": 167200129,
+        "sha256": "8aecfbfa35cfdc742e0aa22a916f2cc680925f63500b6add9ea60e26c775dbbd"
+      },
+      "attestation": "root-coordinator-pinned-builder-receipt",
+      "decoded_raw": {
+        "bytes": 1073741824,
+        "sha256": "744ad9dc411e8342fc0f45038595adbcaa3e90e9276b70725a72e6cea4bb6bb6"
+      },
+      "decoding_scope": "Current encoded transfer/readback hashes; decoded_raw binds the pinned native full roundtrip, not a new remote decode.",
+      "dev": 64512,
+      "fsynced": true,
+      "gid": 0,
+      "host": "build.drewnet.online",
+      "inode": 686337,
+      "mode": "0600",
+      "nlink": 1,
+      "path": "/var/lib/a733-native-fixture-retention-20261107/diagnostic-1g.ext4.gz",
+      "prepared_sha256": "caf9f5f675f09deaf7c3fe53eac640ab89a4af1b6ffe9afc08e1f259a5de1992",
+      "protected_ancestors": true,
+      "schema": 1,
+      "store_mode": "0700",
+      "success": true,
+      "uid": 0
+    },
+    "native_and_builder_gzip": "/var/lib/a733-native-fixture-retention-20261107/diagnostic-1g.ext4.gz",
+    "prepared": {
+      "bytes": 1753,
+      "path": "out/native-fixture-retention-20261107/prepared.json",
+      "sha256": "caf9f5f675f09deaf7c3fe53eac640ab89a4af1b6ffe9afc08e1f259a5de1992"
+    },
+    "prepared_value": {
+      "archive": {
+        "bytes": 167200129,
+        "sha256": "8aecfbfa35cfdc742e0aa22a916f2cc680925f63500b6add9ea60e26c775dbbd"
+      },
+      "archive_metadata": {
+        "allocated": 167206912,
+        "bytes": 167200129,
+        "ctime_ns": 1794053189383198533,
+        "dev": 64512,
+        "gid": 0,
+        "inode": 4499764,
+        "links": 1,
+        "mode": 33152,
+        "mtime_ns": 1794053189383198533,
+        "uid": 0,
+        "xattrs": {}
+      },
+      "archive_path": "/var/lib/a733-native-fixture-retention-20261107/diagnostic-1g.ext4.gz",
+      "controller_sha256": "2e270b8d5cf09e0e196b501fe641831edaf6942f04afdc809305aa0c127faa9d",
+      "evidence": {
+        "docs/evidence/full-root-metadata-fixture-20261106.json": "b893b76af3783984131c73040a394f27def228a789e1b992c519e0fa467d9b09",
+        "docs/evidence/userspace-space-retention-20261106.json": "07697df616d83a5e68198871f5fb7aef70e3668fc49f10ac35c2f24767574cca"
+      },
+      "helper_sha256": "c2733612a3c1fbcf7729be13a2579a11dbbeddd9f0e2d4ac7592ef75e67d32fa",
+      "phase": "prepared",
+      "raw": {
+        "bytes": 1073741824,
+        "sha256": "744ad9dc411e8342fc0f45038595adbcaa3e90e9276b70725a72e6cea4bb6bb6"
+      },
+      "raw_removed": false,
+      "resources": {
+        "encoded_cap": 241172480,
+        "floor": 268435456,
+        "free_after": 338481152,
+        "free_before": 505823232,
+        "margin": 8388608
+      },
+      "schema": 1,
+      "source_atime_ns_observed": 1793987427275647903,
+      "source_metadata": {
+        "allocated": 508342272,
+        "bytes": 1073741824,
+        "ctime_ns": 1793987265767573553,
+        "dev": 64512,
+        "gid": 1000,
+        "inode": 4489576,
+        "links": 1,
+        "mode": 33152,
+        "mtime_ns": 1793987193000000000,
+        "uid": 1000,
+        "xattrs": {}
+      },
+      "source_path": "/home/drew/orange-pi-4-pro/out/full-root-metadata-fixture-20261106/work/full-root-fixture/diagnostic-1g.ext4"
+    },
+    "protected_raw_copy_remains": "/var/lib/a733-userspace-space-retention-20261106/retained-0.ext4",
+    "restoration_executed_after_retirement": false,
+    "result": {
+      "archive": {
+        "bytes": 167200129,
+        "sha256": "8aecfbfa35cfdc742e0aa22a916f2cc680925f63500b6add9ea60e26c775dbbd"
+      },
+      "free_after_close": 846098432,
+      "mirror_proof_sha256": "7b91592d864711304af9febd92a68000fcc75e8b4cba0a9a0ff026598bdab12b",
+      "raw_removed": true,
+      "schema": 1,
+      "source_path": "/home/drew/orange-pi-4-pro/out/full-root-metadata-fixture-20261106/work/full-root-fixture/diagnostic-1g.ext4",
+      "success": true
+    },
+    "root_fixture_tests": 22,
+    "source_review": {
+      "bytes": 6381,
+      "sha256": "0bd1e90ba544976fdee639c19d179b6f51591425e2dff3e81a77f17c97dc6b77"
+    }
+  },
+  "hardware_acceptance": false,
+  "limits": [
+    "No boot, KVM, physical SD write, SPI/recovery, endurance or deployment acceptance added.",
+    "Whole NVMe repeat construction and independent stream verification remain separate.",
+    "No guard reduction or further LV growth is authorized."
+  ],
+  "orange_pi_storage_accessed": false,
+  "records": {
+    "archive": {
+      "builder-ancestor-durability.log": {
+        "bytes": 354,
+        "sha256": "35514baca2834fac0d7a919ae05186c8a60605f3351d6c7a9d727037c5c40f36"
+      },
+      "complete.json": {
+        "bytes": 440,
+        "sha256": "9ae3cead3f17bf40994a94b1b8e268b7cb06c4a56a4e8d0fcfe35f647546d36c"
+      },
+      "execute.log": {
+        "bytes": 440,
+        "sha256": "9ae3cead3f17bf40994a94b1b8e268b7cb06c4a56a4e8d0fcfe35f647546d36c"
+      },
+      "intent.json": {
+        "bytes": 725,
+        "sha256": "ef2e9d20120e36a4990e81d26a307991b8e27911d3b5de98a3b45e67fea4dd08"
+      },
+      "mirror-proof.json": {
+        "bytes": 865,
+        "sha256": "7b91592d864711304af9febd92a68000fcc75e8b4cba0a9a0ff026598bdab12b"
+      },
+      "mirror-transfer.log": {
+        "bytes": 803,
+        "sha256": "2c9188fd590801a613ac2fae29d505492819c9d8370f13c87f6142b75fe6fdc8"
+      },
+      "native-ancestor-durability.log": {
+        "bytes": 357,
+        "sha256": "c2b880b51faef530ec493f0748457b01af22a4ed2255da879d5cefb0360e637a"
+      },
+      "prepare.log": {
+        "bytes": 1986,
+        "sha256": "f4c510fe353796393e7a05afdfbe6964e954dca1f7a3a4fc54cb84a06b1b6610"
+      },
+      "prepared-review.json": {
+        "bytes": 6902,
+        "sha256": "97cb858e92c1386af24e01103d3a0b96c6e1f6d6fe5caccd41bdf33a734bb525"
+      },
+      "prepared.json": {
+        "bytes": 1753,
+        "sha256": "caf9f5f675f09deaf7c3fe53eac640ab89a4af1b6ffe9afc08e1f259a5de1992"
+      },
+      "receive-mirror.py": {
+        "bytes": 2949,
+        "sha256": "eb401935447363b857c83411b676ab51c743511bd07cd2d0a77b81abc751e4a7"
+      },
+      "retain.py": {
+        "bytes": 16650,
+        "sha256": "2e270b8d5cf09e0e196b501fe641831edaf6942f04afdc809305aa0c127faa9d"
+      },
+      "review.json": {
+        "bytes": 6381,
+        "sha256": "0bd1e90ba544976fdee639c19d179b6f51591425e2dff3e81a77f17c97dc6b77"
+      },
+      "sync-ancestors.py": {
+        "bytes": 1055,
+        "sha256": "f5bd703a4bd96cee85baff223c2878c210ab6ff9d2da81bd33cdf890bdacabe6"
+      },
+      "test-retain.py": {
+        "bytes": 11809,
+        "sha256": "1019bdd6bb11c9c6a282c871eab891f46164f06188b6f62c96922155ddccb639"
+      }
+    },
+    "sparse": {
+      "builder-02-execute.log": {
+        "bytes": 1095,
+        "sha256": "758c3a153dff0b994ce7a41ceda01b2ed150a60e88aa5616b62a7e420e8ccd13"
+      },
+      "builder-02-policy.log": {
+        "bytes": 541,
+        "sha256": "63e873460bbce2ab3c010bcb73da5a922dec93cf351d532c21aa9cab80852d8c"
+      },
+      "builder-02-readiness.json": {
+        "bytes": 1014,
+        "sha256": "0edcb7b17ffcb66e805b94b06c009e1485710881c02f63d5a92ebbd380f6e3bc"
+      },
+      "builder-02-readiness.log": {
+        "bytes": 2076,
+        "sha256": "88e498647990e0678683ba83e5e14dae94e79865ee522c18660988720a1e5c58"
+      },
+      "builder-02-review.json": {
+        "bytes": 4478,
+        "sha256": "a0134d36374385d33bb67d6411b546cba6a573208a2c80ded36d4720a6d73a47"
+      },
+      "builder-complete.json": {
+        "bytes": 878,
+        "sha256": "37f062d8e783ee6fa8650115378e7ee1d5b67ba9114b6711b91b0557135cd6f0"
+      },
+      "builder-readiness.json": {
+        "bytes": 1014,
+        "sha256": "d3a291c531a552a372e34c1911514eaf8bf4bc6ebaa5e2d518fa2cbf88e200fa"
+      },
+      "builder-readiness.log": {
+        "bytes": 2294,
+        "sha256": "01081843b7afdeddfcbc5f7093630ee23857527bbdea6f0d760df65382b44e30"
+      },
+      "native-complete.json": {
+        "bytes": 824,
+        "sha256": "d7cd737ebe29d02a07a11948363d5066c9012f1d7013a6f772ca54da61f753f6"
+      },
+      "native-execute.log": {
+        "bytes": 995,
+        "sha256": "d834ca6f2a4f186f84660b0c0ceddb516038bee7ef11f57e4d20396f6d11887b"
+      },
+      "native-fixtures.log": {
+        "bytes": 821,
+        "sha256": "9b2b63c0c77229a9793f4a7e5b5722e16f7958619bbbe8ddece09f6c5e3b32e0"
+      },
+      "native-policy.log": {
+        "bytes": 835,
+        "sha256": "8146d7bbffa45ea5c2af19a4f0b1ddfe0c6c4e756b3d641f6a3713d580672e5e"
+      },
+      "native-readiness.json": {
+        "bytes": 960,
+        "sha256": "88d1fbcf7b55da5ad255d505a24521d30ec195e8e19824492f7f1604473415b3"
+      },
+      "native-readiness.log": {
+        "bytes": 960,
+        "sha256": "88d1fbcf7b55da5ad255d505a24521d30ec195e8e19824492f7f1604473415b3"
+      },
+      "protected-native-complete.json": {
+        "bytes": 808,
+        "sha256": "865d476ae77f84dae14306514716c537864054545c118164e6731cadf2ffa686"
+      },
+      "protected-native-execute.log": {
+        "bytes": 965,
+        "sha256": "a55486ce0a95ad74682f4d310758d4a57ff4aa42148c63714a54c3f5b515daea"
+      },
+      "protected-native-fixtures.log": {
+        "bytes": 821,
+        "sha256": "92709b9dbb8033c6401d8dd4a2f4cdcf88821927a861001e5aa6c653ed20b236"
+      },
+      "protected-native-policy.log": {
+        "bytes": 759,
+        "sha256": "e04e66e70cd2ce4347335d27ec7537485f93d6a0ee7a6893be9461a4543454b3"
+      },
+      "protected-native-readiness.json": {
+        "bytes": 943,
+        "sha256": "72a6f403a92b2d7f16d05fbdee0589fa8d2a4716d2e225c9d964c10ec5456a5d"
+      },
+      "protected-native-readiness.log": {
+        "bytes": 943,
+        "sha256": "72a6f403a92b2d7f16d05fbdee0589fa8d2a4716d2e225c9d964c10ec5456a5d"
+      },
+      "protected-native-review.json": {
+        "bytes": 4213,
+        "sha256": "48ec6fa020f01e6914b91308e7eac8ebd50f9c4a6e57cbfcb41b55cb0cd006cd"
+      },
+      "review.json": {
+        "bytes": 6595,
+        "sha256": "e42cf0bee31a54ddf1f9fdc841145b6634c35285f5aa56d7691b82555aadd557"
+      },
+      "sparse-builder.py": {
+        "bytes": 6765,
+        "sha256": "3738d4c9337a35e9ba5bf8f3b9000d61d1f356556d5ec1b2439421bbd32e8554"
+      },
+      "sparse-native.py": {
+        "bytes": 6670,
+        "sha256": "a81790de6429ebf466a0c4b145a4724e70d274c9659f38fcd3b6eecf61a6b411"
+      },
+      "sparse-protected-native.py": {
+        "bytes": 6692,
+        "sha256": "6a440ea746fd228f9738bb98f7cc97906dce30814280787f9b5350275e9d886e"
+      },
+      "test-policy.py": {
+        "bytes": 1985,
+        "sha256": "2ee4a29a3cae76c38576b6b7bb1efe8b7036e9112c5f59d313d993dc1c13149f"
+      },
+      "test-primitive-builder.py": {
+        "bytes": 2855,
+        "sha256": "67f91ee3fa2d673e35c50aa040245ac85ee27c387ba8d2344f20345000fa2c23"
+      },
+      "test-primitive-native.py": {
+        "bytes": 2884,
+        "sha256": "1eaa732fb38d234683ce768f89b77da80a202fef4e711db59b87a63455a2ccf2"
+      },
+      "test-primitive-protected-native.py": {
+        "bytes": 2864,
+        "sha256": "cbe6e6770feb24adb12da58fcb533631891d7b0239bc3cc46477fd4ef3bd93a6"
+      },
+      "thread-guard.py": {
+        "bytes": 23759,
+        "sha256": "c2733612a3c1fbcf7729be13a2579a11dbbeddd9f0e2d4ac7592ef75e67d32fa"
+      }
+    }
+  },
+  "schema": 1,
+  "sparse_profiles": {
+    "builder": {
+      "complete": {
+        "bytes": 878,
+        "sha256": "37f062d8e783ee6fa8650115378e7ee1d5b67ba9114b6711b91b0557135cd6f0"
+      },
+      "controller": {
+        "bytes": 6765,
+        "sha256": "3738d4c9337a35e9ba5bf8f3b9000d61d1f356556d5ec1b2439421bbd32e8554"
+      },
+      "readiness": {
+        "bytes": 1014,
+        "sha256": "0edcb7b17ffcb66e805b94b06c009e1485710881c02f63d5a92ebbd380f6e3bc"
+      },
+      "result": {
+        "files": [
+          {
+            "allocated_after": 32591872,
+            "allocated_before": 268439552,
+            "full_size_and_hash": {
+              "bytes": 268435456,
+              "sha256": "1db41fa64748f1fcb275f7ef0cacd5e531e0481e0b514f8f8617b0e7d1f7afdb"
+            },
+            "mtime_preserved": true,
+            "signature": [
+              64512,
+              1745017,
+              33188,
+              1048576,
+              1048576,
+              1,
+              268435456,
+              1794042976231093763,
+              1794042976231093763
+            ],
+            "spec": {
+              "bytes": 268435456,
+              "inode": 1745017,
+              "path": "/var/lib/a733-clean-replay-20261106/host-bootstrap-nvme-firmware-01/work/project/out/host-sd-nvme-firmware-01/a733-host-sd.img",
+              "sha256": "1db41fa64748f1fcb275f7ef0cacd5e531e0481e0b514f8f8617b0e7d1f7afdb"
+            }
+          }
+        ],
+        "free_after": 23995502592,
+        "physical_device_writes": false,
+        "success": true
+      },
+      "review": {
+        "bytes": 4478,
+        "sha256": "a0134d36374385d33bb67d6411b546cba6a573208a2c80ded36d4720a6d73a47"
+      }
+    },
+    "native": {
+      "complete": {
+        "bytes": 824,
+        "sha256": "d7cd737ebe29d02a07a11948363d5066c9012f1d7013a6f772ca54da61f753f6"
+      },
+      "controller": {
+        "bytes": 6670,
+        "sha256": "a81790de6429ebf466a0c4b145a4724e70d274c9659f38fcd3b6eecf61a6b411"
+      },
+      "readiness": {
+        "bytes": 960,
+        "sha256": "88d1fbcf7b55da5ad255d505a24521d30ec195e8e19824492f7f1604473415b3"
+      },
+      "result": {
+        "files": [
+          {
+            "allocated_after": 54792192,
+            "allocated_before": 268439552,
+            "full_size_and_hash": {
+              "bytes": 268435456,
+              "sha256": "0144c6dc8eefd285496923e0b3cf538854a6e444565ef32c4ced7df266009d9b"
+            },
+            "mtime_preserved": true,
+            "signature": [
+              64512,
+              4106085,
+              33188,
+              1000,
+              1000,
+              1,
+              268435456,
+              1793922227459066553,
+              1793922228452068074
+            ],
+            "spec": {
+              "bytes": 268435456,
+              "inode": 4106085,
+              "path": "/home/drew/orange-pi-4-pro/out/installer-helper-20261105/a733-installer-prep.img",
+              "sha256": "0144c6dc8eefd285496923e0b3cf538854a6e444565ef32c4ced7df266009d9b"
+            }
+          }
+        ],
+        "free_after": 512573440,
+        "physical_device_writes": false,
+        "success": true
+      },
+      "review": {
+        "bytes": 6595,
+        "sha256": "e42cf0bee31a54ddf1f9fdc841145b6634c35285f5aa56d7691b82555aadd557"
+      }
+    },
+    "protected-native": {
+      "complete": {
+        "bytes": 808,
+        "sha256": "865d476ae77f84dae14306514716c537864054545c118164e6731cadf2ffa686"
+      },
+      "controller": {
+        "bytes": 6692,
+        "sha256": "6a440ea746fd228f9738bb98f7cc97906dce30814280787f9b5350275e9d886e"
+      },
+      "readiness": {
+        "bytes": 943,
+        "sha256": "72a6f403a92b2d7f16d05fbdee0589fa8d2a4716d2e225c9d964c10ec5456a5d"
+      },
+      "result": {
+        "files": [
+          {
+            "allocated_after": 508276736,
+            "allocated_before": 1073745920,
+            "full_size_and_hash": {
+              "bytes": 1073741824,
+              "sha256": "744ad9dc411e8342fc0f45038595adbcaa3e90e9276b70725a72e6cea4bb6bb6"
+            },
+            "mtime_preserved": true,
+            "signature": [
+              64512,
+              4377448,
+              33152,
+              0,
+              0,
+              1,
+              1073741824,
+              1793998627112990082,
+              1793998627112990082
+            ],
+            "spec": {
+              "bytes": 1073741824,
+              "inode": 4377448,
+              "path": "/var/lib/a733-userspace-space-retention-20261106/retained-0.ext4",
+              "sha256": "744ad9dc411e8342fc0f45038595adbcaa3e90e9276b70725a72e6cea4bb6bb6"
+            }
+          }
+        ],
+        "free_after": 1410519040,
+        "physical_device_writes": false,
+        "success": true
+      },
+      "review": {
+        "bytes": 4213,
+        "sha256": "48ec6fa020f01e6914b91308e7eac8ebd50f9c4a6e57cbfcb41b55cb0cd006cd"
+      }
+    }
+  }
+}

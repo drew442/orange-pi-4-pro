@@ -61,7 +61,7 @@ Physical repair, SSH and an actual KVM guest are still unproven.
 | Host operations | [Updates](host-updates.md), [selection](nvme-root-selection.md), [RAM recovery](host-recovery.md) and package-state isolation pass software/packaged checks. Physical interrupted update, rollback, dirty-journal and missing-NVMe recovery remain open. |
 | Guest operations | [KVM-only first guest](kvm-first-guest.md), [management](guest-operations.md), networking, enrollment, checkpoints and off-device backup/restore have software fixtures. **No guest has booted.** |
 
-Latest privileged Ubuntu discovery: **1,631 tests, no skips/errors/failures**;
+Latest privileged Ubuntu discovery: **1,639 tests, no skips/errors/failures**;
 five shell suites, five diagnostic assembly cases and Bash/TOML checks pass.
 These results establish no physical boot, guest, SD-write or recovery acceptance.
 
@@ -82,7 +82,15 @@ See [host assessment](build-host-assessment.md).
 The [registered state repeat adapters](state-repeat-controller.md) pass independent
 source review, committed-source planning, full privileged tests, actual state
 construction/full readback and independent artifact review. The matching
-bootstrap also passes; full NVMe binding remains open.
+bootstrap also passes; full NVMe construction/stream validation remain open.
+
+The [registered NVMe repeat](nvme-repeat-controller.md) passes source review,
+committed planning and the full suite. Construction is **running** at source
+`339eef1`, tag `timesync-repeat-01`; retain/poll that attempt rather than restarting.
+Its independent stream pass and complete artifact review are still pending.
+[Capacity preparation](candidate-repeat-capacity.md) preserves all sparse image
+hashes and retains the retired fixture in gzip on both hosts. Native free space
+after the final conversion is **1,410,519,040 bytes**; remeasure before transfers.
 
 [Verified retention](composition-retention.md) preserves retired work trees on
 both hosts. Native sparse conversion preserves generated image bytes and leaves

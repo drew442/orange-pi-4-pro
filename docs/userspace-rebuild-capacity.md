@@ -15,11 +15,14 @@ remain available on the builder.
 ## Retained locations
 
 The evidence maps every exact builder path to its size, SHA-256, original codex
-copy and protected second copy. The ordinary codex originals remain at:
+copy and protected second copy. Later [candidate capacity preparation](candidate-repeat-capacity.md)
+archives the ordinary diagnostic raw image on both hosts and retires only that
+ordinary file; its protected raw second copy remains available, now sparse.
+The other ordinary codex originals remain at:
 
 | Artifact | Original codex file |
 | --- | --- |
-| Diagnostic filesystem | `out/full-root-metadata-fixture-20261106/work/full-root-fixture/diagnostic-1g.ext4` |
+| Diagnostic filesystem | Historical raw path retired; use the [current recovery map](candidate-repeat-capacity.md) |
 | First configured export | `out/userspace-export-20261106/rootfs.tar.gz` |
 | Repeated configured export | `out/userspace-export-recipe-20261106/rootfs.tar.gz` |
 | First normalized export | `out/userspace-export-canonical-01-20261106/rootfs.tar.gz` |

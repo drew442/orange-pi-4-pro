@@ -53,6 +53,12 @@ staging to its 22 GiB recipe guard; do not assume the small remaining margin fit
 Codex retains this raw/gzip bootstrap sparsely and has **306,089,984 bytes free**
 after transfer. Another full candidate copy requires native capacity preparation
 above the unchanged 256 MiB floor.
+Later [candidate capacity preparation](candidate-repeat-capacity.md) preserves
+three image hashes through sparse conversion and retains a historical fixture
+as verified gzip on both hosts before retiring its ordinary raw copy. Native
+free space becomes **1,410,519,040 bytes**. The full NVMe repeat is now running
+under the unchanged initial/runtime guards; its actual minimum resources and
+artifact results must come from its completed receipt, not this admission sample.
 
 The [operator-approved 20 GiB root-LV growth](evidence/build-host-capacity-execution-20261107.json)
 now completes successfully, including online ext4 enlargement. The LV is

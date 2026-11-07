@@ -22,10 +22,24 @@
   },
   "validation": {
     "actual_construction": false,
-    "committed_cli_plan": false,
-    "full_privileged_suite": false,
+    "assembly_cases": 5,
+    "committed_cli_plan": true,
+    "construction_state": "running; no success established",
+    "full_privileged_suite": true,
+    "full_suite_log": {
+      "bytes": 6459,
+      "sha256": "594a0d7879342dc774bf57e530a64a815349341fbdc89859ce46fdcb24bc64ab"
+    },
     "independent_stream_pass": false,
     "independent_targeted_tests": 53,
+    "plan": {
+      "bytes": 286940,
+      "sha256": "4628f9e58c9e3c1802c6bfdfc1f9ab5d2f59bd2ddeaa451cbb7c9e1a552195d3"
+    },
+    "privileged_skips": 0,
+    "privileged_unit_tests": 1639,
+    "producer_revision": "339eef1ffcd1370dffc65fec81861f7081cb2daf",
+    "shell_suites": 5,
     "skips": 0
   }
 }
