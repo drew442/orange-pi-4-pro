@@ -69,7 +69,11 @@ remain unchanged. **Do not repeat NVMe installation to fix management.**
   The [NVMe-first component candidate](evidence/uboot-nvme-candidate-20261107.json)
   now compiles in the frozen builder. Independent linked-code/package/script
   inspection passes, including EL2 service `0x8000ff40` and unchanged firmware
-  blobs. No SPI image has been assembled or programmed; physical boot is untested.
+  blobs. A [separate registered replay](evidence/uboot-nvme-replay-20261107.json)
+  now matches the unpacked binary, boot package, configuration, challenge and SPI
+  boot0 exactly. All 77 new manifest entries resolve to verified local files or
+  original references; the builder retains 4.04 GB free. No SPI image has been
+  assembled or programmed; physical boot is untested.
 
 ## Implemented and verified in software
 

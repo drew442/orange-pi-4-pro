@@ -1,0 +1,191 @@
+{
+  "builder": "drew@build.drewnet.online",
+  "classification": "Actual frozen-builder registered component replay; no deployment or hardware acceptance",
+  "command": [
+    "/usr/bin/systemd-nspawn",
+    "--directory=/var/lib/a733-frozen-builders/freeze-20261106-01/restored-rootfs",
+    "--settings=no",
+    "--as-pid2",
+    "--register=no",
+    "--keep-unit",
+    "--console=pipe",
+    "--private-users=1048576:65536",
+    "--private-users-ownership=off",
+    "--private-network",
+    "--no-new-privileges=yes",
+    "--drop-capability=CAP_SYS_ADMIN,CAP_SYS_MODULE,CAP_SYS_RAWIO,CAP_SYS_BOOT,CAP_SYS_TIME,CAP_MKNOD,CAP_NET_ADMIN",
+    "--resolv-conf=off",
+    "--timezone=off",
+    "--link-journal=no",
+    "--bind-ro=/var/lib/a733-clean-builder/seed-probe-20261106-05/probe.sh:/a733-probe.sh",
+    "--bind-ro=/var/lib/a733-clean-builder/seed-probe-20261106-05/firmware-empty:/sys/firmware",
+    "--read-only",
+    "--bind-ro=/var/lib/a733-clean-replay-20261106/home:/home",
+    "--bind=/var/lib/a733-clean-replay-20261106/uboot-nvme-component-registered-01/work:/a733-export-output",
+    "--bind-ro=/var/lib/a733-el2-work-20261104/out/el2-diagnostic-20261104-03/artifacts:/var/lib/a733-el2-work-20261104/out/el2-diagnostic-20261104-03/artifacts",
+    "--bind-ro=/var/lib/a733-clean-replay-20261106/uboot-nvme-component-registered-01/inputs:/a733-debs",
+    "--bind-ro=/var/lib/a733-clean-replay-20261106/uboot-nvme-component-registered-01/inputs/run.py:/a733-install.sh",
+    "/bin/sh",
+    "-c",
+    "/bin/sh /a733-probe.sh && exec /usr/bin/python3 -I -B /a733-install.sh"
+  ],
+  "compilation_jobs": 2,
+  "copied_local_files": 30,
+  "date": "2026-11-07",
+  "deployment_authorized": false,
+  "final_resources": {
+    "available_memory_bytes": 7418847232,
+    "free_bytes": 4037980160,
+    "time": 1794026644.9157057
+  },
+  "hardware_acceptance": false,
+  "host_inventory_unchanged": true,
+  "independent_review": {
+    "additional_exact_matches": [
+      "ELF",
+      "bootm object",
+      "bootm source",
+      "bootm disassembly",
+      "link map"
+    ],
+    "model": "gpt-6.1-sol",
+    "pin": {
+      "bytes": 4944,
+      "sha256": "90f2606f0676a6718e23678e5fcf3446aaee0d9660fc86e9dede4d9f034829e9"
+    },
+    "reasoning_effort": "high",
+    "report": "/home/drew/orange-pi-4-pro/out/spi-candidate-registered-01-20261107/independent-review.json",
+    "result": "pass; no findings",
+    "scope": "Retained artifact/reference inspection; launcher independently checked new RAM outputs before unmount. No hardware acceptance."
+  },
+  "limitations": [
+    "No combined SPI image or programmer; no SPI writes or physical boot.",
+    "No actual KVM guest execution.",
+    "Reference map retains complete manifest files, not every newly generated workspace timestamp. Original full workspace archive and unchanged references remain required.",
+    "Private workspace reconstruction/complete archive restoration is not tested.",
+    "Production root/state/NVMe reconstruction remains capacity gated."
+  ],
+  "live_postcheck": {
+    "mapped_processes": [],
+    "phase_mounts": [],
+    "resources": {
+      "available_memory_bytes": 7492235264,
+      "free_bytes": 4037926912,
+      "time": 1794026735.6590278
+    },
+    "work_entries": []
+  },
+  "manifest_entries_verified": 77,
+  "mapped_processes_final": [],
+  "minimum_available_memory_bytes": 6090018816,
+  "minimum_disk_free_bytes": 4037980160,
+  "native_original_reference_root": "/home/drew/orange-pi-4-pro/out/spi-candidate-ram-02-20261107/component-retained",
+  "native_retained_root": "/home/drew/orange-pi-4-pro/out/spi-candidate-registered-01-20261107",
+  "native_shared_archive": "/home/drew/orange-pi-4-pro/out/spi-candidate-ram-02-20261107/work.tar.gz",
+  "phase": "/var/lib/a733-clean-replay-20261106/uboot-nvme-component-registered-01",
+  "phase_mounts_final": [],
+  "producer_revision": "3f2c39a27bfafe6e19507570a371d005c3e02dad",
+  "records": {
+    "component-retained/candidate-manifest.json": {
+      "bytes": 12289,
+      "sha256": "b1935bcab819432d54f02d30331afe10bde85f268b699f3728a4242f70ce3a14"
+    },
+    "component-retained/reference-map.json": {
+      "bytes": 34462,
+      "sha256": "ff9792c7258a68012abaf74e6f4f893b28d9a5af3030a7c60af14f2b2036bbf3"
+    },
+    "receipt.json": {
+      "bytes": 35207,
+      "sha256": "29228a46e956eea6af093ef4e3977981dbadc720803f3731028879c37e46629a"
+    },
+    "retained-awaiting-unmount.json": {
+      "bytes": 35001,
+      "sha256": "ba02f569740ad222b815431fac20b37b4f712d26e24e0ce791a22903c8d7b168"
+    },
+    "source-manifest.json": {
+      "bytes": 2960,
+      "sha256": "818dddd8341ab0d06cc35dfe820def6fee1f5ddf07ace493b59fe0c14128c9ce"
+    }
+  },
+  "referenced_files": 47,
+  "registered_replay": {
+    "exact_matches_verified": true,
+    "matched_artifacts": {
+      "artifacts/boot0_spinor_a733.fex": {
+        "bytes": 237568,
+        "sha256": "7f0babc242c1e4614c7243bd2c45a980e4385727ffbb544a7c8f2d324cf8dc07"
+      },
+      "artifacts/boot_package.fex": {
+        "bytes": 1392640,
+        "sha256": "bdfe070a2c358de9dd0061b39609f604c0c12e9c25140903505f88799cc343be"
+      },
+      "artifacts/uboot-sunxi-challenge.c": {
+        "bytes": 930,
+        "sha256": "c5767cbc5eba6e525b0d1a36ea7783bb7c1f85178fe1e308bf5fba032964e86d"
+      },
+      "artifacts/uboot-unpacked.bin": {
+        "bytes": 1192546,
+        "sha256": "4171ad95268694e35e9a3c2ae827e4feaeeb75fb67e42bd058b1ff64122fe22f"
+      },
+      "artifacts/uboot.config": {
+        "bytes": 35703,
+        "sha256": "0b8837e27ec4edf9e2b28d48d38fffbf43ee4f1f9add2779f3d42cd5ffaf2f97"
+      }
+    },
+    "original_manifest_pin": {
+      "bytes": 11439,
+      "sha256": "5d04b63f4db1faa75a3e64275dbcbaca4d7ba4bb8c5f085ec7edf3baf356fb4f"
+    },
+    "registry_pin": {
+      "bytes": 4035,
+      "sha256": "abb6f3136f6df22c3da0b7a205b7d2b968e3faad7a3589a3fb69c1c2689117c5"
+    },
+    "target_id": "nvme-candidate-20261107-ram02"
+  },
+  "retention": {
+    "mode": "registered-reference",
+    "new_manifest": {
+      "bytes": 12289,
+      "sha256": "b1935bcab819432d54f02d30331afe10bde85f268b699f3728a4242f70ce3a14"
+    },
+    "reference_map": {
+      "bytes": 34462,
+      "sha256": "ff9792c7258a68012abaf74e6f4f893b28d9a5af3030a7c60af14f2b2036bbf3"
+    },
+    "referenced_files": 47,
+    "review_files": "/var/lib/a733-clean-replay-20261106/uboot-nvme-component-registered-01/component-retained",
+    "shared_full_workspace": {
+      "path": "/var/lib/a733-clean-replay-20261106/uboot-nvme-component-ram-02/work.tar.gz",
+      "pin": {
+        "bytes": 412929105,
+        "sha256": "436e35cd9b6e16ccef0a991f88b8afb4a57c21bcd3e374c0946cd6c77635b49a"
+      }
+    }
+  },
+  "retention_budget": {
+    "allocated_upper_bound_bytes": 8818688,
+    "required_free_bytes_exclusive": 4008818688
+  },
+  "returncode": 0,
+  "schema": 1,
+  "state": "complete",
+  "success": true,
+  "validation": {
+    "focused_tests": {
+      "component": 25,
+      "historical_replay": 22,
+      "host_script": 5,
+      "launcher": 22
+    },
+    "full_unittest": {
+      "capacity_rerun_log": "tmp/spi-candidate-20261107/capacity-rerun.log",
+      "cause": "Native filesystem free below unchanged 2/3/4 GB guards. All four affected modules rerun with TMPDIR on temporary 6 GiB tmpfs: 57 tests pass; no guard changes.",
+      "errors": 4,
+      "failures": 2,
+      "log": "tmp/spi-candidate-20261107/full-tests-registered.log",
+      "run": 1451,
+      "skipped": 113
+    },
+    "shell_and_assembly": "All tests/test-*.sh and 4 assembly cases pass; host-only."
+  }
+}

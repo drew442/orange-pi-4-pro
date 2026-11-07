@@ -141,9 +141,9 @@ retention while preserving the final >4 GB reserve. Do not rerun blindly or
 lower the guards; the separate production capacity proposal remains pending.
 
 This first candidate's generated challenge is now an authenticated retained
-input. Exact candidate reproduction still needs a separately registered replay
-using that same input. No flash image, SPI programming, NVMe file-read test,
-physical boot or KVM guest test is established by this software build.
+input. The separately registered replay below reproduces it exactly. No flash
+image, SPI programming, NVMe file-read test, physical boot or KVM guest test is
+established by these software builds.
 
 ## Registered exact replay
 
@@ -191,3 +191,33 @@ compiler, registered challenge, producer revision and retained patch. Reference
 retention does not claim an exact snapshot of every new cache-file timestamp.
 Actual replay results are recorded separately; source review and fixtures alone
 do not establish matching rebuilt artifacts or hardware acceptance.
+
+
+## Executed registered replay
+
+The [actual replay record](evidence/uboot-nvme-replay-20261107.json) records source
+`3f2c39a27bfafe6e19507570a371d005c3e02dad` and phase
+`/var/lib/a733-clean-replay-20261106/uboot-nvme-component-registered-01`.
+It completes with two compilation jobs and unchanged package inventory. All five
+required artifact hashes match the first candidate. The separate host script
+also retains both original hashes and verified CRCs.
+
+Independent Sol high artifact review passes with no findings, including the
+complete original archive, new bundle HEAD, generator patch and producer copies.
+ELF, bootm object/source/disassembly and link map also match byte for byte.
+
+All **77** manifest entries pass native readback: **30** retained local files and
+**47** verified references. New producer inputs, replay patch, provenance and
+logs remain local. Resolve native references using
+`out/spi-candidate-ram-02-20261107/component-retained`; new local records are in
+`out/spi-candidate-registered-01-20261107/component-retained`. The original
+`out/spi-candidate-ram-02-20261107/work.tar.gz` remains the shared full workspace
+archive; keep both sets and the reference map together when transferring them.
+No second complete workspace archive is created. Private source/compiler
+reconstruction and a complete archive restoration have not been exercised.
+
+The minimum disk free is **4,037,980,160 bytes**, and available RAM stays above
+**6,090,018,816 bytes**. The final receipt and a separate live observation show
+an empty, unmounted work directory and no mapped build processes. The >4 GB
+retention reserve remains unchanged. This is component reproduction evidence;
+SPI recovery, image assembly, programming and physical boot remain separate gates.
