@@ -7,6 +7,11 @@ to the [second production root build](production-host-roots-repeat.md). The
 source integration; frozen construction and full readback are separate gates.
 The historical state controllers and their original evidence remain unchanged.
 
+The actual committed-source `--plan` for revision `3221a1c` passes on the builder.
+Privileged Ubuntu validation passes **1,621 unit tests without skips**, five shell
+suites, five SD assembly cases, Bash syntax and TOML parsing. These checks do not
+establish construction or hardware acceptance.
+
 Each adapter authenticates its entire historical controller template by SHA-256,
 holds its physical ancestors and single regular-file descriptor, and checks its
 identity and bytes through final publication. Only an explicit set of constant

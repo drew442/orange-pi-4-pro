@@ -61,7 +61,7 @@ Physical repair, SSH and an actual KVM guest are still unproven.
 | Host operations | [Updates](host-updates.md), [selection](nvme-root-selection.md), [RAM recovery](host-recovery.md) and package-state isolation pass software/packaged checks. Physical interrupted update, rollback, dirty-journal and missing-NVMe recovery remain open. |
 | Guest operations | [KVM-only first guest](kvm-first-guest.md), [management](guest-operations.md), networking, enrollment, checkpoints and off-device backup/restore have software fixtures. **No guest has booted.** |
 
-Latest privileged Ubuntu discovery: **1,614 tests, no skips/errors/failures**;
+Latest privileged Ubuntu discovery: **1,621 tests, no skips/errors/failures**;
 five shell suites, five diagnostic assembly cases and Bash/TOML checks pass.
 These results establish no physical boot, guest, SD-write or recovery acceptance.
 
@@ -78,6 +78,10 @@ sparse and matches the prior SD raw/gzip bytes in the frozen builder. Recheck
 staging overhead and the unchanged full-NVMe **22 GiB** initial guard before any
 composition; **no guard reduction or additional LV growth is authorized**.
 See [host assessment](build-host-assessment.md).
+
+The [registered state repeat adapters](state-repeat-controller.md) pass independent
+source review, committed-source planning and the full privileged test suite.
+Actual state construction/readback and new downstream bindings remain open.
 
 [Verified retention](composition-retention.md) preserves retired work trees on
 both hosts. Native sparse conversion preserves generated image bytes and leaves

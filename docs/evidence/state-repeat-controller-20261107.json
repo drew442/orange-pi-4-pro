@@ -126,12 +126,29 @@
     }
   },
   "validation": {
+    "assembly_cases": 5,
+    "bash_syntax": true,
     "broader_existing_root_required_skips": 5,
     "broader_passed": 48,
     "broader_tests_run": 53,
-    "committed_cli_plan": false,
+    "committed_cli_plan": true,
+    "committed_cli_plan_record": {
+      "bytes": 158721,
+      "path": "tmp/state-repeat-20261107/plan.json",
+      "sha256": "6fc8aebbf0136b2ada68f0af4fa0c901b5f3065d4432776d4d54902bb4c754fb"
+    },
+    "committed_cli_plan_source_revision": "3221a1cf9f589576f875a3c742ac819998a140c0",
     "focused_tests": 7,
     "frozen_state_construction": false,
-    "independent_full_readback": false
+    "full_validation_log": {
+      "bytes": 6441,
+      "path": "tmp/state-repeat-20261107/full-validation.log",
+      "sha256": "33f9c73e8febf02fc190992ad2ffd1702840696b710edde98b2ba4b046f8ee7c"
+    },
+    "independent_full_readback": false,
+    "privileged_ubuntu_skips": 0,
+    "privileged_ubuntu_unit_tests": 1621,
+    "shell_suites": 5,
+    "toml_parse": true
   }
 }
