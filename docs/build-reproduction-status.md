@@ -25,7 +25,8 @@ artifacts remain bound to [the deployment guide](deploy-personalized-20261106.md
 | Device metadata | [Fixture](evidence/fakeroot-device-metadata-20261106.json), [two-phase candidate](evidence/fakeroot-metadata-candidate-20261106.json) | Virtual archive/image devices do not prove hardware access |
 | Complete historical root archive | [Full staging comparison](evidence/full-root-metadata-fixture-20261106.json), [complete diagnostic image readback](evidence/full-root-image-readback-20261106.json): 15,892 paths, 518,081,083 regular-file bytes, links/devices/attributes | Diagnostic 1 GiB image; production 4 GiB slots remain open |
 | Authenticated userspace profiles | [Explicit selection and actual staging](userspace-profiles.md): normalized/default pins, 12 provenance files, complete 15,876-entry extraction, 220 packages, eight package-state components and closed runtime; `timesync-20261106` is now an explicit opt-in profile while baseline default and normalized selection remain unchanged | Time-enabled production images are not built; existing baseline artifacts remain unchanged |
-| Root/state recipe integration | [Optional metadata backend](evidence/root-metadata-backend-20261106.json), [preparation](root-reconstruction-preparation.md), and [time integration](evidence/time-profile-integration-20261107.json): source-wired profile provenance, 221-package metadata, private clock initializer, boot audit and update directory guard; frozen-builder component passed 15,909-entry extraction, 221 tuples, eight per-root package components, four management files, 40 tool files, and a 256 MiB non-deployable clock-state fixture | Time-enabled 4 GiB roots, 8 GiB state and NVMe have not been built or read back; existing baseline artifacts are unchanged |
+| Root/state recipe integration | [Optional metadata backend](evidence/root-metadata-backend-20261106.json), [preparation](root-reconstruction-preparation.md), and [time integration](evidence/time-profile-integration-20261107.json): source-wired profile provenance, 221-package metadata, private clock initializer, boot audit and update directory guard; frozen-builder component passed 15,909-entry extraction, 221 tuples, eight per-root package components, four management files, 40 tool files, and a 256 MiB non-deployable clock-state fixture | Production roots now pass complete readback; 8 GiB state and NVMe remain open; published baseline artifacts are unchanged |
+| Production A/B roots | [Frozen construction and full readback](evidence/production-host-roots-20261107.json): actual 4 GiB slots, 221 packages/332 modules, 86 file hashes, 16,367 paths and every file/link/device/xattr per slot; source and compressed streams independently verified | One construction; repeat, 8 GiB state, matching bootstrap/NVMe and physical deployment remain open |
 | Guest fixture | [Fixed seed fixture](evidence/guest-seed-fixture-20261104.json): root/drew byte-identical Jammy builds | No guest has booted; real KVM is mandatory |
 | Time-service identity | [Fixed identity gate and ARM fixture](timesync-identity.md): stable996, old tuples unchanged, repeat/collision checks and independent review | Built archive preserves all old accounts and uniquely adds UID/GID 996; production state/A-B/NTP/hardware unproven |
 | Clock-state preparation | [Audit, private initializer and state fixtures](timesync-state.md), plus [integration evidence](evidence/time-profile-integration-20261107.json): preserved future mtime, exact 996 ownership/modes, UUID guards; actual 32 MiB and 256 MiB non-deployable ext4 readbacks and independent review | Time-enabled production state, installed rollback and NTP remain unproven |
@@ -69,10 +70,12 @@ Source integration is recorded at commit `bb411e3`; its detailed evidence is
 [here](evidence/time-profile-integration-20261107.json). The source now binds the
 time opt-in profile, package state, and clock-state seed/boot/update guards, but
 does not build time-enabled production artifacts. The [dated baseline and time constructions](account-date-replay-driver.md) now
-pass with preserved closure checks and unchanged historical output pins. Time-enabled 4 GiB roots, 8 GiB state,
-and NVMe reconstruction/readback remain open; baseline artifacts remain unchanged.
+pass with preserved closure checks and unchanged historical output pins. Time-enabled
+4 GiB roots now pass construction/full readback; 8 GiB state and NVMe remain open.
+Published baseline artifacts remain unchanged.
 The [approved 20 GiB builder growth](evidence/build-host-capacity-execution-20261107.json)
 now succeeds and leaves 24.28 GB free, above the unchanged 22 GiB staging guard.
-Only about 663 MB of headroom remains before component staging, so recheck between
-phases and retain outputs safely. A second operator must
+After root construction/readback, current free is 22.81 GB, about 809 MB below
+that final guard. State has a separate construction budget; verified retention
+and staging must restore final-composition headroom without lowering guards. A second operator must
 reproduce deployment from the guide; build proofs cannot satisfy physical release gates.

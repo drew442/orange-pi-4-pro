@@ -1,7 +1,9 @@
 # Frozen-builder root reconstruction preparation
 
-Full NVMe/root/state reconstruction remains open. The published SD and NVMe
-installation candidates are unchanged; use the current deployment guide.
+The [production 4 GiB A/B roots](production-host-roots.md) now pass frozen-builder
+construction and complete readback. Full 8 GiB state/NVMe reconstruction remains
+open. The published SD/NVMe installation candidates are unchanged; use the
+current deployment guide.
 
 The authenticated ARM64 userspace archive contains eight character entries:
 `dev/null`, `console`, `urandom`, `tty`, `ptmx`, `full`, `zero` and `random`.
@@ -42,8 +44,9 @@ the authenticated source record. It verifies 12,302 unique regular inodes,
 1,842 symlink targets (including 99 stored outside the inode), all three hardlink
 groups, eight device identities and the raw capability. The only additional path
 is the expected empty, root-owned `0700` lost+found directory. Image hashes
-before and after remain identical. Production 4 GiB A/B slots and their existing
-staging guards remain unchanged and unexercised.
+before and after remain identical. Those earlier diagnostics did not exercise production sizes. The later
+[production roots](production-host-roots.md) now pass without changing slot sizes
+or staging guards.
 
 Metadata comparisons account explicitly for the pinned creator: mke2fs 1.46.5
 copies child modification times at whole-second resolution and leaves the root
@@ -69,8 +72,8 @@ the frozen namespace. All 15,892 members pass, including eight virtual devices
 and the raw capability; the outside-fakeroot actual-device scan is empty. Eight
 resource samples remain above 6.04 GB free disk and 7.42 GB available RAM.
 Independent software and execution-evidence reviews and 24 focused tests pass.
-Complete payload/state builder paths have unit coverage; their production image
-runs remain pending.
+Complete payload/state builder paths have unit coverage; production roots now
+pass, while the full state image remains pending.
 This probe creates no filesystem image. Existing published images are unchanged;
 replay their historical source revision as specified in
 [SD image reproduction](sd-image-reproduction.md). New recipe source/provenance
@@ -87,10 +90,11 @@ pinned fakeroot IPC limits.
 
 The [approved 20 GiB builder growth](build-host-capacity-plan.md) has now been
 executed. Online ext4 enlargement leaves 24.28 GB free, passing the unchanged
-22 GiB staging guard by about 663 MB. Production A/B roots can be constructed
-next; their allocated data and compressed copies will consume that headroom.
-Measure allocations and retain verified outputs safely before state/final NVMe
-composition. No production image or deployment success follows from expansion.
+22 GiB staging guard by about 663 MB initially. The subsequent production roots
+now pass and consume 1.23 GB in their retained work tree. After full readback,
+22.81 GB remains, about 809 MB below the final guard. Build state under its own
+budget and prepare verified retention/staging before final composition. Expansion
+and root-component checks do not establish deployment acceptance.
 
 No fixture or storage preparation establishes installation, actual KVM guest
 execution, SD-write/endurance behavior, SPI boot or release acceptance.

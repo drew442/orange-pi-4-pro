@@ -31,9 +31,13 @@ Package logs remain on the builder at `/tmp/orangepi-apt-update.log` and `/tmp/o
 
 The [operator-approved 20 GiB root-LV growth](evidence/build-host-capacity-execution-20261107.json)
 now completes successfully, including online ext4 enlargement. The LV is
-88,017,469,440 bytes and free space is **24.28 GB**, above the unchanged 22 GiB
-staging guard by about **663 MB**. Check allocations between production phases;
-this initial pass does not reserve space for all component outputs. The LV UUID,
+88,017,469,440 bytes; free space immediately after growth was **24.28 GB**, above
+the unchanged 22 GiB staging guard by about 663 MB. The subsequent
+[production roots and full readback](production-host-roots.md) now leave
+**22.81 GB**, about **809 MB below** that final-composition guard. Both actual
+4 GiB root slots pass, and the retained work tree allocates 1.23 GB. State still
+has its own construction budget; verified retention/staging must recover final
+composition headroom without reducing guards. The LV UUID,
 root source and filesystem type are unchanged. No Orange Pi storage was touched.
 
 

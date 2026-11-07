@@ -80,7 +80,7 @@ remain unchanged. **Do not repeat NVMe installation to fix management.**
   passes [full temporary-path restoration](evidence/uboot-nvme-restoration-20261107.json):
   all 27,105 entries and 72 manifest hashes, followed by clean unmount. No
   restored-source rebuild is claimed. The approved [builder expansion](build-host-capacity-plan.md)
-  now leaves 24.28 GB free; component allocations still need staged checks.
+  enabled the production root run below; allocations still need staged checks.
 
 ## Implemented and verified in software
 
@@ -122,14 +122,16 @@ remain unchanged. **Do not repeat NVMe installation to fix management.**
   guards boot/update/rollback. Independent source review and an actual frozen-builder
   component pass: 221 packages, eight package-state components, four management
   files, 40 maintenance files and a nondeployable 256 MiB state image. New time roots
-  require management ABI v2; updated tools retain v1 rollback support. Production
-  4 GiB roots/8 GiB state/NVMe reconstruction remains open. Latest unittest
-  discovery ran **1,469 cases** with 113 skips and six disk-capacity failures/errors;
-  all four affected modules pass 57 cases with temporary fixture space. Four
-  assembly cases and all five shell suites pass. All 46 account-date cases pass
-  under root; 52 candidate/script/launcher cases and 22 historical U-Boot cases
-  also pass; 18 SPI assembler cases pass. See [validation limits](evidence/spi-file-assembly-20261107.json). These checks establish no
-  physical acceptance or independently reproduced deployment.
+  require management ABI v2; updated tools retain v1 rollback support. The
+  [production 4 GiB A/B roots](production-host-roots.md) now build in the frozen
+  namespace and pass complete readback: 16,367 paths, all file bytes/links/device
+  records and raw attributes per slot, plus independent artifact/source review.
+  One construction is proved; a repeat, 8 GiB state, matching bootstrap and full
+  NVMe reconstruction remain open. Latest Ubuntu unittest discovery runs
+  **1,491 cases, 112 skips, no failures**; five shell suites and four assembly
+  cases pass. Within-tick mutation fixtures now force observable mtime changes;
+  runtime/source guards are unchanged. See [root evidence](evidence/production-host-roots-20261107.json).
+  These checks establish no physical acceptance or independent deployment.
 
 ## Next actions and blockers
 
@@ -153,9 +155,12 @@ remain unchanged. **Do not repeat NVMe installation to fix management.**
    recovered 663 MB from three generated image copies. The compiled candidate
    and subsequent file-assembly fixture left 4.01 GB free before expansion. The
    operator-approved [20 GiB builder LVM growth](build-host-capacity-plan.md) now
-   succeeds: **24.28 GB** free, passing the unchanged 22 GiB staging guard by
-   about 663 MB. Construct/read back the actual 4 GiB A/B roots next, then
-   reassess allocated space before state and final NVMe composition. The [candidate build and exact replay](uboot-nvme-candidate.md)
+   succeeded and initially passed the unchanged 22 GiB staging guard. Production
+   A/B roots and complete readback now pass. Construct the 8 GiB state next using
+   real operator inputs, and prepare verified retention/staging before final
+   composition: current free is **22.81 GB**, about **809 MB below** the final
+   22 GiB guard. No guard reduction or additional LV growth is authorized.
+   The [candidate build and exact replay](uboot-nvme-candidate.md)
    pass independent inspection. The file-only SPI assembler passes synthetic
    fixtures; its actual board backup/candidate and hardware handoff remain open.
    Keep the existing installation repair as the next operator action; do not
