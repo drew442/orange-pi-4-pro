@@ -102,7 +102,8 @@ publish its concrete write plan, preserve/read-check required backups and recove
 inputs, and obtain explicit authorization. The user has authorized discarding the
 NVMe with serial `134807190FC700149277`, model `SPCC M.2 PCIe SSD`, size
 256,060,514,304 bytes; do not request that permission again if identity matches.
-Revalidate identity and idle state immediately before writing. No such device
-operation has been performed. SPI remains untouched until its actual chip, backup and recovery route
-are verified. Automatic rollback is not established; do not promise it before
+Revalidate identity and idle state immediately before any future write. The
+[November 7 operator log](evidence/installed-host-first-boot-20261107.json) records
+the authorized NVMe installation and readback. SPI remains untouched until its
+actual chip, backup and recovery route are verified. Automatic rollback is not established; do not promise it before
 the proven boot architecture supports it.

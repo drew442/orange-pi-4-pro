@@ -11,7 +11,9 @@ It belongs to the [second roots](production-host-roots-repeat.md) and
 [second personalized state](production-host-state-repeat.md). The currently
 installed board still uses state UUID `00fd…`; the first candidate uses `fc8…`.
 **Do not write this SD alone or use it for the existing-install repair.** A
-matched second NVMe image and deployment procedure are still required.
+[matching second NVMe image](production-nvme-repeat.md) now passes construction
+and independent verification; a matched physical deployment procedure remains
+to be reproduced.
 
 ## Executed build
 
