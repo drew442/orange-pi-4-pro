@@ -21,10 +21,10 @@
     }
   },
   "validation": {
-    "actual_construction": false,
+    "actual_construction": true,
     "assembly_cases": 5,
     "committed_cli_plan": true,
-    "construction_state": "running; no success established",
+    "construction_state": "complete; producer terminal exit0",
     "full_privileged_suite": true,
     "full_suite_log": {
       "bytes": 6459,
@@ -38,6 +38,10 @@
     },
     "privileged_skips": 0,
     "privileged_unit_tests": 1639,
+    "producer_receipt": {
+      "bytes": 390310,
+      "sha256": "7325c0382c14b2120f0ab7642810e04bc7b0f5eb9561fc9be7c9d7c7a02b15b6"
+    },
     "producer_revision": "339eef1ffcd1370dffc65fec81861f7081cb2daf",
     "shell_suites": 5,
     "skips": 0

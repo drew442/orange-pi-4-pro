@@ -8,8 +8,9 @@ approves this adapter; it does not establish a constructed image or stream pass.
 
 Committed-source planning and the full privileged Ubuntu suite pass at producer
 revision `339eef1`: **1,639 unit tests without skips**, five shell suites and five
-assembly cases. Actual composition is running in the frozen builder under tag
-`timesync-repeat-01`; no completed artifact or stream pass is claimed yet.
+assembly cases. Actual composition now passes at tag `timesync-repeat-01`, with a complete
+producer receipt. Independent stream verification is running; no stream pass or
+physical acceptance is claimed yet.
 
 The adapter authenticates its unchanged historical controller and applies only
 12 counted AST string-value amendments. It fixes all three component records by

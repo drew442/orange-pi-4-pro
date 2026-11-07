@@ -32,9 +32,18 @@
   "state_uuid": "feaaee34-d782-4c18-bd04-1029540ab26a",
   "validation": {
     "actual_stream_pass": false,
+    "assembly_cases": 5,
     "focused_skips": 0,
     "focused_tests": 53,
-    "full_privileged_suite_with_new_reader": false,
-    "python310_grammar": true
+    "full_privileged_suite_with_new_reader": true,
+    "full_validation_log": {
+      "bytes": 6525,
+      "path": "tmp/nvme-repeat-stream-20261107/full-validation.log",
+      "sha256": "13782a3cca3b0a79165232510c17157e17b31f91993237e06689d96be3c5f24e"
+    },
+    "privileged_skips": 0,
+    "privileged_unit_tests": 1669,
+    "python310_grammar": true,
+    "shell_suites": 5
   }
 }
