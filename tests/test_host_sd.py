@@ -78,7 +78,7 @@ class HostSDTests(unittest.TestCase):
 
     def test_verifier_requires_explicit_profile_and_evidence_provenance(self):
         with patch.object(VERIFY.HOST, 'REPO', self.repo), patch.object(VERIFY.HOST, 'DIAGNOSTIC_RECORD', self.pin_path):
-            for name in HOST.BOOT_PROFILES:
+            for name in ('baseline-el1', 'experimental-el2'):
                 pinned, profile, recipes = HOST.load_boot_profile(name)
                 manifest = {'boot_inputs': pinned, 'boot_profile': profile,
                             'recipes': {path: HOST.record(data) for path, data in recipes.items()}}

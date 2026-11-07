@@ -17,7 +17,11 @@ DIAGNOSTIC_RECORD = REPO / 'docs/evidence/diagnostic-20261104.json'
 KERNEL_RELEASE = '6.6.98-a733-diag'
 EPOCH = '1793750400'
 MAX_INITRAMFS = 64 * 1024**2 - 65  # Include the legacy 64-byte wrapper in budget.
-BOOT_PROFILES = ('baseline-el1', 'experimental-el2')
+BOOT_PROFILES = ('baseline-el1', 'experimental-el2', 'nvme-first-el2-test')
+NVME_TARGET = 'nvme-candidate-20261107-ram02'
+NVME_REGISTRY = 'configs/uboot-nvme-candidate-targets.lock.json'
+NVME_REGISTRY_RECORD = {
+    'bytes': 4035, 'sha256': 'abb6f3136f6df22c3da0b7a205b7d2b968e3faad7a3589a3fb69c1c2689117c5'}
 BLOBS = ('boot0_sdcard.fex', 'boot_package.fex', 'uImage', 'Image', 'board.dtb', 'kernel.config')
 ENTRIES = {'init': 'configs/host-init',
            'etc/host-storage-resolver.sh': 'configs/host-storage-resolver.sh'}
@@ -105,6 +109,8 @@ def load_boot_profile(name='baseline-el1'):
     files(baseline)
     # Keep diagnostic initramfs provenance for NVMe root-marker pairing.
     pinned = dict(baseline['files'])
+    if name == 'nvme-first-el2-test':
+        return load_nvme_test_profile(pinned, baseline_data, files)
     evidence_path = 'docs/evidence/diagnostic-20261104.json'
     evidence_data = baseline_data
     service, spsr = '0x8000ff04', '0x3c5'
@@ -131,6 +137,92 @@ def load_boot_profile(name='baseline-el1'):
                 'evidence': {'path': evidence_path, **record(evidence_data)}}
     recipes = {'docs/evidence/diagnostic-20261104.json': baseline_data,
                evidence_path: evidence_data}
+    return pinned, metadata, recipes
+
+
+def load_nvme_test_profile(pinned, baseline_data, files):
+    """Authenticate the single registered firmware candidate for SD transport tests."""
+    registry_data = read_regular(REPO / NVME_REGISTRY, 1024**2, NVME_REGISTRY_RECORD)
+    registry = json_object(registry_data)
+    if (type(registry.get('schema')) is not int or registry['schema'] != 1 or
+            not isinstance(registry.get('targets'), dict) or
+            set(registry['targets']) != {NVME_TARGET}):
+        raise ValueError('invalid NVMe test registry schema/target')
+    target = registry['targets'][NVME_TARGET]
+    evidence_path = 'docs/evidence/uboot-nvme-candidate-20261107.json'
+    expected_evidence = target.get('evidence', {})
+    if expected_evidence.get('path') != evidence_path:
+        raise ValueError('NVMe test evidence target differs')
+    evidence_data = read_regular(REPO / evidence_path, 1024**2,
+                                 {key: expected_evidence[key] for key in ('bytes', 'sha256')})
+    evidence = json_object(evidence_data)
+    if (type(evidence.get('schema')) is not int or evidence['schema'] != 1 or
+            evidence.get('success') is not True or
+            evidence.get('source_revision') != target['parent_source_revision'] or
+            evidence.get('source_manifest', {}).get('revision') != target['parent_source_revision'] or
+            evidence.get('component_result') != {
+                'candidate': 'a733-nvme-v1', 'component_build_success': True,
+                'deployment_authorized': False, 'hardware_acceptance': False, 'schema': 1} or
+            evidence.get('hardware_acceptance') is not False or
+            evidence.get('deployment_authorized') is not False):
+        raise ValueError('NVMe test evidence source/result differs')
+    artifacts = target['required_artifacts']
+    if evidence.get('components') != artifacts:
+        raise ValueError('NVMe test component bindings differ')
+    raw = evidence.get('raw_pins', {})
+    if (raw.get('component-retained/candidate-manifest.json') != target['manifest'] or
+            raw.get('component-retained/artifacts/source-provenance.json') != target['source_provenance']):
+        raise ValueError('NVMe test manifest/provenance bindings differ')
+    sources = evidence['source_manifest'].get('files', {})
+    for path, expected in target['original_project_inputs'].items():
+        source = sources.get(path, {})
+        if {key: source.get(key) for key in ('bytes', 'sha256')} != expected:
+            raise ValueError(f'NVMe test producer input binding differs: {path}')
+    config_path = 'configs/uboot-nvme-candidate-v1.json'
+    config_data = read_regular(REPO / config_path, 1024**2,
+                               target['original_project_inputs'][config_path])
+    config = json_object(config_data)
+    bootcommand = 'setenv boot_targets nvme; run distro_bootcmd'
+    review = evidence.get('independent_artifact_review', {})
+    configuration = review.get('configuration', {})
+    safeguards = ['CONFIG_ENV_IS_NOWHERE=y', '# CONFIG_CMD_SAVEENV is not set',
+                  'CONFIG_BOOTCMD_SKIP_MISC=y', '# CONFIG_SUNXI_SWITCH_SYSTEM is not set',
+                  '# CONFIG_BOOTCOUNT_LIMIT is not set']
+    if (type(config.get('schema')) is not int or config['schema'] != 1 or
+            config.get('candidate') != 'a733-nvme-v1' or
+            config.get('builder_profile') != target['builder_profile'] or
+            config.get('bootcommand') != bootcommand or evidence.get('bootcommand') != bootcommand or
+            config.get('core_recipe_sha256') != target['original_project_inputs']['build/uboot-replay.py']['sha256'] or
+            config.get('spi_boot0') != artifacts['artifacts/boot0_spinor_a733.fex'] or
+            config.get('hardware_acceptance') is not False or review.get('result') is not True or
+            configuration.get('facts') != artifacts['artifacts/uboot.config'] or
+            configuration.get('exact_single_bootcommand_change') is not True or
+            configuration.get('immutable_safeguards_checked') != safeguards or
+            configuration.get('ota_symbol') != 'absent; no value assignment' or
+            evidence.get('compiled_el2', {}).get('service_literal') != '0x8000ff40'):
+        raise ValueError('NVMe test configuration/EL2 policy differs')
+    el2_path = 'docs/evidence/el2-diagnostic-20261104.json'
+    el2_data = read_regular(REPO / el2_path, 1024**2,
+                            target['original_project_inputs'][el2_path])
+    el2 = json_object(el2_data)
+    compatible = files(el2)
+    for blob in BLOBS:
+        if blob != 'boot_package.fex' and compatible[blob] != pinned[blob]:
+            raise ValueError(f'NVMe test immutable boot input differs: {blob}')
+    if (el2.get('handoff', {}).get('expected_service') != '0x8000ff40' or
+            el2.get('handoff', {}).get('expected_spsr') != '0x3c9'):
+        raise ValueError('NVMe test EL2 handoff differs')
+    pinned['boot_package.fex'] = artifacts['artifacts/boot_package.fex']
+    metadata = {'name': 'nvme-first-el2-test', 'target_service': '0x8000ff40',
+                'expected_spsr': '0x3c9', 'physical_acceptance_pending': True,
+                'evidence': {'path': evidence_path, **record(evidence_data)},
+                'registry': {'path': NVME_REGISTRY, **record(registry_data)},
+                'registered_target': NVME_TARGET, 'bootcommand': bootcommand,
+                'environment': 'CONFIG_ENV_IS_NOWHERE=y',
+                'sd_fallback': 'run bootcmd_mmc0; configs/host-boot.cmd retained on SD'}
+    recipes = {'docs/evidence/diagnostic-20261104.json': baseline_data,
+               NVME_REGISTRY: registry_data, evidence_path: evidence_data,
+               config_path: config_data, el2_path: el2_data}
     return pinned, metadata, recipes
 
 
