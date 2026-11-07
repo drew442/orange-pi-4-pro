@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "candidate": "a733-nvme-v1",
+  "builder_profile": "replay-20261106",
+  "core_recipe_sha256": "3558c6b75d0fdfa731eaff925b101a136b288953364996f72b8a6bcd3fcb1cfd",
+  "bootcommand": "setenv boot_targets nvme; run distro_bootcmd",
+  "source_date_epoch": 1772630733,
+  "scm_suffix": "-gb791be8-dirty",
+  "challenge": "vendor-fresh-random-128-bytes",
+  "spi_boot0": {
+    "bytes": 237568,
+    "sha256": "7f0babc242c1e4614c7243bd2c45a980e4385727ffbb544a7c8f2d324cf8dc07"
+  },
+  "search_behavior": "Inherits pinned distro bootable partition search (fallback partition 1), prefixes / and /boot/, script and extlinux behavior. This is not a closed whole-firmware partition policy.",
+  "hardware_acceptance": false
+}

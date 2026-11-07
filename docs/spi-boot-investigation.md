@@ -84,9 +84,11 @@ replay target: its `.config` and binary hashes prove a different, SD-only build.
 The separate candidate needs its own configuration provenance, build and review.
 The current host script resets `boot_targets` to `mmc0`, uses implicit partition 1
 and loops on load failure; its candidate revision must carry the discovered
-partition explicitly and document manual recovery. No candidate firmware has
-been built or programmed. The builder currently has about 3.89 GB free, below
-the existing U-Boot recipe's 4 GB guard; guards remain unchanged.
+partition explicitly and document manual recovery. The [separate component recipe](uboot-nvme-candidate.md) now implements this
+policy and a guarded NVMe host script without changing existing diagnostic
+producers. Independent source review and focused fixtures pass. Actual
+compilation is the next step; no firmware has been programmed. Its full budget
+preserves the final >4 GB guard, with unchanged runtime floors.
 
 After installed management works, a serial-only **read test** can establish the
 NVMe file path without programming SPI. Interrupt U-Boot autoboot and capture:

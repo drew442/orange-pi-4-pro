@@ -32,7 +32,7 @@ Package logs remain on the builder at `/tmp/orangepi-apt-update.log` and `/tmp/o
 Latest November 7 evidence: [completed kernel replay retention](kernel-run-retention.md)
 and a subsequent fresh userspace attempt leave about **6.84 GB** on the builder.
 That attempt failed the exact archive pin because account dates changed across
-days. The later [corrected fresh baseline](account-date-replay-driver.md) passes
+days. The later [corrected fresh baseline](account-date-replay-driver.md) passed and
 left about **6.04 GB** free. The subsequent
 [time repeat](evidence/account-date-time-execution-20261107.json) passes and leaves
 **5,249,044,480 bytes** free. Production 22 GiB staging
