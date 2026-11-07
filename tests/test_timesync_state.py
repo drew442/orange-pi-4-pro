@@ -556,7 +556,10 @@ class TimesyncStateTests(unittest.TestCase):
 
         def changed(fd, size):
             result = original_read(fd, size)
+            previous = self.marker.stat()
             self.marker.write_bytes(MARKER.replace(b'64504c34', b'74504c34'))
+            # Make the mutation observable on coarse filesystem clocks.
+            os.utime(self.marker, ns=(previous.st_atime_ns, previous.st_mtime_ns + 10**9))
             return result
 
         with mock.patch.object(state.os, 'read', side_effect=changed):
