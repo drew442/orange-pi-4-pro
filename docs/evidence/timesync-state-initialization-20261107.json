@@ -1,0 +1,288 @@
+{
+  "schema": 1,
+  "date": "2026-11-07",
+  "classification": "Guarded private state initialization and ordinary-file image fixtures only; production selection and hardware acceptance pending",
+  "source_pins": {
+    "build/host-state.py": {
+      "bytes": 18195,
+      "sha256": "ba7cfa545ae90d787461d9c90f3d8dc7a6110f3222bdf72725902842917e6c28"
+    },
+    "build/timesync-state.py": {
+      "bytes": 13891,
+      "sha256": "df3d703f0478d108d820aa3d65eb34695fe356ef9c36d61fe6ef5ad333013907"
+    },
+    "build/host-payload.py": {
+      "bytes": 24386,
+      "sha256": "457e02ecb71c465f4b13f21dcd066e3af74dd159296c38ba9c05c32c486dc70d"
+    },
+    "build/root-selection.py": {
+      "bytes": 10350,
+      "sha256": "15b5a64630cd74793af946ea89b5b3f3bd580a07bf52baa9a893bdd71b82b6e2"
+    },
+    "build/host-initramfs.py": {
+      "bytes": 12506,
+      "sha256": "96c19c387b04a9e753e6eb658ef1ba7373f0cd4d58a46d8ee90c8a1348f9481d"
+    },
+    "build/host-storage-tools.py": {
+      "bytes": 4985,
+      "sha256": "e8d54568a6f43552996021a6a0a3178769564238be34a8642fca9d304f8f9750"
+    },
+    "configs/host_config.py": {
+      "bytes": 5090,
+      "sha256": "db661a276e46cfa924b51c159b6afec5eacfaef9d83291edc6a5269c50c4f29a"
+    },
+    "configs/package_state.py": {
+      "bytes": 13113,
+      "sha256": "809630ebba9d927b6ad5034899a88a8a8fcf3401f94ff6f223f92f6fbfa9c6eb"
+    },
+    "tests/test_host_state.py": {
+      "bytes": 26783,
+      "sha256": "f15ea552585981a71296e85fc25203f5e02f0939fcde83207bd89e7a757bd3f7"
+    }
+  },
+  "unit_test_source": {
+    "bytes": 23838,
+    "sha256": "afeb2c9cd163a1f021ba3c99a2a3e6f21c1710d7ec1ca71c6647b4f2fff973a2"
+  },
+  "api": "build/timesync-state.py initialize(state_root, expected_uuid); build/host-state.py seed_state(..., timesync=True)",
+  "default_behavior": "Existing audit CLI and default state seed remain unchanged; no mutating CLI or production profile enablement.",
+  "state_policy": {
+    "identity": 996,
+    "directory_mode": "0755",
+    "ancestor_mode": "0755",
+    "new_directory_contents": [],
+    "create_clock": false,
+    "clock_metadata_preserved": true,
+    "uuid_checked_before_write": true,
+    "fsync_created_directory_and_parent": true
+  },
+  "validation": {
+    "native_cases": 1293,
+    "native_environment_skips": 100,
+    "timesync_focused_cases": 35,
+    "shell_suites": 5,
+    "assembly_cases": 4,
+    "local_root_cases": 4,
+    "local_root_skips": 0,
+    "builder_root_cases": 5,
+    "builder_root_skips": 0,
+    "git_diff_check": "pass"
+  },
+  "builder": {
+    "host": "build.drewnet.online",
+    "operating_system": "Ubuntu22.04",
+    "host_inventory_unchanged": true,
+    "inventory_sha256": "446b7eb3364a6f196390c698c1c133086fee5eb3b080ec4483cc1d8584b39b15",
+    "free_before_bytes": 4877889536,
+    "free_after_bytes": 4868505600,
+    "tool_packages": "e2fsprogs\t1.46.5-2ubuntu1.2\ngzip\t1.10-4ubuntu4.2\nlibext2fs2:amd64\t1.46.5-2ubuntu1.2\ntar\t1.34+dfsg-1ubuntu0.1.22.04.6\n"
+  },
+  "images": {
+    "/var/lib/a733-timesync-state-seed-fixture-20261107/scratch/tmpnh5558gh/state.ext4": {
+      "bytes": 33554432,
+      "sha256": "bff1ebb995393156200d28abb677f9cdea4cb5ffef4826166d093317ed88b1bd",
+      "allocated_bytes": 4390912
+    },
+    "/var/lib/a733-timesync-state-seed-fixture-20261107/scratch/tmp1nr_jnqj/state.ext4": {
+      "bytes": 33554432,
+      "sha256": "fac601bfa6883a209b6db0b164d29faaffe0e0d900b487d15a62f2376096afc3",
+      "allocated_bytes": 4378624
+    }
+  },
+  "controlled_clock_postcheck": {
+    "success": true,
+    "path": "/var/lib/a733-timesync-state-seed-fixture-20261107/scratch/tmpl_zqkk06/state/var/lib/systemd/timesync/clock",
+    "uid": 996,
+    "gid": 996,
+    "mode": "0644",
+    "size": 0,
+    "nlink": 1,
+    "device": 64512,
+    "inode": 449849,
+    "atime_ns": 1800000003000000000,
+    "mtime_ns": 1800000003000000000,
+    "ctime_ns": 1794010937142189587,
+    "scope": "controlled future-timestamp fixture; no wall-clock setting"
+  },
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "source_verdict": "pass after directory-link portability correction",
+    "artifact_result": {
+      "builder_fixture_results_reviewed": "Five root fixtures passed with zero skips in retained builder-fixtures.stderr; reported builder inventory unchanged",
+      "classification": "Independent read-only inspection of ordinary 32 MiB regular-file component fixtures; no physical boot, device, mount, NTP, KVM or rollback acceptance",
+      "images": [
+        {
+          "bytes": 33554432,
+          "content_metadata_unchanged": true,
+          "debugfs_listing": {
+            "argv": [
+              "debugfs",
+              "-R",
+              "ls -p /var/lib/systemd/timesync",
+              "out/time-state-initialize-20261107/images/scratch/tmpnh5558gh/state.ext4"
+            ],
+            "returncode": 0,
+            "stderr": "debugfs 1.47.0 (5-Feb-2023)\n",
+            "stdout": "/27/040755/996/996/.//\n/26/040755/0/0/..//\n\n"
+          },
+          "debugfs_marker": {
+            "argv": [
+              "debugfs",
+              "-R",
+              "cat /.a733-state",
+              "out/time-state-initialize-20261107/images/scratch/tmpnh5558gh/state.ext4"
+            ],
+            "returncode": 0,
+            "stderr": "debugfs 1.47.0 (5-Feb-2023)\n",
+            "stdout": "a733-state-v1\n83f6ff0c-d34e-427e-ba16-a2180325b03e\n"
+          },
+          "debugfs_stat": {
+            "argv": [
+              "debugfs",
+              "-R",
+              "stat /var/lib/systemd/timesync",
+              "out/time-state-initialize-20261107/images/scratch/tmpnh5558gh/state.ext4"
+            ],
+            "returncode": 0,
+            "stderr": "debugfs 1.47.0 (5-Feb-2023)\n",
+            "stdout": "Inode: 27   Type: directory    Mode:  0755   Flags: 0x80000\nGeneration: 0    Version: 0x00000000:00000000\nUser:   996   Group:   996   Project:     0   Size: 4096\nFile ACL: 0\nLinks: 2   Blockcount: 8\nFragment:  Address: 0    Number: 0    Size: 0\n ctime: 0x6aee6f39:00000000 -- Sat Nov  7 00:22:17 2026\n atime: 0x6aee6f39:00000000 -- Sat Nov  7 00:22:17 2026\n mtime: 0x6aee6f39:00000000 -- Sat Nov  7 00:22:17 2026\ncrtime: 0x6aee6f39:00000000 -- Sat Nov  7 00:22:17 2026\nSize of extra inode fields: 32\nInode checksum: 0x04273614\nEXTENTS:\n(0):1564\n"
+          },
+          "e2fsck_read_only": {
+            "argv": [
+              "e2fsck",
+              "-f",
+              "-n",
+              "out/time-state-initialize-20261107/images/scratch/tmpnh5558gh/state.ext4"
+            ],
+            "returncode": 0,
+            "stderr": "e2fsck 1.47.0 (5-Feb-2023)\n",
+            "stdout": "Pass 1: Checking inodes, blocks, and sizes\nPass 2: Checking directory structure\nPass 3: Checking directory connectivity\nPass 4: Checking reference counts\nPass 5: Checking group summary information\na733-state: 27/8192 files (3.7% non-contiguous), 1565/8192 blocks\n"
+          },
+          "filesystem_uuid": "83f6ff0c-d34e-427e-ba16-a2180325b03e",
+          "marker_matches_filesystem_uuid": true,
+          "marker_uuid": "83f6ff0c-d34e-427e-ba16-a2180325b03e",
+          "path": "out/time-state-initialize-20261107/images/scratch/tmpnh5558gh/state.ext4",
+          "receipt_hash_matches": true,
+          "sha256_after": "bff1ebb995393156200d28abb677f9cdea4cb5ffef4826166d093317ed88b1bd",
+          "sha256_before": "bff1ebb995393156200d28abb677f9cdea4cb5ffef4826166d093317ed88b1bd",
+          "timesync": {
+            "clock_present": false,
+            "entries": [
+              ".",
+              ".."
+            ],
+            "gid": 996,
+            "mode": "0755",
+            "present": true,
+            "uid": 996
+          }
+        },
+        {
+          "bytes": 33554432,
+          "content_metadata_unchanged": true,
+          "debugfs_listing": {
+            "argv": [
+              "debugfs",
+              "-R",
+              "ls -p /var/lib/systemd/timesync",
+              "out/time-state-initialize-20261107/images/scratch/tmp1nr_jnqj/state.ext4"
+            ],
+            "returncode": 0,
+            "stderr": "debugfs 1.47.0 (5-Feb-2023)\n/var/lib/systemd/timesync: File not found by ext2_lookup \n",
+            "stdout": ""
+          },
+          "debugfs_marker": {
+            "argv": [
+              "debugfs",
+              "-R",
+              "cat /.a733-state",
+              "out/time-state-initialize-20261107/images/scratch/tmp1nr_jnqj/state.ext4"
+            ],
+            "returncode": 0,
+            "stderr": "debugfs 1.47.0 (5-Feb-2023)\n",
+            "stdout": "a733-state-v1\n93028e0b-d9c0-4a6b-87b7-70316af6839c\n"
+          },
+          "debugfs_stat": {
+            "argv": [
+              "debugfs",
+              "-R",
+              "stat /var/lib/systemd/timesync",
+              "out/time-state-initialize-20261107/images/scratch/tmp1nr_jnqj/state.ext4"
+            ],
+            "returncode": 0,
+            "stderr": "debugfs 1.47.0 (5-Feb-2023)\n/var/lib/systemd/timesync: File not found by ext2_lookup \n",
+            "stdout": ""
+          },
+          "e2fsck_read_only": {
+            "argv": [
+              "e2fsck",
+              "-f",
+              "-n",
+              "out/time-state-initialize-20261107/images/scratch/tmp1nr_jnqj/state.ext4"
+            ],
+            "returncode": 0,
+            "stderr": "e2fsck 1.47.0 (5-Feb-2023)\n",
+            "stdout": "Pass 1: Checking inodes, blocks, and sizes\nPass 2: Checking directory structure\nPass 3: Checking directory connectivity\nPass 4: Checking reference counts\nPass 5: Checking group summary information\na733-state: 24/8192 files (4.2% non-contiguous), 1562/8192 blocks\n"
+          },
+          "filesystem_uuid": "93028e0b-d9c0-4a6b-87b7-70316af6839c",
+          "marker_matches_filesystem_uuid": true,
+          "marker_uuid": "93028e0b-d9c0-4a6b-87b7-70316af6839c",
+          "path": "out/time-state-initialize-20261107/images/scratch/tmp1nr_jnqj/state.ext4",
+          "receipt_hash_matches": true,
+          "sha256_after": "fac601bfa6883a209b6db0b164d29faaffe0e0d900b487d15a62f2376096afc3",
+          "sha256_before": "fac601bfa6883a209b6db0b164d29faaffe0e0d900b487d15a62f2376096afc3",
+          "timesync": {
+            "absence_verified_from_stderr": true,
+            "present": false
+          }
+        }
+      ],
+      "receipt_sha256": "712dee9c0161c4bcffce2e38361768576c220b4f7da595462777eb43ecbd5782",
+      "schema": 1,
+      "verdict": "pass"
+    },
+    "record": {
+      "bytes": 5803,
+      "sha256": "7ab2f052c0adb3f039d30601ee4e5da980a89a14f7c87e2904da2e4cf4452505"
+    }
+  },
+  "raw_records_root": "out/time-state-initialize-20261107",
+  "record_pins": {
+    "builder-fixtures.stdout": {
+      "bytes": 3361,
+      "sha256": "f3a46fda14f22b96cf06973a1c7a4e045d5112f32841c79d5f98feb99d6ac984"
+    },
+    "builder-fixtures.stderr": {
+      "bytes": 590,
+      "sha256": "bad4a4bd97773e96c1ce28819d8aee9abed4085f79365437391c027d24210a65"
+    },
+    "builder-receipt.json": {
+      "bytes": 2835,
+      "sha256": "712dee9c0161c4bcffce2e38361768576c220b4f7da595462777eb43ecbd5782"
+    },
+    "root-fixtures.stdout": {
+      "bytes": 429,
+      "sha256": "48010ca0f0daa8a085794c4a9641fc436f5e377aa84a2a8bfb922b28fe754ed3"
+    },
+    "root-fixtures.stderr": {
+      "bytes": 643,
+      "sha256": "b1e03d0f34f600fb5ed0ee644dda19147a538e2aa3a6ec36180ebb7a2ef61216"
+    },
+    "clock-postcheck.json": {
+      "bytes": 432,
+      "sha256": "e3c51c95aa148a9eff3e30ac56a598a1998700b98f6167434ba3d381f0f3fa3e"
+    },
+    "verification-code/run-timesync-state-seed-fixture-20261107.py": {
+      "bytes": 177221,
+      "sha256": "c2af6086b54b9763d7863663e5e9e7d27ca803556e123eca39317ca353a5914c"
+    }
+  },
+  "limits": [
+    "New images are two32MiB regular-file component fixtures, not8GiB production state or deployedNVMe.",
+    "The source initializer is not wired into production build profile selection or installed boot/updater/rollback paths.",
+    "Btrfs directory link semantics have mocked regression coverage only; no actual Btrfs filesystem test is claimed.",
+    "No daemon, system clock, SD, physicalNVMe, SPI or LVM changes occurred.",
+    "Installed time/NTP, physical transitions/rollback, realKVM, zero routineSDwrites and all release acceptance gates remain open."
+  ]
+}

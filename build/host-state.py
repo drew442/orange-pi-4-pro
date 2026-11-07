@@ -125,7 +125,17 @@ def write_private(path, data):
         stream.write(data)
 
 
-def seed_state(extracted, state, state_uuid, config, public_key, selection):
+def timesync_initializer():
+    """Load build-only clock-state policy; it is not an installed runtime import."""
+    spec = importlib.util.spec_from_file_location('state_timesync', REPO / 'build/timesync-state.py')
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def seed_state(extracted, state, state_uuid, config, public_key, selection, *, timesync=False):
+    if type(timesync) is not bool:
+        raise ValueError('timesync state selection must be a boolean')
     selector = SELECTION.parse(selection)
     source_var = extracted / 'var'
     info = source_var.lstat()
@@ -141,6 +151,8 @@ def seed_state(extracted, state, state_uuid, config, public_key, selection):
     while machine_id == '0' * 32:
         machine_id = secrets.token_hex(16)
     write_private(state / '.a733-state', f'a733-state-v1\n{state_uuid}\n'.encode())
+    if timesync:
+        timesync_initializer().initialize(state, state_uuid)
     write_private(state / 'identity/machine-id', (machine_id + '\n').encode())
     write_private(state / 'root/.ssh/authorized_keys', public_key)
     write_private(state / 'config/management.json', (json.dumps(config, sort_keys=True, separators=(',', ':')) + '\n').encode())

@@ -191,6 +191,17 @@ class Validators(unittest.TestCase):
             (root / 'input/var').symlink_to(root)
             with self.assertRaises(ValueError):
                 STATE.seed_state(root / 'input', root / 'state', str(uuid.uuid4()), CONFIG, KEY, SELECTION)
+
+    def test_seed_rejects_nonboolean_time_selection_before_changes(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            (root / 'input/var').mkdir(parents=True)
+            for value in (1, 0, 'yes', None):
+                with self.subTest(value=value), self.assertRaises(ValueError):
+                    STATE.seed_state(root / 'input', root / 'state', str(uuid.uuid4()),
+                                     CONFIG, KEY, SELECTION, timesync=value)
+                self.assertTrue((root / 'input/var').is_dir())
+                self.assertFalse((root / 'state').exists())
             self.assertFalse((root / 'state').exists())
 
     def test_streamed_image_gzip(self):
@@ -325,6 +336,67 @@ class UserspaceProfiles(unittest.TestCase):
 
 @unittest.skipUnless(os.geteuid() == 0, 'root required for ownership-preserving state fixture')
 class RootFixtures(unittest.TestCase):
+    def test_seed_timesync_directory_and_preserve_saved_clock(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            (root / 'userspace/var/lib/systemd').mkdir(parents=True)
+            (root / 'userspace/var').chmod(0o755)
+            for path in (root / 'userspace/var').rglob('*'):
+                if path.is_dir():
+                    path.chmod(0o755)
+            state_uuid = str(uuid.uuid4())
+            state = root / 'state'
+            STATE.seed_state(root / 'userspace', state, state_uuid, CONFIG,
+                             STATE.validate_public_key(KEY)[0], SELECTION, timesync=True)
+            directory = state / 'var/lib/systemd/timesync'
+            info = directory.stat()
+            self.assertEqual((info.st_uid, info.st_gid, stat.S_IMODE(info.st_mode)), (996, 996, 0o755))
+            self.assertEqual(list(directory.iterdir()), [])
+            helper = STATE.timesync_initializer()
+            self.assertEqual(helper.audit(state)['status'], 'uninitialized')
+            clock = directory / 'clock'
+            clock.touch(mode=0o644)
+            clock.chmod(0o644)
+            os.chown(clock, 996, 996)
+            timestamp = 1800000003000000000
+            os.utime(clock, ns=(timestamp, timestamp))
+            before = helper._signature(clock.stat())
+            result = helper.initialize(state, state_uuid)
+            self.assertEqual(result['clock_mtime_ns'], timestamp)
+            self.assertEqual(helper._signature(clock.stat()), before)
+
+    def test_default_seed_does_not_load_clock_initializer(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            (root / 'userspace/var/lib/systemd').mkdir(parents=True)
+            with mock.patch.object(STATE, 'timesync_initializer') as initialize:
+                STATE.seed_state(root / 'userspace', root / 'state', str(uuid.uuid4()),
+                                 CONFIG, KEY, SELECTION)
+            initialize.assert_not_called()
+            self.assertFalse((root / 'state/var/lib/systemd/timesync').exists())
+
+    @unittest.skipUnless(all(shutil.which(tool) for tool in ('mke2fs', 'e2fsck', 'debugfs')), 'ext4 fixture tools unavailable')
+    def test_small_image_preserves_timesync_owner_without_clock(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            (root / 'userspace/var/lib/systemd').mkdir(parents=True)
+            for name in ('var', 'var/lib', 'var/lib/systemd'):
+                (root / 'userspace' / name).chmod(0o755)
+            state_uuid = str(uuid.uuid4())
+            STATE.seed_state(root / 'userspace', root / 'state', state_uuid, CONFIG,
+                             KEY, SELECTION, timesync=True)
+            image = root / 'state.ext4'
+            STATE.make_image(root / 'state', image, state_uuid, size=32 * 1024**2)
+            data = subprocess.check_output(
+                ['debugfs', '-R', 'stat /var/lib/systemd/timesync', str(image)],
+                stderr=subprocess.DEVNULL, text=True)
+            self.assertRegex(data, r'Type:\s+directory\s+Mode:\s+0755')
+            self.assertRegex(data, r'User:\s+996\s+Group:\s+996')
+            listing = subprocess.check_output(
+                ['debugfs', '-R', 'ls -p /var/lib/systemd/timesync', str(image)],
+                stderr=subprocess.DEVNULL, text=True)
+            self.assertEqual({line.split('/')[5] for line in listing.splitlines() if line}, {'.', '..'})
+
     def test_seed_preserves_var_and_unique_identities(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

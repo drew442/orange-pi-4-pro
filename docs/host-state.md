@@ -23,6 +23,13 @@ normalized archive; omission preserves the baseline. See [profile selection and
 actual staging evidence](userspace-profiles.md). This does not replace the
 published installation artifacts.
 
+The internal `seed_state(..., timesync=True)` API now supports guarded creation
+of an empty clock directory owned by 996:996 with mode 0755; default seeding does not load that helper.
+[Private initializer and ext4 fixture checks](timesync-state.md) pass independent
+review. This option is not exposed by the production CLI or current profiles.
+Time-profile selection, helper provenance and installed boot/update checks remain
+required before a production time-enabled state image can be built.
+
 ## Inputs and creation
 
 `build/host-state.py ROOTFS_TAR CONFIG_JSON ADMIN_PUBLIC_KEY NEW_OUTPUT_DIR`

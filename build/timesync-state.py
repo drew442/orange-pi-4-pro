@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Read-only NVMe clock-state compatibility audit for a future timesync profile.
 
-This guard neither initializes state nor reads account databases. It never sets a
-clock. Run against private, quiescent build/recovery state, not a live daemon.
+The CLI is read-only. The Python initializer is restricted to private, quiescent
+build/recovery state. Neither interface sets a clock or reads account databases.
 """
 
 import argparse
@@ -87,8 +87,8 @@ def _readable_pin(pinned, expected):
             os.close(descriptor)
 
 
-def audit(state_root, require_clock=False):
-    """Validate physical state without writes; return only nonsecret evidence.
+def _audit(state_root, require_clock=False, initialize_uuid=None):
+    """Validate physical state, optionally preparing an absent timesync directory.
 
     O_NOATIME is mandatory for data/directory reads. Insufficient ownership or
     capabilities fail closed rather than allowing a read to update access time.
@@ -107,6 +107,13 @@ def audit(state_root, require_clock=False):
         fd = os.open(name, flags | os.O_NOFOLLOW | os.O_CLOEXEC, dir_fd=parent)
         held.append((fd, parent, name, os.fstat(fd)))
         return fd
+
+    def check_held():
+        for fd, parent, name, initial in reversed(held):
+            if (_signature(initial) != _signature(os.fstat(fd))
+                    or _signature(initial) != _signature(os.stat(
+                        name, dir_fd=parent, follow_symlinks=False))):
+                raise ValueError('state changed during audit')
 
     try:
         current = open_at(None, '/', os.O_PATH | os.O_DIRECTORY)
@@ -132,9 +139,16 @@ def audit(state_root, require_clock=False):
         if (tag != 'a733-state-v1' or trailing or not parsed.int
                 or str(parsed) != identity or len(data) != MARKER_BYTES):
             raise ValueError('invalid state marker')
+        if initialize_uuid is not None and identity != initialize_uuid:
+            raise ValueError('state UUID does not match')
+        root_device = os.fstat(root).st_dev
+        if initialize_uuid is not None and marker_info.st_dev != root_device:
+            raise ValueError('state hierarchy crosses filesystems')
         for component in ('var', 'lib', 'systemd'):
             current = open_at(current, component, os.O_PATH | os.O_DIRECTORY)
-            _owned(os.fstat(current), 0)
+            _owned(os.fstat(current), 0, 0o755 if initialize_uuid is not None else None)
+            if initialize_uuid is not None and os.fstat(current).st_dev != root_device:
+                raise ValueError('state hierarchy crosses filesystems')
         result = {'state_uuid': identity,
                   'marker_sha256': hashlib.sha256(data).hexdigest(),
                   'status': 'uninitialized', 'clock_mtime_ns': None,
@@ -143,11 +157,65 @@ def audit(state_root, require_clock=False):
         try:
             timesync = open_at(current, 'timesync', os.O_RDONLY | os.O_DIRECTORY | os.O_NOATIME)
         except FileNotFoundError:
+            if initialize_uuid is not None:
+                # The caller guarantees private staging or quiescent recovery.
+                # Pin the physical parent and verify every binding before the
+                # first write; never fix up an existing directory or clock.
+                parent = open_at(current, '.', os.O_RDONLY | os.O_DIRECTORY | os.O_NOATIME)
+                check_held()
+                os.mkdir('timesync', 0o700, dir_fd=parent)
+                created = open_at(parent, 'timesync',
+                                  os.O_RDONLY | os.O_DIRECTORY | os.O_NOATIME)
+                info = os.fstat(created)
+                _owned(info, os.geteuid(), directory=True)
+                if (info.st_dev != root_device or info.st_nlink not in (1, 2)
+                        or stat.S_IMODE(info.st_mode) & ~0o700):
+                    raise ValueError('unsafe new timesync directory')
+                # mkdir is the only allowed change to the held parent. Check
+                # its immutable fields before refreshing its snapshot. Btrfs
+                # reports one directory link even after a child is added.
+                for index, (fd, owner, name, initial) in enumerate(held):
+                    if initial.st_dev == root_device and initial.st_ino == os.fstat(parent).st_ino:
+                        now = os.fstat(fd)
+                        if ((now.st_dev, now.st_ino, now.st_mode, now.st_uid,
+                             now.st_gid, now.st_atime_ns) !=
+                                (initial.st_dev, initial.st_ino, initial.st_mode,
+                                 initial.st_uid, initial.st_gid, initial.st_atime_ns)
+                                or (now.st_nlink != initial.st_nlink + 1
+                                    and (initial.st_nlink, now.st_nlink) != (1, 1))):
+                            raise ValueError('state parent changed during initialization')
+                        held[index] = (fd, owner, name, now)
+                check_held()
+                with os.scandir(created) as entries:
+                    if next(entries, None) is not None:
+                        raise ValueError('new timesync directory is not empty')
+                os.fchown(created, IDENTITY, IDENTITY)
+                os.fchmod(created, 0o755)
+                os.fsync(created)
+                os.fsync(parent)
+                final = os.fstat(created)
+                _owned(final, IDENTITY, 0o755)
+                if ((final.st_dev, final.st_ino, final.st_size, final.st_nlink,
+                     final.st_atime_ns, final.st_mtime_ns) !=
+                        (info.st_dev, info.st_ino, info.st_size, info.st_nlink,
+                         info.st_atime_ns, info.st_mtime_ns)):
+                    raise ValueError('new timesync directory changed')
+                held[-1] = (created, parent, 'timesync', final)
+                check_held()
+                result = audit(state_root)
+                if 'clock' in result['metadata']:
+                    raise ValueError('new timesync directory acquired a saved clock')
+                check_held()
+                return result
             absent.append((current, 'timesync'))
             if require_clock:
                 raise ValueError('required timesync directory is absent')
         else:
             _owned(os.fstat(timesync), IDENTITY, 0o755)
+            if initialize_uuid is not None:
+                info = os.fstat(timesync)
+                if info.st_dev != root_device or info.st_nlink not in (1, 2):
+                    raise ValueError('invalid timesync directory device or links')
             result['metadata']['timesync'] = _metadata(os.fstat(timesync))
             # Stop immediately on an unexpected child; never enumerate unbounded input.
             with os.scandir(timesync) as entries:
@@ -162,6 +230,8 @@ def audit(state_root, require_clock=False):
                     raise ValueError('required saved clock is absent')
             else:
                 info = os.fstat(clock)
+                if initialize_uuid is not None and info.st_dev != root_device:
+                    raise ValueError('state hierarchy crosses filesystems')
                 # v252 timesyncd-manager.c:1097 calls touch_file(); fs-util.c:346
                 # creates a new empty file with 0644. Its mtime is the saved time.
                 _owned(info, IDENTITY, 0o644, directory=False)
@@ -177,15 +247,32 @@ def audit(state_root, require_clock=False):
                 pass
             else:
                 raise ValueError('state changed during audit')
-        for fd, parent, name, initial in reversed(held):
-            if (_signature(initial) != _signature(os.fstat(fd))
-                    or _signature(initial) != _signature(os.stat(
-                        name, dir_fd=parent, follow_symlinks=False))):
-                raise ValueError('state changed during audit')
+        check_held()
         return result
     finally:
         for fd, _, _, _ in reversed(held):
             os.close(fd)
+
+
+def audit(state_root, require_clock=False):
+    """Audit existing state without writing or changing access timestamps."""
+    return _audit(state_root, require_clock)
+
+
+def initialize(state_root, expected_uuid):
+    """Create only an absent timesync directory in private, quiescent state.
+
+    This builder/recovery API never creates a saved clock or normalizes existing
+    files. It deliberately has no CLI counterpart. Failures may leave partial
+    private builder output; no untrusted path is removed on failure.
+    """
+    try:
+        parsed = uuid.UUID(expected_uuid)
+    except (ValueError, AttributeError, TypeError) as error:
+        raise ValueError('invalid expected state UUID') from error
+    if not parsed.int or str(parsed) != expected_uuid:
+        raise ValueError('invalid expected state UUID')
+    return _audit(state_root, initialize_uuid=expected_uuid)
 
 
 def main():

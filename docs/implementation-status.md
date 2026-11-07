@@ -94,7 +94,10 @@ by subsequent clean-build work.
   39-file runtime. The [tracked base pipeline](userspace-pipeline-launcher.md)
   now passes all three phases and matches the normalized archive. The complete time-profile
   build/readback now passes; production root/state/NVMe reconstruction remains
-  open. Latest native discovery: **1,279 cases, 97 environment skips**,
+  open. [Private clock-state initialization](timesync-state.md) and five actual
+  builder root/32 MiB image fixtures now pass independent review. Production profile,
+  provenance and installed boot/update hooks remain open. Latest native discovery:
+  **1,293 cases, 100 environment skips**,
   four assembly cases and all five shell suites. These checks establish no
   physical acceptance or independently reproduced deployment.
 
@@ -109,8 +112,9 @@ by subsequent clean-build work.
    for CPU/disk/network, clean shutdown/restart and persisted disk marker. Return
    its console/log evidence; `/dev/kvm` alone cannot satisfy the gate.
 3. Continue [clean-build work](build-reproduction-status.md): integrate explicit
-   time-profile provenance, 221-package root metadata and persistent clock-state
-   seeding/guards before enabling production composition. Repeat the fresh time
+   time-profile provenance, 221-package root metadata and the tested private clock
+   initializer into production seeding and boot/update guards before enabling
+   composition. Repeat the fresh time
    build and compare outputs, then reconstruct production roots/state/NVMe and
    complete image readback. [Verified single-archive retirement](evidence/builder-deb-retention-20261107.json)
    enabled the successful build; about 4.88 GB remains free. Full production capacity

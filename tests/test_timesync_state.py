@@ -89,6 +89,194 @@ class TimesyncStateTests(unittest.TestCase):
         with self.assertRaises((OSError, ValueError)):
             self.audit(require, root)
 
+    def initialize(self, expected=UUID):
+        # Record ownership changes without requiring chown privileges. All real
+        # directory operations and metadata checks still run on the fixture.
+        def chown(fd, uid, gid):
+            info = os.fstat(fd)
+            self.owners[(info.st_dev, info.st_ino)] = (uid, gid)
+
+        with self.ownership(), mock.patch.object(state.os, 'fchown', side_effect=chown):
+            return state.initialize(self.root, expected)
+
+    def test_initialize_missing_directory_under_restrictive_umask(self):
+        previous = os.umask(0o077)
+        try:
+            report = self.initialize()
+        finally:
+            os.umask(previous)
+        self.assertEqual(report, self.audit())
+        self.assertEqual(report['status'], 'uninitialized')
+        self.assertEqual(report['metadata']['timesync']['uid'], 996)
+        self.assertEqual(report['metadata']['timesync']['gid'], 996)
+        self.assertEqual(report['metadata']['timesync']['mode'], '0755')
+        self.assertEqual(list(self.timesync.iterdir()), [])
+        self.assertFalse(self.clock.exists())
+
+    def test_initialize_accepts_btrfs_style_directory_links(self):
+        # Model Btrfs's stable directory nlink=1 convention without requiring
+        # a privileged mount. This is not evidence from an actual Btrfs image.
+        original_stat, original_fstat = os.stat, os.fstat
+
+        def btrfs_links(info):
+            if stat.S_ISDIR(info.st_mode):
+                changed = Ownership(info, (info.st_uid, info.st_gid))
+                changed.st_nlink = 1
+                return changed
+            return info
+
+        with mock.patch.object(state.os, 'stat',
+                               side_effect=lambda *a, **k: btrfs_links(original_stat(*a, **k))), \
+                mock.patch.object(state.os, 'fstat',
+                                  side_effect=lambda *a, **k: btrfs_links(original_fstat(*a, **k))):
+            report = self.initialize()
+            self.assertEqual(report['metadata']['timesync']['nlink'], 1)
+            self.assertEqual(report['metadata']['timesync']['mode'], '0755')
+            self.assertEqual(list(self.timesync.iterdir()), [])
+            self.assertFalse(self.clock.exists())
+            self.assertEqual(self.initialize(), report)
+            self.clock.touch()
+            self.clock.chmod(0o644)
+            self.set_owner(self.clock, 996)
+            os.utime(self.clock, ns=(2147483640123450000, 2147483640123456789))
+            report = self.audit()
+            self.assertEqual(self.initialize(), report)
+            self.assertEqual(report['clock_mtime_ns'], 2147483640123456789)
+
+    def test_initialize_existing_state_preserves_every_inode_and_timestamp(self):
+        for clock in (False, True):
+            with self.subTest(clock=clock):
+                if not self.timesync.exists():
+                    self.initialized(clock=clock)
+                elif clock:
+                    self.clock.touch()
+                    self.clock.chmod(0o644)
+                    self.set_owner(self.clock, 996)
+                if clock:
+                    os.utime(self.clock, ns=(2147483640123450000, 2147483640123456789))
+                paths = [self.root, self.marker, self.root / 'var', self.root / 'var/lib',
+                         self.systemd, self.timesync] + ([self.clock] if clock else [])
+                before = [state._signature(path.lstat()) for path in paths]
+                report = self.audit()
+                with mock.patch.object(state.os, 'mkdir', side_effect=AssertionError('mkdir')), \
+                        mock.patch.object(state.os, 'fchmod', side_effect=AssertionError('chmod')):
+                    self.assertEqual(self.initialize(), report)
+                    self.assertEqual(self.initialize(), report)
+                self.assertEqual(before, [state._signature(path.lstat()) for path in paths])
+
+    def test_initialize_rejects_expected_uuid_before_any_mkdir(self):
+        for identity in ('74504c34-85b4-4035-9618-d86b298f8349', UUID.upper(),
+                         '00000000-0000-0000-0000-000000000000', '', None):
+            with self.subTest(identity=identity), \
+                    mock.patch.object(state.os, 'mkdir', side_effect=AssertionError('mkdir')):
+                with self.assertRaises(ValueError):
+                    self.initialize(identity)
+        self.assertFalse(self.timesync.exists())
+
+    def test_initialize_rejects_symlink_parent_and_leaf(self):
+        real = self.systemd.with_name('systemd-real')
+        self.systemd.rename(real)
+        self.systemd.symlink_to(real)
+        with self.assertRaises((OSError, ValueError)):
+            self.initialize()
+        self.systemd.unlink()
+        real.rename(self.systemd)
+        self.timesync.symlink_to(self.root)
+        with self.assertRaises((OSError, ValueError)):
+            self.initialize()
+        self.assertTrue(self.timesync.is_symlink())
+
+    def test_initialize_rejects_unsafe_existing_state_without_repairs(self):
+        self.initialized()
+        for path in (self.marker, self.systemd, self.timesync, self.clock):
+            with self.subTest(path=path):
+                good = path.lstat()
+                self.set_owner(path, 997)
+                with self.assertRaises(ValueError):
+                    self.initialize()
+                self.set_owner(path, 996 if path in (self.timesync, self.clock) else 0)
+                path.chmod(0o777)
+                with self.assertRaises(ValueError):
+                    self.initialize()
+                self.assertEqual(stat.S_IMODE(path.lstat().st_mode), 0o777)
+                path.chmod(stat.S_IMODE(good.st_mode))
+        alias = self.root / 'clock-alias'
+        os.link(self.clock, alias)
+        with self.assertRaises(ValueError):
+            self.initialize()
+        self.assertEqual(self.clock.lstat().st_nlink, 2)
+
+    def test_initialize_rejects_inaccessible_parent_before_mkdir(self):
+        for path in (self.root / 'var', self.root / 'var/lib', self.systemd):
+            with self.subTest(parent=path):
+                path.chmod(0o700)
+                self.assertEqual(self.audit()['status'], 'uninitialized')
+                with mock.patch.object(state.os, 'mkdir', side_effect=AssertionError('mkdir')):
+                    with self.assertRaises(ValueError):
+                        self.initialize()
+                self.assertEqual(stat.S_IMODE(path.lstat().st_mode), 0o700)
+                path.chmod(0o755)
+
+    def test_initialize_rejects_cross_filesystem_and_invalid_directory_links(self):
+        self.initialized(clock=False)
+        for path, attribute in ((self.marker, 'st_dev'), (self.systemd, 'st_dev'),
+                                (self.timesync, 'st_dev'), (self.timesync, 'st_nlink')):
+            inode = path.lstat().st_ino
+            with self.subTest(path=path, attribute=attribute), self.ownership():
+                original_fstat, original_stat = os.fstat, os.stat
+
+                def altered(info):
+                    if info.st_ino == inode:
+                        changed = Ownership(info, (info.st_uid, info.st_gid))
+                        setattr(changed, attribute, 3 if attribute == 'st_nlink'
+                                else getattr(info, attribute) + 1)
+                        return changed
+                    return info
+
+                with mock.patch.object(state.os, 'fstat',
+                                       side_effect=lambda *a, **k: altered(original_fstat(*a, **k))), \
+                        mock.patch.object(state.os, 'stat',
+                                          side_effect=lambda *a, **k: altered(original_stat(*a, **k))), \
+                        mock.patch.object(state.os, 'mkdir', side_effect=AssertionError('mkdir')), \
+                        mock.patch.object(state.os, 'fchown', side_effect=AssertionError('chown')):
+                    with self.assertRaises(ValueError):
+                        state.initialize(self.root, UUID)
+
+    def test_initialize_rejects_parent_binding_replaced_before_write(self):
+        original_open = os.open
+
+        def change(name, flags, *args, **kwargs):
+            fd = original_open(name, flags, *args, **kwargs)
+            if name == '.':
+                self.systemd.rename(self.systemd.with_name('systemd-old'))
+                self.systemd.mkdir(mode=0o755)
+                self.set_owner(self.systemd, 0)
+            return fd
+
+        with mock.patch.object(state.os, 'open', side_effect=change):
+            with self.assertRaises(ValueError):
+                self.initialize()
+        self.assertFalse(self.timesync.exists())
+        self.assertFalse((self.systemd.with_name('systemd-old') / 'timesync').exists())
+
+    def test_initialize_marker_mutation_before_write_fails_closed(self):
+        original_open = os.open
+        changed = False
+
+        def change(name, flags, *args, **kwargs):
+            nonlocal changed
+            fd = original_open(name, flags, *args, **kwargs)
+            if name == '.' and not changed:
+                changed = True
+                self.marker.write_bytes(MARKER.replace(b'64504c34', b'74504c34'))
+            return fd
+
+        with mock.patch.object(state.os, 'open', side_effect=change), \
+                mock.patch.object(state.os, 'mkdir', side_effect=AssertionError('mkdir')):
+            with self.assertRaises(ValueError):
+                self.initialize()
+        self.assertFalse(self.timesync.exists())
+
     def test_optional_absent_and_required_absent(self):
         report = self.audit()
         self.assertEqual(report['state_uuid'], UUID)
