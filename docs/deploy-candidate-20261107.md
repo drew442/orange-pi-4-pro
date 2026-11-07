@@ -1,6 +1,6 @@
 # Future matched second-candidate deployment
 
-**The current board action remains the [existing-install repair](installed-host-repair-20261107.md), SSH with both keys, then the [actual KVM guest](kvm-first-guest.md). Do not reinstall to repair management.** This guide prepares a later deliberate deployment of the second candidate; no physical write or endpoint publication is requested by this document. Construction and file verification pass; physical deployment and independent reproduction remain open.
+**The current board action remains the [existing-install repair](installed-host-repair-20261107.md), SSH with both keys, then the [actual KVM guest](kvm-first-guest.md). Do not reinstall to repair management.** This guide prepares a later deliberate deployment of the second candidate; no physical write is requested by this document. Construction and file verification pass; physical deployment and independent reproduction remain open.
 
 The future target is **SPCC M.2 PCIe SSD**, serial **134807190FC700149277**, **256,060,514,304 bytes**, **512/512-byte logical/physical sectors**. Existing discard authorization persists for this exact drive. Revalidate identity and idle state immediately before writing. No backup is created. SPI programming is outside this procedure.
 
@@ -70,17 +70,30 @@ Normal flashing requires no readback. For suspected corruption only, optionally 
 
 ## Future authenticated acquisition and read-only preparation
 
-**No deployed endpoint serves this candidate.** Before acquisition, the operator must supply the intended HTTPS origin and both paths, plus a trusted CA file and its SHA-256 through a trusted channel. Arrange serving of exactly the pinned manifest/gzip; do not silently reuse the old deployment URL or certificate. This document neither publishes files nor grants redistribution clearance. Replace every `REPLACE` below, including the CA path; an endpoint download cannot itself establish CA trust. Confirm certificate hostname/validity against actual UTC; never bypass TLS. Correct the board clock using current trusted `date -u` if needed.
+The [dedicated LAN delivery endpoint](candidate-delivery-20261107.md) is **`https://192.168.1.132:8444`**. An actual full acquisition from the Ubuntu builder passes TLS and encoded-byte authentication. Port **8443** continues to serve the original `00fd…` deployment; do not substitute it. The existing IP-SAN CA is deliberately reused after hostname/time verification, with PEM SHA-256 **`4c71c2528ab650b2f9b8dc2a4554ed6248d77461abb7191bb58dd030a9eb9b56`**. It is valid from **2026-11-06 07:42:33 UTC through 2026-11-20 07:42:33 UTC**. After expiry, renew the certificate and trusted instructions; never bypass TLS. Correct the board clock using current trusted `date -u` if needed. The public CA below comes from these trusted instructions; downloading it from an endpoint cannot itself establish trust. No public redistribution clearance is claimed.
 
 At the installer RAM shell, record `uname -a`, `ip addr show eth0`, `ip route`, `date -u`, and `/usr/bin/python3 -I -B /usr/lib/a733-installer/plan-nvme.py --target /dev/nvme0n1`. Require the exact opening drive identity, 512/512 sectors and no busy state. The following acquisition stages only the compressed payload in a dedicated 1 GiB tmpfs, requiring at least 3 GiB MemAvailable. It writes no target device; fresh output paths are mandatory.
 
 ```sh
 sh -eu <<'A733_ACQUIRE'
-MANIFEST_URL='https://REPLACE_HTTPS_ORIGIN/REPLACE_MANIFEST_PATH'
-IMAGE_URL='https://REPLACE_HTTPS_ORIGIN/REPLACE_IMAGE_PATH'
-CA_FILE='/run/REPLACE_TRUSTED_CA.pem'
-CA_SHA='REPLACE_TRUSTED_CA_SHA256'
-case "$MANIFEST_URL $IMAGE_URL $CA_FILE $CA_SHA" in *REPLACE*) exit 1 ;; esac
+MANIFEST_URL='https://192.168.1.132:8444/manifest.json'
+IMAGE_URL='https://192.168.1.132:8444/nvme.img.gz'
+CA_FILE='/run/a733-candidate-delivery-ca.pem'
+CA_SHA='4c71c2528ab650b2f9b8dc2a4554ed6248d77461abb7191bb58dd030a9eb9b56'
+cat > "$CA_FILE" <<'A733_CANDIDATE_CA'
+-----BEGIN CERTIFICATE-----
+MIIB0jCCAXmgAwIBAgIUcZ55TSJ2jXOIUzroT0uIMcS6C3IwCgYIKoZIzj0EAwIw
+IzEhMB8GA1UEAwwYQTczMyBkZXBsb3ltZW50IDIwMjYxMTA2MB4XDTI2MTEwNjA3
+NDIzM1oXDTI2MTEyMDA3NDIzM1owIzEhMB8GA1UEAwwYQTczMyBkZXBsb3ltZW50
+IDIwMjYxMTA2MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEIz2l+bxw6F8Z0MNi
+T2y6lHSQr5cxeZZncbnjVb96A0+u3BHDeeJVOZV/Zc8TQcAmxhxtNZt0KiKiOms/
+TAKX0qOBijCBhzAdBgNVHQ4EFgQUP5vOvjSI0v6fa8OgSdS007nko5QwHwYDVR0j
+BBgwFoAUP5vOvjSI0v6fa8OgSdS007nko5QwDwYDVR0RBAgwBocEwKgBhDAPBgNV
+HRMBAf8EBTADAQH/MA4GA1UdDwEB/wQEAwIChDATBgNVHSUEDDAKBggrBgEFBQcD
+ATAKBggqhkjOPQQDAgNHADBEAiA6J7WegEBiDD/jPBfj5/iIQKf3BZLUL7/bUClE
+/BKw7QIgaDpR25bUGmY/J0x4RTeHgH9FJn63Vn4B15xYkuVlhDs=
+-----END CERTIFICATE-----
+A733_CANDIDATE_CA
 printf '%s  %s\n' "$CA_SHA" "$CA_FILE" | sha256sum -c -
 test "$(awk '/^MemAvailable:/{print $2}' /proc/meminfo)" -ge 3145728
 test ! -e /run/a733-payload
@@ -158,6 +171,6 @@ Boot this **normal immutable fallback first**. Capture full serial, DHCP address
 
 Only after this matched normal boot and management work, consider the [matching transport test](nvme-repeat-firmware-sd.md#physical-test-gate). Its raw file remains builder-only; obtain it there or expand the verified retained gzip into a separate regular file on a host with sufficient capacity, then verify raw length 268,435,456 and SHA-256 `e8a0a7a7b1edb3bb86cb485dfc6e83ed5e7c7c971caa031463e18faad9c16717` before using the same guarded SD flash. Preserve the normal fallback image for recovery. Capture `version`, firmware environment, NVMe enumeration/file reads, default NVMe boot and a separate manual `run bootcmd_mmc0` fallback. Do not use `saveenv`, SPI program/erase commands or any persistent firmware writes. This transport test establishes no SPI boot result.
 
-Return artifact pins, supplied endpoint/CA fingerprint (no private keys), full serial logs, acquisition/plan/result and exit statuses, live drive geometry, selected root/state identities, DHCP/time/management logs, and separate successful SSH results for both keys. Run [first actual KVM acceptance](kvm-first-guest.md): running KVM VM/vCPU descriptors, CPU/disk/network PASS, clean shutdown/restart and persisted counter. `/dev/kvm` and build checks are insufficient.
+Return artifact pins, actual endpoint/CA fingerprint (no private keys), full serial logs, acquisition/plan/result and exit statuses, live drive geometry, selected root/state identities, DHCP/time/management logs, and separate successful SSH results for both keys. Run [first actual KVM acceptance](kvm-first-guest.md): running KVM VM/vCPU descriptors, CPU/disk/network PASS, clean shutdown/restart and persisted counter. `/dev/kvm` and build checks are insufficient.
 
 Physical repair, SSH/KVM, automatic time, independent recovery/off-device SPI backup, interrupted update/rollback, dirty-journal/missing-NVMe recovery, guest restore, 10 cold/10 warm boots, 24-hour endurance and zero routine SD writes remain required under [hardware validation](hardware-validation.md). Prove zero writes with full-card hashes, Linux counters and firmware audit; prefer eventual SPI-to-NVMe with SD removed only after its separate recovery and exact-target yes/no gates. Record independent deployment reproduction separately; no release acceptance is claimed here.

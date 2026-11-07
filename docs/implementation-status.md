@@ -114,8 +114,9 @@ redistribution clearance is claimed.
 2. Run the [first actual KVM guest](kvm-first-guest.md): CPU/disk/network, clean
    shutdown/restart and persisted disk marker. `/dev/kvm` alone is insufficient.
 3. The [matched second-candidate procedure](deploy-candidate-20261107.md) and
-   actual full-payload acquisition rehearsal pass independent review. Bind a
-   deployment HTTPS endpoint/CA before use, then independently reproduce it on
+   actual full-payload acquisition rehearsal pass independent review. The [dedicated LAN endpoint](candidate-delivery-20261107.md) now serves it on
+   port 8444 with full builder acquisition/TLS proof and trusted CA instructions;
+   original port 8443 remains unchanged. Independently reproduce deployment on
    hardware after the current management/KVM gates. The candidate/transport SD
    must not replace the current repair images alone.
 4. After management works, retain the [original SPI backup](spi-backup.md)

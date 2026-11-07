@@ -10,8 +10,9 @@ metadata differences; byte-identical reproducibility and physical deployment
 acceptance are not established.
 
 Keep the existing installation and follow the
-[one-file machine-id repair](installed-host-repair-20261107.md). Published endpoints
-and operator images are unchanged. This candidate uses state UUID
+[one-file machine-id repair](installed-host-repair-20261107.md). The original deployment endpoint
+and operator images are unchanged; a [separate candidate endpoint](candidate-delivery-20261107.md)
+now supplies the future matched deployment. This candidate uses state UUID
 `feaaee34-d782-4c18-bd04-1029540ab26a`; it cannot use the installed `00fd…` or first
 candidate `fc8…` bootstrap. No new flashing procedure is released here.
 

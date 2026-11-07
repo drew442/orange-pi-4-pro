@@ -1,0 +1,128 @@
+{
+  "actual_builder_acquisition": {
+    "bytes": 2374,
+    "path": "out/candidate-delivery-20261107/lan-acquisition.json",
+    "sha256": "c40c4fbc5a45fe468734d046c1a4477e4dac8f70d4708cee1c98eb2dc76dffe4"
+  },
+  "actual_cli_exit_code": 0,
+  "candidate_endpoint": "https://192.168.1.132:8444",
+  "certificate": {
+    "ip_san": "192.168.1.132",
+    "not_after_utc": "2026-11-20 07:42:33",
+    "not_before_utc": "2026-11-06 07:42:33",
+    "private_material": "Existing key/certificate outside served directory; key bytes neither copied nor recorded",
+    "public_pem": {
+      "bytes": 692,
+      "path": "out/nvme-repeat-candidate-retained-20261107/delivery-ca.pem",
+      "sha256": "4c71c2528ab650b2f9b8dc2a4554ed6248d77461abb7191bb58dd030a9eb9b56"
+    }
+  },
+  "classification": "Dedicated second-candidate LAN HTTPS endpoint and successful actual builder acquisition into tmpfs; no board test",
+  "date": "2026-11-07",
+  "decoded_verified": false,
+  "endpoint_checks": {
+    "bytes": 619,
+    "path": "out/candidate-delivery-20261107/endpoint-checks.json",
+    "sha256": "d56b546c717ccbcc0f43d74d934be0796e1a0c9aee09cfe6111601fd35703213"
+  },
+  "expanded_payload_read": false,
+  "firewall_changed": false,
+  "hardware_acceptance": false,
+  "independent_physical_deployment_reproduced": false,
+  "independent_review": {
+    "bytes": 4603,
+    "model": "gpt-6.1-sol",
+    "path": "out/candidate-delivery-20261107/independent-review.json",
+    "reasoning_effort": "high",
+    "result": "pass",
+    "reviewed_guide_sha256": "7d7a7a8b9044422a7668e0e619f1a225f4ef93c387856f3165c20573e359c4db",
+    "reviewed_service_guide_sha256": "a0a47b57948dd02c1fe28be681270c212f1c7a536ff339ef8efd6811e24c547a",
+    "sha256": "53d71dc43b2aa13e3c0a16a4542f5d0dafdd2f99a87738f5c76f4355dc9250be"
+  },
+  "limits": [
+    "Source-level native client on Ubuntu builder; ARM installer execution and physical preparation/apply/boot remain open.",
+    "Both current endpoints observed live; no uptime after reboot promised.",
+    "Current installation still needs the one-file permission repair; new deployment is a future deliberate operation."
+  ],
+  "manifest": {
+    "bytes": 10481,
+    "sha256": "c0f036dcc5d300a24785ebaac4c438bb0aef7cf1b8b073dc97a2d15a7896f563"
+  },
+  "new_file_created": "Only a public CA copy added to the retained artifact directory; no image copies/hardlinks or file mutations",
+  "original_endpoint": "https://192.168.1.132:8443",
+  "original_service_changed": false,
+  "payload": {
+    "bytes": 545633737,
+    "sha256": "4b6cbe6eb16cc3d3cd236b0d8701908408d38e5993d5aca5ffb4882708766df0"
+  },
+  "physical_device_writes": false,
+  "ram_download_removed": true,
+  "read_only_client_harness": {
+    "bytes": 2657,
+    "path": "out/candidate-delivery-20261107/check-lan.py",
+    "sha256": "ed5288694f820e7d8564341250fde423459323092b0c5e4cba902e8a63df4b0c"
+  },
+  "schema": 1,
+  "served_directory": "/home/drew/orange-pi-4-pro/out/nvme-repeat-candidate-retained-20261107",
+  "server_log": {
+    "bytes": 118,
+    "path": "out/candidate-delivery-20261107/server.log",
+    "sha256": "3fb8fafb61b6340f09796963a3232d521c8d3550d55d1d8505ede60dfed499e2"
+  },
+  "server_processes": {
+    "candidate": {
+      "command": [
+        "python3",
+        "-I",
+        "-B",
+        "build/serve-deployment.py",
+        "--directory",
+        "/home/drew/orange-pi-4-pro/out/nvme-repeat-candidate-retained-20261107",
+        "--certificate",
+        "/home/drew/orange-pi-4-pro/out/deployment-delivery-20261106/private/server.crt",
+        "--key",
+        "/home/drew/orange-pi-4-pro/out/deployment-delivery-20261106/private/server.key",
+        "--bind",
+        "192.168.1.132",
+        "--port",
+        "8444"
+      ],
+      "pid": 3515124,
+      "starttime_ticks": 159364732,
+      "state": "S"
+    },
+    "original": {
+      "command": [
+        "python3",
+        "-I",
+        "-B",
+        "build/serve-deployment.py",
+        "--directory",
+        "/home/drew/orange-pi-4-pro/out/deployment-delivery-20261106/public",
+        "--certificate",
+        "/home/drew/orange-pi-4-pro/out/deployment-delivery-20261106/private/server.crt",
+        "--key",
+        "/home/drew/orange-pi-4-pro/out/deployment-delivery-20261106/private/server.key",
+        "--bind",
+        "192.168.1.132",
+        "--port",
+        "8443"
+      ],
+      "pid": 2192619,
+      "starttime_ticks": 149085457,
+      "state": "S"
+    }
+  },
+  "server_source": {
+    "bytes": 9992,
+    "path": "build/serve-deployment.py",
+    "sha256": "08c76433ed28a45931d52ca3282245041d53f694d59f83ff79f2debadba91450"
+  },
+  "source_client_code": {
+    "bytes": 747,
+    "path": "out/candidate-delivery-20261107/client-code.json",
+    "sha256": "528df6d097d953bda89e5640c150a02bfe64ca4ff04c78b4a644cd308f9953be"
+  },
+  "state_uuid": "feaaee34-d782-4c18-bd04-1029540ab26a",
+  "tls_verified": true
+}
