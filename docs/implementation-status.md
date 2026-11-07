@@ -113,9 +113,11 @@ redistribution clearance is claimed.
 1. Complete the existing-install repair and verify SSH with **both** keys.
 2. Run the [first actual KVM guest](kvm-first-guest.md): CPU/disk/network, clean
    shutdown/restart and persisted disk marker. `/dev/kvm` alone is insufficient.
-3. Prepare a tested matched deployment
-   procedure. The new candidate/transport SD must not replace the current repair
-   images without an explicit matched deployment plan.
+3. The [matched second-candidate procedure](deploy-candidate-20261107.md) and
+   actual full-payload acquisition rehearsal pass independent review. Bind a
+   deployment HTTPS endpoint/CA before use, then independently reproduce it on
+   hardware after the current management/KVM gates. The candidate/transport SD
+   must not replace the current repair images alone.
 4. After management works, retain the [original SPI backup](spi-backup.md)
    off-device and demonstrate independent recovery. The manual's ADB/button
    descriptions and FEL version identification alone do not prove this. Capture

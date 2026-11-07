@@ -1,0 +1,108 @@
+{
+  "acquisition": {
+    "bytes": 821,
+    "path": "out/matched-deployment-20261107/acquisition.json",
+    "sha256": "e6d221966b5750cc3fa61b272896c0a4aa7dd3fc592ce94a791c1fa1fd07b91c"
+  },
+  "actual_cli_exit_code": 0,
+  "actual_wrapper_exit_code": 0,
+  "classification": "Future matched deployment guide and actual retained full-payload loopback HTTPS acquisition; no physical deployment",
+  "cleanup": {
+    "bytes": 104,
+    "path": "out/matched-deployment-20261107/cleanup.json",
+    "sha256": "203038c31a19e2ce10c8f4c8de1d3ae369080348ba626c362d859528f8d08270"
+  },
+  "client_code_matches_refreshed_installer": {
+    "scripts/acquire-nvme.py": {
+      "bytes": 17568,
+      "sha256": "17edaf927764f9feba0fb19bf3dbeb90356e24df1ceed7960eb155d9154b7e42"
+    },
+    "scripts/install-nvme.py": {
+      "bytes": 26072,
+      "sha256": "6f356eb05ea891981966c1d08b7174fe331823da3cd118971cfd5b2c37110b12"
+    },
+    "scripts/nvme_layout.py": {
+      "bytes": 6162,
+      "sha256": "742a71575d94c9be29e01af3f50dc0d0639b38800c3e5a86ded49ac8906e518f"
+    },
+    "scripts/plan-nvme.py": {
+      "bytes": 7815,
+      "sha256": "8ed9075de6ab4425457aa3f309847f2e66b134691f0fe80ac5eb7c43f1746e31"
+    }
+  },
+  "date": "2026-11-07",
+  "decoded_payload_read": false,
+  "decoded_verified": false,
+  "delivery_service_changed": false,
+  "encoded_payload": {
+    "bytes": 545633737,
+    "sha256": "4b6cbe6eb16cc3d3cd236b0d8701908408d38e5993d5aca5ffb4882708766df0"
+  },
+  "encoded_verified": true,
+  "ephemeral_test_key_removed": true,
+  "failures_and_resolution": [
+    {
+      "kind": "Harness preparation",
+      "log": {
+        "bytes": 402,
+        "path": "out/matched-deployment-20261107/preparation-error.log",
+        "sha256": "9070d1dca0ae41a45d601ea058b5691cec236c8871ad92844f5bee59c5412095"
+      },
+      "result": "Wrong manifest dictionary key refused before RAM/output creation; changed recipes lookup to initramfs_recipes"
+    },
+    {
+      "actual_cli_exit_code": 0,
+      "harness": {
+        "bytes": 6946,
+        "path": "out/matched-deployment-20261107-attempt01/rehearse-acquisition.py",
+        "sha256": "657d993bebc557df129bba9c1f4a597fa963b99d7cfd3e7e270de9a2b8420697"
+      },
+      "kind": "First full acquisition wrapper",
+      "log": {
+        "bytes": 447,
+        "path": "out/matched-deployment-20261107-attempt01/wrapper.log",
+        "sha256": "a56ab0ceab431c632fa9ef945af0b9205ee5998acba3c1c6e7fafd5ef7cd3063"
+      },
+      "records": "out/matched-deployment-20261107-attempt01",
+      "result": "Acquisition succeeded; cleanup removed contents but user could not remove empty directory from root-owned /run. Coordinator removed that exact empty directory. Fixed harness admits only empty-directory sudo rmdir fallback; full rerun then terminal0.",
+      "wrapper_exit_code": 1
+    }
+  ],
+  "guide": "docs/deploy-candidate-20261107.md",
+  "hardware_acceptance": false,
+  "harness": {
+    "bytes": 7117,
+    "path": "out/matched-deployment-20261107/rehearse-acquisition.py",
+    "sha256": "80de35d32892e730c5a99316c9468a71d14e021401f9a1f170ac829581dccb94"
+  },
+  "independent_review": {
+    "bytes": 3626,
+    "model": "gpt-6.1-sol",
+    "path": "out/matched-deployment-20261107/independent-review.json",
+    "reasoning_effort": "high",
+    "resolved_finding": "Plan binds manifest hash but does not print state UUID; explicit pinned-manifest UUID check added to guide.",
+    "result": "pass",
+    "reviewed_guide_sha256": "0237eb199943a708db4a82bce51d1250ddb8d6053af502bff5c773cc9c2e39f4",
+    "sha256": "6a094e3c754c17af34b909c8cf2142c8178333b05aba68c9b7c248353bbfdb52"
+  },
+  "limits": [
+    "Native source CLI only; ARM execution and actual installer target preparation/apply were not run.",
+    "Loopback TLS with ephemeral test CA; no production endpoint publication or operator CA binding.",
+    "No expanded 256 GB payload read, target selection, SD/NVMe/SPI writes, board boot, SSH, KVM or independently reproduced physical deployment."
+  ],
+  "loopback_server_stopped": true,
+  "manifest": {
+    "bytes": 10481,
+    "sha256": "c0f036dcc5d300a24785ebaac4c438bb0aef7cf1b8b073dc97a2d15a7896f563"
+  },
+  "operator_next_action": "Existing-install machine-id repair, original matching host SD, return full serial/DHCP/SSHbothkeys; no reinstall for management repair",
+  "physical_device_writes": false,
+  "ram_download_removed": true,
+  "rehearsal": {
+    "bytes": 2379,
+    "path": "out/matched-deployment-20261107/rehearsal.json",
+    "sha256": "630da2f3712abf904d2b26862141bb09db3ff18b87e58f5f91961e95f3abffcd"
+  },
+  "schema": 1,
+  "state_uuid": "feaaee34-d782-4c18-bd04-1029540ab26a"
+}

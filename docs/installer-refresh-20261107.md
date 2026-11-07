@@ -86,6 +86,9 @@ After a successful new full installation of that bundle, run the same
 [permission repair block](installed-host-repair-20261107.md) in the RAM shell
 before powering off and switching to the matching host SD. This changes one
 NVMe file's permission; it does not repeat the installation or read back the disk.
-Newly built state images use the corrected mode, but a refreshed complete NVMe
-bundle is still pending. The host SD, state UUID and both authorized SSH keys
-are unchanged. Physical SSH and real KVM guest execution remain acceptance gates.
+The [second complete NVMe candidate](production-nvme-repeat.md) now contains
+the corrected state and a matching new bootstrap; its
+[future matched deployment procedure](deploy-candidate-20261107.md) still needs
+endpoint binding and physical reproduction. Existing deployed images and their
+state UUID are unchanged. Physical SSH and real KVM guest execution remain
+acceptance gates.
