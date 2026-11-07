@@ -414,14 +414,15 @@ def verify_expectations(candidate, root):
 
 
 def execute(shared, candidate, builder, project, phase, manifest, policy, before, report, userspace, diagnostic, tag,
-            *, output_name=None, stage=None, namespace_command=None, verify=None, expectations=None, final_check=None):
+            *, output_name=None, stage=None, namespace_command=None, verify=None, expectations=None, final_check=None, resource_check=None):
     # Defaults preserve the root producer API; the STATE wrapper supplies explicit hooks.
     stage = stage_inputs if stage is None else stage
     namespace_command = command if namespace_command is None else namespace_command
     verify = verify_output if verify is None else verify
     expectations = verify_expectations if expectations is None else expectations
+    resource_check = check_resources if resource_check is None else resource_check
     output_name = ('host-payload-' + tag) if output_name is None else output_name
-    require(re.fullmatch(r'host-(?:payload|state|sd)-[A-Za-z0-9][A-Za-z0-9_-]{0,63}', output_name),
+    require(re.fullmatch(r'(?:host-(?:payload|state|sd)|nvme-image)-[A-Za-z0-9][A-Za-z0-9_-]{0,63}', output_name),
             'unsafe producer output name')
     shared.safe_directory(phase.parent, trusted=True)
     phase.mkdir(mode=0o700)
@@ -444,7 +445,7 @@ def execute(shared, candidate, builder, project, phase, manifest, policy, before
             while True:
                 sample = shared.resource_sample()
                 report['resources'].append(sample)
-                check_resources(sample, time.monotonic() - start)
+                resource_check(sample, time.monotonic() - start)
                 if proc.poll() is not None:
                     break
                 time.sleep(1)
