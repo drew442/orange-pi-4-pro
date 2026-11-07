@@ -55,6 +55,7 @@ class StateVerifierTests(unittest.TestCase):
                             ('var', 0o755), ('var/lib', 0o755), ('var/lib/systemd', 0o755),
                             ('var/lib/systemd/timesync', 0o755)]:
             (root / name).mkdir(mode=mode)
+            (root / name).chmod(mode)  # Fixture metadata must not depend on the suite's umask.
         values = dict(SCHEMA='1', SLOT='A', ROOT_UUID=m.R.SLOT_UUIDS['A'],
                       ROOT_MARKER_SHA256='a' * 64, KERNEL_RELEASE='6.6.98-a733-diag')
         selection = ''.join(key + '=' + values[key] + '\n' for key in m.FIELDS).encode()
