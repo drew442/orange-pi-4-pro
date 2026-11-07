@@ -131,7 +131,6 @@ def authenticate_roots(verifier, held, policy):
             and receipt['userspace_profile'] == 'timesync-20261106'
             and receipt['metadata_profile'] == 'fakeroot-raw-xattrs-v1'
             and receipt['slot_bytes'] == 4 * 1024**3
-            and receipt['slot_uuids'] == producer['slot_uuids']
             and receipt['policy'] == {k: policy[k] for k in ('archive', 'binding', 'clock', 'diagnostic')}
             and receipt['verification']['manifest'] == held['manifest'].pin,
             'root producer receipt bindings differ')

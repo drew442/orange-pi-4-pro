@@ -134,10 +134,10 @@ class StateLauncherTests(unittest.TestCase):
                 path.unlink(); os.mkfifo(path)
                 with self.assertRaises(ValueError): m.verify_capsule(c, root, pins)
 
-    def test_root_receipt_and_selected_root_binding(self):
+    def test_actual_receipt_without_slot_uuids_and_selected_root_binding(self):
         receipt = {'success': True, 'state': 'complete', 'sources': {'revision': PRODUCER['producer_revision']},
                    'userspace_profile': r.PROFILE, 'metadata_profile': r.METADATA,
-                   'slot_bytes': r.SLOT_BYTES, 'slot_uuids': r.SLOT_UUIDS, 'policy': PRODUCER['policy'],
+                   'slot_bytes': r.SLOT_BYTES, 'policy': PRODUCER['policy'],
                    'verification': {'manifest': PRODUCER['verification']['manifest']}}
         manifest = {'slot_bytes': r.SLOT_BYTES, 'slot_uuids': r.SLOT_UUIDS,
                     'files': {'root-A.ext4': PRODUCER['readback']['slots']['A']['image']},
@@ -150,7 +150,14 @@ class StateLauncherTests(unittest.TestCase):
         def run():
             with mock.patch.object(m, 'json_held', side_effect=[receipt, manifest]):
                 return m.authenticate_roots(v, held, POLICY)
+        # The producer plan receipt records slot_bytes; UUIDs belong to its
+        # authenticated payload manifest and the committed production evidence.
+        self.assertNotIn('slot_uuids', receipt)
         self.assertEqual(run(), manifest)
+        original_uuids = manifest['slot_uuids']
+        manifest['slot_uuids'] = dict(original_uuids, A=r.SLOT_UUIDS['B'])
+        with self.assertRaisesRegex(ValueError, 'selected root manifest'): run()
+        manifest['slot_uuids'] = original_uuids
         for key, bad in (('success', False), ('state', 'running'), ('slot_bytes', 123),
                          ('userspace_profile', 'baseline-20261104')):
             old = receipt[key]; receipt[key] = bad
