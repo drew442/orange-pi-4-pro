@@ -73,6 +73,118 @@
         "packages": 220,
         "lock_sha256": "f2abf03d0d6e7fd506560689093220514cbf1acc678f7560562026d6ca6564a6"
       }
+    },
+    "timesync-20261106": {
+      "archive": {
+        "bytes": 138093095,
+        "sha256": "0ead62c982344bfa3a796027e2f07ce0d8402e7033122707e01a9a3f8860f248"
+      },
+      "bom": {
+        "bytes": 4346433,
+        "sha256": "dd5064e28d8b2751ce7285b83b649e94121dd04b6d70e0650ac2439bd32d79d7"
+      },
+      "raw_tar": {
+        "bytes": 468592640,
+        "sha256": "7559c4c1247e3598d3d879b4e2d0cb385a0216d60aabefa5519391a47386c86e"
+      },
+      "members": 15909,
+      "inventory": {
+        "packages": 221,
+        "lock_sha256": "2e97a93bfa02ebd89b7d437df1c9c946a5e14f76b40823d54a3f1a59ab3d0d43"
+      },
+      "epoch": 1790812800,
+      "sources": {
+        "build/configure-host-userspace.py": {
+          "bytes": 22122,
+          "sha256": "0ff4f8538723ac1a4fe6f43d1ff6d73b6e0e36f22daa8eb31fa97d8553b8c95f"
+        },
+        "build/configure-timesync-userspace.py": {
+          "bytes": 26348,
+          "sha256": "eb41dae44c46ef5cb9aaa4a319ac17eedaedd9447b28e0f2120e17b68ab651c5"
+        },
+        "build/debootstrap-adapter.py": {
+          "bytes": 18308,
+          "sha256": "d10f8a8ea1e83a0b659582d895e98bf8553165dbfc2469aab54eab82e1c501ea"
+        },
+        "build/export-host-userspace.py": {
+          "bytes": 28217,
+          "sha256": "1cd49563c43fe7ddd78d309ef2d9fe48b2ad1d1d29ee6d7050374db12be118ed"
+        },
+        "build/export-timesync-userspace.py": {
+          "bytes": 11762,
+          "sha256": "8bddb7a0500b160c1772c30dbac0ca0ab7cac6e3f1e6de8464b743513d65716a"
+        },
+        "build/launch-timesync-userspace.py": {
+          "bytes": 33819,
+          "sha256": "12bca34664c99b6621378b43807da69e1265dff4fe0b9d4f42251aa78f1ee787"
+        },
+        "build/launch-userspace-configuration.py": {
+          "bytes": 25631,
+          "sha256": "08a8bb767987f2a9496ee92d03260fdb5b61bd1f486b9ab00fd04f7ad4633598"
+        },
+        "build/launch-userspace-pipeline.py": {
+          "bytes": 20436,
+          "sha256": "3338fe97521287124cae5c61b2631deee977ad575e5d713b6ab4d1a6385c22e7"
+        },
+        "build/offline-userspace-repo.py": {
+          "bytes": 19197,
+          "sha256": "bb8a4c71595f9867e4f7cf2958a2bf5bca6e0d81c49819eb1b7483957b0a4911"
+        },
+        "build/prepare-host-userspace.py": {
+          "bytes": 18830,
+          "sha256": "86a3432aea83ae408a38d18f07eb48b2d2a8b59adb7b23b14bfcadfdf6a772a9"
+        },
+        "build/timesync-identity.py": {
+          "bytes": 8173,
+          "sha256": "5ee1f6d3a2b3211189d0f45a2c007a45c1a950fb960cb7b75b5fe2a47a767909"
+        },
+        "build/userspace-bootstrap-api.py": {
+          "bytes": 27185,
+          "sha256": "365fd1681e5b5fbce8062771d54082862482995b48ef6b42f6f2b05464b26964"
+        },
+        "configs/builder-replay-packages-20261106.lock.tsv": {
+          "bytes": 32546,
+          "sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425"
+        },
+        "configs/host-timesync-inputs.lock.json": {
+          "bytes": 3837,
+          "sha256": "b183b9df1c19241420c6939c4487dcf4894ae60daa3827d73589a6e112918a5f"
+        },
+        "configs/host-timesync-package-hashes.lock.tsv": {
+          "bytes": 28789,
+          "sha256": "58f2027166e566f485e9fabccb6a7259c05ad1d882193a8392ee93d60652ebff"
+        },
+        "configs/host-timesync-packages.lock.tsv": {
+          "bytes": 6712,
+          "sha256": "2e97a93bfa02ebd89b7d437df1c9c946a5e14f76b40823d54a3f1a59ab3d0d43"
+        },
+        "configs/host-timesync-sysusers.conf": {
+          "bytes": 170,
+          "sha256": "d3873e161fa2ba8cee53de2a675b1ed8af9145c7151ba7a2775634c480766079"
+        },
+        "configs/host-userspace-package-hashes.lock.tsv": {
+          "bytes": 28638,
+          "sha256": "f2f613e79d9c1abc1689e19cfe81b624d9d2ac3beeb322fd5788980d919f7d86"
+        },
+        "configs/host-userspace-packages.lock.tsv": {
+          "bytes": 6671,
+          "sha256": "f2abf03d0d6e7fd506560689093220514cbf1acc678f7560562026d6ca6564a6"
+        },
+        "configs/host-userspace-source-archives.lock.json": {
+          "bytes": 122443,
+          "sha256": "f75bae857ffcfdfcfe5b7062880850d14b9f40bcdc7296f1999aa6a901fd6185"
+        },
+        "docs/evidence/time-sync-package-input-20261106.json": {
+          "bytes": 2617,
+          "sha256": "acaa7643bd375d58bf68b935b6eb3fbe04c35ede73cd293e94f48dcf87ae55cd"
+        }
+      },
+      "evidence": {
+        "docs/evidence/timesync-execution-20261107.json": {
+          "bytes": 7887,
+          "sha256": "c18b2e967bc602c7051d249f34819323e0f38551e274542d95fb4e4b40c99cd6"
+        }
+      }
     }
   }
 }

@@ -21,6 +21,7 @@ import struct
 import subprocess
 import tarfile
 import tempfile
+import types
 import uuid
 
 REPO = Path(__file__).resolve().parents[1]
@@ -125,17 +126,24 @@ def write_private(path, data):
         stream.write(data)
 
 
-def timesync_initializer():
+def timesync_initializer(expected=None):
     """Load build-only clock-state policy; it is not an installed runtime import."""
-    spec = importlib.util.spec_from_file_location('state_timesync', REPO / 'build/timesync-state.py')
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
+    path = REPO / 'build/timesync-state.py'
+    data = bounded_input(path, 1024 * 1024)
+    if expected is not None and {'bytes': len(data), 'sha256': hashlib.sha256(data).hexdigest()} != expected:
+        raise ValueError('clock initializer differs from bound provenance')
+    module = types.ModuleType('state_timesync')
+    module.__file__ = str(path)
+    exec(compile(data, str(path), 'exec'), module.__dict__)
     return module
 
 
-def seed_state(extracted, state, state_uuid, config, public_key, selection, *, timesync=False):
+def seed_state(extracted, state, state_uuid, config, public_key, selection, *, timesync=False, timesync_pin=None):
     if type(timesync) is not bool:
         raise ValueError('timesync state selection must be a boolean')
+    if not timesync and timesync_pin is not None:
+        raise ValueError('clock provenance requires explicit timesync selection')
+    initializer = timesync_initializer(timesync_pin) if timesync else None
     selector = SELECTION.parse(selection)
     source_var = extracted / 'var'
     info = source_var.lstat()
@@ -152,7 +160,7 @@ def seed_state(extracted, state, state_uuid, config, public_key, selection, *, t
         machine_id = secrets.token_hex(16)
     write_private(state / '.a733-state', f'a733-state-v1\n{state_uuid}\n'.encode())
     if timesync:
-        timesync_initializer().initialize(state, state_uuid)
+        initializer.initialize(state, state_uuid)
     write_private(state / 'identity/machine-id', (machine_id + '\n').encode())
     write_private(state / 'root/.ssh/authorized_keys', public_key)
     write_private(state / 'config/management.json', (json.dumps(config, sort_keys=True, separators=(',', ':')) + '\n').encode())
@@ -230,6 +238,7 @@ def compress_image(image, output):
 def build(rootfs, config_path, public_key_path, output, boot_selection, state_uuid=None, metadata_profile='native', userspace_profile=PAYLOAD.DEFAULT_USERSPACE_PROFILE):
     backend = PAYLOAD.validate_metadata_profile(metadata_profile)
     userspace = PAYLOAD.userspace_binding(userspace_profile, repo=REPO)
+    clock_policy = PAYLOAD.clock_state_policy(userspace_profile, repo=REPO)
     if os.geteuid() != 0:
         raise ValueError('root required to preserve userspace metadata')
     os.umask(0o077)
@@ -254,6 +263,7 @@ def build(rootfs, config_path, public_key_path, output, boot_selection, state_uu
                  REPO / 'configs/host-userspace-package-hashes.lock.tsv',
                  REPO / 'build/host-userspace.sh', REPO / 'configs/host_config.py',
                  REPO / 'configs/package_state.py',
+                 *((REPO / 'build/timesync-state.py',) if clock_policy is not None else ()),
                  *((REPO / 'build/rootfs-metadata.py', backend.LOCK) if backend is not None else ())))
     # Hold the authenticated source descriptor; copy and reauthenticate its bytes
     # into the private output to use the existing GNU metadata extraction helper.
@@ -285,9 +295,13 @@ def build(rootfs, config_path, public_key_path, output, boot_selection, state_uu
         write_private(provenance / path.name, bounded_input(path, 8 * 1024**2))
     for path in userspace['provenance']:
         PAYLOAD.authenticate(provenance / path.name, userspace['provenance_records'][str(path)])
+    if clock_policy is not None:
+        PAYLOAD.authenticate(provenance / 'timesync-state.py', clock_policy['helper'])
     metadata_sources = {}
     if userspace_profile != PAYLOAD.DEFAULT_USERSPACE_PROFILE:
         metadata_sources['userspace_profile'] = userspace['binding']
+    if clock_policy is not None:
+        metadata_sources['timesync_state'] = clock_policy
     if backend is not None:
         helper = REPO / 'build/rootfs-metadata.py'
         metadata_sources['rootfs_metadata'] = {'profile': metadata_profile,
@@ -305,7 +319,11 @@ def build(rootfs, config_path, public_key_path, output, boot_selection, state_uu
                 raise ValueError('metadata helper changed during build')
         cache_pruning = PAYLOAD.PACKAGE.prune_caches(extracted)
         state = stage / 'state'
-        machine_id = seed_state(extracted, state, state_uuid, config, public_key, selection_data)
+        if clock_policy is None:
+            machine_id = seed_state(extracted, state, state_uuid, config, public_key, selection_data)
+        else:
+            machine_id = seed_state(extracted, state, state_uuid, config, public_key, selection_data,
+                                    timesync=True, timesync_pin=clock_policy['helper'])
         PAYLOAD.write_json(output / 'staging-contents.json', contents(state))
         filesystem_metadata = make_image(state, output / 'state.ext4', state_uuid)
     snapshot.unlink()

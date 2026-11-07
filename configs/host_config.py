@@ -112,3 +112,37 @@ def validate_public_keys(data):
         canonical.append(key)
         fingerprints.append(fingerprint)
     return b''.join(canonical), fingerprints
+
+
+def timesync_policy(metadata):
+    """Recognize the closed profile feature set, including legacy baseline."""
+    def require(condition, message):
+        if not condition:
+            raise ValueError(message)
+
+    require(type(metadata) is dict, 'invalid payload metadata')
+    sources = metadata.get('sources', {})
+    require(type(sources) is dict, 'invalid payload sources')
+    binding = sources.get('userspace_profile')
+    if 'userspace_profile' not in sources:
+        profile = 'baseline-20261104'
+    else:
+        require(type(binding) is dict and type(binding.get('profile')) is str,
+                'invalid userspace profile binding')
+        profile = binding['profile']
+    if profile in ('baseline-20261104', 'normalized-20261106'):
+        require('timesync_state' not in sources, 'unexpected timesync policy')
+        return None
+    require(profile == 'timesync-20261106', 'unknown userspace profile')
+    policy = sources.get('timesync_state')
+    require(type(policy) is dict and set(policy) == {'schema', 'identity', 'directory', 'helper'},
+            'invalid timesync policy fields')
+    require(type(policy['schema']) is int and policy['schema'] == 1 and
+            type(policy['identity']) is int and policy['identity'] == 996 and
+            policy['directory'] == 'var/lib/systemd/timesync', 'invalid timesync policy')
+    helper = policy['helper']
+    require(type(helper) is dict and set(helper) == {'bytes', 'sha256'} and
+            type(helper['bytes']) is int and helper['bytes'] > 0 and
+            type(helper['sha256']) is str and re.fullmatch('[0-9a-f]{64}', helper['sha256']) is not None,
+            'invalid timesync helper pin')
+    return policy

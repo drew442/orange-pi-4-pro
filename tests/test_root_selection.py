@@ -58,6 +58,27 @@ class SelectionTests(unittest.TestCase):
                 marker.return_value = (b'marker', {**metadata, 'management_runtime': {'profile': 'different'}})
                 with self.assertRaisesRegex(ValueError, 'management runtime differs'):
                     SELECT.prepare(root / 'image', 'A', path)
+                time_sources = {**boot,
+                    'rootfs.tar.gz': {'bytes': 1, 'sha256': 'd' * 64},
+                    'userspace_profile': {'profile': 'timesync-20261106'},
+                    'timesync_state': {'schema': 1, 'identity': 996, 'directory': 'var/lib/systemd/timesync',
+                                      'helper': {'bytes': 1, 'sha256': 'd' * 64}}}
+                time_profile = {**profile, 'profile': 'a733-management-v2-timesync'}
+                path.write_text(json.dumps({**manifest, 'sources': time_sources, 'management_runtime': time_profile}))
+                captured = {'sources': time_sources, 'management_runtime': time_profile, 'package_state': package}
+                marker.return_value = (b'marker', captured)
+                self.assertEqual(SELECT.parse(SELECT.prepare(root / 'image', 'A', path))['SLOT'], 'A')
+                for field in ('rootfs.tar.gz', 'userspace_profile', 'timesync_state'):
+                    changed = json.loads(json.dumps(captured))
+                    if field == 'rootfs.tar.gz':
+                        changed['sources'][field]['bytes'] = True
+                    elif field == 'timesync_state':
+                        changed['sources'][field]['helper']['sha256'] = 'e' * 64
+                    else:
+                        changed['sources'][field]['profile'] = 'normalized-20261106'
+                    marker.return_value = (b'marker', changed)
+                    with self.subTest(captured_field=field), self.assertRaises(ValueError):
+                        SELECT.prepare(root / 'image', 'A', path)
 
     def test_schema(self):
         self.assertEqual(SELECT.parse(record())['SLOT'], 'A')

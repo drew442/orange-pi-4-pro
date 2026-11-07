@@ -9,6 +9,7 @@ https://www.freedesktop.org/software/systemd/man/252/journald.conf.html
 import ctypes
 import errno
 import fcntl
+import hashlib
 import importlib.util
 import ipaddress
 import json
@@ -21,6 +22,7 @@ import subprocess
 import sys
 import tempfile
 import time
+import types
 import uuid
 
 _spec = importlib.util.spec_from_file_location('a733_host_config', Path(__file__).with_name('host_config.py'))
@@ -68,6 +70,50 @@ def read_secure(path, limit, mode=None):
         value = stream.read(limit + 1)
     require(0 < len(value) <= limit, f'empty or oversized file: {path}')
     return value
+
+
+def timesync_policy(metadata):
+    return CONFIG.timesync_policy(metadata)
+
+
+def timesync_guard(metadata, expected_uuid, *, boot=False):
+    """Check only directory bindings live; audit quiescent clock state at boot."""
+    policy = timesync_policy(metadata)
+    if policy is None:
+        return None
+    own = Path(__file__)
+    helper = (own.parent.parent / 'build/timesync-state.py' if own.parent.name == 'configs'
+              else Path('/usr/lib/a733-tools/build/timesync-state.py'))
+    data = read_secure(helper, 1024 * 1024)
+    if boot:
+        require(len(data) == policy['helper']['bytes'] and
+                hashlib.sha256(data).hexdigest() == policy['helper']['sha256'],
+                'timesync helper differs from selected root')
+    module = types.ModuleType('a733_timesync_state')
+    module.__file__ = str(helper)
+    exec(compile(data, str(helper), 'exec'), module.__dict__)
+    result = module.directory_ready(STATE, expected_uuid)
+    if boot:
+        audit = module.audit(STATE)
+        require(audit.get('state_uuid') == expected_uuid and
+                'timesync' in audit.get('metadata', {}), 'timesync boot state differs')
+    return result
+
+
+def prepare_clock_state():
+    payload = json.loads(read_secure('/usr/lib/orangepi-hypervisor/payload.json', 1024 * 1024),
+                         object_pairs_hook=CONFIG.unique_pairs)
+    if timesync_policy(payload) is None:
+        return None
+    marker = read_secure(STATE / '.a733-state', 51)
+    try:
+        tag, identity, trailing = marker.decode('ascii').split('\n')
+        parsed = uuid.UUID(identity)
+    except (UnicodeError, ValueError, AttributeError) as error:
+        raise ValueError('invalid state marker') from error
+    require(tag == 'a733-state-v1' and not trailing and parsed.int != 0 and
+            str(parsed) == identity and len(marker) == 51, 'invalid state marker')
+    return timesync_guard(payload, identity, boot=True)
 
 
 def mount_table(data):
@@ -289,6 +335,7 @@ def ram_link(path, target):
 
 def prepare():
     config = runtime_guard()  # No write is permitted before all checks succeed.
+    prepare_clock_state()
     files = {
         '/etc/hostname': config['hostname'] + '\n',
         '/etc/hosts': f'127.0.0.1 localhost\n127.0.1.1 {config["hostname"]}\n',

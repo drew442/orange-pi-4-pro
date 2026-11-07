@@ -202,6 +202,17 @@ class Validators(unittest.TestCase):
                                      CONFIG, KEY, SELECTION, timesync=value)
                 self.assertTrue((root / 'input/var').is_dir())
                 self.assertFalse((root / 'state').exists())
+
+    def test_wrong_clock_initializer_pin_refuses_before_state_moves(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            (root / 'input/var').mkdir(parents=True)
+            with self.assertRaisesRegex(ValueError, 'bound provenance'):
+                STATE.seed_state(root / 'input', root / 'state', str(uuid.uuid4()),
+                                 CONFIG, KEY, SELECTION, timesync=True,
+                                 timesync_pin={'bytes': 1, 'sha256': '0' * 64})
+            self.assertTrue((root / 'input/var').is_dir())
+            self.assertFalse((root / 'state').exists())
             self.assertFalse((root / 'state').exists())
 
     def test_streamed_image_gzip(self):
@@ -256,6 +267,7 @@ class UserspaceProfiles(unittest.TestCase):
     def test_profile_archive_authentication_provenance_and_metadata_pin(self):
         cases = [(metadata, 'normalized-20261106', False, False, False) for metadata in STATE.PAYLOAD.METADATA_PROFILES] + [
             ('native', STATE.PAYLOAD.DEFAULT_USERSPACE_PROFILE, False, False, False),
+            ('native', 'timesync-20261106', False, False, False),
             ('native', 'normalized-20261106', True, False, False),
             ('native', 'normalized-20261106', False, True, False), ('native', 'normalized-20261106', False, False, True)]
         for metadata, userspace_profile, wrong_archive, changed_provenance, no_space in cases:
@@ -271,7 +283,7 @@ class UserspaceProfiles(unittest.TestCase):
                 proof.write_text('{}')
                 selected = {'archive': expected, 'evidence': proof,
                     'provenance': (proof, REPO / 'build/userspace-profiles.py', REPO / 'configs/host-userspace-profiles.lock.json'),
-                    'binding': {'profile': 'normalized-20261106', 'source_pins': {'fixture': expected}}}
+                    'binding': {'profile': userspace_profile, 'source_pins': {'fixture': expected}}}
                 selected['provenance_records'] = {str(path): STATE.PAYLOAD.file_record(path) for path in selected['provenance']}
                 if changed_provenance:
                     proof.write_text('{"changed": true}')
@@ -281,7 +293,7 @@ class UserspaceProfiles(unittest.TestCase):
                 backend = STATE.PAYLOAD.metadata_backend(metadata)
                 receipt = {'helper': STATE.PAYLOAD.file_record(REPO / 'build/rootfs-metadata.py')}
                 extract = mock.Mock(return_value=receipt)
-                def seed(extracted, target, *args):
+                def seed(extracted, target, *args, **kwargs):
                     target.mkdir()
                     return 'fixture-machine-id'
                 def image(root, target, state_uuid):
@@ -324,6 +336,12 @@ class UserspaceProfiles(unittest.TestCase):
                 else:
                     self.assertEqual(manifest['sources']['userspace_profile'], selected['binding'])
                 self.assertEqual(manifest['sources']['rootfs.tar.gz'], expected)
+                if userspace_profile == 'timesync-20261106':
+                    self.assertTrue(patches['seed_state'].call_args.kwargs['timesync'])
+                    self.assertEqual(patches['seed_state'].call_args.kwargs['timesync_pin'],
+                                     manifest['sources']['timesync_state']['helper'])
+                else:
+                    self.assertNotIn('timesync_state', manifest['sources'])
                 for source in selected['provenance']:
                     self.assertEqual((output / 'provenance' / source.name).read_bytes(), source.read_bytes())
                 self.assertFalse((output / '.rootfs-input.tar.gz').exists())

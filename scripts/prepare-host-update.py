@@ -71,8 +71,9 @@ def validate_manifest(value, slot, slot_bytes=None):
             and value.get('kernel_release') == INIT.PAYLOAD.KERNEL_RELEASE,
             'incompatible slot size, UUIDs or kernel')
     profile = value.get('management_runtime')
+    expected_profile = INIT.PAYLOAD.management_profile(value)
     require(isinstance(profile, dict) and set(profile) == {'profile', 'files'}
-            and profile.get('profile') == 'a733-management-v1'
+            and profile.get('profile') == expected_profile
             and isinstance(profile.get('files'), dict)
             and set(profile['files']) == {v[0] for v in INIT.PAYLOAD.MANAGEMENT_FILES.values()},
             'incompatible management profile')
@@ -147,6 +148,7 @@ def compatibility(stream, slot, manifest, diagnostic=None):
                 'root/manifest immutable boot stack differs from pinned diagnostic')
     for name in ('management_runtime', 'package_state'):
         require(metadata.get(name) == manifest[name], f'root {name} differs from authenticated manifest')
+    INIT.PAYLOAD.validate_source_bindings(metadata, manifest)
     selector = SELECT.serialize({'SCHEMA': '1', 'SLOT': slot,
                                  'ROOT_UUID': INIT.PAYLOAD.SLOT_UUIDS[slot],
                                  'ROOT_MARKER_SHA256': hashlib.sha256(marker).hexdigest(),

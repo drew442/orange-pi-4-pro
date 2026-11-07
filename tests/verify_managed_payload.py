@@ -50,7 +50,10 @@ def verify(directory):
     with regular(directory / 'manifest.json') as source:
         manifest = json.load(source)
     profile = manifest['management_runtime']
-    if profile['profile'] != 'a733-management-v1':
+    spec = importlib.util.spec_from_file_location('managed_payload_policy', REPO / 'build/host-payload.py')
+    policy = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(policy)
+    if profile['profile'] != policy.management_profile(manifest):
         raise ValueError('unexpected root profile')
     maintenance = manifest.get('maintenance_runtime')
     if maintenance != expected_maintenance():

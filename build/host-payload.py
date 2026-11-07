@@ -23,11 +23,15 @@ REPO = Path(__file__).resolve().parent.parent
 package_spec = importlib.util.spec_from_file_location('payload_package_state', REPO / 'configs/package_state.py')
 PACKAGE = importlib.util.module_from_spec(package_spec)
 package_spec.loader.exec_module(PACKAGE)
+config_spec = importlib.util.spec_from_file_location('payload_host_config', REPO / 'configs/host_config.py')
+CONFIG = importlib.util.module_from_spec(config_spec)
+config_spec.loader.exec_module(CONFIG)
 
 # These shared modules are also packaged for runtime readers. Profile policy is
 # source-only and loaded only when a production build explicitly resolves it.
 DEFAULT_USERSPACE_PROFILE = 'baseline-20261104'
-USERSPACE_PROFILES = (DEFAULT_USERSPACE_PROFILE, 'normalized-20261106')
+USERSPACE_PROFILES = (DEFAULT_USERSPACE_PROFILE, 'normalized-20261106', 'timesync-20261106')
+TIMESYNC_PROFILE = 'timesync-20261106'
 
 SLOT_BYTES = 4 * 1024**3
 KERNEL_RELEASE = '6.6.98-a733-diag'
@@ -63,6 +67,36 @@ def userspace_backend():
 def userspace_binding(profile=DEFAULT_USERSPACE_PROFILE, repo=None):
     """Resolve source-only profile policy against the caller's repository."""
     return userspace_backend().resolve(profile, repo=REPO if repo is None else repo)
+
+
+def clock_state_policy(profile, repo=None):
+    """Bind the additive NVMe clock directory to its guarded implementation."""
+    if profile not in USERSPACE_PROFILES:
+        raise ValueError('unknown userspace profile')
+    if profile != TIMESYNC_PROFILE:
+        return None
+    repository = REPO if repo is None else Path(repo)
+    source = require_regular(repository / 'build/timesync-state.py')
+    return {'schema': 1, 'identity': 996, 'directory': 'var/lib/systemd/timesync',
+            'helper': file_record(source)}
+
+
+def management_profile(metadata):
+    return 'a733-management-v2-timesync' if CONFIG.timesync_policy(metadata) is not None else 'a733-management-v1'
+
+
+def validate_source_bindings(actual, expected):
+    """Bind a captured root's feature and archive provenance to its manifest."""
+    if management_profile(actual) != management_profile(expected):
+        raise ValueError('root feature policy differs from trusted manifest')
+    left, right = actual.get('sources', {}), expected.get('sources', {})
+    if type(left) is not dict or type(right) is not dict:
+        raise ValueError('root source bindings must be objects')
+    for name in ('rootfs.tar.gz', 'userspace_profile', 'timesync_state'):
+        left_json = json.dumps(left.get(name), sort_keys=True, allow_nan=False)
+        right_json = json.dumps(right.get(name), sort_keys=True, allow_nan=False)
+        if (name in left) != (name in right) or left_json != right_json:
+            raise ValueError(f'root {name} differs from trusted manifest')
 
 
 def provenance_paths(paths):
@@ -393,6 +427,7 @@ def validate_builder_packages(lock_path):
 def build(rootfs, diagnostic, output, metadata_profile='native', userspace_profile=DEFAULT_USERSPACE_PROFILE):
     backend = validate_metadata_profile(metadata_profile)
     userspace = userspace_binding(userspace_profile)
+    clock_policy = clock_state_policy(userspace_profile)
     if os.geteuid() != 0:
         raise ValueError('root required to preserve rootfs ownership and device nodes')
     for tool in ('mke2fs', 'tune2fs', 'e2fsck', 'tar'):
@@ -428,6 +463,7 @@ def build(rootfs, diagnostic, output, metadata_profile='native', userspace_profi
                  REPO / 'configs/host-userspace-packages.lock.tsv',
                  REPO / 'configs/host-userspace-package-hashes.lock.tsv',
                  *(REPO / source for source in MANAGEMENT_FILES),
+                 *((REPO / 'build/timesync-state.py',) if clock_policy is not None else ()),
                  *((REPO / 'build/rootfs-metadata.py', backend.LOCK) if backend is not None else ())))
     # Two full images, worst-case compressed copies, staging and safety reserve.
     required = 4 * SLOT_BYTES + unpacked + 1024**3
@@ -439,12 +475,16 @@ def build(rootfs, diagnostic, output, metadata_profile='native', userspace_profi
                **{name: diag_lock[name] for name in BOOT_FILES}}
     if userspace_profile != DEFAULT_USERSPACE_PROFILE:
         sources['userspace_profile'] = userspace['binding']
+    if clock_policy is not None:
+        sources['timesync_state'] = clock_policy
     provenance = output / 'provenance'
     provenance.mkdir()
     for path in paths:
         shutil.copyfile(path, provenance / path.name)
     for path in userspace['provenance']:
         authenticate(provenance / path.name, userspace['provenance_records'][str(path)])
+    if clock_policy is not None:
+        authenticate(provenance / 'timesync-state.py', clock_policy['helper'])
     if backend is not None:
         helper = REPO / 'build/rootfs-metadata.py'
         sources['rootfs_metadata'] = {'profile': metadata_profile,
@@ -463,8 +503,14 @@ def build(rootfs, diagnostic, output, metadata_profile='native', userspace_profi
         cache_pruning = PACKAGE.prune_caches(root)
         module_bom = import_modules(root, modules)
         management = install_management(root)
+        if clock_policy is not None:
+            # Legacy update tools require v1 and must reject time-enabled roots.
+            management = {**management, 'profile': management_profile({'sources': sources})}
         tool_entries = maintenance_entries()
         maintenance = install_maintenance(root, tool_entries)
+        if clock_policy is not None:
+            installed = root / 'usr/lib/a733-tools/build/timesync-state.py'
+            authenticate(installed, clock_policy['helper'])
         maintenance_provenance = provenance / 'maintenance'
         maintenance_provenance.mkdir()
         provenance_entries = {**tool_entries,

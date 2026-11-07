@@ -12,14 +12,15 @@ import stat
 
 REPO = Path(__file__).resolve().parents[1]
 DEFAULT = 'baseline-20261104'
-PROFILES = (DEFAULT, 'normalized-20261106')
+PROFILES = (DEFAULT, 'normalized-20261106', 'timesync-20261106')
 LOCK = 'configs/host-userspace-profiles.lock.json'
-LOCK_SHA256 = 'ffa155f51cca41d4c791594f53829b79cc6c255cde06880137ed0c52cab40d58'
+LOCK_SHA256 = '5e5317a5bf1449125f1fb4b10a767b39162f27b0f729411337900ba0b7c3b380'
 MAX_BYTES = 4 * 1024 * 1024
 EVIDENCE = {
     DEFAULT: ('docs/evidence/host-userspace-20261104.json',),
     PROFILES[1]: ('docs/evidence/userspace-fresh-pipeline-20261106.json',
                   'docs/evidence/userspace-canonical-export-20261106.json'),
+    PROFILES[2]: ('docs/evidence/timesync-execution-20261107.json',),
 }
 SOURCES = ('build/prepare-host-userspace.py', 'build/configure-host-userspace.py',
            'build/export-host-userspace.py', 'build/debootstrap-adapter.py',
@@ -27,6 +28,36 @@ SOURCES = ('build/prepare-host-userspace.py', 'build/configure-host-userspace.py
            'configs/host-userspace-packages.lock.tsv',
            'configs/host-userspace-package-hashes.lock.tsv',
            'configs/host-userspace-source-archives.lock.json')
+
+
+# These are the actual first construction producer inputs, excluding the self lock.
+SOURCES_BY_PROFILE = {
+    DEFAULT: (),
+    PROFILES[1]: SOURCES,
+    PROFILES[2]: (
+        'build/configure-host-userspace.py',
+        'build/configure-timesync-userspace.py',
+        'build/debootstrap-adapter.py',
+        'build/export-host-userspace.py',
+        'build/export-timesync-userspace.py',
+        'build/launch-timesync-userspace.py',
+        'build/launch-userspace-configuration.py',
+        'build/launch-userspace-pipeline.py',
+        'build/offline-userspace-repo.py',
+        'build/prepare-host-userspace.py',
+        'build/timesync-identity.py',
+        'build/userspace-bootstrap-api.py',
+        'configs/builder-replay-packages-20261106.lock.tsv',
+        'configs/host-timesync-inputs.lock.json',
+        'configs/host-timesync-package-hashes.lock.tsv',
+        'configs/host-timesync-packages.lock.tsv',
+        'configs/host-timesync-sysusers.conf',
+        'configs/host-userspace-package-hashes.lock.tsv',
+        'configs/host-userspace-packages.lock.tsv',
+        'configs/host-userspace-source-archives.lock.json',
+        'docs/evidence/time-sync-package-input-20261106.json',
+    ),
+}
 
 
 def require(condition, message):
@@ -114,6 +145,9 @@ def validate_proof(profile, selected, proofs):
         agrees(proofs[0], {'schema': 1, 'packages_installed': 220,
                           'files': {'rootfs.tar.gz': archive}}, 'baseline evidence')
         return
+    if profile == PROFILES[2]:
+        validate_timesync_proof(selected, proofs[0])
+        return
     expected = {'schema': 1, 'success': True, 'archive': archive,
                 'raw_tar': selected['raw_tar'], 'members': selected['members'],
                 'inventory': selected['inventory'],
@@ -136,6 +170,49 @@ def validate_proof(profile, selected, proofs):
         agrees(run, {'export': expected}, 'canonical run')
 
 
+def validate_timesync_proof(selected, proof):
+    """Authorize the reviewed single construction; repeated construction stays open."""
+    links = {
+        'etc/systemd/system/sysinit.target.wants/systemd-timesyncd.service':
+            '/lib/systemd/system/systemd-timesyncd.service',
+        'etc/systemd/system/dbus-org.freedesktop.timesync1.service':
+            '/lib/systemd/system/systemd-timesyncd.service',
+    }
+    artifacts = {key: selected[key] for key in ('archive', 'bom', 'raw_tar', 'members')}
+    agrees(proof, {
+        'schema': 1, 'success': True, 'returncode': 0, **artifacts,
+        'inventory': selected['inventory'],
+        'timestamps': {'epoch': selected['epoch'], 'native_source_metadata_verified': True},
+        'configuration': {'packages': 221, 'dpkg_audit_clean': True,
+                          'apt_check_passed': True, 'accounts_preserved': True,
+                          'service_enablement': {'links': links}},
+        'live_postcheck': {'success': True, 'mapped_processes': [],
+                           'phase_and_base_mounts': [], 'inventory_unchanged': True},
+        'independent_review': {'success': True, 'result': {
+            'schema': 1, **artifacts,
+            'full_archive_bom_content_metadata_topology_match': True,
+            'all_owners_in_private_map': True, 'all_timestamps_at_or_before_epoch': True,
+            'configured_inventory_packages': 221, 'inventory_matches_lock_receipts_status': True,
+            'service_links': links, 'service_files_match_contract_pins': True,
+            'accounts': {
+                'passwd': {'base': 23, 'derived': 24, 'addition': [
+                    'systemd-timesync', 'x', '996', '996', 'systemd Time Synchronization',
+                    '/', '/usr/sbin/nologin']},
+                'group': {'base': 49, 'derived': 50,
+                          'addition': ['systemd-timesync', 'x', '996', '']}},
+            'source_files_verified_against_git_and_both_staged_phases': 22,
+            'receipt_provenance_chains_match': True, 'host_inventory_unchanged': True,
+            'outer_and_phase_cleanup_receipts_coherent': True,
+            'export_build_and_identity_cleanup_verified': True,
+            'helper_receipt_digest_and_success_match': True}},
+    }, 'timesync evidence')
+    require(type(proof.get('phases')) is list and len(proof['phases']) == 2,
+            'timesync evidence must contain configure and export phases')
+    for phase, name in zip(proof['phases'], ('configure', 'export')):
+        agrees(phase, {'name': name, 'success': True, 'returncode': 0,
+                       'private_propagation_passed': True}, 'timesync phase')
+
+
 def resolve(profile=DEFAULT, repo=REPO):
     """Return archive pin, primary evidence, provenance paths and JSON binding."""
     require(type(profile) is str and profile in PROFILES, 'unknown userspace profile')
@@ -150,20 +227,27 @@ def resolve(profile=DEFAULT, repo=REPO):
     keys = {'archive', 'evidence', 'sources'}
     if profile != DEFAULT:
         keys |= {'raw_tar', 'members', 'epoch', 'inventory'}
+    if profile == PROFILES[2]:
+        keys.add('bom')
     require(type(selected) is dict and set(selected) == keys, 'invalid userspace profile fields')
     pin(selected['archive'])
     require(type(selected['evidence']) is dict and tuple(selected['evidence']) == EVIDENCE[profile],
             'invalid userspace evidence paths')
-    expected_sources = () if profile == DEFAULT else SOURCES
+    expected_sources = SOURCES_BY_PROFILE[profile]
     require(type(selected['sources']) is dict and tuple(selected['sources']) == expected_sources,
             'invalid userspace source paths')
     if profile != DEFAULT:
         pin(selected['raw_tar'])
-        require(type(selected['members']) is int and selected['members'] == 15876
+        members, packages, inventory_hash = (
+            (15909, 221, '2e97a93bfa02ebd89b7d437df1c9c946a5e14f76b40823d54a3f1a59ab3d0d43')
+            if profile == PROFILES[2] else
+            (15876, 220, 'f2abf03d0d6e7fd506560689093220514cbf1acc678f7560562026d6ca6564a6'))
+        require(type(selected['members']) is int and selected['members'] == members
                 and type(selected['epoch']) is int and selected['epoch'] == 1790812800,
-                'invalid normalized members/epoch')
-        agrees(selected['inventory'], {'packages': 220, 'lock_sha256':
-               'f2abf03d0d6e7fd506560689093220514cbf1acc678f7560562026d6ca6564a6'}, 'inventory')
+                'invalid userspace members/epoch')
+        agrees(selected['inventory'], {'packages': packages, 'lock_sha256': inventory_hash}, 'inventory')
+    if profile == PROFILES[2]:
+        pin(selected['bom'])
     proofs = []
     records = {str(repo / LOCK): fingerprint(lock_data)}
     for relative, expected in selected['evidence'].items():

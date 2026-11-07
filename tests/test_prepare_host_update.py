@@ -137,6 +137,30 @@ class CandidateTests(unittest.TestCase):
                 self.value[key] = original
                 self.assert_clean()
 
+    def test_root_clock_and_profile_bindings_must_match_manifest(self):
+        for name in ('userspace_profile', 'timesync_state'):
+            with self.subTest(name=name):
+                self.metadata['sources'][name] = {'forged': True}
+                with self.assertRaises(ValueError):
+                    self.prepare()
+                self.metadata['sources'].pop(name)
+                self.assert_clean()
+
+    def test_time_roots_require_versioned_management_contract(self):
+        self.value['sources'].update(userspace_profile={'profile': 'timesync-20261106'},
+            timesync_state={'schema': 1, 'identity': 996, 'directory': 'var/lib/systemd/timesync',
+                            'helper': {'bytes': 1, 'sha256': 'a' * 64}})
+        self.write_manifest()
+        with self.assertRaisesRegex(ValueError, 'management profile'):
+            self.prepare(inspect=mock.Mock(side_effect=AssertionError('image parser reached')))
+        self.assert_clean()
+        self.value['management_runtime']['profile'] = 'a733-management-v2-timesync'
+        self.metadata = {key: copy.deepcopy(self.value[key])
+                         for key in ('sources', 'management_runtime', 'package_state')}
+        self.write_manifest()
+        self.prepare()
+        self.assertTrue(self.output.is_dir())
+
     def test_wrong_root_size_record(self):
         self.value['files']['root-A.ext4']['bytes'] = SIZE - 1
         self.write_manifest()

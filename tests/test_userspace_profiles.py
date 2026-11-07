@@ -20,7 +20,8 @@ class ProfileTests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.repo = Path(self.temp.name) / 'repo'
-        paths = ('build/userspace-profiles.py', profiles.LOCK) + profiles.SOURCES
+        paths = ('build/userspace-profiles.py', profiles.LOCK)
+        paths += tuple(path for group in profiles.SOURCES_BY_PROFILE.values() for path in group)
         paths += tuple(path for group in profiles.EVIDENCE.values() for path in group)
         for relative in paths:
             target = self.repo / relative
@@ -56,6 +57,89 @@ class ProfileTests(unittest.TestCase):
         self.assertEqual(normalized['archive']['bytes'], 138025729)
         self.assertIn(self.repo / 'build/prepare-host-userspace.py', normalized['provenance'])
         self.assertEqual(profiles.resolve(repo=self.repo)['archive']['bytes'], 169852145)
+
+    def test_timesync_single_construction_binding(self):
+        result = profiles.resolve(profiles.PROFILES[2], self.repo)
+        self.assertEqual(result['archive']['bytes'], 138093095)
+        self.assertEqual(result['binding']['bom']['bytes'], 4346433)
+        self.assertEqual(result['binding']['inventory']['packages'], 221)
+        self.assertEqual(len(profiles.SOURCES_BY_PROFILE[profiles.PROFILES[2]]), 21)
+        self.assertNotIn(profiles.LOCK, profiles.SOURCES_BY_PROFILE[profiles.PROFILES[2]])
+        self.assertNotIn('bom', profiles.resolve(self.name, self.repo)['binding'])
+        for name in profiles.PROFILES[:2]:
+            self.assertNotIn('bom', profiles.resolve(name, self.repo)['binding'])
+
+    def test_timesync_semantics_survive_repinning(self):
+        self.name = profiles.PROFILES[2]
+        relative = profiles.EVIDENCE[self.name][0]
+        original_lock = copy.deepcopy(self.lock)
+        original_data = (self.repo / relative).read_bytes()
+        mutations = [
+            lambda d: d.update(success=1),
+            lambda d: d.update(returncode=False),
+            lambda d: d['archive'].update(bytes=138093094),
+            lambda d: d['bom'].update(sha256='0' * 64),
+            lambda d: d['raw_tar'].update(bytes=468592639),
+            lambda d: d.update(members=15908),
+            lambda d: d['timestamps'].update(epoch=1790812801),
+            lambda d: d['timestamps'].update(native_source_metadata_verified=1),
+            lambda d: d['inventory'].update(packages='221'),
+            lambda d: d['inventory'].update(packages=221.0),
+            lambda d: d['inventory'].update(lock_sha256='0' * 64),
+            lambda d: d['configuration'].update(packages=220),
+            lambda d: d['configuration'].update(accounts_preserved=False),
+            lambda d: d['configuration'].update(dpkg_audit_clean=1),
+            lambda d: d['configuration'].update(apt_check_passed=False),
+            lambda d: d['configuration']['service_enablement']['links'].clear(),
+            lambda d: d['independent_review'].update(success=1),
+            lambda d: d['independent_review']['result']['bom'].update(bytes=1),
+            lambda d: d['independent_review']['result'].update(
+                full_archive_bom_content_metadata_topology_match=False),
+            lambda d: d['independent_review']['result'].update(
+                configured_inventory_packages='221'),
+            lambda d: d['independent_review']['result']['service_links'].clear(),
+            lambda d: d['independent_review']['result']['accounts']['passwd'].update(derived=23),
+            lambda d: d['independent_review']['result'].update(
+                export_build_and_identity_cleanup_verified=False),
+            lambda d: d['independent_review']['result'].update(
+                outer_and_phase_cleanup_receipts_coherent=1),
+            lambda d: d['live_postcheck'].update(mapped_processes=[123]),
+            lambda d: d['live_postcheck'].update(phase_and_base_mounts=['/mount']),
+            lambda d: d['live_postcheck'].update(inventory_unchanged=False),
+            lambda d: d['phases'][0].update(private_propagation_passed=False),
+        ]
+        for mutate in mutations:
+            with self.subTest(mutation=mutate):
+                self.lock = copy.deepcopy(original_lock)
+                (self.repo / relative).write_bytes(original_data)
+                self.mutate_proof(relative, mutate)
+                with self.write_lock(), self.assertRaises(ValueError):
+                    profiles.resolve(self.name, self.repo)
+
+    def test_all_timesync_producer_mutations_rejected(self):
+        name = profiles.PROFILES[2]
+        for relative in profiles.SOURCES_BY_PROFILE[name]:
+            path = self.repo / relative
+            original = path.read_bytes()
+            with self.subTest(source=relative):
+                path.write_bytes(original + b'\n')
+                with self.assertRaisesRegex(ValueError, 'source size/hash'):
+                    profiles.resolve(name, self.repo)
+                path.write_bytes(original)
+
+    def test_timesync_source_pin_and_closed_paths_rejected(self):
+        self.name = profiles.PROFILES[2]
+        original = copy.deepcopy(self.lock)
+        sources = self.lock['profiles'][self.name]['sources']
+        source = next(iter(sources))
+        sources[source]['sha256'] = '0' * 64
+        with self.write_lock(), self.assertRaisesRegex(ValueError, 'source size/hash'):
+            profiles.resolve(self.name, self.repo)
+        self.lock = original
+        sources = self.lock['profiles'][self.name]['sources']
+        sources['out/ignored.json'] = sources.pop(source)
+        with self.write_lock(), self.assertRaisesRegex(ValueError, 'source paths'):
+            profiles.resolve(self.name, self.repo)
 
     def test_unknown_profile_rejected_before_reads(self):
         for value in ('normalized', '../proof', '', None, [], True):

@@ -214,6 +214,30 @@ class ArchiveTests(unittest.TestCase):
 
 
 class UserspaceProfiles(unittest.TestCase):
+    def test_clock_profile_binds_actual_packaged_checker(self):
+        for profile in (payload.DEFAULT_USERSPACE_PROFILE, 'normalized-20261106'):
+            self.assertIsNone(payload.clock_state_policy(profile))
+        policy = payload.clock_state_policy('timesync-20261106')
+        self.assertEqual(policy['identity'], 996)
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            runtime = payload.install_maintenance(root)
+            self.assertEqual(len(runtime['files']), 40)
+            helper = root / 'usr/lib/a733-tools/build/timesync-state.py'
+            payload.authenticate(helper, policy['helper'])
+            helper.chmod(0o644)
+            helper.write_bytes(b'changed')
+            with self.assertRaises(ValueError):
+                payload.authenticate(helper, policy['helper'])
+
+    def test_source_parity_is_typed_and_presence_sensitive(self):
+        expected = {'sources': {'rootfs.tar.gz': {'bytes': 1, 'sha256': 'a' * 64}}}
+        payload.validate_source_bindings(expected, expected)
+        for actual in ({'sources': {}}, {'sources': {'rootfs.tar.gz': None}},
+                       {'sources': {'rootfs.tar.gz': {'bytes': True, 'sha256': 'a' * 64}}}):
+            with self.subTest(actual=actual), self.assertRaises(ValueError):
+                payload.validate_source_bindings(actual, expected)
+
     def test_resolver_delegation_and_repository_override(self):
         backend = mock.Mock()
         backend.resolve.return_value = {'selected': True}
@@ -275,6 +299,7 @@ class UserspaceProfiles(unittest.TestCase):
     def test_profile_markers_manifest_provenance_and_metadata_pin(self):
         cases = [(metadata, 'normalized-20261106', False, False) for metadata in payload.METADATA_PROFILES] + [
             ('native', payload.DEFAULT_USERSPACE_PROFILE, False, False),
+            ('native', 'timesync-20261106', False, False),
             ('native', 'normalized-20261106', True, False), ('native', 'normalized-20261106', False, True)]
         for metadata, userspace_profile, changed_provenance, no_space in cases:
             with self.subTest(metadata=metadata, changed_provenance=changed_provenance, no_space=no_space), tempfile.TemporaryDirectory() as temporary, ExitStack() as stack:
@@ -285,7 +310,7 @@ class UserspaceProfiles(unittest.TestCase):
                 expected = payload.file_record(archive)
                 proof = work / 'normalized-proof.json'
                 proof.write_text('{}')
-                binding = {'profile': 'normalized-20261106', 'source_pins': {'fixture': expected}}
+                binding = {'profile': userspace_profile, 'source_pins': {'fixture': expected}}
                 helper = payload.REPO / 'build/userspace-profiles.py'
                 lock = payload.REPO / 'configs/host-userspace-profiles.lock.json'
                 selected = {'archive': expected, 'evidence': proof, 'provenance': (proof, helper, lock), 'binding': binding}
@@ -341,6 +366,11 @@ class UserspaceProfiles(unittest.TestCase):
                 else:
                     self.assertEqual(manifest['sources']['userspace_profile'], binding)
                 self.assertEqual([marker['sources'] for marker in markers], [manifest['sources']] * 2)
+                if userspace_profile == 'timesync-20261106':
+                    self.assertEqual(manifest['management_runtime']['profile'], 'a733-management-v2-timesync')
+                    self.assertIn('timesync_state', manifest['sources'])
+                else:
+                    self.assertNotIn('timesync_state', manifest['sources'])
                 for source in selected['provenance']:
                     self.assertEqual((output / 'provenance' / source.name).read_bytes(), source.read_bytes())
                 if backend is not None:

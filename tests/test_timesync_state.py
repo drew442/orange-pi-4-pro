@@ -99,6 +99,136 @@ class TimesyncStateTests(unittest.TestCase):
         with self.ownership(), mock.patch.object(state.os, 'fchown', side_effect=chown):
             return state.initialize(self.root, expected)
 
+    def ready(self, expected=UUID, root=None):
+        with self.ownership():
+            return state.directory_ready(self.root if root is None else root, expected)
+
+    def test_directory_ready_is_stable_while_clock_changes(self):
+        self.initialized(clock=False)
+        before = self.ready()
+        self.assertEqual(set(before), {'state_uuid', 'directory'})
+        self.assertEqual(set(before['directory']), {'uid', 'gid', 'mode', 'device', 'inode', 'nlink'})
+        self.clock.touch()
+        os.utime(self.clock, ns=(0, 123456789))
+        self.assertEqual(self.ready(), before)
+        # The live guard never opens or enumerates clock; even an unexpected
+        # child is outside its deliberately limited directory proof.
+        (self.timesync / 'unexpected').touch()
+        with mock.patch.object(state.os, 'scandir', side_effect=AssertionError('enumeration')):
+            self.assertEqual(self.ready(), before)
+
+    def test_directory_ready_allows_concurrent_clock_creation_and_ancestor_entries(self):
+        self.initialized(clock=False)
+        original_fstat = os.fstat
+        inode = self.timesync.stat().st_ino
+        seen = 0
+
+        def create(fd):
+            nonlocal seen
+            info = original_fstat(fd)
+            if info.st_ino == inode:
+                seen += 1
+                if seen == 2:
+                    self.clock.touch()
+                    (self.base / 'other-runtime-file').touch()
+                    (self.base / 'other-runtime-directory').mkdir()
+                    info = original_fstat(fd)
+            return info
+
+        before = self.ready()
+        with mock.patch.object(state.os, 'fstat', side_effect=create):
+            self.assertEqual(self.ready(), before)
+        self.assertTrue(self.clock.exists())
+
+    def test_directory_ready_refuses_missing_unsafe_or_aliased_state(self):
+        with self.assertRaises(OSError):
+            self.ready()
+        self.initialized()
+        for expected in ('bad', UUID.upper(), '00000000-0000-0000-0000-000000000000',
+                         '14504c34-85b4-4035-9618-d86b298f8349'):
+            with self.subTest(expected=expected), self.assertRaises(ValueError):
+                self.ready(expected)
+        for path in (self.root / 'var', self.systemd, self.timesync):
+            path.chmod(0o700)
+            with self.subTest(path=path), self.assertRaises(ValueError):
+                self.ready()
+            path.chmod(0o755)
+        self.set_owner(self.timesync, 0)
+        with self.assertRaises(ValueError):
+            self.ready()
+        self.set_owner(self.timesync, 996)
+        os.link(self.marker, self.root / 'alias')
+        with self.assertRaises(ValueError):
+            self.ready()
+
+    def test_directory_ready_rejects_symlink_parent_and_leaf(self):
+        self.initialized()
+        alias = self.base / 'alias'
+        alias.symlink_to(self.root, target_is_directory=True)
+        with self.assertRaises(OSError):
+            self.ready(root=alias)
+        self.timesync.rename(self.systemd / 'original')
+        self.timesync.symlink_to('original', target_is_directory=True)
+        with self.assertRaises(OSError):
+            self.ready()
+
+    def test_directory_ready_rejects_cross_filesystem_and_noncanonical_marker(self):
+        self.initialized()
+        original = state._owned
+
+        def cross(info, *args, **kwargs):
+            original(info, *args, **kwargs)
+            if info.st_ino == self.systemd.stat().st_ino:
+                info.st_dev = info.st_dev + 1
+
+        # Ownership wrappers allow a changed device without requiring a mount.
+        with mock.patch.object(state, '_owned', side_effect=cross), self.assertRaises(ValueError):
+            self.ready()
+        self.marker.write_bytes(MARKER.replace(UUID.encode(), UUID.upper().encode()))
+        with self.assertRaises(ValueError):
+            self.ready()
+
+    def test_directory_ready_detects_marker_and_directory_replacement(self):
+        self.initialized()
+        original = state._readable_pin
+
+        def replace_marker(fd, info):
+            readable = original(fd, info)
+            self.marker.rename(self.root / 'old-marker')
+            self.marker.write_bytes(MARKER)
+            return readable
+
+        with mock.patch.object(state, '_readable_pin', side_effect=replace_marker), self.assertRaises(ValueError):
+            self.ready()
+
+    def test_directory_ready_detects_concurrent_ownership_and_marker_changes(self):
+        self.initialized()
+        original = os.fstat
+        inode = self.timesync.stat().st_ino
+
+        def change_owner(fd):
+            info = original(fd)
+            if info.st_ino == inode:
+                self.set_owner(self.timesync, 0)
+            return info
+
+        with mock.patch.object(state.os, 'fstat', side_effect=change_owner), self.assertRaises(ValueError):
+            self.ready()
+        self.set_owner(self.timesync, 996)
+        original_read = os.read
+        count = 0
+
+        def change_marker(fd, limit):
+            nonlocal count
+            data = original_read(fd, limit)
+            count += 1
+            if count == 1:
+                self.marker.write_bytes(MARKER.replace(b'a733', b'b733'))
+            return data
+
+        with mock.patch.object(state.os, 'read', side_effect=change_marker), self.assertRaises(ValueError):
+            self.ready()
+
     def test_initialize_missing_directory_under_restrictive_umask(self):
         previous = os.umask(0o077)
         try:

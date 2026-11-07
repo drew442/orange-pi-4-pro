@@ -99,9 +99,13 @@ class Manifest:
         self.stack.close()
 
 
+def candidate_context(args, manifest, published=False):
+    return UPDATE.clock_context(manifest.value, snapshot(args, published=published))
+
+
 def check_context(args, manifest, context):
     manifest.check()
-    require(snapshot(args) == context, 'live host context changed')
+    require(candidate_context(args, manifest) == context, 'live host context changed')
 
 
 @contextlib.contextmanager
@@ -136,7 +140,7 @@ def checked_root(args, manifest, context):
 
 def make_plan(args, manifest):
     manifest.check()
-    context = snapshot(args)
+    context = candidate_context(args, manifest)
     with checked_root(args, manifest, context) as (_, selector):
         check_context(args, manifest, context)
     result = {'schema': 1, 'operation': 'explicit-root-selection', 'intent': args.intent,
@@ -325,7 +329,7 @@ def apply(args, manifest, plan, report=None, *, plan_check=lambda target: None):
                     expected['state']['selector_sha256'] = WRITER.digest(proposed)
                     manifest.check()
                     plan_check(target)
-                    require(snapshot(args, published=True) == expected,
+                    require(candidate_context(args, manifest, published=True) == expected,
                             'postpublication context differs; inspect installed selection')
                     WRITER.validate_fd(root.fileno(), target)
                     with PREP.safe_parent(Path(context['state']['boot_directory'])) as named:

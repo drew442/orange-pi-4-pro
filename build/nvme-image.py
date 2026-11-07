@@ -69,7 +69,7 @@ def validate_roots(manifest):
     if (manifest.get('schema') != 1 or manifest.get('slot_bytes') != payload.SLOT_BYTES or
             manifest.get('slot_uuids') != payload.SLOT_UUIDS or
             manifest.get('kernel_release') != payload.KERNEL_RELEASE or
-            profile.get('profile') != 'a733-management-v1' or
+            profile.get('profile') != payload.management_profile(manifest) or
             set(profile.get('files', {})) != {v[0] for v in payload.MANAGEMENT_FILES.values()}):
         raise ValueError('incompatible managed root manifest')
     payload.PACKAGE.validate_profile(manifest.get('package_state'))
@@ -94,6 +94,11 @@ def validate_pairing(roots, state, sd, diagnostic, boot_profile='baseline-el1'):
         if selected != expected or any(sd.get('boot_inputs', {}).get(name) != pinned[name] for name in HOST.BLOBS):
             raise ValueError('SD boot profile provenance or locked inputs differ')
     validate_roots(roots)
+    payload = SELECT.INIT.PAYLOAD
+    root_clock = payload.CONFIG.timesync_policy(roots)
+    state_clock = payload.CONFIG.timesync_policy(state)
+    if root_clock is not None or state_clock is not None:
+        payload.validate_source_bindings(roots, state)
     state_uuid = canonical_uuid(state['state_uuid'])
     if state_uuid in roots['slot_uuids'].values() or state['files']['state.ext4']['bytes'] != 8 * GIB:
         raise ValueError('incompatible state identity/size')
@@ -174,6 +179,27 @@ def validate_state_identity(image, state):
             names.append(fields[5])
     if sorted(names) != ['.', '..']:
         raise ValueError('installation state must not embed SSH host keys')
+    validate_clock_directory(image, state)
+
+
+def validate_clock_directory(image, state):
+    if SELECT.INIT.PAYLOAD.CONFIG.timesync_policy(state) is None:
+        return
+    for path, owner in (('/var', 0), ('/var/lib', 0), ('/var/lib/systemd', 0),
+                        ('/var/lib/systemd/timesync', 996)):
+        info = debugfs(image, 'stat ' + path).decode()
+        if (not re.search(r'Type:\s+directory\s+Mode:\s+0?755\b', info) or
+                not re.search(rf'User:\s+{owner}\s+Group:\s+{owner}\b', info)):
+            raise ValueError('state clock directory metadata differs')
+    names = []
+    for line in debugfs(image, 'ls -p /var/lib/systemd/timesync').decode().splitlines():
+        if line.strip():
+            fields = line.split('/')
+            if len(fields) < 7:
+                raise ValueError('unexpected clock directory listing')
+            names.append(fields[5])
+    if sorted(names) != ['.', '..']:
+        raise ValueError('fresh installation state must not embed a saved clock')
 
 
 def write_all(fd, data, offset):
@@ -255,6 +281,7 @@ def root_selection(snapshot, slot, roots, diagnostic):
         raise ValueError('captured root package-state differs from trusted manifest')
     if value['management_runtime'] != roots['management_runtime']:
         raise ValueError('captured root runtime differs from trusted manifest')
+    SELECT.INIT.PAYLOAD.validate_source_bindings(value, roots)
     for name in ('Image', 'board.dtb', 'kernel.config', 'initramfs.cpio.gz'):
         if value['sources'][name] != diagnostic[name]:
             raise ValueError('captured root boot stack differs')

@@ -259,6 +259,86 @@ def audit(state_root, require_clock=False):
     return _audit(state_root, require_clock)
 
 
+def directory_ready(state_root, expected_uuid):
+    """Prove the physical directory binding while the daemon may touch clock.
+
+    This deliberately neither enumerates children nor opens a saved clock, and
+    makes no claim about synchronization. Only immutable directory fields are
+    compared; marker bytes and all marker metadata remain pinned.
+    """
+    try:
+        parsed = uuid.UUID(expected_uuid)
+    except (ValueError, AttributeError, TypeError) as error:
+        raise ValueError('invalid expected state UUID') from error
+    if not parsed.int or str(parsed) != expected_uuid:
+        raise ValueError('invalid expected state UUID')
+    path = Path(state_root)
+    if '..' in path.parts:
+        raise ValueError('parent traversal is prohibited')
+    path = path.absolute()
+    if len(path.parts) > MAX_COMPONENTS:
+        raise ValueError('state path is too deep')
+    held = []
+
+    def signature(info):
+        return (info.st_dev, info.st_ino, info.st_mode, info.st_uid,
+                info.st_gid)
+
+    def leaf_signature(info):
+        return signature(info) + (info.st_nlink,)
+
+    def open_at(parent, name, directory=True):
+        flags = os.O_PATH | os.O_NOFOLLOW | os.O_CLOEXEC
+        if directory:
+            flags |= os.O_DIRECTORY
+        fd = os.open(name, flags, dir_fd=parent)
+        held.append((fd, parent, name, os.fstat(fd), directory))
+        return fd
+
+    try:
+        current = open_at(None, '/')
+        for component in path.parts[1:]:
+            current = open_at(current, component)
+        root = current
+        _owned(os.fstat(root), 0)
+        if stat.S_IMODE(os.fstat(root).st_mode) & 0o700 != 0o700:
+            raise ValueError('state root requires owner access')
+        device = os.fstat(root).st_dev
+        marker = open_at(root, '.a733-state', False)
+        info = os.fstat(marker)
+        _owned(info, 0, directory=False)
+        if info.st_dev != device or info.st_mode & 0o111 or info.st_size != MARKER_BYTES:
+            raise ValueError('invalid state marker metadata')
+        readable = _readable_pin(marker, info)
+        held.append((readable, root, '.a733-state', info, False))
+        data = os.read(readable, MARKER_BYTES + 1)
+        if data != f'a733-state-v1\n{expected_uuid}\n'.encode('ascii'):
+            raise ValueError('state UUID does not match')
+        for component in ('var', 'lib', 'systemd', 'timesync'):
+            current = open_at(current, component)
+            info = os.fstat(current)
+            _owned(info, IDENTITY if component == 'timesync' else 0, 0o755)
+            if info.st_dev != device:
+                raise ValueError('state hierarchy crosses filesystems')
+            if component == 'timesync' and info.st_nlink not in (1, 2):
+                raise ValueError('invalid timesync directory links')
+        result = _metadata(os.fstat(current))
+        del result['size']
+        # Recheck contents too, using the same readable inode and no atime write.
+        os.lseek(readable, 0, os.SEEK_SET)
+        if os.read(readable, MARKER_BYTES + 1) != data:
+            raise ValueError('state marker changed during directory check')
+        for fd, parent, name, initial, directory in reversed(held):
+            compare = (leaf_signature if fd == current else signature) if directory else _signature
+            if (compare(initial) != compare(os.fstat(fd)) or
+                    compare(initial) != compare(os.stat(name, dir_fd=parent, follow_symlinks=False))):
+                raise ValueError('state changed during directory check')
+        return {'state_uuid': expected_uuid, 'directory': result}
+    finally:
+        for fd, _, _, _, _ in reversed(held):
+            os.close(fd)
+
+
 def initialize(state_root, expected_uuid):
     """Create only an absent timesync directory in private, quiescent state.
 

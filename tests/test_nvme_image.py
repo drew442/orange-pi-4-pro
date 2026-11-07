@@ -147,6 +147,61 @@ class NVMeImageTests(unittest.TestCase):
     def test_pinned_payload_state_bootstrap_pairing(self):
         self.assertEqual(IMAGE.validate_pairing(self.roots, self.state, self.sd, self.diag), self.state['state_uuid'])
 
+    def time_sources(self):
+        payload = IMAGE.SELECT.INIT.PAYLOAD
+        selected = payload.userspace_binding('timesync-20261106')
+        return {'rootfs.tar.gz': selected['archive'], 'userspace_profile': selected['binding'],
+                'timesync_state': payload.clock_state_policy('timesync-20261106')}
+
+    def test_time_pair_requires_matching_archive_and_clock_policy(self):
+        self.roots['sources'].update(self.time_sources())
+        self.roots['management_runtime']['profile'] = 'a733-management-v2-timesync'
+        with self.assertRaises(ValueError):
+            IMAGE.validate_pairing(self.roots, self.state, self.sd, self.diag)
+        self.state['sources'].update(copy.deepcopy(self.time_sources()))
+        self.assertEqual(IMAGE.validate_pairing(self.roots, self.state, self.sd, self.diag), self.state['state_uuid'])
+        for field in ('rootfs.tar.gz', 'userspace_profile', 'timesync_state'):
+            changed = copy.deepcopy(self.state)
+            changed['sources'][field] = None
+            with self.subTest(field=field), self.assertRaises(ValueError):
+                IMAGE.validate_pairing(self.roots, changed, self.sd, self.diag)
+
+    def test_captured_time_root_cannot_change_declared_sources(self):
+        self.roots['sources'].update(self.time_sources())
+        self.roots['management_runtime']['profile'] = 'a733-management-v2-timesync'
+        metadata = {name: copy.deepcopy(self.roots[name]) for name in
+                    ('sources', 'management_runtime', 'package_state')}
+        with tempfile.TemporaryDirectory() as temporary:
+            image = Path(temporary) / 'root.ext4'
+            image.write_bytes(b'parser fixture')
+            with patch.object(IMAGE.SELECT.INIT, 'root_marker', return_value=(b'marker', metadata)):
+                self.assertEqual(IMAGE.root_selection(image, 'A', self.roots, self.diag)['SLOT'], 'A')
+            for field in ('rootfs.tar.gz', 'userspace_profile', 'timesync_state'):
+                changed = copy.deepcopy(metadata)
+                if field == 'timesync_state':
+                    changed['sources'][field]['helper']['sha256'] = 'e' * 64
+                else:
+                    changed['sources'].pop(field)
+                with self.subTest(field=field), patch.object(IMAGE.SELECT.INIT, 'root_marker', return_value=(b'marker', changed)):
+                    with self.assertRaises(ValueError):
+                        IMAGE.root_selection(image, 'A', self.roots, self.diag)
+
+    def test_fresh_time_state_requires_empty_owned_clock_directory(self):
+        state = {'sources': self.time_sources()}
+        responses = {'stat ' + path: f'Type: directory Mode: 0755\nUser: {owner} Group: {owner}\n'.encode()
+                     for path, owner in (('/var', 0), ('/var/lib', 0), ('/var/lib/systemd', 0),
+                                         ('/var/lib/systemd/timesync', 996))}
+        command = 'ls -p /var/lib/systemd/timesync'
+        responses[command] = b'/2/040755/996/996/./4096/\n/1/040755/0/0/../4096/\n'
+        with patch.object(IMAGE, 'debugfs', side_effect=lambda image, name: responses[name]):
+            IMAGE.validate_clock_directory(Path('fixture'), state)
+        for name in responses:
+            changed = dict(responses)
+            changed[name] = b'' if name != command else responses[name] + b'/3/0100644/996/996/clock/0/\n'
+            with self.subTest(name=name), patch.object(IMAGE, 'debugfs', side_effect=lambda image, key: changed[key]):
+                with self.assertRaises(ValueError):
+                    IMAGE.validate_clock_directory(Path('fixture'), state)
+
     def test_explicit_boot_profiles_require_matching_locked_sd_provenance(self):
         for name in IMAGE.HOST.BOOT_PROFILES:
             pinned, profile, _ = IMAGE.HOST.load_boot_profile(name)

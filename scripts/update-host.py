@@ -89,7 +89,7 @@ class Source:
             WRITER.hash_stream(self.root, self.expected)
             self.check()
             self.root.seek(0)
-            selector, _ = inspect(self.root, slot, value)
+            selector, self.metadata = inspect(self.root, slot, value)
             self.check()
             supplied = self.files['selected.conf'].read(4097)
             require(len(supplied) <= 4096 and supplied == selector,
@@ -135,11 +135,30 @@ class Source:
         self.stack.close()
 
 
+def clock_context(metadata, context):
+    """Bind additive time-state compatibility without reading a live clock."""
+    require(isinstance(metadata, dict), 'root metadata must be an object')
+    sources = metadata.get('sources', {})
+    require(isinstance(sources, dict), 'root sources must be an object')
+    if 'userspace_profile' not in sources and 'timesync_state' not in sources:
+        return context
+    policy = adjacent('clock_state_target', 'host-update-target.py')
+    if policy.MANAGEMENT.timesync_policy(metadata) is None:
+        return context
+    clock = policy.MANAGEMENT.timesync_guard(metadata, context['state']['uuid'])
+    require(clock is not None and clock['state_uuid'] == context['state']['uuid'],
+            'clock state differs from selected state filesystem')
+    major, minor = context['state']['major_minor'].split(':')
+    require(clock['directory']['device'] == os.makedev(int(major), int(minor)),
+            'clock directory is not on the selected state filesystem')
+    return {**context, 'timesync_state': clock}
+
+
 def inspect(args, source):
     context = snapshot(args)
     source.off_target(context['target'])
     source.check()
-    return context
+    return clock_context(source.metadata, context)
 
 
 def make_plan(args, source):

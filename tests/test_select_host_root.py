@@ -225,6 +225,17 @@ class SelectionTransactionTests(unittest.TestCase):
         self.assertFalse(report['block_writes_performed'])
         self.assertFalse(report['root_switched'])
 
+    def test_clock_directory_replacement_prevents_selector_publication(self):
+        proof = {'state_uuid': 'fixture', 'directory': {'inode': 1}}
+        with mock.patch.object(LIVE.UPDATE, 'clock_context',
+                               side_effect=lambda metadata, context: {**context, 'timesync_state': copy.deepcopy(proof)}):
+            self.transaction()
+            self.assertEqual(self.plan['context']['timesync_state'], proof)
+            proof['directory']['inode'] = 2
+            report = self.run_apply()
+        self.assert_unpublished(report)
+        self.auth.assert_not_called()
+
     def test_cancel_pending_publishes_authenticated_running_root(self):
         self.args.intent, self.args.slot = 'cancel-pending', 'A'
         self.context['state'].update(selector=LIVE.SELECT.parse(self.after),

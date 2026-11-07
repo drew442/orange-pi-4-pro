@@ -20,7 +20,7 @@ SOURCES = tuple(sorted((
     'scripts/prepare-host-update.py', 'scripts/update-host.py', 'scripts/select-host-root.py',
     'scripts/recover-host-root.py', 'scripts/host-update-target.py', 'scripts/host-recovery-target.py',
     'scripts/install-nvme.py', 'scripts/acquire-nvme.py', 'scripts/plan-nvme.py', 'scripts/nvme_layout.py',
-    'build/root-selection.py', 'build/host-initramfs.py', 'build/host-payload.py',
+    'build/root-selection.py', 'build/host-initramfs.py', 'build/host-payload.py', 'build/timesync-state.py',
     'build/host-storage-tools.py', 'configs/package_state.py', 'configs/host-management.py',
     'configs/host_config.py', 'docs/evidence/diagnostic-20261104.json',
     'configs/guest_config.py', 'configs/guest_identity.py', 'configs/guest_manifest.py',

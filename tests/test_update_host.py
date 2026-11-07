@@ -245,6 +245,17 @@ class StagingTests(unittest.TestCase):
         del unsigned['plan_sha256']
         self.assertEqual(plan['plan_sha256'], UPDATE.WRITER.digest(UPDATE.WRITER.canonical_json(unsigned)))
 
+    def test_clock_directory_replacement_refuses_before_target_write(self):
+        proof = {'state_uuid': 'fixture', 'directory': {'inode': 1}}
+        with mock.patch.object(UPDATE, 'clock_context',
+                               side_effect=lambda metadata, context: {**context, 'timesync_state': copy.deepcopy(proof)}):
+            self.transaction()
+            self.assertEqual(self.plan['context']['timesync_state'], proof)
+            proof['directory']['inode'] = 2
+            report = self.run_apply()
+        self.assert_untouched(report)
+        self.auth.assert_not_called()
+
     def test_success_full_write_zeroes_readback_no_activation_or_partition_refresh(self):
         self.transaction()
         result = self.run_apply()
@@ -470,6 +481,40 @@ class StagingTests(unittest.TestCase):
         self.assertNotIn('--force', output.getvalue())
         self.assertNotIn('--yes', output.getvalue())
         self.assertNotIn('--slot-bytes', output.getvalue())
+
+
+class ClockContextTests(unittest.TestCase):
+    def test_legacy_baseline_needs_no_new_dependency(self):
+        context = {'state': {}}
+        with mock.patch.object(UPDATE, 'adjacent') as load:
+            self.assertIs(UPDATE.clock_context({}, context), context)
+        load.assert_not_called()
+
+    def test_known_nonclock_profile_needs_no_clock_state(self):
+        context = {'state': {}}
+        policy = SimpleNamespace(MANAGEMENT=SimpleNamespace(
+            timesync_policy=mock.Mock(return_value=None), timesync_guard=mock.Mock()))
+        metadata = {'sources': {'userspace_profile': {'profile': 'normalized-20261106'}}}
+        with mock.patch.object(UPDATE, 'adjacent', return_value=policy):
+            self.assertIs(UPDATE.clock_context(metadata, context), context)
+        policy.MANAGEMENT.timesync_guard.assert_not_called()
+
+    def test_clock_binding_must_match_selected_state(self):
+        context = {'state': {'uuid': 'fixture', 'major_minor': '0:1'}}
+        proof = {'state_uuid': 'fixture', 'directory': {'inode': 1, 'device': os.makedev(0, 1)}}
+        guard = mock.Mock(return_value=proof)
+        policy = SimpleNamespace(MANAGEMENT=SimpleNamespace(
+            timesync_policy=mock.Mock(return_value={'schema': 1}), timesync_guard=guard))
+        metadata = {'sources': {'timesync_state': {'schema': 1}}}
+        with mock.patch.object(UPDATE, 'adjacent', return_value=policy):
+            self.assertEqual(UPDATE.clock_context(metadata, context), {**context, 'timesync_state': proof})
+            self.assertNotIn('timesync_state', context)
+            guard.return_value = {**proof, 'state_uuid': 'other'}
+            with self.assertRaisesRegex(ValueError, 'selected state'):
+                UPDATE.clock_context(metadata, context)
+            guard.return_value = {**proof, 'directory': {'inode': 1, 'device': os.makedev(0, 2)}}
+            with self.assertRaisesRegex(ValueError, 'selected state'):
+                UPDATE.clock_context(metadata, context)
 
 
 if __name__ == '__main__':

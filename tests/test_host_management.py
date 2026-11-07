@@ -1,5 +1,7 @@
 """Management fixtures only: never mount, start listeners or touch host config."""
 import base64
+import copy
+import hashlib
 from contextlib import redirect_stdout
 import importlib.util
 import io
@@ -109,7 +111,7 @@ class ValidationTests(unittest.TestCase):
         self.assertIn('\nStandardOutput=journal+console\n', unit)
 
     def test_prepare_only_ram_paths_and_fixed_masks(self):
-        with patch.object(M, 'runtime_guard', return_value=CONFIG), patch.object(M, 'ram_directory'), patch.object(M, 'atomic_write') as write, patch.object(M, 'ram_link') as link, patch.object(M.subprocess, 'run') as command:
+        with patch.object(M, 'runtime_guard', return_value=CONFIG), patch.object(M, 'prepare_clock_state'), patch.object(M, 'ram_directory'), patch.object(M, 'atomic_write') as write, patch.object(M, 'ram_link') as link, patch.object(M.subprocess, 'run') as command:
             M.prepare()
             for call in write.call_args_list:
                 self.assertTrue(str(call.args[0]).startswith('/etc/'))
@@ -124,6 +126,118 @@ class ValidationTests(unittest.TestCase):
             self.assertIn('Type=ether', contents['/etc/systemd/network/00-a733-management.network'])
             self.assertIn('IPv6AcceptRA=no', contents['/etc/systemd/network/00-a733-management.network'])
             command.assert_not_called()
+
+
+class TimesyncGuardTests(unittest.TestCase):
+    identity = '64504c34-85b4-4035-9618-d86b298f8349'
+    helper = b'''def directory_ready(root, identity):
+    return {'state_uuid': identity, 'directory': {'uid': 996}}
+def audit(root):
+    return {'state_uuid': '64504c34-85b4-4035-9618-d86b298f8349',
+            'metadata': {'timesync': {}}}
+'''
+
+    def metadata(self):
+        return {'sources': {'userspace_profile': {'profile': 'timesync-20261106'},
+                'timesync_state': {'schema': 1, 'identity': 996,
+                  'directory': 'var/lib/systemd/timesync',
+                  'helper': {'bytes': len(self.helper),
+                             'sha256': hashlib.sha256(self.helper).hexdigest()}}}}
+
+    def test_baseline_never_requires_helper_or_state(self):
+        values = ({}, {'sources': {}}, *({'sources': {'userspace_profile': {'profile': p}}}
+                  for p in ('baseline-20261104', 'normalized-20261106')))
+        with patch.object(M, 'read_secure', side_effect=AssertionError('helper read')):
+            for value in values:
+                self.assertIsNone(M.timesync_guard(value, 'ignored', boot=True))
+                self.assertIsNone(M.timesync_guard(value, 'ignored'))
+
+    def test_closed_profile_policy_rejects_unknown_or_malformed_features(self):
+        mutations = []
+        for profile in ('future', None, True):
+            value = self.metadata()
+            value['sources']['userspace_profile']['profile'] = profile
+            mutations.append(value)
+        for field, invalid in (('schema', True), ('identity', True), ('identity', 995),
+                               ('directory', '/var/lib/systemd/timesync'),
+                               ('helper', {'bytes': True, 'sha256': '0' * 64}),
+                               ('helper', {'bytes': 1, 'sha256': 'A' * 64}),
+                               ('helper', {'bytes': 1, 'sha256': '0' * 64, 'extra': 0})):
+            value = self.metadata()
+            value['sources']['timesync_state'][field] = invalid
+            mutations.append(value)
+        for key in self.metadata()['sources']['timesync_state']:
+            value = self.metadata()
+            del value['sources']['timesync_state'][key]
+            mutations.append(value)
+        value = self.metadata()
+        value['sources']['timesync_state']['extra'] = 1
+        mutations.append(value)
+        for profile in ('baseline-20261104', 'normalized-20261106'):
+            value = self.metadata()
+            value['sources']['userspace_profile']['profile'] = profile
+            mutations.append(value)
+        value = self.metadata()
+        del value['sources']['userspace_profile']
+        mutations.append(value)
+        for value in mutations:
+            with self.subTest(value=value), patch.object(M, 'read_secure') as read:
+                with self.assertRaises(ValueError):
+                    M.timesync_guard(value, self.identity)
+                read.assert_not_called()
+
+    def test_boot_authenticates_helper_before_execution_and_audits_clock(self):
+        metadata = self.metadata()
+        with patch.object(M, 'read_secure', return_value=self.helper) as read:
+            report = M.timesync_guard(metadata, self.identity, boot=True)
+        self.assertEqual(report, {'state_uuid': self.identity, 'directory': {'uid': 996}})
+        self.assertEqual(read.call_args.args[0], Path(M.__file__).parent.parent / 'build/timesync-state.py')
+        poisoned = b"raise AssertionError('must not execute')\n"
+        with patch.object(M, 'read_secure', return_value=poisoned), self.assertRaisesRegex(ValueError, 'helper differs'):
+            M.timesync_guard(metadata, self.identity, boot=True)
+        for altered in (self.helper.replace(b"'timesync': {}", b"'other': {}"),
+                        self.helper.replace(self.identity.encode(), b'14504c34-85b4-4035-9618-d86b298f8349')):
+            value = copy.deepcopy(metadata)
+            value['sources']['timesync_state']['helper'] = {'bytes': len(altered), 'sha256': hashlib.sha256(altered).hexdigest()}
+            with patch.object(M, 'read_secure', return_value=altered), self.assertRaises(ValueError):
+                M.timesync_guard(value, self.identity, boot=True)
+
+    def test_live_uses_current_trusted_checker_without_candidate_pin_or_full_audit(self):
+        helper = self.helper.replace(b'def audit(root):', b"def audit(root):\n    raise AssertionError('live audit')")
+        with patch.object(M, 'read_secure', return_value=helper):
+            self.assertEqual(M.timesync_guard(self.metadata(), self.identity),
+                             {'state_uuid': self.identity, 'directory': {'uid': 996}})
+        with patch.object(M, '__file__', '/usr/lib/orangepi-hypervisor/host-management.py'), \
+                patch.object(M, 'read_secure', return_value=helper) as read:
+            M.timesync_guard(self.metadata(), self.identity)
+            self.assertEqual(read.call_args.args[0], Path('/usr/lib/a733-tools/build/timesync-state.py'))
+
+    def test_prepare_clock_check_precedes_ram_writes(self):
+        with patch.object(M, 'runtime_guard', return_value=CONFIG), \
+                patch.object(M, 'prepare_clock_state', side_effect=ValueError('clock')), \
+                patch.object(M, 'ram_directory') as directory, patch.object(M, 'atomic_write') as write, \
+                patch.object(M, 'ram_link') as link:
+            with self.assertRaisesRegex(ValueError, 'clock'):
+                M.prepare()
+            directory.assert_not_called()
+            write.assert_not_called()
+            link.assert_not_called()
+
+    def test_prepare_reads_selected_metadata_and_canonical_marker(self):
+        metadata = self.metadata()
+        marker = f'a733-state-v1\n{self.identity}\n'.encode()
+        with patch.object(M, 'read_secure', side_effect=[json.dumps(metadata).encode(), marker]), \
+                patch.object(M, 'timesync_guard') as guard:
+            M.prepare_clock_state()
+            guard.assert_called_once_with(metadata, self.identity, boot=True)
+        with patch.object(M, 'read_secure', return_value=b'{"sources":{}}') as read:
+            self.assertIsNone(M.prepare_clock_state())
+            self.assertEqual(read.call_count, 1)
+        for bad in (marker.upper(), marker[:-1], marker + b'\n'):
+            with patch.object(M, 'read_secure', side_effect=[json.dumps(metadata).encode(), bad]), \
+                    patch.object(M, 'timesync_guard') as guard, self.assertRaises(ValueError):
+                M.prepare_clock_state()
+            guard.assert_not_called()
 
     def test_runtime_builder_guard_has_no_mutations(self):
         with patch.object(M.os, 'geteuid', return_value=0), patch.object(M.Path, 'read_text', return_value=MOUNTS.replace('/dev/nvme0n1p2', '/dev/vda2')), patch.object(M.os, 'open') as opened, patch.object(M.subprocess, 'run') as command:

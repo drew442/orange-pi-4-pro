@@ -41,7 +41,8 @@ class MaintenanceToolsTests(unittest.TestCase):
 
     def test_real_sources_are_exact_and_allowlist_is_closed(self):
         values = TOOLS.entries()
-        self.assertEqual(len(TOOLS.SOURCES), 38)
+        self.assertEqual(len(TOOLS.SOURCES), 39)
+        self.assertIn('build/timesync-state.py', TOOLS.SOURCES)
         self.assertEqual(set(values), set(TOOLS.SOURCES) | {'package.json'})
         for name in TOOLS.SOURCES:
             self.assertEqual(values[name], (0o444, (REPO / name).read_bytes()))
