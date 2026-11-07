@@ -139,7 +139,11 @@ remain unchanged. **Do not repeat NVMe installation to fix management.**
   sparse conversion of three generated SD copies recovered 710 MB. The active
   endpoint and operator procedure remain unchanged. One construction is established;
   repeats and physical deployment remain open.
-  Latest privileged Ubuntu unittest discovery runs **1,585 cases, no skips or failures**;
+  The [NVMe-first firmware test SD](nvme-firmware-test-sd.md) now also builds
+  in the frozen namespace, with the matching production initramfs and manual SD
+  fallback source retained. Its software inspection passes; it remains unbooted
+  and must not be paired with the currently installed state.
+  Latest privileged Ubuntu unittest discovery runs **1,596 cases, no skips or failures**;
   five shell suites and four assembly cases pass. Within-tick mutation fixtures now force observable mtime changes;
   runtime/source guards are unchanged. See [root evidence](evidence/production-host-roots-20261107.json).
   These checks establish no physical acceptance or independent deployment.
@@ -165,7 +169,9 @@ remain unchanged. **Do not repeat NVMe installation to fix management.**
    separate verification of the 545.6 MB gzip and its entire 256.06 GB expansion.
    SPI-ready NVMe BOOT files do not establish physical SPI boot. The gzip and
    derived delivery manifest now pass off-builder retention and source validation;
-   a tested matched delivery procedure remains open. Prepare clean repeats next; software checks do not establish deployment acceptance.
+   a tested matched delivery procedure remains open. The NVMe-first firmware
+   transport SD now passes software construction/inspection; physical boot remains
+   open. Prepare clean repeats next; software checks do not establish deployment acceptance.
    [Kernel replay retention](kernel-run-retention.md) preserves the expanded tree
    as verified archives on two hosts. [Byte-preserving conversion](evidence/candidate-sd-sparsification-20261107.json)
    recovered 663 MB from three generated image copies. The compiled candidate
@@ -175,8 +181,9 @@ remain unchanged. **Do not repeat NVMe installation to fix management.**
    A/B roots and personalized 8 GiB state pass complete readback; the matching
    immutable bootstrap now passes software inspection. [Verified workspace retention](composition-retention.md)
    archives three terminal work trees on both hosts and recovers 2.48 GB.
-   After the full NVMe run, free is **22,245,568,512 bytes**, below the unchanged
-   22 GiB admission guard before staging overhead. Further builds require verified
+   The subsequent firmware transport SD completes under its separate 4 GiB
+   recipe admission plus staging. Builder free is then **21,618,569,216 bytes**,
+   below the unchanged 22 GiB full-NVMe admission guard before staging overhead. Further builds require verified
    retention. No guard reduction or additional LV growth is authorized.
    The [candidate build and exact replay](uboot-nvme-candidate.md)
    pass independent inspection. The file-only SPI assembler passes synthetic

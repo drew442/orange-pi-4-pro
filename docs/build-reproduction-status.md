@@ -31,6 +31,7 @@ artifacts remain bound to [the deployment guide](deploy-personalized-20261106.md
 | Matching immutable bootstrap | [Frozen construction and independent inspection](evidence/production-host-bootstrap-20261107.json): 256 MiB, verified production-state UUID, locked EL2 boot stack, 424 newc entries and complete gzip/raw-header checks; byte-preserving sparsification | One construction; full NVMe composition now passes below; clean repeats and physical deployment remain open |
 | Full production NVMe | [Frozen construction and independent wire verification](evidence/production-nvme-20261107.json): actual 256,060,514,304-byte geometry, matched root/state bytes, complete BOOT/GUESTS readback, SPI-ready BOOT script, 545,633,126-byte gzip independently decoded and checked; independent artifact review passes | One construction; clean repeat, delivery, hardware SPI boot and reproduced deployment remain open |
 | Encoded production candidate retention | [Verified off-builder copy and derived manifest](evidence/nvme-candidate-retention-20261107.json): same 545,633,126-byte gzip, encoded readback and source acquisition/installer manifest validation; 710 MB reclaimed from three generated SD copies without changing bytes | Active endpoint unchanged; tested matched delivery, physical installation and clean repeat remain open |
+| NVMe-first firmware transport SD | [Frozen construction and boot-file inspection](evidence/nvme-firmware-test-sd-20261107.json): 256 MiB with registered NVMe-first U-Boot package, compatible SD boot0/kernel/DTB, exact production initramfs and complete SD reader pass; 1,596 unittests | Unbooted; production state UUID differs from current installation; SPI boot and actual KVM remain physical gates |
 | Guest fixture | [Fixed seed fixture](evidence/guest-seed-fixture-20261104.json): root/drew byte-identical Jammy builds | No guest has booted; real KVM is mandatory |
 | Time-service identity | [Fixed identity gate and ARM fixture](timesync-identity.md): stable996, old tuples unchanged, repeat/collision checks and independent review | Built archive preserves all old accounts and uniquely adds UID/GID 996; production state/A-B now pass below; NTP/hardware unproven |
 | Clock-state preparation | [Audit, private initializer and state fixtures](timesync-state.md), plus [integration evidence](evidence/time-profile-integration-20261107.json): preserved future mtime, exact 996 ownership/modes, UUID guards; actual 32 MiB and 256 MiB non-deployable ext4 readbacks and independent review | Time-enabled production state now passes below; installed rollback and NTP remain unproven |
@@ -85,7 +86,9 @@ now succeeds and leaves 24.28 GB free, above the unchanged 22 GiB staging guard.
 [Verified workspace retention](composition-retention.md) subsequently recovers
 2.48 GB before bootstrap. [Bootstrap construction and sparsification](production-host-bootstrap.md)
 left 23.83 GB, admitting the completed full NVMe run. Its final free is
-22,245,568,512 bytes, below the next initial 22 GiB guard before staging overhead.
+22,245,568,512 bytes; the subsequent firmware transport SD leaves
+21,618,569,216 bytes under its own smaller budget. Both are below the next
+full-NVMe initial 22 GiB guard before staging overhead.
 Further construction requires verified retention. Recheck every admission
 without lowering guards. A second operator must
 reproduce deployment from the guide; build proofs cannot satisfy physical release gates.

@@ -116,8 +116,11 @@ flags; do not claim the whole firmware has a closed partition/file policy.
 The current installed `/boot/boot.scr` is the earlier SD-oriented script and must
 not be presented as this candidate. The new opt-in `spi-nvme-v1` profile in
 `build/nvme-image.py` integrates this separate script into a future NVMe BOOT
-filesystem while leaving its matching SD bootstrap unchanged. Its full image
-construction and physical boot are not established by source integration.
+filesystem while leaving its matching SD bootstrap unchanged. The
+[full NVMe construction](production-nvme-composition.md) now passes complete
+software inspection. The [firmware transport SD](nvme-firmware-test-sd.md) now
+also passes frozen construction and inspection, allowing a later U-Boot test
+before SPI programming. Physical boot remains unproven.
 
 The outer launcher independently checks the generated script's legacy header,
 architecture/type, timestamp, CRCs, size table and exact source bytes. Host
@@ -146,9 +149,11 @@ reuse. The review files remain directly available under `component-retained/`.
 Minimum host disk free and available RAM were **4.05 GB** and **6.08 GB**.
 Live postchecks show no mapped build processes or phase mounts; package inventory
 is unchanged. RAM mode still needs disk for the archive and review copies: this
-run retained approximately 706 MB. Current space is insufficient to repeat that
-retention while preserving the final >4 GB reserve. Do not rerun blindly or
-lower the guards; the separate production capacity proposal remains pending.
+run retained approximately 706 MB. At that completion, space was insufficient
+to repeat that retention while preserving the final >4 GB reserve. Subsequent
+authorized growth and constructions are recorded in the current
+[host assessment](build-host-assessment.md). Recheck the selected phase budget
+before rerunning; do not lower guards.
 
 This first candidate's generated challenge is now an authenticated retained
 input. The separately registered replay below reproduces it exactly. No flash

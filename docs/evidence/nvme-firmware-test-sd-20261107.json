@@ -1,0 +1,286 @@
+{
+  "actual_sd_bytes": 1977614336,
+  "artifact_review": {
+    "effort": "high",
+    "findings": [],
+    "model": "gpt-6.1-sol",
+    "original_raw_comparison": {
+      "differing_bytes_outside_replacement_range": 0,
+      "original_sha256": "beb4ae47ea536e2b7601f29f3ddc89e14d8bb15670b3e52d56271a76f50136e7",
+      "replacement_range_end_exclusive": 18186240,
+      "replacement_range_start": 16793600
+    },
+    "record": {
+      "bytes": 7542,
+      "path": "out/nvme-firmware-sd-20261107/independent-review.json",
+      "sha256": "48b387bebd25770739e3e5e3b657390a554924cd3be891263cb526ba6fd540eb"
+    },
+    "scope": "603 immutable Git blobs, complete gzip/raw hash, MBR/raw firmware, exact original production initramfs, 424 newc entry headers/types/padding, policy/probe/resource/cleanup records. Complete SD filesystem readback attributed to reviewed producer."
+  },
+  "assembler": {
+    "bytes": 21448,
+    "path": "build/assemble-host.py",
+    "sha256": "c9ed33c9526d6660965f00b97e6c226880eba985706b3bbc71c017fee8e9b77f"
+  },
+  "classification": "One frozen-builder NVMe-first firmware transport SD construction; software evidence only",
+  "compressed_image": {
+    "bytes": 17271916,
+    "sha256": "477d63faf661ccff584e36a968dad6ff85266905419a44ebc848699582fd7dd7"
+  },
+  "date": "2026-11-07",
+  "hardware_acceptance": false,
+  "historical_parent": {
+    "bytes": 23192,
+    "path": "build/launch-host-bootstrap.py",
+    "sha256": "bcadf141568ccfa77d875ca1a335fb00792125c831cc4f02aef7b8a1bd6cdc9f"
+  },
+  "image": {
+    "bytes": 268435456,
+    "sha256": "1db41fa64748f1fcb275f7ef0cacd5e531e0481e0b514f8f8617b0e7d1f7afdb"
+  },
+  "image_fits_actual_sd": true,
+  "initramfs_manifest": {
+    "bytes": 75532,
+    "path": "out/nvme-firmware-sd-20261107/work/project/out/host-initramfs-nvme-firmware-01/manifest.json",
+    "sha256": "eeff00ffd0145b023c1c1eb7c6cf70de43b7b6da0ffaa499d244901679de607c"
+  },
+  "initrd": {
+    "bytes": 4762428,
+    "sha256": "71fd015c5eaab267e46d9bea5eb0a4aafa24349c2e2dbf81dad7d8a0d31b9290"
+  },
+  "isolation": {
+    "host_inventory_unchanged": true,
+    "mapped_processes_final": [],
+    "phase_mounts_final": [],
+    "probe": {
+      "ipv6_loopback_routes": [
+        "00000000000000000000000000000001 80 00000000000000000000000000000000 00 00000000000000000000000000000000 00000100 00000001 00000000 00000001       lo",
+        "00000000000000000000000000000000 00 00000000000000000000000000000000 00 00000000000000000000000000000000 ffffffff 00000001 00000000 00200200       lo",
+        "00000000000000000000000000000001 80 00000000000000000000000000000000 00 00000000000000000000000000000000 00000000 00000002 00000000 80200001       lo",
+        "00000000000000000000000000000000 00 00000000000000000000000000000000 00 00000000000000000000000000000000 ffffffff 00000001 00000000 00200200       lo"
+      ],
+      "network_interfaces": [
+        "lo"
+      ],
+      "prohibited_capability_mask": "0xa631000",
+      "uid_base": 1048576,
+      "uid_count": 65536
+    }
+  },
+  "limits": [
+    "One SD construction, not a clean repeated full build/deployment.",
+    "Actual NVMe-first SD transport boot, manual SD fallback and SPI handoff remain untested.",
+    "SD transport does not establish recovery from corrupted SPI or SD-removed SPI boot.",
+    "Original flash backup/off-device retention, recovery demonstration, actual backup-derived candidate and simple exact-target yes/no confirmation remain required before programming.",
+    "Default firmware retains broader distro scan; script payload guards do not close whole-firmware file search.",
+    "Actual SSH with both keys, NTP, KVM guest CPU/disk/network/persistence, endurance, zero routine SD writes and physical rollback/recovery remain open.",
+    "Further full NVMe construction requires verified capacity retention; no guard reduction or additional LV growth authorized."
+  ],
+  "native_retention": {
+    "compressed_image_and_initrd_retained": true,
+    "directory": "out/nvme-firmware-sd-20261107",
+    "raw_image_retained": false
+  },
+  "output": "work/project/out/host-sd-nvme-firmware-01",
+  "parent_bootstrap_evidence": "docs/evidence/production-host-bootstrap-20261107.json",
+  "parent_state_evidence": "docs/evidence/production-host-state-20261107.json",
+  "phase": "/var/lib/a733-clean-replay-20261106/host-bootstrap-nvme-firmware-01",
+  "physical_board_storage_written": false,
+  "preparation_records": {
+    "plan.json": {
+      "bytes": 169125,
+      "path": "out/nvme-firmware-sd-20261107/plan.json",
+      "sha256": "62a1e82782059d0f228d436a034f159ff31c4ae1a4b9b586f2a32ab980c376cc"
+    },
+    "prepare-inputs.py": {
+      "bytes": 1940,
+      "path": "out/nvme-firmware-sd-20261107/prepare-inputs.py",
+      "sha256": "1c646043ae6b2f76601cc444d35151cd2aaab259068daf587f52dc9079e013f0"
+    },
+    "prepared-inputs.json": {
+      "bytes": 2422,
+      "path": "out/nvme-firmware-sd-20261107/prepared-inputs.json",
+      "sha256": "4dcd35f7ce73499df0c9e4f690ef6e0d7af81ba5044a8519a2e8a34f9ad223dc"
+    }
+  },
+  "producer_readback": {
+    "checks": {
+      "classification": "independent regular-file host SD checks; hardware acceptance pending",
+      "gzip_expansion": "passed",
+      "host_script_crc_and_contents": "passed",
+      "image": {
+        "bytes": 268435456,
+        "sha256": "1db41fa64748f1fcb275f7ef0cacd5e531e0481e0b514f8f8617b0e7d1f7afdb"
+      },
+      "initramfs_entries_checked": 424,
+      "initrd_wrapper_and_payload": "passed",
+      "legacy_ext4_features": [
+        "ext_attr",
+        "resize_inode",
+        "dir_index",
+        "filetype",
+        "extent",
+        "flex_bg",
+        "sparse_super",
+        "large_file",
+        "huge_file",
+        "dir_nlink",
+        "extra_isize"
+      ],
+      "mbr_and_raw_blobs": "passed",
+      "physical_storage_writes": false,
+      "pinned_kernel_and_dtb": "passed",
+      "state_uuid": "fc8bbef6-9385-4ddb-90ba-e41eaccc035b"
+    },
+    "hardware_acceptance": false,
+    "inspection": {
+      "bytes": 669,
+      "sha256": "3d89cee14c0376a922cbc58a2faeeb9150afadf1d3743ada804e676d89c324f3"
+    }
+  },
+  "producer_records": {
+    "receipt.json": {
+      "bytes": 174312,
+      "path": "out/nvme-firmware-sd-20261107/receipt.json",
+      "sha256": "0cc90ab9e13e4f194ac124acd309c757282947d5f4ba3232ceb70d9bc34b3558"
+    },
+    "runtime.log": {
+      "bytes": 3173,
+      "path": "out/nvme-firmware-sd-20261107/runtime.log",
+      "sha256": "2d75433cf68a14d642c308f2821fc81a0ff6ce18422bc37522aff0b3b3c16933"
+    },
+    "source-manifest.json": {
+      "bytes": 126840,
+      "path": "out/nvme-firmware-sd-20261107/source-manifest.json",
+      "sha256": "2dfc8124d8f24f8c57b8b05730dd4eb195b7752b64644acd18ccbbad9a56823e"
+    },
+    "staged.json": {
+      "bytes": 169437,
+      "path": "out/nvme-firmware-sd-20261107/staged.json",
+      "sha256": "4a9f4d11ec6caacd187a8cc5519c25567124d0272572d6962bd256a7bc932f9a"
+    }
+  },
+  "producer_verification": {
+    "files_verified": 5,
+    "fits_actual_sd": true,
+    "hardware_acceptance": false,
+    "image_bytes": 268435456,
+    "initramfs_manifest": {
+      "bytes": 75532,
+      "sha256": "eeff00ffd0145b023c1c1eb7c6cf70de43b7b6da0ffaa499d244901679de607c"
+    },
+    "manifest": {
+      "bytes": 9720,
+      "sha256": "3634d99193f7e6f1d38fbb128cd6a46280c07943abfc092397b5c9e216ddbf18"
+    }
+  },
+  "profile": "nvme-first-el2-test",
+  "profile_metadata": {
+    "bootcommand": "setenv boot_targets nvme; run distro_bootcmd",
+    "environment": "CONFIG_ENV_IS_NOWHERE=y",
+    "evidence": {
+      "bytes": 16835,
+      "path": "docs/evidence/uboot-nvme-candidate-20261107.json",
+      "sha256": "da2f319c342beaf692e4f392ef622ab307748d9c586709c186d9f04a1d7ca01c"
+    },
+    "expected_spsr": "0x3c9",
+    "name": "nvme-first-el2-test",
+    "physical_acceptance_pending": true,
+    "registered_target": "nvme-candidate-20261107-ram02",
+    "registry": {
+      "bytes": 4035,
+      "path": "configs/uboot-nvme-candidate-targets.lock.json",
+      "sha256": "abb6f3136f6df22c3da0b7a205b7d2b968e3faad7a3589a3fb69c1c2689117c5"
+    },
+    "sd_fallback": "run bootcmd_mmc0; configs/host-boot.cmd retained on SD",
+    "target_service": "0x8000ff40"
+  },
+  "published_deployment_images_changed": false,
+  "regular_files_only": true,
+  "reproducibility_established": false,
+  "resources": {
+    "final": {
+      "available_memory_bytes": 7482994688,
+      "free_bytes": 21618569216,
+      "time": 1794042983.6583314
+    },
+    "initial_budget": {
+      "capsule_bytes": 232286652,
+      "git_staging_bound_bytes": 128384114,
+      "recipe_bytes": 4294967296,
+      "required_free_bytes": 4655638062
+    },
+    "minimum_available_memory_bytes": 7275708416,
+    "minimum_free_bytes": 21274603520,
+    "next_full_nvme_guard_passes_at_final": false,
+    "next_full_nvme_initial_guard_bytes": 23622320128,
+    "retained_tree": {
+      "actual_block_character_devices": [],
+      "allocated_bytes": 305852416
+    }
+  },
+  "schema": 1,
+  "sd_manifest": {
+    "bytes": 9720,
+    "path": "out/nvme-firmware-sd-20261107/work/project/out/host-sd-nvme-firmware-01/manifest.json",
+    "sha256": "3634d99193f7e6f1d38fbb128cd6a46280c07943abfc092397b5c9e216ddbf18"
+  },
+  "source_controller": {
+    "bytes": 4400,
+    "path": "build/launch-nvme-test-sd.py",
+    "sha256": "2d7ce2feed7d3cf303ee75bc03bf514a6da22f97974d0a9aca7adacdec3e3d50"
+  },
+  "source_review": {
+    "effort": "high",
+    "findings": [],
+    "focused_cases": 43,
+    "model": "gpt-6.1-sol",
+    "record": {
+      "bytes": 3914,
+      "path": "out/nvme-firmware-sd-20261107/source-review.json",
+      "sha256": "c1ce25f8b63b532d08f4b3df46d419416ad69d313fca48bd4ef20b836450a146"
+    }
+  },
+  "source_revision": "2c6f08adb5c3fd0f87810fddde9bc8638954ad37",
+  "state_pairing": "New production fc8bbef6-9385-4ddb-90ba-e41eaccc035b; not installed 00fd936c-49fb-4fea-87c8-928b9c1599e0. Existing-install repair remains next operator action.",
+  "state_uuid": "fc8bbef6-9385-4ddb-90ba-e41eaccc035b",
+  "tracked_source_records": 603,
+  "unchanged_inspection_reader": {
+    "bytes": 10432,
+    "path": "tests/verify_host_sd.py",
+    "sha256": "eafe848535f9aac8108a8e9953f89c23adf8da70741e39fe657d1247ba1480fb"
+  },
+  "validation": {
+    "git_diff_check": "passed",
+    "initial_test_launch_refusal": {
+      "log": {
+        "bytes": 89,
+        "path": "out/nvme-firmware-sd-20261107/full-tests.log",
+        "sha256": "1b213719e86e454839a04e02fb034ee773356fe047089280052f20c8854e9b36"
+      },
+      "reason": "Nonsudo shell could not enter root-private checkout; no tests ran. Corrected root-shell invocation passes."
+    },
+    "python_ast_and_tracked_toml_parse": "passed",
+    "shell_and_assembly": {
+      "assembly_cases": 4,
+      "bash_syntax": "passed",
+      "log": {
+        "bytes": 1087,
+        "path": "out/nvme-firmware-sd-20261107/shell-assembly.log",
+        "sha256": "2ba75a431cda75d8f5cd3d400885a25ae7d649f624a70d5ba730c355f94edf48"
+      },
+      "shell_suites": 5
+    },
+    "ubuntu_unittests": {
+      "cases": 1596,
+      "errors": 0,
+      "failures": 0,
+      "log": {
+        "bytes": 5223,
+        "path": "out/nvme-firmware-sd-20261107/full-tests-root.log",
+        "sha256": "ab7410f333e376742eb8e0bd5ded5f4e4ff23b8f782a810cdf512fb722601c91"
+      },
+      "skipped": 0
+    }
+  }
+}

@@ -44,9 +44,11 @@ only their generated `work` subtrees. It recovers **2.48 GB**, leaving
 left **23,830,810,624 bytes**, admitting the subsequent
 [full NVMe composition](production-nvme-composition.md). It completed with
 20,710,158,336 bytes minimum free and 7,413,485,568 bytes minimum available RAM.
-Final free is **22,245,568,512 bytes**, below the next initial 22 GiB guard before
-staging overhead. Verified retention is needed for further builds; keep every
-guard. No additional LV growth is authorized.
+Final NVMe free was **22,245,568,512 bytes**. The subsequent
+[NVMe-first firmware transport SD](nvme-firmware-test-sd.md) passes its separate
+4 GiB recipe budget plus staging and leaves **21,618,569,216 bytes**. This remains
+below the next full-NVMe initial 22 GiB guard before staging overhead. Verified
+retention is needed for that construction; keep every guard. No additional LV growth is authorized.
 The LV UUID, root source and filesystem type are unchanged. No Orange Pi storage
 was touched. Codex has a separate 256 MiB free-space minimum for retention copies.
 [Native capacity recovery and candidate retention](nvme-candidate-retention.md)

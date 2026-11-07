@@ -88,6 +88,9 @@ partition explicitly and document manual recovery. The [separate component recip
 policy and a guarded NVMe host script without changing existing diagnostic
 producers. Independent source review and focused fixtures pass. [Actual compilation and independent artifact inspection](evidence/uboot-nvme-candidate-20261107.json)
 now pass, including the linked ARM EL2 call and complete packed payload bindings.
+The [SD firmware transport image](nvme-firmware-test-sd.md) now also passes
+frozen construction and software boot-file inspection; it remains unbooted.
+Its state UUID differs from the installed NVMe, so it is not the next repair image.
 No firmware has been programmed. Its full budget
 preserves the final >4 GB guard, with unchanged runtime floors.
 
