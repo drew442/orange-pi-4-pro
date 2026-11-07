@@ -1,0 +1,84 @@
+{
+  "changes": [
+    "Closed native profile selector authenticates exact small metadata and completed stream provenance; arbitrary state/pin overrides refused.",
+    "Generated private tool/recovery checklists and fixed read-only profile assignments transferred through host-key-authenticated SSH with native checksum-file pin.",
+    "All tool hashes, package pin, exact state marker and runtime mount/ABI guard must pass before NVMe evidence directory creation.",
+    "Common pristine guest-storage, UID sandbox, KVM VM/vCPU descriptor, CPU/disk/network and clean restart/counter proof sequence retained."
+  ],
+  "classification": "Authenticated metadata-only first-KVM preparation for current installed and second-candidate profiles; no guest execution",
+  "date": "2026-11-07",
+  "focused_review": {
+    "guide_bash_blocks": 34,
+    "guide_python_blocks": 9,
+    "helper_tests": 6,
+    "related_runtime_tests": 80
+  },
+  "full_privileged_validation": {
+    "assembly_cases": 5,
+    "bash_scripts": 12,
+    "log": {
+      "bytes": 6531,
+      "path": "out/kvm-profile-validation-20261107/full-validation.log",
+      "sha256": "4278e4a8827d580389177b4088302917ff4597065210456d7815a15e67a7059a"
+    },
+    "python310_grammar": true,
+    "shell_suites": 5,
+    "skips": 0,
+    "terminal_exit_code": 0,
+    "toml_files": 5,
+    "unit_tests": 1682
+  },
+  "guest_execution": false,
+  "hardware_acceptance": false,
+  "independent_review": {
+    "bytes": 3850,
+    "model": "gpt-6.1-sol",
+    "path": "out/kvm-profile-validation-20261107/independent-review.json",
+    "reasoning_effort": "high",
+    "result": "pass",
+    "sha256": "4ecbc7a4e66ba43e3db335c6831e59fde5df73f76201467b3dcf73c4709ce237"
+  },
+  "installed_runtime_changed": false,
+  "limits": [
+    "Actual profile generation and software fixtures only. No physical target activation, guest execution, SSH repair, reboot, KVM or release acceptance.",
+    "Metadata generator does not hash/decode the retained large image; the guide separately verifies encoded recovery bytes and uses existing completed expansion evidence.",
+    "No installed runtime/image was changed; current board still requires existing-install machine-id repair."
+  ],
+  "native_cli_results": {
+    "bytes": 4691,
+    "path": "out/kvm-profile-validation-20261107/native-cli-results.json",
+    "sha256": "4acca25a595cab177353a0b303ad66367754e5aa2080da39adeccb88bdd647eb"
+  },
+  "physical_device_writes": false,
+  "profiles": {
+    "candidate-repeat-20261107": {
+      "guest_uuid": "5f980211-35f5-4436-98c6-6a750eb1fc3c",
+      "installed_tool_count": 40,
+      "state_uuid": "feaaee34-d782-4c18-bd04-1029540ab26a"
+    },
+    "installed-20261106": {
+      "guest_uuid": "3dd7373a-c4b2-42e2-867a-bc5f39039285",
+      "installed_tool_count": 39,
+      "state_uuid": "00fd936c-49fb-4fea-87c8-928b9c1599e0"
+    }
+  },
+  "schema": 1,
+  "source_files": {
+    "docs/kvm-first-guest.md": {
+      "bytes": 33919,
+      "path": "docs/kvm-first-guest.md",
+      "sha256": "ffa9eb3aa65494363fc626ad5cdf7244a5dfbb94040a0f505d481d43500959b0"
+    },
+    "scripts/prepare-first-kvm.py": {
+      "bytes": 10225,
+      "path": "scripts/prepare-first-kvm.py",
+      "sha256": "0cec457b4fa59e7dd22eba24694537c7eb31d171747004d5818fb9ad989fb986"
+    },
+    "tests/test_prepare_first_kvm.py": {
+      "bytes": 7460,
+      "path": "tests/test_prepare_first_kvm.py",
+      "sha256": "4a989e51a877eb9f13ee3ac970537e5bbaf2fc8089cbeca42f5de4ced47ad712"
+    }
+  },
+  "source_revision": "07eb15cd4bdedee2efa3f6a8f8c55959a5760db9"
+}
