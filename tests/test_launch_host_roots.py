@@ -100,7 +100,10 @@ class LauncherTests(unittest.TestCase):
                     self.digest = actual_sha()
                 def update(self, chunk):
                     self.digest.update(chunk)
+                    previous = source.stat()
                     source.write_bytes(b'mutated!')
+                    # Make the mutation observable on coarse filesystem clocks.
+                    os.utime(source, ns=(previous.st_atime_ns, previous.st_mtime_ns + 10**9))
                 def hexdigest(self):
                     return self.digest.hexdigest()
             expected = m.pin(b'original')

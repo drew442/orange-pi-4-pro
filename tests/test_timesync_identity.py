@@ -199,7 +199,11 @@ class TimesyncIdentityTests(unittest.TestCase):
             data = original_read(descriptor, count)
             if not changed:
                 changed = True
+                passwd = self.root / 'etc/passwd'
+                previous = passwd.stat()
                 self.replace('passwd', PASSWD.replace('root:x:', 'root:!:'))
+                # Make the mutation observable on coarse filesystem clocks.
+                os.utime(passwd, ns=(previous.st_atime_ns, previous.st_mtime_ns + 10**9))
             return data
 
         with mock.patch.object(identity.os, 'read', side_effect=mutate_after_read):
