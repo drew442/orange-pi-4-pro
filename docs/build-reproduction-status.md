@@ -23,16 +23,17 @@ artifacts remain bound to [the deployment guide](deploy-personalized-20261106.md
 | ARM userspace configuration/export | [Actual configuration/export](evidence/userspace-configured-export-20261106.json): 220 exact configured packages, clean dpkg/APT audits, identity cleanup; all 15,881 archive members independently verified | [Tracked configuration replay](userspace-configuration-replay.md), [normalized pair](userspace-export-reproducibility.md) and [fresh raw-package pipeline](userspace-fresh-pipeline.md) match compressed/raw/BOM bytes; production composition and independent deployment remain open |
 | Tracked userspace orchestration | [Actual launcher execution](evidence/userspace-tracked-execution-20261106.json): fresh raw inputs, all three phases, 220 packages, exact normalized archive, unchanged host inventory and clean process/mount exit | Production root/state/NVMe composition and independent deployment remain open |
 | Device metadata | [Fixture](evidence/fakeroot-device-metadata-20261106.json), [two-phase candidate](evidence/fakeroot-metadata-candidate-20261106.json) | Virtual archive/image devices do not prove hardware access |
-| Complete historical root archive | [Full staging comparison](evidence/full-root-metadata-fixture-20261106.json), [complete diagnostic image readback](evidence/full-root-image-readback-20261106.json): 15,892 paths, 518,081,083 regular-file bytes, links/devices/attributes | Diagnostic 1 GiB image; production 4 GiB slots remain open |
-| Authenticated userspace profiles | [Explicit selection and actual staging](userspace-profiles.md): normalized/default pins, 12 provenance files, complete 15,876-entry extraction, 220 packages, eight package-state components and closed runtime; `timesync-20261106` is now an explicit opt-in profile while baseline default and normalized selection remain unchanged | Time-enabled production images are not built; existing baseline artifacts remain unchanged |
-| Root/state recipe integration | [Optional metadata backend](evidence/root-metadata-backend-20261106.json), [preparation](root-reconstruction-preparation.md), and [time integration](evidence/time-profile-integration-20261107.json): source-wired profile provenance, 221-package metadata, private clock initializer, boot audit and update directory guard; frozen-builder component passed 15,909-entry extraction, 221 tuples, eight per-root package components, four management files, 40 tool files, and a 256 MiB non-deployable clock-state fixture | Production roots now pass complete readback; 8 GiB state and NVMe remain open; published baseline artifacts are unchanged |
-| Production A/B roots | [Frozen construction and full readback](evidence/production-host-roots-20261107.json): actual 4 GiB slots, 221 packages/332 modules, 86 file hashes, 16,367 paths and every file/link/device/xattr per slot; source and compressed streams independently verified | One construction; repeat, 8 GiB state, matching bootstrap/NVMe and physical deployment remain open |
+| Complete historical root archive | [Full staging comparison](evidence/full-root-metadata-fixture-20261106.json), [complete diagnostic image readback](evidence/full-root-image-readback-20261106.json): 15,892 paths, 518,081,083 regular-file bytes, links/devices/attributes | Diagnostic 1 GiB image; production 4 GiB slots now pass as recorded below |
+| Authenticated userspace profiles | [Explicit selection and actual staging](userspace-profiles.md): normalized/default pins, 12 provenance files, complete 15,876-entry extraction, 220 packages, eight package-state components and closed runtime; `timesync-20261106` is now an explicit opt-in profile while baseline default and normalized selection remain unchanged | Production roots/state now pass as recorded below; matching bootstrap/NVMe and physical acceptance remain open |
+| Root/state recipe integration | [Optional metadata backend](evidence/root-metadata-backend-20261106.json), [preparation](root-reconstruction-preparation.md), and [time integration](evidence/time-profile-integration-20261107.json): source-wired profile provenance, 221-package metadata, private clock initializer, boot audit and update directory guard; frozen-builder component passed 15,909-entry extraction, 221 tuples, eight per-root package components, four management files, 40 tool files, and a 256 MiB non-deployable clock-state fixture | Production roots now pass complete readback; 8 GiB state now passes below; bootstrap/NVMe remain open; published baseline artifacts are unchanged |
+| Production A/B roots | [Frozen construction and full readback](evidence/production-host-roots-20261107.json): actual 4 GiB slots, 221 packages/332 modules, 86 file hashes, 16,367 paths and every file/link/device/xattr per slot; source and compressed streams independently verified | One construction; matching state now passes below; repeat, bootstrap/NVMe and physical deployment remain open |
+| Production personalized state | [Frozen construction and full readback](evidence/production-host-state-20261107.json): actual 8 GiB journaled state, real two-key/config inputs, 38 file hashes, 1,172 paths and complete file/metadata/link readback; corrected machine-id mode and empty clock/host-key directories | One construction; matching bootstrap/NVMe, repeat and physical deployment remain open |
 | Guest fixture | [Fixed seed fixture](evidence/guest-seed-fixture-20261104.json): root/drew byte-identical Jammy builds | No guest has booted; real KVM is mandatory |
-| Time-service identity | [Fixed identity gate and ARM fixture](timesync-identity.md): stable996, old tuples unchanged, repeat/collision checks and independent review | Built archive preserves all old accounts and uniquely adds UID/GID 996; production state/A-B/NTP/hardware unproven |
-| Clock-state preparation | [Audit, private initializer and state fixtures](timesync-state.md), plus [integration evidence](evidence/time-profile-integration-20261107.json): preserved future mtime, exact 996 ownership/modes, UUID guards; actual 32 MiB and 256 MiB non-deployable ext4 readbacks and independent review | Time-enabled production state, installed rollback and NTP remain unproven |
+| Time-service identity | [Fixed identity gate and ARM fixture](timesync-identity.md): stable996, old tuples unchanged, repeat/collision checks and independent review | Built archive preserves all old accounts and uniquely adds UID/GID 996; production state/A-B now pass below; NTP/hardware unproven |
+| Clock-state preparation | [Audit, private initializer and state fixtures](timesync-state.md), plus [integration evidence](evidence/time-profile-integration-20261107.json): preserved future mtime, exact 996 ownership/modes, UUID guards; actual 32 MiB and 256 MiB non-deployable ext4 readbacks and independent review | Time-enabled production state now passes below; installed rollback and NTP remain unproven |
 | Time-service package step | [Offline derivation](timesync-userspace.md): exact 221 input locks, complete base-BOM gate, fixed identity/service policy and independent source/input review | Actual complete 221-package configuration and boot-link checks pass; installed startup and physical behavior remain open |
-| Time-profile export | [Authenticated adapter](timesync-export.md): strict source/receipt/state chain, immutable backend, prepublication bindings and independent review; native builder process cleanup regressions | Complete readback of all 15,909 archive/BOM members passes; time-enabled production roots/state/NVMe remain unbuilt |
-| Time-profile outer orchestration | [Tracked launcher and actual prelude](timesync-outer-launcher.md): base/source/namespace chain, private-propagation handshake, common manifest, guarded clone and measured output contracts; actual early 5 GiB refusal | Actual complete 221-package configuration/export and independent artifact readback pass; the [dated repeat](evidence/account-date-time-execution-20261107.json) now passes with the strict new baseline receipt contract; time-enabled production images and hardware acceptance remain open |
+| Time-profile export | [Authenticated adapter](timesync-export.md): strict source/receipt/state chain, immutable backend, prepublication bindings and independent review; native builder process cleanup regressions | Complete readback of all 15,909 archive/BOM members passes; production roots/state now pass below; matching bootstrap/NVMe remain unbuilt |
+| Time-profile outer orchestration | [Tracked launcher and actual prelude](timesync-outer-launcher.md): base/source/namespace chain, private-propagation handshake, common manifest, guarded clone and measured output contracts; actual early 5 GiB refusal | Actual complete 221-package configuration/export and independent artifact readback pass; the [dated repeat](evidence/account-date-time-execution-20261107.json) now passes with the strict new baseline receipt contract; production roots/state now pass below; integrated images and hardware acceptance remain open |
 | Distribution inputs | [26-input license inventory](evidence/vendor-boot-license-inventory-20261106.json) | Attribution/grants unresolved; no public redistribution clearance claimed |
 
 The November 7 [cross-day failure](userspace-account-date-replay.md) exposed
@@ -44,7 +45,8 @@ complete 15,876-entry readback and source review pass. The failed attempt remain
 recorded. [Time-profile repetition](evidence/account-date-time-execution-20261107.json)
 now also passes with unchanged compressed/raw/BOM pins and complete independent
 15,909-entry readback. Both staged source snapshots match all 27 recorded Git
-blobs; live cleanup and unchanged inventory pass. Production images remain open.
+blobs; live cleanup and unchanged inventory pass. Production roots/state now pass
+below; integrated installation images remain open.
 
 The pinned mke2fs creator copies child modification times at whole-second
 resolution and sets the filesystem root to its creation epoch; diagnostic image
@@ -59,8 +61,8 @@ Capacity recovery is documented in [retention](build-cache-retention.md),
 remain authenticated on codex; restore paths using their maps. [Verified userspace retention](userspace-rebuild-capacity.md) subsequently recovered
 approximately 1.12 GB without losing the five selected artifacts. Recheck actual
 free disk/RAM before every run. The reviewed [20 GiB LVM growth](build-host-capacity-plan.md)
-has a metadata backup and successful dry run, but awaits authorization. No resize
-has occurred; production capacity guards remain mandatory.
+was authorized and executed with a metadata backup and successful online ext4
+growth. The LV is now 88,017,469,440 bytes; production capacity guards remain mandatory.
 
 The [tracked base now passes](userspace-pipeline-launcher.md) after
 [historical root retention](historical-root-retention.md) recovered about 3.53 GB.
@@ -69,13 +71,14 @@ passes after [one more verified cache retirement](evidence/builder-deb-retention
 Source integration is recorded at commit `bb411e3`; its detailed evidence is
 [here](evidence/time-profile-integration-20261107.json). The source now binds the
 time opt-in profile, package state, and clock-state seed/boot/update guards, but
-does not build time-enabled production artifacts. The [dated baseline and time constructions](account-date-replay-driver.md) now
+is component evidence; subsequent production roots/state are recorded below. The [dated baseline and time constructions](account-date-replay-driver.md) now
 pass with preserved closure checks and unchanged historical output pins. Time-enabled
-4 GiB roots now pass construction/full readback; 8 GiB state and NVMe remain open.
+4 GiB roots and 8 GiB personalized state now pass construction/full readback;
+matching bootstrap and NVMe remain open.
 Published baseline artifacts remain unchanged.
 The [approved 20 GiB builder growth](evidence/build-host-capacity-execution-20261107.json)
 now succeeds and leaves 24.28 GB free, above the unchanged 22 GiB staging guard.
-After root construction/readback, current free is 22.81 GB, about 809 MB below
-that final guard. State has a separate construction budget; verified retention
-and staging must restore final-composition headroom without lowering guards. A second operator must
+After root/state construction and readback, free is 22.53 GB, about 1.10 GB below
+that final guard. Verified retention and staging must restore final-composition
+headroom without lowering guards. A second operator must
 reproduce deployment from the guide; build proofs cannot satisfy physical release gates.

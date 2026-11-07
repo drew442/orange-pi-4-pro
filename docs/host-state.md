@@ -29,8 +29,13 @@ The source-integrated opt-in `timesync-20261106` profile calls
 owned by 996:996 with mode 0755. Baseline and normalized profile seeding does
 not initialize it. Production initialization authenticates the helper hash
 before file moves. Existing state is never automatically migrated. The
-[initializer and fixture evidence](timesync-state.md) covers components, not a
-complete production state image or physical rollback.
+[initializer and fixture evidence](timesync-state.md) covers its historical components. The new production-state evidence is linked
+above; physical rollback remains unproven.
+
+The [production time-enabled state](production-host-state.md) now supplies a new
+8 GiB component bound to the verified production roots, with both real keys and
+complete filesystem readback. It has not replaced the published images or been
+installed. Its unique UUID differs from the running installation.
 
 ## Inputs and creation
 

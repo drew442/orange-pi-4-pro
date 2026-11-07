@@ -126,10 +126,12 @@ remain unchanged. **Do not repeat NVMe installation to fix management.**
   [production 4 GiB A/B roots](production-host-roots.md) now build in the frozen
   namespace and pass complete readback: 16,367 paths, all file bytes/links/device
   records and raw attributes per slot, plus independent artifact/source review.
-  One construction is proved; a repeat, 8 GiB state, matching bootstrap and full
-  NVMe reconstruction remain open. Latest Ubuntu unittest discovery runs
-  **1,491 cases, 112 skips, no failures**; five shell suites and four assembly
-  cases pass. Within-tick mutation fixtures now force observable mtime changes;
+  The matching [production 8 GiB state](production-host-state.md) now also builds
+  and passes complete readback: 1,172 paths, both keys, corrected machine-id
+  permissions, fixed clock ownership and selected root A. One construction each
+  is proved; repeats, matching bootstrap and full NVMe reconstruction remain open.
+  Latest Ubuntu unittest discovery runs **1,513 cases, 112 skips, no failures**;
+  five shell suites and four assembly cases pass. Within-tick mutation fixtures now force observable mtime changes;
   runtime/source guards are unchanged. See [root evidence](evidence/production-host-roots-20261107.json).
   These checks establish no physical acceptance or independent deployment.
 
@@ -148,18 +150,19 @@ remain unchanged. **Do not repeat NVMe installation to fix management.**
    and [repeated time profile](evidence/account-date-time-execution-20261107.json)
    now pass: 220/221 packages and unchanged compressed/raw/BOM bytes. Independent
    complete 15,876/15,909-entry readbacks, source review and all 46 account-date
-   tests under root pass. Reconstruct production roots/state/NVMe next; software
-   reproduction does not establish physical deployment acceptance.
+   tests under root pass. Production roots and personalized state now pass
+   construction and full readback. Build their matching bootstrap and NVMe next; software reproduction
+   does not establish physical deployment acceptance.
    [Kernel replay retention](kernel-run-retention.md) preserves the expanded tree
    as verified archives on two hosts. [Byte-preserving conversion](evidence/candidate-sd-sparsification-20261107.json)
    recovered 663 MB from three generated image copies. The compiled candidate
    and subsequent file-assembly fixture left 4.01 GB free before expansion. The
    operator-approved [20 GiB builder LVM growth](build-host-capacity-plan.md) now
    succeeded and initially passed the unchanged 22 GiB staging guard. Production
-   A/B roots and complete readback now pass. Construct the 8 GiB state next using
-   real operator inputs, and prepare verified retention/staging before final
-   composition: current free is **22.81 GB**, about **809 MB below** the final
-   22 GiB guard. No guard reduction or additional LV growth is authorized.
+   A/B roots and personalized 8 GiB state now pass complete readback. Build the
+   matching bootstrap and prepare verified retention/staging before final
+   composition: free after state construction is **22.53 GB**, about **1.10 GB below**
+   the final 22 GiB guard. No guard reduction or additional LV growth is authorized.
    The [candidate build and exact replay](uboot-nvme-candidate.md)
    pass independent inspection. The file-only SPI assembler passes synthetic
    fixtures; its actual board backup/candidate and hardware handoff remain open.

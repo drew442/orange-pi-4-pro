@@ -25,7 +25,8 @@ sudo update-binfmts --display qemu-aarch64
 sudo losetup -f
 ```
 
-Package logs remain on the builder at `/tmp/orangepi-apt-update.log` and `/tmp/orangepi-apt-install.log`; temporary logs are not release evidence archives. No disk resizing or OS replacement was performed.
+Package logs remain on the builder at `/tmp/orangepi-apt-update.log` and `/tmp/orangepi-apt-install.log`; temporary logs are not release evidence archives. No disk resizing or OS replacement was performed during initial preparation;
+the later authorized LV expansion is recorded below.
 
 ## Current cache capacity
 
@@ -34,10 +35,11 @@ now completes successfully, including online ext4 enlargement. The LV is
 88,017,469,440 bytes; free space immediately after growth was **24.28 GB**, above
 the unchanged 22 GiB staging guard by about 663 MB. The subsequent
 [production roots and full readback](production-host-roots.md) now leave
-**22.81 GB**, about **809 MB below** that final-composition guard. Both actual
-4 GiB root slots pass, and the retained work tree allocates 1.23 GB. State still
-has its own construction budget; verified retention/staging must recover final
-composition headroom without reducing guards. The LV UUID,
+**22.53 GB** after the subsequent [production state](production-host-state.md),
+about **1.10 GB below** that final-composition guard. Both actual 4 GiB root
+slots and the 8 GiB state pass complete readback. Their retained work trees
+allocate 1.23 GB and 104 MB respectively. Verified retention/staging must recover
+final composition headroom without reducing guards. The LV UUID,
 root source and filesystem type are unchanged. No Orange Pi storage was touched.
 
 
