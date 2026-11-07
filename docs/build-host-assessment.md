@@ -39,8 +39,10 @@ pass complete readback, leaving 22.53 GB before retention. Their work trees
 allocate 1.23 GB and 104 MB respectively. [Verified workspace retention](composition-retention.md)
 then archives three older terminal work trees on build and codex and retires
 only their generated `work` subtrees. It recovers **2.48 GB**, leaving
-**24,148,152,320 bytes**, only **525,832,192 bytes above** the unchanged final
-22 GiB composition guard. Recheck after bootstrap and staging; keep every guard.
+**24,148,152,320 bytes** before the matching bootstrap. Its completed
+[construction and byte-preserving sparsification](production-host-bootstrap.md)
+leave **23,830,810,624 bytes**, only **208,490,496 bytes above** the unchanged
+22 GiB composition guard. Recheck each further staging step; keep every guard.
 The LV UUID, root source and filesystem type are unchanged. No Orange Pi storage
 was touched. Codex has a separate 256 MiB free-space minimum for retention copies.
 

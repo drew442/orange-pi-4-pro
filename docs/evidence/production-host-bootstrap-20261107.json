@@ -1,0 +1,358 @@
+{
+  "agent_routing": {
+    "implementation": {
+      "effort": "medium",
+      "model": "gpt-6.1-sol"
+    },
+    "independent_review": {
+      "effort": "high",
+      "model": "gpt-6.1-sol"
+    },
+    "maximum_active_children": 2,
+    "usage_and_cost": "Not exposed; no savings claim."
+  },
+  "boot_inputs": {
+    "Image": {
+      "bytes": 27283464,
+      "sha256": "9df974c55fa61a77e8fe812652780dad471527eb9615c27838f481887d4c50e7"
+    },
+    "board.dtb": {
+      "bytes": 209320,
+      "sha256": "4d7d964a54668cf5dc12cd4bf7e72a625c79883541272aeba1a91adbbedb86ed"
+    },
+    "boot0_sdcard.fex": {
+      "bytes": 245760,
+      "sha256": "9213f1c56ef932930d43b5751e8937bea0e9ae7460ec16187cc1b0dffdb75345"
+    },
+    "boot_package.fex": {
+      "bytes": 1392640,
+      "sha256": "b20c3d1133aee6474416bc9846b0bf94d5439aa12d7f7555b44607105ddab3b6"
+    },
+    "kernel.config": {
+      "bytes": 212080,
+      "sha256": "8a29d9c36e52db7e8a7d6ff757dc69e660f4273c99e5f00c5dbc5a9b7e060675"
+    },
+    "uImage": {
+      "bytes": 27283528,
+      "sha256": "6f9269755c4c2bc196c094899fa1ff20292f4d762c4000f77fcbb0887d5f154a"
+    }
+  },
+  "boot_profile": {
+    "evidence": {
+      "bytes": 6582,
+      "path": "docs/evidence/el2-diagnostic-20261104.json",
+      "sha256": "9c30d5d873fa8ad154b8068cdebfc7f40f6487ce6a79f76a52da4dd44ba1b5f8"
+    },
+    "expected_spsr": "0x3c9",
+    "name": "experimental-el2",
+    "physical_acceptance_pending": true,
+    "target_service": "0x8000ff40"
+  },
+  "boot_script": {
+    "bytes": 1115,
+    "sha256": "d65f4dc811150fed3ab9b67722e6b327341d388b0263907380c9bf59497fd93f"
+  },
+  "builder": "drew@build.drewnet.online",
+  "builder_packages": {
+    "bash": {
+      "architecture": "amd64",
+      "version": "5.1-6ubuntu1.1"
+    },
+    "coreutils": {
+      "architecture": "amd64",
+      "version": "8.32-4.1ubuntu1.4"
+    },
+    "e2fsprogs": {
+      "architecture": "amd64",
+      "version": "1.46.5-2ubuntu1.2"
+    },
+    "libpython3.10-stdlib": {
+      "architecture": "amd64",
+      "version": "3.10.12-1~22.04.18"
+    },
+    "python3.10-minimal": {
+      "architecture": "amd64",
+      "version": "3.10.12-1~22.04.18"
+    },
+    "u-boot-tools": {
+      "architecture": "amd64",
+      "version": "2022.01+dfsg-2ubuntu2.9"
+    },
+    "util-linux": {
+      "architecture": "amd64",
+      "version": "2.37.2-4ubuntu3.6"
+    }
+  },
+  "classification": "Actual frozen-builder immutable EL2 bootstrap bound to new production time-enabled state; component only, no physical boot or integrated release acceptance",
+  "compressed_image": {
+    "bytes": 17271918,
+    "sha256": "2942d0ab174d23f1dfd43e83d58c2e8ba8c99cff09a55d527fe4e46f4be27a1c"
+  },
+  "date": "2026-11-07",
+  "hardware_acceptance": false,
+  "image": {
+    "bytes": 268435456,
+    "sha256": "beb4ae47ea536e2b7601f29f3ddc89e14d8bb15670b3e52d56271a76f50136e7"
+  },
+  "image_fits_actual_sd": {
+    "fits": true,
+    "image_bytes": 268435456,
+    "sd_bytes": 1977614336
+  },
+  "independent_review": {
+    "bytes": 6439,
+    "findings": [],
+    "path": "out/host-bootstrap-timesync-01-20261107/independent-review.json",
+    "scope": "587 immutable Git blobs; retained output hashes; complete gzip expansion; raw headers/firmware regions; all newc entries/wrappers in RAM; source/proof/sparse metadata. Complete SD filesystem inspection attributed to reviewed producer run.",
+    "sha256": "73cb8e8b4c91e5afd59cd082302923d86f5ccc2527effc10c7d0306d0d434bd2"
+  },
+  "initial_budget": {
+    "capsule_bytes": 232286652,
+    "git_staging_bound_bytes": 125682875,
+    "recipe_bytes": 4294967296,
+    "required_free_bytes": 4652936823
+  },
+  "isolation": {
+    "host_inventory_unchanged": true,
+    "mapped_processes_final": [],
+    "phase_mounts_final": [],
+    "probe": {
+      "ipv6_loopback_routes": [
+        "00000000000000000000000000000001 80 00000000000000000000000000000000 00 00000000000000000000000000000000 00000100 00000001 00000000 00000001       lo",
+        "00000000000000000000000000000000 00 00000000000000000000000000000000 00 00000000000000000000000000000000 ffffffff 00000001 00000000 00200200       lo",
+        "00000000000000000000000000000001 80 00000000000000000000000000000000 00 00000000000000000000000000000000 00000000 00000002 00000000 80200001       lo",
+        "00000000000000000000000000000000 00 00000000000000000000000000000000 00 00000000000000000000000000000000 ffffffff 00000001 00000000 00200200       lo"
+      ],
+      "network_interfaces": [
+        "lo"
+      ],
+      "prohibited_capability_mask": "0xa631000",
+      "uid_base": 1048576,
+      "uid_count": 65536
+    }
+  },
+  "limits": [
+    "One bootstrap construction; complete integrated NVMe assembly and clean repeat remain open.",
+    "Bootstrap consumes original baseline archive only for locked storage-tool binaries; production roots/state use separately pinned time-enabled profile.",
+    "Producer executes reviewed complete raw-layout/wrapper/newc/gzip inspection inside frozen namespace; independent artifact audit scope recorded separately.",
+    "No physical boot, automatic DHCP/SSH/NTP, real KVM guest, cycle/endurance, SD-write, update/rollback/recovery or reproduced deployment acceptance established.",
+    "Free-space guard is passed after byte-preserving sparsification only; recheck admission for every subsequent staging operation."
+  ],
+  "native_retention": {
+    "compressed_image_and_initramfs_retained": true,
+    "directory": "out/host-bootstrap-timesync-01-20261107",
+    "raw_image_retained": false,
+    "raw_image_transiently_copied": true,
+    "transfer_correction": {
+      "action": "Incorrect leading ./ exclusion caused dense duplicate transfer. Verified duplicate matched hash then removed only duplicate. Builder original and gzip unchanged.",
+      "record": {
+        "bytes": 481,
+        "sha256": "fbc5915cec626acfe458bc16910ef529d49beed76984e32e220d28e610d14b3b"
+      },
+      "reserve_restored": true,
+      "temporary_free_bytes": 159158272
+    }
+  },
+  "output": "work/project/out/host-sd-timesync-01",
+  "phase": "/var/lib/a733-clean-replay-20261106/host-bootstrap-timesync-01",
+  "physical_storage_written": false,
+  "producer_records": {
+    "receipt.json": {
+      "bytes": 169867,
+      "sha256": "695521ceca818858992503f6507e265469d777a78d2324b08d1d7675e4992571"
+    },
+    "runtime.log": {
+      "bytes": 3174,
+      "sha256": "8cd0c55eebd2513ab2df83f321f57c2767f8183e2b21d0da91319e0f51457c83"
+    },
+    "source-manifest.json": {
+      "bytes": 123476,
+      "sha256": "94d57f362622038e747ecef2423857cb718c1b585b1163f74e0d530e1adaeeca"
+    },
+    "staged.json": {
+      "bytes": 165012,
+      "sha256": "b6e978c5d7c482bfc1d4a432a5ab9d0df74d9f53da2aabe354e54cdd529531ab"
+    }
+  },
+  "published_deployment_images_changed": false,
+  "readback_expectations": {
+    "checks": {
+      "classification": "independent regular-file host SD checks; hardware acceptance pending",
+      "gzip_expansion": "passed",
+      "host_script_crc_and_contents": "passed",
+      "image": {
+        "bytes": 268435456,
+        "sha256": "beb4ae47ea536e2b7601f29f3ddc89e14d8bb15670b3e52d56271a76f50136e7"
+      },
+      "initramfs_entries_checked": 424,
+      "initrd_wrapper_and_payload": "passed",
+      "legacy_ext4_features": [
+        "ext_attr",
+        "resize_inode",
+        "dir_index",
+        "filetype",
+        "extent",
+        "flex_bg",
+        "sparse_super",
+        "large_file",
+        "huge_file",
+        "dir_nlink",
+        "extra_isize"
+      ],
+      "mbr_and_raw_blobs": "passed",
+      "physical_storage_writes": false,
+      "pinned_kernel_and_dtb": "passed",
+      "state_uuid": "fc8bbef6-9385-4ddb-90ba-e41eaccc035b"
+    },
+    "hardware_acceptance": false,
+    "inspection": {
+      "bytes": 669,
+      "sha256": "b3e340724f1828c9601f4a2f1424fd6003891d29ea09582586ce38dd21e176c9"
+    }
+  },
+  "resources": {
+    "builder_free_bytes_after_sparsification": 23830810624,
+    "composition_guard_bytes": 23622320128,
+    "final_before_sparsification": {
+      "available_memory_bytes": 7510192128,
+      "free_bytes": 23595245568,
+      "time": 1794035213.5631747
+    },
+    "guard_margin_after_sparsification_bytes": 208490496,
+    "minimum_available_memory_bytes": 7412342784,
+    "minimum_free_bytes": 23251279872,
+    "native_free_bytes_at_evidence": 426942464,
+    "native_minimum_bytes": 268435456,
+    "retained_tree_before_sparsification": {
+      "actual_block_character_devices": [],
+      "allocated_bytes": 305528832
+    }
+  },
+  "schema": 1,
+  "source_revision": "885b2441caf35d6c7f96058468f4db85f7d10405",
+  "source_userspace_profile": "original-baseline-storage-tools-only",
+  "sparsification": {
+    "independent_review": {
+      "approved_code_sha256": "43ad531a731df2de6fc5824f62fe643ea69e07113db3d618a8c13c9793a9d98a",
+      "approved_readiness_sha256": "199338fe29eacc4010c821cd122de08f70e4668333a544ec44753192892169dd",
+      "effort": "high",
+      "model": "gpt-6.1-sol"
+    },
+    "records": {
+      "complete.json": {
+        "bytes": 868,
+        "sha256": "5620b5cc3c164649d37b8eb99cc942e323230afa782b369e699303176468cf03"
+      },
+      "completed-file-0.json": {
+        "bytes": 660,
+        "sha256": "a0ad7038ce202fcbe65e4ff337db6f83e9b20c32dfe1c2b197a35a31e19958a2"
+      },
+      "intent.json": {
+        "bytes": 390,
+        "sha256": "248b3dcf8d68cc4be34560420622efff8e89072bff9187aab237097767921b57"
+      },
+      "readiness.json": {
+        "bytes": 1004,
+        "sha256": "199338fe29eacc4010c821cd122de08f70e4668333a544ec44753192892169dd"
+      },
+      "sparsify.py": {
+        "bytes": 6550,
+        "sha256": "43ad531a731df2de6fc5824f62fe643ea69e07113db3d618a8c13c9793a9d98a"
+      },
+      "thread-guard.py": {
+        "bytes": 23759,
+        "sha256": "c2733612a3c1fbcf7729be13a2579a11dbbeddd9f0e2d4ac7592ef75e67d32fa"
+      }
+    },
+    "result": {
+      "files": [
+        {
+          "allocated_after": 32591872,
+          "allocated_before": 268435456,
+          "full_size_and_hash": {
+            "bytes": 268435456,
+            "sha256": "beb4ae47ea536e2b7601f29f3ddc89e14d8bb15670b3e52d56271a76f50136e7"
+          },
+          "mtime_preserved": true,
+          "signature": [
+            64512,
+            1742990,
+            33188,
+            1048576,
+            1048576,
+            1,
+            268435456,
+            1794035206161521141,
+            1794035206161521141
+          ],
+          "spec": {
+            "bytes": 268435456,
+            "inode": 1742990,
+            "path": "/var/lib/a733-clean-replay-20261106/host-bootstrap-timesync-01/work/project/out/host-sd-timesync-01/a733-host-sd.img",
+            "sha256": "beb4ae47ea536e2b7601f29f3ddc89e14d8bb15670b3e52d56271a76f50136e7"
+          }
+        }
+      ],
+      "free_after": 23830822912,
+      "physical_device_writes": false,
+      "success": true
+    },
+    "zero_extent_fixture_tests": {
+      "log": {
+        "bytes": 821,
+        "sha256": "25d017b15cc212e3908974b4d07a05b6281c50e181ffc51f84dd436f0ef3b41b"
+      },
+      "passed": 5,
+      "skipped": 0
+    }
+  },
+  "state_evidence": "docs/evidence/production-host-state-20261107.json",
+  "state_identity_binding": "fc8bbef6-9385-4ddb-90ba-e41eaccc035b belongs to new state component, not installed NVMe state UUID 00fd936c-49fb-4fea-87c8-928b9c1599e0; do not flash bootstrap alone",
+  "state_receipt_sha256": "3abeb7ba014eae05acebfd7af3b75dab7c4c58999b96d8c752163bb96a2ccd33",
+  "state_uuid": "fc8bbef6-9385-4ddb-90ba-e41eaccc035b",
+  "tracked_source_records": 587,
+  "validation": {
+    "git_diff_check": "passed",
+    "previous_failed_fullsuite": {
+      "log": {
+        "bytes": 8883,
+        "sha256": "669d6acc2dbb4fa2ebf67c4163ec5b8e472ddeb540876ca91fdf244ee4403ac0"
+      },
+      "reason": "Incorrect whole-suite -I invocation removed cwd imports; a same-length marker mutation fixture could also occur within one filesystem clock tick. Standard invocation and explicit fixture mtime correct both; runtime guards unchanged."
+    },
+    "shell_and_assembly": {
+      "assembly_cases": 4,
+      "log": {
+        "bytes": 1087,
+        "sha256": "3695ce0aba692532041e789f629eb193674f043e905a2835d58593820f149b8b"
+      },
+      "shell_suites": 5,
+      "unchanged_shell_sources": "Executed during state validation; no shell source changed for bootstrap."
+    },
+    "ubuntu_unittests": {
+      "cases": 1530,
+      "errors": 0,
+      "failures": 0,
+      "invocation": "sudo python3 -B -m unittest discover -s tests -p test_*.py",
+      "log": {
+        "bytes": 5232,
+        "sha256": "af7f2dd70490ee784e07979b83f85fef817221a1e3091c9d9235898819c4171d"
+      },
+      "skipped": 0
+    }
+  },
+  "verification": {
+    "files_verified": 5,
+    "fits_actual_sd": true,
+    "hardware_acceptance": false,
+    "image_bytes": 268435456,
+    "initramfs_manifest": {
+      "bytes": 75532,
+      "sha256": "eeff00ffd0145b023c1c1eb7c6cf70de43b7b6da0ffaa499d244901679de607c"
+    },
+    "manifest": {
+      "bytes": 8766,
+      "sha256": "9feb3451a8776f2dfe2ca9f4ee092e51c31a897b1788f34984099ccfa7ded7e6"
+    }
+  }
+}

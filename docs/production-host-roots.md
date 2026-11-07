@@ -4,7 +4,8 @@ The [construction and readback evidence](evidence/production-host-roots-20261107
 records two actual **4 GiB** root components built in the frozen Ubuntu 22.04
 namespace. Both pass complete filesystem readback. This is one construction;
 the matching [8 GiB state](production-host-state.md) now also passes construction
-and complete readback. Repeat-build reproducibility, matching bootstrap and final
+and complete readback, and the [matching bootstrap](production-host-bootstrap.md)
+passes construction and inspection. Repeat-build reproducibility and the final
 NVMe image remain open. The published deployment images are unchanged, and the
 [existing-install repair](installed-host-repair-20261107.md) remains the next board
 action. These components are not a replacement SD or whole-drive image.

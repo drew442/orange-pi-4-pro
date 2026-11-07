@@ -129,7 +129,9 @@ remain unchanged. **Do not repeat NVMe installation to fix management.**
   The matching [production 8 GiB state](production-host-state.md) now also builds
   and passes complete readback: 1,172 paths, both keys, corrected machine-id
   permissions, fixed clock ownership and selected root A. One construction each
-  is proved; repeats, matching bootstrap and full NVMe reconstruction remain open.
+  is proved. The matching [256 MiB EL2 bootstrap](production-host-bootstrap.md) now
+  also builds and passes boot-file, wrapper/newc/gzip checks and independent
+  artifact review. Repeats and full NVMe reconstruction remain open.
   Latest privileged Ubuntu unittest discovery runs **1,530 cases, no skips or failures**;
   five shell suites and four assembly cases pass. Within-tick mutation fixtures now force observable mtime changes;
   runtime/source guards are unchanged. See [root evidence](evidence/production-host-roots-20261107.json).
@@ -151,7 +153,7 @@ remain unchanged. **Do not repeat NVMe installation to fix management.**
    now pass: 220/221 packages and unchanged compressed/raw/BOM bytes. Independent
    complete 15,876/15,909-entry readbacks, source review and all 46 account-date
    tests under root pass. Production roots and personalized state now pass
-   construction and full readback. Build their matching bootstrap and NVMe next; software reproduction
+   construction and full readback, and the matching immutable bootstrap now passes. Compose NVMe next; software reproduction
    does not establish physical deployment acceptance.
    [Kernel replay retention](kernel-run-retention.md) preserves the expanded tree
    as verified archives on two hosts. [Byte-preserving conversion](evidence/candidate-sd-sparsification-20261107.json)
@@ -159,11 +161,11 @@ remain unchanged. **Do not repeat NVMe installation to fix management.**
    and subsequent file-assembly fixture left 4.01 GB free before expansion. The
    operator-approved [20 GiB builder LVM growth](build-host-capacity-plan.md) now
    succeeded and initially passed the unchanged 22 GiB staging guard. Production
-   A/B roots and personalized 8 GiB state now pass complete readback. Build the
-   matching bootstrap before final composition. [Verified workspace retention](composition-retention.md)
+   A/B roots and personalized 8 GiB state pass complete readback; the matching
+   immutable bootstrap now passes software inspection. [Verified workspace retention](composition-retention.md)
    archives three terminal work trees on both hosts and recovers 2.48 GB; free
-   after retirement is **24.15 GB**, only **526 MB above** the unchanged 22 GiB
-   guard. Recheck after bootstrap/staging. No guard reduction or additional LV
+   after bootstrap and byte-preserving sparsification is **23.83 GB**, only
+   **208 MB above** the unchanged 22 GiB guard. Recheck every further staging step. No guard reduction or additional LV
    growth is authorized.
    The [candidate build and exact replay](uboot-nvme-candidate.md)
    pass independent inspection. The file-only SPI assembler passes synthetic
