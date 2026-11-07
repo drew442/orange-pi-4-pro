@@ -102,12 +102,22 @@ and [hush exit handling](https://github.com/orangepi-xunlong/u-boot-orangepi/blo
 Bash control-flow fixtures check these intended branches; they do not execute
 U-Boot or Linux.
 
-The firmware retains its broader distro scan: other bootable partitions,
-`/` and `/boot/`, extlinux, script alternatives and EFI. The script's guards
-restrict its own payload reads only. Before deployment, independently verify the
-reviewed boot-partition file list and GPT flags; do not claim the whole firmware
-has a closed partition/file policy. The current installed `/boot/boot.scr` is
-the earlier SD-oriented script and must not be presented as this candidate.
+The firmware retains its broader distro scan: bootable partitions, `/` and
+`/boot/`, extlinux and both script alternatives. The
+[linked-firmware clarification](evidence/nvme-firmware-search-policy-20261107.json)
+confirms that **EFI loading is disabled in this exact candidate**; its conditional
+EFI code is absent from the linked scan. It also confirms the vendor's unnumbered
+`bootcmd_nvme` and partition-1 fallback: five Linux-type GPT entries with zero
+attributes produce an empty bootable list, remove `devplist`, then select partition 1.
+
+The script's guards restrict its own payload reads only. Before deployment,
+independently verify the complete boot-partition file list and actual GPT types/
+flags; do not claim the whole firmware has a closed partition/file policy.
+The current installed `/boot/boot.scr` is the earlier SD-oriented script and must
+not be presented as this candidate. The new opt-in `spi-nvme-v1` profile in
+`build/nvme-image.py` integrates this separate script into a future NVMe BOOT
+filesystem while leaving its matching SD bootstrap unchanged. Its full image
+construction and physical boot are not established by source integration.
 
 The outer launcher independently checks the generated script's legacy header,
 architecture/type, timestamp, CRCs, size table and exact source bytes. Host

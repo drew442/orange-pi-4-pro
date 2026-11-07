@@ -1,0 +1,112 @@
+{
+  "candidate": "a733-nvme-v1",
+  "classification": "Pinned source and linked-firmware search-policy clarification; not physical boot acceptance",
+  "conclusions": [
+    "Exact candidate disables CONFIG_EFI_LOADER and has no EFI scan in linked default environment.",
+    "bootcmd replaces boot_targets with nvme; bootcmd_nvme exists with devnum 0.",
+    "Five Linux-filesystem-type GPT entries with attributes zero yield no bootable partitions, empty env assignment deletes devplist, and scanner falls back to partition 1.",
+    "Prefixes / and /boot/, extlinux and boot.scr.uimg/boot.scr scan remain broader than script guards.",
+    "Complete produced-filesystem whitelist and physical boot acceptance remain required."
+  ],
+  "configuration": {
+    "bytes": 35703,
+    "lines": {
+      "1483": "# CONFIG_EFI_LOADER is not set",
+      "309": "CONFIG_BOOTCOMMAND=\"setenv boot_targets nvme; run distro_bootcmd\"",
+      "481": "CONFIG_CMD_ENV_EXISTS=y",
+      "723": "CONFIG_ENV_IS_NOWHERE=y"
+    },
+    "path": "out/spi-candidate-ram-02-20261107/component-retained/artifacts/uboot.config",
+    "sha256": "0b8837e27ec4edf9e2b28d48d38fffbf43ee4f1f9add2779f3d42cd5ffaf2f97"
+  },
+  "date": "2026-11-07",
+  "gpt_preconditions": {
+    "all_attributes": 0,
+    "all_type_guids": "0fc63daf-8483-4772-8e79-3d69d8477de4",
+    "efi_system_partition_type": false,
+    "legacy_bios_bootable_bit": false,
+    "partition_count": 5,
+    "result": "No bootable partition list; empty assignment removes devplist, so scanner selects partition 1."
+  },
+  "hardware_acceptance": false,
+  "independent_review": {
+    "coordinator_corroboration": "ELF symbol bytes hash and presence in packaged U-Boot checked; source interpretation from independent review.",
+    "effort": "high",
+    "model": "gpt-6.1-sol"
+  },
+  "limits": [
+    "Corrects current documentation describing EFI scanning in this exact candidate; historical producer proofs remain unchanged.",
+    "Script/extlinux alternatives and both prefixes remain; the script guards do not close the whole firmware search policy.",
+    "Generated image GPT preconditions and complete boot-filesystem whitelist must be verified on the actual new artifact.",
+    "No physical SPI boot, backup/recovery/programming, zero routine SD writes or KVM guest execution acceptance."
+  ],
+  "linked_environment": {
+    "address": "0x4a09653e",
+    "bytes": 2779,
+    "complete_bytes_present_in_packaged_uboot": true,
+    "file_offset": "0xa653e",
+    "packaged_path": "out/spi-candidate-ram-02-20261107/component-retained/artifacts/pack/u-boot.fex",
+    "path": "out/spi-candidate-ram-02-20261107/component-retained/artifacts/uboot.elf",
+    "sha256": "491b5df6241ebff4eed20b23af49a620933ba90a6f10a11be223a2bb4a4c107b",
+    "symbol": "default_environment"
+  },
+  "preserved_immutable_records": [
+    "configs/uboot-nvme-candidate-targets.lock.json",
+    "docs/evidence/uboot-nvme-candidate-20261107.json"
+  ],
+  "raw_review": {
+    "bytes": 13779,
+    "path": "tmp/nvme-host-20261107/firmware-source-review.json",
+    "sha256": "ae30eba185cee156628ee85f706b1ef9b71724d9f91e0b4cacfedc4f79137dde"
+  },
+  "schema": 1,
+  "selected_environment": {
+    "boot_prefixes": "/ /boot/",
+    "boot_scripts": "boot.scr.uimg boot.scr",
+    "boot_targets": "mmc0 mmc2 ufs nvme usb0 ",
+    "bootcmd": "setenv boot_targets nvme; run distro_bootcmd",
+    "bootcmd_nvme": "pci enum;nvme scan;setenv devnum 0;run nvme_boot;",
+    "distro_bootcmd": "for target in ${boot_targets}; do run bootcmd_${target}; done",
+    "nvme_boot": "if nvme dev ${devnum}; then setenv devtype nvme; run scan_dev_for_boot_part; fi",
+    "scan_dev_for_boot": "echo Scanning ${devtype} ${devnum}:${distro_bootpart}...; for prefix in ${boot_prefixes}; do run scan_dev_for_extlinux; run scan_dev_for_scripts; done;",
+    "scan_dev_for_boot_part": "part list ${devtype} ${devnum} -bootable devplist; env exists devplist || setenv devplist 1; for distro_bootpart in ${devplist}; do if fstype ${devtype} ${devnum}:${distro_bootpart} bootfstype; then run scan_dev_for_boot; fi; done"
+  },
+  "source_archive": {
+    "bytes": 163031040,
+    "path": "out/spi-candidate-ram-02-20261107/component-retained/artifacts/uboot-pinned-source.tar",
+    "sha256": "63e1c785c5fafa621ae66d784e7a7da43c129e6a78e3cc578437ec0e38fab7c3"
+  },
+  "source_lines": {
+    "efi_compile_condition": "include/config_distro_bootcmd.h:120-194",
+    "empty_assignment_deletes_variable": "cmd/nvedit.c:245-248,293-294",
+    "empty_part_list_assignment": "cmd/part.c:88-107",
+    "env_exists": "cmd/nvedit.c:1133-1145",
+    "gpt_bootable_definition": "disk/part_efi.c:75-79,341",
+    "nvme_target": "include/config_distro_bootcmd.h:28-32,67-76",
+    "partition_scanner": "include/config_distro_bootcmd.h:434-443",
+    "script_and_extlinux_scans": "include/config_distro_bootcmd.h:389-430"
+  },
+  "source_members": {
+    "cmd/nvedit.c": {
+      "bytes": 31627,
+      "sha256": "c71873f19c79e1eef06cdfa1dd54f7ea6fb7dca1eb61396f505bd0b3482bd5c6"
+    },
+    "cmd/part.c": {
+      "bytes": 4602,
+      "sha256": "549fdebda20e6a22e95f23530f14362bd2a1d19285204a148d6145729273da0f"
+    },
+    "disk/part_efi.c": {
+      "bytes": 31479,
+      "sha256": "c55eee1dc22a3e44557ad8606f75b998adcdbd86c2aea9ec13c71a34ca6dfe27"
+    },
+    "include/config_distro_bootcmd.h": {
+      "bytes": 17323,
+      "sha256": "1f94119bbae366ffa7d0d20200dde3c0c2427c30e6e325790ded4ccdc3a31a91"
+    },
+    "include/part_efi.h": {
+      "bytes": 3835,
+      "sha256": "d48e93c9e2f6ba26147f267a0b88d1c25eb199e590777e7fe18c37f0f5da0c8c"
+    }
+  },
+  "source_revision": "b791be842935b27268ae3d00e943a9075495f30a"
+}
