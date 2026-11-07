@@ -1,0 +1,145 @@
+{
+  "builder": "drew@build.drewnet.online",
+  "builder_archive_directory": "/var/lib/a733-composition-retention-20261107",
+  "classification": "Verified retention of three terminal generated workspaces on builder and codex; no Orange Pi storage operation",
+  "codex_archive_directory": "/var/lib/a733-composition-retention-20261107/mirror",
+  "composition_guard_bytes": 23622320128,
+  "date": "2026-11-07",
+  "execution_log": {
+    "bytes": 1240,
+    "sha256": "79f2db2d24a8c73ab570ed293d47c30f220f9398b9676ce1e51ce1f4e2b05f83"
+  },
+  "free_bytes_after_retirement": 24148152320,
+  "free_bytes_before_retirement": 21664014336,
+  "hardware_acceptance": false,
+  "independent_review": {
+    "approved_retire_script_sha256": "06dfe325c104a9bb9c6bf371fa8db48611eec870e0504aacd79e9a474435bde5",
+    "effort": "high",
+    "findings": [],
+    "model": "gpt-6.1-sol"
+  },
+  "journal_phases": [
+    "start",
+    "intent",
+    "renamed",
+    "removed",
+    "intent",
+    "renamed",
+    "removed",
+    "intent",
+    "renamed",
+    "removed",
+    "complete"
+  ],
+  "limits": [
+    "No full restoration of these three archives has been executed.",
+    "Restoration preserves recorded payload metadata; inode numbers, ctime and atime are not reproducible.",
+    "Capacity is measured only at retirement; subsequent bootstrap/composition staging must pass unchanged guards.",
+    "Archives are builder retention inputs, not deployable images; physical release acceptance unchanged."
+  ],
+  "margin_at_retirement_bytes": 525832192,
+  "mirror_verifier_code": {
+    "bytes": 3190,
+    "sha256": "7e3fa194fc98066eb6592228bc104bdf9de094cbfbc1206c5cd7fd03f8cdb5a1"
+  },
+  "native_free_bytes_after_mirror": 461733888,
+  "native_free_bytes_at_evidence": 455630848,
+  "native_minimum_free_bytes": 268435456,
+  "physical_storage_written": false,
+  "preparation_code": {
+    "bytes": 3286,
+    "sha256": "4873416bfae9ccaea6fee5d748ea75ba6a59dc026f201aedd1955179f8484ec6"
+  },
+  "preserved": [
+    "All original phase records outside work; sd-run-formal-02",
+    "Current production A/B roots/state and parent readback proofs",
+    "Latest configured userspace and all operator inputs",
+    "Successful NVMe U-Boot candidate/replay and source/toolchain caches"
+  ],
+  "raw_records": {
+    "idle-helper.py": {
+      "bytes": 23821,
+      "sha256": "404607d4d22db254e3cad1200f9f4c8c03e1742864bd52a8cb47e109ff2fd844"
+    },
+    "mirror-verified.json": {
+      "bytes": 2260,
+      "sha256": "272164ebc24e1156db4a5de0902b8a61bab78fedbcd7569b7e27e6da2bd4f12d"
+    },
+    "prepared.json": {
+      "bytes": 1863,
+      "sha256": "145f3661f2c69b7704412caaa4cf7f9e31e5b5d73f3c160ce73d1ffbd2a9e83d"
+    },
+    "retire.py": {
+      "bytes": 8288,
+      "sha256": "06dfe325c104a9bb9c6bf371fa8db48611eec870e0504aacd79e9a474435bde5"
+    },
+    "retirement.jsonl": {
+      "bytes": 3003,
+      "sha256": "6fedf279dc89a287e02b574f4936c5c21d2b04d56a9226e31e8737ce36cf8889"
+    }
+  },
+  "records": {
+    "full-root-metadata-fixture-02": {
+      "builder_archive": {
+        "bytes": 170528925,
+        "path": "/var/lib/a733-composition-retention-20261107/full-root-metadata-fixture-02.tar.gz",
+        "sha256": "d3ddb945fb89c820f95a8e55c6c5ee1e6592f0a365d53a6c6a9937a63c3d394f"
+      },
+      "codex_archive": "/var/lib/a733-composition-retention-20261107/mirror/full-root-metadata-fixture-02.tar.gz",
+      "hardlink_groups": 3,
+      "inventory": {
+        "bytes": 4582720,
+        "sha256": "a5c527399ae98ab64bc6c5888b24d6e05f20a7f4d1ee219119fa788a93b5cf9c"
+      },
+      "members": 15908,
+      "raw_xattrs": 0,
+      "retired_path": "/var/lib/a733-clean-replay-20261106/full-root-metadata-fixture-02/work",
+      "unique_inode_allocated_bytes": 561053696
+    },
+    "sd-run-03": {
+      "builder_archive": {
+        "bytes": 229482716,
+        "path": "/var/lib/a733-composition-retention-20261107/sd-run-03.tar.gz",
+        "sha256": "445a1b5808425a0178d5ea249edbb3ee5126c9e196df4e2e171e9dc0b67c97eb"
+      },
+      "codex_archive": "/var/lib/a733-composition-retention-20261107/mirror/sd-run-03.tar.gz",
+      "hardlink_groups": 0,
+      "inventory": {
+        "bytes": 699735,
+        "sha256": "7d1c71ee7b993568b734247f2ab0623c75b9087c1a54e7a4feb701a10ffe6001"
+      },
+      "members": 2311,
+      "raw_xattrs": 0,
+      "retired_path": "/var/lib/a733-clean-replay-20261106/sd-run-03/work",
+      "unique_inode_allocated_bytes": 796688384
+    },
+    "uboot-nvme-component-first-01": {
+      "builder_archive": {
+        "bytes": 372738635,
+        "path": "/var/lib/a733-composition-retention-20261107/uboot-nvme-component-first-01.tar.gz",
+        "sha256": "ef407d561d9d140c09b1da4e58631776709e21b7584f1fb16fd418a73fce8380"
+      },
+      "codex_archive": "/var/lib/a733-composition-retention-20261107/mirror/uboot-nvme-component-first-01.tar.gz",
+      "hardlink_groups": 0,
+      "inventory": {
+        "bytes": 7876050,
+        "sha256": "690292386b91089fa10c6e51f6f77ef22d59b9e17dd1a2eddd105e56c6100ab1"
+      },
+      "members": 24669,
+      "raw_xattrs": 0,
+      "retired_path": "/var/lib/a733-clean-replay-20261106/uboot-nvme-component-first-01/work",
+      "unique_inode_allocated_bytes": 1126400000
+    }
+  },
+  "recovered_bytes_during_retirement": 2484137984,
+  "schema": 1,
+  "source_retirement_complete": true,
+  "validation": [
+    "Archive SHA256 agrees on both hosts; native mirror protected and fsync verified.",
+    "GNU tar compares every archive member against live source before retirement.",
+    "Exact archive namespace, modes, numeric UID/GID, nanosecond mtime, symlink targets and hardlink topology match inventoried source.",
+    "All raw xattr names/values match; these three actual source trees have zero raw xattrs and no unaccounted ACLs.",
+    "Unique inode allocation avoids double-counting three hardlink groups.",
+    "Every source identity/metadata revalidated, all namespace/process/loop guards passed, durable intent/rename/removal journal completed."
+  ]
+}

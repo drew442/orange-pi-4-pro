@@ -34,13 +34,15 @@ The [operator-approved 20 GiB root-LV growth](evidence/build-host-capacity-execu
 now completes successfully, including online ext4 enlargement. The LV is
 88,017,469,440 bytes; free space immediately after growth was **24.28 GB**, above
 the unchanged 22 GiB staging guard by about 663 MB. The subsequent
-[production roots and full readback](production-host-roots.md) now leave
-**22.53 GB** after the subsequent [production state](production-host-state.md),
-about **1.10 GB below** that final-composition guard. Both actual 4 GiB root
-slots and the 8 GiB state pass complete readback. Their retained work trees
-allocate 1.23 GB and 104 MB respectively. Verified retention/staging must recover
-final composition headroom without reducing guards. The LV UUID,
-root source and filesystem type are unchanged. No Orange Pi storage was touched.
+[production roots](production-host-roots.md) and [state](production-host-state.md)
+pass complete readback, leaving 22.53 GB before retention. Their work trees
+allocate 1.23 GB and 104 MB respectively. [Verified workspace retention](composition-retention.md)
+then archives three older terminal work trees on build and codex and retires
+only their generated `work` subtrees. It recovers **2.48 GB**, leaving
+**24,148,152,320 bytes**, only **525,832,192 bytes above** the unchanged final
+22 GiB composition guard. Recheck after bootstrap and staging; keep every guard.
+The LV UUID, root source and filesystem type are unchanged. No Orange Pi storage
+was touched. Codex has a separate 256 MiB free-space minimum for retention copies.
 
 
 The latest [candidate build](evidence/uboot-nvme-candidate-20261107.json) used

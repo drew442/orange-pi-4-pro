@@ -130,7 +130,7 @@ remain unchanged. **Do not repeat NVMe installation to fix management.**
   and passes complete readback: 1,172 paths, both keys, corrected machine-id
   permissions, fixed clock ownership and selected root A. One construction each
   is proved; repeats, matching bootstrap and full NVMe reconstruction remain open.
-  Latest Ubuntu unittest discovery runs **1,513 cases, 112 skips, no failures**;
+  Latest privileged Ubuntu unittest discovery runs **1,530 cases, no skips or failures**;
   five shell suites and four assembly cases pass. Within-tick mutation fixtures now force observable mtime changes;
   runtime/source guards are unchanged. See [root evidence](evidence/production-host-roots-20261107.json).
   These checks establish no physical acceptance or independent deployment.
@@ -160,9 +160,11 @@ remain unchanged. **Do not repeat NVMe installation to fix management.**
    operator-approved [20 GiB builder LVM growth](build-host-capacity-plan.md) now
    succeeded and initially passed the unchanged 22 GiB staging guard. Production
    A/B roots and personalized 8 GiB state now pass complete readback. Build the
-   matching bootstrap and prepare verified retention/staging before final
-   composition: free after state construction is **22.53 GB**, about **1.10 GB below**
-   the final 22 GiB guard. No guard reduction or additional LV growth is authorized.
+   matching bootstrap before final composition. [Verified workspace retention](composition-retention.md)
+   archives three terminal work trees on both hosts and recovers 2.48 GB; free
+   after retirement is **24.15 GB**, only **526 MB above** the unchanged 22 GiB
+   guard. Recheck after bootstrap/staging. No guard reduction or additional LV
+   growth is authorized.
    The [candidate build and exact replay](uboot-nvme-candidate.md)
    pass independent inspection. The file-only SPI assembler passes synthetic
    fixtures; its actual board backup/candidate and hardware handoff remain open.

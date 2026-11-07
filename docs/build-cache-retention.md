@@ -13,6 +13,12 @@ Raw records and the one-off scripts remain outside Git on the builder at
 `/var/lib/a733-cache-retention-20261104/`. Readable copies of the records are at
 `/home/drew/orange-pi-4-pro-build/cache-retention-evidence-20261104/`.
 
+The [composition retention map](composition-retention.md) now retires the generated
+`work` subtrees of `sd-run-03`, `full-root-metadata-fixture-02` and
+`uboot-nvme-component-first-01`. Complete compared archives and metadata are
+protected on both hosts; original phase records remain. Restore from that map
+before using an old command that names those expanded paths.
+
 ## Current off-builder retention
 
 [Three November 7 generated SD copies](evidence/candidate-sd-sparsification-20261107.json)

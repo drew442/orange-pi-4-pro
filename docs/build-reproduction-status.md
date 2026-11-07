@@ -78,7 +78,7 @@ matching bootstrap and NVMe remain open.
 Published baseline artifacts remain unchanged.
 The [approved 20 GiB builder growth](evidence/build-host-capacity-execution-20261107.json)
 now succeeds and leaves 24.28 GB free, above the unchanged 22 GiB staging guard.
-After root/state construction and readback, free is 22.53 GB, about 1.10 GB below
-that final guard. Verified retention and staging must restore final-composition
-headroom without lowering guards. A second operator must
+[Verified workspace retention](composition-retention.md) subsequently recovers
+2.48 GB, leaving 24.15 GB, only 526 MB above that final guard before bootstrap
+and staging. Recheck every admission without lowering guards. A second operator must
 reproduce deployment from the guide; build proofs cannot satisfy physical release gates.
