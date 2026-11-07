@@ -1,208 +1,112 @@
 # Implementation status
 
-Updated 2026-11-07. Decisions and next actions are below; detailed build evidence
-is indexed in [build reproduction status](build-reproduction-status.md).
+Updated 2026-11-07. Detailed construction history is indexed in
+[build reproduction status](build-reproduction-status.md). Physical release and
+independently reproduced deployment remain incomplete.
 
-## Current milestone
+## Current board action
 
-The [November 7 physical logs](evidence/installed-host-first-boot-20261107.json)
-confirm successful installation/full readback on the exact NVMe and installed
-root A reaching systemd. All eight CPUs enter EL2 and KVM initializes. Ethernet
-links at 1 Gbps, but DHCP/SSH fails and the normal serial root account is locked.
-**Actual SSH and KVM guest execution remain unproven.**
+Apply the [existing-install machine-id repair](installed-host-repair-20261107.md),
+then boot the **same deployed host SD**. Return the complete serial log, DHCP
+address and SSH results with both authorized keys. **Do not reinstall NVMe to
+fix management.**
 
-The deployed machine-id is `0600`, blocking unprivileged networkd's default DHCP
-identity generation. The actual pinned ARM library reproduces this permission
-failure. [Reviewed source fixes](evidence/installed-host-fix-20261107.json) seed/upgrade it
-to `0644`; keys and configuration
-remain private. Use the [existing-install repair](installed-host-repair-20261107.md),
-which changes one NVMe file's permissions without reinstalling. Physical repair
-and successful DHCP/SSH still await operator results.
+[Physical logs](evidence/installed-host-first-boot-20261107.json) prove successful
+NVMe installation/full readback and installed root A reaching systemd. All eight
+CPUs enter EL2 and KVM initializes. Ethernet links at 1 Gbps, but installed
+DHCP/SSH fails; the serial root account has no usable password. The deployed
+machine-id mode `0600` blocks unprivileged networkd's DHCP identity access.
+[Actual pinned ARM-library checks](evidence/installed-host-fix-20261107.json)
+reproduce the defect; the repair changes that one file to `0644`.
+Physical repair, SSH and an actual KVM guest are still unproven.
 
-The [refreshed installer](installer-refresh-20261107.md) is now built from
-`151a532`: 256 MiB, exact-target yes/no, one expanded write pass, optional readback
-and progress feedback. Packaged ARM tests, independent image/source-BOM inspection
-and a separate ARM default-no-readback probe pass. This new image is unbooted;
-it does not automatically repair installed state. November 6 host SD/NVMe artifacts
-remain unchanged. **Do not repeat NVMe installation to fix management.**
+## Fixed requirements and authorization
 
-## Decisions and physical evidence
+- A733, actual **1,977,614,336-byte SD**, nominal 250 GB NVMe, minimal Linux
+  KVM/QEMU and **zero routine SD writes**. Prefer SPI-to-NVMe with SD removed;
+  otherwise immutable SD bootstrap. Emulation/containers cannot satisfy KVM.
+- [Inventory](board-diagnostic-20261104.md): 12 GiB LPDDR5; SU02G SD CID
+  `035344535530324780716f216e00a8f5`; NVMe `SPCC M.2 PCIe SSD`, serial
+  `134807190FC700149277`, firmware `EDFM20.0`, **256,060,514,304 bytes, 512/512**.
+  Exact-NVMe erase authorization persists; revalidate identity and idle state
+  immediately before any future concrete write. The operator completed installation.
+- [Power/cooling](evidence/power-cooling-20261106.json): reported 67 W USB-PD
+  adapter, 10.4 mm six-layer whole-board copper heatsink. Leave heatsinks attached;
+  diagnostic identities suffice. Negotiated power, fan and thermal endurance are unproven.
+- [Management inputs](evidence/operator-inputs-20261105.json): both RSA3072 and
+  Ed25519 keys, hostname `a733-host`, public-key-only SSH from any source/subnet.
+  Wired MAC `10:f4:ae:90:5e:57`. Preparation boot obtained DHCP `192.168.1.115/24`
+  and HTTPS after manual UTC correction; installed automatic networking/time remain open.
+- SPI: **XM25QU128C**, JEDEC `204118`, 16 MiB, erase 65,536/write 1 byte.
+  Preparation is authorized; present the exact live target/write plan and request
+  simple **yes/no** before programming. No SPI write has occurred. Original backup,
+  off-device retention and independent recovery must precede a programming proposal.
+- Installation uses one expanded write with progress; readback is optional.
+  Do not benchmark the board to diagnose installation duration. Builder artifact
+  validation does not add mandatory onboard installation passes.
 
-- Preserve **A733, actual 2 GB SD, nominal 250 GB NVMe**, minimal Linux KVM/QEMU
-  and **zero routine SD writes**. Prefer SPI-to-NVMe with SD removed; otherwise
-  immutable SD bootstrap. Never substitute emulation/containers for real KVM.
-- [Inventory](board-diagnostic-20261104.md): 12 GiB LPDDR5; SU02G SD
-  **1,977,614,336 bytes**, CID `035344535530324780716f216e00a8f5`; NVMe
-  **256,060,514,304 bytes**, `SPCC M.2 PCIe SSD`, serial `134807190FC700149277`,
-  firmware `EDFM20.0`, logical/physical sectors **512/512**. Use actual geometry.
-- Erase authorization for that exact NVMe persists; revalidate identity and idle
-  state immediately before the concrete write. Do not request that permission
-  again. The operator completed the authorized NVMe installation. No coordinator physical
-  erase or SPI programming has occurred.
-- [Power/cooling](evidence/power-cooling-20261106.json): operator reports 67 W
-  USB-PD adapter and 10.4 mm, six-layer whole-board copper heatsink. Leave all
-  heatsinks attached; diagnostic identities suffice. Negotiated power, fan
-  configuration and thermal endurance remain unmeasured.
-- Wired MAC `10:f4:ae:90:5e:57`, 1 Gbps/full, DHCP `192.168.1.115/24`, gateway/DNS
-  `192.168.1.1` and verified HTTPS are observed on the preparation boot. The clock
-  starts in 1970; HTTPS passed after manual UTC correction. Repeated installed-host
-  networking and automatic time remain open. [Time-sync input](host-time.md) is
-  authenticated. The [time-profile build](timesync-outer-launcher.md) now passes
-  actual 221-package configuration/export and independent complete archive
-  readback, including boot links and fixed 996:996 identity. Opt-in profile and
-  matching root/package/clock-state source integration now pass; actual installed
-  transitions and NTP remain open. Current installation images are unchanged.
-- [Operator inputs](evidence/operator-inputs-20261105.json): RSA3072 and Ed25519
-  keys, DHCP hostname `a733-host`, any source/subnet. Require public-key-only SSH.
-  [ARM SSH-policy checks](evidence/ssh-console-management-arm-20261106.json) pass;
-  real login with both keys remains pending; the serial root account has no usable
-  password. The installer physical RAM shell is the current recovery access.
-- SD is unmounted in Linux; one zero-write snapshot has `ro=0`. Full-card offline
-  hashes, Linux counters and firmware/cycle/workload observations remain required.
-- SPI is **XM25QU128C**, JEDEC `204118`, 16 MiB, erase 65,536/write 1 byte.
-  [Investigation](spi-boot-investigation.md) records the distinct boot layout and
-  erase-count concern. The user permits SPI preparation with exact target/write details and yes/no
-  confirmation before programming. Verified backup/recovery and a compatible
-  reviewed candidate remain required; no SPI write has occurred. The
-  [read-only backup tool](spi-backup.md) passes 27 safety cases and independent
-  review; its original-flash backup/off-device retention are not yet performed.
-  The [NVMe-first component candidate](evidence/uboot-nvme-candidate-20261107.json)
-  now compiles in the frozen builder. Independent linked-code/package/script
-  inspection passes, including EL2 service `0x8000ff40` and unchanged firmware
-  blobs. A [separate registered replay](evidence/uboot-nvme-replay-20261107.json)
-  now matches the unpacked binary, boot package, configuration, challenge and SPI
-  boot0 exactly. All 77 new manifest entries resolve to verified local files or
-  original references. The [file-only assembler](spi-file-candidate.md) now passes
-  two identical assemblies using real boot components and an explicitly synthetic
-  backup. It preserves every byte outside the two replacement ranges and records
-  all 256 erase-unit hashes. No backup-derived board candidate, physical SPI
-  programming or SPI boot is established. The retained candidate workspace also
-  passes [full temporary-path restoration](evidence/uboot-nvme-restoration-20261107.json):
-  all 27,105 entries and 72 manifest hashes, followed by clean unmount. No
-  restored-source rebuild is claimed. The approved [builder expansion](build-host-capacity-plan.md)
-  enabled the production root run below; allocations still need staged checks.
+## Validated software and retained candidates
 
-## Implemented and verified in software
+| Area | Evidence and current limit |
+| --- | --- |
+| Compatible board stack | [Locked sources](../configs/diagnostic-sources.lock.json): vendor `a95129bf`, kernel `2ac08e8c`/6.6.98, U-Boot `b791be84`, pinned toolchains/boot inputs. [EL2 diagnostics](el2-diagnostic.md) physically initialize KVM; the separate modalias fix remains unbooted. |
+| Existing deployment | [Published guide](deploy-personalized-20261106.md) retains original SD/NVMe images and state UUID `00fd936c-49fb-4fea-87c8-928b9c1599e0`. Management repair is next. |
+| Installer refresh | [Source `151a532`](installer-refresh-20261107.md): 256 MiB, exact-target yes/no, optional readback/progress; packaged ARM/default-no-readback checks pass. New image unbooted; it does not automatically repair installed state. |
+| Time-enabled userspace | [Actual offline build](timesync-outer-launcher.md) configures 221 pinned packages; complete archive readback and [dated repeat](account-date-replay-driver.md) pass. Fixed clock UID/GID 996, package/management ABI integration; installed NTP remains untested. |
+| Production components | [4 GiB roots](production-host-roots.md), [8 GiB personalized state](production-host-state.md) and [256 MiB bootstrap](production-host-bootstrap.md) pass frozen construction/full readback or boot-file inspection and independent review. One construction each; new state UUID `fc8bbef6-9385-4ddb-90ba-e41eaccc035b`. |
+| Full NVMe candidate | [Complete composition](production-nvme-composition.md) passes BOOT/GUESTS readback, all parent root/state bytes and independent full gzip/raw/GPT verification. [545.6 MB gzip and derived manifest](nvme-candidate-retention.md) retained on codex; active endpoint unchanged. Clean repeat and matched physical deployment remain open. |
+| NVMe-first firmware | [Compiled and exactly replayed U-Boot](uboot-nvme-candidate.md); [SD transport](nvme-firmware-test-sd.md) builds and passes independent inspection. Entire SD is identical to production bootstrap outside the boot package. Unbooted, paired only with new `fc8…` state; do not use with installed `00fd…` state. |
+| SPI preparation | [Read-only backup tool](spi-backup.md) and [file assembler](spi-file-candidate.md) pass tests/review; only synthetic baseline assemblies exist. Synthetic files must never be flashed. Actual backup/candidate/programmer/recovery remain open. |
+| ROM investigation | [Version-only host FEL probe](rom-recovery-investigation.md) now compiles in the frozen builder; source/archive/ELF/capsule review passes. No RAM/execute/flash command path. No actual USB response or independent ROM recovery demonstrated. |
+| Host operations | [Updates](host-updates.md), [selection](nvme-root-selection.md), [RAM recovery](host-recovery.md) and package-state isolation pass software/packaged checks. Physical interrupted update, rollback, dirty-journal and missing-NVMe recovery remain open. |
+| Guest operations | [KVM-only first guest](kvm-first-guest.md), [management](guest-operations.md), networking, enrollment, checkpoints and off-device backup/restore have software fixtures. **No guest has booted.** |
 
-- [Source lock](../configs/diagnostic-sources.lock.json): vendor `a95129bf`, kernel
-  `2ac08e8c` (6.6.98), U-Boot `b791be84` (2018.07), pinned toolchains and boot inputs.
-  Preserve compatible boot0/monitor/SCP/kernel/DTB. Actual diagnostic and reviewed
-  EL2 handoff boots are recorded in [board diagnostics](board-diagnostic-20261104.md).
-  The [modalias whitespace correction](ethernet-diagnostics.md) passes source/ARM
-  checks and independent review; that source correction remains unbooted.
-- [Minimal interim userspace](host-userspace.md): 220 locked packages, QEMU 7.2.22,
-  OpenSSH/storage tools, approximately 531 MiB unpacked. Choose the release base
-  after measuring the working KVM host; Debian alone supplies no board support.
-- [Roots](host-payload.md), [package-state isolation](host-package-state.md),
-  [state](host-state.md), [selection](nvme-root-selection.md),
-  [handoff](host-handoff.md), [management](host-management.md),
-  [updates](host-updates.md) and [RAM recovery](host-recovery.md) pass software/
-  packaged ARM checks. The [current roots](current-host-roots.md) contain all 39
-  tools. File-backed interruption tests do not prove physical recovery.
-- [Personalized NVMe candidate](evidence/personalized-nvme-20261106.json) uses
-  actual geometry, both keys and state UUID `00fd936c-49fb-4fea-87c8-928b9c1599e0`.
-  Complete logical hash/GPT/filesystem/selection inspection and independent
-  component-binding review pass. [Installer evidence](evidence/deployment-installer-20261106.json)
-  and [delivery](deployment-delivery.md) pass software/TLS/ARM checks. Physical acquisition/install/readback and host root A boot are now recorded;
-  management is blocked by the machine-id permission defect.
-- [Guest operations](guest-operations.md), [activation](guest-activation.md),
-  [enrollment](guest-enrollment.md), [checkpoints](guest-checkpoints.md),
-  [backup](guest-backups.md), [restore](guest-restoration.md),
-  [HTTPS restore](guest-restore-delivery.md) and [networking](guest-networking.md)
-  pass host/packaged checks. **No guest has booted.** Acceleration fallback is forbidden.
-- [Clean-build progress](build-reproduction-status.md): frozen builder, fresh
-  source U-Boot/kernel replays and both SD image reproductions pass. The
-  [fresh raw-package pipeline](userspace-fresh-pipeline.md) configures 220 locked
-  packages and matches the [normalized export pair](userspace-export-reproducibility.md):
-  138,025,729 compressed bytes, 15,876 entries. [Explicit profile selection](userspace-profiles.md)
-  and complete staging pass. The [tracked base pipeline](userspace-pipeline-launcher.md)
-  passes all three phases and matches the normalized archive. The complete time-profile
-  build/readback passes. [Time-profile integration](evidence/time-profile-integration-20261107.json)
-  now authenticates matching root/state provenance, seeds private clock state and
-  guards boot/update/rollback. Independent source review and an actual frozen-builder
-  component pass: 221 packages, eight package-state components, four management
-  files, 40 maintenance files and a nondeployable 256 MiB state image. New time roots
-  require management ABI v2; updated tools retain v1 rollback support. The
-  [production 4 GiB A/B roots](production-host-roots.md) now build in the frozen
-  namespace and pass complete readback: 16,367 paths, all file bytes/links/device
-  records and raw attributes per slot, plus independent artifact/source review.
-  The matching [production 8 GiB state](production-host-state.md) now also builds
-  and passes complete readback: 1,172 paths, both keys, corrected machine-id
-  permissions, fixed clock ownership and selected root A. One construction each
-  is proved. The matching [256 MiB EL2 bootstrap](production-host-bootstrap.md) now
-  also builds and passes boot-file, wrapper/newc/gzip checks and independent
-  artifact review. The matching [full NVMe candidate](production-nvme-composition.md)
-  now passes construction, complete BOOT/GUESTS readback and a separate full gzip
-  wire/decoded-image/GPT/root-state-byte check. Independent artifact review finds
-  no issues. A [verified encoded delivery copy](nvme-candidate-retention.md)
-  and compatible derived manifest are now retained on codex, after byte-preserving
-  sparse conversion of three generated SD copies recovered 710 MB. The active
-  endpoint and operator procedure remain unchanged. One construction is established;
-  repeats and physical deployment remain open.
-  The [NVMe-first firmware test SD](nvme-firmware-test-sd.md) now also builds
-  in the frozen namespace, with the matching production initramfs and manual SD
-  fallback source retained. Its software inspection passes; it remains unbooted
-  and must not be paired with the currently installed state.
-  Latest privileged Ubuntu unittest discovery runs **1,596 cases, no skips or failures**;
-  five shell suites and four assembly cases pass. Within-tick mutation fixtures now force observable mtime changes;
-  runtime/source guards are unchanged. See [root evidence](evidence/production-host-roots-20261107.json).
-  These checks establish no physical acceptance or independent deployment.
+Latest privileged Ubuntu discovery: **1,614 tests, no skips/errors/failures**;
+five shell suites, four diagnostic assembly cases and Bash/TOML checks pass.
+These results establish no physical boot, guest, SD-write or recovery acceptance.
 
-## Next actions and blockers
+## Capacity and reproducibility
 
-1. Operator applies the [machine-id repair](installed-host-repair-20261107.md)
-   using the existing installer RAM shell, then boots the same matching host SD.
-   Return the complete serial log and observed DHCP address/SSH result. Do not
-   repeat acquisition or full-disk installation.
-2. Validate SSH with both keys, then run [the first KVM guest](kvm-first-guest.md)
-   for CPU/disk/network, clean shutdown/restart and persisted disk marker. Return
-   its console/log evidence; `/dev/kvm` alone cannot satisfy the gate.
-3. Continue [clean-build work](build-reproduction-status.md). Separate authenticated
-   replay adapters correct the cross-day account dates while preserving historical
-   producers, receipts and artifact pins. [Fresh baseline](evidence/account-date-baseline-execution-20261107.json)
-   and [repeated time profile](evidence/account-date-time-execution-20261107.json)
-   now pass: 220/221 packages and unchanged compressed/raw/BOM bytes. Independent
-   complete 15,876/15,909-entry readbacks, source review and all 46 account-date
-   tests under root pass. Production roots and personalized state now pass
-   construction and full readback. The matching immutable bootstrap and
-   [full NVMe composition](production-nvme-composition.md) now pass, including
-   separate verification of the 545.6 MB gzip and its entire 256.06 GB expansion.
-   SPI-ready NVMe BOOT files do not establish physical SPI boot. The gzip and
-   derived delivery manifest now pass off-builder retention and source validation;
-   a tested matched delivery procedure remains open. The NVMe-first firmware
-   transport SD now passes software construction/inspection; physical boot remains
-   open. Prepare clean repeats next; software checks do not establish deployment acceptance.
-   [Kernel replay retention](kernel-run-retention.md) preserves the expanded tree
-   as verified archives on two hosts. [Byte-preserving conversion](evidence/candidate-sd-sparsification-20261107.json)
-   recovered 663 MB from three generated image copies. The compiled candidate
-   and subsequent file-assembly fixture left 4.01 GB free before expansion. The
-   operator-approved [20 GiB builder LVM growth](build-host-capacity-plan.md) now
-   succeeded and initially passed the unchanged 22 GiB staging guard. Production
-   A/B roots and personalized 8 GiB state pass complete readback; the matching
-   immutable bootstrap now passes software inspection. [Verified workspace retention](composition-retention.md)
-   archives three terminal work trees on both hosts and recovers 2.48 GB.
-   The subsequent firmware transport SD completes under its separate 4 GiB
-   recipe admission plus staging. Builder free is then **21,618,569,216 bytes**,
-   below the unchanged 22 GiB full-NVMe admission guard before staging overhead. Further builds require verified
-   retention. No guard reduction or additional LV growth is authorized.
-   The [candidate build and exact replay](uboot-nvme-candidate.md)
-   pass independent inspection. The file-only SPI assembler passes synthetic
-   fixtures; its actual board backup/candidate and hardware handoff remain open.
-   Keep the existing installation repair as the next operator action; do not
-   program SPI or repeat NVMe installation.
-   [Firmware license evidence](evidence/vendor-boot-license-inventory-20261106.json)
-   remains incomplete; all 479 userspace source archives are acquired, not compiled.
-4. Prove installed automatic time/state transitions and physical reliability:
-   10 cold/10 warm boots, 24-hour CPU/disk/network/thermal workload, zero routine SD
-   writes, interrupted update/manual rollback, dirty-journal and missing-NVMe
-   recovery, and off-device guest backup restoration. Establish SPI backup/recovery
-   before considering SPI programming. After SSH works, follow the
-   [SPI backup procedure](spi-backup.md) and return plan/backup/off-device
-   verification output. Do not program SPI yet.
+The [authorized 20 GiB builder growth](build-host-capacity-plan.md) completed;
+LV size is 88,017,469,440 bytes. After the FEL compilation, builder free is
+**21,557,407,744 bytes**, below the next full-NVMe **22 GiB** initial guard before
+staging overhead. Smaller SD/probe phases passed their separate unchanged
+budgets. Further full composition needs verified retention; **no guard reduction
+or additional LV growth is authorized**. See [host assessment](build-host-assessment.md).
 
-## Completion rule
+[Verified retention](composition-retention.md) preserves retired work trees on
+both hosts. Native sparse conversion preserves generated image bytes and leaves
+the separate **256 MiB** free-space minimum intact. Keep generated/downloaded
+artifacts outside Git. Recheck disk/RAM before each operation; start compilation
+with two jobs.
 
-[Release acceptance](hardware-validation.md) and an independently reproduced
-clean build/deployment remain incomplete. Finish only when the plan's physical
-results and reproduction procedure are verified. Builds, model review and
-emulation cannot waive these requirements.
+[Clean-build evidence](build-reproduction-status.md) includes frozen-builder
+restoration, source kernel/U-Boot replays, SD reproductions, normalized 220/221
+package exports and separate dated repeats. Full new production component repeats
+and independent deployment are unfinished. All 479 userspace source archives
+are acquired, not compiled. [Licensing evidence for the 26 vendor boot inputs](evidence/vendor-boot-license-inventory-20261106.json)
+remains incomplete. No public redistribution clearance is claimed.
+
+## Next actions and completion gates
+
+1. Complete the existing-install repair and verify SSH with **both** keys.
+2. Run the [first actual KVM guest](kvm-first-guest.md): CPU/disk/network, clean
+   shutdown/restart and persisted disk marker. `/dev/kvm` alone is insufficient.
+3. Continue clean production repeats and prepare a tested matched deployment
+   procedure. The new candidate/transport SD must not replace the current repair
+   images without an explicit matched deployment plan.
+4. After management works, retain the [original SPI backup](spi-backup.md)
+   off-device and demonstrate independent recovery. The manual's ADB/button
+   descriptions and FEL version identification alone do not prove this. Capture
+   U-Boot NVMe file reads; later test the matched NVMe-first transport/default and
+   manual SD fallback. Independently inspect the actual SPI candidate before
+   exact-target yes/no programming confirmation.
+5. Prove automatic time/state transitions, 10 cold/10 warm boots, 24-hour CPU/
+   disk/network/thermal workload, SD-removed SPI boot or zero routine fallback SD
+   writes (full-card hashes, Linux counters and firmware audit), interrupted
+   update/manual rollback, dirty-journal/missing-NVMe recovery and off-device
+   guest restoration. Reproduce the deployment from the guide independently.
+
+Finish only when [release acceptance](hardware-validation.md) and the
+[plan](hypervisor-plan.md) are satisfied. Builds, reviews and emulation cannot
+waive any physical requirement.

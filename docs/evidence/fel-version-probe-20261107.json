@@ -1,0 +1,283 @@
+{
+  "binary": {
+    "bytes": 35280,
+    "path": "out/fel-version-20261107/work/project/out/fel-version-compile-02/fel-version",
+    "sha256": "ddd419d6356609b9a79b5a6d582215e0ee6a19b579a893ccfabdfe2d33c9a4f6"
+  },
+  "classification": "Frozen host x86-64 version-only FEL probe compilation and offline artifact inspection; hardware recovery unproven",
+  "compiler_diagnostics": {
+    "bytes": 17,
+    "path": "out/fel-version-20261107/work/project/out/fel-version-compile-02/compiler.log",
+    "sha256": "67f33eaf2cbbc73271c370b94e49b010bd71f5753ce63cc48e84f02365cc0f4e"
+  },
+  "date": "2026-11-07",
+  "dependencies": {
+    "binutils": "2.38-4ubuntu2.12",
+    "binutils-common:amd64": "2.38-4ubuntu2.12",
+    "binutils-x86-64-linux-gnu": "2.38-4ubuntu2.12",
+    "cpp-11": "11.4.0-1ubuntu1~22.04.3",
+    "gcc-11": "11.4.0-1ubuntu1~22.04.3",
+    "gcc-11-base:amd64": "11.4.0-1ubuntu1~22.04.3",
+    "libbinutils:amd64": "2.38-4ubuntu2.12",
+    "libc-dev-bin": "2.35-0ubuntu3.15",
+    "libc6-dev:amd64": "2.35-0ubuntu3.15",
+    "libc6:amd64": "2.35-0ubuntu3.15",
+    "libgcc-11-dev:amd64": "11.4.0-1ubuntu1~22.04.3",
+    "libusb-1.0-0-dev:amd64": "2:1.0.25-1ubuntu2",
+    "libusb-1.0-0:amd64": "2:1.0.25-1ubuntu2",
+    "pkg-config": "0.29.2-1ubuntu3"
+  },
+  "direct_elf_dependencies": [
+    "libusb-1.0.so.0",
+    "libc.so.6"
+  ],
+  "failed_attempt": {
+    "compiler_returncode": 1,
+    "diagnosis": "Source inspection found missing upstream include/ header search. Strict parent timestamp checks also rejected expected sibling receipt creation; corrected source uses existing identity guard and preserves strict leaf hash/signature. No successful artifact from this attempt.",
+    "exact_original_compiler_stderr_available": false,
+    "inventory_and_process_mount_cleanup": "passed",
+    "producer_revision": "e90ac0314aed91897cb9a7620229b5b2a0a67a69",
+    "receipt": {
+      "bytes": 130887,
+      "path": "out/fel-version-20261107/failed-compile-01-receipt.json",
+      "sha256": "3d0908b72dbdec9346630e9724a3c8b997eeeac39a115d36b0122439ae13aa6d"
+    },
+    "status": "failed",
+    "tag": "compile-01"
+  },
+  "frontend": {
+    "bytes": 2466,
+    "path": "build/fel-version.c",
+    "sha256": "0a3933ce9ecbfbfd5d96d74374562b24fec664f7e7e55ee3627d2498e5a21e74"
+  },
+  "full_build_deployment_reproduced": false,
+  "hardware_acceptance": false,
+  "independent_artifact_review": {
+    "effort": "high",
+    "findings": [],
+    "model": "gpt-6.1-sol",
+    "record": {
+      "bytes": 6788,
+      "path": "out/fel-version-20261107/independent-review.json",
+      "sha256": "2fbdcf757b8852cde434b9521e237418e8853d67556c0995be5f9421e530c74c"
+    },
+    "scope": "All610 project Git blobs,97 output hashes,87 upstream archive members/bytes/modes, five live capsule files, actual ELF symbols/imports/disassembly, probe and terminal isolation. No valid USB address execution."
+  },
+  "isolation": {
+    "host_inventory_unchanged": true,
+    "mapped_processes_final": [],
+    "phase_mounts_final": [],
+    "probe": {
+      "ipv6_loopback_routes": [
+        "00000000000000000000000000000001 80 00000000000000000000000000000000 00 00000000000000000000000000000000 00000100 00000001 00000000 00000001       lo",
+        "00000000000000000000000000000000 00 00000000000000000000000000000000 00 00000000000000000000000000000000 ffffffff 00000001 00000000 00200200       lo",
+        "00000000000000000000000000000001 80 00000000000000000000000000000000 00 00000000000000000000000000000000 00000000 00000002 00000000 80200001       lo",
+        "00000000000000000000000000000000 00 00000000000000000000000000000000 00 00000000000000000000000000000000 ffffffff 00000001 00000000 00200200       lo"
+      ],
+      "network_interfaces": [
+        "lo"
+      ],
+      "prohibited_capability_mask": "0xa631000",
+      "uid_base": 1048576,
+      "uid_count": 65536
+    }
+  },
+  "launcher": {
+    "bytes": 9560,
+    "path": "build/launch-fel-version.py",
+    "sha256": "1fc94aec0eed8a4700e1ec62b38cdad7b4c9025eef171dc4a997366edce51cdd"
+  },
+  "limits": [
+    "Version response and USB enumeration alone do not prove independent ROM entry, compatible RAM loading or restoration after corrupted SPI.",
+    "Manual ADB/BOOT-button presence provides no verified ROM recovery port/button/power procedure.",
+    "Stock full sunxi-fel frontend, listing/SID and all RAM/flash commands are excluded; upstream A733 memory/loader support is not imported.",
+    "Actual original SPI backup/off-device retention, independent recovery, actual board candidate, exact-target yes/no confirmation and physical programming remain pending.",
+    "Installed management repair, both SSH keys, actual KVM guest execution, NTP, endurance, zero routine SD writes and update/rollback/recovery remain hardware gates.",
+    "One probe compilation is not a clean full-hypervisor build/deployment reproduction.",
+    "Further full NVMe composition requires verified retention; no guard reduction or additional LV growth authorized."
+  ],
+  "manifest": {
+    "bytes": 19726,
+    "path": "out/fel-version-20261107/work/project/out/fel-version-compile-02/manifest.json",
+    "sha256": "5a754827fdd53938f23d23bc3db79247667b58689ddeac0d8cf4c469ac0df263"
+  },
+  "manual_extract": {
+    "bytes": 3768,
+    "path": "out/fel-version-20261107/manual-extract.json",
+    "sha256": "03f809fd1a9e9ebba05112fd2f09f87c3a1d690c71e58c5d675f9c0dcd76db3b"
+  },
+  "phase": "/var/lib/a733-clean-replay-20261106/fel-version-compile-02",
+  "physical_device_writes": false,
+  "physical_recovery_proven": false,
+  "producer_records": {
+    "receipt.json": {
+      "bytes": 132032,
+      "path": "out/fel-version-20261107/receipt.json",
+      "sha256": "9ccc7b79e95add321ba2e48025fe73bcacce494fc3f3b0194d38ec1cd7a7978a"
+    },
+    "runtime.log": {
+      "bytes": 3279,
+      "path": "out/fel-version-20261107/runtime.log",
+      "sha256": "4d782302bcd8486bf9373751fbde19b90776352c63d055b2920400b404641af0"
+    },
+    "source-manifest.json": {
+      "bytes": 128254,
+      "path": "out/fel-version-20261107/source-manifest.json",
+      "sha256": "8a069f96a913e5509a6d8c7f0a20169353091f94ef1507b306992bbec7d09fea"
+    },
+    "staged.json": {
+      "bytes": 129118,
+      "path": "out/fel-version-20261107/staged.json",
+      "sha256": "8f681cc278f26e05fccdce715000410fe81befe79f160e0221abc4933b0681fe"
+    }
+  },
+  "recipe": {
+    "bytes": 9366,
+    "path": "build/fel-version.py",
+    "sha256": "789695603b86295b14762cdd35eaa7bbdac24a092027f17353eecf4f59ed9436"
+  },
+  "resources": {
+    "final": {
+      "available_memory_bytes": 7342551040,
+      "free_bytes": 21557407744,
+      "time": 1794044535.2719107
+    },
+    "full_nvme_guard_passes_at_final": false,
+    "full_nvme_initial_guard_bytes": 23622320128,
+    "initial_budget": {
+      "capsule_bytes": 763416,
+      "git_staging_bound_bytes": 129163443,
+      "recipe_bytes": 4294967296,
+      "required_free_bytes": 4424894155
+    },
+    "minimum_available_memory_bytes": 7342542848,
+    "minimum_free_bytes": 21557407744,
+    "retained_work": {
+      "actual_block_character_devices": [],
+      "allocated_bytes": 13692928
+    }
+  },
+  "retained_output_file_count": 97,
+  "retention": {
+    "complete_source_notices_recipe_lock_retained": true,
+    "directory": "out/fel-version-20261107",
+    "offline_bundles": {
+      "project.bundle": {
+        "bytes": 2224302,
+        "path": "out/fel-version-20261107/inputs/project.bundle",
+        "sha256": "2f58dd08a4fcee8c564a0389d7f609888fbfe5612576cda1e9bf989ce6acf2ee"
+      },
+      "upstream.bundle": {
+        "bytes": 763416,
+        "path": "out/fel-version-20261107/inputs/upstream.bundle",
+        "sha256": "b1692eb0752c8e930fadd715d783ff40ef5ef4003f2497c1a3e9efc44ccedb3d"
+      }
+    },
+    "regular_files_only": true
+  },
+  "schema": 1,
+  "source_review": {
+    "corrections": {
+      "bytes": 3172,
+      "path": "out/fel-version-20261107/correction-review.json",
+      "sha256": "ef0911085136864045011ad7fb7f4f42b3928d8c2d47ea3139e8a2d0f5275dcb"
+    },
+    "effort": "high",
+    "findings": [],
+    "model": "gpt-6.1-sol",
+    "record": {
+      "bytes": 4351,
+      "path": "out/fel-version-20261107/source-review.json",
+      "sha256": "1abb21fa9f08a05cc343afcdc7de1d0860ce59ad77c045f6bc6467f030fd49a7"
+    }
+  },
+  "source_revision": "4903e67f1da90f6b2d598658ca67b950a8523538",
+  "tracked_project_sources": 610,
+  "upstream": {
+    "a733_proposal": {
+      "head": "6362299a409eece76bdf820c08792b26e7862b23",
+      "identity_constant": "0x1903; proposed soc_info.c line670, not imported SRAM support",
+      "observed_state": "open",
+      "url": "https://github.com/linux-sunxi/sunxi-tools/pull/223"
+    },
+    "boot_notes": {
+      "record": {
+        "bytes": 2383,
+        "path": "out/fel-version-20261107/boot-fel-pinned.md",
+        "sha256": "7f58773493c199b62b7dca047b7acc6307ddb0b4c1289cc29ccf51825871f60d"
+      },
+      "scope": "Serial FEL entry after boot0 DRAM initialization; not proof of independent ROM recovery.",
+      "url": "https://github.com/dlan17/a733/blob/0feb1a77f9b1914b421672048e853ff0de85fbbc/boot-fel.md"
+    },
+    "bundle": {
+      "bytes": 763416,
+      "sha256": "b1692eb0752c8e930fadd715d783ff40ef5ef4003f2497c1a3e9efc44ccedb3d"
+    },
+    "commit": "34dfa20f8284273085666436e4cac09af19646c8",
+    "original_files": 87,
+    "source_archive": {
+      "bytes": 542720,
+      "path": "out/fel-version-20261107/work/project/out/fel-version-compile-02/sunxi-tools-source.tar",
+      "sha256": "ed18650ce80d4c44b53f59fb55f9608253a35ae41f75ccc0863462c4b56eee77"
+    },
+    "tree": "9394e0d05f62c99645cbd6ebd5189d81d5635e97",
+    "url": "https://github.com/linux-sunxi/sunxi-tools"
+  },
+  "usb_access_performed": false,
+  "validation": {
+    "focused_launcher": {
+      "cases": 4,
+      "log": {
+        "bytes": 102,
+        "path": "out/fel-version-20261107/launcher-corrected-tests.log",
+        "sha256": "967c92d36cebcf36f2f214cac7698609db89c071c595426864067899c8d2dcc7"
+      }
+    },
+    "focused_recipe_frontend": {
+      "cases": 14,
+      "log": {
+        "bytes": 113,
+        "path": "out/fel-version-20261107/recipe-corrected-tests.log",
+        "sha256": "99c1c42ca4509fdc0439780b82d920f4a3ed9fb1c82518a08f0b99662bf11df2"
+      }
+    },
+    "git_diff_check": "passed",
+    "shell_assembly": {
+      "assembly_cases": 4,
+      "bash_syntax": "passed",
+      "log": {
+        "bytes": 1087,
+        "path": "out/fel-version-20261107/shell-assembly.log",
+        "sha256": "bf55b4b7419fe2afafd401a6625ebd9685d535bac903f293ddfdc1f088e53311"
+      },
+      "shell_suites": 5
+    },
+    "tracked_toml_parse": "passed",
+    "ubuntu_unittests": {
+      "cases": 1614,
+      "errors": 0,
+      "failures": 0,
+      "log": {
+        "bytes": 5241,
+        "path": "out/fel-version-20261107/full-tests.log",
+        "sha256": "e4fe6857b8e07acb7166b590494935698977ddcc4beebd81e67f548bcca282f4"
+      },
+      "skipped": 0
+    }
+  },
+  "version_protocol": {
+    "address": 0,
+    "alarm_seconds": 30,
+    "fel_request": 1,
+    "fel_status_validation": "Upstream transport reads but does not validate eight-byte FEL status; no recovery acceptance implied.",
+    "flash_commands": false,
+    "identification_only": true,
+    "length": 0,
+    "required_signature": "AWUSBFEX",
+    "required_soc_id": "0x1903",
+    "target_execution_commands": false,
+    "target_memory_commands": false,
+    "usb_product": "efe8",
+    "usb_vendor": "1f3a"
+  }
+}

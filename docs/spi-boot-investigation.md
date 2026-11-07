@@ -130,9 +130,12 @@ tmpfs output is accepted, and active swap is refused. Transfer and verify the
 backup off-device before poweroff. Host fixtures and independent review do not
 establish that a physical backup has been made.
 
-The manual lists a BOOT button, but a recovery route for corrupted SPI has not
-been demonstrated. Do not infer that SD boot or button presence proves ROM/USB
-recovery. That hardware result remains required before programming.
+The [ROM recovery investigation](rom-recovery-investigation.md) now provides a
+pinned, version-only host FEL probe with source/ELF inspection and no memory or
+flash command path. It has not contacted the board. The manual lists a BOOT button
+and ADB instructions but no independent ROM-entry procedure. Neither button
+presence, working SD boot nor a later version response proves corrupted-SPI
+recovery. That hardware demonstration remains required before programming.
 
 Before proposing any SPI write:
 

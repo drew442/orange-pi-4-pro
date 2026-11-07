@@ -46,7 +46,10 @@ left **23,830,810,624 bytes**, admitting the subsequent
 20,710,158,336 bytes minimum free and 7,413,485,568 bytes minimum available RAM.
 Final NVMe free was **22,245,568,512 bytes**. The subsequent
 [NVMe-first firmware transport SD](nvme-firmware-test-sd.md) passes its separate
-4 GiB recipe budget plus staging and leaves **21,618,569,216 bytes**. This remains
+4 GiB recipe budget plus staging and leaves **21,618,569,216 bytes**. The
+[version-only FEL probe](rom-recovery-investigation.md) subsequently passes
+frozen compilation under its own 4 GiB recipe budget and leaves
+**21,557,407,744 bytes**, with unchanged host inventory and clean exit. This remains
 below the next full-NVMe initial 22 GiB guard before staging overhead. Verified
 retention is needed for that construction; keep every guard. No additional LV growth is authorized.
 The LV UUID, root source and filesystem type are unchanged. No Orange Pi storage
