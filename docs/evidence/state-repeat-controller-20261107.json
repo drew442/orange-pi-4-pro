@@ -1,0 +1,137 @@
+{
+  "classification": "Reviewed registered state repeat adapters; artifact construction not established by source review",
+  "date": "2026-11-07",
+  "hardware_acceptance": false,
+  "historical_controllers_modified": false,
+  "independent_review": {
+    "bytes": 6816,
+    "path": "out/state-repeat-controller-20261107/independent-review.json",
+    "record": {
+      "assigned_model": "gpt-6.1-sol",
+      "assigned_reasoning_effort": "high",
+      "blocking_findings": [],
+      "checks": [
+        {
+          "command": "python3 -B -m unittest discover -s tests -p 'test_host_state_repeat.py' -v",
+          "result": "7 tests passed; no skips"
+        },
+        {
+          "command": "python3 -B -m unittest discover -s tests -p 'test_*host_state*.py' -v",
+          "result": "53 tests run; 48 passed and 5 existing root-required state ownership fixtures skipped; no failures/errors"
+        },
+        {
+          "command": "git diff --check",
+          "result": "passed"
+        },
+        {
+          "command": "independent raw/canonical evidence SHA256, git hash-object and source SHA256 checks",
+          "result": "all expected source, parent revision, parent receipt, raw/canonical and Git pins matched"
+        }
+      ],
+      "conditions_before_execution": [
+        "Commit coherent reviewed adapter/test bytes with unchanged historical templates and registered evidence; rerun committed CLI --plan successfully. No committed-source CLI plan pass is claimed from tests of imported modules or from currently untracked files.",
+        "Coordinator must inspect integrated source and revalidate live builder disk/RAM, copied root-owned controller capsule/source pins, parent regular artifacts and fresh tag/UUID before any actual state construction. Preserve all unchanged capacity guards; no additional LV growth or guard reduction is authorized.",
+        "Run the registered frozen-builder STATE construction and independent full filesystem reader with exact fresh receipt SHA; retain failed phases and readback evidence. Review actual artifact evidence separately.",
+        "Keep second chain separate from installed 00fd and first candidate fc8 state/bootstrap/NVMe chains and current published operator endpoints."
+      ],
+      "date": "2026-11-07",
+      "hardware_acceptance": false,
+      "limits": [
+        "No SSH, builder execution, device access, builds, commit or push performed in this review. Only local source review and local software tests ran.",
+        "No state-repeat artifact pass, committed-source plan pass, independent state-repeat filesystem readback or byte reproducibility claimed.",
+        "A733; actual 1977614336-byte SD; nominal 250 GB NVMe; minimal host; zero routine SD writes remain required. Actual physical KVM guest and remaining hardware release gates cannot be replaced by model confidence, fixtures or emulation."
+      ],
+      "nonblocking_findings": [],
+      "registered_parent": {
+        "canonical_sha256": "a92e4e387abb8bb6fef7ccbb956104f0dac531305278c60b72085cd922a3a6f3",
+        "git_blob": "988ddfff51156769ea02467a00dab17cfd638ae9",
+        "path": "docs/evidence/production-host-roots-repeat-20261107.json",
+        "phase": "/var/lib/a733-clean-replay-20261106/host-roots-timesync-repeat-01",
+        "producer_revision": "626e3222d9d98587179722a925208fdca34127ee",
+        "receipt": {
+          "bytes": 150796,
+          "sha256": "64e413bbdd158da4e998a193e32d40c8a62c65d3051c6cb2f6aa4b955ab2efbc"
+        }
+      },
+      "review_role": "independent source and local software review",
+      "reviewed_properties": [
+        "Both historical state bodies match the required SHA256 pins and remain unchanged; only the two adapters and their tests are untracked at review time.",
+        "Historical AST amendments are limited to five launcher and four reader string Constant anchors, each exactly once, after exact template SHA authentication. Control flow, predicates, execution statements, exception paths, recipe code, budget and runtime checks are preserved.",
+        "Templates are bounded single-link regular physical siblings, opened nofollow through held physical ancestor descriptors, authenticated by exact SHA256, and rechecked by inode metadata, namespace identity and complete bytes. Same-byte replacement and mutation are rejected.",
+        "Launcher authenticates held original template against committed contents, exact root-reader SHA, raw and canonical root evidence pins, exact Git evidence blob, producer revision, producer phase/output and producer receipt SHA.",
+        "Reader preserves the closed original policy and independent parent marker proof, adds exact canonical registered parent, raw/Git evidence source records, both historical template source pins, repeat-controller binding and repeat-launcher source-record presence.",
+        "Binding __file__/SELF to each adapter makes the original launcher compare executing adapter bytes to committed closure, and makes the original reader hold/authenticate executing reader-adapter bytes against receipt sources. Historical templates remain separately held and pinned.",
+        "Both UUID guards call the original canonical/nonzero/root-slot checks and additionally exclude installed 00fd936c-49fb-4fea-87c8-928b9c1599e0 and prior candidate fc8bbef6-9385-4ddb-90ba-e41eaccc035b.",
+        "Launcher hook runs original final_check followed by template check inside original execute cleanup before success receipt publication. Reader hook checks template immediately before original publish and forces failure report on template-check error.",
+        "Read-only parent root bind, copied private capsule namespace/authentication, initial-root/initial-user-namespace and frozen Ubuntu builder checks, runtime resource thresholds, inventory/mount/process checks and failure retention remain in unchanged parent functions.",
+        "Old state/bootstrap/NVMe chain controllers and published endpoint are unaffected by these new adapter files."
+      ],
+      "schema": 1,
+      "source_pins": {
+        "build/launch-host-roots.py": {
+          "bytes": 28616,
+          "sha256": "eb55e7b0cd51f3deeede47777adda8255de9d48322eb568c502f9a52a797e4ff"
+        },
+        "build/launch-host-state-repeat.py": {
+          "bytes": 8943,
+          "sha256": "5e2998921932607614e51b5f0177917afed24b7a821be5ebad44c4475eeedace"
+        },
+        "build/launch-host-state.py": {
+          "bytes": 28805,
+          "sha256": "68bdbb52c81c41cf97e11b1298c3c04ff64bf4671574550dd4f7ffaad9f405e1"
+        },
+        "build/verify-host-roots.py": {
+          "bytes": 33471,
+          "sha256": "80e843d499bcc2f6d299d6022dc7edf83d73842405e95b38b0f32eee72dcda30"
+        },
+        "build/verify-host-state-repeat.py": {
+          "bytes": 8520,
+          "sha256": "3a31b48f463ce5fa0f8e0c343f6f939dbb3ead30a2870bbff1ac29ffbcbff95d"
+        },
+        "build/verify-host-state.py": {
+          "bytes": 25945,
+          "sha256": "f4375efa014dabac6e68d192ffa0627e8c0645a9b5b4675f8fd95b82504f70e6"
+        },
+        "docs/evidence/production-host-roots-repeat-20261107.json": {
+          "bytes": 25380,
+          "sha256": "4595d68a5077a9b6ac79a1aac37f6b5a1c081cefd08b4bbb64af0a670284f673"
+        },
+        "tests/test_host_state_repeat.py": {
+          "bytes": 14475,
+          "sha256": "387a30195724002179862317f6bdfb8a130587aa9b226f105ee1fed32d729514"
+        }
+      },
+      "verdict": "approve reviewed source pins for coordinator integration; execution and artifact acceptance remain conditional"
+    },
+    "sha256": "3c89cd2614a7fa3ea653c031fe141bd6ae93f92a18e65c236deacfa5b520c9f0"
+  },
+  "registered_root_evidence": {
+    "bytes": 25380,
+    "path": "docs/evidence/production-host-roots-repeat-20261107.json",
+    "sha256": "4595d68a5077a9b6ac79a1aac37f6b5a1c081cefd08b4bbb64af0a670284f673"
+  },
+  "schema": 1,
+  "sources": {
+    "build/launch-host-state-repeat.py": {
+      "bytes": 8943,
+      "sha256": "5e2998921932607614e51b5f0177917afed24b7a821be5ebad44c4475eeedace"
+    },
+    "build/verify-host-state-repeat.py": {
+      "bytes": 8520,
+      "sha256": "3a31b48f463ce5fa0f8e0c343f6f939dbb3ead30a2870bbff1ac29ffbcbff95d"
+    },
+    "tests/test_host_state_repeat.py": {
+      "bytes": 14475,
+      "sha256": "387a30195724002179862317f6bdfb8a130587aa9b226f105ee1fed32d729514"
+    }
+  },
+  "validation": {
+    "broader_existing_root_required_skips": 5,
+    "broader_passed": 48,
+    "broader_tests_run": 53,
+    "committed_cli_plan": false,
+    "focused_tests": 7,
+    "frozen_state_construction": false,
+    "independent_full_readback": false
+  }
+}
