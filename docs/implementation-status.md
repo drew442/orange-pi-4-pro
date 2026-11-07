@@ -53,8 +53,8 @@ Physical repair, SSH and an actual KVM guest are still unproven.
 | Existing deployment | [Published guide](deploy-personalized-20261106.md) retains original SD/NVMe images and state UUID `00fd936c-49fb-4fea-87c8-928b9c1599e0`. Management repair is next. |
 | Installer refresh | [Source `151a532`](installer-refresh-20261107.md): 256 MiB, exact-target yes/no, optional readback/progress; packaged ARM/default-no-readback checks pass. New image unbooted; it does not automatically repair installed state. |
 | Time-enabled userspace | [Actual offline build](timesync-outer-launcher.md) configures 221 pinned packages; complete archive readback and [dated repeat](account-date-replay-driver.md) pass. Fixed clock UID/GID 996, package/management ABI integration; installed NTP remains untested. |
-| Production components | First [roots](production-host-roots.md), [state](production-host-state.md) and [bootstrap](production-host-bootstrap.md) pass construction/readback/review. [Second roots](production-host-roots-repeat.md), [state](production-host-state-repeat.md) and [bootstrap](production-host-bootstrap-repeat.md) also pass, with timestamp/identity differences documented. Second UUID `feaaee34-d782-4c18-bd04-1029540ab26a`; matching full NVMe repeat remains open. |
-| Full NVMe candidate | [Complete composition](production-nvme-composition.md) passes BOOT/GUESTS readback, all parent root/state bytes and independent full gzip/raw/GPT verification. [545.6 MB gzip and derived manifest](nvme-candidate-retention.md) retained on codex; [encoded retention](nvme-raw-retention.md) retires only the generated raw file, preserving both gzip copies. Active endpoint unchanged; clean repeat and matched deployment remain open. |
+| Production components | First [roots](production-host-roots.md), [state](production-host-state.md) and [bootstrap](production-host-bootstrap.md) pass construction/readback/review. [Second roots](production-host-roots-repeat.md), [state](production-host-state-repeat.md) and [bootstrap](production-host-bootstrap-repeat.md) also pass, with timestamp/identity differences documented. Second UUID `feaaee34-d782-4c18-bd04-1029540ab26a`; matching [full NVMe repeat](production-nvme-repeat.md) now passes construction and independent stream verification. |
+| Full NVMe candidate | [Complete composition](production-nvme-composition.md) passes BOOT/GUESTS readback, all parent root/state bytes and independent full gzip/raw/GPT verification. [545.6 MB gzip and derived manifest](nvme-candidate-retention.md) retained on codex; [encoded retention](nvme-raw-retention.md) retires only the generated raw file, preserving both gzip copies. [Second composition and retained gzip](production-nvme-repeat.md) also pass. Active endpoint unchanged; matched physical deployment remains open. |
 | NVMe-first firmware | [Compiled and exactly replayed U-Boot](uboot-nvme-candidate.md); [SD transport](nvme-firmware-test-sd.md) builds and passes independent inspection. Entire SD is identical to production bootstrap outside the boot package. Unbooted, paired only with new `fc8…` state; do not use with installed `00fd…` state. |
 | SPI preparation | [Read-only backup tool](spi-backup.md) and [file assembler](spi-file-candidate.md) pass tests/review; only synthetic baseline assemblies exist. Synthetic files must never be flashed. Actual backup/candidate/programmer/recovery remain open. |
 | ROM investigation | [Version-only host FEL probe](rom-recovery-investigation.md) now compiles in the frozen builder; source/archive/ELF/capsule review passes. No RAM/execute/flash command path. No actual USB response or independent ROM recovery demonstrated. |
@@ -73,7 +73,7 @@ preserves eleven superseded expanded leaves on both hosts and recovers about
 5.17 GB. [Encoded retention](nvme-raw-retention.md) then recovers another 975 MB
 without changing either gzip copy. The second bootstrap construction ends with
 **23,760,064,512 bytes** free, before new full-NVMe project/capsule staging.
-The full NVMe repeat remains open. New regular-file SD packaging stays
+The full NVMe repeat now passes. New regular-file SD packaging stays
 sparse and matches the prior SD raw/gzip bytes in the frozen builder. Recheck
 staging overhead and the unchanged full-NVMe **22 GiB** initial guard before any
 composition; **no guard reduction or additional LV growth is authorized**.
@@ -82,15 +82,14 @@ See [host assessment](build-host-assessment.md).
 The [registered state repeat adapters](state-repeat-controller.md) pass independent
 source review, committed-source planning, full privileged tests, actual state
 construction/full readback and independent artifact review. The matching
-bootstrap also passes; full NVMe construction/stream validation remain open.
+bootstrap and full NVMe construction/stream validation also pass.
 
 The [registered NVMe repeat](nvme-repeat-controller.md) passes source review,
 committed planning and the full suite. Construction passed at source `339eef1`, tag `timesync-repeat-01`, with unchanged
-host inventory and clean process/mount exit. Its **independent stream check is
-running**; stream pass and final artifact review remain pending.
+host inventory and clean process/mount exit. Its [independent full stream check
+and encoded retention](production-nvme-repeat.md) and independent artifact review pass.
 [Capacity preparation](candidate-repeat-capacity.md) preserves all sparse image
-hashes and retains the retired fixture in gzip on both hosts. Native free space
-after the final conversion is **1,410,519,040 bytes**; remeasure before transfers.
+hashes and retains the retired fixture in gzip on both hosts. After the new encoded copy, native free is **855,748,608 bytes**; remeasure before transfers.
 
 [Verified retention](composition-retention.md) preserves retired work trees on
 both hosts. Native sparse conversion preserves generated image bytes and leaves
@@ -100,8 +99,8 @@ with two jobs.
 
 [Clean-build evidence](build-reproduction-status.md) includes frozen-builder
 restoration, source kernel/U-Boot replays, SD reproductions, normalized 220/221
-package exports and separate dated repeats. Full new production component repeats
-and independent deployment are unfinished. All 479 userspace source archives
+package exports and separate dated repeats. Second production roots/state/bootstrap/NVMe constructions now pass with documented
+timestamp/identity differences; independent deployment remains unfinished. All 479 userspace source archives
 are acquired, not compiled. [Licensing evidence for the 26 vendor boot inputs](evidence/vendor-boot-license-inventory-20261106.json)
 remains incomplete. [Userspace notices](userspace-notices.md) resolve for all 221
 packages; notice presence does not establish legal sufficiency. No public
@@ -112,7 +111,7 @@ redistribution clearance is claimed.
 1. Complete the existing-install repair and verify SSH with **both** keys.
 2. Run the [first actual KVM guest](kvm-first-guest.md): CPU/disk/network, clean
    shutdown/restart and persisted disk marker. `/dev/kvm` alone is insufficient.
-3. Continue clean production repeats and prepare a tested matched deployment
+3. Prepare a tested matched deployment
    procedure. The new candidate/transport SD must not replace the current repair
    images without an explicit matched deployment plan.
 4. After management works, retain the [original SPI backup](spi-backup.md)

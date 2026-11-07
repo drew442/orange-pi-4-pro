@@ -1,5 +1,11 @@
 {
-  "classification": "Reviewed independent repeat stream reader; actual constructed-artifact streaming not established by source tests",
+  "actual_stream_exit_code": 0,
+  "actual_stream_report": {
+    "bytes": 5322,
+    "path": "out/nvme-timesync-repeat-01-20261107/stream-verification.json",
+    "sha256": "683d48fadbbf7481ccc5d0973923e37640af730f95e75179b81dba3babd7e63d"
+  },
+  "classification": "Reviewed independent repeat stream reader and successful actual full-artifact stream verification",
   "date": "2026-11-07",
   "hardware_acceptance": false,
   "historical_reader": {
@@ -31,8 +37,14 @@
   },
   "state_uuid": "feaaee34-d782-4c18-bd04-1029540ab26a",
   "validation": {
-    "actual_stream_pass": false,
+    "actual_stream_pass": true,
     "assembly_cases": 5,
+    "bash_syntax_log": {
+      "bytes": 29,
+      "path": "tmp/nvme-repeat-stream-20261107/syntax-check.log",
+      "sha256": "934aa42cd4472031c917ffac45977ad3b728ec49549469c1cce1217943a4f3fb"
+    },
+    "bash_syntax_scripts": 12,
     "focused_skips": 0,
     "focused_tests": 53,
     "full_privileged_suite_with_new_reader": true,
@@ -44,6 +56,13 @@
     "privileged_skips": 0,
     "privileged_unit_tests": 1669,
     "python310_grammar": true,
-    "shell_suites": 5
+    "resolved_wrapper_issue": "Original full-suite wrapper used unavailable rg inside process substitution; unit/shell/assembly passed but syntax step did not run. Separate checked rg/find fallback completed all12 Bash parses, and exact reader-commit five TOML files parsed successfully.",
+    "shell_suites": 5,
+    "toml_files": 5,
+    "toml_parse_log": {
+      "bytes": 58,
+      "path": "tmp/nvme-repeat-stream-20261107/toml-check.log",
+      "sha256": "5c2912350bb46f6a0c9465ebdbdd4e6066faa87bee0e9451d7737d078d797708"
+    }
   }
 }

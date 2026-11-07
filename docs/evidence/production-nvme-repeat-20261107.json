@@ -1,0 +1,146 @@
+{
+  "classification": "Second full production NVMe file construction, independent stream verification and encoded retention",
+  "construction": {
+    "compression": {
+      "filename": "",
+      "gzip": {
+        "bytes": 545633737,
+        "sha256": "4b6cbe6eb16cc3d3cd236b0d8701908408d38e5993d5aca5ffb4882708766df0"
+      },
+      "gzip_expansion_independent_verification": "pending",
+      "input_identity_unchanged": true,
+      "level": 9,
+      "mtime": 0,
+      "raw": {
+        "bytes": 256060514304,
+        "sha256": "d8f842f806c8ea4257b6efaf45d080b95e42a1f06bbde0a35f07d67c7416c7d9"
+      },
+      "schema": 1
+    },
+    "final_resources": {
+      "available_memory_bytes": 7625736192,
+      "free_bytes": 22269272064,
+      "time": 1794055324.770462
+    },
+    "host_inventory_unchanged": true,
+    "initial_budget": {
+      "capsule_bytes": 207399,
+      "git_staging_bound_bytes": 131918156,
+      "recipe_bytes": 23622320128,
+      "required_free_bytes": 23754445683
+    },
+    "mapped_processes_final": [],
+    "minimum_resources": {
+      "available_memory_bytes": 7548633088,
+      "free_bytes": 20733865984
+    },
+    "phase_mounts_final": [],
+    "raw_allocated_bytes": 975032320,
+    "receipt": {
+      "bytes": 390310,
+      "sha256": "7325c0382c14b2120f0ab7642810e04bc7b0f5eb9561fc9be7c9d7c7a02b15b6"
+    },
+    "state": "complete",
+    "state_uuid": "feaaee34-d782-4c18-bd04-1029540ab26a",
+    "success": true,
+    "verification": {
+      "hardware_acceptance": false,
+      "image": {
+        "bytes": 256060514304,
+        "sha256": "d8f842f806c8ea4257b6efaf45d080b95e42a1f06bbde0a35f07d67c7416c7d9"
+      },
+      "manifest": {
+        "bytes": 9393,
+        "sha256": "b95ff7047bfcf99809d7d9fd39b0eb4e697a5d185694d89c7dc6e881a2979d60"
+      }
+    }
+  },
+  "date": "2026-11-07",
+  "delivery_service_changed": false,
+  "hardware_acceptance": false,
+  "independent_deployment_reproduced": false,
+  "independent_review": {
+    "bytes": 55017,
+    "hardware_acceptance": false,
+    "model": "gpt-6.1-sol",
+    "path": "out/nvme-timesync-repeat-01-20261107/independent-review.json",
+    "reasoning_effort": "high",
+    "result": "approved_file_artifact_scope_only",
+    "sha256": "258fd8a849315f554527dad912f34016e7a6eab06364d63d7a3c62fa07a2c2cf"
+  },
+  "outer_launcher_final_resources": {
+    "available_memory_bytes": 7647715328,
+    "free_bytes": 22253371392,
+    "time": 1794055530.2138646
+  },
+  "phase": "/var/lib/a733-clean-replay-20261106/nvme-timesync-repeat-01",
+  "physical_device_writes": false,
+  "producer_revision": "339eef1ffcd1370dffc65fec81861f7081cb2daf",
+  "reader_revision": "b3caa81",
+  "reproduction": "Second construction with semantic comparisons of parent components; timestamps, fresh state identity and filesystem construction metadata differ. Byte-identical reproducibility is not claimed.",
+  "retention": {
+    "report": {
+      "bytes": 757,
+      "path": "out/nvme-repeat-candidate-retained-20261107/retention.json",
+      "sha256": "060361413447aa56a51cc169c6c4e206798450eafd0d4ad0f83723a06d828a90"
+    },
+    "result": {
+      "delivery_service_changed": false,
+      "free_after": 855748608,
+      "free_before": 1401446400,
+      "gzip": {
+        "bytes": 545633737,
+        "sha256": "4b6cbe6eb16cc3d3cd236b0d8701908408d38e5993d5aca5ffb4882708766df0"
+      },
+      "hardware_acceptance": false,
+      "manifest": {
+        "bytes": 10481,
+        "sha256": "c0f036dcc5d300a24785ebaac4c438bb0aef7cf1b8b073dc97a2d15a7896f563"
+      },
+      "native_reserve_bytes": 268435456,
+      "physical_device_writes": false,
+      "recompressed": false,
+      "schema": 1,
+      "source_manifest": {
+        "bytes": 9393,
+        "sha256": "b95ff7047bfcf99809d7d9fd39b0eb4e697a5d185694d89c7dc6e881a2979d60"
+      },
+      "stream_report": {
+        "bytes": 5322,
+        "sha256": "683d48fadbbf7481ccc5d0973923e37640af730f95e75179b81dba3babd7e63d"
+      },
+      "success": true
+    }
+  },
+  "schema": 1,
+  "state_uuid": "feaaee34-d782-4c18-bd04-1029540ab26a",
+  "stream_verification": {
+    "boot_guests_namespaces": "Producer readback, independently reviewed; not independently repeated by stream reader",
+    "compressed_wire": {
+      "bytes": 545633737,
+      "sha256": "4b6cbe6eb16cc3d3cd236b0d8701908408d38e5993d5aca5ffb4882708766df0"
+    },
+    "decoded_image": {
+      "bytes": 256060514304,
+      "sha256": "d8f842f806c8ea4257b6efaf45d080b95e42a1f06bbde0a35f07d67c7416c7d9"
+    },
+    "gpt": true,
+    "report": {
+      "bytes": 5322,
+      "path": "out/nvme-timesync-repeat-01-20261107/stream-verification.json",
+      "sha256": "683d48fadbbf7481ccc5d0973923e37640af730f95e75179b81dba3babd7e63d"
+    },
+    "root_state_partition_bytes": true,
+    "superblocks": true,
+    "terminal_exit_code": 0
+  },
+  "validation": {
+    "assembly_cases": 5,
+    "bash_scripts": 12,
+    "controller_evidence": "docs/evidence/nvme-repeat-stream-controller-20261107.json",
+    "privileged_unit_tests": 1669,
+    "shell_suites": 5,
+    "skips": 0,
+    "toml_files": 5
+  }
+}
