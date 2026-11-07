@@ -83,7 +83,7 @@ further work; no guard reduction or additional LV growth is authorized.
 
 Hardware SSH, automatic time, actual KVM execution, boot/write endurance,
 interrupted update/rollback, backup/recovery and independently reproduced
-installation remain open. The matching NVMe-first firmware transport for this
-second identity also remains to be built and physically tested. SPI programming
+installation remain open. The [matching NVMe-first firmware transport](nvme-repeat-firmware-sd.md) now
+passes construction and independent inspection; physical boot remains open. SPI programming
 still requires the original off-device backup, independent recovery evidence,
 exact live target/write plan and the agreed yes/no confirmation.

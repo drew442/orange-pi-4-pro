@@ -55,13 +55,13 @@ Physical repair, SSH and an actual KVM guest are still unproven.
 | Time-enabled userspace | [Actual offline build](timesync-outer-launcher.md) configures 221 pinned packages; complete archive readback and [dated repeat](account-date-replay-driver.md) pass. Fixed clock UID/GID 996, package/management ABI integration; installed NTP remains untested. |
 | Production components | First [roots](production-host-roots.md), [state](production-host-state.md) and [bootstrap](production-host-bootstrap.md) pass construction/readback/review. [Second roots](production-host-roots-repeat.md), [state](production-host-state-repeat.md) and [bootstrap](production-host-bootstrap-repeat.md) also pass, with timestamp/identity differences documented. Second UUID `feaaee34-d782-4c18-bd04-1029540ab26a`; matching [full NVMe repeat](production-nvme-repeat.md) now passes construction and independent stream verification. |
 | Full NVMe candidate | [Complete composition](production-nvme-composition.md) passes BOOT/GUESTS readback, all parent root/state bytes and independent full gzip/raw/GPT verification. [545.6 MB gzip and derived manifest](nvme-candidate-retention.md) retained on codex; [encoded retention](nvme-raw-retention.md) retires only the generated raw file, preserving both gzip copies. [Second composition and retained gzip](production-nvme-repeat.md) also pass. Active endpoint unchanged; matched physical deployment remains open. |
-| NVMe-first firmware | [Compiled and exactly replayed U-Boot](uboot-nvme-candidate.md); [SD transport](nvme-firmware-test-sd.md) builds and passes independent inspection. Entire SD is identical to production bootstrap outside the boot package. Unbooted, paired only with new `fc8…` state; do not use with installed `00fd…` state. |
+| NVMe-first firmware | [Compiled and exactly replayed U-Boot](uboot-nvme-candidate.md); [first SD transport](nvme-firmware-test-sd.md) and [second matching transport](nvme-repeat-firmware-sd.md) build and pass independent inspection. Each equals its matching bootstrap outside the boot package. Unbooted; paired with `fc8…` and `feaa…` respectively. Do not use with installed `00fd…` state. |
 | SPI preparation | [Read-only backup tool](spi-backup.md) and [file assembler](spi-file-candidate.md) pass tests/review; only synthetic baseline assemblies exist. Synthetic files must never be flashed. Actual backup/candidate/programmer/recovery remain open. |
 | ROM investigation | [Version-only host FEL probe](rom-recovery-investigation.md) now compiles in the frozen builder; source/archive/ELF/capsule review passes. No RAM/execute/flash command path. No actual USB response or independent ROM recovery demonstrated. |
 | Host operations | [Updates](host-updates.md), [selection](nvme-root-selection.md), [RAM recovery](host-recovery.md) and package-state isolation pass software/packaged checks. Physical interrupted update, rollback, dirty-journal and missing-NVMe recovery remain open. |
 | Guest operations | [KVM-only first guest](kvm-first-guest.md), [management](guest-operations.md), networking, enrollment, checkpoints and off-device backup/restore have software fixtures. **No guest has booted.** |
 
-Latest privileged Ubuntu discovery: **1,669 tests, no skips/errors/failures**;
+Latest privileged Ubuntu discovery: **1,676 tests, no skips/errors/failures**;
 five shell suites, five diagnostic assembly cases and Bash/TOML checks pass.
 These results establish no physical boot, guest, SD-write or recovery acceptance.
 
@@ -92,7 +92,9 @@ and encoded retention](production-nvme-repeat.md) and independent artifact revie
 hashes and retains the retired fixture in gzip on both hosts. After the new encoded copy, native free is **855,748,608 bytes**; remeasure before transfers.
 
 [Verified retention](composition-retention.md) preserves retired work trees on
-both hosts. Native sparse conversion preserves generated image bytes and leaves
+both hosts. The second matching NVMe-first transport ends with **21,926,354,944 bytes** free
+on the builder, below a new full-NVMe initial admission. Native sparse conversion
+preserves generated image bytes and leaves
 the separate **256 MiB** free-space minimum intact. Keep generated/downloaded
 artifacts outside Git. Recheck disk/RAM before each operation; start compilation
 with two jobs.

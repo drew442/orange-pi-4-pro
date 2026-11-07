@@ -11,7 +11,9 @@ board. It does not establish SPI boot, a working recovery route or KVM execution
 is paired with production state UUID `fc8bbef6-9385-4ddb-90ba-e41eaccc035b`.
 The installed NVMe uses `00fd936c-49fb-4fea-87c8-928b9c1599e0`; these do not pair.
 Do not write this image over the current host SD or reinstall NVMe to fix DHCP.
-No new physical flashing step is requested here.
+A [separate matching transport for the second `feaa…` candidate](nvme-repeat-firmware-sd.md)
+now also passes construction/inspection. No new physical flashing step is
+requested here.
 
 ## Boot paths and scope
 

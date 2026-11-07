@@ -1,0 +1,140 @@
+{
+  "boot_profile": {
+    "bootcommand": "setenv boot_targets nvme; run distro_bootcmd",
+    "environment": "CONFIG_ENV_IS_NOWHERE=y",
+    "evidence": {
+      "bytes": 16835,
+      "path": "docs/evidence/uboot-nvme-candidate-20261107.json",
+      "sha256": "da2f319c342beaf692e4f392ef622ab307748d9c586709c186d9f04a1d7ca01c"
+    },
+    "expected_spsr": "0x3c9",
+    "name": "nvme-first-el2-test",
+    "physical_acceptance_pending": true,
+    "registered_target": "nvme-candidate-20261107-ram02",
+    "registry": {
+      "bytes": 4035,
+      "path": "configs/uboot-nvme-candidate-targets.lock.json",
+      "sha256": "abb6f3136f6df22c3da0b7a205b7d2b968e3faad7a3589a3fb69c1c2689117c5"
+    },
+    "sd_fallback": "run bootcmd_mmc0; configs/host-boot.cmd retained on SD",
+    "target_service": "0x8000ff40"
+  },
+  "classification": "Constructed NVMe-first firmware transport SD matched to second production state; no physical acceptance",
+  "date": "2026-11-07",
+  "delivery_service_changed": false,
+  "files": {
+    "a733-host-sd.img": {
+      "bytes": 268435456,
+      "sha256": "e8a0a7a7b1edb3bb86cb485dfc6e83ed5e7c7c971caa031463e18faad9c16717"
+    },
+    "a733-host-sd.img.gz": {
+      "bytes": 17272072,
+      "sha256": "17da6486bd6669b61959e7ae5b32f6cdd58177856b1cec1bc2211f24d617a2ae"
+    },
+    "assembly.log": {
+      "bytes": 4114,
+      "sha256": "904431cfc2b183c9f8bbe35bbad8e953e79420ec038f3cd343fcd4b69ecfade6"
+    },
+    "uInitrd": {
+      "bytes": 4762443,
+      "sha256": "bf2c0c309fe61bdff9e5706ce23dec5418dab5114b27faf0f6ab2a94e9ce0386"
+    }
+  },
+  "hardware_acceptance": false,
+  "independent_artifact_review": {
+    "bytes": 11069,
+    "hardware_acceptance": false,
+    "model": "gpt-6.1-sol",
+    "path": "out/nvme-repeat-firmware-sd-20261107/independent-review.json",
+    "reasoning_effort": "high",
+    "result": "pass",
+    "scope": "644 source blobs/checkouts and complete capsule; independently decoded SD, MBR/firmware, filesystem files, CRC and all424newc entries; byte equality outside firmware region to matching second bootstrap; current842 host inventory and cleanup",
+    "sha256": "4e7ebc3785161013cc8927f995019e595e9fb8cee882e3b06bde43073f7b8109"
+  },
+  "installer_manifest_source_check": {
+    "manifest": {
+      "bytes": 10481,
+      "path": "out/nvme-repeat-candidate-retained-20261107/manifest.json",
+      "sha256": "c0f036dcc5d300a24785ebaac4c438bb0aef7cf1b8b073dc97a2d15a7896f563"
+    },
+    "result": "pass",
+    "scope": "Pure manifest validator only; no target selection, installation or physical write",
+    "source": {
+      "bytes": 26072,
+      "path": "scripts/install-nvme.py",
+      "sha256": "6f356eb05ea891981966c1d08b7174fe331823da3cd118971cfd5b2c37110b12"
+    }
+  },
+  "output": "work/project/out/host-sd-nvme-firmware-repeat-01",
+  "phase": "/var/lib/a733-clean-replay-20261106/host-bootstrap-nvme-firmware-repeat-01",
+  "physical_device_writes": false,
+  "postconditions": {
+    "host_inventory_unchanged": true,
+    "mapped_processes": [],
+    "phase_mounts": []
+  },
+  "producer_bootstrap_readback": {
+    "bytes": 669,
+    "path": "out/nvme-repeat-firmware-sd-20261107/work/readback/bootstrap.json",
+    "sha256": "6128726122769549586347f7434c282ed37769806238b927797d7b0b8b4da885"
+  },
+  "producer_revision": "41e0e8f8a018147e8b0cfc93f5fca1e0b8d16bc5",
+  "receipt": {
+    "bytes": 186214,
+    "path": "out/nvme-repeat-firmware-sd-20261107/receipt.json",
+    "sha256": "f757c8bb087a26e5559978f0d88f752db1af9f9c72fff23dcb851cf68e613c1f"
+  },
+  "resources": {
+    "final": {
+      "available_memory_bytes": 7675428864,
+      "free_bytes": 21926354944,
+      "time": 1794056893.5844324
+    },
+    "initial_budget": {
+      "capsule_bytes": 232307243,
+      "git_staging_bound_bytes": 133384815,
+      "recipe_bytes": 4294967296,
+      "required_free_bytes": 4660659354
+    },
+    "minimum_available_memory_bytes": 7334268928,
+    "minimum_free_bytes": 21783724032
+  },
+  "schema": 1,
+  "sd_manifest": {
+    "bytes": 9734,
+    "path": "out/nvme-repeat-firmware-sd-20261107/work/project/out/host-sd-nvme-firmware-repeat-01/manifest.json",
+    "sha256": "74d9c25f6053322df8fef3f1522c92e48ef1730fa7ad098063bfd7a27f705127"
+  },
+  "source_files": 644,
+  "source_manifest": {
+    "bytes": 135505,
+    "path": "out/nvme-repeat-firmware-sd-20261107/source-manifest.json",
+    "sha256": "7e25c729c380cda6481625e8c4bd8571215917bdced25b300826bd113b9ce529"
+  },
+  "source_review": {
+    "bytes": 3948,
+    "path": "out/nvme-repeat-firmware-sd-20261107/source-review.json",
+    "sha256": "40f3c68f9be58347dde7288fe31cb6577b156e3d9577bdbe17139928d35acdf9"
+  },
+  "spi_programmed": false,
+  "state_uuid": "feaaee34-d782-4c18-bd04-1029540ab26a",
+  "validation": {
+    "assembly_cases": 5,
+    "bash_scripts": 12,
+    "full_suite_log": {
+      "bytes": 6525,
+      "path": "out/nvme-repeat-firmware-sd-20261107/full-validation.log",
+      "sha256": "13bf1851b100f12281879ff5d12f7190985b6b4ef7565157f14f4f5eda15afb2"
+    },
+    "privileged_unit_tests": 1676,
+    "python310_grammar": true,
+    "shell_suites": 5,
+    "skips": 0,
+    "toml_files": 5,
+    "toml_log": {
+      "bytes": 771,
+      "path": "out/nvme-repeat-firmware-sd-20261107/toml-check.log",
+      "sha256": "ba6dc8961b71a7f54286f013b5f3a22954a1c2f8beccab3e90e54c50842fc142"
+    }
+  }
+}
