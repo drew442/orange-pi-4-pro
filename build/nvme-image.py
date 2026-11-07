@@ -42,6 +42,26 @@ RECIPES = ('build/nvme-image.py', 'scripts/nvme_layout.py', 'build/assemble-host
            'build/root-selection.py', 'build/host-initramfs.py', 'build/host-payload.py',
            'build/host-state.py', 'configs/host_config.py', 'configs/package_state.py',
            'configs/host-boot.cmd', 'configs/builder-packages.lock.tsv')
+BOOT_COMMAND_PROFILES = ('sd-bootstrap', 'spi-nvme-v1')
+SPI_COMMAND = 'configs/spi-nvme-host-boot.cmd'
+SPI_COMMAND_PIN = {'bytes': 1315, 'sha256': 'c9f0db913fb49bbc5c54c5287049b8c56aaf17406fcdccf1b9fe0847ccce6c26'}
+
+
+def boot_command(profile='sd-bootstrap', boot_profile='baseline-el1'):
+    """Select an explicit NVMe boot-file policy; the matching SD stays unchanged."""
+    if profile not in BOOT_COMMAND_PROFILES:
+        raise ValueError('unknown NVMe boot command profile')
+    if profile == 'sd-bootstrap':
+        return HOST.read_regular(REPO / 'configs/host-boot.cmd', 128 * 1024), None
+    if boot_profile != 'experimental-el2':
+        raise ValueError('SPI/NVMe boot command requires experimental-el2 boot profile')
+    command = HOST.read_regular(REPO / SPI_COMMAND, 128 * 1024, SPI_COMMAND_PIN)
+    return command, {
+        'name': profile, 'source': {'path': SPI_COMMAND, **SPI_COMMAND_PIN},
+        'payload_context': {'devtype': 'nvme', 'devnum': 0, 'partition': 1, 'prefix': '/boot/'},
+        'firmware_search_policy': 'Broader pinned distro scan; inspect GPT attributes and complete boot filesystem separately.',
+        'physical_acceptance_pending': True,
+    }
 
 
 def metadata(directory):
@@ -294,10 +314,11 @@ def root_selection(snapshot, slot, roots, diagnostic):
 
 
 def build(payload_directory, state_directory, sd_directory, diagnostic_directory,
-          output_directory, size_bytes, logical_sector_bytes=512, physical_sector_bytes=4096, for_installation=False, boot_profile='baseline-el1'):
+          output_directory, size_bytes, logical_sector_bytes=512, physical_sector_bytes=4096, for_installation=False, boot_profile='baseline-el1', boot_command_profile='sd-bootstrap'):
     diagnostic, profile, profile_recipes = HOST.load_boot_profile(boot_profile)
     if os.geteuid() != 0:
         raise ValueError('root required to seed root-owned filesystem metadata')
+    command, command_policy = boot_command(boot_command_profile, boot_profile)
     # Geometry and all supplied manifests are checked before reserving output.
     gpt = LAYOUT.encode_gpt(size_bytes, logical_sector_bytes, physical_sector_bytes)
     payload_directory, roots, root_record = metadata(payload_directory)
@@ -359,7 +380,6 @@ def build(payload_directory, state_directory, sd_directory, diagnostic_directory
                 HOST.record(initrd[64:]) != {k: sd['host_initramfs'][k] for k in ('bytes', 'sha256')}):
             raise ValueError('host initrd wrapper/payload differs')
         (boot_seed / 'boot/uInitrd').write_bytes(initrd)
-        command = (REPO / 'configs/host-boot.cmd').read_bytes()
         (boot_seed / 'boot/boot.cmd').write_bytes(command)
         environment = dict(os.environ, SOURCE_DATE_EPOCH=HOST.EPOCH)
         subprocess.run(['mkimage', '-C', 'none', '-A', 'arm', '-T', 'script', '-d',
@@ -401,6 +421,9 @@ def build(payload_directory, state_directory, sd_directory, diagnostic_directory
                   'build_seconds': round(time.monotonic() - started, 1),
                   'reproducibility': 'fresh disk/partition/boot/guests UUIDs and filesystem metadata; byte identity not claimed',
                   'limitations': [('Per-installation state must not be cloned.' if for_installation else 'Fixture state must not be deployed or cloned.'), 'No physical target identity or write authorization implied.', 'No SPI firmware or NVMe-boot capability established.', 'Zero SD writes and actual KVM guest acceptance require board evidence.']}
+        if command_policy is not None:
+            result['nvme_boot_command_profile'] = command_policy
+            result['recipes'][SPI_COMMAND] = HOST.record(command)
         (output / 'manifest.json').write_text(json.dumps(result, indent=2) + '\n')
     return result
 
@@ -414,10 +437,11 @@ if __name__ == '__main__':
     parser.add_argument('--logical-sector-bytes', type=int, choices=(512, 4096), default=512)
     parser.add_argument('--physical-sector-bytes', type=int, default=4096)
     parser.add_argument('--boot-profile', choices=HOST.BOOT_PROFILES, default='baseline-el1')
+    parser.add_argument('--boot-command-profile', choices=BOOT_COMMAND_PROFILES, default='sd-bootstrap')
     args = parser.parse_args()
     try:
         result = build(args.payload_directory, args.state_directory, args.sd_directory, args.diagnostic_directory,
-                       args.new_output_directory, args.size_bytes, args.logical_sector_bytes, args.physical_sector_bytes, args.for_installation, boot_profile=args.boot_profile)
+                       args.new_output_directory, args.size_bytes, args.logical_sector_bytes, args.physical_sector_bytes, args.for_installation, boot_profile=args.boot_profile, boot_command_profile=args.boot_command_profile)
     except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as error:
         parser.exit(1, f'NVMe image: {error}\n')
     print(json.dumps(result, indent=2))

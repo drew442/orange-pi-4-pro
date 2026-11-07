@@ -25,6 +25,51 @@ class NVMeImageTests(unittest.TestCase):
         self.sd['package_state_profile'] = 'a733-package-state-v1'
         self.diag = json.loads((REPO / 'docs/evidence/diagnostic-20261104.json').read_text())['files']
 
+    def test_default_boot_command_keeps_sd_fallback(self):
+        command, policy = IMAGE.boot_command()
+        self.assertEqual(command, (REPO / 'configs/host-boot.cmd').read_bytes())
+        self.assertIsNone(policy)
+
+    def test_spi_boot_command_binds_reviewed_nvme_script_and_context(self):
+        command, policy = IMAGE.boot_command('spi-nvme-v1', 'experimental-el2')
+        self.assertEqual(command, (REPO / IMAGE.SPI_COMMAND).read_bytes())
+        self.assertEqual(IMAGE.HOST.record(command), IMAGE.SPI_COMMAND_PIN)
+        self.assertEqual(policy['source'], dict(path=IMAGE.SPI_COMMAND, **IMAGE.SPI_COMMAND_PIN))
+        self.assertEqual(policy['payload_context'],
+                         {'devtype': 'nvme', 'devnum': 0, 'partition': 1, 'prefix': '/boot/'})
+        self.assertTrue(policy['physical_acceptance_pending'])
+
+    def test_spi_boot_command_refuses_substitution_and_symlink(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            (root / 'configs').mkdir()
+            script = root / IMAGE.SPI_COMMAND
+            script.write_bytes(b'saveenv\n')
+            with patch.object(IMAGE, 'REPO', root):
+                with self.assertRaises(ValueError):
+                    IMAGE.boot_command('spi-nvme-v1', 'experimental-el2')
+                script.unlink()
+                script.symlink_to(REPO / IMAGE.SPI_COMMAND)
+                with self.assertRaises(ValueError):
+                    IMAGE.boot_command('spi-nvme-v1', 'experimental-el2')
+
+    def test_invalid_command_profiles_refuse_before_input_or_storage_work(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary) / 'out/nvme-image-refused'
+            for command_profile, firmware in (('unknown', 'experimental-el2'),
+                                                ('spi-nvme-v1', 'baseline-el1')):
+                with self.subTest(command_profile=command_profile), \
+                        patch.object(IMAGE.os, 'geteuid', return_value=0), \
+                        patch.object(IMAGE, 'metadata') as inputs, \
+                        patch.object(IMAGE.STATE, 'validate_workspace_storage') as storage:
+                    with self.assertRaises(ValueError):
+                        IMAGE.build(Path('/absent'), Path('/absent'), Path('/absent'),
+                                    Path('/absent'), output, 256060514304,
+                                    boot_profile=firmware, boot_command_profile=command_profile)
+                    inputs.assert_not_called()
+                    storage.assert_not_called()
+                self.assertFalse(output.parent.exists())
+
     def test_fixture_cannot_be_marked_for_installation(self):
         self.assertFalse(IMAGE.installation_intent(self.state)['for_installation'])
         with self.assertRaisesRegex(ValueError, 'fixture'):
