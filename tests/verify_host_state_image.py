@@ -128,7 +128,7 @@ def verify(image, manifest_path):
             attributes = re.search(r'Type:\s+(\S+)\s+Mode:\s+0?([0-7]{3,4})\b', value)
             owner = re.search(r'User:\s+(\d+)\s+Group:\s+(\d+)', value)
             if (not attributes or not owner or attributes.group(1) != kind or
-                    int(attributes.group(2), 8) != mode or owner.groups() != ('0', '0')):
+                    int(attributes.group(2), 8) not in (mode if isinstance(mode, tuple) else (mode,)) or owner.groups() != ('0', '0')):
                 raise ValueError(f'unexpected filesystem metadata: {path}')
 
         for path, mode in (('/', 0o755), ('/lost+found', 0o700), ('/var', 0o755),
@@ -136,7 +136,7 @@ def verify(image, manifest_path):
                            ('/identity', 0o700), ('/identity/ssh', 0o700), ('/config', 0o700), ('/boot', 0o700)):
             metadata(path, 'directory', mode)
         for path in ('/.a733-state', '/identity/machine-id', '/config/management.json', '/root/.ssh/authorized_keys', '/boot/selected.conf'):
-            metadata(path, 'regular', 0o600)
+            metadata(path, 'regular', (0o600, 0o644) if path == '/identity/machine-id' else 0o600)
         if debugfs('cat /.a733-state') != f'a733-state-v1\n{state_uuid}\n'.encode():
             raise ValueError('state marker mismatch')
         identity = debugfs('cat /identity/machine-id')

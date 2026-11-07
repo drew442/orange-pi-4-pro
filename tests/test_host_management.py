@@ -2,7 +2,7 @@
 import base64
 import copy
 import hashlib
-from contextlib import redirect_stdout
+from contextlib import redirect_stderr, redirect_stdout
 import importlib.util
 import io
 import json
@@ -100,19 +100,21 @@ class ValidationTests(unittest.TestCase):
                 M.ssh_config(address, CONFIG)
 
     def test_prepare_guard_precedes_every_write(self):
-        with patch.object(M, 'runtime_guard', side_effect=ValueError('builder')), patch.object(M, 'atomic_write') as write, patch.object(M, 'ram_link') as link:
+        with patch.object(M, 'runtime_guard', side_effect=ValueError('builder')), patch.object(M, 'atomic_write') as write, patch.object(M, 'ram_link') as link, patch.object(M.os, 'chmod') as chmod:
             with self.assertRaises(ValueError):
                 M.prepare()
             write.assert_not_called()
             link.assert_not_called()
+            chmod.assert_not_called()
 
     def test_identity_output_reaches_journal_and_console(self):
         unit = (Path(__file__).resolve().parents[1] / 'configs/a733-management-ssh.service').read_text()
         self.assertIn('\nStandardOutput=journal+console\n', unit)
 
-    def test_prepare_only_ram_paths_and_fixed_masks(self):
-        with patch.object(M, 'runtime_guard', return_value=CONFIG), patch.object(M, 'prepare_clock_state'), patch.object(M, 'ram_directory'), patch.object(M, 'atomic_write') as write, patch.object(M, 'ram_link') as link, patch.object(M.subprocess, 'run') as command:
+    def test_prepare_ram_config_bound_machine_identity_and_fixed_masks(self):
+        with patch.object(M, 'runtime_guard', return_value=CONFIG), patch.object(M, 'prepare_clock_state'), patch.object(M, 'ram_directory'), patch.object(M, 'atomic_write') as write, patch.object(M, 'ram_link') as link, patch.object(M.subprocess, 'run') as command, patch.object(M.os, 'chmod') as chmod:
             M.prepare()
+            chmod.assert_called_once_with('/etc/machine-id', 0o644)
             for call in write.call_args_list:
                 self.assertTrue(str(call.args[0]).startswith('/etc/'))
             links = dict(call.args for call in link.call_args_list)
@@ -216,12 +218,13 @@ def audit(root):
         with patch.object(M, 'runtime_guard', return_value=CONFIG), \
                 patch.object(M, 'prepare_clock_state', side_effect=ValueError('clock')), \
                 patch.object(M, 'ram_directory') as directory, patch.object(M, 'atomic_write') as write, \
-                patch.object(M, 'ram_link') as link:
+                patch.object(M, 'ram_link') as link, patch.object(M.os, 'chmod') as chmod:
             with self.assertRaisesRegex(ValueError, 'clock'):
                 M.prepare()
             directory.assert_not_called()
             write.assert_not_called()
             link.assert_not_called()
+            chmod.assert_not_called()
 
     def test_prepare_reads_selected_metadata_and_canonical_marker(self):
         metadata = self.metadata()
@@ -539,8 +542,20 @@ class SupervisorTests(unittest.TestCase):
         self.assertEqual(events, ['identity 192.0.2.20', 'start', 'stop', 'identity 192.0.2.21', 'start', 'stop'])
 
     def test_missing_ip_is_bounded(self):
-        with self.assertRaises(ValueError):
+        with self.assertRaisesRegex(M.AddressUnavailable, 'management IPv4 unavailable after 60 seconds'):
             self.run_loop([None], [False], clock=[0, 61])
+
+    def test_failure_reports_only_fixed_public_timeout_reason(self):
+        errors = [M.AddressUnavailable('private material must never be interpolated'),
+                  ValueError('private material'), OSError('private material'),
+                  subprocess.CalledProcessError(1, ['private material'], output='private material')]
+        for error in errors:
+            with self.subTest(error=type(error).__name__), redirect_stderr(io.StringIO()) as output:
+                M.report_failure(error)
+                self.assertNotIn('private material', output.getvalue())
+                self.assertIn('activation failed', output.getvalue())
+                self.assertEqual('management IPv4 unavailable after 60 seconds' in output.getvalue(),
+                                 type(error) is M.AddressUnavailable)
 
     def test_invalid_identity_stops_before_listener(self):
         for failing in ('ensure_host_key', 'log_host_identity'):

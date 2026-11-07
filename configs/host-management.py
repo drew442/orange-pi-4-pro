@@ -36,6 +36,10 @@ RUNTIME = Path('/run/a733-management')
 KEY_NAME = 'ssh_host_ed25519_key'
 
 
+class AddressUnavailable(ValueError):
+    """A fixed, public diagnostic; never carries config or command output."""
+
+
 def require(condition, message):
     if not condition:
         raise ValueError(message)
@@ -336,6 +340,10 @@ def ram_link(path, target):
 def prepare():
     config = runtime_guard()  # No write is permitted before all checks succeed.
     prepare_clock_state()
+    # Upgrade older state images whose private machine-id prevents networkd's
+    # unprivileged DHCP client from deriving its default DUID. The guard verifies
+    # that this is the bound NVMe identity, not a symlink or another filesystem.
+    os.chmod('/etc/machine-id', 0o644)
     files = {
         '/etc/hostname': config['hostname'] + '\n',
         '/etc/hosts': f'127.0.0.1 localhost\n127.0.1.1 {config["hostname"]}\n',
@@ -506,7 +514,8 @@ def supervise(config, stopped):
                     deadline = time.monotonic() + 60
                 active = None
             if address is None:
-                require(time.monotonic() < deadline, 'management IPv4 unavailable after 60 seconds')
+                if time.monotonic() >= deadline:
+                    raise AddressUnavailable('management IPv4 unavailable after 60 seconds')
             elif child is None:
                 private = ensure_host_key(STATE / 'identity/ssh')
                 atomic_write(RUNTIME / 'sshd_config', ssh_config(address, config))
@@ -542,10 +551,17 @@ def main():
     {'prepare': prepare, 'serve': serve}[sys.argv[1]]()
 
 
+def report_failure(error):
+    # Only this locally constructed exception has public text. Other errors can
+    # contain private config, key material, command arguments or captured output.
+    detail = '; management IPv4 unavailable after 60 seconds' if type(error) is AddressUnavailable else ''
+    print(f'A733 management: {type(error).__name__}{detail}; activation failed', file=sys.stderr, flush=True)
+
+
 if __name__ == '__main__':
     try:
         main()
     except (OSError, ValueError, subprocess.SubprocessError) as error:
         # Commands containing private material are never printed.
-        print(f'A733 management: {type(error).__name__}; activation failed', file=sys.stderr)
+        report_failure(error)
         sys.exit(1)

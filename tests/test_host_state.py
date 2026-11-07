@@ -434,7 +434,8 @@ class RootFixtures(unittest.TestCase):
                 self.assertEqual((state / 'identity/machine-id').read_bytes(), machine_id.encode() + b'\n')
                 self.assertEqual((state / 'var/lib/data').stat().st_uid, 123)
                 self.assertEqual(os.getxattr(state / 'var/lib/data', 'user.fixture'), b'preserved')
-                for name, mode in [('root', 0o700), ('home', 0o755), ('identity/ssh', 0o700),
+                for name, mode in [('root', 0o700), ('home', 0o755), ('identity', 0o700),
+                                   ('identity/machine-id', 0o644), ('identity/ssh', 0o700),
                                    ('config/management.json', 0o600), ('root/.ssh/authorized_keys', 0o600),
                                    ('boot', 0o700), ('boot/selected.conf', 0o600)]:
                     self.assertEqual(stat.S_IMODE((state / name).stat().st_mode), mode)
@@ -458,6 +459,9 @@ class RootFixtures(unittest.TestCase):
             self.assertEqual(marker, f'a733-state-v1\n{state_uuid}\n'.encode())
             identity = subprocess.check_output(['debugfs', '-R', 'cat /identity/machine-id', str(image)], stderr=subprocess.DEVNULL)
             self.assertRegex(identity, rb'^[0-9a-f]{32}\n$')
+            identity_stat = subprocess.check_output(
+                ['debugfs', '-R', 'stat /identity/machine-id', str(image)], stderr=subprocess.DEVNULL)
+            self.assertRegex(identity_stat, rb'Type: regular\s+Mode:\s+0644\b')
 
 
 if __name__ == '__main__':

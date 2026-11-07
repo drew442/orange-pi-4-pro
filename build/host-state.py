@@ -162,6 +162,9 @@ def seed_state(extracted, state, state_uuid, config, public_key, selection, *, t
     if timesync:
         initializer.initialize(state, state_uuid)
     write_private(state / 'identity/machine-id', (machine_id + '\n').encode())
+    # The file is bind-mounted at /etc/machine-id. Unprivileged system services
+    # (including networkd's default DHCP DUID generation) must be able to read it.
+    (state / 'identity/machine-id').chmod(0o644)
     write_private(state / 'root/.ssh/authorized_keys', public_key)
     write_private(state / 'config/management.json', (json.dumps(config, sort_keys=True, separators=(',', ':')) + '\n').encode())
     SELECTION.atomic_store(state / 'boot', SELECTION.serialize(selector))

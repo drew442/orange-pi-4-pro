@@ -164,7 +164,10 @@ def validate_state_identity(image, state):
         raise ValueError('captured state configuration, administrator or machine identity differs')
     for path in ('/config/management.json', '/root/.ssh/authorized_keys', '/identity/machine-id'):
         info = debugfs(image, 'stat ' + path).decode()
-        if not re.search(r'Type:\s+regular\s+Mode:\s+0?600\b', info) or not re.search(r'User:\s+0\s+Group:\s+0\b', info):
+        # Retain validation of historical 0600 images; new seeds use readable
+        # machine-id for unprivileged system services. Keys/config stay private.
+        mode = r'(?:600|644)' if path == '/identity/machine-id' else r'600'
+        if not re.search(r'Type:\s+regular\s+Mode:\s+0?' + mode + r'\b', info) or not re.search(r'User:\s+0\s+Group:\s+0\b', info):
             raise ValueError('state identity file metadata differs')
     info = debugfs(image, 'stat /identity/ssh').decode()
     if not re.search(r'Type:\s+directory\s+Mode:\s+0?700\b', info) or not re.search(r'User:\s+0\s+Group:\s+0\b', info):

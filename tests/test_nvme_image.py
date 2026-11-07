@@ -101,6 +101,16 @@ class NVMeImageTests(unittest.TestCase):
         responses['stat /identity/ssh'] = b'Inode: 13 Type: directory Mode: 0700\nUser: 0 Group: 0\n'
         with patch.object(IMAGE, 'debugfs', side_effect=lambda image, command: responses[command]):
             IMAGE.validate_state_identity(Path('fixture'), state)
+        readable = dict(responses)
+        readable['stat /identity/machine-id'] = b'Type: regular Mode: 0644\nUser: 0 Group: 0\n'
+        with patch.object(IMAGE, 'debugfs', side_effect=lambda image, command: readable[command]):
+            IMAGE.validate_state_identity(Path('fixture'), state)
+        for mode in ('0666', '0664', '0674'):
+            changed = dict(responses)
+            changed['stat /identity/machine-id'] = ('Type: regular Mode: ' + mode + '\nUser: 0 Group: 0\n').encode()
+            with self.subTest(mode=mode), patch.object(IMAGE, 'debugfs', side_effect=lambda image, command: changed[command]):
+                with self.assertRaises(ValueError):
+                    IMAGE.validate_state_identity(Path('fixture'), state)
         for command, value in (('cat /identity/machine-id', b'f'*32 + b'\n'),
                                 ('stat /root/.ssh/authorized_keys', b'Type: regular Mode: 0644\nUser: 0 Group: 0\n'),
                                 ('ls -p /identity/ssh', responses['ls -p /identity/ssh'] + b'/14/0100600/0/0/ssh_host_ed25519_key/100/\n')):
