@@ -104,7 +104,9 @@ restoration, source kernel/U-Boot replays, SD reproductions, normalized 220/221
 package exports and separate dated repeats. Second production roots/state/bootstrap/NVMe constructions now pass with documented
 timestamp/identity differences; independent deployment remains unfinished. All 479 userspace source archives
 are acquired, not compiled. [Licensing evidence for the 26 vendor boot inputs](evidence/vendor-boot-license-inventory-20261106.json)
-remains incomplete. [Userspace notices](userspace-notices.md) resolve for all 221
+remains incomplete. [Compiler-source inventory](toolchain-sources.md) now pins
+four acquired manifest-listed archives and eight notices; six Git source inputs
+remain unacquired. [Userspace notices](userspace-notices.md) resolve for all 221
 packages; notice presence does not establish legal sufficiency. No public
 redistribution clearance is claimed.
 

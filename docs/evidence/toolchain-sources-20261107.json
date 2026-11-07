@@ -1,0 +1,96 @@
+{
+  "acquisition_terminal_exit_code": 0,
+  "actual_acquisition": {
+    "bytes": 1760,
+    "path": "out/toolchain-sources-20261107/acquisition.json",
+    "sha256": "b64f5283ab91e5000149d46a49342b9958b38f6cbfb9fece9a2260f842f7f36d"
+  },
+  "actual_checksum_check": {
+    "bytes": 88,
+    "path": "out/toolchain-sources-20261107/checksums.log",
+    "sha256": "f313ed6d950f9c95ffa967e0f80db5bb5fe36244f01c25490b757cd1fec5a47c"
+  },
+  "actual_notice_inventory": {
+    "bytes": 2798,
+    "path": "out/toolchain-sources-20261107/notice-inventory.json",
+    "sha256": "2c0a1f603fe8be9d3822891fac6a34aa7c5821158eefe69d938d84aef650eba6"
+  },
+  "binary_manifest": {
+    "bytes": 10307,
+    "path": "out/toolchain-sources-20261107/binary-manifest.txt",
+    "sha256": "de0cd8327e74bc22ee2dccfab5a52203f4c181866d50f739eab2337abcf4a279"
+  },
+  "binary_manifest_binding": {
+    "bytes": 553,
+    "path": "out/toolchain-sources-20261107/binary-binding.json",
+    "sha256": "ea9f8a7ade25dcbc71ca95d6b67984f9b79b09adcdea5184dc9e335724c7e146"
+  },
+  "builder_free_after": 21811671040,
+  "checksum_terminal_exit_code": 0,
+  "classification": "Partial source acquisition for pinned Linaro build toolchain; no compiler or board rebuild",
+  "compiler_binary_rebuilt": false,
+  "complete_build_dependency_source_closure": false,
+  "component_inventory": {
+    "bytes": 7905,
+    "path": "configs/linaro-source-inputs.lock.json",
+    "sha256": "398f1652f50c1aeb9e01b0bd203cdfaf78e630f68f65ed7546f92ce5fd6cceb1"
+  },
+  "date": "2026-11-07",
+  "hardware_acceptance": false,
+  "images_or_firmware_changed": false,
+  "independent_data_review": {
+    "bytes": 1915,
+    "model": "gpt-6-luna",
+    "path": "out/toolchain-sources-20261107/independent-data-review.json",
+    "reasoning_effort": "low",
+    "result": "pass",
+    "sha256": "7417ab9b499e5c87f0978872190a8bef449795e7658da8b35f9b6eb1f36f0641"
+  },
+  "limits": [
+    "Four archive identities match historical MD5 from a SHA256-pinned binary manifest; newSHA256 pins protect future byte checks. No PGP signature verification.",
+    "Six Git input sources including GCC/ABE remain unacquired; three MinGW-only rows are recorded separately.",
+    "This is source provenance and notice presence only, not legal sufficiency or redistribution clearance.",
+    "No physical deployment, guest execution, boot, SPI, endurance or release acceptance evidence."
+  ],
+  "notice_file_count": 8,
+  "notice_inventory_terminal_exit_code": 0,
+  "official_source_endpoint_probe": {
+    "bytes": 807,
+    "path": "out/toolchain-sources-20261107/official-source-probe.json",
+    "sha256": "c47cccb862912f5532c0eefb8c1514011afa469390bf126ca97d0c4678a0f160"
+  },
+  "physical_device_writes": false,
+  "probe_errors_resolved": [
+    {
+      "initial": "Python3.10 tarfile streaming XZ reader raised EOFError on concatenated streams.",
+      "initial_log": {
+        "bytes": 566,
+        "path": "out/toolchain-sources-20261107/binary-binding-initial.stderr",
+        "sha256": "553bc41a9261cfe08f863ef94c5f351cc145d7b074b79e2bea4e73eb3b8cbf6b"
+      },
+      "probe": "Read embedded binary manifest",
+      "resolution": "Use LZMAFile for decoding and tar r| for iteration; corrected binding exited0 and matches pinned complete binary SHA."
+    },
+    {
+      "initial": "GzipFile received an invalid positional file object; archive downloads unaffected.",
+      "initial_log": {
+        "bytes": 276,
+        "path": "out/toolchain-sources-20261107/notice-inventory-initial.stderr",
+        "sha256": "d2e1e5392fd55d43d2d449f250d0cbe525620d867493931c75a2e7c3f766a42e"
+      },
+      "probe": "Read COPYING files",
+      "resolution": "Use fileobj= explicitly for gzip; preserve initial partial notice cache separately and corrected new inventory exited0."
+    }
+  ],
+  "remaining_distinct_git_source_inputs_including_abe": 6,
+  "retained_builder_directory": "/var/lib/a733-toolchain-sources-20261107",
+  "schema": 1,
+  "signature_verified": false,
+  "source_archive_bytes": 97977913,
+  "source_archive_count": 4,
+  "source_checksums": {
+    "bytes": 336,
+    "path": "configs/linaro-infrastructure-sources.sha256",
+    "sha256": "18e1b3ce6739aecb756dfcf3e619511f10b4278af53f1ccff884079e7181232b"
+  }
+}
