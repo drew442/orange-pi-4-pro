@@ -122,6 +122,15 @@ class AssembleDiagnosticTests(unittest.TestCase):
         self.assertIn("Output must not exist", result.stderr)
         self.assertEqual(self.output.read_bytes(), sentinel)
 
+    def test_sparse_regular_output_preserves_logical_size_and_zero_tail(self):
+        self.assemble()
+        info = self.output.stat()
+        self.assertEqual(info.st_size, IMAGE_BYTES)
+        self.assertLess(info.st_blocks * 512, IMAGE_BYTES // 2)
+        with self.output.open('rb') as image:
+            image.seek(-1024 * 1024, os.SEEK_END)
+            self.assertEqual(image.read(), bytes(1024 * 1024))
+
     def test_identical_inputs_produce_identical_image(self):
         def digest():
             checksum = hashlib.sha256()

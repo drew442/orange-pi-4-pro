@@ -68,9 +68,11 @@ truncate -s 256M "$work/disk.img"
 printf 'label: dos\nlabel-id: 0xa7330001\nunit: sectors\n\nstart=65536, size=458752, type=83, bootable\n' | sfdisk "$work/disk.img"
 dd if="$inputs/boot0_sdcard.fex" of="$work/disk.img" bs=8192 seek=1 conv=notrunc status=none
 dd if="$inputs/boot_package.fex" of="$work/disk.img" bs=8192 seek=2050 conv=notrunc status=none
-dd if="$work/partition.ext4" of="$work/disk.img" bs=1M seek=32 conv=notrunc status=none
+dd if="$work/partition.ext4" of="$work/disk.img" bs=1M seek=32 conv=notrunc,sparse status=none
 (( $(stat -c %s "$work/disk.img") < 1800000000 ))
 # noclobber prevents overwriting an existing output even if it appeared mid-build.
-( set -o noclobber; cat "$work/disk.img" > "$output" )
+# Keep the newly reserved regular file sparse; never use this copy rule for
+# physical flashing, where zero bytes must replace any previous contents.
+( set -o noclobber; dd if="$work/disk.img" bs=1M conv=sparse status=none > "$output" )
 sha256sum "$output"
 stat -c 'Image bytes: %s' "$output"
