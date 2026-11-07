@@ -124,19 +124,17 @@ remain unchanged. **Do not repeat NVMe installation to fix management.**
 2. Validate SSH with both keys, then run [the first KVM guest](kvm-first-guest.md)
    for CPU/disk/network, clean shutdown/restart and persisted disk marker. Return
    its console/log evidence; `/dev/kvm` alone cannot satisfy the gate.
-3. Continue [clean-build work](build-reproduction-status.md). The fresh November 7
-   repeat completed all three child phases but **failed** its outer archive pin:
-   [45 account dates across two files](userspace-account-date-replay.md) changed
-   across days; the other 15,874 entries match. A closed build-only helper passes
-   17 focused tests and independent review. A separately authenticated
-   [replay driver](account-date-replay-driver.md) now integrates it; eight driver
-   and ten adapter tests plus independent review pass. Actual fresh baseline/time
-   reproduction is pending; reproduce the unchanged pins, then
-   reconstruct production roots/state/NVMe. Do not reuse the failed base receipt.
-   [Completed kernel replay retention](kernel-run-retention.md) preserves the
-   removed expanded tree as verified archives on two hosts. After the fresh base
-   attempt and archive mirror, builder free space was **6.84 GB**; codex was
-   **2.75 GB**. Recheck before staging. Full production capacity guards remain.
+3. Continue [clean-build work](build-reproduction-status.md). The November 7
+   [cross-day failure](userspace-account-date-replay.md) is now corrected by a
+   separately authenticated replay adapter. [Actual fresh baseline execution](evidence/account-date-baseline-execution-20261107.json)
+   passes all 220 packages and unchanged archive/raw/BOM pins; independent complete
+   15,876-entry readback passes. Independent source review and eight driver/ten
+   adapter cases pass. Integrate the strict time-profile consumer for this new
+   receipt/manifest, repeat time construction, then build production roots/state/
+   NVMe. Historical producers and failed receipts remain unchanged.
+   [Kernel replay retention](kernel-run-retention.md) preserves the expanded tree
+   as verified archives on two hosts. After the fresh baseline, builder free
+   space was **6.04 GB**; recheck before staging. Production capacity guards stay.
    The reviewed [20 GiB builder LVM growth](build-host-capacity-plan.md) awaits
    approval; no resize occurred.
    [Firmware license evidence](evidence/vendor-boot-license-inventory-20261106.json)

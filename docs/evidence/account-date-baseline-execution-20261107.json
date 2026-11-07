@@ -1,0 +1,345 @@
+{
+  "schema": 1,
+  "date": "2026-11-07",
+  "classification": "Fresh raw-package baseline replay with explicit locked-account date transform; no physical acceptance",
+  "success": true,
+  "source_revision": "b13345444d7026666a1ddfe7daf3c545fb57fad3",
+  "builder_project": "/var/lib/a733-account-date-replay-20261107/project",
+  "builder_phase": "/var/lib/a733-clean-replay-20261106/userspace-pipeline-account-dates-01",
+  "returncode": 0,
+  "source_bundle": {
+    "bytes": 1901884,
+    "sha256": "a1f53d136fbb203439f3ecddc8ee764a92244dddd6362e2d8e66cd45a0858289"
+  },
+  "inputs": {
+    "build/account-dates.py": {
+      "bytes": 9114,
+      "git_blob": "6fe5dc4539eef8c8ec30c0600694092537e22865",
+      "sha256": "a9bad51aeeb113dc66d1050550e0ec5eceb6e3cb7ec8c4c524934b5915165114"
+    },
+    "build/configure-host-userspace.py": {
+      "bytes": 22122,
+      "git_blob": "768f64362b2653206409df0735cb00ba7764a040",
+      "sha256": "0ff4f8538723ac1a4fe6f43d1ff6d73b6e0e36f22daa8eb31fa97d8553b8c95f"
+    },
+    "build/debootstrap-adapter.py": {
+      "bytes": 18308,
+      "git_blob": "8fcebf8d99be90b868df37c0965c3c4780bf7901",
+      "sha256": "d10f8a8ea1e83a0b659582d895e98bf8553165dbfc2469aab54eab82e1c501ea"
+    },
+    "build/export-account-dated-userspace.py": {
+      "bytes": 11393,
+      "git_blob": "75f7073a4af3af696b38663b5d526fdf68111367",
+      "sha256": "269d2aa0390a0a8b41e49e215efd5544c096ca1d94a1c4f85bd09f2b1a2dad0a"
+    },
+    "build/export-host-userspace.py": {
+      "bytes": 28217,
+      "git_blob": "3a3f94a2cb582455d82a624160e94f7b7067ea24",
+      "sha256": "1cd49563c43fe7ddd78d309ef2d9fe48b2ad1d1d29ee6d7050374db12be118ed"
+    },
+    "build/launch-account-dated-userspace.py": {
+      "bytes": 8956,
+      "git_blob": "e5c4fc22821458d85a28ee066ccacdcbe7fda5c6",
+      "sha256": "65b507b671ae2fb80a1e72cb47ce06d7833656b2f7e5e5c7613542a10fec0eba"
+    },
+    "build/launch-userspace-configuration.py": {
+      "bytes": 25631,
+      "git_blob": "5f56acbe086e1bedafc539b75d4024b39cb5761a",
+      "sha256": "08a8bb767987f2a9496ee92d03260fdb5b61bd1f486b9ab00fd04f7ad4633598"
+    },
+    "build/launch-userspace-pipeline.py": {
+      "bytes": 20436,
+      "git_blob": "ce87ad6137dd3ae8b09c6bdc677bac2c553b61d1",
+      "sha256": "3338fe97521287124cae5c61b2631deee977ad575e5d713b6ab4d1a6385c22e7"
+    },
+    "build/offline-userspace-repo.py": {
+      "bytes": 19197,
+      "git_blob": "5d2b02920e1d470367b1d4672f5e25b4e894a344",
+      "sha256": "bb8a4c71595f9867e4f7cf2958a2bf5bca6e0d81c49819eb1b7483957b0a4911"
+    },
+    "build/prepare-host-userspace.py": {
+      "bytes": 18830,
+      "git_blob": "361d66ec4cb22e67c2f23eb2962fdb838062f9ae",
+      "sha256": "86a3432aea83ae408a38d18f07eb48b2d2a8b59adb7b23b14bfcadfdf6a772a9"
+    },
+    "build/userspace-bootstrap-api.py": {
+      "bytes": 27185,
+      "git_blob": "d743e639cdca51ba3adb5a796a090a3589e47e1f",
+      "sha256": "365fd1681e5b5fbce8062771d54082862482995b48ef6b42f6f2b05464b26964"
+    },
+    "configs/builder-replay-packages-20261106.lock.tsv": {
+      "bytes": 32546,
+      "git_blob": "17518b78511b6fa86474aa62a2a575b53895c549",
+      "sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425"
+    },
+    "configs/host-account-dates-replay.lock.json": {
+      "bytes": 2655,
+      "git_blob": "1ae20cfa807884d572898617259f3ce33230e046",
+      "sha256": "5859c325c938168b6c08612d5071be059d032c520ed017410f3a3941571190bb"
+    },
+    "configs/host-userspace-package-hashes.lock.tsv": {
+      "bytes": 28638,
+      "git_blob": "529b39aad256fbe28188c6c724c60bfb9edee698",
+      "sha256": "f2f613e79d9c1abc1689e19cfe81b624d9d2ac3beeb322fd5788980d919f7d86"
+    },
+    "configs/host-userspace-packages.lock.tsv": {
+      "bytes": 6671,
+      "git_blob": "640af83be6bb0939d56d11b7b62f256e03ba05f9",
+      "sha256": "f2abf03d0d6e7fd506560689093220514cbf1acc678f7560562026d6ca6564a6"
+    },
+    "configs/host-userspace-profiles.lock.json": {
+      "bytes": 7337,
+      "git_blob": "afb0cae0a1844f7c6d99b56bbe5738948b24ae04",
+      "sha256": "5e5317a5bf1449125f1fb4b10a767b39162f27b0f729411337900ba0b7c3b380"
+    }
+  },
+  "phases": [
+    {
+      "name": "foreign",
+      "success": true,
+      "returncode": 0,
+      "recipe_receipt_sha256": "f53352f42b86cac6a4acbb3a39020e493a1448e50d8e10b99cba53e309355035",
+      "mapped_processes_final": [],
+      "output_mounts_final": []
+    },
+    {
+      "name": "configure",
+      "success": true,
+      "returncode": 0,
+      "recipe_receipt_sha256": "c0310ed47af14fc17f7919b6c2d60805b37129fcc66fb8dcc5151d00b259663f",
+      "mapped_processes_final": [],
+      "output_mounts_final": []
+    },
+    {
+      "name": "export",
+      "success": true,
+      "returncode": 0,
+      "recipe_receipt_sha256": "060679de1f70d3a9c146df6176f0eb3ada0ffdcfbb68497da2d9d0cd9331746a",
+      "mapped_processes_final": [],
+      "output_mounts_final": []
+    }
+  ],
+  "configured_packages": 220,
+  "archive": {
+    "bytes": 138025729,
+    "sha256": "98d6a57bbb70ff55bef32b6bd051ebfcb6bc0fad4f6c8b3167e8619b5a9d961e"
+  },
+  "raw_tar": {
+    "bytes": 468398080,
+    "sha256": "a3b1ccfb69c24844d50cf60fb4c4286eb366dc6ba8da0f77ff672c8202b6e730"
+  },
+  "bom": {
+    "bytes": 4337400,
+    "sha256": "1c415ad29e297260b89f199c48c0185e8c9987be5c336fd553cff5e5c38aaa72"
+  },
+  "members": 15876,
+  "account_date_replay": {
+    "schema": 1,
+    "profile": "baseline",
+    "adapter": {
+      "bytes": 11393,
+      "sha256": "269d2aa0390a0a8b41e49e215efd5544c096ca1d94a1c4f85bd09f2b1a2dad0a"
+    },
+    "helper": {
+      "bytes": 9114,
+      "sha256": "a9bad51aeeb113dc66d1050550e0ec5eceb6e3cb7ec8c4c524934b5915165114"
+    },
+    "contract": {
+      "bytes": 2655,
+      "sha256": "5859c325c938168b6c08612d5071be059d032c520ed017410f3a3941571190bb"
+    },
+    "source_manifest": {
+      "bytes": 1599,
+      "sha256": "8c0ceb35a81a60d2996a0435d9c1ccc0952884763605c6e8f5d7559e3ef2a634"
+    },
+    "input_receipt_sha256": "c0310ed47af14fc17f7919b6c2d60805b37129fcc66fb8dcc5151d00b259663f",
+    "changed_basenames": [
+      "shadow",
+      "shadow-"
+    ],
+    "before": {
+      "shadow": {
+        "bytes": 600,
+        "sha256": "b76718a9f135deab1f731349fbbc62241d2ab63be2fabcec1950bf8a8b9bd706"
+      },
+      "shadow-": {
+        "bytes": 581,
+        "sha256": "27644cc9bcfcdfe8571c94e9d51da5f393b26813f8ff93850e1a14f25d1ea82d"
+      }
+    },
+    "after": {
+      "shadow": {
+        "bytes": 600,
+        "sha256": "dd3aae9dcb6dc8be3e8fc6639662430917dbd9d14cffa05e4f729e7bf76a1908"
+      },
+      "shadow-": {
+        "bytes": 581,
+        "sha256": "a9517cc11d3d789da84abfc161816f9cb639b77ad2e308fa0bb503d871053fce"
+      }
+    }
+  },
+  "historical_archive_raw_and_bom_pins_unchanged": true,
+  "postconditions": {
+    "host_inventory_unchanged": true,
+    "mapped_processes_final": [],
+    "output_mounts_final": []
+  },
+  "resource_minima": {
+    "free_disk_bytes": 6022111232,
+    "available_memory_bytes": 7245991936,
+    "samples": 224
+  },
+  "independent_readback": {
+    "archive": {
+      "bytes": 138025729,
+      "sha256": "98d6a57bbb70ff55bef32b6bd051ebfcb6bc0fad4f6c8b3167e8619b5a9d961e"
+    },
+    "raw_tar": {
+      "bytes": 468398080,
+      "sha256": "a3b1ccfb69c24844d50cf60fb4c4286eb366dc6ba8da0f77ff672c8202b6e730"
+    },
+    "members": 15876,
+    "types": {
+      "dir": 1720,
+      "symlink": 1850,
+      "char": 8,
+      "file": 12295,
+      "hardlink": 3
+    },
+    "root_locked": true,
+    "machine_id_empty": true,
+    "forbidden_build_and_identity_paths_absent": true,
+    "inventory_exact": 220,
+    "success": true,
+    "account_days": 20763,
+    "locked_account_counts": {
+      "shadow": 23,
+      "shadow-": 22
+    },
+    "bom": {
+      "bytes": 4337400,
+      "sha256": "1c415ad29e297260b89f199c48c0185e8c9987be5c336fd553cff5e5c38aaa72"
+    },
+    "script_sha256": "f90ff6dfbda1f6f8a01061ee7a4c9a13648d73d2d5b85e45081e920031195af5",
+    "classification": "Independent complete raw tar/PAX/BOM readback; no physical acceptance"
+  },
+  "independent_source_review": {
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "result": "pass after fixing receipt-mode reader; real shared-reader regression passes",
+    "driver_root_cases": 8,
+    "adapter_cases": 10
+  },
+  "raw_records_root": "out/account-date-replay-20261107/records/",
+  "raw_pins": {
+    "receipt.json": {
+      "bytes": 33549,
+      "sha256": "0043661784a2398ff12559b812387503f3d5c79a778ca135e7999f0df19c3970"
+    },
+    "source-manifest.json": {
+      "bytes": 3136,
+      "sha256": "e7d400c5e33da5d8102323a60dbad22de9e0dba737605a4b3634fd220e05a525"
+    },
+    "host-packages.before.tsv": {
+      "bytes": 40966,
+      "sha256": "446b7eb3364a6f196390c698c1c133086fee5eb3b080ec4483cc1d8584b39b15"
+    },
+    "host-packages.after.tsv": {
+      "bytes": 40966,
+      "sha256": "446b7eb3364a6f196390c698c1c133086fee5eb3b080ec4483cc1d8584b39b15"
+    },
+    "foreign/runtime.log": {
+      "bytes": 9110,
+      "sha256": "ffe3baf497a2da45d155b33618c87ab32bd73656c8559fce99793086e6728b38"
+    },
+    "configure/runtime.log": {
+      "bytes": 14228,
+      "sha256": "38c1d26c87d04305e45934b8f236f5f2945406f57924ffb3dbe19ec55245d5f1"
+    },
+    "export/runtime.log": {
+      "bytes": 6097,
+      "sha256": "b49013aa552d5f20d17c87f5b2862b7649b8f4cb1d414101e6e5f97b956722d3"
+    },
+    "foreign/inputs/manifest.json": {
+      "bytes": 1228,
+      "sha256": "6d74574a4c1c44e508d497dd9619333708ca8309611a02ecdcf5a003f96adc4f"
+    },
+    "foreign/inputs/run.py": {
+      "bytes": 216,
+      "sha256": "50f605b55d60d4f022d373b047da4fac3d56cab52cf4a59b9ca20e782247d77b"
+    },
+    "configure/inputs/manifest.json": {
+      "bytes": 842,
+      "sha256": "2c6dfc49b9b5bf64941d452eec8265f584dfa705601c8a95dd384957878f699e"
+    },
+    "configure/inputs/run.py": {
+      "bytes": 218,
+      "sha256": "0f2082950deebcf0bb18d0a055e614c8b01bd050a2357d6ca90b60b22907f8db"
+    },
+    "export/inputs/manifest.json": {
+      "bytes": 1599,
+      "sha256": "8c0ceb35a81a60d2996a0435d9c1ccc0952884763605c6e8f5d7559e3ef2a634"
+    },
+    "export/inputs/run.py": {
+      "bytes": 402,
+      "sha256": "94063a8461938a2d66c6d8ad0c1b3e4429a2fd9b7aa7515198d778de8e89f35d"
+    },
+    "work/foreign-receipt.json": {
+      "bytes": 6064,
+      "sha256": "f53352f42b86cac6a4acbb3a39020e493a1448e50d8e10b99cba53e309355035"
+    },
+    "work/configure-receipt.json": {
+      "bytes": 11182,
+      "sha256": "c0310ed47af14fc17f7919b6c2d60805b37129fcc66fb8dcc5151d00b259663f"
+    },
+    "work/export-result/receipt.json": {
+      "bytes": 3633,
+      "sha256": "060679de1f70d3a9c146df6176f0eb3ada0ffdcfbb68497da2d9d0cd9331746a"
+    },
+    "work/export-result/rootfs-bom.json": {
+      "bytes": 4337400,
+      "sha256": "1c415ad29e297260b89f199c48c0185e8c9987be5c336fd553cff5e5c38aaa72"
+    }
+  },
+  "other_raw_pins": {
+    "tmp/account-date-replay-20261107/source-clone.log": {
+      "bytes": 152,
+      "sha256": "5c0ef4a0bd3b561644051a8457dc087d8cc793f0a641f89dfcd55aff46751284"
+    },
+    "tmp/account-date-replay-20261107/plan.json": {
+      "bytes": 5586,
+      "sha256": "b25e5996390d617fa480e7b56495a2c0464b01b2205ac25f7dccc94248fe13fe"
+    },
+    "tmp/account-date-replay-20261107/execution.log": {
+      "bytes": 206,
+      "sha256": "cda9962b8d45ff719ad026b60609f76d07ef34a0a0b6acfdfbdaa19e939d6357"
+    },
+    "tmp/account-date-replay-20261107/independent-readback.py": {
+      "bytes": 8529,
+      "sha256": "f90ff6dfbda1f6f8a01061ee7a4c9a13648d73d2d5b85e45081e920031195af5"
+    },
+    "out/account-date-replay-20261107/independent-readback.json": {
+      "bytes": 924,
+      "sha256": "e83a336c5a5faf64fc8e91466ea27afd856eafa5eba3c8d4ca61f8bd4043c7c9"
+    },
+    "tmp/account-dates/pipeline-root-tests.log": {
+      "bytes": 1134,
+      "sha256": "9115ee2b454c7dfdb8299d000981125558435217680e00af14eb29bfa4256a52"
+    },
+    "tmp/account-dates/replay-focused.log": {
+      "bytes": 129,
+      "sha256": "a1412c9d9a9aba28b0f1773fe31b53e0bef5edd88946c59ad2f9aa2f15befcbf"
+    },
+    "tmp/account-dates/discovery-replay.log": {
+      "bytes": 8539,
+      "sha256": "7648518fa87eb0a8d272db10cd925fb728a423e8081a3ce47d4adc97561e558c"
+    }
+  },
+  "regression_limits": "Full native discovery before targeted receipt-reader correction ran1387cases with112skips and5capacity-related failures/errors in pre-existing EL2/kernel/vDSO tests. Previous affected-module reruns in ordinary-path tmpfs passed; final8driver/10adapter checks pass independently. No full-suite green claim.",
+  "remaining": [
+    "Fresh time-profile outer receipt/source integration and repeated construction",
+    "Production4GiBroots/8GiBstate/NVMe reconstruction and capacity",
+    "Physical repairedDHCP/SSH,bothkeys,actualKVMguest,endurance,zeroSDwrites,SPIbackup/recovery",
+    "Independent deployment reproduction and unresolved firmware license evidence"
+  ]
+}

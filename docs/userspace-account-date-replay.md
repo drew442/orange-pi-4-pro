@@ -27,8 +27,11 @@ Jammy/Python 3.10, and independent Sol/high review found no blocking issue.
 full-suite capacity limits, affected-module reruns and successful shell/assembly
 checks. Both historical archive account sets
 and the fixed time account identity were separately inspected. **The helper is
-wired into a [separate replay driver](account-date-replay-driver.md); no corrected
-fresh archive is claimed until actual execution and complete comparison pass.**
+wired into a [separate replay driver](account-date-replay-driver.md). Its
+[fresh baseline execution](evidence/account-date-baseline-execution-20261107.json)
+now matches the original archive, raw tar and BOM pins; independent complete
+readback passes. Fresh time-profile outer integration and construction remain
+pending.**
 
 A global `SOURCE_DATE_EPOCH` is unsuitable for preserving these historical
 bytes: pinned Python 3.11 `py_compile` selects hash-based bytecode when that
@@ -38,5 +41,6 @@ export cores. It must normalize only after configure/clone authentication and
 before final BOM/archive creation, record the transformation honestly, retain
 all historical closure checks and require exact archive/raw-tar/BOM hashes.
 The time launcher also needs a strict validator for the new replay receipt and
-source manifest; it must not accept the old failed receipt. Integration,
-independent review and actual fresh baseline/time reproduction remain next work.
+source manifest; it must not accept the old failed receipt. Baseline integration,
+independent review and actual fresh construction now pass.
+Time-profile outer receipt integration and actual repetition remain next work.

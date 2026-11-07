@@ -44,7 +44,10 @@ rejects this changed source closure; do not relax it or edit old receipts.
 
 Eight driver tests and ten adapter tests pass, including real mapped-owner
 receipt metadata. Independent Sol/high review passes after correcting a receipt
-reader that incorrectly required readonly mode. Actual fresh baseline execution
-is recorded separately when available; this document alone establishes
-neither reproduction nor deployment success. Full roots/state/NVMe construction,
+reader that incorrectly required readonly mode. [Actual fresh baseline execution](evidence/account-date-baseline-execution-20261107.json)
+now passes from `b133454`: all 220 packages, unchanged archive/raw/BOM pins and
+independent complete 15,876-entry raw PAX/BOM readback. Host inventory is unchanged
+and no mapped processes or mounts remain; minimum disk/RAM were 6.02 GB/7.25 GB.
+Time-profile outer integration and production construction remain pending.
+The baseline proof establishes no deployment success. Full roots/state/NVMe construction,
 physical SSH/KVM and independent deployment remain required.
