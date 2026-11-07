@@ -216,16 +216,9 @@ subprocess.run(['fakeroot','--','/usr/bin/python3','-I','-B','/a733-debs/payload
 '''.replace('REVISION', repr(revision)).replace('OUTPUT', repr('out/host-payload-' + tag))).encode()
 
 
-def payload_program(tag):
-    phase_path(tag)
-    return (r'''import base64,hashlib,importlib.util,json,os,pathlib,stat
-p=pathlib.Path('/a733-export-output/project')
-spec=importlib.util.spec_from_file_location('host_payload',p/'build/host-payload.py')
-payload=importlib.util.module_from_spec(spec)
-spec.loader.exec_module(payload)
-readback=pathlib.Path('/a733-export-output/readback')
-readback.mkdir(mode=0o700)
-def snapshot(root):
+def snapshot_program():
+    """Expected-tree capture shared with the per-installation state producer."""
+    return r'''def snapshot(root):
  root=pathlib.Path(root)
  members={};inodes={}
  def visit(path):
@@ -259,7 +252,19 @@ def snapshot(root):
    for child in sorted(path.iterdir()):visit(child)
  visit(root)
  return members
-original=payload.make_image
+'''
+
+
+def payload_program(tag):
+    phase_path(tag)
+    return (r'''import base64,hashlib,importlib.util,json,os,pathlib,stat
+p=pathlib.Path('/a733-export-output/project')
+spec=importlib.util.spec_from_file_location('host_payload',p/'build/host-payload.py')
+payload=importlib.util.module_from_spec(spec)
+spec.loader.exec_module(payload)
+readback=pathlib.Path('/a733-export-output/readback')
+readback.mkdir(mode=0o700)
+''' + snapshot_program() + r'''original=payload.make_image
 def capture(root,output,slot,size=payload.SLOT_BYTES):
  assert size==4294967296 and slot in ('A','B')
  before=snapshot(root)
@@ -408,7 +413,16 @@ def verify_expectations(candidate, root):
     return records
 
 
-def execute(shared, candidate, builder, project, phase, manifest, policy, before, report, userspace, diagnostic, tag):
+def execute(shared, candidate, builder, project, phase, manifest, policy, before, report, userspace, diagnostic, tag,
+            *, output_name=None, stage=None, namespace_command=None, verify=None, expectations=None, final_check=None):
+    # Defaults preserve the root producer API; the STATE wrapper supplies explicit hooks.
+    stage = stage_inputs if stage is None else stage
+    namespace_command = command if namespace_command is None else namespace_command
+    verify = verify_output if verify is None else verify
+    expectations = verify_expectations if expectations is None else expectations
+    output_name = ('host-payload-' + tag) if output_name is None else output_name
+    require(re.fullmatch(r'host-(?:payload|state)-[A-Za-z0-9][A-Za-z0-9_-]{0,63}', output_name),
+            'unsafe producer output name')
     shared.safe_directory(phase.parent, trusted=True)
     phase.mkdir(mode=0o700)
     report.update(success=False, state='staging', resources=[])
@@ -419,10 +433,10 @@ def execute(shared, candidate, builder, project, phase, manifest, policy, before
         work = phase / 'work'
         work.mkdir(mode=0o700)
         os.chown(work, shared.UID_BASE, shared.UID_BASE)
-        report['bundle'] = stage_inputs(candidate, shared, project, phase, manifest, policy, userspace, diagnostic, tag)
+        report['bundle'] = stage(candidate, shared, project, phase, manifest, policy, userspace, diagnostic, tag)
         shared.atomic_json(phase / 'source-manifest.json', manifest)
         shared.atomic_json(phase / 'staged.json', report)
-        args = command(shared, builder, phase)
+        args = namespace_command(shared, builder, phase)
         report.update(state='running', command=args)
         with (phase / 'runtime.log').open('xb') as stream:
             proc = subprocess.Popen(args, stdout=stream, stderr=subprocess.STDOUT, env=ENV, start_new_session=True)
@@ -439,8 +453,8 @@ def execute(shared, candidate, builder, project, phase, manifest, policy, before
             os.fsync(stream.fileno())
         require(report['returncode'] == 0, 'root payload failed; outputs retained')
         report['probe'] = builder.validate_probe((phase / 'runtime.log').read_bytes())
-        report['verification'] = verify_output(candidate, work / 'project/out' / ('host-payload-' + tag), policy)
-        report['readback_expectations'] = verify_expectations(candidate, work / 'readback')
+        report['verification'] = verify(candidate, work / 'project/out' / output_name, policy)
+        report['readback_expectations'] = expectations(candidate, work / 'readback')
         report['success'] = True
     except BaseException as error:
         report['error'] = repr(error)
@@ -462,6 +476,8 @@ def execute(shared, candidate, builder, project, phase, manifest, policy, before
             report['host_inventory_unchanged'] = before == after
             report['final_resources'] = shared.resource_sample()
             report['retained_tree'] = inspect_tree(phase / 'work')
+            if final_check is not None:
+                final_check()
             report['success'] = (report['success'] and before == after and not report['mapped_processes_final']
                                  and not report['phase_mounts_final']
                                  and report['final_resources']['free_bytes'] >= 3_000_000_000
