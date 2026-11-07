@@ -1,5 +1,7 @@
 """Bounded admission/provenance tests; no production image or hardware execution."""
 import ast
+import contextlib
+import io
 import copy
 import gzip
 import hashlib
@@ -43,7 +45,9 @@ class NVMeLauncherTests(unittest.TestCase):
     def test_plan_never_touches_runtime(self):
         with mock.patch.object(Path, 'lstat', side_effect=AssertionError('runtime access')), \
              mock.patch.object(Path, 'open', side_effect=AssertionError('runtime access')), \
-             mock.patch.object(Path, 'mkdir', side_effect=AssertionError('phase created')):
+             mock.patch.object(Path, 'mkdir', side_effect=AssertionError('phase created')), \
+             mock.patch.object(n.resource, 'getrlimit', side_effect=AssertionError('process limit queried')), \
+             mock.patch.object(n.resource, 'setrlimit', side_effect=AssertionError('process limit changed')):
             result = n.plan('tiny', {'revision': 'a' * 40}, POLICY)
         self.assertEqual(result['phase'], str(n.BASE / 'nvme-tiny'))
         self.assertEqual(result['output'], 'work/project/out/nvme-image-tiny')
@@ -51,6 +55,60 @@ class NVMeLauncherTests(unittest.TestCase):
         self.assertFalse(result['physical_write_authorization'])
         self.assertFalse(result['hardware_acceptance'])
         self.assertEqual(result['timeout_seconds'], 10800)
+        self.assertEqual(result['minimum_process_open_file_soft_limit'], 4096)
+
+    def test_main_plan_never_queries_or_changes_descriptor_limit(self):
+        fake=types.ModuleType('plan_roots')
+        contents={n.SELF:b'controller',n.ROOTS:b''}
+        fake.committed_sources=lambda project:({'revision':'a'*40},contents)
+        fake.read_source=lambda path:b'controller'
+        output=io.StringIO()
+        with mock.patch.object(n.types,'ModuleType',return_value=fake), \
+             mock.patch.object(n.subprocess,'check_output',return_value=b''), \
+             mock.patch.object(n.sys,'flags',types.SimpleNamespace(isolated=True,dont_write_bytecode=True)), \
+             mock.patch.object(n,'contract',return_value=POLICY), \
+             mock.patch.object(n.resource,'getrlimit',side_effect=AssertionError('limit query')), \
+             mock.patch.object(n.resource,'setrlimit',side_effect=AssertionError('limit mutation')), \
+             contextlib.redirect_stdout(output):
+            n.main(['--project',str(REPO),'--tag','tiny','--plan'])
+        self.assertEqual(json.loads(output.getvalue())['minimum_process_open_file_soft_limit'],4096)
+
+    def test_process_descriptor_limit_raises_soft_and_preserves_hard(self):
+        with mock.patch.object(n.resource, 'getrlimit', side_effect=[(1024,1048576),(4096,1048576)]), \
+             mock.patch.object(n.resource, 'setrlimit') as setter:
+            result=n.admit_descriptor_limit()
+        setter.assert_called_once_with(n.resource.RLIMIT_NOFILE,(4096,1048576))
+        self.assertEqual(result['soft_before'],1024)
+        self.assertEqual(result['soft_after'],4096)
+        self.assertEqual(result['hard'],1048576)
+        self.assertEqual(result['scope'],'current producer process only')
+
+    def test_process_descriptor_limit_refuses_low_hard_before_opening_inputs(self):
+        with mock.patch.object(n.resource, 'getrlimit', return_value=(1024,2048)), \
+             mock.patch.object(n.resource, 'setrlimit') as setter:
+            with self.assertRaisesRegex(ValueError,'hard limit'):n.admit_descriptor_limit()
+        setter.assert_not_called()
+
+    def test_process_descriptor_limit_keeps_large_or_infinite_soft(self):
+        for limits in ((4096,4096),(8192,1048576),(n.resource.RLIM_INFINITY,n.resource.RLIM_INFINITY)):
+            with self.subTest(limits=limits), \
+                 mock.patch.object(n.resource,'getrlimit',return_value=limits), \
+                 mock.patch.object(n.resource,'setrlimit') as setter:
+                result=n.admit_descriptor_limit()
+                self.assertEqual(result['soft_before'],result['soft_after'])
+                setter.assert_not_called()
+
+    def test_process_descriptor_limit_allows_infinite_hard_and_verifies_result(self):
+        infinity=n.resource.RLIM_INFINITY
+        with mock.patch.object(n.resource,'getrlimit',side_effect=[(1024,infinity),(4096,infinity)]), \
+             mock.patch.object(n.resource,'setrlimit') as setter:
+            n.admit_descriptor_limit()
+        setter.assert_called_once_with(n.resource.RLIMIT_NOFILE,(4096,infinity))
+        for final in ((1024,1048576),(4096,8192)):
+            with self.subTest(final=final), \
+                 mock.patch.object(n.resource,'getrlimit',side_effect=[(1024,1048576),final]), \
+                 mock.patch.object(n.resource,'setrlimit'):
+                with self.assertRaisesRegex(ValueError,'after admission'):n.admit_descriptor_limit()
 
     def test_unsafe_tags(self):
         for tag in ('', '../bad', '/bad', 'bad tag', 'a' * 65):

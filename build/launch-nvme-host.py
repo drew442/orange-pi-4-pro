@@ -10,6 +10,7 @@ import json
 import os
 from pathlib import Path
 import re
+import resource
 import stat
 import subprocess
 import sys
@@ -34,6 +35,7 @@ INPUTS['diagnostic'] = Path('/var/lib/a733-bootstrap-inputs-20261107')
 STATE_UUID = 'fc8bbef6-9385-4ddb-90ba-e41eaccc035b'
 SIZE = 256060514304
 TIMEOUT = 10800
+MINIMUM_NOFILE = 4096
 GUARD = 22 * 1024**3
 READER_SHA = '80e843d499bcc2f6d299d6022dc7edf83d73842405e95b38b0f32eee72dcda30'
 ENV = {'PATH': '/usr/sbin:/usr/bin:/sbin:/bin', 'HOME': '/nonexistent', 'LC_ALL': 'C', 'TZ': 'UTC'}
@@ -83,11 +85,27 @@ def plan(tag, manifest, policy):
             'output': 'work/project/out/nvme-image-' + tag, 'work_mode': 'disk',
             'initial_required_bytes': '22 GiB + metadata capsule + Git staging bound',
             'minimum_initial_available_memory_bytes': 3 * 1024**3,
+            'minimum_process_open_file_soft_limit': MINIMUM_NOFILE,
             'runtime_minimum_free_bytes': 3_000_000_000,
             'runtime_minimum_available_memory_bytes': 1_000_000_000, 'timeout_seconds': TIMEOUT,
             'candidate_for_installation': True, 'hardware_acceptance': False,
             'physical_storage_written': False, 'physical_write_authorization': False,
             'reproducibility': 'not established'}
+
+
+def admit_descriptor_limit():
+    """Raise only this producer's soft limit before opening held input ancestry."""
+    before, hard = resource.getrlimit(resource.RLIMIT_NOFILE)
+    expected = before
+    if before != resource.RLIM_INFINITY and before < MINIMUM_NOFILE:
+        require(hard == resource.RLIM_INFINITY or hard >= MINIMUM_NOFILE,
+                'process open-file hard limit is below required 4096')
+        expected = MINIMUM_NOFILE
+        resource.setrlimit(resource.RLIMIT_NOFILE, (expected, hard))
+    after, final_hard = resource.getrlimit(resource.RLIMIT_NOFILE)
+    require(after == expected and final_hard == hard, 'process open-file limit differs after admission')
+    return {'required_soft_limit': MINIMUM_NOFILE, 'soft_before': before, 'soft_after': after,
+            'hard': hard, 'scope': 'current producer process only'}
 
 
 def records(policy):
@@ -359,6 +377,7 @@ def main(argv=None):
     report = plan(options.tag, manifest, policy)
     if options.plan:
         print(json.dumps(report, sort_keys=True)); return
+    report['process_open_file_limit'] = admit_descriptor_limit()
     state = roots.module(STATE, contents[STATE]); bootstrap = roots.module(BOOTSTRAP, contents[BOOTSTRAP])
     verifier = roots.module(VERIFIER, contents[VERIFIER]); Held = state.held_class(verifier)
     shared = roots.module(roots.SHARED, contents[roots.SHARED]); candidate = roots.module(roots.CANDIDATE, contents[roots.CANDIDATE])
