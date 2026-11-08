@@ -104,6 +104,10 @@ class SourceTests(unittest.TestCase):
                 try:
                     self.assertEqual(os.read(fd, len(payload)), payload)
                     path.write_bytes(payload[:-1] + b'!')
+                    # Filesystem timestamps can share one coarse clock tick.
+                    # This check exercises identity change, not adversarial
+                    # same-size mutation with deliberately unchanged metadata.
+                    os.utime(path, ns=(path.stat().st_atime_ns, original[7] + 1_000_000_000))
                     with self.assertRaises(w.Refusal):
                         w.validate_source(fd, str(path), original)
                 finally:
