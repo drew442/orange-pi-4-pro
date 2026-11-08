@@ -91,3 +91,45 @@ NVMe remains untouched; the separate reviewed VGIC SD boot awaits operator
 approval. Automatic time, complete KVM guest networking/restart, zero routine SD
 writes, matching NVMe-first firmware, SPI recovery and remaining hardware gates
 are unchanged. See [implementation status](implementation-status.md).
+
+## Actual committed-source readiness
+
+[Readiness evidence](evidence/nvme-runtime-fixes-readiness-20261108.json) records
+source `6c34629c424a1bb414780b26461e06ccd2854ae9`, all **696** tracked files,
+independent source review and a passing committed CLI plan:
+
+```sh
+sudo python3 -I -B \
+  /var/lib/a733-nvme-runtime-fixes-project-20261108-01/project/build/launch-nvme-host-runtime-fixes.py \
+  --project /var/lib/a733-nvme-runtime-fixes-project-20261108-01/project \
+  --tag timesync-runtime-fixes-01 --plan
+```
+
+The separate read-only integration runner held and authenticated **144 actual
+files, 17,861,946,198 bytes**, including both complete 4 GiB raw roots, 8 GiB
+state, 256 MiB SD and every manifest-listed artifact. The unchanged historical
+component authentication passed with real held descriptors; source and input
+identities remained stable. This extends the earlier native metadata check to
+the actual large payloads. It does not construct or inspect a new NVMe image.
+
+The full privileged Ubuntu suite passes **1,746 unit tests without skips**, five
+shell suites, five assembly cases and 12 Bash syntax checks. The correct replay
+inventory lock matches all 842 host packages; `dpkg --audit` is empty, and no
+mapped processes or phase mounts remain. No composition phase exists; the tag
+has not been consumed.
+
+Exact initial admission is **23,760,999,827 bytes**, including the unchanged
+23,622,320,128-byte recipe guard. The authentication sample had
+**18,859,384,832 bytes** free: **4,901,614,995 bytes short**. Do not invoke
+construction until verified retention and a fresh resource check clear the
+whole budget. All records remain in `out/nvme-runtime-fixes-20261108`.
+
+A read-only capacity audit identifies the old seed's `rootfs/` as a possible
+4,161,245,184-byte leaf; its live source snapshot matches the frozen source
+manifest. Current builder-restoration correspondence under the correct
+namespace mapping still needs proof before retirement. Preserve the seed's
+probe, firmware mask and records and the active restored builder. Superseded
+first-generation raw roots also need encoded-copy verification and a concrete
+retention review. These are preparation candidates, not approved deletion
+results. Native storage needs its own retention plan before a future full-NVMe
+gzip copy; keep its 256 MiB floor. No storage was retired in this work.

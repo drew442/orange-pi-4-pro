@@ -1,0 +1,231 @@
+{
+  "admission": {
+    "additional_lv_growth_authorized": false,
+    "capacity_available": false,
+    "construction_requires_fresh_verified_retention": true,
+    "guard_lowered": false,
+    "initial_budget": {
+      "capsule_bytes": 221054,
+      "git_staging_bound_bytes": 138458645,
+      "recipe_bytes": 23622320128,
+      "required_free_bytes": 23760999827
+    },
+    "sample": {
+      "available_memory_bytes": 7572660224,
+      "free_bytes": 18859384832,
+      "time": 1794104921.6984754
+    },
+    "shortfall_bytes_at_sample": 4901614995
+  },
+  "agent_routing": {
+    "architecture_integration_and_acceptance": "coordinator",
+    "capacity_extraction": {
+      "requested_model": "gpt-6-luna",
+      "requested_reasoning_effort": "low"
+    },
+    "fresh_context": true,
+    "implementation": {
+      "requested_model": "gpt-6.1-sol",
+      "requested_reasoning_effort": "medium"
+    },
+    "independent_review": {
+      "requested_model": "gpt-6.1-sol",
+      "requested_reasoning_effort": "high"
+    },
+    "maximum_active_children": 2,
+    "nested_delegation": false,
+    "token_usage_and_cost": "not exposed; unknown"
+  },
+  "bootstrap_family": {
+    "held_historical_template": {
+      "bytes": 23192,
+      "sha256": "bcadf141568ccfa77d875ca1a335fb00792125c831cc4f02aef7b8a1bd6cdc9f"
+    },
+    "registered_runtime_fixes_controller": {
+      "historical_template": {
+        "bytes": 23192,
+        "sha256": "bcadf141568ccfa77d875ca1a335fb00792125c831cc4f02aef7b8a1bd6cdc9f"
+      },
+      "registered_parent": "docs/evidence/production-host-state-runtime-fixes-20261108.json",
+      "registered_parent_canonical_sha256": "4d3b694fd55fc1d40b73b1de8c3b0d2e9f9dce9ca2fb8c1dda058dfb77a1e6c1",
+      "registered_parent_pin": {
+        "bytes": 13777,
+        "sha256": "d0566a7ed65fdb192890c78655e6d30a871fd2584576dd669d0ddddd8eb02e04"
+      },
+      "state_adapter": {
+        "path": "build/launch-host-state-runtime-fixes.py",
+        "sha256": "f137beb5512c4f370806191bb1a2646a367bce8514154f5b64a369de04e4629c"
+      },
+      "state_historical_template": {
+        "bytes": 28805,
+        "sha256": "68bdbb52c81c41cf97e11b1298c3c04ff64bf4671574550dd4f7ffaad9f405e1"
+      }
+    },
+    "source_evidence": "docs/evidence/production-host-bootstrap-runtime-fixes-20261108.json"
+  },
+  "builder": "drew@build.drewnet.online",
+  "builder_postchecks": {
+    "dpkg_audit_empty": true,
+    "host_inventory_matches_lock": true,
+    "inventory_lock": {
+      "bytes": 32546,
+      "path": "configs/builder-replay-packages-20261106.lock.tsv",
+      "sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425"
+    },
+    "mapped_processes": [],
+    "packages": 842,
+    "phase_mounts": [],
+    "physical_storage_written": false,
+    "proposed_phase_absent": true,
+    "record": {
+      "bytes": 492,
+      "path": "out/nvme-runtime-fixes-20261108/builder-postchecks.json",
+      "sha256": "10d2f5faed82f33da85af318d6f1ab939f71400b6004abc53eb80fd9791efd25"
+    },
+    "resources": {
+      "available_memory_bytes": 7685586944,
+      "free_bytes": 18859196416,
+      "time": 1794105081.0930853
+    },
+    "result": "PASS"
+  },
+  "classification": "Registered corrected-chain NVMe controller: committed planning, source review, full input authentication and host checks only; no composition",
+  "committed_plan": {
+    "bytes": 223419,
+    "path": "out/nvme-runtime-fixes-20261108/plan.json",
+    "sha256": "173529d41ce072d0712725f7a0cd65b6a189c5198ae14ea099ae0628634e8eb8"
+  },
+  "composition_launched": false,
+  "controller": {
+    "bytes": 16151,
+    "path": "build/launch-nvme-host-runtime-fixes.py",
+    "sha256": "c891af5964cd22ae1bd58d77f3796a974ce476c65030cb478f2850a8e40c9c8c"
+  },
+  "date": "2026-11-08",
+  "full_input_authentication": {
+    "all_input_identity_unchanged": true,
+    "held_file_count": 144,
+    "historical_authenticate_passed": true,
+    "policy_sha256": "56b8a4f2bfb29c8a444a66177c4ac6b6ea59d9a34e1571a87dbf23f3430402f0",
+    "process_open_file_limit": {
+      "hard": 1048576,
+      "required_soft_limit": 4096,
+      "scope": "current producer process only",
+      "soft_after": 4096,
+      "soft_before": 1024
+    },
+    "record": {
+      "bytes": 45722,
+      "path": "out/nvme-runtime-fixes-20261108/full-input-authentication.json",
+      "sha256": "f61aede4a9e02ae10b8aec2a2e620ad5593834f8b74c51cac77d35abf126f7bd"
+    },
+    "runner": {
+      "bytes": 3526,
+      "path": "tmp/nvme-runtime-fixes-20261108/authenticate-inputs.py",
+      "sha256": "fb27dc58d47f1817967c2537a7ac410ba8ea42ac87ad70977839a42cca10567f"
+    },
+    "source_closure_unchanged": true,
+    "terminal_exit_code": 0,
+    "total_authenticated_bytes": 17861946198
+  },
+  "hardware_acceptance": false,
+  "historical_template": {
+    "bytes": 27704,
+    "sha256": "5ae2db40d7f9e599fff34a2bc6dc6e14f927ffb8a47ecaac9dcb140b7d5a03d5"
+  },
+  "native_metadata_integration": {
+    "actual_held_metadata_files": 9,
+    "log": {
+      "bytes": 98,
+      "path": "out/nvme-runtime-fixes-20261108/native-authenticate.log",
+      "sha256": "64f166579b2eb7a0afc7ab6d7a9c8ff1a1c4c59ae4e962a7341ef469972971ae"
+    },
+    "note": "Actual large payload authentication is separately recorded below.",
+    "root_payload_bytes_reread": false
+  },
+  "next_actions": [
+    "Prove correct frozen namespace/archive metadata correspondence before retiring only the superseded seed rootfs; preserve seed probe, firmware mask and records.",
+    "Verify retained gzip/raw identity and both encoded copies before proposing retirement of superseded first-generation root raw files.",
+    "Independently review any concrete retention operation, retain restoration map and remeasure exact admission before composition.",
+    "Prepare native retention before copying a future full NVMe gzip; preserve native 256 MiB floor.",
+    "After composition, run complete independent gzip/raw/GPT/partition validation. Physical VGIC boot, real guest completion, matched deployment and release gates remain open."
+  ],
+  "observations": [
+    "Initial coordinator postcheck used the older builder-packages.lock.tsv and rejected it. Corrected postcheck derives HOST_LOCK from the committed root producer; all 842 packages match builder-replay-packages-20261106.lock.tsv, with empty dpkg audit. No package changes were made."
+  ],
+  "phase_exists_after_checks": false,
+  "physical_storage_written": false,
+  "proposed_output": "work/project/out/nvme-image-timesync-runtime-fixes-01",
+  "proposed_phase": "/var/lib/a733-clean-replay-20261106/nvme-timesync-runtime-fixes-01",
+  "proposed_tag_consumed": false,
+  "published_deployment_images_changed": false,
+  "registrations": {
+    "bootstrap": {
+      "canonical_sha256": "60d40b557637f1b7da3785e45fde52db37b692e36d30d8156616f48c9e8f9176",
+      "git_blob": "988f05aa16232fbe4114f5719486e94ff1a88e0c",
+      "path": "docs/evidence/production-host-bootstrap-runtime-fixes-20261108.json",
+      "pin": {
+        "bytes": 9499,
+        "sha256": "f718c119b3d2b79c110c26eec51ee18655242d02e2acfa4de59f93e7d2b852cb"
+      }
+    },
+    "roots": {
+      "canonical_sha256": "2c04a75d5239224b80a721442e88ea872ccd63d18aaae841539d007697302971",
+      "git_blob": "63ee6c9c17dbca0f434feaef010c7a0fa630f070",
+      "path": "docs/evidence/production-host-roots-runtime-fixes-20261108.json",
+      "pin": {
+        "bytes": 17141,
+        "sha256": "12c45544ac379a0ca11312f833f2e49333b0cf94dc55156a280a18044ba8003d"
+      }
+    },
+    "state": {
+      "canonical_sha256": "4d3b694fd55fc1d40b73b1de8c3b0d2e9f9dce9ca2fb8c1dda058dfb77a1e6c1",
+      "git_blob": "a2ea1c12cfb0d566c6348f92e6b3bcc7b2c657ac",
+      "path": "docs/evidence/production-host-state-runtime-fixes-20261108.json",
+      "pin": {
+        "bytes": 13777,
+        "sha256": "d0566a7ed65fdb192890c78655e6d30a871fd2584576dd669d0ddddd8eb02e04"
+      }
+    }
+  },
+  "root_readback_binding": {
+    "canonical_sha256": "2a684166b782bfc386bfa478b5d72373e943e63ddbe493d5f3ed1263c7a8d1ce",
+    "git_blob": "ca2f96f454b8c892b6e6b1e771668dc4afa4d032",
+    "path": "docs/evidence/production-host-roots-runtime-fixes-nvme-readback-binding-20261108.json",
+    "pin": {
+      "bytes": 5555,
+      "sha256": "24ee24034c7c41f9827583be950f393ba6beacc5725a21c00709860c1ef5ed00"
+    }
+  },
+  "schema": 1,
+  "source_review": {
+    "bytes": 4517,
+    "findings": [],
+    "path": "out/nvme-runtime-fixes-20261108/source-review.json",
+    "result": "PASS within source-review scope; no actionable findings",
+    "sha256": "0172b1012c6c3d71eda42a5df8b0f95b6b1082e0ff04d912b51bfe7f60a6699d"
+  },
+  "source_revision": "6c34629c424a1bb414780b26461e06ccd2854ae9",
+  "state_uuid": "360dfb39-f49f-487e-b307-0bb887c854c5",
+  "tracked_source_records": 696,
+  "validation": {
+    "assembly_cases": 5,
+    "bash_files": 12,
+    "committed_plan_terminal_exit_code": 0,
+    "full_suite_log": {
+      "bytes": 6915,
+      "path": "out/nvme-runtime-fixes-20261108/full-validation.log",
+      "sha256": "92b1cf3a2b2e1dd9a10eb5506be3f382a6f326b45e9b31e11238f8794cdfd75e"
+    },
+    "full_suite_terminal_exit_code": 0,
+    "privileged_ubuntu_unit_tests": 1746,
+    "python_ast_toml_diff_checks": true,
+    "shell_suites": 5,
+    "skips": 0,
+    "source_import_log": {
+      "bytes": 621,
+      "path": "out/nvme-runtime-fixes-20261108/source-import.log",
+      "sha256": "d8bd08e75d6205321a27934a94c2956306096a80d9698e5e170db4efda3401ca"
+    }
+  }
+}
