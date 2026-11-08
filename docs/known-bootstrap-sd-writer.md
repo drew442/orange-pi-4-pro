@@ -2,7 +2,16 @@
 
 `scripts/write-known-bootstrap-sd.py` is a Python 3.11 standard-library helper
 for the coordinator's maintenance operation in the private SSH RAM installer.
-It has no external binary dependencies. It only accepts the known Orange Pi
+It has no external binary dependencies. Kernel initramfs starts `/` at mode 1777;
+normalize that RAM-only directory to 0755 before maintenance.
+
+In this RAM installer, verify the root filesystem before changing its mode:
+
+```sh
+awk '$1 == "rootfs" && $2 == "/" && $3 == "rootfs" {ok=1} END {exit !ok}' /proc/mounts && chmod 0755 /
+```
+
+This changes RAM metadata only; no physical filesystem is mounted or written. It only accepts the known Orange Pi
 4 Pro A733 SD `/dev/mmcblk1`, device `179:0`, model `SU02G`, CID
 `035344535530324780716f216e00a8f5`, actual size **1,977,614,336 bytes**,
 with 512-byte logical sectors. There are no alternate device or hash switches.
@@ -20,7 +29,7 @@ The known-target write is covered by the operator's persisted
 [storage authorization](evidence/storage-write-authorization-20261108.json).
 The helper's `--write` flag explicitly selects that maintenance operation;
 there is no additional prompt. This helper is not a general disk installer.
-Independent review is required before its first use. Host tests do not prove
+Independent source review passes. Live plan checks remain required before its first write. Host tests do not prove
 hardware behavior.
 
 ## Preparation and commands

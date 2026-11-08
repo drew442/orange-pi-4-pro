@@ -109,18 +109,24 @@ def parse_archive(data):
         for member in archive:
             count += 1
             require(count <= 5 and member.name not in result, 'duplicate or excess archive members')
+            require(set(member.pax_headers) <= {'mtime', 'atime', 'ctime'} and
+                    all(re.fullmatch(r'-?[0-9]+(?:\.[0-9]+)?', value)
+                        for value in member.pax_headers.values()),
+                    'unselected or invalid archive extension')
             if member.isdir() and member.name in ('identity', 'identity/ssh'):
                 require(member.uid == member.gid == 0 and member.mode == 0o700,
                         'unsafe archive directory')
                 result[member.name] = None
                 continue
-            require(member.name in FILES and member.isfile() and not member.pax_headers,
+            require(member.name in FILES and member.isfile(),
                     'unselected or unsafe archive member')
             require(member.uid == member.gid == 0 and member.mode == FILES[member.name],
                     'archive member metadata differs')
             require(0 < member.size <= (33 if member.name.endswith('machine-id') else 4096),
                     'archive member size differs')
             result[member.name] = archive.extractfile(member).read(member.size + 1)
+    require(set(result) == set(FILES) | {'identity', 'identity/ssh'},
+            'missing identity file or directory')
     result = {k: v for k, v in result.items() if v is not None}
     require(set(result) == set(FILES), 'missing identity file')
     mid = result['identity/machine-id']

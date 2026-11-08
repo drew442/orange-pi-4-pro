@@ -180,7 +180,7 @@ def target_identity():
         partition_name = re.fullmatch(r'mmcblk1p([1-9][0-9]*)', child.name)
         try:
             os.stat(child / 'partition')
-        except FileNotFoundError:
+        except (FileNotFoundError, NotADirectoryError):
             require(partition_name is None, 'SD partition probe disappeared or is missing')
             continue
         require(partition_name is not None, 'unexpected SD partition name')

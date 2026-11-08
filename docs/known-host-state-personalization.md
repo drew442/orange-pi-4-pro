@@ -22,7 +22,9 @@ file replacements are the exact paths established by
 
 Mode 0644 on machine-id is necessary for unprivileged services including
 networkd. The original pinned identity archive has five members including two
-0700 root-owned directories. Its exact 10,240 bytes have SHA256
+0700 root-owned directories. Timestamp-only PAX fields (`mtime`, `atime`,
+`ctime`) are permitted and ignored for destination metadata; path, size, link
+and xattr extensions are refused. Both directory entries are required. Its exact 10,240 bytes have SHA256
 `ae3930cec481912a164361e11c926ca02d81561a49c0fc49b70514dd19d3d06e`.
 The original private builder copy is
 `/var/lib/a733-original-host-identity-20261108-01/identity.tar`.

@@ -197,6 +197,35 @@ class TargetTests(unittest.TestCase):
             with self.assertRaises(PermissionError):
                 w.target_identity()
 
+    def test_ordinary_sysfs_attribute_files_are_not_partition_directories(self):
+        base = '/sys/class/block/mmcblk1/'
+        values = {'dev': '179:0', 'device/cid': w.CID, 'device/name': 'SU02G',
+                  'ro': '0', 'size': str(w.TARGET_BYTES // 512),
+                  'queue/logical_block_size': '512', 'mmcblk1p1/partition': '1',
+                  'mmcblk1p1/dev': '179:1'}
+        def probe(path):
+            if str(path).endswith(('uevent/partition', 'dev/partition')):
+                raise NotADirectoryError(str(path))
+            return info()
+        with mock.patch.object(w.os, 'lstat', return_value=info()), \
+                mock.patch.object(w, 'read_text', side_effect=lambda p: values[str(p).removeprefix(base)]), \
+                mock.patch.object(w.Path, 'iterdir', side_effect=lambda *a: iter(
+                    [Path(base + n) for n in ('uevent', 'dev', 'mmcblk1p1')])), \
+                mock.patch.object(w.os, 'stat', side_effect=probe):
+            self.assertEqual(w.target_identity()[1], {(179, 0), (179, 1)})
+
+    def test_partition_named_nondirectory_is_refused(self):
+        base = '/sys/class/block/mmcblk1/'
+        values = {'dev': '179:0', 'device/cid': w.CID, 'device/name': 'SU02G',
+                  'ro': '0', 'size': str(w.TARGET_BYTES // 512),
+                  'queue/logical_block_size': '512'}
+        with mock.patch.object(w.os, 'lstat', return_value=info()), \
+                mock.patch.object(w, 'read_text', side_effect=lambda p: values[str(p).removeprefix(base)]), \
+                mock.patch.object(w.Path, 'iterdir', side_effect=lambda *a: iter([Path(base + 'mmcblk1p1')])), \
+                mock.patch.object(w.os, 'stat', side_effect=NotADirectoryError):
+            with self.assertRaises(w.Refusal):
+                w.target_identity()
+
     def test_idle_fails_on_mount_swap_holder_and_probe_errors(self):
         with mock.patch.object(w, 'mountinfo', return_value=[{'dev': (179, 1)}]):
             with self.assertRaises(w.Refusal):

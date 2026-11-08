@@ -18,18 +18,26 @@ M = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(M)
 
 
-def fixture(extra=None, mode=None):
+def fixture(extra=None, mode=None, pax=None, include_directories=True):
     blob = b'\0\0\0\x0bssh-ed25519\0\0\0\x20' + b'x' * 32
     files = {'identity/machine-id': b'1' * 32 + b'\n',
              'identity/ssh/ssh_host_ed25519_key.pub': b'ssh-ed25519 ' + base64.b64encode(blob) + b' fixture\n',
              'identity/ssh/ssh_host_ed25519_key': b'-----BEGIN OPENSSH PRIVATE KEY-----\n' +
              base64.b64encode(b'openssh-key-v1\0' + blob) + b'\n-----END OPENSSH PRIVATE KEY-----\n'}
     stream = io.BytesIO()
-    with tarfile.open(fileobj=stream, mode='w', format=tarfile.USTAR_FORMAT) as tar:
+    with tarfile.open(fileobj=stream, mode='w', format=tarfile.PAX_FORMAT) as tar:
+        if include_directories:
+            for name in ('identity', 'identity/ssh'):
+                member = tarfile.TarInfo(name)
+                member.type = tarfile.DIRTYPE
+                member.mode = 0o700
+                member.pax_headers = dict(pax or {})
+                tar.addfile(member)
         for name, data in files.items():
             member = tarfile.TarInfo(name)
             member.mode = mode if mode is not None else M.FILES[name]
             member.size = len(data)
+            member.pax_headers = dict(pax or {})
             tar.addfile(member, io.BytesIO(data))
         if extra:
             tar.addfile(extra, io.BytesIO(b''))
@@ -65,6 +73,20 @@ class ArchiveTests(unittest.TestCase):
             M.parse_archive(data)
         with mock.patch.object(M, 'ARCHIVE_HASH', M.digest(data)), self.assertRaises(ValueError):
             M.parse_archive(data)
+
+    def test_timestamp_extensions_are_allowed_but_other_pax_fields_are_refused(self):
+        data, files, fp = fixture(pax={'mtime': '1777319348.692000006',
+                                     'atime': '1793952102', 'ctime': '48.336000022'})
+        self.assertEqual(self.parse(data, fp), files)
+        for pax in ({'SCHILY.xattr.test': 'value'}, {'linkpath': '../other'}, {'ctime': 'invalid'}):
+            data, _, fp = fixture(pax=pax)
+            with self.subTest(pax=pax), self.assertRaises((ValueError, tarfile.TarError)):
+                self.parse(data, fp)
+
+    def test_both_pinned_archive_directories_are_required(self):
+        data, _, fp = fixture(include_directories=False)
+        with self.assertRaisesRegex(ValueError, 'missing identity file or directory'):
+            self.parse(data, fp)
 
     def test_superblock_uuid_and_label(self):
         data = bytearray(1024)
