@@ -1,0 +1,151 @@
+{
+  "schema": 1,
+  "date": "2026-11-08",
+  "boot_id": "7c31dc06-b2a4-43ee-a049-4747ae54bc10",
+  "scope": "physical authenticated guest restore and actual KVM restart on corrected host",
+  "source_counter": 3,
+  "observed_counters": [
+    4,
+    5
+  ],
+  "receipts": {
+    "corrected-restore-receipt.json": {
+      "archive_sha256": "2f2f21e2d6624b91f8b54c118cc7edda3fa17ae49fc47923a113fe8510e9adb6",
+      "bytes_attempted_staged": 140444202,
+      "directory_may_be_published": true,
+      "durable": true,
+      "manifest_sha256": "672f4b490c1d21b65144646f0231119bad37e5468bf7ce9f0026290bd3d1d427",
+      "operation": "a733-guest-restore-v1",
+      "plan_sha256": "f9c9872e0c011edeb495734a880d3086545df0ae0078bc0a8208079fd08f13b4",
+      "published": true,
+      "schema": 1,
+      "source_manifest_sha256": "1317731d7025a3bd609cc92e1bbd24d7a19172822bae77d5bbb469b127bc6291",
+      "staging_retained": false,
+      "success": true
+    },
+    "restored-counter4-checkpoint-receipt.json": {
+      "disk_flush_attempted": true,
+      "durable": true,
+      "history_durable": true,
+      "history_published": true,
+      "manifest_replace_attempted": true,
+      "metadata_may_be_modified": true,
+      "name": "firstkvm",
+      "new_disk_sha256": "cc1cb41b5c94402948b1c4603a2784cca6835112e5a70397d36f0d238354f471",
+      "new_manifest_sha256": "feb3fad9f5a832cb7aa7f88e40186ca43bb24ff2cd2e57b2519bdcbd525c910e",
+      "old_manifest_sha256": "672f4b490c1d21b65144646f0231119bad37e5468bf7ce9f0026290bd3d1d427",
+      "operation": "a733-guest-checkpoint-v1",
+      "plan_sha256": "fd3c94ba568fef0a616ed54bc6e81b286967a384dea67e9c981869d84698d6d1",
+      "published": true,
+      "schema": 1,
+      "success": true
+    },
+    "restored-counter5-checkpoint-receipt.json": {
+      "disk_flush_attempted": true,
+      "durable": true,
+      "history_durable": true,
+      "history_published": true,
+      "manifest_replace_attempted": true,
+      "metadata_may_be_modified": true,
+      "name": "firstkvm",
+      "new_disk_sha256": "d3faf8742f80fb83091d84464ff367d0e3f31ab8fb72ea20066ff5f8a5f83217",
+      "new_manifest_sha256": "0b4b439236715ff308c9efab823159ed97fe5dfe010ed4a366091161dc1647fd",
+      "old_manifest_sha256": "feb3fad9f5a832cb7aa7f88e40186ca43bb24ff2cd2e57b2519bdcbd525c910e",
+      "operation": "a733-guest-checkpoint-v1",
+      "plan_sha256": "eb6580257412842c12c8bda0864e7cb996d4e033429fdd64df0d3601beb4b9e1",
+      "published": true,
+      "schema": 1,
+      "success": true
+    }
+  },
+  "runs": [
+    {
+      "counter": 4,
+      "clean_exit": {
+        "ActiveState": "inactive",
+        "ControlPID": 0,
+        "ExecMainCode": 1,
+        "ExecMainExitTimestampMonotonic": 259979316,
+        "ExecMainPID": 1874,
+        "ExecMainStartTimestampMonotonic": 246956415,
+        "ExecMainStatus": 0,
+        "LoadState": "loaded",
+        "MainPID": 0,
+        "Result": "success",
+        "SubState": "dead",
+        "event": "final",
+        "unit": "a733-guest-firstkvm.service"
+      },
+      "uid_gid": 60001,
+      "capabilities": "all zero",
+      "no_new_privileges": true,
+      "records": [
+        {
+          "path": "out/vgic-nvme-image-20261108/restored-counter4-console.txt",
+          "bytes": 14967,
+          "sha256": "6fe3fad30bb3802dde2098efc940e6b706e695a8b36ab292b562300ae22e5901"
+        },
+        {
+          "path": "out/vgic-nvme-image-20261108/restored-counter4-exit-observer.jsonl",
+          "bytes": 417,
+          "sha256": "402c9a37721cde272ce6480bb54f3b318fdcdaf99aeb0835c2b57c10a88ddf63"
+        },
+        {
+          "path": "out/vgic-nvme-image-20261108/restored-counter4-kvm-process.txt",
+          "bytes": 2547,
+          "sha256": "1cbdcda056d6d627e0a69515d90c83944871f8dad1938cf71954caf9688a603b"
+        },
+        {
+          "path": "out/vgic-nvme-image-20261108/restored-counter4-http.txt",
+          "bytes": 72,
+          "sha256": "6ce9ba8dc52f4f77174caa4f4e72d9f6ca0d4e87d884a0bce1d3d1815662e2d1"
+        }
+      ]
+    },
+    {
+      "counter": 5,
+      "clean_exit": {
+        "ActiveState": "inactive",
+        "ControlPID": 0,
+        "ExecMainCode": 1,
+        "ExecMainExitTimestampMonotonic": 334414401,
+        "ExecMainPID": 2040,
+        "ExecMainStartTimestampMonotonic": 327484238,
+        "ExecMainStatus": 0,
+        "LoadState": "loaded",
+        "MainPID": 0,
+        "Result": "success",
+        "SubState": "dead",
+        "event": "final",
+        "unit": "a733-guest-firstkvm.service"
+      },
+      "uid_gid": 60001,
+      "capabilities": "all zero",
+      "no_new_privileges": true,
+      "records": [
+        {
+          "path": "out/vgic-nvme-image-20261108/restored-counter5-console.txt",
+          "bytes": 29689,
+          "sha256": "95afb3e0996085a2a5164a971d6a7265e40ee6feb8f87573a23a82eb56074957"
+        },
+        {
+          "path": "out/vgic-nvme-image-20261108/restored-counter5-exit-observer.jsonl",
+          "bytes": 417,
+          "sha256": "15cbf8b9086e9abdba9391286c3e469e68c19ee218e4e561918ee838b0db2005"
+        },
+        {
+          "path": "out/vgic-nvme-image-20261108/restored-counter5-kvm-process.txt",
+          "bytes": 2386,
+          "sha256": "dfe302ea0577bdb43bd837556ad1db98e0e42c9a715bb4b6873460cbe40634fb"
+        },
+        {
+          "path": "out/vgic-nvme-image-20261108/restored-counter5-http.txt",
+          "bytes": 72,
+          "sha256": "e68f7a11f6db453437872a52a197c7e906c49fb83fd166fec21ef6f45afac49b"
+        }
+      ]
+    }
+  ],
+  "hardware_acceptance": false,
+  "interpretation": "Guest core and restoration gates pass; complete release acceptance remains open."
+}

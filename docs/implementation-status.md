@@ -13,16 +13,20 @@ independent deployment reproduction remain incomplete.
   Minimal Linux/KVM/QEMU is the target.
   Preserve zero routine SD writes; prefer SPI-to-NVMe with SD removed, otherwise
   use immutable SD boot files. Leave attached heatsinks in place.
-- **Running now:** The [private SSH RAM installer](ssh-installer-remote-boot-20261108.md)
-  physically boots at **192.168.1.115**, boot ID `f3a37e96-ad2f-4eb5-93a3-193d41083ce3`.
-  Existing pinned host key, Ed25519 login and PTY pass. Root is RAM. The approved full NVMe install, same-board identity restoration
-  and matched 256 MiB SD write now pass; see [physical write receipts](evidence/corrected-host-install-20261108.json).
-  Final corrected-host boot is next. SD and NVMe are unmounted.
-  RSA hardware login for this new boot remains unperformed.
-- **Existing NVMe host:** The installed `00fd…` NVMe host was repaired in place.
+- **Running now:** The corrected VGIC host physically boots at **192.168.1.116**,
+  boot ID `7c31dc06-b2a4-43ee-a049-4747ae54bc10` at its verified boot. SSH is now
+  refused while ping still responds; serial diagnostics are requested. Read-only NVMe p2 root,
+  STATE `360d…`, the complete 40-file installed tool closure and 221-package
+  manifest pass. Existing pinned SSH identity and Ed25519 login pass;
+  automatic NTP reports synchronized. Early Linux SD write/discard/flush
+  counters are zero. See [corrected physical boot](evidence/corrected-host-boot-20261108.json).
+  The approved full NVMe install, identity restoration and SD switch pass;
+  [write receipts](evidence/corrected-host-install-20261108.json) include the
+  full-card acceptance baseline. RSA login has not been repeated on this boot.
+- **Previous NVMe host:** The earlier `00fd…` host was repaired before replacement.
   Trusted live SSH verified DHCP `192.168.1.116/24` on `end0`, MAC
   `10:f4:ae:90:5e:57`, and acceptance of both authorized keys. SSH remains
-  public-key-only from any source/subnet. Do not reinstall NVMe to fix management. See
+  public-key-only from any source/subnet. That repair did not require reinstallation. See
   [repair results](installed-host-repair-results-20261108.md).
 - **Actual KVM guest core tests pass:** [Physical CPU/disk/network, clean
   poweroff/checkpoint/restart](kvm-vgic-results-20261108.md) advance the disk
@@ -37,27 +41,38 @@ independent deployment reproduction remain incomplete.
   The counter-1 guest disk and original enrollment survived unchanged;
   off-device guest backup and guarded p5 activation pass. [Normal-GIC guest tests](kvm-vgic-results-20261108.md) now pass; this remains
   a diagnostic host, not final release acceptance.
-- **Guest backup:** The stopped counter-3 guest and both checkpoint records now
-  have an [authenticated backup on builder and codex](evidence/vgic-counter3-backup-20261108.json).
-  Independent receiver readback passes. Restoration and a restored KVM boot remain open.
+- **Guest backup and restoration:** The stopped counter-3 guest and both checkpoint
+  records have an [authenticated backup on builder and codex](evidence/vgic-counter3-backup-20261108.json).
+  [Physical restoration and KVM boots 3 → 4 → 5](evidence/corrected-host-guest-restore-20261108.json)
+  now pass on the corrected host; both new checkpoints are durable.
+- **Endurance:** The [60-second physical smoke](evidence/endurance-smoke-physical-20261108.json)
+  passes with four KVM vCPUs, four additional nonroot host workers, verified
+  network transfers, three disk cycles and independently observed clean exit.
+  The [24-hour run](endurance-run-20261108.md) started **2026-11-08 11:06:24 UTC**;
+  it **failed management reachability** at collector elapsed 300.005 seconds.
+  Last valid guest sample is elapsed 357 seconds/cycle 12; temperatures were below
+  29 °C, available memory 11,589,748 KiB, NVMe kernel errors absent and SD writes
+  zero. Root cause and subsequent guest/load state are unknown; serial output is
+  requested. Its initial 86-second telemetry gap is also recorded.
 - **Corrected candidate:** Runtime-fixed roots, matched state and bootstrap
   passed construction, readback/inspection and independent artifact review;
-  they have not booted. The matched full-NVMe producer (source `6c34629`, tag
+  the corrected VGIC chain now physically boots. The matched full-NVMe producer (source `6c34629`, tag
   `timesync-runtime-fixes-01`) now passes construction, producer readback and
   final environment checks, independent complete stream verification and
   independent artifact review. Hardware acceptance remains open. See
   [construction evidence](production-nvme-runtime-fixes.md).
 - **Corrected VGIC bootstrap:** [Two constructions and independent artifact review](vgic-runtime-bootstrap.md) pass from `18af215`; raw/gzip/initramfs bytes match.
   The 256 MiB image fits the actual SD and selects corrected state `360d…`.
-  It remains **UNBOOTED**; full NVMe BOOT derivation with the same DTB is next.
+  Matched NVMe derivation, approved writes and actual corrected-host boot now pass;
+  historical construction records retain their construction-time classification.
 - **Private SSH RAM installer:** [Construction, independent review and ARM
   session tests](evidence/ssh-ram-installer-20261108.json) pass. The private
   256 MiB SD candidate preserves firmware/kernel/VGIC and both authorized keys.
   Actual RAM boot, Ed25519 login, PTY and idle-NVMe observations now pass.
   Full VGIC NVMe construction and producer readback pass after preserving empty
   `lost+found`; [independent complete artifact comparison now passes](evidence/vgic-nvme-image-20261108.json).
-  Before deployment, preserve same-board identity using the reviewed
-  [STATE helper](known-host-state-personalization.md), then use the reviewed
+  The installation preserved same-board identity using the reviewed
+  [STATE helper](known-host-state-personalization.md), then used the reviewed
   [known SD writer](known-bootstrap-sd-writer.md) for the matched bootstrap.
   Both maintenance helpers now completed physical writes with durable receipts.
   The full NVMe stream was installed without readback, then identity was restored;
@@ -78,9 +93,11 @@ images exceed the SD capacity. The board inventory and pinned compatible
 firmware/kernel inputs are in [diagnostic inventory](board-diagnostic-20261104.md)
 and [source locks](../configs/diagnostic-sources.lock.json).
 
-The original deployment clock remains April 27 without NTP; the 221-package
-time-enabled corrected userspace is unbooted. The machine-id commit mask and
-account/ROM fixes are packaged and inspected, not physically validated. Reported
+The corrected 221-package host now synchronizes time automatically and masks
+machine-id commit. Packaged account creation and the ROM-free launcher now run
+on the corrected host; restored guest counter **3 → 4 → 5**, CPU, disk, network
+and independently observed clean exits pass. Durable checkpoint 4 passes;
+checkpoint 5 also passes. See [restoration evidence](evidence/corrected-host-guest-restore-20261108.json). Reported
 power/cooling is a 67 W USB-PD adapter and 10.4 mm six-layer whole-board copper
 heatsink; negotiated power, fan and thermal endurance remain unproven.
 
@@ -108,7 +125,7 @@ count as physical acceptance.
 - The corrected-chain root components, state and bootstrap have passed their
   documented construction and inspection checks. The full NVMe producer is
   complete; independent stream inspection and artifact review pass.
-  Physical boot remains pending.
+  Corrected VGIC-chain physical boot now passes.
 - Actual old-seed retirement removed **91,578** entries; all **7** protected
   postchecks passed. Source/quarantine are absent and the probe, mask, records,
   active builder and backups remain. Free space at completion was
@@ -130,9 +147,10 @@ count as physical acceptance.
   preserves a verified 893 MB generated archive on builder and releases native
   capacity for current images. Native free at completion was 1,165,426,688 bytes;
   remeasure above its unchanged 256 MiB floor. Restoration is unperformed.
-- Latest privileged Ubuntu suite: **1,880 tests**, no skips, errors or failures;
+- Latest privileged Ubuntu suite: **1,928 tests**, no skips, errors or failures;
   five shell suites and five diagnostic assembly cases pass. See the
-  [latest record](evidence/known-maintenance-validation-20261108.json). These are host
+  [latest record](evidence/endurance-validation-20261108.json). Jammy lacks `tomllib`;
+  all five TOML files passed the separate native parser. These are host
   checks only, not hardware acceptance.
 - Source/licensing work remains incomplete: licensing for 26 vendor boot inputs
   is unresolved; GCC and DejaGNU sources remain unacquired; notice presence does
@@ -142,12 +160,11 @@ count as physical acceptance.
 
 ## Next actions
 
-1. Preserve the successful VGIC/guest evidence and current counter-3 checkpoint.
-   Integrate the proven DT and matched firmware into the corrected host chain;
-   validate that coherent deployment and its packaged/time/identity behavior.
-   Independent NVMe artifact review and the approved NVMe installation, identity
-   preservation and final SD switch now pass. Boot the corrected host, validate
-   its installed closure and restore the authenticated counter-3 guest.
+1. Obtain the requested serial console output for SSH refusal during the failed
+   endurance attempt, establish the cause and recover management. Preserve on-board
+   observer/console evidence before any restart if accessible. Corrected boot,
+   packaged tools, automatic time and guest restoration passed earlier. Repeat
+   the full endurance run after the fault is resolved.
 2. The verified `timesync-runtime-fixes-01` image is retained on both hosts;
    recheck resource floors before transfers. Integrate and
    validate matching NVMe-first firmware and VGIC DT separately; physically

@@ -1,0 +1,83 @@
+{
+  "schema": 1,
+  "date": "2026-11-08",
+  "classification": "Read-only local source review; no board access or hardware diagnosis established",
+  "review_scope": [
+    "configs/host-management.py",
+    "configs/a733-management-ssh.service",
+    "scripts/select-host-root.py",
+    "scripts/host-update-target.py",
+    "scripts/update-host.py",
+    "scripts/prepare-host-update.py",
+    "build/host-initramfs.py",
+    "build/timesync-state.py"
+  ],
+  "source_match": {
+    "configs/host-management.py": "a6cc8ec90f90050efc16fda6567d666aadd5fcb2a12b468b050ab9fd52ca6052",
+    "matches": "docs/evidence/corrected-host-boot-20261108.json complete_tools host-management.py"
+  },
+  "reported_observations_not_remeasured": [
+    "Current boot 7c31dc06-b2a4-43ee-a049-4747ae54bc10; trusted SSH stopped abruptly during read-only preparation/security probes",
+    "Same board responds to ping at 192.168.1.116; port 22 refuses connection",
+    "No selector apply, reboot, explicit board write or workload stop performed"
+  ],
+  "source_findings": [
+    {
+      "location": "configs/host-management.py:498",
+      "finding": "Supervisor repeats runtime_guard then current_address every five seconds. Guard/command exception, changed configuration, or unexpected sshd child exit unwinds through finally and terminates listener."
+    },
+    {
+      "location": "configs/host-management.py:138",
+      "finding": "Guard rejects unsafe/missing mounts, unexpected protected submounts, any escaped mount path anywhere in mountinfo, changed root/state device identity, unsafe metadata, wrong immutable package bindings, invalid identity/config/authorized keys, and blkid failures/timeouts. Plain content reads may change atime but guarded metadata comparisons do not include atime."
+    },
+    {
+      "location": "configs/host-management.py:498",
+      "finding": "Address loss/change stops old listener; loss waits up to 60 seconds before error. Ambiguous global IPv4 or failed ip command also causes exception. Persistent refusal is compatible with repeated guard/startup failures or externally killed/stopped service, but does not distinguish these."
+    },
+    {
+      "location": "configs/a733-management-ssh.service:6",
+      "finding": "Restart=on-failure with 10-second delay. Unit has no explicit namespace isolation or KillMode override; systemd default control-group kill behavior can terminate active SSH descendants when the unit stops. RuntimeDirectory=sshd is maintained by systemd."
+    },
+    {
+      "location": "scripts/select-host-root.py:141",
+      "finding": "prepare uses manifest authentication, repeated live snapshots, readonly inactive-root block FD with O_EXCL/flock, full root hashing and readonly debugfs metadata extraction. It performs no mount/namespace change, selector publication, service signal, or network reconfiguration. Plan JSON prints only after make_plan completes, so blank output does not locate failure."
+    },
+    {
+      "location": "scripts/update-host.py:138",
+      "finding": "clock_context imports the local policy helper and checks timesync directory bindings without opening live clock state. No sd-bus/network reconfiguration is present in prepare path."
+    },
+    {
+      "location": "configs/host-management.py:523",
+      "finding": "Production listener is sshd -D -e -f /run/a733-management/sshd_config. Separate sshd -T without -f does not target that listener or signal it; absence of default host keys explains that standalone validation failure, not listener termination."
+    }
+  ],
+  "unproven_hypotheses": [
+    "A repeated runtime_guard failure terminated management and unit cleanup killed active sessions",
+    "sshd/supervisor was externally killed or failed (kernel OOM/I/O/process/resource failure require journal evidence)",
+    "Management address enumeration/lifetime changed or became ambiguous despite later ping response"
+  ],
+  "checks": {
+    "command": "python3 -m unittest discover -s tests -p test_host_management.py",
+    "result": "38 tests passed",
+    "scope": "local fixtures only; existing test_guard_failure_terminates_existing_listener confirms guard cleanup mechanism"
+  },
+  "serial_collection_before_restart_or_reboot": [
+    "date -u; cat /proc/sys/kernel/random/boot_id; cat /proc/uptime",
+    "systemctl show a733-management-ssh.service -p ActiveState -p SubState -p Result -p MainPID -p ExecMainCode -p ExecMainStatus -p NRestarts -p KillMode -p FragmentPath -p DropInPaths",
+    "systemctl cat a733-management-ssh.service",
+    "journalctl -b -u a733-management-ssh.service --since '2026-11-08 11:05:00 UTC' --no-pager -o short-monotonic",
+    "journalctl -b -k --since '2026-11-08 11:05:00 UTC' --no-pager -o short-monotonic",
+    "ss -ltnp; ip -j -4 addr show dev end0; ip route; cat /proc/self/mountinfo",
+    "stat -c '%n %a %u:%g %h %d:%i' /run /run/etc-upper /run/etc-work /run/a733-state /run/a733-state/config /run/a733-state/identity /run/a733-state/identity/ssh /root /root/.ssh /root/.ssh/authorized_keys /etc/machine-id /run/a733-state/identity/machine-id",
+    "cat /sys/class/block/mmcblk1/stat; systemctl list-units '*endurance*' --all --no-pager",
+    "/usr/sbin/sshd -t -f /run/a733-management/sshd_config",
+    "python3 -I -B - <<'CHECK'\nimport importlib.util\np='/usr/lib/orangepi-hypervisor/host-management.py'\ns=importlib.util.spec_from_file_location('management_diagnostic',p)\nm=importlib.util.module_from_spec(s)\ns.loader.exec_module(m)\ntry:\n    m.runtime_guard()\n    print('runtime_guard PASS')\nexcept Exception as e:\n    print('runtime_guard FAIL',type(e).__name__,str(e))\nCHECK"
+  ],
+  "serial_collection_cautions": [
+    "Commands are read-only diagnostics; do not dump shadow, private host key or configuration contents. Review exception text locally before sharing because malformed input errors may contain input fragments.",
+    "Capture existing journal before restart/reboot; do not run management prepare, selector apply or change guard/retry behavior as diagnosis.",
+    "If supervisor still exists, compare its /proc/<MainPID>/mountinfo with console mountinfo; its own namespace is authoritative for guard behavior."
+  ],
+  "hardware_acceptance": "No root cause, endurance pass, recovery pass, or hardware health claim can be made from this review.",
+  "coordinator_note": "Corrected SD diagnostic command to actual mmcblk1. Normal installed serial root login is password-locked; first requested only visible console text, without requiring login."
+}

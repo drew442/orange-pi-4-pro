@@ -1,0 +1,71 @@
+{
+  "schema": 1,
+  "date": "2026-11-08",
+  "status": "failed_management_access_lost",
+  "boot_id": "7c31dc06-b2a4-43ee-a049-4747ae54bc10",
+  "guest_run_id": "e97c6d41-6ed0-4bd1-9036-2bef1c5f0905",
+  "start_utc": "2026-11-08T11:06:24Z",
+  "required_guest_seconds": 86400,
+  "guest_service": "a733-guest-endurance.service",
+  "guest_enrollment_sha256": "2bfbb4a0f69b90415c9e23361448c1f38149320be3b9fd1803a1088a9dcae41a",
+  "host_cpu_service": "a733-endurance-host-cpu-release.service",
+  "exit_observer_service": "a733-endurance-release-exit-observer.service",
+  "offboard_collector_service": "a733-offboard-endurance-collector-20261108.service",
+  "offboard_output": "out/endurance-physical-release-20261108-01/samples.jsonl",
+  "initial_observation_gap_guest_seconds": 86,
+  "gap_explanation": "Initial shell-background collector did not persist. Replaced with a supervised system service; first valid sample is guest elapsed86seconds. No telemetry is claimed for that initial interval. Guest/host load, baseline health and the held exit observer were separately started/observed. Final acceptance must assess actual coverage.",
+  "records": [
+    {
+      "path": "out/vgic-nvme-image-20261108/endurance-release-start.txt",
+      "bytes": 1614,
+      "sha256": "83eafd1ccb849e515c543ddf37c18cdabaea813ce0a8a57ae6acf7a5c1aefdd5"
+    },
+    {
+      "path": "out/vgic-nvme-image-20261108/endurance-release-host-cpu-process.json",
+      "bytes": 6698,
+      "sha256": "5b103684c54b0cee3030d134fea9851ed9a99304769ad0bceb905c3b3f64bc1e"
+    },
+    {
+      "path": "out/vgic-nvme-image-20261108/endurance-release-enroll-receipt.json",
+      "bytes": 359,
+      "sha256": "d3ac1544462c547db80ae80c89315eae266a52e5ae8595dfecdb488348e40ebd"
+    },
+    {
+      "path": "out/vgic-nvme-image-20261108/endurance-smoke-retention-result.jsonl",
+      "bytes": 381,
+      "sha256": "946a2517d48c583fa43b8305445cbe0f5afb674e6f4070c54de5e9766077cb8b"
+    },
+    {
+      "path": "tmp/retain-endurance-smoke-review-20261108.json",
+      "bytes": 3182,
+      "sha256": "cf2b2d22fefa67a8fda37172a7622e733231cb640ca91a1c8206c6535b089d2a"
+    }
+  ],
+  "hardware_acceptance": false,
+  "release_pass": false,
+  "remaining": [
+    "Full guest elapsed duration and ENDURANCE_PASS without FAIL",
+    "Independent observer final rawexit1/0 and own successful cleanup",
+    "Host CPU worker full duration/normal exit and complete sampled host metrics",
+    "Final NVMe SMART/error and SD counter comparison",
+    "Separate repeated boots, recovery/rollback, SD policy, clean deployment reproduction gates"
+  ],
+  "collector_failure": {
+    "reason": "ValueError: SSH probe failed",
+    "collector_elapsed_seconds": 300.005,
+    "last_good_guest_elapsed_seconds": 357,
+    "last_good_guest_cycles": 12,
+    "last_good_mem_available_kib": 11589748,
+    "last_good_max_thermal_millicelsius": 28582,
+    "last_good_nvme_kernel_errors": [],
+    "last_good_linux_sd_writes": 0,
+    "board_ping": "responds at recorded address with recorded MAC",
+    "ssh_port": "connection refused",
+    "host_or_guest_workload_status": "unknown after management loss; not remotely stopped",
+    "root_cause": "not established; serial console requested"
+  },
+  "parallel_readonly_operations_at_failure": [
+    "select-host-root.py prepare --intent activate --slot B; no apply was called, native plan stdout/stderr remain empty",
+    "Management security probe read account metadata then invoked sshd -T without the actual runtime -f config; expected no-hostkeys error. Probe failed without completed JSON. This did not establish final security acceptance."
+  ]
+}

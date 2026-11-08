@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "date": "2026-11-08",
+  "classification": "Read-only evidence extraction for the current physically booted SD fallback; not independent acceptance",
+  "identity": {
+    "board": "Orange Pi 4 Pro A733",
+    "sd_raw_sha256": "f02c74b4c001f1608d0005b6ff23fe82bffa8c02f71e19e5b6573819125ae383",
+    "sd_bytes": 268435456,
+    "first_32_mib_sha256": "da4a8db3aba8255a78ed2b60a251c9835dfa0b5f471f1f0590fe09abb722b556",
+    "package": {
+      "offset": 16793600,
+      "bytes": 1392640,
+      "sha256": "b20c3d1133aee6474416bc9846b0bf94d5439aa12d7f7555b44607105ddab3b6"
+    },
+    "boot_id": "7c31dc06-b2a4-43ee-a049-4747ae54bc10",
+    "evidence": [
+      "docs/evidence/vgic-runtime-bootstrap-20261108.json#/artifacts/a733-host-sd.img",
+      "docs/evidence/vgic-runtime-bootstrap-20261108.json#/preservation/identical_complete_prefix",
+      "docs/evidence/vgic-runtime-bootstrap-20261108.json#/preservation/output_readback",
+      "docs/evidence/corrected-host-install-20261108.json#/sd_write",
+      "docs/evidence/corrected-host-boot-20261108.json#/boot/boot_id"
+    ]
+  },
+  "firmware_source_and_configuration": {
+    "uboot_source": "orangepi-xunlong/u-boot-orangepi b791be842935b27268ae3d00e943a9075495f30a",
+    "build_recipe": "build/el2-diagnostic.sh:247-265; build/diagnostic.sh:125-137",
+    "asserted_build_config": {
+      "CONFIG_ENV_IS_NOWHERE": "y",
+      "CONFIG_ENV_SIZE": "0x20000 (RAM env buffer)",
+      "CONFIG_CMD_SAVEENV": "not set",
+      "CONFIG_BOOTCMD_SKIP_MISC": "y",
+      "CONFIG_SUNXI_SWITCH_SYSTEM": "not set",
+      "CONFIG_BOOTCOUNT_LIMIT": "not set",
+      "CONFIG_ENV_IS_IN_EXT4": "not set",
+      "CONFIG_SUNXI_OTA_TURNNING": "not set",
+      "CONFIG_BOOTCOMMAND": "setenv boot_targets mmc0; run distro_bootcmd"
+    },
+    "interpretation": "Pinned recipe configures a volatile environment and disables the saveenv command and identified misc/system-switch/bootcount/OTA paths. The assembled boot command reads SD files and, on failure, waits; it does not request persistent environment writes.",
+    "refs": [
+      "docs/implementation-evidence.md#Independent boot review (Other-device fallback, Persistent environment, System switching / boot count, Misc command write, Recovery-key misc write, Boot parameters / userdata, Opaque boot0 / monitor)",
+      "configs/host-boot.cmd:6-19",
+      "docs/uboot-reproducibility.md:106-118",
+      "out/vgic-runtime-bootstrap-20261108/retained-01/base-bootstrap-manifest.json#/boot_inputs/boot_package.fex",
+      "docs/evidence/production-host-bootstrap-runtime-fixes-20261108.json#/boot_inputs/boot_package.fex"
+    ]
+  },
+  "physical_observations": {
+    "early_linux_sd_counters": "corrected-host-boot evidence states Linux SD write/discard/flush counters are zero; /sys/block/mmcblk1/stat has writes completed=0 and sectors written=0 at the sample",
+    "ref": "docs/evidence/corrected-host-boot-20261108.json#/boot/sd_block_stat and /observations",
+    "interpretation": "Only Linux block-layer activity observed at the recorded early sample; it cannot observe ROM, boot0, monitor, or pre-kernel writes.",
+    "full_card_baseline": {
+      "sha256": "436fb8258d0ce9fed094babdedbeb39aa339dca57b2a3b7642775425971acc08",
+      "operation": "full-card-zero-routine-write-acceptance-baseline",
+      "hardware_acceptance": false,
+      "ref": "docs/evidence/corrected-host-install-20261108.json#/sd_acceptance_baseline"
+    }
+  },
+  "limits_and_gaps": [
+    "The exact boot_package.fex is a vendor-packed binary including opaque firmware. Source/config review constrains known U-Boot writes but does not prove every ROM, boot0, secure monitor, or binary path is side-effect free.",
+    "No firmware-level write trace or instrumentation is retained; Linux counters begin after firmware handoff.",
+    "A single full-card baseline is not a before/after unchanged-card comparison across repeated boot, workload, shutdown, and restart cycles. The 10 cold/10 warm and sustained zero-SD-write acceptance gate remains open (docs/hypervisor-plan.md:110-117; docs/implementation-status.md#Acceptance requirements and evidence).",
+    "No complete physical boot-cycle firmware audit establishes behavior under failed boot, missing NVMe, or recovery paths."
+  ],
+  "not_current_candidate": {
+    "note": "Do not use the separate unbooted NVMe-first transport SD/package as evidence for this fallback. Current package is b20c3d...; separate candidate has different artifact/config and remains unbooted.",
+    "refs": [
+      "docs/evidence/nvme-firmware-test-sd-20261107.json#/classification",
+      "docs/evidence/uboot-nvme-candidate-20261107.json#/classification",
+      "docs/spi-boot-investigation.md:81-94"
+    ]
+  },
+  "conclusion": "Good source/config and early Linux-counter evidence supports the intended immutable fallback policy. It does not yet prove zero routine physical SD writes across the acceptance cycles or rule out opaque pre-kernel firmware writes.",
+  "hardware_acceptance": false
+}

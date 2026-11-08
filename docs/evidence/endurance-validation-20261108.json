@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "date": "2026-11-08",
+  "source_revision": "eb9847b",
+  "builder": "drew@build.drewnet.online Ubuntu 22.04",
+  "project": "/var/lib/a733-maintenance-validation-20261108-01/project",
+  "source_composition": "Previously validated e0bad7f complete tree overlaid with all tracked files differing between e0bad7f and eb9847b; code and tests match eb9847b.",
+  "checks": {
+    "python_unittest": {
+      "tests": 1928,
+      "seconds": 55.569,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    },
+    "shell_suites": 5,
+    "diagnostic_assembly_cases": 5,
+    "native_tomllib_files": 5,
+    "native_bash_syntax": true,
+    "native_git_diff_check": true
+  },
+  "runner_exit_code": 1,
+  "runner_exit_explanation": "All test suites passed. Final optional builder TOML parser raised ModuleNotFoundError because Jammy Python 3.10 lacks tomllib. All five TOML files were separately parsed successfully with native Python tomllib; no TOML changes were made. No test suite was repeated.",
+  "record": {
+    "path": "out/vgic-nvme-image-20261108/endurance-full-jammy-validation.log",
+    "bytes": 8391,
+    "sha256": "2a7cb13dee28011a209d05e2b1f61714c453e1d20f65815fd1dc28b138a77154"
+  },
+  "builder_after": {
+    "free_disk_bytes": 20969992192,
+    "available_memory_bytes": 7393067008
+  },
+  "hardware_acceptance": false
+}

@@ -6,10 +6,9 @@ board. [Evidence](evidence/fel-version-probe-20261107.json) records exactly what
 was checked. This prepares identification; it does not establish USB ROM entry,
 a RAM recovery loader, flash restoration or recovery after a bad SPI bootloader.
 
-The next board action remains the
-[existing-install repair](installed-host-repair-20261107.md), followed by actual
-SSH and KVM guest validation. No new cable/button sequence or SPI write is
-requested here. Keep both heatsinks attached.
+The [corrected host](evidence/corrected-host-boot-20261108.json), SSH, automatic time
+and restored KVM guest now pass. The [24-hour endurance run](endurance-run-20261108.md)
+lost SSH management; capture the requested serial diagnostics before USB recovery experiments. Keep both heatsinks attached.
 
 ## What the sources establish
 
@@ -146,8 +145,9 @@ stock tool's listing/SID or RAM/flash commands as substitute checks.
 Before SPI programming can be proposed, demonstrate entry independent of the
 installed SPI bootloader, boot a compatible RAM recovery environment without
 persistent writes, retain and verify the complete original flash off-device,
-and inspect the actual backup-derived candidate/erase-unit plan. Then present
-the exact live SPI target and proposed write for a simple yes/no confirmation.
+and inspect the actual backup-derived candidate/erase-unit plan. The operator has [authorized the identified SPI target](evidence/storage-write-authorization-20261108.json);
+that authorization persists, while recovery and independent programmer review
+remain prerequisites.
 Version identification alone does not satisfy this gate. Actual restore testing,
 SD-removed SPI boot and all [hardware acceptance](hardware-validation.md), including
 real KVM guest execution, remain required.

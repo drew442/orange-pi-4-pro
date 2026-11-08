@@ -122,5 +122,14 @@
     "These receipts establish completed writes, not successful corrected-host boot or release acceptance."
   ],
   "hardware_acceptance": false,
-  "next": "Boot corrected host and verify actual root, state, identity, time, packaged tools and restored KVM guest."
+  "next": "Boot corrected host and verify actual root, state, identity, time, packaged tools and restored KVM guest.",
+  "sd_acceptance_baseline": {
+    "operation": "full-card-zero-routine-write-acceptance-baseline",
+    "bytes": 1977614336,
+    "sha256": "436fb8258d0ce9fed094babdedbeb39aa339dca57b2a3b7642775425971acc08",
+    "seconds": 164.5276293699999,
+    "boot_id": "f3a37e96-ad2f-4eb5-93a3-193d41083ce3",
+    "block_stat": "1510        0  3862536   319848      206    65330   524288   128340        0   198172   448188        0        0        0        0        0        0",
+    "hardware_acceptance": false
+  }
 }

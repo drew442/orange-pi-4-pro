@@ -6,6 +6,8 @@ confirms all CPUs at EL2 and KVM VHE initialization. A subsequent
 [physical VGIC KVM guest](kvm-vgic-results-20261108.md) passes CPU/disk/network,
 guest poweroff, checkpoints and restart with counter progression 1 → 2 → 3.
 [Installed SSH repair](installed-host-repair-results-20261108.md) also passes.
+The [corrected host](evidence/corrected-host-boot-20261108.json) now passes automatic
+NTP and [restored KVM boots 3 → 4 → 5](evidence/corrected-host-guest-restore-20261108.json).
 Release acceptance remains incomplete. Host-only checks are recorded separately in
 [implementation status](implementation-status.md) and the diagnostic guide.
 Never infer a passed board test from a build, model review or QEMU emulation.
@@ -31,14 +33,14 @@ for boot0/U-Boot writes.
 | Diagnostic SD | Actual 2 GB card, serial boot through Linux shell | Observed: 1,977,614,336-byte card; RAM shell |
 | Inventory | Board/RAM/SSD/power/cooling and exact capacities | RAM/CPU/SD/SSD and 67 W USB-PD/copper heatsink description recorded; operating power/thermal tests pending |
 | NVMe | PCIe/NVMe enumeration, errors and stable repeated access | Enumerates/live; repeated access and warning investigation pending |
-| KVM | EL2 messages plus guest execution with KVM explicitly required | [Actual nonroot KVM CPU/disk/network, clean poweroff/checkpoints and restart](kvm-vgic-results-20261108.md) pass on the diagnostic VGIC host; final corrected-host validation remains open |
-| Ethernet | Vendor binding, DHCP, route/DNS/TLS and repeatable cold boot | Preparation DHCP/DNS/TLS observed; [installed DHCP and both SSH keys pass after repair](installed-host-repair-results-20261108.md); repeatable cold boot and installed automatic time remain open |
+| KVM | EL2 messages plus guest execution with KVM explicitly required | [Actual nonroot KVM CPU/disk/network, clean poweroff/checkpoints and restart](kvm-vgic-results-20261108.md) pass on the diagnostic VGIC host; corrected-host restoration and KVM restart also pass; full release remains open |
+| Ethernet | Vendor binding, DHCP, route/DNS/TLS and repeatable cold boot | Preparation DHCP/DNS/TLS observed; [installed DHCP and both SSH keys pass after repair](installed-host-repair-results-20261108.md); corrected-host automatic NTP passes; repeatable cold boot remains open |
 | Installation | Fresh deployment on actual card and nominal 250 GB SSD | [November 7 write/readback and installed root A boot observed](evidence/installed-host-first-boot-20261107.json); [management repair passes](installed-host-repair-results-20261108.md); independent deployment reproduction remains open |
 | Boot reliability | 10 cold boots and 10 warm reboots, matched firmware/SSD | Pending |
-| Workload | 24 hours: CPU/disk/network, temperatures/memory/NVMe errors | Pending |
+| Workload | 24 hours: CPU/disk/network, temperatures/memory/NVMe errors | [60-second physical smoke passes; release attempt lost management](endurance-run-20261108.md), full run pending |
 | SD policy | SD removed, or full-card hashes plus write counters/firmware audit | No mounted SD; one zero-write snapshot; full gate pending |
 | Update/recovery | Interrupted update, rollback, missing NVMe, disposable data | Pending |
-| Backup | Off-device backup restored and checked | Pending |
+| Backup | Off-device backup restored and checked | [Authenticated physical restoration, KVM restart and checkpoints pass](evidence/corrected-host-guest-restore-20261108.json) |
 | Security | Unique keys, no shared secrets, limited guest privileges/services | Pending |
 | Reproduction | Independent operator follows clean build/deployment guide | Pending |
 
