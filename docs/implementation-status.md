@@ -135,10 +135,14 @@ free, still below the unchanged full-NVMe guard. [Verified first-root encoded
 retention](component-retention-20261108.md) now retires only two superseded raw
 files, releasing **888,848,384 allocated bytes**. Builder free becomes
 **19,735,375,872 bytes**, still below the **23,760,999,827-byte** initial admission.
-A complete **91,578-path** old-seed recovery rehearsal and independent review now
-pass, with private exclusions retained on both hosts. The old seed leaf remains
-present; its retirement procedure still needs implementation and review. Preserve
-its probe/mask/records and the active builder. Native sparse conversion
+Complete **91,578-path** old-seed recoveries from both the active copy and the
+[pinned archive](evidence/seed-archive-recovery-20261108.json) now pass independent
+review. The separately reviewed leaf-retirement procedure passes 29 Ubuntu
+fixtures and its real-plan check; it is **currently running** under
+`/var/lib/a733-seed-leaf-retirement-20261108-01`, with the source leaf in its closed
+quarantine and every unlink journaled. Do not launch builder jobs until terminal
+success and protected postchecks. Completion is not yet claimed. Preserve the
+probe/mask/records, active builder and backups. Native sparse conversion
 preserves generated image bytes and leaves
 the separate **256 MiB** free-space minimum intact. Keep generated/downloaded
 artifacts outside Git. Recheck disk/RAM before each operation; start compilation
@@ -158,7 +162,7 @@ redistribution clearance is claimed.
 ## Next actions and completion gates
 
 1. Boot the [VGIC diagnostic SD](next-host-boot-20261108.md), return its serial/capability checks and current DHCP address, then finish guest networking, guest-initiated shutdown/restart and counter progression over trusted SSH. The original first-guest sequence needs the documented controller/fixture corrections; do not run it unchanged.
-2. The [matching full-NVMe controller](nvme-runtime-fixes-controller.md) passes source review, committed planning and full input authentication. [First raw-root retention and complete seed recovery](component-retention-20261108.md) now pass; implement and independently review old-seed leaf retirement, preserving its probe/mask/records and active builder. Recheck admission and native copy capacity before composition. After the VGIC hardware result, integrate the proven DT and matched NVMe-first firmware separately. Validate automatic time, packaged account/ROM fixes and masked-unit behavior on hardware.
+2. Monitor the running reviewed seed-leaf retirement to terminal success and verify protected postchecks, then recheck the [matching full-NVMe controller](nvme-runtime-fixes-controller.md) admission. Native archive-only deduplication has 552 MB exact redundancy identified; its reviewed controller still needs full fixtures, actual plan and recovery checks before retirement. Keep all other records and canonical copies. After capacity clears, construct and fully inspect matched NVMe. Integrate the hardware-proven VGIC DT and matching NVMe-first firmware separately; validate automatic time, packaged fixes and identity behavior on hardware.
 3. The [matched second-candidate procedure](deploy-candidate-20261107.md) and
    actual full-payload acquisition rehearsal pass independent review. The [dedicated LAN endpoint](candidate-delivery-20261107.md) now serves it on
    port 8444 with full builder acquisition/TLS proof and trusted CA instructions;

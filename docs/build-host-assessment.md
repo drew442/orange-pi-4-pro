@@ -35,10 +35,11 @@ only the two first-generation raw roots after full dual-host encoded-copy checks
 independent source review and 24 Ubuntu fixtures. Their complete fresh-path A
 restoration also passes. Builder free is **19,735,375,872 bytes**, below the next
 **23,760,999,827-byte** NVMe admission including its unchanged 22 GiB recipe guard.
-The complete 91,578-path old-seed reconstruction and private dual-host retention
-now pass independent review. Its old rootfs remains present pending a separately
-reviewed retirement procedure; preserve seed probe/mask/records, active restored
-builder and corrected components. All 842 packages still match the replay lock;
+Complete 91,578-path old-seed recoveries from both the active copy and retained
+archive now pass independent review. Its reviewed retirement passes 29 Ubuntu
+fixtures and real-plan inspection and is currently running with durable per-entry
+records; terminal success is not yet claimed. Preserve seed probe/mask/records,
+active restored builder and corrected components. All 842 packages still match the replay lock;
 audit is empty. Native storage needs separate capacity preparation before a full
 NVMe gzip copy. No guard reduction or further LV growth is authorized. Earlier
 samples below are historical.

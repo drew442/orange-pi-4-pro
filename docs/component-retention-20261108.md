@@ -103,13 +103,21 @@ Private overlay and compressed metadata are verified and retained under
 0600. No private contents are in Git. Only newly generated raw metadata duplicates
 were retired after both compressed copies and their full expansions verified.
 Independent review passes for the actual rehearsal and retained correspondence.
-The standalone helper has source review for quiescent offline use; executing that
-helper directly and archive-based method B remain untested. Original freeze
-archive pins and limitations remain explicit.
+The [archive-based Method B](evidence/seed-archive-recovery-20261108.json) has now
+also executed: pinned archive expansion, original UID/ACL/capability namespace
+extraction, the actual retained finish helper and an independent full 91,578-path
+comparison all pass. Its eight new provenance records are verified on both hosts;
+existing Method A artifacts remain unchanged. The standalone Method A copy branch
+has source review but has not been executed directly as another full copy.
+Original freeze archive pins and dependency limits remain explicit.
 
-**No old seed retirement occurred.** Next, prepare and independently review its
-exact leaf-retirement procedure, preserving the seed's probe, firmware mask,
-metadata and the active restored builder. Recheck the full NVMe guard afterward.
+The separately reviewed old-seed retirement is currently running under
+`/var/lib/a733-seed-leaf-retirement-20261108-01` on the builder. Its exact source
+leaf was atomically moved to the closed sibling quarantine; the durable journal
+records each removal. Completion and protected postchecks are not yet claimed.
+Do not start builder namespace jobs or restore that source path while this
+operation is live. The probe, firmware mask, parent records, active builder and
+backups are protected. Recheck the full NVMe guard after terminal success.
 No further LV growth or admission reduction is authorized. Native storage retains
 its separate 256 MiB free-space floor; another full NVMe gzip transfer still
 needs native capacity preparation.

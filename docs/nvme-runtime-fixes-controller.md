@@ -128,8 +128,9 @@ whole budget. All records remain in `out/nvme-runtime-fixes-20261108`.
 only two superseded raw roots after complete dual-host encoded verification,
 independent review and actual recovery rehearsal. Builder free becomes
 19,735,375,872 bytes, still below the recorded admission. Complete old-seed
-reconstruction and private retention pass, but its original rootfs remains
-present pending a separately reviewed retirement procedure. Preserve the seed's
+reconstruction, archive-based recovery and private retention pass. The reviewed
+seed-leaf retirement is currently running; wait for terminal success and protected
+postchecks before launching composition. Preserve the seed's
 probe, firmware mask and records, active builder and corrected components. Native
 storage still needs its own retention plan before a full NVMe gzip copy; keep
 its 256 MiB floor. No new composition has been launched.
