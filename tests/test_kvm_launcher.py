@@ -48,6 +48,8 @@ class LauncherTests(unittest.TestCase):
         self.assertNotIn("tcg", " ".join(argv))
         self.assertIn("-nodefaults", argv)
         self.assertIn("-nographic", argv)
+        # Direct kernel boot must not depend on an optional PXE ROM package.
+        self.assertIn("virtio-net-pci,netdev=guestnet,romfile=", argv)
         self.assertEqual(result["hardware_acceptance"], "pending")
 
     def test_no_listeners_or_passthrough(self):

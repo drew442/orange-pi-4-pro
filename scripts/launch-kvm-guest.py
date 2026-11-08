@@ -188,7 +188,7 @@ class PreparedGuest:
                 "-blockdev", json.dumps(block, separators=(",", ":")),
                 "-device", "virtio-blk-pci,drive=guest-disk",
                 "-netdev", netdev,
-                "-device", "virtio-net-pci,netdev=guestnet"]
+                "-device", "virtio-net-pci,netdev=guestnet,romfile="]
 
     def report(self):
         return {"operation": "dry-run" if self.args.dry_run else "launch",
