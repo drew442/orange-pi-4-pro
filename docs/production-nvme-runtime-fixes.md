@@ -40,7 +40,11 @@ The producer receipt SHA-256 is
 The original 9,393-byte manifest SHA-256 is
 `8d40099bb8a670d67bc62a9c6623edb1201903aef16e8c17c0d424233c4ce8a8`.
 
-Builder artifacts remain under
+The [subsequent capacity retention](coherent-build-capacity-20261108.md) now
+retires only the generated raw NVMe image; both gzip copies remain. The original
+producer/evidence retention fields describe construction time.
+
+Builder retained artifacts remain under
 `/var/lib/a733-clean-replay-20261106/nvme-timesync-runtime-fixes-01/work/project/out/nvme-image-timesync-runtime-fixes-01`.
 The retained codex gzip is
 `out/nvme-runtime-fixes-20261108/payload-compressed/nvme.img.gz`;

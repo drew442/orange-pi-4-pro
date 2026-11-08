@@ -98,6 +98,10 @@ count as physical acceptance.
   subsequent jobs. Do not reduce the guard or
   grow the LV without authorization. See [native archive retention](native-archive-retention-20261108.md)
   and [capacity assessment](build-host-assessment.md).
+- [Coherent-build capacity retention](coherent-build-capacity-20261108.md) now
+  retires three superseded expanded cache files, keeping their verified encoded
+  recovery copies and all current corrected inputs. Builder free at completion
+  is **24,076,783,616 bytes**; recheck each new source/capsule budget.
 - Latest privileged Ubuntu suite: **1,799 tests**, no skips, errors or failures;
   five shell suites and five diagnostic assembly cases pass. These are host
   checks only, not hardware acceptance.

@@ -1,0 +1,146 @@
+{
+  "date": "2026-11-08",
+  "classification": "Generated regular-file cache retention; physical board storage untouched",
+  "result": "PASS",
+  "retired": [
+    {
+      "path": "/var/lib/a733-clean-replay-20261106/host-roots-timesync-repeat-01/work/project/out/host-payload-timesync-repeat-01/root-A.ext4",
+      "raw_bytes": 4294967296,
+      "raw_sha256": "7c299c832d95d0147c5d6b8289229787d237777f4e124eaa678ef6d8a58d8956",
+      "raw_hash_rechecked": true,
+      "allocated_bytes": 444424192,
+      "retained_gzip": {
+        "path": "/var/lib/a733-clean-replay-20261106/host-roots-timesync-repeat-01/work/project/out/host-payload-timesync-repeat-01/root-A.ext4.gz",
+        "bytes": 143467720,
+        "sha256": "f1554c3c3bd96c165d2bdd1c5427f14194f785866c717ad1719160b304bba66a"
+      }
+    },
+    {
+      "path": "/var/lib/a733-clean-replay-20261106/host-roots-timesync-repeat-01/work/project/out/host-payload-timesync-repeat-01/root-B.ext4",
+      "raw_bytes": 4294967296,
+      "raw_sha256": "57d8965545340bf2f82c40819cd235b823e017d29703f396079d5a4fc0ed04dd",
+      "raw_hash_rechecked": true,
+      "allocated_bytes": 444424192,
+      "retained_gzip": {
+        "path": "/var/lib/a733-clean-replay-20261106/host-roots-timesync-repeat-01/work/project/out/host-payload-timesync-repeat-01/root-B.ext4.gz",
+        "bytes": 143467898,
+        "sha256": "8dafd43ba9312643f021828db2a702f2c13e168608c636f625d568fda81f3a66"
+      }
+    },
+    {
+      "path": "/var/lib/a733-clean-replay-20261106/nvme-timesync-runtime-fixes-01/work/project/out/nvme-image-timesync-runtime-fixes-01/nvme.img",
+      "raw_bytes": 256060514304,
+      "raw_sha256": "0eda2415406e370ca1870f22ce7b2fd1e59620b52cf6c59894b5a2fbce005754",
+      "raw_hash_rechecked": false,
+      "allocated_bytes": 975032320,
+      "retained_gzip": {
+        "path": "/var/lib/a733-clean-replay-20261106/nvme-timesync-runtime-fixes-01/work/project/out/nvme-image-timesync-runtime-fixes-01/nvme.img.gz",
+        "bytes": 545632565,
+        "sha256": "7c44516aefb25b36db6342dc7cd9666e73b370e59b30fb3dc698bec4d93413c8"
+      }
+    }
+  ],
+  "released_allocated_bytes": 1863880704,
+  "builder_free_after_bytes": 24076783616,
+  "unchanged_old_initial_admission_bytes": 23760999827,
+  "source": {
+    "path": "tmp/retire-coherent-expanded-20261108.py",
+    "bytes": 6116,
+    "sha256": "2e03c37a6926d55d3ba842d3c712bc09359681a93c7d8e02d12928a900d75960"
+  },
+  "execution_receipt": {
+    "path": "out/coherent-build-capacity-20261108/retirement.json",
+    "bytes": 2529,
+    "sha256": "ac5d685f5c55db630cd0d2d26c353b7393dffeea37c3024e04c7294768c92e40"
+  },
+  "native_canonical_proof": {
+    "path": "out/coherent-build-capacity-20261108/native-canonical-proof.json",
+    "bytes": 1987,
+    "sha256": "4e5dbebad5b2e9894b9d855a2af41779d5544e875f1bab025e7b4e95e59230a5"
+  },
+  "native_backup_pins": [
+    {
+      "path": "out/nvme-repeat-candidate-retained-20261107/nvme.img.gz",
+      "bytes": 545633737,
+      "sha256": "4b6cbe6eb16cc3d3cd236b0d8701908408d38e5993d5aca5ffb4882708766df0",
+      "result": "PASS"
+    },
+    {
+      "path": "out/nvme-runtime-fixes-20261108/payload-compressed/nvme.img.gz",
+      "bytes": 545632565,
+      "sha256": "7c44516aefb25b36db6342dc7cd9666e73b370e59b30fb3dc698bec4d93413c8",
+      "result": "PASS"
+    },
+    {
+      "report": "out/nvme-repeat-candidate-retained-20261107/stream-verification.json",
+      "sha256": "683d48fadbbf7481ccc5d0973923e37640af730f95e75179b81dba3babd7e63d",
+      "image": {
+        "bytes": 256060514304,
+        "sha256": "d8f842f806c8ea4257b6efaf45d080b95e42a1f06bbde0a35f07d67c7416c7d9"
+      },
+      "partition_payloads": {
+        "root-a": {
+          "bytes": 4294967296,
+          "sha256": "7c299c832d95d0147c5d6b8289229787d237777f4e124eaa678ef6d8a58d8956"
+        },
+        "root-b": {
+          "bytes": 4294967296,
+          "sha256": "57d8965545340bf2f82c40819cd235b823e017d29703f396079d5a4fc0ed04dd"
+        },
+        "state": {
+          "bytes": 8589934592,
+          "sha256": "218f0c8dcceb18651e334d130834026ced970657e941a4ab3254cfbe4d159656"
+        }
+      },
+      "result": "PASS"
+    },
+    {
+      "report": "out/nvme-runtime-fixes-20261108/independent-stream.json",
+      "sha256": "4652e997b3a4960fbd3930c4d58a472b6a176a84a3aba7ae459adbc58c792efd",
+      "image": {
+        "bytes": 256060514304,
+        "sha256": "0eda2415406e370ca1870f22ce7b2fd1e59620b52cf6c59894b5a2fbce005754"
+      },
+      "partition_payloads": {
+        "root-a": {
+          "bytes": 4294967296,
+          "sha256": "d868571e89216762ce9d8d2b8209884b958c53b7be97a215d8c4ddbc96ab7940"
+        },
+        "root-b": {
+          "bytes": 4294967296,
+          "sha256": "3369a8b4c4b0f7dd9ed33740db3bd86b0d868154bc8195c66806ee0e73f3bdab"
+        },
+        "state": {
+          "bytes": 8589934592,
+          "sha256": "de80b3a599f51b6fd71876511aa15474e9b27283e0c5bc32bae9afa1088c8ef2"
+        }
+      },
+      "result": "PASS"
+    }
+  ],
+  "preserved": [
+    "Current corrected f40c151 root/state/bootstrap inputs.",
+    "All individual gzip files, manifests, receipts, source worktrees and other outputs.",
+    "Both full-NVMe gzip copies on builder and codex; old repeat roots additionally survive in the retained repeat NVMe image."
+  ],
+  "method": [
+    "All selected paths were canonical regular single-link files; exact sizes, owner/modes and stable held identities checked.",
+    "Both superseded root raw hashes and complete individual gzip expansions matched their expected 4 GiB pins.",
+    "The 256 GB raw file was not rehashed: full decoded-byte proof was already retained, and both current canonical gzip hashes were verified.",
+    "Selected-file process/loop checks passed before each unlink; directory metadata and a one-shot journal were synchronized.",
+    "Canonical gzip bytes were rechecked after retirement."
+  ],
+  "physical_device_writes": false,
+  "lv_growth": false,
+  "guard_reduced": false,
+  "hardware_acceptance": false,
+  "private_host_identity_backup": {
+    "host": "build.drewnet.online",
+    "path": "/var/lib/a733-original-host-identity-20261108-01/identity.tar",
+    "bytes": 10240,
+    "sha256": "ae3930cec481912a164361e11c926ca02d81561a49c0fc49b70514dd19d3d06e",
+    "mode": "0600 in root0700 directory",
+    "contents": "Only this board identity/machine-id and its existing SSH host key pair; private bytes outside Git and logs.",
+    "purpose": "Preserve the same physical host identity during any later approved replacement; not clone across hosts."
+  }
+}
