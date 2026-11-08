@@ -3,11 +3,12 @@
 `build/verify-nvme-runtime-fixes-stream.py` independently reads the single
 registered corrected-chain full-NVMe gzip artifact from binary stdin. It is
 separate from the producer's reviewed source/project; adding this reader does
-not require rebuilding that producer. The full image has **not been constructed
-or stream-verified** by this change. Independent source review and 31 focused
+not require rebuilding that producer. The [actual completed corrected-chain
+image](production-nvme-runtime-fixes.md) now passes this reader over its complete
+compressed wire and 256,060,514,304-byte expansion. Independent source review and 31 focused
 no-fork tests pass. Full privileged Ubuntu discovery passes **1,777 tests**
-without skips, errors or failures. The actual complete artifact stream remains
-a coordinator gate.
+without skips, errors or failures. These software checks do not establish
+physical boot or deployment acceptance.
 
 The reader holds the physical sibling `build/verify-nvme-stream.py` with SHA256
 `02b04bce52597d9a4ca00f19f4c520fe357e3ba437de43aa1bef38978474684d`.
@@ -55,8 +56,8 @@ alongside the historical metadata checks at stream fences (including each
 compressed MiB), and before/after verification. A successful report adds the
 separate `runtime_fixes_stream_reader` provenance key.
 
-After construction, obtain the actual successful producer receipt SHA256 through
-a trusted channel. No receipt SHA256 is registered in advance. Run the reader
+For an actual completed construction, obtain the successful producer receipt
+SHA256 through a trusted channel. No receipt SHA256 is registered in advance. Run the reader
 from its checkout, keeping the pinned template and helper at their sibling paths:
 
 ```sh

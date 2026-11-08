@@ -43,8 +43,12 @@ staging; remeasure against the exact admission before composition. Preserve seed
 active restored builder and corrected components. All 842 packages still match the replay lock;
 audit is empty. [Native archive retention](native-archive-retention-20261108.md) now releases
 552,181,760 allocated bytes; native free is 872,210,432 bytes at completion.
-Remeasure against its 256 MiB floor before a full NVMe gzip copy. No guard reduction or further LV growth is authorized. Earlier
-samples below are historical.
+Remeasure against its 256 MiB floor before a full NVMe gzip copy. The [corrected full NVMe construction](production-nvme-runtime-fixes.md) now
+passes with **20,742,758,400 bytes** minimum free and **22,278,135,808 bytes**
+final free on the builder. Its actual retained gzip passes independent full
+stream verification and artifact review. Codex retains **321 MB** free, above
+its unchanged 256 MiB floor. No guard reduction or further LV growth is
+authorized. Earlier samples below are historical.
 
 Latest [production-repeat retention](repeat-build-retention.md) preserves eleven
 historical expanded leaves as complete, independently verified archives on build

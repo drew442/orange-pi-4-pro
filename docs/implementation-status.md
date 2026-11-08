@@ -34,10 +34,10 @@ independent deployment reproduction remain incomplete.
 - **Corrected candidate:** Runtime-fixed roots, matched state and bootstrap
   passed construction, readback/inspection and independent artifact review;
   they have not booted. The matched full-NVMe producer (source `6c34629`, tag
-  `timesync-runtime-fixes-01`) is currently running its compression phase.
-  Completion, independent stream verification and hardware acceptance are
-  pending. Do not treat it as a completed image. Details are in the
-  [runtime-fixes controller](nvme-runtime-fixes-controller.md).
+  `timesync-runtime-fixes-01`) now passes construction, producer readback and
+  final environment checks, independent complete stream verification and
+  independent artifact review. Hardware acceptance remains open. See
+  [construction evidence](production-nvme-runtime-fixes.md).
 - **SPI:** Original backup and a private candidate derived from it are reviewed;
   the XM25QU128C, JEDEC `204118`, 16 MiB backup is blank (`0xff`).
   Candidate is prepared, not programmed.
@@ -80,8 +80,8 @@ count as physical acceptance.
 
 - The corrected-chain root components, state and bootstrap have passed their
   documented construction and inspection checks. The full NVMe producer is
-  still running; matching image, complete stream inspection and physical boot
-  remain pending.
+  complete; independent stream inspection and artifact review pass.
+  Physical boot remains pending.
 - Actual old-seed retirement removed **91,578** entries; all **7** protected
   postchecks passed. Source/quarantine are absent and the probe, mask, records,
   active builder and backups remain. Free space at completion was
@@ -109,8 +109,8 @@ count as physical acceptance.
 1. Obtain the yes/no for the reviewed VGIC SD write/reboot. If authorized, boot
    it and return complete serial/read-only checks and DHCP address; then finish
    guest network, guest-initiated shutdown/restart and counter checks over SSH.
-2. Monitor `timesync-runtime-fixes-01` to terminal success, then independently
-   verify the complete stream; recheck resource floors before transfers. Integrate and
+2. The verified `timesync-runtime-fixes-01` image is retained on both hosts;
+   recheck resource floors before transfers. Integrate and
    validate matching NVMe-first firmware and VGIC DT separately; physically
    validate automatic time and identity behavior.
 3. Demonstrate independent SPI recovery before proposing programming. Capture

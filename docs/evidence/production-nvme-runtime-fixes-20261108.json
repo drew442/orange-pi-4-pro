@@ -1,0 +1,428 @@
+{
+  "date": "2026-11-08",
+  "classification": "Completed regular-file corrected-chain NVMe construction; unbooted",
+  "producer_source_revision": "6c34629c424a1bb414780b26461e06ccd2854ae9",
+  "phase": "/var/lib/a733-clean-replay-20261106/nvme-timesync-runtime-fixes-01",
+  "output": "work/project/out/nvme-image-timesync-runtime-fixes-01",
+  "tag": "timesync-runtime-fixes-01",
+  "receipt": {
+    "path": "out/nvme-runtime-fixes-20261108/generated/receipt.json",
+    "bytes": 391338,
+    "sha256": "372cf8da55d6347421260924025a26debe35761f3afa94a0fae8d86359698ba3"
+  },
+  "manifest": {
+    "path": "out/nvme-runtime-fixes-20261108/generated/work/project/out/nvme-image-timesync-runtime-fixes-01/manifest.json",
+    "bytes": 9393,
+    "sha256": "8d40099bb8a670d67bc62a9c6623edb1201903aef16e8c17c0d424233c4ce8a8"
+  },
+  "construction": {
+    "success": true,
+    "state": "complete",
+    "image": {
+      "bytes": 256060514304,
+      "sha256": "0eda2415406e370ca1870f22ce7b2fd1e59620b52cf6c59894b5a2fbce005754"
+    },
+    "gzip": {
+      "bytes": 545632565,
+      "sha256": "7c44516aefb25b36db6342dc7cd9666e73b370e59b30fb3dc698bec4d93413c8"
+    },
+    "host_inventory_unchanged": true,
+    "mapped_processes_final": [],
+    "phase_mounts_final": [],
+    "physical_storage_written": false,
+    "hardware_acceptance": false
+  },
+  "producer_readback": {
+    "pin": {
+      "bytes": 3454,
+      "sha256": "54171148bad72e29d7240f5f7dd34d1c9b49ba2e7ab9a1bedaa8656cd3dfbe21"
+    },
+    "value": {
+      "boot_and_guests_root_metadata": true,
+      "boot_file_hashes": {
+        "boot/boot.cmd": {
+          "bytes": 1315,
+          "sha256": "c9f0db913fb49bbc5c54c5287049b8c56aaf17406fcdccf1b9fe0847ccce6c26"
+        },
+        "boot/boot.scr": {
+          "bytes": 1387,
+          "sha256": "d82fd8c465f12aa539146ee0843e1badb3eb983f243dc241c04c63b0db56c938"
+        },
+        "boot/dtb/allwinner/sun60i-a733-orangepi-4-pro.dtb": {
+          "bytes": 209320,
+          "sha256": "4d7d964a54668cf5dc12cd4bf7e72a625c79883541272aeba1a91adbbedb86ed"
+        },
+        "boot/uImage": {
+          "bytes": 27283528,
+          "sha256": "6f9269755c4c2bc196c094899fa1ff20292f4d762c4000f77fcbb0887d5f154a"
+        },
+        "boot/uInitrd": {
+          "bytes": 4762436,
+          "sha256": "b10bdad8671a32b4157bf6f7ff553618024fc928e59caf691b529c8658b12d16"
+        }
+      },
+      "classification": "independent regular-file NVMe inspection; no hardware acceptance",
+      "complete_new_filesystem_readback": {
+        "boot": {
+          "allowed_extra_empty_directory": "lost+found",
+          "character_devices": 0,
+          "fast_symlinks": 0,
+          "hardlink_groups": [],
+          "hardware_acceptance": false,
+          "image_mtime_policy": "source whole seconds; root from actual superblock s_mkfs_time",
+          "long_symlinks_dumped": 0,
+          "namespace_members": 9,
+          "out_of_scope_metadata": [
+            "atime",
+            "ctime",
+            "crtime"
+          ],
+          "production_build_acceptance": false,
+          "raw_xattrs": 0,
+          "regular_bytes_read": 32257986,
+          "root_creation_time_seconds": 1794111662,
+          "source_fractional_mtime_members": 9,
+          "source_nanosecond_metadata_preserved": false,
+          "symlinks": 0,
+          "unique_regular_inodes": 5
+        },
+        "guests": {
+          "allowed_extra_empty_directory": "lost+found",
+          "character_devices": 0,
+          "fast_symlinks": 0,
+          "hardlink_groups": [],
+          "hardware_acceptance": false,
+          "image_mtime_policy": "source whole seconds; root from actual superblock s_mkfs_time",
+          "long_symlinks_dumped": 0,
+          "namespace_members": 1,
+          "out_of_scope_metadata": [
+            "atime",
+            "ctime",
+            "crtime"
+          ],
+          "production_build_acceptance": false,
+          "raw_xattrs": 0,
+          "regular_bytes_read": 0,
+          "root_creation_time_seconds": 1794111662,
+          "source_fractional_mtime_members": 1,
+          "source_nanosecond_metadata_preserved": false,
+          "symlinks": 0,
+          "unique_regular_inodes": 0
+        }
+      },
+      "filesystem_uuids_and_features": {
+        "boot": "b1fe17ee-8532-4ba0-8ac1-b916ffd423b8",
+        "guests": "298b281a-d10e-44eb-bdb9-285e27eaafad",
+        "root-a": "a7330000-0000-4000-8000-00000000000a",
+        "root-b": "a7330000-0000-4000-8000-00000000000b",
+        "state": "360dfb39-f49f-487e-b307-0bb887c854c5"
+      },
+      "gpt_primary_backup_and_geometry": true,
+      "image": {
+        "bytes": 256060514304,
+        "sha256": "0eda2415406e370ca1870f22ce7b2fd1e59620b52cf6c59894b5a2fbce005754"
+      },
+      "image_metadata_unchanged": true,
+      "limitations": [
+        "Trusted manifest required; no signature authentication.",
+        "Whole logical image hashed once; final dev/inode/size/mtime/ctime compared on a quiescent builder.",
+        "No physical installation, SPI/NVMe boot, zero SD writes, or KVM guest demonstrated."
+      ],
+      "logical_sector_bytes": 512,
+      "manifest": {
+        "bytes": 9393,
+        "sha256": "8d40099bb8a670d67bc62a9c6623edb1201903aef16e8c17c0d424233c4ce8a8"
+      },
+      "partition_payloads": {
+        "root-a": {
+          "bytes": 4294967296,
+          "sha256": "d868571e89216762ce9d8d2b8209884b958c53b7be97a215d8c4ddbc96ab7940"
+        },
+        "root-b": {
+          "bytes": 4294967296,
+          "sha256": "3369a8b4c4b0f7dd9ed33740db3bd86b0d868154bc8195c66806ee0e73f3bdab"
+        },
+        "state": {
+          "bytes": 8589934592,
+          "sha256": "de80b3a599f51b6fd71876511aa15474e9b27283e0c5bc32bae9afa1088c8ef2"
+        }
+      },
+      "root_markers_and_state_selection": true,
+      "spi_script_wrapper": {
+        "header_type_crc_body": true,
+        "helper": {
+          "bytes": 10432,
+          "path": "tests/verify_host_sd.py",
+          "sha256": "eafe848535f9aac8108a8e9953f89c23adf8da70741e39fe657d1247ba1480fb"
+        }
+      }
+    }
+  },
+  "registered_components": {
+    "roots": {
+      "path": "docs/evidence/production-host-roots-runtime-fixes-20261108.json",
+      "bytes": 17141,
+      "sha256": "12c45544ac379a0ca11312f833f2e49333b0cf94dc55156a280a18044ba8003d"
+    },
+    "state": {
+      "path": "docs/evidence/production-host-state-runtime-fixes-20261108.json",
+      "bytes": 13777,
+      "sha256": "d0566a7ed65fdb192890c78655e6d30a871fd2584576dd669d0ddddd8eb02e04"
+    },
+    "bootstrap": {
+      "path": "docs/evidence/production-host-bootstrap-runtime-fixes-20261108.json",
+      "bytes": 9499,
+      "sha256": "f718c119b3d2b79c110c26eec51ee18655242d02e2acfa4de59f93e7d2b852cb"
+    }
+  },
+  "state_uuid": "360dfb39-f49f-487e-b307-0bb887c854c5",
+  "resources": {
+    "initial_required_bytes": 23760999827,
+    "minimum_observed_free_bytes": 20742758400,
+    "minimum_observed_available_memory_bytes": 7509852160,
+    "final": {
+      "available_memory_bytes": 7666974720,
+      "free_bytes": 22278135808,
+      "time": 1794113487.2637966
+    },
+    "sample_count": 1670,
+    "native_free_after_retention_bytes": 321662976,
+    "native_floor_bytes": 268435456,
+    "initial_budget": {
+      "capsule_bytes": 221054,
+      "git_staging_bound_bytes": 138458645,
+      "recipe_bytes": 23622320128,
+      "required_free_bytes": 23760999827
+    }
+  },
+  "independent_stream": {
+    "state": "complete",
+    "success": true,
+    "reader": "build/verify-nvme-runtime-fixes-stream.py",
+    "report": {
+      "path": "out/nvme-runtime-fixes-20261108/independent-stream.json",
+      "bytes": 5343,
+      "sha256": "4652e997b3a4960fbd3930c4d58a472b6a176a84a3aba7ae459adbc58c792efd"
+    },
+    "proof": {
+      "authenticated_inspection_helper": {
+        "bytes": 15781,
+        "sha256": "d9e9342136af125df2eb9dfe1d832183244f13cd28c7ac3e2a4d7f1ca976b8fb"
+      },
+      "classification": "Independent file-artifact gzip wire and decoded NVMe stream verification",
+      "compressed_wire": {
+        "bytes": 545632565,
+        "sha256": "7c44516aefb25b36db6342dc7cd9666e73b370e59b30fb3dc698bec4d93413c8"
+      },
+      "decoded_image": {
+        "bytes": 256060514304,
+        "sha256": "0eda2415406e370ca1870f22ce7b2fd1e59620b52cf6c59894b5a2fbce005754"
+      },
+      "filesystem_superblocks_uuid_features_and_geometry": true,
+      "gpt_primary_backup_and_geometry": true,
+      "gzip_crc_and_single_member": true,
+      "gzip_expansion_independent_verification": true,
+      "hardware_acceptance": false,
+      "limitations": [
+        "Filesystem namespaces and boot files are producer-attributed; this reader independently verifies whole wire/raw hashes, GPT, superblocks and root/state partition bytes only.",
+        "No physical device access, installation, boot, SD-write validation or KVM guest execution."
+      ],
+      "manifest": {
+        "bytes": 9393,
+        "sha256": "8d40099bb8a670d67bc62a9c6623edb1201903aef16e8c17c0d424233c4ce8a8"
+      },
+      "metadata_identity_unchanged": true,
+      "partition_payloads": {
+        "root-a": {
+          "bytes": 4294967296,
+          "sha256": "d868571e89216762ce9d8d2b8209884b958c53b7be97a215d8c4ddbc96ab7940"
+        },
+        "root-b": {
+          "bytes": 4294967296,
+          "sha256": "3369a8b4c4b0f7dd9ed33740db3bd86b0d868154bc8195c66806ee0e73f3bdab"
+        },
+        "state": {
+          "bytes": 8589934592,
+          "sha256": "de80b3a599f51b6fd71876511aa15474e9b27283e0c5bc32bae9afa1088c8ef2"
+        }
+      },
+      "partitions": [
+        {
+          "end_lba": 1050623,
+          "name": "boot",
+          "number": 1,
+          "size_bytes": 536870912,
+          "start_bytes": 1048576,
+          "start_lba": 2048
+        },
+        {
+          "end_lba": 9439231,
+          "name": "root-a",
+          "number": 2,
+          "size_bytes": 4294967296,
+          "start_bytes": 537919488,
+          "start_lba": 1050624
+        },
+        {
+          "end_lba": 17827839,
+          "name": "root-b",
+          "number": 3,
+          "size_bytes": 4294967296,
+          "start_bytes": 4832886784,
+          "start_lba": 9439232
+        },
+        {
+          "end_lba": 34605055,
+          "name": "state",
+          "number": 4,
+          "size_bytes": 8589934592,
+          "start_bytes": 9127854080,
+          "start_lba": 17827840
+        },
+        {
+          "end_lba": 500117503,
+          "name": "guests",
+          "number": 5,
+          "size_bytes": 238342373376,
+          "start_bytes": 17717788672,
+          "start_lba": 34605056
+        }
+      ],
+      "producer_attributed_only": {
+        "boot_file_hashes": {
+          "boot/boot.cmd": {
+            "bytes": 1315,
+            "sha256": "c9f0db913fb49bbc5c54c5287049b8c56aaf17406fcdccf1b9fe0847ccce6c26"
+          },
+          "boot/boot.scr": {
+            "bytes": 1387,
+            "sha256": "d82fd8c465f12aa539146ee0843e1badb3eb983f243dc241c04c63b0db56c938"
+          },
+          "boot/dtb/allwinner/sun60i-a733-orangepi-4-pro.dtb": {
+            "bytes": 209320,
+            "sha256": "4d7d964a54668cf5dc12cd4bf7e72a625c79883541272aeba1a91adbbedb86ed"
+          },
+          "boot/uImage": {
+            "bytes": 27283528,
+            "sha256": "6f9269755c4c2bc196c094899fa1ff20292f4d762c4000f77fcbb0887d5f154a"
+          },
+          "boot/uInitrd": {
+            "bytes": 4762436,
+            "sha256": "b10bdad8671a32b4157bf6f7ff553618024fc928e59caf691b529c8658b12d16"
+          }
+        },
+        "complete_boot_and_guests_filesystem_readback": {
+          "boot": {
+            "allowed_extra_empty_directory": "lost+found",
+            "character_devices": 0,
+            "fast_symlinks": 0,
+            "hardlink_groups": [],
+            "hardware_acceptance": false,
+            "image_mtime_policy": "source whole seconds; root from actual superblock s_mkfs_time",
+            "long_symlinks_dumped": 0,
+            "namespace_members": 9,
+            "out_of_scope_metadata": [
+              "atime",
+              "ctime",
+              "crtime"
+            ],
+            "production_build_acceptance": false,
+            "raw_xattrs": 0,
+            "regular_bytes_read": 32257986,
+            "root_creation_time_seconds": 1794111662,
+            "source_fractional_mtime_members": 9,
+            "source_nanosecond_metadata_preserved": false,
+            "symlinks": 0,
+            "unique_regular_inodes": 5
+          },
+          "guests": {
+            "allowed_extra_empty_directory": "lost+found",
+            "character_devices": 0,
+            "fast_symlinks": 0,
+            "hardlink_groups": [],
+            "hardware_acceptance": false,
+            "image_mtime_policy": "source whole seconds; root from actual superblock s_mkfs_time",
+            "long_symlinks_dumped": 0,
+            "namespace_members": 1,
+            "out_of_scope_metadata": [
+              "atime",
+              "ctime",
+              "crtime"
+            ],
+            "production_build_acceptance": false,
+            "raw_xattrs": 0,
+            "regular_bytes_read": 0,
+            "root_creation_time_seconds": 1794111662,
+            "source_fractional_mtime_members": 1,
+            "source_nanosecond_metadata_preserved": false,
+            "symlinks": 0,
+            "unique_regular_inodes": 0
+          }
+        },
+        "root_markers_and_state_selection": true
+      },
+      "producer_receipt": {
+        "bytes": 391338,
+        "sha256": "372cf8da55d6347421260924025a26debe35761f3afa94a0fae8d86359698ba3"
+      },
+      "reproducibility_established": false,
+      "runtime_fixes_stream_reader": {
+        "historical_template": {
+          "bytes": 20922,
+          "path": "build/verify-nvme-stream.py",
+          "sha256": "02b04bce52597d9a4ca00f19f4c520fe357e3ba437de43aa1bef38978474684d"
+        },
+        "historical_template_identity_unchanged": true,
+        "registered_literals": {
+          "/var/lib/a733-clean-replay-20261106/nvme-timesync-03": "/var/lib/a733-clean-replay-20261106/nvme-timesync-runtime-fixes-01",
+          "08cb041263fd4d24770cd80615745c46b9136940737eb6acbb07c1db39bcec8c": "2c04a75d5239224b80a721442e88ea872ccd63d18aaae841539d007697302971",
+          "6f46e080b9557dd6d720bb0b07d17b19044a7946": "6c34629c424a1bb414780b26461e06ccd2854ae9",
+          "c5799bb06995313b6c90f99d4aedcc7b802095a0742cdd19a08d48ba3e3fec98": "60d40b557637f1b7da3785e45fde52db37b692e36d30d8156616f48c9e8f9176",
+          "fc8bbef6-9385-4ddb-90ba-e41eaccc035b": "360dfb39-f49f-487e-b307-0bb887c854c5",
+          "fee4c46acb4db8838bbcc4b03f935701032ea093206a53ee39671cd840c6546e": "4d3b694fd55fc1d40b73b1de8c3b0d2e9f9dce9ca2fb8c1dda058dfb77a1e6c1",
+          "work/project/out/nvme-image-timesync-03": "work/project/out/nvme-image-timesync-runtime-fixes-01"
+        }
+      },
+      "schema": 1,
+      "state": "complete",
+      "success": true
+    }
+  },
+  "independent_artifact_review": {
+    "state": "complete",
+    "decision": "PASS",
+    "findings": [],
+    "assertions": 778,
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "fresh_context": true,
+    "nested_delegation": false,
+    "report": {
+      "path": "tmp/nvme-runtime-fixes-artifact-review-20261108.json",
+      "bytes": 13994,
+      "sha256": "c48e741e74a820b8ee3c6864bcc0b52d3a97af8332cc57e47b99ad435e711811"
+    }
+  },
+  "retention": {
+    "builder_gzip": "/var/lib/a733-clean-replay-20261106/nvme-timesync-runtime-fixes-01/work/project/out/nvme-image-timesync-runtime-fixes-01/nvme.img.gz",
+    "native_gzip": "out/nvme-runtime-fixes-20261108/payload-compressed/nvme.img.gz",
+    "raw_image_retained_on_builder": true,
+    "expanded_native_image_created": false,
+    "delivery_manifest": {
+      "path": "out/nvme-runtime-fixes-20261108/payload-compressed/manifest.json",
+      "bytes": 10477,
+      "sha256": "308d8a15cd749fbd5019e6527d8a6b18d846d40fdb9e53edb078ea97b0839a13"
+    },
+    "builder_gzip_rehash": {
+      "sha256": "7c44516aefb25b36db6342dc7cd9666e73b370e59b30fb3dc698bec4d93413c8",
+      "result": "PASS",
+      "path": "out/nvme-runtime-fixes-20261108/retained-builder-gzip.sha256"
+    }
+  },
+  "limits": [
+    "No physical NVMe installation, SD overwrite, SPI programming or hardware acceptance.",
+    "Original DTB retained; VGIC and matched NVMe-first firmware integration remain separate.",
+    "Current installed state 00fd remains unchanged; do not flash this candidate bootstrap alone against it.",
+    "Producer attributes full BOOT/GUESTS namespace and SPI-wrapper readback; independent stream does not independently traverse those namespaces."
+  ]
+}

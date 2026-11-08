@@ -79,11 +79,11 @@ large root/STATE image bytes; full held-input authentication on the builder
 remains a separate coordinator gate.
 
 The registration itself launched no composition. After [verified seed retention](component-retention-20261108.md),
-full admission planning was repeated and construction is now running with tag
+full admission planning was repeated and [construction and independent full
+stream verification](production-nvme-runtime-fixes.md) now pass for tag
 `timesync-runtime-fixes-01` from the original `6c34629` producer project.
 The last observed builder free space before phase creation was **23,814,090,752
-bytes**, above the unchanged **23,760,999,827-byte** total admission. Completion
-and independent full stream verification are not yet claimed. Runtime floors remain
+bytes**, above the unchanged **23,760,999,827-byte** total admission. Runtime floors remain
 3,000,000,000 free bytes and 1,000,000,000 available memory bytes, with a 10,800
 second timeout and process descriptor soft limit of at least 4,096. The exact
 SPCC target remains 256,060,514,304 bytes with 512/512-byte sectors.
@@ -114,25 +114,22 @@ component authentication passed with real held descriptors; source and input
 identities remained stable. This extends the earlier native metadata check to
 the actual large payloads. It does not construct or inspect a new NVMe image.
 
-The full privileged Ubuntu suite passes **1,746 unit tests without skips**, five
-shell suites, five assembly cases and 12 Bash syntax checks. The correct replay
-inventory lock matches all 842 host packages; `dpkg --audit` is empty, and no
-mapped processes or phase mounts remain. No composition phase exists; the tag
-has not been consumed.
+The readiness run passed **1,746 privileged unit tests without skips**, five
+shell suites and five assembly cases. The later independent reader validation
+passes **1,777 tests** with no skips. The replay lock matches all 842 host
+packages; audit is empty. Completed construction has separate final idle and
+inventory evidence in its immutable receipt. The readiness record itself is
+preconstruction; its absent phase and unused tag are historical observations.
+The tag is now consumed and must not be reused.
 
-Exact initial admission is **23,760,999,827 bytes**, including the unchanged
-23,622,320,128-byte recipe guard. The authentication sample had
-**18,859,384,832 bytes** free: **4,901,614,995 bytes short**. Do not invoke
-construction until verified retention and a fresh resource check clear the
-whole budget. All records remain in `out/nvme-runtime-fixes-20261108`.
-
-[Subsequent component retention](component-retention-20261108.md) now retires
-only two superseded raw roots after complete dual-host encoded verification,
-independent review and actual recovery rehearsal. Builder free becomes
-19,735,375,872 bytes, still below the recorded admission. Complete old-seed
-reconstruction, archive-based recovery and private retention pass. The reviewed
-seed-leaf retirement is currently running; wait for terminal success and protected
-postchecks before launching composition. Preserve the seed's
-probe, firmware mask and records, active builder and corrected components. Native
-storage still needs its own retention plan before a full NVMe gzip copy; keep
-its 256 MiB floor. No new composition has been launched.
+Exact initial admission was **23,760,999,827 bytes**, including the unchanged
+23,622,320,128-byte recipe guard. The first input-authentication sample was
+4,901,614,995 bytes short. Subsequent [component and seed retention](component-retention-20261108.md)
+completed with protected postchecks, preserving recoverable backups, active
+builder, seed probe/mask and corrected components. A fresh admission then passed.
+[Native archive retention](native-archive-retention-20261108.md) separately made
+room for the actual compressed copy above its 256 MiB floor. The [completed
+construction record](production-nvme-runtime-fixes.md) reports actual minima,
+final resource samples and retained artifact pins. No guard was reduced and no
+additional LV growth occurred. Raw logs remain in
+`out/nvme-runtime-fixes-20261108`; no physical storage was written.
