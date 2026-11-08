@@ -136,8 +136,13 @@ class DerivationTests(unittest.TestCase):
         for command in commands:
             self.assertFalse(command.startswith(('swapon ', 'mkfs', 'dd ', 'reboot', 'mount /dev/')))
             self.assertNotIn('install-nvme.py --', command)
-        self.assertEqual((REPO / 'configs/installer-sshd.pam').read_text(),
-                         'auth required pam_deny.so\naccount required pam_unix.so\npassword required pam_deny.so\nsession required pam_permit.so\n')
+        stack = [line.split() for line in (REPO / 'configs/installer-sshd.pam').read_text().splitlines()]
+        self.assertEqual([(role, control, Path(module).name) for role, control, module in stack],
+                         [('auth', 'required', 'pam_deny.so'), ('account', 'required', 'pam_unix.so'),
+                          ('password', 'required', 'pam_deny.so'), ('session', 'required', 'pam_permit.so')])
+        for _, _, module in stack:
+            self.assertTrue(module.startswith('/'), 'RAM root has no merged-/usr module alias')
+            self.assertIn(module.lstrip('/'), D.policy()['required_data'])
 
 
 if __name__ == '__main__':

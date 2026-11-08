@@ -72,7 +72,9 @@ base files. Output expansion is bounded to 256 MiB; compressed bytes plus the
 64-byte wrapper must be strictly below 64 MiB.
 
 The authenticated rootfs supplies sshd, ssh-keygen, the AArch64 loader and recursive
-ELF closure. The dedicated PAM stack explicitly adds pam_deny, pam_unix and
+ELF closure. The dedicated PAM stack uses absolute module paths because the
+minimal RAM root has separate `/lib` and `/usr/lib` directories. It explicitly
+adds pam_deny, pam_unix and
 pam_permit plus their dependencies. NSS files/DNS modules are explicit runtime
 inputs. All available package copyright notices and common licenses are retained.
 No package installation or download occurs.

@@ -1,4 +1,4 @@
-auth required pam_deny.so
-account required pam_unix.so
-password required pam_deny.so
-session required pam_permit.so
+auth required /usr/lib/aarch64-linux-gnu/security/pam_deny.so
+account required /usr/lib/aarch64-linux-gnu/security/pam_unix.so
+password required /usr/lib/aarch64-linux-gnu/security/pam_deny.so
+session required /usr/lib/aarch64-linux-gnu/security/pam_permit.so
