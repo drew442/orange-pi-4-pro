@@ -8,6 +8,8 @@ backup helper supplies read-only opening, sysfs/JEDEC/geometry checks, no-swap
 checks and the read-only MEMGETINFO ioctl. Read progress goes to stderr.
 
 This tool is limited to the [actual original-backup candidate](spi-original-backup-20261108.md).
+The [actual live comparison](spi-live-plan-results-20261108.md) now passes;
+its scope is limited to the observed read-only match.
 It pins the entire candidate manifest, candidate image, original baseline and
 physical sibling `backup-spi.py`. The fixed manifest in turn binds the backup
 manifest, component parent and registry, source provenance, replacement ranges,

@@ -56,6 +56,10 @@ limited to backup retention and regular-file candidate correctness.
 
 ## Remaining gates
 
+A subsequent [read-only live comparison](spi-live-plan-results-20261108.md) now
+confirms the baseline still matches and all candidate unit/preservation pins
+agree. It adds no programming authorization or recovery proof.
+
 The current operator action remains the [VGIC SD trial](next-host-boot-20261108.md).
 Do not substitute this SPI file or reinstall NVMe. The installed NVMe BOOT
 partition still contains the old Linux DT; a working SPI-to-NVMe path needs a
