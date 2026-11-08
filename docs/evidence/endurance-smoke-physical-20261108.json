@@ -1,0 +1,163 @@
+{
+  "schema": 1,
+  "date": "2026-11-08",
+  "boot_id": "7c31dc06-b2a4-43ee-a049-4747ae54bc10",
+  "mode": "smoke",
+  "required_seconds": 60,
+  "guest_elapsed_seconds": 60,
+  "guest_cycles": 3,
+  "guest_disk_counter": 1,
+  "actual_kvm_vcpus": 4,
+  "uid_gid": 60002,
+  "guest_clean_exit": {
+    "ActiveState": "inactive",
+    "ControlPID": 0,
+    "ExecMainCode": 1,
+    "ExecMainExitTimestampMonotonic": 645924394,
+    "ExecMainPID": 2400,
+    "ExecMainStartTimestampMonotonic": 583772318,
+    "ExecMainStatus": 0,
+    "LoadState": "loaded",
+    "MainPID": 0,
+    "Result": "success",
+    "SubState": "dead",
+    "event": "final",
+    "unit": "a733-guest-endurance.service"
+  },
+  "host_cpu_workers": {
+    "count": 4,
+    "uid_gid": 65534,
+    "nice": 19,
+    "normal_exit": "ExecMainCode=1 ExecMainStatus=0 Result=success",
+    "seconds": 60.165214
+  },
+  "collector": {
+    "exit_code": 2,
+    "interpretation": "pending external completion combined here with independent console, exit and health evidence",
+    "running_samples": 2,
+    "physical_payload_bytes_verified": 2097152,
+    "temperatures_millicelsius": [
+      [
+        {
+          "type": "cpub_thermal_zone",
+          "value": 20832
+        },
+        {
+          "type": "ddr_thermal_zone",
+          "value": 20956
+        },
+        {
+          "type": "npu_thermal_zone",
+          "value": 21018
+        },
+        {
+          "type": "cpul_thermal_zone",
+          "value": 20770
+        },
+        {
+          "type": "gpu_thermal_zone",
+          "value": 23126
+        }
+      ],
+      [
+        {
+          "type": "cpub_thermal_zone",
+          "value": 23870
+        },
+        {
+          "type": "ddr_thermal_zone",
+          "value": 21204
+        },
+        {
+          "type": "npu_thermal_zone",
+          "value": 21266
+        },
+        {
+          "type": "cpul_thermal_zone",
+          "value": 25048
+        },
+        {
+          "type": "gpu_thermal_zone",
+          "value": 19344
+        }
+      ],
+      [
+        {
+          "type": "cpub_thermal_zone",
+          "value": 20646
+        },
+        {
+          "type": "ddr_thermal_zone",
+          "value": 20274
+        },
+        {
+          "type": "npu_thermal_zone",
+          "value": 21142
+        },
+        {
+          "type": "cpul_thermal_zone",
+          "value": 23870
+        },
+        {
+          "type": "gpu_thermal_zone",
+          "value": 19344
+        }
+      ]
+    ]
+  },
+  "sd_linux_write_counters": "zero throughout samples",
+  "nvme_health": {
+    "critical_warning_before_after": [
+      0,
+      0
+    ],
+    "media_errors_before_after": [
+      0,
+      0
+    ],
+    "error_log_entries_before_after": [
+      151,
+      151
+    ],
+    "unsafe_shutdowns_before_after": [
+      72,
+      72
+    ],
+    "baseline_error": "Invalid Field in Command, SQID0, NSID0, LBA0; retained as existing unsupported-command error, not relabeled media damage"
+  },
+  "records": [
+    {
+      "path": "out/vgic-nvme-image-20261108/endurance-smoke-final-console-and-health.txt",
+      "bytes": 16987,
+      "sha256": "a8f20a97fd5c01ffbe93302fe80c6728f84e6b39bc6114f4872e53848a0c6b44"
+    },
+    {
+      "path": "out/vgic-nvme-image-20261108/endurance-smoke-exit-observer.jsonl",
+      "bytes": 419,
+      "sha256": "1a617321712128cb6dc68c250d8837bbd29113ea6725556078ae90cc3fec6855"
+    },
+    {
+      "path": "out/vgic-nvme-image-20261108/endurance-smoke-host-cpu-process.json",
+      "bytes": 6694,
+      "sha256": "5dd0b4d35052256345c5fb865fad66e000a21b0b69abd530a43490dd398da8f3"
+    },
+    {
+      "path": "out/vgic-nvme-image-20261108/nvme-health-before-endurance.txt",
+      "bytes": 4714,
+      "sha256": "672160dccd4388856f3491c1492b11900019db70e77f0081108f19c12baa40f7"
+    },
+    {
+      "path": "out/vgic-nvme-image-20261108/nvme-error-baseline-description.txt",
+      "bytes": 491,
+      "sha256": "3806aea2cbc8bb2334823764cf6e553f1e6545442fa5b0fb3497444026921212"
+    },
+    {
+      "path": "out/endurance-physical-smoke-20261108-01/samples.jsonl",
+      "bytes": 17869,
+      "sha256": "c5eb20722b8d998dd3b89972d24564531a68b9a3aa631783dba790f9c5de1c4b"
+    }
+  ],
+  "smoke_pass": true,
+  "hardware_acceptance": false,
+  "interpretation": "Physical smoke gate only; not a 24-hour run or release acceptance."
+}

@@ -69,7 +69,13 @@ sets `no_errors_observed`. Coordinator assessment remains required before
 acceptance when preexisting errors are present. Every thermal zone needs a readable critical
 trip and must remain below it. Missing or changed error evidence fails closed;
 kernel ring-buffer turnover can therefore require operator investigation.
-SD mount or any nonzero write/discard/flush counters fails. Block field positions
+Before reading SD statistics, the collector checks `/sys/class/block/mmcblk1`
+against the known card: major/minor `179:0`, CID
+`035344535530324780716f216e00a8f5`, model `SU02G`, and size 1,977,614,336 bytes
+(sysfs size in 512-byte sectors). It records this identity in each SD snapshot;
+missing or mismatched identity fails. The local validator independently checks
+the recorded identity. SD mount or any nonzero write/discard/flush counters fails.
+Block field positions
 follow Linux [block statistics documentation](https://www.kernel.org/doc/html/latest/block/stat.html).
 These Linux observations do not prove absence of firmware writes or replace full
 SD hashes and shutdown evidence. SMART is explicitly `not_proved`: no NVMe ioctl

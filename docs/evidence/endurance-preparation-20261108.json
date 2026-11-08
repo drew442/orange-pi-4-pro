@@ -4,8 +4,9 @@
   "scope": "endurance preparation software only",
   "checks": {
     "guest_tests": 9,
-    "collector_tests": 24,
-    "shell_syntax": true
+    "collector_tests": 26,
+    "shell_syntax": true,
+    "endurance_wrapper_tests": 13
   },
   "records": [
     {
@@ -83,19 +84,19 @@
     },
     {
       "path": "tmp/endurance-tools-independent-review-20261108.json",
-      "bytes": 4395,
-      "sha256": "a2adbbdcaac5c9aeaf98d338316a232bddfbd036c442b6b837f850f63501609c",
+      "bytes": 5776,
+      "sha256": "d0a5bd5c3c442f74f42d439bc436cd225d57e55dd90da3a91bba72eef7274996",
       "record": {
         "schema": 1,
         "reviewer": "independent Sol high",
         "review_date": "2026-11-08",
-        "result": "pass_with_nonblocking_documentation_advisory",
+        "result": "pass",
         "hardware_acceptance": false,
         "scope": {
-          "scripts/collect-kvm-endurance.py": "3c723a889e290242f9f969dce053435ea468eb1ebc1c8469c04d7ab770d4656d",
+          "scripts/collect-kvm-endurance.py": "0e34533a74691af16ce58d235df3055ef5637eceac76e3ead5f2be565812654c",
           "scripts/endurance-cpu-load.py": "13e12e9d1ef93f883b34b4949088a267c80d61973cf3c1565565488ab3a02360",
-          "tests/test_kvm_endurance_tools.py": "59d54c3e335d10e939c852a71ab0e93ff0cdeafd9629b98b26d82b74a21202a4",
-          "docs/kvm-endurance-tools.md": "9e5d395aa024a3dc25f35cd805299d7619a497c1c20bef6f57ec025aaf14058c"
+          "tests/test_kvm_endurance_tools.py": "e88dfec281976ce56cf5ddf28e8027c34400948d60450ec1b1b18c49ca43d7cd",
+          "docs/kvm-endurance-tools.md": "ca152400eb369fd1a4631a609a35e49e2965f4688d3857bdd1ee5a73a41a6d38"
         },
         "constraints": [
           "A733",
@@ -111,12 +112,23 @@
         "checks": [
           {
             "command": "python3 -m unittest discover -s tests -p test_kvm_endurance_tools.py -v",
-            "tests": 24,
-            "passed": 24
+            "tests": 26,
+            "passed": 26
           },
           {
             "command": "git diff --check",
             "exit_code": 0
+          },
+          {
+            "kind": "Independent recorded-hardware replay",
+            "identity_source": "docs/evidence/corrected-host-install-20261108.json#/sd_write/target",
+            "stat_source": "docs/evidence/corrected-host-boot-20261108.json",
+            "observations": [
+              "Code SD_IDENTITY equals independently reconstructed recorded target: mmcblk1, 179:0, CID 035344535530324780716f216e00a8f5, SU02G, 1977614336 bytes.",
+              "Recorded corrected-host block stats [78,0,4184,746,0,0,0,0,0,680,746,0,0,0,0,0,0] pass local validator together with recorded identity.",
+              "Wrong device, major/minor, CID, model and capacity each rejected independently.",
+              "mounted=False in replay remains synthetic; remote mount enumeration reviewed statically and mounted=True covered by regression."
+            ]
           }
         ],
         "required_changes": [],
@@ -133,6 +145,7 @@
         ],
         "limits": [
           "No SSH or hardware operation performed.",
+          "Recorded physical SD identity and stat values were replayed locally; this does not establish a new physical collection run.",
           "No physical thermal-zone compatibility check.",
           "No actual 24-hour execution or installed-host acceptance.",
           "Independent review covers only the four named source/test/documentation files; coordinator retains integration and hardware acceptance."
@@ -157,16 +170,20 @@
             "id": "failed_sample",
             "status": "resolved",
             "evidence": "Validation/watchdog failure retains the decoded bounded sample. data resets to None before every probe; later transport failure therefore cannot relabel the previous sample. Recording regressions cover both cases."
+          },
+          {
+            "id": "SD-target-integration",
+            "status": "resolved",
+            "identified_by": "coordinator after initial independent review",
+            "evidence": "Initial review overlooked synthetic mmcblk0 fixture versus recorded physical mmcblk1. Updated REMOTE reads fixed mmcblk1, checks sysfs device/name/CID/512-byte sector size/dev against the recorded identity before its stat read, records identity, and enumerates whole-device and partition major/minor IDs for direct mount detection. Local replay validator independently rejects absent/mismatched identity. Pinned facts independently checked against physical install receipt and corrected-boot stats, not merely fixture constant."
+          },
+          {
+            "id": "SSH-identity-wording",
+            "status": "resolved",
+            "evidence": "Documentation now explicitly permits additional IdentityFile entries from local SSH configuration."
           }
         ],
-        "advisories": [
-          {
-            "severity": "nonblocking",
-            "location": "docs/kvm-endurance-tools.md",
-            "finding": "The phrase supplied identity exclusively overstates IdentitiesOnly=yes: OpenSSH can also use IdentityFile entries from inherited user/client configuration.",
-            "suggested_change": "Remove exclusively, or intentionally isolate configuration if exclusive identity selection is required."
-          }
-        ]
+        "advisories": []
       }
     },
     {
@@ -276,6 +293,49 @@
           "build/assemble-host.py"
         ],
         "workspace": "/var/lib/a733-endurance-guest-build-20261108-01"
+      }
+    },
+    {
+      "path": "tmp/endurance-observer-independent-review-20261108.json",
+      "bytes": 1454,
+      "sha256": "be1d20e58e5747e7ea4b95dbd34711203660400f8428602ddf2e4f36e0ab9ff4",
+      "record": {
+        "review_date": "2026-11-08",
+        "scope": [
+          "scripts/observe-endurance-kvm-exit.py",
+          "tests/test_endurance_exit_observer.py",
+          "docs/endurance-exit-observer.md"
+        ],
+        "verdict": "pass",
+        "defects": [],
+        "base_sha256": "334f79c44ca9033556f9a7752d837ada7f37c4c34a7c7a51798807e195faefb4",
+        "base_digest_matches_pin": true,
+        "unit_tests": {
+          "wrapper": {
+            "passed": 13
+          },
+          "unchanged_base": {
+            "passed": 7
+          }
+        },
+        "independent_executable_checks": [
+          "successful cleanup precedes final",
+          "cleanup failure suppresses final",
+          "nonzero exit suppresses final",
+          "signal exit suppresses final",
+          "missing executed PID suppresses final",
+          "live main PID suppresses final",
+          "argv restored on delegate BaseException",
+          "deadline cleanup attempts UnrefUnit and always closes connection"
+        ],
+        "git_diff_check": "pass",
+        "hardware_access": "none; no SSH, bus connection, guest launch/stop or board changes",
+        "acceptance_limit": "Host-only review and mocked observation checks; no physical endurance or hardware acceptance evidence.",
+        "reviewed_sha256": {
+          "scripts/observe-endurance-kvm-exit.py": "3fc0e9e256872a4aaec733bccb8b8d892c1dffa99f47475979ea888547b8d6b9",
+          "tests/test_endurance_exit_observer.py": "ec69a85f1575c02422e82a7b8228a758714a997fef316ef69fabb298c20f31e0",
+          "docs/endurance-exit-observer.md": "7a780c3053b9aa615f0b933c72c957899ba160c60bd565da859399b9c2c89ec0"
+        }
       }
     }
   ],

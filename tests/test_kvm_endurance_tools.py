@@ -1,3 +1,4 @@
+import ast
 import hashlib
 import importlib.util
 import json
@@ -26,7 +27,7 @@ RUN = '22222222-2222-4222-8222-222222222222'
 def fixture():
     status = 'Uid: 60002 60002 60002 60002\nGid: 60002 60002 60002 60002\nNoNewPrivs: 1\n'
     status += ''.join(key + ': 0000000000000000\n' for key in ('CapInh', 'CapPrm', 'CapEff', 'CapBnd', 'CapAmb'))
-    return {'boot_id': BOOT, 'unit': {'MemoryMax': '536870912'}, 'blocks': {'mmcblk0': {'mounted': False, 'stat': [0] * 17}},
+    return {'boot_id': BOOT, 'unit': {'MemoryMax': '536870912'}, 'blocks': {'mmcblk1': {'identity': dict(C.SD_IDENTITY), 'mounted': False, 'stat': [0] * 17}},
             'network': [{'rx_bytes': 100, 'tx_bytes': 200}],
             'thermal': [{'temp': 40000, 'critical': [100000]}], 'nvme_errors': [],
             'endpoint_state': 'running', 'process': {'status': status,
@@ -150,16 +151,50 @@ class ValidationTests(unittest.TestCase):
             with self.subTest(key=key), self.assertRaises((KeyError, ValueError)):
                 C.validate(data, BOOT, 'smoke')
 
+    def test_only_known_mmcblk1_identity_accepted(self):
+        data = fixture()
+        self.assertEqual(C.validate(data, BOOT, 'smoke'), 'readonly_evidence')
+        for field, wrong in (('cid', '0' * 32), ('model', 'UNKNOWN'),
+                             ('size_bytes', 1977614336 + 512), ('major_minor', '179:32'),
+                             ('device', 'mmcblk2')):
+            data = fixture()
+            data['blocks']['mmcblk1']['identity'][field] = wrong
+            with self.subTest(field=field), self.assertRaisesRegex(ValueError, 'identity'):
+                C.validate(data, BOOT, 'smoke')
+        data = fixture()
+        del data['blocks']['mmcblk1']['identity']
+        with self.assertRaisesRegex(ValueError, 'identity'):
+            C.validate(data, BOOT, 'smoke')
+
+    def test_remote_reads_and_checks_sysfs_identity(self):
+        tree = ast.parse(C.REMOTE)
+        helper = next(node for node in tree.body if isinstance(node, ast.FunctionDef)
+                      and node.name == 'checked_sd_identity')
+        base = '/sys/class/block/mmcblk1'
+        values = {base + '/dev': '179:0', base + '/device/cid': C.SD_IDENTITY['cid'],
+                  base + '/device/name': 'SU02G', base + '/size': str(1977614336 // 512)}
+        namespace = {'P': Path, 'EXPECTED_SD': C.SD_IDENTITY, 'read': values.__getitem__}
+        exec(compile(ast.Module(body=[helper], type_ignores=[]), '<SD helper>', 'exec'), namespace)
+        check = namespace['checked_sd_identity']
+        self.assertEqual(check(base), C.SD_IDENTITY)
+        for suffix, wrong in (('/device/cid', '0' * 32), ('/device/name', 'UNKNOWN'),
+                              ('/size', '1'), ('/dev', '179:32')):
+            with self.subTest(suffix=suffix), patch.dict(values, {base + suffix: wrong}):
+                with self.assertRaisesRegex(ValueError, 'identity'):
+                    check(base)
+        self.assertLess(C.REMOTE.index('identity = checked_sd_identity(base)'),
+                        C.REMOTE.index("read(base + '/stat')"))
+
     def test_sd_writes_mounts_and_thermals(self):
         for index in (4, 5, 6, 7, 11, 12, 15):
             data = fixture()
-            data['blocks']['mmcblk0']['stat'][index] = 1
+            data['blocks']['mmcblk1']['stat'][index] = 1
             with self.subTest(index=index), self.assertRaises(ValueError):
                 C.validate(data, BOOT, 'smoke')
         for patch_data in ('mounted', 'hot', 'no_trip', 'nvme_error', 'hash', 'workers'):
             data = fixture()
             if patch_data == 'mounted':
-                data['blocks']['mmcblk0']['mounted'] = True
+                data['blocks']['mmcblk1']['mounted'] = True
             elif patch_data == 'hot':
                 data['thermal'][0]['temp'] = 100000
             elif patch_data == 'no_trip':

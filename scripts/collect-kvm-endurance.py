@@ -23,13 +23,23 @@ DURATIONS = {'smoke': 60, 'release': 86400}
 PROFILE = 'a733-kvm-endurance-v1'
 PROGRESS_TIMEOUT = 120
 MEMORY_MAX = '536870912'
+SD_IDENTITY = {'device': 'mmcblk1', 'major_minor': '179:0',
+               'cid': '035344535530324780716f216e00a8f5',
+               'model': 'SU02G', 'size_bytes': 1977614336}
 
 # Executed with Python isolated mode on the host, with no user-controlled source.
-REMOTE = r'''
+REMOTE = 'EXPECTED_SD = ' + repr(SD_IDENTITY) + '\n' + r'''
 import glob, json, os, pathlib, re, subprocess, sys, urllib.request
 P = pathlib.Path
 def read(path):
     return P(path).read_text()[:32768].strip()
+def checked_sd_identity(base):
+    identity = {'device': P(base).name, 'major_minor': read(base + '/dev'),
+        'cid': read(base + '/device/cid'), 'model': read(base + '/device/name'),
+        'size_bytes': int(read(base + '/size')) * 512}
+    if identity != EXPECTED_SD:
+        raise ValueError('SD sysfs identity mismatch')
+    return identity
 def command(argv):
     return subprocess.check_output(argv, timeout=5).decode()
 def fetch(path, limit):
@@ -68,11 +78,14 @@ for net in glob.glob('/sys/class/net/*'):
             'tx_bytes': int(read(net + '/statistics/tx_bytes'))})
 m['blocks'] = {}
 mounts = read('/proc/self/mountinfo').splitlines()
-for name in ('mmcblk0', 'nvme0n1'):
+for name in ('mmcblk1', 'nvme0n1'):
     base = '/sys/class/block/' + name
+    identity = checked_sd_identity(base) if name == 'mmcblk1' else None
     devs = [read(base + '/dev')] + [read(p) for p in glob.glob(base + '/' + name + '*/dev')]
     m['blocks'][name] = {'stat': [int(x) for x in read(base + '/stat').split()],
         'mounted': any(line.split()[2] in devs for line in mounts)}
+    if identity is not None:
+        m['blocks'][name]['identity'] = identity
 # Linux block stat fields: Documentation/block/stat.rst (writes completed and sectors written).
 log = command(['dmesg', '--color=never'])
 m['nvme_errors'] = sorted(set(line for line in log.splitlines() if 'nvme' in line.lower()
@@ -206,7 +219,9 @@ def validate(data, boot_id, mode, baseline=None, previous=None):
         raise ValueError('guest unit MemoryMax must be 536870912')
     if data['boot_id'] != boot_id:
         raise ValueError('host boot changed')
-    sd = data['blocks']['mmcblk0']
+    sd = data['blocks']['mmcblk1']
+    if sd.get('identity') != SD_IDENTITY:
+        raise ValueError('SD sysfs identity mismatch')
     if sd['mounted'] or len(sd['stat']) < 11 or any(sd['stat'][4:8]) or any(sd['stat'][11:]):
         raise ValueError('SD mounted or written')
     if len(data['network']) != 1 or not data['thermal']:
