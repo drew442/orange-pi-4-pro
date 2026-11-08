@@ -1,0 +1,126 @@
+{
+  "schema": 1,
+  "date": "2026-11-08",
+  "operation": "physical-corrected-vgic-host-installation",
+  "authorization": "docs/evidence/storage-write-authorization-20261108.json",
+  "nvme_install": {
+    "bytes_attempted": 256060514304,
+    "bytes_verified": 0,
+    "bytes_written": 256060514304,
+    "existing_data_policy": "discard-authorized",
+    "readback_requested": false,
+    "source_sha256": "835031b81d0320d6f9f35e74b9be67b494006c26a25fa9070f3e0a8f434ebc11",
+    "success": true,
+    "target_modified": true
+  },
+  "sd_write": {
+    "authorization": "docs/evidence/storage-write-authorization-20261108.json",
+    "bytes_written": 268435456,
+    "expected_boot_id": "f3a37e96-ad2f-4eb5-93a3-193d41083ce3",
+    "hardware_acceptance": false,
+    "operation": "known-bootstrap-sd-maintenance",
+    "source": {
+      "bytes": 268435456,
+      "path": "/run/a733-payload/a733-host-sd.img",
+      "sha256": "f02c74b4c001f1608d0005b6ff23fe82bffa8c02f71e19e5b6573819125ae383"
+    },
+    "status": "write-complete",
+    "target": {
+      "bytes": 1977614336,
+      "cid": "035344535530324780716f216e00a8f5",
+      "major_minor": "179:0",
+      "model": "SU02G",
+      "path": "/dev/mmcblk1",
+      "write_bytes": 268435456,
+      "write_offset": 0
+    }
+  },
+  "identity_preservation": {
+    "apply": true,
+    "archive_sha256": "ae3930cec481912a164361e11c926ca02d81561a49c0fc49b70514dd19d3d06e",
+    "changed_files": [
+      "identity/ssh/ssh_host_ed25519_key",
+      "identity/ssh/ssh_host_ed25519_key.pub",
+      "identity/machine-id"
+    ],
+    "completed": true,
+    "disk": "/dev/nvme0n1",
+    "durability": "files and containing directories fsynced; STATE unmounted",
+    "files_fsynced": true,
+    "hardware_acceptance": false,
+    "operation": "same-physical-board-identity-preservation",
+    "proposed_files": [
+      {
+        "mode": "0600",
+        "path": "identity/ssh/ssh_host_ed25519_key",
+        "sha256": "13626b951777da0224c4431370c23d25ceec8dff15658fd27d0e1bdc043ef3d9"
+      },
+      {
+        "mode": "0644",
+        "path": "identity/ssh/ssh_host_ed25519_key.pub",
+        "sha256": "f0b962302d98868356f708f346288baf8754a07bfa86460ddab35dfd873186bf"
+      },
+      {
+        "mode": "0644",
+        "path": "identity/machine-id",
+        "sha256": "d9acc584e9dfb0c973657ae89d742335531bb5b6286a60988d32abb79634676a"
+      }
+    ],
+    "public_fingerprint": "SHA256:Epfegy9GsJ6ng4/0EH3dZmir7beQj5uYTnIbE4JPfEI",
+    "schema": 1,
+    "serial": "134807190FC700149277",
+    "state_uuid": "360dfb39-f49f-487e-b307-0bb887c854c5",
+    "target": "/dev/nvme0n1p4",
+    "unmounted": true
+  },
+  "source_review": {
+    "path": "tmp/vgic-nvme-final-artifact-review-20261108.json",
+    "bytes": 13845,
+    "sha256": "d7704510a076bc8f8dfa193d904d413a9731e05e6140e787bab445c079d53ac0"
+  },
+  "runtime_compatibility_review": {
+    "path": "tmp/maintenance-runtime-compat-review-20261108.json",
+    "bytes": 6769,
+    "sha256": "c537e7d4746be824febb23fb75974bb2daaff633f82c40947bcf99c0e8a26ddb"
+  },
+  "raw_records": [
+    {
+      "path": "out/vgic-nvme-image-20261108/physical-install-report.json",
+      "bytes": 306,
+      "sha256": "8bd91f05e25f7d1fad9ae3560b51e44d4dab571c3eddc0118a26745ac2569fd6"
+    },
+    {
+      "path": "out/vgic-nvme-image-20261108/physical-install-plan.json",
+      "bytes": 3195,
+      "sha256": "68d969b55a2455c13228f862d8781a182cac2a9c2ac1d42ac7f1144574666c45"
+    },
+    {
+      "path": "out/vgic-nvme-image-20261108/physical-identity-plan.json",
+      "bytes": 1051,
+      "sha256": "5b2b6ec3ae4e69bbb39b13cb1967e40074ce239066d2c2e85531990fdcba0d55"
+    },
+    {
+      "path": "out/vgic-nvme-image-20261108/physical-identity-apply.txt",
+      "bytes": 1165,
+      "sha256": "bad7337bbc80afc8672256336919507d8d6f430a363581113673e97893597699"
+    },
+    {
+      "path": "out/vgic-nvme-image-20261108/physical-final-sd-write-report.json",
+      "bytes": 613,
+      "sha256": "b696562c7586d66b7ec277511e2aec9468be5f845a8624d1167caaabd81a4fa0"
+    },
+    {
+      "path": "out/vgic-nvme-image-20261108/physical-final-sd-write.stderr",
+      "bytes": 692,
+      "sha256": "847802d339566b17fa62dfb577e3d782d6726c87605edcf597a67276b27f208d"
+    }
+  ],
+  "interpretation": [
+    "Full expanded NVMe stream written once with progress and fsync; readback not requested.",
+    "Same-board identity was then restored; original stream hash does not describe the personalized whole device.",
+    "Matched 256 MiB SD bootstrap written with fsync and BLKFLSBUF, without readback.",
+    "These receipts establish completed writes, not successful corrected-host boot or release acceptance."
+  ],
+  "hardware_acceptance": false,
+  "next": "Boot corrected host and verify actual root, state, identity, time, packaged tools and restored KVM guest."
+}

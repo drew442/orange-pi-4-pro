@@ -15,8 +15,9 @@ independent deployment reproduction remain incomplete.
   use immutable SD boot files. Leave attached heatsinks in place.
 - **Running now:** The [private SSH RAM installer](ssh-installer-remote-boot-20261108.md)
   physically boots at **192.168.1.115**, boot ID `f3a37e96-ad2f-4eb5-93a3-193d41083ce3`.
-  Existing pinned host key, Ed25519 login and PTY pass. Root is RAM; SD and NVMe
-  are unmounted, swap/holders absent and early Linux write counters zero.
+  Existing pinned host key, Ed25519 login and PTY pass. Root is RAM. The approved full NVMe install, same-board identity restoration
+  and matched 256 MiB SD write now pass; see [physical write receipts](evidence/corrected-host-install-20261108.json).
+  Final corrected-host boot is next. SD and NVMe are unmounted.
   RSA hardware login for this new boot remains unperformed.
 - **Existing NVMe host:** The installed `00fd…` NVMe host was repaired in place.
   Trusted live SSH verified DHCP `192.168.1.116/24` on `end0`, MAC
@@ -58,7 +59,9 @@ independent deployment reproduction remain incomplete.
   Before deployment, preserve same-board identity using the reviewed
   [STATE helper](known-host-state-personalization.md), then use the reviewed
   [known SD writer](known-bootstrap-sd-writer.md) for the matched bootstrap.
-  These two maintenance helpers have not yet performed physical writes.
+  Both maintenance helpers now completed physical writes with durable receipts.
+  The full NVMe stream was installed without readback, then identity was restored;
+  its original stream hash does not describe the personalized whole device.
 - **SPI:** Original backup and a private candidate derived from it are reviewed;
   the XM25QU128C, JEDEC `204118`, 16 MiB backup is blank (`0xff`).
   The [fresh read-only live comparison](spi-live-plan-results-20261108.md)
@@ -142,8 +145,9 @@ count as physical acceptance.
 1. Preserve the successful VGIC/guest evidence and current counter-3 checkpoint.
    Integrate the proven DT and matched firmware into the corrected host chain;
    validate that coherent deployment and its packaged/time/identity behavior.
-   The RAM installer is ready; complete independent NVMe artifact review before
-   the approved NVMe installation, identity preservation and final SD switch.
+   Independent NVMe artifact review and the approved NVMe installation, identity
+   preservation and final SD switch now pass. Boot the corrected host, validate
+   its installed closure and restore the authenticated counter-3 guest.
 2. The verified `timesync-runtime-fixes-01` image is retained on both hosts;
    recheck resource floors before transfers. Integrate and
    validate matching NVMe-first firmware and VGIC DT separately; physically
