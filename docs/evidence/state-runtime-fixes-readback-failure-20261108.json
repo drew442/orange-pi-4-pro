@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "date": "2026-11-08",
+  "classification": "Retained state construction with failed follow-on reader integration; no deployment",
+  "source_revision": "6665d0f9535eab2dee80d6eb4111e05e0bd0085b",
+  "phase": "/var/lib/a733-clean-replay-20261106/host-state-timesync-runtime-fixes-01",
+  "state_uuid": "a55f9ea1-d255-4556-b578-9aa9e9d72726",
+  "construction_success": true,
+  "full_filesystem_readback_success": false,
+  "reader_terminal_exit_code": 1,
+  "failure": "KeyError: 'expected' while resolving policy.producer.expected_trees.A.expected",
+  "cause": "Coordinator root artifact evidence used a flattened expected_trees pin. Historical state reader requires the full expected/stability/members record; initial adapter tests did not cover actual registered parent shape.",
+  "correction": "Separate state-binding evidence preserves original root evidence and actual artifact pins, restores the producer expected-proof record shape, and requires additional adapter preflight/schema tests before a fresh identity/tag build.",
+  "hardware_written": false,
+  "retained": true,
+  "deployment_authorized": false,
+  "evidence": [
+    {
+      "path": "out/state-runtime-fixes-20261108/producer/receipt.json",
+      "bytes": 175841,
+      "sha256": "b1b24be6aae177b4cc3df359b946cfee64f70761b9ba0d795e32fc600fc2eff0"
+    },
+    {
+      "path": "out/state-runtime-fixes-20261108/readback-console.stderr",
+      "bytes": 748,
+      "sha256": "353b756a4363793f6fa6f36e6dd5a0de7e3a82a24823c53396fcb7a7ee828243"
+    }
+  ]
+}
