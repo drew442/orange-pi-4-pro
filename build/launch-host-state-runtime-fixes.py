@@ -14,14 +14,15 @@ import stat
 import sys
 import types
 
-EVIDENCE = 'docs/evidence/production-host-roots-runtime-fixes-20261108.json'
-EVIDENCE_PIN = {'bytes': 17141, 'sha256': '12c45544ac379a0ca11312f833f2e49333b0cf94dc55156a280a18044ba8003d'}
-EVIDENCE_BLOB = '63ee6c9c17dbca0f434feaef010c7a0fa630f070'
-CANONICAL_SHA = '2c04a75d5239224b80a721442e88ea872ccd63d18aaae841539d007697302971'
+EVIDENCE = 'docs/evidence/production-host-roots-runtime-fixes-state-binding-20261108.json'
+EVIDENCE_PIN = {'bytes': 18102, 'sha256': '14371bdf3ee8b18c9f37be9203e09249dd388e8ac7354df221c9e3b49b3be5d2'}
+EVIDENCE_BLOB = '1a5d452c3871fee25062c88b9c37f48875a7b79d'
+CANONICAL_SHA = 'e4be6ff26a59d116056b3f5b777aea9c3b4668b3674861bb41b63b99f10e8db4'
 READER_SHA = '80e843d499bcc2f6d299d6022dc7edf83d73842405e95b38b0f32eee72dcda30'
 FORBIDDEN_UUIDS = ('00fd936c-49fb-4fea-87c8-928b9c1599e0',
                    'fc8bbef6-9385-4ddb-90ba-e41eaccc035b',
-                   'feaaee34-d782-4c18-bd04-1029540ab26a')
+                   'feaaee34-d782-4c18-bd04-1029540ab26a',
+                   'a55f9ea1-d255-4556-b578-9aa9e9d72726')
 
 
 def require(ok, message):
@@ -133,6 +134,34 @@ def evidence_record(record):
             and record.get('git_blob') == EVIDENCE_BLOB, 'registered root evidence source closure differs')
 
 
+def parent_proof_schema(producer):
+    """Reject incompatible registered parent proofs before any construction."""
+    require(type(producer) is dict, 'registered parent proof producer must be an object')
+    trees = producer.get('expected_trees')
+    readback = producer.get('readback')
+    require(type(trees) is dict and set(trees) == {'A', 'B'}
+            and type(readback) is dict and type(readback.get('slots')) is dict
+            and set(readback['slots']) == {'A', 'B'}, 'registered parent proof slots differ')
+    def valid_pin(value):
+        return (type(value) is dict and set(value) == {'bytes', 'sha256'}
+                and type(value['bytes']) is int and value['bytes'] > 0
+                and type(value['sha256']) is str and len(value['sha256']) == 64
+                and all(c in '0123456789abcdef' for c in value['sha256']))
+    for slot in ('A', 'B'):
+        expected, actual = trees[slot], readback['slots'][slot]
+        require(type(expected) is dict and set(expected) ==
+                {'expected', 'stability', 'members', 'independent_image_readback'}
+                and type(actual) is dict, 'registered parent proof record differs: ' + slot)
+        require(expected['independent_image_readback'] is False
+                and valid_pin(expected['expected']) and valid_pin(expected['stability'])
+                and type(expected['members']) is int and expected['members'] > 0
+                and type(actual.get('namespace_members')) is int
+                and expected['members'] == actual['namespace_members']
+                and expected['expected'] == actual.get('expected')
+                and expected['stability'] == actual.get('stability'),
+                'registered parent proof binding differs: ' + slot)
+
+
 def guard_uuid(parent):
     original = parent.state_uuid
     def state_uuid(value):
@@ -168,6 +197,7 @@ def adapt(parent, held):
                 separators=(',', ':')).encode()).hexdigest() == CANONICAL_SHA,
                 'registered parsed root evidence differs')
         policy = original_contract(roots, project, contents)
+        parent_proof_schema(policy['producer'])
         held.unchanged()
         return policy
     def plan(options, manifest, policy):

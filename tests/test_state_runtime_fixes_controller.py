@@ -137,6 +137,9 @@ class RuntimeFixesTests(unittest.TestCase):
             with contextlib.ExitStack() as stack:
                 parent, _ = self.parent(adapter, stack)
                 self.assertEqual(parent.state_uuid(FRESH_UUID), FRESH_UUID)
+                self.assertIn('a55f9ea1-d255-4556-b578-9aa9e9d72726', adapter.FORBIDDEN_UUIDS)
+                with self.assertRaises(ValueError):
+                    parent.state_uuid('a55f9ea1-d255-4556-b578-9aa9e9d72726')
                 for value in (*L.FORBIDDEN_UUIDS, *ROOTS.SLOT_UUIDS.values(), '0' * 32, FRESH_UUID.upper()):
                     with self.subTest(adapter=adapter.SELF, value=value), self.assertRaises(ValueError):
                         parent.state_uuid(value)
@@ -252,7 +255,7 @@ class RuntimeFixesTests(unittest.TestCase):
                         held.close()
 
     def test_registration_matches_committed_evidence_and_historical_adapters(self):
-        raw = subprocess.check_output(['git', '-C', str(REPO), 'show', '80e9ba6:' + L.EVIDENCE])
+        raw = subprocess.check_output(['git', '-C', str(REPO), 'show', '3fcfd75:' + L.EVIDENCE])
         for adapter in (L, V):
             self.assertEqual(pin(raw), adapter.EVIDENCE_PIN)
             self.assertEqual(record(raw)['git_blob'], adapter.EVIDENCE_BLOB)
@@ -262,6 +265,102 @@ class RuntimeFixesTests(unittest.TestCase):
                 ('build/launch-host-state-repeat.py', '5e2998921932607614e51b5f0177917afed24b7a821be5ebad44c4475eeedace'),
                 ('build/verify-host-state-repeat.py', '3a31b48f463ce5fa0f8e0c343f6f939dbb3ead30a2870bbff1ac29ffbcbff95d')):
             self.assertEqual(hashlib.sha256((REPO / name).read_bytes()).hexdigest(), sha)
+
+    def test_committed_parent_proof_schema_and_actual_reader_member_binding(self):
+        import contextlib
+        raw = subprocess.check_output(['git', '-C', str(REPO), 'show', '3fcfd75:' + L.EVIDENCE])
+        producer = json.loads(raw)
+        for adapter in (L, V):
+            adapter.parent_proof_schema(producer)
+        # Exercise the precise historical lookup against the real committed
+        # policy, including its actual count and pins. Only transport of the
+        # separately held proof JSON is replaced by a deterministic tree.
+        with contextlib.ExitStack() as stack:
+            parent, _ = self.parent(V, stack)
+            expected = producer['expected_trees']['A']
+            directory = dict(type='dir', mode=0o755, uid=0, gid=0, mtime_ns=0, xattrs={})
+            marker = dict(type='file', mode=0o444, uid=0, gid=0, mtime_ns=0,
+                          xattrs={}, data=pin(b'actual-shape marker fixture'))
+            members = {name: dict(directory) for name in
+                ('.', 'usr', 'usr/lib', 'usr/lib/orangepi-hypervisor')}
+            members['usr/lib/orangepi-hypervisor/payload.json'] = marker
+            for index in range(expected['members'] - len(members)):
+                members['fixture-%05d' % index] = dict(marker)
+            proof = dict(schema=1, slot='A', members=members)
+            held = types.SimpleNamespace(pin=expected['expected'])
+            selector = {'ROOT_MARKER_SHA256': marker['data']['sha256']}
+            with mock.patch.object(parent.R, 'json_fd', return_value=proof):
+                self.assertEqual(parent.parent_marker_binding(held, {'producer': producer}, selector), marker['data'])
+                with self.assertRaisesRegex(ValueError, 'selected marker'):
+                    parent.parent_marker_binding(held, {'producer': producer}, {'ROOT_MARKER_SHA256': '0' * 64})
+                bad = copy.deepcopy(proof)
+                bad['members'].pop('fixture-00000')
+                with mock.patch.object(parent.R, 'json_fd', return_value=bad):
+                    with self.assertRaisesRegex(ValueError, 'proof identity'):
+                        parent.parent_marker_binding(held, {'producer': producer}, selector)
+
+    def test_parent_proof_schema_rejects_flat_missing_and_corrupt_records(self):
+        producer = json.loads(contents()[L.EVIDENCE])
+        for adapter in (L, V):
+            for slot in ('A', 'B'):
+                mutations = []
+                bad = copy.deepcopy(producer)
+                bad['expected_trees'][slot] = bad['expected_trees'][slot]['expected']
+                mutations.append(bad)
+                for field in ('expected', 'stability', 'members', 'independent_image_readback'):
+                    bad = copy.deepcopy(producer)
+                    del bad['expected_trees'][slot][field]
+                    mutations.append(bad)
+                for field, value in (('expected', {'bytes': 1, 'sha256': '0' * 64}),
+                                     ('stability', {'bytes': 57, 'sha256': 'f' * 64}),
+                                     ('members', 1), ('members', True), ('members', '16368'),
+                                     ('independent_image_readback', True),
+                                     ('independent_image_readback', 0)):
+                    bad = copy.deepcopy(producer)
+                    bad['expected_trees'][slot][field] = value
+                    mutations.append(bad)
+                for field in ('expected', 'stability', 'namespace_members'):
+                    bad = copy.deepcopy(producer)
+                    del bad['readback']['slots'][slot][field]
+                    mutations.append(bad)
+                for index, bad in enumerate(mutations):
+                    with self.subTest(adapter=adapter.SELF, slot=slot, index=index):
+                        with self.assertRaisesRegex(ValueError, 'registered parent proof'):
+                            adapter.parent_proof_schema(bad)
+
+    def test_parent_proof_preflight_runs_after_authentication_in_both_hooks(self):
+        import contextlib
+        data = contents()
+        with contextlib.ExitStack() as stack:
+            launcher, _ = self.parent(L, stack)
+            reader, _ = self.parent(V, stack)
+            with mock.patch.object(L, 'parent_proof_schema', wraps=L.parent_proof_schema) as guard:
+                launcher.contract(ROOTS, REPO, data)
+                guard.assert_called_once_with(json.loads(data[L.EVIDENCE]))
+                guard.reset_mock()
+                with self.assertRaisesRegex(ValueError, 'evidence bytes'):
+                    launcher.contract(ROOTS, REPO, dict(data, **{L.EVIDENCE: data[L.EVIDENCE] + b'\n'}))
+                guard.assert_not_called()
+            with mock.patch.object(V, 'parent_proof_schema', wraps=V.parent_proof_schema) as guard:
+                receipt = self.receipt()
+                reader.source_policy(receipt)
+                guard.assert_called_once_with(receipt['policy']['producer'])
+                guard.reset_mock()
+                bad = copy.deepcopy(receipt)
+                bad['policy']['producer']['expected_trees']['A'] = bad['policy']['producer']['expected_trees']['A']['expected']
+                with self.assertRaisesRegex(ValueError, 'committed evidence'):
+                    reader.source_policy(bad)
+                guard.assert_not_called()
+            # An authenticated but incompatible future registration must still
+            # refuse the launcher contract, before any phase can be created.
+            bad_producer = json.loads(data[L.EVIDENCE])
+            bad_producer['expected_trees']['A'] = bad_producer['expected_trees']['A']['expected']
+            raw = json.dumps(bad_producer, sort_keys=True, separators=(',', ':')).encode()
+            with mock.patch.object(L, 'EVIDENCE_PIN', pin(raw)), \
+                 mock.patch.object(L, 'CANONICAL_SHA', hashlib.sha256(raw).hexdigest()), \
+                 mock.patch.object(Path, 'mkdir', side_effect=AssertionError('staging')):
+                with self.assertRaisesRegex(ValueError, 'registered parent proof'):
+                    launcher.contract(ROOTS, REPO, dict(data, **{L.EVIDENCE: raw}))
 
     def test_adapted_reader_keeps_full_semantic_and_regular_ext4_checks(self):
         # Reuse existing non-production fixtures against the adapted module.
