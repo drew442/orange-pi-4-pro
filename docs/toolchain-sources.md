@@ -137,6 +137,8 @@ proof records remain outside Git.
 This inventory does not establish the compiler's complete build-host dependency
 closure, a rebuild of the compiler binary, legal sufficiency or public binary
 redistribution clearance. [Vendor boot-input grants](evidence/vendor-boot-license-inventory-20261106.json)
-remain independently unresolved. The current board still needs its
-[management repair](installed-host-repair-20261107.md), actual KVM execution and
-all physical [release acceptance](hardware-validation.md).
+remain independently unresolved. The board now passes
+[management repair and SSH](installed-host-repair-results-20261108.md) and
+[partial actual KVM CPU/disk execution](first-kvm-results-20261108.md). Guest
+networking, clean restart and the remaining physical
+[release acceptance](hardware-validation.md) are still open.
