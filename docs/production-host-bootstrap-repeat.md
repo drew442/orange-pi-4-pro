@@ -81,5 +81,6 @@ above its separate 256 MiB floor. Do not duplicate large inputs there.
 Privileged Ubuntu validation passes **1,631 unit tests without skips**, five
 shell suites, five SD assembly cases and Bash/TOML checks. These establish no
 physical boot, SSH, KVM, zero routine SD writes, SPI/recovery or endurance result.
-The [existing-install repair](installed-host-repair-20261107.md) and full release
-acceptance remain pending; published operator images and endpoints are unchanged.
+The [existing-install repair](installed-host-repair-results-20261108.md) now
+passes. The [VGIC SD trial](next-host-boot-20261108.md) and full release acceptance
+remain pending; this historical bootstrap is not the current operator image.

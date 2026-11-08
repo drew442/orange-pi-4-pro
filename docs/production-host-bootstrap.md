@@ -9,13 +9,13 @@ unchanged. The matching [full NVMe composition](production-nvme-composition.md)
 now passes software inspection; clean reconstruction repeats remain required.
 The [second matching bootstrap](production-host-bootstrap-repeat.md) now passes
 frozen construction and independent artifact review for the second state UUID
-`feaa…`; its full NVMe repeat is still pending.
+`feaa…`; its [full NVMe repeat](production-nvme-repeat.md) also passes.
 
 **Do not flash this component over the current host SD.** Its state UUID is
 `fc8bbef6-9385-4ddb-90ba-e41eaccc035b`; the installed NVMe state UUID is
-`00fd936c-49fb-4fea-87c8-928b9c1599e0`. These do not pair. The next operator action
-remains the [existing-install machine-id repair](installed-host-repair-20261107.md),
-using the existing installer RAM shell and the same deployed host SD.
+`00fd936c-49fb-4fea-87c8-928b9c1599e0`. These do not pair. The existing-install repair now passes. The next operator
+action is the [VGIC diagnostic SD trial](next-host-boot-20261108.md), matched to
+the installed state; retain the existing NVMe installation.
 
 ## Construction
 
