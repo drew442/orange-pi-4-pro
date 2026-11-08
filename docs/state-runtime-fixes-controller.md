@@ -110,3 +110,7 @@ or installation is part of these commands. Physical boot, automatic time,
 masked-unit behavior, full KVM guest acceptance, recovery and zero routine SD
 writes remain open gates; continue the separate reviewed VGIC SD trial on the
 existing installation.
+
+The [actual second construction and full readback](production-host-state-runtime-fixes.md)
+now pass, with the first failed reader attempt retained separately. Its source,
+UUID, exact commands and artifact acceptance limits are recorded there.

@@ -1,0 +1,416 @@
+{
+  "admin_public_key_fingerprints": [
+    "SHA256:WVU8wsBgfy5mGFNAZMdrvf+a3cTYo85B8llJlHIhUKA",
+    "SHA256:Dw9WPpqQ741skiDShdwAP3qXQtpgxgbUSlCp2hmod7k"
+  ],
+  "attempts": [
+    {
+      "construction_success": true,
+      "failure_record": {
+        "bytes": 1529,
+        "path": "docs/evidence/state-runtime-fixes-readback-failure-20261108.json",
+        "sha256": "2140716771d1137cf45c44dda9918979626cae9d99c598b65a648b6964b5286e"
+      },
+      "full_readback_success": false,
+      "source_revision": "6665d0f9535eab2dee80d6eb4111e05e0bd0085b",
+      "state_uuid": "a55f9ea1-d255-4556-b578-9aa9e9d72726",
+      "tag": "timesync-runtime-fixes-01"
+    },
+    {
+      "construction_success": true,
+      "full_readback_success": true,
+      "tag": "timesync-runtime-fixes-02"
+    }
+  ],
+  "boot_selection": {
+    "KERNEL_RELEASE": "6.6.98-a733-diag",
+    "ROOT_MARKER_SHA256": "e1cc0395cd97e222e7d8146c05fa703e3ae9373b34bf1e24fbfb91a7e63dfa61",
+    "ROOT_UUID": "a7330000-0000-4000-8000-00000000000a",
+    "SCHEMA": "1",
+    "SLOT": "A"
+  },
+  "builder": "drew@build.drewnet.online",
+  "classification": "Fresh matched personalized state; not installation ready",
+  "critical_metadata": {
+    "boot/selected.conf": {
+      "data": {
+        "bytes": 179,
+        "sha256": "bd27df59dbdb53680db09cf6f7cfd80ceb73aa89c7ade0a627fa76ff4aabd20a"
+      },
+      "gid": 0,
+      "mode": 384,
+      "mtime_ns": 1794102535676927634,
+      "type": "file",
+      "uid": 0,
+      "xattrs": {}
+    },
+    "config": {
+      "gid": 0,
+      "mode": 448,
+      "mtime_ns": 1794102535676927634,
+      "type": "dir",
+      "uid": 0,
+      "xattrs": {}
+    },
+    "config/management.json": {
+      "data": {
+        "bytes": 115,
+        "sha256": "02da91818fe26e2d7d6feb9e5bbb9b08c32faa855feb73c3872589cdb1eb2565"
+      },
+      "gid": 0,
+      "mode": 384,
+      "mtime_ns": 1794102535676927634,
+      "type": "file",
+      "uid": 0,
+      "xattrs": {}
+    },
+    "identity": {
+      "gid": 0,
+      "mode": 448,
+      "mtime_ns": 1794102535675927633,
+      "type": "dir",
+      "uid": 0,
+      "xattrs": {}
+    },
+    "identity/machine-id": {
+      "data": {
+        "bytes": 33,
+        "sha256": "27e9d2bf78a55ad7cbfc2dfce5511aebb7adcd44b24b474b5123c4ce41c39e2a"
+      },
+      "gid": 0,
+      "mode": 420,
+      "mtime_ns": 1794102535675927633,
+      "type": "file",
+      "uid": 0,
+      "xattrs": {}
+    },
+    "identity/ssh": {
+      "gid": 0,
+      "mode": 448,
+      "mtime_ns": 1794102535661927620,
+      "type": "dir",
+      "uid": 0,
+      "xattrs": {}
+    },
+    "root/.ssh": {
+      "gid": 0,
+      "mode": 448,
+      "mtime_ns": 1794102535676927634,
+      "type": "dir",
+      "uid": 0,
+      "xattrs": {}
+    },
+    "root/.ssh/authorized_keys": {
+      "data": {
+        "bytes": 634,
+        "sha256": "b7b77f991b1285ff1054fb32edd0b4e7416014c1ce3eaf32a81a365700df28c1"
+      },
+      "gid": 0,
+      "mode": 384,
+      "mtime_ns": 1794102535676927634,
+      "type": "file",
+      "uid": 0,
+      "xattrs": {}
+    },
+    "var/lib/systemd/timesync": {
+      "gid": 996,
+      "mode": 493,
+      "mtime_ns": 1794102535662927621,
+      "type": "dir",
+      "uid": 996,
+      "xattrs": {}
+    }
+  },
+  "date": "2026-11-08",
+  "deployment_authorized": false,
+  "evidence": [
+    {
+      "bytes": 166725,
+      "path": "out/state-runtime-fixes-20261108/plan-02.json",
+      "sha256": "5222f87f781cb88241c19eb4a434dfee45d48cb1e0a2c4e238654446aa1d22d2"
+    },
+    {
+      "bytes": 191,
+      "path": "out/state-runtime-fixes-20261108/preparation-02.json",
+      "sha256": "5e8eaca93e25fb2dc68c80e5674b4d9c730d35a600d914e738a7287da1e24270"
+    },
+    {
+      "bytes": 95,
+      "path": "out/state-runtime-fixes-20261108/readback-console-02.stderr",
+      "sha256": "5249fa4b649c39aada0d8a20e8f48ba838708ec17bf68bf613b4072f40124d31"
+    },
+    {
+      "bytes": 94,
+      "path": "out/state-runtime-fixes-20261108/board-poll.txt",
+      "sha256": "a9fb839104bfd6b0c6f2e8a3397fa67da082faef90315989c0c21b3e713002e6"
+    }
+  ],
+  "expected_tree": {
+    "character_devices": 0,
+    "expected": {
+      "bytes": 279128,
+      "sha256": "bd73ad6e725b662ac13019d3daa110c13b05da4b8b7a1373e28b2e95fb8a4a60"
+    },
+    "independent_image_readback": false,
+    "members": 1172,
+    "stability": {
+      "bytes": 98,
+      "sha256": "02bf7b7fc4e2c6cdc70cf05d24bd21f66d5d875d3e8114882d246f6c150a81a1"
+    }
+  },
+  "hardware_acceptance": false,
+  "identity_policy": "fresh per installation; never clone this image across hosts; fresh builds intentionally differ",
+  "independent_review": {
+    "bytes": 11775,
+    "findings": [],
+    "path": "out/state-runtime-fixes-20261108/independent-review-02.json",
+    "scope": "Source/capsule/payload authentication, full gzip/raw correspondence, staged delta and direct filesystem critical-path inspection; no hardware acceptance",
+    "sha256": "3e7cb0362b05640058221c4d704b571454c700c1c0fe7ec4f099959fe5917a92",
+    "verdict": "PASS"
+  },
+  "initial_budget": {
+    "capsule_bytes": 138093894,
+    "git_staging_bound_bytes": 137262673,
+    "required_free_bytes": 19107968964,
+    "selector_peak_bytes": 5368709120,
+    "state_recipe_bytes": 18832612397,
+    "unpacked_bytes": 440908294
+  },
+  "isolation": {
+    "host_inventory_unchanged": true,
+    "mapped_processes_final": [],
+    "phase_mounts_final": []
+  },
+  "limits": [
+    "Matched bootstrap and full NVMe composition still required before installation",
+    "Existing historical registrations unchanged; old and failed UUIDs not reused",
+    "No physical boot, time-service/unit-mask behavior, KVM guest completion, rollback/recovery or SD-write acceptance established",
+    "Personalization and filesystem construction metadata intentionally differ; never clone identity",
+    "First retained construction has failed readback and is not an accepted component"
+  ],
+  "management": {
+    "dhcp": true,
+    "hostname": "a733-host",
+    "management_cidr": "0.0.0.0/0",
+    "management_mac": "10:f4:ae:90:5e:57",
+    "schema": 1
+  },
+  "metadata_profile": "fakeroot-raw-xattrs-v1",
+  "native_retention": {
+    "all_nonraw_payloads_copied": true,
+    "compressed_stream_independently_expands_to_raw_pin": true,
+    "producer": "out/state-runtime-fixes-20261108/producer-02",
+    "raw_image_copied": false,
+    "readback": "out/state-runtime-fixes-20261108/readback-02"
+  },
+  "operator_guide": "docs/production-host-state-runtime-fixes.md",
+  "output": "work/project/out/host-state-timesync-runtime-fixes-02",
+  "parent_roots": {
+    "evidence": {
+      "bytes": 18102,
+      "path": "docs/evidence/production-host-roots-runtime-fixes-state-binding-20261108.json",
+      "sha256": "14371bdf3ee8b18c9f37be9203e09249dd388e8ac7354df221c9e3b49b3be5d2"
+    },
+    "readback_expected": {
+      "marker": {
+        "bytes": 16383,
+        "sha256": "e1cc0395cd97e222e7d8146c05fa703e3ae9373b34bf1e24fbfb91a7e63dfa61"
+      },
+      "proof": {
+        "bytes": 3744535,
+        "sha256": "7de1d0447615995ead4a3475b9193c09174a62e57afc252f290dc30b74452df0"
+      },
+      "scope": "bound parent expected tree previously checked by independent full root readback"
+    },
+    "receipt_sha256": "12a0bb104f29935f75be49e936d120e410a335ee032a3dd486e0f3cf112b6ba2"
+  },
+  "phase": "/var/lib/a733-clean-replay-20261106/host-state-timesync-runtime-fixes-02",
+  "physical_storage_written": false,
+  "producer_records": {
+    "receipt.json": {
+      "bytes": 177249,
+      "sha256": "a25aa352b42bc49c13218d61587ea68636e83d21b77a34af52c6fd68db12ae88"
+    },
+    "runtime.log": {
+      "bytes": 3480,
+      "sha256": "3071ef7979f20392b23af8dc2679a1564b560d3cdbf986be3bd925d3d0a33a56"
+    },
+    "source-manifest.json": {
+      "bytes": 144105,
+      "sha256": "6c876c99aaef5f746e19dc9131d6ebb9e2c92316af6df2c5cec43587d46796f8"
+    },
+    "staged.json": {
+      "bytes": 167109,
+      "sha256": "aa64b68803619cf8f267b59236cf517d56b587bf50cc3e6c676a1546d6a0160c"
+    }
+  },
+  "profile": "timesync-20261106",
+  "published_deployment_images_changed": false,
+  "readback": {
+    "artifact_files_authenticated": 38,
+    "controller": {
+      "bytes": 10520,
+      "sha256": "48e9052c599b4b40f542a3332e03b3745c50da4293a5cb56d1b4422300efb1ee"
+    },
+    "filesystem": {
+      "allowed_extra_empty_directory": "lost+found",
+      "character_devices": 0,
+      "expected": {
+        "bytes": 279128,
+        "sha256": "bd73ad6e725b662ac13019d3daa110c13b05da4b8b7a1373e28b2e95fb8a4a60"
+      },
+      "fast_symlinks": 3,
+      "filesystem_root_metadata": {
+        "gid": 0,
+        "mode": "0755",
+        "type": "directory",
+        "uid": 0
+      },
+      "full_namespace_metadata_content_readback": true,
+      "hardlink_groups": [],
+      "hardware_acceptance": false,
+      "image": {
+        "bytes": 8589934592,
+        "sha256": "de80b3a599f51b6fd71876511aa15474e9b27283e0c5bc32bae9afa1088c8ef2"
+      },
+      "image_mtime_policy": "source whole seconds; root from actual superblock s_mkfs_time",
+      "input_identity_unchanged": true,
+      "long_symlinks_dumped": 0,
+      "namespace_members": 1172,
+      "out_of_scope_metadata": [
+        "atime",
+        "ctime",
+        "crtime"
+      ],
+      "production_build_acceptance": false,
+      "raw_xattrs": 0,
+      "regular_bytes_read": 7337572,
+      "root_creation_time_seconds": 1794102536,
+      "root_metadata_policy": "mkfs root 0755 root:root; source/staging root 0700 root:root",
+      "source_fractional_mtime_members": 15,
+      "source_nanosecond_metadata_preserved": false,
+      "source_root_metadata": {
+        "gid": 0,
+        "mode": 448,
+        "uid": 0
+      },
+      "stability": {
+        "bytes": 98,
+        "sha256": "02bf7b7fc4e2c6cdc70cf05d24bd21f66d5d875d3e8114882d246f6c150a81a1"
+      },
+      "symlinks": 3,
+      "unique_regular_inodes": 1115
+    },
+    "input_identity_unchanged": true,
+    "output": "/var/lib/a733-host-state-runtime-fixes-readback-20261108-02",
+    "reader": {
+      "bytes": 33471,
+      "sha256": "80e843d499bcc2f6d299d6022dc7edf83d73842405e95b38b0f32eee72dcda30"
+    },
+    "receipt": {
+      "bytes": 207364,
+      "sha256": "44b956ecbe34cfdd15179b4fb6bac75737f022ff82abaaad39a2619fe67c287e"
+    },
+    "runtime_fixes_controller": {
+      "historical_template": {
+        "bytes": 25945,
+        "sha256": "f4375efa014dabac6e68d192ffa0627e8c0645a9b5b4675f8fd95b82504f70e6"
+      },
+      "registered_parent": "docs/evidence/production-host-roots-runtime-fixes-state-binding-20261108.json",
+      "registered_parent_canonical_sha256": "e4be6ff26a59d116056b3f5b777aea9c3b4668b3674861bb41b63b99f10e8db4",
+      "registered_parent_pin": {
+        "bytes": 18102,
+        "sha256": "14371bdf3ee8b18c9f37be9203e09249dd388e8ac7354df221c9e3b49b3be5d2"
+      }
+    }
+  },
+  "resources": {
+    "final": {
+      "available_memory_bytes": 7633661952,
+      "free_bytes": 19201351680,
+      "time": 1794102587.5368426
+    },
+    "minimum_available_memory_bytes": 7261958144,
+    "minimum_free_bytes": 18677731328
+  },
+  "runtime_fixes_controller": {
+    "historical_template": {
+      "bytes": 28805,
+      "sha256": "68bdbb52c81c41cf97e11b1298c3c04ff64bf4671574550dd4f7ffaad9f405e1"
+    },
+    "registered_parent": "docs/evidence/production-host-roots-runtime-fixes-state-binding-20261108.json",
+    "registered_parent_canonical_sha256": "e4be6ff26a59d116056b3f5b777aea9c3b4668b3674861bb41b63b99f10e8db4",
+    "registered_parent_pin": {
+      "bytes": 18102,
+      "sha256": "14371bdf3ee8b18c9f37be9203e09249dd388e8ac7354df221c9e3b49b3be5d2"
+    }
+  },
+  "schema": 1,
+  "semantic_comparison": {
+    "all_other_regular_contents_types_links_modes_ownership_and_attributes_identical": true,
+    "baseline": "docs/evidence/production-host-state-repeat-20261107.json",
+    "byte_identical_reproduction_expected": false,
+    "content_changes": [
+      ".a733-state",
+      "boot/selected.conf",
+      "identity/machine-id"
+    ],
+    "members": 1172,
+    "mtime_changed_members": 15,
+    "mtime_only_members": 12,
+    "namespaces_identical": true
+  },
+  "source_revision": "6dbf6d97568f2c6eeef3d0a326552358fe4b3d9a",
+  "state_bytes": 8589934592,
+  "state_compressed": {
+    "bytes": 10009284,
+    "sha256": "0941f53c1722158e8cd05677e68ccab74dcf0533740ecc5939eb79169e09f2a3"
+  },
+  "state_image": {
+    "bytes": 8589934592,
+    "sha256": "de80b3a599f51b6fd71876511aa15474e9b27283e0c5bc32bae9afa1088c8ef2"
+  },
+  "state_uuid": "360dfb39-f49f-487e-b307-0bb887c854c5",
+  "tracked_source_records": 684,
+  "validation": {
+    "assembly_cases": 5,
+    "committed_cli_plan": true,
+    "full_reader_terminal_exit_code": 0,
+    "log": {
+      "bytes": 6893,
+      "path": "out/state-runtime-fixes-20261108/full-tests-02.log",
+      "sha256": "520d4f16b15efc240e29846ada859e75c17fa688b5b3277ab16b786dd4d609af"
+    },
+    "privileged_ubuntu_unit_tests": 1724,
+    "producer_terminal_exit_code": 0,
+    "shell_suites": 5,
+    "skips": 0,
+    "source_review": {
+      "bytes": 6607,
+      "path": "out/state-runtime-fixes-20261108/source-review-02.json",
+      "sha256": "82469036cd0241867b5718f84588acd543e4b4159f2b183858e55eb7afb1e13d"
+    }
+  },
+  "verification": {
+    "boot_selection": {
+      "pin": {
+        "bytes": 179,
+        "sha256": "bd27df59dbdb53680db09cf6f7cfd80ceb73aa89c7ade0a627fa76ff4aabd20a"
+      },
+      "selector": {
+        "KERNEL_RELEASE": "6.6.98-a733-diag",
+        "ROOT_MARKER_SHA256": "e1cc0395cd97e222e7d8146c05fa703e3ae9373b34bf1e24fbfb91a7e63dfa61",
+        "ROOT_UUID": "a7330000-0000-4000-8000-00000000000a",
+        "SCHEMA": "1",
+        "SLOT": "A"
+      }
+    },
+    "files_verified": 38,
+    "full_filesystem_readback": false,
+    "image_allocated_bytes": 83042304,
+    "manifest": {
+      "bytes": 15468,
+      "sha256": "b8789e3da623866fa8a9d67cad75ef10a6143731ca7d882503e69d3ea67d5fac"
+    }
+  }
+}
