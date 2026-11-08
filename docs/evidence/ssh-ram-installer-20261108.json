@@ -1,0 +1,187 @@
+{
+  "date": "2026-11-08",
+  "classification": "PRIVATE same-board SSH RAM installer construction and software validation; UNBOOTED",
+  "result": "PASS",
+  "runtime_source_revision": "7f2fce8",
+  "sd_source_revision": "b9806c3",
+  "builder": "build.drewnet.online",
+  "runtime_directory": "/var/lib/a733-ssh-installer-project-20261108-03/project/out/ssh-installer-personalized-03",
+  "sd_directory": "/var/lib/a733-ssh-sd-project-20261108-01/project/out/ssh-installer-sd-personalized-01",
+  "runtime": {
+    "archive": {
+      "bytes": 28946324,
+      "sha256": "209257f1c240d6662831ce27f14e41947f859992d2ceffc11efd39b5bd94ea36"
+    },
+    "manifest": {
+      "bytes": 664617,
+      "sha256": "cc2f5f467d9dd1ab13fd7a1eaea21119dc29b171d8737b208e2d1f37528dc8a6"
+    },
+    "expanded_bytes": 85242500,
+    "entries": 2307,
+    "maintenance_entries": 40,
+    "review": {
+      "path": "tmp/ssh-runtime03-delta-review-20261108.json",
+      "bytes": 14313,
+      "sha256": "6c6b0acabd27c7ea5c6185e7a57049f960e0132f2873781d3d6431e4aa7f29e4"
+    }
+  },
+  "sd": {
+    "files": {
+      "uInitrd": {
+        "bytes": 28946388,
+        "sha256": "5cfeb750a3889196cefd11014dd9b85a9835ca8399c83fd783aa007caef68a5b"
+      },
+      "parent-bootstrap-manifest.json": {
+        "bytes": 17471,
+        "sha256": "47df42be022d9e378a034df25d31865a24337c9309b4e4fdc2710ea9c2462993"
+      },
+      "a733-ssh-installer.img": {
+        "bytes": 268435456,
+        "sha256": "d3a02224efdb2c2eeccc7115d84cd6c4b2d75c7d06580b8f7812d12a546bc3f6"
+      },
+      "ssh-runtime-manifest.json": {
+        "bytes": 664617,
+        "sha256": "cc2f5f467d9dd1ab13fd7a1eaea21119dc29b171d8737b208e2d1f37528dc8a6"
+      },
+      "assembly.log": {
+        "bytes": 4453,
+        "sha256": "471a3d31b2f66e339f3978aab38c2cb516b6cff6192021f7a6bfc171c5c6cacc"
+      },
+      "a733-ssh-installer.img.gz": {
+        "bytes": 41229263,
+        "sha256": "2f9cdd006e6d5c2c59e5ed1aba68f3ed7dd267a7f61b3672e590d926468c4eec"
+      }
+    },
+    "manifest": {
+      "bytes": 759823,
+      "sha256": "71ce47846a2f4c5e2b62b6bfdd76996ed5df5a6e3948e732b4555d5d9d3da8b4"
+    },
+    "review": {
+      "path": "tmp/ssh-ram-sd-artifact-review-20261108.json",
+      "bytes": 9261,
+      "sha256": "15c6b332ff3bac775080b46779c8271f48302a2ed9e77b1410a2bd142d1333ea"
+    },
+    "actual_sd_bytes": 1977614336,
+    "boot_profile": "experimental-el2-vgic-v1",
+    "root_selection": "RAM only; no NVMe UUID selected"
+  },
+  "arm_fixture": {
+    "result": {
+      "binfmt": {
+        "configured_interpreter": "/usr/bin/qemu-aarch64-static",
+        "interpreter": {
+          "bytes": 5628704,
+          "sha256": "92c4aeb8dd898de7152c184370ab22f09ae7c5b7279fd300081c76cee3f78a80"
+        },
+        "limit": "Kernel-held F interpreter descriptor is not independently inspectable.",
+        "registration": "enabled\ninterpreter /usr/libexec/qemu-binfmt/aarch64-binfmt-P\nflags: PF\noffset 0\nmagic 7f454c460201010000000000000000000200b700\nmask ffffffffffffff00fffffffffffffffffeffffff\n"
+      },
+      "checks": {
+        "command_uid": 0,
+        "forwarding_rejected": true,
+        "locked_root_PAM_session": true,
+        "password_only_rejected": true,
+        "pty": true,
+        "sshd_t_and_T": true,
+        "target_private_key_proof": "SHA256:Epfegy9GsJ6ng4/0EH3dZmir7beQj5uYTnIbE4JPfEI",
+        "wrong_key_rejected": true
+      },
+      "classification": "ARM64 binfmt SSH/PAM software fixture; no physical boot or KVM evidence",
+      "hardware_acceptance": false,
+      "native_client_files": {
+        "ssh": {
+          "bytes": 850984,
+          "sha256": "acfbdc053a41d23c7200a358873f5df6fe09ba5759155cd3ef6a00f0392cf193"
+        },
+        "ssh-keygen": {
+          "bytes": 457152,
+          "sha256": "03679e510f6a5cfd386cbb11cc52ca8899e968150af614487f66be446c28673a"
+        }
+      },
+      "native_client_package": [
+        "openssh-client",
+        "1:8.9p1-3ubuntu0.18",
+        "amd64"
+      ],
+      "schema": 1,
+      "source_archive": {
+        "bytes": 28946324,
+        "sha256": "209257f1c240d6662831ce27f14e41947f859992d2ceffc11efd39b5bd94ea36"
+      },
+      "source_manifest_sha256": "cc2f5f467d9dd1ab13fd7a1eaea21119dc29b171d8737b208e2d1f37528dc8a6",
+      "source_unchanged": true,
+      "status": "PASS",
+      "storage": {
+        "fstype": "ext4",
+        "maj:min": "252:0"
+      }
+    },
+    "record": {
+      "path": "out/ssh-ram-installer-20261108/arm-fixture-03-result.json",
+      "bytes": 1683,
+      "sha256": "941b5ba35c19a75c7d02879f8822a6a7affce6aab6c508be2fd46db35bf3f8f0"
+    },
+    "scope": "Actual ARM64 programs under binfmt in isolated Ubuntu PID/mount/network namespaces; disposable fixture key replaces only extracted-copy authorized_keys. Does not prove operator-key physical login or hardware boot."
+  },
+  "validation": {
+    "source_revision": "b9806c3",
+    "unit_tests": 1843,
+    "skips": 0,
+    "errors": 0,
+    "failures": 0,
+    "shell_suites": 5,
+    "diagnostic_assembly_cases": 5,
+    "bash_syntax": "PASS",
+    "toml": {
+      "result": "PASS",
+      "count": 5
+    },
+    "log": {
+      "path": "out/ssh-ram-installer-20261108/full-jammy-final-validation.log",
+      "bytes": 7816,
+      "sha256": "5e791253e1e446dbc3455cfffb76d5690a50c0e052d2e522fd89da336a0bb394"
+    }
+  },
+  "reviews": {
+    "runtime_source": {
+      "path": "tmp/ssh-ram-installer-review-20261108.json",
+      "bytes": 8579,
+      "sha256": "dc5ce1a51cd319484ab2ca707d86a521be5624fc708f39575072e076be583450"
+    },
+    "runtime01_artifact": {
+      "path": "tmp/ssh-ram-installer-artifact-review-20261108.json",
+      "bytes": 4066,
+      "sha256": "18f4e35b74e751cfe93fc499a19ba26b4e05f0b6787fe7940bcb468cf58e39a2"
+    },
+    "runtime_fixes": {
+      "path": "tmp/nvme-pam-runtime-fix-review-20261108.json",
+      "bytes": 7434,
+      "sha256": "80ac4e32c920fafb6da74493f82db81da2292be27516d964146b8b9bcc5c01a4"
+    },
+    "sd_source": {
+      "path": "tmp/ssh-ram-sd-source-review-20261108.json",
+      "bytes": 9857,
+      "sha256": "89d1846f2242205bbbe8a7304dd7db71b13d4404ffaf73d9da8814b042f26b7f"
+    }
+  },
+  "earlier_attempts": [
+    {
+      "runtime": "01",
+      "result": "Actual ARM key accepted, PAM account rejected; corrected to explicit staged module paths."
+    },
+    {
+      "runtime": "02",
+      "result": "Actual ARM root command passed; PTY allocated but exact output check rejected missing lastlog warning. Added empty RAM lastlog file."
+    },
+    {
+      "ci_source": "2cabea0",
+      "attempt": "01",
+      "result": "Eight Git-based fixture errors because transferred .git ownership differed from root source tree; fixed metadata and full attempt02 passes1831 cases. No source fix."
+    }
+  ],
+  "nonblocking_limit": "Successful PTY daemon log retains syslogin_perform_logout: logout() returned an error; cause not established. Client output is clean. RAM installer accounting is not release-host accounting proof.",
+  "private_artifacts": "Private host-key-bearing images/initrd remain only in root-private builder output and approved same-board RAM staging. No private artifact in Git or native image copy.",
+  "hardware_acceptance": false,
+  "physical_storage_written": false,
+  "next": "Reviewed known-target SD maintenance write, normal reboot and actual RAM/SSH/NVMe-idle proof; full corrected NVMe derivation remains running separately."
+}

@@ -44,6 +44,12 @@ independent deployment reproduction remain incomplete.
 - **Corrected VGIC bootstrap:** [Two constructions and independent artifact review](vgic-runtime-bootstrap.md) pass from `18af215`; raw/gzip/initramfs bytes match.
   The 256 MiB image fits the actual SD and selects corrected state `360d…`.
   It remains **UNBOOTED**; full NVMe BOOT derivation with the same DTB is next.
+- **Private SSH RAM installer:** [Construction, independent review and ARM
+  session tests](evidence/ssh-ram-installer-20261108.json) pass. The private
+  256 MiB SD candidate preserves firmware/kernel/VGIC and both authorized keys.
+  Actual RAM boot, operator-key login and idle-NVMe checks are next.
+  Full VGIC NVMe reconstruction is running after retaining empty `lost+found`;
+  the earlier refusal happened before any BOOT patch.
 - **SPI:** Original backup and a private candidate derived from it are reviewed;
   the XM25QU128C, JEDEC `204118`, 16 MiB backup is blank (`0xff`).
   The [fresh read-only live comparison](spi-live-plan-results-20261108.md)
@@ -108,9 +114,9 @@ count as physical acceptance.
   retires three superseded expanded cache files, keeping their verified encoded
   recovery copies and all current corrected inputs. Builder free at completion
   is **24,076,783,616 bytes**; recheck each new source/capsule budget.
-- Latest privileged Ubuntu suite: **1,824 tests**, no skips, errors or failures;
+- Latest privileged Ubuntu suite: **1,843 tests**, no skips, errors or failures;
   five shell suites and five diagnostic assembly cases pass. See the
-  [latest record](evidence/vgic-nvme-host-validation-20261108.json). These are host
+  [latest record](evidence/ssh-ram-installer-20261108.json). These are host
   checks only, not hardware acceptance.
 - Source/licensing work remains incomplete: licensing for 26 vendor boot inputs
   is unresolved; GCC and DejaGNU sources remain unacquired; notice presence does

@@ -10,6 +10,11 @@ The compatible firmware/kernel/DTB, 2 GB SD and nominal 250 GB NVMe requirements
 remain unchanged. This derivation does not establish boot, SSH, storage-idle,
 zero SD writes or actual KVM guest acceptance.
 
+[Actual construction and validation](evidence/ssh-ram-installer-20261108.json)
+now pass for runtime03, including independent artifact inspection and ARM
+SSH/PAM/PTY/rejection tests. The matched SD is also constructed and independently
+reviewed. Physical boot and operator-key login remain pending.
+
 ## Inputs and invocation
 
 Run as root in the prepared, pinned Ubuntu 22.04 builder checkout on known fixed
