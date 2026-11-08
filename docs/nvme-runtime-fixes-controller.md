@@ -124,12 +124,12 @@ Exact initial admission is **23,760,999,827 bytes**, including the unchanged
 construction until verified retention and a fresh resource check clear the
 whole budget. All records remain in `out/nvme-runtime-fixes-20261108`.
 
-A read-only capacity audit identifies the old seed's `rootfs/` as a possible
-4,161,245,184-byte leaf; its live source snapshot matches the frozen source
-manifest. Current builder-restoration correspondence under the correct
-namespace mapping still needs proof before retirement. Preserve the seed's
-probe, firmware mask and records and the active restored builder. Superseded
-first-generation raw roots also need encoded-copy verification and a concrete
-retention review. These are preparation candidates, not approved deletion
-results. Native storage needs its own retention plan before a future full-NVMe
-gzip copy; keep its 256 MiB floor. No storage was retired in this work.
+[Subsequent component retention](component-retention-20261108.md) now retires
+only two superseded raw roots after complete dual-host encoded verification,
+independent review and actual recovery rehearsal. Builder free becomes
+19,735,375,872 bytes, still below the recorded admission. Complete old-seed
+reconstruction and private retention pass, but its original rootfs remains
+present pending a separately reviewed retirement procedure. Preserve the seed's
+probe, firmware mask and records, active builder and corrected components. Native
+storage still needs its own retention plan before a full NVMe gzip copy; keep
+its 256 MiB floor. No new composition has been launched.

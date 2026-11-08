@@ -1,0 +1,291 @@
+{
+  "agent_routing": {
+    "cost_and_token_usage": "not exposed; unknown",
+    "fresh_focused_handoffs": true,
+    "implementation_requested": "gpt-6.1-sol / medium",
+    "independent_review_requested": "gpt-6.1-sol / high",
+    "integration_and_acceptance": "coordinator",
+    "maximum_active_children": 2,
+    "nested_delegation": false
+  },
+  "builder": "drew@build.drewnet.online",
+  "classification": "Verified redundant regular-file raw-root retirement and complete old-seed recovery preparation; no board storage or hardware acceptance",
+  "date": "2026-11-08",
+  "dpkg_audit_empty": true,
+  "first_roots": {
+    "allocated_bytes_released": 888848384,
+    "apply": {
+      "bytes": 356,
+      "path": "out/component-retention-20261108/retirement-apply.json",
+      "sha256": "413640ccc0202487754a66a5062cf17122a935190b440426c0e13de314b533e1"
+    },
+    "both_encoded_copies_and_complete_streams_verified": true,
+    "builder_proof": {
+      "bytes": 2300,
+      "path": "out/component-retention-20261108/first-roots-builder.json",
+      "sha256": "044f62df315d5252e18308e9b0457c395e255f24f1a9059a44832cb7de8f73ea"
+    },
+    "complete": {
+      "bytes": 346,
+      "path": "out/component-retention-20261108/retirement-complete.json",
+      "sha256": "466f04eafd1cb8b95a13cedaef2f1a4383d341a231e34eebb3eabe8a48fd2c51"
+    },
+    "consumed_phase": "/var/lib/a733-first-roots-retirement-20261108-01",
+    "controller": {
+      "bytes": 21069,
+      "path": "tmp/component-retention-20261108/retirement/retire-roots.py",
+      "sha256": "e146ae1daa46aa6b55d24dfe369c3c7e67dc4abf4082f97eb93dfdbb53170294"
+    },
+    "corrected_source_review": {
+      "bytes": 5068,
+      "path": "tmp/component-retention-20261108/retirement/review-attempt02.json",
+      "sha256": "f47c79f07ebc66db634c1e948effea42c5ccbd41722ae3f6ed80cd125dfe8b0a"
+    },
+    "dual_host_proof": {
+      "bytes": 1346,
+      "path": "out/component-retention-20261108/first-roots-dual-host-proof.json",
+      "sha256": "8f1cc0814c1f76cfd56b72912433380717600ade983796edb46cf48fc011d391"
+    },
+    "events": {
+      "bytes": 1858,
+      "path": "out/component-retention-20261108/retirement-events.jsonl",
+      "sha256": "e199f4610033df8ed061a4d4ddb3ba571a7181364875cee38f4b1738efc5b754"
+    },
+    "fixture_validation": {
+      "cases": 24,
+      "log": {
+        "bytes": 1909,
+        "path": "out/component-retention-20261108/retirement-jammy-fixtures.log",
+        "sha256": "c861f13c31e6d88cd938fba33325bc158d46a70ab8d380d9b0855b12a4a6d7fe"
+      },
+      "terminal_exit_code": 0,
+      "ubuntu_version": "22.04"
+    },
+    "initial_source_review": {
+      "bytes": 5608,
+      "path": "tmp/component-retention-20261108/retirement/review.json",
+      "sha256": "28d1ffaf3c1682fa4611ae89359ae2d99de870b824e3f385c6c53d743ceba94f"
+    },
+    "logical_raw_bytes": 8589934592,
+    "native_proof": {
+      "bytes": 1395,
+      "path": "out/component-retention-20261108/first-roots-native.json",
+      "sha256": "bbaa6034ae55256d1d91b49c9a7efc032998c7ae77b22218c5cc8537899ab868"
+    },
+    "original_evidence": {
+      "bytes": 23859,
+      "path": "docs/evidence/production-host-roots-20261107.json",
+      "sha256": "b0d1f628688ab0ce0ce43a70b32227a54ebe79aa519c3b3e3f9e404725ef2386"
+    },
+    "plan": {
+      "bytes": 2309,
+      "path": "out/component-retention-20261108/retirement-plan.json",
+      "sha256": "634ade1c29305ba9c39a4b1674cba00e36abc8f701d4a939689f4dc14e09b6e7"
+    },
+    "postchecks": {
+      "bytes": 721,
+      "path": "out/component-retention-20261108/retirement-postchecks.json",
+      "sha256": "5d601c97ceba4dfacc74ea405e61a6d456209271fdef48295746fdfa982a1ba4"
+    },
+    "prepared": {
+      "bytes": 2177,
+      "path": "out/component-retention-20261108/retirement-prepared.json",
+      "sha256": "4e09400f13c94b3a3d2c2998bb24d20a473063be6c1b2f214a58794c77510205"
+    },
+    "prepared_sha256": "4e09400f13c94b3a3d2c2998bb24d20a473063be6c1b2f214a58794c77510205",
+    "proof_reader": {
+      "bytes": 2624,
+      "path": "tmp/component-retention-20261108/verify-first-roots.py",
+      "sha256": "d4e535c53d82c5b60f70c915448b0220e07f085f2fb865ff9c35fe9f11f4c03d"
+    },
+    "recovery": {
+      "B_raw_file_reconstruction_performed": false,
+      "actual_A_allocated_bytes": 444665856,
+      "actual_A_raw_pin": {
+        "bytes": 4294967296,
+        "sha256": "4f9379aeca0044c6222fb4aa5b60dc65a32b744a4d9562061031a0b742e756d4"
+      },
+      "actual_fresh_path_A_rehearsal": {
+        "bytes": 979,
+        "path": "out/component-retention-20261108/root-restoration-rehearsal.json",
+        "sha256": "f4cbe2df9b5970fa2fc24f7842d4ee939c9c84ae0b4c59c820a1d07a5014dc3b"
+      },
+      "documentation": "docs/component-retention-20261108.md",
+      "existing_and_symlink_outputs_refused": true,
+      "gzip_paths_on_builder": [
+        "/var/lib/a733-clean-replay-20261106/host-roots-timesync-01/work/project/out/host-payload-timesync-01/root-A.ext4.gz",
+        "/var/lib/a733-clean-replay-20261106/host-roots-timesync-01/work/project/out/host-payload-timesync-01/root-B.ext4.gz"
+      ],
+      "native_directory": "out/host-roots-timesync-01-20261107/payload-compressed",
+      "new_rehearsal_removed": true,
+      "old_raw_paths_restored": false,
+      "restoration_review": {
+        "bytes": 3810,
+        "path": "tmp/component-retention-20261108/retirement/restoration-review.json",
+        "sha256": "463e3f5ddcb595a5f1c97b24416c6aad0144be7f2abe853065e2e2e9d41ac486"
+      },
+      "reviewed_document_snapshot": {
+        "bytes": 5679,
+        "path": "out/component-retention-20261108/component-retention-reviewed.md",
+        "sha256": "d2c92f1fa058c16c086af602b39c3c907830796a70d9c7f1abff70ba9bfd6ff5"
+      },
+      "reviewed_restoration_section_unchanged": true
+    },
+    "retired": [
+      "/var/lib/a733-clean-replay-20261106/host-roots-timesync-01/work/project/out/host-payload-timesync-01/root-A.ext4",
+      "/var/lib/a733-clean-replay-20261106/host-roots-timesync-01/work/project/out/host-payload-timesync-01/root-B.ext4"
+    ],
+    "tests": {
+      "bytes": 20331,
+      "path": "tmp/component-retention-20261108/retirement/test-retire-roots.py",
+      "sha256": "f79ba77af49c5d0ce0e276cd5f810616c44e5dda3821ba76d5587d86c34394ad"
+    }
+  },
+  "full_nvme_capacity_shortfall_at_postcheck_bytes": 4025623955,
+  "full_nvme_initial_budget_bytes": 23760999827,
+  "hardware_acceptance": false,
+  "host_packages_match_replay_lock": 842,
+  "mapped_processes": [],
+  "next_actions": [
+    "Prepare independently reviewed old-seed leaf retirement retaining probe, firmware mask, source records and active builder.",
+    "Recheck exact NVMe initial admission including new source/staging overhead before composition.",
+    "Prepare native capacity above its 256 MiB minimum before transferring a full NVMe gzip.",
+    "SD overwrite and reboot still require pending exact-target operator yes/no; guest and release hardware gates remain open."
+  ],
+  "no_board_storage_writes": true,
+  "no_sd_overwrite_approval_inferred": true,
+  "old_seed": {
+    "active_builder": "/var/lib/a733-frozen-builders/freeze-20261106-01/restored-rootfs",
+    "archive_method_B_executed": false,
+    "checks": {
+      "active_full_unchanged": true,
+      "active_mounts": true,
+      "complete_recovered_copy_equals_original_source": true,
+      "host_configuration": true,
+      "host_inventory": true,
+      "mapped_processes": true,
+      "new_rehearsal_removed": true,
+      "only_four_known_extra_copy_directories_removed": true,
+      "overlay_tar_compare_source": true,
+      "protected_root_identities": true,
+      "rehearsal_mounts": true,
+      "source_full_unchanged": true,
+      "source_mounts": true
+    },
+    "comparison_excludes": [
+      "atime",
+      "ctime",
+      "creation time"
+    ],
+    "complete_proof": {
+      "bytes": 1586,
+      "path": "tmp/seed-retention-proof-20261108/complete-recovery-summary.json",
+      "sha256": "f7e2886af29020c140d24bb6a169eed6a14a185fd9a93fa9ad167909840115d4"
+    },
+    "complete_proof_description": {
+      "bytes": 4811,
+      "path": "tmp/seed-retention-proof-20261108/complete-result.md",
+      "sha256": "f6d050485b40d53604eebcd59aaeff4b5aa0e937076f37776f2cf67f3c31cc9c"
+    },
+    "complete_reconstructed": {
+      "bytes": 26717831,
+      "entries": 91578,
+      "sha256": "223fa3df41df1ee5fe3b2b9b6dbd44028fd02dc20605868de7d92b3e06d95368"
+    },
+    "complete_reconstructed_copy_passed": true,
+    "complete_source": {
+      "bytes": 26717831,
+      "entries": 91578,
+      "sha256": "223fa3df41df1ee5fe3b2b9b6dbd44028fd02dc20605868de7d92b3e06d95368"
+    },
+    "exclusion_paths": 16,
+    "final_retention_check": {
+      "bytes": 520,
+      "path": "tmp/seed-retention-proof-20261108/final-retention-check.json",
+      "sha256": "47c7c1e9124c57542b243fb1265c3dd700c3bb5dab46c645b4868445412545af"
+    },
+    "independent_review": {
+      "bytes": 6270,
+      "path": "tmp/seed-retention-proof-20261108/independent-review.json",
+      "sha256": "341571ad6c79c887653430a2b0f8f54372e3a72a46ff992694609d464b0941c9"
+    },
+    "initial_exact_comparison_passed": false,
+    "initial_extra_paths": {
+      "bytes": 830,
+      "path": "tmp/seed-retention-proof-20261108/active-extra-paths.json",
+      "sha256": "1cacc4de72acfc94c140d41d9490882a1949685804d34351e7aa49295e01f16a"
+    },
+    "initial_failure": "var/lib directory mtime differs; four added empty directories were outside original source files.list",
+    "initial_manifest_difference": {
+      "bytes": 342,
+      "path": "tmp/seed-retention-proof-20261108/manifest-differences.json",
+      "sha256": "629ccfa647f42fe494b9966dbd1adffbc834d6879eacab54c48b0d3e06c846ba"
+    },
+    "initial_report": {
+      "bytes": 14776,
+      "path": "tmp/seed-retention-proof-20261108/report.json",
+      "sha256": "60ad3abf54bd0dd2ff91aadc86fefd3571a89223682ca4f63073f2c5c798964c"
+    },
+    "initial_selected_paths": 91562,
+    "initial_tmpfs_resource_summary": {
+      "bytes": 370,
+      "path": "tmp/seed-retention-proof-20261108/resource-summary.json",
+      "sha256": "5a836b3fb4822fe8faf33d0a3e181b2da954c9e1a757b7dc0d3876c901a04a9b"
+    },
+    "initial_tmpfs_stage_used_existing_OS_swap": true,
+    "native_retention": {
+      "bytes": 2779,
+      "path": "tmp/seed-retention-proof-20261108/native-retention-receipt.json",
+      "sha256": "741ff1386341926b452b78cc8870a4516dd156c4f76474c9046ed66f196ad32b"
+    },
+    "new_metadata_encoded_retention": {
+      "bytes": 2117,
+      "path": "tmp/seed-retention-proof-20261108/owned-metadata-compression-receipt.json",
+      "sha256": "a7ea63756dd7d59d3826a21bad5f8b50cd1f986f81252a991d4456e3106e92e9"
+    },
+    "no_private_contents_in_git": true,
+    "private_file_content_bytes": 4325,
+    "private_file_count": 6,
+    "private_overlay": {
+      "bytes": 40960,
+      "sha256": "663f71279228135a1c36ed21eaba89cf6be4d531f9ce7dd36acd9462865478a4"
+    },
+    "private_retention_directory_on_both_hosts": "/var/lib/a733-seed-retention-20261108",
+    "proof_script": {
+      "bytes": 12636,
+      "path": "tmp/seed-retention-proof-20261108/complete-recovery.py",
+      "sha256": "b86c5432d3991831cfcfb87776b92c93d793bbafc0ab0061b82731f2ebd3c5ee"
+    },
+    "resources": {
+      "final": {
+        "disk_free": 18778841088,
+        "mem_available": 7336747008,
+        "swap_used": 205750272,
+        "time": 1794106161.699846
+      },
+      "max_swap_used": 205750272,
+      "min_disk_free": 14618341376,
+      "min_mem_available": 7177080832,
+      "min_swap_used": 205750272,
+      "samples": 68
+    },
+    "retirement_implementation_reviewed": false,
+    "retirement_performed": false,
+    "review_verdicts": {
+      "archive_alternative_B": "DOCUMENTED, UNEXECUTED. Original namespace script/probe/files.list and compatible UID/ACL/capability translation remain dependencies.",
+      "dual_host_retained_correspondence": "PASS: directly read and internally verified native and builder retained metadata, overlay members, compression mappings, and script/recipe pins.",
+      "future_standalone_helper_source_review": "PASS for documented quiescent offline single-writer use; no blocking actionable defect found. Standalone full execution has not been demonstrated.",
+      "historical_complete_copy_proof": "PASS: actual newly reconstructed copy matched all 91578 source records; historical source/active postchecks passed and only new rehearsal was removed.",
+      "old_seed_retirement": "NOT AUTHORIZED OR REVIEWED: requires separate concrete target, guards and retirement implementation review."
+    },
+    "source_leaf": "/var/lib/a733-clean-builder/seed-probe-20261106-05/rootfs",
+    "standalone_full_restore_executed": false
+  },
+  "phase_mounts": [],
+  "resources_after_raw_retirement": {
+    "available_memory_bytes": 7676407808,
+    "free_bytes": 19735375872,
+    "time": 1794106889.4671326
+  },
+  "schema": 1
+}

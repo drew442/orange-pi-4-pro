@@ -111,3 +111,10 @@ change mtime to avoid within-tick filesystem timestamp assumptions. Runtime
 checks and pins are unchanged. Software tests and these component artifacts do
 not establish installed networking/time, KVM guest execution, SPI boot, zero
 routine SD writes, endurance, rollback/recovery or independent deployment.
+
+The [November 8 encoded retention](component-retention-20261108.md) now retires
+only this construction's two superseded builder raw images. Matching gzip files
+remain on both hosts, with complete expansion proofs, independent review and an
+actual fresh-path A recovery rehearsal. Restore a needed raw path using that
+guide before invoking a historical consumer. Original artifact evidence remains
+unchanged; current installed and corrected-generation images are separate.
