@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "date": "2026-11-08",
+  "classification": "Reviewed future-host packaging correction; production construction and physical boot pending",
+  "source_revision": "14e50d15463226fb75451b59a6fa8463fc705300",
+  "mask": {
+    "path": "/etc/systemd/system/systemd-machine-id-commit.service",
+    "type": "symlink",
+    "target": "/dev/null",
+    "mode": "0777"
+  },
+  "placement": "Packaged /etc overlay lowerdir, before switch_root/PID1; both root slots",
+  "identity_policy": "Persistent NVMe ext4 machine-id bind and 0644 permission preserved; vendor unit unchanged",
+  "profiles": "220- and 221-package host roots",
+  "focused_payload_tests": 27,
+  "full_ubuntu_validation": {
+    "tests": 1711,
+    "skips": 0,
+    "failures": 0,
+    "errors": 0,
+    "shell_suites": 5,
+    "assembly_cases": 5,
+    "bash_syntax_files": 12
+  },
+  "production_images_rebuilt": false,
+  "installed_host_modified": false,
+  "physical_unit_acceptance": false,
+  "review": {
+    "path": "tmp/host-repair-20261108/machine-id-mask-independent-review.json",
+    "bytes": 3396,
+    "sha256": "03d3a48983621869fc6303270667f4e028b5a8c14c0f406b331d4d6568c1e21e"
+  },
+  "evidence": [
+    {
+      "path": "out/host-repair-20261108/machine-id-mask-full-tests.log",
+      "bytes": 6880,
+      "sha256": "e874e6fb175a66b3e94e58083d7fefdfa4849adf2d4979f1021b06dbbd0b7077"
+    },
+    {
+      "path": "build/host-payload.py",
+      "bytes": 28046,
+      "sha256": "30c003e983b9123bae30c9c5cdd45cde4fab88ccd06179433171eaa8aa34ba32"
+    },
+    {
+      "path": "tests/test_host_payload.py",
+      "bytes": 28099,
+      "sha256": "0a19771320d0cfc20bb5e8d26eb69900e85424598327d7d7249aeb50edf797a5"
+    }
+  ]
+}

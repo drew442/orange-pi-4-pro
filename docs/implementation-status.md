@@ -36,8 +36,10 @@ available. No NVMe reinstall or SPI write is required.
 The captured board clock remains April 27. The original 220-package deployment
 has no NTP; separately prepared time-enabled userspace remains unbooted.
 The transient machine-id commit unit fails against the intentional persistent
-ext4 identity bind; suppress that inapplicable unit in a future image while
-preserving identity. No SPI programming has occurred.
+ext4 identity bind. The [future host recipe now masks that unit](evidence/machine-id-commit-mask-20261108.json)
+before PID 1 while preserving identity; new production roots and physical
+validation remain pending. The delivered VGIC SD retains the original host
+installation. No SPI programming has occurred.
 
 ## Fixed requirements and authorization
 
@@ -75,12 +77,12 @@ preserving identity. No SPI programming has occurred.
 | Production components | First [roots](production-host-roots.md), [state](production-host-state.md) and [bootstrap](production-host-bootstrap.md) pass construction/readback/review. [Second roots](production-host-roots-repeat.md), [state](production-host-state-repeat.md) and [bootstrap](production-host-bootstrap-repeat.md) also pass, with timestamp/identity differences documented. Second UUID `feaaee34-d782-4c18-bd04-1029540ab26a`; matching [full NVMe repeat](production-nvme-repeat.md) now passes construction and independent stream verification. |
 | Full NVMe candidate | [Complete composition](production-nvme-composition.md) passes BOOT/GUESTS readback, all parent root/state bytes and independent full gzip/raw/GPT verification. [545.6 MB gzip and derived manifest](nvme-candidate-retention.md) retained on codex; [encoded retention](nvme-raw-retention.md) retires only the generated raw file, preserving both gzip copies. [Second composition and retained gzip](production-nvme-repeat.md) also pass. Active endpoint unchanged; matched physical deployment remains open. |
 | NVMe-first firmware | [Compiled and exactly replayed U-Boot](uboot-nvme-candidate.md); [first SD transport](nvme-firmware-test-sd.md) and [second matching transport](nvme-repeat-firmware-sd.md) build and pass independent inspection. Each equals its matching bootstrap outside the boot package. Unbooted; paired with `fc8…` and `feaa…` respectively. Do not use with installed `00fd…` state. |
-| SPI preparation | [Read-only backup tool](spi-backup.md) and [file assembler](spi-file-candidate.md) pass tests/review; only synthetic baseline assemblies exist. Synthetic files must never be flashed. Actual backup/candidate/programmer/recovery remain open. |
+| SPI preparation | [Original physical SPI backup](spi-original-backup-20261108.md) is verified on codex and builder; all 16 MiB are `0xff`. The actual-backup-derived private candidate passes independent full-file/unit inspection. Programmer, independent recovery and physical SPI/NVMe boot remain open; no flash write occurred. |
 | ROM investigation | [Version-only host FEL probe](rom-recovery-investigation.md) now compiles in the frozen builder; source/archive/ELF/capsule review passes. No RAM/execute/flash command path. No actual USB response or independent ROM recovery demonstrated. |
 | Host operations | [Updates](host-updates.md), [selection](nvme-root-selection.md), [RAM recovery](host-recovery.md) and package-state isolation pass software/packaged checks. Physical interrupted update, rollback, dirty-journal and missing-NVMe recovery remain open. |
 | Guest operations | [KVM-only first guest](kvm-first-guest.md) now has [two authenticated preparation profiles](evidence/first-kvm-profiles-20261107.json): original installed state/39 tools or second-candidate state/40 tools. Management, networking, enrollment, checkpoints and off-device restore have software fixtures. [Physical GICv2/KVM diagnostics](first-kvm-results-20261108.md) pass CPU/disk only; networking and clean restart remain open. The VGIC test SD is built/reviewed, unbooted. |
 
-Latest privileged Ubuntu discovery: **1,708 tests, no skips/errors/failures**;
+Latest privileged Ubuntu discovery: **1,711 tests, no skips/errors/failures**;
 five shell suites, five diagnostic assembly cases and Bash/TOML checks pass.
 These results establish no physical boot, guest, SD-write or recovery acceptance.
 
@@ -132,19 +134,19 @@ redistribution clearance is claimed.
 ## Next actions and completion gates
 
 1. Boot the [VGIC diagnostic SD](next-host-boot-20261108.md), return its serial/capability checks and current DHCP address, then finish guest networking, guest-initiated shutdown/restart and counter progression over trusted SSH. The original first-guest sequence needs the documented controller/fixture corrections; do not run it unchanged.
-2. Package the reviewed account and ROM corrections and suppress the inapplicable machine-id commit unit in a future host; validate prepared automatic time on hardware.
+2. Construct fresh production roots with the reviewed account/ROM corrections and machine-id commit mask; validate prepared automatic time and masked-unit behavior on hardware.
 3. The [matched second-candidate procedure](deploy-candidate-20261107.md) and
    actual full-payload acquisition rehearsal pass independent review. The [dedicated LAN endpoint](candidate-delivery-20261107.md) now serves it on
    port 8444 with full builder acquisition/TLS proof and trusted CA instructions;
    original port 8443 remains unchanged. Independently reproduce deployment on
    hardware after the current management/KVM gates. The candidate/transport SD
    must not replace the current repair images alone.
-4. After management works, retain the [original SPI backup](spi-backup.md)
-   off-device and demonstrate independent recovery. The manual's ADB/button
+4. The [original SPI backup and private candidate](spi-original-backup-20261108.md)
+   are retained and independently checked. Demonstrate independent recovery. The manual's ADB/button
    descriptions and FEL version identification alone do not prove this. Capture
    U-Boot NVMe file reads; later test the matched NVMe-first transport/default and
-   manual SD fallback. Independently inspect the actual SPI candidate before
-   exact-target yes/no programming confirmation.
+   manual SD fallback. Review the eventual programmer, rollback and matched NVMe
+   BOOT files before exact-target yes/no programming confirmation.
 5. Prove automatic time/state transitions, 10 cold/10 warm boots, 24-hour CPU/
    disk/network/thermal workload, SD-removed SPI boot or zero routine fallback SD
    writes (full-card hashes, Linux counters and firmware audit), interrupted

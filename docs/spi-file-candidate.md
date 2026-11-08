@@ -3,7 +3,7 @@
 The SPI candidate assembler works on regular files on the provisioning host. It
 will not open an MTD device or erase/program flash. The production candidate
 requires the original flash backup from [the read-only backup procedure](spi-backup.md).
-That physical backup and demonstrated recovery are still pending. Synthetic
+The [actual backup is retained and a private candidate is assembled](spi-original-backup-20261108.md); demonstrated recovery is still pending. Synthetic
 fixtures exercise the assembler; they must never be used as board firmware.
 
 The component source is the separately built and [registered, reproduced NVMe
@@ -73,16 +73,16 @@ sudo python3 -I -B \
 
 The existing fixture output is retained, so this exact output name now refuses
 reuse. These are development fixture records, not instructions to prepare the
-board. A production invocation cannot be completed until
-the physical backup is retained and verified off-device. Keep that original
+board. The actual-backup invocation is now recorded in the linked result; the command
+above remains the historical synthetic fixture example. Keep the original
 backup and manifest immutable, alongside the candidate and source provenance.
 
 ## Remaining physical gates
 
-Apply the [installed management repair](installed-host-repair-20261107.md) first.
-Then verify both SSH keys, retain the original SPI backup off-device, demonstrate
-the recovery route, and capture the [U-Boot NVMe read test](spi-boot-investigation.md#resolved-source-policy-and-remaining-candidate-work).
-Inspect the actual backup-derived candidate independently before presenting the
+Installed management and original SPI retention now pass. Demonstrate
+the recovery route and capture the [U-Boot NVMe read test](spi-boot-investigation.md#resolved-source-policy-and-remaining-candidate-work).
+The current backup-derived candidate passes independent inspection. Review the
+actual programmer, rollback and matched NVMe boot files before presenting the
 exact physical target and proposed write for a simple yes/no confirmation.
 No physical SPI write is authorized by a successful assembly or its tests.
 

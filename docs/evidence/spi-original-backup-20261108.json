@@ -1,0 +1,172 @@
+{
+  "schema": 1,
+  "date": "2026-11-08",
+  "classification": "Physical original SPI read and verified off-device retention; private regular-file candidate only",
+  "source_revision": "14e50d15463226fb75451b59a6fa8463fc705300",
+  "host_boot_id": "94851e72-e3b9-4824-88c6-fb82ad7fb610",
+  "device": {
+    "dev": "90:0",
+    "device": "/dev/mtd0",
+    "ioctl": {
+      "erasesize": 65536,
+      "flags": 3072,
+      "oobsize": 0,
+      "size": 16777216,
+      "type": 3,
+      "writesize": 1
+    },
+    "jedec_id": "204118",
+    "partname": "XM25QU128C",
+    "proc_mtd": "dev:    size   erasesize  name\nmtd0: 01000000 00010000 \"spi0.0\"\n",
+    "spi": "/sys/devices/platform/soc@3000000/2540000.spi/spi_master/spi0/spi0.0",
+    "sysfs": "/sys/devices/platform/soc@3000000/2540000.spi/spi_master/spi0/spi0.0/mtd/mtd0",
+    "sysfs_geometry": {
+      "erasesize": "65536",
+      "name": "spi0.0",
+      "size": "16777216",
+      "type": "nor",
+      "writesize": "1"
+    }
+  },
+  "original": {
+    "path": "out/spi-backup-20261108-01/spi.bin",
+    "bytes": 16777216,
+    "sha256": "dffab0dd410657cb30c7b2fd7f2586a4792e8472e58882b3532581f8111a646d"
+  },
+  "source_reads": 2,
+  "all_original_bytes_ff": true,
+  "retention": {
+    "native_path": "/home/drew/orange-pi-4-pro/out/spi-backup-20261108-01",
+    "builder_path": "/var/lib/a733-spi-backup-20261108-01",
+    "verified_both_hosts": true,
+    "original_manifest_unchanged": true
+  },
+  "candidate": {
+    "path": "out/spi-nvme-original-20261108/a733-spi-nvme.bin",
+    "bytes": 16777216,
+    "sha256": "83edcd7f448e8353163666016a6bae3e9b70d041a5e4d8454f48931839205e90"
+  },
+  "candidate_manifest": {
+    "path": "out/spi-nvme-original-20261108/manifest.json",
+    "bytes": 77287,
+    "sha256": "d1444bb4f0c16d9495e125d3db4b7e7e130af294106f356c850d0e0b8fb31ff0"
+  },
+  "replacement_ranges": [
+    [
+      0,
+      237568
+    ],
+    [
+      262144,
+      1654784
+    ]
+  ],
+  "preserved_ranges": [
+    [
+      237568,
+      262144
+    ],
+    [
+      1654784,
+      16777216
+    ]
+  ],
+  "changed_erase_units": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25
+  ],
+  "erase_units_checked": 256,
+  "physical_flash_writes": false,
+  "recovery_proven": false,
+  "deployment_authorized": false,
+  "hardware_spi_nvme_boot": false,
+  "review": {
+    "path": "tmp/host-repair-20261108/spi-original-artifact-review.json",
+    "bytes": 8887,
+    "sha256": "8d02dec62377bde72d8777ad3d8cc5a7acbec8840f0978ba5a875940c9d1b77a"
+  },
+  "evidence": [
+    {
+      "path": "out/spi-backup-20261108-01/plan-console.txt",
+      "bytes": 880,
+      "sha256": "7b897db8999e0835a99ac7d8d5933d6080669ae096026834ce4dd0b1a1477f2c"
+    },
+    {
+      "path": "out/spi-backup-20261108-01/backup-console.txt",
+      "bytes": 2017,
+      "sha256": "30a1c4c3d6dd9a5ccc30741a23486bcf19a04be1c18cee828872888f68a71351"
+    },
+    {
+      "path": "out/spi-backup-20261108-01/manifest.json",
+      "bytes": 947,
+      "sha256": "abd61a40a8313922676dec1c200af8d692131cb9aebd42f3817c73abf8638680"
+    },
+    {
+      "path": "out/spi-backup-20261108-01/native-retention.json",
+      "bytes": 238,
+      "sha256": "2acb7edecf550c8cce81bcc8743e710f4d35a5b5add609d506fbbb0cfe44b69f"
+    },
+    {
+      "path": "out/spi-backup-20261108-01/builder-retention.json",
+      "bytes": 301,
+      "sha256": "5bf7cdc68e60aa19c04f3af943ae92bd9c522edbe43fd381c62d216a2dc3296a"
+    },
+    {
+      "path": "out/spi-backup-20261108-01/candidate-plan.json",
+      "bytes": 77292,
+      "sha256": "162c78263fa035376fb31f4c4203a697dda184ecdded99b54a79a35ff528964a"
+    },
+    {
+      "path": "out/spi-backup-20261108-01/candidate-result.json",
+      "bytes": 77287,
+      "sha256": "d1444bb4f0c16d9495e125d3db4b7e7e130af294106f356c850d0e0b8fb31ff0"
+    },
+    {
+      "path": "out/spi-backup-20261108-01/candidate-build.stderr",
+      "bytes": 170,
+      "sha256": "581502325e85fe7d6f1f4c53470ddd2be644fb00fc067755698e436cc14cb397"
+    },
+    {
+      "path": "scripts/backup-spi.py",
+      "bytes": 10111,
+      "sha256": "b160e3fe8e421e18e35aad34aff909e10b4dfca027178d80a4b202c711e2147d"
+    },
+    {
+      "path": "build/assemble-spi-nvme.py",
+      "bytes": 15643,
+      "sha256": "28b9feff0e6dad435390212a992eb1cd89a3d373cce044c3f1e5dd4d44f300b7"
+    }
+  ],
+  "remaining": [
+    "VGIC SD boot and full guest validation",
+    "Matched corrected Linux DT/kernel/initramfs in NVMe BOOT",
+    "Recovery independent of programmed SPI bootloader",
+    "U-Boot NVMe file loads and NVMe-first physical trial",
+    "Independently reviewed programmer/rollback; exact-live-target yes/no authorization",
+    "SD-removed SPI boot and full release acceptance"
+  ]
+}

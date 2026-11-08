@@ -11,6 +11,13 @@ clean shutdown and restart have not passed. The sequence below retains its
 original authenticated profiles and old fixture hashes as a preparation
 reference, pending integration of those corrections into an executable guide.
 
+The guest partition is now populated with disposable diagnostic fixtures and
+its original evidence directory already exists. Do not remove either to force
+the pristine sequence below to run. The original full-NVMe recovery bundle
+predates these guest writes; a repeated activation must account for the current
+contents and retained recovery evidence. A fresh reviewed run profile and the
+corrected fixture are required after the next host boot.
+
 The current operator action is the [VGIC diagnostic SD boot](next-host-boot-20261108.md),
 with the existing NVMe installation and repaired identity. The coordinator will
 use trusted SSH for the corrected guest sequence after reviewing that boot.
