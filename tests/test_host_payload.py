@@ -48,6 +48,50 @@ def modules(extra=None):
 
 
 class ArchiveTests(unittest.TestCase):
+    def test_machine_id_commit_mask_preserves_vendor_unit_and_identity(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            vendor = root / 'usr/lib/systemd/system/systemd-machine-id-commit.service'
+            vendor.parent.mkdir(parents=True)
+            vendor.write_bytes(b'[Service]\nExecStart=/lib/systemd/systemd-machine-id-setup --commit\n')
+            identity = root / 'etc/machine-id'
+            identity.parent.mkdir()
+            identity.write_bytes(b'0123456789abcdef0123456789abcdef\n')
+            identity.chmod(0o644)
+            originals = {path: (path.read_bytes(), path.stat()) for path in (vendor, identity)}
+            records = payload.install_machine_id_commit_mask(root)
+            relative = 'etc/systemd/system/systemd-machine-id-commit.service'
+            mask = root / relative
+            self.assertTrue(stat.S_ISLNK(mask.lstat().st_mode))
+            self.assertEqual(os.readlink(mask), '/dev/null')
+            self.assertEqual(records, {relative: {'type': 'symlink', 'target': '/dev/null', 'mode': 0o777}})
+            self.assertEqual(list((root / 'etc/systemd/system').iterdir()), [mask])
+            for path, (data, original) in originals.items():
+                self.assertEqual(path.read_bytes(), data)
+                self.assertEqual(path.stat(), original)
+            self.assertEqual(identity.stat().st_mode & 0o777, 0o644)
+            with self.assertRaisesRegex(ValueError, 'already exists'):
+                payload.install_machine_id_commit_mask(root)
+
+    def test_machine_id_commit_mask_refuses_existing_destination_and_unsafe_ancestors(self):
+        relative = 'etc/systemd/system/systemd-machine-id-commit.service'
+        for kind in ('file', 'directory', 'symlink', 'ancestor'):
+            with self.subTest(kind=kind), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                target = root / relative
+                if kind == 'ancestor':
+                    (root / 'etc').symlink_to('/etc')
+                else:
+                    target.parent.mkdir(parents=True)
+                    if kind == 'file':
+                        target.write_text('keep')
+                    elif kind == 'directory':
+                        target.mkdir()
+                    else:
+                        target.symlink_to('/dev/null')
+                with self.assertRaises(ValueError):
+                    payload.install_machine_id_commit_mask(root)
+
     def test_maintenance_tree_is_complete_read_only_and_matches_portable_package(self):
         entries = payload.maintenance_entries()
         with tempfile.TemporaryDirectory() as temporary:
@@ -331,6 +375,9 @@ class UserspaceProfiles(unittest.TestCase):
                 markers = []
                 def image(root, destination, slot):
                     markers.append(json.loads((root / 'usr/lib/orangepi-hypervisor/payload.json').read_text()))
+                    mask = root / 'etc/systemd/system/systemd-machine-id-commit.service'
+                    self.assertTrue(mask.is_symlink())
+                    self.assertEqual(os.readlink(mask), '/dev/null')
                     destination.write_bytes(b'image')
                 patches = {'userspace_binding': mock.Mock(return_value=selected),
                     'validate_metadata_profile': mock.Mock(return_value=backend),
@@ -366,6 +413,10 @@ class UserspaceProfiles(unittest.TestCase):
                 else:
                     self.assertEqual(manifest['sources']['userspace_profile'], binding)
                 self.assertEqual([marker['sources'] for marker in markers], [manifest['sources']] * 2)
+                self.assertEqual(manifest['systemd_masks'], {
+                    'etc/systemd/system/systemd-machine-id-commit.service': {
+                        'type': 'symlink', 'target': '/dev/null', 'mode': 0o777}})
+                self.assertEqual([marker['systemd_masks'] for marker in markers], [manifest['systemd_masks']] * 2)
                 if userspace_profile == 'timesync-20261106':
                     self.assertEqual(manifest['management_runtime']['profile'], 'a733-management-v2-timesync')
                     self.assertIn('timesync_state', manifest['sources'])
@@ -381,6 +432,27 @@ class UserspaceProfiles(unittest.TestCase):
 
 @unittest.skipUnless(all(shutil.which(tool) for tool in ('mke2fs', 'tune2fs', 'e2fsck', 'debugfs')), 'e2fsprogs required')
 class FilesystemTests(unittest.TestCase):
+    def test_machine_id_commit_mask_survives_compressed_root_image(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            root = base / 'root'
+            root.mkdir()
+            payload.install_machine_id_commit_mask(root)
+            image = base / 'root-A.ext4'
+            payload.make_image(root, image, 'A', size=32 * 1024**2)
+            archive = base / 'root-A.ext4.gz'
+            with image.open('rb') as source, gzip.open(archive, 'wb') as target:
+                shutil.copyfileobj(source, target)
+            image.unlink()
+            with gzip.open(archive, 'rb') as source, image.open('xb') as target:
+                shutil.copyfileobj(source, target)
+            info = subprocess.check_output(['debugfs', '-R',
+                'stat /etc/systemd/system/systemd-machine-id-commit.service', str(image)],
+                stderr=subprocess.DEVNULL)
+            self.assertIn(b'Type: symlink', info)
+            self.assertRegex(info, rb'Mode:\s+0777')
+            self.assertIn(b'Fast link dest: "/dev/null"', info)
+
     def test_ext4_readonly_without_journal_uuid_and_content(self):
         with tempfile.TemporaryDirectory() as directory:
             base = Path(directory)

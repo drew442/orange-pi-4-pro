@@ -312,6 +312,25 @@ def install_management(root):
     return {'profile': 'a733-management-v1', 'files': records}
 
 
+def install_machine_id_commit_mask(root):
+    """Suppress transient-ID commit before PID 1 sees the persistent state bind."""
+    relative = 'etc/systemd/system/systemd-machine-id-commit.service'
+    parent = root
+    for part in PurePosixPath(relative).parts[:-1]:
+        parent = parent / part
+        if parent.is_symlink() or (parent.exists() and not parent.is_dir()):
+            raise ValueError('unsafe machine-id commit mask ancestor')
+    target = root / relative
+    if target.exists() or target.is_symlink():
+        raise ValueError('machine-id commit mask destination already exists')
+    target.parent.mkdir(parents=True, exist_ok=True)
+    # host-init overlays this packaged /etc before switch_root. Its guarded
+    # ext4 identity bind is already persistent, unlike systemd's transient ID.
+    target.symlink_to('/dev/null')
+    return {relative: {'type': 'symlink', 'target': os.readlink(target),
+                       'mode': stat.S_IMODE(target.lstat().st_mode)}}
+
+
 def maintenance_entries():
     # Build-time only: runtime imports of this module must not import the
     # packager, which itself records this source in its closed runtime set.
@@ -502,6 +521,7 @@ def build(rootfs, diagnostic, output, metadata_profile='native', userspace_profi
                 raise ValueError('metadata helper changed during build')
         cache_pruning = PACKAGE.prune_caches(root)
         module_bom = import_modules(root, modules)
+        systemd_masks = install_machine_id_commit_mask(root)
         management = install_management(root)
         if clock_policy is not None:
             # Legacy update tools require v1 and must reject time-enabled roots.
@@ -529,6 +549,7 @@ def build(rootfs, diagnostic, output, metadata_profile='native', userspace_profi
                 'filesystem_uuid': SLOT_UUIDS[slot], 'kernel_release': KERNEL_RELEASE,
                 'sources': sources, 'modules_bom': file_record(output / 'modules.json'),
                 'management_runtime': management, 'maintenance_runtime': maintenance,
+                'systemd_masks': systemd_masks,
                 'package_state': package_state,
                 'cache_pruning': cache_pruning})
             image = output / f'root-{slot}.ext4'
@@ -543,6 +564,7 @@ def build(rootfs, diagnostic, output, metadata_profile='native', userspace_profi
         'kernel_release': KERNEL_RELEASE, 'slot_bytes': SLOT_BYTES,
         'slot_uuids': SLOT_UUIDS, 'sources': sources, 'files': files,
         'management_runtime': management, 'maintenance_runtime': maintenance,
+        'systemd_masks': systemd_masks,
         'package_state': package_state,
         'cache_pruning': cache_pruning,
         **({'metadata_extraction': metadata_extraction} if backend is not None else {}),
