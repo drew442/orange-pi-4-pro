@@ -1,5 +1,10 @@
 # Installer preparation environment
 
+**Historical procedure:** use the [current image map](current-images.md) for the
+corrected `360d…` installation and same-board SSH RAM recovery. The earlier
+`00fd…` host bootstraps below do not select the current NVMe state. Capture the
+requested serial diagnostics before changing media.
+
 The [EL2 diagnostic](el2-diagnostic.md) has physically initialized KVM. The
 [next preparation image](#next-physical-boot) includes the module-helper fix and
 retains the proven EL2 boot package. The [physical preparation boot](evidence/installer-prep-physical-20261106.json)

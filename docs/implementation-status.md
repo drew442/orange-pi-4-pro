@@ -53,7 +53,9 @@ independent deployment reproduction remain incomplete.
   Last valid guest sample is elapsed 357 seconds/cycle 12; temperatures were below
   29 °C, available memory 11,589,748 KiB, NVMe kernel errors absent and SD writes
   zero. Root cause and subsequent guest/load state are unknown; serial output is
-  requested. Its initial 86-second telemetry gap is also recorded.
+  requested. Its initial 86-second telemetry gap is also recorded. The
+  [read-only offline journal exporter](offline-host-journal.md) passes independent
+  review; actual recovery export is unperformed. See the [current image map](current-images.md).
 - **Corrected candidate:** Runtime-fixed roots, matched state and bootstrap
   passed construction, readback/inspection and independent artifact review;
   the corrected VGIC chain now physically boots. The matched full-NVMe producer (source `6c34629`, tag
@@ -147,9 +149,9 @@ count as physical acceptance.
   preserves a verified 893 MB generated archive on builder and releases native
   capacity for current images. Native free at completion was 1,165,426,688 bytes;
   remeasure above its unchanged 256 MiB floor. Restoration is unperformed.
-- Latest privileged Ubuntu suite: **1,928 tests**, no skips, errors or failures;
+- Latest privileged Ubuntu suite: **1,941 tests**, no skips, errors or failures;
   five shell suites and five diagnostic assembly cases pass. See the
-  [latest record](evidence/endurance-validation-20261108.json). Jammy lacks `tomllib`;
+  [latest record](evidence/offline-journal-preparation-20261108.json). Jammy lacks `tomllib`;
   all five TOML files passed the separate native parser. These are host
   checks only, not hardware acceptance.
 - Source/licensing work remains incomplete: licensing for 26 vendor boot inputs

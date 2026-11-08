@@ -1,11 +1,22 @@
 # Orange Pi 4 Pro hypervisor
 
-Build a minimal KVM/QEMU host for an A733 Orange Pi 4 Pro with a 2 GB SD card and a nominal 250 GB NVMe drive.
+A minimal Linux KVM/QEMU host for the **Orange Pi 4 Pro A733**, using the actual
+2 GB SD card and nominal 250 GB NVMe. Prefer SPI-to-NVMe boot; the fallback uses
+immutable SD boot files with zero routine SD writes.
 
-Start with [implementation status](docs/implementation-status.md), then the [build and deployment plan](docs/hypervisor-plan.md). Diagnostic recipes, host tests and a read-only NVMe layout planner are implemented. Host preparation also includes [A/B root payloads](docs/host-payload.md), a [root/state handoff](docs/host-handoff.md), [per-installation state](docs/host-state.md), a [complete SD host bootstrap](docs/host-sd-bootstrap.md), [management preparation](docs/host-management.md), [NVMe disk preparation](docs/nvme-provisioning.md), [installer preparation](docs/installer-preparation.md), the [guarded full-disk writer](docs/nvme-installation.md) and a [KVM guest fixture](docs/guest-fixture.md). These have not been installed or passed hardware acceptance.
+Start with [implementation status](docs/implementation-status.md) and the
+[current images](docs/current-images.md). The corrected installation has booted,
+synchronized time and run a real KVM guest through restoration, clean shutdown,
+checkpoint and restart. The 60-second endurance smoke passed; the 24-hour attempt
+lost SSH management and awaits serial diagnosis. **Release acceptance is incomplete.**
 
-Preferred outcome: Linux KVM with QEMU, a minimal host on NVMe, and SPI boot where validated. A read-only SD bootstrap is the fallback. Hardware acceleration and boot compatibility must be proven before release.
+The [build/deployment plan](docs/hypervisor-plan.md),
+[Ubuntu build-host assessment](docs/build-host-assessment.md),
+[serial guide](docs/diagnostic-image.md) and
+[hardware acceptance record](docs/hardware-validation.md) define the work and
+remaining physical gates. Build recipes and guarded installation, guest,
+update/rollback and recovery tools live under `build/`, `scripts/` and `docs/`.
+Generated images, downloaded sources, private keys and raw logs stay outside Git.
 
-The [agent routing policy](docs/agent-routing.md) and project `.codex/` configuration define model tiers, context budgets, review gates, and cost calibration for implementation work.
-
-See the [diagnostic image and serial guide](docs/diagnostic-image.md), [build host assessment](docs/build-host-assessment.md) and [hardware acceptance record](docs/hardware-validation.md). The first image must fit the available 2 GB SD card; live hardware inventory follows its first boot.
+The [agent routing policy](docs/agent-routing.md) and `.codex/` configuration define
+model tiers, focused handoffs and independent review requirements.

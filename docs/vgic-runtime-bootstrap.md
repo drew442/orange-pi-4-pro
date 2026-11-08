@@ -1,5 +1,10 @@
 # VGIC derivation for the corrected bootstrap
 
+The [corrected host boot](evidence/corrected-host-boot-20261108.json) and
+[restored KVM guest](evidence/corrected-host-guest-restore-20261108.json) now pass.
+The construction-time UNBOOTED classification below is superseded by those
+physical records; [full acceptance remains open](endurance-run-20261108.md).
+
 `build/vgic-runtime-bootstrap.py` derives a regular-file 256 MiB bootstrap for
 corrected state **360dfb39-f49f-487e-b307-0bb887c854c5**, using explicit new
 profile **experimental-el2-vgic-v1**. The sole DT semantic change adds

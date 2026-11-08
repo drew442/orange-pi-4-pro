@@ -1,5 +1,10 @@
 # Completed physical boot: VGIC diagnostic SD
 
+**Historical procedure:** use the [current image map](current-images.md) for the
+corrected `360d…` installation and same-board SSH RAM recovery. The earlier
+`00fd…` host bootstraps below do not select the current NVMe state. Capture the
+requested serial diagnostics before changing media.
+
 This historical diagnostic step is complete. The board now runs the
 [private SSH RAM installer](ssh-installer-remote-boot-20261108.md) at
 192.168.1.115. Keep the image below only as recovery for the original `00fd…`

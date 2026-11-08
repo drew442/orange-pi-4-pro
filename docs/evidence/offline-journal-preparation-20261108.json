@@ -1,0 +1,260 @@
+{
+  "schema": 1,
+  "date": "2026-11-08",
+  "scope": "Read-only recovery export and current SD flashing documentation preparation",
+  "reviews": [
+    {
+      "path": "tmp/offline-journal-export-review-20261108.json",
+      "bytes": 6405,
+      "sha256": "ad6af48b424b69500226686d40ccfd8f44823fbf0402e30f6b19f49538355ea2",
+      "record": {
+        "checks": {
+          "delta_independent_host_probes": [
+            "MAX_DEPTH=0 refuses depth-1 child before child scandir: pass; only root scanner invoked.",
+            "Real machine-directory + journal-file fixture succeeds with MAX_ENTRIES=2: pass.",
+            "Same real fixture refuses with MAX_ENTRIES=1: pass."
+          ],
+          "existing_suite": {
+            "command": "python3 -m unittest discover -s tests -p 'test_known_host_journal_export.py' -v",
+            "result": "pass",
+            "tests": 13
+          },
+          "independent_host_probes": [
+            "Journal ancestor symlink refused before traversal: pass.",
+            "Read-write mount refused: pass.",
+            "Missing noload/norecovery refused: pass.",
+            "Missing noexec refused: pass.",
+            "Mount/collection/cleanup failure prevents archive emission: pass.",
+            "Unbounded enumeration reproduced with 4096 names and 256-entry configured cap."
+          ],
+          "initial_existing_suite": {
+            "command": "python3 -m unittest discover -s tests -p 'test_known_host_journal_export.py' -v",
+            "result": "pass",
+            "tests": 12
+          }
+        },
+        "date": "2026-11-08",
+        "findings": [
+          {
+            "detail": "sorted(os.listdir(fd)) materializes all directory names before MAX_ENTRIES and MAX_DEPTH are checked. A large or corrupt journal directory can consume substantial RAM or cause OOM before the intended 256-entry refusal. This contradicts the bounded-RAM operation required for the recovery helper.",
+            "file": "scripts/export-known-host-journal.py",
+            "hardware_safety_effect": "No write-path defect observed; potential diagnostic-process memory exhaustion and failed recovery export.",
+            "id": "F1",
+            "line": 251,
+            "recommended_fix": "Check depth before enumeration; iterate a closable os.scandir(fd), reject when the remaining total entry allowance is exceeded, and only then sort the bounded retained names. Add a regression proving enumeration stops at the first over-limit entry rather than consuming the complete source.",
+            "reproduction": "A host-only patched enumeration yielded 4096 names with MAX_ENTRIES=256. All 4096 were consumed by sorted before the helper raised its bounds exception.",
+            "resolution": "Depth is checked before enumeration. A closable os.scandir(fd) iterator increments the shared global count and refuses at MAX_ENTRIES+1 before appending the extra name; sorting occurs only on bounded retained names.",
+            "resolution_validation": "New lazy 4096-name regression confirms exactly 257 total entries consumed and scanner context closed, both direct and nested. Additional independent probes prove excess depth is refused before child enumeration and a real two-entry parent/child fixture succeeds at allowance 2 but refuses at allowance 1.",
+            "severity": "medium",
+            "status": "resolved-and-independently-rechecked",
+            "title": "Directory enumeration allocates unbounded names before enforcing the entry cap"
+          }
+        ],
+        "followup": "No unresolved concrete source defect identified. Coordinator retains integration, live identity checks and hardware acceptance ownership. This source review authorizes no hardware success claim.",
+        "hardware_acceptance": false,
+        "hardware_performed": false,
+        "initial_source_sha256": {
+          "docs/offline-host-journal.md": "dcb6c7e5c08fac9780aa9112608ef9471b387a332a1da8dd0be298d887c3b13b",
+          "scripts/export-known-host-journal.py": "a577b5e239a98af329ef752cff3e180522eb92bd226e2f8ef9a22617b181a50d",
+          "tests/test_known_host_journal_export.py": "a000de42189772a6d837777d51db245b2d1d16146cb6ac6a1dd2c99f03ccac7f"
+        },
+        "result": "pass-source-review",
+        "reviewed_passes": [
+          "Fixed NVMe serial/model/bytes, 512-byte logical/physical geometry, exact p1-p5 node set, p4 parent/start/8GiB size and UUID/label match the supplied known-board scope.",
+          "SD CID is pinned before both Linux write/discard/flush snapshots; missing or malformed counters fail closed.",
+          "Internal journal inode 8 is required and external journal UUID/device are refused. Unknown ext4 incompat features outside the allowed mask are refused; ro,noload suppresses internal replay.",
+          "Initial namespace, actual boot pin, RAM root, dedicated tmpfs /run, disabled swap and private root permissions are guarded; RAM root default 1777 normalization is explicitly limited by documentation to a proven RAM boot.",
+          "Known NVMe node holders, visible mount namespaces, process FDs/references/maps and swap are checked before the helper opens devices and again after unmount.",
+          "libc mount uses read-only,nosuid,nodev,noexec,noload; mounted major/minor, filesystem type, ro protection and noload/norecovery reporting are independently checked.",
+          "Held directory FDs plus O_NOFOLLOW confine var/log/journal; cross-device, unsafe owner/mode/type, symlink, hardlink, nonjournal and changed metadata are refused.",
+          "File bytes/count/per-file/depth and directory enumeration limits are enforced. Shared entry allowance is checked during scandir before appending, and depth before enumeration; sorting receives at most 256 retained names across the tree. Peak file-byte storage has bounded transient duplication beyond MAX_TOTAL.",
+          "Unmount is attempted on collection/verification failure; failed unmount retains mountpoint. Archive output begins only after successful unmount, repeated runtime/identity guards and unchanged SD/NVMe counters.",
+          "The docs distinguish host tests, Linux-interval counter equality, raw private data and actual hardware acceptance."
+        ],
+        "role": "independent-source-safety-review",
+        "schema": 1,
+        "scope": [
+          "scripts/export-known-host-journal.py",
+          "tests/test_known_host_journal_export.py",
+          "docs/offline-host-journal.md"
+        ],
+        "scope_limits": [
+          "No SSH, mounts, physical-device opens, flashes, commits or source edits performed.",
+          "Host mocks and temporary fixtures do not prove board behavior.",
+          "Device constants were compared with the coordinator handoff and current implementation status; actual live identity remains a runtime prerequisite."
+        ],
+        "source_sha256": {
+          "docs/offline-host-journal.md": "dcb6c7e5c08fac9780aa9112608ef9471b387a332a1da8dd0be298d887c3b13b",
+          "scripts/export-known-host-journal.py": "028ccf43946cfff8e7c8b3a1969348f48567882283f9ad105dc9af5cf0bb024c",
+          "tests/test_known_host_journal_export.py": "71e4dd4c4ac7b03126f066f7fa858a90a1a326197415b1f07751075dd31a5cbd"
+        }
+      }
+    },
+    {
+      "path": "tmp/current-image-flashing-review-20261108.json",
+      "bytes": 5153,
+      "sha256": "3b00781ce2ffd5ed1cb7ce1e02fc66d6a57c24017314b851f22b37d0854fc5a3",
+      "record": {
+        "date": "2026-11-08",
+        "reviewer": "independent Sol high child",
+        "scope": "Readonly documentation review; sole output is this ignored report.",
+        "reviewed_paths": [
+          "AGENTS.md",
+          "docs/agent-routing.md",
+          "docs/implementation-status.md",
+          "docs/hypervisor-plan.md",
+          "docs/current-images.md",
+          "docs/deploy-personalized-20261106.md",
+          "docs/installer-preparation.md",
+          "docs/next-host-boot-20261108.md",
+          "docs/vgic-runtime-bootstrap.md",
+          "docs/evidence/storage-write-authorization-20261108.json",
+          "docs/evidence/corrected-host-install-20261108.json",
+          "docs/ssh-installer-remote-boot-20261108.md",
+          "docs/evidence/vgic-nvme-image-20261108.json",
+          "docs/evidence/vgic-runtime-bootstrap-20261108.json"
+        ],
+        "result": "PASS_AFTER_FIX",
+        "hardware_acceptance": false,
+        "passes": [
+          "All three retained gzip SHA-256 values independently recomputed and match the current map and cited evidence.",
+          "Retained sizes agree: recovery 41229263, host SD 17271954, NVMe 545632496 compressed bytes.",
+          "Raw host/recovery hashes, corrected state UUID and NVMe raw hash agree with cited receipts/evidence.",
+          "Map distinguishes corrected state 360d from incompatible 00fd bootstraps, independent RAM recovery, same-board private host identity and unprogrammed SPI.",
+          "Map accurately keeps serial diagnosis pending after corrected-host boot, NTP and restored real KVM counters 3 -> 4 -> 5; no fresh flash or NVMe reinstall is requested.",
+          "History banners correctly redirect old host bootstraps and avoid replacing physical evidence with artifact-review confidence.",
+          "SD instructions identify whole-device target and persistent known-target authorization without requiring redundant confirmation.",
+          "Type, exact 1977614336-byte capacity and nonempty mount guards reject the tested negative cases.",
+          "Source checksum precedes expansion; stream uses pipefail, progress, fsync and sync without mandatory readback or install-time benchmarking.",
+          "TTL serial electrical/rate instructions, heatsink preservation, pinned SSH identity and RSA-test caveat agree with known constraints.",
+          "Revised standalone inventory assignments fail closed for each probe error, including otherwise valid stdout; confirmed by harmless mocks."
+        ],
+        "checks": {
+          "bash_n_exit": 0,
+          "mocked_guards": [
+            {
+              "case": "valid-unmounted",
+              "exit": 0,
+              "reached_write_stage": true,
+              "pass": true
+            },
+            {
+              "case": "partition-refusal",
+              "exit": 1,
+              "reached_write_stage": false,
+              "pass": true
+            },
+            {
+              "case": "wrong-size-refusal",
+              "exit": 1,
+              "reached_write_stage": false,
+              "pass": true
+            },
+            {
+              "case": "mounted-refusal",
+              "exit": 1,
+              "reached_write_stage": false,
+              "pass": true
+            },
+            {
+              "case": "type-fails-valid-stdout",
+              "exit": 1,
+              "reached_write_stage": false,
+              "pass": true
+            },
+            {
+              "case": "capacity-fails-valid-stdout",
+              "exit": 1,
+              "reached_write_stage": false,
+              "pass": true
+            },
+            {
+              "case": "mount-fails-empty-stdout",
+              "exit": 1,
+              "reached_write_stage": false,
+              "pass": true
+            },
+            {
+              "case": "mount-fails-whitespace-stdout",
+              "exit": 1,
+              "reached_write_stage": false,
+              "pass": true
+            },
+            {
+              "case": "inventory-display-failure",
+              "exit": 1,
+              "reached_write_stage": false,
+              "pass": true
+            }
+          ],
+          "gzip_hash_verification": "all three actual files match",
+          "current_images_sha256": "e2178d1bb242a1c19475662550c59739d1ffc536d29ba1b6ad8dfa338960e473",
+          "delta_review_result": "All nine harmless mock cases pass; no real lsblk/blockdev/sudo/dd invoked."
+        },
+        "limitations": [
+          "No device writes, dd invocation, SSH, hardware checks, commits, source edits or delegation.",
+          "Review does not grant hardware or production acceptance.",
+          "Existing prose requires positive physical identification of the known card; exact capacity alone is not a unique hardware identity."
+        ],
+        "resolved_defects": [
+          {
+            "severity": "medium",
+            "path": "docs/current-images.md",
+            "line": 67,
+            "description": "Mount inventory failure is interpreted as an empty mount inventory. The exit status of lsblk/tr inside the [[ -z $(...) ]] substitution does not control the outer test, so set -e and pipefail do not fail closed.",
+            "evidence": "Mock lsblk mount scan exit 1 with empty stdout allowed harmless REACHED_WRITE_STAGE marker and shell exit 0. No dd was invoked.",
+            "recommendation": "Capture mount inventory with a standalone assignment whose failure aborts, then test emptiness, e.g. mountpoints=$(lsblk -nr -o MOUNTPOINT \"$A733_SD_DEVICE\") followed by the existing whitespace-empty check.",
+            "resolution": "All type, capacity and mount probes now use standalone assignments under set -e before comparison. Their nonzero status aborts even when stdout would satisfy the comparison."
+          }
+        ],
+        "defects": []
+      }
+    }
+  ],
+  "hardware_operations_performed": false,
+  "hardware_acceptance": false,
+  "live_export_performed": false,
+  "checks": {
+    "native_journal_tests": 13,
+    "native_tomllib_files": 5,
+    "flashing_snippet_syntax": true,
+    "native_git_diff_check": true,
+    "jammy_unittest": {
+      "tests": 1941,
+      "seconds": 55.434,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    },
+    "jammy_shell_suites": 5,
+    "jammy_diagnostic_assembly_cases": 5,
+    "jammy_runner_exit_code": 0
+  },
+  "remaining": "Capture requested serial console text; use reviewed RAM recovery only if needed, then collect logs and resolve the actual management fault.",
+  "full_suite": {
+    "source_base": "eb9847b",
+    "additional_files": [
+      "scripts/export-known-host-journal.py",
+      "tests/test_known_host_journal_export.py",
+      "docs/offline-host-journal.md"
+    ],
+    "source_hashes": {
+      "scripts/export-known-host-journal.py": {
+        "bytes": 17393,
+        "sha256": "028ccf43946cfff8e7c8b3a1969348f48567882283f9ad105dc9af5cf0bb024c"
+      },
+      "tests/test_known_host_journal_export.py": {
+        "bytes": 10615,
+        "sha256": "71e4dd4c4ac7b03126f066f7fa858a90a1a326197415b1f07751075dd31a5cbd"
+      }
+    },
+    "path": "out/vgic-nvme-image-20261108/journal-export-full-jammy-validation.log",
+    "bytes": 8726,
+    "sha256": "60cfd88e80c134dbb888c9c7640209465e85fd54b486da6b112945b1b2118c24",
+    "after": {
+      "free_disk_bytes": 20969910272,
+      "available_memory_bytes": 7659458560
+    },
+    "tomllib": "All five TOML files separately parsed with native Python; Jammy Python 3.10 does not provide tomllib."
+  }
+}
