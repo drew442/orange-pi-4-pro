@@ -1,4 +1,9 @@
-# Next physical boot: VGIC diagnostic SD
+# Completed physical boot: VGIC diagnostic SD
+
+This historical diagnostic step is complete. The board now runs the
+[private SSH RAM installer](ssh-installer-remote-boot-20261108.md) at
+192.168.1.115. Keep the image below only as recovery for the original `00fd…`
+installation; the corrected `360d…` deployment needs its matched bootstrap.
 
 Use the same NVMe installation and repaired identity. **Do not reinstall NVMe.**
 The new image is:

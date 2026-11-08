@@ -1,0 +1,37 @@
+{
+  "date": "2026-11-08",
+  "result": "PASS",
+  "source": {
+    "path": "out/builder-retained-20261106/kernel-object-cache/kernel-object-cache.tar.gz",
+    "bytes": 893430589,
+    "sha256": "11a3282b5049e1587754109a0075a1af899245f0370c606af50105b538a4e5e3",
+    "mode": "0o400",
+    "identity": [
+      64512,
+      4106188,
+      1793832619231343073,
+      1793950501739272331
+    ],
+    "allocated_bytes": 893435904,
+    "purpose": "Relocate a historical generated cache archive, preserving exact bytes; no physical board storage."
+  },
+  "retained_destination": {
+    "path": "/var/lib/a733-native-kernel-cache-retained-20261108-01/kernel-object-cache.tar.gz",
+    "bytes": 893430589,
+    "sha256": "11a3282b5049e1587754109a0075a1af899245f0370c606af50105b538a4e5e3",
+    "uid": 0,
+    "mode": "0400",
+    "parent_mode": "0700",
+    "full_encoded_hash_verified": true,
+    "file_and_parent_synced": true
+  },
+  "native_path_retired": true,
+  "native_free_after_bytes": 1165426688,
+  "restore_verified": false,
+  "physical_board_writes": false,
+  "unchanged_native_floor_bytes": 268435456,
+  "reason": "Keep space for retained deployment/recovery artifacts; a historical generated cache is relocated after complete encoded-hash checks.",
+  "source_and_destination_hashes_verified": true,
+  "lv_growth": false,
+  "guard_reduced": false
+}

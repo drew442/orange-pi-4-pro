@@ -47,8 +47,23 @@ outside-BOOT byte proof. The complete original BOOT filesystem is retained as
 The authenticated installation intent, management MAC, subnet policy and
 administrator key fingerprints are copied unchanged for the existing installer.
 
-Independent source review and all **10** small-fixture tests pass. Actual full
-construction, independent artifact inspection and physical boot remain pending.
+Independent source review and all **10** small-fixture tests pass. [Actual full construction and complete independent artifact review](evidence/vgic-nvme-image-20261108.json)
+now pass. Physical corrected-host boot remains pending.
+
+The 256060514304-byte raw image has SHA-256
+`835031b81d0320d6f9f35e74b9be67b494006c26a25fa9070f3e0a8f434ebc11`;
+its 545632496-byte gzip has SHA-256
+`3e560264bb64a9bc23b342febdff2146955ca97cb6e0279e5240c29d4e6d85bc`.
+Independent review authenticates both complete gzip streams and directly compares
+all **255523643392 bytes outside BOOT**, including GUESTS and gaps. Root/state
+payloads, all BOOT metadata, sole DTB semantic change and full reverse capsule pass.
+
+Builder output is
+`/var/lib/a733-vgic-nvme-project-20261108-02/project/out/nvme-vgic-corrected-02`.
+Codex retains the verified gzip under
+`out/vgic-nvme-image-20261108/retained-02/nvme.img.gz`. No native raw expansion
+was created. Minimum builder free was 20933390336 bytes and available memory
+6928285696 bytes; remeasure before subsequent jobs.
 
 Run only in the prepared Ubuntu 22.04 builder after independent source review,
 using fresh measured resources and a trusted quiescent checkout:

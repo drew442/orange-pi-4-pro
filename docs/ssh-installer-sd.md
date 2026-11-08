@@ -4,7 +4,8 @@
 installer**, with no device access or automatic erase. It preserves the paired
 corrected VGIC SD's EL2 firmware, kernel and proven VGIC DTB. Its only profile is
 `experimental-el2-vgic-v1`, kernel ABI `6.6.98-a733-diag`. The result remains
-**UNBOOTED**; source and host checks cannot establish hardware acceptance.
+a construction artifact whose [physical RAM boot now passes](ssh-installer-remote-boot-20261108.md).
+Final corrected-host and release acceptance remain open.
 
 The archive includes the installed board's actual SSH host private key. Keep the
 entire output private; never publish or commit its raw image, compressed image,
@@ -74,5 +75,5 @@ Its 664,617-byte manifest has SHA-256
 `cc2f5f467d9dd1ab13fd7a1eaea21119dc29b171d8737b208e2d1f37528dc8a6`.
 The actual ARM fixture passes host-key proof, locked-root PAM login, command and
 PTY sessions, and wrong-key/password-only/forwarding rejection. Earlier failed
-artifacts are retained for diagnosis. Independent SD review and physical boot
-remain separate gates.
+artifacts are retained for diagnosis. Independent SD artifact review and actual RAM boot now pass. Final deployment
+and release acceptance remain separate gates.

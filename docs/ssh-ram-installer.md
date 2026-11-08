@@ -13,7 +13,9 @@ zero SD writes or actual KVM guest acceptance.
 [Actual construction and validation](evidence/ssh-ram-installer-20261108.json)
 now pass for runtime03, including independent artifact inspection and ARM
 SSH/PAM/PTY/rejection tests. The matched SD is also constructed and independently
-reviewed. Physical boot and operator-key login remain pending.
+reviewed. The [physical RAM boot](ssh-installer-remote-boot-20261108.md), Ed25519 login,
+PTY and idle-NVMe observations now pass. RSA operator login and final corrected
+NVMe host acceptance remain pending.
 
 ## Inputs and invocation
 

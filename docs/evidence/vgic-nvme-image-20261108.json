@@ -1,0 +1,111 @@
+{
+  "date": "2026-11-08",
+  "result": "PASS",
+  "classification": "Complete corrected VGIC NVMe construction and independent artifact review; UNBOOTED",
+  "source_revision": "6dc70b4",
+  "builder_output": "/var/lib/a733-vgic-nvme-project-20261108-02/project/out/nvme-vgic-corrected-02",
+  "manifest": {
+    "path": "out/vgic-nvme-image-20261108/build-02.stdout",
+    "bytes": 35023,
+    "sha256": "addfcafe239a2aa075435383cc4742869d256d98beecd2526806da206d98f4a2"
+  },
+  "files": {
+    "nvme.img.gz": {
+      "bytes": 545632496,
+      "sha256": "3e560264bb64a9bc23b342febdff2146955ca97cb6e0279e5240c29d4e6d85bc"
+    },
+    "base-boot.ext4.gz": {
+      "bytes": 16658343,
+      "sha256": "2157ee9933b382c4b1c1b1060dd2d1d294c8c5e0317e66691a4afc6f6ef11530"
+    },
+    "base-nvme-manifest.json": {
+      "bytes": 9393,
+      "sha256": "8d40099bb8a670d67bc62a9c6623edb1201903aef16e8c17c0d424233c4ce8a8"
+    },
+    "paired-sd-manifest.json": {
+      "bytes": 17471,
+      "sha256": "47df42be022d9e378a034df25d31865a24337c9309b4e4fdc2710ea9c2462993"
+    },
+    "patch.log": {
+      "bytes": 6346,
+      "sha256": "3a1907eaa6931a0c660d0e42f1198ab019b56600e903b68ff448de559dfa6134"
+    },
+    "nvme.img": {
+      "bytes": 256060514304,
+      "sha256": "835031b81d0320d6f9f35e74b9be67b494006c26a25fa9070f3e0a8f434ebc11"
+    }
+  },
+  "state_uuid": "360dfb39-f49f-487e-b307-0bb887c854c5",
+  "boot_profile": {
+    "name": "experimental-el2-vgic-v1",
+    "target_service": "0x8000ff40",
+    "expected_spsr": "0x3c9",
+    "physical_acceptance_pending": true,
+    "dtb": {
+      "bytes": 209344,
+      "sha256": "1ba8f5926c0d76d12479bafcfcfce66be4a934ccfb6a5bcbcc7f7aa86c07f9f4"
+    }
+  },
+  "base_raw": {
+    "bytes": 256060514304,
+    "sha256": "0eda2415406e370ca1870f22ce7b2fd1e59620b52cf6c59894b5a2fbce005754"
+  },
+  "base_gzip": {
+    "bytes": 545632565,
+    "sha256": "7c44516aefb25b36db6342dc7cd9666e73b370e59b30fb3dc698bec4d93413c8"
+  },
+  "complete_outside_boot_bytes": 255523643392,
+  "independent_outside_boot_byte_identical": true,
+  "source_dtb_provenance": {
+    "bytes": 209320,
+    "sha256": "4d7d964a54668cf5dc12cd4bf7e72a625c79883541272aeba1a91adbbedb86ed"
+  },
+  "runtime_dtb": {
+    "bytes": 209344,
+    "sha256": "1ba8f5926c0d76d12479bafcfcfce66be4a934ccfb6a5bcbcc7f7aa86c07f9f4"
+  },
+  "resources": {
+    "minimum_free_bytes": 20933390336,
+    "minimum_memavailable_bytes": 6928285696,
+    "build_seconds": 2900.0630514310324,
+    "unchanged_admission_bytes": 23760999827,
+    "disk_runtime_floor_bytes": 3000000000,
+    "memory_runtime_floor_bytes": 1000000000
+  },
+  "reviews": {
+    "source": {
+      "path": "tmp/vgic-nvme-derivation-review-20261108.json",
+      "bytes": 4910,
+      "sha256": "17ceeb2bd9c0b4da531f708d16e9743fab4c581ef2038b67907d74383afa20dc"
+    },
+    "fix": {
+      "path": "tmp/nvme-pam-runtime-fix-review-20261108.json",
+      "bytes": 7434,
+      "sha256": "80ac4e32c920fafb6da74493f82db81da2292be27516d964146b8b9bcc5c01a4"
+    },
+    "complete_artifact": {
+      "path": "tmp/vgic-nvme-final-artifact-review-20261108.json",
+      "bytes": 13845,
+      "sha256": "d7704510a076bc8f8dfa193d904d413a9731e05e6140e787bab445c079d53ac0"
+    }
+  },
+  "native_encoded_copy": {
+    "path": "out/vgic-nvme-image-20261108/retained-02/nvme.img.gz",
+    "bytes": 545632496,
+    "sha256": "3e560264bb64a9bc23b342febdff2146955ca97cb6e0279e5240c29d4e6d85bc",
+    "hash_verified": true
+  },
+  "failed_attempt": {
+    "tag": "corrected-01",
+    "result": "Full base raw authentication passed; namespace refused standard empty lost+found before BOOT mutation.",
+    "retired_generated_caches": {
+      "path": "out/vgic-nvme-image-20261108/failed-cache-retirement.json",
+      "bytes": 1285,
+      "sha256": "abcd58902b53eee66d723ba07c946f6e0fc13a0069f2a4a4fbd01c8a31fcc3ee"
+    },
+    "restore_verified": false
+  },
+  "hardware_acceptance": false,
+  "physical_nvme_write_performed": false,
+  "next": "Approved actual NVMe installation from SSH RAM installer, then same-board identity, matching SD and actual corrected-host acceptance."
+}

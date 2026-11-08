@@ -1,0 +1,74 @@
+{
+  "date": "2026-11-08",
+  "source_revision": "e0bad7f",
+  "result": "PASS",
+  "host": "build.drewnet.online",
+  "runtime": "Privileged prepared Ubuntu22.04 Python3.10",
+  "unit_tests": 1880,
+  "skips": 0,
+  "errors": 0,
+  "failures": 0,
+  "shell_suites": 5,
+  "diagnostic_assembly_cases": 5,
+  "bash_syntax": "PASS",
+  "toml": {
+    "result": "PASS",
+    "count": 5,
+    "runtime": "local Python tomllib"
+  },
+  "log": {
+    "path": "out/ssh-ram-installer-20261108/maintenance-full-jammy-validation-attempt02.log",
+    "bytes": 7894,
+    "sha256": "3e4d02322e0a0c9c295c7557b6da0b44d872223f288da137e5ea311e56dc4669"
+  },
+  "earlier_attempt": {
+    "log": {
+      "path": "out/ssh-ram-installer-20261108/maintenance-full-jammy-validation-attempt01.log",
+      "bytes": 7180,
+      "sha256": "af081bedf135c1e89752eb6969725e5dff501027a64178b10e984a423b8c257a"
+    },
+    "result": "One timestamp-dependent identity fixture failed.",
+    "correction": "Set an explicit changed mtime in the fixture; same-size writes can share a filesystem clock tick. Production guards and trusted-quiescent assumption unchanged."
+  },
+  "maintenance_reviews": {
+    "sd_source": {
+      "path": "tmp/ram-bootstrap-sd-writer-review-20261108.json",
+      "bytes": 4611,
+      "sha256": "94c55d4bfcc1eea47693bbb3d9ccac46206aafe786f378640cf8c6e9f04ae743"
+    },
+    "state_source": {
+      "path": "tmp/known-host-state-identity-review-20261108.json",
+      "bytes": 6996,
+      "sha256": "114a5d527de5423d34dc7fff2d1bda014ea0ccd12cd0b0981dd437687ceb92a4"
+    },
+    "live_compatibility_fixes": {
+      "path": "tmp/maintenance-runtime-compat-review-20261108.json",
+      "bytes": 6769,
+      "sha256": "c537e7d4746be824febb23fb75974bb2daaff633f82c40947bcf99c0e8a26ddb"
+    }
+  },
+  "actual_read_only_preparation": {
+    "sd_plan": {
+      "path": "out/ssh-ram-installer-20261108/final-sd-plan-v2.json",
+      "bytes": 595,
+      "sha256": "6ce8ecbb97fce8b33de8a6d9bba2ea1db04c5663212d2d4fe1c0950057729a29"
+    },
+    "identity_old_state_refusal": {
+      "path": "out/ssh-ram-installer-20261108/identity-old-state-refusal-v2.json",
+      "bytes": 291,
+      "sha256": "04c742e604814ac1d8027ba67d629381990752079eb732a539309133def8427b"
+    },
+    "ram_root_normalization": {
+      "path": "out/ssh-ram-installer-20261108/ram-root-normalization.json",
+      "bytes": 179,
+      "sha256": "1ee724204b10e8c1e6e1e743a87c6e195124bff55e10ef2561b73334f8671bba"
+    },
+    "identity_archive_public_metadata": {
+      "path": "out/ssh-ram-installer-20261108/identity-archive-metadata.json",
+      "bytes": 1255,
+      "sha256": "717c33fbb7c9926b300009e27fcfcf4c7fd221848b47f37db9201f62976fad49"
+    }
+  },
+  "hardware_acceptance": false,
+  "scope": "Source/host fixtures plus real read-only plans. No physical write by these maintenance helpers yet."
+}

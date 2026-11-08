@@ -13,7 +13,12 @@ independent deployment reproduction remain incomplete.
   Minimal Linux/KVM/QEMU is the target.
   Preserve zero routine SD writes; prefer SPI-to-NVMe with SD removed, otherwise
   use immutable SD boot files. Leave attached heatsinks in place.
-- **Installed host:** The installed `00fd…` NVMe host was repaired in place.
+- **Running now:** The [private SSH RAM installer](ssh-installer-remote-boot-20261108.md)
+  physically boots at **192.168.1.115**, boot ID `f3a37e96-ad2f-4eb5-93a3-193d41083ce3`.
+  Existing pinned host key, Ed25519 login and PTY pass. Root is RAM; SD and NVMe
+  are unmounted, swap/holders absent and early Linux write counters zero.
+  RSA hardware login for this new boot remains unperformed.
+- **Existing NVMe host:** The installed `00fd…` NVMe host was repaired in place.
   Trusted live SSH verified DHCP `192.168.1.116/24` on `end0`, MAC
   `10:f4:ae:90:5e:57`, and acceptance of both authorized keys. SSH remains
   public-key-only from any source/subnet. Do not reinstall NVMe to fix management. See
@@ -47,9 +52,13 @@ independent deployment reproduction remain incomplete.
 - **Private SSH RAM installer:** [Construction, independent review and ARM
   session tests](evidence/ssh-ram-installer-20261108.json) pass. The private
   256 MiB SD candidate preserves firmware/kernel/VGIC and both authorized keys.
-  Actual RAM boot, operator-key login and idle-NVMe checks are next.
-  Full VGIC NVMe reconstruction is running after retaining empty `lost+found`;
-  the earlier refusal happened before any BOOT patch.
+  Actual RAM boot, Ed25519 login, PTY and idle-NVMe observations now pass.
+  Full VGIC NVMe construction and producer readback pass after preserving empty
+  `lost+found`; [independent complete artifact comparison now passes](evidence/vgic-nvme-image-20261108.json).
+  Before deployment, preserve same-board identity using the reviewed
+  [STATE helper](known-host-state-personalization.md), then use the reviewed
+  [known SD writer](known-bootstrap-sd-writer.md) for the matched bootstrap.
+  These two maintenance helpers have not yet performed physical writes.
 - **SPI:** Original backup and a private candidate derived from it are reviewed;
   the XM25QU128C, JEDEC `204118`, 16 MiB backup is blank (`0xff`).
   The [fresh read-only live comparison](spi-live-plan-results-20261108.md)
@@ -114,9 +123,13 @@ count as physical acceptance.
   retires three superseded expanded cache files, keeping their verified encoded
   recovery copies and all current corrected inputs. Builder free at completion
   is **24,076,783,616 bytes**; recheck each new source/capsule budget.
-- Latest privileged Ubuntu suite: **1,843 tests**, no skips, errors or failures;
+- [Historical kernel-cache relocation](native-kernel-cache-relocation-20261108.md)
+  preserves a verified 893 MB generated archive on builder and releases native
+  capacity for current images. Native free at completion was 1,165,426,688 bytes;
+  remeasure above its unchanged 256 MiB floor. Restoration is unperformed.
+- Latest privileged Ubuntu suite: **1,880 tests**, no skips, errors or failures;
   five shell suites and five diagnostic assembly cases pass. See the
-  [latest record](evidence/ssh-ram-installer-20261108.json). These are host
+  [latest record](evidence/known-maintenance-validation-20261108.json). These are host
   checks only, not hardware acceptance.
 - Source/licensing work remains incomplete: licensing for 26 vendor boot inputs
   is unresolved; GCC and DejaGNU sources remain unacquired; notice presence does
@@ -129,6 +142,8 @@ count as physical acceptance.
 1. Preserve the successful VGIC/guest evidence and current counter-3 checkpoint.
    Integrate the proven DT and matched firmware into the corrected host chain;
    validate that coherent deployment and its packaged/time/identity behavior.
+   The RAM installer is ready; complete independent NVMe artifact review before
+   the approved NVMe installation, identity preservation and final SD switch.
 2. The verified `timesync-runtime-fixes-01` image is retained on both hosts;
    recheck resource floors before transfers. Integrate and
    validate matching NVMe-first firmware and VGIC DT separately; physically

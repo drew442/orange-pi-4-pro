@@ -1,0 +1,208 @@
+{
+  "date": "2026-11-08",
+  "classification": "Actual same-board private SSH RAM installer write and warm boot; final corrected NVMe host UNBOOTED",
+  "result": "PASS",
+  "boot_id": "f3a37e96-ad2f-4eb5-93a3-193d41083ce3",
+  "previous_boot_id": "7f1f07c4-5a4f-469f-97a7-612406d915a2",
+  "operator_authorization": "docs/evidence/storage-write-authorization-20261108.json",
+  "sd": {
+    "target": "/dev/mmcblk1",
+    "major_minor": "179:0",
+    "model": "SU02G",
+    "cid": "035344535530324780716f216e00a8f5",
+    "actual_bytes": 1977614336,
+    "image_bytes": 268435456,
+    "image_sha256": "d3a02224efdb2c2eeccc7115d84cd6c4b2d75c7d06580b8f7812d12a546bc3f6",
+    "write_completed": true,
+    "write_seconds": 34.2736,
+    "readback_requested": false
+  },
+  "write_guard": {
+    "source": {
+      "path": "tmp/ssh-installer-remote-boot-20261108/write-sd.sh",
+      "bytes": 2147,
+      "sha256": "e8b4056a767772039ab6258ac60676be24e59a4436738628de4f97768b8e399c"
+    },
+    "source_text": "#!/bin/bash\nset -euo pipefail\nexport PATH=/usr/sbin:/usr/bin:/sbin:/bin LC_ALL=C\nmode=${1:-plan}\ncase \"$mode\" in plan|write) ;; *) exit 2 ;; esac\nCARD=/dev/mmcblk1\nIMAGE=/dev/shm/a733-ssh-installer-20261108/a733-ssh-installer.img\nIMAGE_DIR=${IMAGE%/*}\nexpect_output() {\n local expected=$1 actual\n shift\n actual=$(\"$@\") || return 1\n [[ \"$actual\" = \"$expected\" ]]\n}\nexpect_output 0 id -u\nexpect_output 7f1f07c4-5a4f-469f-97a7-612406d915a2 cat /proc/sys/kernel/random/boot_id\n[[ -b \"$CARD\" && ! -L \"$CARD\" ]]\nexpect_output 179:0 cat /sys/class/block/mmcblk1/dev\nexpect_output 035344535530324780716f216e00a8f5 cat /sys/class/block/mmcblk1/device/cid\nexpect_output SU02G cat /sys/class/block/mmcblk1/device/name\nexpect_output 0 cat /sys/class/block/mmcblk1/ro\nexpect_output disk lsblk -dn -o TYPE \"$CARD\"\nexpect_output 1977614336 blockdev --getsize64 \"$CARD\"\nmounts=$(lsblk -nr -o MOUNTPOINTS \"$CARD\") || exit 1\n[[ ! \"$mounts\" =~ [^[:space:]] ]]\nfor node in /sys/class/block/mmcblk1 /sys/class/block/mmcblk1/mmcblk1p*; do\n [[ -d \"$node\" && -d \"$node/holders\" ]]\n holders=$(find \"$node/holders\" -mindepth 1 -maxdepth 1 -print) || exit 1\n [[ -z \"$holders\" ]]\ndone\nexpect_output 1 wc -l </proc/swaps\nexpect_output tmpfs findmnt -n -o FSTYPE -T \"$IMAGE\"\n[[ -f \"$IMAGE\" && ! -L \"$IMAGE\" && -d \"$IMAGE_DIR\" && ! -L \"$IMAGE_DIR\" ]]\nexpect_output 268435456 stat -c %s \"$IMAGE\"\nexpect_output 0:0:600:1 stat -c %u:%g:%a:%h \"$IMAGE\"\nexpect_output 0:0:700 stat -c %u:%g:%a \"$IMAGE_DIR\"\nprintf '%s  %s\\n' d3a02224efdb2c2eeccc7115d84cd6c4b2d75c7d06580b8f7812d12a546bc3f6 \"$IMAGE\" | sha256sum -c -\nprintf 'Target: %s SU02G CID 035344535530324780716f216e00a8f5, 1977614336 bytes, unmounted.\\n' \"$CARD\"\nprintf 'Write plan: first 268435456 bytes only; NVMe and SPI untouched.\\n'\nif [[ \"$mode\" = plan ]]; then exit 0; fi\n# Known target is already authorized: docs/evidence/storage-write-authorization-20261108.json.\nprintf 'Writing reviewed PRIVATE SSH RAM installer to the authorized SD target...\\n'\ndd if=\"$IMAGE\" of=\"$CARD\" bs=4M conv=fsync status=progress\nblockdev --flushbufs \"$CARD\"\nprintf 'SD write complete. No readback requested; reboot is a separate action.\\n'\n",
+    "review": {
+      "path": "tmp/ssh-installer-remote-boot-20261108/write-review.json",
+      "bytes": 15076,
+      "sha256": "6f343c3682c47ab817c74d0bef15b3588daf16625aaa3beacfefafed3b522f88"
+    },
+    "review_checks": 78,
+    "resolved_issue": "Explicit command-status checks reject failed mount/holder/identity probes even when output is empty or misleadingly expected."
+  },
+  "ssh": {
+    "address": "192.168.1.115",
+    "previous_host_address": "192.168.1.116",
+    "physical_mac": "10:f4:ae:90:5e:57",
+    "interface": "eth0",
+    "speed_mbps": 1000,
+    "duplex": "full",
+    "host_fingerprint": "SHA256:Epfegy9GsJ6ng4/0EH3dZmir7beQj5uYTnIbE4JPfEI",
+    "trust": "StrictHostKeyChecking=yes with HostKeyAlias=192.168.1.116 used existing trusted key at new address, not TOFU.",
+    "ed25519_operator_key_login": true,
+    "pty": true,
+    "both_operator_public_keys_present": true,
+    "rsa_operator_private_key_login_this_boot": false,
+    "address_discovery": {
+      "path": "out/ssh-ram-installer-20261108/target-arp-discovery.json",
+      "bytes": 207,
+      "sha256": "a6a4a8f64fd4e0ef124b3d7ec4e3cdc5c21829a1ccf806c60c60351350f85e9f"
+    }
+  },
+  "root": "rootfs / rootfs rw; /run and /tmp bounded tmpfs; proc/sysfs/devtmpfs/devpts only; no SD or NVMe filesystem mounted",
+  "kernel": "6.6.98-a733-diag",
+  "runtime_details": {
+    "boot_id": "f3a37e96-ad2f-4eb5-93a3-193d41083ce3",
+    "kvm": {
+      "api_version": 12,
+      "irqchip": 1,
+      "arm_user_irq": 1
+    },
+    "swaps_splitlines": [
+      "Filename\t\t\t\tType\t\tSize\t\tUsed\t\tPriority"
+    ],
+    "swaps_header_fields": [
+      "Filename",
+      "Type",
+      "Size",
+      "Used",
+      "Priority"
+    ],
+    "swaps_contains_literal_backslash_t": false,
+    "uid_map": "         0          0 4294967295\n",
+    "sd_stats": [
+      "1",
+      "0",
+      "8",
+      "2",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "4",
+      "2",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0"
+    ],
+    "nvme_stats": [
+      "10",
+      "0",
+      "80",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0"
+    ],
+    "gic_interrupts_hex": "000000010000000900000004"
+  },
+  "nvme_preparation": {
+    "target": {
+      "canonical_path": "/dev/nvme0n1",
+      "logical_sector_bytes": 512,
+      "major_minor": "259:0",
+      "model": "SPCC M.2 PCIe SSD",
+      "physical_sector_bytes": 512,
+      "requested_path": "/dev/nvme0n1",
+      "serial": "134807190FC700149277",
+      "size_bytes": 256060514304,
+      "stable_path_recommended": "/dev/disk/by-id/nvme-\u2026"
+    },
+    "checked_mounts_holders_swaps_absent": true,
+    "writes_performed": false,
+    "scope": "Packaged plan-only command; it does not lock or detect raw open-device users. Installer apply must revalidate and claim target."
+  },
+  "clock": "RAM boot began at 1970; coordinator later corrected UTC manually. This is not NTP or final corrected-host automatic-time evidence.",
+  "logs": {
+    "physical-sd-write.stdout": {
+      "path": "out/ssh-ram-installer-20261108/physical-sd-write.stdout",
+      "bytes": 429,
+      "sha256": "7d36dc421e119c02baadc55179dfe0bc5be57b125bb34ab777371465112867f6"
+    },
+    "physical-sd-write.stderr": {
+      "path": "out/ssh-ram-installer-20261108/physical-sd-write.stderr",
+      "bytes": 95,
+      "sha256": "718829cae6a5a49892b013de0f396ab216e00beae3dd5ef3d0ec42f49dba9e99"
+    },
+    "remote-sd-reviewed-plan.txt": {
+      "path": "out/ssh-ram-installer-20261108/remote-sd-reviewed-plan.txt",
+      "bytes": 222,
+      "sha256": "e05c821cf27086cd9b6d73b7875e577b9896c6551a41f526c393561b360f69c3"
+    },
+    "physical-ram-boot.txt": {
+      "path": "out/ssh-ram-installer-20261108/physical-ram-boot.txt",
+      "bytes": 1930,
+      "sha256": "32d3bf21c72884d4dc6ff47d506ade4a6f9c09cc5e601839811b35806a34cd67"
+    },
+    "physical-boot-diagnostics.txt": {
+      "path": "out/ssh-ram-installer-20261108/physical-boot-diagnostics.txt",
+      "bytes": 81722,
+      "sha256": "0a18229e40e2f5e355192c5ebb64ca2aef6510f73a58236b812f80c68476602d"
+    },
+    "physical-pty.stdout": {
+      "path": "out/ssh-ram-installer-20261108/physical-pty.stdout",
+      "bytes": 28,
+      "sha256": "0a91c50151bf27a8d179a83a18f563d896a699b0d3ea4f1343c3cd81bd80005b"
+    },
+    "physical-pty.stderr": {
+      "path": "out/ssh-ram-installer-20261108/physical-pty.stderr",
+      "bytes": 37,
+      "sha256": "0851d992f7543049eeebc6fcd2ed7bf79763981779b7953731b7dbeb2286c7c4"
+    },
+    "physical-nvme-idle-plan.json": {
+      "path": "out/ssh-ram-installer-20261108/physical-nvme-idle-plan.json",
+      "bytes": 2944,
+      "sha256": "a5e787e92cea0aceac0b488174abc08160bac28ef25232cdf55226b219067e78"
+    },
+    "physical-runtime-details.json": {
+      "path": "out/ssh-ram-installer-20261108/physical-runtime-details.json",
+      "bytes": 818,
+      "sha256": "15dee96a5e3029f26c7f85b7836f84d972ee6c77661e25ca07ff0f16be06698b"
+    },
+    "manual-ram-clock.json": {
+      "path": "out/ssh-ram-installer-20261108/manual-ram-clock.json",
+      "bytes": 278,
+      "sha256": "db085b8ecf5cb99adff7ed0f7127c772d194bb1d47042719a8dde9a01581f141"
+    }
+  },
+  "limits": [
+    "No external serial capture for this remote warm boot; SSH kernel/mount/PTY evidence only.",
+    "Linux SD/NVMe write counters are zero at the recorded early sample; full-card hashes, firmware-write audit and final workload/boot-cycle acceptance remain open.",
+    "Actual KVM guest core tests belong to the earlier diagnostic NVMe host; no guest launched in this RAM installer.",
+    "No NVMe installation or SPI programming in this step.",
+    "Final corrected221-package host boot, both-key login, NTP, guest restoration/execution and release endurance remain open."
+  ],
+  "private_recovery_gzip": {
+    "path": "out/ssh-ram-installer-20261108/a733-ssh-installer.img.gz",
+    "bytes": 41229263,
+    "sha256": "2f9cdd006e6d5c2c59e5ed1aba68f3ed7dd267a7f61b3672e590d926468c4eec"
+  },
+  "private_artifact_retention": "Verified recovery gzip on codex (administrator-owned0700 directory/file0600) and builder root-private output; contains same-board private host key, never public/Git.",
+  "final_release_acceptance": false,
+  "ram_root_preparation": {
+    "before_mode": "1777",
+    "after_mode": "0755",
+    "physical_storage_modified": false,
+    "record": {
+      "path": "out/ssh-ram-installer-20261108/ram-root-normalization.json",
+      "bytes": 179,
+      "sha256": "1ee724204b10e8c1e6e1e743a87c6e195124bff55e10ef2561b73334f8671bba"
+    }
+  }
+}
