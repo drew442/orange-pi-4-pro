@@ -2,7 +2,9 @@
 
 Updated 2026-11-08. See [build reproduction status](build-reproduction-status.md)
 for construction history and evidence links. Physical release acceptance and
-independent deployment reproduction remain incomplete.
+independent deployment reproduction remain incomplete. Hardware work is blocked
+pending the requested serial-console evidence; reviewed read-only journal
+recovery preparation and its builder filesystem checks are complete.
 
 ## Current state
 

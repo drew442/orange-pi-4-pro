@@ -27,8 +27,10 @@ is claimed for that initial interval; final acceptance must assess coverage.
 | codex | `out/endurance-physical-release-20261108-01/samples.jsonl` |
 | Orange Pi | `/run/corrected-kvm/release-exit-observer.jsonl` and `.stderr` |
 
-The collector runs independently of this chat and transfers/verifies one actual
-1 MiB guest payload over SSH every 30 seconds. It records exact SD identity and
+The collector was launched independently of this chat and transferred/verified
+actual 1 MiB guest payloads over SSH every 30 seconds before management failed.
+Its off-board service is now terminally failed (`ExecMainCode=1`,
+`ExecMainStatus=1`); no collection is continuing. Its records include exact SD identity and
 Linux counters, real KVM/VGIC/four-vCPU descriptors, process restrictions, thermal
 trips, memory, CPU and physical network/storage counters, and kernel NVMe errors.
 NVMe SMART/error logs are retained separately before and after the run. Existing
