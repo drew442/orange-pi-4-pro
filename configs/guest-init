@@ -27,10 +27,20 @@ while [ ! -b /dev/vda ]; do
     [ "$tries" -lt 10 ] || fail missing-fixture-disk
     sleep 1
 done
-identity=$(blkid /dev/vda) || fail disk-identity
-case "$identity" in *'TYPE="ext4"'*) ;; *) fail disk-type ;; esac
-case "$identity" in *'LABEL="kvm-fixture"'*) ;; *) fail disk-label ;; esac
-case "$identity" in *'UUID="d67f33ba-e201-46bc-980b-61901bbd1156"'*) ;; *) fail disk-uuid ;; esac
+fixture_disk_identity() {
+    # Read only the fixed fixture superblock. Exact hex comparisons also reject
+    # short reads; NUL padding in the label is part of the required identity.
+    fixture_field() {
+        field=$(od -An -v -tx1 -j "$2" -N "$3" "$1" 2>/dev/null) || return 1
+        field=$(printf '%s' "$field" | tr -d ' \n') || return 1
+        [ "${#field}" -eq "$(( $3 * 2 ))" ] && [ "$field" = "$4" ]
+    }
+    fixture_field "$1" 1080 2 53ef &&
+        fixture_field "$1" 1116 12 28000000c20200006b040000 &&
+        fixture_field "$1" 1128 16 d67f33bae20146bc980b61901bbd1156 &&
+        fixture_field "$1" 1144 16 6b766d2d666978747572650000000000
+}
+fixture_disk_identity /dev/vda || fail disk-identity
 # noload prevents journal replay before the content marker is verified.
 mount -t ext4 -o ro,noload /dev/vda /mnt || fail disk-mount
 [ "$(cat /mnt/fixture-id)" = a733-kvm-guest-fixture-v1 ] || fail disk-marker

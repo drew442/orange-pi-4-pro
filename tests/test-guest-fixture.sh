@@ -32,6 +32,29 @@ recipe = (repo / 'build/guest-fixture.sh').read_text()
 init = (repo / 'configs/guest-init').read_text()
 fragment = (repo / 'configs/guest-kernel.fragment').read_text()
 assert 'mkfs' not in init
+# Run only the actual identity function, never guest PID 1 on the host.
+identity = init[init.index('fixture_disk_identity() {'):init.index('fixture_disk_identity /dev/vda')]
+probe = work / 'identity.sh'
+probe.write_text(identity + '\nfixture_disk_identity "$1"\n')
+fields = [(1080, bytes.fromhex('53ef')),
+          (1116, bytes.fromhex('28000000c20200006b040000')),
+          (1128, bytes.fromhex('d67f33bae20146bc980b61901bbd1156')),
+          (1144, bytes.fromhex('6b766d2d666978747572650000000000'))]
+valid = bytearray(1160)
+for offset, value in fields:
+    valid[offset:offset + len(value)] = value
+sample = work / 'identity.raw'
+def accepts(data):
+    sample.write_bytes(data)
+    return subprocess.run(['sh', str(probe), str(sample)], capture_output=True).returncode == 0
+assert accepts(valid)
+for offset, value in fields:
+    corrupt = valid.copy()
+    corrupt[offset] ^= 1
+    assert not accepts(corrupt), offset
+    assert not accepts(valid[:offset + len(value) - 1]), offset
+assert subprocess.run(['sh', str(probe), str(work / 'missing')], capture_output=True).returncode != 0
+assert subprocess.run(['sh', str(probe), str(work)], capture_output=True).returncode != 0
 assert init.index('"$$" -eq 1') < init.index('mount -t proc')
 assert init.index('ro,noload /dev/vda') < init.index('cat /mnt/fixture-id') < init.index('rw /dev/vda')
 assert init.index('umount /mnt || fail disk-unmount\nprintf') < init.index('PASS disk')
