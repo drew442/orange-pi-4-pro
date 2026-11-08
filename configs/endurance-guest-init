@@ -1,0 +1,177 @@
+#!/bin/sh
+# PID 1 for the QEMU virt endurance fixture; never boot on the physical board.
+[ "$$" -eq 1 ] || exit 1
+export PATH=/bin
+/bin/busybox --install -s /bin
+workers=
+network_pid=
+mounted=0
+cleanup() {
+    for worker in $workers; do kill "$worker" 2>/dev/null || :; done
+    [ -z "$network_pid" ] || kill "$network_pid" 2>/dev/null || :
+    for worker in $workers; do wait "$worker" 2>/dev/null || :; done
+    [ -z "$network_pid" ] || wait "$network_pid" 2>/dev/null || :
+    sync || return 1
+    if [ "$mounted" = 1 ]; then umount /mnt || return 1; mounted=0; fi
+}
+fail() {
+    printf 'ENDURANCE_FAIL reason=%s\n' "$1"
+    if [ -f /run/status.json ]; then
+        sed 's/"state":"[a-z]*"/"state":"failed"/;s/"cpu_workers_alive":4/"cpu_workers_alive":0/' /run/status.json > /run/status.json.tmp &&
+            mv /run/status.json.tmp /run/status.json
+    fi
+    cleanup || echo 'ENDURANCE_FAIL reason=cleanup'
+    poweroff -f
+    while :; do sleep 60; done
+}
+trap 'fail signal' TERM INT HUP
+mount -t proc proc /proc || fail proc
+mount -t sysfs sysfs /sys || fail sysfs
+mount -t devtmpfs devtmpfs /dev || fail devtmpfs
+exec </dev/console >/dev/console 2>&1
+# QEMU virt supplies exactly this compatible string. Reject A733 before disk IO.
+compatible=$(tr '\000' '\n' < /proc/device-tree/compatible) || fail machine-identity
+[ "$compatible" = linux,dummy-virt ] || fail machine-identity
+mount -t tmpfs -o mode=0755,nosuid,nodev,size=8m tmpfs /run || fail run
+mount -t tmpfs -o mode=0755,nosuid,nodev,size=4m tmpfs /www || fail www
+mkdir /www/cgi-bin || fail www-directory
+cp /etc/endurance-status.cgi /www/cgi-bin/status || fail status-cgi
+chmod 755 /www/cgi-bin/status || fail status-mode
+. /etc/endurance.conf
+case "$DURATION:$MODE" in 86400:release) ;; *)
+    [ "$MODE" = smoke ] || fail configuration
+    case "$DURATION" in ''|*[!0-9]*) fail configuration ;; esac
+    [ "$DURATION" -ge 30 ] && [ "$DURATION" -le 300 ] || fail configuration
+esac
+run_id=$(cat /proc/sys/kernel/random/boot_id) || fail run-id
+case "$run_id" in ''|*[!a-f0-9-]*) fail run-id ;; esac
+[ "${#run_id}" -eq 36 ] || fail run-id
+now() { read -r uptime _ignored < /proc/uptime || return 1; uptime=${uptime%%.*}; }
+verify_hash() {
+    sha256sum "$1" > /run/hash || return 1
+    read -r actual _ignored < /run/hash || return 1
+    [ "$actual" = "$2" ]
+}
+dd if=/dev/zero of=/www/payload.bin bs=1048576 count=1 2>/dev/null || fail ram-payload
+verify_hash /www/payload.bin "$RAM_SHA256" || fail ram-hash
+tries=0
+while [ ! -b /dev/vda ]; do
+    tries=$((tries + 1))
+    [ "$tries" -lt 10 ] || fail missing-fixture-disk
+    sleep 1
+done
+[ "$(cat /sys/class/block/vda/size)" = 262144 ] || fail disk-size
+fixture_disk_identity() {
+    # Copied exactly from the authenticated corrected counter-3 fixture init.
+    fixture_field() {
+        field=$(od -An -v -tx1 -j "$2" -N "$3" "$1" 2>/dev/null) || return 1
+        field=$(printf '%s' "$field" | tr -d ' \n') || return 1
+        [ "${#field}" -eq "$(( $3 * 2 ))" ] && [ "$field" = "$4" ]
+    }
+    fixture_field "$1" 1080 2 53ef &&
+        fixture_field "$1" 1116 12 28000000c20200006b040000 &&
+        fixture_field "$1" 1128 16 d67f33bae20146bc980b61901bbd1156 &&
+        fixture_field "$1" 1144 16 6b766d2d666978747572650000000000
+}
+fixture_disk_identity /dev/vda || fail disk-identity
+mount -t ext4 -o ro,noload /dev/vda /mnt || fail disk-mount
+mounted=1
+[ "$(cat /mnt/fixture-id)" = a733-kvm-guest-fixture-v1 ] || fail disk-marker
+[ ! -L /mnt/counter ] || fail disk-counter-symlink
+counter=$(cat /mnt/counter) || fail disk-counter
+case "$counter" in ''|*[!0-9]*) fail disk-counter ;; esac
+[ "${#counter}" -le 8 ] || fail disk-counter-range
+[ "$counter" = 0 ] || [ "${counter#0}" = "$counter" ] || fail disk-counter-format
+umount /mnt || fail disk-unmount
+mounted=0
+mount -t ext4 -o rw /dev/vda /mnt || fail disk-write-mount
+mounted=1
+counter=$((counter + 1))
+printf '%s\n' "$counter" > /mnt/counter || fail disk-counter-write
+sync || fail disk-sync
+# Remove any old scratch name before creating a new regular file. Never follow links.
+rm -f /mnt/endurance-scratch.bin || fail scratch-remove
+ip link set lo up || fail loopback
+ip link set eth0 up || fail ethernet
+udhcpc -f -n -q -t 5 -T 3 -i eth0 -s /etc/udhcpc.script || fail dhcp
+cpu=1
+while [ "$cpu" -le 4 ]; do
+    printf '%s\n' -1 > "/run/cpu-$cpu.previous" || fail cpu-state
+    (
+        last=-1
+        while :; do
+            # Each worker owns a small hash output; no unbounded logs or files.
+            sha256sum /www/payload.bin > "/run/cpu-$cpu.hash" || exit 1
+            read -r hash _ignored < "/run/cpu-$cpu.hash" || exit 1
+            [ "$hash" = "$RAM_SHA256" ] || exit 1
+            now || exit 1
+            if [ "$uptime" != "$last" ]; then
+                printf '%s\n' "$uptime" > "/run/cpu-$cpu.beat.tmp" || exit 1
+                mv "/run/cpu-$cpu.beat.tmp" "/run/cpu-$cpu.beat" || exit 1
+                last=$uptime
+            fi
+        done
+    ) &
+    workers="$workers $!"
+    cpu=$((cpu + 1))
+done
+tries=0
+while [ ! -f /run/cpu-1.beat ] || [ ! -f /run/cpu-2.beat ] || [ ! -f /run/cpu-3.beat ] || [ ! -f /run/cpu-4.beat ]; do
+    tries=$((tries + 1))
+    [ "$tries" -le 10 ] || fail cpu-start
+    sleep 1
+done
+cycles=0
+disk_checks=0
+elapsed=0
+now || fail uptime
+start=$uptime
+next_disk=0
+state=running
+status() {
+    printf '{"schema":1,"profile":"a733-kvm-endurance-v1","run_id":"%s","mode":"%s","state":"%s","required_seconds":%s,"elapsed_seconds":%s,"cycles":%s,"disk_counter":%s,"cpu_workers":4,"cpu_workers_alive":4,"disk_sha256":"%s"}\n' \
+        "$run_id" "$MODE" "$state" "$DURATION" "$elapsed" "$cycles" "$counter" "$DISK_SHA256" > /run/status.json.tmp || return 1
+    mv /run/status.json.tmp /run/status.json
+}
+status || fail status
+httpd -f -p 8080 -h /www &
+network_pid=$!
+printf 'ENDURANCE_READY run_id=%s mode=%s duration=%s counter=%s\n' "$run_id" "$MODE" "$DURATION" "$counter"
+while :; do
+    now || fail uptime
+    elapsed=$((uptime - start))
+    [ "$elapsed" -ge 0 ] || fail monotonic-clock
+    for worker in $workers; do kill -0 "$worker" 2>/dev/null || fail cpu-worker; done
+    kill -0 "$network_pid" 2>/dev/null || fail http-server
+    if [ "$elapsed" -ge "$next_disk" ]; then
+        dd if=/dev/zero of=/mnt/endurance-scratch.bin bs=1048576 count=16 2>/dev/null || fail disk-write
+        sync || fail disk-sync
+        verify_hash /mnt/endurance-scratch.bin "$DISK_SHA256" || fail disk-hash
+        cpu=1
+        while [ "$cpu" -le 4 ]; do
+            beat=$(cat "/run/cpu-$cpu.beat") || fail cpu-heartbeat
+            previous=$(cat "/run/cpu-$cpu.previous") || fail cpu-heartbeat
+            case "$beat" in ''|*[!0-9]*) fail cpu-heartbeat ;; esac
+            [ "$beat" -gt "$previous" ] || fail cpu-stalled
+            now || fail uptime
+            [ "$((uptime - beat))" -le 15 ] || fail cpu-stalled
+            printf '%s\n' "$beat" > "/run/cpu-$cpu.previous" || fail cpu-state
+            cpu=$((cpu + 1))
+        done
+        disk_checks=$((disk_checks + 1))
+        cycles=$((cycles + 1))
+        next_disk=$((elapsed + 30))
+    fi
+    now || fail uptime
+    elapsed=$((uptime - start))
+    status || fail status
+    [ "$elapsed" -lt "$DURATION" ] || break
+    sleep 1
+done
+state=finishing
+status || fail status
+cleanup || fail cleanup
+printf 'ENDURANCE_PASS run_id=%s mode=%s elapsed=%s duration=%s cycles=%s disk_checks=%s cpu_workers=4 counter=%s ram_sha256=%s disk_sha256=%s\n' \
+    "$run_id" "$MODE" "$elapsed" "$DURATION" "$cycles" "$disk_checks" "$counter" "$RAM_SHA256" "$DISK_SHA256"
+poweroff -f
+fail poweroff

@@ -1,0 +1,288 @@
+{
+  "schema": 1,
+  "date": "2026-11-08",
+  "scope": "endurance preparation software only",
+  "checks": {
+    "guest_tests": 9,
+    "collector_tests": 24,
+    "shell_syntax": true
+  },
+  "records": [
+    {
+      "path": "tmp/endurance-guest-independent-review-20261108.json",
+      "bytes": 4039,
+      "sha256": "a3c02855b1b71d678d9b46ac8947a51338651e95917acb10d8da32725765a6ee",
+      "record": {
+        "checks": [
+          {
+            "command": "python3 tests/test_endurance_guest.py",
+            "result": "9 tests pass"
+          },
+          {
+            "command": "sh -n configs/endurance-guest-init configs/endurance-guest-status.cgi",
+            "result": "pass"
+          },
+          {
+            "check": "Authenticate retained corrected base and repack all new records in memory",
+            "result": {
+              "base_bytes": 975394,
+              "base_sha256": "10b45e928ab1726e818f78ced73ab6015f0fbabef4f18403d574091fde0adaa2",
+              "final_records": 24,
+              "original_records": 22,
+              "preserved_original_non_init_non_trailer_records": 20,
+              "raw_output_bytes": 1826068
+            }
+          },
+          {
+            "check": "Execute unmodified fixture_disk_identity function under host BusyBox sh using inherited anonymous memory file descriptors",
+            "result": {
+              "mutated_ext4_magic": "rejected",
+              "mutated_feature_bytes": "rejected",
+              "mutated_label": "rejected",
+              "mutated_uuid": "rejected",
+              "original_seed_header": "accepted",
+              "truncated_header": "rejected"
+            }
+          }
+        ],
+        "defects": [],
+        "hardware_acceptance": false,
+        "limitations": [
+          "No guest boot, KVM invocation, SSH session, block-device mutation or hardware validation was performed.",
+          "Host software checks and anonymous-file identity-function tests do not prove physical boot, 24-hour workload behavior, actual CPU allocation, KVM acceleration, network transfer, media health, thermal performance or zero physical SD writes.",
+          "Enrollment must authenticate kernel and disposable fixture seed, preserve counter-3 backup, and establish four vCPUs/KVM. Release acceptance additionally needs external network transfers, cycle progression, host telemetry/error evidence and normal service/QEMU shutdown.",
+          "Hash verification after sync can use the guest page cache; the documentation correctly discloses this limitation."
+        ],
+        "result": "pass_for_software_preparation",
+        "review_date": "2026-11-08",
+        "review_findings": [
+          "The producer authenticates compressed input before decompression, bounds archive size, changes only init plus two new records, and permits only fresh private direct out directories.",
+          "Guest disk writes follow PID 1 and exact QEMU virt compatible guard, exact vda size and ext4 identity, ro,noload mount and fixture marker/counter checks. No physical host disk scan or formatting path exists.",
+          "The bounded scratch name is unlinked before creation; counter symlinks are rejected. Routine workload writes target only guest counter and scratch; tmpfs contains bounded payload and status.",
+          "Release mode is fixed to 86400 monotonic uptime seconds; smoke mode is explicitly separate. CPU workers hash and verify the RAM payload, publish atomic heartbeats, and must remain alive and progress; scratch writes are synced and verified.",
+          "Cleanup must sync and unmount before PASS; failure markers are emitted on checked failures. Collector must reject every failure marker and verify guest-initiated shutdown independently.",
+          "HTTP status rejects POST and query input; network throughput and hash transfer are explicitly external collector duties, rather than inferred from httpd liveness."
+        ],
+        "review_scope": [
+          "build/endurance-guest.py",
+          "configs/endurance-guest-init",
+          "configs/endurance-guest-status.cgi",
+          "tests/test_endurance_guest.py",
+          "docs/endurance-guest.md"
+        ],
+        "reviewer_role": "independent Sol high reviewer",
+        "schema": 1,
+        "source_sha256": {
+          "build/endurance-guest.py": "d71821d3c476aba84c934760340968833fe9b8a12cb841a9b8217d127144c6ac",
+          "configs/endurance-guest-init": "769c4994aabc4347655f1bd578f17b4efda33f4105ad5c2be633cd585d39d3ae",
+          "configs/endurance-guest-status.cgi": "843a43fd8d34aca86a9f3ccfabd43567439150248284eda3b105f907e22c356f",
+          "docs/endurance-guest.md": "059c277c394c3cf6af06c97c9f75be1f42d958737952e20bfa06f4cdb17c9e37",
+          "tests/test_endurance_guest.py": "8008690d4c29d1771a2d6e0bd203aa8eebddba30c38c352ca9da45564edd2655"
+        }
+      }
+    },
+    {
+      "path": "tmp/endurance-tools-independent-review-20261108.json",
+      "bytes": 4395,
+      "sha256": "a2adbbdcaac5c9aeaf98d338316a232bddfbd036c442b6b837f850f63501609c",
+      "record": {
+        "schema": 1,
+        "reviewer": "independent Sol high",
+        "review_date": "2026-11-08",
+        "result": "pass_with_nonblocking_documentation_advisory",
+        "hardware_acceptance": false,
+        "scope": {
+          "scripts/collect-kvm-endurance.py": "3c723a889e290242f9f969dce053435ea468eb1ebc1c8469c04d7ab770d4656d",
+          "scripts/endurance-cpu-load.py": "13e12e9d1ef93f883b34b4949088a267c80d61973cf3c1565565488ab3a02360",
+          "tests/test_kvm_endurance_tools.py": "59d54c3e335d10e939c852a71ab0e93ff0cdeafd9629b98b26d82b74a21202a4",
+          "docs/kvm-endurance-tools.md": "9e5d395aa024a3dc25f35cd805299d7619a497c1c20bef6f57ec025aaf14058c"
+        },
+        "constraints": [
+          "A733",
+          "2 GB SD",
+          "nominal 250 GB NVMe",
+          "zero routine SD writes",
+          "actual KVM required",
+          "QEMU UID/GID 60002",
+          "four vCPU",
+          "guest RAM 256 MiB",
+          "unit MemoryMax 512 MiB"
+        ],
+        "checks": [
+          {
+            "command": "python3 -m unittest discover -s tests -p test_kvm_endurance_tools.py -v",
+            "tests": 24,
+            "passed": 24
+          },
+          {
+            "command": "git diff --check",
+            "exit_code": 0
+          }
+        ],
+        "required_changes": [],
+        "passed_review_points": [
+          "Fixed JSON service argument is shell-safe after restrictive service-name validation; validated IPv4 cannot add SSH options.",
+          "Strict host-key policy and fixed host-key alias are present; no trust enrollment performed.",
+          "Frame size, exact payload length, finite JSON, payload hash and transport failure checks fail closed.",
+          "Actual KVM descriptors include exact vendor VGIC label, four vCPU descriptors, VM descriptor; UID/GID/capability/NoNewPrivs restrictions enforced.",
+          "SD write/discard/flush counters and direct mounts fail; thermal critical trips are required and exceeded trips fail.",
+          "HTTP redirects/proxies disabled; actual payload traverses SSH to workstation without payload files.",
+          "CPU helper refuses root, uses RAM and four forked workers, detects early exits, terminates/reaps remaining workers with bounded SIGKILL fallback.",
+          "Smoke/release durations remain distinct; no path grants hardware acceptance; inactive/completed collection exits pending external completion.",
+          "SMART explicitly unproved and physical/console/exit/duration acceptance delegated to coordinator."
+        ],
+        "limits": [
+          "No SSH or hardware operation performed.",
+          "No physical thermal-zone compatibility check.",
+          "No actual 24-hour execution or installed-host acceptance.",
+          "Independent review covers only the four named source/test/documentation files; coordinator retains integration and hardware acceptance."
+        ],
+        "resolved_findings": [
+          {
+            "id": "R1",
+            "status": "resolved",
+            "evidence": "Only -m 256/256M accepted. Remote systemctl show collects MemoryMax; validate requires string 536870912. Negative tests reject 512/512M and missing, unlimited or incorrect limits."
+          },
+          {
+            "id": "R2",
+            "status": "resolved",
+            "evidence": "Main loop invokes ProgressWatchdog after successful running-sample validation. Both elapsed_seconds and cycles independently require advancement within 120 collector-monotonic seconds. Tests accept exactly 120 seconds and reject longer stalls even while the other counter advances. disk_counter correctly remains a per-run identity; prior review suggestion to require its progress was superseded by clarified interface."
+          },
+          {
+            "id": "R3",
+            "status": "resolved",
+            "evidence": "Every error-bearing validated sample gets nvme_kernel_error_assessment=coordinator_review_required. Empty baseline gets no_errors_observed; changed error sets still fail. Tests cover all three cases."
+          },
+          {
+            "id": "failed_sample",
+            "status": "resolved",
+            "evidence": "Validation/watchdog failure retains the decoded bounded sample. data resets to None before every probe; later transport failure therefore cannot relabel the previous sample. Recording regressions cover both cases."
+          }
+        ],
+        "advisories": [
+          {
+            "severity": "nonblocking",
+            "location": "docs/kvm-endurance-tools.md",
+            "finding": "The phrase supplied identity exclusively overstates IdentitiesOnly=yes: OpenSSH can also use IdentityFile entries from inherited user/client configuration.",
+            "suggested_change": "Remove exclusively, or intentionally isolate configuration if exclusive identity selection is required."
+          }
+        ]
+      }
+    },
+    {
+      "path": "tmp/endurance-guest-jammy-build-20261108.json",
+      "bytes": 4048,
+      "sha256": "832a2f895827390b9d219fb5183343117ee0cfc53b160aec0ad14a1ffaa2f971",
+      "record": {
+        "authenticated_base": {
+          "bytes": 975394,
+          "path": "/var/lib/a733-counter3-guest-backup-20261108-01/verified/initramfs.cpio.gz",
+          "sha256": "10b45e928ab1726e818f78ced73ab6015f0fbabef4f18403d574091fde0adaa2"
+        },
+        "builder": "drew@build.drewnet.online",
+        "hardware_acceptance": false,
+        "os_release": "PRETTY_NAME=\"Ubuntu 22.04.5 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"22.04\"\nVERSION=\"22.04.5 LTS (Jammy Jellyfish)\"\nVERSION_CODENAME=jammy\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=jammy\n",
+        "outputs": {
+          "release": {
+            "hardware_acceptance": false,
+            "initramfs": {
+              "bytes": 976723,
+              "sha256": "183bbe9b48d61a21e890b5a13c51dbea603d40e13081324db05eba520de66bc8"
+            },
+            "manifest": {
+              "bytes": 5074,
+              "sha256": "41741a3baf3e4de5cb72a6bc24cdebca0ea8c558133795218aab0e4d4a2f8be8"
+            },
+            "matches_local_artifact": true,
+            "packaging_seconds": 0.235,
+            "path": "/var/lib/a733-endurance-guest-build-20261108-01/project/out/endurance-guest-release-20261108-01",
+            "raw_initramfs": {
+              "bytes": 1826068,
+              "sha256": "e46cc34fd15552709525dda7e0c6a6ab9eb6a87fb1deb695c859a068c967db80"
+            },
+            "required_seconds": 86400
+          },
+          "smoke": {
+            "hardware_acceptance": false,
+            "initramfs": {
+              "bytes": 976721,
+              "sha256": "1033526eebc6edccfe875ca596a2080dc96ba08e62cb4ad4eda9af5f45dfd7f8"
+            },
+            "manifest": {
+              "bytes": 5069,
+              "sha256": "18e1bb4725968e9d2e4e0371d6de4b5c99a4ceb8750ec10d9dfd0efc8714929d"
+            },
+            "matches_local_artifact": true,
+            "packaging_seconds": 0.236,
+            "path": "/var/lib/a733-endurance-guest-build-20261108-01/project/out/endurance-guest-smoke-20261108-01",
+            "raw_initramfs": {
+              "bytes": 1826060,
+              "sha256": "9ff3e18beed303cf294ed3ad0b69070f619527e696e8609aeb0ae07e5f898d8c"
+            },
+            "required_seconds": 60
+          }
+        },
+        "python": "3.10.12",
+        "recorded_utc": "2026-11-08T10:48:49.023399+00:00",
+        "resource_floors": {
+          "disk_available_bytes": 3000000000,
+          "memory_available_bytes": 1000000000
+        },
+        "resources_after": {
+          "disk_available_bytes": 20974272512,
+          "memory_available_bytes": 7682666496
+        },
+        "resources_before": {
+          "disk_available_bytes": 20976349184,
+          "memory_available_bytes": 7693369344
+        },
+        "result": "pass_for_software_preparation",
+        "schema": 1,
+        "scope": "Initramfs packaging only; no VM, board, kernel compilation or hardware acceptance.",
+        "selected_packages": [
+          "libpython3.10-stdlib:amd64\t3.10.12-1~22.04.18\tamd64",
+          "python3-minimal\t3.10.6-1~22.04.1\tamd64",
+          "python3.10-minimal\t3.10.12-1~22.04.18\tamd64",
+          "zlib1g:amd64\t1:1.2.11.dfsg-2ubuntu9.2\tamd64"
+        ],
+        "source_dependencies": {
+          "build/assemble-host.py": {
+            "bytes": 21448,
+            "sha256": "c9ed33c9526d6660965f00b97e6c226880eba985706b3bbc71c017fee8e9b77f"
+          },
+          "build/endurance-guest.py": {
+            "bytes": 7553,
+            "sha256": "d71821d3c476aba84c934760340968833fe9b8a12cb841a9b8217d127144c6ac"
+          },
+          "build/repack-guest-initramfs.py": {
+            "bytes": 5899,
+            "sha256": "a5318361672be3bb286187ea8b46604b3a303fca555382258a83bab90a75913a"
+          },
+          "configs/endurance-guest-init": {
+            "bytes": 7562,
+            "sha256": "769c4994aabc4347655f1bd578f17b4efda33f4105ad5c2be633cd585d39d3ae"
+          },
+          "configs/endurance-guest-status.cgi": {
+            "bytes": 382,
+            "sha256": "843a43fd8d34aca86a9f3ccfabd43567439150248284eda3b105f907e22c356f"
+          },
+          "configs/guest-kernel.fragment": {
+            "bytes": 1143,
+            "sha256": "61984ad245672e179b7e16bbf85d1a5583eca09059e14c422042d10d9bd2cab0"
+          }
+        },
+        "transitive_local_imports": [
+          "build/repack-guest-initramfs.py",
+          "build/assemble-host.py"
+        ],
+        "workspace": "/var/lib/a733-endurance-guest-build-20261108-01"
+      }
+    }
+  ],
+  "hardware_acceptance": false,
+  "remaining": [
+    "Real corrected-host KVM smoke, actual telemetry, clean exit and 24-hour workload",
+    "Four additional nonroot host CPU workers",
+    "NVMe SMART/error assessment, zero SD write and complete release gates"
+  ]
+}
