@@ -291,19 +291,95 @@ class InputAndLockTests(unittest.TestCase):
     def test_database_metadata_policy(self):
         fields = dict(st_mode=0o100640, st_uid=0, st_gid=42, st_nlink=1, st_dev=7)
         for name in ('shadow', 'gshadow'):
-            ACCOUNTS.validate_database_metadata(SimpleNamespace(**fields), 7, name, 42)
+            ACCOUNTS.validate_database_metadata(SimpleNamespace(**fields), name, 42)
             for key, value in (('st_mode', 0o100644), ('st_mode', 0o100660),
                                ('st_mode', 0o100400), ('st_uid', 1000), ('st_gid', 99),
-                               ('st_nlink', 2), ('st_dev', 8), ('st_mode', 0o120640)):
+                               ('st_nlink', 2), ('st_mode', 0o120640)):
                 with self.subTest(name=name, key=key, value=value), self.assertRaises(ValueError):
                     ACCOUNTS.validate_database_metadata(
-                        SimpleNamespace(**dict(fields, **{key: value})), 7, name, 42)
+                        SimpleNamespace(**dict(fields, **{key: value})), name, 42)
         for name in ('passwd', 'group'):
             for mode in (0o100644, 0o100600):
                 ACCOUNTS.validate_database_metadata(
-                    SimpleNamespace(**dict(fields, st_mode=mode, st_gid=0)), 7, name, 42)
+                    SimpleNamespace(**dict(fields, st_mode=mode, st_gid=0)), name, 42)
             with self.assertRaises(ValueError):
-                ACCOUNTS.validate_database_metadata(SimpleNamespace(**fields), 7, name, 42)
+                ACCOUNTS.validate_database_metadata(SimpleNamespace(**fields), name, 42)
+
+    def test_strict_fd_mount_identity(self):
+        self.assertEqual(ACCOUNTS.fd_mount_id('pos:\t0\nmnt_id:\t43\nino:\t123\n'), 43)
+        for data in ('', 'pos: 0\n', 'mnt_id: 43\nmnt_id: 43\n',
+                     'mnt_id: 043\n', 'mnt_id: +43\n', 'mnt_id: -1\n',
+                     'mnt_id: 0\n', 'mnt_id: abc\n', 'malformed\nmnt_id: 43\n',
+                     'mnt_id: ' + '1' * 21, 'x' * (ACCOUNTS.FDINFO_LIMIT + 1)):
+            with self.subTest(data=data), self.assertRaises(ValueError):
+                ACCOUNTS.fd_mount_id(data)
+
+    def test_overlay_mount_identity_uses_management_validation(self):
+        row = '43 1 0:26 / /etc rw - overlay overlay rw\n'
+        with patch.object(ACCOUNTS.MANAGEMENT, 'validate_mounts') as validate:
+            self.assertEqual(ACCOUNTS.etc_mount_id(row), 43)
+            validate.assert_called_once()
+            for value in ('', row + row, row.replace('43 ', '043 ', 1),
+                          row.replace('43 ', '+43 ', 1), 'malformed\n'):
+                with self.subTest(value=value), self.assertRaises(ValueError):
+                    ACCOUNTS.etc_mount_id(value)
+        with patch.object(ACCOUNTS.MANAGEMENT, 'validate_mounts', side_effect=ValueError('guard')):
+            with self.assertRaisesRegex(ValueError, 'guard'):
+                ACCOUNTS.etc_mount_id(row)
+
+    def test_database_mount_boundary_before_read(self):
+        for file_mount in (43, 44):
+            with self.subTest(file_mount=file_mount), tempfile.TemporaryDirectory() as directory:
+                path = Path(directory) / 'passwd'
+                payload = database()['passwd']
+                path.write_bytes(payload)
+                path.chmod(0o644)
+                values = {key: getattr(path.stat(), key) for key in (
+                    'st_dev', 'st_ino', 'st_mode', 'st_uid', 'st_gid', 'st_nlink',
+                    'st_size', 'st_mtime_ns', 'st_ctime_ns')}
+                info = SimpleNamespace(**dict(values, st_uid=0, st_gid=0))
+                etc_info = SimpleNamespace(**dict(values, st_dev=info.st_dev + 1))
+                fd = os.open(directory, os.O_RDONLY | os.O_DIRECTORY)
+                try:
+                    with patch.object(ACCOUNTS, 'validate_etc') as parent, \
+                         patch.object(ACCOUNTS, 'held_mount_id', return_value=file_mount), \
+                         patch.object(ACCOUNTS.os, 'stat', return_value=info), \
+                         patch.object(ACCOUNTS.os, 'fstat', return_value=info), \
+                         patch.object(ACCOUNTS.os, 'open', wraps=os.open) as opened, \
+                         patch.object(ACCOUNTS.os, 'read', wraps=os.read) as read:
+                        if file_mount == 43:
+                            self.assertEqual(ACCOUNTS.read_database('passwd', fd, etc_info, 43), payload)
+                            read.assert_called_once()
+                            self.assertEqual(parent.call_count, 3)
+                        else:
+                            with self.assertRaisesRegex(ValueError, 'foreign account database mount'):
+                                ACCOUNTS.read_database('passwd', fd, etc_info, 43)
+                            read.assert_not_called()
+                        self.assertEqual(opened.call_args.args[0], 'passwd')
+                        self.assertEqual(opened.call_args.kwargs, {'dir_fd': fd})
+                        self.assertTrue(opened.call_args.args[1] & os.O_NOFOLLOW)
+                        self.assertTrue(opened.call_args.args[1] & os.O_NONBLOCK)
+                finally:
+                    os.close(fd)
+
+    def test_parent_identity_and_mount_fences(self):
+        fields = dict(st_dev=26, st_ino=1, st_mode=0o40755, st_uid=0, st_gid=0,
+                      st_nlink=1, st_size=0, st_mtime_ns=1, st_ctime_ns=1)
+        info = SimpleNamespace(**fields)
+        for failure in (None, 'held', 'path', 'fd_mount', 'path_mount'):
+            with self.subTest(failure=failure), \
+                 patch.object(ACCOUNTS.os, 'fstat', return_value=SimpleNamespace(
+                     **dict(fields, st_ino=2 if failure == 'held' else 1))), \
+                 patch.object(ACCOUNTS.MANAGEMENT, 'secure_path', return_value=SimpleNamespace(
+                     **dict(fields, st_ino=2 if failure == 'path' else 1))), \
+                 patch.object(ACCOUNTS, 'held_mount_id', return_value=44 if failure == 'fd_mount' else 43), \
+                 patch.object(ACCOUNTS, 'etc_mount_id', return_value=44 if failure == 'path_mount' else 43), \
+                 patch.object(Path, 'read_text', return_value='fixture'):
+                if failure is None:
+                    ACCOUNTS.validate_etc(10, info, 43)
+                else:
+                    with self.assertRaises(ValueError):
+                        ACCOUNTS.validate_etc(10, info, 43)
 
     def test_lock_metadata_refusal_matrix(self):
         fields = dict(st_mode=0o100600, st_uid=0, st_gid=0, st_nlink=1,

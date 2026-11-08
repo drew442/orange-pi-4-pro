@@ -35,6 +35,7 @@ require = IDENTITY.require
 DATABASES = ('passwd', 'shadow', 'group', 'gshadow')
 LOCK = '/run/a733-guest-accounts.lock'
 DB_LIMIT = 1024 * 1024
+FDINFO_LIMIT = 16384
 
 
 def canonical(value):
@@ -70,47 +71,103 @@ def read_input(path):
         os.close(fd)
 
 
-def validate_database_metadata(info, etc_device, name, shadow_gid=0):
+def fd_mount_id(data):
+    require(isinstance(data, str) and 0 < len(data) <= FDINFO_LIMIT, 'invalid fdinfo size')
+    values = []
+    for line in data.splitlines():
+        require(':' in line, 'malformed fdinfo')
+        key, value = line.split(':', 1)
+        if key == 'mnt_id':
+            value = value.strip()
+            require(re.fullmatch(r'[1-9][0-9]{0,19}', value) is not None,
+                    'invalid fd mount identity')
+            values.append(int(value))
+    require(len(values) == 1, 'missing or ambiguous fd mount identity')
+    return values[0]
+
+
+def held_mount_id(fd):
+    with open(f'/proc/self/fdinfo/{fd}', 'r', encoding='ascii') as stream:
+        return fd_mount_id(stream.read(FDINFO_LIMIT + 1))
+
+
+def etc_mount_id(data):
+    """Locate the same overlay mount already authenticated by runtime_guard."""
+    MANAGEMENT.validate_mounts(MANAGEMENT.mount_table(data))
+    rows = [line.split() for line in data.splitlines() if line.split()[4] == '/etc']
+    require(len(rows) == 1 and re.fullmatch(r'[1-9][0-9]{0,19}', rows[0][0]) is not None,
+            'missing or ambiguous etc mount identity')
+    return int(rows[0][0])
+
+
+def validate_database_metadata(info, name, shadow_gid=0):
     sensitive = name in ('shadow', 'gshadow')
     require(name in DATABASES and stat.S_ISREG(info.st_mode) and info.st_uid == 0 and
-            info.st_nlink == 1 and info.st_dev == etc_device and
+            info.st_nlink == 1 and
             stat.S_IMODE(info.st_mode) in ({0o600, 0o640} if sensitive else {0o600, 0o644}) and
             info.st_gid in ({0, shadow_gid} if sensitive else {0}),
             'unsafe account database metadata')
 
 
-def read_database(name, etc_device, shadow_gid=0):
-    """Bounded held-FD reads, allowing Debian's root:shadow 0640 convention."""
-    path = Path('/etc') / name
-    MANAGEMENT.secure_path(path.parent, directory=True)
-    before = path.lstat()
-    fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+def validate_etc(fd, info, mount_id):
+    require(metadata(os.fstat(fd)) == metadata(info) and
+            metadata(MANAGEMENT.secure_path('/etc', directory=True)) == metadata(info),
+            'account database parent changed')
+    require(held_mount_id(fd) == mount_id and
+            etc_mount_id(Path('/proc/self/mountinfo').read_text()) == mount_id,
+            'account database parent mount changed')
+
+
+def read_database(name, etc_fd, etc_info, mount_id, shadow_gid=0):
+    """Read relative to held /etc; OverlayFS file st_dev may differ from /etc.
+
+    A held file must belong to the authenticated overlay mount before any bytes
+    are read. A bind over a file has a different mount ID even on the same fs.
+    """
+    require(name in DATABASES, 'unknown account database')
+    validate_etc(etc_fd, etc_info, mount_id)
+    before = os.stat(name, dir_fd=etc_fd, follow_symlinks=False)
+    fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=etc_fd)
     try:
         info = os.fstat(fd)
         require(metadata(info) == metadata(before), 'account database changed during open')
-        validate_database_metadata(info, etc_device, name, shadow_gid)
+        validate_database_metadata(info, name, shadow_gid)
+        require(held_mount_id(fd) == mount_id, 'foreign account database mount')
+        validate_etc(etc_fd, etc_info, mount_id)
+        require(0 < info.st_size <= DB_LIMIT, 'empty or oversized account database')
         data = os.read(fd, DB_LIMIT + 1)
         require(0 < len(data) <= DB_LIMIT, 'empty or oversized account database')
         require(metadata(os.fstat(fd)) == metadata(info) and
-                metadata(path.lstat()) == metadata(info), 'account database changed during read')
+                metadata(os.stat(name, dir_fd=etc_fd, follow_symlinks=False)) == metadata(info),
+                'account database changed during read')
+        require(held_mount_id(fd) == mount_id, 'account database mount changed')
+        validate_etc(etc_fd, etc_info, mount_id)
         return data
     finally:
         os.close(fd)
 
 
 def snapshot():
-    """Runtime guard proves /etc is a fixed RAM-upper overlay first.
+    """Callers run runtime_guard first to prove the fixed RAM-upper overlay.
 
     A root:root group database establishes the trusted local shadow group ID.
     No shadow/gshadow bytes are copied to plans or receipts.
     """
-    etc_device = os.stat('/etc').st_dev
-    group = read_database('group', etc_device)
-    groups = parse_database(group, 4, 2)
-    shadow_gid = int(groups['shadow'][2]) if 'shadow' in groups else 0
-    return {'group': group, 'passwd': read_database('passwd', etc_device),
-            'shadow': read_database('shadow', etc_device, shadow_gid),
-            'gshadow': read_database('gshadow', etc_device, shadow_gid)}
+    before = MANAGEMENT.secure_path('/etc', directory=True)
+    fd = os.open('/etc', os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    try:
+        info = os.fstat(fd)
+        require(metadata(info) == metadata(before), 'account database parent changed during open')
+        mount_id = etc_mount_id(Path('/proc/self/mountinfo').read_text())
+        validate_etc(fd, info, mount_id)
+        group = read_database('group', fd, info, mount_id)
+        groups = parse_database(group, 4, 2)
+        shadow_gid = int(groups['shadow'][2]) if 'shadow' in groups else 0
+        return {'group': group, 'passwd': read_database('passwd', fd, info, mount_id),
+                'shadow': read_database('shadow', fd, info, mount_id, shadow_gid),
+                'gshadow': read_database('gshadow', fd, info, mount_id, shadow_gid)}
+    finally:
+        os.close(fd)
 
 
 def parse_database(data, count, numeric=None):
