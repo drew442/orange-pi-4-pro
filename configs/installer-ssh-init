@@ -1,0 +1,67 @@
+#!/bin/sh
+# PID 1: private same-board RAM SSH installer; no automatic disk writes.
+export PATH=/usr/sbin:/usr/bin:/sbin:/bin LC_ALL=C
+/bin/busybox --install -s /bin
+mount -t proc -o nosuid,nodev,noexec proc /proc
+mount -t sysfs -o nosuid,nodev,noexec sysfs /sys
+mount -t devtmpfs -o nosuid devtmpfs /dev
+mount -t tmpfs -o mode=0755,nosuid,nodev,size=64m tmpfs /run
+mount -t tmpfs -o mode=1777,nosuid,nodev,size=64m tmpfs /tmp
+exec </dev/console >/dev/console 2>&1
+
+echo 'A733 installer preparation: unrestricted physical root console.'
+echo 'RAM-root SSH preparation; no disk filesystem, swap or automatic physical writer is started.'
+echo 'Keep payloads on identified fixed/external storage, not in /run, /tmp or SD.'
+modprobe nvme 2>/dev/null || :
+# Pass sysfs paths as arguments: names such as Fixed MDIO bus.0 contain spaces.
+find /sys/devices -name modalias -exec sh -c '
+    if read -r alias < "$1"; then
+        modprobe "$alias" 2>/dev/null || :
+    fi
+' sh {} \; 2>/dev/null
+uname -a
+cat /proc/cmdline
+lsblk -b -o NAME,SIZE,MODEL,SERIAL,TYPE,FSTYPE,MOUNTPOINTS || :
+ls -l /dev/kvm 2>/dev/null || :
+mkdir -p /dev/pts /run/sshd
+ssh_pty_ready=no
+if mount -t devpts -o nosuid,noexec,mode=0620,ptmxmode=0666 devpts /dev/pts; then
+    [ -c /dev/pts/ptmx ] && ssh_pty_ready=yes
+fi
+[ -e /dev/ptmx ] || ln -s pts/ptmx /dev/ptmx
+chmod 0755 /run/sshd
+ip link set lo up || :
+ssh_network_ready=no
+for net in /sys/class/net/*; do
+    [ "$(cat "$net/address" 2>/dev/null)" = 10:f4:ae:90:5e:57 ] || continue
+    [ -e "$net/device" ] && [ ! -d "$net/wireless" ] && [ ! -d "$net/phy80211" ] || continue
+    [ "$(cat "$net/type" 2>/dev/null)" = 1 ] || continue
+    interface=${net##*/}
+    ip link set "$interface" up || continue
+    if udhcpc -f -n -q -t 3 -T 3 -i "$interface" -s /etc/udhcpc.script; then
+        if ip -4 addr show dev "$interface" | /bin/busybox grep -q 'inet '; then
+            ssh_network_ready=yes
+        fi
+    fi
+done
+ip addr
+ip route
+host_fingerprint=$(/usr/bin/ssh-keygen -l -E sha256 -f /etc/ssh/ssh_host_ed25519_key.pub 2>/dev/null | awk '{print $2}')
+if [ "$ssh_network_ready" = yes ] && [ "$ssh_pty_ready" = yes ] && [ "$host_fingerprint" = SHA256:Epfegy9GsJ6ng4/0EH3dZmir7beQj5uYTnIbE4JPfEI ] && /usr/sbin/sshd -t -f /etc/ssh/sshd_config; then
+    echo "SSH host public fingerprint: $host_fingerprint"
+    /usr/sbin/sshd -f /etc/ssh/sshd_config -E /run/sshd.log
+    echo 'Private same-board SSH listener requested; log: /run/sshd.log'
+else
+    echo 'SSH preparation failed; serial console remains available.'
+fi
+printf '%s\n' 'Read-only target report: /usr/bin/python3 -I -B /usr/lib/a733-installer/plan-nvme.py --target IDENTIFIED_NVME_PATH'
+printf '%s\n' 'Physical installation, SPI programming and actual KVM acceptance remain pending.'
+while :; do
+    echo 'Starting installer preparation shell; exit restarts it.'
+    if command -v setsid >/dev/null 2>&1 && command -v cttyhack >/dev/null 2>&1; then
+        setsid cttyhack /bin/sh -i </dev/console >/dev/console 2>&1
+    else
+        /bin/sh -i </dev/console >/dev/console 2>&1
+    fi
+    sleep 1
+done

@@ -1,0 +1,27 @@
+Port 22
+AddressFamily inet
+ListenAddress 0.0.0.0
+HostKey /etc/ssh/ssh_host_ed25519_key
+PidFile /run/sshd.pid
+UsePAM yes
+AuthenticationMethods publickey
+PubkeyAuthentication yes
+PasswordAuthentication no
+KbdInteractiveAuthentication no
+PermitEmptyPasswords no
+PermitRootLogin prohibit-password
+StrictModes yes
+AllowUsers root
+AuthorizedKeysFile .ssh/authorized_keys
+DisableForwarding yes
+AllowAgentForwarding no
+AllowTcpForwarding no
+X11Forwarding no
+PermitTunnel no
+PermitUserEnvironment no
+PermitUserRC no
+PrintMotd no
+PrintLastLog no
+UseDNS no
+LogLevel VERBOSE
+Subsystem sftp internal-sftp
