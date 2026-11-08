@@ -30,6 +30,15 @@ the later authorized LV expansion is recorded below.
 
 ## Current cache capacity
 
+Latest [coherent-build retention](coherent-build-capacity-20261108.md) releases
+three superseded expanded cache files, preserving verified encoded recovery
+copies and current corrected inputs. After two [corrected VGIC bootstrap
+constructions](vgic-runtime-bootstrap.md), a fresh sample shows
+**23,932,395,520 bytes free** and **7,681,134,592 bytes available RAM** on the
+builder. Native retained-bootstrap staging leaves **287,522,816 bytes free**,
+above its unchanged 268,435,456-byte floor. Remeasure before the next job; these
+are point samples, not build minima. Earlier measurements below are historical.
+
 Latest [verified component retention](component-retention-20261108.md) retires
 only the two first-generation raw roots after full dual-host encoded-copy checks,
 independent source review and 24 Ubuntu fixtures. Their complete fresh-path A

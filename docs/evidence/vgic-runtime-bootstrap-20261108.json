@@ -1,0 +1,164 @@
+{
+  "date": "2026-11-08",
+  "source_revision": "18af21523e0e82809ea3503d8c84e26e72c31975",
+  "result": "PASS",
+  "classification": "Corrected state360d VGIC bootstrap construction and independent inspection; UNBOOTED",
+  "state_uuid": "360dfb39-f49f-487e-b307-0bb887c854c5",
+  "boot_profile": {
+    "name": "experimental-el2-vgic-v1",
+    "target_service": "0x8000ff40",
+    "expected_spsr": "0x3c9",
+    "physical_acceptance_pending": true,
+    "dtb": {
+      "bytes": 209344,
+      "sha256": "1ba8f5926c0d76d12479bafcfcfce66be4a934ccfb6a5bcbcc7f7aa86c07f9f4"
+    }
+  },
+  "artifacts": {
+    "a733-host-sd.img": {
+      "bytes": 268435456,
+      "sha256": "f02c74b4c001f1608d0005b6ff23fe82bffa8c02f71e19e5b6573819125ae383"
+    },
+    "a733-host-sd.img.gz": {
+      "bytes": 17271954,
+      "sha256": "fbfa9f4eae5913a61768e90fb62b2a3f48df9a2d38aed5b7380b83873f5307b6"
+    },
+    "uInitrd": {
+      "bytes": 4762436,
+      "sha256": "b10bdad8671a32b4157bf6f7ff553618024fc928e59caf691b529c8658b12d16"
+    },
+    "base-bootstrap-manifest.json": {
+      "bytes": 8794,
+      "sha256": "23d80141db14245d3f832440416131e818fba7b73f1a64a3147365a60a8007c2"
+    },
+    "assembly.log": {
+      "bytes": 4134,
+      "sha256": "39c5fbc343e2b3bf31c087536addd241a2f4c07decb6e36051444b7783e98572"
+    }
+  },
+  "manifest": {
+    "path": "out/vgic-runtime-bootstrap-20261108/retained-01/manifest.json",
+    "bytes": 17471,
+    "sha256": "47df42be022d9e378a034df25d31865a24337c9309b4e4fdc2710ea9c2462993"
+  },
+  "base_bootstrap_manifest": {
+    "bytes": 8794,
+    "sha256": "23d80141db14245d3f832440416131e818fba7b73f1a64a3147365a60a8007c2"
+  },
+  "builder_project": "/var/lib/a733-vgic-runtime-bootstrap-project-20261108-01/project",
+  "builder_outputs": [
+    "out/host-sd-vgic-runtime-corrected-01",
+    "out/host-sd-vgic-runtime-corrected-02"
+  ],
+  "repeat": {
+    "raw_identical": true,
+    "gzip_identical": true,
+    "uInitrd_identical": true,
+    "scope": "Two new file-packager runs from the same pinned base; not an independent complete source rebuild."
+  },
+  "reviews": {
+    "source": {
+      "path": "tmp/vgic-runtime-bootstrap-review-20261108.json",
+      "bytes": 3943,
+      "sha256": "33c4ed55152728c1ac9199ca00631b57b4ed61275edc9b74b4566e54c0d3b1eb"
+    },
+    "artifact": {
+      "path": "tmp/vgic-runtime-bootstrap-artifact-review-20261108.json",
+      "bytes": 8683,
+      "sha256": "d21ff7ae3261d382408599f7b6ed5aae0753868f57566a1fc32952ac4e8459c2"
+    }
+  },
+  "validation": {
+    "runtime": "Privileged prepared Ubuntu 22.04 Python 3.10",
+    "unit_tests": 1814,
+    "skips": 0,
+    "failures": 0,
+    "errors": 0,
+    "shell_suites": 5,
+    "diagnostic_assembly_cases": 5,
+    "bash_syntax": "PASS",
+    "toml": {
+      "runtime": "local Python tomllib",
+      "count": 5,
+      "result": "PASS"
+    },
+    "log": {
+      "path": "out/vgic-runtime-bootstrap-20261108/full-jammy-validation-attempt02.log",
+      "bytes": 7787,
+      "sha256": "9e4764c720e857c1d344f59ac8ea0eb76c39a86af1abc48fb0218f596534d34a"
+    },
+    "earlier_attempt": "Attempt01 failed before tests because an unprivileged wrapper could not enter root0700 parent. Attempt02 ran the entire wrapper with sudo; no source change."
+  },
+  "preservation": {
+    "semantic_change": {
+      "node": "/interrupt-controller@3400000",
+      "property": "interrupts",
+      "cells": [
+        1,
+        9,
+        4
+      ]
+    },
+    "dtb_before": {
+      "bytes": 209320,
+      "sha256": "4d7d964a54668cf5dc12cd4bf7e72a625c79883541272aeba1a91adbbedb86ed"
+    },
+    "dtb_after": {
+      "bytes": 209344,
+      "sha256": "1ba8f5926c0d76d12479bafcfcfce66be4a934ccfb6a5bcbcc7f7aa86c07f9f4"
+    },
+    "semantic_proof": "all FDT nodes/properties/reservations/boot CPU compared; only interrupts added",
+    "preserved_files": {
+      "uImage": {
+        "bytes": 27283528,
+        "sha256": "6f9269755c4c2bc196c094899fa1ff20292f4d762c4000f77fcbb0887d5f154a"
+      },
+      "uInitrd": {
+        "bytes": 4762436,
+        "sha256": "b10bdad8671a32b4157bf6f7ff553618024fc928e59caf691b529c8658b12d16"
+      },
+      "boot.cmd": {
+        "bytes": 1115,
+        "sha256": "d65f4dc811150fed3ab9b67722e6b327341d388b0263907380c9bf59497fd93f"
+      },
+      "boot.scr": {
+        "bytes": 1187,
+        "sha256": "f1ba10868782026d6fa4392b5e5f60db7953e8a340539f750ad710fb2b2032f1"
+      }
+    },
+    "identical_complete_prefix": {
+      "bytes": 33554432,
+      "sha256": "da4a8db3aba8255a78ed2b60a251c9835dfa0b5f471f1f0590fe09abb722b556"
+    },
+    "output_readback": "layout, complete prefix, extracted boot files, DT semantics and gzip expansion passed",
+    "base_inputs_held_and_reauthenticated": true,
+    "source_patch_url": "https://lkml.iu.edu/hypermail/linux/kernel/2610.3/16416.html",
+    "root_embedded_dtb": "unchanged original source pin; roots not modified",
+    "gzip": {
+      "mtime": 0,
+      "filename": "",
+      "level": 9
+    },
+    "image_fits_actual_sd": true,
+    "inputs": {
+      "/var/lib/a733-clean-replay-20261106/host-bootstrap-timesync-runtime-fixes-01/work/project/out/host-sd-timesync-runtime-fixes-01/a733-host-sd.img": {
+        "bytes": 268435456,
+        "sha256": "1063c591c3955e1e8531c8b22960bc09eb080024a6e79d331846572c3e0d2f76"
+      },
+      "/var/lib/a733-clean-replay-20261106/host-bootstrap-timesync-runtime-fixes-01/work/project/out/host-sd-timesync-runtime-fixes-01/manifest.json": {
+        "bytes": 8794,
+        "sha256": "23d80141db14245d3f832440416131e818fba7b73f1a64a3147365a60a8007c2"
+      }
+    }
+  },
+  "resource_sample": {
+    "builder_free_bytes": 23932395520,
+    "builder_memory_available_bytes": 7681134592,
+    "native_free_bytes_at_retention": 287522816,
+    "native_floor_bytes": 268435456,
+    "note": "Point-in-time sample after two constructions, not build minima. Recheck before next build."
+  },
+  "hardware_acceptance": false,
+  "physical_storage_written": false,
+  "next_gate": "Integrate the same DTB into corrected full NVMe BOOT while preserving all outside-BOOT bytes; independently review and boot the matched chain."
+}

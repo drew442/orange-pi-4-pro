@@ -31,8 +31,24 @@ python3 build/vgic-runtime-bootstrap.py --name corrected-01 \
   --manifest /ABSOLUTE/BASE/manifest.json
 ```
 
-Independent source review and 29 combined VGIC tests pass. Actual construction
-and independent artifact inspection are the next gates.
+Two actual constructions from committed source `18af215` now pass, with byte-identical
+raw images, gzip files and `uInitrd`. Independent source and artifact reviews pass.
+The privileged Jammy suite passes **1,814 tests**, five shell suites and five
+diagnostic assembly cases, without skips, errors or failures. See the
+[construction record](evidence/vgic-runtime-bootstrap-20261108.json).
+
+| Output | Bytes | SHA-256 |
+| --- | ---: | --- |
+| Raw bootstrap | 268435456 | `f02c74b4c001f1608d0005b6ff23fe82bffa8c02f71e19e5b6573819125ae383` |
+| Gzip | 17271954 | `fbfa9f4eae5913a61768e90fb62b2a3f48df9a2d38aed5b7380b83873f5307b6` |
+
+Builder outputs are in
+`/var/lib/a733-vgic-runtime-bootstrap-project-20261108-01/project/out/host-sd-vgic-runtime-corrected-01`
+and `-02`. Codex retains the first encoded image, manifest, original manifest,
+initramfs and assembly log under `out/vgic-runtime-bootstrap-20261108/retained-01/`;
+the raw files remain on the builder. The artifact review independently compares
+complete raw/gzip streams, firmware prefix, extracted files and DT semantics.
+Physical boot and matching full-NVMe integration remain pending.
 
 This is a file packager, without namespace producer execution, mounts, device
 writes, source downloads or dependency installation. Selected package versions

@@ -38,6 +38,9 @@ independent deployment reproduction remain incomplete.
   final environment checks, independent complete stream verification and
   independent artifact review. Hardware acceptance remains open. See
   [construction evidence](production-nvme-runtime-fixes.md).
+- **Corrected VGIC bootstrap:** [Two constructions and independent artifact review](vgic-runtime-bootstrap.md) pass from `18af215`; raw/gzip/initramfs bytes match.
+  The 256 MiB image fits the actual SD and selects corrected state `360d…`.
+  It remains **UNBOOTED**; full NVMe BOOT derivation with the same DTB is next.
 - **SPI:** Original backup and a private candidate derived from it are reviewed;
   the XM25QU128C, JEDEC `204118`, 16 MiB backup is blank (`0xff`).
   The [fresh read-only live comparison](spi-live-plan-results-20261108.md)
@@ -102,8 +105,9 @@ count as physical acceptance.
   retires three superseded expanded cache files, keeping their verified encoded
   recovery copies and all current corrected inputs. Builder free at completion
   is **24,076,783,616 bytes**; recheck each new source/capsule budget.
-- Latest privileged Ubuntu suite: **1,799 tests**, no skips, errors or failures;
-  five shell suites and five diagnostic assembly cases pass. These are host
+- Latest privileged Ubuntu suite: **1,814 tests**, no skips, errors or failures;
+  five shell suites and five diagnostic assembly cases pass. See the
+  [latest record](evidence/vgic-runtime-bootstrap-20261108.json). These are host
   checks only, not hardware acceptance.
 - Source/licensing work remains incomplete: licensing for 26 vendor boot inputs
   is unresolved; GCC and DejaGNU sources remain unacquired; notice presence does
@@ -122,7 +126,7 @@ count as physical acceptance.
    validate automatic time and identity behavior.
 3. Demonstrate independent SPI recovery before proposing programming. Capture
    U-Boot NVMe file reads, then test matched NVMe-first boot and manual SD
-   fallback. Review rollback and exact live write target before yes/no approval.
+   fallback. Review rollback and revalidate the authorized exact live write target.
 4. Complete the physical gates listed above and reproduce deployment from the
    guide. Do not claim release completion until the [plan](hypervisor-plan.md)
    and [release acceptance](hardware-validation.md) pass.
