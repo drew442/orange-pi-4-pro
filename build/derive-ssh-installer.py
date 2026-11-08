@@ -283,6 +283,7 @@ def derive(base, manifest_path, rootfs, authorized_keys, identity_path, output):
                  'etc/ssh/sshd_config': (stat.S_IFREG | 0o644, (REPO / 'configs/installer-sshd_config').read_bytes()),
                  'etc/pam.d/sshd': (stat.S_IFREG | 0o644, (REPO / 'configs/installer-sshd.pam').read_bytes()),
                  'var/empty': (stat.S_IFDIR | 0o755, b''),
+                 'var/log/lastlog': (stat.S_IFREG | 0o644, b''),
                  'run/sshd': (stat.S_IFDIR | 0o755, b''),
                  'dev/pts': (stat.S_IFDIR | 0o755, b''),
                  PROVENANCE + 'base-manifest.json': (stat.S_IFREG | 0o644, receipt)}
