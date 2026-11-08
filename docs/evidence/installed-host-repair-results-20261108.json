@@ -1,0 +1,58 @@
+{
+  "schema": 1,
+  "date": "2026-11-08",
+  "classification": "Physical installed-host management repair and SSH acceptance; KVM guest and boot-storage acceptance remain pending",
+  "repair": {
+    "target_model": "SPCC M.2 PCIe SSD",
+    "target_serial": "134807190FC700149277",
+    "partition": "/dev/nvme0n1p4",
+    "state_uuid": "00fd936c-49fb-4fea-87c8-928b9c1599e0",
+    "change": "identity/machine-id mode 0600 -> 0644; contents preserved",
+    "reinstall_performed": false,
+    "raw_log_lines": "tmp/08112026-1052-host-repair-and-ssh-test.txt:1266-1272"
+  },
+  "installed_boot": {
+    "os": "Debian GNU/Linux 12 (bookworm)",
+    "kernel": "6.6.98-a733-diag",
+    "boot_id": "94851e72-e3b9-4824-88c6-fb82ad7fb610",
+    "root": "/dev/nvme0n1p2 (read-only)",
+    "state": "/dev/nvme0n1p4 (read-write)",
+    "raw_log_lines": "tmp/08112026-1052-host-repair-and-ssh-test.txt:2393-2399,2604-2619"
+  },
+  "management": {
+    "interface": "end0",
+    "mac": "10:f4:ae:90:5e:57",
+    "ipv4": "192.168.1.116/24",
+    "gateway": "192.168.1.1",
+    "ssh_host_key_sha256": "Epfegy9GsJ6ng4/0EH3dZmir7beQj5uYTnIbE4JPfEI",
+    "accepted_client_keys_sha256": [
+      "RSA:WVU8wsBgfy5mGFNAZMdrvf+a3cTYo85B8llJlHIhUKA",
+      "ED25519:Dw9WPpqQ741skiDShdwAP3qXQtpgxgbUSlCp2hmod7k"
+    ],
+    "raw_log_lines": "tmp/08112026-1052-host-repair-and-ssh-test.txt:2611-2619",
+    "live_capture_lines": "out/host-repair-20261108/live-read-only.log:1-30"
+  },
+  "live_capture": {
+    "path": "out/host-repair-20261108/live-read-only.log",
+    "bytes": 5294,
+    "sha256": "45b1f47b4c5cb552c512b021b9bbedc4bd212f7879a5b19570371edd394571e7"
+  },
+  "limitations": {
+    "clock": "Captured system time is April 27, inconsistent with evidence date.",
+    "machine_id_commit": "systemd-machine-id-commit.service fails: /etc/machine-id is not on a temporary filesystem.",
+    "state_mounts": "Persistent ext4 state partition binds /etc/machine-id and backs /home, /root, /var, and /run/a733-state.",
+    "kvm_guest_accepted": false,
+    "spi_programmed_or_validated": false,
+    "zero_routine_sd_write_acceptance": false
+  },
+  "next_actions": [
+    "Package suppression of the inapplicable machine-id commit unit and validate prepared time-enabled userspace; preserve persistent identity.",
+    "Boot and accept an actual KVM guest.",
+    "Separately validate SPI-to-NVMe boot or the read-only SD fallback and zero routine SD writes."
+  ],
+  "operator_log": {
+    "path": "tmp/08112026-1052-host-repair-and-ssh-test.txt",
+    "bytes": 188714,
+    "sha256": "f71522e514a877879c6b1371ada33f11e745f7040a99ed9f0eedf47e8a3f49bc"
+  }
+}

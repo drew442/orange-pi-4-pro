@@ -1,15 +1,25 @@
 # First physical KVM guest for a matched installed profile
 
-This prospective procedure has **not been run on the board**. The current
-board action remains the [existing-install machine-id repair](installed-host-repair-20261107.md),
-then booting the same deployed host SD and verifying trusted SSH with **both**
-authorized keys. Do not reinstall to repair management. The current installation
-uses `installed-20261106`; the later `candidate-repeat-20261107` profile is only
-for a completed [matched second-candidate deployment](deploy-candidate-20261107.md)
-with its own successful management checks.
+**Do not run the original sequence below unchanged on the existing deployment.**
+[Physical execution on 2026-11-08](first-kvm-results-20261108.md) reached guest
+CPU/disk tests, but exposed three compatibility defects: OverlayFS account
+mount identity, absent host VGIC DT information, and unavailable BusyBox
+`blkid` in the original fixture. The minimal QEMU package also needs an explicit
+empty NIC option-ROM setting. Source corrections and a new initramfs are
+reviewed; the installed immutable tools remain unchanged. Full guest network,
+clean shutdown and restart have not passed. The sequence below retains its
+original authenticated profiles and old fixture hashes as a preparation
+reference, pending integration of those corrections into an executable guide.
 
-Select exactly one profile below, then use the common runtime, activation,
-enrollment and KVM proof sequence. Profiles bind complete tool closures (39
+The current operator action is the [VGIC diagnostic SD boot](next-host-boot-20261108.md),
+with the existing NVMe installation and repaired identity. The coordinator will
+use trusted SSH for the corrected guest sequence after reviewing that boot.
+The original installation uses `installed-20261106`; the later
+`candidate-repeat-20261107` profile belongs only to a completed
+[matched second-candidate deployment](deploy-candidate-20261107.md).
+
+For subsequent guide integration, select exactly one profile below. Its runtime, activation,
+enrollment and KVM proof sequence must incorporate the corrections above. Profiles bind complete tool closures (39
 installed files for the original deployment, 40 for the second candidate),
 package state, state/p5 identities and retained recovery artifacts. Do not mix
 profiles or override individual UUIDs, hashes or tool counts. This changes no

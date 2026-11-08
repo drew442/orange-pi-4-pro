@@ -1,0 +1,58 @@
+{
+  "schema": 1,
+  "date": "2026-11-08",
+  "source_commit": "6b9a4ab",
+  "classification": "Reviewed software and artifact corrections; physical guest CPU/disk partial only",
+  "changes": {
+    "97904d3": "Disable unused NIC PXE ROM while retaining host GIC and KVM-only CPU policy",
+    "6b9a4ab": "Replace unavailable guest blkid with exact read-only ext4 superblock magic/features/UUID/label validation before existing read-only content guard; repackage only init"
+  },
+  "software_checks": {
+    "privileged_unit_tests": 1708,
+    "skips": 0,
+    "errors": 0,
+    "failures": 0,
+    "shell_suites": 5,
+    "assembly_cases": 5,
+    "bash_syntax_files": 12
+  },
+  "test_environment_repair": "First discovery refused two imports because git-archive directories had group-write mode 0775. Removed group/other write from isolated root-owned builder checkout; unchanged source then passed full discovery.",
+  "initramfs": {
+    "bytes": 975394,
+    "sha256": "10b45e928ab1726e818f78ced73ab6015f0fbabef4f18403d574091fde0adaa2",
+    "independent_review": "22 entries; 21 non-init raw entries and padding byte-identical; init header changes only filesize",
+    "native_and_ubuntu22_builder_byte_equal": true
+  },
+  "physical_limits": [
+    "RAM diagnostic launcher selects GICv2; production host-GIC selection unchanged",
+    "Corrected guest passes CPU and one disk write but not network or guest-initiated clean shutdown/restart",
+    "Installed read-only tools were not replaced; new host packaging remains necessary"
+  ],
+  "evidence": [
+    {
+      "path": "tmp/host-repair-20261108/romfile-independent-review.json",
+      "bytes": 1570,
+      "sha256": "c942ebe3cbff46c7450edd1cc5ee76e5e44f6d42ad58a2549c8537ad5bf9c7a8"
+    },
+    {
+      "path": "tmp/host-repair-20261108/guest-identity-independent-review.json",
+      "bytes": 2459,
+      "sha256": "e2a53bed0c448da669a6becc27c106d47d5a717f34a89055855534fc1f97bec4"
+    },
+    {
+      "path": "out/host-repair-20261108/guest-fixed-full-tests-retry.log",
+      "bytes": 6557,
+      "sha256": "280c5fe7defae7eeef1bc9808aca7fbc836b7caf1a5ce764b20cfb1af0690566"
+    },
+    {
+      "path": "out/host-repair-20261108/guest-initramfs-builder-repeat.json",
+      "bytes": 3258,
+      "sha256": "5ea4475c4f4a2c8f58363f309568cb4bcfcfe7832fe460d604cf2e8957cc41dc"
+    },
+    {
+      "path": "out/guest-initramfs-identity-20261108/manifest.json",
+      "bytes": 4042,
+      "sha256": "f69e0a14aa63183e33fee05d54c0fcf40ef42fef99d210188dbc9441d2e5c0d9"
+    }
+  ]
+}

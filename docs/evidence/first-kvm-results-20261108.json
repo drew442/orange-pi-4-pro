@@ -1,0 +1,134 @@
+{
+  "schema": 1,
+  "date": "2026-11-08",
+  "classification": "physical KVM guest partial CPU+disk proof; full guest and release acceptance open",
+  "board": "Orange Pi 4 Pro A733",
+  "host_boot_id": "94851e72-e3b9-4824-88c6-fb82ad7fb610",
+  "diagnostics": {
+    "host_gic_dt_path": "/sys/firmware/devicetree/base/interrupt-controller@3400000",
+    "host_gic_compatible_hex": "61726d2c6769632d763300",
+    "host_gic_interrupts": null,
+    "KVM_CAP_IRQCHIP": 0,
+    "GICV2_RAM_launcher_only": true,
+    "launcher_two_argument_changes": [
+      "virt,gic-version=host -> virt,gic-version=2",
+      "virtio-net-pci,netdev=guestnet -> virtio-net-pci,netdev=guestnet,romfile="
+    ],
+    "installed_tools_replaced": false,
+    "guest_account_fix_only_modified_file": "scripts/guest-accounts.py",
+    "guest_account_fix_files_verified": 11,
+    "failed_fixture_pid": 3339,
+    "failed_fixture_reason": "passed CPU, failed blkid before disk writes",
+    "failed_fixture_disk_sha256_unchanged": "ff595fac0b9a7d990f099edc0dd0f9d4859fb9942e185d2f2377088ce32bd577",
+    "failed_fixture_archive": "/run/a733-guests/.firstkvm-failed-fixture-20261108",
+    "corrected_initramfs_bytes": 975394,
+    "corrected_initramfs_sha256": "10b45e928ab1726e818f78ced73ab6015f0fbabef4f18403d574091fde0adaa2",
+    "tcg_used": false,
+    "storage_reinstalled": false,
+    "spi_written": false,
+    "sd_write_acceptance_performed": false,
+    "corrected_initramfs_only_for_partial_run": true
+  },
+  "evidence": [
+    {
+      "path": "out/host-repair-20261108/kvm-gic-capabilities.json",
+      "bytes": 530,
+      "sha256": "078408be89c546f56d7599147e8b799e3a8faf5ece947d8c76fad8c71a5c2414"
+    },
+    {
+      "path": "out/guest-gicv2-no-rom-hotfix-20261108/manifest.json",
+      "bytes": 1588,
+      "sha256": "e09af216adc1ff651286309757dd55e193c79d0af32824272cca491f08ac2d26"
+    },
+    {
+      "path": "out/guest-gicv2-no-rom-hotfix-20261108/final-closure-verification.json",
+      "bytes": 375,
+      "sha256": "85bf1336eb7851147cc7937a495a7266e61f4775bc1c55f9b638cc63db7990f0"
+    },
+    {
+      "path": "out/guest-account-overlay-hotfix-20261108/manifest.json",
+      "bytes": 3651,
+      "sha256": "44ffeb86b915878499a0774dd9e4dcd6a280428054eabe40b8df7b2a7c6b7368"
+    },
+    {
+      "path": "out/guest-account-overlay-hotfix-20261108/final-closure-verification.json",
+      "bytes": 361,
+      "sha256": "7fcaa89ec3d3d0358ab1402db0ced0a88cedecc905ee45657c84ab263a13b6dc"
+    },
+    {
+      "path": "out/guest-initramfs-identity-20261108/manifest.json",
+      "bytes": 4042,
+      "sha256": "f69e0a14aa63183e33fee05d54c0fcf40ef42fef99d210188dbc9441d2e5c0d9"
+    },
+    {
+      "path": "out/first-kvm-installed-20261106/board-evidence-final/console-identity-1-complete.txt",
+      "bytes": 13424,
+      "sha256": "de3ad32ae84f87f9ce7fa458419843556c5a0b6eb47479ef69aeb03915d849b4"
+    },
+    {
+      "path": "out/first-kvm-installed-20261106/board-evidence-final/kvm-process-identity-1.txt",
+      "bytes": 2403,
+      "sha256": "f52768930f993a88cc8978d7dcd06f31deeacf8d3788ef71ef6883e1dfd652b9"
+    },
+    {
+      "path": "out/host-repair-20261108/guest-forward-lan-1.stderr",
+      "bytes": 95,
+      "sha256": "cfe955f74038f213cb8561888eafc86959849befd1272b7d73ce05f2ee81b460"
+    },
+    {
+      "path": "out/host-repair-20261108/first-kvm-session.typescript",
+      "bytes": 60874,
+      "sha256": "cfe6063f85a44ecef1f342d5a3714bbf7c881f3e254c3c86937790ad2c19d2b9"
+    },
+    {
+      "path": "out/host-repair-20261108/final-board-state.log",
+      "bytes": 2128,
+      "sha256": "aa9dbea7d771c0a61b3da671bdf31d53a907ee8e20b5eac0e68f9f98ff788fa8"
+    },
+    {
+      "path": "out/first-kvm-installed-20261106/board-evidence-final/stopped-counter-identity-1.txt",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "out/first-kvm-installed-20261106/board-evidence-final/stopped-disk-identity-1.sha256",
+      "bytes": 101,
+      "sha256": "4a7ff4b495637e23077c671d916168352fc4e2a5d106e263fd2e456c90e0aaa5"
+    },
+    {
+      "path": "out/first-kvm-installed-20261106/board-evidence-final/exit-identity-1-host-requested-stop.txt",
+      "bytes": 77,
+      "sha256": "87c4a5274e51f6192adbf9b054728710a4759ea35fc0ad196d272d18ffff0fc7"
+    }
+  ],
+  "next_physical_procedure": "docs/next-host-boot-20261108.md",
+  "partial_run": {
+    "qemu_pid": 3648,
+    "kvm_fds": [
+      "/dev/kvm",
+      "anon_inode:kvm-vm",
+      "anon_inode:kvm-vcpu:0"
+    ],
+    "uid": 60001,
+    "gid": 60001,
+    "supplementary_group_kvm_gid": 103,
+    "memory_mib": 256,
+    "memory_limit_mib": 512,
+    "vcpus": 1,
+    "cpu_result": "PASS",
+    "disk_result": "PASS previous=0 counter=1",
+    "disk_mount_sequence": [
+      "read-only",
+      "unmount",
+      "read-write",
+      "unmount",
+      "before networking"
+    ],
+    "network": "DHCPDISCOVER and SELECT 10.0.2.15 observed; no confirmed lease or HTTP response",
+    "stop": "host-requested SIGTERM; QEMU exit 0; unit inactive; not guest clean shutdown",
+    "post_stop_counter": 1,
+    "restart_or_counter_2_proven": false,
+    "loopback_http": "curl timed out after 10 seconds without response",
+    "lan_http": "connection refused, expected loopback-only isolation"
+  }
+}

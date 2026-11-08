@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "date": "2026-11-08",
+  "classification": "Reviewed account-controller correction with physical account creation; no KVM guest acceptance",
+  "source_commit": "5eed798cbe8285d922350240f11f539597b900e6",
+  "problem": "OverlayFS non-directory st_dev differs from /etc directory despite same mount ID; original controller refused before reading account databases",
+  "fix": "Validate held directory and account descriptor mount IDs before and after reading; retain no-follow, metadata, parent and mount guards",
+  "validation": {
+    "privileged_unit_tests": 1686,
+    "skips": 0,
+    "shell_suites": 5,
+    "assembly_cases": 5,
+    "bash_syntax_files": 12,
+    "real_private_overlay_fixture": "8 reads across lower/copy-up and foreign bind refusal before read"
+  },
+  "physical": {
+    "boot_id": "94851e72-e3b9-4824-88c6-fb82ad7fb610",
+    "state_uuid": "00fd936c-49fb-4fea-87c8-928b9c1599e0",
+    "override": "/run/a733-first-kvm-overlay-fix-20261108",
+    "files": 11,
+    "only_modified_file": "scripts/guest-accounts.py",
+    "account": "a733-vm-firstkvm",
+    "uid": 60001,
+    "gid": 60001,
+    "locked": true,
+    "supplementary_groups": [],
+    "home": "/nonexistent",
+    "shell": "/usr/sbin/nologin",
+    "installed_root_modified": false
+  },
+  "evidence": {
+    "tmp/host-repair-20261108/overlay-independent-review.json": {
+      "bytes": 4901,
+      "sha256": "1d540e8893edbf24c3b7d07f898b1bd01470b924f8cd13982391954788356dc7"
+    },
+    "out/host-repair-20261108/overlay-full-tests.log": {
+      "bytes": 6535,
+      "sha256": "b6de15cc7ad15a41770944475dad64a582640bbc6cd3c30063859eb0e9cbe985"
+    },
+    "out/host-repair-20261108/overlay-private-fixture.json": {
+      "bytes": 1367,
+      "sha256": "334a35c440f082603541cb736e7167bf83ec3da2af73136280a0f103bc9ee4b9"
+    },
+    "out/guest-account-overlay-hotfix-20261108/manifest.json": {
+      "bytes": 3651,
+      "sha256": "44ffeb86b915878499a0774dd9e4dcd6a280428054eabe40b8df7b2a7c6b7368"
+    },
+    "out/guest-account-overlay-hotfix-20261108/board-closure-verification.json": {
+      "bytes": 361,
+      "sha256": "7fcaa89ec3d3d0358ab1402db0ced0a88cedecc905ee45657c84ab263a13b6dc"
+    },
+    "out/guest-account-overlay-hotfix-20261108/post-accounts-closure-verification.json": {
+      "bytes": 361,
+      "sha256": "7fcaa89ec3d3d0358ab1402db0ced0a88cedecc905ee45657c84ab263a13b6dc"
+    },
+    "out/guest-account-overlay-hotfix-20261108/board-account-apply.log": {
+      "bytes": 588,
+      "sha256": "d41a61d5cba8509fee2624715f14e73699896a46003ae18f8296b80daf9a79a6"
+    }
+  },
+  "limitations": [
+    "RAM override disappears on reboot; original installed controller remains unchanged",
+    "Correction must be packaged in a future host image",
+    "Unit fixtures do not establish hardware guest/boot/storage acceptance"
+  ],
+  "upstream": "https://docs.kernel.org/filesystems/overlayfs.html"
+}

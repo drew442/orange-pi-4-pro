@@ -1,0 +1,82 @@
+{
+  "schema": 1,
+  "date": "2026-11-08",
+  "classification": "Built and independently inspected experimental SD; physical boot pending",
+  "source_commit": "3da4212",
+  "build_host": "drew@build.drewnet.online",
+  "build_project": "/var/lib/a733-vgic-sd-20261108/project",
+  "state_uuid": "00fd936c-49fb-4fea-87c8-928b9c1599e0",
+  "actual_sd_bytes": 1977614336,
+  "image": {
+    "path": "out/vgic-host-sd-20261108-trial01/a733-host-sd.img",
+    "bytes": 268435456,
+    "sha256": "0bb7ff051f8c79110e4bad15624f5026b21b3bf09593f476dead02a0793c56ac"
+  },
+  "gzip": {
+    "path": "out/vgic-host-sd-20261108-trial01/a733-host-sd.img.gz",
+    "bytes": 17269227,
+    "sha256": "c1b11bb53b7b60a4785337f898ee83a05726c68b4cee3baf9c29f7e578b3bc5e"
+  },
+  "manifest": {
+    "path": "out/vgic-host-sd-20261108-trial01/manifest.json",
+    "bytes": 3714,
+    "sha256": "40e8e6f3195a03456da6d4492b2d168e10ebf1d2729987d776c2aee6c614776b"
+  },
+  "change": "Only semantic DT addition /interrupt-controller@3400000 interrupts=<1 9 4>",
+  "preserved": [
+    "first 32 MiB including MBR/raw firmware/padding",
+    "kernel uImage",
+    "uInitrd including original state UUID",
+    "boot.cmd",
+    "boot.scr",
+    "all other DT semantics and reservations"
+  ],
+  "physical_boot": false,
+  "installed_root_changed": false,
+  "spi_written": false,
+  "reviews": [
+    {
+      "path": "tmp/host-repair-20261108/vgic-sd-independent-review.json",
+      "bytes": 4636,
+      "sha256": "4d8d67d54975327703f84a2f05394738aecb446ca67680255e54523be9c58f97"
+    },
+    {
+      "path": "tmp/host-repair-20261108/vgic-sd-artifact-review.json",
+      "bytes": 8065,
+      "sha256": "f61f676d989c6e84fa5a0e4d360c70773231281cc51ea943f16c3d24360c7372"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "out/host-repair-20261108/vgic-sd-build.log",
+      "bytes": 784,
+      "sha256": "71a0fe116fcaac3249e0fb51531e1dea163dd678f12ac46b7e74d18cb5e12296"
+    },
+    {
+      "path": "tmp/host-repair-20261108/build-vgic-sd.sh",
+      "bytes": 809,
+      "sha256": "781869ead25d6d412db9f4bd7c1bc8cb556b863091ad6c84d596bd4cc2046549"
+    },
+    {
+      "path": "tmp/host-repair-20261108/vgic-source.tar",
+      "bytes": 7761920,
+      "sha256": "4eb6bbdfeb9c7070225d958ef52e817b43c2deb12c66aad9fa3bd77d223ef884"
+    },
+    {
+      "path": "out/host-repair-20261108/vgic-sd-repeat.log",
+      "bytes": 253,
+      "sha256": "13876c6e368eddd29f1081a74a7571179a61f990b3782aef777c1478cae8b6b7"
+    }
+  ],
+  "limitations": [
+    "Published A733 maintenance-PPI proposal supports a trial, not hardware acceptance",
+    "Does not package account-controller or launcher source corrections into deployed root",
+    "Guest network, clean poweroff and restart must still pass with corrected host boot"
+  ],
+  "next_procedure": "docs/next-host-boot-20261108.md",
+  "reproduction": {
+    "second_tag": "20261108-trial02",
+    "raw_image_bytes_identical": true,
+    "raw_sha256": "0bb7ff051f8c79110e4bad15624f5026b21b3bf09593f476dead02a0793c56ac"
+  }
+}

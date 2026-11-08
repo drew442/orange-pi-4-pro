@@ -1,28 +1,43 @@
 # Implementation status
 
-Updated 2026-11-07. Detailed construction history is indexed in
+Updated 2026-11-08. Detailed construction history is indexed in
 [build reproduction status](build-reproduction-status.md). Physical release and
 independently reproduced deployment remain incomplete.
 
 ## Current board action
 
-The coordinator is [blocked on recurring missing hardware evidence](evidence/hardware-wait-audit-20261107.json).
-Off-board preparation has progressed; release acceptance still requires the
-operator's repair/boot log and a trusted current board address.
+The [existing-install repair succeeded](installed-host-repair-results-20261108.md).
+Both authorized SSH keys were accepted. Trusted live SSH confirms wired DHCP
+`192.168.1.116/24` on `end0`, MAC `10:f4:ae:90:5e:57`, with root A read-only
+and NVMe state read-write. **Do not reinstall NVMe to fix management.**
 
-Apply the [existing-install machine-id repair](installed-host-repair-20261107.md),
-then boot the **same deployed host SD**. Return the complete serial log, DHCP
-address and SSH results with both authorized keys. **Do not reinstall NVMe to
-fix management.**
+[Actual KVM guest execution is now proven partially](first-kvm-results-20261108.md):
+QEMU at UID/GID 60001 held VM/vCPU descriptors, and the guest passed CPU and
+NVMe-backed disk-write tests. Counter `1` remained after stop. Networking did
+not complete; the host stopped QEMU. **Guest clean poweroff, checkpoint,
+restart/counter `2` and full guest acceptance remain open.**
 
-[Physical logs](evidence/installed-host-first-boot-20261107.json) prove successful
-NVMe installation/full readback and installed root A reaching systemd. All eight
-CPUs enter EL2 and KVM initializes. Ethernet links at 1 Gbps, but installed
-DHCP/SSH fails; the serial root account has no usable password. The deployed
-machine-id mode `0600` blocks unprivileged networkd's DHCP identity access.
-[Actual pinned ARM-library checks](evidence/installed-host-fix-20261107.json)
-reproduce the defect; the repair changes that one file to `0644`.
-Physical repair, SSH and an actual KVM guest are still unproven.
+The original host DT lacks the GIC maintenance interrupt (`KVM_CAP_IRQCHIP=0`).
+The partial run used explicit GICv2 with KVM CPU execution and no PXE ROM,
+plus the reviewed [RAM account-controller correction](evidence/account-overlay-correction-20261108.json).
+The corrected guest initramfs preserves pinned BusyBox and checks fixed disk
+identity without its unavailable `blkid`. Deployed immutable tools remain
+unchanged; package the source corrections in a future host.
+
+**Next physical action:** [flash and boot the reviewed VGIC diagnostic SD](next-host-boot-20261108.md).
+`out/vgic-host-sd-20261108-trial01/a733-host-sd.img` is **256 MiB**, matched to
+the existing `00fd…` NVMe state. Two Ubuntu 22.04 builds are byte-identical;
+[independent artifact inspection](evidence/vgic-host-sd-20261108.json) passes.
+Only the GIC maintenance-interrupt property changes; firmware, kernel,
+initramfs, boot scripts and first 32 MiB remain unchanged. Physical boot is
+pending. Return full serial/read-only checks and DHCP address, and leave SSH
+available. No NVMe reinstall or SPI write is required.
+
+The captured board clock remains April 27. The original 220-package deployment
+has no NTP; separately prepared time-enabled userspace remains unbooted.
+The transient machine-id commit unit fails against the intentional persistent
+ext4 identity bind; suppress that inapplicable unit in a future image while
+preserving identity. No SPI programming has occurred.
 
 ## Fixed requirements and authorization
 
@@ -40,7 +55,7 @@ Physical repair, SSH and an actual KVM guest are still unproven.
 - [Management inputs](evidence/operator-inputs-20261105.json): both RSA3072 and
   Ed25519 keys, hostname `a733-host`, public-key-only SSH from any source/subnet.
   Wired MAC `10:f4:ae:90:5e:57`. Preparation boot obtained DHCP `192.168.1.115/24`
-  and HTTPS after manual UTC correction; installed automatic networking/time remain open.
+  and HTTPS after manual UTC correction; installed DHCP/SSH now pass; automatic time remains open.
 - SPI: **XM25QU128C**, JEDEC `204118`, 16 MiB, erase 65,536/write 1 byte.
   Preparation is authorized; present the exact live target/write plan and request
   simple **yes/no** before programming. No SPI write has occurred. Original backup,
@@ -54,7 +69,7 @@ Physical repair, SSH and an actual KVM guest are still unproven.
 | Area | Evidence and current limit |
 | --- | --- |
 | Compatible board stack | [Locked sources](../configs/diagnostic-sources.lock.json): vendor `a95129bf`, kernel `2ac08e8c`/6.6.98, U-Boot `b791be84`, pinned toolchains/boot inputs. [EL2 diagnostics](el2-diagnostic.md) physically initialize KVM; the separate modalias fix remains unbooted. |
-| Existing deployment | [Published guide](deploy-personalized-20261106.md) retains original SD/NVMe images and state UUID `00fd936c-49fb-4fea-87c8-928b9c1599e0`. Management repair is next. |
+| Existing deployment | [Published guide](deploy-personalized-20261106.md) retains original SD/NVMe images and state UUID `00fd936c-49fb-4fea-87c8-928b9c1599e0`. Physical repair, DHCP and both SSH keys now pass. |
 | Installer refresh | [Source `151a532`](installer-refresh-20261107.md): 256 MiB, exact-target yes/no, optional readback/progress; packaged ARM/default-no-readback checks pass. New image unbooted; it does not automatically repair installed state. |
 | Time-enabled userspace | [Actual offline build](timesync-outer-launcher.md) configures 221 pinned packages; complete archive readback and [dated repeat](account-date-replay-driver.md) pass. Fixed clock UID/GID 996, package/management ABI integration; installed NTP remains untested. |
 | Production components | First [roots](production-host-roots.md), [state](production-host-state.md) and [bootstrap](production-host-bootstrap.md) pass construction/readback/review. [Second roots](production-host-roots-repeat.md), [state](production-host-state-repeat.md) and [bootstrap](production-host-bootstrap-repeat.md) also pass, with timestamp/identity differences documented. Second UUID `feaaee34-d782-4c18-bd04-1029540ab26a`; matching [full NVMe repeat](production-nvme-repeat.md) now passes construction and independent stream verification. |
@@ -63,9 +78,9 @@ Physical repair, SSH and an actual KVM guest are still unproven.
 | SPI preparation | [Read-only backup tool](spi-backup.md) and [file assembler](spi-file-candidate.md) pass tests/review; only synthetic baseline assemblies exist. Synthetic files must never be flashed. Actual backup/candidate/programmer/recovery remain open. |
 | ROM investigation | [Version-only host FEL probe](rom-recovery-investigation.md) now compiles in the frozen builder; source/archive/ELF/capsule review passes. No RAM/execute/flash command path. No actual USB response or independent ROM recovery demonstrated. |
 | Host operations | [Updates](host-updates.md), [selection](nvme-root-selection.md), [RAM recovery](host-recovery.md) and package-state isolation pass software/packaged checks. Physical interrupted update, rollback, dirty-journal and missing-NVMe recovery remain open. |
-| Guest operations | [KVM-only first guest](kvm-first-guest.md) now has [two authenticated preparation profiles](evidence/first-kvm-profiles-20261107.json): original installed state/39 tools or second-candidate state/40 tools. Management, networking, enrollment, checkpoints and off-device restore have software fixtures. **No guest has booted.** |
+| Guest operations | [KVM-only first guest](kvm-first-guest.md) now has [two authenticated preparation profiles](evidence/first-kvm-profiles-20261107.json): original installed state/39 tools or second-candidate state/40 tools. Management, networking, enrollment, checkpoints and off-device restore have software fixtures. [Physical GICv2/KVM diagnostics](first-kvm-results-20261108.md) pass CPU/disk only; networking and clean restart remain open. The VGIC test SD is built/reviewed, unbooted. |
 
-Latest privileged Ubuntu discovery: **1,682 tests, no skips/errors/failures**;
+Latest privileged Ubuntu discovery: **1,708 tests, no skips/errors/failures**;
 five shell suites, five diagnostic assembly cases and Bash/TOML checks pass.
 These results establish no physical boot, guest, SD-write or recovery acceptance.
 
@@ -116,9 +131,8 @@ redistribution clearance is claimed.
 
 ## Next actions and completion gates
 
-1. Complete the existing-install repair and verify SSH with **both** keys.
-2. Run the [first actual KVM guest](kvm-first-guest.md): CPU/disk/network, clean
-   shutdown/restart and persisted disk marker. `/dev/kvm` alone is insufficient.
+1. Boot the [VGIC diagnostic SD](next-host-boot-20261108.md), return its serial/capability checks and current DHCP address, then finish guest networking, guest-initiated shutdown/restart and counter progression over trusted SSH. The original first-guest sequence needs the documented controller/fixture corrections; do not run it unchanged.
+2. Package the reviewed account and ROM corrections and suppress the inapplicable machine-id commit unit in a future host; validate prepared automatic time on hardware.
 3. The [matched second-candidate procedure](deploy-candidate-20261107.md) and
    actual full-payload acquisition rehearsal pass independent review. The [dedicated LAN endpoint](candidate-delivery-20261107.md) now serves it on
    port 8444 with full builder acquisition/TLS proof and trusted CA instructions;
