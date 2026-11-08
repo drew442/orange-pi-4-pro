@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "date": "2026-11-08",
+  "result": "PASS_DEVELOPER_CACHE_RETIREMENT",
+  "scope": "Developer cache only; no physical device writes",
+  "retired_archives": 4,
+  "allocated_bytes_released": 552181760,
+  "native_free_bytes_after_completion": 872210432,
+  "canonical_archives_retained": 2,
+  "native_and_builder_full_pin_checks": "PASS",
+  "candidate_code_sha256": "2c4e166579bd040c320d125214d6829030456affca83a2b426d3a78d0e37bb14",
+  "execution": {
+    "first_plan_attempt": "failed because a transient process was unavailable; private logs preserved; no unlink occurred",
+    "second_plan_and_apply": "PASS",
+    "apply_record": "out/native-archive-retention-20261108/apply.json",
+    "apply_stderr": "out/native-archive-retention-20261108/apply.stderr",
+    "retired_paths": [
+      "out/userspace-export-fresh-20261106/rootfs.tar.gz",
+      "out/userspace-export-canonical-02-20261106/rootfs.tar.gz",
+      "out/userspace-tracked-20261106/records/work/export-result/rootfs.tar.gz",
+      "out/timesync-retry-20261107/records/work/export-timesync-result/rootfs.tar.gz"
+    ],
+    "retained_control_and_events": "/var/lib/a733-native-archive-retirement-20261108-01",
+    "events_sha256": "78e9b6f0d2a577d6ee1889ad6794977b1504c9d16fa035cc92b7a45f86edcd3a",
+    "event_counts": {
+      "intent": 1,
+      "unlink-intent": 4,
+      "unlinked": 4,
+      "complete": 1
+    }
+  },
+  "validation": {
+    "native_fixtures": "25 passed, 0 failed",
+    "ubuntu_jammy_fixtures": "25 passed, 0 failed",
+    "independent_nsfs_review": "PASS",
+    "review_record": "tmp/native-archive-retention-20261108/review-nsfs.json",
+    "native_fixture_log": "tmp/native-archive-retention-20261108/fixture-nsfs-local25.log",
+    "ubuntu_fixture_log": "tmp/native-archive-retention-20261108/jammy-fixtures-home-03-nsfs25.log",
+    "restore_controller_source_and_fixtures": "PASS",
+    "actual_restore_performed": false
+  },
+  "limitations": [
+    "Earlier 23/24-case fixture logs are historical; current local and Ubuntu Jammy runs each passed all 25 cases.",
+    "No actual restore or recovery was performed.",
+    "This is developer-cache maintenance evidence; it does not establish device boot, storage, KVM, or hardware acceptance."
+  ]
+}

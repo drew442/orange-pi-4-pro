@@ -36,12 +36,14 @@ independent source review and 24 Ubuntu fixtures. Their complete fresh-path A
 restoration also passes. Builder free is **19,735,375,872 bytes**, below the next
 **23,760,999,827-byte** NVMe admission including its unchanged 22 GiB recipe guard.
 Complete 91,578-path old-seed recoveries from both the active copy and retained
-archive now pass independent review. Its reviewed retirement passes 29 Ubuntu
-fixtures and real-plan inspection and is currently running with durable per-entry
-records; terminal success is not yet claimed. Preserve seed probe/mask/records,
+archive now pass independent review. Its [reviewed retirement](evidence/seed-leaf-retirement-20261108.json) passes 29 Ubuntu
+fixtures and now completes all 91,578 entries with seven protected postchecks.
+Builder free at completion is **23,848,976,384 bytes**, before later validation
+staging; remeasure against the exact admission before composition. Preserve seed probe/mask/records,
 active restored builder and corrected components. All 842 packages still match the replay lock;
-audit is empty. Native storage needs separate capacity preparation before a full
-NVMe gzip copy. No guard reduction or further LV growth is authorized. Earlier
+audit is empty. [Native archive retention](native-archive-retention-20261108.md) now releases
+552,181,760 allocated bytes; native free is 872,210,432 bytes at completion.
+Remeasure against its 256 MiB floor before a full NVMe gzip copy. No guard reduction or further LV growth is authorized. Earlier
 samples below are historical.
 
 Latest [production-repeat retention](repeat-build-retention.md) preserves eleven

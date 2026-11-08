@@ -1,0 +1,31 @@
+{
+  "date": "2026-11-08",
+  "source_revision": "09a292a1c5f26e28869c4ee7ae2aadc8ea0edfe5",
+  "ubuntu_host": "build.drewnet.online",
+  "unit_tests": {
+    "count": 1777,
+    "result": "PASS",
+    "skips": 0
+  },
+  "shell_suites": {
+    "count": 5,
+    "result": "PASS"
+  },
+  "diagnostic_assembly": {
+    "count": 5,
+    "result": "PASS"
+  },
+  "bash_syntax": "PASS",
+  "toml": {
+    "result": "PASS",
+    "runtime": "local Python tomllib",
+    "note": "Ubuntu Python 3.10 lacks tomllib; final wrapper exit was nonzero only at its attempted import. Local Python parsed all .codex TOML."
+  },
+  "log": {
+    "path": "out/nvme-runtime-fixes-20261108/reader-full-jammy-validation-attempt03.log",
+    "bytes": 7038,
+    "sha256": "0c15240ca858aed04e95ef53ee7d39ed8cc22b0bd737c963dee9b08f23a2d371"
+  },
+  "earlier_attempts": "Preserved: first staging lacked Git metadata; second exposed staging ownership and group permissions. Third used complete root-owned non-writable committed checkout. No source changes were made to get these passes.",
+  "limits": "Host checks only; no hardware acceptance or actual NVMe stream verification."
+}

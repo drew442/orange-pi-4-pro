@@ -29,7 +29,9 @@ A [matched bootstrap](production-host-bootstrap-runtime-fixes.md) now passes
 construction and independent complete artifact inspection. Deployed tools remain
 unchanged. The [matching full-NVMe controller](nvme-runtime-fixes-controller.md)
 now passes independent source review, committed planning and full input
-authentication; composition and physical acceptance remain pending.
+authentication; composition is running at tag `timesync-runtime-fixes-01` after
+verified capacity admission. Completion, independent stream verification and
+physical acceptance remain pending.
 
 **Next physical action:** [flash and boot the reviewed VGIC diagnostic SD](next-host-boot-20261108.md).
 `out/vgic-host-sd-20261108-trial01/a733-host-sd.img` is **256 MiB**, matched to
@@ -85,7 +87,7 @@ installation. No SPI programming has occurred.
 | Installer refresh | [Source `151a532`](installer-refresh-20261107.md): 256 MiB, exact-target yes/no, optional readback/progress; packaged ARM/default-no-readback checks pass. New image unbooted; it does not automatically repair installed state. |
 | Time-enabled userspace | [Actual offline build](timesync-outer-launcher.md) configures 221 pinned packages; complete archive readback and [dated repeat](account-date-replay-driver.md) pass. Fixed clock UID/GID 996, package/management ABI integration; installed NTP remains untested. |
 | Corrected root components | [Runtime-fix roots](production-host-roots-runtime-fixes.md), source `f40c151`: both 4 GiB slots pass full 16,368-path readback and independent review; account/ROM fixes and machine-id mask are packaged. Matched state and bootstrap now pass construction/readback/review; full-NVMe chain and physical boot remain pending. |
-| Corrected-chain NVMe binding | [Registered controller](nvme-runtime-fixes-controller.md), source `6c34629`: committed plan and all 144 actual input files (17.86 GB) authenticate, with independent source review. Full composition awaits verified capacity; no new NVMe image or physical acceptance. |
+| Corrected-chain NVMe binding | [Registered controller](nvme-runtime-fixes-controller.md), source `6c34629`: committed plan and all 144 actual input files (17.86 GB) authenticate, with independent source review. Full composition is running after verified retention and admission; completion, stream verification and physical acceptance remain pending. |
 | Corrected-chain bootstrap | [Matched 256 MiB bootstrap](production-host-bootstrap-runtime-fixes.md), source `0a3d2a1`: complete firmware/SD/newc/gzip inspection and independent review pass. Original DTB retained; separate VGIC and NVMe-first integrations, matched NVMe and physical boot remain pending. |
 | Corrected-chain state | [Fresh state](production-host-state-runtime-fixes.md), source `6dbf6d9`, UUID `360d…`: 8 GiB, all 1,172 paths verified, keys/configuration preserved and independent review passes. First metadata-schema failure retained; no installation or hardware acceptance. |
 | Production components | First [roots](production-host-roots.md), [state](production-host-state.md) and [bootstrap](production-host-bootstrap.md) pass construction/readback/review. [Second roots](production-host-roots-repeat.md), [state](production-host-state-repeat.md) and [bootstrap](production-host-bootstrap-repeat.md) also pass, with timestamp/identity differences documented. Second UUID `feaaee34-d782-4c18-bd04-1029540ab26a`; matching [full NVMe repeat](production-nvme-repeat.md) now passes construction and independent stream verification. |
@@ -96,7 +98,7 @@ installation. No SPI programming has occurred.
 | Host operations | [Updates](host-updates.md), [selection](nvme-root-selection.md), [RAM recovery](host-recovery.md) and package-state isolation pass software/packaged checks. Physical interrupted update, rollback, dirty-journal and missing-NVMe recovery remain open. |
 | Guest operations | [KVM-only first guest](kvm-first-guest.md) now has [two authenticated preparation profiles](evidence/first-kvm-profiles-20261107.json): original installed state/39 tools or second-candidate state/40 tools. Management, networking, enrollment, checkpoints and off-device restore have software fixtures. [Physical GICv2/KVM diagnostics](first-kvm-results-20261108.md) pass CPU/disk only; networking and clean restart remain open. The VGIC test SD is built/reviewed, unbooted. |
 
-Latest privileged Ubuntu discovery: **1,746 tests, no skips/errors/failures**;
+Latest privileged Ubuntu discovery: **1,777 tests, no skips/errors/failures**;
 five shell suites, five diagnostic assembly cases and Bash/TOML checks pass.
 These results establish no physical boot, guest, SD-write or recovery acceptance.
 
@@ -137,12 +139,12 @@ files, releasing **888,848,384 allocated bytes**. Builder free becomes
 **19,735,375,872 bytes**, still below the **23,760,999,827-byte** initial admission.
 Complete **91,578-path** old-seed recoveries from both the active copy and the
 [pinned archive](evidence/seed-archive-recovery-20261108.json) now pass independent
-review. The separately reviewed leaf-retirement procedure passes 29 Ubuntu
-fixtures and its real-plan check; it is **currently running** under
-`/var/lib/a733-seed-leaf-retirement-20261108-01`, with the source leaf in its closed
-quarantine and every unlink journaled. Do not launch builder jobs until terminal
-success and protected postchecks. Completion is not yet claimed. Preserve the
-probe/mask/records, active builder and backups. Native sparse conversion
+review. The [reviewed seed-leaf retirement](evidence/seed-leaf-retirement-20261108.json)
+now completes: **91,578 entries** removed, all **seven protected postchecks**
+pass, source/quarantine absent and probe/mask/records, active builder and backups
+preserved. Builder free at completion is **23,848,976,384 bytes**, before later
+validation staging. Recheck the exact admission before composition. No board
+storage was written. Native sparse conversion
 preserves generated image bytes and leaves
 the separate **256 MiB** free-space minimum intact. Keep generated/downloaded
 artifacts outside Git. Recheck disk/RAM before each operation; start compilation
@@ -162,7 +164,7 @@ redistribution clearance is claimed.
 ## Next actions and completion gates
 
 1. Boot the [VGIC diagnostic SD](next-host-boot-20261108.md), return its serial/capability checks and current DHCP address, then finish guest networking, guest-initiated shutdown/restart and counter progression over trusted SSH. The original first-guest sequence needs the documented controller/fixture corrections; do not run it unchanged.
-2. Monitor the running reviewed seed-leaf retirement to terminal success and verify protected postchecks, then recheck the [matching full-NVMe controller](nvme-runtime-fixes-controller.md) admission. Native archive-only deduplication has 552 MB exact redundancy identified; its reviewed controller still needs full fixtures, actual plan and recovery checks before retirement. Keep all other records and canonical copies. After capacity clears, construct and fully inspect matched NVMe. Integrate the hardware-proven VGIC DT and matching NVMe-first firmware separately; validate automatic time, packaged fixes and identity behavior on hardware.
+2. Recheck the [matching full-NVMe controller](nvme-runtime-fixes-controller.md) admission. [Native archive deduplication](native-archive-retention-20261108.md) now retires four identical duplicate gzip files after 25 Ubuntu fixtures, independent review and actual plan/apply checks, releasing **552,181,760 allocated bytes**. Canonical copies remain on both hosts; actual restore is unperformed. Matched NVMe composition is running; monitor it to terminal success before full independent stream inspection. Integrate the hardware-proven VGIC DT and matching NVMe-first firmware separately; validate automatic time, packaged fixes and identity behavior on hardware.
 3. The [matched second-candidate procedure](deploy-candidate-20261107.md) and
    actual full-payload acquisition rehearsal pass independent review. The [dedicated LAN endpoint](candidate-delivery-20261107.md) now serves it on
    port 8444 with full builder acquisition/TLS proof and trusted CA instructions;

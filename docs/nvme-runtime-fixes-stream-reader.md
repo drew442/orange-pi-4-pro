@@ -5,8 +5,9 @@ registered corrected-chain full-NVMe gzip artifact from binary stdin. It is
 separate from the producer's reviewed source/project; adding this reader does
 not require rebuilding that producer. The full image has **not been constructed
 or stream-verified** by this change. Independent source review and 31 focused
-no-fork tests pass. Ubuntu validation and the actual complete artifact stream
-remain coordinator gates.
+no-fork tests pass. Full privileged Ubuntu discovery passes **1,777 tests**
+without skips, errors or failures. The actual complete artifact stream remains
+a coordinator gate.
 
 The reader holds the physical sibling `build/verify-nvme-stream.py` with SHA256
 `02b04bce52597d9a4ca00f19f4c520fe357e3ba437de43aa1bef38978474684d`.

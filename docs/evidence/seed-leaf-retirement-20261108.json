@@ -1,0 +1,89 @@
+{
+  "date": "2026-11-08",
+  "classification": "Completed builder seed-leaf retirement; no board storage writes or hardware acceptance",
+  "source_leaf": "/var/lib/a733-clean-builder/seed-probe-20261106-05/rootfs",
+  "retirement": {
+    "success": true,
+    "entries_removed": 91578,
+    "target_absent": true,
+    "quarantine_absent": true,
+    "physical_device_writes": false,
+    "no_board_storage_writes": true,
+    "probe_mask_lock_preserved": true,
+    "protected_postchecks_passed": 7,
+    "protected_postchecks": {
+      "active-binding": true,
+      "active-full-tree": true,
+      "inventory": true,
+      "process-mount-postcheck": true,
+      "restore-parent-mtime": true,
+      "retained-backups": true,
+      "seed-outside-leaf": true
+    }
+  },
+  "prepared_record": {
+    "path": "/var/lib/a733-seed-leaf-retirement-20261108-01/prepared.json",
+    "bytes": 26015168,
+    "sha256": "c3c4aa5699a813189e6593abafcdf79eca461d2c41c07569f26fd1f36088da04"
+  },
+  "journal": {
+    "path": "/var/lib/a733-seed-leaf-retirement-20261108-01/events.jsonl",
+    "bytes": 21029992,
+    "sha256": "a266abf07ee59e206ecf0268c38030b8ec221154fedbaebbcfee57039a2a228a",
+    "events": {
+      "intent": 1,
+      "rename-intent": 1,
+      "renamed": 1,
+      "unlink-intent": 91578,
+      "unlinked": 91578,
+      "tree-removed": 1,
+      "postcheck": 7,
+      "complete": 1
+    }
+  },
+  "completion_receipt": {
+    "path": "out/seed-leaf-retirement-20261108/complete.json",
+    "entries": 91578,
+    "success": true,
+    "physical_device_writes": false
+  },
+  "builder_resource_sample": {
+    "free_bytes": 23848976384,
+    "available_memory_bytes": 7519412224,
+    "swap_used_bytes": 205737984
+  },
+  "source_review": {
+    "path": "tmp/seed-retention-proof-20261108/retirement/review-attempt02.json",
+    "verdict": "PASS",
+    "findings": [],
+    "fixtures": "29 PASS",
+    "correction": "Complete active-tree identity map is bound before journal creation; independent nested-inode replacement is refused before journal/rename."
+  },
+  "fixture_validation": {
+    "path": "out/seed-leaf-retirement-20261108/jammy-fixtures.log",
+    "result": "29 PASS",
+    "runtime": "Ubuntu 22.04"
+  },
+  "source_and_active_recovery": {
+    "path": "docs/evidence/component-retention-20261108.json",
+    "complete_actual_reconstruction_entries": 91578,
+    "complete_actual_reconstruction_sha256": "223fa3df41df1ee5fe3b2b9b6dbd44028fd02dc20605868de7d92b3e06d95368",
+    "archive_method_B_actual_reconstruction": "docs/evidence/seed-archive-recovery-20261108.json",
+    "archive_method_B_independent_review": "PASS",
+    "both_recovery_methods_have_actual_complete_proof": true
+  },
+  "retention": {
+    "preserve": [
+      "seed probe and firmware mask",
+      "inventory and source records",
+      "active builder and backups",
+      "private per-path metadata and raw journals on their existing hosts"
+    ],
+    "private_per_path_metadata_and_raw_journals_copied_to_git": false,
+    "large_files_copied": false
+  },
+  "limits": [
+    "This is builder cache maintenance only; it establishes no physical boot, KVM guest, SD-write, SPI, rollback, endurance, or production-image acceptance.",
+    "Builder free space at the recorded sample exceeds the 23,760,999,827-byte initial admission by 87,976,557 bytes before later validation staging; remeasure before composition."
+  ]
+}

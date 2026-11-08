@@ -78,10 +78,12 @@ discovery does not depend on ignored build products. It does not reread the
 large root/STATE image bytes; full held-input authentication on the builder
 remains a separate coordinator gate.
 
-No composition was launched by this registration work. The last recorded
-builder free space is **18,874,372,096 bytes**, below the unchanged **22 GiB**
-initial recipe guard, before metadata capsule and Git staging overhead. Fresh
-verified capacity is required before construction. Runtime floors remain
+The registration itself launched no composition. After [verified seed retention](component-retention-20261108.md),
+full admission planning was repeated and construction is now running with tag
+`timesync-runtime-fixes-01` from the original `6c34629` producer project.
+The last observed builder free space before phase creation was **23,814,090,752
+bytes**, above the unchanged **23,760,999,827-byte** total admission. Completion
+and independent full stream verification are not yet claimed. Runtime floors remain
 3,000,000,000 free bytes and 1,000,000,000 available memory bytes, with a 10,800
 second timeout and process descriptor soft limit of at least 4,096. The exact
 SPCC target remains 256,060,514,304 bytes with 512/512-byte sectors.

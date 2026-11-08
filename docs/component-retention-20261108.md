@@ -82,9 +82,9 @@ stream is verified, but a new complete B-file reconstruction was not run.
 
 ## Complete old-seed recovery rehearsal
 
-The old seed leaf remains present at
-`/var/lib/a733-clean-builder/seed-probe-20261106-05/rootfs`. Before considering
-its retirement, the coordinator found two gaps in its existing freeze backup:
+Before retirement, the old seed leaf was at
+`/var/lib/a733-clean-builder/seed-probe-20261106-05/rootfs`. The coordinator found
+two gaps in its existing freeze backup:
 the active builder has one changed directory timestamp and four additional empty
 directories; the freeze archive intentionally excludes 16 paths, including six
 private files totaling 4,325 bytes. A source-list comparison alone cannot prove
@@ -111,13 +111,22 @@ existing Method A artifacts remain unchanged. The standalone Method A copy branc
 has source review but has not been executed directly as another full copy.
 Original freeze archive pins and dependency limits remain explicit.
 
-The separately reviewed old-seed retirement is currently running under
-`/var/lib/a733-seed-leaf-retirement-20261108-01` on the builder. Its exact source
-leaf was atomically moved to the closed sibling quarantine; the durable journal
-records each removal. Completion and protected postchecks are not yet claimed.
-Do not start builder namespace jobs or restore that source path while this
-operation is live. The probe, firmware mask, parent records, active builder and
-backups are protected. Recheck the full NVMe guard after terminal success.
-No further LV growth or admission reduction is authorized. Native storage retains
-its separate 256 MiB free-space floor; another full NVMe gzip transfer still
-needs native capacity preparation.
+The separately reviewed old-seed retirement completed successfully under
+`/var/lib/a733-seed-leaf-retirement-20261108-01` on the builder. It removed only
+that 91,578-entry source leaf through its closed sibling quarantine; every unlink
+was journaled and all seven protected postchecks pass. The exact journal SHA-256
+is `a266abf07ee59e206ecf0268c38030b8ec221154fedbaebbcfee57039a2a228a`; the
+prepared-record SHA-256 is `c3c4aa5699a813189e6593abafcdf79eca461d2c41c07569f26fd1f36088da04`.
+The full journal and per-path records remain private on the builder. The actual
+reconstruction from the retained active-builder material and the separate
+archive-based Method B both have complete 91,578-path proofs; Method B's
+independent review passes. See the [retirement receipt](evidence/seed-leaf-retirement-20261108.json)
+and [archive recovery evidence](evidence/seed-archive-recovery-20261108.json).
+The probe, firmware mask, parent records, active builder and backups remain
+protected. At the recorded postcheck sample, builder free space is **23,848,976,384
+bytes**, exceeding the unchanged **23,760,999,827-byte** initial admission by
+**87,976,557 bytes** before later validation staging. Recheck capacity before
+composition. No further LV growth or admission reduction is authorized.
+Native storage retains its separate 256 MiB free-space floor; another full NVMe
+gzip transfer now has [verified native archive capacity](native-archive-retention-20261108.md);
+remeasure against the retained 256 MiB floor before copying.

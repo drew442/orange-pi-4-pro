@@ -28,7 +28,7 @@ selections for root and state. `--metadata-profile fakeroot-raw-xattrs-v1` remai
 explicit metadata backend choice; it does not select archive bytes.
 
 The retained normalized archive on codex is
-`out/userspace-export-fresh-20261106/rootfs.tar.gz`; on the builder it is
+`out/userspace-export-canonical-01-20261106/rootfs.tar.gz`; on the builder it is
 `/var/lib/a733-clean-replay-20261106/userspace-foreign-recipe-01/work/export-fresh-01/rootfs.tar.gz`.
 Check its size/hash before use. Follow the existing builder isolation, output,
 configuration, selection and free-space requirements. Production slots remain
