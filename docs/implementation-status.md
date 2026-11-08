@@ -98,7 +98,7 @@ count as physical acceptance.
   subsequent jobs. Do not reduce the guard or
   grow the LV without authorization. See [native archive retention](native-archive-retention-20261108.md)
   and [capacity assessment](build-host-assessment.md).
-- Latest privileged Ubuntu suite: **1,787 tests**, no skips, errors or failures;
+- Latest privileged Ubuntu suite: **1,799 tests**, no skips, errors or failures;
   five shell suites and five diagnostic assembly cases pass. These are host
   checks only, not hardware acceptance.
 - Source/licensing work remains incomplete: licensing for 26 vendor boot inputs

@@ -260,5 +260,6 @@
     "Independent SPI recovery, SPI boot or accepted immutable-SD fallback and zero routine SD writes.",
     "10 cold/10 warm boots and 24-hour CPU/disk/network/thermal endurance on the selected release configuration.",
     "Interrupted update/rollback, missing-NVMe/dirty-journal recovery, off-device guest restore and independent deployment reproduction."
-  ]
+  ],
+  "host_regressions": "docs/evidence/vgic-kvm-host-validation-20261108.json"
 }

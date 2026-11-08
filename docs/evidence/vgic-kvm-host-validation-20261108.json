@@ -1,0 +1,25 @@
+{
+  "date": "2026-11-08",
+  "source_revision": "2163c454a49b20ccf2d748df4ceec25a4570bac3",
+  "host": "build.drewnet.online",
+  "runtime": "privileged Ubuntu 22.04 Python 3.10",
+  "unit_tests": 1799,
+  "skips": 0,
+  "errors": 0,
+  "failures": 0,
+  "shell_suites": 5,
+  "diagnostic_assembly_cases": 5,
+  "bash_syntax": "PASS",
+  "toml": {
+    "result": "PASS",
+    "count": 5,
+    "runtime": "local Python tomllib"
+  },
+  "result": "PASS",
+  "log": {
+    "path": "out/vgic-live-boot-20261108/full-jammy-validation.log",
+    "bytes": 6939,
+    "sha256": "573ed60c870cbe549125ee7202c4cda7928aa03ae734e867fff4b0a01ab22046"
+  },
+  "limits": "Host regressions only. Actual board results are separately pinned in kvm-vgic-results-20261108.json."
+}
