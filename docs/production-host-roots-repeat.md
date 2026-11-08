@@ -84,5 +84,6 @@ new roots, followed by matching bootstrap and full NVMe composition. Historical
 state/bootstrap/NVMe controllers still bind the first construction; their
 records cannot be relabeled as a new chain. This root repeat establishes no
 physical boot, SSH, automatic time, KVM guest, SPI recovery or SD-write acceptance.
-The [existing-install management repair](installed-host-repair-20261107.md)
-remains the next board action.
+The [VGIC SD trial](next-host-boot-20261108.md) is the current board action.
+[Corrected roots](production-host-roots-runtime-fixes.md) are now also built and
+inspected, with their separate matching state/boot chain still pending.
