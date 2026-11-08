@@ -1,0 +1,40 @@
+{
+  "date": "2026-11-08",
+  "source_revision": "2d9df08",
+  "host": "build.drewnet.online",
+  "runtime": "Privileged Ubuntu22.04 Python3.10",
+  "unit_tests": 1824,
+  "skips": 0,
+  "errors": 0,
+  "failures": 0,
+  "shell_suites": 5,
+  "diagnostic_assembly_cases": 5,
+  "bash_syntax": "PASS",
+  "toml": {
+    "result": "PASS",
+    "count": 5,
+    "runtime": "local Python tomllib"
+  },
+  "source_review": {
+    "path": "tmp/vgic-nvme-derivation-review-20261108.json",
+    "bytes": 4910,
+    "sha256": "17ceeb2bd9c0b4da531f708d16e9743fab4c581ef2038b67907d74383afa20dc"
+  },
+  "log": {
+    "path": "out/vgic-nvme-image-20261108/full-jammy-validation-attempt02.log",
+    "bytes": 7797,
+    "sha256": "14ec62acb153e7877048331e6af22a46f84cd3c7f761659d8d41f5304681413e"
+  },
+  "earlier_attempt": {
+    "result": "Failed: six errors in1785 discovered cases. No source bug or patch.",
+    "cause": "git archive exported group-write bits refused by root bootstrap guards; PYTHONDONTWRITEBYTECODE rejected by loader/environment guards.",
+    "correction": "Remove group/other write bits from source directories and three bootstrap files outside active producer closure; unset environment override, use python3 -B.",
+    "log": {
+      "path": "out/vgic-nvme-image-20261108/full-jammy-validation-attempt01.log",
+      "bytes": 12935,
+      "sha256": "7036cacaada026dc45d4613865a5a433f98ee97e1c4296c74d0ae93ff9cc0044"
+    }
+  },
+  "result": "PASS",
+  "limits": "Host source and fixture checks only; full NVMe construction running separately and physical derived-host acceptance remains pending."
+}

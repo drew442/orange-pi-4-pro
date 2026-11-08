@@ -31,8 +31,10 @@ uncooperative processes throughout restoration.
 Use the complete installed tree at `/usr/lib/a733-tools` on the new immutable
 A/B root or a trusted complete portable tool tree on RAM or NVMe. The older
 published recovery SD image has not been refreshed. See
-[guest tools availability](guest-tools-package.md). No board installation,
-boot or KVM guest pass has been demonstrated. Choose [direct HTTPS delivery](guest-restore-delivery.md)
+[guest tools availability](guest-tools-package.md). The
+[diagnostic KVM guest](kvm-vgic-results-20261108.md) and its
+[counter-3 off-device backup](evidence/vgic-counter3-backup-20261108.json) now pass;
+physical restoration and a restored KVM boot remain untested. Choose [direct HTTPS delivery](guest-restore-delivery.md)
 to avoid local encoded staging. For the local-file mode below, copy the verified archive from the separate backup
 machine to a **protected directory on the selected NVMe**, outside every enrolled
 guest directory. Its ancestors must be root-owned without shared write access;

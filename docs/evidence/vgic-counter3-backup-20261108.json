@@ -1,0 +1,145 @@
+{
+  "date": "2026-11-08",
+  "result": "PASS",
+  "classification": "Actual stopped diagnostic guest backup to two separate hosts; restoration not yet tested",
+  "boot_id": "7f1f07c4-5a4f-469f-97a7-612406d915a2",
+  "source_host": "root@192.168.1.116",
+  "source_manifest_sha256": "1317731d7025a3bd609cc92e1bbd24d7a19172822bae77d5bbb469b127bc6291",
+  "guest_counter": 3,
+  "disk": {
+    "bytes": 134217728,
+    "sha256": "210f6fb580f0e67a8c2a8b93d966a04fc7e8b53f183df4c5a02f46141c0024c3"
+  },
+  "history_records": 2,
+  "source_receipt": {
+    "path": "tmp/vgic-counter3-backup-20261108/source-receipt.json",
+    "bytes": 496,
+    "sha256": "972fc7295244cd833ee346b0bcaaaa7dc4d2613fa52a8a96771109fbc5773cd3"
+  },
+  "receiver_receipt": {
+    "path": "tmp/vgic-counter3-backup-20261108/receiver-receipt.json",
+    "bytes": 1591,
+    "sha256": "69411eb5263095a508c77cd984ef38d88d46bd9916522fd93502c8249c67d59e"
+  },
+  "ram_source_closure": {
+    "path": "tmp/vgic-counter3-backup-20261108/source-pins.json",
+    "bytes": 1802,
+    "sha256": "4cc250d896736a1032af815c93dbdf874646103095c3064153167302a96b92cd"
+  },
+  "ram_sources": {
+    "configs/guest_identity.py": {
+      "bytes": 1997,
+      "sha256": "d7d126f015e64c7d2f26a6cad8686b90c7892c00ea9ab552e4fc36b9254d5e84"
+    },
+    "configs/host_config.py": {
+      "bytes": 5090,
+      "sha256": "db661a276e46cfa924b51c159b6afec5eacfaef9d83291edc6a5269c50c4f29a"
+    },
+    "configs/guest_config.py": {
+      "bytes": 6627,
+      "sha256": "b3bf7098828be6d131a65b1d7307d7578cc2852768e0f181012a3479736aa041"
+    },
+    "configs/guest_manifest.py": {
+      "bytes": 6364,
+      "sha256": "e4407e98d6ccee39b4437f88de9c885965e15ec4c59be085ce6b89115d6fd6c6"
+    },
+    "configs/host-management.py": {
+      "bytes": 23404,
+      "sha256": "b6f3907d0423542543e6accfb3c5112b6a4ceaa9d7e74aa39104b7fe86a479dd"
+    },
+    "configs/package_state.py": {
+      "bytes": 13113,
+      "sha256": "809630ebba9d927b6ad5034899a88a8a8fcf3401f94ff6f223f92f6fbfa9c6eb"
+    },
+    "scripts/enroll-guest.py": {
+      "bytes": 23309,
+      "sha256": "04e12b68426d3c1137f9835e098dc20a3c0370c97de7ada592fb4e1e2b7db64e"
+    },
+    "scripts/guest-storage.py": {
+      "bytes": 8915,
+      "sha256": "64cd02b2e01fe8f58b0c425f6bfb2ae8849ab2b3b7f4022e4d712604a396ed44"
+    },
+    "scripts/guest-accounts.py": {
+      "bytes": 15412,
+      "sha256": "3b047df1be2b1548b31a3a94caac6541f3b6d407b08e9575f5b4c5fbc8644073"
+    },
+    "scripts/checkpoint-guest.py": {
+      "bytes": 12703,
+      "sha256": "50c01b06819adfc9bc1f1bd13ba20ae1acac660518f653f9b103567c515dec20"
+    },
+    "scripts/guest-checkpoint-policy.py": {
+      "bytes": 12977,
+      "sha256": "e7779518ad5a4d002b827d48b60c9d93d418d2283004a9df2ee088aab1c6a30f"
+    },
+    "scripts/backup-guest.py": {
+      "bytes": 9419,
+      "sha256": "e566d2426a7c6a876b63bc49592a63d5276642c4e1c7c28adb5a4c69d24cf47a"
+    },
+    "configs/guest_backup.py": {
+      "bytes": 6738,
+      "sha256": "449a623551e76177bc4fb5aafb477ac8e57c147f1d9ad2a4e564ccd467b43486"
+    }
+  },
+  "archive": {
+    "path": "out/vgic-counter3-backup-20261108/archive.tar.gz",
+    "bytes": 3391546,
+    "sha256": "2f2f21e2d6624b91f8b54c118cc7edda3fa17ae49fc47923a113fe8510e9adb6"
+  },
+  "builder_retention": "/var/lib/a733-counter3-guest-backup-20261108-01/archive.tar.gz",
+  "builder_verified_output": "/var/lib/a733-counter3-guest-backup-20261108-01/verified",
+  "receiver_result": {
+    "archive_sha256": "2f2f21e2d6624b91f8b54c118cc7edda3fa17ae49fc47923a113fe8510e9adb6",
+    "classification": "artifact-only",
+    "durable": true,
+    "files": {
+      ".checkpoints/46ad7bb99c62855e08ed3da37288c2a21ea8b44803aea01c99701172c6dddcaa-b3c3f1082abcae3a5d5d76e4849e099290e831b9309050e89992b545a9efae11.json": {
+        "bytes": 5657,
+        "sha256": "f2a00ed2e6a4e04b5cb071dd52d71f32b541fb77574dc128083ce1d7476d6e19"
+      },
+      ".checkpoints/b3c3f1082abcae3a5d5d76e4849e099290e831b9309050e89992b545a9efae11-1317731d7025a3bd609cc92e1bbd24d7a19172822bae77d5bbb469b127bc6291.json": {
+        "bytes": 6218,
+        "sha256": "bba3b7ed9e5dc29954c8d6f8460855328c14b769b89d0f0b826d04287eb9c4b6"
+      },
+      "Image": {
+        "bytes": 5251080,
+        "sha256": "1294959bcaa5a5ad3791913e33cffb8f0893708396aac8be9837c03a0e1f9377"
+      },
+      "archive.tar.gz": {
+        "bytes": 3391546,
+        "sha256": "2f2f21e2d6624b91f8b54c118cc7edda3fa17ae49fc47923a113fe8510e9adb6"
+      },
+      "checkpoint-history.json": {
+        "bytes": 16232,
+        "sha256": "6ba574ec933068b514af797a1e87905ef0bd8095bff53130c9302990be86c56d"
+      },
+      "disk.raw": {
+        "bytes": 134217728,
+        "sha256": "210f6fb580f0e67a8c2a8b93d966a04fc7e8b53f183df4c5a02f46141c0024c3"
+      },
+      "enrollment.json": {
+        "bytes": 1266,
+        "sha256": "1317731d7025a3bd609cc92e1bbd24d7a19172822bae77d5bbb469b127bc6291"
+      },
+      "initramfs.cpio.gz": {
+        "bytes": 975394,
+        "sha256": "10b45e928ab1726e818f78ced73ab6015f0fbabef4f18403d574091fde0adaa2"
+      }
+    },
+    "guarantees": "No off-device storage, guest boot or restore guarantee.",
+    "manifest_sha256": "1317731d7025a3bd609cc92e1bbd24d7a19172822bae77d5bbb469b127bc6291",
+    "profile": "a733-guest-backup-v1",
+    "published": true,
+    "schema": 1,
+    "source_history_records": 2,
+    "storage": {
+      "fstype": "ext4",
+      "maj:min": "252:0"
+    },
+    "success": true
+  },
+  "source_inspection": "Existing reviewed account correction tree plus unmodified backup-guest.py/guest_backup.py; complete 13-file closure staged only in RAM. Inspection and source locks/rechecks unchanged.",
+  "storage_relation": "Coordinator SSH relayed the authenticated backup from the board to build.drewnet.online, then retained the same encoded bytes on codex.drewnet.online; both are separate from board NVMe.",
+  "restore_verified": false,
+  "restored_kvm_boot_verified": false,
+  "final_corrected_host_acceptance": false
+}

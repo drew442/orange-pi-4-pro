@@ -31,6 +31,9 @@ independent deployment reproduction remain incomplete.
   The counter-1 guest disk and original enrollment survived unchanged;
   off-device guest backup and guarded p5 activation pass. [Normal-GIC guest tests](kvm-vgic-results-20261108.md) now pass; this remains
   a diagnostic host, not final release acceptance.
+- **Guest backup:** The stopped counter-3 guest and both checkpoint records now
+  have an [authenticated backup on builder and codex](evidence/vgic-counter3-backup-20261108.json).
+  Independent receiver readback passes. Restoration and a restored KVM boot remain open.
 - **Corrected candidate:** Runtime-fixed roots, matched state and bootstrap
   passed construction, readback/inspection and independent artifact review;
   they have not booted. The matched full-NVMe producer (source `6c34629`, tag
@@ -105,9 +108,9 @@ count as physical acceptance.
   retires three superseded expanded cache files, keeping their verified encoded
   recovery copies and all current corrected inputs. Builder free at completion
   is **24,076,783,616 bytes**; recheck each new source/capsule budget.
-- Latest privileged Ubuntu suite: **1,814 tests**, no skips, errors or failures;
+- Latest privileged Ubuntu suite: **1,824 tests**, no skips, errors or failures;
   five shell suites and five diagnostic assembly cases pass. See the
-  [latest record](evidence/vgic-runtime-bootstrap-20261108.json). These are host
+  [latest record](evidence/vgic-nvme-host-validation-20261108.json). These are host
   checks only, not hardware acceptance.
 - Source/licensing work remains incomplete: licensing for 26 vendor boot inputs
   is unresolved; GCC and DejaGNU sources remain unacquired; notice presence does

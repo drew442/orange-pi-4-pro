@@ -4,14 +4,17 @@ The sender streams an enrolled guest's manifest, checkpoint history, kernel,
 initramfs and disk to another machine. The receiver authenticates the compressed
 archive before decoding it, verifies every member and independently reads back
 the new files. These tools prepare backup artifacts. Guest restoration, a
-restored KVM boot and off-device retention still require validation. No such
-hardware test has passed.
+restored KVM boot and off-device retention still require validation. The [counter-3 diagnostic guest backup](evidence/vgic-counter3-backup-20261108.json)
+now passes actual off-device transfer and receiver readback on builder and codex.
+It includes both checkpoint records. Restoration and a restored KVM boot remain
+untested.
 
 Use the complete installed tree at `/usr/lib/a733-tools` on the new immutable
 A/B root or a trusted complete portable tool tree on RAM or NVMe; do not copy a
 single script without its imported modules. The older published recovery SD
 image has not been refreshed. See [guest tools availability](guest-tools-package.md).
-No board installation, boot or KVM guest pass has been demonstrated.
+The [diagnostic host KVM guest](kvm-vgic-results-20261108.md) passes core tests;
+final corrected-host deployment and restoration remain unvalidated.
 
 ## Prepare a consistent source
 
