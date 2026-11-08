@@ -183,6 +183,8 @@ class NvmeDerivationTests(unittest.TestCase):
     def make_boot(self):
         seed = self.root / 'seed'; seed.mkdir()
         for directory in sorted(V.DIRECTORIES - {'.'}, key=len):
+            if directory == 'lost+found':
+                continue  # Preserve the empty directory created by mke2fs.
             (seed / directory).mkdir()
         for path in V.BOOT_FILES:
             (seed / path).write_bytes(F.fdt() if path == V.DTB_PATH else path.encode())
@@ -191,7 +193,6 @@ class NvmeDerivationTests(unittest.TestCase):
             stream.truncate(16 * 1024**2)
         subprocess.run(['mke2fs', '-q', '-t', 'ext4', '-F', '-O', '^has_journal,^64bit,^metadata_csum',
                         '-d', str(seed), str(image)], check=True, capture_output=True)
-        subprocess.run(['debugfs', '-w', '-R', 'rmdir /lost+found', str(image)], check=True, capture_output=True)
         return image
 
     @unittest.skipUnless(shutil.which('debugfs') and shutil.which('mke2fs'), 'e2fsprogs required')

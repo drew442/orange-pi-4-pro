@@ -47,7 +47,7 @@ BOOT_FILES = {
     'boot/boot.scr': {'bytes': 1387, 'sha256': 'd82fd8c465f12aa539146ee0843e1badb3eb983f243dc241c04c63b0db56c938'},
     DTB_PATH: RUNTIME.DTB_RECORD,
 }
-DIRECTORIES = {'.', 'boot', 'boot/dtb', 'boot/dtb/allwinner'}
+DIRECTORIES = {'.', 'lost+found', 'boot', 'boot/dtb', 'boot/dtb/allwinner'}
 ADMISSION = 23760999827
 DISK_FLOOR, MEMORY_FLOOR = 3000000000, 1000000000
 NATIVE_FLOOR = 268435456

@@ -20,7 +20,9 @@ length 536,870,912 bytes). The binary semantic check permits only
 files, including the **NVMe SPI boot command**, retain their exact original
 pins. The SD boot command is never copied. Complete BOOT namespace, types,
 content hashes, ownership, modes, link counts and all four inode timestamps
-are checked before and after. Unexpected entries, hardlinks and xattrs fail.
+are checked before and after. The empty ext4 `lost+found` directory is
+preserved, including its metadata; any child in it is refused. Unexpected
+entries, hardlinks and xattrs fail.
 Only the private BOOT scratch filesystem receives `debugfs -w`; `e2fsck -nf`
 performs read-only checking. No mounts, repair, downloads or physical writes occur.
 
