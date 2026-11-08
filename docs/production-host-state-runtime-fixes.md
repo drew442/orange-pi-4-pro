@@ -100,7 +100,9 @@ logs are in `out/state-runtime-fixes-20261108`, with successful files under
 The `-01` paths retain the failed reader attempt and must not be confused with
 the accepted component.
 
-Matched bootstrap and NVMe bindings are still required. Historical registrations
+The [matched bootstrap](production-host-bootstrap-runtime-fixes.md) now passes
+construction and independent inspection. Matched NVMe integration remains
+required. Historical registrations
 cannot be relabeled. Current published images, installed state and SPI are
 unchanged. Physical boot, automatic time, the machine-id unit mask, complete KVM
 guest checks, rollback/recovery and independent deployment remain open.

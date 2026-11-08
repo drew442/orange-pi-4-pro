@@ -13,6 +13,18 @@ only the device tree gains the GIC maintenance interrupt. The
 This image has not booted on the board. It does not package the RAM account or
 launcher corrections used during the coordinator's guest diagnostics.
 
+## Prepared remote write over SSH
+
+The coordinator has also completed [non-destructive remote preparation](evidence/vgic-remote-sd-preparation-20261108.json)
+for the same image: RAM-only staging, exact SU02G identity/capacity, idle-state
+checks, image hash and independent review. The identified target is
+`/dev/mmcblk1`, CID `035344535530324780716f216e00a8f5`. Exact-target operator
+yes/no for overwrite and reboot is pending. No remote SD write has occurred.
+After approval, the guarded single-write procedure repeats the identity and
+idle checks, displays progress and skips optional readback. Failed boot may
+still require the physical recovery procedure below. NVMe and SPI are outside
+this write plan.
+
 ## Flash the same SD
 
 Save any console session first. Shut down the running host normally with

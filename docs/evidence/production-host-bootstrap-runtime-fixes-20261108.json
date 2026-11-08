@@ -1,0 +1,254 @@
+{
+  "boot_inputs": {
+    "Image": {
+      "bytes": 27283464,
+      "sha256": "9df974c55fa61a77e8fe812652780dad471527eb9615c27838f481887d4c50e7"
+    },
+    "board.dtb": {
+      "bytes": 209320,
+      "sha256": "4d7d964a54668cf5dc12cd4bf7e72a625c79883541272aeba1a91adbbedb86ed"
+    },
+    "boot0_sdcard.fex": {
+      "bytes": 245760,
+      "sha256": "9213f1c56ef932930d43b5751e8937bea0e9ae7460ec16187cc1b0dffdb75345"
+    },
+    "boot_package.fex": {
+      "bytes": 1392640,
+      "sha256": "b20c3d1133aee6474416bc9846b0bf94d5439aa12d7f7555b44607105ddab3b6"
+    },
+    "kernel.config": {
+      "bytes": 212080,
+      "sha256": "8a29d9c36e52db7e8a7d6ff757dc69e660f4273c99e5f00c5dbc5a9b7e060675"
+    },
+    "uImage": {
+      "bytes": 27283528,
+      "sha256": "6f9269755c4c2bc196c094899fa1ff20292f4d762c4000f77fcbb0887d5f154a"
+    }
+  },
+  "boot_profile": {
+    "evidence": {
+      "bytes": 6582,
+      "path": "docs/evidence/el2-diagnostic-20261104.json",
+      "sha256": "9c30d5d873fa8ad154b8068cdebfc7f40f6487ce6a79f76a52da4dd44ba1b5f8"
+    },
+    "expected_spsr": "0x3c9",
+    "name": "experimental-el2",
+    "physical_acceptance_pending": true,
+    "target_service": "0x8000ff40"
+  },
+  "boot_script": {
+    "bytes": 1115,
+    "sha256": "d65f4dc811150fed3ab9b67722e6b327341d388b0263907380c9bf59497fd93f"
+  },
+  "builder": "drew@build.drewnet.online",
+  "classification": "Corrected-chain frozen-builder immutable EL2 bootstrap; no installation or physical acceptance",
+  "compressed_image": {
+    "bytes": 17271950,
+    "sha256": "90d5aacb8f38c4afbb260712d01d119d83c324cb8b9bf89f6b96fd0006adc686"
+  },
+  "date": "2026-11-08",
+  "hardware_acceptance": false,
+  "image": {
+    "bytes": 268435456,
+    "sha256": "1063c591c3955e1e8531c8b22960bc09eb080024a6e79d331846572c3e0d2f76"
+  },
+  "image_fits_actual_sd": {
+    "fits": true,
+    "image_bytes": 268435456,
+    "sd_bytes": 1977614336
+  },
+  "independent_review": {
+    "bytes": 18556,
+    "findings": [],
+    "path": "out/bootstrap-runtime-fixes-20261108/independent-review.json",
+    "result": "PASS",
+    "scope": "Independent actual source/capsule/state proof plus complete regular-file SD/newc/CRC/gzip inspection; no mounts or device writes",
+    "sha256": "d03a85a403cd110e77f7ba51b0d897c80711455f8d8a4205d830eecdd76ebeb6"
+  },
+  "initial_budget": {
+    "capsule_bytes": 232323933,
+    "git_staging_bound_bytes": 137792021,
+    "recipe_bytes": 4294967296,
+    "required_free_bytes": 4665083250
+  },
+  "isolation": {
+    "host_inventory_packages": 842,
+    "host_inventory_unchanged": true,
+    "mapped_processes_final": [],
+    "phase_mounts_final": []
+  },
+  "limits": [
+    "Matched full NVMe construction and independent stream verification still required.",
+    "State360d differs from installed00fd and earliercandidates; never flash this SD alone for currentinstallation.",
+    "Original compatible DTB retained; VGICdiagnosticDT and NVMe-first firmware require separate matching integration and hardwareproof.",
+    "No physicalboot, automatedtime, KVMcompletion, SDwrite, SPI/recovery, endurance, rollback or deploymentreproduction acceptance established."
+  ],
+  "native_retention": {
+    "compressed_image_and_initramfs_retained": true,
+    "directory": "out/bootstrap-runtime-fixes-20261108/generated",
+    "native_raw_allocated_bytes": 32591872,
+    "raw_image_retained": true,
+    "sparse_transfer_full_hash_preserved": true
+  },
+  "observations": [
+    "e2fsck -fn exits zero with nine inherited timestamp warnings also present in historical bootstrap images; no structural filesystem error observed.",
+    "Retained checkout uses a mapped UID. Read-only remote Git checks use a command-scoped safe.directory for that exact checkout; no persistent Git configuration is changed.",
+    "All 689 committed source records, original and capsule input pins, real state proofs, payload/inner program bytes and copied artifact pins pass. Native image and gzip are fully streamed; source-derived complete newc is independently parsed and checked."
+  ],
+  "output": "work/project/out/host-sd-timesync-runtime-fixes-01",
+  "payload_records": {
+    "initramfs_manifest": {
+      "bytes": 75532,
+      "sha256": "5bbeafdd793464eaae74fa2010606adc30664676c8132d0f0e983c1ced68e2f3"
+    },
+    "inspection": {
+      "bytes": 669,
+      "sha256": "e748f2bc4397fd619f4eb449a22b62db42dee499d4da5d4669ad6337a438e7ff"
+    },
+    "sd_manifest": {
+      "bytes": 8794,
+      "sha256": "23d80141db14245d3f832440416131e818fba7b73f1a64a3147365a60a8007c2"
+    }
+  },
+  "phase": "/var/lib/a733-clean-replay-20261106/host-bootstrap-timesync-runtime-fixes-01",
+  "physical_storage_written": false,
+  "producer_records": {
+    "receipt.json": {
+      "bytes": 188414,
+      "sha256": "f084529efc51b880119c4a425194914e196f372d3cbc7bd6b2f2a64243f20ba5"
+    },
+    "runtime.log": {
+      "bytes": 3177,
+      "sha256": "2c205b9c7de9fbcbfdf6539aa3ee2f2af5729ffedb63ed64f86212268e7f6841"
+    },
+    "source-manifest.json": {
+      "bytes": 145213,
+      "sha256": "30cc375349a78a75a9a0c62bc72ba0fa5b6cc8707f090a539e31714bb918fce5"
+    },
+    "staged.json": {
+      "bytes": 183412,
+      "sha256": "8d3455ac0505269b8b7e0f9792037362e0ea4ed27958ec191dab4061d321121a"
+    }
+  },
+  "published_deployment_images_changed": false,
+  "readback_expectations": {
+    "checks": {
+      "classification": "independent regular-file host SD checks; hardware acceptance pending",
+      "gzip_expansion": "passed",
+      "host_script_crc_and_contents": "passed",
+      "image": {
+        "bytes": 268435456,
+        "sha256": "1063c591c3955e1e8531c8b22960bc09eb080024a6e79d331846572c3e0d2f76"
+      },
+      "initramfs_entries_checked": 424,
+      "initrd_wrapper_and_payload": "passed",
+      "legacy_ext4_features": [
+        "ext_attr",
+        "resize_inode",
+        "dir_index",
+        "filetype",
+        "extent",
+        "flex_bg",
+        "sparse_super",
+        "large_file",
+        "huge_file",
+        "dir_nlink",
+        "extra_isize"
+      ],
+      "mbr_and_raw_blobs": "passed",
+      "physical_storage_writes": false,
+      "pinned_kernel_and_dtb": "passed",
+      "state_uuid": "360dfb39-f49f-487e-b307-0bb887c854c5"
+    },
+    "hardware_acceptance": false,
+    "inspection": {
+      "bytes": 669,
+      "sha256": "e748f2bc4397fd619f4eb449a22b62db42dee499d4da5d4669ad6337a438e7ff"
+    }
+  },
+  "resources": {
+    "composition_admission_requires_additional_project_and_capsule_staging": true,
+    "composition_recipe_guard_bytes": 23622320128,
+    "final": {
+      "available_memory_bytes": 7576543232,
+      "free_bytes": 18874372096,
+      "time": 1794103935.1479173
+    },
+    "minimum_available_memory_bytes": 7403929600,
+    "minimum_free_bytes": 18639495168,
+    "native_minimum_bytes": 268435456
+  },
+  "runtime_fixes_controller": {
+    "historical_template": {
+      "bytes": 23192,
+      "sha256": "bcadf141568ccfa77d875ca1a335fb00792125c831cc4f02aef7b8a1bd6cdc9f"
+    },
+    "registered_parent": "docs/evidence/production-host-state-runtime-fixes-20261108.json",
+    "registered_parent_canonical_sha256": "4d3b694fd55fc1d40b73b1de8c3b0d2e9f9dce9ca2fb8c1dda058dfb77a1e6c1",
+    "registered_parent_pin": {
+      "bytes": 13777,
+      "sha256": "d0566a7ed65fdb192890c78655e6d30a871fd2584576dd669d0ddddd8eb02e04"
+    },
+    "state_adapter": {
+      "path": "build/launch-host-state-runtime-fixes.py",
+      "sha256": "f137beb5512c4f370806191bb1a2646a367bce8514154f5b64a369de04e4629c"
+    },
+    "state_historical_template": {
+      "bytes": 28805,
+      "sha256": "68bdbb52c81c41cf97e11b1298c3c04ff64bf4671574550dd4f7ffaad9f405e1"
+    }
+  },
+  "schema": 1,
+  "source_review": {
+    "bytes": 17113,
+    "path": "out/bootstrap-runtime-fixes-20261108/source-review.json",
+    "sha256": "61eeb289ebba2bcee5e6d7e23f585afa7c58278c0118395e1b8b6c7239c2b2ec"
+  },
+  "source_revision": "0a3d2a1ff78108e445d1c832362b2667897a9c9e",
+  "source_userspace_profile": "original-baseline-storage-tools-only",
+  "state_evidence": {
+    "bytes": 13777,
+    "path": "docs/evidence/production-host-state-runtime-fixes-20261108.json",
+    "sha256": "d0566a7ed65fdb192890c78655e6d30a871fd2584576dd669d0ddddd8eb02e04"
+  },
+  "state_receipt_sha256": "a25aa352b42bc49c13218d61587ea68636e83d21b77a34af52c6fd68db12ae88",
+  "state_uuid": "360dfb39-f49f-487e-b307-0bb887c854c5",
+  "tracked_source_records": 689,
+  "uInitrd": {
+    "bytes": 4762436,
+    "sha256": "b10bdad8671a32b4157bf6f7ff553618024fc928e59caf691b529c8658b12d16"
+  },
+  "validation": {
+    "assembly_cases": 5,
+    "bash_files": 12,
+    "bash_toml_diff_checks": true,
+    "committed_cli_plan": {
+      "bytes": 183100,
+      "path": "out/bootstrap-runtime-fixes-20261108/plan.json",
+      "sha256": "ebbc10fcc08a8c6c36fe4df82c0f873a148d7baac421d7b5d36cf734ef96693a"
+    },
+    "full_validation_log": {
+      "bytes": 7525,
+      "path": "out/bootstrap-runtime-fixes-20261108/full-validation.log",
+      "sha256": "19ba586f6e91292789cd47c1bbe6c319b3050d0ec98c409e0d316a23b8464a39"
+    },
+    "privileged_ubuntu_unit_tests": 1735,
+    "producer_terminal_exit_code": 0,
+    "shell_suites": 5,
+    "skips": 0
+  },
+  "verification": {
+    "files_verified": 5,
+    "fits_actual_sd": true,
+    "hardware_acceptance": false,
+    "image_bytes": 268435456,
+    "initramfs_manifest": {
+      "bytes": 75532,
+      "sha256": "5bbeafdd793464eaae74fa2010606adc30664676c8132d0f0e983c1ced68e2f3"
+    },
+    "manifest": {
+      "bytes": 8794,
+      "sha256": "23d80141db14245d3f832440416131e818fba7b73f1a64a3147365a60a8007c2"
+    }
+  }
+}

@@ -25,8 +25,9 @@ identity without its unavailable `blkid`. [Fresh corrected root components](prod
 now pass construction, full filesystem readback and independent artifact review.
 A [matched fresh state](production-host-state-runtime-fixes.md) now also passes
 construction, complete filesystem readback and independent artifact review.
-Deployed tools remain unchanged; matching bootstrap/NVMe integration and physical
-acceptance remain pending.
+A [matched bootstrap](production-host-bootstrap-runtime-fixes.md) now passes
+construction and independent complete artifact inspection. Deployed tools remain
+unchanged; matching full-NVMe integration and physical acceptance remain pending.
 
 **Next physical action:** [flash and boot the reviewed VGIC diagnostic SD](next-host-boot-20261108.md).
 `out/vgic-host-sd-20261108-trial01/a733-host-sd.img` is **256 MiB**, matched to
@@ -34,8 +35,11 @@ the existing `00fd…` NVMe state. Two Ubuntu 22.04 builds are byte-identical;
 [independent artifact inspection](evidence/vgic-host-sd-20261108.json) passes.
 Only the GIC maintenance-interrupt property changes; firmware, kernel,
 initramfs, boot scripts and first 32 MiB remain unchanged. Physical boot is
-pending. Return full serial/read-only checks and DHCP address, and leave SSH
-available. No NVMe reinstall or SPI write is required.
+pending. The coordinator has staged this exact image in RAM over trusted SSH;
+the [exact `/dev/mmcblk1` SU02G target and single-write plan](evidence/vgic-remote-sd-preparation-20261108.json) pass independent
+review. Operator yes/no for the remote SD overwrite/reboot is pending; no SD
+write has occurred. Return full serial/read-only checks and DHCP address, and
+leave SSH available. No NVMe reinstall or SPI write is required.
 
 The captured board clock remains April 27. The original 220-package deployment
 has no NTP; separately prepared time-enabled userspace remains unbooted.
@@ -78,7 +82,8 @@ installation. No SPI programming has occurred.
 | Existing deployment | [Published guide](deploy-personalized-20261106.md) retains original SD/NVMe images and state UUID `00fd936c-49fb-4fea-87c8-928b9c1599e0`. Physical repair, DHCP and both SSH keys now pass. |
 | Installer refresh | [Source `151a532`](installer-refresh-20261107.md): 256 MiB, exact-target yes/no, optional readback/progress; packaged ARM/default-no-readback checks pass. New image unbooted; it does not automatically repair installed state. |
 | Time-enabled userspace | [Actual offline build](timesync-outer-launcher.md) configures 221 pinned packages; complete archive readback and [dated repeat](account-date-replay-driver.md) pass. Fixed clock UID/GID 996, package/management ABI integration; installed NTP remains untested. |
-| Corrected root components | [Runtime-fix roots](production-host-roots-runtime-fixes.md), source `f40c151`: both 4 GiB slots pass full 16,368-path readback and independent review; account/ROM fixes and machine-id mask are packaged. Matched state is now built/read back/reviewed; bootstrap/NVMe chain and physical boot remain pending. |
+| Corrected root components | [Runtime-fix roots](production-host-roots-runtime-fixes.md), source `f40c151`: both 4 GiB slots pass full 16,368-path readback and independent review; account/ROM fixes and machine-id mask are packaged. Matched state and bootstrap now pass construction/readback/review; full-NVMe chain and physical boot remain pending. |
+| Corrected-chain bootstrap | [Matched 256 MiB bootstrap](production-host-bootstrap-runtime-fixes.md), source `0a3d2a1`: complete firmware/SD/newc/gzip inspection and independent review pass. Original DTB retained; separate VGIC and NVMe-first integrations, matched NVMe and physical boot remain pending. |
 | Corrected-chain state | [Fresh state](production-host-state-runtime-fixes.md), source `6dbf6d9`, UUID `360d…`: 8 GiB, all 1,172 paths verified, keys/configuration preserved and independent review passes. First metadata-schema failure retained; no installation or hardware acceptance. |
 | Production components | First [roots](production-host-roots.md), [state](production-host-state.md) and [bootstrap](production-host-bootstrap.md) pass construction/readback/review. [Second roots](production-host-roots-repeat.md), [state](production-host-state-repeat.md) and [bootstrap](production-host-bootstrap-repeat.md) also pass, with timestamp/identity differences documented. Second UUID `feaaee34-d782-4c18-bd04-1029540ab26a`; matching [full NVMe repeat](production-nvme-repeat.md) now passes construction and independent stream verification. |
 | Full NVMe candidate | [Complete composition](production-nvme-composition.md) passes BOOT/GUESTS readback, all parent root/state bytes and independent full gzip/raw/GPT verification. [545.6 MB gzip and derived manifest](nvme-candidate-retention.md) retained on codex; [encoded retention](nvme-raw-retention.md) retires only the generated raw file, preserving both gzip copies. [Second composition and retained gzip](production-nvme-repeat.md) also pass. Active endpoint unchanged; matched physical deployment remains open. |
@@ -88,7 +93,7 @@ installation. No SPI programming has occurred.
 | Host operations | [Updates](host-updates.md), [selection](nvme-root-selection.md), [RAM recovery](host-recovery.md) and package-state isolation pass software/packaged checks. Physical interrupted update, rollback, dirty-journal and missing-NVMe recovery remain open. |
 | Guest operations | [KVM-only first guest](kvm-first-guest.md) now has [two authenticated preparation profiles](evidence/first-kvm-profiles-20261107.json): original installed state/39 tools or second-candidate state/40 tools. Management, networking, enrollment, checkpoints and off-device restore have software fixtures. [Physical GICv2/KVM diagnostics](first-kvm-results-20261108.md) pass CPU/disk only; networking and clean restart remain open. The VGIC test SD is built/reviewed, unbooted. |
 
-Latest privileged Ubuntu discovery: **1,724 tests, no skips/errors/failures**;
+Latest privileged Ubuntu discovery: **1,735 tests, no skips/errors/failures**;
 five shell suites, five diagnostic assembly cases and Bash/TOML checks pass.
 These results establish no physical boot, guest, SD-write or recovery acceptance.
 
@@ -122,7 +127,10 @@ hashes and retains the retired fixture in gzip on both hosts. After the new enco
 both hosts. The second matching NVMe-first transport ends with **21,926,354,944 bytes** free
 on the builder, below a new full-NVMe initial admission. The corrected root construction ends with **19,751,702,528 bytes** free on the
 builder; accepted corrected-chain state construction then ends with
-**19,201,351,680 bytes**, still below the unchanged full-NVMe guard. Native sparse conversion
+**19,201,351,680 bytes**. The matched bootstrap ends with **18,874,372,096 bytes**
+free, still below the unchanged full-NVMe guard. A read-only retention audit finds
+no unretired large leaf already verified on both hosts; fresh retention evidence
+is needed before deletion. Native sparse conversion
 preserves generated image bytes and leaves
 the separate **256 MiB** free-space minimum intact. Keep generated/downloaded
 artifacts outside Git. Recheck disk/RAM before each operation; start compilation
@@ -142,7 +150,7 @@ redistribution clearance is claimed.
 ## Next actions and completion gates
 
 1. Boot the [VGIC diagnostic SD](next-host-boot-20261108.md), return its serial/capability checks and current DHCP address, then finish guest networking, guest-initiated shutdown/restart and counter progression over trusted SSH. The original first-guest sequence needs the documented controller/fixture corrections; do not run it unchanged.
-2. Register a matching bootstrap binding to the [accepted corrected-chain state](production-host-state-runtime-fixes.md), then construct and inspect it. Preserve historical registrations and recover capacity before full NVMe composition. Validate automatic time, packaged account/ROM fixes and masked-unit behavior on hardware.
+2. The [corrected-chain bootstrap](production-host-bootstrap-runtime-fixes.md) now passes construction/review. Register the matching full-NVMe controller and recover capacity before composition, preserving historical registrations and guards. After the VGIC hardware result, integrate the proven DT and matched NVMe-first firmware separately. Validate automatic time, packaged account/ROM fixes and masked-unit behavior on hardware.
 3. The [matched second-candidate procedure](deploy-candidate-20261107.md) and
    actual full-payload acquisition rehearsal pass independent review. The [dedicated LAN endpoint](candidate-delivery-20261107.md) now serves it on
    port 8444 with full builder acquisition/TLS proof and trusted CA instructions;

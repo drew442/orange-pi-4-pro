@@ -45,3 +45,8 @@ a hardware acceptance requirement. This component is unbooted and is not for
 the current installed `00fd…` state. The next physical action remains the
 [reviewed VGIC diagnostic SD](next-host-boot-20261108.md), matched to that
 existing installation; no NVMe reinstall or SPI write is part of this work.
+
+The [actual committed-source construction](production-host-bootstrap-runtime-fixes.md)
+now passes the complete privileged suite, producer inspection and independent
+artifact review. Its source, consumed tag and remaining integration limits are
+recorded separately.

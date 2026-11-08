@@ -85,8 +85,10 @@ Published deployment images and the delivered VGIC SD are unchanged.
 
 A [matched fresh state](production-host-state-runtime-fixes.md) now passes
 construction, full readback and independent review. Its separate registered
-parent binding preserves the complete root-proof record schema. Matching
-bootstrap and NVMe composition remain pending. Existing historical registrations
+parent binding preserves the complete root-proof record schema. A
+[matched bootstrap](production-host-bootstrap-runtime-fixes.md) also passes
+construction and independent inspection; full-NVMe composition remains pending.
+Existing historical registrations
 must not be relabeled; the installed and older candidate identities remain
 separate from the newly generated state.
 

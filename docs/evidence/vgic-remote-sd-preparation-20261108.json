@@ -1,0 +1,95 @@
+{
+  "boot_id": "94851e72-e3b9-4824-88c6-fb82ad7fb610",
+  "classification": "Non-destructive remote VGIC SD preparation; exact-target approval pending",
+  "date": "2026-11-08",
+  "host": "root@192.168.1.116",
+  "image": {
+    "bytes": 268435456,
+    "path": "/dev/shm/a733-vgic-sd-20261108/a733-host-sd.img",
+    "sha256": "0bb7ff051f8c79110e4bad15624f5026b21b3bf09593f476dead02a0793c56ac",
+    "storage": "tmpfs RAM only"
+  },
+  "independent_review": {
+    "checks": [
+      "Bash syntax",
+      "actual trusted-SSH read-only plan",
+      "recovery image SHA256",
+      "git diff --check"
+    ],
+    "conditions": [
+      "Exact-target operator yes/no required before write mode",
+      "No concurrent mount or source replacement; guards do not provide exclusive locks",
+      "Failed boot can require physical SD recovery"
+    ],
+    "findings": [],
+    "model": "gpt-6.1-sol",
+    "raw_plan": {
+      "bytes": 210,
+      "path": "out/bootstrap-runtime-fixes-20261108/remote-sd-independent-plan.txt",
+      "sha256": "48a1308bb50f5ac80527bc092e917ca83de6f510e4ad87e60022e694828d2c9e"
+    },
+    "reasoning_effort": "high",
+    "report_origin": "Returned agent review in coordinator conversation; no separate reviewer JSON created.",
+    "result": "PASS",
+    "reviewer": "/root/remote_sd_write_review"
+  },
+  "limits": [
+    "Preparation and review do not prove physical boot or guest success",
+    "This is a deliberate diagnostic SD update; zero routine SD-write acceptance remains open"
+  ],
+  "operator_approval": "pending explicit yes/no",
+  "physical_sd_written": false,
+  "physical_vgic_or_kvm_acceptance": false,
+  "raw_evidence": [
+    {
+      "bytes": 876,
+      "path": "out/bootstrap-runtime-fixes-20261108/remote-sd-preparation.txt",
+      "sha256": "471ae68b5becf760fec5e443d414dee06de06a94e3e23911d783b241ca984e88"
+    },
+    {
+      "bytes": 210,
+      "path": "out/bootstrap-runtime-fixes-20261108/remote-sd-plan.txt",
+      "sha256": "48a1308bb50f5ac80527bc092e917ca83de6f510e4ad87e60022e694828d2c9e"
+    },
+    {
+      "bytes": 2783,
+      "path": "out/bootstrap-runtime-fixes-20261108/live-board-check.txt",
+      "sha256": "aec83e8eab9a048ee33125e0b6f9310ca4b640b86443260d661946323eb6f5a3"
+    }
+  ],
+  "reboot_performed": false,
+  "recovery_image": {
+    "path": "out/host-deployment-20261106/a733-host-sd.img",
+    "reviewer_verified": true,
+    "sha256": "2d22d84ada37a5b5d3696cc913caddcb31c0e681e65185005ea56ca0b8396329"
+  },
+  "reviewed_script": {
+    "contents": "#!/bin/bash\nset -euo pipefail\nexport PATH=/usr/sbin:/usr/bin:/sbin:/bin LC_ALL=C\nmode=${1:-plan}\ncase \"$mode\" in plan|write) ;; *) exit 2 ;; esac\nCARD=/dev/mmcblk1\nIMAGE=/dev/shm/a733-vgic-sd-20261108/a733-host-sd.img\n[[ $(id -u) = 0 ]]\n[[ $(cat /proc/sys/kernel/random/boot_id) = 94851e72-e3b9-4824-88c6-fb82ad7fb610 ]]\n[[ -b \"$CARD\" && ! -L \"$CARD\" ]]\n[[ $(cat /sys/class/block/mmcblk1/dev) = 179:0 ]]\n[[ $(cat /sys/class/block/mmcblk1/device/cid) = 035344535530324780716f216e00a8f5 ]]\n[[ $(cat /sys/class/block/mmcblk1/device/name) = SU02G ]]\n[[ $(cat /sys/class/block/mmcblk1/ro) = 0 ]]\n[[ $(lsblk -dn -o TYPE \"$CARD\") = disk ]]\n[[ $(blockdev --getsize64 \"$CARD\") = 1977614336 ]]\n[[ -z $(lsblk -nr -o MOUNTPOINTS \"$CARD\" | sed '/^[[:space:]]*$/d') ]]\nfor node in /sys/class/block/mmcblk1 /sys/class/block/mmcblk1/mmcblk1p*; do\n [[ -d \"$node\" ]]\n [[ -z $(find \"$node/holders\" -mindepth 1 -maxdepth 1 -print) ]]\ndone\n[[ $(wc -l < /proc/swaps) = 1 ]]\n[[ $(findmnt -n -o FSTYPE -T \"$IMAGE\") = tmpfs ]]\n[[ -f \"$IMAGE\" && ! -L \"$IMAGE\" && $(stat -c %s \"$IMAGE\") = 268435456 ]]\nprintf '%s  %s\\n' 0bb7ff051f8c79110e4bad15624f5026b21b3bf09593f476dead02a0793c56ac \"$IMAGE\" | sha256sum -c -\nprintf 'Target: %s SU02G CID 035344535530324780716f216e00a8f5, 1977614336 bytes, unmounted.\\n' \"$CARD\"\nprintf 'Write plan: first 268435456 bytes only; NVMe and SPI untouched.\\n'\nif [[ \"$mode\" = plan ]]; then exit 0; fi\n# Coordinator may invoke write only after exact-target operator yes/no approval.\nprintf 'Writing reviewed VGIC image to the authorized SD target...\\n'\ndd if=\"$IMAGE\" of=\"$CARD\" bs=4M conv=fsync status=progress\nblockdev --flushbufs \"$CARD\"\nprintf 'SD write complete. No readback requested; reboot is a separate action.\\n'\n",
+    "pin": {
+      "bytes": 1724,
+      "path": "tmp/bootstrap-runtime-fixes-20261108/remote-vgic-sd.sh",
+      "sha256": "9a4e40ab2e9b7d5522ae9ce07c1a56b5e96507deec2300add9b944811f4386c6"
+    }
+  },
+  "schema": 1,
+  "target": {
+    "bytes": 1977614336,
+    "cid": "035344535530324780716f216e00a8f5",
+    "device_number": "179:0",
+    "holders": [],
+    "mounted": false,
+    "name": "SU02G",
+    "path": "/dev/mmcblk1",
+    "swap_in_use": false
+  },
+  "trusted_ssh_host_fingerprint": "SHA256:Epfegy9GsJ6ng4/0EH3dZmir7beQj5uYTnIbE4JPfEI",
+  "write_plan": {
+    "bytes": 268435456,
+    "mandatory_readback": false,
+    "nvme_write": false,
+    "offset": 0,
+    "progress": true,
+    "reboot_after_authorized_write": true,
+    "spi_write": false
+  }
+}
