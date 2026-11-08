@@ -55,7 +55,8 @@ independent deployment reproduction remain incomplete.
   zero. Root cause and subsequent guest/load state are unknown; serial output is
   requested. Its initial 86-second telemetry gap is also recorded. The
   [read-only offline journal exporter](offline-host-journal.md) passes independent
-  review; actual recovery export is unperformed. See the [current image map](current-images.md).
+  review and [real ext4 loop checks](evidence/offline-journal-loop-20261108.json);
+  actual board recovery export is unperformed. See the [current image map](current-images.md).
 - **Corrected candidate:** Runtime-fixed roots, matched state and bootstrap
   passed construction, readback/inspection and independent artifact review;
   the corrected VGIC chain now physically boots. The matched full-NVMe producer (source `6c34629`, tag

@@ -94,3 +94,26 @@ without assuming that absence of a final log proves a particular failure. Keep
 raw journals and logs in private ignored output storage, and link only a bounded
 redacted finding from implementation status. No journal interpretation or
 hardware result is claimed by the helper tests.
+
+## Real-filesystem software check
+
+The [Ubuntu loop-fixture record](evidence/offline-journal-loop-20261108.json)
+now passes two fresh 64 MiB clean ext4 filesystems: an exact synthetic archive
+roundtrip and refusal of an unexpected nonjournal file. Both mounts use the
+production read-only/noload implementation. Complete source hashes and Linux
+write/discard/flush counters stay unchanged across the export, and independent
+postchecks find no remaining fixture loops or directories. Counter fields follow
+[Linux I/O statistics](https://docs.kernel.org/admin-guide/iostats.html).
+
+The harness accepts no device argument and formats only its newly created held
+regular files in a private mount namespace. Source review precedes execution.
+Initial fixture runs detected attachment-time flush activity before export;
+waiting for device events before baseline sampling resolved that setup race.
+The exporter and its strict counter checks were not changed.
+
+The synthetic bytes are not real systemd journals. The physical-target/RAM-entry
+policy is bypassed solely to call filesystem helpers with the new loop device;
+this does not establish actual A733 export or dirty-journal recovery. To repeat
+on the prepared builder, run the reviewed `tests/verify_known_host_journal_loop.py`
+as root from its protected project tree, with no arguments. No compilation or
+package installation is required.

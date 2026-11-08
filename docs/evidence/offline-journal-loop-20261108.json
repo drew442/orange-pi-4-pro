@@ -1,0 +1,309 @@
+{
+  "schema": 1,
+  "date": "2026-11-08",
+  "classification": "Prepared Ubuntu 22.04 x86-64 clean synthetic ext4 loop fixture only",
+  "production_helper_unchanged": true,
+  "fixed_physical_target_and_ram_entry_policy_bypassed": true,
+  "actual_board_export_performed": false,
+  "hardware_acceptance": false,
+  "builder": {
+    "host": "drew@build.drewnet.online",
+    "kernel": "6.8.0-138-generic",
+    "packages": {
+      "e2fsprogs": "1.46.5-2ubuntu1.2",
+      "util-linux": "2.37.2-4ubuntu3.6",
+      "python3": "3.10.6-1~22.04.1",
+      "udev": "249.11-0ubuntu3.23"
+    }
+  },
+  "invocation": "sudo -n /usr/bin/python3 -I -B /var/lib/a733-maintenance-validation-20261108-01/project/tests/verify_known_host_journal_loop.py",
+  "result": {
+    "checks": [
+      {
+        "allocated_fixture_bytes": 8577024,
+        "check": "journal-archive-roundtrip",
+        "image_bytes": 67108864,
+        "internal_journal_inode": 8,
+        "owned_mount_cleaned": true,
+        "resources_exported": {
+          "disk_free_bytes": 20961251328,
+          "memory_available_bytes": 7683497984
+        },
+        "resources_prepared": {
+          "disk_free_bytes": 20961247232,
+          "memory_available_bytes": 7691345920
+        },
+        "source_after": {
+          "sha256": "6c88e02fd216192337fe89e4d94d306fb2611cdb8ba8dcd751c00d7a73cacd7f",
+          "write_discard_flush_counters": [
+            10,
+            0,
+            0,
+            9,
+            0,
+            0,
+            0,
+            0,
+            10,
+            9
+          ]
+        },
+        "source_before": {
+          "sha256": "6c88e02fd216192337fe89e4d94d306fb2611cdb8ba8dcd751c00d7a73cacd7f",
+          "write_discard_flush_counters": [
+            10,
+            0,
+            0,
+            9,
+            0,
+            0,
+            0,
+            0,
+            10,
+            9
+          ]
+        },
+        "verified_mount_flags": [
+          "ro",
+          "noload",
+          "noexec",
+          "nodev",
+          "nosuid"
+        ]
+      },
+      {
+        "allocated_fixture_bytes": 8585216,
+        "check": "unexpected-file-refused",
+        "image_bytes": 67108864,
+        "internal_journal_inode": 8,
+        "owned_mount_cleaned": true,
+        "resources_exported": {
+          "disk_free_bytes": 20961239040,
+          "memory_available_bytes": 7657959424
+        },
+        "resources_prepared": {
+          "disk_free_bytes": 20961234944,
+          "memory_available_bytes": 7656919040
+        },
+        "source_after": {
+          "sha256": "785f9386827f5c3723bc92256a0527f831ceb9dc208dd5cbbd8bc05238d94378",
+          "write_discard_flush_counters": [
+            12,
+            0,
+            0,
+            10,
+            0,
+            0,
+            0,
+            0,
+            12,
+            10
+          ]
+        },
+        "source_before": {
+          "sha256": "785f9386827f5c3723bc92256a0527f831ceb9dc208dd5cbbd8bc05238d94378",
+          "write_discard_flush_counters": [
+            12,
+            0,
+            0,
+            10,
+            0,
+            0,
+            0,
+            0,
+            12,
+            10
+          ]
+        },
+        "verified_mount_flags": [
+          "ro",
+          "noload",
+          "noexec",
+          "nodev",
+          "nosuid"
+        ]
+      }
+    ],
+    "classification": "new private synthetic ext4 loop fixtures only; fixed physical-device and RAM-entry policy bypassed by calling filesystem helpers directly",
+    "cleanup": "owned mounts removed, loops detached, fixture paths deleted",
+    "hardware_acceptance": false,
+    "resources_after": {
+      "disk_free_bytes": 20969828352,
+      "memory_available_bytes": 7594676224
+    },
+    "resources_before": {
+      "disk_free_bytes": 20969832448,
+      "memory_available_bytes": 7692038144
+    },
+    "schema": 1,
+    "source_sha256": "028ccf43946cfff8e7c8b3a1969348f48567882283f9ad105dc9af5cf0bb024c"
+  },
+  "independent_postcheck": {
+    "matching_loops": [],
+    "removed_empty_failed_workspaces": [
+      "/var/tmp/a733-journal-loop-ul2a4_ln",
+      "/var/tmp/a733-journal-loop-6o_ptail",
+      "/var/tmp/a733-journal-loop-erq0cc6b"
+    ],
+    "remaining_workspaces": [],
+    "source_hashes": {
+      "scripts/export-known-host-journal.py": "028ccf43946cfff8e7c8b3a1969348f48567882283f9ad105dc9af5cf0bb024c",
+      "tests/verify_known_host_journal_loop.py": "aeb9ba27bb1310937812043088e102c45adc9f25f2c84b50c5d2dff3f6972c3a"
+    },
+    "hardware_acceptance": false
+  },
+  "independent_review": {
+    "schema": 1,
+    "review": "independent read-only pre-execution safety review",
+    "verdict": "pass for coordinator execution of final reviewed fixture harness; successful final filesystem test pending",
+    "hardware_acceptance": false,
+    "privileged_harness_executed": false,
+    "reviewed_harness": "tests/verify_known_host_journal_loop.py",
+    "harness_sha256": "aeb9ba27bb1310937812043088e102c45adc9f25f2c84b50c5d2dff3f6972c3a",
+    "production_helper": "scripts/export-known-host-journal.py",
+    "production_helper_sha256": "028ccf43946cfff8e7c8b3a1969348f48567882283f9ad105dc9af5cf0bb024c",
+    "static_checks_passed": [
+      "No device arguments or re-exec path; argparse rejects unknown options and positional device paths before verify().",
+      "New 64 MiB files use O_EXCL, O_NOFOLLOW, root ownership/mode/inode checks and an open held FD; mke2fs receives only that held regular-file FD.",
+      "Mount namespace is unshared, made recursively private and verified before fixture use.",
+      "Validated loop path, block identity, sysfs identity, backing-file inode, geometry and no holders are required before mount and detach.",
+      "Only PART is temporarily patched; mounted_journal performs the actual ro,noload mount, mounted identity checks, collect and ordinary unmount.",
+      "Positive archive/payload/metadata and negative unexpected-file checks use production filesystem helpers.",
+      "Successful checks require a full 64 MiB SHA256 and Linux write/discard/flush counters to remain unchanged before detach.",
+      "Detected remaining owned mount fails closed without forced/lazy unmount or detach.",
+      "Resource guards require 3 GB disk reserve plus 256 MiB budget and 1 GB available RAM.",
+      "Evidence explicitly sets hardware_acceptance=false and labels synthetic fixture scope.",
+      "Ambiguous loop allocation is fail-closed: image/workspace are retained on timeout, subprocess failure, decoding failure or unvalidated output; no cleanup filesystem operation occurs before the uncertainty guard."
+    ],
+    "executed_nonprivileged_checks": [
+      {
+        "check": "Compile harness and production helper in memory",
+        "exit_code": 0
+      },
+      {
+        "check": "--device /dev/nvme0n1 rejected",
+        "exit_code": 2
+      },
+      {
+        "check": "positional /dev/loop0 rejected",
+        "exit_code": 2
+      },
+      {
+        "check": "--expected-boot-id rejected",
+        "exit_code": 2
+      },
+      {
+        "check": "Independently reran mock timeout, nonzero-exit and decoding-error allocation retention probes",
+        "exit_code": 0,
+        "mock_allocation_failures_retained": 3,
+        "device_operations": 0
+      }
+    ],
+    "required_before_execution": [
+      "Coordinator must execute the exact reviewed harness SHA and production-helper SHA on the intended x86 builder with trusted system tools, no device arguments and sufficient real resources.",
+      "Capture actual positive/negative ext4 execution, identical before/after full hashes and all write/discard/flush counters, verified mount flags and successful owned cleanup.",
+      "Retain every fixture resource on uncertain allocation, unmount or detach; do not substitute static review or mocks for actual filesystem test evidence."
+    ],
+    "limits": "The reviewer ran no privileged harness, mount, loop, formatting, SSH or board action. Earlier coordinator attempts 01/02/03 failed the strict acceptance assertion and are not successful filesystem-test evidence. This review and any later x86 fixture test do not establish A733 recovery, dirty-journal recovery, hardware boot, KVM acceptance or physical SD/NVMe write behavior.",
+    "resolved_findings": [
+      {
+        "severity": "blocking",
+        "location": "tests/verify_known_host_journal_loop.py:162; Fixture.cleanup",
+        "finding": "A losetup allocation timeout, nonzero exit, or output decoding failure can occur after successful allocation but before self.loop is assigned. Cleanup then treats the fixture as never attached, closes the held file and deletes its image and directory without proving no loop remains attached.",
+        "required_fix": "Mark allocation as attempted/uncertain before starting losetup. If there is no validated owned loop identity afterward, retain the image, held file where possible, workspace and diagnostic paths; never unlink unless attachment absence is proven. Only clear uncertainty after validating a returned owned loop or proving no attachment exists.",
+        "resolution": "allocation_may_exist is set before subprocess execution. cleanup refuses before filesystem inspection or mutation unless an owned loop identity was validated, and clears uncertainty only after successful detach and disappearance of its backing attribute. Failure diagnostics retain workspace, backing image, uncertainty and validated device details."
+      }
+    ],
+    "defects": [],
+    "delta_review": {
+      "measurement_change": "udevadm settle --timeout=15 runs only after the newly allocated loop passes backing/inode/device validation; fixture identity is checked again afterward. Full 64 MiB hashing precedes counter sampling. Strict before/after hash and Linux write/discard/flush counter equality remains required before detach.",
+      "safety_assessment": "No change to physical-device selection, held regular-file formatting, private mount namespace, loop ownership checks, fail-closed allocation uncertainty, conservative unmount/detach or resource guards. udevadm settle drains queued events and does not create or select a storage write target.",
+      "instrumentation": "ExitStack/mock wrappers call each original production mount_readonly, verify_mount, collect_journal and unmount function with unchanged arguments. Their finally blocks only revalidate owned fixture identity and read sysfs counters; no production result or error is converted into success. PART still selects only the validated newly allocated loop.",
+      "prior_attempt_03_evidence": "Coordinator log journal-loop-validation-03.stderr records baseline write counter 6 but before-production-mount 8; every traced production stage retains write counter 8 and flush counter 8 with full 64 MiB source SHA unchanged. This locates the observed counter change before the production mount. The specific uevent-probe cause is an inference, not an independently observed process attribution.",
+      "reviewer_checks": "In-memory syntax compilation, independent rerun of all three mock allocation-retention probes (zero device operations), CLI device-option rejection exit 2 and unchanged production-helper SHA.",
+      "unresolved_defects": []
+    }
+  },
+  "attempts": [
+    {
+      "number": 1,
+      "exit_code": 1,
+      "records": [
+        {
+          "path": "out/vgic-nvme-image-20261108/journal-loop-validation-01.json",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "out/vgic-nvme-image-20261108/journal-loop-validation-01.stderr",
+          "bytes": 1165,
+          "sha256": "48ca556663f4ddcb7155bff9240a25e52334ecaf061cd184c368b2f12afaff74"
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "exit_code": 1,
+      "records": [
+        {
+          "path": "out/vgic-nvme-image-20261108/journal-loop-validation-02.json",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "out/vgic-nvme-image-20261108/journal-loop-validation-02.stderr",
+          "bytes": 1193,
+          "sha256": "242446268e9a7cda4a52f68b3719de1a701aed7a1b11a55d32a3cf82b8680a70"
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "exit_code": 1,
+      "records": [
+        {
+          "path": "out/vgic-nvme-image-20261108/journal-loop-validation-03.json",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "out/vgic-nvme-image-20261108/journal-loop-validation-03.stderr",
+          "bytes": 2240,
+          "sha256": "5bfcc62d1c74350101a6107738595f98a501e2d160c396a6e1f21603d769a82c"
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "exit_code": 0,
+      "records": [
+        {
+          "path": "out/vgic-nvme-image-20261108/journal-loop-validation-04.json",
+          "bytes": 2045,
+          "sha256": "c053de546ce563d6f68a4a199efefb25be4dabeecbde5924e776d05391f44c56"
+        },
+        {
+          "path": "out/vgic-nvme-image-20261108/journal-loop-validation-04.stderr",
+          "bytes": 1708,
+          "sha256": "92507f16aa8287006df7f6b156747aff4d82b58d90b1221fa8cee9a9a472c8fa"
+        }
+      ]
+    }
+  ],
+  "source_files": {
+    "scripts/export-known-host-journal.py": {
+      "bytes": 17393,
+      "sha256": "028ccf43946cfff8e7c8b3a1969348f48567882283f9ad105dc9af5cf0bb024c"
+    },
+    "tests/verify_known_host_journal_loop.py": {
+      "bytes": 19369,
+      "sha256": "aeb9ba27bb1310937812043088e102c45adc9f25f2c84b50c5d2dff3f6972c3a"
+    }
+  },
+  "interpretation": [
+    "Positive archive roundtrip and negative unexpected-file refusal pass on two separately created clean 64 MiB ext4 fixtures.",
+    "Every logical source byte and all selected Linux write/discard/flush counters remain unchanged during the export phase; owned mounts and loops are cleaned.",
+    "Attempts 01-03 correctly failed strict checks because attachment-time counters changed before production mount. Instrumentation shows unchanged counters across all production mount/verify/collect/unmount stages. Waiting for device events and sampling counters after the initial full source hash corrects fixture baselining; production safeguards are unchanged.",
+    "No real systemd journal parsing, A733 device guards, dirty-journal recovery or board hardware acceptance is established."
+  ]
+}
