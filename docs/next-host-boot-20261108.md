@@ -10,7 +10,7 @@ SHA-256: `0bb7ff051f8c79110e4bad15624f5026b21b3bf09593f476dead02a0793c56ac`.
 It preserves the original firmware, kernel, initramfs, boot commands and state UUID;
 only the device tree gains the GIC maintenance interrupt. The
 [construction recipe](vgic-host-sd.md) explains the experimental source basis.
-This image has not booted on the board. It does not package the RAM account or
+This image now [passes its physical warm boot and VGIC checks](vgic-live-boot-20261108.md). It does not package the RAM account or
 launcher corrections used during the coordinator's guest diagnostics.
 
 ## Prepared remote write over SSH
@@ -19,9 +19,9 @@ The coordinator has also completed [non-destructive remote preparation](evidence
 for the same image: RAM-only staging, exact SU02G identity/capacity, idle-state
 checks, image hash and independent review. The identified target is
 `/dev/mmcblk1`, CID `035344535530324780716f216e00a8f5`. Exact-target operator
-yes/no for overwrite and reboot is pending. No remote SD write has occurred.
-After approval, the guarded single-write procedure repeats the identity and
-idle checks, displays progress and skips optional readback. Failed boot may
+approval was granted for the known SD, NVMe and SPI. The guarded single SD
+write and warm reboot now pass, with progress and no optional readback.
+[Observed results](vgic-live-boot-20261108.md) retain the exact write/boot evidence. Failed boot may
 still require the physical recovery procedure below. NVMe and SPI are outside
 this write plan.
 

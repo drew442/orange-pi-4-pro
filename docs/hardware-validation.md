@@ -3,8 +3,8 @@
 The first [physical diagnostic boot](board-diagnostic-20261104.md) reached the
 RAM shell and enumerated NVMe. The [second boot](evidence/board-el2-20261104.json)
 confirms all CPUs at EL2 and KVM VHE initialization. A subsequent
-[physical KVM guest](first-kvm-results-20261108.md) passes CPU and disk checks;
-guest networking, clean shutdown/restart and counter progression remain open.
+[physical VGIC KVM guest](kvm-vgic-results-20261108.md) passes CPU/disk/network,
+guest poweroff, checkpoints and restart with counter progression 1 → 2 → 3.
 [Installed SSH repair](installed-host-repair-results-20261108.md) also passes.
 Release acceptance remains incomplete. Host-only checks are recorded separately in
 [implementation status](implementation-status.md) and the diagnostic guide.
@@ -31,7 +31,7 @@ for boot0/U-Boot writes.
 | Diagnostic SD | Actual 2 GB card, serial boot through Linux shell | Observed: 1,977,614,336-byte card; RAM shell |
 | Inventory | Board/RAM/SSD/power/cooling and exact capacities | RAM/CPU/SD/SSD and 67 W USB-PD/copper heatsink description recorded; operating power/thermal tests pending |
 | NVMe | PCIe/NVMe enumeration, errors and stable repeated access | Enumerates/live; repeated access and warning investigation pending |
-| KVM | EL2 messages plus guest execution with KVM explicitly required | [Actual KVM CPU/disk execution](first-kvm-results-20261108.md) observed, counter 1 persists; networking and guest clean shutdown/restart remain open |
+| KVM | EL2 messages plus guest execution with KVM explicitly required | [Actual nonroot KVM CPU/disk/network, clean poweroff/checkpoints and restart](kvm-vgic-results-20261108.md) pass on the diagnostic VGIC host; final corrected-host validation remains open |
 | Ethernet | Vendor binding, DHCP, route/DNS/TLS and repeatable cold boot | Preparation DHCP/DNS/TLS observed; [installed DHCP and both SSH keys pass after repair](installed-host-repair-results-20261108.md); repeatable cold boot and installed automatic time remain open |
 | Installation | Fresh deployment on actual card and nominal 250 GB SSD | [November 7 write/readback and installed root A boot observed](evidence/installed-host-first-boot-20261107.json); [management repair passes](installed-host-repair-results-20261108.md); independent deployment reproduction remains open |
 | Boot reliability | 10 cold boots and 10 warm reboots, matched firmware/SSD | Pending |
@@ -46,10 +46,11 @@ for boot0/U-Boot writes.
 
 The current host has physically demonstrated EL2 and actual guest KVM CPU
 execution. Configuration, `/dev/kvm` and capability ioctls alone remain
-insufficient evidence. The installed DT lacks the GIC maintenance interrupt
-(`KVM_CAP_IRQCHIP=0`); the [partial diagnostic run](first-kvm-results-20261108.md)
-used reviewed RAM corrections and explicit GICv2. The [VGIC SD trial](next-host-boot-20261108.md)
-still awaits approval and physical boot. Do not run the original first-guest
+insufficient evidence. The old installed DT lacked the GIC maintenance interrupt
+(`KVM_CAP_IRQCHIP=0`); the [initial partial run](first-kvm-results-20261108.md)
+used explicit GICv2. The [VGIC SD now physically boots](vgic-live-boot-20261108.md)
+with `KVM_CAP_IRQCHIP=1`, and the [follow-up normal-GIC tests](kvm-vgic-results-20261108.md)
+pass through clean restart. Do not run the original first-guest
 sequence unchanged against the existing modified fixture state.
 
 The final matched host must run the pinned ARM64 guest with explicit KVM, using
@@ -73,8 +74,8 @@ launch requirement. `--dry-run` verifies inputs and prints JSON without requirin
 KVM or QEMU; it is preparation only. The guest disk must be a regular NVMe-backed
 file, never a physical drive. It is mutable: after a clean shutdown, preserve its
 new reviewed checkpoint hash for the next launch. The [base guest fixture](guest-fixture.md) is built; the separately corrected
-diagnostic fixture has booted and passed CPU/disk only. Its partial result does
-not establish full fixture acceptance. Restricted user-mode networking has no inbound
+diagnostic fixture now passes CPU/disk/network and clean restart on the VGIC
+host. This does not establish final corrected-host release acceptance. Restricted user-mode networking has no inbound
 listeners by default; the [HTTP fixture and explicit loopback profile](guest-networking.md)
 define the pending actual guest network test.
 

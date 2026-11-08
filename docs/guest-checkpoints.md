@@ -5,8 +5,9 @@ guest disk in its protected manifest. It never resizes or copies the disk,
 starts/stops a service, or claims filesystem cleanliness. A checkpoint is not a
 backup, snapshot or successful guest boot. Use the separate
 [backup artifact workflow](guest-backups.md) to preserve disk contents off-device.
-Physical shutdown, restart and
-restoration remain acceptance gates.
+Actual [guest poweroff, two durable checkpoints and restart](kvm-vgic-results-20261108.md)
+now pass on the diagnostic VGIC host; off-device restore and final corrected-host
+validation remain open.
 
 ## Establish a trusted starting record
 
@@ -27,7 +28,7 @@ Use the guest's own verified shutdown procedure. Record guest shutdown output,
 QEMU exit status and host service state. The current preparation unit sends
 SIGTERM when stopped; `systemctl stop` alone does not establish a clean guest
 shutdown. The fixture guest requests its own shutdown after syncing and
-unmounting its disk, but that behavior has not run on the board yet.
+unmounting its disk; that behavior is now observed in the linked physical results.
 
 The controller requires the fixed service name `a733-guest-NAME.service` to be
 `inactive/dead` with `MainPID=0` and `ControlPID=0`. A genuinely absent unit is
@@ -51,13 +52,14 @@ is root:guest-group `0710`, so the guest cannot replace its manifest or assets.
 
 ## Prepare and apply
 
-The following is prospective usage after verified physical shutdown and
-installation. It has not been reproduced on the board. In a root shell, set
+The controller prepare/apply sequence has now run on the board through the
+reviewed RAM account closure, after verified guest poweroff. The generic
+commands below still require the caller's actual matched installation, manifest
+pin and observed shutdown evidence. In a root shell, set
 values from the trusted records and use the complete installed tree at
 `/usr/lib/a733-tools` on the new immutable A/B root or a trusted complete
 portable tool tree on NVMe or RAM. The older recovery SD image has not been
-refreshed; see [guest tools availability](guest-tools-package.md). No board
-installation, boot or KVM guest pass has been demonstrated:
+refreshed; see [guest tools availability](guest-tools-package.md). The diagnostic hardware result does not establish final corrected-host release acceptance:
 
 ```sh
 : "${A733_GUEST_TOOLS:?Set absolute trusted complete installed or portable tool tree}"

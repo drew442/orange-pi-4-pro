@@ -2,7 +2,7 @@
 
 ## Purpose and Current State
 
-Build a minimal KVM/QEMU host for the **Orange Pi 4 Pro A733**, using a 2 GB SD card and nominal 250 GB NVMe. Read `docs/implementation-status.md` first, then relevant sections of `docs/hypervisor-plan.md`. Diagnostic/preparation SD boots enter EL2 on all eight CPUs. A real KVM guest passes CPU/disk; networking and clean restart remain open. Installed NVMe boot, DHCP and both SSH keys now pass after repair. A reviewed VGIC test SD awaits physical boot; see status for RAM corrections and remaining gates.
+Build a minimal KVM/QEMU host for the **Orange Pi 4 Pro A733**, using a 2 GB SD card and nominal 250 GB NVMe. Read `docs/implementation-status.md` first, then relevant sections of `docs/hypervisor-plan.md`. Diagnostic/preparation SD boots enter EL2 on all eight CPUs. A real nonroot KVM guest now passes CPU/disk/network, clean shutdown, checkpoint and restart tests. Installed NVMe boot, DHCP and both SSH keys now pass after repair. The VGIC test SD physically boots with IRQ-chip support; see status for RAM corrections and remaining gates.
 
 Vendor images exceed the available SD capacity. Use diagnostic outputs for inventory; leave attached heatsinks in place. Prefer SPI-to-NVMe boot; otherwise keep SD boot files read-only with zero routine writes. Require an actual KVM guest for hardware acceptance.
 
@@ -24,7 +24,7 @@ Delegate bounded work according to `docs/agent-routing.md`: Luna for extraction,
 
 ## Changes and Validation
 
-Use descriptive names, consistent language-native formatting, and focused patches. Pin vendor revisions and cite source paths for hardware claims. Add meaningful regression tests with behavior changes. Independently review boot, disk selection and rollback logic; record hardware evidence separately from host checks. Present exact erase/SPI targets and request yes/no confirmation. Make installation readback optional and show progress; do not benchmark hardware to diagnose installation duration.
+Use descriptive names, consistent language-native formatting, and focused patches. Pin vendor revisions and cite source paths for hardware claims. Add meaningful regression tests with behavior changes. Independently review boot, disk selection and rollback logic; record hardware evidence separately from host checks. Identify exact erase/SPI targets and honor persisted operator authorization; request yes/no only for unapproved targets or scope. The known board SD, NVMe and SPI writes are authorized; see `docs/evidence/storage-write-authorization-20261108.json`. Make installation readback optional and show progress; do not benchmark hardware to diagnose installation duration.
 
 Use imperative commit subjects. Commit coherent changes with validation results; pull requests should explain purpose, risks and linked issues where applicable. Keep generated images, downloaded sources and secrets out of Git.
 

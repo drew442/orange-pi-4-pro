@@ -6,8 +6,9 @@ CPU/disk tests, but exposed three compatibility defects: OverlayFS account
 mount identity, absent host VGIC DT information, and unavailable BusyBox
 `blkid` in the original fixture. The minimal QEMU package also needs an explicit
 empty NIC option-ROM setting. Source corrections and a new initramfs are
-reviewed; the installed immutable tools remain unchanged. Full guest network,
-clean shutdown and restart have not passed. The sequence below retains its
+reviewed; the installed immutable tools remain unchanged. The [follow-up VGIC
+run](kvm-vgic-results-20261108.md) now passes CPU/disk/network, guest poweroff,
+durable checkpoints and restart with counter progression 1 → 2 → 3. The sequence below retains its
 original authenticated profiles and old fixture hashes as a preparation
 reference, pending integration of those corrections into an executable guide.
 
@@ -16,11 +17,13 @@ its original evidence directory already exists. Do not remove either to force
 the pristine sequence below to run. The original full-NVMe recovery bundle
 predates these guest writes; a repeated activation must account for the current
 contents and retained recovery evidence. A fresh reviewed run profile and the
-corrected fixture are required after the next host boot.
+corrected fixture are required after another host boot. The current stopped
+guest is at counter 3 with enrollment pin `1317731d…`; its exact retained state
+and evidence are in the follow-up result.
 
-The current operator action is the [VGIC diagnostic SD boot](next-host-boot-20261108.md),
-with the existing NVMe installation and repaired identity. The coordinator will
-use trusted SSH for the corrected guest sequence after reviewing that boot.
+The [VGIC SD boot](vgic-live-boot-20261108.md) and its trusted-SSH guest tests
+now pass on the existing repaired NVMe installation. Integrating and validating
+the corrected production host remains open.
 The original installation uses `installed-20261106`; the later
 `candidate-repeat-20261107` profile belongs only to a completed
 [matched second-candidate deployment](deploy-candidate-20261107.md).

@@ -1,0 +1,264 @@
+{
+  "date": "2026-11-08",
+  "classification": "Actual KVM CPU/disk/network, guest clean poweroff, durable checkpoints and restart persistence on physical VGIC diagnostic host",
+  "guest_core_result": "PASS",
+  "release_acceptance": false,
+  "host_boot_id": "7f1f07c4-5a4f-469f-97a7-612406d915a2",
+  "host_boot_evidence": "docs/evidence/vgic-live-boot-20261108.json",
+  "profile": "installed-20261106",
+  "state_uuid": "00fd936c-49fb-4fea-87c8-928b9c1599e0",
+  "guest_uuid": "3dd7373a-c4b2-42e2-867a-bc5f39039285",
+  "initial_baseline": {
+    "counter": 1,
+    "manifest_sha256": "46ad7bb99c62855e08ed3da37288c2a21ea8b44803aea01c99701172c6dddcaa",
+    "disk_sha256": "e664c07abeee4c6ceb73682c05270825feec9e8dba117c96f7be9e3530a6fc0c",
+    "prior_stop": "host-SIGTERM",
+    "prior_clean_shutdown_verified": false
+  },
+  "runs": {
+    "2": {
+      "pid": 2157,
+      "uid": 60001,
+      "gid": 60001,
+      "kvm_vm_vcpu_fds": true,
+      "machine": "virt,gic-version=host",
+      "accel": "kvm",
+      "cpu": "host",
+      "counter_previous": 1,
+      "counter": 2,
+      "cpu_pass": true,
+      "disk_pass": true,
+      "dhcp_guest_ipv4": "10.0.2.15",
+      "loopback_http_probe_and_confirmation": "PASS",
+      "host_forward": "127.0.0.1:18080",
+      "lan_forward_refused": true,
+      "guest_requested_poweroff": true,
+      "host_stop_issued": false,
+      "disk": {
+        "bytes": 134217728,
+        "sha256": "86871c4211758281c684ff9958875bc4282d39a13dc30d3d7261e577a45ec12a"
+      },
+      "durable_checkpoint_enrollment": {
+        "path": "out/vgic-live-boot-20261108/checkpoint-counter2/enrollment.json",
+        "bytes": 1266,
+        "sha256": "b3c3f1082abcae3a5d5d76e4849e099290e831b9309050e89992b545a9efae11"
+      },
+      "evidence": {
+        "kvm-process-counter2.txt": {
+          "path": "out/vgic-live-boot-20261108/kvm-process-counter2.txt",
+          "bytes": 2546,
+          "sha256": "c53b0d8477fcf8150c9403f23a6b18c1194e6ac6afbf653d2e6b01d18f632afb"
+        },
+        "http-probe-counter2.txt": {
+          "path": "out/vgic-live-boot-20261108/http-probe-counter2.txt",
+          "bytes": 76,
+          "sha256": "081ad75082a8379b223c62dc156af0e3bb68ffdbc34f1980b97c72b10e7e7ca1"
+        },
+        "http-confirm-counter2.txt": {
+          "path": "out/vgic-live-boot-20261108/http-confirm-counter2.txt",
+          "bytes": 36,
+          "sha256": "55e7d0ada28aa096d766b7a847330ea905ac297b95565685789add14fab3ea58"
+        },
+        "lan-probe-counter2.stderr": {
+          "path": "out/vgic-live-boot-20261108/lan-probe-counter2.stderr",
+          "bytes": 95,
+          "sha256": "cfe955f74038f213cb8561888eafc86959849befd1272b7d73ce05f2ee81b460"
+        },
+        "clean-exit-counter2.txt": {
+          "path": "out/vgic-live-boot-20261108/clean-exit-counter2.txt",
+          "bytes": 8604,
+          "sha256": "d62294d9f763db5d8d768c5bac29294c7b638a953203196bf055996aa327c051"
+        },
+        "checkpoint-counter2-plan.json": {
+          "path": "out/vgic-live-boot-20261108/checkpoint-counter2-plan.json",
+          "bytes": 2988,
+          "sha256": "f923ebff697db4e96034a3fba3137f0abb3d6a5688877cbd246e51a4c5c4e05b"
+        },
+        "checkpoint-counter2.typescript": {
+          "path": "out/vgic-live-boot-20261108/checkpoint-counter2.typescript",
+          "bytes": 1676,
+          "sha256": "dade98c8a028eaecbba9af2c6e74d51fcfa565b1a443f7ffcb5ba165aeab904c"
+        }
+      },
+      "exit_field_observation": {
+        "raw_exec_code_retained": false,
+        "reason": "Unit garbage collection cleared historical fields before a later systemctl query. Do not interpret reset 0/0 as raw process exit.",
+        "guest_and_manager_log": {
+          "path": "out/vgic-live-boot-20261108/unit-exit-history-counter2.txt",
+          "bytes": 1074,
+          "sha256": "5528a8125efdfba3b7b2fad2035df4c5a1a3167bfc21b25b1e2ed770ffadac19"
+        }
+      }
+    },
+    "3": {
+      "pid": 2665,
+      "uid": 60001,
+      "gid": 60001,
+      "kvm_vm_vcpu_fds": true,
+      "machine": "virt,gic-version=host",
+      "accel": "kvm",
+      "cpu": "host",
+      "counter_previous": 2,
+      "counter": 3,
+      "cpu_pass": true,
+      "disk_pass": true,
+      "dhcp_guest_ipv4": "10.0.2.15",
+      "loopback_http_probe_and_confirmation": "PASS",
+      "host_forward": "127.0.0.1:18080",
+      "lan_forward_refused": true,
+      "guest_requested_poweroff": true,
+      "host_stop_issued": false,
+      "disk": {
+        "bytes": 134217728,
+        "sha256": "210f6fb580f0e67a8c2a8b93d966a04fc7e8b53f183df4c5a02f46141c0024c3"
+      },
+      "durable_checkpoint_enrollment": {
+        "path": "out/vgic-live-boot-20261108/checkpoint-counter3/enrollment.json",
+        "bytes": 1266,
+        "sha256": "1317731d7025a3bd609cc92e1bbd24d7a19172822bae77d5bbb469b127bc6291"
+      },
+      "evidence": {
+        "kvm-process-counter3.txt": {
+          "path": "out/vgic-live-boot-20261108/kvm-process-counter3.txt",
+          "bytes": 3313,
+          "sha256": "c7de2a37b3035313b467156fd063e67a7aca1d596f20dfd0d09cad48513a1f0c"
+        },
+        "http-probe-counter3.txt": {
+          "path": "out/vgic-live-boot-20261108/http-probe-counter3.txt",
+          "bytes": 90,
+          "sha256": "d057b6b77c18f4cb46d3c2df3116f62e8ed5f114d84c628196a9f80f19541b5c"
+        },
+        "http-confirm-counter3.txt": {
+          "path": "out/vgic-live-boot-20261108/http-confirm-counter3.txt",
+          "bytes": 36,
+          "sha256": "eed5e1fa602d12ba9b73ca7a6e41ae8b71d7669295897417493d20680d60005d"
+        },
+        "lan-probe-counter3.stderr": {
+          "path": "out/vgic-live-boot-20261108/lan-probe-counter3.stderr",
+          "bytes": 95,
+          "sha256": "cfe955f74038f213cb8561888eafc86959849befd1272b7d73ce05f2ee81b460"
+        },
+        "clean-exit-counter3.txt": {
+          "path": "out/vgic-live-boot-20261108/clean-exit-counter3.txt",
+          "bytes": 8482,
+          "sha256": "590fa6b7a0e88ac2034b8a0b4094d92f73fa667a511a57d7a32aa0c9d2c9b9fd"
+        },
+        "checkpoint-counter3-plan.json": {
+          "path": "out/vgic-live-boot-20261108/checkpoint-counter3-plan.json",
+          "bytes": 3229,
+          "sha256": "9fed2d7b0859dcec2511edf8505b8c8327205c2b82dfe8a5ac1225b48fb770ba"
+        },
+        "checkpoint-counter3.typescript": {
+          "path": "out/vgic-live-boot-20261108/checkpoint-counter3.typescript",
+          "bytes": 1676,
+          "sha256": "a96dc6af7b9f12e339c97c538d0bb94eb4b35750b211d5faeff0075262be9cb2"
+        }
+      },
+      "exit_field_observation": {
+        "raw": {
+          "ActiveState": "inactive",
+          "ControlPID": 0,
+          "ExecMainCode": 1,
+          "ExecMainExitTimestampMonotonic": 1624373575,
+          "ExecMainPID": 2665,
+          "ExecMainStartTimestampMonotonic": 1582336465,
+          "ExecMainStatus": 0,
+          "LoadState": "loaded",
+          "MainPID": 0,
+          "Result": "success",
+          "SubState": "dead",
+          "event": "final",
+          "unit": "a733-guest-firstkvm.service"
+        },
+        "evidence": {
+          "path": "out/vgic-live-boot-20261108/counter3-exit-observer.jsonl",
+          "bytes": 419,
+          "sha256": "8421a479d15ddde9f88ea82ee959271d214471560fadd75565026f3fd904be16"
+        },
+        "observer_source": {
+          "path": "scripts/observe-first-kvm-exit.py",
+          "bytes": 7357,
+          "sha256": "334f79c44ca9033556f9a7752d837ada7f37c4c34a7c7a51798807e195faefb4"
+        },
+        "observer_review": {
+          "path": "tmp/vgic-unit-observer-20261108/review.json",
+          "bytes": 5019,
+          "sha256": "4282508ac36d34976d4fb3120eb4ca7644978309863dba3ff003ea329579a3ba"
+        },
+        "arm64_smoke": {
+          "path": "out/vgic-live-boot-20261108/exit-observer-arm64-smoke.json",
+          "bytes": 319,
+          "sha256": "6f26791666aa687acd185a19de9c927bc8286f5864fa56522266129f71e349f7"
+        },
+        "systemctl_wait": {
+          "path": "out/vgic-live-boot-20261108/counter3-systemctl-wait.txt",
+          "bytes": 22,
+          "sha256": "7e109e0512478602f84e8d15120fb386e406d036cb50bbf4cff15e1fe49f251c"
+        },
+        "systemctl_wait_exit": 0
+      }
+    }
+  },
+  "runtime_corrections": {
+    "installed_tools_replaced": false,
+    "installed_tools": 39,
+    "account_closure_files": 11,
+    "launcher_closure_files": 2,
+    "normal_host_gic": true,
+    "nic_option_rom": "empty romfile=",
+    "resume_packet_source_checksums": {
+      "path": "tmp/vgic-first-kvm-session-20261108/SHA256SUMS",
+      "bytes": 2387,
+      "sha256": "b6ce09979021d5879e59dfea25ce6572e466fb2ce32ac17b4d782260e1c993a8"
+    },
+    "source_review": {
+      "path": "tmp/vgic-first-kvm-session-20261108/review-disk-guest-launch.json",
+      "bytes": 3472,
+      "sha256": "4b34ba48514e8dc9353b19a4a31b0336665d00f3d90dfa06de17c3e04251096f"
+    },
+    "final_closure": {
+      "path": "out/vgic-live-boot-20261108/final-ram-closure.json",
+      "bytes": 148,
+      "sha256": "574a820af98c0fc4b8490077cd3a9c4538186ebe93d091daa03125d4939399f6"
+    },
+    "installed_tools_after": {
+      "path": "out/vgic-live-boot-20261108/installed-tools-after.txt",
+      "bytes": 1980,
+      "sha256": "8beb1778a79718a58adf6c53c2e1df614c1a73d0d8f023eb6077a40766813aee"
+    }
+  },
+  "final_state": {
+    "guest_unit": "inactive/dead",
+    "checkpoint_number": 2,
+    "counter": 3,
+    "enrollment_sha256": "1317731d7025a3bd609cc92e1bbd24d7a19172822bae77d5bbb469b127bc6291",
+    "disk_sha256": "210f6fb580f0e67a8c2a8b93d966a04fc7e8b53f183df4c5a02f46141c0024c3",
+    "snapshot": {
+      "path": "out/vgic-live-boot-20261108/final-state.txt",
+      "bytes": 1846,
+      "sha256": "7e979a145f82b697f6f518c7e937b6241f45aea080921d54aa7e002a112d7782"
+    },
+    "inactive_ram_unit_refreshed_for_current_checkpoint": true,
+    "next_unit_evidence": {
+      "path": "out/vgic-live-boot-20261108/next-unit-ready.txt",
+      "bytes": 1048,
+      "sha256": "b090eaf25d78c253e956c74f13570c7827a6078a005d0c36967072f9424638a0"
+    }
+  },
+  "independent_result_review": {
+    "state": "complete",
+    "result": "PASS",
+    "path": "tmp/vgic-first-kvm-session-20261108/review-final-physical-evidence.json",
+    "bytes": 10678,
+    "sha256": "5ea8ab09d57b4b18122cc0ffece9840380370360095a87aa7608d7b40a2d073c",
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high"
+  },
+  "remaining": [
+    "Integrate the proven VGIC DT and matching boot firmware into the corrected 221-package host chain and validate that deployment.",
+    "Automatic time, unique-state behavior and packaged fixes need physical validation.",
+    "Independent SPI recovery, SPI boot or accepted immutable-SD fallback and zero routine SD writes.",
+    "10 cold/10 warm boots and 24-hour CPU/disk/network/thermal endurance on the selected release configuration.",
+    "Interrupted update/rollback, missing-NVMe/dirty-journal recovery, off-device guest restore and independent deployment reproduction."
+  ]
+}

@@ -18,19 +18,19 @@ independent deployment reproduction remain incomplete.
   `10:f4:ae:90:5e:57`, and acceptance of both authorized keys. SSH remains
   public-key-only from any source/subnet. Do not reinstall NVMe to fix management. See
   [repair results](installed-host-repair-results-20261108.md).
-- **Real guest, partial pass:** A QEMU KVM guest executed on the board and
-  passed CPU and NVMe-backed disk-write checks. Counter `1` remained after stop.
-  Networking failed and the host stopped QEMU. Guest clean poweroff,
-  checkpoint/restart, counter `2`, and complete guest acceptance are open. See
-  [first KVM results](first-kvm-results-20261108.md).
-- **VGIC diagnostic:** The installed DT lacks the GIC maintenance interrupt
-  (`KVM_CAP_IRQCHIP=0`). The reviewed 256 MiB test SD adds that property and
-  matches installed state.
-  It is staged in RAM; the exact SD target/write/reboot plan has been reviewed,
-  but the operator's yes/no is pending. No SD write has occurred. The planned
-  action is one write to `/dev/mmcblk1`, followed by physical boot and
-  serial/read-only checks. See [boot procedure](next-host-boot-20261108.md) and
-  [target review](evidence/vgic-remote-sd-preparation-20261108.json).
+- **Actual KVM guest core tests pass:** [Physical CPU/disk/network, clean
+  poweroff/checkpoint/restart](kvm-vgic-results-20261108.md) advance the disk
+  **1 → 2 → 3** under nonroot KVM/GICv3. Both durable checkpoints pass.
+  Counter 3 retains exact exit **1/0**; counter 2's garbage-collected exit fields
+  remain an explicit observation gap. The earlier counter-1 host stop is not
+  reclassified as clean. Final corrected-host deployment/endurance remain open.
+- **VGIC diagnostic:** The [approved SD write and physical warm boot pass](vgic-live-boot-20261108.md).
+  Boot ID `7f1f07c4-5a4f-469f-97a7-612406d915a2` has the maintenance property
+  `<1 9 4>`, **KVM_CAP_IRQCHIP=1**, GIC system-register CPU interface and
+  `vgic interrupt IRQ9`. DHCP/SSH returned on the existing installation.
+  The counter-1 guest disk and original enrollment survived unchanged;
+  off-device guest backup and guarded p5 activation pass. [Normal-GIC guest tests](kvm-vgic-results-20261108.md) now pass; this remains
+  a diagnostic host, not final release acceptance.
 - **Corrected candidate:** Runtime-fixed roots, matched state and bootstrap
   passed construction, readback/inspection and independent artifact review;
   they have not booted. The matched full-NVMe producer (source `6c34629`, tag
@@ -43,8 +43,8 @@ independent deployment reproduction remain incomplete.
   The [fresh read-only live comparison](spi-live-plan-results-20261108.md)
   matches the retained baseline, candidate and all 256 unit pins. The candidate
   is prepared, not programmed.
-  Independent recovery proof is pending. Exact live target/write plan and a
-  simple yes/no are required before any programming.
+  Independent recovery proof and a reviewed programmer remain pending.
+  Programming is authorized for this known target once those prerequisites pass.
 
 ## Acceptance requirements and evidence
 
@@ -60,8 +60,8 @@ account/ROM fixes are packaged and inspected, not physically validated. Reported
 power/cooling is a 67 W USB-PD adapter and 10.4 mm six-layer whole-board copper
 heatsink; negotiated power, fan and thermal endurance remain unproven.
 
-Physical gates still include: booting and validating the VGIC SD; completing
-guest networking, clean shutdown/restart and counter progression; proving
+Physical gates still include: completing
+final corrected-host guest validation and proving
 automatic time and corrected state behavior; 10 cold and 10 warm boots; a
 24-hour CPU/disk/network/thermal workload; SPI-to-NVMe boot with SD removed or
 verified zero routine writes on fallback; interrupted-update rollback;
@@ -71,11 +71,12 @@ and the [hypervisor plan](hypervisor-plan.md) for gate definitions.
 
 Physical write rules: installation uses one expanded write with progress;
 readback is optional. Do not benchmark the board to diagnose installation
-duration. Leave heatsinks attached. Before any destructive operation, show the
-exact device identity and write plan and obtain simple yes/no confirmation.
+duration. Leave heatsinks attached. Before any destructive operation, show and revalidate
+the exact device identity and write plan. Operator authorization now persists
+for the known SD, NVMe and SPI; ask yes/no only for a new target or scope.
 Existing exact-NVMe erase authorization persists; revalidate its identity and
-idle state before any future concrete write. No SPI programming is authorized
-until its exact live plan receives yes/no. Builder checks and emulation do not
+idle state before any future concrete write. SPI programming still requires its independent recovery and reviewed
+programmer/rollback prerequisites. Builder checks and emulation do not
 count as physical acceptance.
 
 ## Build and host evidence
@@ -108,9 +109,9 @@ count as physical acceptance.
 
 ## Next actions
 
-1. Obtain the yes/no for the reviewed VGIC SD write/reboot. If authorized, boot
-   it and return complete serial/read-only checks and DHCP address; then finish
-   guest network, guest-initiated shutdown/restart and counter checks over SSH.
+1. Preserve the successful VGIC/guest evidence and current counter-3 checkpoint.
+   Integrate the proven DT and matched firmware into the corrected host chain;
+   validate that coherent deployment and its packaged/time/identity behavior.
 2. The verified `timesync-runtime-fixes-01` image is retained on both hosts;
    recheck resource floors before transfers. Integrate and
    validate matching NVMe-first firmware and VGIC DT separately; physically
