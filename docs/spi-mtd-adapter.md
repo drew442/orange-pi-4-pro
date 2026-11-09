@@ -60,8 +60,10 @@ not prove power-loss durability, ROM recovery or a successful physical boot.
 
 ## Remaining production integration
 
-The caller layer is still required. Before constructing this backend for a real
-write, that layer must establish the exact board/descriptor and initial namespace,
+The [trusted caller and native capture](known-spi-programmer.md) now pass
+independent code review and privileged Ubuntu tests. Their production recovery
+pin remains unregistered, so write mode refuses before device opening. Before
+constructing this backend for a real write, the caller must establish the exact board/descriptor and initial namespace,
 exclusive use and quiescence, held authenticated original/candidate sources,
 registered independently demonstrated ROM recovery, preserved original backup,
 and durable off-board event capture. It must honor the operator's existing known
@@ -72,8 +74,8 @@ is trusted, not independent evidence that those prerequisites were satisfied.
 
 Neither this backend nor a simulated successful engine transaction satisfies
 those gates. The [ROM recovery investigation](rom-recovery-investigation.md),
-actual programmer integration, physical restoration and SD-removed NVMe boot
-remain open. The A733, actual 2 GB SD, nominal 250 GB NVMe, minimal host and zero
+registered physical recovery evidence, actual MTD operation/restoration and
+SD-removed NVMe boot remain open. The A733, actual 2 GB SD, nominal 250 GB NVMe, minimal host and zero
 routine SD-write requirements remain unchanged. Real KVM acceptance stays separate.
 
 Host validation and independent probes are recorded in

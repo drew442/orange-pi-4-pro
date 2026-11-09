@@ -64,7 +64,7 @@ without restarting the workload, collector or UART relay.
 | Protected host boot, management, time and identity | Passed; current full release acceptance remains open |
 | 24-hour workload | Running; no final pass claimed |
 | 10 cold and 10 warm boots with matched firmware/SSD | Pending; accidental user restarts and the controlled RAM reset are not counted |
-| SPI-to-NVMe with SD removed | Unprogrammed; independent recovery and reviewed programmer prerequisites pending |
+| SPI-to-NVMe with SD removed | Unprogrammed; registered independent recovery and physical SPI/SD-removed boot pending |
 | Immutable SD fallback | Linux writes remain zero; [whole-card baseline](evidence/protected-sd-baseline-20261109.json) and exact written prefix match pass; post-workload/shutdown/reboot comparison and firmware audit pending |
 | Interrupted update, rollback, missing NVMe, dirty journal | Software preparation/review pass; required physical recovery cases pending |
 | Off-device guest backup/restoration | [Counter-3 backup and physical restoration](evidence/corrected-host-guest-restore-20261108.json) pass |
@@ -113,7 +113,7 @@ pending. The active endurance host is unchanged.
   inspection and unchanged outside-BOOT bytes pass. Native candidate is
   `out/protected-nvme-candidate-20261109/nvme.img.gz`; fresh installation is
   unperformed. [Evidence](evidence/protected-full-nvme-image-20261109.json).
-- Latest complete privileged Ubuntu suite: **2,180 tests**, zero skips/errors/
+- Latest complete privileged Ubuntu suite: **2,218 tests**, zero skips/errors/
   failures; five shell suites and five diagnostic assembly cases also pass.
   All five TOML files parse separately on codex. These are software checks.
 - [Matched A/B maintenance candidates](matched-host-updates-20261109.md) now
@@ -180,8 +180,10 @@ pending. The active endurance host is unchanged.
    actual-input NOR-model rehearsals; it supplies no device-opening route.
    [Preparation evidence](evidence/spi-unit-transaction-20261109.json).
    A [borrowed-FD Linux MTD backend](spi-mtd-adapter.md) now passes independent
-   review and the full privileged Jammy suite. It has no CLI or device opening;
-   the complete programmer and recovery/durability gate integration remain pending.
+   review and the full privileged Jammy suite. It has no CLI or device opening.
+   The [trusted programmer/capture preparation](known-spi-programmer.md) now passes
+   independent review and 2,218 Ubuntu tests; actual writes remain disabled until
+   independent physical recovery evidence is registered.
    Otherwise finish complete immutable-SD proof. The blank XM25QU128C SPI backup
    and successful SD boot do not alone prove recovery after broken SPI firmware.
 5. Complete the remaining physical gates in [hardware validation](hardware-validation.md)

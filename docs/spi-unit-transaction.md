@@ -1,7 +1,7 @@
 # SPI erase-unit transaction engine preparation
 
-`scripts/spi-unit-transaction.py` is an API-only engine for a future independently
-reviewed adapter. It imports only Python hashing/JSON support. It has no CLI,
+`scripts/spi-unit-transaction.py` is an API-only engine used by the independently
+reviewed [caller preparation](known-spi-programmer.md). It imports only Python hashing/JSON support. It has no CLI,
 file opening, device opening, physical erase ioctl or hardware programming route.
 The active 24-hour real KVM workload must remain undisturbed. These host tests
 and callback receipts always report `hardware_acceptance: false`.
@@ -43,7 +43,7 @@ the reviewed plan, authenticates immutable source bytes and obtains a fresh full
 current image. Rebuilding the plan must reproduce the reviewed plan exactly
 before any mutation. The caller cannot silently replace its current-image pin.
 
-The future adapter supplies five explicit callbacks:
+The caller/backend supplies five explicit callbacks:
 
 - `read(offset, size)` returns exact immutable bytes or raises.
 - `erase(offset, 65536)` completes one full unit or raises; a raising erase may
@@ -84,10 +84,11 @@ write counters. A final event failure also prevents a success receipt.
 
 A [Linux MTD backend](spi-mtd-adapter.md) now implements bounded syscall callbacks
 on a caller-owned descriptor and passes independent host review. It has no CLI
-or device-opening path. The complete trusted programmer and its recovery,
-quiescence, source and off-board durability integration remain unimplemented.
+or device-opening path. The [trusted caller and native capture](known-spi-programmer.md) now pass
+independent source review and 2,218 privileged Ubuntu tests. They remain
+preparation: real recovery proof is unregistered and write admission is disabled.
 
-The future trusted programmer must independently enforce pinned A733/XM25QU128C target
+The trusted programmer must independently enforce pinned A733/XM25QU128C target
 identity and geometry, initial namespace and quiescence, authenticated staged
 sources, registered ROM recovery proof, durable off-board capture and the required
 single yes/no authorization workflow while honoring existing operator authority.
@@ -99,7 +100,7 @@ The vendor ABI is pinned to revision
 `2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f`:
 [`include/uapi/mtd/mtd-abi.h`](https://github.com/orangepi-xunlong/linux-orangepi/blob/2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f/include/uapi/mtd/mtd-abi.h)
 and [`drivers/mtd/mtdchar.c`](https://github.com/orangepi-xunlong/linux-orangepi/blob/2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f/drivers/mtd/mtdchar.c).
-A future adapter's `MEMERASE64` uses unsigned 64-bit start/length and ioctl
+The backend's `MEMERASE64` uses unsigned 64-bit start/length and ioctl
 `0x40104d14`. Do not use NAND/OOB-oriented `MEMWRITE` for this NOR transaction.
 The pinned mtdchar file operations provide no guaranteed `fsync` operation;
 callback completion must use reviewed MTD write/close/readback semantics rather
@@ -110,7 +111,7 @@ Run `python3 -m unittest discover -s tests -p 'test_spi_unit_transaction.py'` fo
 host NOR-model checks. They cover exact full-unit preservation, skip behavior,
 short writes, interruptions, fresh restore, stale plans/pins, preservation refusal,
 callback failure ordering and final full-image verification. They do not establish
-actual MTD acceptance. The complete physical programmer, ROM recovery demonstration,
-real SPI restoration and SD-removed NVMe boot remain unprepared or unperformed.
+actual MTD acceptance. The programmer source is prepared; registered ROM recovery, actual MTD
+operation/restoration and SD-removed NVMe boot remain unperformed.
 Physical KVM and hardware release acceptance remain with the coordinator, retaining
 the A733, 2 GB SD and nominal 250 GB NVMe requirements.

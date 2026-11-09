@@ -1,0 +1,117 @@
+{
+  "schema": 1,
+  "classification": "Known SPI caller and off-board durable capture independently reviewed and privileged Ubuntu-tested; physical writes disabled pending registered recovery evidence",
+  "hardware_acceptance": false,
+  "new_tools_physically_executed": false,
+  "physical_spi_written": false,
+  "production_recovery_proof_pin": null,
+  "sources": {
+    "scripts/program-known-spi.py": {
+      "bytes": 25723,
+      "sha256": "4ef03baf60e46bb9d6e88f90a870de8d67e871def8f5b012c19c50c8bf5d1efb"
+    },
+    "scripts/capture-known-spi-events.py": {
+      "bytes": 20522,
+      "sha256": "f2d675997e9aadbf57d75f0e9397b81986debdc923002f86e375857811959263"
+    },
+    "tests/test_known_spi_programmer.py": {
+      "bytes": 33418,
+      "sha256": "ca4054958489d4433434b58fe55f683f08e6f11810aa9283a3b4987ce46ce88b"
+    }
+  },
+  "unchanged_authenticated_helpers": {
+    "scripts/backup-spi.py": {
+      "bytes": 10111,
+      "sha256": "b160e3fe8e421e18e35aad34aff909e10b4dfca027178d80a4b202c711e2147d"
+    },
+    "scripts/spi-mtd-adapter.py": {
+      "bytes": 8088,
+      "sha256": "f8b88a531827118812e6707de7b5b6e8940e2781e5505896e48d851a16cfbecd"
+    },
+    "scripts/spi-unit-transaction.py": {
+      "bytes": 9566,
+      "sha256": "6002270dfd2251c16ef8d9ad2fa0a6caa6e279ef346c11c52fa31fcce4c95d0d"
+    },
+    "scripts/write-known-bootstrap-sd.py": {
+      "bytes": 21661,
+      "sha256": "4769001ab4a4861ff8ffe26ad6aa427f9abe5430b48bb49918d6c1206b96c52a"
+    }
+  },
+  "reviews": {
+    "initial": {
+      "path": "tmp/known-spi-programmer-review-20261109.json",
+      "bytes": 7451,
+      "sha256": "0262e68645c9b0cf70e96663511360209add77ee335fd91a963a3ba28d14f546",
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "high",
+      "result": "FAIL"
+    },
+    "fixed": {
+      "path": "tmp/known-spi-programmer-rereview-20261109.json",
+      "bytes": 6712,
+      "sha256": "31de081333daf9e790247469903eb0d0ede27e271c7868961ec927812de8e66e",
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "high",
+      "result": "PASS"
+    }
+  },
+  "qualified_jammy_validation": {
+    "path": "/var/lib/a733-known-spi-validation-20261109-01",
+    "unit": "a733-known-spi-validation-20261109-01.service",
+    "tests": 2218,
+    "seconds": 93.566,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "shell_suites": 5,
+    "diagnostic_cases": 5,
+    "toml_files_parsed": 5,
+    "source_files_checked_before_after": 877,
+    "exit_status": 0,
+    "cpu_quota_percent": 100,
+    "memory_max_bytes": 3221225472,
+    "builder_free_bytes_after": 24483409920,
+    "builder_memory_available_bytes_after": 7365152768,
+    "retained": {
+      "out/known-spi-programmer-validation-20261109-01/validation-unit.txt": {
+        "bytes": 135,
+        "sha256": "b041c518fef1eda7f342fa432d0d23c7379936d749e2c288350e0bf16a51f4ec"
+      },
+      "out/known-spi-programmer-validation-20261109-01/validation.log": {
+        "bytes": 16369,
+        "sha256": "dddb003cf3da13a3fe892e6c4ae669d602248c6eeaa7dade2b66954809e0b876"
+      },
+      "out/known-spi-programmer-validation-20261109-01/source-lock.json": {
+        "bytes": 139944,
+        "sha256": "d761b25f176a7b93de68497ebd91fe7d6f29bcd7f96e4c2c4fa636b475a4d6cf"
+      }
+    },
+    "toml_parse_location": "coordinator workspace using native Python tomllib"
+  },
+  "fixed_target": {
+    "device": "/dev/mtd0",
+    "dev": "90:0",
+    "partname": "XM25QU128C",
+    "jedec_id": "204118",
+    "bytes": 16777216,
+    "erase_bytes": 65536,
+    "write_bytes": 1,
+    "nvme_serial": "134807190FC700149277",
+    "compatible_hex": "78756e6c6f6e672c6f72616e676570692d342d70726f0061726d2c73756e3630697732703100"
+  },
+  "operator_authority": "docs/evidence/storage-write-authorization-20261108.json",
+  "target_context_observation": {
+    "path": "out/spi-programmer-target-observation-20261109.json",
+    "bytes": 521,
+    "sha256": "f9c259c2ae8dff880d1e01181842491961997d2027dc12c5475a361fc94957a7"
+  },
+  "initial_blocker_resolution": "Initial independent review refused missing programmer source authentication/lifetime guard. Fixed native bootstrap authenticates exact held programmer bytes before compile/exec; write requires bound bootstrap and guarded own-source descriptor. Initial failure remains retained.",
+  "limits": [
+    "No actual MTD opening/programming/restoration or SD-removed SPI boot was performed by these tools.",
+    "Recovery proof is deliberately unregistered; no CLI/environment source or proof pin override exists.",
+    "Requires trusted quiescent root maintenance, not hostile-root exclusion.",
+    "Device callback success/close and native fsync acknowledgements do not independently prove power-loss recovery or physical boot.",
+    "Software NOR/pipe/subprocess fixtures never replace physical acceptance."
+  ],
+  "writes_disabled_until_registered_physical_proof": true
+}
