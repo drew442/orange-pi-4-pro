@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "date": "2026-11-09",
+  "status": "prepared; additional growth not authorized or executed",
+  "builder": "build.drewnet.online",
+  "target": "/dev/ubuntu-vg/ubuntu-lv",
+  "lv_uuid": "Wacdne-hf6p-osvg-5IiF-iVD0-Dlgt-6iflHh",
+  "old_lv_bytes": 88017469440,
+  "new_lv_bytes": 94459920384,
+  "growth_bytes": 6442450944,
+  "free_vg_before_bytes": 45067796480,
+  "expected_free_vg_after_bytes": 38625345536,
+  "metadata_backup_sha256": "ac982fbae17b73bfb6fd262716c24ec8df97c2d481ec60acedf97abd2c2afd67",
+  "test_mode_passed": true,
+  "post_test_sizes_unchanged": true,
+  "full_nvme_admission_bytes": 23760999827,
+  "orange_pi_storage_written": false,
+  "hardware_acceptance": false,
+  "review": {
+    "schema": 1,
+    "review_date": "2026-11-09",
+    "result": "PASS",
+    "scope": "Independent read-only review of the prepared additional 6 GiB Ubuntu builder root LV/ext4 growth proposal. This report does not authorize or execute it.",
+    "script": {
+      "path": "tmp/build-host-growth-20261109/apply.sh",
+      "sha256": "79930be84c2a83974f2ffd5b38940d999dfef801ec17a77428bef828aec944b1",
+      "bash_syntax": "PASS; bash -n only, script not executed"
+    },
+    "blockers": [],
+    "target": {
+      "host": "build.drewnet.online",
+      "logical_volume": "/dev/ubuntu-vg/ubuntu-lv",
+      "lv_uuid": "Wacdne-hf6p-osvg-5IiF-iVD0-Dlgt-6iflHh",
+      "root_source": "/dev/mapper/ubuntu--vg-ubuntu--lv",
+      "root_fstype": "ext4",
+      "root_major_minor": "252:0"
+    },
+    "arithmetic": {
+      "old_lv_bytes": 88017469440,
+      "new_lv_bytes": 94459920384,
+      "growth_bytes": 6442450944,
+      "vg_free_before_bytes": 45067796480,
+      "vg_free_after_bytes": 38625345536,
+      "observed_filesystem_available_bytes": 19218972672,
+      "unchanged_admission_bytes": 23760999827,
+      "current_admission_shortfall_bytes": 4542027155,
+      "upper_bound_available_before_ext4_overhead_bytes": 25661423616,
+      "upper_bound_headroom_above_admission_bytes": 1900423789,
+      "result": "PASS; exact 6 GiB delta, 1536 existing 4 MiB extents; documented remaining VG capacity matches."
+    },
+    "findings": [
+      "Target guards bind hostname, exact LV UUID and original size, exact root source/type/device, minimum free VG capacity, and pinned root-private pre-growth metadata backup. The prepared script hash matches the requested pin.",
+      "Exact final-size lvextend and the original-size guard prevent repeated additive growth. The supplied LVM test-mode stderr explicitly disables metadata updates; post-test LV and VG values retain their original sizes.",
+      "The prior exact 20 GiB approval was consumed by the November 7 execution. This additional 6 GiB is a separate pending operator yes/no decision; known A733 SD/NVMe/SPI authorization does not cover it.",
+      "Failure handling is correct: retain any enlarged LV if resize2fs fails, stop, inspect actual LV/filesystem state, and perform a separately controlled resume. Never shrink or restore pre-growth VG metadata. The old-size guard deliberately blocks blindly rerunning this script after LV growth.",
+      "The backup hash protects LVM metadata identity, not filesystem contents. Actual free space must be measured after ext4 growth; retain the unchanged 23760999827-byte admission and runtime resource floors before construction/replay. The projected capacity is not proof that all later phases fit."
+    ],
+    "evidence_read": [
+      "AGENTS.md",
+      "docs/agent-routing.md",
+      "docs/implementation-status.md",
+      "docs/build-host-capacity-addition-20261109.md",
+      "docs/build-host-capacity-plan.md",
+      "docs/evidence/build-host-capacity-execution-20261107.json",
+      "out/serial-recovery-20261109/builder-growth-readonly-inventory.txt",
+      "out/serial-recovery-20261109/builder-growth-preparation.txt",
+      "out/serial-recovery-20261109/builder-growth-preparation.stderr"
+    ],
+    "limitations": [
+      "No SSH, builder writes, volume/filesystem operations, script execution, device actions, delegation, commit or push performed. Only this local review report was written.",
+      "No physical A733 acceptance claim; the separate 24-hour KVM workload and project A733/2 GB SD/250 GB NVMe/minimal-host/zero-routine-SD-write requirements remain unaffected."
+    ]
+  }
+}
