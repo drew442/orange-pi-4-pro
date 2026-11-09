@@ -92,7 +92,10 @@ pass independent actual-artifact review. Full distribution/STATE-selector
 integration and physical policy/listener verification remain required. The
 [matched STATE component](public-config-state.md) now passes construction, full
 filesystem readback and independent artifact review, preserving the current
-protected BOOT UUID and authenticating the new root-A marker. The active endurance
+protected BOOT UUID and authenticating the new root-A marker. The
+[full-image recipe](public-config-nvme-image.md) now passes independent code review
+and full software checks; complete construction and actual-artifact verification
+remain pending. The active endurance
 host is unchanged.
 
 ## Construction, resources and authorization
@@ -103,7 +106,7 @@ host is unchanged.
   inspection and unchanged outside-BOOT bytes pass. Native candidate is
   `out/protected-nvme-candidate-20261109/nvme.img.gz`; fresh installation is
   unperformed. [Evidence](evidence/protected-full-nvme-image-20261109.json).
-- Latest complete privileged Ubuntu suite: **2,155 tests**, zero skips/errors/
+- Latest complete privileged Ubuntu suite: **2,167 tests**, zero skips/errors/
   failures; five shell suites and five diagnostic assembly cases also pass.
   All five TOML files parse separately on codex. These are software checks.
 - [Matched A/B maintenance candidates](matched-host-updates-20261109.md) now

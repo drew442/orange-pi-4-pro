@@ -1,0 +1,82 @@
+{
+  "schema": 1,
+  "classification": "Pinned three-partition full distribution recipe independently reviewed and host-tested; production construction and hardware acceptance pending",
+  "hardware_acceptance": false,
+  "production_distribution_built": false,
+  "physical_storage_written": false,
+  "sources": {
+    "build/public-config-nvme-image.py": {
+      "bytes": 16092,
+      "sha256": "7410499409bd5aef620834d7aefed563f412a6c8020cd4592b8d906bf4c8cc91"
+    },
+    "tests/test_public_config_nvme_image.py": {
+      "bytes": 19537,
+      "sha256": "db071ad9dd8625583b686633152601f864c00d0d56d58357759d0a08f34711b0"
+    }
+  },
+  "base_distribution": "docs/evidence/protected-full-nvme-image-20261109.json",
+  "new_root_components": "docs/evidence/public-config-roots-20261109.json",
+  "new_STATE_component": "docs/evidence/public-config-state-build-20261109.json",
+  "replacement_interval": {
+    "start_bytes": 537919488,
+    "end_bytes_exclusive": 17717788672,
+    "bytes": 17179869184,
+    "partitions": [
+      "root-a",
+      "root-b",
+      "state"
+    ]
+  },
+  "unchanged_extents": [
+    "protected BOOT",
+    "protective MBR and both GPT headers/tables",
+    "GUESTS",
+    "all bytes outside replacement interval"
+  ],
+  "independent_review": {
+    "path": "tmp/public-config-nvme-recipe-review-20261109.json",
+    "bytes": 6419,
+    "sha256": "de65abed57641a76d3ca7bd6c8b5bdb8f5dbec623713af1eece46fb541efe3ed",
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "result": "PASS"
+  },
+  "qualified_jammy_validation": {
+    "project": "/var/lib/a733-public-config-nvme-validation-20261109-01",
+    "unit": "a733-public-config-nvme-validation-20261109-01",
+    "tests": 2167,
+    "errors": 0,
+    "failures": 0,
+    "skips": 0,
+    "seconds": 67.879,
+    "shell_suites": 5,
+    "diagnostic_cases": 5,
+    "toml_files_parsed": 5,
+    "source_files_checked_before_after": 860,
+    "unit_exit": 0,
+    "cpu_quota_percent": 200,
+    "memory_max_bytes": 3221225472,
+    "builder_free_bytes_after": 30556614656,
+    "builder_mem_available_after": 7495458816,
+    "retained": {
+      "out/public-config-nvme-validation-20261109-01/jammy-validation.log": {
+        "bytes": 16318,
+        "sha256": "626d75181edb4402fc8df09fb367378941b4893ca5a642bf16bf7455ce32f767"
+      },
+      "out/public-config-nvme-validation-20261109-01/validation-unit.txt": {
+        "bytes": 120,
+        "sha256": "189fa4fbbe445b6fbede4c0a0716f528924572dbfe999476b9f09a199365806e"
+      },
+      "out/public-config-nvme-validation-20261109-01/source-lock.json": {
+        "bytes": 137203,
+        "sha256": "b54959e8175c32a54359f0cae359e25e1345085b926a87d356d414d871fb7bd2"
+      }
+    }
+  },
+  "limits": [
+    "Scaled fixtures and source-only review establish software behavior, not a full256GB construction or physical installation.",
+    "Require successful producer exit plus full output/GPT/hash proof and independent actual-artifact review before installation.",
+    "Installation readback remains optional; builder checks do not add mandatory board readback.",
+    "Live endurance workload remains unchanged."
+  ]
+}
