@@ -49,6 +49,13 @@ A and its `e1cc…` selector intact until staging completes and a separately val
 [update guards](host-updates.md) and [root selection](host-root-selection.md).
 Retain each actual plan, interrupted/complete result, selector and boot record.
 
+For rollback to the still-installed old A, retain its actual selector and old
+`4f28…` root manifest before staging. The native retained selector is
+`out/matched-updates-20261109-01/candidate-A/selected.conf`, 179 bytes, SHA-256
+`bd27df59dbdb53680db09cf6f7cfd80ceb73aa89c7ade0a627fa76ff4aabd20a`.
+Use that old pair for rollback to `e1cc…`. The normalized candidate-A selector in
+the table selects `286494…` and belongs with a later staged normalized A.
+
 Offline execution of the authenticated old updater's complete `Source` reader
 accepts new B, and its selection-manifest reader accepts `c1…`. Corrected tooling
 accepts retained old A's metadata/selector. Actual-marker and synthetic-mount

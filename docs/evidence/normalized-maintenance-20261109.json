@@ -248,5 +248,19 @@
       "bytes": 179,
       "sha256": "27ea5d897aa590de9efbe42800894b6a0645ec855ef68012897684f87efe2971"
     }
+  },
+  "old_A_rollback_pair": {
+    "selector": {
+      "path": "out/matched-updates-20261109-01/candidate-A/selected.conf",
+      "bytes": 179,
+      "sha256": "bd27df59dbdb53680db09cf6f7cfd80ceb73aa89c7ade0a627fa76ff4aabd20a"
+    },
+    "payload_manifest": {
+      "bytes": 32613,
+      "sha256": "4f28d75a14323c52aa976b00f957b56913b75472a07a717672abd33d439b97b9"
+    },
+    "marker_sha256": "e1cc0395cd97e222e7d8146c05fa703e3ae9373b34bf1e24fbfb91a7e63dfa61",
+    "root_image_sha256": "d868571e89216762ce9d8d2b8209884b958c53b7be97a215d8c4ddbc96ab7940",
+    "scope": "Retained old A rollback pair for current installation; normalized candidate-A selector is reserved for normalized A after staging."
   }
 }
