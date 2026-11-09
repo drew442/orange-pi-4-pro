@@ -89,7 +89,10 @@ Ubuntu suite. Two [corrected root constructions](public-config-roots-20261109.md
 now pass independent artifact review and all four full filesystem readbacks;
 [Matched maintenance candidates](public-config-maintenance-20261109.md) also
 pass independent actual-artifact review. Full distribution/STATE-selector
-integration and physical policy/listener verification remain required. The active endurance
+integration and physical policy/listener verification remain required. The
+[registered STATE launcher and reader](public-config-state.md) preserve the
+current protected BOOT UUID while changing the selected-root marker; construction
+is pending. The active endurance
 host is unchanged.
 
 ## Construction, resources and authorization
@@ -100,7 +103,7 @@ host is unchanged.
   inspection and unchanged outside-BOOT bytes pass. Native candidate is
   `out/protected-nvme-candidate-20261109/nvme.img.gz`; fresh installation is
   unperformed. [Evidence](evidence/protected-full-nvme-image-20261109.json).
-- Latest complete privileged Ubuntu suite: **2,141 tests**, zero skips/errors/
+- Latest complete privileged Ubuntu suite: **2,155 tests**, zero skips/errors/
   failures; five shell suites and five diagnostic assembly cases also pass.
   All five TOML files parse separately on codex. These are software checks.
 - [Matched A/B maintenance candidates](matched-host-updates-20261109.md) now

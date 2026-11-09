@@ -1,0 +1,94 @@
+{
+  "schema": 1,
+  "classification": "Registered STATE launcher and full reader reviewed and host-tested; production construction pending",
+  "hardware_acceptance": false,
+  "production_state_constructed": false,
+  "physical_storage_written": false,
+  "sources": {
+    "build/launch-host-state-public-dirs.py": {
+      "bytes": 10912,
+      "sha256": "4d2e2a71f89e58cded8d7cc141fc474dcd64b07737ed4c197d39ba969f8200c0"
+    },
+    "build/verify-host-state-public-dirs.py": {
+      "bytes": 10499,
+      "sha256": "90d2f91db8224674798fa1790c09b21baa0368f9247c7e9000c5f649c88acfe6"
+    },
+    "tests/test_public_config_state_adapter.py": {
+      "bytes": 12735,
+      "sha256": "b3176c38e85754a87b5a58fc660fa17b8286d0ebde15d8b442c84635191baf76"
+    },
+    "tests/test_public_config_state_reader.py": {
+      "bytes": 13979,
+      "sha256": "fcc46a6bcc678ea2733bf82c237d682f7ea8bacc7e810f135954a6ae8ffaeb20"
+    },
+    "docs/evidence/public-config-roots-state-binding-20261109.json": {
+      "bytes": 12099,
+      "sha256": "d5064ee631bf6270506685b68ed9b45c3a099c6925e5198285ed2aad18421ddc"
+    }
+  },
+  "parent_root_binding": "docs/evidence/public-config-roots-state-binding-20261109.json",
+  "parent_root_revision": "4f40843365566ae4ada9b7377b75bba3f40c3360",
+  "intended_state_uuid": "360dfb39-f49f-487e-b307-0bb887c854c5",
+  "intended_root_A_marker_sha256": "286494073ce3a0b69443f96389dbbce11ab015705f7e9f05c7a7cf06503da866",
+  "independent_reviews": {
+    "launcher": {
+      "path": "tmp/public-config-state-adapter-review-20261109.json",
+      "bytes": 4751,
+      "sha256": "f50aead8a43ed3c02f254b4d7f7e558eeab9c3bfa0d569fb6eb4e49f5356b29c",
+      "result": "PASS",
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "high"
+    },
+    "reader": {
+      "path": "tmp/public-config-state-reader-review-20261109.json",
+      "bytes": 4673,
+      "sha256": "9ee64906226007af24ac06ae5b38f370ea26f2cf62ac48da52a4aa586c2f9f6d",
+      "result": "PASS",
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "high"
+    }
+  },
+  "qualified_jammy_validation": {
+    "project": "/var/lib/a733-public-config-state-validation-20261109-02",
+    "unit": "a733-public-config-state-validation-20261109-02",
+    "tests": 2155,
+    "errors": 0,
+    "failures": 0,
+    "skips": 0,
+    "seconds": 66.568,
+    "shell_suites": 5,
+    "diagnostic_cases": 5,
+    "toml_files_parsed": 5,
+    "source_files_checked_before_after": 855,
+    "unit_exit": 0,
+    "cpu_quota_percent": 200,
+    "memory_max_bytes": 3221225472,
+    "builder_free_bytes_after": 30849204224,
+    "builder_mem_available_after": 7527030784,
+    "retained": {
+      "out/public-config-state-validation-20261109-02/jammy-validation.log": {
+        "bytes": 16306,
+        "sha256": "f9698da2f2869be25fd832b11ec5fda48c44661a748c13c70fe2029abb1dde76"
+      },
+      "out/public-config-state-validation-20261109-02/validation-unit.txt": {
+        "bytes": 120,
+        "sha256": "189fa4fbbe445b6fbede4c0a0716f528924572dbfe999476b9f09a199365806e"
+      },
+      "out/public-config-state-validation-20261109-02/source-lock.json": {
+        "bytes": 136386,
+        "sha256": "c2894c32f95cb00d6357e99fd48ffd3d2c94358d919ad47d5a4354c0c7007238"
+      }
+    }
+  },
+  "requirements": [
+    "Commit launcher and full reader together in producer source closure before construction.",
+    "Build and fully read back matched STATE; independently inspect actual artifact and root selector.",
+    "Integrate corrected roots and matched STATE with unchanged protected BOOT in a fresh complete distribution.",
+    "Retain active endurance outcome and required backups before any physical board maintenance."
+  ],
+  "limits": [
+    "Software checks do not prove physical boot, repaired resolver policy or hardware acceptance.",
+    "Fresh STATE construction intentionally generates a new machine identity; the distribution is not a live-board backup.",
+    "Installation readback remains optional; these builder inspections do not add mandatory board readback."
+  ]
+}
