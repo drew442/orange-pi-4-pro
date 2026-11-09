@@ -1,0 +1,322 @@
+{
+  "schema": 1,
+  "date": "2026-11-09",
+  "operation": "physical stopped endurance guest forensic preservation",
+  "classification": "forensic byte preservation, no clean checkpoint or restoration claim",
+  "source_boot_id": "dd8d6f67-d297-4f3b-bc9a-8a41c9742051",
+  "source_nvme_serial": "134807190FC700149277",
+  "source_guest_uuid": "298b281a-d10e-44eb-bdb9-285e27eaafad",
+  "guest_directories": [
+    "endurance",
+    ".endurance-failed-retained-20261108",
+    ".endurance-smoke-retained-20261108"
+  ],
+  "archive": {
+    "bytes": 10159229,
+    "sha256": "fc4532873c176b7efc499b1708437cc541e2195bbb285801291ec433f644f0aa"
+  },
+  "builder_archive": "/var/lib/a733-endurance-forensic-backup-20261109-01/inbox/archive.tar.gz",
+  "decoded_tar_bytes": 421355520,
+  "members_verified": 15,
+  "source_before_after_inventory_and_guard_equal": true,
+  "all_three_disk_locks_retained_during_copy": true,
+  "loop_and_nbd_census_before_after_empty": true,
+  "source_and_receiver_ssh_exit_zero": true,
+  "receiver_success": true,
+  "receiver_file_and_directory_fsync": true,
+  "ancestor_fsync_completed": true,
+  "clean_checkpoint_claimed": false,
+  "new_guest_restore_or_boot_claimed": false,
+  "hardware_release_acceptance": false,
+  "source_entries": {
+    ".endurance-failed-retained-20261108": {
+      "ctime_ns": 1794189990646241388,
+      "device": 66309,
+      "gid": 60002,
+      "inode": 6673,
+      "mode": 456,
+      "mtime_ns": 1794135884436970657,
+      "nlink": 2,
+      "sha256": null,
+      "size": 4096,
+      "type": "directory",
+      "uid": 0
+    },
+    ".endurance-failed-retained-20261108/Image": {
+      "ctime_ns": 1794135883156959118,
+      "device": 66309,
+      "gid": 0,
+      "inode": 6674,
+      "mode": 292,
+      "mtime_ns": 1794135883148959046,
+      "nlink": 1,
+      "sha256": "1294959bcaa5a5ad3791913e33cffb8f0893708396aac8be9837c03a0e1f9377",
+      "size": 5251080,
+      "type": "file",
+      "uid": 0
+    },
+    ".endurance-failed-retained-20261108/disk.raw": {
+      "ctime_ns": 1794136286766639498,
+      "device": 66309,
+      "gid": 60002,
+      "inode": 6676,
+      "mode": 384,
+      "mtime_ns": 1794136286766639498,
+      "nlink": 1,
+      "sha256": "c7640eb706c94c1eee286bbf3f551c04a2953c952931ea3f6e246bc7bc910f7e",
+      "size": 134217728,
+      "type": "file",
+      "uid": 60002
+    },
+    ".endurance-failed-retained-20261108/enrollment.json": {
+      "ctime_ns": 1794135884436970657,
+      "device": 66309,
+      "gid": 0,
+      "inode": 6677,
+      "mode": 256,
+      "mtime_ns": 1794135884436970657,
+      "nlink": 1,
+      "sha256": "2bfbb4a0f69b90415c9e23361448c1f38149320be3b9fd1803a1088a9dcae41a",
+      "size": 1026,
+      "type": "file",
+      "uid": 0
+    },
+    ".endurance-failed-retained-20261108/initramfs.cpio.gz": {
+      "ctime_ns": 1794135883184959370,
+      "device": 66309,
+      "gid": 0,
+      "inode": 6675,
+      "mode": 292,
+      "mtime_ns": 1794135883184959370,
+      "nlink": 1,
+      "sha256": "183bbe9b48d61a21e890b5a13c51dbea603d40e13081324db05eba520de66bc8",
+      "size": 976723,
+      "type": "file",
+      "uid": 0
+    },
+    ".endurance-smoke-retained-20261108": {
+      "ctime_ns": 1794135853412687424,
+      "device": 66309,
+      "gid": 60002,
+      "inode": 6667,
+      "mode": 456,
+      "mtime_ns": 1794135478631705571,
+      "nlink": 2,
+      "sha256": null,
+      "size": 4096,
+      "type": "directory",
+      "uid": 0
+    },
+    ".endurance-smoke-retained-20261108/Image": {
+      "ctime_ns": 1794135477351697022,
+      "device": 66309,
+      "gid": 0,
+      "inode": 6669,
+      "mode": 292,
+      "mtime_ns": 1794135477343696969,
+      "nlink": 1,
+      "sha256": "1294959bcaa5a5ad3791913e33cffb8f0893708396aac8be9837c03a0e1f9377",
+      "size": 5251080,
+      "type": "file",
+      "uid": 0
+    },
+    ".endurance-smoke-retained-20261108/disk.raw": {
+      "ctime_ns": 1794135623234079170,
+      "device": 66309,
+      "gid": 60002,
+      "inode": 6671,
+      "mode": 384,
+      "mtime_ns": 1794135623234079170,
+      "nlink": 1,
+      "sha256": "cf9ed2e96362451e230ab8c44ed7fa29c8c66a894e4e086416642e4d501c4d92",
+      "size": 134217728,
+      "type": "file",
+      "uid": 60002
+    },
+    ".endurance-smoke-retained-20261108/enrollment.json": {
+      "ctime_ns": 1794135478631705571,
+      "device": 66309,
+      "gid": 0,
+      "inode": 6672,
+      "mode": 256,
+      "mtime_ns": 1794135478631705571,
+      "nlink": 1,
+      "sha256": "2768aafdab2161ac35b6e1956b3b5604db589abd0c4cd8dd0c9e6629840c4656",
+      "size": 1026,
+      "type": "file",
+      "uid": 0
+    },
+    ".endurance-smoke-retained-20261108/initramfs.cpio.gz": {
+      "ctime_ns": 1794135477379697209,
+      "device": 66309,
+      "gid": 0,
+      "inode": 6670,
+      "mode": 292,
+      "mtime_ns": 1794135477375697183,
+      "nlink": 1,
+      "sha256": "1033526eebc6edccfe875ca596a2080dc96ba08e62cb4ad4eda9af5f45dfd7f8",
+      "size": 976721,
+      "type": "file",
+      "uid": 0
+    },
+    "endurance": {
+      "ctime_ns": 1794190059115162813,
+      "device": 66309,
+      "gid": 60002,
+      "inode": 6678,
+      "mode": 456,
+      "mtime_ns": 1794190059043162060,
+      "nlink": 2,
+      "sha256": null,
+      "size": 4096,
+      "type": "directory",
+      "uid": 0
+    },
+    "endurance/Image": {
+      "ctime_ns": 1794190057771148676,
+      "device": 66309,
+      "gid": 0,
+      "inode": 6679,
+      "mode": 292,
+      "mtime_ns": 1794190057763148591,
+      "nlink": 1,
+      "sha256": "1294959bcaa5a5ad3791913e33cffb8f0893708396aac8be9837c03a0e1f9377",
+      "size": 5251080,
+      "type": "file",
+      "uid": 0
+    },
+    "endurance/disk.raw": {
+      "ctime_ns": 1794262948316211409,
+      "device": 66309,
+      "gid": 60002,
+      "inode": 6681,
+      "mode": 384,
+      "mtime_ns": 1794262948316211409,
+      "nlink": 1,
+      "sha256": "117d71c397b376c9107501a4c713a4de6ceea749f9d1ab757a20beada2a0d6d7",
+      "size": 134217728,
+      "type": "file",
+      "uid": 60002
+    },
+    "endurance/enrollment.json": {
+      "ctime_ns": 1794190059043162060,
+      "device": 66309,
+      "gid": 0,
+      "inode": 6682,
+      "mode": 256,
+      "mtime_ns": 1794190059043162060,
+      "nlink": 1,
+      "sha256": "2bfbb4a0f69b90415c9e23361448c1f38149320be3b9fd1803a1088a9dcae41a",
+      "size": 1026,
+      "type": "file",
+      "uid": 0
+    },
+    "endurance/initramfs.cpio.gz": {
+      "ctime_ns": 1794190057799148972,
+      "device": 66309,
+      "gid": 0,
+      "inode": 6680,
+      "mode": 292,
+      "mtime_ns": 1794190057799148972,
+      "nlink": 1,
+      "sha256": "183bbe9b48d61a21e890b5a13c51dbea603d40e13081324db05eba520de66bc8",
+      "size": 976723,
+      "type": "file",
+      "uid": 0
+    }
+  },
+  "software_fixtures": 20,
+  "independent_review": "PASS; serialized trusted root, separate kernel-consumer census, authenticated source receipt, fresh destination and ancestor fsync obligations met",
+  "records": [
+    {
+      "path": "out/endurance-forensic-preservation-20261109-01/archive-transfer.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/endurance-forensic-preservation-20261109-01/builder-durability.json",
+      "bytes": 137,
+      "sha256": "3007270b852f906bcfb167da5eefcf91e22b37295adaa67c76c554d021a56220"
+    },
+    {
+      "path": "out/endurance-forensic-preservation-20261109-01/kernel-consumer-census.py",
+      "bytes": 552,
+      "sha256": "e9c4b42e94acc29b8af5b3e30a5b632527c5ebafe0f36895bbe0c643499e87b6"
+    },
+    {
+      "path": "out/endurance-forensic-preservation-20261109-01/receiver-exit.json",
+      "bytes": 18,
+      "sha256": "df4d721d233a2334088d2d2e0110346ae9e509ff46bf0b379fbcfa85c715af4d"
+    },
+    {
+      "path": "out/endurance-forensic-preservation-20261109-01/receiver-receipt.json",
+      "bytes": 444,
+      "sha256": "2ac5b66c0cd4f8e116507f27fd445ad64a1904d59d44021e13fe1c7e06526188"
+    },
+    {
+      "path": "out/endurance-forensic-preservation-20261109-01/receiver.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/endurance-forensic-preservation-20261109-01/source-kernel-consumer-final.json",
+      "bytes": 91,
+      "sha256": "90b2ad0e1f6c3505f4ecd7b34996a23d4cf61a833411aa6cfa1de0e4554ee03a"
+    },
+    {
+      "path": "out/endurance-forensic-preservation-20261109-01/source-kernel-consumer-preflight.json",
+      "bytes": 91,
+      "sha256": "90b2ad0e1f6c3505f4ecd7b34996a23d4cf61a833411aa6cfa1de0e4554ee03a"
+    },
+    {
+      "path": "out/endurance-forensic-preservation-20261109-01/source-receipt.json",
+      "bytes": 5540,
+      "sha256": "70f3404591629ad14077a7af599a2811d5cfa92acd97c7053ed9fb08ec15b00d"
+    },
+    {
+      "path": "out/endurance-forensic-preservation-20261109-01/staging.json",
+      "bytes": 425,
+      "sha256": "e57c6f5cc6d55866928c0e7052ad1db46fb4b49ed8358493202692e4c93ce6aa"
+    },
+    {
+      "path": "out/endurance-forensic-preservation-20261109-01/transfer-receipt.json",
+      "bytes": 308,
+      "sha256": "ad96838856ab9547703eca57a589dc4e44e82afd0bd7c07bfb3c98a96a41d17c"
+    },
+    {
+      "path": "tmp/endurance-forensic-backup-20261109/send.py",
+      "bytes": 9936,
+      "sha256": "e8e60ac5c2ba5d762bfa3cd80487de5c66ed934c4628eece8f0c870e093bd930"
+    },
+    {
+      "path": "tmp/endurance-forensic-backup-20261109/verify.py",
+      "bytes": 11023,
+      "sha256": "891112b0fb2d745c12e324f7a996695d36bea5b33c623a27d5bf4bfa1ed3afaa"
+    },
+    {
+      "path": "tmp/endurance-forensic-backup-20261109/README.md",
+      "bytes": 4195,
+      "sha256": "4a98eca31c288dbcb589a3032b89f1b709cc65074aa5955122e20f5a84085781"
+    },
+    {
+      "path": "tmp/endurance-forensic-backup-20261109/fixture-evidence.json",
+      "bytes": 1756,
+      "sha256": "0a14265e520a211bd34176bd953bc978263105a6d891c5eca69699aa7fcb6c05"
+    },
+    {
+      "path": "tmp/endurance-forensic-backup-20261109/fixture-checks.py",
+      "bytes": 6094,
+      "sha256": "fec5548baf514663aa4f76c12f74cadd0689babc3464ef95812102bcf91cc76a"
+    },
+    {
+      "path": "tmp/forensic-guest-preservation-review-20261109.json",
+      "bytes": 3945,
+      "sha256": "806dcc92f1efa70a8540e9a56cfbcdf44e55fdeb5dd87cce5d44876a6c4ae6f9"
+    }
+  ],
+  "remaining": [
+    "Offline compatible ROOT-A/ROOT-B/STATE preservation before update/reinstall",
+    "Restore clean counter5 archive on selected fresh host and validate actual KVM",
+    "Retain original forensic archives before any investigation or filesystem repair"
+  ]
+}

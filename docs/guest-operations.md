@@ -91,11 +91,13 @@ Upstream references: [QEMU 7.2 invocation and file backends](https://gitlab.com/
 
 ## Remaining operational work
 
-Retain a fresh stopped, checkpointed backup of the current counter-5 guest using
-[the backup protocol](guest-backups.md) before reinstalling; the physically
-restored counter-3 archive omits later data. Preserve completed and failed
-endurance guest directories separately, together with native UART, journals and
-telemetry. The automatic outcome preserver captures evidence, not guest disks.
+The [current counter-5 backup](evidence/current-counter5-backup-20261109.json)
+now passes authenticated transfer and durable independent receiver readback.
+Keep it before reinstalling and confirm its source remains stopped and unchanged;
+the physically restored counter-3 archive omits later data. Restoration of the
+new archive belongs to fresh-install validation. Completed, failed and smoke-test endurance directories now have
+[verified forensic copies](guest-preservation-20261109.md); keep their original
+metadata and the separate native UART, journals and telemetry. The automatic outcome preserver captures evidence, not guest disks.
 Follow [offline STATE and root preservation](host-state-backup.md) before any
 journal replay or destructive install. Host STATE restoration and failed-boot
 recovery remain separate unvalidated paths.

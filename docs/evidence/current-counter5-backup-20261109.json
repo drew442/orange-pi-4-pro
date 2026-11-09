@@ -1,0 +1,108 @@
+{
+  "schema": 1,
+  "date": "2026-11-09",
+  "operation": "physical current counter5 guest off-device backup",
+  "source_board": "root@192.168.1.116",
+  "source_boot_id": "dd8d6f67-d297-4f3b-bc9a-8a41c9742051",
+  "source_nvme_serial": "134807190FC700149277",
+  "source_guest_uuid": "298b281a-d10e-44eb-bdb9-285e27eaafad",
+  "guest": "firstkvm",
+  "counter": 5,
+  "archive": {
+    "bytes": 3394269,
+    "sha256": "ba85b804690a50bd12b4e001b11cfe404896c78e70e4d87855c1523145b297e2",
+    "builder_path": "/var/lib/a733-counter5-guest-backup-20261109-01/inbox/archive.tar.gz"
+  },
+  "manifest_sha256": "0b4b439236715ff308c9efab823159ed97fe5dfe010ed4a366091161dc1647fd",
+  "disk_sha256": "d3faf8742f80fb83091d84464ff367d0e3f31ab8fb72ea20066ff5f8a5f83217",
+  "checkpoint_history_records": 4,
+  "authenticated_installed_tool_files": 40,
+  "builder_receiver_tool_files": 40,
+  "builder_root_filesystem_uuid": "bb90e190-be63-4324-a020-c80583437401",
+  "source_success": true,
+  "source_and_destination_ssh_exit": 0,
+  "receiver_success": true,
+  "receiver_published": true,
+  "receiver_durable": true,
+  "same_known_source_disk_bytes_read_back_at_receiver": true,
+  "restored_this_new_archive": false,
+  "new_kvm_execution_claimed": false,
+  "release_acceptance": false,
+  "clean_source_provenance": "Existing actual guest shutdown and durable counter5 checkpoint in docs/evidence/corrected-host-guest-restore-20261108.json; no later firstkvm launch or mutation observed. Sender itself makes file-only claims.",
+  "records": [
+    {
+      "path": "out/current-guest-preservation-20261109-01/archive-transfer.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/current-guest-preservation-20261109-01/builder-durability.json",
+      "bytes": 118,
+      "sha256": "5ba85706ed3a9b65a2cf9aa8da5c9de883230679e025b3b76b93cc8be8b40b4c"
+    },
+    {
+      "path": "out/current-guest-preservation-20261109-01/builder-preflight.json",
+      "bytes": 178,
+      "sha256": "453d2ffb4a24f8c488bb48a72e7b2c7a8ed2faa16a88a7a3556beee87842bb33"
+    },
+    {
+      "path": "out/current-guest-preservation-20261109-01/builder-preflight.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/current-guest-preservation-20261109-01/receiver-exit.json",
+      "bytes": 18,
+      "sha256": "df4d721d233a2334088d2d2e0110346ae9e509ff46bf0b379fbcfa85c715af4d"
+    },
+    {
+      "path": "out/current-guest-preservation-20261109-01/receiver-receipt.json",
+      "bytes": 2073,
+      "sha256": "a00d6b6d7ae005f0ab94a6a401473284142baae3d5ad6ce40fc2ada57420fc49"
+    },
+    {
+      "path": "out/current-guest-preservation-20261109-01/receiver.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/current-guest-preservation-20261109-01/source-preflight.json",
+      "bytes": 6782,
+      "sha256": "3a84917eb6439a57648d9d116c6ca1d9f79230b373552d53a1307223fe0c6562"
+    },
+    {
+      "path": "out/current-guest-preservation-20261109-01/source-preflight.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/current-guest-preservation-20261109-01/source-receipt.json",
+      "bytes": 496,
+      "sha256": "df259a443ce8a9edc2d3191d32830ea09929fa4fc24176dde57390339fbc8601"
+    },
+    {
+      "path": "out/current-guest-preservation-20261109-01/transfer-receipt.json",
+      "bytes": 355,
+      "sha256": "0f353e793af92fe83305498f231b19c82e16a952d9fa866fc2ea8ea4f8858afd"
+    },
+    {
+      "path": "out/current-guest-preservation-20261109-01/trusted-manifest-pin.json",
+      "bytes": 293,
+      "sha256": "09cfcffbcf0745be9bfaf52010d09f8d91d7a5015294c742acba32a5f537c1b0"
+    },
+    {
+      "path": "out/current-guest-preservation-20261109-01/guest-filesystem-inventory.json",
+      "bytes": 374,
+      "sha256": "906f9499f3c3ae1a7b8b5d5428b0166f6742130b7edbdc3665c477a17d31fcad"
+    }
+  ],
+  "remaining": [
+    "Preserve offline compatible ROOT-A/ROOT-B/STATE before update/reinstall",
+    "Restore this counter5 archive on fresh selected distribution and validate actual KVM"
+  ],
+  "guest_filesystem_inventory": {
+    "all_guest_directories_accounted_for": true,
+    "global_enrollment_directory_empty": true,
+    "lost_found_empty": true
+  }
+}

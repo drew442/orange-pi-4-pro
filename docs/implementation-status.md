@@ -73,7 +73,7 @@ retained with their original metadata. No new eight-hour test is required. Relea
 | SPI-to-NVMe with SD removed | Unprogrammed; registered independent recovery and physical SPI/SD-removed boot pending |
 | Immutable SD fallback | Linux writes remain zero and post-workload full-card hash matches; [whole-card baseline](evidence/protected-sd-baseline-20261109.json) and exact written prefix match pass; [bounded firmware source audit](sd-firmware-write-policy.md) complete; final shutdown/reboot comparison and serial reconciliation pending |
 | Interrupted update, rollback, missing NVMe, dirty journal | Software preparation/review pass; required physical recovery cases pending |
-| Off-device guest backup/restoration | [Counter-3 backup and physical restoration](evidence/corrected-host-guest-restore-20261108.json) pass |
+| Off-device guest backup/restoration | [Counter-3 physical restoration](evidence/corrected-host-guest-restore-20261108.json) passes; [current counter-5 off-device backup](evidence/current-counter5-backup-20261109.json) now passes durable receiver readback; new archive restore pending |
 | Coherent normalized full image and independent deployment reproduction | [Two selected full streams match and pass independent artifact review](evidence/normalized-full-nvme-image-20261109.json); fresh installation and reproduced deployment pending |
 
 The [previous release run](endurance-run-20261108.md) lost SSH at collector
@@ -157,7 +157,9 @@ privileged focused review; full-suite revalidation and final guide review pass. 
 
 ## Next actions
 
-1. Preserve current guest/configuration data now that the qualifying workload and post-run checks pass. The
+1. Current counter-5 guest backup and [all three stopped endurance-directory
+   forensic copies](guest-preservation-20261109.md) are verified off-device.
+   Preserve the offline compatible ROOT-A/ROOT-B/STATE cohort next. The
    [warm-reboot collector](warm-boot-validation.md) is independently reviewed
    and prepared for the SD route; it remains unexecuted and refuses active
    workloads or missing retained outcome evidence. The operator-stop snapshot was

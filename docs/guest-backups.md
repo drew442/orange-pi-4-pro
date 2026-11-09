@@ -7,8 +7,13 @@ the new files. The [counter-3 guest backup](evidence/vgic-counter3-backup-202611
 passes off-device transfer and receiver readback on builder and codex, including
 both checkpoint records. Its [physical corrected-host restoration](evidence/corrected-host-guest-restore-20261108.json)
 passes authenticated restore, actual nonroot KVM runs advancing 3 → 4 → 5,
-clean shutdown and checkpoints. This establishes that specific restore; a fresh
-backup of the current counter-5 disk and normalized deployment remain unperformed.
+clean shutdown and checkpoints. This establishes that specific restore; the
+[fresh counter-5 backup](evidence/current-counter5-backup-20261109.json) now
+passes authenticated source transfer and independent receiver readback on the
+builder. It includes all four checkpoint records. Restoration of that new
+archive on the normalized installation remains unperformed. The three other
+stopped guest directories also have [verified forensic retention](guest-preservation-20261109.md);
+those copies preserve original enrollment and disk bytes without clean checkpoints.
 
 Use the complete installed tree at `/usr/lib/a733-tools` on the new immutable
 A/B root or a trusted complete portable tool tree on RAM or NVMe; do not copy a

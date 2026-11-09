@@ -21,12 +21,19 @@ for the current counter-5 `firstkvm` disk: verified shutdown, checkpoint, truste
 current manifest pin, authenticated sender receipt and independent receiver
 readback. The [counter-3 archive](evidence/corrected-host-guest-restore-20261108.json)
 was physically restored and advanced through 4 and 5; that archive omits later
-data. A fresh counter-5 backup remains unperformed.
+data. The [fresh counter-5 backup](evidence/current-counter5-backup-20261109.json)
+now passes source authentication and independent durable receiver readback on the
+builder. Its manifest pin is `0b4b439236715ff308c9efab823159ed97fe5dfe010ed4a366091161dc1647fd`.
+Recheck that the guest is still stopped and unchanged before relying on it;
+a later run/checkpoint requires a matching fresh backup.
 
 Retain the completed/current and `.endurance-failed-retained-20261108` guest
 directories, including mutable disks, enrollment metadata and checkpoint records.
 Use the guest protocol where valid enrollment/checkpoints permit it. Otherwise retain a labeled
-stopped forensic copy with paths, ownership, sizes and hashes; never manufacture a clean checkpoint. Keep originals until this inventory is complete; p5 is outside this backup.
+stopped forensic copy with paths, ownership, sizes and hashes; never manufacture a clean checkpoint. The [three endurance-directory copies](guest-preservation-20261109.md)
+now pass source stability and independent stored-archive verification on builder;
+all four current guest directories are accounted for. Their original enrollment
+metadata is preserved verbatim. Keep originals until this inventory is complete; p5 is outside this backup.
 
 Copy native UART relay and bridge logs, full collector telemetry, journals,
 observer/CPU exits and `/run/corrected-kvm` output off-board before RAM loss.
