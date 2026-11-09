@@ -1,0 +1,312 @@
+{
+  "schema": 1,
+  "source_revision": "50bc9e70698d4a09c3705594dcc61c64e1715cb9",
+  "source_files_authenticated": 869,
+  "hardware_acceptance": false,
+  "physical_devices_changed": false,
+  "existing_state_compatible": {
+    "root_A_marker_sha256": "286494073ce3a0b69443f96389dbbce11ab015705f7e9f05c7a7cf06503da866",
+    "root_B_marker_sha256": "521e86e5446c35f0d87f71c302126b47a0fa1ba32214e98c62c3c79ce9ddf8f8",
+    "selector_marker_pair_preserved": true,
+    "state_artifact_reread_in_this_review": false,
+    "state_evidence": "docs/evidence/public-config-state-build-20261109.json",
+    "state_image_sha256_from_existing_review": "2e9d3dcf4dcabfaead65e125e7778c0aed092eeb665e67f3559719d08e3564ec"
+  },
+  "pair_comparison": {
+    "root-A.ext4": {
+      "bytes_compared": 4294967296,
+      "complete_byte_equality": true,
+      "pin": {
+        "bytes": 4294967296,
+        "sha256": "a9715b819348a8220ec8b3b1f41ef27db677baaa96014f5d1dfb7a22597decdd"
+      }
+    },
+    "root-A.ext4.gz": {
+      "bytes_compared": 143482835,
+      "complete_byte_equality": true,
+      "pin": {
+        "bytes": 143482835,
+        "sha256": "87b097024dd772d6752dfb6a605618cfb8a1ce208722d056fb1e91f8c0a6f2fa"
+      }
+    },
+    "root-B.ext4": {
+      "bytes_compared": 4294967296,
+      "complete_byte_equality": true,
+      "pin": {
+        "bytes": 4294967296,
+        "sha256": "42fb2becf66c25a4cbb7844a6ab84ba12ab3f53c0d5d283acc8d42e63b124ab2"
+      }
+    },
+    "root-B.ext4.gz": {
+      "bytes_compared": 143482852,
+      "complete_byte_equality": true,
+      "pin": {
+        "bytes": 143482852,
+        "sha256": "7501e9ccd972d934c5eef71994c7a7d372f33e2b0651c818b79255c50d56b4af"
+      }
+    }
+  },
+  "terminal_unit_properties": {
+    "producer-unit-02.txt": {
+      "ActiveState": "active",
+      "CPUQuotaPerSecUSec": "1s",
+      "CPUUsageNSec": "167910531000",
+      "ExecMainExitTimestamp": "Mon 2026-11-09 15:23:32 UTC",
+      "ExecMainStartTimestamp": "Mon 2026-11-09 15:20:41 UTC",
+      "ExecMainStatus": "0",
+      "MemoryCurrent": "[not set]",
+      "MemoryMax": "3221225472",
+      "Result": "success",
+      "SubState": "exited"
+    },
+    "producer-unit-03.txt": {
+      "ActiveState": "active",
+      "CPUQuotaPerSecUSec": "1s",
+      "CPUUsageNSec": "167832634000",
+      "ExecMainExitTimestamp": "Mon 2026-11-09 15:26:28 UTC",
+      "ExecMainStartTimestamp": "Mon 2026-11-09 15:23:37 UTC",
+      "ExecMainStatus": "0",
+      "MemoryCurrent": "[not set]",
+      "MemoryMax": "3221225472",
+      "Result": "success",
+      "SubState": "exited"
+    },
+    "review-unit.txt": {
+      "ActiveState": "active",
+      "CPUQuotaPerSecUSec": "1s",
+      "CPUUsageNSec": "236567121000",
+      "ExecMainExitTimestamp": "Mon 2026-11-09 15:31:08 UTC",
+      "ExecMainStartTimestamp": "Mon 2026-11-09 15:27:05 UTC",
+      "ExecMainStatus": "0",
+      "MemoryCurrent": "[not set]",
+      "MemoryMax": "1073741824",
+      "Result": "success",
+      "SubState": "exited"
+    }
+  },
+  "failed_first_attempt": {
+    "attribution": "Concurrent reviewer /var/lib sibling creation is a likely trigger; strict guard remained intact.",
+    "excluded_from_successful_pair": true,
+    "failure": "physical parent changed during read",
+    "reviewer_base_creation_utc": "2026-11-09T15:19:30.259840336+00:00",
+    "tag": "timesync-deterministic-01"
+  },
+  "limits": [
+    "Same qualified builder and pinned e2fsprogs, not independently provisioned build environments.",
+    "No physical installation, A733 boot, resolver listener repair, KVM or endurance acceptance.",
+    "Full reader compares physical ext4 contents with authenticated producer expected trees; independent historical semantic and source closure checks supplement that binding."
+  ],
+  "classification": "Two successful full-size normalized A/B constructions independently match complete raw/gzip bytes and filesystem semantics; not hardware acceptance",
+  "independent_review": {
+    "path": "tmp/deterministic-roots-artifact-review-20261109.json",
+    "bytes": 260445,
+    "sha256": "9132756cbdaeb37a08adae78e61630c353eddbf69d7e0f725deab1414a348da0",
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "result": "PASS"
+  },
+  "runs": {
+    "timesync-deterministic-02": {
+      "receipt": {
+        "bytes": 208120,
+        "sha256": "478cc403d395b9521a55cb3673a063cb44fca309db3f45a5198407ce50d47df3"
+      },
+      "manifest": {
+        "bytes": 33481,
+        "sha256": "c1bcc7d23d22bd487534ba17ea447055881a044350829608360aa92ca24283f2"
+      },
+      "final_resources": {
+        "available_memory_bytes": 7424499712,
+        "free_bytes": 27143188480,
+        "time": 1794237812.4191747
+      },
+      "artifact_files_authenticated": 86,
+      "full_readback_controller": {
+        "bytes": 33471,
+        "sha256": "80e843d499bcc2f6d299d6022dc7edf83d73842405e95b38b0f32eee72dcda30"
+      },
+      "slots": {
+        "A": {
+          "namespace_members": 16368,
+          "regular_bytes_read": 451240558,
+          "expected": {
+            "bytes": 3744542,
+            "sha256": "8da93b9053a1c4fca0b0cb09a24400c3919fbde445445154d0b7e0703c4121cd"
+          },
+          "stability": {
+            "bytes": 57,
+            "sha256": "4ef667d780cc43bd45c96bec9bcee954a72cbacd82f4a4ec3b2fa17ad4e0ba01"
+          },
+          "direct_files_authenticated": 46,
+          "historical_nonmtime_contents_metadata_equal": true,
+          "gzip_expansion_matches_raw": true,
+          "normalized_metadata": {
+            "all_atime_mtime_ctime_crtime_seconds": 1793750400,
+            "all_timestamp_extra_fields": 0,
+            "namespace_entries_including_lost_found": 16369,
+            "superblock": {
+              "block_bytes": 4096,
+              "filesystem_bytes": 4294967296,
+              "hash_seed": "a7330000-0000-4000-8000-00000000000a",
+              "lastcheck": 1793750400,
+              "mkfs_time": 1793750400,
+              "mtime": 0,
+              "readonly_without_journal": true,
+              "uuid": "a7330000-0000-4000-8000-00000000000a",
+              "wtime": 1793750400
+            },
+            "unique_reachable_inodes": 16366
+          }
+        },
+        "B": {
+          "namespace_members": 16368,
+          "regular_bytes_read": 451240558,
+          "expected": {
+            "bytes": 3744542,
+            "sha256": "d4f48bd977cefbc8b52bc06adeba4f22e5b1ae805e231a29160d0813c616c908"
+          },
+          "stability": {
+            "bytes": 57,
+            "sha256": "57a766cccbe0f267fa81c75be87e553490341fd7d1117ee518c796ccd8629828"
+          },
+          "direct_files_authenticated": 46,
+          "historical_nonmtime_contents_metadata_equal": true,
+          "gzip_expansion_matches_raw": true,
+          "normalized_metadata": {
+            "all_atime_mtime_ctime_crtime_seconds": 1793750400,
+            "all_timestamp_extra_fields": 0,
+            "namespace_entries_including_lost_found": 16369,
+            "superblock": {
+              "block_bytes": 4096,
+              "filesystem_bytes": 4294967296,
+              "hash_seed": "a7330000-0000-4000-8000-00000000000b",
+              "lastcheck": 1793750400,
+              "mkfs_time": 1793750400,
+              "mtime": 0,
+              "readonly_without_journal": true,
+              "uuid": "a7330000-0000-4000-8000-00000000000b",
+              "wtime": 1793750400
+            },
+            "unique_reachable_inodes": 16366
+          }
+        }
+      }
+    },
+    "timesync-deterministic-03": {
+      "receipt": {
+        "bytes": 208015,
+        "sha256": "8bc380e841d5d79fc22f8ba307209479bbcf544342e8b4303571cfebf93a2e00"
+      },
+      "manifest": {
+        "bytes": 33481,
+        "sha256": "c1bcc7d23d22bd487534ba17ea447055881a044350829608360aa92ca24283f2"
+      },
+      "final_resources": {
+        "available_memory_bytes": 7461175296,
+        "free_bytes": 25729433600,
+        "time": 1794237988.4218788
+      },
+      "artifact_files_authenticated": 86,
+      "full_readback_controller": {
+        "bytes": 33471,
+        "sha256": "80e843d499bcc2f6d299d6022dc7edf83d73842405e95b38b0f32eee72dcda30"
+      },
+      "slots": {
+        "A": {
+          "namespace_members": 16368,
+          "regular_bytes_read": 451240558,
+          "expected": {
+            "bytes": 3744542,
+            "sha256": "8da93b9053a1c4fca0b0cb09a24400c3919fbde445445154d0b7e0703c4121cd"
+          },
+          "stability": {
+            "bytes": 57,
+            "sha256": "4ef667d780cc43bd45c96bec9bcee954a72cbacd82f4a4ec3b2fa17ad4e0ba01"
+          },
+          "direct_files_authenticated": 46,
+          "historical_nonmtime_contents_metadata_equal": true,
+          "gzip_expansion_matches_raw": true,
+          "normalized_metadata": {
+            "all_atime_mtime_ctime_crtime_seconds": 1793750400,
+            "all_timestamp_extra_fields": 0,
+            "namespace_entries_including_lost_found": 16369,
+            "superblock": {
+              "block_bytes": 4096,
+              "filesystem_bytes": 4294967296,
+              "hash_seed": "a7330000-0000-4000-8000-00000000000a",
+              "lastcheck": 1793750400,
+              "mkfs_time": 1793750400,
+              "mtime": 0,
+              "readonly_without_journal": true,
+              "uuid": "a7330000-0000-4000-8000-00000000000a",
+              "wtime": 1793750400
+            },
+            "unique_reachable_inodes": 16366
+          }
+        },
+        "B": {
+          "namespace_members": 16368,
+          "regular_bytes_read": 451240558,
+          "expected": {
+            "bytes": 3744542,
+            "sha256": "d4f48bd977cefbc8b52bc06adeba4f22e5b1ae805e231a29160d0813c616c908"
+          },
+          "stability": {
+            "bytes": 57,
+            "sha256": "57a766cccbe0f267fa81c75be87e553490341fd7d1117ee518c796ccd8629828"
+          },
+          "direct_files_authenticated": 46,
+          "historical_nonmtime_contents_metadata_equal": true,
+          "gzip_expansion_matches_raw": true,
+          "normalized_metadata": {
+            "all_atime_mtime_ctime_crtime_seconds": 1793750400,
+            "all_timestamp_extra_fields": 0,
+            "namespace_entries_including_lost_found": 16369,
+            "superblock": {
+              "block_bytes": 4096,
+              "filesystem_bytes": 4294967296,
+              "hash_seed": "a7330000-0000-4000-8000-00000000000b",
+              "lastcheck": 1793750400,
+              "mkfs_time": 1793750400,
+              "mtime": 0,
+              "readonly_without_journal": true,
+              "uuid": "a7330000-0000-4000-8000-00000000000b",
+              "wtime": 1793750400
+            },
+            "unique_reachable_inodes": 16366
+          }
+        }
+      }
+    }
+  },
+  "retained_review_evidence": {
+    "/var/lib/a733-deterministic-roots-independent-review-20261109-01/full-timesync-deterministic-02/receipt.json": {
+      "bytes": 3998,
+      "sha256": "e478b6750339f4a2310c46a4236ad97ed084582d97fee56de7e52b294fac3058"
+    },
+    "/var/lib/a733-deterministic-roots-independent-review-20261109-01/full-timesync-deterministic-03/receipt.json": {
+      "bytes": 3998,
+      "sha256": "031d196dde9a98bd48187302a7ffd639de00d36a978ca206ad24e158e52c58c2"
+    },
+    "/var/lib/a733-deterministic-roots-independent-review-20261109-01/producer-unit-02.txt": {
+      "bytes": 261,
+      "sha256": "bb3a7355032f853905782b9ca08816752fa4c105a3324a1fe74716cccb5c79a3"
+    },
+    "/var/lib/a733-deterministic-roots-independent-review-20261109-01/producer-unit-03.txt": {
+      "bytes": 261,
+      "sha256": "cf20ebf94b043be090346e5e302cd0d58bb01ef58021835aa592671d1e415937"
+    },
+    "/var/lib/a733-deterministic-roots-independent-review-20261109-01/review-unit.txt": {
+      "bytes": 261,
+      "sha256": "6624cdd15da48fde430fa8f98bcd1c802a0e1cf2f942df97603ad0506009178b"
+    },
+    "/var/lib/a733-deterministic-roots-independent-review-20261109-01/review.py": {
+      "bytes": 13529,
+      "sha256": "d8ad2857eaae384f83d34166a69d5641fcdff847646bae3f7f79163d636f3f48"
+    },
+    "/var/lib/a733-deterministic-roots-independent-review-20261109-01/runtime.log": {
+      "bytes": 2768,
+      "sha256": "a457e7aac7270c69aead1f770d216cde3e09d3f671a51aeb82ca09dcbbf3982a"
+    }
+  }
+}

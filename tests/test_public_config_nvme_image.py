@@ -207,6 +207,23 @@ class StreamTests(unittest.TestCase):
             self.assertTrue((complete / 'manifest.json').exists())
             self.assertFalse((complete / 'nvme.img').exists())
             self.assertEqual(result['source_manifest'], base)
+            # The named normalized profile must route both authority and raw
+            # pins through held-input authentication and output derivation.
+            # Deliberately poison legacy pins so a default-profile fallback fails.
+            invalid_legacy = copy.deepcopy(self.new)
+            invalid_legacy['root-a'] = record(b'wrong legacy root')
+            with patch.object(M, 'ROOTS_MANIFEST', record(b'wrong legacy manifest')), \
+                    patch.object(M, 'NEW', invalid_legacy), \
+                    patch.object(M, 'DETERMINISTIC_ROOTS_MANIFEST', record(manifests[1].read_bytes())), \
+                    patch.object(M, 'DETERMINISTIC_ROOTS', {k: v for k, v in self.new.items() if k != 'state'}):
+                normalized = M.build(self.source, manifests[0], manifests[1], self.paths['root-a'],
+                                     self.paths['root-b'], manifests[2], self.paths['state'],
+                                     out / 'public-config-nvme-image-normalized', 'deterministic-20261109')
+            self.assertEqual(normalized['root_profile'], 'deterministic-20261109')
+            self.assertEqual(normalized['roots_manifest'], record(manifests[1].read_bytes()))
+            self.assertEqual(normalized['partition_payloads'], self.new)
+            self.assertEqual(normalized['files']['nvme.img'], record(self.expected))
+            self.assertEqual(normalized['files']['nvme.img.gz'], result['files']['nvme.img.gz'])
             for label in ('member', 'header'):
                 tampered = out / ('public-config-nvme-image-' + label)
                 def tamper(*args):
@@ -294,6 +311,34 @@ class PinnedMetadataTests(unittest.TestCase):
                  'files': {'state.ext4': M.NEW['state']}, 'management': management,
                  'admin_public_key_fingerprints': fingerprints}
         return tuple(copy.deepcopy(item) for item in (base, roots, state))
+
+    def test_registered_profiles_preserve_state_and_reject_cross_profile_roots(self):
+        original_manifest, original = M.root_inputs('public-dirs-20261109')
+        normalized_manifest, normalized = M.root_inputs('deterministic-20261109')
+        self.assertNotEqual(original_manifest, normalized_manifest)
+        self.assertEqual(normalized['state'], original['state'])
+        for name in ('root-a', 'root-b'):
+            self.assertEqual(normalized[name]['bytes'], original[name]['bytes'])
+            self.assertNotEqual(normalized[name]['sha256'], original[name]['sha256'])
+        base, roots, state = self.fixture()
+        roots['files'].update({'root-A.ext4': normalized['root-a'], 'root-B.ext4': normalized['root-b']})
+        M.validate_metadata(base, roots, state, normalized)
+        with self.assertRaisesRegex(ValueError, 'component manifest'):
+            M.validate_metadata(base, roots, state)
+        roots['files']['root-B.ext4'] = original['root-b']
+        with self.assertRaisesRegex(ValueError, 'component manifest'):
+            M.validate_metadata(base, roots, state, normalized)
+        normalized['state']['sha256'] = '0' * 64
+        self.assertEqual(M.root_inputs('deterministic-20261109')[1]['state'], original['state'])
+
+    def test_unknown_profile_refused_before_admission_or_output_access(self):
+        for profile in ('unknown', '', None, {'root-a': 'override'}):
+            with self.subTest(profile=profile), patch.object(M, 'output_path') as output, \
+                    patch.object(M.BASE, 'admission') as admission:
+                with self.assertRaisesRegex(ValueError, 'unregistered root profile'):
+                    M.build(*([Path('/missing')] * 8), root_profile=profile)
+                output.assert_not_called()
+                admission.assert_not_called()
 
     def test_matched_metadata_and_contiguous_extents(self):
         base, roots, state = self.fixture()

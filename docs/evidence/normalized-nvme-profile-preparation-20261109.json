@@ -1,0 +1,86 @@
+{
+  "schema": 1,
+  "classification": "Finite normalized root full-image profile independently code-reviewed and privileged Ubuntu-tested; integrated construction and hardware acceptance pending",
+  "hardware_acceptance": false,
+  "physical_storage_written": false,
+  "integrated_normalized_distribution_built": false,
+  "sources": {
+    "build/public-config-nvme-image.py": {
+      "bytes": 17337,
+      "sha256": "1b573fce0e39b6f91b50d9c5d1ae3f6865d632390ee8e296e0bdc03b19371db9"
+    },
+    "tests/test_public_config_nvme_image.py": {
+      "bytes": 22818,
+      "sha256": "d9c48b03b10d2f81fbaaf6ab61862388865f668d4b37c892034fe04b11f3522a"
+    }
+  },
+  "root_artifact_proof": "docs/evidence/deterministic-host-roots-20261109.json",
+  "fixed_profiles": [
+    "public-dirs-20261109",
+    "deterministic-20261109"
+  ],
+  "default_profile": "public-dirs-20261109",
+  "new_profile": "deterministic-20261109",
+  "independent_review": {
+    "path": "tmp/normalized-nvme-profile-review-20261109.json",
+    "bytes": 4498,
+    "sha256": "f601cf0ce4ad2eec1e348e98d9e82da525bd67ed26bd224b4fe668a6fbf2ccf8",
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "result": "PASS"
+  },
+  "qualified_jammy_validation": {
+    "path": "/var/lib/a733-deterministic-roots-validation-20261109-01/normalized-profile-validation-02",
+    "unit": "a733-normalized-nvme-profile-validation-20261109-02.service",
+    "tests": 2180,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "seconds": 72.033,
+    "shell_suites": 5,
+    "diagnostic_cases": 5,
+    "toml_files": 5,
+    "frozen_source_files_checked_before_after": 870,
+    "cpu_quota_percent": 100,
+    "memory_max_bytes": 3221225472,
+    "exit_status": 0,
+    "builder_free_bytes_after": 25589731328,
+    "builder_memory_available_bytes_after": 7180017664,
+    "retained": {
+      "out/normalized-nvme-profile-validation-20261109-01/failed-validation.log": {
+        "bytes": 17793,
+        "sha256": "764df36eb71ddd037ececb796f98d4deee510d197248018f8995b97302e948ec"
+      },
+      "out/normalized-nvme-profile-validation-20261109-01/validation-unit.txt": {
+        "bytes": 135,
+        "sha256": "b041c518fef1eda7f342fa432d0d23c7379936d749e2c288350e0bf16a51f4ec"
+      },
+      "out/normalized-nvme-profile-validation-20261109-01/validation.log": {
+        "bytes": 16331,
+        "sha256": "4e1b5c7df2ae0372e5346273e605c58231061dfda2d9fed1ec0f258e4ecfbfdd"
+      },
+      "out/normalized-nvme-profile-validation-20261109-01/source-lock.json": {
+        "bytes": 138801,
+        "sha256": "076f1cdb6f85a13bc95eb46b7023ddfa4794d1c5b654124b4c47d9927cc6cca6"
+      },
+      "out/normalized-nvme-profile-validation-20261109-01/failed-unit.txt": {
+        "bytes": 112,
+        "sha256": "7604e5d4a8d6dd4858e17ea1842b3a69482d4214301a66d562a809a4e27bc0df"
+      }
+    }
+  },
+  "initial_validation_failure": {
+    "unit": "a733-normalized-nvme-profile-validation-20261109-01.service",
+    "cause": "Staging tar preserved group-write mode on two guarded bootstrap source files, so module imports refused unsafe mode.",
+    "correction": "Retained failure; extracted identical frozen source bytes into fresh02 with root ownership and group/other write removed. No source bytes or guards changed.",
+    "test_errors": 2,
+    "partial_tests_run": 2141,
+    "exit_status": 1
+  },
+  "limits": [
+    "Two full-size root pairs match on one qualified builder; independent clean builder/deployment reproduction is still incomplete.",
+    "No integrated normalized full stream has yet been built or physically installed.",
+    "Default profile retains old roots and same BOOT/STATE/layout authority; no CLI hash/layout override.",
+    "Active physical24hKVM workload is unchanged."
+  ]
+}

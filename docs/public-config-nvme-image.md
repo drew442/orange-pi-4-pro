@@ -49,6 +49,24 @@ manifests are `1f82…` and `0c6a…`. The base is the protected `675d6b…` log
 image, gzip `584a…`, manifest `f19b…`. Complete hashes are fixed in source and
 linked evidence; abbreviated hashes here are labels, not verification commands.
 
+## Normalized root integration preparation
+
+The recipe provides a finite `--root-profile deterministic-20261109`
+selection, with [independent source review and 2,180 privileged Ubuntu tests](evidence/normalized-nvme-profile-preparation-20261109.json). Its default remains `public-dirs-20261109`, using the historical
+components above. The new selection fixes the normalized root manifest to
+`c1bcc7d2…`, ROOT-A to `a9715b81…` and ROOT-B to `42fb2bec…`; complete pins are
+in source. It retains the same STATE `2e9d3dcf…`, selected marker, layout,
+protected BOOT and base image. It offers no hash, UUID or layout overrides.
+
+Use the normalized root directory
+`/var/lib/a733-clean-replay-20261106/host-roots-timesync-deterministic-02/work/project/out/host-payload-timesync-deterministic-02`
+for `A733_NEW_ROOTS` and add `--root-profile deterministic-20261109` to the
+prepared invocation. The fresh repeat is tag `timesync-deterministic-03`.
+Independent source review and complete actual-root verification now pass.
+Integrated full-image construction and its independent artifact verification
+remain required before installation. Neither normalized integrated distribution
+nor physical installation is claimed here. See [root normalization](deterministic-host-roots.md).
+
 Admission remains **23,760,999,827 available bytes**. Runtime floors remain
 3,000,000,000 disk bytes and 1,000,000,000 available memory bytes. The 2 GiB
 compressed-output ceiling plus 16 MiB headroom bounds scratch use; it does not

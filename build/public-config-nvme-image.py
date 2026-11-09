@@ -35,6 +35,11 @@ NEW = {
     'root-a': {'bytes': 4294967296, 'sha256': '299b1f2f74e11c71c89b9ee249dfd43bdc741ac3e90addc763a9626bbbb5aed6'},
     'root-b': {'bytes': 4294967296, 'sha256': '48b9876f72f28d4a10f7458dd81a96b95da00d13ae00783b39f7c30067fa94f7'},
     'state': {'bytes': 8589934592, 'sha256': '2e9d3dcf4dcabfaead65e125e7778c0aed092eeb665e67f3559719d08e3564ec'}}
+ROOT_PROFILES = ('public-dirs-20261109', 'deterministic-20261109')
+DETERMINISTIC_ROOTS_MANIFEST = {'bytes': 33481, 'sha256': 'c1bcc7d23d22bd487534ba17ea447055881a044350829608360aa92ca24283f2'}
+DETERMINISTIC_ROOTS = {
+    'root-a': {'bytes': 4294967296, 'sha256': 'a9715b819348a8220ec8b3b1f41ef27db677baaa96014f5d1dfb7a22597decdd'},
+    'root-b': {'bytes': 4294967296, 'sha256': '42fb2becf66c25a4cbb7844a6ab84ba12ab3f53c0d5d283acc8d42e63b124ab2'}}
 OPERATOR_INPUTS = {
     'operator_config': {'bytes': 136, 'sha256': '382ccdfb6273614a23f99034dd269740166c2786d65a001ec51deecbe4683491'},
     'operator_public_key': {'bytes': 663, 'sha256': 'ded86d3be3f910e5b33d7938d21245a149e2b19dc517f0ac4f582b5b0c52f68b'},
@@ -42,6 +47,15 @@ OPERATOR_INPUTS = {
 SELECTION = {'SCHEMA': '1', 'SLOT': 'A', 'ROOT_UUID': 'a7330000-0000-4000-8000-00000000000a',
              'ROOT_MARKER_SHA256': '286494073ce3a0b69443f96389dbbce11ab015705f7e9f05c7a7cf06503da866',
              'KERNEL_RELEASE': '6.6.98-a733-diag'}
+
+
+def root_inputs(profile):
+    require(type(profile) is str and profile in ROOT_PROFILES, 'unregistered root profile')
+    manifest, components = copy.deepcopy(ROOTS_MANIFEST), copy.deepcopy(NEW)
+    if profile == 'deterministic-20261109':
+        manifest = copy.deepcopy(DETERMINISTIC_ROOTS_MANIFEST)
+        components.update(copy.deepcopy(DETERMINISTIC_ROOTS))
+    return manifest, components
 
 
 def output_path(path):
@@ -139,7 +153,8 @@ def derive(source_fd, replacements, target, expected, old_pins, new_pins, ranges
     return {'bytes': total, 'sha256': candidate.hexdigest()}, before, after, bounded.record()
 
 
-def validate_metadata(base, roots, state):
+def validate_metadata(base, roots, state, components=None):
+    components = NEW if components is None else components
     require(base['files']['nvme.img.gz'] == WIRE and base['files']['nvme.img'] == RAW, 'base authority mismatch')
     require(base['protected_boot'] == BASE.NEW_BOOT, 'protected BOOT mismatch')
     require(base['state_uuid'] == state['state_uuid'] == RUNTIME.STATE_UUID, 'STATE UUID mismatch')
@@ -148,8 +163,8 @@ def validate_metadata(base, roots, state):
     require(roots['slot_uuids'] == {slot: base['filesystem_uuids']['root-' + slot.lower()] for slot in ('A', 'B')}, 'root UUID mismatch')
     require(roots['sources']['rootfs.tar.gz'] == state['sources']['rootfs.tar.gz'], 'source userspace mismatch')
     require(roots['sources']['userspace_profile'] == state['sources']['userspace_profile'], 'userspace profile mismatch')
-    require(roots['files']['root-A.ext4'] == NEW['root-a'] and roots['files']['root-B.ext4'] == NEW['root-b'] and
-            state['files']['state.ext4'] == NEW['state'], 'new component manifest mismatch')
+    require(roots['files']['root-A.ext4'] == components['root-a'] and roots['files']['root-B.ext4'] == components['root-b'] and
+            state['files']['state.ext4'] == components['state'], 'new component manifest mismatch')
     for name, pin in OPERATOR_INPUTS.items():
         require(state['sources'][name] == pin, 'original operator/selection input mismatch: ' + name)
     require(state['management'] == {'schema': 1, 'dhcp': True, 'hostname': 'a733-host',
@@ -194,7 +209,9 @@ def publish(output, partial, result):
         raise
 
 
-def build(base_gzip, base_manifest, roots_manifest, root_a, root_b, state_manifest, state_image, output):
+def build(base_gzip, base_manifest, roots_manifest, root_a, root_b, state_manifest, state_image, output,
+          root_profile=ROOT_PROFILES[0]):
+    roots_pin, component_pins = root_inputs(root_profile)
     started = time.monotonic()
     output = output_path(output)
     require(output.parent.is_dir(), 'repository out directory required')
@@ -210,21 +227,21 @@ def build(base_gzip, base_manifest, roots_manifest, root_a, root_b, state_manife
             return item
         source = hold(base_gzip, WIRE['bytes'], WIRE)
         authority = hold(base_manifest, MANIFEST['bytes'], MANIFEST)
-        roots_authority = hold(roots_manifest, ROOTS_MANIFEST['bytes'], ROOTS_MANIFEST)
+        roots_authority = hold(roots_manifest, roots_pin['bytes'], roots_pin)
         state_authority = hold(state_manifest, STATE_MANIFEST['bytes'], STATE_MANIFEST)
-        components = {name: hold(path, NEW[name]['bytes'], NEW[name]) for name, path in
+        components = {name: hold(path, component_pins[name]['bytes'], component_pins[name]) for name, path in
                       (('root-a', root_a), ('root-b', root_b), ('state', state_image))}
         recipes = {name: hold(REPO / name, CHUNK).record for name in RECIPES}
         # Authenticate all fixed inputs and recipe closure before interpreting JSON.
         base, roots, state = [json.loads(item.read()) for item in (authority, roots_authority, state_authority)]
-        validate_metadata(base, roots, state)
+        validate_metadata(base, roots, state, component_pins)
         replacement_ranges = replacement_extents(base)
         ranges = extents(base, replacement_ranges, RAW['bytes'])
         output.mkdir(mode=0o700)
         fsync_directory(output.parent)
         partial = output / 'nvme.img.gz.partial'
         replacements = {name: (components[name].fd, *extent) for name, extent in replacement_ranges.items()}
-        raw, before, after, generated_wire = derive(source.fd, replacements, partial, RAW, base['partition_payloads'], NEW, ranges, monitor)
+        raw, before, after, generated_wire = derive(source.fd, replacements, partial, RAW, base['partition_payloads'], component_pins, ranges, monitor)
         proof = BASE.verify_output(partial, raw, ranges, monitor)
         require(proof.records() == after, 'independent output ranges differ')
         BASE.validate_gpt(proof.gpt, base, RAW['bytes'])
@@ -240,12 +257,13 @@ def build(base_gzip, base_manifest, roots_manifest, root_a, root_b, state_manife
         require(wire['bytes'] <= OUTPUT_BOUND, 'compressed output exceeds scratch bound')
         result = {key: copy.deepcopy(base[key]) for key in BASE.PAYLOAD_METADATA if key in base}
         result['boot_selection'] = copy.deepcopy(state['boot_selection'])
-        result['partition_payloads'].update(copy.deepcopy(NEW))
+        result['partition_payloads'].update(copy.deepcopy(component_pins))
         result.update(classification='public configuration full NVMe distribution; UNBOOTED',
                       hardware_acceptance=False, physical_storage_written=False,
                       deployment='unpersonalized distribution only; never overwrite the personalized running board',
                       files={'nvme.img': raw, 'nvme.img.gz': wire}, sources=recipes,
-                      base_gzip=WIRE, base_manifest=MANIFEST, roots_manifest=ROOTS_MANIFEST, state_manifest=STATE_MANIFEST,
+                      base_gzip=WIRE, base_manifest=MANIFEST, roots_manifest=roots_pin, state_manifest=STATE_MANIFEST,
+                      root_profile=root_profile,
                       source_manifest=base, root_component_metadata=roots, state_component_metadata=state,
                       derivation={'replaced_extents': {name: {'offset_bytes': start, 'bytes': length} for name, (start, length) in replacement_ranges.items()},
                                   'replaced_extent_bytes': sum(length for _, length in replacement_ranges.values()),
@@ -272,10 +290,11 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ('base-gzip', 'base-manifest', 'roots-manifest', 'root-a', 'root-b', 'state-manifest', 'state', 'output'):
         parser.add_argument('--' + name, required=True, type=Path)
+    parser.add_argument('--root-profile', choices=ROOT_PROFILES, default=ROOT_PROFILES[0])
     args = parser.parse_args()
     try:
         print(json.dumps(build(args.base_gzip, args.base_manifest, args.roots_manifest, args.root_a,
-                               args.root_b, args.state_manifest, args.state, args.output), indent=2))
+                               args.root_b, args.state_manifest, args.state, args.output, args.root_profile), indent=2))
     except (ValueError, OSError, KeyError, TypeError, UnicodeError, EOFError, zlib.error, struct.error) as error:
         parser.exit(1, f'public configuration full NVMe packaging failed: {error}\n')
 
