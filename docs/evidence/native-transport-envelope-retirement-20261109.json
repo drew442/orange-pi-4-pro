@@ -318,8 +318,8 @@
   "source_script_sha256": "d3b16a28e0c377d2b6f872e988a2e17d3190d7b31e3bf05935412ff57d347aaa",
   "disposable_tests": 20,
   "canonical_data_removed": false,
-  "scope": "Only encoded-inputs.tar removed. All12canonicalcompressedcopies and allretainedrawroots remain; looseinboxfiles untouched.",
-  "purpose": "RetainnewfullNVMecompressedcandidateoncodexabovetheunchanged256MiBfloor",
+  "scope": "Only encoded-inputs.tar was removed. All 12 canonical gzip copies, retained raw roots and loose inbox files remain.",
+  "purpose": "Retain the new full NVMe compressed candidate on codex above the unchanged 256 MiB floor.",
   "native_candidate": {
     "path": "out/protected-nvme-candidate-20261109/nvme.img.gz",
     "bytes": 545636009,
@@ -330,5 +330,5 @@
     "independent_artifact_review": "pending"
   },
   "native_free_after_candidate_retention": 735850496,
-  "restoration": "If the transport tar is needed, reproduce recorded512byteheaders in memberorder, corresponding canonicalgzipbytes, zero memberpadding and recordedzerofooter, intoafreshordinaryfilewithsufficientcapacity. Require860497920 bytesandoriginalarchiveSHA00da5da7e105e217778078138aa2be332c8ca87dea001964e63fb6e233f67088 beforeuse. Actualreconstructionisnotperformed."
+  "restoration": "If needed, reproduce recorded 512-byte headers in member order, canonical gzip bytes, zero member padding and the recorded zero footer into a fresh ordinary file with sufficient capacity. Require 860497920 bytes and original SHA-256 00da5da7e105e217778078138aa2be332c8ca87dea001964e63fb6e233f67088 before use. Actual reconstruction is unperformed."
 }
