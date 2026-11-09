@@ -121,10 +121,13 @@ running. The active endurance host is unchanged.
   They use root-payload manifest `4f28…`, distinct from the whole-drive manifest.
   A read-only check matches all 40 installed maintenance files; physical update,
   activation and rollback remain unperformed. Preserve the running workload.
-- Native evidence capacity is **1,280,147,456 free bytes** after reviewed
-  retirement of six redundant transfer files. Both protected copies and all
-  24 historical canonical raw/gzip files retain their identities and metadata.
-  [Actual cleanup evidence](evidence/native-loose-transfer-retirement-20261109.json).
+- Native free space after retaining the new encoded candidate is
+  **428,056,576 bytes**, above its unchanged 256 MiB floor and planned
+  384 MiB reserve covering outcome/scratch budgets. The 545,581,074-byte gzip is
+  private and awaits complete raw review; avoid another large native copy.
+  All 24 historical canonical raw/gzip files remain retained. Earlier
+  [duplicate-transfer retirement](evidence/native-loose-transfer-retirement-20261109.json)
+  remains recorded separately; bulk backups can stay on the builder.
 - Builder LV now **107,344,822,272 bytes**, VG free **25,740,443,648 bytes**;
   filesystem free after the reviewed additional 12 GiB growth is
   **31,798,525,952 bytes**. [Latest growth](evidence/build-host-public-config-capacity-20261109.json)
