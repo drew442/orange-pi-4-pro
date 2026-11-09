@@ -1,57 +1,54 @@
-# Matched resolver-readable full NVMe recipe
+# Normalized resolver-readable full NVMe image
 
-`build/public-config-nvme-image.py` prepares a complete regular-file distribution
-from the authenticated protected image, [corrected roots](public-config-roots-20261109.md)
-and [matched STATE](public-config-state.md). [Independent code review and 2,167 privileged Ubuntu tests](evidence/public-config-nvme-preparation-20261109.json)
-pass. The first full production stream now passes [independent actual-artifact
-review](evidence/public-config-nvme-image-20261109.json). This uses the original
-resolver-readable root pair; normalized follow-up builds are separate below.
-Physical installation remains pending; the running endurance host is unchanged.
+Two fresh-checkout constructions now match **every raw and gzip byte** and pass
+[independent actual-artifact verification](evidence/normalized-full-nvme-image-20261109.json).
+The selected distribution is **unpersonalized and unbooted**. Physical installation,
+resolver-policy checks and independent deployment reproduction remain pending.
+Leave the running endurance host undisturbed.
 
-The recipe replaces only the contiguous ROOT-A, ROOT-B and STATE extents:
-**[537,919,488, 17,717,788,672)**, totaling 16 GiB. The complete logical image
-remains **256,060,514,304 bytes**. Protected BOOT, both GPT tables, GUESTS and all
-other bytes are preserved. The 256 MiB SD bootstrap remains unchanged and fits
-the actual 1,977,614,336-byte SD card.
+| Artifact | Bytes | SHA-256 |
+| --- | ---: | --- |
+| Logical NVMe image | 256,060,514,304 | `1fa9144d7a1269066c91a94bfb105a9ac4e4083d4707dd6791e8ac2f26902cd9` |
+| `nvme.img.gz` | 545,581,074 | `3bc02f46d272dcac591d435fff2b1bc98d4fb048569fb2120746145929a8ad64` |
+| Selected `manifest.json` | 118,399 | `3cbe28d6154d1bdeb8d364bd0f8bf82b61fd40af7be27fbd49695771c4fad08f` |
 
-All seven component/authority inputs have fixed size and SHA-256 pins in the
-recipe. There are no pin or layout overrides. Before JSON interpretation, the
-producer authenticates the entire input closure, then validates UUID, kernel,
-operator-key/configuration and root/STATE pairing. The output manifest updates
-both the three partition payload hashes and the selected root marker. Old
-`source_manifest` metadata remains historical; new resource/tool measurements
-and derivation proofs describe this invocation.
+Native selected files are under `out/normalized-nvme-candidate-20261109/` on
+codex, including `verification.json`. The second manifest is 118,399 bytes,
+SHA-256 `37f63f75595747254811722b8a7e1131ba96ca33068c708b2caf5f1bb84ca281`;
+its resource/timing measurements differ while both image files match.
+Builder outputs remain under
+`/var/lib/a733-normalized-nvme-source-20261109-01/project-NN/out/public-config-nvme-image-deterministic-20261109-NN`,
+for `NN=01,02`, source `81f907481b12e9639ad23752966e05166074f96f`.
+Both producer units exited 0; quotas were two and one CPU respectively, each
+with a 3 GiB ceiling. This is repetition on one qualified builder.
 
-## Verified first production stream
+## Fixed composition and invocation
 
-Builder output is
-`/var/lib/a733-public-config-nvme-source-20261109-01/project/out/public-config-nvme-image-20261109-01`,
-from committed source `f9994be634ffd5f2963c10d3bcbde32adfa27f92`.
-Its gzip is **545,642,173 bytes**, SHA-256
-`f61fefa5c503136e14b9c1870ece53b90cdebcfb107a5511cf9621bcf00a5c7f`.
-The full logical hash is
-`de2298316a6c7d39d90233c71c02097e3f1b62a4e546f6a92123b7b5fc6b67e6`;
-the 117,427-byte manifest hash is
-`9486db64da09bd4454a63b3a1ca9f486bab0c4fa37de4d28c01c7bea48e3b662`.
+`build/public-config-nvme-image.py --root-profile deterministic-20261109`
+authenticates the protected `675d6b…` base, [normalized roots](deterministic-host-roots.md)
+and [matched STATE](public-config-state.md). It replaces only
+**[537,919,488, 17,717,788,672)**: 4 GiB ROOT-A, 4 GiB ROOT-B and 8 GiB STATE.
+Protected BOOT, GPT, GUESTS and every other byte are preserved. The unchanged
+256 MiB SD bootstrap fits the actual 1,977,614,336-byte card.
 
-The independent verifier imports no producer code. It decodes both complete
-256,060,514,304-byte streams, checks framing/CRC/EOF, partition/range hashes and
-both GPT tables, and directly compares all **238,880,645,120 bytes outside** the
-replacement interval. Every byte inside matches its pinned root or STATE source.
-One construction is verified; no repeat or physical boot is claimed. This is an
-unpersonalized distribution, not a backup of the running host.
+The root manifest is `c1bcc7d2…`, raw A `a9715b81…`, raw B `42fb2bec…`, STATE
+`2e9d3dcf…`, selected A marker `286494…` and STATE UUID
+`360dfb39-f49f-487e-b307-0bb887c854c5`. Complete pins are in source and linked
+evidence. The finite profile exposes no hash, UUID or layout override.
+The default `public-dirs-20261109` profile preserves the historical construction;
+select `deterministic-20261109` explicitly for this distribution.
 
-## Prepared invocation
-
-Use a fresh authenticated checkout containing the committed reviewed recipe,
-create its ignored `out` directory, and select an unused output tag:
+The following form was exercised with each fresh project checkout and output
+suffix `deterministic-20261109-01` or `-02`. Those names are consumed; use a fresh
+output suffix for another construction:
 
 ```sh
 : "${A733_IMAGE_PROJECT:?Set the authenticated recipe checkout}"
 : "${A733_BASE_IMAGE:?Set retained protected-state-nvme-image-20261109-01 directory}"
-: "${A733_NEW_ROOTS:?Set host-payload-timesync-public-dirs-01 directory}"
+: "${A733_NEW_ROOTS:?Set host-payload-timesync-deterministic-02 directory}"
 : "${A733_NEW_STATE:?Set host-state-timesync-public-dirs-01 directory}"
 python3 -I -B "$A733_IMAGE_PROJECT/build/public-config-nvme-image.py" \
+  --root-profile deterministic-20261109 \
   --base-gzip "$A733_BASE_IMAGE/nvme.img.gz" \
   --base-manifest "$A733_BASE_IMAGE/manifest.json" \
   --roots-manifest "$A733_NEW_ROOTS/manifest.json" \
@@ -62,62 +59,31 @@ python3 -I -B "$A733_IMAGE_PROJECT/build/public-config-nvme-image.py" \
   --output "$A733_IMAGE_PROJECT/out/public-config-nvme-image-FRESH"
 ```
 
-The exact retained builder inputs are linked by the component guides and
-[protected full-image evidence](evidence/protected-full-nvme-image-20261109.json).
-ROOT-A is `299b1f2f…`, ROOT-B `48b9876f…`, STATE `2e9d3dcf…`; their authority
-manifests are `1f82…` and `0c6a…`. The base is the protected `675d6b…` logical
-image, gzip `584a…`, manifest `f19b…`. Complete hashes are fixed in source and
-linked evidence; abbreviated hashes here are labels, not verification commands.
+Admission remains 23,760,999,827 available bytes; runtime floors remain
+3,000,000,000 disk bytes and 1,000,000,000 available memory bytes. The compressed
+output ceiling is 2 GiB plus 16 MiB scratch headroom. No full raw staging file
+is created. Remeasure resources before another job.
 
-## Normalized root integration preparation
+## Verification and deployment scope
 
-The recipe provides a finite `--root-profile deterministic-20261109`
-selection, with [independent source review and 2,180 privileged Ubuntu tests](evidence/normalized-nvme-profile-preparation-20261109.json). Its default remains `public-dirs-20261109`, using the historical
-components above. The new selection fixes the normalized root manifest to
-`c1bcc7d2…`, ROOT-A to `a9715b81…` and ROOT-B to `42fb2bec…`; complete pins are
-in source. It retains the same STATE `2e9d3dcf…`, selected marker, layout,
-protected BOOT and base image. It offers no hash, UUID or layout overrides.
+The producer authenticates all seven inputs before parsing JSON, validates
+kernel/UUID/operator/selector pairing, checks bounded single-member CRC/EOF and
+complete base/replacement hashes, and separately decodes its complete output.
+Exact generated wire bytes, all held inputs and recipes are reauthenticated;
+files/directories are synced and the manifest is published last. A final filename
+without successful exit and complete manifest is insufficient.
 
-Use the normalized root directory
-`/var/lib/a733-clean-replay-20261106/host-roots-timesync-deterministic-02/work/project/out/host-payload-timesync-deterministic-02`
-for `A733_NEW_ROOTS` and add `--root-profile deterministic-20261109` to the
-prepared invocation. The fresh repeat is tag `timesync-deterministic-03`.
-Independent source review and complete actual-root verification now pass.
-Two integrated constructions completed successfully from separate fresh checkouts of
-`81f907481b12e9639ad23752966e05166074f96f` under
-`/var/lib/a733-normalized-nvme-source-20261109-01/project-01` and `project-02`,
-with output suffixes `deterministic-20261109-01` and `-02`. Their quotas were two
-and one CPU respectively, each with a 3 GiB ceiling. Paired independent artifact
-verification is running and remains required before installation. Both are
-unbooted; no physical installation is claimed here. See [root normalization](deterministic-host-roots.md).
+The independent verifier imports no producer code. It directly compares both
+complete new raw streams and gzip files, checks every replacement byte against
+held components, recomputes full raw/partition/range hashes and validates both
+GPT tables. Each complete unchanged-region hash matches the authenticated
+[prior full direct old/new proof](evidence/public-config-nvme-image-20261109.json),
+covering 238,880,645,120 bytes per image. That composition avoids decoding the
+old 256 GB stream again; this run does not claim a new direct old-byte comparison.
 
-Admission remains **23,760,999,827 available bytes**. Runtime floors remain
-3,000,000,000 disk bytes and 1,000,000,000 available memory bytes. The 2 GiB
-compressed-output ceiling plus 16 MiB headroom bounds scratch use; it does not
-assert the expected output size. No full 256 GB raw staging file is created.
-
-## Verification and publication
-
-The source is decoded as exactly one gzip member with CRC/trailer, EOF and a
-hard expansion bound. The complete original raw hash and old partition hashes
-must match. The producer hashes complete replacement extents and unchanged
-prefix/suffix, plus all partitions and bounded GPT structures. GPT checks cover
-protective MBR, both header/table CRCs, geometry and identities.
-
-A separate complete output decode verifies the new logical hash and every
-captured range. An online SHA-256/count of the one-member encoder's exact wire
-bytes must also match the reread compressed file: appended empty gzip members
-or altered headers cannot be silently adopted. All component and recipe inputs
-are held and reauthenticated before publication.
-
-Wire data, manifest and publication directories are synced. `manifest.json` is
-published last; failed tags are reserved. Require a successful producer exit,
-the complete manifest and independent actual-artifact verification. A final
-filename alone does not prove a successful or durable build.
-
-These checks run on builder regular files. They do not add installation
-readback on the Orange Pi; physical installation readback remains optional.
-The image is an unpersonalized distribution, not a backup of the running board.
-Retain its outcome, identity and current guests before any later physical
-installation. Actual boot, KVM, resolver policy and release acceptance require
-their own hardware evidence.
+These regular-file checks do not add Orange Pi installation readback, which
+remains optional. Use the [prepared same-board deployment guide](deploy-protected-20261109.md)
+after retaining endurance/backup evidence and the changed-slot recovery tests.
+Preserve the existing private identity and restore current guests. This image is
+not a backup of the running board. Physical boot, corrected resolver policy,
+KVM/recovery and final release acceptance require their own evidence.

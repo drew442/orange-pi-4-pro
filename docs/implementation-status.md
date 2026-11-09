@@ -68,7 +68,7 @@ without restarting the workload, collector or UART relay.
 | Immutable SD fallback | Linux writes remain zero; [whole-card baseline](evidence/protected-sd-baseline-20261109.json) and exact written prefix match pass; post-workload/shutdown/reboot comparison and firmware audit pending |
 | Interrupted update, rollback, missing NVMe, dirty journal | Software preparation/review pass; required physical recovery cases pending |
 | Off-device guest backup/restoration | [Counter-3 backup and physical restoration](evidence/corrected-host-guest-restore-20261108.json) pass |
-| Coherent protected full image and independent deployment reproduction | [Two full streams match and pass independent artifact review](evidence/protected-full-nvme-image-20261109.json); fresh installation and reproduced deployment pending |
+| Coherent normalized full image and independent deployment reproduction | [Two selected full streams match and pass independent artifact review](evidence/normalized-full-nvme-image-20261109.json); fresh installation and reproduced deployment pending |
 
 The [previous release run](endurance-run-20261108.md) lost SSH at collector
 elapsed 300.005 seconds, last valid guest elapsed 357/cycle 12. Later state was
@@ -86,45 +86,40 @@ so `systemd-resolve` cannot read it. The selected Ethernet link disables these
 protocols; global policy is not applied. Root password is locked, SSH is key-only
 and bound to the selected address, and the running guest is UID/GID 60002 with
 empty capabilities; these observations do not waive the resolver finding.
-A focused creation-mode fix passes independent review and the full privileged
-Ubuntu suite. Two [corrected root constructions](public-config-roots-20261109.md)
-now pass independent artifact review and all four full filesystem readbacks;
-[Matched maintenance candidates](public-config-maintenance-20261109.md) also
-pass independent actual-artifact review. Full distribution/STATE-selector
-integration and physical policy/listener verification remain required. The
-[matched STATE component](public-config-state.md) now passes construction, full
-filesystem readback and independent artifact review, preserving the current
-protected BOOT UUID and authenticating the new root-A marker. The
-[full-image recipe](public-config-nvme-image.md) passes independent code review
-and software checks; its first full stream now passes complete independent
-[actual-artifact verification](evidence/public-config-nvme-image-20261109.json). A [build-only normalization profile](deterministic-host-roots.md)
-now has two independently reviewed full-size constructions matching complete
-raw/gzip bytes, all four filesystem readbacks and the existing marker/STATE
-pairing. The finite normalized full-image profile now passes independent code review
-and 2,180 privileged Ubuntu tests. Two full streams completed producer checks
-from fresh checkouts of `81f9074`; paired independent actual-artifact review is
-running. The active endurance host is unchanged.
+The creation-mode fix is now in [normalized roots](deterministic-host-roots.md)
+with complete filesystem and raw/gzip repeat proof. The matched STATE selector
+and [two complete full-image streams](evidence/normalized-full-nvme-image-20261109.json)
+pass independent artifact review. The selected native candidate is
+`out/normalized-nvme-candidate-20261109/`; it is unbooted. Physical policy/listener
+verification remains required after installation; the active endurance host is
+unchanged. Deployment review found the old identity helper recognized only its
+predecessor's factory machine ID. A narrow two-factory fix passes independent
+privileged focused review; full-suite revalidation and final guide review pass. Image bytes and root/STATE pairing are unchanged by this external helper.
 
 ## Construction, resources and authorization
 
-- Protected SD and NVMe BOOT components each have two byte-matching constructions
-  and independent actual-artifact review. Two fresh full NVMe streams now match
-  byte for byte; complete independent old/new comparison, GPT/framing/hash
-  inspection and unchanged outside-BOOT bytes pass. Native candidate is
-  `out/protected-nvme-candidate-20261109/nvme.img.gz`; fresh installation is
-  unperformed. [Evidence](evidence/protected-full-nvme-image-20261109.json).
-- Latest complete privileged Ubuntu suite: **2,218 tests**, zero skips/errors/
+- Protected SD and NVMe BOOT components each have two matching constructions
+  and independent artifact review; their actual protected host boot passes.
+  [Physical evidence](evidence/protected-state-maintenance-20261109.json).
+- The selected normalized full NVMe candidate has two matching fresh-checkout
+  raw/gzip constructions and complete independent GPT/hash/component checks.
+  [Current evidence](evidence/normalized-full-nvme-image-20261109.json). Same-builder
+  repetition is established; independent clean-builder/deployment reproduction
+  and physical installation remain open.
+- Latest complete privileged Ubuntu suite: **2,225 tests**, zero skips/errors/
   failures; five shell suites and five diagnostic assembly cases also pass.
   All five TOML files parse separately on codex. These are software checks.
-- [Matched A/B maintenance candidates](matched-host-updates-20261109.md) now
-  pass independent complete artifact review and are retained on both hosts.
-  They use root-payload manifest `4f28…`, distinct from the whole-drive manifest.
-  A read-only check matches all 40 installed maintenance files; physical update,
-  activation and rollback remain unperformed. Preserve the running workload.
+- [Normalized maintenance candidates](normalized-maintenance-20261109.md) use
+  root manifest `c1bc…` and pass independent artifact review plus offline old/new
+  API checks. The separate [old A rollback pair](matched-host-updates-20261109.md)
+  uses manifest `4f28…`, selector hash `bd27…` and selected old-A root marker
+  `e1cc…`. A read-only audit matches the 40
+  installed old maintenance files. Live staging/activation/rollback remain
+  unperformed; preserve the workload until final evidence is retained.
 - Native free space after retaining the new encoded candidate is
   **428,056,576 bytes**, above its unchanged 256 MiB floor and planned
   384 MiB reserve covering outcome/scratch budgets. The 545,581,074-byte gzip is
-  private and awaits complete raw review; avoid another large native copy.
+  retained with complete raw review passed; avoid another large native copy.
   All 24 historical canonical raw/gzip files remain retained. Earlier
   [duplicate-transfer retirement](evidence/native-loose-transfer-retirement-20261109.json)
   remains recorded separately; bulk backups can stay on the builder.
@@ -167,8 +162,9 @@ running. The active endurance host is unchanged.
    The earlier protected-image preflight remains historical; do not substitute
    its older image for the final corrected distribution. Preserve same-board
    identity, current guests and prior failure evidence before whole-drive erasure.
-3. Finish independent verification of the two completed normalized full streams,
-   then publish their exact final artifact pins and deployment instructions.
+3. Independently review the final normalized deployment bindings and preflight
+   before physical installation; both full streams now pass complete artifact
+   verification. Actual fresh installation and deployment reproduction are open.
    Preserve current BOOT; verify the policy physically after retaining endurance
    evidence.
 4. Prepare SPI recovery/programming and matched NVMe-first firmware trials.

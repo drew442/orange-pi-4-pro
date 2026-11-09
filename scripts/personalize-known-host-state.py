@@ -31,7 +31,17 @@ PART_START = (1 + 512 + 4096 + 4096) * 2048
 STATE_UUID = '360dfb39-f49f-487e-b307-0bb887c854c5'
 ARCHIVE_HASH = 'ae3930cec481912a164361e11c926ca02d81561a49c0fc49b70514dd19d3d06e'
 FINGERPRINT = 'SHA256:Epfegy9GsJ6ng4/0EH3dZmir7beQj5uYTnIbE4JPfEI'
+# Protected predecessor STATE: production-host-state-runtime-fixes-20261108.json.
 FRESH_MACHINE_ID_HASH = '27e9d2bf78a55ad7cbfc2dfce5511aebb7adcd44b24b474b5123c4ce41c39e2a'
+# Public-config STATE: public-config-state-build-20261109.json, raw SHA256
+# 2e9d3dcf4dcabfaead65e125e7778c0aed092eeb665e67f3559719d08e3564ec.
+# Its factory bytes + newline were authenticated from the 118399-byte full-image
+# manifest SHA256 3cbe28d6154d1bdeb8d364bd0f8bf82b61fd40af7be27fbd49695771c4fad08f.
+# Both are factory identities for the fixed STATE UUID/SSD, never arbitrary IDs.
+FRESH_MACHINE_ID_HASHES = frozenset({
+    FRESH_MACHINE_ID_HASH,
+    '413b642225f62d2813550eded9cfd923f2a947657f7d00addffd57ef329dc347',
+})
 FILES = {'identity/machine-id': 0o644, 'identity/ssh/ssh_host_ed25519_key': 0o600,
          'identity/ssh/ssh_host_ed25519_key.pub': 0o644}
 
@@ -284,6 +294,12 @@ def check_state(root):
 
 
 def prepare_destinations(root, files, fresh_hash):
+    # Retain the internal single-hash interface used by legacy fixtures; production
+    # passes only the fixed two-entry registry, with no CLI or environment override.
+    fresh_hashes = frozenset({fresh_hash}) if type(fresh_hash) is str else fresh_hash
+    require(type(fresh_hashes) is frozenset and 1 <= len(fresh_hashes) <= 2 and
+            all(type(value) is str and re.fullmatch(r'[0-9a-f]{64}', value)
+                for value in fresh_hashes), 'invalid factory machine-id hash allowance')
     device = check_state(root)
     existing = {}
     for name, data in files.items():
@@ -292,7 +308,7 @@ def prepare_destinations(root, files, fresh_hash):
             old = bounded_read(path, 4096, mode=FILES[name], device=device)
             permitted = old in (b'', data)
             if name == 'identity/machine-id' and re.fullmatch(rb'[0-9a-f]{32}\n', old):
-                permitted |= digest(old) == fresh_hash
+                permitted |= digest(old) in fresh_hashes
             require(permitted, 'unexpected nonempty destination; refusing overwrite')
             existing[name] = old
     return existing
@@ -360,7 +376,7 @@ def execute(args, report):
                        check=True, capture_output=True)
         mounted = True
         verify_mount(point, identity[PART.name])
-        atomic_files(point, files, FRESH_MACHINE_ID_HASH, report['changed_files'])
+        atomic_files(point, files, FRESH_MACHINE_ID_HASHES, report['changed_files'])
         check_state(point)
         report['files_fsynced'] = True
     finally:

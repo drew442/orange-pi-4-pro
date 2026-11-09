@@ -13,7 +13,8 @@ matched candidate; it remains unexecuted and waits for retained workload evidenc
 Paths below are relative to `/home/drew/orange-pi-4-pro` on codex.
 
 For later inactive-root maintenance, use the separately authenticated
-[matched A/B update kit](matched-host-updates-20261109.md). Its root-payload
+[normalized A/B update kit](normalized-maintenance-20261109.md), retaining the
+[old A rollback pair](matched-host-updates-20261109.md) separately. Its root-payload
 manifest differs from the whole-NVMe installer manifest below. Physical update
 and rollback tests remain pending until workload evidence is retained.
 The separately retained [matched NVMe-first trial SD](matched-nvme-trial-sd-20261109.md)
@@ -25,7 +26,7 @@ the normal host bootstrap in the table.
 | SSH RAM recovery, same board | `out/ssh-ram-installer-20261108/a733-ssh-installer.img.gz` |
 | Current protected host SD bootstrap | `out/serial-recovery-20261109/protected-sd-retained-01/a733-host-sd.img.gz` |
 | Current protected NVMe BOOT component | `out/serial-recovery-20261109/protected-nvme-retained-01/boot.ext4.gz` |
-| Protected full NVMe candidate, fresh installation unperformed | `out/protected-nvme-candidate-20261109/nvme.img.gz` |
+| Normalized full NVMe candidate, fresh installation unperformed | `out/normalized-nvme-candidate-20261109/nvme.img.gz` |
 | Historical full NVMe base, requiring the protected BOOT update | `out/vgic-nvme-image-20261108/retained-02/nvme.img.gz` |
 
 The two SD artifacts each expand to **268,435,456 bytes**, fitting the actual
@@ -49,7 +50,7 @@ Check the compressed source once on the flashing computer:
 | SSH RAM recovery SD | 41,229,263 | `2f9cdd006e6d5c2c59e5ed1aba68f3ed7dd267a7f61b3672e590d926468c4eec` |
 | Protected host SD | 17,273,154 | `450e30f0b8169da7471396dbc97d44185426c3da61cc83d8425acab74ccef18c` |
 | Protected NVMe BOOT | 16,659,543 | `6a2725e53e3f2e89b7a796969df05af19f9778db301152495699fc0d9351e041` |
-| Protected full NVMe candidate | 545,636,009 | `584a958c63fb01f62c2162c733aeb004082088952c6e428d6406087492e315e2` |
+| Normalized full NVMe candidate | 545,581,074 | `3bc02f46d272dcac591d435fff2b1bc98d4fb048569fb2120746145929a8ad64` |
 | Historical NVMe base | 545,632,496 | `3e560264bb64a9bc23b342febdff2146955ca97cb6e0279e5240c29d4e6d85bc` |
 
 Expanded recovery SD SHA-256 is
@@ -62,13 +63,13 @@ It is a p1-only maintenance payload, not a whole-drive image; use the
 [reviewed offline updater](known-nvme-boot-writer.md), which has already applied
 it to this board. The host roots, STATE and GUESTS were retained. The matched full candidate is
 now retained above.
-The protected full candidate expands to **256,060,514,304 bytes**, SHA-256
-`675d6ba87e53daaf3517f331948a3be5924d79ec21a5143c7bc9f5dda4f0b386`.
-Its `manifest.json` (50,191 bytes, SHA-256
-`f19b5b58c12030422b36c203471026209731fa413ea1ce8d9196121861cf8eb5`) and
-`SHA256SUMS` are alongside the gzip. Two constructions and independent complete
+The normalized full candidate expands to **256,060,514,304 bytes**, SHA-256
+`1fa9144d7a1269066c91a94bfb105a9ac4e4083d4707dd6791e8ac2f26902cd9`.
+Its `manifest.json` (118,399 bytes, SHA-256
+`3cbe28d6154d1bdeb8d364bd0f8bf82b61fd40af7be27fbd49695771c4fad08f`) and
+`verification.json` are alongside the gzip. Two constructions and independent complete
 artifact inspection pass; [fresh installation and hardware release acceptance
-remain pending](evidence/protected-full-nvme-image-20261109.json).
+remain pending](evidence/normalized-full-nvme-image-20261109.json).
 
 The historical NVMe base stream expands to **256,060,514,304 bytes**, SHA-256
 `835031b81d0320d6f9f35e74b9be67b494006c26a25fa9070f3e0a8f434ebc11`.

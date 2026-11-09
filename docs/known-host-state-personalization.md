@@ -6,7 +6,9 @@ before its first boot. It never provisions another machine with these keys.
 Storage authorization is recorded in
 [evidence/storage-write-authorization-20261108.json](evidence/storage-write-authorization-20261108.json).
 Independent device-safety review is required before physical use. Host tests do
-not establish hardware acceptance.
+not establish hardware acceptance. The normalized-distribution fix now passes
+[independent focused review and 2,225 privileged Ubuntu tests](evidence/normalized-deployment-preparation-20261109.json);
+physical identity restoration on that new distribution remains unperformed.
 
 The immutable root slots, package-state profile, configuration, boot selector,
 user state and timesync daemon ownership remain unchanged. The only intended
@@ -36,11 +38,15 @@ The target is fixed to `/dev/nvme0n1p4`, ext4 STATE UUID
 `360dfb39-f49f-487e-b307-0bb887c854c5`, on the 256,060,514,304-byte
 SPCC M.2 PCIe SSD serial `134807190FC700149277`, with 512/512 sectors.
 Partition 4 must start at sector 17,827,840 and be 8 GiB. There is no alternate
-target argument. The existing fresh machine-id is replaced only if its bytes
-match SHA256
-`27e9d2bf78a55ad7cbfc2dfce5511aebb7adcd44b24b474b5123c4ce41c39e2a`,
-bound by the corrected STATE producer receipt in
-[evidence/production-host-state-runtime-fixes-20261108.json](evidence/production-host-state-runtime-fixes-20261108.json).
+target argument. Existing factory machine-id bytes are accepted only for two
+fixed hashes, with no CLI or environment override:
+
+- Protected predecessor: `27e9d2bf78a55ad7cbfc2dfce5511aebb7adcd44b24b474b5123c4ce41c39e2a`,
+  bound by [its STATE producer](evidence/production-host-state-runtime-fixes-20261108.json).
+- Resolver-readable/normalized distribution: `413b642225f62d2813550eded9cfd923f2a947657f7d00addffd57ef329dc347`,
+  bound by the [matched STATE](evidence/public-config-state-build-20261109.json)
+  and [normalized full-image manifests](evidence/normalized-full-nvme-image-20261109.json).
+
 Absent/empty files and exact idempotent copies are permitted; other nonempty
 files fail before any identity file changes.
 

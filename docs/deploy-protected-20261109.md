@@ -1,9 +1,11 @@
-# Protected full-image deployment for the recorded A733
+# Deploy the normalized image on the recorded A733
 
 **Prepared procedure; fresh installation and independent physical reproduction
 are unperformed. Do not run while the November 9 endurance workload is active.**
 Use [current images](current-images.md) rather than the older November 6/7
-payloads or delivery endpoints. This procedure destroys the entire recorded
+payloads or delivery endpoints. The selected normalized distribution now passes
+paired independent full-stream verification; physical installation is unperformed.
+This procedure destroys the entire recorded
 NVMe, including STATE and guests. The operator's [known storage authorization](evidence/storage-write-authorization-20261108.json)
 persists. The installer displays its exact target and asks one yes/no question.
 SPI is untouched; preferred SPI boot and its recovery prerequisites remain open.
@@ -17,24 +19,27 @@ Stop if either identity differs; these are same-board instructions.
 
 | Input on codex, under `/home/drew/orange-pi-4-pro` | SHA-256 |
 | --- | --- |
-| `out/protected-nvme-candidate-20261109/nvme.img.gz` | `584a958c63fb01f62c2162c733aeb004082088952c6e428d6406087492e315e2` |
-| Adjacent `manifest.json` | `f19b5b58c12030422b36c203471026209731fa413ea1ce8d9196121861cf8eb5` |
-| `scripts/personalize-known-host-state.py` | `59772d1a55df6edf44c6e1c80c0c09bde4fbcbeff9bf4ef957fda1c5dcef9321` |
+| `out/normalized-nvme-candidate-20261109/nvme.img.gz` | `3bc02f46d272dcac591d435fff2b1bc98d4fb048569fb2120746145929a8ad64` |
+| Adjacent `manifest.json` | `3cbe28d6154d1bdeb8d364bd0f8bf82b61fd40af7be27fbd49695771c4fad08f` |
+| `scripts/personalize-known-host-state.py` | `7a8ba7c36102ac5c72e6f7efa961d2f713bf50f0d2d6c0806ae8d7e2c140a2ac` |
 | `scripts/write-known-bootstrap-sd.py` | `4769001ab4a4861ff8ffe26ad6aa427f9abe5430b48bb49918d6c1206b96c52a` |
 
-The gzip is **545636009 bytes**; its single expansion is **256060514304 bytes**,
-SHA-256 `675d6ba87e53daaf3517f331948a3be5924d79ec21a5143c7bc9f5dda4f0b386`.
-The 50191-byte manifest binds STATE UUID
+The gzip is **545581074 bytes**; its single expansion is **256060514304 bytes**,
+SHA-256 `1fa9144d7a1269066c91a94bfb105a9ac4e4083d4707dd6791e8ac2f26902cd9`.
+The 118399-byte manifest binds STATE UUID
 `360dfb39-f49f-487e-b307-0bb887c854c5`. Two constructions and complete independent
-[artifact comparison](evidence/protected-full-nvme-image-20261109.json) pass.
+[artifact comparison](evidence/normalized-full-nvme-image-20261109.json) pass.
 This distribution contains no copy of the board's installed private identity.
 
 Before leaving the installed host, retain and review the endurance outcome,
 observer/CPU exits, full UART capture and post-workload SD measurements off-board.
 The [automatic preserver](endurance-run-20261109.md) does not grant acceptance.
 Retain the authenticated [counter-3 guest backup](evidence/corrected-host-guest-restore-20261108.json)
-and its indexes/manifests; a full reinstall erases even the retained failed-run
-guest directories. Keep private host identity separately. No preservation of
+and its indexes/manifests. Also take fresh backups of current guests, including
+the counter-5 state, plus completed/failed endurance evidence; counter-3 does not
+contain later data. A full reinstall erases the retained failed-run guest directories.
+Complete the [changed inactive-slot interruption and rollback cases](normalized-maintenance-20261109.md)
+first, preserving their evidence. Keep private host identity separately. No preservation of
 unrelated original user data is claimed or required by the discard authorization.
 
 The original same-board identity archive is root-private on the builder:
@@ -123,8 +128,8 @@ A733_RAM_SSH=(ssh -T -i /home/drew/.ssh/id_ed25519 -o IdentitiesOnly=yes \
 a733_send_file() {
   "${A733_RAM_SSH[@]}" "umask 077; set -C; cat > /run/a733-payload/$2" < "$1"
 }
-a733_send_file out/protected-nvme-candidate-20261109/nvme.img.gz nvme.img.gz
-a733_send_file out/protected-nvme-candidate-20261109/manifest.json manifest.json
+a733_send_file out/normalized-nvme-candidate-20261109/nvme.img.gz nvme.img.gz
+a733_send_file out/normalized-nvme-candidate-20261109/manifest.json manifest.json
 a733_send_file scripts/personalize-known-host-state.py personalize-known-host-state.py
 a733_send_file scripts/write-known-bootstrap-sd.py write-known-bootstrap-sd.py
 a733_send_file "$A733_DEPLOY_EVIDENCE/identity.tar" identity.tar
@@ -144,8 +149,8 @@ encoded image. The SD writer authenticates its fixed raw image itself. On the bo
 
 ```sh
 sha256sum -c - <<'PINS'
-f19b5b58c12030422b36c203471026209731fa413ea1ce8d9196121861cf8eb5  /run/a733-payload/manifest.json
-59772d1a55df6edf44c6e1c80c0c09bde4fbcbeff9bf4ef957fda1c5dcef9321  /run/a733-payload/personalize-known-host-state.py
+3cbe28d6154d1bdeb8d364bd0f8bf82b61fd40af7be27fbd49695771c4fad08f  /run/a733-payload/manifest.json
+7a8ba7c36102ac5c72e6f7efa961d2f713bf50f0d2d6c0806ae8d7e2c140a2ac  /run/a733-payload/personalize-known-host-state.py
 4769001ab4a4861ff8ffe26ad6aa427f9abe5430b48bb49918d6c1206b96c52a  /run/a733-payload/write-known-bootstrap-sd.py
 ae3930cec481912a164361e11c926ca02d81561a49c0fc49b70514dd19d3d06e  /run/a733-payload/identity.tar
 PINS
@@ -164,7 +169,7 @@ Do not mount target partitions or change inputs between operations.
 ```sh
 set -- --image /run/a733-payload/nvme.img.gz \
   --manifest /run/a733-payload/manifest.json \
-  --manifest-sha256 f19b5b58c12030422b36c203471026209731fa413ea1ce8d9196121861cf8eb5 \
+  --manifest-sha256 3cbe28d6154d1bdeb8d364bd0f8bf82b61fd40af7be27fbd49695771c4fad08f \
   --target /dev/nvme0n1 --expected-model 'SPCC M.2 PCIe SSD' \
   --expected-serial 134807190FC700149277 --expected-bytes 256060514304 \
   --existing-data-policy discard-authorized

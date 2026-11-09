@@ -1,0 +1,109 @@
+{
+  "schema": 1,
+  "classification": "Normalized deployment bindings and narrow two-factory identity restoration reviewed and host-tested; physical fresh deployment/reproduction unperformed",
+  "hardware_acceptance": false,
+  "physical_storage_written": false,
+  "fresh_full_installation_performed": false,
+  "independent_physical_deployment_reproduction": "UNPERFORMED",
+  "image_evidence": "docs/evidence/normalized-full-nvme-image-20261109.json",
+  "identity_helper_sources": {
+    "scripts/personalize-known-host-state.py": {
+      "bytes": 19418,
+      "sha256": "7a8ba7c36102ac5c72e6f7efa961d2f713bf50f0d2d6c0806ae8d7e2c140a2ac"
+    },
+    "tests/test_known_host_state_personalization.py": {
+      "bytes": 24381,
+      "sha256": "bded4244ba879158e22badb1a33086502d22decd1c308fdf5ef9d5c387e12e3e"
+    }
+  },
+  "factory_machine_id_sha256": [
+    "27e9d2bf78a55ad7cbfc2dfce5511aebb7adcd44b24b474b5123c4ce41c39e2a",
+    "413b642225f62d2813550eded9cfd923f2a947657f7d00addffd57ef329dc347"
+  ],
+  "unchanged_identity_scope": {
+    "state_uuid": "360dfb39-f49f-487e-b307-0bb887c854c5",
+    "nvme_serial": "134807190FC700149277",
+    "original_archive_sha256": "ae3930cec481912a164361e11c926ca02d81561a49c0fc49b70514dd19d3d06e",
+    "paths": [
+      "identity/machine-id",
+      "identity/ssh/ssh_host_ed25519_key",
+      "identity/ssh/ssh_host_ed25519_key.pub"
+    ],
+    "root_or_state_selector_writes": false,
+    "cli_or_environment_pin_override": false,
+    "installed_39_source_closure_changed": false
+  },
+  "reviews": {
+    "initial": {
+      "path": "tmp/normalized-deployment-binding-review-20261109.json",
+      "bytes": 13112,
+      "sha256": "80401f74da19317f5e53af073db0a2555833fb99f082c33f1e3051f66db98e71",
+      "result": "FAIL",
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "high"
+    },
+    "fixed": {
+      "path": "tmp/normalized-deployment-binding-rereview-20261109.json",
+      "bytes": 21504,
+      "sha256": "22472f89c5dacc9e82871c570d946c019cd51e37e406a132db96c415da84cc28",
+      "result": "PASS",
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "high"
+    },
+    "documentation": {
+      "path": "tmp/normalized-deployment-documentation-review-20261109.json",
+      "bytes": 11295,
+      "sha256": "4fb37c079bcec8597e6d1a5f2d9fc99d864555eb62409efaed1bc45b8a5776f3",
+      "result": "PASS with two minor status label corrections applied before commit",
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "high",
+      "coordinator_corrections": [
+        "Current gate links normalized full-image evidence rather than protected predecessor.",
+        "Old A e1cc is identified as the selected root marker, with bd27 selector hash stated."
+      ]
+    }
+  },
+  "qualified_jammy_validation": {
+    "path": "/var/lib/a733-normalized-deployment-validation-20261109-01",
+    "unit": "a733-normalized-deployment-validation-20261109-01.service",
+    "tests": 2225,
+    "seconds": 73.218,
+    "errors": 0,
+    "failures": 0,
+    "skips": 0,
+    "shell_suites": 5,
+    "diagnostic_cases": 5,
+    "source_files_checked_before_after": 881,
+    "exit_status": 0,
+    "cpu_quota_percent": 100,
+    "memory_max_bytes": 3221225472,
+    "builder_free_bytes_after": 23512854528,
+    "builder_memory_available_bytes_after": 7485071360,
+    "retained": {
+      "out/normalized-deployment-validation-20261109-01/validation-unit.txt": {
+        "bytes": 135,
+        "sha256": "b041c518fef1eda7f342fa432d0d23c7379936d749e2c288350e0bf16a51f4ec"
+      },
+      "out/normalized-deployment-validation-20261109-01/validation.log": {
+        "bytes": 16376,
+        "sha256": "a9bd84c9faab62c1c7801d0e24f905d8ba1e405d846bf74f69ee5ee20c725083"
+      },
+      "out/normalized-deployment-validation-20261109-01/source-lock.json": {
+        "bytes": 140632,
+        "sha256": "55b6692dd2d1f98387c19c2f9b4bf48f9e7227d38acd3aff897d6063c650392b"
+      }
+    }
+  },
+  "native_toml_checks": {
+    "files": 5,
+    "parser": "Python tomllib",
+    "location": "coordinator workspace"
+  },
+  "initial_blocker": "Prior helper accepted only predecessor factory machine-id; actual new matched STATE was refused before identity replacements. Fixed registry accepts only the two authenticated known factory IDs while retaining all old guards.",
+  "limits": [
+    "Focused privileged filesystem probes mock target/mount operations; no A733/bridge/private identity archive access occurred.",
+    "Full software suite does not establish fresh physical install, mounted-device guards or deployment reproduction.",
+    "All target/namespace/archive/UUID/ownership/key/sentinel safety checks remain required during actual apply.",
+    "Known storage authority persists; no additional user confirmation is needed for that authorized scope."
+  ]
+}
