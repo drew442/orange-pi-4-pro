@@ -71,6 +71,12 @@ health observations when the collector is confirmed stopped. SSH errors, missing
 files, boot mismatches and possible truncation are retained explicitly. These
 are unreviewed captures; no automatic pass or recovery is attempted.
 
+A [live read-only preflight and independent review](evidence/endurance-journal-selector-repair-20261109.json)
+found and corrected the journal boot selector before final capture: this target
+requires the compact 32-character boot ID. The protected copy was atomically
+replaced at November 9 12:55:58 UTC, without restarting services or changing the
+workload. All three journals now return records from the expected boot.
+
 The [whole-SD baseline](evidence/protected-sd-baseline-20261109.json) is now
 `401df09e666c22db8e8f9adbeecc0f385a910b1f41995e7a1d0bc68be3b64be5`
 for 1,977,614,336 bytes. Its first 256 MiB exactly match the written protected

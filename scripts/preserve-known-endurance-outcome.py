@@ -162,14 +162,14 @@ def remote_snapshot(health_allowed=False):
                        for name in FILES]
     # Pin journals to the expected boot even if the machine has since rebooted.
     result['guest_journal'] = journal_capture(
-        ['journalctl', '--no-pager', '--boot=' + BOOT, '--unit=' + UNITS[0],
+        ['journalctl', '--no-pager', '--boot=' + BOOT.replace('-', ''), '--unit=' + UNITS[0],
          '--output=json', '--lines=10000'], 8 * MIB, 10000)
     result['kernel_journal'] = journal_capture(
-        ['journalctl', '--no-pager', '--boot=' + BOOT, '--dmesg', '--output=json',
+        ['journalctl', '--no-pager', '--boot=' + BOOT.replace('-', ''), '--dmesg', '--output=json',
          '--lines=2000'], MIB, 2000)
     result['dmesg'] = bounded_command(['dmesg', '--color=never'], MIB)
     result['manager_journal'] = journal_capture(
-        ['journalctl', '--no-pager', '--boot=' + BOOT, '--output=json', '--lines=2000',
+        ['journalctl', '--no-pager', '--boot=' + BOOT.replace('-', ''), '--output=json', '--lines=2000',
          '_PID=1'], MIB, 2000)
     if health_allowed:
         result['nvme_smart'] = bounded_command(

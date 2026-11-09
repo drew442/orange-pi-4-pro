@@ -1,0 +1,136 @@
+{
+  "schema": 1,
+  "recorded_utc": "2026-11-09T12:56:23.003434+00:00",
+  "classification": "reviewed capture repair installed; endurance acceptance pending",
+  "hardware_acceptance": false,
+  "problem": "Target journalctl rejects the hyphenated UUID boot descriptor; all three original captures would fail. Raw /proc boot matching is retained.",
+  "sources": {
+    "scripts/preserve-known-endurance-outcome.py": "492f607aa7ab4307cff2a0b2a186c004daa035629852a70fbb4908a36f533bfb",
+    "tests/test_preserve_known_endurance_outcome.py": "316bcb5e3849edd9a8b040efe1829c42ea8347ff857b17638fe87d435ae54fd3"
+  },
+  "independent_review": {
+    "schema": 1,
+    "reviewed_utc": "2026-11-09T12:53:14.307603+00:00",
+    "result": "PASS",
+    "scope": [
+      "scripts/preserve-known-endurance-outcome.py",
+      "tests/test_preserve_known_endurance_outcome.py"
+    ],
+    "source_sha256": {
+      "scripts/preserve-known-endurance-outcome.py": "492f607aa7ab4307cff2a0b2a186c004daa035629852a70fbb4908a36f533bfb",
+      "tests/test_preserve_known_endurance_outcome.py": "316bcb5e3849edd9a8b040efe1829c42ea8347ff857b17638fe87d435ae54fd3"
+    },
+    "checks": [
+      {
+        "command": "python3 -B tests/test_preserve_known_endurance_outcome.py",
+        "result": "PASS",
+        "tests": 13
+      },
+      {
+        "command": "git diff --check -- scripts/preserve-known-endurance-outcome.py tests/test_preserve_known_endurance_outcome.py",
+        "result": "PASS"
+      },
+      {
+        "check": "Mocked raw hyphenated boot match remains true; all three journal selectors use expected compact ID",
+        "result": "PASS"
+      },
+      {
+        "check": "In-memory mutation of each journal selector back to hyphenated ID is detected by updated regression test",
+        "result": "PASS",
+        "mutants": [
+          {
+            "journal_position": 1,
+            "hyphenated_regression_detected": true
+          },
+          {
+            "journal_position": 2,
+            "hyphenated_regression_detected": true
+          },
+          {
+            "journal_position": 3,
+            "hyphenated_regression_detected": true
+          }
+        ]
+      },
+      {
+        "check": "Source hashes unchanged during review",
+        "result": "PASS"
+      }
+    ],
+    "findings": [],
+    "conclusion": "The three command-only conversions preserve the expected 128-bit boot identity while retaining the raw hyphenated /proc comparison and evidence metadata. The regression independently fixes the expected compact descriptor and checks all three journal commands.",
+    "limits": [
+      "No physical hardware commands, writes, reboot, or acceptance performed. Target journalctl parsing observation was supplied by coordinator; this review verifies implementation and software regression only.",
+      "A733, 2 GB SD, nominal 250 GB NVMe, zero routine SD writes, and real-KVM acceptance requirements remain unchanged."
+    ]
+  },
+  "live_preflight": {
+    "boot_matches": true,
+    "guest_journal_records": 160,
+    "kernel_journal_records": 25,
+    "manager_journal_records": 75,
+    "all_returncodes": 0,
+    "all_expected_boot_records": true,
+    "all_possible_truncation": false,
+    "health_commands_skipped": true,
+    "scope": "Actual generated remote source executed read-only; final output names were not used."
+  },
+  "validation": {
+    "builder_project": "/var/lib/a733-outcome-journal-validation-20261109-01",
+    "tests": 2139,
+    "skips": 0,
+    "errors": 0,
+    "failures": 0,
+    "seconds": 66.686,
+    "shell_suites": 5,
+    "diagnostic_cases": 5,
+    "toml_files_parsed": 5,
+    "frozen_tracked_sources": 843,
+    "before_after_source_hashes_match": true,
+    "cpu_quota_percent": 200,
+    "memory_max_bytes": 3221225472,
+    "unit_terminal_exit": 0
+  },
+  "installation": {
+    "installed_utc": "2026-11-09T12:55:58.322189+00:00",
+    "path": "/var/lib/a733-endurance-preserver-20261109/preserve.py",
+    "old_sha256": "259fef75311c1818afb81810115e0ca499520bf07b0bf40a2bf2b6d606610a72",
+    "sha256": "492f607aa7ab4307cff2a0b2a186c004daa035629852a70fbb4908a36f533bfb",
+    "uid": 0,
+    "mode": "0444",
+    "atomic_replace": true,
+    "file_and_directory_fsynced": true,
+    "hardware_writes": false,
+    "service_restarts": false
+  },
+  "evidence": {
+    "out/outcome-journal-preflight-20261109-01/boot-selector-comparison.json": {
+      "bytes": 272,
+      "sha256": "c237904611f463766f6885c6faf1dcaed28cd6e28073b281fc589bd022bc4c02"
+    },
+    "out/outcome-journal-preflight-20261109-01/remote.json": {
+      "bytes": 652787,
+      "sha256": "a41d3cc27cceece84eeed0d25c3eebd10148bc75955715cc131fffd590e72df8"
+    },
+    "out/outcome-journal-preflight-20261109-01/stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/outcome-journal-preflight-20261109-01/jammy-validation.log": {
+      "bytes": 16288,
+      "sha256": "dd210bf421dc604b17851497026c9a39993dda834585be93aa172a3bf4ec7111"
+    },
+    "out/outcome-journal-preflight-20261109-01/validation-unit.txt": {
+      "bytes": 101,
+      "sha256": "ffce2a2f93db1227df5f7f4738dfb04caaba997b3014727ba3d6ec57afa5951b"
+    },
+    "out/outcome-journal-preflight-20261109-01/source-lock.json": {
+      "bytes": 134353,
+      "sha256": "b26d8057fa75313e5d0325336d5b7334aaecdcfe0662176e2be877160fc08ba2"
+    },
+    "out/outcome-journal-preflight-20261109-01/native-units.txt": {
+      "bytes": 333,
+      "sha256": "953690dc315f5a9e11dc821c83475125c82fd31c924de820fe7915270ae07daf"
+    }
+  }
+}

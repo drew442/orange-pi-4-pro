@@ -81,8 +81,12 @@ class OutcomeTests(unittest.TestCase):
         self.assertFalse(result['hardware_acceptance'])
         self.assertEqual(result['classification'], 'unreviewed')
         self.assertTrue(result['guest_journal']['possible_truncation'])
-        self.assertTrue(all('--boot=' + helper.BOOT in argv for argv in commands
-                            if argv[0] == 'journalctl'))
+        journals = [argv for argv in commands if argv[0] == 'journalctl']
+        self.assertEqual(len(journals), 3)
+        # journalctl parses hyphens as boot-offset delimiters on the target;
+        # bind its compact 128-bit descriptor independently of the formatter.
+        self.assertTrue(all('--boot=dd8d6f67d2974f3bbc9a8a41c9742051' in argv
+                            for argv in journals))
         self.assertIn(['nvme', 'error-log', '/dev/nvme0', '-e', '1',
                        '--output-format=json'], commands)
         self.assertTrue(all(argv[0] in ('systemctl', 'journalctl', 'dmesg', 'nvme')

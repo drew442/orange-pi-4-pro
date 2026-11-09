@@ -51,6 +51,9 @@ UART relay are independent of this chat. Reviewed read-only outcome preservation
 is armed on collector exit and at **November 10 02:16 UTC**, with separate private
 snapshots. It never grants acceptance; coordinator review of console, exact exit
 records, duration, health and telemetry remains mandatory.
+A [reviewed live preflight repair](evidence/endurance-journal-selector-repair-20261109.json)
+now uses compact journal boot IDs; the protected capture copy was replaced
+without restarting the workload, collector or UART relay.
 
 | Gate | Evidence/status |
 | --- | --- |
