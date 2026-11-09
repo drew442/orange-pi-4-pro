@@ -95,10 +95,11 @@ integration and physical policy/listener verification remain required. The
 [matched STATE component](public-config-state.md) now passes construction, full
 filesystem readback and independent artifact review, preserving the current
 protected BOOT UUID and authenticating the new root-A marker. The
-[full-image recipe](public-config-nvme-image.md) now passes independent code review
-and full software checks; complete construction and actual-artifact verification
-remain pending. The active endurance
-host is unchanged.
+[full-image recipe](public-config-nvme-image.md) passes independent code review
+and software checks; its first full stream is running, with actual-artifact
+verification pending. A [build-only normalization profile](deterministic-host-roots.md)
+now passes independent review and pinned Ubuntu tests; full-size root byte-repeat
+proof remains pending. The active endurance host is unchanged.
 
 ## Construction, resources and authorization
 
@@ -108,7 +109,7 @@ host is unchanged.
   inspection and unchanged outside-BOOT bytes pass. Native candidate is
   `out/protected-nvme-candidate-20261109/nvme.img.gz`; fresh installation is
   unperformed. [Evidence](evidence/protected-full-nvme-image-20261109.json).
-- Latest complete privileged Ubuntu suite: **2,167 tests**, zero skips/errors/
+- Latest complete privileged Ubuntu suite: **2,178 tests**, zero skips/errors/
   failures; five shell suites and five diagnostic assembly cases also pass.
   All five TOML files parse separately on codex. These are software checks.
 - [Matched A/B maintenance candidates](matched-host-updates-20261109.md) now
@@ -154,9 +155,10 @@ host is unchanged.
    accepts the actual manifest and RAM tool pins; physical execution and clean
    independent reproduction remain unperformed. Keep the running
    workload undisturbed until its evidence is retained.
-3. Build corrected roots for the resolver directory finding and refresh the
-   matched maintenance/full-install artifacts. Preserve current compatible BOOT;
-   verify the policy physically after retaining endurance evidence.
+3. Complete the matched full-image construction and actual-artifact review,
+   then prove full-size normalized root repeats and marker/STATE compatibility.
+   Preserve current BOOT; verify the policy physically after retaining endurance
+   evidence.
 4. Prepare SPI recovery/programming and matched NVMe-first firmware trials.
    The [matched trial SD](matched-nvme-trial-sd-20261109.md) now has two identical
    constructions and independent complete artifact review; it preserves current

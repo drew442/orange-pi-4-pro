@@ -1,0 +1,95 @@
+{
+  "schema": 1,
+  "classification": "Build-only root normalization helpers reviewed and host-tested; full-size production and repeat-byte proof pending",
+  "hardware_acceptance": false,
+  "production_roots_constructed": false,
+  "physical_storage_written": false,
+  "sources": {
+    "build/deterministic-root-image.py": {
+      "bytes": 12059,
+      "sha256": "977f0658d4f8f045231142bf06e0f39cc90c8482225c5d8c39d9f80ac82cf4b4"
+    },
+    "build/launch-deterministic-host-roots.py": {
+      "bytes": 9290,
+      "sha256": "ed92ee2688649e51f219eca0cb498418243798cd56068d4afcd0a2e40989916e"
+    },
+    "tests/test_deterministic_root_image.py": {
+      "bytes": 11502,
+      "sha256": "0d1764cfd05845ad41f76f6c43a2013e0b584ba4303878aa730e1088c3f71e7e"
+    },
+    "tests/test_launch_deterministic_host_roots.py": {
+      "bytes": 11602,
+      "sha256": "f25feb3ea20580f07a9438127778f7644c62649eecf2047796e0b67206f41f56"
+    }
+  },
+  "unchanged_original_root_launcher_sha256": "eb55e7b0cd51f3deeede47777adda8255de9d48322eb568c502f9a52a797e4ff",
+  "normalization_epoch": 1793750400,
+  "installed_maintenance_source_changes": false,
+  "payload_marker_changes_intended": false,
+  "independent_reviews": {
+    "creator": {
+      "path": "tmp/deterministic-root-creator-review-20261109.json",
+      "bytes": 4741,
+      "sha256": "dd7ecf64593229652b8a7118d7bb7094cd2d9aece755450550a3af80b41bb43c",
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "high",
+      "result": "PASS"
+    },
+    "launcher": {
+      "path": "tmp/deterministic-roots-launcher-review-20261109.json",
+      "bytes": 4480,
+      "sha256": "bab0b6730064f6175d77371876f0796ff0b6804390ba36d027deacc5bf03be7f",
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "high",
+      "result": "PASS"
+    }
+  },
+  "qualified_jammy_validation": {
+    "project": "/var/lib/a733-deterministic-roots-validation-20261109-01",
+    "unit": "a733-deterministic-roots-validation-20261109-01",
+    "tests": 2178,
+    "errors": 0,
+    "failures": 0,
+    "skips": 0,
+    "seconds": 71.257,
+    "shell_suites": 5,
+    "diagnostic_cases": 5,
+    "toml_files_parsed": 5,
+    "source_files_checked_before_after": 867,
+    "unit_exit": 0,
+    "cpu_quota_percent": 100,
+    "memory_max_bytes": 3221225472,
+    "builder_free_bytes_after": 29972168704,
+    "builder_mem_available_after": 7526211584,
+    "retained": {
+      "out/deterministic-roots-validation-20261109-01/jammy-validation.log": {
+        "bytes": 16329,
+        "sha256": "ea0da1bcc8bac1ffbbbd2dc9d0dd390b494972e84e7bdd108c6f757130ffa519"
+      },
+      "out/deterministic-roots-validation-20261109-01/validation-unit.txt": {
+        "bytes": 120,
+        "sha256": "9a2a6999e01f633fd9958ffb97047574393c15329ff26d904947b6df28923e06"
+      },
+      "out/deterministic-roots-validation-20261109-01/source-lock.json": {
+        "bytes": 138347,
+        "sha256": "b97a3588dbd465f8f93a4984c70d151b11ab655b3430c74ba88ff9439f9f0bdb"
+      }
+    }
+  },
+  "requirements": [
+    "Construct two fresh complete4GiB A/B pairs from pinned userspace/diagnostic inputs.",
+    "Fully inspect all four filesystems and independently review actual artifacts.",
+    "Compare complete raw and compressed bytes; verify actual markers/package profiles remain paired with current STATE.",
+    "Preserve actual2GBSD/250GBNVMe externalBOOT and all physical acceptance gates."
+  ],
+  "limits": [
+    "Small native1.47 and pinnedJammy1.46.5 fixtures do not prove full production byte identity.",
+    "No board operations or hardware validation performed; active24h workload remains unchanged."
+  ],
+  "documentation_review": {
+    "path": "tmp/deterministic-roots-documentation-review-20261109.json",
+    "bytes": 2666,
+    "sha256": "566840e02872e06e94d57ac5cfb55465f83686f6fff6d742a7353d86d08e0a75",
+    "result": "PASS"
+  }
+}
