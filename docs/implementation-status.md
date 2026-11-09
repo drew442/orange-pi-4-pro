@@ -96,8 +96,8 @@ integration and physical policy/listener verification remain required. The
 filesystem readback and independent artifact review, preserving the current
 protected BOOT UUID and authenticating the new root-A marker. The
 [full-image recipe](public-config-nvme-image.md) passes independent code review
-and software checks; its first full stream now completes with producer exit 0,
-with independent actual-artifact verification running. A [build-only normalization profile](deterministic-host-roots.md)
+and software checks; its first full stream now passes complete independent
+[actual-artifact verification](evidence/public-config-nvme-image-20261109.json). A [build-only normalization profile](deterministic-host-roots.md)
 now has two independently reviewed full-size constructions matching complete
 raw/gzip bytes, all four filesystem readbacks and the existing marker/STATE
 pairing. The finite normalized full-image profile now passes independent code review
@@ -148,8 +148,10 @@ pending. The active endurance host is unchanged.
 
 1. Observe the new 24-hour run and serial capture. The
    [warm-reboot collector](warm-boot-validation.md) is independently reviewed
-   and prepared; it remains unexecuted and refuses active workloads or missing
-   retained outcome evidence. [Preparation evidence](evidence/warm-boot-preparation-20261109.json).
+   and prepared for the SD route; it remains unexecuted and refuses active
+   workloads or missing retained outcome evidence. Count the final ten warm and
+   ten cold boots only after choosing and installing the final release/boot route.
+   An SD-removed SPI route needs corresponding collector adaptation. [Preparation evidence](evidence/warm-boot-preparation-20261109.json).
    Preserve kernel/control evidence on recurrence. Audit final guest/CPU exits, duration and post-run
    health; pending collector exit 2 alone is not acceptance.
 2. After the workload, follow the independently reviewed

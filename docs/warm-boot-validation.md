@@ -15,6 +15,13 @@ python3 scripts/collect-known-warm-boots.py --execute \
   --tag AFTER-ENDURANCE-UNIQUE-TAG
 ```
 
+For release counts, first select and install the final image and boot route,
+then record the final firmware/SSD combination. Preliminary reboot trials on a
+different route do not replace the final ten warm and ten cold boots. This
+collector currently requires the known SD card; it is prepared for the immutable
+SD route. A selected SPI route with SD removed needs corresponding collector
+adaptation and physical validation before its ten-boot series.
+
 This command has **not been run**. Replace the UUID with a fresh observation;
 the collector refuses any mismatch. The existing storage/reboot authorization
 applies; there is no new typed confirmation. Execution always targets

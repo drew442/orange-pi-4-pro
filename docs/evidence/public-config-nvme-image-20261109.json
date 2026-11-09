@@ -1,0 +1,186 @@
+{
+  "schema": 1,
+  "hardware_acceptance": false,
+  "physical_storage_written": false,
+  "review_method": "Independent stdlib-only verifier; no producer imports, no mounts or device access; full bounded single-member gzip decoding of old and new streams, full raw/partition/range hashes, direct equality of every byte outside replacement interval; direct component equality inside replacement intervals; independent GPT CRC/geometry/identity inspection.",
+  "source_git_head": "f9994be634ffd5f2963c10d3bcbde32adfa27f92",
+  "manifest": {
+    "bytes": 117427,
+    "sha256": "9486db64da09bd4454a63b3a1ca9f486bab0c4fa37de4d28c01c7bea48e3b662"
+  },
+  "authenticated_inputs": {
+    "base-gzip": {
+      "path": "/var/lib/a733-maintenance-validation-20261108-01/project/out/protected-state-nvme-image-20261109-01/nvme.img.gz",
+      "bytes": 545636009,
+      "sha256": "584a958c63fb01f62c2162c733aeb004082088952c6e428d6406087492e315e2"
+    },
+    "base-manifest": {
+      "path": "/var/lib/a733-maintenance-validation-20261108-01/project/out/protected-state-nvme-image-20261109-01/manifest.json",
+      "bytes": 50191,
+      "sha256": "f19b5b58c12030422b36c203471026209731fa413ea1ce8d9196121861cf8eb5"
+    },
+    "roots-manifest": {
+      "path": "/var/lib/a733-clean-replay-20261106/host-roots-timesync-public-dirs-01/work/project/out/host-payload-timesync-public-dirs-01/manifest.json",
+      "bytes": 32613,
+      "sha256": "1f82b9e85c5fbcbac65af695b699ee0048fb397faeba2e3eeb652eeb584adb6c"
+    },
+    "root-a": {
+      "path": "/var/lib/a733-clean-replay-20261106/host-roots-timesync-public-dirs-01/work/project/out/host-payload-timesync-public-dirs-01/root-A.ext4",
+      "bytes": 4294967296,
+      "sha256": "299b1f2f74e11c71c89b9ee249dfd43bdc741ac3e90addc763a9626bbbb5aed6"
+    },
+    "root-b": {
+      "path": "/var/lib/a733-clean-replay-20261106/host-roots-timesync-public-dirs-01/work/project/out/host-payload-timesync-public-dirs-01/root-B.ext4",
+      "bytes": 4294967296,
+      "sha256": "48b9876f72f28d4a10f7458dd81a96b95da00d13ae00783b39f7c30067fa94f7"
+    },
+    "state-manifest": {
+      "path": "/var/lib/a733-clean-replay-20261106/host-state-timesync-public-dirs-01/work/project/out/host-state-timesync-public-dirs-01/manifest.json",
+      "bytes": 15468,
+      "sha256": "0c6a76a38743924cf5919ac0ba9f5cf2a4eae818b0b312a01c2d4c590283ae03"
+    },
+    "state": {
+      "path": "/var/lib/a733-clean-replay-20261106/host-state-timesync-public-dirs-01/work/project/out/host-state-timesync-public-dirs-01/state.ext4",
+      "bytes": 8589934592,
+      "sha256": "2e9d3dcf4dcabfaead65e125e7778c0aed092eeb665e67f3559719d08e3564ec"
+    }
+  },
+  "compressed_output": {
+    "bytes": 545642173,
+    "sha256": "f61fefa5c503136e14b9c1870ece53b90cdebcfb107a5511cf9621bcf00a5c7f"
+  },
+  "raw_streams": {
+    "base": {
+      "bytes": 256060514304,
+      "sha256": "675d6ba87e53daaf3517f331948a3be5924d79ec21a5143c7bc9f5dda4f0b386"
+    },
+    "candidate": {
+      "bytes": 256060514304,
+      "sha256": "de2298316a6c7d39d90233c71c02097e3f1b62a4e546f6a92123b7b5fc6b67e6"
+    }
+  },
+  "direct_equal_outside": {
+    "intervals": [
+      [
+        0,
+        537919488
+      ],
+      [
+        17717788672,
+        256060514304
+      ]
+    ],
+    "bytes": 238880645120,
+    "result": "PASS"
+  },
+  "direct_component_equality": {
+    "root-a": 4294967296,
+    "root-b": 4294967296,
+    "state": 8589934592
+  },
+  "gzip": {
+    "base_single_member_crc_trailer_eof_verified": true,
+    "candidate_single_member_crc_trailer_eof_verified": true,
+    "full_expansion_bytes_each": 256060514304,
+    "no_trailing_bytes_or_members": true,
+    "maximum_decoded_chunk_bytes": 4194304
+  },
+  "elapsed_seconds": 1900.150782037992,
+  "limits": [
+    "One full production construction reviewed; no independent rebuild/repeatability claim.",
+    "No physical installation, board/bridge access, boot or KVM acceptance; hardware endurance untouched.",
+    "Metadata compatibility and byte identity do not replace physical policy/listener validation.",
+    "Trusted builder files checked with held descriptors and before/after identities; no defense against privileged hostile concurrent modification.",
+    "Filesystem semantics rely on the authenticated previously reviewed ROOT-A, ROOT-B and STATE artifacts; this review proves their exact full-byte inclusion."
+  ],
+  "output_directory": "/var/lib/a733-public-config-nvme-source-20261109-01/project/out/public-config-nvme-image-20261109-01",
+  "retained_review_evidence": {
+    "verify.py": {
+      "path": "/var/tmp/a733-public-config-nvme-artifact-review-20261109-01/verify.py",
+      "bytes": 13550,
+      "sha256": "d55d37097eb44a68c0aa7be89798dbf3e38abf5aed72ce49e52a34349863e5d9"
+    },
+    "review.log": {
+      "path": "/var/tmp/a733-public-config-nvme-artifact-review-20261109-01/review.log",
+      "bytes": 2595,
+      "sha256": "5bffd0f45812bcf30e5e27fd69af40c8c764b424baab72b4d19206323f3b7ca3"
+    },
+    "result.json": {
+      "path": "/var/tmp/a733-public-config-nvme-artifact-review-20261109-01/result.json",
+      "bytes": 20731,
+      "sha256": "f36f1a1401dc346cf469bcbbebef2ad76aef7343e617d091048aa1d35fbe95c1"
+    },
+    "review-unit-loaded-status.txt": {
+      "path": "/var/tmp/a733-public-config-nvme-artifact-review-20261109-01/review-unit-loaded-status.txt",
+      "bytes": 677,
+      "sha256": "3d9ce1f65724a31acd9f4112266bb9cf24244960a17890f9c7efe736d9e1cca8"
+    },
+    "producer-unit-final-status.txt": {
+      "path": "/var/tmp/a733-public-config-nvme-artifact-review-20261109-01/producer-unit-final-status.txt",
+      "bytes": 1743,
+      "sha256": "fdb53d25908e9ae4754e1d265a69d90da0a9924bdeba6d2f7df34ab8af624bfb"
+    },
+    "build-01.log": {
+      "path": "/var/lib/a733-public-config-nvme-source-20261109-01/build-01.log",
+      "bytes": 135014,
+      "sha256": "b82bcd1ae72fbe99e1fb81ed13c5ea4759bb7504cade783c47ed7e95a96d5c22"
+    }
+  },
+  "verification_environment": {
+    "python": "3.10.12 (main, Aug 31 2026, 10:18:17) [GCC 11.4.0]",
+    "zlib_runtime": "1.2.11",
+    "maximum_review_cpu_quota_percent": 100,
+    "maximum_review_memory_bytes": 1073741824,
+    "full_raw_staging_created": false
+  },
+  "classification": "One coherent resolver-readable full NVMe stream constructed and independently verified; unbooted and not repeated",
+  "independent_review": {
+    "path": "tmp/public-config-nvme-artifact-review-20261109.json",
+    "bytes": 26754,
+    "sha256": "6efec1cd824163f432df015f4c55e1201501e10b51fda0110c1907dec4af81cb",
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "result": "PASS"
+  },
+  "producer": {
+    "exit_status": 0,
+    "source_revision": "f9994be634ffd5f2963c10d3bcbde32adfa27f92",
+    "cpu_quota_percent": 200,
+    "memory_max_bytes": 3221225472,
+    "resources": {
+      "admission": {
+        "free_bytes": 30538190848,
+        "available_memory_bytes": 7559290880
+      },
+      "admission_guard": 23760999827,
+      "output_bound": 2147483648,
+      "scratch_budget": 2164260864,
+      "disk_floor": 3000000000,
+      "memory_floor": 1000000000,
+      "minimum_free_bytes": 29963464704,
+      "minimum_available_memory_bytes": 7058448384
+    }
+  },
+  "compatibility": {
+    "unchanged_boot": {
+      "bytes": 536870912,
+      "sha256": "cc2ad988fdc57579178766acaf09c71d688aaadec94b722593192cb24426c313"
+    },
+    "selected_root": {
+      "KERNEL_RELEASE": "6.6.98-a733-diag",
+      "ROOT_MARKER_SHA256": "286494073ce3a0b69443f96389dbbce11ab015705f7e9f05c7a7cf06503da866",
+      "ROOT_UUID": "a7330000-0000-4000-8000-00000000000a",
+      "SCHEMA": "1",
+      "SLOT": "A"
+    },
+    "state_uuid": "360dfb39-f49f-487e-b307-0bb887c854c5",
+    "root_components": "docs/evidence/public-config-roots-20261109.json",
+    "state_component": "docs/evidence/public-config-state-build-20261109.json"
+  },
+  "native_metadata": {
+    "path": "out/public-config-nvme-build-20261109-01/completed/manifest.json",
+    "bytes": 117427,
+    "sha256": "9486db64da09bd4454a63b3a1ca9f486bab0c4fa37de4d28c01c7bea48e3b662"
+  },
+  "normalized_followup": "docs/evidence/normalized-nvme-profile-preparation-20261109.json"
+}

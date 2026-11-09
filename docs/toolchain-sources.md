@@ -61,7 +61,10 @@ and assume it corresponds to the pinned binary.
 The acquisition admitted the unchanged builder 3 GiB free-space floor plus all
 97,977,913 archive bytes and completed with 21,811,671,040 bytes free. It installed
 no packages and wrote no physical device. Future source acquisition must measure
-capacity again; no further LV growth or guard reduction is authorized.
+capacity again. All free capacity on the Ubuntu builder is now authorized for
+use/expansion; revalidate exact targets and retain independent review as recorded
+in the [current host assessment](build-host-assessment.md#november-9-capacity-and-standing-authorization).
+Resource guards remain unchanged.
 
 ## Exact Git source snapshots
 

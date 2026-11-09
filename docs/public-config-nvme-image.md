@@ -3,9 +3,10 @@
 `build/public-config-nvme-image.py` prepares a complete regular-file distribution
 from the authenticated protected image, [corrected roots](public-config-roots-20261109.md)
 and [matched STATE](public-config-state.md). [Independent code review and 2,167 privileged Ubuntu tests](evidence/public-config-nvme-preparation-20261109.json)
-pass. The first full production stream now completes with producer exit 0;
-independent actual-artifact review is running. Repeat construction and physical
-installation remain pending; the running endurance host is unchanged.
+pass. The first full production stream now passes [independent actual-artifact
+review](evidence/public-config-nvme-image-20261109.json). This uses the original
+resolver-readable root pair; normalized follow-up builds are separate below.
+Physical installation remains pending; the running endurance host is unchanged.
 
 The recipe replaces only the contiguous ROOT-A, ROOT-B and STATE extents:
 **[537,919,488, 17,717,788,672)**, totaling 16 GiB. The complete logical image
@@ -20,6 +21,25 @@ operator-key/configuration and root/STATE pairing. The output manifest updates
 both the three partition payload hashes and the selected root marker. Old
 `source_manifest` metadata remains historical; new resource/tool measurements
 and derivation proofs describe this invocation.
+
+## Verified first production stream
+
+Builder output is
+`/var/lib/a733-public-config-nvme-source-20261109-01/project/out/public-config-nvme-image-20261109-01`,
+from committed source `f9994be634ffd5f2963c10d3bcbde32adfa27f92`.
+Its gzip is **545,642,173 bytes**, SHA-256
+`f61fefa5c503136e14b9c1870ece53b90cdebcfb107a5511cf9621bcf00a5c7f`.
+The full logical hash is
+`de2298316a6c7d39d90233c71c02097e3f1b62a4e546f6a92123b7b5fc6b67e6`;
+the 117,427-byte manifest hash is
+`9486db64da09bd4454a63b3a1ca9f486bab0c4fa37de4d28c01c7bea48e3b662`.
+
+The independent verifier imports no producer code. It decodes both complete
+256,060,514,304-byte streams, checks framing/CRC/EOF, partition/range hashes and
+both GPT tables, and directly compares all **238,880,645,120 bytes outside** the
+replacement interval. Every byte inside matches its pinned root or STATE source.
+One construction is verified; no repeat or physical boot is claimed. This is an
+unpersonalized distribution, not a backup of the running host.
 
 ## Prepared invocation
 
