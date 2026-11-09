@@ -1,6 +1,11 @@
 # Future matched second-candidate deployment
 
-**The current board action remains the [existing-install repair](installed-host-repair-20261107.md), SSH with both keys, then the [actual KVM guest](kvm-first-guest.md). Do not reinstall to repair management.** This guide prepares a later deliberate deployment of the second candidate; no physical write is requested by this document. Construction and file verification pass; physical deployment and independent reproduction remain open.
+**Historical second-candidate procedure.** Its `feaa…` STATE and payloads are
+not the current protected `360d…` candidate. Use the [current image map](current-images.md)
+and [prepared protected deployment guide](deploy-protected-20261109.md).
+Leave the active endurance workload undisturbed; no reinstallation is requested.
+The commands below are retained as historical construction/rehearsal context.
+
 
 The future target is **SPCC M.2 PCIe SSD**, serial **134807190FC700149277**, **256,060,514,304 bytes**, **512/512-byte logical/physical sectors**. Existing discard authorization persists for this exact drive. Revalidate identity and idle state immediately before writing. No backup is created. SPI programming is outside this procedure.
 

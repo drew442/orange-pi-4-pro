@@ -6,7 +6,9 @@ A [fresh 24-hour workload](endurance-run-20261109.md) is in progress with UART
 capture. Firmware currently loads the Linux boot files from SD and uses NVMe root.
 The matching NVMe BOOT component is installed; firmware loading it remains
 unperformed. No operator flashing is currently requested. Release acceptance remains
-incomplete; the previous endurance failure is still unexplained.
+incomplete; the previous endurance failure is still unexplained. The
+[prepared full deployment procedure](deploy-protected-20261109.md) uses this
+matched candidate; it remains unexecuted and waits for retained workload evidence.
 
 Paths below are relative to `/home/drew/orange-pi-4-pro` on codex.
 

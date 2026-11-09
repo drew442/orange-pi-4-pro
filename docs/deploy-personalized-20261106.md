@@ -3,13 +3,16 @@
 **Historical procedure:** use the [current image map](current-images.md) for the
 corrected `360d…` installation and same-board SSH RAM recovery. The earlier
 `00fd…` host bootstraps below do not select the current NVMe state. Capture the
-requested serial diagnostics before changing media.
+ongoing endurance evidence before changing media. The
+[prepared protected deployment](deploy-protected-20261109.md) supplies the current
+full-image/STATE pins.
 
 The [November 7 physical logs](evidence/installed-host-first-boot-20261107.json)
 show successful NVMe installation/readback and installed root A reaching systemd.
-DHCP/SSH failed. **For this existing installation, use the
-[machine-id permission repair](installed-host-repair-20261107.md); do not repeat
-NVMe installation.** Actual SSH and KVM guest execution remain pending.
+DHCP/SSH failed at that historical boot; the
+[machine-id permission repair](installed-host-repair-20261107.md) subsequently
+worked. Current SSH and actual KVM guest execution pass; full release acceptance
+remains open. Do not repeat this historical NVMe installation to repair management.
 
 The commands below record the existing pinned November 6 installer. That image
 still uses the old typed confirmations and mandatory readback. Updated source

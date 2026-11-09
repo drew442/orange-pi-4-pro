@@ -21,7 +21,8 @@ The exact raw bootstrap input is **268,435,456 bytes**, SHA-256
 `ab5e8c2c846cbbd51b61bef6831d7e4d1498c29fefbf47d74301b1f3bb0ad207`.
 Its builder location is
 `/var/lib/a733-maintenance-validation-20261108-01/project/out/protected-state-bootstrap-20261109-01/a733-host-sd.img`.
-This protected STATE bootstrap selects state `360d…` and remains **UNBOOTED**.
+This protected STATE bootstrap selects state `360d…` and now boots physically;
+see the [maintenance receipt](evidence/protected-state-maintenance-20261109.json).
 It replaces the historical `f02c…` input pin; that earlier image physically
 booted, but did not block writes during its initial filesystem probe.
 The source firmware is unchanged. Consult the evolving status document for the
@@ -31,8 +32,9 @@ The known-target write is covered by the operator's persisted
 [storage authorization](evidence/storage-write-authorization-20261108.json).
 The helper's `--write` flag explicitly selects that maintenance operation;
 there is no additional prompt. This helper is not a general disk installer.
-Independent source review passes. Live plan checks remain required before its first write. Host tests do not prove
-hardware behavior.
+Independent source review and the recorded first physical write pass. Live plan
+checks remain required before each later write. Host tests do not prove hardware
+behavior.
 
 ## Preparation and commands
 

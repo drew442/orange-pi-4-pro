@@ -7,8 +7,9 @@ immutable SD boot files with zero routine SD writes.
 Start with [implementation status](docs/implementation-status.md) and the
 [current images](docs/current-images.md). The corrected installation has booted,
 synchronized time and run a real KVM guest through restoration, clean shutdown,
-checkpoint and restart. The 60-second endurance smoke passed; the 24-hour attempt
-lost SSH management and awaits serial diagnosis. **Release acceptance is incomplete.**
+checkpoint and restart. The protected host now runs a fresh 24-hour workload
+with independent UART capture/control; the earlier SSH failure remains
+unexplained. **Release acceptance is incomplete.**
 
 The [build/deployment plan](docs/hypervisor-plan.md),
 [Ubuntu build-host assessment](docs/build-host-assessment.md),

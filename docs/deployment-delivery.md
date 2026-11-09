@@ -1,4 +1,10 @@
-# Authenticated LAN deployment delivery
+# Historical November 6 LAN deployment delivery
+
+This endpoint and its image pins belong to the earlier `00fd…` deployment.
+They are not inputs for the current protected candidate. Use the
+[current image map](current-images.md) and
+[prepared protected deployment](deploy-protected-20261109.md). Historical
+service/transfer descriptions below are not a current availability check.
 
 The prepared helper serves a verified compressed installation bundle over HTTPS
 on `192.168.1.132:8443` (codex). It has passed native TLS tests and independent

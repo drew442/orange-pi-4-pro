@@ -1,0 +1,247 @@
+{
+  "schema": 1,
+  "date": "2026-11-09",
+  "classification": "independent software deployment preflight; physical full deployment unperformed",
+  "hardware_acceptance": false,
+  "inputs": {
+    "docs/deploy-protected-20261109.md": {
+      "bytes": 13020,
+      "sha256": "bb8eba78471a0357e4100fb8891801df45252dd575573c2ea81ad5fe1979cb14"
+    },
+    "docs/known-bootstrap-sd-writer.md": {
+      "bytes": 6406,
+      "sha256": "ef8ece6d53adaeb21b3137357896b02316ce26faa3333a9056aeaaff8e24c00a"
+    },
+    "scripts/install-nvme.py": {
+      "bytes": 26072,
+      "sha256": "6f356eb05ea891981966c1d08b7174fe331823da3cd118971cfd5b2c37110b12"
+    },
+    "scripts/plan-nvme.py": {
+      "bytes": 7815,
+      "sha256": "8ed9075de6ab4425457aa3f309847f2e66b134691f0fe80ac5eb7c43f1746e31"
+    },
+    "scripts/nvme_layout.py": {
+      "bytes": 6162,
+      "sha256": "742a71575d94c9be29e01af3f50dc0d0639b38800c3e5a86ded49ac8906e518f"
+    },
+    "scripts/personalize-known-host-state.py": {
+      "bytes": 18303,
+      "sha256": "59772d1a55df6edf44c6e1c80c0c09bde4fbcbeff9bf4ef957fda1c5dcef9321"
+    },
+    "scripts/write-known-bootstrap-sd.py": {
+      "bytes": 16081,
+      "sha256": "c6e53ebd84e894f52fca623ce35fce2136733822c982e5c9e3f5d561abdabc34"
+    },
+    "out/protected-nvme-candidate-20261109/manifest.json": {
+      "bytes": 50191,
+      "sha256": "f19b5b58c12030422b36c203471026209731fa413ea1ce8d9196121861cf8eb5"
+    },
+    "out/ssh-ram-installer-20261108/manifest-03.json": {
+      "bytes": 664617,
+      "sha256": "cc2f5f467d9dd1ab13fd7a1eaea21119dc29b171d8737b208e2d1f37528dc8a6"
+    }
+  },
+  "independent_review": {
+    "path": "tmp/protected-deployment-review-20261109.json",
+    "sha256": "2ac70a0b0657772e91bbf731876ffbf8af26f6e61d11f019953e8f8c9948d420",
+    "result": {
+      "schema": 1,
+      "date": "2026-11-09",
+      "result": "PASS",
+      "classification": "Independent prepared deployment source/document review and bounded read-only software reproduction",
+      "hardware_acceptance": false,
+      "fresh_full_installation_performed": false,
+      "independent_physical_deployment_reproduction": "UNPERFORMED",
+      "physical_storage_written": false,
+      "ssh_or_hardware_access": false,
+      "blockers": [],
+      "reviewed_documents": {
+        "docs/deploy-protected-20261109.md": {
+          "bytes": 13020,
+          "sha256": "bb8eba78471a0357e4100fb8891801df45252dd575573c2ea81ad5fe1979cb14"
+        },
+        "docs/known-bootstrap-sd-writer.md": {
+          "bytes": 6406,
+          "sha256": "ef8ece6d53adaeb21b3137357896b02316ce26faa3333a9056aeaaff8e24c00a"
+        },
+        "README.md": {
+          "bytes": 1309,
+          "sha256": "743b6387663fd99f7dd224c851fc9078a0ecd4de23fcc51f8644b6dc7288a8b1"
+        },
+        "docs/deployment-delivery.md": {
+          "bytes": 3668,
+          "sha256": "c4704c435c8ae6db9c53a595b3892daf4be86f6fddde6428f8dd89e97ed87ba2"
+        },
+        "docs/deploy-candidate-20261107.md": {
+          "bytes": 15450,
+          "sha256": "c2c97db1ed0258d054bc42eb454698b8c8a2e87492ab25e76ff12d04eb10f758"
+        },
+        "docs/deploy-personalized-20261106.md": {
+          "bytes": 15375,
+          "sha256": "a31513c56cbd4a3f7ca54428680c6903a89a11a5e97e88947c3ab03d38a0bccd"
+        }
+      },
+      "shell_syntax": [
+        {
+          "document": "docs/deploy-protected-20261109.md",
+          "shell_block": 1,
+          "shell": "sh",
+          "result": "PASS"
+        },
+        {
+          "document": "docs/deploy-protected-20261109.md",
+          "shell_block": 2,
+          "shell": "sh",
+          "result": "PASS"
+        },
+        {
+          "document": "docs/deploy-protected-20261109.md",
+          "shell_block": 3,
+          "shell": "bash",
+          "result": "PASS"
+        },
+        {
+          "document": "docs/deploy-protected-20261109.md",
+          "shell_block": 4,
+          "shell": "sh",
+          "result": "PASS"
+        },
+        {
+          "document": "docs/deploy-protected-20261109.md",
+          "shell_block": 5,
+          "shell": "sh",
+          "result": "PASS"
+        },
+        {
+          "document": "docs/deploy-protected-20261109.md",
+          "shell_block": 6,
+          "shell": "sh",
+          "result": "PASS"
+        },
+        {
+          "document": "docs/deploy-protected-20261109.md",
+          "shell_block": 7,
+          "shell": "sh",
+          "result": "PASS"
+        },
+        {
+          "document": "docs/known-bootstrap-sd-writer.md",
+          "shell_block": 1,
+          "shell": "sh",
+          "result": "PASS"
+        }
+      ],
+      "current_sources": {
+        "scripts/install-nvme.py": {
+          "bytes": 26072,
+          "sha256": "6f356eb05ea891981966c1d08b7174fe331823da3cd118971cfd5b2c37110b12"
+        },
+        "scripts/plan-nvme.py": {
+          "bytes": 7815,
+          "sha256": "8ed9075de6ab4425457aa3f309847f2e66b134691f0fe80ac5eb7c43f1746e31"
+        },
+        "scripts/nvme_layout.py": {
+          "bytes": 6162,
+          "sha256": "742a71575d94c9be29e01af3f50dc0d0639b38800c3e5a86ded49ac8906e518f"
+        },
+        "scripts/personalize-known-host-state.py": {
+          "bytes": 18303,
+          "sha256": "59772d1a55df6edf44c6e1c80c0c09bde4fbcbeff9bf4ef957fda1c5dcef9321"
+        },
+        "scripts/write-known-bootstrap-sd.py": {
+          "bytes": 16081,
+          "sha256": "c6e53ebd84e894f52fca623ce35fce2136733822c982e5c9e3f5d561abdabc34"
+        }
+      },
+      "actual_candidate": {
+        "manifest": {
+          "bytes": 50191,
+          "sha256": "f19b5b58c12030422b36c203471026209731fa413ea1ce8d9196121861cf8eb5"
+        },
+        "files": {
+          "nvme.img": {
+            "bytes": 256060514304,
+            "sha256": "675d6ba87e53daaf3517f331948a3be5924d79ec21a5143c7bc9f5dda4f0b386"
+          },
+          "nvme.img.gz": {
+            "bytes": 545636009,
+            "sha256": "584a958c63fb01f62c2162c733aeb004082088952c6e428d6406087492e315e2"
+          }
+        },
+        "state_uuid": "360dfb39-f49f-487e-b307-0bb887c854c5",
+        "validate_manifest": "PASS",
+        "source_constructed": false,
+        "encoded_image_rehashed": false,
+        "full_decode_repeated": false,
+        "image_size_checked": true,
+        "complete_artifact_evidence_reused": "docs/evidence/protected-full-nvme-image-20261109.json"
+      },
+      "actual_ram_manifest": {
+        "path": "out/ssh-ram-installer-20261108/manifest-03.json",
+        "record": {
+          "bytes": 664617,
+          "sha256": "cc2f5f467d9dd1ab13fd7a1eaea21119dc29b171d8737b208e2d1f37528dc8a6"
+        },
+        "bound_to_evidence": true,
+        "tool_entries": {
+          "/usr/lib/a733-installer/install-nvme.py": {
+            "bytes": 26072,
+            "mode": 33188,
+            "sha256": "6f356eb05ea891981966c1d08b7174fe331823da3cd118971cfd5b2c37110b12"
+          },
+          "/usr/lib/a733-installer/plan-nvme.py": {
+            "bytes": 7815,
+            "mode": 33188,
+            "sha256": "8ed9075de6ab4425457aa3f309847f2e66b134691f0fe80ac5eb7c43f1746e31"
+          },
+          "/usr/lib/a733-installer/nvme_layout.py": {
+            "bytes": 6162,
+            "mode": 33188,
+            "sha256": "742a71575d94c9be29e01af3f50dc0d0639b38800c3e5a86ded49ac8906e518f"
+          }
+        },
+        "scp_sftp_executables_absent": true,
+        "busybox_applet_install_verified_from_pinned_init": true
+      },
+      "source_review": {
+        "exact_target": "/dev/nvme0n1; SPCC M.2 PCIe SSD; serial 134807190FC700149277; 256060514304 bytes; 512/512 sectors",
+        "source_authentication": "Pinned manifest plus prepare encoded-byte authentication, repeated before apply writes; raw hash/gzip integrity checked during write; no preliminary full decode",
+        "recovery": "Current private same-board RAM d3a02224 image; actual DHCP discovery, pinned host checking, current independently recorded RAM boot UUID; historical hardcoded transition explicitly excluded",
+        "identity_order": "Retain endurance/guest/identity off-device first; RAM recovery; full NVMe install; three pinned identity files restored to STATE; protected host SD written; receipts retained/fsynced off-board; only then clean reboot",
+        "identity_material_review": "Metadata and source constants only; private identity archive contents never opened",
+        "storage_authorization": "Known board SD/NVMe authorization persists; source installer still requires its concrete TTY y/N prompt; SD helper uses explicit preauthorized --write",
+        "readback_progress": "NVMe --verify-readback optional; normal bytes_verified=0/readback_requested=false; progress to stderr; SD flushes without readback; no benchmark requested",
+        "sd": "Only known SU02G CID 035344535530324780716f216e00a8f5, 1977614336 bytes; writer authenticates 268435456-byte raw ab5e8c2c payload and writes its prefix only; no SPI operation",
+        "tests_inspected": [
+          "tests/test_install_nvme.py",
+          "tests/test_known_host_state_personalization.py",
+          "tests/test_known_bootstrap_sd_writer.py"
+        ],
+        "tests_scope": "Existing fixtures cover source authentication, interactive authorization, discard policy, target geometry/busy guards, optional readback/progress, identity refusal/durability/cleanup, exact SD guards/short writes; no new tests or fixture/device writes performed",
+        "known_sd_doc_diff": "Recorded maintenance SD receipt matches ab5e raw input/268435456 bytes, successful first write, subsequent protected physical boot; updated statements supported",
+        "additional_documentation_diffs": "PASS: README preserves unexplained earlier failure and incomplete acceptance while reflecting fresh workload/UART; three historical guides route obsolete pins/endpoint/current-repair claims to current prepared procedure."
+      },
+      "limitations": [
+        "Current 24-hour board workload was untouched.",
+        "No installation, network transfer, device read/write, mount, services, reboot or physical reproduction performed.",
+        "Complete 256 GB decode and encoded-image hash not repeated; prior independent complete artifact PASS reused.",
+        "Prepared guide PASS does not grant physical release acceptance; fresh full installation, independent deployment reproduction and listed hardware gates remain unperformed."
+      ],
+      "git_diff_check": "PASS"
+    }
+  },
+  "proven": [
+    "Actual retained candidate manifest accepted by pure installer validation without opening a target.",
+    "Retained RAM source manifest is authenticated to construction evidence; installer/planner/layout pins match current source.",
+    "Shell blocks parse; scoped local links and diff checks pass.",
+    "Fullimage installer confirms yes/no; no default readback; source decoding/hashing occurs during writes."
+  ],
+  "unperformed": [
+    "No board, SD, NVMe or SPI write in this preparation.",
+    "No reboot or guest state change.",
+    "No fresh full installation or clean-environment independent physical procedure reproduction.",
+    "No hardware release acceptance."
+  ],
+  "current_workload": "Existing24-hour workload/serialcapture remain undisturbed.",
+  "authorization": "Known board SD/NVMe/SPI authorization persists; no repeated permission request for these targets."
+}

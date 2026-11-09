@@ -108,9 +108,12 @@ power and full thermal endurance remain unproven.
    retained outcome evidence. [Preparation evidence](evidence/warm-boot-preparation-20261109.json).
    Preserve kernel/control evidence on recurrence. Audit final guest/CPU exits, duration and post-run
    health; pending collector exit 2 alone is not acceptance.
-2. After the workload, reproduce installation from the verified coherent full
-   stream with protected SD, retain same-board identity and required guest
-   backups, and complete independent deployment review. Keep the running
+2. After the workload, follow the independently reviewed
+   [protected full-deployment procedure](deploy-protected-20261109.md), retain
+   same-board identity and guest backups, and reproduce physical deployment.
+   [Software preflight](evidence/protected-deployment-preparation-20261109.json)
+   accepts the actual manifest and RAM tool pins; physical execution and clean
+   independent reproduction remain unperformed. Keep the running
    workload undisturbed until its evidence is retained.
 3. Prepare SPI recovery/programming and matched NVMe-first firmware trials.
    Otherwise finish complete immutable-SD proof. The blank XM25QU128C SPI backup
