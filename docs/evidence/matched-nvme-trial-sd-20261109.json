@@ -1,0 +1,735 @@
+{
+  "schema": 1,
+  "date": "2026-11-09",
+  "classification": "current-matched NVMe-first trial SD construction; UNBOOTED",
+  "hardware_acceptance": false,
+  "source_git_baseline": "c8a65e1520d014234855c3ded5143a45ca2d5744",
+  "sources": [
+    {
+      "path": "build/matched-nvme-trial-sd.py",
+      "bytes": 14982,
+      "sha256": "8ff3bb24b20dc1753710af2c28d17b6b75259bda30ebe8b3bc847929b1431340"
+    },
+    {
+      "path": "tests/test_matched_nvme_trial_sd.py",
+      "bytes": 13523,
+      "sha256": "0680610eb215a1293d70026ab3288bd9c23215e3908dccdbcf816f81865dc389"
+    },
+    {
+      "path": "docs/matched-nvme-trial-sd-20261109.md",
+      "bytes": 5478,
+      "sha256": "cd9f99d1285912e570109cbb9ce17bcb1dcd27ec69071bf620ee5850d338be47"
+    }
+  ],
+  "construction": {
+    "two_matching_outputs": true,
+    "builds": [
+      {
+        "output": "/var/lib/a733-matched-nvme-trial-20261109-01/out/matched-nvme-trial-sd-01",
+        "manifest": {
+          "bytes": 4191,
+          "sha256": "9d31f95d75de4bc84b2d9617ddd057902323141bcf61d222c61d77282cb4f4df"
+        },
+        "outputs": {
+          "a733-host-sd.img": {
+            "bytes": 268435456,
+            "sha256": "8470ff59290016bb2f99c051f371ab20ac431e75fd17dec4e0e0de5c665613d9"
+          },
+          "a733-host-sd.img.gz": {
+            "bytes": 17273151,
+            "sha256": "5abb6ac92112a3b87a17328eab2f193aa49833effc6b4aa44557fe7271c2a0c8"
+          }
+        },
+        "resources": [
+          {
+            "available_memory_bytes": 7536361472,
+            "free_bytes": 23208988672,
+            "phase": "admission"
+          },
+          {
+            "available_memory_bytes": 7534522368,
+            "free_bytes": 23208984576,
+            "phase": "copy"
+          },
+          {
+            "available_memory_bytes": 7529762816,
+            "free_bytes": 22940549120,
+            "phase": "preservation"
+          },
+          {
+            "available_memory_bytes": 7524528128,
+            "free_bytes": 22940549120,
+            "phase": "gzip"
+          },
+          {
+            "available_memory_bytes": 7526744064,
+            "free_bytes": 22923272192,
+            "phase": "gzip-verification"
+          },
+          {
+            "available_memory_bytes": 7527796736,
+            "free_bytes": 22923272192,
+            "phase": "final"
+          }
+        ],
+        "preservation": {
+          "boot_partition": {
+            "bytes": 234881024,
+            "sha256": "dca66b00a1287f860759685e2aeeb011f935a57a628f02449a71456542009003"
+          },
+          "byte_for_byte_equal": true,
+          "concatenated_sha256": "ae3307af6e34cf08e1a898515f3b3d78f37ac43431c9b7fb53ab54e99f0b9570",
+          "ranges": [
+            [
+              0,
+              16793600
+            ],
+            [
+              18186240,
+              268435456
+            ]
+          ]
+        },
+        "hardware_acceptance": false
+      },
+      {
+        "output": "/var/lib/a733-matched-nvme-trial-20261109-01/out/matched-nvme-trial-sd-02",
+        "manifest": {
+          "bytes": 4191,
+          "sha256": "2878bbaca8f232497e505151ed30cc7c8475a50fc954cde8087149223053e9a2"
+        },
+        "outputs": {
+          "a733-host-sd.img": {
+            "bytes": 268435456,
+            "sha256": "8470ff59290016bb2f99c051f371ab20ac431e75fd17dec4e0e0de5c665613d9"
+          },
+          "a733-host-sd.img.gz": {
+            "bytes": 17273151,
+            "sha256": "5abb6ac92112a3b87a17328eab2f193aa49833effc6b4aa44557fe7271c2a0c8"
+          }
+        },
+        "resources": [
+          {
+            "available_memory_bytes": 7526772736,
+            "free_bytes": 22923264000,
+            "phase": "admission"
+          },
+          {
+            "available_memory_bytes": 7520301056,
+            "free_bytes": 22923259904,
+            "phase": "copy"
+          },
+          {
+            "available_memory_bytes": 7523049472,
+            "free_bytes": 22654824448,
+            "phase": "preservation"
+          },
+          {
+            "available_memory_bytes": 7523049472,
+            "free_bytes": 22654824448,
+            "phase": "gzip"
+          },
+          {
+            "available_memory_bytes": 7524560896,
+            "free_bytes": 22637547520,
+            "phase": "gzip-verification"
+          },
+          {
+            "available_memory_bytes": 7524642816,
+            "free_bytes": 22637547520,
+            "phase": "final"
+          }
+        ],
+        "preservation": {
+          "boot_partition": {
+            "bytes": 234881024,
+            "sha256": "dca66b00a1287f860759685e2aeeb011f935a57a628f02449a71456542009003"
+          },
+          "byte_for_byte_equal": true,
+          "concatenated_sha256": "ae3307af6e34cf08e1a898515f3b3d78f37ac43431c9b7fb53ab54e99f0b9570",
+          "ranges": [
+            [
+              0,
+              16793600
+            ],
+            [
+              18186240,
+              268435456
+            ]
+          ]
+        },
+        "hardware_acceptance": false
+      }
+    ],
+    "hardware_acceptance": false
+  },
+  "builder": "drew@build.drewnet.online Ubuntu22.04",
+  "independent_source_review": {
+    "record": {
+      "path": "tmp/matched-nvme-trial-review-20261109.json",
+      "bytes": 7953,
+      "sha256": "aa073fdc7fc851e03596167b50ec2ff8f90ce1e13e1ecbbed2927a56d4bdc2a7"
+    },
+    "summary": {
+      "schema": 1,
+      "date_utc": "2026-11-09T10:39:32.064219+00:00",
+      "operation": "independent-source-review-matched-nvme-trial-sd",
+      "decision": "PASS",
+      "blockers": [],
+      "classification": "Frozen-source and synthetic regular-file checks only; permits coordinator full-size construction, not deployment or physical acceptance",
+      "frozen_files": [
+        {
+          "path": "build/matched-nvme-trial-sd.py",
+          "bytes": 14982,
+          "sha256": "8ff3bb24b20dc1753710af2c28d17b6b75259bda30ebe8b3bc847929b1431340"
+        },
+        {
+          "path": "tests/test_matched_nvme_trial_sd.py",
+          "bytes": 12446,
+          "sha256": "e40566e3ba499793ca46d55c747635a046a1bd59ba99500224e7b75e9905c24b"
+        }
+      ],
+      "owned_changes": [
+        "tmp/matched-nvme-trial-review-20261109.json",
+        "tmp/matched-nvme-trial-review-20261109/"
+      ],
+      "project_files_edited": false,
+      "full_artifacts_constructed": false,
+      "physical_device_writes": false,
+      "ssh_or_services_used": false,
+      "hardware_acceptance": false,
+      "checks": [
+        {
+          "name": "actual additions inspected",
+          "result": "PASS",
+          "evidence": [
+            "build/matched-nvme-trial-sd.py:1-350",
+            "tests/test_matched_nvme_trial_sd.py:1-249"
+          ],
+          "notes": "Complete new-file diffs inspected. CLI is sole caller; related VGIC bootstrap raw firmware placement and prior NVMe trial transport range agree."
+        },
+        {
+          "name": "fixed input/provenance bindings",
+          "result": "PASS",
+          "evidence": "tmp/matched-nvme-trial-review-20261109/pin-audit.json",
+          "notes": "All four complete closure pins match current files. Registry package, SPI full candidate and protected current SD base agree with pinned evidence; base has current STATE UUID, corrected VGIC kernel/DTB and protected init provenance."
+        },
+        {
+          "name": "range closure",
+          "result": "PASS",
+          "evidence": [
+            "build/matched-nvme-trial-sd.py:21",
+            "build/matched-nvme-trial-sd.py:167",
+            "build/matched-nvme-trial-sd.py:261"
+          ],
+          "notes": "Only SPI [262144,1654784) copied into SD [16793600,18186240). Complete outside-range comparison preserves SD boot0/MBR and BOOT [33554432,268435456). No SPI boot0 copy. Raw length remains 268435456, below actual SD 1977614336."
+        },
+        {
+          "name": "path/held-source/output guards",
+          "result": "PASS",
+          "evidence": [
+            "build/matched-nvme-trial-sd.py:59",
+            "build/matched-nvme-trial-sd.py:73",
+            "build/matched-nvme-trial-sd.py:203",
+            "build/matched-nvme-trial-sd.py:248"
+          ],
+          "notes": "Absolute canonical regular inputs, no-follow ancestors, trusted owner/non-world-writable paths, single-link files; held identity/fingerprint and final reauthentication; fresh constrained private output and exclusive file creation; sealed output metadata checked."
+        },
+        {
+          "name": "bounded copies and complete gzip verification",
+          "result": "PASS",
+          "evidence": [
+            "build/matched-nvme-trial-sd.py:120",
+            "build/matched-nvme-trial-sd.py:159",
+            "build/matched-nvme-trial-sd.py:186",
+            "build/matched-nvme-trial-sd.py:275"
+          ],
+          "notes": "1 MiB chunked source hash/copy/gzip. Short writes retried. Entire decoded gzip length/hash/CRC checked, maximum compressed size and expansion enforced. Raw preservation rechecked after compression and source reauthentication."
+        },
+        {
+          "name": "resource admission/runtime enforcement",
+          "result": "PASS",
+          "evidence": [
+            "build/matched-nvme-trial-sd.py:35",
+            "build/matched-nvme-trial-sd.py:148"
+          ],
+          "notes": "Disk admission 3000000000 + 1073741824; runtime floor 3000000000; MemAvailable floor 1000000000. Sampling around major phases and publication. Raw plus bounded gzip at most 537919488 bytes, below scratch budget."
+        },
+        {
+          "name": "fsync publication/error cleanup",
+          "result": "PASS",
+          "evidence": [
+            "build/matched-nvme-trial-sd.py:314",
+            "tmp/matched-nvme-trial-review-20261109/independent-probes.log"
+          ],
+          "notes": "Raw/gzip/receipt and output/parent/repo dirs fsynced. Injected receipt fsync, final directory fsync, final floor and path drift failures leave no producer success receipt. Output path swap cleanup uses held original dir FD and leaves replacement sentinel intact."
+        },
+        {
+          "name": "focused tests",
+          "result": "PASS",
+          "count": 16,
+          "command": "python3 -m unittest discover -s tests -p test_matched_nvme_trial_sd.py -v"
+        },
+        {
+          "name": "independent synthetic probes",
+          "result": "PASS",
+          "count": 8,
+          "command": "python3 tmp/matched-nvme-trial-review-20261109/probes.py",
+          "notes": "Unaligned distinct-pattern fixture, 257-byte chunks and 13-byte short writes, deterministic repeated gzip; same-size source path replacement/closure mutation, output inode replacement, runtime disk floor, final directory fsync failure, publication path swap sentinel, truncated/extra-member/oversized gzip rejection."
+        },
+        {
+          "name": "syntax/CLI/whitespace",
+          "result": "PASS",
+          "notes": "AST parsed; stdlib-only import closure confirmed; CLI help exposes only required input/output paths. git diff --check and no-index --check of both additions pass."
+        }
+      ],
+      "limits": [
+        "Trusted, quiescent root/Drew-owned environment is a precondition. Predicate does not exclude all group writers or hostile privileged mutation; this was explicitly outside review requirements.",
+        "Tests change pins/ranges/resource thresholds only in process. No complete actual SD output, qualified Jammy suite or independent full artifact inspection performed in this review.",
+        "Coordinator must construct two fresh full-size artifacts, verify complete raw/gzip/BOOT preservation and run qualified Jammy checks before later trial use.",
+        "Physical firmware NVMe file loading, default NVMe boot, manual SD fallback, current live GPT/BOOT file inventory, zero routine SD writes, actual KVM and release gates remain unwaived. No running endurance workload was disturbed.",
+        "SPI programming/recovery, SD-removed boot, rollback/interruption and physical acceptance are not established by this producer."
+      ],
+      "evidence": [
+        {
+          "path": "tmp/matched-nvme-trial-review-20261109/source.diff",
+          "bytes": 15522,
+          "sha256": "9b3c14824671c73be7e3046917d8bda719f16488f152d9c92df05ad58493732f"
+        },
+        {
+          "path": "tmp/matched-nvme-trial-review-20261109/tests.diff",
+          "bytes": 12914,
+          "sha256": "676188a28c51dcb0558096d3caa1aa04e56cc0e39386f90130ce61e441a73a30"
+        },
+        {
+          "path": "tmp/matched-nvme-trial-review-20261109/focused-tests.log",
+          "bytes": 5020,
+          "sha256": "aefdd5c3b35eb67b81008f92259f17867745c5731b4d2e58aaf2e572c7319778"
+        },
+        {
+          "path": "tmp/matched-nvme-trial-review-20261109/probes.py",
+          "bytes": 7703,
+          "sha256": "6f27bbcb4b1789b7abb2b411e537a9e9d0a167096e8e50fc1e82bb64291c1681"
+        },
+        {
+          "path": "tmp/matched-nvme-trial-review-20261109/independent-probes.log",
+          "bytes": 3556,
+          "sha256": "257bd1516eab6ecadc5d9f7263fb68ec2914bd225c108076b9e0ceb9d08af87f"
+        },
+        {
+          "path": "tmp/matched-nvme-trial-review-20261109/pin-audit.json",
+          "bytes": 1245,
+          "sha256": "1310cdb09fe4d320de535706f0270ae7688be536b1d004887b0ebf288e283a91"
+        },
+        {
+          "path": "tmp/matched-nvme-trial-review-20261109/cli-help.log",
+          "bytes": 506,
+          "sha256": "a90ef4c254888a4eceeb73270db7614584d1fe248f67a2807db97af819ee58fa"
+        },
+        {
+          "path": "tmp/matched-nvme-trial-review-20261109/source-whitespace.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "tmp/matched-nvme-trial-review-20261109/tests-whitespace.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    }
+  },
+  "independent_actual_artifact_review": {
+    "record": {
+      "path": "tmp/matched-nvme-trial-artifact-review-20261109.json",
+      "bytes": 10794,
+      "sha256": "47d0cb1afc88fa55ce950d9f20780a388336ca57791839dbaf2f96a2ad461e79"
+    },
+    "summary": {
+      "schema": 1,
+      "date_utc": "2026-11-09T10:47:58.510519+00:00",
+      "operation": "independent-read-only-actual-matched-nvme-trial-artifact-review",
+      "decision": "PASS",
+      "blockers": [],
+      "classification": "Two complete constructions on the same qualified builder, independently checked; UNBOOTED software artifacts only",
+      "source_review_preserved": "tmp/matched-nvme-trial-review-20261109.json",
+      "producer": {
+        "path": "build/matched-nvme-trial-sd.py",
+        "bytes": 14982,
+        "sha256": "8ff3bb24b20dc1753710af2c28d17b6b75259bda30ebe8b3bc847929b1431340"
+      },
+      "updated_test_fixture": {
+        "file": {
+          "path": "tests/test_matched_nvme_trial_sd.py",
+          "bytes": 13523,
+          "sha256": "0680610eb215a1293d70026ab3288bd9c23215e3908dccdbcf816f81865dc389"
+        },
+        "independent_checks": "Reviewed delta only creates and validates missing ignored tmp fixture parent and adds fresh-checkout regression; 17 focused tests pass. Producer unchanged."
+      },
+      "builder_review": {
+        "decision": "PASS",
+        "physical_device_writes": false,
+        "hardware_acceptance": false,
+        "source": {
+          "bytes": 14982,
+          "sha256": "8ff3bb24b20dc1753710af2c28d17b6b75259bda30ebe8b3bc847929b1431340"
+        },
+        "complete_two_build_raw_and_gzip_byte_comparison": true,
+        "review_inputs_unchanged": true,
+        "builds": [
+          {
+            "path": "/var/lib/a733-matched-nvme-trial-20261109-01/out/matched-nvme-trial-sd-01",
+            "manifest": {
+              "bytes": 4191,
+              "sha256": "9d31f95d75de4bc84b2d9617ddd057902323141bcf61d222c61d77282cb4f4df"
+            },
+            "raw": {
+              "bytes": 268435456,
+              "sha256": "8470ff59290016bb2f99c051f371ab20ac431e75fd17dec4e0e0de5c665613d9"
+            },
+            "gzip": {
+              "bytes": 17273151,
+              "sha256": "5abb6ac92112a3b87a17328eab2f193aa49833effc6b4aa44557fe7271c2a0c8"
+            },
+            "complete_gzip_crc_and_byte_comparison": true,
+            "preservation": {
+              "ranges": [
+                [
+                  0,
+                  16793600
+                ],
+                [
+                  18186240,
+                  268435456
+                ]
+              ],
+              "byte_for_byte_equal": true,
+              "concatenated_sha256": "ae3307af6e34cf08e1a898515f3b3d78f37ac43431c9b7fb53ab54e99f0b9570",
+              "boot_partition": {
+                "bytes": 234881024,
+                "sha256": "dca66b00a1287f860759685e2aeeb011f935a57a628f02449a71456542009003"
+              }
+            },
+            "private_root_owned_outputs": true,
+            "recorded_minimum_disk": 22923272192,
+            "recorded_minimum_memory": 7524528128,
+            "mbr": {
+              "disk_signature": "a7330001",
+              "bootable": true,
+              "type": 131,
+              "start_sector": 65536,
+              "sectors": 458752,
+              "remaining_entries_zero": true,
+              "fits_actual_sd_bytes": 1977614336
+            }
+          },
+          {
+            "path": "/var/lib/a733-matched-nvme-trial-20261109-01/out/matched-nvme-trial-sd-02",
+            "manifest": {
+              "bytes": 4191,
+              "sha256": "2878bbaca8f232497e505151ed30cc7c8475a50fc954cde8087149223053e9a2"
+            },
+            "raw": {
+              "bytes": 268435456,
+              "sha256": "8470ff59290016bb2f99c051f371ab20ac431e75fd17dec4e0e0de5c665613d9"
+            },
+            "gzip": {
+              "bytes": 17273151,
+              "sha256": "5abb6ac92112a3b87a17328eab2f193aa49833effc6b4aa44557fe7271c2a0c8"
+            },
+            "complete_gzip_crc_and_byte_comparison": true,
+            "preservation": {
+              "ranges": [
+                [
+                  0,
+                  16793600
+                ],
+                [
+                  18186240,
+                  268435456
+                ]
+              ],
+              "byte_for_byte_equal": true,
+              "concatenated_sha256": "ae3307af6e34cf08e1a898515f3b3d78f37ac43431c9b7fb53ab54e99f0b9570",
+              "boot_partition": {
+                "bytes": 234881024,
+                "sha256": "dca66b00a1287f860759685e2aeeb011f935a57a628f02449a71456542009003"
+              }
+            },
+            "private_root_owned_outputs": true,
+            "recorded_minimum_disk": 22637547520,
+            "recorded_minimum_memory": 7520301056,
+            "mbr": {
+              "disk_signature": "a7330001",
+              "bootable": true,
+              "type": 131,
+              "start_sector": 65536,
+              "sectors": 458752,
+              "remaining_entries_zero": true,
+              "fits_actual_sd_bytes": 1977614336
+            }
+          }
+        ]
+      },
+      "native_retention_review": {
+        "decision": "PASS",
+        "path": "/home/drew/orange-pi-4-pro/out/matched-nvme-trial-20261109-01/retained",
+        "raw_image_staged": false,
+        "review_inputs_unchanged": true,
+        "files": {
+          "a733-host-sd.img.gz": {
+            "bytes": 17273151,
+            "sha256": "5abb6ac92112a3b87a17328eab2f193aa49833effc6b4aa44557fe7271c2a0c8",
+            "private_directory_single_link_regular": true,
+            "file_mode": "0o400",
+            "complete_crc_and_expansion": {
+              "bytes": 268435456,
+              "sha256": "8470ff59290016bb2f99c051f371ab20ac431e75fd17dec4e0e0de5c665613d9"
+            }
+          },
+          "manifest-01.json": {
+            "bytes": 4191,
+            "sha256": "9d31f95d75de4bc84b2d9617ddd057902323141bcf61d222c61d77282cb4f4df",
+            "private_directory_single_link_regular": true,
+            "file_mode": "0o400"
+          },
+          "manifest-02.json": {
+            "bytes": 4191,
+            "sha256": "2878bbaca8f232497e505151ed30cc7c8475a50fc954cde8087149223053e9a2",
+            "private_directory_single_link_regular": true,
+            "file_mode": "0o400"
+          }
+        }
+      },
+      "validation": {
+        "full_raw_and_gzip_sha256": "PASS both constructions",
+        "complete_bounded_gzip_crc_expansion_and_raw_byte_comparison": "PASS both constructions",
+        "complete_two_build_raw_and_gzip_byte_comparison": "PASS",
+        "entire_outside_package_byte_preservation_against_each_authenticated_base": "PASS",
+        "extracted_package_spi_range_and_registered_package_pin": "PASS",
+        "complete_boot_partition_preserved": "PASS",
+        "mbr_signature_partition_geometry_and_actual_card_fit": "PASS",
+        "private_root_owned_builder_directories_and_regular_single_link_output_files": "PASS 0700 directories / 0600 files",
+        "native_retention": "PASS Drew0700 directory / Drew0400 single-link regular files; final mode independently rechecked",
+        "executing_builder_source_and_all_manifest_closure_pins": "PASS",
+        "manifest_inputs_outputs_ranges_acceptance_and_resource_records": "PASS",
+        "recorded_publication_floors": [
+          {
+            "free_bytes": 22923264000,
+            "available_memory_bytes": 7527804928
+          },
+          {
+            "free_bytes": 22637539328,
+            "available_memory_bytes": 7524651008
+          }
+        ],
+        "build_exit_evidence": "MainPID=0 Result=success ExecMainStatus=0; unit DevicePolicy=closed NoNewPrivileges=yes",
+        "updated_focused_tests": 17,
+        "all_reviewed_file_identities_and_metadata_unchanged_through_checks": true
+      },
+      "scope": {
+        "read_only_builder_ssh": true,
+        "builder_files_created": false,
+        "board_ssh": false,
+        "services_changed": false,
+        "raw_images_staged": false,
+        "physical_device_writes": false,
+        "hardware_acceptance": false,
+        "project_files_edited": false,
+        "source_receipt_modified": false
+      },
+      "remaining_uncertainty": [
+        "Two builds share one qualified builder; no claim of clean isolated builds on two independent hosts.",
+        "Qualified full Jammy rerun passed according to coordinator; this reviewer independently reran only the 17 focused cases and does not independently assert full-suite counts.",
+        "Resource figures are recorded build samples and publication logs, not continuous measurement; producer guards were separately reviewed.",
+        "Current live NVMe GPT/BOOT inventory, physical NVMe-first file loading/default boot, manual SD fallback and compatibility require later read-only/live validation.",
+        "Actual trial remains unperformed. Zero routine physical SD writes, real KVM after trial, ROM recovery, SPI programmer/programming/rollback, SD-removed boot and remaining project release gates remain open.",
+        "Trusted, quiescent root/Drew environment remains a precondition; no hostile privileged mutation defense claim."
+      ],
+      "evidence": [
+        {
+          "path": "tmp/matched-nvme-trial-review-20261109/artifact-probe.py",
+          "bytes": 10817,
+          "sha256": "0e0b841b6b4f70f990c5e708f7038e61a4ee91b51fcc0ddee5ce44106567f4ba"
+        },
+        {
+          "path": "tmp/matched-nvme-trial-review-20261109/builder-artifact-review.json",
+          "bytes": 3188,
+          "sha256": "498746eb2d4e40f40a3e0dcf5ad65bd1e25d6d4f557ea8acfdb5b3122e31f17f"
+        },
+        {
+          "path": "tmp/matched-nvme-trial-review-20261109/builder-artifact-review.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "tmp/matched-nvme-trial-review-20261109/native-retention-probe.py",
+          "bytes": 3105,
+          "sha256": "a98e2b44be266d48218a102b327d6164539c9254e7680043b386385c548dd195"
+        },
+        {
+          "path": "tmp/matched-nvme-trial-review-20261109/native-retention-review.json",
+          "bytes": 1011,
+          "sha256": "8d687243351eb9fc6b1778221d684e51a9fcb516f2491cc5c0f103f38f227616"
+        },
+        {
+          "path": "tmp/matched-nvme-trial-review-20261109/native-retention-review.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "tmp/matched-nvme-trial-review-20261109/focused-tests-updated.log",
+          "bytes": 5938,
+          "sha256": "2064309514272c7d5ea7c73e1c237ee40d10fbc409f544922623f48bcbb364c4"
+        },
+        {
+          "path": "out/matched-nvme-trial-20261109-01/builds.log",
+          "bytes": 1958,
+          "sha256": "1eaa8d290346aa8f9811b5375661202f739cc5081a4abda677ef462a6287edbd"
+        },
+        {
+          "path": "out/matched-nvme-trial-20261109-01/builder-output-summary.json",
+          "bytes": 3995,
+          "sha256": "8243955e8af74ee06a96a78ea876727f81dd67eb5c91d9a0e3247349a3327c78"
+        },
+        {
+          "path": "out/matched-nvme-trial-20261109-01/build-unit-before-stop.txt",
+          "bytes": 231,
+          "sha256": "42037d8268f3ad23962239ac003796aa88fb54737badd071139dacbae39bb692"
+        }
+      ],
+      "changed_files": [
+        "tmp/matched-nvme-trial-artifact-review-20261109.json",
+        "tmp/matched-nvme-trial-review-20261109/artifact-probe.py",
+        "tmp/matched-nvme-trial-review-20261109/builder-artifact-review.json",
+        "tmp/matched-nvme-trial-review-20261109/builder-artifact-review.stderr",
+        "tmp/matched-nvme-trial-review-20261109/native-retention-probe.py",
+        "tmp/matched-nvme-trial-review-20261109/native-retention-review.json",
+        "tmp/matched-nvme-trial-review-20261109/native-retention-review.stderr",
+        "tmp/matched-nvme-trial-review-20261109/focused-tests-updated.log",
+        "tmp/matched-nvme-trial-review-20261109/actual-manifest-01.json"
+      ]
+    }
+  },
+  "native_retention": {
+    "files": [
+      {
+        "path": "out/matched-nvme-trial-20261109-01/retained/a733-host-sd.img.gz",
+        "bytes": 17273151,
+        "sha256": "5abb6ac92112a3b87a17328eab2f193aa49833effc6b4aa44557fe7271c2a0c8"
+      },
+      {
+        "path": "out/matched-nvme-trial-20261109-01/retained/manifest-01.json",
+        "bytes": 4191,
+        "sha256": "9d31f95d75de4bc84b2d9617ddd057902323141bcf61d222c61d77282cb4f4df"
+      },
+      {
+        "path": "out/matched-nvme-trial-20261109-01/retained/manifest-02.json",
+        "bytes": 4191,
+        "sha256": "2878bbaca8f232497e505151ed30cc7c8475a50fc954cde8087149223053e9a2"
+      }
+    ],
+    "full_gzip_crc_size_and_expanded_raw_sha256_checked": true,
+    "files_and_publication_ancestors_fsynced": true,
+    "raw_image_staged_on_codex": false
+  },
+  "jammy_validation": {
+    "python_tests": 2125,
+    "errors": 0,
+    "failures": 0,
+    "skips": 0,
+    "shell_suites": 5,
+    "diagnostic_assembly_cases": 5,
+    "source_files_unchanged_after_tests": 839,
+    "corrected_fixture_test_sha256": "0680610eb215a1293d70026ab3288bd9c23215e3908dccdbcf816f81865dc389",
+    "initial_failure": "16 new tests required an ignored tmp directory absent from a fresh checkout. Test-only fixture setup now creates and qualifies it; added fresh-missing-tmp regression. Producer and constructed image bytes unchanged. Initial failed suite retained.",
+    "unit": "a733-matched-nvme-trial-validation-20261109-02",
+    "effective_limit_receipt": {
+      "path": "out/matched-nvme-trial-20261109-01/validation-02-unit.txt",
+      "bytes": 195,
+      "sha256": "005931ef7ba27c99163c9c5c5bf444b14c26722824c30323a0a3e6354b8c0a06"
+    },
+    "CPUQuotaPerSecUSec": "2s",
+    "MemoryMax": 3221225472
+  },
+  "build_unit": {
+    "receipt": {
+      "path": "out/matched-nvme-trial-20261109-01/build-unit-before-stop.txt",
+      "bytes": 231,
+      "sha256": "42037d8268f3ad23962239ac003796aa88fb54737badd071139dacbae39bb692"
+    },
+    "ExecMainStatus": 0,
+    "Result": "success",
+    "MainPID": 0,
+    "SubState": "exited",
+    "MemoryMax": 1073741824,
+    "CPUQuotaPerSecUSec": "2s",
+    "DevicePolicy": "closed",
+    "NoNewPrivileges": true,
+    "lifecycle_note": "Both producers completed; --wait wrapper remained attached because RemainAfterExit kept the unit active/exited. Captured the loaded terminal state and effective limits, then stopped only this builder unit. Later default/unloaded show fields in builds.log are not runtime-limit observations."
+  },
+  "retained_records": [
+    {
+      "path": "out/matched-nvme-trial-20261109-01/builds.log",
+      "bytes": 1958,
+      "sha256": "1eaa8d290346aa8f9811b5375661202f739cc5081a4abda677ef462a6287edbd"
+    },
+    {
+      "path": "out/matched-nvme-trial-20261109-01/builder-output-summary.json",
+      "bytes": 3995,
+      "sha256": "8243955e8af74ee06a96a78ea876727f81dd67eb5c91d9a0e3247349a3327c78"
+    },
+    {
+      "path": "out/matched-nvme-trial-20261109-01/jammy-validation.log",
+      "bytes": 25173,
+      "sha256": "5953046a850b358ebfa15dab3ee3c97c48062b4c5f1ffd0827f8a9e9b6c134cd"
+    },
+    {
+      "path": "out/matched-nvme-trial-20261109-01/jammy-validation-02.log",
+      "bytes": 15841,
+      "sha256": "3756f757d4a8636911510ed6605a333f9af5a2e6bbf78140af66f37521df4c02"
+    },
+    {
+      "path": "out/matched-nvme-trial-20261109-01/validation-02-launch.log",
+      "bytes": 269,
+      "sha256": "85c42ad6bf69f649c7ae607d6042b95aeb2842445d406bb11fa2aba0459744e7"
+    },
+    {
+      "path": "out/matched-nvme-trial-20261109-01/source-postcheck.json",
+      "bytes": 120,
+      "sha256": "9dbb965b8e260b755be3d21db52712121ccaf8520b46b5da883c6d28f63585c3"
+    },
+    {
+      "path": "out/matched-nvme-trial-20261109-01/source-lock.json",
+      "bytes": 133664,
+      "sha256": "535d189442a77c77b5bb4797cce7e8d78d0301eb76ce975c198d395ac32dd0f4"
+    },
+    {
+      "path": "out/matched-nvme-trial-20261109-01/source-lock-02.json",
+      "bytes": 133664,
+      "sha256": "4176bff1f39fc22cfa52ed2350ca27f72da8c3a6db463e1f0717e400c91cc4b8"
+    },
+    {
+      "path": "out/matched-nvme-trial-20261109-01/source.tar",
+      "bytes": 9799680,
+      "sha256": "08c7a8347e7e8775e5a8536beca4fb4dfb42593ae80fe90a2db9955fb23a0df9"
+    },
+    {
+      "path": "out/matched-nvme-trial-20261109-01/source-02.tar",
+      "bytes": 9799680,
+      "sha256": "af06c38256ce44a2ce72b8fe6ab4e028b25f8984dd7afa781004b6d070738870"
+    },
+    {
+      "path": "out/matched-nvme-trial-20261109-01/source-history.bundle",
+      "bytes": 3207041,
+      "sha256": "220eff90102810baedf738233509fa735a470508c5292502e295636ef4dc2ba7"
+    }
+  ],
+  "limits": [
+    "Two regular-file constructions on the same qualified host; not two clean independent builder environments.",
+    "No board storage, boot, SPI, services or active hardware workload was changed.",
+    "Known protected-SD writer pins the prior ab5 raw; a separately reviewed maintenance write and trial procedure remain required.",
+    "Physical NVMe-first boot, manual SD fallback, KVM/zero-SD-write checks on this firmware, independent ROM recovery, SPI programming/restoration, SD-removed boot and full release acceptance remain open.",
+    "Native/producer path guards assume trusted quiescent root/Drew; owner predicate does not independently exclude every group writer."
+  ]
+}

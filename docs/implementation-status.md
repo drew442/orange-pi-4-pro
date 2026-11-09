@@ -80,7 +80,7 @@ power and full thermal endurance remain unproven.
   inspection and unchanged outside-BOOT bytes pass. Native candidate is
   `out/protected-nvme-candidate-20261109/nvme.img.gz`; fresh installation is
   unperformed. [Evidence](evidence/protected-full-nvme-image-20261109.json).
-- Latest complete privileged Ubuntu suite: **2,108 tests**, zero skips/errors/
+- Latest complete privileged Ubuntu suite: **2,125 tests**, zero skips/errors/
   failures; five shell suites and five diagnostic assembly cases also pass.
   All five TOML files parse separately on codex. These are software checks.
 - [Matched A/B maintenance candidates](matched-host-updates-20261109.md) now
@@ -125,6 +125,10 @@ power and full thermal endurance remain unproven.
    independent reproduction remain unperformed. Keep the running
    workload undisturbed until its evidence is retained.
 3. Prepare SPI recovery/programming and matched NVMe-first firmware trials.
+   The [matched trial SD](matched-nvme-trial-sd-20261109.md) now has two identical
+   constructions and independent complete artifact review; it preserves current
+   protected BOOT and SD boot0. Its maintenance writer/trial and physical NVMe
+   firmware handoff remain pending until workload evidence is retained.
    The [transaction API](spi-unit-transaction.md) passes independent review and
    actual-input NOR-model rehearsals; it supplies no device-opening route.
    [Preparation evidence](evidence/spi-unit-transaction-20261109.json).

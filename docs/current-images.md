@@ -16,6 +16,9 @@ For later inactive-root maintenance, use the separately authenticated
 [matched A/B update kit](matched-host-updates-20261109.md). Its root-payload
 manifest differs from the whole-NVMe installer manifest below. Physical update
 and rollback tests remain pending until workload evidence is retained.
+The separately retained [matched NVMe-first trial SD](matched-nvme-trial-sd-20261109.md)
+is unbooted and awaits a reviewed physical trial after the workload. It is not
+the normal host bootstrap in the table.
 
 | Purpose | Existing artifact |
 | --- | --- |

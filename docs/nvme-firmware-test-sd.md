@@ -6,10 +6,11 @@ candidate. This provides a firmware test stage before any SPI programming.
 Software construction and inspection pass; this image has not booted on the
 board. It does not establish SPI boot, a working recovery route or KVM execution.
 
-**Your next board action remains the
-[existing-install repair](installed-host-repair-20261107.md).** This new test SD
+This is a historical transport. The [current matched trial SD](matched-nvme-trial-sd-20261109.md)
+now preserves the working protected boot stack and current STATE identity;
+its physical trial remains unperformed. This older test SD
 is paired with production state UUID `fc8bbef6-9385-4ddb-90ba-e41eaccc035b`.
-The installed NVMe uses `00fd936c-49fb-4fea-87c8-928b9c1599e0`; these do not pair.
+The November 7 installed NVMe used `00fd936c-49fb-4fea-87c8-928b9c1599e0`; those did not pair.
 Do not write this image over the current host SD or reinstall NVMe to fix DHCP.
 A [separate matching transport for the second `feaa…` candidate](nvme-repeat-firmware-sd.md)
 now also passes construction/inspection. No new physical flashing step is
@@ -135,7 +136,8 @@ in that test. Return serial logs and installed root/state identities.
 
 Before any SPI programming, retain the original flash backup off-device,
 demonstrate recovery, independently inspect the actual backup-derived candidate
-and exact erase-unit plan, identify the live target, then request the agreed
-simple yes/no confirmation. Actual SD-removed cold boot, KVM guest CPU/disk/
+and exact erase-unit plan, and identify the live target. The known-board SPI
+authority persists; request simple yes/no only for unapproved targets or scope.
+Actual SD-removed cold boot, KVM guest CPU/disk/
 network/persistence and all remaining [release acceptance](hardware-validation.md)
 remain mandatory.
