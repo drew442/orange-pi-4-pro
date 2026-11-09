@@ -3,7 +3,9 @@
 The protected STATE bootstrap now boots at **192.168.1.116**, with read-only
 NVMe root, automatic time synchronization and a real KVM guest running.
 A [fresh 24-hour workload](endurance-run-20261109.md) is in progress with UART
-capture. No operator flashing is currently requested. Release acceptance remains
+capture. Firmware currently loads the Linux boot files from SD and uses NVMe root.
+The matching NVMe BOOT component is installed; firmware loading it remains
+unperformed. No operator flashing is currently requested. Release acceptance remains
 incomplete; the previous endurance failure is still unexplained.
 
 Paths below are relative to `/home/drew/orange-pi-4-pro` on codex.
@@ -13,6 +15,7 @@ Paths below are relative to `/home/drew/orange-pi-4-pro` on codex.
 | SSH RAM recovery, same board | `out/ssh-ram-installer-20261108/a733-ssh-installer.img.gz` |
 | Current protected host SD bootstrap | `out/serial-recovery-20261109/protected-sd-retained-01/a733-host-sd.img.gz` |
 | Current protected NVMe BOOT component | `out/serial-recovery-20261109/protected-nvme-retained-01/boot.ext4.gz` |
+| Protected full NVMe candidate, fresh installation unperformed | `out/protected-nvme-candidate-20261109/nvme.img.gz` |
 | Historical full NVMe base, requiring the protected BOOT update | `out/vgic-nvme-image-20261108/retained-02/nvme.img.gz` |
 
 The two SD artifacts each expand to **268,435,456 bytes**, fitting the actual
@@ -36,7 +39,8 @@ Check the compressed source once on the flashing computer:
 | SSH RAM recovery SD | 41,229,263 | `2f9cdd006e6d5c2c59e5ed1aba68f3ed7dd267a7f61b3672e590d926468c4eec` |
 | Protected host SD | 17,273,154 | `450e30f0b8169da7471396dbc97d44185426c3da61cc83d8425acab74ccef18c` |
 | Protected NVMe BOOT | 16,659,543 | `6a2725e53e3f2e89b7a796969df05af19f9778db301152495699fc0d9351e041` |
-| Corrected NVMe | 545,632,496 | `3e560264bb64a9bc23b342febdff2146955ca97cb6e0279e5240c29d4e6d85bc` |
+| Protected full NVMe candidate | 545,636,009 | `584a958c63fb01f62c2162c733aeb004082088952c6e428d6406087492e315e2` |
+| Historical NVMe base | 545,632,496 | `3e560264bb64a9bc23b342febdff2146955ca97cb6e0279e5240c29d4e6d85bc` |
 
 Expanded recovery SD SHA-256 is
 `d3a02224efdb2c2eeccc7115d84cd6c4b2d75c7d06580b8f7812d12a546bc3f6`;
@@ -46,14 +50,23 @@ The BOOT component expands to **536,870,912 bytes**, SHA-256
 `cc2ad988fdc57579178766acaf09c71d688aaadec94b722593192cb24426c313`.
 It is a p1-only maintenance payload, not a whole-drive image; use the
 [reviewed offline updater](known-nvme-boot-writer.md), which has already applied
-it to this board. The host roots, STATE and GUESTS were retained. A new full
-NVMe distribution stream incorporating that component remains to be produced.
-The NVMe stream expands to **256,060,514,304 bytes**, SHA-256
+it to this board. The host roots, STATE and GUESTS were retained. The matched full candidate is
+now retained above.
+The protected full candidate expands to **256,060,514,304 bytes**, SHA-256
+`675d6ba87e53daaf3517f331948a3be5924d79ec21a5143c7bc9f5dda4f0b386`.
+Its `manifest.json` (50,191 bytes, SHA-256
+`f19b5b58c12030422b36c203471026209731fa413ea1ce8d9196121861cf8eb5`) and
+`SHA256SUMS` are alongside the gzip. Two constructions and independent complete
+artifact inspection pass; [fresh installation and hardware release acceptance
+remain pending](evidence/protected-full-nvme-image-20261109.json).
+
+The historical NVMe base stream expands to **256,060,514,304 bytes**, SHA-256
 `835031b81d0320d6f9f35e74b9be67b494006c26a25fa9070f3e0a8f434ebc11`.
 Its producer manifest is retained at `out/vgic-nvme-image-20261108/build-02.stdout`
 (35,023 bytes, SHA-256 `addfcafe239a2aa075435383cc4742869d256d98beecd2526806da206d98f4a2`).
 Same-board identity was restored after installation and BOOT was subsequently
-updated, so the personalized whole NVMe no longer has the original stream hash. No NVMe reinstall is requested.
+updated, so neither unpersonalized full-stream hash describes the current NVMe.
+No NVMe reinstall is requested.
 
 ## Flash an SD after diagnosis calls for it
 

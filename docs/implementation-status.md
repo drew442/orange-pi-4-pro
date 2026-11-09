@@ -20,6 +20,8 @@ unexplained; it is not reclassified as a pass.
 - **Boot update:** Reviewed 256 MiB protected SD and 512 MiB NVMe p1-only writes
   pass; roots, STATE and GUESTS were retained. Live original BOOT backup is
   authenticated off-device. No installation readback was requested.
+  Firmware currently loads kernel/DTB/initramfs from SD and root from NVMe.
+  Matching NVMe BOOT files are installed; firmware loading them is untested.
   [Physical receipts](evidence/protected-state-maintenance-20261109.json),
   [current images](current-images.md).
 - **STATE protection:** Legacy serial captured orphan cleanup despite `ro,noload`.
@@ -61,7 +63,7 @@ records, duration, health and telemetry remains mandatory.
 | Immutable SD fallback | Linux writes remain zero; [whole-card baseline](evidence/protected-sd-baseline-20261109.json) and exact written prefix match pass; post-workload/shutdown/reboot comparison and firmware audit pending |
 | Interrupted update, rollback, missing NVMe, dirty journal | Software preparation/review pass; required physical recovery cases pending |
 | Off-device guest backup/restoration | [Counter-3 backup and physical restoration](evidence/corrected-host-guest-restore-20261108.json) pass |
-| Coherent protected full image and independent deployment reproduction | Full stream builds underway; artifact review and reproduced deployment pending |
+| Coherent protected full image and independent deployment reproduction | [Two full streams match and pass independent artifact review](evidence/protected-full-nvme-image-20261109.json); fresh installation and reproduced deployment pending |
 
 The [previous release run](endurance-run-20261108.md) lost SSH at collector
 elapsed 300.005 seconds, last valid guest elapsed 357/cycle 12. Later state was
@@ -73,9 +75,11 @@ power and full thermal endurance remain unproven.
 ## Construction, resources and authorization
 
 - Protected SD and NVMe BOOT components each have two byte-matching constructions
-  and independent actual-artifact review. Two fresh full NVMe stream builds run
-  on the qualified Ubuntu 22.04 builder, preserving all bytes outside BOOT.
-  [Producer](protected-state-nvme-image.md); no full-stream artifact pass yet.
+  and independent actual-artifact review. Two fresh full NVMe streams now match
+  byte for byte; complete independent old/new comparison, GPT/framing/hash
+  inspection and unchanged outside-BOOT bytes pass. Native candidate is
+  `out/protected-nvme-candidate-20261109/nvme.img.gz`; fresh installation is
+  unperformed. [Evidence](evidence/protected-full-nvme-image-20261109.json).
 - Latest complete privileged Ubuntu suite: **2,039 tests**, zero skips/errors/
   failures; five shell suites and five diagnostic assembly cases also pass.
   All five TOML files parse separately on codex. These are software checks.
@@ -101,9 +105,10 @@ power and full thermal endurance remain unproven.
 1. Observe the new 24-hour run and serial capture. Preserve kernel/control
    evidence on recurrence. Audit final guest/CPU exits, duration and post-run
    health; pending collector exit 2 alone is not acceptance.
-2. Complete both full-image constructions, independently inspect actual gzip,
-   logical raw/range/GPT hashes and matching bytes, then reproduce deployment.
-   Keep the running hardware workload undisturbed.
+2. After the workload, reproduce installation from the verified coherent full
+   stream with protected SD, retain same-board identity and required guest
+   backups, and complete independent deployment review. Keep the running
+   workload undisturbed until its evidence is retained.
 3. Prepare SPI recovery/programming and matched NVMe-first firmware trials.
    Otherwise finish complete immutable-SD proof. The blank XM25QU128C SPI backup
    and successful SD boot do not alone prove recovery after broken SPI firmware.

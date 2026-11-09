@@ -1,0 +1,857 @@
+{
+  "schema": 1,
+  "date": "2026-11-09",
+  "classification": "two matching full distribution constructions and independent actual-artifact review; software-only UNBOOTED",
+  "hardware_acceptance": false,
+  "fresh_full_installation_performed": false,
+  "build_host": "build.drewnet.online",
+  "producer_commit": "4645234",
+  "files": {
+    "nvme.img": {
+      "bytes": 256060514304,
+      "sha256": "675d6ba87e53daaf3517f331948a3be5924d79ec21a5143c7bc9f5dda4f0b386"
+    },
+    "nvme.img.gz": {
+      "bytes": 545636009,
+      "sha256": "584a958c63fb01f62c2162c733aeb004082088952c6e428d6406087492e315e2"
+    }
+  },
+  "source_closure_equal": true,
+  "artifact_records_equal": true,
+  "same_qualified_builder_fresh_outputs": true,
+  "independent_clean_os_constructions": false,
+  "builds": [
+    {
+      "unit": "a733-protected-full-nvme-build-20261109-01.service",
+      "output": "/var/lib/a733-maintenance-validation-20261108-01/project/out/protected-state-nvme-image-20261109-01",
+      "manifest_bytes": 50191,
+      "manifest_sha256": "f19b5b58c12030422b36c203471026209731fa413ea1ce8d9196121861cf8eb5",
+      "resources": {
+        "admission": {
+          "free_bytes": 25303719936,
+          "available_memory_bytes": 7667150848
+        },
+        "admission_guard": 23760999827,
+        "output_bound": 2147483648,
+        "scratch_budget": 2164260864,
+        "disk_floor": 3000000000,
+        "memory_floor": 1000000000,
+        "minimum_free_bytes": 24212283392,
+        "minimum_available_memory_bytes": 7362994176
+      }
+    },
+    {
+      "unit": "a733-protected-full-nvme-build-20261109-02.service",
+      "output": "/var/lib/a733-maintenance-validation-20261108-01/project/out/protected-state-nvme-image-20261109-02",
+      "manifest_bytes": 50191,
+      "manifest_sha256": "4779245e1b595795f01d70f08e8c59e35ce23a868302bda9082c726575ab4b26",
+      "resources": {
+        "admission": {
+          "free_bytes": 24949833728,
+          "available_memory_bytes": 7653462016
+        },
+        "admission_guard": 23760999827,
+        "output_bound": 2147483648,
+        "scratch_budget": 2164260864,
+        "disk_floor": 3000000000,
+        "memory_floor": 1000000000,
+        "minimum_free_bytes": 24203702272,
+        "minimum_available_memory_bytes": 7491633152
+      }
+    }
+  ],
+  "review": {
+    "schema": 1,
+    "date": "2026-11-09",
+    "artifact_review": "PASS",
+    "blocking_findings": [],
+    "scope": "Independent actual two-stream regular-file artifact review of protected STATE full NVMe distribution; both actual constructions compared",
+    "source_commit": "4645234",
+    "source_recipe_sha256": "152840e5e2af6c3f36cd0e7799f4c03ca93f6faa9fbee1169c9c5c9760036ba1",
+    "reviewer_implementation": "Private stdlib-only raw-deflate decoder with explicit gzip header/trailer framing, complete raw/range hashing, byte comparator and independent GPT parser; no production recipe imports",
+    "first_stream_review": {
+      "schema": 1,
+      "artifact_review": "PASS",
+      "validator": "independent stdlib-only raw-deflate streaming comparator; no producer imports",
+      "old_raw": {
+        "bytes": 256060514304,
+        "sha256": "835031b81d0320d6f9f35e74b9be67b494006c26a25fa9070f3e0a8f434ebc11"
+      },
+      "new_raw": {
+        "bytes": 256060514304,
+        "sha256": "675d6ba87e53daaf3517f331948a3be5924d79ec21a5143c7bc9f5dda4f0b386"
+      },
+      "old_wire": {
+        "bytes": 545632496,
+        "sha256": "3e560264bb64a9bc23b342febdff2146955ca97cb6e0279e5240c29d4e6d85bc"
+      },
+      "new_wire": {
+        "bytes": 545636009,
+        "sha256": "584a958c63fb01f62c2162c733aeb004082088952c6e428d6406087492e315e2"
+      },
+      "old_manifest": {
+        "bytes": 35023,
+        "sha256": "addfcafe239a2aa075435383cc4742869d256d98beecd2526806da206d98f4a2"
+      },
+      "new_manifest": {
+        "bytes": 50191,
+        "sha256": "f19b5b58c12030422b36c203471026209731fa413ea1ce8d9196121861cf8eb5"
+      },
+      "sources": {
+        "build/protected-state-nvme-image.py": {
+          "bytes": 16747,
+          "sha256": "152840e5e2af6c3f36cd0e7799f4c03ca93f6faa9fbee1169c9c5c9760036ba1"
+        },
+        "build/protected-state-nvme-boot.py": {
+          "bytes": 10404,
+          "sha256": "d2b28c431334d0819decfd1d47c7da64ab711ec160ad50042736e4da6a9e75cf"
+        },
+        "build/protected-state-bootstrap.py": {
+          "bytes": 15523,
+          "sha256": "8257a30349a409aa57bc1d4d92263e6f37d9bc8a8f10833325b2eff2324b9fb5"
+        },
+        "build/vgic-nvme-image.py": {
+          "bytes": 21985,
+          "sha256": "75a19faad5b06cbd103630425925793693a78f9176a809bad8def30372a23149"
+        },
+        "build/vgic-runtime-bootstrap.py": {
+          "bytes": 14774,
+          "sha256": "6fc8e0662cc3a314c3ee224d587629a856505e3c68153c9311afde903b69cd45"
+        },
+        "build/vgic-host-sd.py": {
+          "bytes": 13742,
+          "sha256": "65067be9e06270a29d8f2187a79b1a0af428270f689e8db95c27bb34961db9a5"
+        },
+        "build/assemble-host.py": {
+          "bytes": 21448,
+          "sha256": "c9ed33c9526d6660965f00b97e6c226880eba985706b3bbc71c017fee8e9b77f"
+        },
+        "build/verify-host-roots.py": {
+          "bytes": 33471,
+          "sha256": "80e843d499bcc2f6d299d6022dc7edf83d73842405e95b38b0f32eee72dcda30"
+        },
+        "tests/verify_nvme_image.py": {
+          "bytes": 15781,
+          "sha256": "d9e9342136af125df2eb9dfe1d832183244f13cd28c7ac3e2a4d7f1ca976b8fb"
+        },
+        "configs/host-init": {
+          "bytes": 17650,
+          "sha256": "2cf52e1cee8d4f2050fe3a90eca0a0a8c50b6f30718d210667f7273f9f08ab12"
+        }
+      },
+      "outside_boot_bytes_compared": 255523643392,
+      "changed_boot_bytes": 3788408,
+      "before_ranges": {
+        "prefix": {
+          "bytes": 1048576,
+          "sha256": "0d72cd796bea08cc3663e89e51938113af2409623d6505bb7564e140a2fbc4c3"
+        },
+        "boot": {
+          "bytes": 536870912,
+          "sha256": "5860889755d7479e619e86b83bc32237e51bacd3a3fd2e2d2ebe976898f44899"
+        },
+        "suffix": {
+          "bytes": 255522594816,
+          "sha256": "f0d29ecb980daf23f2fce9c5139343505a8300da9d58c4cd292a20600e8dd070"
+        },
+        "partition:root-a": {
+          "bytes": 4294967296,
+          "sha256": "d868571e89216762ce9d8d2b8209884b958c53b7be97a215d8c4ddbc96ab7940"
+        },
+        "partition:root-b": {
+          "bytes": 4294967296,
+          "sha256": "3369a8b4c4b0f7dd9ed33740db3bd86b0d868154bc8195c66806ee0e73f3bdab"
+        },
+        "partition:state": {
+          "bytes": 8589934592,
+          "sha256": "de80b3a599f51b6fd71876511aa15474e9b27283e0c5bc32bae9afa1088c8ef2"
+        },
+        "partition:guests": {
+          "bytes": 238342373376,
+          "sha256": "f1f1fb4cb210e0d6ff9e8c851e6cceaa2cb0a642d0a582b9bd2bc9284c45c7a0"
+        },
+        "gpt:protective-mbr": {
+          "bytes": 512,
+          "sha256": "b6d0b9179af5316d7a9c9db924c0cd01a4976c94b896415ff2bb6f4ff4922c50"
+        },
+        "gpt:primary-header": {
+          "bytes": 512,
+          "sha256": "f6e60c22527739a241b05ea22762c001432b9470383e641b9a83f0988dabf52c"
+        },
+        "gpt:primary-entries": {
+          "bytes": 16384,
+          "sha256": "13a4b8d58e00ffa6a3c52f377d0dcd4454df904f34f754092b988413b1c673be"
+        },
+        "gpt:backup-entries": {
+          "bytes": 16384,
+          "sha256": "13a4b8d58e00ffa6a3c52f377d0dcd4454df904f34f754092b988413b1c673be"
+        },
+        "gpt:backup-header": {
+          "bytes": 512,
+          "sha256": "c796f02d3a1bf7ad2d6e1dcbba1c70e05f67bb322a59c42c30bf72c795c32708"
+        }
+      },
+      "after_ranges": {
+        "prefix": {
+          "bytes": 1048576,
+          "sha256": "0d72cd796bea08cc3663e89e51938113af2409623d6505bb7564e140a2fbc4c3"
+        },
+        "boot": {
+          "bytes": 536870912,
+          "sha256": "cc2ad988fdc57579178766acaf09c71d688aaadec94b722593192cb24426c313"
+        },
+        "suffix": {
+          "bytes": 255522594816,
+          "sha256": "f0d29ecb980daf23f2fce9c5139343505a8300da9d58c4cd292a20600e8dd070"
+        },
+        "partition:root-a": {
+          "bytes": 4294967296,
+          "sha256": "d868571e89216762ce9d8d2b8209884b958c53b7be97a215d8c4ddbc96ab7940"
+        },
+        "partition:root-b": {
+          "bytes": 4294967296,
+          "sha256": "3369a8b4c4b0f7dd9ed33740db3bd86b0d868154bc8195c66806ee0e73f3bdab"
+        },
+        "partition:state": {
+          "bytes": 8589934592,
+          "sha256": "de80b3a599f51b6fd71876511aa15474e9b27283e0c5bc32bae9afa1088c8ef2"
+        },
+        "partition:guests": {
+          "bytes": 238342373376,
+          "sha256": "f1f1fb4cb210e0d6ff9e8c851e6cceaa2cb0a642d0a582b9bd2bc9284c45c7a0"
+        },
+        "gpt:protective-mbr": {
+          "bytes": 512,
+          "sha256": "b6d0b9179af5316d7a9c9db924c0cd01a4976c94b896415ff2bb6f4ff4922c50"
+        },
+        "gpt:primary-header": {
+          "bytes": 512,
+          "sha256": "f6e60c22527739a241b05ea22762c001432b9470383e641b9a83f0988dabf52c"
+        },
+        "gpt:primary-entries": {
+          "bytes": 16384,
+          "sha256": "13a4b8d58e00ffa6a3c52f377d0dcd4454df904f34f754092b988413b1c673be"
+        },
+        "gpt:backup-entries": {
+          "bytes": 16384,
+          "sha256": "13a4b8d58e00ffa6a3c52f377d0dcd4454df904f34f754092b988413b1c673be"
+        },
+        "gpt:backup-header": {
+          "bytes": 512,
+          "sha256": "c796f02d3a1bf7ad2d6e1dcbba1c70e05f67bb322a59c42c30bf72c795c32708"
+        }
+      },
+      "held_inputs": [
+        {
+          "path": "/var/lib/a733-vgic-nvme-project-20261108-02/project/out/nvme-vgic-corrected-02/manifest.json",
+          "identity": [
+            64512,
+            822605,
+            33188,
+            1,
+            35023,
+            1794129466618252218,
+            1794129466618252218
+          ],
+          "record": {
+            "bytes": 35023,
+            "sha256": "addfcafe239a2aa075435383cc4742869d256d98beecd2526806da206d98f4a2"
+          }
+        },
+        {
+          "path": "/var/lib/a733-maintenance-validation-20261108-01/project/out/protected-state-nvme-image-20261109-01/manifest.json",
+          "identity": [
+            64512,
+            826842,
+            33152,
+            1,
+            50191,
+            1794195975958832439,
+            1794195975958832439
+          ],
+          "record": {
+            "bytes": 50191,
+            "sha256": "f19b5b58c12030422b36c203471026209731fa413ea1ce8d9196121861cf8eb5"
+          }
+        },
+        {
+          "path": "/var/lib/a733-maintenance-validation-20261108-01/project/build/protected-state-nvme-image.py",
+          "identity": [
+            64512,
+            826827,
+            33204,
+            1,
+            16747,
+            1794192190000000000,
+            1794192422930636455
+          ],
+          "record": {
+            "bytes": 16747,
+            "sha256": "152840e5e2af6c3f36cd0e7799f4c03ca93f6faa9fbee1169c9c5c9760036ba1"
+          }
+        },
+        {
+          "path": "/var/lib/a733-maintenance-validation-20261108-01/project/build/protected-state-nvme-boot.py",
+          "identity": [
+            64512,
+            826813,
+            33204,
+            1,
+            10404,
+            1794188866000000000,
+            1794188942569183381
+          ],
+          "record": {
+            "bytes": 10404,
+            "sha256": "d2b28c431334d0819decfd1d47c7da64ab711ec160ad50042736e4da6a9e75cf"
+          }
+        },
+        {
+          "path": "/var/lib/a733-maintenance-validation-20261108-01/project/build/protected-state-bootstrap.py",
+          "identity": [
+            64512,
+            826803,
+            33204,
+            1,
+            15523,
+            1794187762258890900,
+            1794187997369873645
+          ],
+          "record": {
+            "bytes": 15523,
+            "sha256": "8257a30349a409aa57bc1d4d92263e6f37d9bc8a8f10833325b2eff2324b9fb5"
+          }
+        },
+        {
+          "path": "/var/lib/a733-maintenance-validation-20261108-01/project/build/vgic-nvme-image.py",
+          "identity": [
+            64512,
+            822633,
+            33188,
+            1,
+            21985,
+            1794131421000000000,
+            1794131570194856665
+          ],
+          "record": {
+            "bytes": 21985,
+            "sha256": "75a19faad5b06cbd103630425925793693a78f9176a809bad8def30372a23149"
+          }
+        },
+        {
+          "path": "/var/lib/a733-maintenance-validation-20261108-01/project/build/vgic-runtime-bootstrap.py",
+          "identity": [
+            64512,
+            822634,
+            33188,
+            1,
+            14774,
+            1794131421000000000,
+            1794131570194856665
+          ],
+          "record": {
+            "bytes": 14774,
+            "sha256": "6fc8e0662cc3a314c3ee224d587629a856505e3c68153c9311afde903b69cd45"
+          }
+        },
+        {
+          "path": "/var/lib/a733-maintenance-validation-20261108-01/project/build/vgic-host-sd.py",
+          "identity": [
+            64512,
+            822632,
+            33188,
+            1,
+            13742,
+            1794131421000000000,
+            1794131570194856665
+          ],
+          "record": {
+            "bytes": 13742,
+            "sha256": "65067be9e06270a29d8f2187a79b1a0af428270f689e8db95c27bb34961db9a5"
+          }
+        },
+        {
+          "path": "/var/lib/a733-maintenance-validation-20261108-01/project/build/assemble-host.py",
+          "identity": [
+            64512,
+            822544,
+            33188,
+            1,
+            21448,
+            1794131421000000000,
+            1794131570014856513
+          ],
+          "record": {
+            "bytes": 21448,
+            "sha256": "c9ed33c9526d6660965f00b97e6c226880eba985706b3bbc71c017fee8e9b77f"
+          }
+        },
+        {
+          "path": "/var/lib/a733-maintenance-validation-20261108-01/project/build/verify-host-roots.py",
+          "identity": [
+            64512,
+            822625,
+            33188,
+            1,
+            33471,
+            1794131421000000000,
+            1794131570172856647
+          ],
+          "record": {
+            "bytes": 33471,
+            "sha256": "80e843d499bcc2f6d299d6022dc7edf83d73842405e95b38b0f32eee72dcda30"
+          }
+        },
+        {
+          "path": "/var/lib/a733-maintenance-validation-20261108-01/project/tests/verify_nvme_image.py",
+          "identity": [
+            64512,
+            823296,
+            33188,
+            1,
+            15781,
+            1794131421000000000,
+            1794131570302856757
+          ],
+          "record": {
+            "bytes": 15781,
+            "sha256": "d9e9342136af125df2eb9dfe1d832183244f13cd28c7ac3e2a4d7f1ca976b8fb"
+          }
+        },
+        {
+          "path": "/var/lib/a733-maintenance-validation-20261108-01/project/configs/host-init",
+          "identity": [
+            64512,
+            822656,
+            33261,
+            1,
+            17650,
+            1794186921628296000,
+            1794187608095723578
+          ],
+          "record": {
+            "bytes": 17650,
+            "sha256": "2cf52e1cee8d4f2050fe3a90eca0a0a8c50b6f30718d210667f7273f9f08ab12"
+          }
+        },
+        {
+          "path": "/var/lib/a733-vgic-nvme-project-20261108-02/project/out/nvme-vgic-corrected-02/nvme.img.gz",
+          "identity": [
+            64512,
+            822600,
+            33188,
+            1,
+            545632496,
+            1794128736704654463,
+            1794128736704654463
+          ],
+          "record": {
+            "bytes": 545632496,
+            "sha256": "3e560264bb64a9bc23b342febdff2146955ca97cb6e0279e5240c29d4e6d85bc"
+          }
+        },
+        {
+          "path": "/var/lib/a733-maintenance-validation-20261108-01/project/out/protected-state-nvme-image-20261109-01/nvme.img.gz",
+          "identity": [
+            64512,
+            826835,
+            33152,
+            1,
+            545636009,
+            1794194826131203442,
+            1794195975957832439
+          ],
+          "record": {
+            "bytes": 545636009,
+            "sha256": "584a958c63fb01f62c2162c733aeb004082088952c6e428d6406087492e315e2"
+          }
+        }
+      ],
+      "all_identities_and_content_unchanged": true,
+      "gzip_header_crc_isize_single_member_no_tail": true,
+      "both_gpt_pairs_parsed": true,
+      "resources": {
+        "minimum_free_bytes": 24203493376,
+        "minimum_available_memory_bytes": 7562989568
+      },
+      "seconds": 1738.947471352003,
+      "hardware_acceptance": false,
+      "physical_storage_written": false,
+      "component_namespace_review": "not repeated; fixed cc2 BOOT authority already independently reviewed"
+    },
+    "second_stream_review": {
+      "schema": 1,
+      "artifact_review": "PASS",
+      "first_complete_proof": {
+        "bytes": 12138,
+        "sha256": "88e230f063b2596159b8514be63eefa3f42f2e97b0617c47af4294b560f041bc"
+      },
+      "first_manifest": {
+        "bytes": 50191,
+        "sha256": "f19b5b58c12030422b36c203471026209731fa413ea1ce8d9196121861cf8eb5"
+      },
+      "second_manifest": {
+        "bytes": 50191,
+        "sha256": "4779245e1b595795f01d70f08e8c59e35ce23a868302bda9082c726575ab4b26"
+      },
+      "wire": {
+        "bytes": 545636009,
+        "sha256": "584a958c63fb01f62c2162c733aeb004082088952c6e428d6406087492e315e2"
+      },
+      "encoded_bytes_compared": 545636009,
+      "encoded_files_byte_identical": true,
+      "manifest_differences_only_resources": true,
+      "second_resources": {
+        "admission": {
+          "free_bytes": 24949833728,
+          "available_memory_bytes": 7653462016
+        },
+        "admission_guard": 23760999827,
+        "output_bound": 2147483648,
+        "scratch_budget": 2164260864,
+        "disk_floor": 3000000000,
+        "memory_floor": 1000000000,
+        "minimum_free_bytes": 24203702272,
+        "minimum_available_memory_bytes": 7491633152
+      },
+      "held_inputs": [
+        {
+          "path": "/var/lib/a733-maintenance-validation-20261108-01/project/out/protected-full-independent-review-20261109-01/result.json",
+          "identity": [
+            64512,
+            826856,
+            33188,
+            1,
+            12138,
+            1794197953972708713,
+            1794197953972708713
+          ],
+          "record": {
+            "bytes": 12138,
+            "sha256": "88e230f063b2596159b8514be63eefa3f42f2e97b0617c47af4294b560f041bc"
+          }
+        },
+        {
+          "path": "/var/lib/a733-maintenance-validation-20261108-01/project/out/protected-state-nvme-image-20261109-01/manifest.json",
+          "identity": [
+            64512,
+            826842,
+            33152,
+            1,
+            50191,
+            1794195975958832439,
+            1794195975958832439
+          ],
+          "record": {
+            "bytes": 50191,
+            "sha256": "f19b5b58c12030422b36c203471026209731fa413ea1ce8d9196121861cf8eb5"
+          }
+        },
+        {
+          "path": "/var/lib/a733-maintenance-validation-20261108-01/project/out/protected-state-nvme-image-20261109-02/manifest.json",
+          "identity": [
+            64512,
+            826854,
+            33152,
+            1,
+            50191,
+            1794196553243980216,
+            1794196553243980216
+          ],
+          "record": {
+            "bytes": 50191,
+            "sha256": "4779245e1b595795f01d70f08e8c59e35ce23a868302bda9082c726575ab4b26"
+          }
+        },
+        {
+          "path": "/var/lib/a733-maintenance-validation-20261108-01/project/out/protected-state-nvme-image-20261109-01/nvme.img.gz",
+          "identity": [
+            64512,
+            826835,
+            33152,
+            1,
+            545636009,
+            1794194826131203442,
+            1794195975957832439
+          ],
+          "record": {
+            "bytes": 545636009,
+            "sha256": "584a958c63fb01f62c2162c733aeb004082088952c6e428d6406087492e315e2"
+          }
+        },
+        {
+          "path": "/var/lib/a733-maintenance-validation-20261108-01/project/out/protected-state-nvme-image-20261109-02/nvme.img.gz",
+          "identity": [
+            64512,
+            826839,
+            33152,
+            1,
+            545636009,
+            1794195409522960593,
+            1794196553241980215
+          ],
+          "record": {
+            "bytes": 545636009,
+            "sha256": "584a958c63fb01f62c2162c733aeb004082088952c6e428d6406087492e315e2"
+          }
+        },
+        {
+          "path": "/var/lib/a733-maintenance-validation-20261108-01/project/build/protected-state-nvme-image.py",
+          "identity": [
+            64512,
+            826827,
+            33204,
+            1,
+            16747,
+            1794192190000000000,
+            1794192422930636455
+          ],
+          "record": {
+            "bytes": 16747,
+            "sha256": "152840e5e2af6c3f36cd0e7799f4c03ca93f6faa9fbee1169c9c5c9760036ba1"
+          }
+        },
+        {
+          "path": "/var/lib/a733-maintenance-validation-20261108-01/project/build/protected-state-nvme-boot.py",
+          "identity": [
+            64512,
+            826813,
+            33204,
+            1,
+            10404,
+            1794188866000000000,
+            1794188942569183381
+          ],
+          "record": {
+            "bytes": 10404,
+            "sha256": "d2b28c431334d0819decfd1d47c7da64ab711ec160ad50042736e4da6a9e75cf"
+          }
+        },
+        {
+          "path": "/var/lib/a733-maintenance-validation-20261108-01/project/build/protected-state-bootstrap.py",
+          "identity": [
+            64512,
+            826803,
+            33204,
+            1,
+            15523,
+            1794187762258890900,
+            1794187997369873645
+          ],
+          "record": {
+            "bytes": 15523,
+            "sha256": "8257a30349a409aa57bc1d4d92263e6f37d9bc8a8f10833325b2eff2324b9fb5"
+          }
+        },
+        {
+          "path": "/var/lib/a733-maintenance-validation-20261108-01/project/build/vgic-nvme-image.py",
+          "identity": [
+            64512,
+            822633,
+            33188,
+            1,
+            21985,
+            1794131421000000000,
+            1794131570194856665
+          ],
+          "record": {
+            "bytes": 21985,
+            "sha256": "75a19faad5b06cbd103630425925793693a78f9176a809bad8def30372a23149"
+          }
+        },
+        {
+          "path": "/var/lib/a733-maintenance-validation-20261108-01/project/build/vgic-runtime-bootstrap.py",
+          "identity": [
+            64512,
+            822634,
+            33188,
+            1,
+            14774,
+            1794131421000000000,
+            1794131570194856665
+          ],
+          "record": {
+            "bytes": 14774,
+            "sha256": "6fc8e0662cc3a314c3ee224d587629a856505e3c68153c9311afde903b69cd45"
+          }
+        },
+        {
+          "path": "/var/lib/a733-maintenance-validation-20261108-01/project/build/vgic-host-sd.py",
+          "identity": [
+            64512,
+            822632,
+            33188,
+            1,
+            13742,
+            1794131421000000000,
+            1794131570194856665
+          ],
+          "record": {
+            "bytes": 13742,
+            "sha256": "65067be9e06270a29d8f2187a79b1a0af428270f689e8db95c27bb34961db9a5"
+          }
+        },
+        {
+          "path": "/var/lib/a733-maintenance-validation-20261108-01/project/build/assemble-host.py",
+          "identity": [
+            64512,
+            822544,
+            33188,
+            1,
+            21448,
+            1794131421000000000,
+            1794131570014856513
+          ],
+          "record": {
+            "bytes": 21448,
+            "sha256": "c9ed33c9526d6660965f00b97e6c226880eba985706b3bbc71c017fee8e9b77f"
+          }
+        },
+        {
+          "path": "/var/lib/a733-maintenance-validation-20261108-01/project/build/verify-host-roots.py",
+          "identity": [
+            64512,
+            822625,
+            33188,
+            1,
+            33471,
+            1794131421000000000,
+            1794131570172856647
+          ],
+          "record": {
+            "bytes": 33471,
+            "sha256": "80e843d499bcc2f6d299d6022dc7edf83d73842405e95b38b0f32eee72dcda30"
+          }
+        },
+        {
+          "path": "/var/lib/a733-maintenance-validation-20261108-01/project/tests/verify_nvme_image.py",
+          "identity": [
+            64512,
+            823296,
+            33188,
+            1,
+            15781,
+            1794131421000000000,
+            1794131570302856757
+          ],
+          "record": {
+            "bytes": 15781,
+            "sha256": "d9e9342136af125df2eb9dfe1d832183244f13cd28c7ac3e2a4d7f1ca976b8fb"
+          }
+        },
+        {
+          "path": "/var/lib/a733-maintenance-validation-20261108-01/project/configs/host-init",
+          "identity": [
+            64512,
+            822656,
+            33261,
+            1,
+            17650,
+            1794186921628296000,
+            1794187608095723578
+          ],
+          "record": {
+            "bytes": 17650,
+            "sha256": "2cf52e1cee8d4f2050fe3a90eca0a0a8c50b6f30718d210667f7273f9f08ab12"
+          }
+        }
+      ],
+      "all_identities_and_content_unchanged": true,
+      "second_full_decode_repeated": false,
+      "reason": "Entire encoded bytes identical to fully independently validated first stream.",
+      "review_resources": {
+        "free_bytes": 24203472896,
+        "available_memory_bytes": 7657381888
+      },
+      "hardware_acceptance": false,
+      "physical_storage_written": false
+    },
+    "retained_remote_evidence": {
+      "directory": "/var/lib/a733-maintenance-validation-20261108-01/project/out/protected-full-independent-review-20261109-01",
+      "records": {
+        "verify.py": {
+          "bytes": 11633,
+          "sha256": "15e783e0383ac60a23bb73bcda31f370bb332336165574be09eca5a71072e1b3"
+        },
+        "second-compare.py": {
+          "bytes": 4501,
+          "sha256": "25236c2a0ccacd1293a29c87856fefc7de5673777f94dd006c22a6d42136db38"
+        },
+        "expected.json": {
+          "bytes": 2650,
+          "sha256": "58ab23b2af270f3454dc498b84301772959b07c4504cc7e60dfafa2b3d4f58c4"
+        },
+        "result.json": {
+          "bytes": 12138,
+          "sha256": "88e230f063b2596159b8514be63eefa3f42f2e97b0617c47af4294b560f041bc"
+        },
+        "second-result.json": {
+          "bytes": 7725,
+          "sha256": "897f78a230de0b120fdbdd2a52ebd57e673dc6cf6b5e578df34dad62d564fffa"
+        },
+        "stdout.log": {
+          "bytes": 20192,
+          "sha256": "43abbde1633297eed61ffcda648fb47a6cb77e90b224f869abe0dbf8dbf74aa9"
+        },
+        "stderr.log": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "unit": "a733-protected-full-independent-review-20261109-01.service",
+      "unit_final_state": "ExecMainStatus=0\nActiveState=inactive\nSubState=dead\n",
+      "output_directory_entries": {
+        "01": [
+          "manifest.json",
+          "nvme.img.gz"
+        ],
+        "02": [
+          "manifest.json",
+          "nvme.img.gz"
+        ]
+      }
+    },
+    "additional_independent_checks": [
+      "Private decoder ordinary-file fixture:8MiB+17 zero bytes,733-byte reads; valid stream passes and trailingzero/extraemptygzipmember refuse.",
+      "All10 actual source records match native checkout and git commit4645234 before/after review.",
+      "Held pinned actual manifests preserve all18 payload identity/geometry/boot-policy fields and complete boot-file map except matched reviewed uInitrd2149513 pin.",
+      "Both output directories contain exactly manifest.json and nvme.img.gz; no raw staging artifact.",
+      "Remote private validator/comparator/expected-input file hashes equal native reviewed scripts and expected records."
+    ],
+    "component_review_reused": {
+      "report": "tmp/protected-nvme-boot-review-20261109.json",
+      "boot_sha256": "cc2ad988fdc57579178766acaf09c71d688aaadec94b722593192cb24426c313",
+      "matched_sd_nvme_uinitrd_sha256": "2149513ae5cf90f1edb6047e6ebf8ba903dc86c55b4b43754a5a2cfd3368c786",
+      "ext4_namespace_and_cpio_review_repeated": false
+    },
+    "hardware_acceptance": false,
+    "physical_storage_written": false,
+    "raw_image_staged": false,
+    "limitations": [
+      "Software distribution artifacts only; full image remains UNBOOTED. The running personalized board is not represented by whole-raw hash675d6ba8.",
+      "No board/UART access, device writes, mounts, loop devices or physical acceptance checks were performed. Existing24-hour workload remains outside this review.",
+      "Two constructions are byte-identical in the same prepared builder environment; this does not establish clean independent deployment reproduction."
+    ]
+  },
+  "durability_postcheck": {
+    "outputs": [
+      {
+        "output": "/var/lib/a733-maintenance-validation-20261108-01/project/out/protected-state-nvme-image-20261109-01",
+        "files_protected_readonly_and_fsynced": true
+      },
+      {
+        "output": "/var/lib/a733-maintenance-validation-20261108-01/project/out/protected-state-nvme-image-20261109-02",
+        "files_protected_readonly_and_fsynced": true
+      }
+    ],
+    "hardware_acceptance": false
+  },
+  "native_copy": {
+    "directory": "out/protected-nvme-candidate-20261109",
+    "gzip_bytes": 545636009,
+    "gzip_sha256": "584a958c63fb01f62c2162c733aeb004082088952c6e428d6406087492e315e2",
+    "manifest_sha256": "f19b5b58c12030422b36c203471026209731fa413ea1ce8d9196121861cf8eb5",
+    "file_and_directory_fsynced": true
+  },
+  "installer_manifest_validation": "current installer accepts the actual manifest; no target opened and no device written"
+}

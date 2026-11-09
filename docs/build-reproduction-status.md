@@ -7,7 +7,7 @@ artifacts remain bound to [the deployment guide](deploy-personalized-20261106.md
 | Stage | Verified evidence | Remaining limit |
 | --- | --- | --- |
 | Protected STATE boot pair | [Two identical SD constructions](evidence/protected-state-bootstrap-20261109.json), [matching NVMe BOOT](evidence/protected-state-nvme-boot-20261109.json), independent actual-artifact review and [physical boot/write receipts](evidence/protected-state-maintenance-20261109.json) | Dirty recovery and full release gates remain open |
-| Protected full NVMe stream | [Reviewed producer](protected-state-nvme-image.md), two monitored constructions underway | Complete artifact checks and independent deployment pending |
+| Protected full NVMe stream | [Two matching constructions and independent complete inspection](evidence/protected-full-nvme-image-20261109.json) | Fresh installation and independent deployment pending |
 | Fresh physical endurance | [November 9 run](endurance-run-20261109.md), four actual KVM vCPUs plus four host workers, UART and [armed result preservation](evidence/endurance-outcome-preservation-20261109.json) | Full duration and coordinator review pending |
 | Prepared Jammy host | [Assessment](build-host-assessment.md), pinned package inventories, two compilation jobs | Prepared-host builds alone are insufficient |
 | Builder inputs | [842 package archives](evidence/builder-packages-acquired-20261106.json), [signed AMD64 seed](../configs/builder-base-20261106.lock.json) | Source recompilation is separate |

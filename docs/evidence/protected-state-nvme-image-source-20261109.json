@@ -1,9 +1,9 @@
 {
   "schema": 1,
   "date": "2026-11-09",
-  "classification": "reviewed full distribution producer; two monitored constructions running",
+  "classification": "reviewed producer; two actual matching full constructions and independent artifact inspection now complete",
   "hardware_acceptance": false,
-  "full_construction_performed": false,
+  "full_construction_performed": true,
   "review": {
     "schema": 1,
     "date": "2026-11-09",
@@ -138,5 +138,6 @@
   "construction_units": [
     "a733-protected-full-nvme-build-20261109-01.service",
     "a733-protected-full-nvme-build-20261109-02.service"
-  ]
+  ],
+  "actual_construction_evidence": "docs/evidence/protected-full-nvme-image-20261109.json"
 }

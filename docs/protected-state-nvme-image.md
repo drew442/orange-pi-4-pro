@@ -3,8 +3,9 @@
 `build/protected-state-nvme-image.py` packages the fixed protected BOOT component
 inside a complete **256,060,514,304 logical-byte** NVMe gzip distribution. This is
 software preparation for the Orange Pi 4 Pro A733, 2 GB SD and nominal 250 GB NVMe
-minimal host with zero routine SD writes. The recipe has ordinary-file tests;
-**full construction and independent artifact review are pending**. It grants no
+minimal host with zero routine SD writes. Two full constructions now match byte for byte and pass independent complete
+artifact review; see [actual evidence](evidence/protected-full-nvme-image-20261109.json).
+Fresh full installation remains unperformed. It grants no
 physical boot, dirty-STATE recovery, KVM or endurance acceptance.
 
 The [authorized builder expansion](build-host-capacity-addition-20261109.md)
@@ -77,7 +78,8 @@ run. Historical construction measurements are never copied as current evidence.
 Only `nvme.img.gz` and `manifest.json` are published. During work the stream is
 `nvme.img.gz.partial`. A failed directory is reserved and cannot be reused;
 absence of the final manifest means incomplete packaging. Independent complete
-artifact inspection remains required after an actual full construction.
+artifact inspection now passes for both published constructions; later builds
+require their own inspection.
 
 This stream is an **unpersonalized distribution**, not a backup of the current
 board. Its whole-device hash cannot describe the installed personalized NVMe.
