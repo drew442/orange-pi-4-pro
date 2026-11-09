@@ -80,7 +80,7 @@ power and full thermal endurance remain unproven.
   inspection and unchanged outside-BOOT bytes pass. Native candidate is
   `out/protected-nvme-candidate-20261109/nvme.img.gz`; fresh installation is
   unperformed. [Evidence](evidence/protected-full-nvme-image-20261109.json).
-- Latest complete privileged Ubuntu suite: **2,039 tests**, zero skips/errors/
+- Latest complete privileged Ubuntu suite: **2,065 tests**, zero skips/errors/
   failures; five shell suites and five diagnostic assembly cases also pass.
   All five TOML files parse separately on codex. These are software checks.
 - Builder LV now **94,459,920,384 bytes**, VG free **38,625,345,536 bytes**;
@@ -102,8 +102,11 @@ power and full thermal endurance remain unproven.
 
 ## Next actions
 
-1. Observe the new 24-hour run and serial capture. Preserve kernel/control
-   evidence on recurrence. Audit final guest/CPU exits, duration and post-run
+1. Observe the new 24-hour run and serial capture. The
+   [warm-reboot collector](warm-boot-validation.md) is independently reviewed
+   and prepared; it remains unexecuted and refuses active workloads or missing
+   retained outcome evidence. [Preparation evidence](evidence/warm-boot-preparation-20261109.json).
+   Preserve kernel/control evidence on recurrence. Audit final guest/CPU exits, duration and post-run
    health; pending collector exit 2 alone is not acceptance.
 2. After the workload, reproduce installation from the verified coherent full
    stream with protected SD, retain same-board identity and required guest

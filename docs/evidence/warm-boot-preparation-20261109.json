@@ -1,0 +1,95 @@
+{
+  "schema": 1,
+  "date": "2026-11-09",
+  "hardware_acceptance": false,
+  "classification": "prepared and independently reviewed; physical warm boots unperformed",
+  "artifacts": {
+    "scripts/collect-known-warm-boots.py": {
+      "bytes": 20225,
+      "sha256": "7956e2ec34998e048eb15f731adf18f2c9a1426fc1469aa7ed7c0f325fdfbc52"
+    },
+    "tests/test_known_warm_boots.py": {
+      "bytes": 17830,
+      "sha256": "d0775a4813963f6c2bb78a7b8da168bb56a9fa520c9f3df260478e440fef2035"
+    },
+    "docs/warm-boot-validation.md": {
+      "bytes": 5553,
+      "sha256": "220227eef5844c30f7e0ed128fba9be50e84220127f5aca98d6d4b19d58859c7"
+    }
+  },
+  "review": {
+    "report": "tmp/warm-boot-review-20261109-final.json",
+    "sha256": "828b9636537f9b07022f640ad214ba7ea4f7c8dc1ba191a6a178b9fc5bcc2e57",
+    "result": {
+      "review_date_utc": "2026-11-09",
+      "verdict": "PASS",
+      "hardware_acceptance": false,
+      "scope": "Focused independent re-review of preservation-admission fix, associated tests and documentation; original blocked report retained unchanged.",
+      "reviewed_sha256": {
+        "scripts/collect-known-warm-boots.py": "7956e2ec34998e048eb15f731adf18f2c9a1426fc1469aa7ed7c0f325fdfbc52",
+        "tests/test_known_warm_boots.py": "d0775a4813963f6c2bb78a7b8da168bb56a9fa520c9f3df260478e440fef2035",
+        "docs/warm-boot-validation.md": "220227eef5844c30f7e0ed128fba9be50e84220127f5aca98d6d4b19d58859c7"
+      },
+      "blockers": [],
+      "original_blocker": "Resolved: nested unit/journal/dmesg command captures, all six RAM-file captures and readable UART retention are validated before any probe or reboot. The prior all-failed nested-capture reproduction now refuses before transport.",
+      "findings": [
+        "capture_bytes requires exact integer zero returncode, explicit false timeout/truncation flags, strict base64 and byte bounds. Journals require consistent record counts and no possible truncation.",
+        "preserved_snapshot requires all expected unit identities and stopped guest/CPU/observer state with numeric exit fields; nonzero workload exit status remains admissible because this gate verifies retention rather than endurance success.",
+        "All six native FILES records must exist, have distinct expected paths and consistent captured extents. Empty complete CPU output and stderr are allowed. Small observer/CPU files must be complete.",
+        "Actual observer sources scripts/observe-endurance-kvm-exit.py and scripts/observe-first-kvm-exit.py use event=ready/event=final with unit=a733-guest-endurance.service as expected. Failed observer outcomes retain ready plus stderr, which the new gate deliberately admits.",
+        "Native preserver show() emits Id and exit properties for the same five units; remote_snapshot emits files, units, guest/kernel/manager journals and dmesg with the fields expected by the new guards.",
+        "Management-watch JSONL may retain a consistent tail; its first potentially partial line is skipped and later complete object records are required. UART may use a consistent nonempty tail or a readable nonempty regular native archive. These exceptions do not admit incomplete CPU or observer files.",
+        "No change was made to the previously reviewed zero-transport default, fixed-target SSH/identity checks, namespace proof, idle-workload guards, clean ten-request loop, distinct canonical boot ID handling or failure evidence retention."
+      ],
+      "independent_checks": {
+        "frozen_hashes": "All three match supplied hashes",
+        "targeted_native_ubuntu_24_04_tests": "26 tests PASS: python3 -m unittest discover -s tests -p test_known_warm_boots.py -v",
+        "additional_local_checks": "Native TRANSPORT.file_tail-generated record shapes admitted; five additional mutations rejected: boolean returncode, missing exit fields, mismatched guest journal boot, missing observer outcome, inconsistent CPU extent.",
+        "scoped_git_diff_check": "PASS"
+      },
+      "limits": "No hardware, SSH, remote probe, reboot, service mutation, delegation, commit or push. Only tmp/warm-boot-review-20261109-final.json was written. Static review and native mocked tests establish software behavior only. Actual post-endurance snapshot availability and physical ten warm boots remain unperformed acceptance work; current workload must remain undisturbed."
+    }
+  },
+  "initial_review": {
+    "verdict": "BLOCKED",
+    "finding": "Snapshot key presence admitted failed nested captures and missing UART evidence. Corrected before integration.",
+    "report_sha256": "e88589a642ae2f82dd48fd93067b1f450e3bd1f063ea7026e611baa646b9b153"
+  },
+  "validation": {
+    "targeted_tests": 26,
+    "result": "pass",
+    "qualified_full_suite": {
+      "host": "build.drewnet.online Ubuntu22.04",
+      "tests": 2065,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "seconds": 58.351,
+      "log": "out/serial-recovery-20261109/warm-preparation-jammy-validation-02.log",
+      "sha256": "f0de704c1d4597225c0df764ac1986e6b1bad3c040f272a1b2345197115f8103"
+    },
+    "initial_runner_attempt": "Stopped before tests because the unprivileged shell could not cd into the root-private build project; corrected to sudo bash. No product source change.",
+    "shell_and_diagnostic": {
+      "shell_suites": 5,
+      "diagnostic_assembly_tests": 5,
+      "result": "pass",
+      "log": "out/serial-recovery-20261109/warm-preparation-shell-and-diagnostic.log",
+      "sha256": "650e8c32961e2d7f3a11043ddeecf2247723ae7fddcae91b9166124eeebb8e53"
+    },
+    "toml_files_parsed": 5,
+    "diff_check": "pass"
+  },
+  "execution": {
+    "plan_only_tested": true,
+    "physical_warm_boots": 0,
+    "physical_cold_boots": 0,
+    "remote_script_executed": false,
+    "reboot_requests": 0,
+    "current_workload": "Nov9 release endurance remains running; no disruption"
+  },
+  "limits": [
+    "Mocked tests establish software behavior only.",
+    "Usable retained failed workload outcomes permit later collection but do not establish endurance acceptance.",
+    "Full SD byte comparisons and firmware-write audit remain separate physical gates."
+  ]
+}
