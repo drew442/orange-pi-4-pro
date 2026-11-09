@@ -1,0 +1,92 @@
+{
+  "schema": 1,
+  "date": "2026-11-09",
+  "classification": "Reviewed restoration of four empty frozen-builder bind-target placeholders and parent timestamp; isolated composition retry pending",
+  "hardware_acceptance": false,
+  "orange_pi_storage_written": false,
+  "core_image_or_target_pins_changed": false,
+  "original_attempt": {
+    "unit": "a733-isolated-nvme-composition-20261109-01.service",
+    "result": "exit-code",
+    "exit_status": 1,
+    "namespace_launched": false,
+    "phase_created": false,
+    "failure": "Namespace source path set differs before input staging"
+  },
+  "review": {
+    "path": "tmp/frozen-builder-anchor-repair-review-20261109.json",
+    "bytes": 4605,
+    "sha256": "d03a859a7807e3aefa4a867090ff565819b2a21d9469f70183ac965233150f30",
+    "result": "PASS conditional on trusted launch, fresh guard checks and quiescence",
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high"
+  },
+  "actual_repair": {
+    "after_bytes": 26714583,
+    "after_sha256": "88819f357852ff19b0cc2d38cfe6a4566e392427a03e22e68dda896a28a9ab0b",
+    "before_sha256": "6e766c78df195d66a158b48762881eb2c993983457c2069247a9bcf9309dd04d",
+    "classification": "Restore four audited empty builder bind-target placeholders",
+    "exact_common_content_and_xattrs_unchanged": true,
+    "hardware_acceptance": false,
+    "historical_anchor_passed": true,
+    "historical_sha256": "0937b28df5ad6b304c7e7580e44855c4babb5e2cc1a601f7240d07f281724583",
+    "orange_pi_storage_written": false,
+    "parent_mtime_restored": true,
+    "removed": [
+      "var/lib/a733-el2-work-20261104/out/el2-diagnostic-20261104-03/artifacts",
+      "var/lib/a733-el2-work-20261104/out/el2-diagnostic-20261104-03",
+      "var/lib/a733-el2-work-20261104/out",
+      "var/lib/a733-el2-work-20261104"
+    ],
+    "schema": 1,
+    "success": true
+  },
+  "actual_launch_preflight": {
+    "builder_filesystem_uuid": "bb90e190-be63-4324-a020-c80583437401",
+    "builder_boot_id": "7b22f42d-82ec-4c14-ac0b-f0449d7551b3",
+    "outer_source_commit": "13af36a1fd94007fd36c8e4ab46487290ef78ab0",
+    "launcher_sha256": "f1e3808137c92ada140a49ad0ac5deca1caea8849773796df8a3b3578b1924fd",
+    "reviewed_script_bytes": 5604,
+    "reviewed_script_sha256": "9ca047e83d3c0a83b8aac494a5bd964a0c653cd0738da292c69719d60e67458b",
+    "guarded_launcher_preflight_passed": true,
+    "operator_exclusive_quiescence": true
+  },
+  "retained": {
+    "out/isolated-nvme-execution-20261109-01/failed-unit.txt": {
+      "bytes": 122,
+      "sha256": "73d4724ab6348bea9bcf039baa10b1d0b395da89e31def3bf4ab1eeb7f21e1d9"
+    },
+    "out/isolated-nvme-execution-20261109-01/failed-execute.log": {
+      "bytes": 988,
+      "sha256": "c945aba56d7787037f5c435cdc1a2a6adeac03f80fd34b7545c50288305f7a03"
+    },
+    "out/isolated-nvme-execution-20261109-01/frozen-path-difference.json": {
+      "bytes": 863,
+      "sha256": "913a5256e3744bb01b810ac66b3b7df366757bf71ff7c66a8bf972a8debdf72c"
+    },
+    "out/isolated-nvme-execution-20261109-01/frozen-metadata-difference.json": {
+      "bytes": 728,
+      "sha256": "5c2da73ba5826f3112385928e1f79ba4ed9ba5a27224b35b32cf62322487ef47"
+    },
+    "out/isolated-nvme-execution-20261109-01/repair-frozen-root.py": {
+      "bytes": 5604,
+      "sha256": "9ca047e83d3c0a83b8aac494a5bd964a0c653cd0738da292c69719d60e67458b"
+    },
+    "out/isolated-nvme-execution-20261109-01/frozen-repair-execution.log": {
+      "bytes": 895,
+      "sha256": "9de4a4ed97bf2e8f3b6298dc35c21656cc859242155d9a3fc62e5087a9b27766"
+    },
+    "out/isolated-nvme-execution-20261109-01/frozen-repair-receipt.json": {
+      "bytes": 802,
+      "sha256": "e64b98aa9d9a845e02b4b1bee83417fe4767737a06a6e7ce838d85149320ab39"
+    }
+  },
+  "limits": [
+    "Only metadata/content covered by the original freeze snapshot is claimed; private/runtime contents and atime/ctime are excluded.",
+    "Historical namespace mapping policy treats translated ACL/capability values separately; repair additionally preserved all covered common host xattr values.",
+    "Process checks do not impose a concurrency lock; the coordinator serialized all namespace work.",
+    "No source-file content was removed or rewritten; rmdir refused any nonempty directory.",
+    "An interrupted metadata repair is not transactional; use retained snapshots/receipt and revalidate.",
+    "No existing failed unit or tag was resumed; retry uses a new unit/tag."
+  ]
+}
