@@ -1,13 +1,17 @@
 # Preserve installed STATE and both roots before reinstalling
 
-**UNEXECUTED procedure; independent preparation review passes.**
-[Review evidence](evidence/offline-preservation-preparation-20261109.json). This is preparation for
-same-board preservation, not a tested restore. The
-[November 9 workload result](evidence/eight-hour-endurance-result-20261109.json)
-passes the 8-hour criterion; both phases of final preservation are complete and
-reviewed. These guest/STATE/root backups and subsequent restoration remain
-unperformed. The former 02:11/02:16 timing was only a planned 24-hour endpoint
-and is no longer a prerequisite.
+**Raw cohort copy remains UNEXECUTED; independent preparation review passes.**
+[Review evidence](evidence/offline-preservation-preparation-20261109.json).
+The [eight-hour workload result](evidence/eight-hour-endurance-result-20261109.json)
+and [guest preservation](guest-preservation-20261109.md) are complete. Raw
+ROOT-A/ROOT-B/STATE backup and host restoration remain unperformed.
+
+[Physical RAM entry and source protection](evidence/offline-preservation-ram-entry-20261109.json)
+now pass at `.115`, boot `732ffcf6-d815-4ec0-80d5-02e9ecb69c96`. NVMe is
+unmounted; namespace and p1–p5 are block read-only. Do not repeat the
+pre-protection snapshot against those flags: it intentionally requires RO=0.
+Retain protection throughout the raw copies; no filesystem mount or replay is
+permitted first.
 
 The A733 uses a 2 GB SD and nominal 250 GB NVMe; keep the minimal host and zero SD writes. These backups read only NVMe and stream directly to private
 fixed builder storage: codex has only about 425 MB free. No full raw staging,
@@ -107,7 +111,7 @@ Do not use RAM/removable/SD storage. Both SSH host keys must already be pinned.
 ```bash
 set -euo pipefail
 : "${A733_RAM_IP:?Set verified recovery address}"
-A733_SAVE=/var/lib/a733-pre-reinstall-preservation-20261110-01
+A733_SAVE=/var/lib/a733-pre-reinstall-preservation-20261109-01
 A733_SSH=(ssh -T -i /home/drew/.ssh/id_ed25519 -o IdentitiesOnly=yes
   -o BatchMode=yes -o StrictHostKeyChecking=yes
   -o HostKeyAlias=192.168.1.116 -o ConnectTimeout=5 "root@$A733_RAM_IP")

@@ -12,18 +12,21 @@ unexplained; it is not reclassified as a pass.
   NVMe **256,060,514,304 bytes**, SPCC M.2 PCIe SSD, serial
   `134807190FC700149277`, firmware EDFM20.0, 512/512-byte sectors.
   Leave both attached heatsinks in place. Diagnostic inventory is sufficient.
-- **Host:** `root@192.168.1.116`, boot
-  `dd8d6f67-d297-4f3b-bc9a-8a41c9742051`; pinned Ed25519 SSH, read-only NVMe p2
-  root, STATE UUID `360dfb39-f49f-487e-b307-0bb887c854c5`, authenticated 40-file
-  tool closure and automatic NTP pass. Both public keys are retained, accessible
-  from any subnet; fresh RSA login is not repeated.
-- **Boot update:** Reviewed 256 MiB protected SD and 512 MiB NVMe p1-only writes
-  pass; roots, STATE and GUESTS were retained. Live original BOOT backup is
-  authenticated off-device. No installation readback was requested.
-  Firmware currently loads kernel/DTB/initramfs from SD and root from NVMe.
-  Matching NVMe BOOT files are installed; firmware loading them is untested.
-  [Physical receipts](evidence/protected-state-maintenance-20261109.json),
-  [current images](current-images.md).
+- **Current maintenance session:** private SSH RAM recovery at `root@192.168.1.115`,
+  using `HostKeyAlias=192.168.1.116` and the original pinned key. Boot
+  `732ffcf6-d815-4ec0-80d5-02e9ecb69c96`; RAM root mode 0755, no swap or mounted
+  NVMe filesystems. Complete 40-file recovery tools authenticate under
+  `/run/a733-tools`. Namespace and p1–p5 are block-RO with idle/consumer checks.
+  [Physical RAM entry](evidence/offline-preservation-ram-entry-20261109.json).
+- **Preserved installation:** the prior protected host at `.116`, boot
+  `dd8d6f67-d297-4f3b-bc9a-8a41c9742051`, used read-only NVMe p2 root and STATE
+  UUID `360dfb39-f49f-487e-b307-0bb887c854c5`. Management, automatic NTP and both
+  public SSH keys passed. Its roots, STATE and GUESTS remain intact offline.
+- **Current SD:** the approved first-256-MiB write of private recovery image
+  `d3a022…6bc3f6` completed with fsync/flush and booted physically. No installation
+  readback was requested. Protected normal-host SD `ab5e8c…ad207` remains retained
+  for restoration. NVMe BOOT `cc2ad9…26c313` and SPI are unchanged; firmware
+  loading NVMe BOOT remains untested. [Images](current-images.md).
 - **STATE protection:** Legacy serial captured orphan cleanup despite `ro,noload`.
   Reviewed boot/export changes enforce block RO before probing; four real ext4
   fixtures, including legacy orphans, preserve all source bytes/write counters.
@@ -55,9 +58,11 @@ checkpoint and restart evidence remains valid.
 
 Both fixed outcome-preservation phases were explicitly captured immediately.
 The obsolete November 10 02:16 timer is stopped and disabled. UART capture/relay remain live;
-the A733 has not rebooted. [Whole-data audit and post-workload checks](evidence/eight-hour-endurance-result-20261109.json)
-now pass the revised eight-hour workload gate. The complete SD hash still
-matches its baseline and all recorded write fields remain zero. Final SMART has zero critical warnings/media errors,
+the A733 subsequently made one explicitly recorded RAM-maintenance reboot.
+[Whole-data audit and post-workload checks](evidence/eight-hour-endurance-result-20261109.json)
+now pass the revised eight-hour workload gate. Before the explicit maintenance
+write, the post-workload complete SD hash matched its protected baseline and all
+recorded workload write fields were zero. Final SMART had zero critical warnings/media errors,
 with the existing 153 error-log entries and 77 unsafe shutdowns unchanged.
 The historical [12-hour audit](evidence/endurance-prefix-12h-20261109.json) and
 [preflight repair](evidence/endurance-journal-selector-repair-20261109.json) remain
@@ -71,7 +76,7 @@ retained with their original metadata. No new eight-hour test is required. Relea
 | Eight-hour workload | [Passed using retained >20-hour data](evidence/eight-hour-endurance-result-20261109.json); no rerun |
 | 10 cold and 10 warm boots with matched firmware/SSD | Pending; accidental user restarts and the controlled RAM reset are not counted |
 | SPI-to-NVMe with SD removed | Unprogrammed; registered independent recovery and physical SPI/SD-removed boot pending |
-| Immutable SD fallback | Linux writes remain zero and post-workload full-card hash matches; [whole-card baseline](evidence/protected-sd-baseline-20261109.json) and exact written prefix match pass; [bounded firmware source audit](sd-firmware-write-policy.md) complete; final shutdown/reboot comparison and serial reconciliation pending |
+| Immutable SD fallback | Qualifying workload writes were zero and its pre-maintenance full-card hash matched; [whole-card baseline](evidence/protected-sd-baseline-20261109.json) and exact written prefix match pass; [bounded firmware source audit](sd-firmware-write-policy.md) complete; final shutdown/reboot comparison and serial reconciliation pending |
 | Interrupted update, rollback, missing NVMe, dirty journal | Software preparation/review pass; required physical recovery cases pending |
 | Off-device guest backup/restoration | [Counter-3 physical restoration](evidence/corrected-host-guest-restore-20261108.json) passes; [current counter-5 off-device backup](evidence/current-counter5-backup-20261109.json) now passes durable receiver readback; new archive restore pending |
 | Coherent normalized full image and independent deployment reproduction | [Two selected full streams match and pass independent artifact review](evidence/normalized-full-nvme-image-20261109.json); fresh installation and reproduced deployment pending |

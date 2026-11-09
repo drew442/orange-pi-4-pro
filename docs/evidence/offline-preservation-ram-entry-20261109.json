@@ -1,0 +1,166 @@
+{
+  "schema": 1,
+  "date": "2026-11-09",
+  "operation": "known SD private RAM recovery entry for offline host preservation",
+  "old_boot_id": "dd8d6f67-d297-4f3b-bc9a-8a41c9742051",
+  "ram_boot_id": "732ffcf6-d815-4ec0-80d5-02e9ecb69c96",
+  "ram_ip": "192.168.1.115",
+  "ssh_host_key_alias": "192.168.1.116",
+  "ssh_fingerprint": "SHA256:Epfegy9GsJ6ng4/0EH3dZmir7beQj5uYTnIbE4JPfEI",
+  "sd_target": {
+    "bytes": 1977614336,
+    "cid": "035344535530324780716f216e00a8f5",
+    "major_minor": "179:0",
+    "model": "SU02G",
+    "path": "/dev/mmcblk1",
+    "write_bytes": 268435456,
+    "write_offset": 0
+  },
+  "sd_profile": "ssh-ram-recovery-20261108",
+  "sd_raw_sha256": "d3a02224efdb2c2eeccc7115d84cd6c4b2d75c7d06580b8f7812d12a546bc3f6",
+  "sd_written_bytes": 268435456,
+  "sd_write_exit": 0,
+  "sd_readback_performed": false,
+  "clean_old_host_unmounts_captured": true,
+  "reboot_ssh_exit": 255,
+  "reboot_ssh_interpretation": "Connection closed during accepted reboot; complete UART and new authenticated RAM boot establish actual transition. Not retried.",
+  "portable_tool_files_authenticated": 40,
+  "ram_root_mode": "0755",
+  "nvme_filesystems_mounted": false,
+  "nvme_and_all_five_partitions_block_ro": true,
+  "nvme_or_spi_erased_or_programmed": false,
+  "offline_cohort_backup_complete": false,
+  "release_boot_test_counted": false,
+  "actual_kvm_guest_run_in_ram_claimed": false,
+  "limits": [
+    "Initial read-only preflight wrapper used unsupported /proc/PID/task/TID/map_files path and refused before flags changed. Retry used exact reviewed generic census with direct /proc/TID/map_files; all consumers absent before and after RO protection.",
+    "No filesystem mount or journal replay was used to inspect or preserve source STATE. Raw ROOT-A/ROOT-B/STATE backup remains next."
+  ],
+  "records": [
+    {
+      "path": "out/ram-preservation-entry-20261109-01/nvme-preservation-protection-02-exit.json",
+      "bytes": 18,
+      "sha256": "df4d721d233a2334088d2d2e0110346ae9e509ff46bf0b379fbcfa85c715af4d"
+    },
+    {
+      "path": "out/ram-preservation-entry-20261109-01/nvme-preservation-protection-02.json",
+      "bytes": 2078,
+      "sha256": "85fbfa686e5069c3467633ec77bda8b4ab2f3daff99771d2b062aafeae5762ba"
+    },
+    {
+      "path": "out/ram-preservation-entry-20261109-01/nvme-preservation-protection-02.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/ram-preservation-entry-20261109-01/nvme-preservation-protection-exit.json",
+      "bytes": 18,
+      "sha256": "8869ca5e7f3ae989b151917c32f706ea8b83fd8d2ab5fd425117c4860c4e595f"
+    },
+    {
+      "path": "out/ram-preservation-entry-20261109-01/nvme-preservation-protection.json",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/ram-preservation-entry-20261109-01/nvme-preservation-protection.stderr",
+      "bytes": 461,
+      "sha256": "49a0a025b6edb45ffdbf107b19ecc42b0ada4d326a464aab333b18b294527d07"
+    },
+    {
+      "path": "out/ram-preservation-entry-20261109-01/ram-boot-console-so-far.log",
+      "bytes": 96978,
+      "sha256": "d7b0a51042f8f7f858ceb5aa865a2ed76dc47f9a8339f6f552b08b9adf78b003"
+    },
+    {
+      "path": "out/ram-preservation-entry-20261109-01/ram-boot-console.log",
+      "bytes": 96978,
+      "sha256": "d7b0a51042f8f7f858ceb5aa865a2ed76dc47f9a8339f6f552b08b9adf78b003"
+    },
+    {
+      "path": "out/ram-preservation-entry-20261109-01/ram-offline-source-final.json",
+      "bytes": 1934,
+      "sha256": "2a7582c74f644c8cce979701c9e5a9e34b77477d420cc92f465662de25ff88bc"
+    },
+    {
+      "path": "out/ram-preservation-entry-20261109-01/ram-offline-source-final.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/ram-preservation-entry-20261109-01/ram-session-identity.json",
+      "bytes": 690,
+      "sha256": "7f5113a4036b4ca8b9028d29f189734944eaa7a619283eecbf06e7afbefd27c5"
+    },
+    {
+      "path": "out/ram-preservation-entry-20261109-01/ram-staging-preflight.json",
+      "bytes": 130,
+      "sha256": "4534de04dc6683905139a25bdda4e4f6bdd848bace5a2905016a366ca5781bb2"
+    },
+    {
+      "path": "out/ram-preservation-entry-20261109-01/ram-tools-authentication.json",
+      "bytes": 115,
+      "sha256": "c512dd4bd2a54f4cfa70fd5f5846e8cf2c953af5732e5969fb763ceea6ef0518"
+    },
+    {
+      "path": "out/ram-preservation-entry-20261109-01/ram-tools-authentication.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/ram-preservation-entry-20261109-01/raw-transfer.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/ram-preservation-entry-20261109-01/reboot-command.json",
+      "bytes": 67,
+      "sha256": "e36487bf3c456b43d41859024c081903daf657a519ef0b46ebc05f6ff965c580"
+    },
+    {
+      "path": "out/ram-preservation-entry-20261109-01/reboot-intent.json",
+      "bytes": 260,
+      "sha256": "2ef757c97905c22f92473485a9f00b59a4a7c9561ac6532adaad9f8c09aaeaad"
+    },
+    {
+      "path": "out/ram-preservation-entry-20261109-01/reboot-ssh.stderr",
+      "bytes": 52,
+      "sha256": "66bf0c531a84d8667deb7224f45e7cc9e1cf6c470c66ea76e212329eda512f01"
+    },
+    {
+      "path": "out/ram-preservation-entry-20261109-01/reboot-ssh.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/ram-preservation-entry-20261109-01/sd-plan.json",
+      "bytes": 641,
+      "sha256": "6c45b5d6b8d71ea0ef28ffea129f05ba510d328d87976a242e38f2a5f41d68cc"
+    },
+    {
+      "path": "out/ram-preservation-entry-20261109-01/sd-plan.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/ram-preservation-entry-20261109-01/sd-write-exit.json",
+      "bytes": 16,
+      "sha256": "e8cfe601a7e2762e17f7bf533044f84e714ac09a5af0186ccd93a58eb88f5ba8"
+    },
+    {
+      "path": "out/ram-preservation-entry-20261109-01/sd-write-receipt.json",
+      "bytes": 659,
+      "sha256": "e5faee65132e3460b1d5aa434e4b5aea15f1f28c2289b4be046783793ebcd72b"
+    },
+    {
+      "path": "out/ram-preservation-entry-20261109-01/sd-write.stderr",
+      "bytes": 738,
+      "sha256": "e1f08b5464cddcf7bed51e1a03a23de52c3e4d5b782e904cdf83d5028bef4bd2"
+    },
+    {
+      "path": "out/ram-preservation-entry-20261109-01/source-staging.json",
+      "bytes": 421,
+      "sha256": "41fb0b4c2924828eaf11ac751ae6474d2144b9ff5a54d0fc9aa1c5c032e7c579"
+    }
+  ]
+}

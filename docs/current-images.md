@@ -1,18 +1,20 @@
 # Current images for this board
 
-The protected STATE bootstrap now boots at **192.168.1.116**, with read-only
-NVMe root and automatic time synchronization; actual KVM guest execution has
-been demonstrated. The workload is stopped.
-The [November 9 workload result](evidence/eight-hour-endurance-result-20261109.json)
-passes the 8-hour gate using 72,659 measured seconds. Final telemetry and
-preservation were reviewed; full-card SD hash matches the baseline and counters
-remain zero. Firmware currently loads the Linux boot files from SD and uses NVMe root.
-The matching NVMe BOOT component is installed; firmware loading it remains
-unperformed. No operator flashing is currently requested. Release acceptance remains
- incomplete; the previous endurance failure is still unexplained. The
-[prepared full deployment procedure](deploy-protected-20261109.md) uses this
-matched candidate; it remains unexecuted pending required backups and its other
-deployment prerequisites.
+The board is temporarily in **private SSH RAM recovery at 192.168.1.115**,
+boot `732ffcf6-d815-4ec0-80d5-02e9ecb69c96`. Use strict host-key checking with
+`HostKeyAlias=192.168.1.116` and the original pinned key. NVMe is unmounted and
+all six namespace/partition block flags are read-only for offline preservation.
+The card currently contains the recovery SD below; the protected normal-host SD
+is retained for restoration. [Physical transition](evidence/offline-preservation-ram-entry-20261109.json).
+No operator flashing is requested.
+
+The prior protected host demonstrated real KVM execution and the
+[eight-hour workload gate](evidence/eight-hour-endurance-result-20261109.json)
+passes using its retained longer run. [All four guest directories are preserved](guest-preservation-20261109.md).
+The offline compatible ROOT-A/ROOT-B/STATE copy is next and remains unperformed.
+NVMe BOOT is unchanged; firmware loading it remains untested. Release acceptance
+and [fresh normalized deployment](deploy-protected-20261109.md) remain incomplete;
+the previous endurance failure is still unexplained.
 
 Paths below are relative to `/home/drew/orange-pi-4-pro` on codex.
 
@@ -29,7 +31,7 @@ the normal host bootstrap in the table.
 | Purpose | Existing artifact |
 | --- | --- |
 | SSH RAM recovery, same board | `out/ssh-ram-installer-20261108/a733-ssh-installer.img.gz` |
-| Current protected host SD bootstrap | `out/serial-recovery-20261109/protected-sd-retained-01/a733-host-sd.img.gz` |
+| Retained protected host SD bootstrap | `out/serial-recovery-20261109/protected-sd-retained-01/a733-host-sd.img.gz` |
 | Current protected NVMe BOOT component | `out/serial-recovery-20261109/protected-nvme-retained-01/boot.ext4.gz` |
 | Normalized full NVMe candidate, fresh installation unperformed | `out/normalized-nvme-candidate-20261109/nvme.img.gz` |
 | Historical full NVMe base, requiring the protected BOOT update | `out/vgic-nvme-image-20261108/retained-02/nvme.img.gz` |
