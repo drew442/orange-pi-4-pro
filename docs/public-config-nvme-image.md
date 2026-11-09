@@ -3,8 +3,9 @@
 `build/public-config-nvme-image.py` prepares a complete regular-file distribution
 from the authenticated protected image, [corrected roots](public-config-roots-20261109.md)
 and [matched STATE](public-config-state.md). [Independent code review and 2,167 privileged Ubuntu tests](evidence/public-config-nvme-preparation-20261109.json)
-pass. Full production construction and physical installation are
-pending; the running endurance host remains unchanged.
+pass. The first full production stream now completes with producer exit 0;
+independent actual-artifact review is running. Repeat construction and physical
+installation remain pending; the running endurance host is unchanged.
 
 The recipe replaces only the contiguous ROOT-A, ROOT-B and STATE extents:
 **[537,919,488, 17,717,788,672)**, totaling 16 GiB. The complete logical image

@@ -96,10 +96,12 @@ integration and physical policy/listener verification remain required. The
 filesystem readback and independent artifact review, preserving the current
 protected BOOT UUID and authenticating the new root-A marker. The
 [full-image recipe](public-config-nvme-image.md) passes independent code review
-and software checks; its first full stream is running, with actual-artifact
-verification pending. A [build-only normalization profile](deterministic-host-roots.md)
-now passes independent review and pinned Ubuntu tests; full-size root byte-repeat
-proof remains pending. The active endurance host is unchanged.
+and software checks; its first full stream now completes with producer exit 0,
+with independent actual-artifact verification running. A [build-only normalization profile](deterministic-host-roots.md)
+now passes independent review and pinned Ubuntu tests. Its first production
+attempt failed a strict parent-directory stability guard during reviewer setup;
+a fresh serialized construction is running. Full-size root byte-repeat proof
+remains pending. The active endurance host is unchanged.
 
 ## Construction, resources and authorization
 

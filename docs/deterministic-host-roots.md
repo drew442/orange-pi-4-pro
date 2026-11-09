@@ -3,8 +3,11 @@
 A build-only creator and registered launcher are designed to normalize root
 filesystem metadata while retaining the installed maintenance sources and
 payload-marker contents. [Independent source reviews and 2,178 privileged Ubuntu tests](evidence/deterministic-roots-preparation-20261109.json)
-pass. Actual 4 GiB construction, complete readback and repeat-byte comparison
-remain pending; no hardware acceptance is claimed.
+pass. The first 4 GiB pair was generated, but its producer failed final parent-directory
+stability verification during parallel reviewer setup. It remains a failed
+attempt; a fresh serialized construction is running. Successful construction,
+complete readback and repeat-byte comparison remain pending. No hardware
+acceptance is claimed.
 
 The earlier [two resolver-readable roots](public-config-roots-20261109.md)
 match contents and non-mtime metadata, but differ in 465 expected mtimes per
@@ -67,8 +70,15 @@ fixtures establish creator behavior, not the full production result.
 After committing both modules in the producer source closure, invoke the new
 launcher using the same `--project`, `--userspace`, `--diagnostic`, `--tag` and
 `--plan` interface as the [existing root construction](public-config-roots-20261109.md).
-Use separate fresh tags `timesync-deterministic-01` and
-`timesync-deterministic-02`; reused phases are refused. Keep the existing pinned
+[Attempt evidence](evidence/deterministic-roots-failed-attempt-20261109.json)
+retains tag `timesync-deterministic-01` as failed: reviewer directory
+creation at 2026-11-09 15:19:30 UTC coincided with the final strict parent check.
+The failed receipt records unchanged package inventory and cleared mapped
+processes/mounts. A fresh `timesync-deterministic-02` is running from committed
+source `50bc9e70698d4a09c3705594dcc61c64e1715cb9`, with one CPU and a 3 GiB
+memory ceiling. Use `timesync-deterministic-03` for its later repeat; keep all
+shared ancestor directory creation serialized with strict verification. Failed
+or consumed tags cannot be reused. Keep the existing pinned
 userspace and diagnostic inputs. Fully read back all four resulting filesystems,
 independently inspect the artifacts, compare complete raw and gzip bytes, and
 check actual payload markers and package profiles before any full-image update.

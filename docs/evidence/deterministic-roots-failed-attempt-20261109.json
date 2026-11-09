@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "classification": "Retained failed first full-size normalized root producer; serialized fresh construction pending",
+  "hardware_acceptance": false,
+  "physical_storage_written": false,
+  "source_revision": "50bc9e70698d4a09c3705594dcc61c64e1715cb9",
+  "phase": "/var/lib/a733-clean-replay-20261106/host-roots-timesync-deterministic-01",
+  "success": false,
+  "state": "failed",
+  "error": "ValueError('physical parent changed during read')",
+  "host_inventory_unchanged": true,
+  "mapped_processes_final": [],
+  "phase_mounts_final": [],
+  "final_resources": {
+    "available_memory_bytes": 7509184512,
+    "free_bytes": 28548370432,
+    "time": 1794237573.449442
+  },
+  "assessment": {
+    "reviewer_directory_creation_utc": "2026-11-09T15:19:30.259840336Z",
+    "reviewer_directory": "/var/lib/a733-deterministic-roots-independent-review-20261109-01",
+    "likely_cause": "Concurrent creation changed a physical ancestor directory during final authentication. Exact differing ancestor was not logged.",
+    "guard_changed": false,
+    "recovery": "Retain failed01 without successful-producer claims; serialize directory creation; build fresh02 then03."
+  },
+  "retained": {
+    "out/deterministic-host-roots-20261109-01/failed-01-receipt.json": {
+      "bytes": 206967,
+      "sha256": "93dae7f026e423c95f9c6320d7f3b1941bd4f95a643d7ab5f590c6c7f1aea6c0"
+    },
+    "out/deterministic-host-roots-20261109-01/failed-01-unit.txt": {
+      "bytes": 228,
+      "sha256": "8f2b82c34f33924f033b8280ea6644d8a31fa0dd0b132686e9124139e39e7ef2"
+    }
+  }
+}
