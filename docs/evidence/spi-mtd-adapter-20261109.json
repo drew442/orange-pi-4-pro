@@ -1,0 +1,290 @@
+{
+  "schema": 1,
+  "date": "2026-11-09",
+  "classification": "borrowed-descriptor Linux MTD backend preparation; no complete programmer or hardware execution",
+  "hardware_acceptance": false,
+  "source_artifacts": [
+    {
+      "path": "scripts/spi-mtd-adapter.py",
+      "bytes": 8088,
+      "sha256": "f8b88a531827118812e6707de7b5b6e8940e2781e5505896e48d851a16cfbecd"
+    },
+    {
+      "path": "tests/test_spi_mtd_adapter.py",
+      "bytes": 18430,
+      "sha256": "dd94f2cf55a6be2e31867a641049161924773a9651b5b1415126a85f700b2a1f"
+    },
+    {
+      "path": "scripts/spi-unit-transaction.py",
+      "bytes": 9566,
+      "sha256": "6002270dfd2251c16ef8d9ad2fa0a6caa6e279ef346c11c52fa31fcce4c95d0d"
+    },
+    {
+      "path": "docs/spi-mtd-adapter.md",
+      "bytes": 4910,
+      "sha256": "0cfc227ddb90d8bfd07409b66be6596bf66c18d5ec691e9a9a546acb2eefb42e"
+    }
+  ],
+  "independent_review": {
+    "record": {
+      "path": "tmp/spi-mtd-adapter-review-20261109.json",
+      "bytes": 7176,
+      "sha256": "c23fd2ca1b284c259a997550eaa7ca2a7aabd4b951fe24e2b70fce3878f86914"
+    },
+    "summary": {
+      "schema": 1,
+      "reviewed_at_utc": "2026-11-09T10:22:01.825266+00:00",
+      "review_role": "independent bounded lowlevel SPI backend reviewer",
+      "result": "PASS_WITH_LIMITS",
+      "blocking_findings": [],
+      "source_kernel_revision": "2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f",
+      "frozen_sha256_before": {
+        "scripts/spi-mtd-adapter.py": "f8b88a531827118812e6707de7b5b6e8940e2781e5505896e48d851a16cfbecd",
+        "tests/test_spi_mtd_adapter.py": "dd94f2cf55a6be2e31867a641049161924773a9651b5b1415126a85f700b2a1f",
+        "tmp/spi-mtd-adapter-20261109/mtdchar.c": "f72607ac8b813724e46d46a7a3f7d281d309344336902ad516566b0a59143bbf",
+        "tmp/spi-mtd-adapter-20261109/mtd-abi.h": "21cb435f6b606838c87c4bb183a5e6232fa72bec9f3899b2bb8cd93903000cc7"
+      },
+      "frozen_sha256_after": {
+        "scripts/spi-mtd-adapter.py": "f8b88a531827118812e6707de7b5b6e8940e2781e5505896e48d851a16cfbecd",
+        "tests/test_spi_mtd_adapter.py": "dd94f2cf55a6be2e31867a641049161924773a9651b5b1415126a85f700b2a1f",
+        "tmp/spi-mtd-adapter-20261109/mtdchar.c": "f72607ac8b813724e46d46a7a3f7d281d309344336902ad516566b0a59143bbf",
+        "tmp/spi-mtd-adapter-20261109/mtd-abi.h": "21cb435f6b606838c87c4bb183a5e6232fa72bec9f3899b2bb8cd93903000cc7"
+      },
+      "source_bytes_unchanged": true,
+      "engine_sha256": "6002270dfd2251c16ef8d9ad2fa0a6caa6e279ef346c11c52fa31fcce4c95d0d",
+      "reviewed_paths": [
+        "docs/implementation-status.md",
+        "docs/hypervisor-plan.md",
+        "docs/agent-routing.md",
+        "docs/spi-unit-transaction.md",
+        "scripts/spi-unit-transaction.py",
+        "scripts/spi-mtd-adapter.py",
+        "tests/test_spi_mtd_adapter.py",
+        "tmp/spi-mtd-adapter-20261109/mtdchar.c",
+        "tmp/spi-mtd-adapter-20261109/mtd-abi.h"
+      ],
+      "checks": [
+        {
+          "check": "adapter unit tests",
+          "run": 18,
+          "passed": 18,
+          "skipped": 0,
+          "log": "tmp/spi-mtd-adapter-review-20261109/adapter-tests.log"
+        },
+        {
+          "check": "related SPI suites including adapter",
+          "run": 58,
+          "passed": 57,
+          "skipped": 1,
+          "skip_reason": "test_spi_live_plan: root-owned private path checks require root",
+          "log": "tmp/spi-mtd-adapter-review-20261109/spi-tests.log"
+        },
+        {
+          "check": "independent probes plus repeated AdapterTests",
+          "run": 23,
+          "passed": 23,
+          "skipped": 0,
+          "new_probes": 7,
+          "coverage": [
+            "unsupported platform/pointer size before syscalls",
+            "geometry failure invalidates subsequent guard/read/erase/write/emit",
+            "invalid MEMGETINFO returns stop mutation",
+            "descriptor drift after geometry check stops mutation",
+            "actual closed pipe descriptor EBADF invalidates without mutation",
+            "huge signed/unsigned offsets reject before syscalls",
+            "libc write offset, buffer, int64 and ssize arguments"
+          ],
+          "log": "tmp/spi-mtd-adapter-review-20261109/review-probes.log"
+        },
+        {
+          "check": "compiled C ABI against retained vendor mtd-abi.h on Linux x86_64",
+          "passed": true,
+          "userspace_annotation": "-D__user= only; pinned header unchanged",
+          "observed": {
+            "mtd_info_user_size": 32,
+            "erase_info_user64_size": 16,
+            "flags_offset": 4,
+            "padding_offset": 24,
+            "off_t_size": 8,
+            "ssize_t_size": 8,
+            "MEMGETINFO": "0x80204d01",
+            "MEMERASE64": "0x40104d14"
+          },
+          "log": "tmp/spi-mtd-adapter-review-20261109/abi-probe.log"
+        },
+        {
+          "check": "git diff --check",
+          "passed": true,
+          "log": "tmp/spi-mtd-adapter-review-20261109/diff-check.log"
+        },
+        {
+          "check": "actual new-file diffs inspected",
+          "passed": true,
+          "logs": [
+            "tmp/spi-mtd-adapter-review-20261109/adapter.diff",
+            "tmp/spi-mtd-adapter-review-20261109/adapter-tests.diff"
+          ]
+        }
+      ],
+      "source_evidence": [
+        {
+          "path": "scripts/spi-mtd-adapter.py",
+          "lines": [
+            87,
+            93,
+            108,
+            134
+          ],
+          "finding": "Exact CHR 90:0, O_RDWR/no APPEND or PATH, fixed supported ABI and NOR geometry; full metadata/flags binding."
+        },
+        {
+          "path": "scripts/spi-mtd-adapter.py",
+          "lines": [
+            136,
+            195
+          ],
+          "finding": "Trusted guard and identity followed by metadata stability; fresh geometry and stability before mutation; bounded reads, aligned erases 0..25, immutable <=4096-byte boundary-contained writes; exceptions invalidate."
+        },
+        {
+          "path": "scripts/spi-mtd-adapter.py",
+          "lines": [
+            49,
+            77
+          ],
+          "finding": "Single direct libc ioctl/pwrite invocation with explicit types avoids CPython mutation EINTR retries."
+        },
+        {
+          "path": "tmp/spi-mtd-adapter-20261109/mtdchar.c",
+          "lines": [
+            91,
+            107,
+            217,
+            302,
+            905,
+            954
+          ],
+          "finding": "Vendor source confirms RW release mtd_sync, error after possible writes, zeroed 32-byte info and MEMERASE64 mtd_erase handling."
+        },
+        {
+          "path": "scripts/spi-unit-transaction.py",
+          "lines": [
+            101,
+            232
+          ],
+          "finding": "Engine integration checks whole-image preservation; short writes advance only confirmed bytes and failures retain conservative mutation-possible receipt with hardware_acceptance false."
+        }
+      ],
+      "harness_corrections": [
+        {
+          "issue": "Initial extra ABI probe accidentally invoked fixture-patched _pwrite, so the libc mock was not called.",
+          "resolution": "Capture original _pwrite before fixture setup; corrected 23 tests pass.",
+          "log": "tmp/spi-mtd-adapter-review-20261109/review-probes-initial-harness-error.log"
+        },
+        {
+          "issue": "Raw retained UAPI header uses kernel __user annotation not defined in standalone C userspace probe.",
+          "resolution": "Compile with -D__user= without changing retained header; static assertions pass.",
+          "log": "tmp/spi-mtd-adapter-review-20261109/abi-compile-initial-userspace-annotation.log"
+        }
+      ],
+      "remaining_uncertainty": [
+        "Future caller is unimplemented; must independently enforce pinned A733/sysfs/JEDEC identity, initial namespace, quiescence, exclusive unshared FD lifetime/normal mode, registered ROM recovery, authenticated sources/operator authority, durable off-board events, close and post-close handling.",
+        "No host tests establish physical erase/write completion, persistence, power-failure recovery, ROM recovery, restoration, SPI-to-NVMe boot, SD removal or hardware release acceptance.",
+        "No arm64 runtime, vendor-driver live ioctl or actual EINTR-on-MTD execution was performed; x86_64 compiled layout and in-process ABI/error models are the evidence.",
+        "Descriptor stamps cannot detect close/reopen of identical inode or malicious privileged changes; accepted contract requires exclusive lifetime/no reentry.",
+        "One existing root-only source-path check was skipped by related SPI suite; it is outside the adapter backend."
+      ],
+      "hardware_acceptance": false,
+      "hardware_devices_services_ssh_accessed": false,
+      "tracked_or_frozen_source_files_changed": [],
+      "review_artifacts": [
+        "tmp/spi-mtd-adapter-review-20261109.json",
+        "tmp/spi-mtd-adapter-review-20261109"
+      ]
+    }
+  },
+  "jammy_validation": {
+    "builder": "drew@build.drewnet.online Ubuntu22.04",
+    "source_git_baseline": "fe7d845",
+    "staging_directory": "/var/lib/a733-spi-adapter-validation-20261109-01",
+    "authenticated_project_files": 835,
+    "unit": "a733-spi-mtd-adapter-validation-20261109-02",
+    "python_tests": 2108,
+    "python_errors": 0,
+    "python_failures": 0,
+    "python_skips": 0,
+    "shell_suites": 5,
+    "diagnostic_assembly_cases": 5,
+    "source_files_match_before_and_after": true,
+    "boundary_resources": {
+      "after_disk_free_bytes": 23265329152,
+      "after_MemAvailable_bytes": 7351046144,
+      "before_staging_disk_free_bytes": 23293874176,
+      "before_staging_MemAvailable_bytes": 7525408768
+    },
+    "resource_limits": "Boundary observations, not continuous minima; tests use disposable host fixtures.",
+    "initial_failed_attempt": "Fresh snapshot omitted historical Git objects and had group-writable bootstrap source permissions. Two modules failed import and two historical-evidence tests failed; no production-code fix. Authenticated complete history and root-owned non-group-writable source normalized before successful rerun.",
+    "records": [
+      {
+        "path": "out/serial-recovery-20261109/spi-mtd-adapter-jammy-validation-02.log",
+        "bytes": 13458,
+        "sha256": "4f691e29c069eb68581465f0fe5bcc23a3341ea71d7a35104416887c04bfe6b5"
+      },
+      {
+        "path": "out/serial-recovery-20261109/spi-mtd-adapter-jammy-validation.log",
+        "bytes": 17047,
+        "sha256": "c07a42851f09267f3ac0978d6edf84d15c6acc5a8c1d67e93b6c3758413b1165"
+      },
+      {
+        "path": "out/serial-recovery-20261109/spi-mtd-adapter-validation-source-lock.json",
+        "bytes": 133046,
+        "sha256": "cb480e1cd9d2bc46a2aac2d4a54f875ade627c1859d602cef45ec3a305c1b151"
+      },
+      {
+        "path": "out/serial-recovery-20261109/spi-mtd-adapter-source-verification.json",
+        "bytes": 152,
+        "sha256": "cc5743af2f2afe5d1857e4b0c0916a5f58f0a26e77d670a54cce506fbdf20bc5"
+      },
+      {
+        "path": "out/serial-recovery-20261109/spi-mtd-adapter-source-postcheck.json",
+        "bytes": 176,
+        "sha256": "2ccfb3e0193e24550c5ac93d619f945e912e7ac79feeb4c9af95f7687a2c4155"
+      },
+      {
+        "path": "out/serial-recovery-20261109/spi-mtd-adapter-validation-unit.txt",
+        "bytes": 169,
+        "sha256": "59c4b8443b83278217c857b009bed9fedc673e6c4b3dc9ad7c9f1ca5901cc09a"
+      },
+      {
+        "path": "out/serial-recovery-20261109/spi-mtd-adapter-validation-unit-after-gc.txt",
+        "bytes": 110,
+        "sha256": "9e37a1e1894d2b9b281a21b58abed33a9dd3ba54dba97ead57562907a3b971df"
+      }
+    ],
+    "inputs": [
+      {
+        "path": "out/serial-recovery-20261109/spi-mtd-adapter-validation-inputs/a733-spi-adapter-validation-history-20261109-01.bundle",
+        "bytes": 3187141,
+        "sha256": "df19c7ff297f1ea0321bce27f4b851c912d25618511f2e714c42c31e16252a69"
+      },
+      {
+        "path": "out/serial-recovery-20261109/spi-mtd-adapter-validation-inputs/a733-spi-adapter-validation-source-20261109-01.tar",
+        "bytes": 9748480,
+        "sha256": "51aa3fab212269f3235fc6d60aff792b509339f8333c525fa86dc9f5376addbb"
+      }
+    ],
+    "CPUQuota_requested": "200%",
+    "MemoryMax_requested_bytes": 3221225472,
+    "runtime_effective_limits_independently_retained": false,
+    "post_unit_query_limitation": "systemd-run --wait completed successfully, but the transient unit was unloaded afterward. Post-run systemctl show returns not-found/default unlimited fields; these are not observations of runtime effective limits. Requested CPU/memory limits are recorded separately, not claimed as independently verified."
+  },
+  "native_checks": {
+    "TOML_files_parsed": 5,
+    "whitespace": "PASS"
+  },
+  "limits": [
+    "No actual MTD/ARM runtime, flash erase/program/restore, ROM recovery or SD-removed NVMe boot occurred.",
+    "Backend takes an already-open exclusive descriptor; full caller integration and independent gate review still required.",
+    "Caller must enforce sysfs/JEDEC identity, namespace, quiescence, authenticated sources, original backup, demonstrated ROM recovery, existing target authority, off-board event durability and close handling.",
+    "Current hardware endurance continues unchanged; host tests do not replace physical acceptance."
+  ]
+}

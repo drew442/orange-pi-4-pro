@@ -80,7 +80,7 @@ power and full thermal endurance remain unproven.
   inspection and unchanged outside-BOOT bytes pass. Native candidate is
   `out/protected-nvme-candidate-20261109/nvme.img.gz`; fresh installation is
   unperformed. [Evidence](evidence/protected-full-nvme-image-20261109.json).
-- Latest complete privileged Ubuntu suite: **2,090 tests**, zero skips/errors/
+- Latest complete privileged Ubuntu suite: **2,108 tests**, zero skips/errors/
   failures; five shell suites and five diagnostic assembly cases also pass.
   All five TOML files parse separately on codex. These are software checks.
 - [Matched A/B maintenance candidates](matched-host-updates-20261109.md) now
@@ -126,8 +126,11 @@ power and full thermal endurance remain unproven.
    workload undisturbed until its evidence is retained.
 3. Prepare SPI recovery/programming and matched NVMe-first firmware trials.
    The [transaction API](spi-unit-transaction.md) passes independent review and
-   actual-input NOR-model rehearsals; it has no physical adapter or device route.
+   actual-input NOR-model rehearsals; it supplies no device-opening route.
    [Preparation evidence](evidence/spi-unit-transaction-20261109.json).
+   A [borrowed-FD Linux MTD backend](spi-mtd-adapter.md) now passes independent
+   review and the full privileged Jammy suite. It has no CLI or device opening;
+   the complete programmer and recovery/durability gate integration remain pending.
    Otherwise finish complete immutable-SD proof. The blank XM25QU128C SPI backup
    and successful SD boot do not alone prove recovery after broken SPI firmware.
 4. Complete the remaining physical gates in [hardware validation](hardware-validation.md)

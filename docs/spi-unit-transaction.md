@@ -82,7 +82,12 @@ write counters. A final event failure also prevents a success receipt.
 
 ## Physical adapter remains a separate gate
 
-A future trusted adapter must independently enforce pinned A733/XM25QU128C target
+A [Linux MTD backend](spi-mtd-adapter.md) now implements bounded syscall callbacks
+on a caller-owned descriptor and passes independent host review. It has no CLI
+or device-opening path. The complete trusted programmer and its recovery,
+quiescence, source and off-board durability integration remain unimplemented.
+
+The future trusted programmer must independently enforce pinned A733/XM25QU128C target
 identity and geometry, initial namespace and quiescence, authenticated staged
 sources, registered ROM recovery proof, durable off-board capture and the required
 single yes/no authorization workflow while honoring existing operator authority.
@@ -105,7 +110,7 @@ Run `python3 -m unittest discover -s tests -p 'test_spi_unit_transaction.py'` fo
 host NOR-model checks. They cover exact full-unit preservation, skip behavior,
 short writes, interruptions, fresh restore, stale plans/pins, preservation refusal,
 callback failure ordering and final full-image verification. They do not establish
-actual MTD acceptance. The physical adapter/programmer, ROM recovery demonstration,
+actual MTD acceptance. The complete physical programmer, ROM recovery demonstration,
 real SPI restoration and SD-removed NVMe boot remain unprepared or unperformed.
 Physical KVM and hardware release acceptance remain with the coordinator, retaining
 the A733, 2 GB SD and nominal 250 GB NVMe requirements.
