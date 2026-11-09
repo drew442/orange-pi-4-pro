@@ -128,13 +128,72 @@ backup as payload. It authenticates the old source pin and requires current
 live p1 to match the **new** pin. For rollback in a later RAM boot, independently
 reverify the retained old backup and issue a newly boot-bound receipt. Rollback
 retains all identity, idle, GPT, bounded-write, flush and optional-readback guards.
-A partially written p1 matches neither predecessor pin and is deliberately
-refused by both modes; stop and prepare a separately reviewed recovery operation.
+A partially written p1 matches neither predecessor pin and is refused by both
+modes. Use the explicit inspect/recover procedure below only after its independent
+source review passes.
 
 A flush or postcheck failure can leave p1 partially or fully changed. Failure
 reports use unknown bytes-written once application begins; do not interpret a
 failed operation as zero writes or automatic rollback. No image, successful
 host test, or helper receipt establishes physical BOOT or KVM acceptance.
+
+## Inspect and recover an interrupted write
+
+This extension has **not performed physical partial-write recovery**. The original
+writer SHA-256 `6401a4153a6bcb49c13e0fe0959383f4d2e6384c504e983d1bbe54ec3f1db975`
+was independently reviewed and used for the successful physical p1 application;
+that historical result does not validate this extension. Independent source review
+and physical interrupted-recovery acceptance are separate gates.
+
+Remain in the private maintenance RAM root, or boot it again if required. Preserve
+the existing off-device old BOOT backup. Independently reverify its expanded
+536,870,912-byte length and old SHA-256 on the trusted retention host; for a new
+maintenance boot, create a newly authenticated receipt bound to its observed boot
+ID as described above. Stage the verified expanded old backup and receipt in the
+protected RAM directory. Do not attempt to export a partially written p1 as the
+old backup: `export-backup` requires the complete old hash.
+
+First inspect the exact fixed target; this operation takes **no payload** and opens
+both namespace and p1 read-only. All existing offline, namespace, idle, identity,
+geometry, exclusive-claim and GPT guards apply. Its fresh JSON report records
+`current_sha256`, validated boot ID, model/serial, device-node identities, complete
+partition geometry and the verified GPT extent pins. It hashes only p1:
+
+```sh
+python3 /run/maintenance/write-known-nvme-boot.py inspect \
+  --expected-boot-id OBSERVED-BOOT-ID \
+  --report /run/maintenance/inspect.json
+```
+
+Retain and review the successful report through the authenticated control channel.
+Use its exact `current_sha256` as the caller pin in the same maintenance boot:
+
+```sh
+python3 /run/maintenance/write-known-nvme-boot.py recover-backup \
+  /run/maintenance/live-boot.ext4 \
+  --expected-boot-id OBSERVED-BOOT-ID \
+  --expected-current-sha256 CURRENT-SHA256-FROM-FRESH-INSPECT \
+  --backup-receipt /run/maintenance/backup-receipt.json \
+  --backup-receipt-sha256 RECEIPT-SHA256 \
+  --report /run/maintenance/recover.json
+```
+
+`--expected-current-sha256` binds only the observed current target bytes; it never
+changes the allowed source. Recovery always authenticates the fixed old backup
+hash `5860889755d7479e619e86b83bc32237e51bacd3a3fd2e2d2ebe976898f44899`
+and requires the same pinned off-device old-backup receipt. No device or source-hash
+override exists. The helper checks the caller pin after claiming p1 and again
+immediately before writing, under that same held claim, after the fresh context,
+identity, idle, GPT and source-descriptor checks. A changed current hash is refused
+without copying. If it changes, investigate the cause and obtain a fresh inspection;
+do not blindly substitute hashes until a write is accepted.
+
+Recovery writes exactly the 512 MiB p1 descriptor, with progress, fsync and
+`BLKFLSBUF`; GPT and p2–p5 remain outside its writable range. Add `--readback`
+only when an explicit complete p1 readback is wanted. Save both reports off-device.
+A successful recovery report establishes helper completion, not physical boot or
+KVM acceptance. A failure after admission may have changed p1 and never triggers
+automatic rollback; retain the reports and reinspect before any further operation.
 
 ## Host regression evidence
 
@@ -142,6 +201,9 @@ host test, or helper receipt establishes physical BOOT or KVM acceptance.
 exercises bounded actual regular-file copies with zeros and short writes,
 prefix/suffix preservation, EOF/zero-write refusal, GPT corruption, source
 metadata/hash checks, receipt binding and both forward/reverse predecessor
-pins. Fixtures never open physical storage. Root is required for root-owned
+pins. Additional fixtures inspect without a source, interrupt a real regular-file
+copy then restore the fixed old source while preserving bytes outside the emulated
+partition window, reject changed or missing current-target pins, and require the
+boot-bound receipt. Fixtures never open physical storage. Root is required for root-owned
 source/receipt fixtures. Independent review and hardware evidence remain the
 coordinator's responsibility.

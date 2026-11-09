@@ -1,0 +1,98 @@
+{
+  "schema": 1,
+  "date": "2026-11-09",
+  "classification": "software-only interrupted BOOT recovery extension",
+  "hardware_acceptance": false,
+  "physical_partial_recovery_performed": false,
+  "historical_physical_writer_sha256": "6401a4153a6bcb49c13e0fe0959383f4d2e6384c504e983d1bbe54ec3f1db975",
+  "source_review": {
+    "schema": 1,
+    "date": "2026-11-09",
+    "review_scope": "Independent Sol/high review of the inspect/recover-backup extension relative to committed fd12903; local source, documentation and regular-file/mocked validation only",
+    "source_review": "PASS",
+    "blocking_findings": [],
+    "nonblocking_findings": [],
+    "baseline_review": "tmp/known-nvme-boot-writer-review-20261109.json",
+    "sources": {
+      "scripts/write-known-nvme-boot.py": {
+        "bytes": 28670,
+        "sha256": "39adee8bd81186bc1665701843d393c9ceb7f16466fca304b6a3cf43993999d9"
+      },
+      "tests/test_known_nvme_boot_writer.py": {
+        "bytes": 33297,
+        "sha256": "b1fc54dddca115ca93b7deffa724b869093683eeb08d69e2a3d96cddee16989e"
+      },
+      "docs/known-nvme-boot-writer.md": {
+        "bytes": 11599,
+        "sha256": "97d5999717a356589cc58772418bec84bced70b61ba84b3c58cf677267258d5d"
+      }
+    },
+    "checks": [
+      {
+        "source": "scripts/write-known-nvme-boot.py:446",
+        "result": "Inspect takes no payload, opens namespace and p1 read-only through the existing exclusive-claim context, hashes only exact p1, and returns boot, serial/model, node identity, fixed geometry/GPT pins and zero bytes-written only after successful context postchecks."
+      },
+      {
+        "source": "scripts/write-known-nvme-boot.py:462",
+        "result": "Recovery fixes source authentication to OLD_SHA256 5860889755d7479e619e86b83bc32237e51bacd3a3fd2e2d2ebe976898f44899 before writable target admission. Caller current-target pin cannot override source digest, target, offset or extent. Existing protected root0600/single-link RAM source descriptor checks remain."
+      },
+      {
+        "source": "scripts/write-known-nvme-boot.py:472",
+        "result": "Caller current hash is checked after p1 claim and again immediately before copying, under the same held descriptors, following fresh context/identity/idle/GPT/source checks. Stale or changed current bytes refuse copying. Existing fixed-kernel/initial-namespace inode guards, process visibility, O_EXCL/flock, device geometry and pre/post GPT checks remain."
+      },
+      {
+        "source": "scripts/write-known-nvme-boot.py:539",
+        "result": "Recovery requires payload, lowercase current hash, both receipt path/digest, and existing receipt verification against old hash, exact serial/size, current boot and positive authenticated-transfer assertion. Missing or invalid admission inputs never call application. Application failures preserve null bytes_written conservatively."
+      },
+      {
+        "source": "scripts/write-known-nvme-boot.py:488",
+        "result": "Only fixed 512 MiB p1 is writable; progress, complete bounded copying including zeros, short-write handling, source postcheck, fsync/BLKFLSBUF and optional readback remain. Existing apply/rollback predecessor directions are preserved."
+      },
+      {
+        "source": "docs/known-nvme-boot-writer.md:143",
+        "result": "Procedure requires independently reverified expanded off-device old backup and newly boot-bound receipt when boot changes. It separates the historical 6401a415 writer physical application from this untested extension and does not claim interrupted-recovery acceptance."
+      }
+    ],
+    "executed_validation": [
+      {
+        "command": "sudo -n python3 -m unittest discover -s tests -p 'test_known_nvme_boot_writer.py' -v",
+        "result": "PASS",
+        "tests": 48,
+        "skips": 0,
+        "physical_devices_opened": false
+      },
+      {
+        "command": "Additional isolated mocked CLI checks via sudo python3 stdin",
+        "result": "PASS",
+        "cases": 19,
+        "coverage": "Missing payloads for all payload modes; forbidden inspect flags; current-pin rejection outside recovery; uppercase, malformed and wrong-length pins; incomplete receipts; recovery application failure with/without readback emits null bytes_written and matching persisted/stdout JSON",
+        "physical_devices_opened": false
+      },
+      {
+        "command": "Python ast.parse of reviewed script/tests; git diff --check; rehash reviewed sources",
+        "result": "PASS"
+      }
+    ],
+    "limitations": [
+      "Receipt verification authenticates a trusted caller assertion; the helper does not independently contact retention storage. Restored source bytes themselves must match the fixed old pin.",
+      "Trusted quiescent root remains required; advisory locks and idle census cannot prevent a deliberately racing privileged actor. Current hashes prove byte agreement rather than inspection age.",
+      "The regular-file interruption/recovery fixture preserves prefix/suffix and restores old bytes, but mocks block-device/context guards. No physical partial-write recovery, durability, BOOT, KVM, endurance or SD-write acceptance is established.",
+      "Historical physical maintenance with script SHA256 6401a4153a6bcb49c13e0fe0959383f4d2e6384c504e983d1bbe54ec3f1db975 remains historical evidence for that writer only; it was neither rerun nor reclassified."
+    ],
+    "hardware_acceptance": false,
+    "physical_storage_written": false,
+    "remote_target_actions": false,
+    "reviewed_sources_modified": false
+  },
+  "qualified_builder_validation": {
+    "python_unittest_cases": 2014,
+    "seconds": 56.082,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "shell_suites": 5,
+    "assembly_cases": 5,
+    "log": "out/serial-recovery-20261109/partial-recovery-final-jammy-validation.log"
+  },
+  "limits": "The live application and protected-host boot used historical6401 source. New inspect/recover-backup operations have no physical recovery evidence."
+}

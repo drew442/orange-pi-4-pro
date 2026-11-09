@@ -443,13 +443,35 @@ def export_backup(path, expected_boot_id, mounts):
             'export_boot_id': expected_boot_id, 'status': 'export-complete'}
 
 
-def apply_payload(path, expected_boot_id, mounts, rollback=False, readback=False):
-    current_sha, source_sha = ((NEW_SHA256, OLD_SHA256) if rollback else (OLD_SHA256, NEW_SHA256))
+def inspect_target(expected_boot_id):
+    """Observe the fixed BOOT target under the same exclusive read-only claim."""
+    with opened_target(expected_boot_id) as (part_fd, _):
+        before, _ = target_identity()
+        print('Inspecting live BOOT SHA-256...', file=sys.stderr, flush=True)
+        current_sha = hash_extent(part_fd, SOURCE_BYTES)
+    return {'status': 'inspect-complete', 'current_sha256': current_sha,
+            'observed_boot_id': expected_boot_id, 'bytes_written': 0, 'write_bytes': 0,
+            'read_only': True,
+            'model': MODEL, 'namespace_bytes': TARGET_BYTES, 'sector_bytes': 512,
+            'target_identity': before, 'partition_geometry_sectors': GEOMETRY,
+            'gpt_extents': [{'offset': offset, 'bytes': length, 'sha256': digest}
+                            for offset, length, digest in GPT_EXTENTS],
+            'gpt_verified': True}
+
+
+def apply_payload(path, expected_boot_id, mounts, rollback=False, readback=False,
+                  recovery_current_sha=None):
+    if recovery_current_sha is not None:
+        require(not rollback and re.fullmatch(r'[0-9a-f]{64}', recovery_current_sha) is not None,
+                'recovery requires a lowercase SHA-256 current-target pin')
+        current_sha, source_sha = recovery_current_sha, OLD_SHA256
+    else:
+        current_sha, source_sha = ((NEW_SHA256, OLD_SHA256) if rollback else (OLD_SHA256, NEW_SHA256))
     source_fd, source_identity = open_source(path, mounts, source_sha)
     try:
         with opened_target(expected_boot_id, writable=True) as (part_fd, disk_fd):
             print('Checking live predecessor BOOT SHA-256...', file=sys.stderr, flush=True)
-            require(hash_extent(part_fd) == current_sha, 'live BOOT hash differs from required predecessor')
+            require(hash_extent(part_fd, SOURCE_BYTES) == current_sha, 'live BOOT hash differs from required predecessor')
             host_context(expected_boot_id)
             before, devices = target_identity()
             validate_open_target(part_fd, TARGET, before, SOURCE_BYTES)
@@ -457,6 +479,12 @@ def apply_payload(path, expected_boot_id, mounts, rollback=False, readback=False
             idle_target(devices, (disk_fd, part_fd))
             verify_gpt(disk_fd)
             validate_source(source_fd, path, source_identity)
+            if recovery_current_sha is not None:
+                print('Rechecking caller-pinned BOOT immediately before recovery...',
+                      file=sys.stderr, flush=True)
+                require(hash_extent(part_fd, SOURCE_BYTES) == current_sha,
+                        'live BOOT changed since caller inspection or recovery admission')
+                validate_source(source_fd, path, source_identity)
             os.lseek(source_fd, 0, os.SEEK_SET)
             os.lseek(part_fd, 0, os.SEEK_SET)
             count = stream_write(source_fd, part_fd, SOURCE_BYTES, progress)
@@ -465,8 +493,10 @@ def apply_payload(path, expected_boot_id, mounts, rollback=False, readback=False
             os.fsync(part_fd)
             fcntl.ioctl(part_fd, BLKFLSBUF)
             if readback:
-                require(hash_extent(part_fd) == source_sha, 'explicit BOOT readback failed')
-        return {'status': 'rollback-complete' if rollback else 'write-complete',
+                require(hash_extent(part_fd, SOURCE_BYTES) == source_sha, 'explicit BOOT readback failed')
+        return {'status': ('recovery-complete' if recovery_current_sha is not None else
+                           'rollback-complete' if rollback else 'write-complete'),
+                'predecessor_sha256': current_sha,
                 'bytes_written': count, 'source_sha256': source_sha, 'readback': readback}
     finally:
         os.close(source_fd)
@@ -474,18 +504,20 @@ def apply_payload(path, expected_boot_id, mounts, rollback=False, readback=False
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('operation', choices=('export-backup', 'apply', 'rollback'))
-    parser.add_argument('payload', help='fresh backup output or raw input in root0700 /run tmpfs directory')
+    parser.add_argument('operation', choices=('export-backup', 'apply', 'rollback', 'inspect', 'recover-backup'))
+    parser.add_argument('payload', nargs='?', help='fresh backup output or raw input in root0700 /run tmpfs directory')
     parser.add_argument('--expected-boot-id', required=True)
     parser.add_argument('--backup-receipt')
     parser.add_argument('--backup-receipt-sha256')
+    parser.add_argument('--expected-current-sha256', help='recover-backup only: fresh inspect current_sha256')
     parser.add_argument('--readback', action='store_true', help='optional complete p1 readback after write')
     parser.add_argument('--report', required=True, help='fresh protected /run JSON result')
     args = parser.parse_args(argv)
     report_fd = None
     report = {'operation': 'known-nvme-boot-' + args.operation, 'status': 'failed-or-refused',
               'target': TARGET, 'serial': SERIAL, 'write_offset': 0, 'namespace_offset': 1048576,
-              'write_bytes': SOURCE_BYTES, 'expected_boot_id': args.expected_boot_id,
+              'write_bytes': 0 if args.operation == 'inspect' else SOURCE_BYTES,
+              'expected_boot_id': args.expected_boot_id,
               'authorization': AUTHORIZATION, 'hardware_acceptance': False, 'bytes_written': 0}
     try:
         mounts = host_context(args.expected_boot_id)
@@ -493,11 +525,26 @@ def main(argv=None):
                 'report must be distinct from inputs')
         report_fd = fresh_output(args.report, mounts)
         print(json.dumps(report, sort_keys=True), file=sys.stderr, flush=True)
-        if args.operation == 'export-backup':
+        if args.operation == 'inspect':
+            require(args.payload is None and not args.readback and not args.backup_receipt and
+                    not args.backup_receipt_sha256 and args.expected_current_sha256 is None,
+                    'inspect takes no payload, receipt, readback or current-target pin')
+            report.update(inspect_target(args.expected_boot_id))
+        elif args.operation == 'export-backup':
+            require(args.payload is not None, 'backup output payload path required')
+            require(args.expected_current_sha256 is None, 'current-target pin is recovery-only')
             require(not args.readback and not args.backup_receipt and not args.backup_receipt_sha256,
                     'export takes no receipt or readback')
             report.update(export_backup(args.payload, args.expected_boot_id, mounts))
         else:
+            require(args.payload is not None, 'input payload path required')
+            if args.operation == 'recover-backup':
+                require(args.expected_current_sha256 is not None and
+                        re.fullmatch(r'[0-9a-f]{64}', args.expected_current_sha256) is not None,
+                        'recover-backup requires --expected-current-sha256 from fresh inspect')
+                report['expected_current_sha256'] = args.expected_current_sha256
+            else:
+                require(args.expected_current_sha256 is None, 'current-target pin is recovery-only')
             require(args.backup_receipt and args.backup_receipt_sha256, 'pinned off-device backup receipt required')
             # Rollback may occur in a later offline boot: its caller must create a new
             # authenticated receipt for the retained old backup bound to that boot ID.
@@ -507,7 +554,8 @@ def main(argv=None):
             report['backup_remote_host'] = receipt['remote_host']
             report['bytes_written'] = None  # Any subsequent failure may leave a partial p1.
             report.update(apply_payload(args.payload, args.expected_boot_id, mounts,
-                                        args.operation == 'rollback', args.readback))
+                                        args.operation == 'rollback', args.readback,
+                                        args.expected_current_sha256))
         result = 0
     except (OSError, ValueError, Refusal) as error:
         report['error'] = str(error)

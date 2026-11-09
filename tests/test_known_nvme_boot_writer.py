@@ -372,6 +372,199 @@ class WriterTests(unittest.TestCase):
     def test_explicit_readback(self):
         self.exercise_apply(readback=True)
 
+    def test_inspect_reports_fixed_target_without_source_or_write(self):
+        with tempfile.TemporaryFile() as target:
+            target.write(b'partial')
+            target.flush()
+            @contextmanager
+            def opened(boot, writable=False):
+                self.assertEqual(boot, 'boot')
+                self.assertFalse(writable)
+                yield target.fileno(), 9999
+            with patch.object(W, 'opened_target', opened), patch.object(W, 'SOURCE_BYTES', 7), \
+                    patch.object(W, 'target_identity', return_value=({'nvme0n1p1': (1, 2, 3)}, set())), \
+                    patch.object(W, 'open_source') as source, patch.object(W, 'stream_write') as write:
+                report = W.inspect_target('boot')
+            self.assertEqual(report['current_sha256'], hashlib.sha256(b'partial').hexdigest())
+            self.assertEqual(report['observed_boot_id'], 'boot')
+            self.assertEqual(report['target_identity'], {'nvme0n1p1': (1, 2, 3)})
+            self.assertTrue(report['gpt_verified'])
+            self.assertTrue(report['read_only'])
+            self.assertEqual(report['bytes_written'], 0)
+            source.assert_not_called()
+            write.assert_not_called()
+
+    @unittest.skipUnless(os.geteuid() == 0, 'root-owned fixture requires privileged suite')
+    def test_partial_write_recovery_preserves_outside_partition(self):
+        # Emulate only the p1 descriptor's byte window within an ordinary file.
+        # The real source authentication, hashes and bounded streaming still run.
+        old = b'OLD' + b'\x00' * 13 + b'backup'
+        new = b'NEW' + b'x' * (len(old) - 3)
+        prefix, suffix = b'GPT-prefix', b'p2-p5-and-backup-GPT'
+        old_sha = hashlib.sha256(old).hexdigest()
+        original_pread, original_lseek = os.pread, os.lseek
+        with tempfile.TemporaryDirectory() as directory, tempfile.TemporaryFile() as target:
+            path = Path(directory) / 'old'
+            path.write_bytes(old)
+            path.chmod(0o600)
+            target.write(prefix + old + suffix)
+            target.flush()
+            # An actual interrupted forward copy leaves new bytes plus old tail.
+            original_lseek(target.fileno(), len(prefix), os.SEEK_SET)
+            with tempfile.TemporaryFile() as forward:
+                forward.write(new)
+                forward.seek(0)
+                real_write = os.write
+                calls = []
+                def interrupt(fd, data):
+                    if calls:
+                        raise OSError('interrupted')
+                    calls.append(True)
+                    return real_write(fd, data[:5])
+                with patch.object(W.os, 'write', side_effect=interrupt), self.assertRaises(OSError):
+                    W.stream_write(forward.fileno(), target.fileno(), len(old))
+            partial = original_pread(target.fileno(), len(old), len(prefix))
+            self.assertNotEqual(partial, old)
+            self.assertNotEqual(partial, new)
+            current_sha = hashlib.sha256(partial).hexdigest()
+            def partition_pread(fd, count, offset):
+                return original_pread(fd, count, offset + (len(prefix) if fd == target.fileno() else 0))
+            def partition_lseek(fd, offset, whence):
+                if fd == target.fileno() and whence == os.SEEK_SET:
+                    offset += len(prefix)
+                return original_lseek(fd, offset, whence)
+            @contextmanager
+            def opened(*args, **kwargs):
+                self.assertTrue(kwargs['writable'])
+                yield target.fileno(), 9999
+            with patch.object(W, 'SOURCE_BYTES', len(old)), patch.object(W, 'OLD_SHA256', old_sha), \
+                    patch.object(W, 'protected_ram_path'), patch.object(W, 'opened_target', opened), \
+                    patch.object(W, 'host_context'), patch.object(W, 'target_identity', return_value=({}, set())), \
+                    patch.object(W, 'validate_open_target'), patch.object(W, 'idle_target'), \
+                    patch.object(W, 'verify_gpt'), patch.object(W.fcntl, 'ioctl') as flush, \
+                    patch.object(W.os, 'pread', side_effect=partition_pread), \
+                    patch.object(W.os, 'lseek', side_effect=partition_lseek):
+                result = W.apply_payload(str(path), 'boot', [], recovery_current_sha=current_sha)
+            self.assertEqual(result['status'], 'recovery-complete')
+            self.assertEqual(result['source_sha256'], old_sha)
+            self.assertFalse(result['readback'])
+            self.assertEqual(original_pread(target.fileno(), 4096, 0), prefix + old + suffix)
+            flush.assert_called_once_with(target.fileno(), W.BLKFLSBUF)
+
+    def test_recovery_rechecks_changed_current_before_write(self):
+        with tempfile.TemporaryFile() as source, tempfile.TemporaryFile() as target:
+            source.write(b'old')
+            source.seek(0)
+            target.write(b'bad')
+            target.flush()
+            @contextmanager
+            def opened(*args, **kwargs):
+                yield target.fileno(), 9999
+            with patch.object(W, 'open_source', return_value=(os.dup(source.fileno()), 'identity')) as authenticated, \
+                    patch.object(W, 'opened_target', opened), \
+                    patch.object(W, 'hash_extent', side_effect=['a' * 64, 'b' * 64]) as hashed, \
+                    patch.object(W, 'validate_source'), patch.object(W, 'host_context'), \
+                    patch.object(W, 'target_identity', return_value=({}, set())), \
+                    patch.object(W, 'validate_open_target'), patch.object(W, 'idle_target'), \
+                    patch.object(W, 'verify_gpt'), patch.object(W, 'stream_write') as write, \
+                    self.assertRaisesRegex(W.Refusal, 'changed since caller'):
+                W.apply_payload('old', 'boot', [], recovery_current_sha='a' * 64)
+            authenticated.assert_called_once_with('old', [], W.OLD_SHA256)
+            self.assertEqual(hashed.call_count, 2)
+            write.assert_not_called()
+            self.assertEqual(os.pread(target.fileno(), 3, 0), b'bad')
+
+    def recovery_cli(self, extra, receipt=None):
+        output = io.StringIO()
+        with tempfile.TemporaryFile() as report_file, \
+                patch.object(W, 'host_context', return_value=[]), \
+                patch.object(W, 'fresh_output', return_value=os.dup(report_file.fileno())), \
+                patch.object(W, 'apply_payload') as apply, \
+                patch.object(W, 'read_receipt', side_effect=receipt) as checked, redirect_stdout(output):
+            result = W.main(['recover-backup', '/run/private/old', '--expected-boot-id', 'boot',
+                             '--report', '/run/private/report', *extra])
+        return result, json.loads(output.getvalue()), apply, checked
+
+    def test_inspect_cli_accepts_no_payload_and_exports_json(self):
+        output = io.StringIO()
+        with tempfile.TemporaryFile() as report_file, \
+                patch.object(W, 'host_context', return_value=[]), \
+                patch.object(W, 'fresh_output', return_value=os.dup(report_file.fileno())), \
+                patch.object(W, 'inspect_target', return_value={'status': 'inspect-complete',
+                                                              'current_sha256': 'a' * 64}) as inspect, \
+                patch.object(W, 'apply_payload') as apply, redirect_stdout(output):
+            result = W.main(['inspect', '--expected-boot-id', 'boot', '--report', '/run/private/report'])
+            report_file.seek(0)
+            self.assertEqual(json.loads(report_file.read()), json.loads(output.getvalue()))
+        self.assertEqual(result, 0)
+        self.assertEqual(json.loads(output.getvalue())['write_bytes'], 0)
+        inspect.assert_called_once_with('boot')
+        apply.assert_not_called()
+
+    def test_inspect_cli_refuses_payload(self):
+        with tempfile.TemporaryFile() as report_file, \
+                patch.object(W, 'host_context', return_value=[]), \
+                patch.object(W, 'fresh_output', return_value=os.dup(report_file.fileno())), \
+                patch.object(W, 'inspect_target') as inspect, redirect_stdout(io.StringIO()):
+            result = W.main(['inspect', '/run/private/unused', '--expected-boot-id', 'boot',
+                             '--report', '/run/private/report'])
+        self.assertEqual(result, 1)
+        inspect.assert_not_called()
+
+    def test_recovery_cli_passes_current_pin_with_old_receipt(self):
+        result, report, apply, receipt = self.recovery_cli(
+            ['--expected-current-sha256', 'a' * 64, '--backup-receipt', '/run/private/receipt',
+             '--backup-receipt-sha256', 'b' * 64], receipt=lambda *args: {'remote_host': 'trusted'})
+        self.assertEqual(result, 0)
+        receipt.assert_called_once_with('/run/private/receipt', [], 'b' * 64, 'boot')
+        apply.assert_called_once_with('/run/private/old', 'boot', [], False, False, 'a' * 64)
+
+    def test_recovery_wrong_initial_current_never_writes(self):
+        with tempfile.TemporaryFile() as source, tempfile.TemporaryFile() as target:
+            @contextmanager
+            def opened(*args, **kwargs):
+                yield target.fileno(), 9999
+            with patch.object(W, 'open_source', return_value=(os.dup(source.fileno()), 'identity')) as authenticated, \
+                    patch.object(W, 'opened_target', opened), patch.object(W, 'hash_extent', return_value='b' * 64), \
+                    patch.object(W, 'stream_write') as write, self.assertRaisesRegex(W.Refusal, 'predecessor'):
+                W.apply_payload('old', 'boot', [], recovery_current_sha='a' * 64)
+            authenticated.assert_called_once_with('old', [], W.OLD_SHA256)
+            write.assert_not_called()
+
+    @unittest.skipUnless(os.geteuid() == 0, 'root-owned fixture requires privileged suite')
+    def test_recovery_cannot_restore_an_arbitrary_source(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'wrong-source'
+            path.write_bytes(b'wrong')
+            path.chmod(0o600)
+            with patch.object(W, 'SOURCE_BYTES', 5), patch.object(W, 'protected_ram_path'), \
+                    patch.object(W, 'opened_target') as opened, self.assertRaisesRegex(W.Refusal, 'source SHA-256'):
+                W.apply_payload(str(path), 'boot', [], recovery_current_sha='a' * 64)
+            opened.assert_not_called()
+
+    def test_recovery_cli_requires_current_pin(self):
+        for pin in ([], ['--expected-current-sha256', 'bad']):
+            result, report, apply, receipt = self.recovery_cli(pin)
+            self.assertEqual(result, 1)
+            self.assertEqual(report['bytes_written'], 0)
+            apply.assert_not_called()
+            receipt.assert_not_called()
+
+    def test_recovery_cli_requires_backup_receipt(self):
+        result, report, apply, receipt = self.recovery_cli(['--expected-current-sha256', 'a' * 64])
+        self.assertEqual(result, 1)
+        apply.assert_not_called()
+        receipt.assert_not_called()
+
+    def test_recovery_cli_refuses_wrong_backup_receipt(self):
+        result, report, apply, receipt = self.recovery_cli(
+            ['--expected-current-sha256', 'a' * 64, '--backup-receipt', '/run/private/receipt',
+             '--backup-receipt-sha256', 'b' * 64], receipt=W.Refusal('wrong boot-bound receipt'))
+        self.assertEqual(result, 1)
+        self.assertEqual(report['bytes_written'], 0)
+        apply.assert_not_called()
+        receipt.assert_called_once_with('/run/private/receipt', [], 'b' * 64, 'boot')
+
     @unittest.skipUnless(os.geteuid() == 0, 'root-owned fixture requires privileged suite')
     def test_export_only_reads_target(self):
         with tempfile.TemporaryDirectory() as directory, tempfile.TemporaryFile() as target:
