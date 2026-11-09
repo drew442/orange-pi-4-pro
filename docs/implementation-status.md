@@ -116,13 +116,14 @@ privileged focused review; full-suite revalidation and final guide review pass. 
   `e1cc…`. A read-only audit matches the 40
   installed old maintenance files. Live staging/activation/rollback remain
   unperformed; preserve the workload until final evidence is retained.
-- Native free space after retaining the new encoded candidate is
-  **428,056,576 bytes**, above its unchanged 256 MiB floor and planned
-  384 MiB reserve covering outcome/scratch budgets. The 545,581,074-byte gzip is
-  retained with complete raw review passed; avoid another large native copy.
-  All 24 historical canonical raw/gzip files remain retained. Earlier
-  [duplicate-transfer retirement](evidence/native-loose-transfer-retirement-20261109.json)
-  remains recorded separately; bulk backups can stay on the builder.
+- Native free space is now **513,011,712 bytes** after [byte-exact builder
+  retention of ten validation source transfer archives](evidence/native-validation-source-retention-20261109.json)
+  and retirement of their native copies (108,267,520 bytes). The unchanged
+  256 MiB floor and planned 384 MiB outcome/scratch reserve remain. Canonical
+  images, manifests and hardware evidence were retained; all 24 historical
+  canonical raw/gzip files remain. Avoid another large native copy and keep
+  bulk backups on the builder. Earlier [duplicate-transfer retirement](evidence/native-loose-transfer-retirement-20261109.json)
+  remains recorded separately.
 - Builder LV now **107,344,822,272 bytes**, VG free **25,740,443,648 bytes**;
   filesystem free after the reviewed additional 12 GiB growth is
   **31,798,525,952 bytes**. [Latest growth](evidence/build-host-public-config-capacity-20261109.json)

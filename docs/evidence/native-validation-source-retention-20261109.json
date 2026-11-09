@@ -1,0 +1,96 @@
+{
+  "schema": 1,
+  "classification": "Byte-exact offboard retention and retirement of native transfer copies only",
+  "hardware_acceptance": false,
+  "canonical_images_removed": false,
+  "files": [
+    {
+      "native_source": "/home/drew/orange-pi-4-pro/out/known-spi-programmer-validation-20261109-01/source.tar",
+      "bytes": 11345920,
+      "sha256": "6aeb9287cb4a2a012363cbabed7411c8ed4985ffe94152420775eec1cefabf2e",
+      "builder_copy": "/var/lib/a733-native-validation-source-retention-20261109-01/known-spi-programmer-validation-20261109-01.source.tar",
+      "builder_reread_verified": true,
+      "native_retired": true
+    },
+    {
+      "native_source": "/home/drew/orange-pi-4-pro/out/public-config-directory-validation-20261109-01/source.tar",
+      "bytes": 10762240,
+      "sha256": "4c6869a522e21bd8709db1cacc47b5422ee55e68b29acfb09c8acce0cdf21dca",
+      "builder_copy": "/var/lib/a733-native-validation-source-retention-20261109-01/public-config-directory-validation-20261109-01.source.tar",
+      "builder_reread_verified": true,
+      "native_retired": true
+    },
+    {
+      "native_source": "/home/drew/orange-pi-4-pro/out/public-config-state-validation-20261109-01/source.tar",
+      "bytes": 10854400,
+      "sha256": "b556d592165f24a5c69c29fd0ab2d0dbfa4ec0bc28fb7ff76c0c491eeea4237b",
+      "builder_copy": "/var/lib/a733-native-validation-source-retention-20261109-01/public-config-state-validation-20261109-01.source.tar",
+      "builder_reread_verified": true,
+      "native_retired": true
+    },
+    {
+      "native_source": "/home/drew/orange-pi-4-pro/out/public-config-state-validation-20261109-02/source.tar",
+      "bytes": 10926080,
+      "sha256": "068852cf2fa75a187e87904896bacb202ab44d87ad886e6ab67ad873ef82cf14",
+      "builder_copy": "/var/lib/a733-native-validation-source-retention-20261109-01/public-config-state-validation-20261109-02.source.tar",
+      "builder_reread_verified": true,
+      "native_retired": true
+    },
+    {
+      "native_source": "/home/drew/orange-pi-4-pro/out/public-config-nvme-validation-20261109-01/source.tar",
+      "bytes": 10987520,
+      "sha256": "9585c51c150e204467831b8ff6958437c7dd45c6db2aa88d49fedf1dd916ab37",
+      "builder_copy": "/var/lib/a733-native-validation-source-retention-20261109-01/public-config-nvme-validation-20261109-01.source.tar",
+      "builder_reread_verified": true,
+      "native_retired": true
+    },
+    {
+      "native_source": "/home/drew/orange-pi-4-pro/out/normalized-nvme-profile-validation-20261109-01/source.tar",
+      "bytes": 11212800,
+      "sha256": "4427d74668a32d7c8e90f7bf7e24290d0bf29ca3952baa0ba8e0774dd6defda6",
+      "builder_copy": "/var/lib/a733-native-validation-source-retention-20261109-01/normalized-nvme-profile-validation-20261109-01.source.tar",
+      "builder_reread_verified": true,
+      "native_retired": true
+    },
+    {
+      "native_source": "/home/drew/orange-pi-4-pro/out/normalized-deployment-validation-20261109-01/source.tar",
+      "bytes": 11386880,
+      "sha256": "21ed71106aa37cd480637a385ea492a1f9634714ad4252543941640b6370e82f",
+      "builder_copy": "/var/lib/a733-native-validation-source-retention-20261109-01/normalized-deployment-validation-20261109-01.source.tar",
+      "builder_reread_verified": true,
+      "native_retired": true
+    },
+    {
+      "native_source": "/home/drew/orange-pi-4-pro/out/deterministic-roots-validation-20261109-01/source.tar",
+      "bytes": 11048960,
+      "sha256": "808f7d83c01d71ccbd9dbbac9b093271cc6b579949a6a9645313bd2dbdd30001",
+      "builder_copy": "/var/lib/a733-native-validation-source-retention-20261109-01/deterministic-roots-validation-20261109-01.source.tar",
+      "builder_reread_verified": true,
+      "native_retired": true
+    },
+    {
+      "native_source": "/home/drew/orange-pi-4-pro/out/known-sd-recovery-profile-20261109-01/source.tar",
+      "bytes": 9881600,
+      "sha256": "737c1105949d1140df7d0d0b57087b9e2e6375b72e9273e5abdac6a679c4d305",
+      "builder_copy": "/var/lib/a733-native-validation-source-retention-20261109-01/known-sd-recovery-profile-20261109-01.source.tar",
+      "builder_reread_verified": true,
+      "native_retired": true
+    },
+    {
+      "native_source": "/home/drew/orange-pi-4-pro/out/known-sd-trial-writer-20261109-01/source.tar",
+      "bytes": 9861120,
+      "sha256": "4e0f3ca1d04b88c5f09ed6116807d62bd251bea70a0ae811cd5138c4a81a51cd",
+      "builder_copy": "/var/lib/a733-native-validation-source-retention-20261109-01/known-sd-trial-writer-20261109-01.source.tar",
+      "builder_reread_verified": true,
+      "native_retired": true
+    }
+  ],
+  "retired_bytes": 108267520,
+  "native_available_bytes_after": 513011712,
+  "limits": [
+    "Only source.tar transfer copies were retired; canonical image files, manifests, raw logs and hardware evidence remain.",
+    "Each builder copy was fsynced and independently reread before native unlink; source identity remained unchanged.",
+    "The builder retention directory is root-owned mode0700 and files are0400.",
+    "No A733/UART bridge access, native LVM growth or physical storage writes occurred."
+  ]
+}
