@@ -1,0 +1,252 @@
+{
+  "result": "PASS",
+  "hardware_acceptance": false,
+  "physical_storage_written": false,
+  "source_project": "/var/lib/a733-normalized-nvme-source-20261109-01/project-01",
+  "source_revision": "81f907481b12e9639ad23752966e05166074f96f",
+  "source_pins": {
+    "build/maintenance-tools.py": {
+      "bytes": 14315,
+      "sha256": "4f646bce7ab74318d172661ac9e94fcf3da060e884a12a9aaef57fd3f32fa6ab"
+    },
+    "configs/host-management.py": {
+      "bytes": 26395,
+      "sha256": "66fbeaf8a939ad073f183b88a3910bfd62794ffa9c485f2c1f1adac5ab5f8728"
+    },
+    "scripts/host-update-target.py": {
+      "bytes": 13517,
+      "sha256": "e4d11cc2457497b2339aa39d19077ab90489ec2fb10a1bc3c5f4afa127c59ab3"
+    },
+    "scripts/prepare-host-update.py": {
+      "bytes": 13492,
+      "sha256": "464d44d7c8e868fd72f85f3ac5d6095d7d18d205528b0f55c379c9b2b30c3b4b"
+    },
+    "scripts/select-host-root.py": {
+      "bytes": 20047,
+      "sha256": "646b608cf5dc3fbd3f1411a49ace41192ee0dec4472199240f87cc1c1073fd89"
+    },
+    "scripts/update-host.py": {
+      "bytes": 16334,
+      "sha256": "7e244244e36eabf6ef64b2640029cb05e77b43a8aed121257254dd3a6908433d"
+    }
+  },
+  "source_tracked_changes_vs_HEAD": false,
+  "payload_manifest": {
+    "bytes": 33481,
+    "sha256": "c1bcc7d23d22bd487534ba17ea447055881a044350829608360aa92ca24283f2"
+  },
+  "producer_inputs": {
+    "prepare.log": {
+      "bytes": 38625,
+      "sha256": "c62c281b55b655fee28faad95471c657dff7c5a11e3f8cfdcc01f366f5abe43a"
+    },
+    "prepare.sh": {
+      "bytes": 1312,
+      "sha256": "71acb425f33b12f56837cb4e0d5af692317d2cc5ce529a869dff9f15bfbac5c4"
+    }
+  },
+  "producer_unit": "Result=success\nExecMainStartTimestamp=Mon 2026-11-09 16:27:13 UTC\nExecMainExitTimestamp=Mon 2026-11-09 16:27:57 UTC\nExecMainStatus=0\nCPUUsageNSec=43703934000\nCPUQuotaPerSecUSec=1s\nMemoryMax=1073741824\nActiveState=active\nSubState=exited\n",
+  "review_harness_attempts": [
+    {
+      "artifacts_affected": false,
+      "classification": "review harness path assumption; expected published tree directory is tree, archive root is a733-tools",
+      "exit_status": 1,
+      "result": "exit-code",
+      "unit": "a733-normalized-maintenance-review-20261109-01.service"
+    },
+    {
+      "correction": "Only published tree pathname changed in private review harness.",
+      "exit_status": 0,
+      "result": "success",
+      "unit": "a733-normalized-maintenance-review-20261109-02.service"
+    }
+  ],
+  "review_terminal_unit": "Result=success\nExecMainStartTimestamp=Mon 2026-11-09 16:34:47 UTC\nExecMainExitTimestamp=Mon 2026-11-09 16:35:03 UTC\nExecMainStatus=0\nCPUUsageNSec=16503684000\nCPUQuotaPerSecUSec=1s\nMemoryMax=1073741824\nActiveState=active\nSubState=exited\n",
+  "limits": [
+    "Regular-file offline artifact inspection; no physical stage/activate/rollback, power interruption, KVM, resolver listener, SD write or boot acceptance.",
+    "Full raw equality reuses deterministic-02 full filesystem proof; direct extraction in this review covers 40 maintenance files and 4 management files per slot plus marker.",
+    "Portable identity safely reuses prior actual package proof, not a fresh compiler/userspace rebuild or independent clean deployment.",
+    "Old Source and selection Manifest readers execute unchanged; block-target/live runtime/timesync validation and publication are not invoked.",
+    "Durability is producer behavior and prior evidence, not simulated power loss or new independent fsync."
+  ],
+  "offline_compatibility": {
+    "STATE_UUID_in_pure_mount_fixture": "360dfb39-f49f-487e-b307-0bb887c854c5",
+    "active_old_A_preserved_in_fixture_before_after_pending": true,
+    "assessment": "No format/API incompatibility found: authenticated old updater consumes new normalized B, and corrected root reader consumes retained old A for rollback. Stage changes only inactive B; selection changes NVMe STATE selector, preserving running old A and STATE UUID. This is source behavior and offline fixture evidence, not physical behavior.",
+    "changed_package_files": [
+      "configs/host-management.py",
+      "package.json"
+    ],
+    "fixture_limit": "Real old marker/selector bytes and new B selector; synthetic mountinfo/state marker, no live target opened.",
+    "live_timesync_guard_not_executed": true,
+    "new_code_accepts_old_A_rollback_metadata_and_selector": true,
+    "old_API_Source_probe_full_hashes_4GiB": true,
+    "old_A_marker": {
+      "bytes": 16383,
+      "sha256": "e1cc0395cd97e222e7d8146c05fa703e3ae9373b34bf1e24fbfb91a7e63dfa61"
+    },
+    "old_archive": {
+      "bytes": 124128,
+      "sha256": "bbd617d6765323baf2d885d93451d1ebdd6600b8c6ad9aa3aaf7499838b23934"
+    },
+    "old_code_accepts_new_B_Source": true,
+    "old_code_accepts_new_manifest_in_selection_reader": true,
+    "old_manifest": {
+      "bytes": 32613,
+      "sha256": "4f28d75a14323c52aa976b00f957b56913b75472a07a717672abd33d439b97b9"
+    },
+    "pending_selector_blocks_staging_in_fixture": true,
+    "preconditions": [
+      "Retain endurance outcome before any hardware maintenance; this review contacts neither A733 nor UART bridge.",
+      "Revalidate exact NVMe model/serial/capacity, running A/e1cc marker and selector, STATE UUID, complete installed 40-file old package, inactive B availability, and absence of pending selector.",
+      "Keep verified off-device original root/STATE/identity/guest backups, old4f28 and newc1 root manifests, serial access and recovery path; preserve external protected BOOT and current kernel/DTB/initramfs.",
+      "Actual timesync directory and live runtime guards must pass on the board; no shared-state migration is implemented or accepted by these artifact probes.",
+      "Use controller reviewed plans/locks/TTY requirements and fresh source verification; after activation independently check boot/management/resolver policy/real KVM and manual rollback.",
+      "Old installed B3369 to normalized B42 is a genuinely changed inactive-slot payload; after installing a full image already containing B42, staging identical B42 weakens interruption-test evidence."
+    ],
+    "result": "PASS with live prerequisites untested",
+    "same_package_state_profile_manifest": true,
+    "same_timesync_state_policy": true
+  },
+  "schema": 1,
+  "classification": "Normalized A/B maintenance candidates independently verified as regular files; physical update/rollback pending",
+  "independent_review": {
+    "path": "tmp/normalized-maintenance-artifact-review-20261109.json",
+    "bytes": 32152,
+    "sha256": "aaf557e4f65b4881c9937f6d1351ec71708e03084dc2cde282f21ebdd7268c76",
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "result": "PASS"
+  },
+  "slots": {
+    "A": {
+      "filesystem_uuid": "a7330000-0000-4000-8000-00000000000a",
+      "kernel_release": "6.6.98-a733-diag",
+      "marker": {
+        "bytes": 16383,
+        "sha256": "286494073ce3a0b69443f96389dbbce11ab015705f7e9f05c7a7cf06503da866"
+      },
+      "readonly_without_journal": true,
+      "selector": {
+        "bytes": 179,
+        "sha256": "3c76b96c328b4508ff407c8594352e04389664e97ced6f0a09284cade5bd027b"
+      },
+      "source_copy_comparison": {
+        "bytes": 4294967296,
+        "complete_byte_comparison": true,
+        "copy_identity": {
+          "allocated_bytes": 454037504,
+          "bytes": 4294967296,
+          "ctime_ns": 1794241650991605505,
+          "device": 64512,
+          "gid": 0,
+          "inode": 938120,
+          "links": 1,
+          "mode": "0o400",
+          "mtime_ns": 1794241650991605505,
+          "uid": 0
+        },
+        "sha256": "a9715b819348a8220ec8b3b1f41ef27db677baaa96014f5d1dfb7a22597decdd",
+        "source_identity": {
+          "allocated_bytes": 444424192,
+          "bytes": 4294967296,
+          "ctime_ns": 1794237673203839646,
+          "device": 64512,
+          "gid": 1048576,
+          "inode": 2117099,
+          "links": 1,
+          "mode": "0o600",
+          "mtime_ns": 1794237673203839646,
+          "uid": 1048576
+        }
+      },
+      "receipt_bindings_match": true,
+      "management_files_directly_verified": 4
+    },
+    "B": {
+      "filesystem_uuid": "a7330000-0000-4000-8000-00000000000b",
+      "kernel_release": "6.6.98-a733-diag",
+      "marker": {
+        "bytes": 16383,
+        "sha256": "521e86e5446c35f0d87f71c302126b47a0fa1ba32214e98c62c3c79ce9ddf8f8"
+      },
+      "readonly_without_journal": true,
+      "selector": {
+        "bytes": 179,
+        "sha256": "27ea5d897aa590de9efbe42800894b6a0645ec855ef68012897684f87efe2971"
+      },
+      "source_copy_comparison": {
+        "bytes": 4294967296,
+        "complete_byte_comparison": true,
+        "copy_identity": {
+          "allocated_bytes": 454037504,
+          "bytes": 4294967296,
+          "ctime_ns": 1794241673042592053,
+          "device": 64512,
+          "gid": 0,
+          "inode": 938125,
+          "links": 1,
+          "mode": "0o400",
+          "mtime_ns": 1794241673042592053,
+          "uid": 0
+        },
+        "sha256": "42fb2becf66c25a4cbb7844a6ab84ba12ab3f53c0d5d283acc8d42e63b124ab2",
+        "source_identity": {
+          "allocated_bytes": 444424192,
+          "bytes": 4294967296,
+          "ctime_ns": 1794237739733837316,
+          "device": 64512,
+          "gid": 1048576,
+          "inode": 2117103,
+          "links": 1,
+          "mode": "0o600",
+          "mtime_ns": 1794237739733837316,
+          "uid": 1048576
+        }
+      },
+      "receipt_bindings_match": true,
+      "management_files_directly_verified": 4
+    }
+  },
+  "portable": {
+    "archive": {
+      "bytes": 124193,
+      "sha256": "87279790979079ef707a817931fc958e440e44204239e7b5897a86de231056bf"
+    },
+    "manifest": {
+      "bytes": 16312,
+      "sha256": "1ce0e5daaf760a8407914986dc61314c13091239be68db5948a2765de0c21d97"
+    },
+    "archive_members": 46,
+    "source_comparisons": 39,
+    "recipe_pins": 40,
+    "identity_to_prior_actual_package": true,
+    "complete_directory_namespace_modes_owners_equal_prior_and_archive": true
+  },
+  "retained_metadata": {
+    "out/normalized-maintenance-20261109-01/retained/candidate-A/candidate.json": {
+      "bytes": 8856,
+      "sha256": "92510a1a9be8e61e2fe8e6e51860ace7af43158fd842f0ed59f556a264c86d66"
+    },
+    "out/normalized-maintenance-20261109-01/retained/candidate-A/manifest.json": {
+      "bytes": 33481,
+      "sha256": "c1bcc7d23d22bd487534ba17ea447055881a044350829608360aa92ca24283f2"
+    },
+    "out/normalized-maintenance-20261109-01/retained/candidate-A/selected.conf": {
+      "bytes": 179,
+      "sha256": "3c76b96c328b4508ff407c8594352e04389664e97ced6f0a09284cade5bd027b"
+    },
+    "out/normalized-maintenance-20261109-01/retained/candidate-B/candidate.json": {
+      "bytes": 8856,
+      "sha256": "0a3f4df69eaa867320320e3c41a88a1f30566d274049cd0b475b8baedef208b5"
+    },
+    "out/normalized-maintenance-20261109-01/retained/candidate-B/manifest.json": {
+      "bytes": 33481,
+      "sha256": "c1bcc7d23d22bd487534ba17ea447055881a044350829608360aa92ca24283f2"
+    },
+    "out/normalized-maintenance-20261109-01/retained/candidate-B/selected.conf": {
+      "bytes": 179,
+      "sha256": "27ea5d897aa590de9efbe42800894b6a0645ec855ef68012897684f87efe2971"
+    }
+  }
+}

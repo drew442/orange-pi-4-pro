@@ -101,9 +101,9 @@ and software checks; its first full stream now passes complete independent
 now has two independently reviewed full-size constructions matching complete
 raw/gzip bytes, all four filesystem readbacks and the existing marker/STATE
 pairing. The finite normalized full-image profile now passes independent code review
-and 2,180 privileged Ubuntu tests. Two full streams are running from fresh
-checkouts of `81f9074`; completed construction and actual-artifact review remain
-pending. The active endurance host is unchanged.
+and 2,180 privileged Ubuntu tests. Two full streams completed producer checks
+from fresh checkouts of `81f9074`; paired independent actual-artifact review is
+running. The active endurance host is unchanged.
 
 ## Construction, resources and authorization
 
@@ -154,15 +154,18 @@ pending. The active endurance host is unchanged.
    An SD-removed SPI route needs corresponding collector adaptation. [Preparation evidence](evidence/warm-boot-preparation-20261109.json).
    Preserve kernel/control evidence on recurrence. Audit final guest/CPU exits, duration and post-run
    health; pending collector exit 2 alone is not acceptance.
-2. After the workload, follow the independently reviewed
-   [protected full-deployment procedure](deploy-protected-20261109.md), retain
-   same-board identity and guest backups, and reproduce physical deployment.
-   [Software preflight](evidence/protected-deployment-preparation-20261109.json)
-   accepts the actual manifest and RAM tool pins; physical execution and clean
-   independent reproduction remain unperformed. Keep the running
-   workload undisturbed until its evidence is retained.
-3. Complete the matched full-image construction and actual-artifact review,
-   then integrate the verified normalized roots through the reviewed finite profile.
+2. After retaining the workload outcome and backups, run the
+   [changed inactive-slot interruption and manual rollback cases](normalized-maintenance-20261109.md)
+   on the current old host. Both normalized candidates now pass independent
+   actual-artifact review, including offline old/new API compatibility. Verify
+   live guards and the actual inactive marker first; physical execution is pending.
+   Then bind the [prepared full-deployment procedure](deploy-protected-20261109.md)
+   to the final verified normalized distribution and reproduce its fresh install.
+   The earlier protected-image preflight remains historical; do not substitute
+   its older image for the final corrected distribution. Preserve same-board
+   identity, current guests and prior failure evidence before whole-drive erasure.
+3. Finish independent verification of the two completed normalized full streams,
+   then publish their exact final artifact pins and deployment instructions.
    Preserve current BOOT; verify the policy physically after retaining endurance
    evidence.
 4. Prepare SPI recovery/programming and matched NVMe-first firmware trials.
