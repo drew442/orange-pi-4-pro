@@ -1,0 +1,226 @@
+{
+  "schema": 1,
+  "date": "2026-11-09",
+  "classification": "regular-file NVMe BOOT component; physical install pending",
+  "hardware_acceptance": false,
+  "producer_sha256": "d2b28c431334d0819decfd1d47c7da64ab711ec160ad50042736e4da6a9e75cf",
+  "component_extent": {
+    "offset_bytes": 1048576,
+    "bytes": 536870912,
+    "partition": 1
+  },
+  "files": {
+    "boot.ext4": {
+      "bytes": 536870912,
+      "sha256": "cc2ad988fdc57579178766acaf09c71d688aaadec94b722593192cb24426c313"
+    },
+    "boot.ext4.gz": {
+      "bytes": 16659543,
+      "sha256": "6a2725e53e3f2e89b7a796969df05af19f9778db301152495699fc0d9351e041"
+    },
+    "reverse-boot.ext4.gz": {
+      "bytes": 16658365,
+      "sha256": "967c16b0d3803abda86ce0e22018b894e0655f3579a8c2fe2e6407e1470a5467"
+    },
+    "uInitrd": {
+      "bytes": 4763312,
+      "sha256": "2149513ae5cf90f1edb6047e6ebf8ba903dc86c55b4b43754a5a2cfd3368c786"
+    },
+    "initramfs.cpio.gz": {
+      "bytes": 4763248,
+      "sha256": "5ca1dbccaf7ac13f203f39631b47319c8e04d7e07af4d4bbcd5ac946893c9abf"
+    }
+  },
+  "two_fresh_outputs_match": true,
+  "independent_clean_environment_replay": false,
+  "fresh_full_nvme_expansion_verified": false,
+  "outside_boot_freshly_verified": false,
+  "resources": [
+    {
+      "before": {
+        "free_bytes": 20143992832,
+        "available_memory_bytes": 7423946752
+      },
+      "after": {
+        "free_bytes": 19563978752,
+        "available_memory_bytes": 7284281344
+      },
+      "scratch_budget": 2147483648,
+      "disk_floor": 3000000000,
+      "memory_floor": 1000000000,
+      "after_scratch_cleanup": {
+        "free_bytes": 19564244992,
+        "available_memory_bytes": 7283384320
+      }
+    },
+    {
+      "before": {
+        "free_bytes": 19798970368,
+        "available_memory_bytes": 7631552512
+      },
+      "after": {
+        "free_bytes": 19218960384,
+        "available_memory_bytes": 7516827648
+      },
+      "scratch_budget": 2147483648,
+      "disk_floor": 3000000000,
+      "memory_floor": 1000000000,
+      "after_scratch_cleanup": {
+        "free_bytes": 19219226624,
+        "available_memory_bytes": 7516418048
+      }
+    }
+  ],
+  "review": {
+    "schema": 1,
+    "date": "2026-11-09",
+    "review_scope": "independent source and actual Jammy artifact review of protected STATE NVMe BOOT regular-file component",
+    "source_review": "PASS",
+    "blocking_findings": [],
+    "sources": {
+      "build/protected-state-nvme-boot.py": {
+        "bytes": 10404,
+        "sha256": "d2b28c431334d0819decfd1d47c7da64ab711ec160ad50042736e4da6a9e75cf"
+      },
+      "tests/test_protected_state_nvme_boot.py": {
+        "bytes": 5684,
+        "sha256": "988169de26aa64cd64e5bd0f879e40cd6f38c92f536bdf1ad3b7c856e1a6da5d"
+      },
+      "docs/protected-state-nvme-boot.md": {
+        "bytes": 4715,
+        "sha256": "41e5fd61ca7200a42ee7b886eb89819207b05ce8a6725dfb96af9b99609f59bc"
+      },
+      "build/protected-state-bootstrap.py": {
+        "bytes": 15523,
+        "sha256": "8257a30349a409aa57bc1d4d92263e6f37d9bc8a8f10833325b2eff2324b9fb5"
+      },
+      "build/vgic-nvme-image.py": {
+        "bytes": 21985,
+        "sha256": "75a19faad5b06cbd103630425925793693a78f9176a809bad8def30372a23149"
+      },
+      "build/vgic-runtime-bootstrap.py": {
+        "bytes": 14774,
+        "sha256": "6fc8e0662cc3a314c3ee224d587629a856505e3c68153c9311afde903b69cd45"
+      },
+      "build/vgic-host-sd.py": {
+        "bytes": 13742,
+        "sha256": "65067be9e06270a29d8f2187a79b1a0af428270f689e8db95c27bb34961db9a5"
+      },
+      "build/assemble-host.py": {
+        "bytes": 21448,
+        "sha256": "c9ed33c9526d6660965f00b97e6c226880eba985706b3bbc71c017fee8e9b77f"
+      },
+      "build/verify-host-roots.py": {
+        "bytes": 33471,
+        "sha256": "80e843d499bcc2f6d299d6022dc7edf83d73842405e95b38b0f32eee72dcda30"
+      },
+      "tests/verify_nvme_image.py": {
+        "bytes": 15781,
+        "sha256": "d9e9342136af125df2eb9dfe1d832183244f13cd28c7ac3e2a4d7f1ca976b8fb"
+      },
+      "configs/host-init": {
+        "bytes": 17650,
+        "sha256": "2cf52e1cee8d4f2050fe3a90eca0a0a8c50b6f30718d210667f7273f9f08ab12"
+      },
+      "out/vgic-nvme-image-20261108/build-02.stdout": {
+        "bytes": 35023,
+        "sha256": "addfcafe239a2aa075435383cc4742869d256d98beecd2526806da206d98f4a2"
+      }
+    },
+    "checks": [
+      "Fixed complete compressed input and historical manifest hashes authenticate before prefix decoding; fixed p1 extent hash authenticates before ext4 namespace parsing.",
+      "Full exact historical namespace and NVMe boot file pins precede modification; corrected VGIC, STATE UUID and matched protected SD uInitrd pins enforced.",
+      "HeldInput accepts only bounded single-link regular files, rejects symlink ancestors/device/proc/sys paths, retains descriptor and rechecks identity plus full content before manifest publication.",
+      "Loaded repository helper dependency closure is completely held/recorded and reauthenticated. Trusted quiescent checkout is an explicit prerequisite; hostile concurrent checkout mutation is outside this contract.",
+      "Fresh strict repository output tag, mode0700 output, exclusive extraction/gzip/log creation, constrained debugfs scratch path and no device write calls.",
+      "2GiB scratch admission plus 3,000,000,000-byte disk floor and 1,000,000,000-byte MemAvailable floor cover raw BOOT, two worst-case compressed capsules and bounded namespace/archive workspace; original full-NVMe admission unchanged.",
+      "Only init CPIO bytes/size and BOOT uInitrd bytes/size may differ; every other record/content, uid/gid/mode/link metadata and four timestamps compared; xattrs forbidden and read-only e2fsck required.",
+      "Both BOOT capsules receive complete expansion/hash comparison; reverse capsule explicitly historical construction BOOT rather than personalized live backup.",
+      "Output and documentation explicitly exclude fresh outside-BOOT/full-raw validation, physical writes and hardware acceptance."
+    ],
+    "executed_validation": [
+      {
+        "command": "python3 -m unittest discover -s tests -p 'test_protected_state_nvme_boot.py' -v",
+        "result": "PASS",
+        "tests": 5,
+        "skips": 0,
+        "real_ext4_fixture": true
+      },
+      {
+        "command": "python3 -m unittest discover -s tests -p 'test_protected_state_bootstrap.py' -v",
+        "result": "PASS",
+        "tests": 8,
+        "skips": 0,
+        "real_ext4_fixture": true
+      },
+      {
+        "command": "git diff --check",
+        "result": "PASS"
+      }
+    ],
+    "artifact_review": "PASS",
+    "hardware_acceptance": false,
+    "physical_storage_written": false,
+    "limitations": [
+      "Source/tests and fresh builder artifact checks establish bounded component construction only; no outside-BOOT bytes freshly verified.",
+      "Independent offline updater/live rollback and physical dirty-STATE/boot/KVM/zero-SD-write gates remain separate."
+    ],
+    "actual_artifact_review": {
+      "artifact_review": "PASS",
+      "manifest": {
+        "bytes": 135550,
+        "sha256": "1714bf7f5d90c17e42d72ff41194c8b2cb3777275f4ef3679c630eafe627409e"
+      },
+      "output": "/var/lib/a733-maintenance-validation-20261108-01/project/out/protected-state-nvme-boot-20261109-01",
+      "files": {
+        "boot.ext4": {
+          "bytes": 536870912,
+          "sha256": "cc2ad988fdc57579178766acaf09c71d688aaadec94b722593192cb24426c313"
+        },
+        "uInitrd": {
+          "bytes": 4763312,
+          "sha256": "2149513ae5cf90f1edb6047e6ebf8ba903dc86c55b4b43754a5a2cfd3368c786"
+        },
+        "reverse-boot.ext4.gz": {
+          "bytes": 16658365,
+          "sha256": "967c16b0d3803abda86ce0e22018b894e0655f3579a8c2fe2e6407e1470a5467"
+        },
+        "initramfs.cpio.gz": {
+          "bytes": 4763248,
+          "sha256": "5ca1dbccaf7ac13f203f39631b47319c8e04d7e07af4d4bbcd5ac946893c9abf"
+        },
+        "patch.commands": {
+          "bytes": 5212,
+          "sha256": "0ea53f782e7a0da138b3f3caf2e2c6ccdeb68725b2eb46e144863a42d0e92345"
+        },
+        "boot.ext4.gz": {
+          "bytes": 16659543,
+          "sha256": "6a2725e53e3f2e89b7a796969df05af19f9778db301152495699fc0d9351e041"
+        },
+        "patch.log": {
+          "bytes": 6270,
+          "sha256": "b0dac463d806a95a9b3c5167a698bc1ca9eb50d7189c2ee015d389bc0dac9493"
+        }
+      },
+      "checks": [
+        "all artifact/source complete hashes authenticated; fixed original complete compressed hash authenticated",
+        "actual NVMe uInitrd byte-identical to both separately constructed protected SD uInitrds",
+        "independently decoded original BOOT extent exactly matches fixed 586088 pin; no whole raw expansion",
+        "both single-member deterministic gzip capsules fully decoded through valid CRC/EOF; no trailing bytes; exact expanded hashes",
+        "fresh complete before/after namespace/content/xattr/uid/gid/mode/four timestamps agrees with historical source and manifest; only uInitrd data/size differs; e2fsck -nf both PASS",
+        "fresh legacy CRC/single bounded gzip/newc validation; exactly init data/size changes; all other encoded records byte-identical; BusyBox and STATE config preserved; only length/CRC legacy fields changed",
+        "all held artifact, source, original-wire and paired SD identities/content unchanged after review"
+      ],
+      "resources_before": {
+        "free_bytes": 19798978560,
+        "available_memory_bytes": 7626379264
+      },
+      "resources_after_scratch_cleanup": {
+        "free_bytes": 19798978560,
+        "available_memory_bytes": 7504416768
+      },
+      "hardware_acceptance": false,
+      "physical_storage_written": false
+    }
+  }
+}
