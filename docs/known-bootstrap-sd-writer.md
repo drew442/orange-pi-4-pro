@@ -1,9 +1,15 @@
 # Known bootstrap SD maintenance writer
 
-`scripts/write-known-bootstrap-sd.py` is a Python 3.11 standard-library helper
-for the coordinator's maintenance operation in the private SSH RAM installer.
-It has no external binary dependencies. Kernel initramfs starts `/` at mode 1777;
-normalize that RAM-only directory to 0755 before maintenance.
+`scripts/write-known-bootstrap-sd.py` is a Python standard-library helper for
+explicit coordinator SD maintenance. It accepts a quiescent NVMe-rooted host or
+the private SSH RAM installer, with the SD unused and the source held on tmpfs.
+The current 24-hour workload must finish and its outcome be retained before any
+SD write. The helper does not stop workloads or reboot the board.
+
+Its reviewed source SHA-256 is
+`14f97000094054f9eaac252759413fdded3a62085f34424d1a0fd2c36b3429e2`.
+It has no external binary dependencies. In the RAM installer, initramfs starts
+`/` at mode 1777; normalize that RAM-only directory to 0755 before maintenance.
 
 In this RAM installer, verify the root filesystem before changing its mode:
 
@@ -17,7 +23,14 @@ This changes RAM metadata only; no physical filesystem is mounted or written. It
 with 512-byte logical sectors. There are no alternate device or hash switches.
 It never selects NVMe or SPI.
 
-The exact raw bootstrap input is **268,435,456 bytes**, SHA-256
+Both finite profiles write exactly **268,435,456 bytes**:
+
+| Explicit `--profile` | Raw SHA-256 |
+| --- | --- |
+| `protected-state-20261109` (default) | `ab5e8c2c846cbbd51b61bef6831d7e4d1498c29fefbf47d74301b1f3bb0ad207` |
+| `nvme-first-trial-20261109` | `8470ff59290016bb2f99c051f371ab20ac431e75fd17dec4e0e0de5c665613d9` |
+
+The protected profile's raw bootstrap input has SHA-256
 `ab5e8c2c846cbbd51b61bef6831d7e4d1498c29fefbf47d74301b1f3bb0ad207`.
 Its builder location is
 `/var/lib/a733-maintenance-validation-20261108-01/project/out/protected-state-bootstrap-20261109-01/a733-host-sd.img`.
@@ -25,23 +38,30 @@ This protected STATE bootstrap selects state `360d…` and now boots physically;
 see the [maintenance receipt](evidence/protected-state-maintenance-20261109.json).
 It replaces the historical `f02c…` input pin; that earlier image physically
 booted, but did not block writes during its initial filesystem probe.
-The source firmware is unchanged. Consult the evolving status document for the
-matched full-NVMe construction state and hardware gates.
+Its firmware is unchanged. The explicit trial profile uses the separately
+[reviewed matched trial image](matched-nvme-trial-sd-20261109.md), preserving SD
+boot0 and BOOT while changing the registered U-Boot package. It remains unbooted.
+The profile is never inferred from a filename; the selected pin applies to
+source authentication, plans, writes and receipts. There is no hash override.
 
 The known-target write is covered by the operator's persisted
 [storage authorization](evidence/storage-write-authorization-20261108.json).
 The helper's `--write` flag explicitly selects that maintenance operation;
 there is no additional prompt. This helper is not a general disk installer.
-Independent source review and the recorded first physical write pass. Live plan
-checks remain required before each later write. Host tests do not prove hardware
-behavior.
+An earlier helper physically wrote the protected SD successfully. The expanded
+writer passes independent software review and read-only namespace/target/census
+checks on the installed A733. New-profile source plans, maintenance writes and
+boot acceptance remain separate. [Preparation evidence](evidence/known-sd-trial-writer-preparation-20261109.json).
+Live plan checks remain required before every later write.
 
 ## Preparation and commands
 
-The operator/coordinator must confirm the live RAM-installer session and pin
+The operator/coordinator must confirm the intended quiescent host session and pin
 its exact `/proc/sys/kernel/random/boot_id` from the intended session. Passing
 an arbitrary freshly read boot ID without checking the session defeats the
-caller pin's purpose. Do not invoke this against a normally running host.
+caller pin's purpose. For SD-only work the installed root can stay on NVMe;
+source data must stay on RAM and all SD safety checks must pass. Whole-NVMe
+installation retains its separate RAM-recovery requirement.
 
 Stage the authenticated raw input on **tmpfs** under `/run/a733-payload`, with
 a root-owned **0700** directory and a root-owned **0600**, single-link regular
@@ -51,6 +71,10 @@ and is held on RAM storage throughout. Keep ancestors root-owned and without
 group/other write permissions. Symlinks and `/dev/shm` are intentionally
 rejected. Transfer the writer separately; it requires no adjacent imports.
 The writer verifies the full pinned hash before opening the SD for writing.
+The installed host's `/run` is initially only 64 MiB: after workload retention,
+remount that existing tmpfs with sufficient capacity before staging, or use a
+new private dedicated tmpfs. Verify available RAM. Do not mount over existing
+`/run` contents, which contain SSH runtime state.
 
 Using the actual intended boot ID in place of the example placeholder:
 
@@ -73,18 +97,30 @@ cannot replace an existing file. Progress and explicit flush status go to
 stderr. Do not pipeline the source: a held, seekable, authenticated file is
 required. A refusal or error exits nonzero. Any failed write may leave the SD
 partially changed; stdout reports an unknown byte count conservatively.
+For the matched trial image, add `--profile nvme-first-trial-20261109` to **both**
+invocations. Keep the default or explicitly select `protected-state-20261109`
+when restoring the protected bootstrap. Require exit 0 and one complete valid
+receipt; report-file presence alone does not establish completion. A report
+write failure can leave multiple JSON objects and a nonzero exit.
 
 ## Guards and scope
 
-Before execution, the helper requires root, the caller's boot ID, PID/mount
-namespace equality with PID 1, a visible proc process census, and an unhidden
-proc mount. It reads the live SD CID, model, size, logical sector size and
+Before execution, the helper requires root, the caller's boot ID, the known
+Linux initial PID/user namespaces, PID 1's mount namespace, a single-threaded
+writer and a complete, unrestricted proc mount. `NSpid` is corroboration;
+it cannot establish an initial namespace on its own. The constants and proc
+layout follow the pinned vendor
+[namespace definitions](https://github.com/orangepi-xunlong/linux-orangepi/blob/2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f/include/linux/proc_ns.h)
+and [proc implementation](https://github.com/orangepi-xunlong/linux-orangepi/blob/2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f/fs/proc/base.c).
+It reads the live SD CID, model, size, logical sector size and
 read-only state from sysfs. It derives partition device numbers from sysfs and
 rejects mounts, swap, holders, and open block-device descriptors for the SD
-or any partition, including read-only descriptors. Failed probes, permission
-errors and malformed input are fatal. Processes or descriptors that disappear
-during the census are allowed to disappear; this does not hide permission
-failures.
+or any partition, including read-only descriptors in another thread's FD table.
+File-backed mappings are checked through canonical `/proc/TID/map_files` paths
+even after their FDs close. The mapping device column describes the node's
+filesystem, so the checker obtains the actual mapped inode's block-device number.
+Failed probes, permission errors and malformed input are fatal. Disappearing
+tasks/mappings require corroboration; a surviving unscannable process is refused.
 
 The source's descriptor and path must retain the full original identity after
 hashing and immediately before writing. The target is revalidated before and
@@ -101,7 +137,7 @@ mount filesystems, change partition tables beyond the pinned image's bytes,
 or establish physical boot/guest acceptance. A successful result always says
 `hardware_acceptance: false`.
 
-This is a maintenance guard for a trusted, quiescent root RAM installer.
+This is a maintenance guard for a trusted, quiescent root environment.
 Namespace checks and process censuses do not constitute defense against a
 hostile root process, and census snapshots cannot prevent an unrelated process
 from opening a device later. Keep the RAM installer quiescent throughout the
@@ -114,5 +150,5 @@ Run the tiny host regressions with:
 PYTHONDONTWRITEBYTECODE=1 python3 -B tests/test_known_bootstrap_sd_writer.py
 ```
 
-Tests use mock proc/sysfs/device probes and tiny regular-file stream fixtures;
-they never connect to hardware, hash a full native image, or write block devices.
+Tests use mock proc/sysfs/device probes, tiny regular-file streams and harmless
+real file mappings. They never connect to hardware or write block devices.

@@ -3,10 +3,12 @@ import contextlib
 import hashlib
 import importlib.util
 import io
+import mmap
 import os
 from pathlib import Path
 import stat
 import tempfile
+import threading
 import types
 import unittest
 from unittest import mock
@@ -76,6 +78,45 @@ class ParsingTests(unittest.TestCase):
             with self.assertRaises(w.Refusal):
                 w.host_context(boot)
 
+    def host_fixture(self, mounts=None, namespace_change=None):
+        boot = '11111111-1111-4111-8111-111111111111'
+        if mounts is None:
+            mounts = [dict(path='/proc', root='/', fstype='proc', dev=(0, 1), options=['rw'])]
+        def probe(path):
+            ns = str(path).rsplit('/', 1)[-1]
+            inode = w.INITIAL_NAMESPACES.get(ns, 99)
+            if namespace_change and ns in namespace_change:
+                inode = namespace_change[ns]
+            return info(st_ino=inode)
+        def read(path):
+            return boot if str(path).endswith('boot_id') else 'NSpid:\t' + str(os.getpid())
+        with mock.patch.object(w.os, 'geteuid', return_value=0), \
+                mock.patch.object(w.os, 'stat', side_effect=probe), \
+                mock.patch.object(w, 'read_text', side_effect=read), \
+                mock.patch.object(w, 'mountinfo', return_value=mounts), \
+                mock.patch.object(w, 'require_single_thread'):
+            return w.host_context(boot)
+
+    def test_initial_namespace_pins_reject_private_proc_simulation(self):
+        self.host_fixture()
+        # Both self and the visible PID 1 match, with a single NSpid value:
+        # a privately remounted proc in nested PID/user namespaces still fails.
+        for namespace in ('pid', 'user'):
+            with self.subTest(namespace=namespace), self.assertRaises(w.Refusal):
+                self.host_fixture(namespace_change={namespace: 12345})
+
+    def test_full_proc_root_device_and_submount_policy(self):
+        base = dict(path='/proc', root='/', fstype='proc', dev=(0, 1), options=['rw'])
+        for changes in ({'root': '/123'}, {'dev': (0, 2)}, {'fstype': 'tmpfs'},
+                        {'options': ['subset=pid']}, {'options': ['hidepid=2']}):
+            with self.subTest(changes=changes), self.assertRaises(w.Refusal):
+                self.host_fixture([{**base, **changes}])
+        hidden = dict(path='/proc/42/task', root='/', fstype='tmpfs', dev=(0, 2), options=[])
+        with self.assertRaises(w.Refusal):
+            self.host_fixture([base, hidden])
+        allowed = {**hidden, 'path': '/proc/sys/fs/binfmt_misc', 'fstype': 'binfmt_misc'}
+        self.host_fixture([base, allowed])
+
 
 @contextlib.contextmanager
 def fixture_root_ownership():
@@ -103,8 +144,8 @@ class SourceTests(unittest.TestCase):
             path.write_bytes(payload)
             path.chmod(0o600)
             with fixture_root_ownership(), mock.patch.object(w, 'protected_ram_path'), \
-                    mock.patch.object(w, 'SOURCE_BYTES', len(payload)), \
-                    mock.patch.object(w, 'SOURCE_SHA256', hashlib.sha256(payload).hexdigest()):
+                    mock.patch.object(w, 'PROFILES', {w.DEFAULT_PROFILE:
+                        (len(payload), hashlib.sha256(payload).hexdigest())}):
                 fd, original = w.open_source(str(path), [])
                 try:
                     self.assertEqual(os.read(fd, len(payload)), payload)
@@ -124,7 +165,7 @@ class SourceTests(unittest.TestCase):
             path.write_bytes(b'fixture')
             path.chmod(0o600)
             with fixture_root_ownership(), mock.patch.object(w, 'protected_ram_path'), \
-                    mock.patch.object(w, 'SOURCE_BYTES', 7):
+                    mock.patch.object(w, 'PROFILES', {w.DEFAULT_PROFILE: (7, w.SOURCE_SHA256)}):
                 with self.assertRaises(w.Refusal):
                     w.open_source(str(path), [])
                 link = Path(folder) / 'link'
@@ -159,6 +200,75 @@ class SourceTests(unittest.TestCase):
         with mock.patch.object(w.os, 'lstat', return_value=info(st_mode=stat.S_IFDIR | 0o777)):
             with self.assertRaises(w.Refusal):
                 w.protected_ram_path('/run/private/image', [])
+
+
+class ProfileTests(unittest.TestCase):
+    def test_finite_profile_pins(self):
+        self.assertEqual(dict(w.PROFILES), {
+            'protected-state-20261109': (268435456,
+                'ab5e8c2c846cbbd51b61bef6831d7e4d1498c29fefbf47d74301b1f3bb0ad207'),
+            'nvme-first-trial-20261109': (268435456,
+                '8470ff59290016bb2f99c051f371ab20ac431e75fd17dec4e0e0de5c665613d9')})
+
+    def invoke(self, args):
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output), contextlib.redirect_stderr(io.StringIO()):
+            status = w.main(args)
+        return status, __import__('json').loads(output.getvalue())
+
+    def test_repeated_main_profiles_and_default_do_not_leak(self):
+        boot = '11111111-1111-4111-8111-111111111111'
+        protected, trial = tuple(w.PROFILES)
+        payloads = {protected: b'protected', trial: b'trial----'}
+        pins = {name: (len(data), hashlib.sha256(data).hexdigest())
+                for name, data in payloads.items()}
+        with tempfile.TemporaryDirectory() as folder, fixture_root_ownership(), \
+                mock.patch.object(w, 'protected_ram_path'), \
+                mock.patch.object(w, 'host_context', return_value=[]), \
+                mock.patch.object(w, 'target_identity', return_value=('identity', {(179, 0)})), \
+                mock.patch.object(w, 'idle_target'), mock.patch.object(w, 'PROFILES', pins), \
+                mock.patch.object(w, 'write_payload', return_value=9) as write:
+            for selected in (trial, protected, trial, None):
+                profile = selected or protected
+                path = Path(folder) / 'image'
+                path.write_bytes(payloads[profile])
+                path.chmod(0o600)
+                args = [str(path), '--expected-boot-id', boot]
+                if selected:
+                    args += ['--profile', selected]
+                status, report = self.invoke(args)
+                self.assertEqual(status, 0)
+                self.assertEqual(report['status'], 'plan')
+                self.assertEqual(report['profile'], profile)
+                self.assertEqual(report['source']['sha256'], pins[profile][1])
+                status, report = self.invoke(args + ['--write'])
+                self.assertEqual(status, 0)
+                self.assertEqual(report['status'], 'write-complete')
+                self.assertEqual(write.call_args.kwargs['profile'], profile)
+                other = trial if profile == protected else protected
+                status, report = self.invoke([str(path), '--expected-boot-id', boot,
+                                            '--profile', other, '--write'])
+                self.assertEqual(status, 1)
+                self.assertEqual(report['profile'], other)
+                self.assertEqual(report['source']['sha256'], pins[other][1])
+                self.assertIn('SHA-256 mismatch', report['error'])
+            self.assertEqual(w.SOURCE_SHA256,
+                'ab5e8c2c846cbbd51b61bef6831d7e4d1498c29fefbf47d74301b1f3bb0ad207')
+
+    def test_wrong_and_unknown_profile_before_rw_target_open(self):
+        with mock.patch.object(w.os, 'open') as opened, \
+                contextlib.redirect_stderr(io.StringIO()):
+            with self.assertRaises(SystemExit):
+                w.main(['/run/private/image', '--expected-boot-id', 'boot', '--profile', 'arbitrary'])
+            opened.assert_not_called()
+        with mock.patch.object(w, 'host_context', return_value=[]), \
+                mock.patch.object(w, 'open_source', side_effect=w.Refusal('source SHA-256 mismatch')), \
+                mock.patch.object(w.os, 'open') as opened:
+            status, report = self.invoke(['/run/private/image', '--expected-boot-id', 'boot',
+                                          '--profile', 'nvme-first-trial-20261109', '--write'])
+            self.assertEqual(status, 1)
+            self.assertEqual(report['profile'], 'nvme-first-trial-20261109')
+            opened.assert_not_called()
 
 
 class TargetTests(unittest.TestCase):
@@ -257,39 +367,200 @@ class TargetTests(unittest.TestCase):
             with self.assertRaises(PermissionError):
                 w.idle_target({(179, 0)})
 
-    def test_process_descriptor_census_including_readonly(self):
-        def listing(path):
-            if str(path) == '/proc':
-                return iter([Path('/proc/1'), Path('/proc/42')])
-            return iter([path / '3'])
-        with mock.patch.object(w.Path, 'iterdir', listing), \
-                mock.patch.object(w.os, 'stat', return_value=info()):
-            with self.assertRaises(w.Refusal):
-                w.process_consumers({(179, 0)})
-        for error in (PermissionError('hidden'), ValueError('malformed')):
-            with mock.patch.object(w.Path, 'iterdir', listing), \
-                    mock.patch.object(w.os, 'stat', side_effect=error):
-                with self.assertRaises(type(error)):
-                    w.process_consumers({(179, 0)})
-        with mock.patch.object(w.Path, 'iterdir', listing), \
-                mock.patch.object(w.os, 'stat', side_effect=FileNotFoundError):
-            w.process_consumers({(179, 0)})
-
-    def test_census_excludes_only_own_target_fd_and_process_exit(self):
+    def census(self, *, thread_fd=False, mapping=False, own_fd=None, error=None,
+               table_error=None, maps_error=None, maps_text=None,
+               map_range='1000-2000', map_missing=False):
         mine = str(os.getpid())
         def listing(path):
+            path = Path(path)
+            if str(path) == '/proc/self/task':
+                return iter([path / mine])
             if str(path) == '/proc':
-                return iter([Path('/proc/1'), Path('/proc/' + mine), Path('/proc/999999999')])
-            if str(path) == '/proc/999999999/fd':
-                raise FileNotFoundError('exited')
-            if str(path) == '/proc/1/fd':
+                return iter([path / '1', path / mine])
+            if path.name == 'task':
+                if table_error and path.parent.name == '1':
+                    raise table_error
+                ids = ['1', '2'] if path.parent.name == '1' else [mine]
+                return iter([path / n for n in ids])
+            if path.name == 'fd':
+                if (thread_fd and path.parent.name == '2') or path.parent.name == mine:
+                    return iter([path / '8'])
                 return iter([])
-            return iter([path / '8'])
-        with mock.patch.object(w.Path, 'iterdir', listing), \
-                mock.patch.object(w.os, 'stat', return_value=info()):
-            w.process_consumers({(179, 0)}, own_fd=8)
-            with self.assertRaises(w.Refusal):
-                w.process_consumers({(179, 0)}, own_fd=9)
+            raise AssertionError(str(path))
+        def probe(path):
+            if 'map_files' in Path(path).parts:
+                start, end = (int(value, 16) for value in map_range.split('-'))
+                self.assertEqual(str(path), f'/proc/2/map_files/{start:x}-{end:x}')
+                if map_missing:
+                    raise FileNotFoundError(2, 'missing map_files entry')
+            if error:
+                raise error
+            return info()
+        def maps(path):
+            if maps_error:
+                raise maps_error
+            if maps_text is not None:
+                return maps_text
+            if mapping and str(path) == '/proc/1/task/2/maps':
+                # 00:01 is the filesystem holding the node, not 179:0.
+                return map_range + ' rw-s 00000000 00:01 20 /dev/renamed-node (deleted)'
+            return ''
+        with mock.patch.object(w.Path, 'iterdir', autospec=True, side_effect=listing), \
+                mock.patch.object(w.os, 'stat', side_effect=probe), \
+                mock.patch.object(w, 'read_text', side_effect=maps):
+            w.process_consumers({(179, 0)}, own_fd=own_fd)
+
+    def test_thread_only_descriptor_and_closed_fd_mapping_refused(self):
+        with self.assertRaisesRegex(w.Refusal, 'descriptor'):
+            self.census(thread_fd=True, own_fd=8)
+        with self.assertRaisesRegex(w.Refusal, 'mapping'):
+            self.census(mapping=True, own_fd=8)
+
+    def test_padded_low_mapping_range_normalized_and_disappearance_checked(self):
+        with self.assertRaisesRegex(w.Refusal, 'open process mapping'):
+            self.census(mapping=True, own_fd=8, map_range='00400000-00420000')
+        # ENOENT cannot silently skip a surviving padded mapping by comparing
+        # its normalized basename with the original padded maps range.
+        with self.assertRaisesRegex(w.Refusal, 'mapping is unscannable'):
+            self.census(mapping=True, own_fd=8, map_range='00400000-00420000',
+                        map_missing=True)
+
+    def test_census_canonical_lookup_for_own_real_file_mappings(self):
+        mine = str(os.getpid())
+        task = Path('/proc') / mine / 'task' / mine
+        rows = w.read_text(task / 'maps')
+        actual_lstat = os.lstat
+        lookups = []
+        def listing(directory):
+            directory = Path(directory)
+            if str(directory) == '/proc':
+                return iter([Path('/proc/1'), Path('/proc') / mine])
+            if str(directory) == '/proc/1/task':
+                return iter([directory / '1'])
+            if str(directory) == '/proc/' + mine + '/task':
+                return iter([task])
+            if directory.name == 'fd':
+                return iter([])
+            raise AssertionError(str(directory))
+        def probe(entry):
+            entry = Path(entry)
+            self.assertEqual(entry.parent, Path('/proc') / mine / 'map_files')
+            self.assertTrue(stat.S_ISLNK(actual_lstat(entry).st_mode))
+            lookups.append(entry)
+            # The real symlink shape suffices; following these special links
+            # may require capabilities unavailable to an ordinary test user.
+            return info(st_mode=stat.S_IFREG | 0o600)
+        def maps(entry):
+            return rows if Path(entry) == task / 'maps' else ''
+        with mock.patch.object(w, 'require_single_thread'), \
+                mock.patch.object(w.Path, 'iterdir', autospec=True, side_effect=listing), \
+                mock.patch.object(w, 'read_text', side_effect=maps), \
+                mock.patch.object(w.os, 'stat', side_effect=probe):
+            w.process_consumers({(179, 0)})
+        self.assertGreater(len(lookups), 0)
+        self.assertEqual(len(lookups), sum(int(row.split()[4]) != 0 for row in rows.splitlines()))
+
+    def test_real_proc_map_files_shape_with_closed_file_and_nonleader_thread(self):
+        # Use a real harmless mapping and actual proc symlink/directory shape.
+        # Only the mapped inode's metadata is simulated as the protected block
+        # device; no device is opened, and no privileged map_files stat is needed.
+        mine = str(os.getpid())
+        ready, stop = threading.Event(), threading.Event()
+        tids = []
+        def worker():
+            tids.append(str(threading.get_native_id()))
+            ready.set()
+            stop.wait(10)
+        thread = threading.Thread(target=worker)
+        thread.start()
+        try:
+            self.assertTrue(ready.wait(5))
+            with tempfile.TemporaryDirectory() as folder:
+                path = Path(folder) / 'ordinary-mapped-file'
+                path.write_bytes(b'x' * mmap.PAGESIZE)
+                with path.open('rb') as source:
+                    mapped = mmap.mmap(source.fileno(), 0, access=mmap.ACCESS_READ)
+                try:
+                    actual_stat, actual_lstat = os.stat, os.lstat
+                    actual_read = w.read_text
+                    for tid in (mine, tids[0]):
+                        with self.subTest(tid=tid):
+                            task = Path('/proc') / mine / 'task' / tid
+                            direct = Path('/proc') / tid / 'map_files'
+                            self.assertTrue(stat.S_ISDIR(actual_stat(direct).st_mode))
+                            with self.assertRaises(FileNotFoundError):
+                                actual_stat(task / 'map_files')
+                            rows = [row for row in actual_read(task / 'maps').splitlines()
+                                    if row.split(maxsplit=5)[-1] == str(path)]
+                            self.assertEqual(len(rows), 1)
+                            start, end = (int(value, 16) for value in rows[0].split()[0].split('-'))
+                            map_range = f'{start:x}-{end:x}'
+                            self.assertTrue(stat.S_ISLNK(actual_lstat(direct / map_range).st_mode))
+                            def listing(directory):
+                                directory = Path(directory)
+                                if str(directory) == '/proc':
+                                    return iter([Path('/proc/1'), Path('/proc') / mine])
+                                if str(directory) == '/proc/1/task':
+                                    return iter([directory / '1'])
+                                if str(directory) == '/proc/' + mine + '/task':
+                                    return iter([task])
+                                if directory.name == 'fd':
+                                    return iter([])
+                                raise AssertionError(str(directory))
+                            def probe(entry):
+                                self.assertEqual(Path(entry), direct / map_range)
+                                self.assertTrue(stat.S_ISLNK(actual_lstat(entry).st_mode))
+                                return info()
+                            def maps(entry):
+                                return rows[0] if Path(entry) == task / 'maps' else ''
+                            with mock.patch.object(w, 'require_single_thread'), \
+                                    mock.patch.object(w.Path, 'iterdir', autospec=True, side_effect=listing), \
+                                    mock.patch.object(w, 'read_text', side_effect=maps), \
+                                    mock.patch.object(w.os, 'stat', side_effect=probe):
+                                with self.assertRaisesRegex(w.Refusal, 'mapping'):
+                                    w.process_consumers({(179, 0)})
+                finally:
+                    mapped.close()
+        finally:
+            stop.set()
+            thread.join(5)
+        self.assertFalse(thread.is_alive())
+
+    def test_census_excludes_only_own_target_fd(self):
+        self.census(own_fd=8)
+        with self.assertRaisesRegex(w.Refusal, 'descriptor'):
+            self.census(own_fd=9)
+
+    def test_process_probe_errors_fail_closed_except_ordinary_exit(self):
+        for error in (PermissionError('hidden'), ValueError('malformed'),
+                      OSError(5, 'io failure')):
+            with self.subTest(error=error), self.assertRaises(type(error)):
+                self.census(thread_fd=True, own_fd=8, error=error)
+        for error in (FileNotFoundError(2, 'exited'), ProcessLookupError(3, 'exited')):
+            self.census(thread_fd=True, own_fd=8, error=error)
+
+    def test_mapping_permission_denial_is_fatal(self):
+        with self.assertRaises(PermissionError):
+            self.census(mapping=True, own_fd=8, error=PermissionError('map_files denied'))
+
+    def test_surviving_process_with_missing_or_hidden_task_table_refused(self):
+        for error in (FileNotFoundError(2, 'leader exited'), PermissionError('hidden')):
+            with self.subTest(error=error), self.assertRaises((w.Refusal, PermissionError)):
+                self.census(own_fd=8, table_error=error)
+        with self.assertRaisesRegex(w.Refusal, 'task is unscannable'):
+            self.census(own_fd=8, maps_error=FileNotFoundError(2, 'missing maps'))
+
+    def test_malformed_maps_refused(self):
+        for text in ('bad', '2000-1000 rw-s 0 00:01 20',
+                     '1000-2000 rw-s invalid 00:01 20'):
+            with self.subTest(text=text), self.assertRaises(w.Refusal):
+                self.census(own_fd=8, maps_text=text)
+
+    def test_writer_multiple_threads_refused(self):
+        with mock.patch.object(w.Path, 'iterdir', return_value=iter([
+                Path('/proc/self/task') / str(os.getpid()), Path('/proc/self/task/987')])):
+            with self.assertRaisesRegex(w.Refusal, 'single-threaded'):
+                w.process_consumers({(179, 0)}, own_fd=8)
 
     def test_recheck_prevents_opening_changed_target(self):
         before = (1, 2, 3)
@@ -337,7 +608,12 @@ class TargetTests(unittest.TestCase):
             flush = stack.enter_context(mock.patch.object(w.os, 'fsync', side_effect=lambda *a: events.append('fsync')))
             ioctl = stack.enter_context(mock.patch.object(w.fcntl, 'ioctl', side_effect=lambda *a: events.append('flush')))
             stack.enter_context(contextlib.redirect_stderr(io.StringIO()))
-            self.assertEqual(w.write_payload(10, '/run/private/image', (), 'boot', before), w.SOURCE_BYTES)
+            profile = 'nvme-first-trial-20261109'
+            self.assertEqual(w.write_payload(10, '/run/private/image', (), 'boot', before,
+                                             profile=profile), w.PROFILES[profile][0])
+            self.assertEqual(mocks['validate_source'].call_count, 3)
+            for call in mocks['validate_source'].call_args_list:
+                self.assertEqual(call.kwargs['profile'], profile)
             self.assertEqual(events, ['open', 'claim', 'write', 'fsync', 'flush'])
             mocks['idle_target'].assert_any_call({(179, 0)}, own_fd=99)
             ioctl.assert_called_once_with(99, w.BLKFLSBUF)

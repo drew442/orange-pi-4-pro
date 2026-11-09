@@ -159,6 +159,8 @@ class MatchedTrialTests(unittest.TestCase):
     def test_source_mutation_and_ancestor_drift(self):
         with P.HeldPath(self.base) as held:
             self.base.write_bytes(b'Z' + self.base_bytes[1:])
+            stamp = self.base.stat()
+            os.utime(self.base, ns=(stamp.st_atime_ns, stamp.st_mtime_ns + 1_000_000_000))
             with self.assertRaisesRegex(ValueError, 'mutation'):
                 held.check()
         parent = self.root / 'parent'
@@ -172,6 +174,13 @@ class MatchedTrialTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'drift'):
                 held.check()
 
+    def test_full_authentication_rejects_content_with_metadata_check_passing(self):
+        with P.HeldPath(self.base) as held:
+            self.base.write_bytes(b'Z' + self.base_bytes[1:])
+            with mock.patch.object(held, 'check', return_value=None):
+                with self.assertRaisesRegex(ValueError, 'SHA-256 pin mismatch'):
+                    P.authenticate(held, self.patches['BASE'])
+
     def test_mid_build_source_mutation_leaves_no_receipt(self):
         original = P.resources
         def mutate(fd, phase, admission=False):
@@ -180,7 +189,7 @@ class MatchedTrialTests(unittest.TestCase):
                 self.base.write_bytes(b'Z' + self.base_bytes[1:])
             return result
         with mock.patch.object(P, 'resources', side_effect=mutate):
-            with self.assertRaisesRegex(ValueError, 'mutation'):
+            with self.assertRaisesRegex(ValueError, 'mutation|pin mismatch'):
                 self.run_build()
         self.assertFalse((self.output / 'manifest.json').exists())
 

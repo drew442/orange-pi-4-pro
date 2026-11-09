@@ -75,10 +75,11 @@ correction and successful 2,125-test privileged Jammy validation.
 
 ## Physical trial still required
 
-After retaining the workload outcome, prepare and independently review the exact
-SD maintenance write and boot procedure for this new raw hash. The existing
-protected-SD writer pins `ab5e…` and cannot write this trial; do not bypass its
-pin or relabel this image as that protected baseline. Keep the verified protected
+After retaining the workload outcome, use the independently reviewed
+[known SD writer](known-bootstrap-sd-writer.md) with the explicit
+`--profile nvme-first-trial-20261109` for this raw hash. Its default protected
+profile still pins `ab5e…`; it refuses the trial bytes under that default.
+The trial-profile maintenance write and boot remain unperformed. Keep the verified protected
 SD and private RAM recovery image available for restoration. Known-board storage
 authorization persists; another permission request is not needed for that scope.
 

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """One preauthorized A733 maintenance SD and one authenticated RAM payload."""
 import argparse
+import errno
 import fcntl
 import hashlib
 import json
@@ -12,12 +13,22 @@ import struct
 import sys
 import time
 import uuid
+from types import MappingProxyType
 
 TARGET = '/dev/mmcblk1'
 TARGET_DEV = (179, 0)
 TARGET_BYTES = 1977614336
 SOURCE_BYTES = 268435456
 SOURCE_SHA256 = 'ab5e8c2c846cbbd51b61bef6831d7e4d1498c29fefbf47d74301b1f3bb0ad207'
+DEFAULT_PROFILE = 'protected-state-20261109'
+PROFILES = MappingProxyType({
+    DEFAULT_PROFILE: (SOURCE_BYTES, SOURCE_SHA256),
+    'nvme-first-trial-20261109': (268435456,
+        '8470ff59290016bb2f99c051f371ab20ac431e75fd17dec4e0e0de5c665613d9'),
+})
+# Pinned vendor include/linux/proc_ns.h, revision
+# 2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f, lines 41–42.
+INITIAL_NAMESPACES = {'pid': 0xEFFFFFFC, 'user': 0xEFFFFFFD}
 CID = '035344535530324780716f216e00a8f5'
 AUTHORIZATION = 'docs/evidence/storage-write-authorization-20261108.json'
 BLKGETSIZE64 = 0x80081272
@@ -65,6 +76,7 @@ def mountinfo():
                 'malformed mountinfo fields')
         require(fields[0].isdigit() and fields[1].isdigit(), 'malformed mount IDs')
         result.append({'dev': device_number(fields[2]),
+                       'root': unescape_mount(fields[3]),
                        'path': unescape_mount(fields[4]),
                        'options': fields[5].split(',') + fields[-1].split(','),
                        'fstype': fields[separator + 1]})
@@ -87,21 +99,37 @@ def host_context(expected_boot_id):
     require(str(uuid.UUID(expected_boot_id)) == expected_boot_id, 'invalid expected boot ID')
     require(read_text('/proc/sys/kernel/random/boot_id') == expected_boot_id,
             'boot ID differs from caller pin')
-    for namespace in ('pid', 'mnt'):
+    for namespace in ('pid', 'user', 'mnt'):
         mine = os.stat('/proc/self/ns/' + namespace)
         init = os.stat('/proc/1/ns/' + namespace)
         require((mine.st_dev, mine.st_ino) == (init.st_dev, init.st_ino),
                 'must share PID 1 host PID and mount namespaces')
-    # NSpid detects a nested PID namespace even when its own PID 1 is visible.
+        if namespace in INITIAL_NAMESPACES:
+            require(mine.st_ino == INITIAL_NAMESPACES[namespace],
+                    'must use initial PID and user namespaces')
+    # Corroborate the pinned namespace identities; NSpid alone is insufficient
+    # when a nested PID namespace has a privately remounted proc filesystem.
     status = read_text('/proc/self/status')
     nspid = [line.split()[1:] for line in status.splitlines() if line.startswith('NSpid:')]
-    require(len(nspid) == 1 and len(nspid[0]) == 1 and nspid[0][0].isdigit(),
+    require(len(nspid) == 1 and len(nspid[0]) == 1 and nspid[0][0] == str(os.getpid()),
             'nested or unavailable host PID namespace')
     mounts = mountinfo()
     proc = containing_mount('/proc', mounts)
-    require(proc['path'] == '/proc' and proc['fstype'] == 'proc', 'invalid proc mount')
+    proc_stat = os.stat('/proc')
+    require(proc['path'] == '/proc' and proc['root'] == '/' and
+            proc['fstype'] == 'proc' and
+            proc['dev'] == (os.major(proc_stat.st_dev), os.minor(proc_stat.st_dev)),
+            'invalid or partial proc mount')
     require(not any(x.startswith('hidepid=') and x != 'hidepid=0' for x in proc['options']),
             'proc hides processes')
+    require(not any(x.startswith('subset=') and x != 'subset=all' for x in proc['options']),
+            'proc restricts process visibility')
+    for mount in mounts:
+        if mount['path'].startswith('/proc/'):
+            require(mount['path'] == '/proc/sys/fs/binfmt_misc' and
+                    mount['fstype'] == 'binfmt_misc' and mount['root'] == '/',
+                    'unexpected proc submount')
+    require_single_thread()
     return mounts
 
 
@@ -132,30 +160,32 @@ def identity(info):
             info.st_nlink, info.st_size, info.st_mtime_ns, info.st_ctime_ns)
 
 
-def validate_source(fd, path, initial=None):
+def validate_source(fd, path, initial=None, profile=DEFAULT_PROFILE):
+    length, _ = PROFILES[profile]
     info = os.fstat(fd)
     require(stat.S_ISREG(info.st_mode) and info.st_uid == 0 and
             stat.S_IMODE(info.st_mode) == 0o600 and info.st_nlink == 1 and
-            info.st_size == SOURCE_BYTES, 'source must be root 0600, single-link, exact-size regular file')
+            info.st_size == length, 'source must be root 0600, single-link, exact-size regular file')
     require(identity(os.lstat(path)) == identity(info), 'source path/held descriptor changed')
     if initial is not None:
         require(identity(info) == initial, 'source identity changed')
     return identity(info)
 
 
-def open_source(path, mounts):
+def open_source(path, mounts, profile=DEFAULT_PROFILE):
+    _, expected_hash = PROFILES[profile]
     protected_ram_path(path, mounts)
     fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC)
     try:
-        initial = validate_source(fd, path)
+        initial = validate_source(fd, path, profile=profile)
         digest = hashlib.sha256()
         while True:
             chunk = os.read(fd, CHUNK)
             if not chunk:
                 break
             digest.update(chunk)
-        require(digest.hexdigest() == SOURCE_SHA256, 'source SHA-256 mismatch')
-        validate_source(fd, path, initial)
+        require(digest.hexdigest() == expected_hash, 'source SHA-256 mismatch')
+        validate_source(fd, path, initial, profile=profile)
         os.lseek(fd, 0, os.SEEK_SET)
         return fd, initial
     except BaseException:
@@ -193,25 +223,97 @@ def target_identity():
     return (info.st_dev, info.st_ino, info.st_rdev), devices
 
 
+def ordinary_exit(error):
+    return error.errno in (errno.ENOENT, errno.ESRCH)
+
+
+def confirmed_gone(path):
+    try:
+        os.stat(path)
+    except OSError as error:
+        if ordinary_exit(error):
+            return True
+        raise
+    return False
+
+
+def require_single_thread():
+    tasks = list(Path('/proc/self/task').iterdir())
+    require(len(tasks) == 1 and tasks[0].name == str(os.getpid()),
+            'writer must remain single-threaded')
+
+
 def process_consumers(devices, own_fd=None):
+    # This census assumes a trusted, quiescent root environment. It is not an
+    # atomic exclusion mechanism against new consumers or hostile root actors.
+    require_single_thread()
     pids = [p for p in Path('/proc').iterdir() if p.name.isdigit()]
     require(bool(pids) and any(p.name == '1' for p in pids), 'incomplete proc process visibility')
     for process in pids:
         try:
-            descriptors = list((process / 'fd').iterdir())
-        except FileNotFoundError:
-            continue  # Process exited during the census.
-        for descriptor in descriptors:
-            require(descriptor.name.isdigit(), 'malformed process descriptor')
-            if process.name == str(os.getpid()) and int(descriptor.name) == own_fd:
-                continue
-            try:
-                info = os.stat(descriptor)
-            except FileNotFoundError:
-                continue  # Descriptor closed during the census.
-            if stat.S_ISBLK(info.st_mode):
-                require((os.major(info.st_rdev), os.minor(info.st_rdev)) not in devices,
-                        'SD block device has an open process descriptor')
+            tasks = list((process / 'task').iterdir())
+            require(bool(tasks), 'empty process task table')
+            for task in tasks:
+                require(task.name.isdigit(), 'malformed process task')
+                try:
+                    descriptors = list((task / 'fd').iterdir())
+                    for descriptor in descriptors:
+                        require(descriptor.name.isdigit(), 'malformed process descriptor')
+                        if (process.name == task.name == str(os.getpid()) and
+                                int(descriptor.name) == own_fd):
+                            continue
+                        try:
+                            reject_block_consumer(os.stat(descriptor), devices, 'descriptor')
+                        except OSError as error:
+                            if not ordinary_exit(error):
+                                raise
+                    # A block-device mapping can survive close(fd). The maps
+                    # device column describes the node's filesystem st_dev,
+                    # never the underlying block device's st_rdev.
+                    maps = read_text(task / 'maps')
+                    for line in maps.splitlines():
+                        fields = line.split(maxsplit=5)
+                        require(len(fields) >= 5 and
+                                re.fullmatch(r'[0-9a-f]+-[0-9a-f]+', fields[0]) and
+                                re.fullmatch(r'[r-][w-][x-][ps]', fields[1]) and
+                                re.fullmatch(r'[0-9a-f]+', fields[2]) and
+                                re.fullmatch(r'[0-9a-f]+:[0-9a-f]+', fields[3]) and
+                                fields[4].isdigit(), 'malformed process maps')
+                        start, end = (int(x, 16) for x in fields[0].split('-'))
+                        require(start < end, 'malformed process map range')
+                        if int(fields[4]) == 0:
+                            continue
+                        try:
+                            # Linux exposes map_files through direct /proc/TID,
+                            # but omits it from /proc/PID/task/TID.
+                            # maps pads low addresses; map_files names do not.
+                            map_name = f'{start:x}-{end:x}'
+                            mapped = os.stat(Path('/proc') / task.name / 'map_files' / map_name)
+                        except OSError as error:
+                            if ordinary_exit(error):
+                                if confirmed_gone(task):
+                                    continue
+                                remaining = read_text(task / 'maps').splitlines()
+                                require(not any(row.split()[0] == fields[0] for row in remaining
+                                                if row.split()),
+                                        'surviving process mapping is unscannable')
+                                continue
+                            raise
+                        reject_block_consumer(mapped, devices, 'mapping')
+                except OSError as error:
+                    if not ordinary_exit(error):
+                        raise
+                    require(confirmed_gone(task), 'surviving process task is unscannable')
+        except OSError as error:
+            if not ordinary_exit(error):
+                raise
+            require(confirmed_gone(process), 'surviving process is unscannable')
+
+
+def reject_block_consumer(info, devices, kind):
+    if stat.S_ISBLK(info.st_mode):
+        require((os.major(info.st_rdev), os.minor(info.st_rdev)) not in devices,
+                'SD block device has an open process ' + kind)
 
 
 def idle_target(devices, own_fd=None):
@@ -270,9 +372,11 @@ def stream_write(source_fd, target_fd, length, progress=None):
     return written
 
 
-def write_payload(source_fd, source_path, source_identity, expected_boot_id, before):
+def write_payload(source_fd, source_path, source_identity, expected_boot_id, before,
+                  profile=DEFAULT_PROFILE):
+    length, _ = PROFILES[profile]
     host_context(expected_boot_id)
-    validate_source(source_fd, source_path, source_identity)
+    validate_source(source_fd, source_path, source_identity, profile=profile)
     current, devices = target_identity()
     require(current == before, 'target identity changed before opening')
     idle_target(devices)
@@ -287,11 +391,11 @@ def write_payload(source_fd, source_path, source_identity, expected_boot_id, bef
         require((opened.st_dev, opened.st_ino, opened.st_rdev) == current,
                 'target path no longer names opened block device')
         idle_target(devices, own_fd=fd)
-        validate_source(source_fd, source_path, source_identity)
+        validate_source(source_fd, source_path, source_identity, profile=profile)
         os.lseek(source_fd, 0, os.SEEK_SET)
-        count = stream_write(source_fd, fd, SOURCE_BYTES,
+        count = stream_write(source_fd, fd, length,
                              lambda n, total: print(f'Written {n}/{total} bytes', file=sys.stderr, flush=True))
-        validate_source(source_fd, source_path, source_identity)
+        validate_source(source_fd, source_path, source_identity, profile=profile)
         print('Flushing SD writes (fsync and BLKFLSBUF)...', file=sys.stderr, flush=True)
         os.fsync(fd)
         fcntl.ioctl(fd, BLKFLSBUF)
@@ -317,20 +421,22 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('image', help='authenticated raw payload in a root 0700 directory on /run tmpfs')
     parser.add_argument('--expected-boot-id', required=True)
+    parser.add_argument('--profile', choices=tuple(PROFILES), default=DEFAULT_PROFILE)
     parser.add_argument('--write', action='store_true', help='execute this preauthorized maintenance write')
     parser.add_argument('--report', help='fresh JSON report path in a root 0700 directory on /run tmpfs')
     args = parser.parse_args(argv)
+    length, expected_hash = PROFILES[args.profile]
     source_fd = report_fd = None
     report = {'operation': 'known-bootstrap-sd-maintenance', 'status': 'refused',
-              'hardware_acceptance': False, 'bytes_written': 0,
+              'profile': args.profile, 'hardware_acceptance': False, 'bytes_written': 0,
               'authorization': AUTHORIZATION, 'expected_boot_id': args.expected_boot_id,
               'target': {'path': TARGET, 'major_minor': '179:0', 'model': 'SU02G',
                          'cid': CID, 'bytes': TARGET_BYTES, 'write_offset': 0,
-                         'write_bytes': SOURCE_BYTES},
-              'source': {'path': args.image, 'bytes': SOURCE_BYTES, 'sha256': SOURCE_SHA256}}
+                         'write_bytes': length},
+              'source': {'path': args.image, 'bytes': length, 'sha256': expected_hash}}
     try:
         mounts = host_context(args.expected_boot_id)
-        source_fd, source_identity = open_source(args.image, mounts)
+        source_fd, source_identity = open_source(args.image, mounts, profile=args.profile)
         before, devices = target_identity()
         idle_target(devices)
         if args.report:
@@ -341,7 +447,7 @@ def main(argv=None):
         if args.write:
             print(json.dumps(report, sort_keys=True), file=sys.stderr, flush=True)
             report['bytes_written'] = write_payload(source_fd, args.image, source_identity,
-                                                    args.expected_boot_id, before)
+                                                    args.expected_boot_id, before, profile=args.profile)
             report['status'] = 'write-complete'
         emit_report(report, report_fd)
         return 0

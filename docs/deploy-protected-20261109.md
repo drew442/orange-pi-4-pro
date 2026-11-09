@@ -20,7 +20,7 @@ Stop if either identity differs; these are same-board instructions.
 | `out/protected-nvme-candidate-20261109/nvme.img.gz` | `584a958c63fb01f62c2162c733aeb004082088952c6e428d6406087492e315e2` |
 | Adjacent `manifest.json` | `f19b5b58c12030422b36c203471026209731fa413ea1ce8d9196121861cf8eb5` |
 | `scripts/personalize-known-host-state.py` | `59772d1a55df6edf44c6e1c80c0c09bde4fbcbeff9bf4ef957fda1c5dcef9321` |
-| `scripts/write-known-bootstrap-sd.py` | `c6e53ebd84e894f52fca623ce35fce2136733822c982e5c9e3f5d561abdabc34` |
+| `scripts/write-known-bootstrap-sd.py` | `14f97000094054f9eaac252759413fdded3a62085f34424d1a0fd2c36b3429e2` |
 
 The gzip is **545636009 bytes**; its single expansion is **256060514304 bytes**,
 SHA-256 `675d6ba87e53daaf3517f331948a3be5924d79ec21a5143c7bc9f5dda4f0b386`.
@@ -140,7 +140,7 @@ encoded image. The SD writer authenticates its fixed raw image itself. On the bo
 sha256sum -c - <<'PINS'
 f19b5b58c12030422b36c203471026209731fa413ea1ce8d9196121861cf8eb5  /run/a733-payload/manifest.json
 59772d1a55df6edf44c6e1c80c0c09bde4fbcbeff9bf4ef957fda1c5dcef9321  /run/a733-payload/personalize-known-host-state.py
-c6e53ebd84e894f52fca623ce35fce2136733822c982e5c9e3f5d561abdabc34  /run/a733-payload/write-known-bootstrap-sd.py
+14f97000094054f9eaac252759413fdded3a62085f34424d1a0fd2c36b3429e2  /run/a733-payload/write-known-bootstrap-sd.py
 ae3930cec481912a164361e11c926ca02d81561a49c0fc49b70514dd19d3d06e  /run/a733-payload/identity.tar
 PINS
 ```
@@ -210,7 +210,8 @@ resolve it before proceeding. Personalization changes the full-device hash, so
 the distribution raw hash is a pre-personalization record only.
 
 Use the [known SD writer](known-bootstrap-sd-writer.md) with the same boot UUID,
-first its read-only invocation, then `--write --report
+explicitly selecting `--profile protected-state-20261109`, first its read-only
+invocation, then `--write --report
 /run/a733-payload/sd-write-result.json`. It writes only the first 268435456 bytes
 of the exact card with progress, fsync and flush; raw SHA-256 is
 `ab5e8c2c846cbbd51b61bef6831d7e4d1498c29fefbf47d74301b1f3bb0ad207`.

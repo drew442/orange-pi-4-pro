@@ -1,0 +1,331 @@
+{
+  "schema": 1,
+  "date": "2026-11-09",
+  "classification": "finite-profile known SD writer and complete proc census preparation; no maintenance write",
+  "hardware_acceptance": false,
+  "source_git_baseline": "d2734c3",
+  "sources": [
+    {
+      "path": "scripts/write-known-bootstrap-sd.py",
+      "bytes": 21539,
+      "sha256": "14f97000094054f9eaac252759413fdded3a62085f34424d1a0fd2c36b3429e2"
+    },
+    {
+      "path": "tests/test_known_bootstrap_sd_writer.py",
+      "bytes": 35867,
+      "sha256": "bd62677d5eb20f1aad7e825f143c1c81ba0c52dbf77e945d981aad91f894ef4e"
+    },
+    {
+      "path": "tests/test_matched_nvme_trial_sd.py",
+      "bytes": 14069,
+      "sha256": "f0e917f916e67325089b1513e8469f530620944b7da77e7f57d65a64f8e92a67"
+    }
+  ],
+  "target": {
+    "device": "/dev/mmcblk1",
+    "major_minor": "179:0",
+    "cid": "035344535530324780716f216e00a8f5",
+    "model": "SU02G",
+    "bytes": 1977614336,
+    "write_offset": 0,
+    "write_bytes": 268435456
+  },
+  "profiles": {
+    "protected-state-20261109": {
+      "default": true,
+      "raw_sha256": "ab5e8c2c846cbbd51b61bef6831d7e4d1498c29fefbf47d74301b1f3bb0ad207"
+    },
+    "nvme-first-trial-20261109": {
+      "default": false,
+      "raw_sha256": "8470ff59290016bb2f99c051f371ab20ac431e75fd17dec4e0e0de5c665613d9"
+    }
+  },
+  "independent_source_review": {
+    "record": {
+      "path": "tmp/known-sd-trial-writer-review-20261109-final.json",
+      "bytes": 7344,
+      "sha256": "57bdd09618cc3044554202d4edf1fc029c1a640082781e877bd598c4a859eb8b"
+    },
+    "summary": {
+      "result": "PASS",
+      "classification": "Independent source, diff, caller and local host-probe review; not physical write or hardware acceptance",
+      "date": "2026-11-09",
+      "source_hashes": {
+        "scripts/write-known-bootstrap-sd.py": "14f97000094054f9eaac252759413fdded3a62085f34424d1a0fd2c36b3429e2",
+        "tests/test_known_bootstrap_sd_writer.py": "bd62677d5eb20f1aad7e825f143c1c81ba0c52dbf77e945d981aad91f894ef4e"
+      },
+      "review_scope": {
+        "sources_read": [
+          "docs/implementation-status.md",
+          "docs/hypervisor-plan.md relevant storage/acceptance sections",
+          "docs/agent-routing.md",
+          "scripts/write-known-bootstrap-sd.py complete",
+          "tests/test_known_bootstrap_sd_writer.py complete and final delta",
+          "docs/matched-nvme-trial-sd-20261109.md",
+          "docs/evidence/storage-write-authorization-20261108.json",
+          "out/known-sd-trial-writer-20261109-01/live-namespace-observation.json",
+          "docs/known-bootstrap-sd-writer.md",
+          "docs/deploy-protected-20261109.md relevant writer call/pin sections"
+        ],
+        "no_hardware_or_services_access": true,
+        "no_source_edits": true,
+        "no_commits_or_pushes": true
+      },
+      "findings": [],
+      "resolved_blockers": [
+        {
+          "candidate_hash": "b7beb39bc7ed09eaeb263c41212e31ceec990275da6314bd1998cf3b091c3968",
+          "problem": "Nonexistent task-qualified map_files directory made all live file-backed mappings unscannable.",
+          "resolution": "Uses direct /proc/TID/map_files with task-qualified FD/maps/lifecycle checks retained.",
+          "initial_report": "tmp/known-sd-trial-writer-review-20261109.json",
+          "evidence": "tmp/known-sd-trial-writer-review-20261109/map-paths-root-probe.log"
+        },
+        {
+          "candidate_hash": "05a2d19b3df43f4189d3821e65399a2eae297518dcba18fe5960d72f933a089d",
+          "problem": "Verbatim padded maps address ranges fail map_files canonical-name parsing.",
+          "resolution": "Builds map_files name from parsed numeric bounds using lowercase unpadded hex; original maps range retained for disappearance corroboration.",
+          "initial_report": "tmp/known-sd-trial-writer-review-20261109/candidate-2-review.json",
+          "evidence": "tmp/known-sd-trial-writer-review-20261109/map-range-format-probe.log"
+        }
+      ],
+      "checks": [
+        {
+          "name": "focused regression suite",
+          "result": "34 tests passed",
+          "log": "tmp/known-sd-trial-writer-review-20261109/focused-tests-candidate3.log"
+        },
+        {
+          "name": "independent reviewer probes",
+          "result": "7 tests passed: real regular source and receipt, dry-run physical-target-open guard, write/report faults, persistent/disappeared/exited/denied mappings",
+          "log": "tmp/known-sd-trial-writer-review-20261109/independent-probes-candidate3.log"
+        },
+        {
+          "name": "actual private-proc PID namespace",
+          "result": "sudo unshare --pid --fork --mount-proc executed host_context only; self and visible PID1 match and NSpid is single-valued; nested PID inode correctly refuses",
+          "log": "tmp/known-sd-trial-writer-review-20261109/private-proc-candidate3.log"
+        },
+        {
+          "name": "actual own-process census as root",
+          "result": "PASS on real single-thread task/fd/maps/map_files including FD-closed harmless file mapping; unrelated PID1 listing/maps alone stubbed empty; no target nodes opened",
+          "log": "tmp/known-sd-trial-writer-review-20261109/real-own-census-candidate3.log"
+        },
+        {
+          "name": "source syntax",
+          "result": "Both frozen Python files compile in memory; no pyc files generated"
+        },
+        {
+          "name": "git diff --check",
+          "result": "passed",
+          "log": "tmp/known-sd-trial-writer-review-20261109/diff-check-candidate3.log"
+        }
+      ],
+      "guard_assessment": [
+        "Finite immutable profiles preserve protected-state default and explicitly select authenticated trial; source checks, bounded write and all receipts bind selected profile.",
+        "Fixed exact SD target/CID/model/size/sector identity and source RAM/root/mode/hardlink/identity guards retained; no arbitrary target/hash/force overrides.",
+        "Initial PID/user namespace pins plus PID1 namespace equality, full proc root/device/type, hidden/subset/submount rejection and NSpid corroboration reject the reproduced private-proc admission hole.",
+        "All visible process tasks are scanned for block FDs and FD-free mappings; maps filesystem device column is not treated as block rdev. Mapped inode stat supplies block type/rdev. Live inaccessible tasks/maps fail closed.",
+        "Single-thread writer and exact held target FD exclusion retained; source and target rechecks, O_EXCL block claim, progress, fsync then BLKFLSBUF retained. Dry run never reaches target RW open; successful receipt always has hardware_acceptance=false."
+      ],
+      "nonblocking_existing_limitations": [
+        {
+          "path": "scripts/write-known-bootstrap-sd.py",
+          "lines": "405-415 and 458-462",
+          "problem": "If report fsync fails after JSON bytes were written, fallback appends a second failure JSON object; report file is not a single JSON document. This predates the reviewed changes.",
+          "safety_result": "Operation exits 1; stdout says failed-or-refused, bytes_written=null, hardware_acceptance=false. No success acceptance should use an intermediate report row.",
+          "required_caller_rule": "Require exit 0 plus one complete valid JSON receipt. Retain stdout/stderr on failure.",
+          "evidence": "tmp/known-sd-trial-writer-review-20261109/independent-probes-candidate3.log"
+        }
+      ],
+      "remaining_uncertainty": [
+        "Full privileged Jammy/root integration suite remains the coordinator gate.",
+        "No actual RAM-maintenance full preflight, target ioctl/exclusive-claim, SD write/flush/readback, restore, boot or firmware trial was performed.",
+        "Live board namespace observation corroborates pinned inode values only; it is not a writer preflight pass.",
+        "Trusted quiescent root environment remains required; census snapshots do not provide atomic exclusion against new consumers or hostile root.",
+        "No physical NVMe-file handoff, SD fallback, zero routine SD writes, rollback or real KVM/endurance acceptance is established by this review. Existing workload was not accessed or disturbed.",
+        "Deployment guide writer hash and operator documentation still need coordinator integration; pending status prose was explicitly excluded as a code-review blocker."
+      ],
+      "primary_sources": [
+        {
+          "path": "include/linux/proc_ns.h",
+          "revision": "2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f",
+          "url": "https://raw.githubusercontent.com/orangepi-xunlong/linux-orangepi/2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f/include/linux/proc_ns.h",
+          "retained_copy": "tmp/known-sd-trial-writer-review-20261109/vendor-proc-ns.h"
+        },
+        {
+          "path": "fs/proc/base.c",
+          "revision": "2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f",
+          "url": "https://raw.githubusercontent.com/orangepi-xunlong/linux-orangepi/2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f/fs/proc/base.c",
+          "retained_copy": "tmp/known-sd-trial-writer-review-20261109/vendor-proc-base.c"
+        }
+      ],
+      "changed_files_by_reviewer": [
+        "tmp/known-sd-trial-writer-review-20261109.json",
+        "tmp/known-sd-trial-writer-review-20261109-final.json",
+        "tmp/known-sd-trial-writer-review-20261109/ probes, evidence and logs only"
+      ]
+    }
+  },
+  "timestamp_fixture_review": {
+    "record": {
+      "path": "tmp/matched-nvme-trial-clock-fixture-review-20261109.json",
+      "bytes": 8965,
+      "sha256": "9f9b1bbbceaaf963f53734a2a99148f787ba64b82078bbc78a66c599358e9769"
+    },
+    "reason": "Same-tick filesystem mtime/ctime may remain unchanged after a rewrite. Metadata test now forces a distinct mtime; separate hash test rejects changed content with metadata check passing. Producer 8ff3 remains unchanged; trial artifacts need no reconstruction."
+  },
+  "jammy_validation": {
+    "builder": "drew@build.drewnet.online Ubuntu22.04",
+    "project": "/var/lib/a733-known-sd-trial-writer-validation-20261109-01",
+    "unit": "a733-known-sd-trial-writer-validation-20261109-02",
+    "python_tests": 2139,
+    "errors": 0,
+    "failures": 0,
+    "skips": 0,
+    "shell_suites": 5,
+    "diagnostic_assembly_cases": 5,
+    "source_files_unchanged": 841,
+    "source_postcheck": {
+      "source_files_unchanged": 841,
+      "source_lock_sha256": "4e200f9b39d47e22f0b1f6ac5d5e6d8035079887ade941859c48a5471bd5865f",
+      "free_bytes_after_validation": 22605803520,
+      "hardware_acceptance": false
+    },
+    "effective_limits": {
+      "CPUQuotaPerSecUSec": "2s",
+      "MemoryMax": 3221225472
+    },
+    "initial_attempt": "2138 tests, sole failure the timestamp-dependent matched-trial metadata fixture. Failure retained; no source producer or binary artifact changes. Deterministic test correction independently reviewed before combined successful rerun."
+  },
+  "read_only_live_observation": {
+    "board": "root@192.168.1.116",
+    "boot_id": "dd8d6f67-d297-4f3b-bc9a-8a41c9742051",
+    "result": {
+      "target_metadata_and_quiescence_guard": "pass",
+      "target_identity": [
+        5,
+        117,
+        45824
+      ],
+      "devices": [
+        [
+          179,
+          0
+        ],
+        [
+          179,
+          1
+        ]
+      ],
+      "classification": "read-only guards on active installed host; no source staging or maintenance write invocation",
+      "source_sha256": "14f97000094054f9eaac252759413fdded3a62085f34424d1a0fd2c36b3429e2",
+      "elapsed_seconds": 0.7058360860028188,
+      "hardware_acceptance": false
+    },
+    "scope": "Executed only authenticated module host_context, target_identity and idle_target; these read proc/sysfs/stat metadata. No source image staged, no CLI maintenance plan, no write_payload or device write invoked. Active workload continued.",
+    "records": [
+      {
+        "path": "out/known-sd-trial-writer-20261109-01/live-namespace-observation.json",
+        "bytes": 771,
+        "sha256": "c002b48a3c6512431c0b6adc2157e4876042d27cf0e79944dbce6db07c13e21d"
+      },
+      {
+        "path": "out/known-sd-trial-writer-20261109-01/readonly-live-guard-probe.py",
+        "bytes": 29719,
+        "sha256": "3c07931fec19a159c3ad45738a1c24fb2aeae11468d3e5b90c8101649a81c958"
+      },
+      {
+        "path": "out/known-sd-trial-writer-20261109-01/readonly-live-guard-probe.stdout",
+        "bytes": 466,
+        "sha256": "d94984629a0362fbb770d1d24c178eaa27de5c439c5ebd7fe18cb322dfc9f174"
+      },
+      {
+        "path": "out/known-sd-trial-writer-20261109-01/readonly-live-guard-probe.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ]
+  },
+  "guard_corrections": [
+    "Require fixed known initial PID/user namespace identities, shared PID1 mount namespace and complete unrestricted proc view; NSpid alone is insufficient.",
+    "Inspect every task FD table and FD-free file mappings; fail closed on surviving unscannable actors.",
+    "Initial review found task-qualified map_files path nonexistent; use direct /proc/TID/map_files. Second found padded maps addresses rejected by map_files; normalize parsed hex bounds. Both blocked candidates retained, neither used to write hardware.",
+    "No arbitrary source-hash or target override; source profile is explicit and fixed throughout plans/writes/reports."
+  ],
+  "validation_records": [
+    {
+      "path": "out/known-sd-trial-writer-20261109-01/jammy-validation-01.log",
+      "bytes": 15202,
+      "sha256": "eb20dc1a7992431b917a42e89fc39955e4f9c99c45acd9024e7c84cef24fcc66"
+    },
+    {
+      "path": "out/known-sd-trial-writer-20261109-01/jammy-validation-02.log",
+      "bytes": 15855,
+      "sha256": "10c62d7a729f3f7e669c701b61e31156d9b4218dbb4972626c140a5998d09745"
+    },
+    {
+      "path": "out/known-sd-trial-writer-20261109-01/validation-01-failed-unit.txt",
+      "bytes": 140,
+      "sha256": "942df6a509c779531bbe9ab81a108d3cca43eeeb5974ceb2415f7a2b22d96b39"
+    },
+    {
+      "path": "out/known-sd-trial-writer-20261109-01/validation-02-unit.txt",
+      "bytes": 198,
+      "sha256": "351c80c134f7d6087213e2740c856669e36fe43d29f1332a0ecc8375b420de20"
+    },
+    {
+      "path": "out/known-sd-trial-writer-20261109-01/validation-launch.log",
+      "bytes": 787,
+      "sha256": "9c21f83e0c1edc4733e866f40dc94f0d96ec412f299e2a7032ef3b61bb0d4712"
+    },
+    {
+      "path": "out/known-sd-trial-writer-20261109-01/validation-02-launch.log",
+      "bytes": 275,
+      "sha256": "7711580145dc613001a21101eab1ddc0fd279350eec37aad2e671d28808da3d0"
+    },
+    {
+      "path": "out/known-sd-trial-writer-20261109-01/source-lock.json",
+      "bytes": 133995,
+      "sha256": "f425a9589ced5e6346be5bd787b026626ab5debdf2316cd9ad8b43996dfdd0af"
+    },
+    {
+      "path": "out/known-sd-trial-writer-20261109-01/source-lock-02.json",
+      "bytes": 133995,
+      "sha256": "4e200f9b39d47e22f0b1f6ac5d5e6d8035079887ade941859c48a5471bd5865f"
+    },
+    {
+      "path": "out/known-sd-trial-writer-20261109-01/source.tar",
+      "bytes": 9861120,
+      "sha256": "4e0f3ca1d04b88c5f09ed6116807d62bd251bea70a0ae811cd5138c4a81a51cd"
+    },
+    {
+      "path": "out/known-sd-trial-writer-20261109-01/source-02.tar",
+      "bytes": 9861120,
+      "sha256": "0e5b0df4b649c49fbba1c6817562416e85c2f00083eec1677c94ef4faa4d9490"
+    },
+    {
+      "path": "out/known-sd-trial-writer-20261109-01/source-history.bundle",
+      "bytes": 3233118,
+      "sha256": "a02272e7cdf3b6de9fd4961191c891e41998a5bf3a48afa5fefc7593b77dbde2"
+    },
+    {
+      "path": "out/known-sd-trial-writer-20261109-01/source-postcheck.json",
+      "bytes": 206,
+      "sha256": "1ef1cc06d0e969b29302c5118b7eea2e23d99de73598d252667f5ffbe694cc1d"
+    }
+  ],
+  "native_checks": {
+    "TOML_files_parsed": 5,
+    "diff_whitespace": "PASS"
+  },
+  "operational_scope": [
+    "Known-card authority persists; --write requests the preauthorized operation without another prompt.",
+    "SD-only maintenance can use a quiescent NVMe-rooted host or private RAM recovery; source and reports require protected /run tmpfs. Whole-NVMe installation still requires its separate RAM procedure.",
+    "Wait for retained endurance outcome before any SD write. Current installed /run is 64MiB; provision sufficient RAM staging after that gate. No tmpfs expansion or raw-source staging was performed during this observation.",
+    "Callers require exit 0 and one complete valid receipt. Pre-existing report-fsync failure can append multiple JSON objects; failed writes remain uncertain.",
+    "Census assumes trusted quiescent root; it is not atomic exclusion against new consumers or hostile root."
+  ],
+  "remaining_acceptance": [
+    "Actual new-profile source plan and SD maintenance write, boot and EL2/KVM/SD-write checks.",
+    "Full 24-hour completion, cold/warm cycles, physical recovery/rollback, SPI recovery/programming if supported, and independent deployment reproduction."
+  ]
+}
