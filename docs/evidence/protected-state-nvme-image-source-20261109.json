@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "date": "2026-11-09",
-  "classification": "reviewed full distribution producer; actual construction pending",
+  "classification": "reviewed full distribution producer; two monitored constructions running",
   "hardware_acceptance": false,
   "full_construction_performed": false,
   "review": {
@@ -116,7 +116,15 @@
     "assembly_cases": 5,
     "log": "out/serial-recovery-20261109/full-stream-recipe-final-jammy-validation.log",
     "final_publication_minima_fix": "Two final resource-minimum assignments added after late input reauthentication; 12 final-source Jammy focused cases pass in 0.032s, independent delta review passes.",
-    "final_focused_log": "out/serial-recovery-20261109/full-stream-final-metadata-jammy-tests.log"
+    "final_focused_log": "out/serial-recovery-20261109/full-stream-final-metadata-jammy-tests.log",
+    "latest_complete_final_source_suite": {
+      "cases": 2039,
+      "seconds": 72.273,
+      "errors": 0,
+      "failures": 0,
+      "skips": 0,
+      "log": "out/serial-recovery-20261109/armed-outcome-final-jammy-validation.log"
+    }
   },
   "capacity": {
     "approved_lv_growth_completed": true,
@@ -126,5 +134,9 @@
   },
   "source_image": "fixed original835 raw via authenticated3e gzip",
   "permitted_delta": "512MiB BOOT partition at1MiB only",
-  "current_board": "personalized protected host runs separate24hworkload; never overwrite it for this packaging task"
+  "current_board": "personalized protected host runs separate24hworkload; never overwrite it for this packaging task",
+  "construction_units": [
+    "a733-protected-full-nvme-build-20261109-01.service",
+    "a733-protected-full-nvme-build-20261109-02.service"
+  ]
 }
