@@ -106,7 +106,7 @@ privileged focused review; full-suite revalidation and final guide review pass. 
   [Current evidence](evidence/normalized-full-nvme-image-20261109.json). Same-builder
   repetition is established; independent clean-builder/deployment reproduction
   and physical installation remain open.
-- Latest complete privileged Ubuntu suite: **2,225 tests**, zero skips/errors/
+- Latest complete privileged Ubuntu suite: **2,245 tests**, zero skips/errors/
   failures; five shell suites and five diagnostic assembly cases also pass.
   All five TOML files parse separately on codex. These are software checks.
 - [Normalized maintenance candidates](normalized-maintenance-20261109.md) use
@@ -164,7 +164,9 @@ privileged focused review; full-suite revalidation and final guide review pass. 
    its older image for the final corrected distribution. Preserve same-board
    identity, current guests and prior failure evidence before whole-drive erasure.
    [Offline STATE/root preservation](host-state-backup.md) is prepared; physical
-   backup and a guarded paired STATE/root restoration remain open.
+   backup and [paired STATE/root restoration](known-host-state-restore.md) remain
+   physical gates; the external controller now passes independent review and
+   the full Ubuntu suite without changing installed image bytes.
 3. Independently review the final normalized deployment bindings and preflight
    before physical installation; both full streams now pass complete artifact
    verification. Actual fresh installation and deployment reproduction are open.

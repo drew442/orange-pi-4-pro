@@ -172,13 +172,13 @@ the normalized root pair.** Keep the original dirty STATE archive immutable;
 perform replay only on a restored copy after preserving its original bytes.
 
 `recover-host-root.py` authenticates a retained root and changes selection; it
-neither restores partition images nor backs them up. The full installer erases
-the drive, and slot staging does not restore STATE. No executable raw restore
-write command is approved here: there is no reviewed controller binding all
-three archive pins/expanded sizes to exclusive exact-partition claims, verifying
-writes and reporting interrupted paired restoration without premature boot.
+neither restores partition images nor backs them up. The separate
+[fixed paired restore controller](known-host-state-restore.md) now passes
+independent code/procedure review and the full privileged Ubuntu suite. It
+binds all three archives to an off-device verified index, claims all targets
+before writing roots then STATE, and reports partial attempts conservatively.
+Routine readback is optional; use it for physical restoration acceptance.
 
-Extend existing offline recovery with its device/GPT/environment guards, fixed
-p2/p3/p4 destinations, authenticated receipts and paired plan/apply review. Require independent
-review, interruption tests and physical same-board restore/boot plus actual KVM
-before claiming restoration. Physical preservation and usable host restore remain open gates.
+No backup or host restoration has been performed by this preparation. Preserve
+the complete set, test interrupted retry and verify same-board boot,
+configuration/management and an actual KVM guest before claiming host restore.

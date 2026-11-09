@@ -1,0 +1,118 @@
+{
+  "schema": 1,
+  "date": "2026-11-09",
+  "classification": "Independently reviewed paired host restore preparation; physical preservation and host restoration unperformed",
+  "hardware_acceptance": false,
+  "physical_storage_written": false,
+  "host_restore_performed": false,
+  "sources": {
+    "scripts/restore-known-host-state.py": {
+      "bytes": 22987,
+      "sha256": "2332cae64cafdc03cde0e7023df460235a89efcdd5b2d9ed376389421e9e0c9f"
+    },
+    "tests/test_known_host_state_restore.py": {
+      "bytes": 22137,
+      "sha256": "231d9eab65dcb80f3420796d1b51419ffa35caf2fabcfa555b43a210939bd025"
+    },
+    "scripts/write-known-nvme-boot.py": {
+      "bytes": 28670,
+      "sha256": "39adee8bd81186bc1665701843d393c9ceb7f16466fca304b6a3cf43993999d9"
+    }
+  },
+  "reviews": {
+    "initial": {
+      "path": "tmp/state-restore-code-review-20261109.json",
+      "bytes": 3781,
+      "sha256": "ddca6bc1b910ef81aa67ad2c67ae61ab817c940d817e0b95d5bc105387d2260c",
+      "result": "FAIL",
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "high"
+    },
+    "fixed": {
+      "path": "tmp/state-restore-code-rereview-20261109.json",
+      "bytes": 4047,
+      "sha256": "51758fe35bf952d9f67d8fb6926190dc04c34a310d4ae3899c22c019d9e33faf",
+      "result": "PASS",
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "high"
+    },
+    "documentation": {
+      "path": "tmp/state-restore-documentation-review-20261109.json",
+      "bytes": 2692,
+      "sha256": "38b63737607c40737aeaaf3532f899f15073ac2c1b35389cb88b1aec24666c3e",
+      "result": "PASS",
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "high"
+    }
+  },
+  "validation": {
+    "builder": "drew@build.drewnet.online",
+    "path": "/var/lib/a733-paired-state-restore-validation-20261109-03",
+    "unit": "a733-paired-state-restore-validation-20261109-03.service",
+    "result": "success",
+    "exit_status": 0,
+    "tests": 2245,
+    "seconds": 72.584,
+    "errors": 0,
+    "failures": 0,
+    "skips": 0,
+    "shell_suites": 5,
+    "diagnostic_cases": 5,
+    "source_files_before_after": 888,
+    "cpu_quota_percent": 100,
+    "memory_max_bytes": 3221225472,
+    "builder_free_bytes_after": 23342411776,
+    "builder_available_memory_bytes_after": 7214452736,
+    "retained": {
+      "out/paired-state-restore-validation-20261109-01/validation.log": {
+        "bytes": 24956,
+        "sha256": "c40b10fcaef05a43ebe71cf81ec794553c351de5d3e250c5857e85fd17cdd5f3"
+      },
+      "out/paired-state-restore-validation-20261109-01/validation-unit.txt": {
+        "bytes": 120,
+        "sha256": "9a2a6999e01f633fd9958ffb97047574393c15329ff26d904947b6df28923e06"
+      },
+      "out/paired-state-restore-validation-20261109-01/source-lock.json": {
+        "bytes": 141871,
+        "sha256": "2c456dc7f43af40ad786d7490a7a26bb9604ab9bd477bf00e2a2867e7385465d"
+      },
+      "out/paired-state-restore-validation-20261109-01/source-history.bundle": {
+        "bytes": 3470736,
+        "sha256": "23d51073276705ac68a3abd090f47415dd27801e8ee40b5a0080fe4658c52081"
+      },
+      "out/paired-state-restore-validation-20261109-01/failed-01-validation.log": {
+        "bytes": 127289,
+        "sha256": "6fa19560baca422e829f19f76d377d4c98a8a2476ecbf4c9e8bfc48b55acbb0e"
+      },
+      "out/paired-state-restore-validation-20261109-01/failed-01-unit.txt": {
+        "bytes": 122,
+        "sha256": "ecc95df6dac075371495498f4cc549b83dda6f460b22171b82b672f615c61ed2"
+      },
+      "out/paired-state-restore-validation-20261109-01/failed-02-validation.log": {
+        "bytes": 97394,
+        "sha256": "67665d0c4a3a092c80e68c3eeb729603c5bb25952636aebfc37775c0a5b87341"
+      },
+      "out/paired-state-restore-validation-20261109-01/failed-02-unit.txt": {
+        "bytes": 122,
+        "sha256": "ecc95df6dac075371495498f4cc549b83dda6f460b22171b82b672f615c61ed2"
+      }
+    },
+    "initial_environment_failures": [
+      "Run01 snapshot omitted Git history required by regression tests; retained failure.",
+      "Run02 copied bundle without selecting its branch/index; retained failure.",
+      "Run03 explicitly selected main and populated/verified HEAD and index before tests; sources unchanged."
+    ]
+  },
+  "limits": [
+    "No hardware access or private STATE backup occurred during implementation/review.",
+    "Focused fixtures substitute physical/root boundaries; they are not device or hardware acceptance.",
+    "Raw restore is nontransactional and requires the externally pinned index from one fully verified off-device backup cohort.",
+    "A conservative progress file cannot prove completion: require matching terminal receipt and process exit zero.",
+    "First physical acceptance must include readback, restored host/configuration checks and actual KVM.",
+    "New helper is external to the installed 39-source closure; image bytes are unchanged."
+  ],
+  "native_toml_checks": {
+    "files": 5,
+    "parser": "Python tomllib"
+  }
+}

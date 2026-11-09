@@ -41,9 +41,11 @@ physical installation. Fresh machine identity is intentionally installation
 specific; the same-board personalization step preserves this board's private
 identity without changing the selected root pairing.
 
-Latest complete privileged validation is **2,225 Python tests**, zero skips,
+Latest complete privileged validation is **2,245 Python tests**, zero skips,
 errors or failures, plus five shell suites and five diagnostic assembly cases.
-Five TOML files parse separately on codex. These are software checks.
+Five TOML files parse separately on codex. [Retained suite and restore preparation](evidence/known-host-state-restore-preparation-20261109.json)
+record the source pins and initial validation-environment failures. These are
+software checks.
 
 ## Resources and unresolved inputs
 
