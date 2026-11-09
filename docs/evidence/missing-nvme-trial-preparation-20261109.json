@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "date": "2026-11-09",
+  "classification": "Reviewed one-boot physical-board NVMe-driver fault-injection procedure; execution unperformed",
+  "hardware_acceptance": false,
+  "physical_trial_performed": false,
+  "physical_ssd_removed": false,
+  "physical_storage_written": false,
+  "release_reliability_boot_count": 0,
+  "kernel_commit": "2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f",
+  "kernel_config_sha256": "8a29d9c36e52db7e8a7d6ff757dc69e660f4273c99e5f00c5dbc5a9b7e060675",
+  "required_config": [
+    "CONFIG_KALLSYMS=y",
+    "CONFIG_NVME_CORE=y",
+    "CONFIG_BLK_DEV_NVME=y"
+  ],
+  "temporary_bootarg": "initcall_blacklist=nvme_init",
+  "sources": {
+    "init/main.c": {
+      "url": "https://raw.githubusercontent.com/orangepi-xunlong/linux-orangepi/2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f/init/main.c",
+      "bytes": 38707,
+      "sha256": "4565160eede776c66ee0f0434358baf1d34ecc59ce3cc2cda2a7e34ab670414c"
+    },
+    "drivers/nvme/host/pci.c": {
+      "url": "https://raw.githubusercontent.com/orangepi-xunlong/linux-orangepi/2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f/drivers/nvme/host/pci.c",
+      "bytes": 100475,
+      "sha256": "555ef8afbfef7c49bc4ea97ea2ec52c0f55f49afa4450ce9354d4b7e8aa06991"
+    }
+  },
+  "reviews": {
+    "initial": {
+      "path": "tmp/missing-nvme-trial-review-20261109.json",
+      "bytes": 4682,
+      "sha256": "cc35fc369f3f2ee461c2b274f51529e50262175deae16a0ba79e80fd8fe64129",
+      "result": "FAIL",
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "high",
+      "snapshot_limit": "Initial finding concerned bare BusyBox applet commands. Its report hash snapshot occurred after the concurrent explicit-applet correction; use fixed review for final file binding."
+    },
+    "fixed": {
+      "path": "tmp/missing-nvme-trial-rereview-20261109.json",
+      "bytes": 5512,
+      "sha256": "1adbe11b8ed4d272a8e3315992c5b0d39f738ad4b1d2790950b8c23cd4486fe0",
+      "result": "PASS",
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "high"
+    }
+  },
+  "limits": [
+    "Source/configuration support is not proof that the compiled initcall is skipped; verify actual absence of driver and namespace.",
+    "This tests the real board Linux missing-storage path; it is not physical SSD removal or all electrical failure cases.",
+    "Require final endurance preservation and current-data backups first.",
+    "Require faulted serial recovery and subsequent normal host boot/management plus actual KVM.",
+    "No environment save, boot-file edit, raw disk write or SPI programming is part of these commands."
+  ]
+}

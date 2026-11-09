@@ -171,7 +171,9 @@ privileged focused review; full-suite revalidation and final guide review pass. 
    before physical installation; both full streams now pass complete artifact
    verification. Actual fresh installation and deployment reproduction are open.
    Preserve current BOOT; verify the policy physically after retaining endurance
-   evidence.
+   evidence. The [temporary missing-NVMe driver trial](missing-nvme-recovery-test.md)
+   now passes independent procedure review; faulted serial recovery, normal
+   recovery boot and a KVM guest remain unperformed for that case.
 4. Prepare SPI recovery/programming and matched NVMe-first firmware trials.
    The [matched trial SD](matched-nvme-trial-sd-20261109.md) now has two identical
    constructions and independent complete artifact review; it preserves current

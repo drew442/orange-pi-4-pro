@@ -39,8 +39,8 @@ for boot0/U-Boot writes.
 | Boot reliability | 10 cold boots and 10 warm reboots, matched firmware/SSD | Pending |
 | Workload | 24 hours: CPU/disk/network, temperatures/memory/NVMe errors | [Fresh protected-host run is active](endurance-run-20261109.md); previous failed run remains separate, full duration pending |
 | SD policy | SD removed, or full-card hashes plus write counters/firmware audit | No mounted SD; continuous zero-write samples and [whole-media baseline/prefix match](evidence/protected-sd-baseline-20261109.json) pass; firmware audit and later comparison pending |
-| Update/recovery | Interrupted update, rollback, missing NVMe, disposable data | Pending |
-| Backup | Off-device backup restored and checked | [Authenticated physical restoration, KVM restart and checkpoints pass](evidence/corrected-host-guest-restore-20261108.json) |
+| Update/recovery | Interrupted update, rollback, missing NVMe, disposable data | Physical cases pending; [missing-NVMe fault-injection procedure](missing-nvme-recovery-test.md) reviewed and unperformed |
+| Backup | Off-device guest/configuration backup restored and checked | [Guest restoration, KVM restart and checkpoints pass](evidence/corrected-host-guest-restore-20261108.json); [host STATE restoration](known-host-state-restore.md) remains physically unperformed |
 | Security | Unique keys, no shared secrets, limited guest privileges/services | Pending |
 | Reproduction | Independent operator follows clean build/deployment guide | Pending |
 
@@ -79,7 +79,7 @@ new reviewed checkpoint hash for the next launch. The [base guest fixture](guest
 diagnostic fixture now passes CPU/disk/network and clean restart on the VGIC
 host. This does not establish final corrected-host release acceptance. Restricted user-mode networking has no inbound
 listeners by default; the [HTTP fixture and explicit loopback profile](guest-networking.md)
-define the pending actual guest network test.
+define the loopback network profile used in the linked physical guest checks.
 
 The helper selects the host's GIC version for KVM, as supported by
 [QEMU 7.2's virt machine](https://gitlab.com/qemu-project/qemu/-/blob/v7.2.0/docs/system/arm/virt.rst).
@@ -107,17 +107,24 @@ smaller than the actual card, whereas this gate covers every card byte.
 `scripts/plan-nvme.py --target /dev/disk/by-id/EXACT_NVME` produces a read-only
 identity and layout report on a Linux environment with Python and util-linux.
 It uses actual bytes, requires model/serial and rejects known busy indicators.
-The diagnostic BusyBox image does not yet include Python. A plan is neither a
+The original minimal diagnostic BusyBox image lacks Python; the current
+[private SSH RAM recovery image](current-images.md) supplies the installer runtime.
+A plan is neither a
 lock nor authorization to install; raw-device users and other mount namespaces
 remain limitations. Revalidate just before any future installer action.
 
 Before erasing physical storage or programming SPI, identify the exact device,
 publish its concrete write plan, preserve/read-check required backups and recovery
-inputs, and obtain explicit authorization. The user has authorized discarding the
-NVMe with serial `134807190FC700149277`, model `SPCC M.2 PCIe SSD`, size
-256,060,514,304 bytes; do not request that permission again if identity matches.
-Revalidate identity and idle state immediately before any future write. The
-[November 7 operator log](evidence/installed-host-first-boot-20261107.json) records
-the authorized NVMe installation and readback. SPI remains untouched until its
-actual chip, backup and recovery route are verified. Automatic rollback is not established; do not promise it before
-the proven boot architecture supports it.
+inputs, and revalidate identity and idle state. The operator's [standing storage
+authorization](evidence/storage-write-authorization-20261108.json) covers the known
+board's SD, NVMe and SPI; do not ask again within that scope. Request a simple
+yes/no only for a new target or unapproved scope. Known NVMe is serial
+`134807190FC700149277`, model `SPCC M.2 PCIe SSD`, 256,060,514,304 bytes;
+known SD is the SU02G with CID `035344535530324780716f216e00a8f5`.
+The [November 7 operator log](evidence/installed-host-first-boot-20261107.json)
+records an earlier authorized NVMe installation and readback. Normal installation
+readback is optional and transfer/write progress must remain visible.
+SPI remains unprogrammed until its exact chip, backup and independent recovery
+route are verified. Persisted write authority does not supply recovery evidence.
+Automatic rollback is not established; do not promise it before the proven boot
+architecture supports it.
