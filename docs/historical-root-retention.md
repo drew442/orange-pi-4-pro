@@ -42,3 +42,17 @@ gzip files provide another authenticated representation of each raw image.
 
 This retention frees build workspace. It establishes no physical installation,
 rollback, KVM guest execution or release acceptance.
+
+## Later transport-envelope retirement
+
+On November 9, the redundant `out/historical-root-retention-20261106/encoded-inputs.tar`
+transport envelope was retired after all six compressed members matched both
+held protected canonical copies. Its entire tar grammar, saved literal headers,
+zero padding/footer and full SHA-256 are recorded in
+[the reviewed actual retirement evidence](evidence/native-transport-envelope-retirement-20261109.json).
+All canonical raw/gzip files and loose inbox files remain. This releases
+860,504,064 allocated bytes; the new full-image candidate was then retained on
+codex with 735,850,496 bytes free, above its unchanged 256 MiB floor.
+The transport tar is not a build input. Reconstruct it only if needed using
+recorded headers and canonical members, and verify its original size/hash; that
+reconstruction has not been performed.
