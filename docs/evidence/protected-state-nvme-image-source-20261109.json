@@ -1,0 +1,130 @@
+{
+  "schema": 1,
+  "date": "2026-11-09",
+  "classification": "reviewed full distribution producer; actual construction pending",
+  "hardware_acceptance": false,
+  "full_construction_performed": false,
+  "review": {
+    "schema": 1,
+    "date": "2026-11-09",
+    "review_scope": "Independent Sol high source review of protected STATE full NVMe distribution producer; ordinary-file tests only",
+    "source_review": "PASS",
+    "blocking_findings": [],
+    "sources": {
+      "build/protected-state-nvme-image.py": {
+        "bytes": 16747,
+        "sha256": "152840e5e2af6c3f36cd0e7799f4c03ca93f6faa9fbee1169c9c5c9760036ba1"
+      },
+      "tests/test_protected_state_nvme_image.py": {
+        "bytes": 15439,
+        "sha256": "6fd5aa7b9891a00094b578ff27c9c869272cc9b9706b842c19a70a093a8d9669"
+      },
+      "docs/protected-state-nvme-image.md": {
+        "bytes": 5736,
+        "sha256": "d8f836e9586bae30b63a3880428ca78f7c2746a575e2399e8c7d2fe10d54f149"
+      }
+    },
+    "checks": [
+      "Complete fixed historical compressed input, manifest and replacement BOOT authenticate before interpretation; original complete 256060514304-byte logical stream and replaced old BOOT extent hashes must match fixed pins.",
+      "Only 536870912 bytes at offset 1048576 are substituted from held replacement. Old/new prefix, suffix, every partition and GPT extent hashes are compared. No full raw staging file is created.",
+      "Bounded zlib source expansion refuses first excess logical byte, invalid header/CRC/trailer, truncation, trailing zeros and additional gzip members. CRC and exact total size are required.",
+      "Deterministic single-member output has level9, zero mtime and empty filename; encoded writes include footer in the enforced 2GiB bound. Separate gzip.GzipFile complete output decode verifies raw hash, size and every captured range.",
+      "Both GPT headers/arrays, CRCs, protective MBR, GUIDs, unused entries and exact five-partition geometry are validated. Reconstruction from actual pinned historical metadata matches all five historical GPT extent hashes; this is metadata validation, not a full image construction.",
+      "All nine loaded repository module source paths are included in held RECIPES, plus host-init. Descriptors, path identity, regular-file/single-link bounds and complete content are rechecked before publication; symlink ancestors and device/proc/sys paths refuse.",
+      "Fresh strict repository output directory is private; output creates exclusively and incomplete runs have no final manifest. Trusted quiescent checkout/output contract is required.",
+      "Admission remains 23760999827 bytes; runtime floors remain 3000000000 free disk and 1000000000 available RAM. Scratch includes 2GiB encoded ceiling plus16MiB headroom. Builder capacity must freshly qualify before construction; the initial approximately19.2GB-free builder was disqualified.",
+      "Manifest inherits only allowlisted unchanged payload identity/geometry/policy. Entire historical authority is nested under source_manifest; stale construction measurements cannot appear as current evidence.",
+      "Documentation preserves A733, 2GB SD, nominal250GB NVMe, minimal host, zero routine SD writes, unpersonalized distribution distinction and all physical acceptance gates.",
+      "Publication resource minima are copied after final held-input reauthentication and forced publication sampling, so the manifest includes late disk/memory minima. Regression lowers both minima only at publication and verifies the final values."
+    ],
+    "resolved_findings": [
+      {
+        "finding": "Historical build_seconds, allocated_bytes and builder_packages previously leaked through deep-copy inheritance into current construction evidence.",
+        "resolution": "Explicit payload metadata allowlist plus historical source_manifest; regression checks known and unknown historical fields remain nested only.",
+        "status": "CLOSED"
+      },
+      {
+        "finding": "Resource minima were snapshotted before final reauthentication/publication samples.",
+        "resolution": "Final minimum_free_bytes/minimum_available_memory_bytes assignments occur immediately after forced publication check; focused integration regression confirms late minima.",
+        "status": "CLOSED"
+      }
+    ],
+    "executed_validation": [
+      {
+        "command": "python3 -m unittest discover -s tests -p test_protected_state_nvme_image.py -v",
+        "result": "PASS",
+        "tests": 12,
+        "skips": 0,
+        "final_revision": true
+      },
+      {
+        "command": "python3 -m unittest discover -s tests -p test_protected_state_nvme_boot.py -v",
+        "result": "PASS",
+        "tests": 5,
+        "skips": 0
+      },
+      {
+        "command": "python3 -m unittest discover -s tests -p test_protected_state_bootstrap.py -v",
+        "result": "PASS",
+        "tests": 8,
+        "skips": 0
+      },
+      {
+        "command": "python3 -m unittest discover -s tests -p test_vgic_nvme_image.py -v",
+        "result": "PASS",
+        "tests": 10,
+        "skips": 0
+      },
+      {
+        "command": "Independent temporary-file decoder stress: 8MiB+17 zero bytes; CHUNK1,7,64,1024,1048576; trailingzero/emptysecondmember/corruptheader refusal",
+        "result": "PASS"
+      },
+      {
+        "command": "Recursive loaded-repository-module closure versus RECIPES and fixed historical GPT metadata reconstruction",
+        "result": "PASS"
+      },
+      {
+        "command": "git diff --check",
+        "result": "PASS"
+      }
+    ],
+    "limitations": [
+      "No actual full distribution construction or complete actual-artifact review was performed; these remain required after capacity qualifies.",
+      "Python gzip output reader accepts concatenated members/padding; strict no-tail input policy and single-member output writer govern framing. Actual artifact review must independently inspect framing.",
+      "Hardware boot, dirty-STATE recovery, KVM/endurance, installation and zero-SD-write acceptance are unaffected and remain separate. Current physical workload was not contacted or disturbed."
+    ],
+    "full_construction_performed": false,
+    "artifact_review": "UNPERFORMED",
+    "hardware_acceptance": false,
+    "physical_storage_written": false,
+    "followup_review": {
+      "scope": "Two publication-minima assignments and focused regression; no stream changes.",
+      "source_review": "PASS",
+      "focused_tests": 12,
+      "diff_check": "PASS",
+      "full_construction_performed": false,
+      "builder_capacity": "Coordinator reports authorized growth to approximately25.3GB free; reviewer did not contact builder or perform admission."
+    }
+  },
+  "validation": {
+    "complete_jammy_python_cases": 2026,
+    "seconds": 56.859,
+    "errors": 0,
+    "failures": 0,
+    "skips": 0,
+    "shell_suites": 5,
+    "assembly_cases": 5,
+    "log": "out/serial-recovery-20261109/full-stream-recipe-final-jammy-validation.log",
+    "final_publication_minima_fix": "Two final resource-minimum assignments added after late input reauthentication; 12 final-source Jammy focused cases pass in 0.032s, independent delta review passes.",
+    "final_focused_log": "out/serial-recovery-20261109/full-stream-final-metadata-jammy-tests.log"
+  },
+  "capacity": {
+    "approved_lv_growth_completed": true,
+    "free_bytes_after_growth": 25303740416,
+    "admission_guard": 23760999827,
+    "qualification": "remeasure before actual invocation"
+  },
+  "source_image": "fixed original835 raw via authenticated3e gzip",
+  "permitted_delta": "512MiB BOOT partition at1MiB only",
+  "current_board": "personalized protected host runs separate24hworkload; never overwrite it for this packaging task"
+}
