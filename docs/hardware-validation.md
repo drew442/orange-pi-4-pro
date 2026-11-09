@@ -39,7 +39,7 @@ for boot0/U-Boot writes.
 | Boot reliability | 10 cold boots and 10 warm reboots, matched firmware/SSD | Pending |
 | Workload | 24 hours: CPU/disk/network, temperatures/memory/NVMe errors | [Fresh protected-host run is active](endurance-run-20261109.md); previous failed run remains separate, full duration pending |
 | SD policy | SD removed, or full-card hashes plus write counters/firmware audit | No mounted SD; continuous zero-write samples and [whole-media baseline/prefix match](evidence/protected-sd-baseline-20261109.json) pass; firmware audit and later comparison pending |
-| Update/recovery | Interrupted update, rollback, missing NVMe, disposable data | Physical cases pending; [missing-NVMe fault-injection procedure](missing-nvme-recovery-test.md) reviewed and unperformed |
+| Update/recovery | Interrupted update, rollback, missing NVMe, disposable data | Physical cases pending; [missing-NVMe procedure](missing-nvme-recovery-test.md) and [dirty-STATE trial design](dirty-state-recovery-trial.md) reviewed and unperformed; dirty-STATE live commands remain unbound |
 | Backup | Off-device guest/configuration backup restored and checked | [Guest restoration, KVM restart and checkpoints pass](evidence/corrected-host-guest-restore-20261108.json); [host STATE restoration](known-host-state-restore.md) remains physically unperformed |
 | Security | Unique keys, no shared secrets, limited guest privileges/services | Pending |
 | Reproduction | Independent operator follows clean build/deployment guide | Pending |

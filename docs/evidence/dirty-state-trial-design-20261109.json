@@ -1,0 +1,98 @@
+{
+  "schema": 1,
+  "date": "2026-11-09",
+  "operation": "dirty-state-trial-design-preparation",
+  "status": "independent-design-review-pass",
+  "hardware_acceptance": false,
+  "hardware_actions_performed": false,
+  "live_execution_plan_complete": false,
+  "sources": [
+    {
+      "path": "docs/dirty-state-recovery-trial.md",
+      "bytes": 7533,
+      "sha256": "b5b3f56c9174e77918daafec95f9ca0d99d6a699b1cf58fb4707655b81252473"
+    },
+    {
+      "path": "configs/host-init",
+      "bytes": 17650,
+      "sha256": "2cf52e1cee8d4f2050fe3a90eca0a0a8c50b6f30718d210667f7273f9f08ab12"
+    },
+    {
+      "path": "scripts/export-known-host-journal.py",
+      "bytes": 22835,
+      "sha256": "3a54ca3536f0df7599f6a8722d14f465cbe9cfb774865623d9a5e622ad7bbb1c"
+    },
+    {
+      "path": "scripts/host-recovery-target.py",
+      "bytes": 9770,
+      "sha256": "9901e568384fd7d4e5722e22eac84e936640f05e8fee4900b06d2b2b987e960b"
+    }
+  ],
+  "review_record": {
+    "path": "tmp/dirty-state-trial-design-review-20261109.json",
+    "bytes": 4910,
+    "sha256": "79fd354dd5fb6608f1f0c36e9882af192eabeca57ab1d7056b92d23b87d7b438"
+  },
+  "independent_review": {
+    "schema": 1,
+    "review_date": "2026-11-09",
+    "document": "docs/dirty-state-recovery-trial.md",
+    "review_scope": "Independent read-only design preparation review; not executable live write-plan review or hardware acceptance",
+    "status": "PASS",
+    "hardware_actions_performed": false,
+    "device_or_bridge_access_performed": false,
+    "findings": [
+      {
+        "id": "DSTR-1",
+        "severity": "blocking",
+        "document_lines": [
+          65,
+          74
+        ],
+        "title": "Whole-namespace protection conflicts with unchanged exporter admission",
+        "detail": "Step 4 protects the exact namespace and partitions block-RO, then the next section runs the unchanged exporter without an intervening parent-flag transition. scripts/export-known-host-journal.py:167-172 requires the whole DISK BLKROGET/sysfs flag to equal 0; only PART (p4) may be 1. The exporter therefore refuses before its protected mount, independently of journal-directory consistency. This cannot exercise the intended protected inspection lifecycle.",
+        "minimum_correction": "After authenticating and retaining the immutable off-device dirty archive, require fresh same-device/geometry/idle/consumer revalidation and explicitly restore only /dev/nvme0n1 parent namespace write eligibility to 0 before invoking the unchanged exporter. Keep p4 and p1/p2/p3/p5 block-RO=1, verify all ioctl/sysfs flags, and exclude concurrent administration. Explain that parent eligibility permits privileged raw namespace writes, so exclusion remains essential. Preserve exporter policy unchanged; do not classify this admission refusal as journal-directory evidence.",
+        "status": "corrected and independently rereviewed",
+        "correction_document_lines": [
+          74,
+          78
+        ],
+        "correction_verified": "Corrected design now explicitly requires verified immutable archive, idle identity revalidation, parent namespace RO=0 and all five partitions RO=1 before the unchanged exporter. It identifies premature exporter refusal and forbids weakening preflight or clearing p4 protection. This matches inspect_target and preserves p4 original_ro=1 through protected_journal cleanup."
+      }
+    ],
+    "reviewed_coherent_aspects": [
+      "The document explicitly states design-only preparation and defers live command bindings, tool availability, actual backups and independent execution review. Their present absence is not a defect.",
+      "The active endurance workload is protected by explicit outcome, NVMe health, SD comparison and data/evidence preservation preconditions.",
+      "Exact A733 known NVMe identity and p4 geometry bound the deliberate fault; paired restore correctly precedes p4-only dirtiness, and complete original cohort restoration is required on failure.",
+      "Only the disposable STATE filesystem is mounted writable for crash creation; protected partitions and no concurrent raw consumers limit accidental writes. SysRq b retains the RAM recovery SD boot route.",
+      "RECOVER plus nonzero journal start and raw inode-8 mapping are distinguished from proof of pending committed transactions; absent transaction evidence cannot establish content replay.",
+      "Raw dirty archive custody remains separate from the original paired cohort and cannot falsely claim a new three-partition export.",
+      "Exporter content refusal can be retained without a false protection failure claim; cleanup and counters still need review before further action.",
+      "Production host-init block protection, ro/noload validation, normal unmount, internal-journal/device/idle revalidation and subsequent authorized writable mount are described consistently.",
+      "Compatible protected SD restoration, console/identity/marker checks and an actual KVM guest remain physical requirements. No model or loop evidence is promoted to hardware acceptance; final clean boot counts are not claimed."
+    ],
+    "sources_reviewed": [
+      "docs/agent-routing.md",
+      "docs/implementation-status.md",
+      "docs/dirty-state-recovery-trial.md",
+      "configs/host-init",
+      "scripts/export-known-host-journal.py",
+      "scripts/host-recovery-target.py",
+      "docs/host-state-backup.md",
+      "docs/known-host-state-restore.md",
+      "docs/known-bootstrap-sd-writer.md",
+      "docs/offline-host-journal.md",
+      "docs/hypervisor-plan.md"
+    ],
+    "remaining_scope": "After the design correction, exact live-bound commands, available tools, actual cohort pins, journal analysis and full reset/normal-boot route still require independent review before execution. No hardware result is established by this report.",
+    "document_sha256": "b5b3f56c9174e77918daafec95f9ca0d99d6a699b1cf58fb4707655b81252473",
+    "unresolved_blocking_defects": [],
+    "acceptance": "PASS for design preparation only; no live command review, execution authorization binding, exporter hardware validation, dirty-journal replay or physical recovery acceptance is established."
+  },
+  "remaining": [
+    "Retain and review actual endurance outcome, NVMe health and full-card SD comparison",
+    "Preserve current guest/evidence/identity and verify immutable paired ROOT-A/ROOT-B/STATE cohort",
+    "Independently review exact live command bindings, available journal-inspection tools and recovery route",
+    "Create and preserve actual interrupted journal on disposable restored p4, then execute and assess physical protection/recovery/actual KVM checks"
+  ]
+}

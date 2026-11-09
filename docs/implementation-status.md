@@ -29,6 +29,9 @@ unexplained; it is not reclassified as a pass.
   fixtures, including legacy orphans, preserve all source bytes/write counters.
   Protected host boot passes; physical dirty-journal recovery is still pending.
   [Evidence](evidence/state-block-protection-20261109.json).
+  The [dirty-STATE trial design](dirty-state-recovery-trial.md) now passes
+  [independent review](evidence/dirty-state-trial-design-20261109.json); live command bindings, verified backups, an actual crash
+  journal and physical execution remain pending.
 - **Serial:** `orangepi@192.168.1.117`, `ttyS3-capture.service`,
   `/var/log/ttyS3.log` (volatile). Native codex relay
   `a733-uart-relay-20261109-01.service` preserves output off-board.
