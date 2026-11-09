@@ -1,18 +1,19 @@
 # Current images for this board
 
-The corrected NVMe installation and host SD already booted, synchronized time,
-and ran the restored KVM guest through counters 3 → 4 → 5. Its endurance attempt
-subsequently lost SSH; [serial diagnosis is pending](endurance-run-20261108.md).
-Capture that console output before changing media. Installation and release
-acceptance are separate; this is not a public release.
+The protected STATE bootstrap now boots at **192.168.1.116**, with read-only
+NVMe root, automatic time synchronization and a real KVM guest running.
+A [fresh 24-hour workload](endurance-run-20261109.md) is in progress with UART
+capture. No operator flashing is currently requested. Release acceptance remains
+incomplete; the previous endurance failure is still unexplained.
 
 Paths below are relative to `/home/drew/orange-pi-4-pro` on codex.
 
 | Purpose | Existing artifact |
 | --- | --- |
 | SSH RAM recovery, same board | `out/ssh-ram-installer-20261108/a733-ssh-installer.img.gz` |
-| Normal corrected host SD bootstrap | `out/vgic-runtime-bootstrap-20261108/retained-01/a733-host-sd.img.gz` |
-| Corrected NVMe installation | `out/vgic-nvme-image-20261108/retained-02/nvme.img.gz` |
+| Current protected host SD bootstrap | `out/serial-recovery-20261109/protected-sd-retained-01/a733-host-sd.img.gz` |
+| Current protected NVMe BOOT component | `out/serial-recovery-20261109/protected-nvme-retained-01/boot.ext4.gz` |
+| Historical full NVMe base, requiring the protected BOOT update | `out/vgic-nvme-image-20261108/retained-02/nvme.img.gz` |
 
 The two SD artifacts each expand to **268,435,456 bytes**, fitting the actual
 **1,977,614,336-byte** SU02G card, CID `035344535530324780716f216e00a8f5`.
@@ -33,19 +34,26 @@ Check the compressed source once on the flashing computer:
 | Artifact | Compressed bytes | Compressed SHA-256 |
 | --- | ---: | --- |
 | SSH RAM recovery SD | 41,229,263 | `2f9cdd006e6d5c2c59e5ed1aba68f3ed7dd267a7f61b3672e590d926468c4eec` |
-| Corrected host SD | 17,271,954 | `fbfa9f4eae5913a61768e90fb62b2a3f48df9a2d38aed5b7380b83873f5307b6` |
+| Protected host SD | 17,273,154 | `450e30f0b8169da7471396dbc97d44185426c3da61cc83d8425acab74ccef18c` |
+| Protected NVMe BOOT | 16,659,543 | `6a2725e53e3f2e89b7a796969df05af19f9778db301152495699fc0d9351e041` |
 | Corrected NVMe | 545,632,496 | `3e560264bb64a9bc23b342febdff2146955ca97cb6e0279e5240c29d4e6d85bc` |
 
 Expanded recovery SD SHA-256 is
 `d3a02224efdb2c2eeccc7115d84cd6c4b2d75c7d06580b8f7812d12a546bc3f6`;
 expanded host SD SHA-256 is
-`f02c74b4c001f1608d0005b6ff23fe82bffa8c02f71e19e5b6573819125ae383`.
+`ab5e8c2c846cbbd51b61bef6831d7e4d1498c29fefbf47d74301b1f3bb0ad207`.
+The BOOT component expands to **536,870,912 bytes**, SHA-256
+`cc2ad988fdc57579178766acaf09c71d688aaadec94b722593192cb24426c313`.
+It is a p1-only maintenance payload, not a whole-drive image; use the
+[reviewed offline updater](known-nvme-boot-writer.md), which has already applied
+it to this board. The host roots, STATE and GUESTS were retained. A new full
+NVMe distribution stream incorporating that component remains to be produced.
 The NVMe stream expands to **256,060,514,304 bytes**, SHA-256
 `835031b81d0320d6f9f35e74b9be67b494006c26a25fa9070f3e0a8f434ebc11`.
 Its producer manifest is retained at `out/vgic-nvme-image-20261108/build-02.stdout`
 (35,023 bytes, SHA-256 `addfcafe239a2aa075435383cc4742869d256d98beecd2526806da206d98f4a2`).
-Same-board identity was restored after installation, so the personalized whole
-NVMe no longer has the original stream hash. No NVMe reinstall is requested.
+Same-board identity was restored after installation and BOOT was subsequently
+updated, so the personalized whole NVMe no longer has the original stream hash. No NVMe reinstall is requested.
 
 ## Flash an SD after diagnosis calls for it
 

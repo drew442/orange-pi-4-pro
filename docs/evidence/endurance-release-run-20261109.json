@@ -1,0 +1,202 @@
+{
+  "schema": 1,
+  "date": "2026-11-09",
+  "classification": "24-hour physical KVM workload running; not accepted",
+  "hardware_acceptance": false,
+  "host_boot_id": "dd8d6f67-d297-4f3b-bc9a-8a41c9742051",
+  "guest_run_id": "59af604a-cf2e-4c8f-9fd5-e26b8283d14c",
+  "guest_unit": "a733-guest-endurance.service",
+  "guest_started_utc": "2026-11-09 02:10:42 UTC",
+  "host_cpu_started_utc": "2026-11-09 02:10:45 UTC",
+  "collector_started_utc": "2026-11-09 02:10:55 UTC",
+  "required_guest_seconds": 86400,
+  "earliest_workload_completion_utc": "2026-11-10 02:10:45 UTC",
+  "first_endpoint_guest_elapsed_seconds": 0,
+  "first_collector_guest_elapsed_seconds": 10,
+  "initial_collection_gap_seconds": 10,
+  "samples_at_record": 20,
+  "latest_guest": {
+    "schema": 1,
+    "profile": "a733-kvm-endurance-v1",
+    "run_id": "59af604a-cf2e-4c8f-9fd5-e26b8283d14c",
+    "mode": "release",
+    "state": "running",
+    "required_seconds": 86400,
+    "elapsed_seconds": 581,
+    "cycles": 20,
+    "disk_counter": 1,
+    "cpu_workers": 4,
+    "cpu_workers_alive": 4,
+    "disk_sha256": "080acf35a507ac9849cfcba47dc2ad83e01b75663a516279c8b9d243b719643e"
+  },
+  "latest_temperatures_millidegrees": [
+    31434,
+    30566,
+    28768,
+    32488,
+    30318
+  ],
+  "latest_nvme_kernel_errors": [],
+  "latest_sd_stat": [
+    78,
+    0,
+    4184,
+    741,
+    0,
+    0,
+    0,
+    0,
+    0,
+    672,
+    741,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "host_cpu": {
+    "service": "a733-endurance-host-cpu-release-20261109.service",
+    "properties": {
+      "MainPID": "2169",
+      "ExecMainStartTimestamp": "Mon 2026-11-09 02:10:45 UTC",
+      "ExecMainStartTimestampMonotonic": "543976328",
+      "MemoryMax": "134217728",
+      "ActiveState": "active"
+    },
+    "children": [
+      {
+        "pid": 2170,
+        "uid": 65534,
+        "cap_effective": "0000000000000000",
+        "no_new_privs": "1"
+      },
+      {
+        "pid": 2171,
+        "uid": 65534,
+        "cap_effective": "0000000000000000",
+        "no_new_privs": "1"
+      },
+      {
+        "pid": 2172,
+        "uid": 65534,
+        "cap_effective": "0000000000000000",
+        "no_new_privs": "1"
+      },
+      {
+        "pid": 2174,
+        "uid": 65534,
+        "cap_effective": "0000000000000000",
+        "no_new_privs": "1"
+      }
+    ],
+    "script_sha256": "13e12e9d1ef93f883b34b4949088a267c80d61973cf3c1565565488ab3a02360",
+    "hardware_acceptance": false
+  },
+  "collector": "a733-offboard-endurance-collector-20261109.service",
+  "samples_path": "out/endurance-physical-release-20261109-01/samples.jsonl",
+  "serial_relay": "a733-uart-relay-20261109-01.service",
+  "serial_path": "out/serial-recovery-20261109/serial-live.log",
+  "exit_observer": "a733-endurance-release-exit-observer-20261109.service",
+  "management_watch": "a733-management-watch-endurance-20261109.service",
+  "failed_guest_retention": {
+    "review": {
+      "schema": 1,
+      "date": "2026-11-09",
+      "reviewer": "independent Sol high review",
+      "scope": "Read-only review of ignored one-shot helper; local disposable fixtures only; no hardware or SSH execution",
+      "script": "tmp/retain-failed-endurance-20261109.py",
+      "script_sha256": "a208c2862bda171519b1970384247c5df3ac1d971c308bcb2a1dcc6ec35a1e99",
+      "baseline_script_sha256": "01545c8f91e5b3bf0907dac3def14d5376c2a4caf21ce33f251f9dea9a8642a3",
+      "verdict": "pass_for_scoped_one_shot_execution",
+      "blocking_findings": [],
+      "scope_conditions": [
+        "Invoke with ordinary python3 without optimization; all safety assertions must execute.",
+        "Coordinator exclusively controls all guest launches and enrollment for the operation; systemd launch does not take the enrollment flock.",
+        "Run only on pinned boot dd8d6f67-d297-4f3b-bc9a-8a41c9742051 with the authenticated installed dependency closure. Current-boot verification remains coordinator-owned.",
+        "Failure before a durable receipt is not proof the rename did not occur; inspect both exact paths before any retry."
+      ],
+      "verified": {
+        "only_baseline_differences": [
+          "Pinned current boot ID",
+          "Enrollment lock O_CREAT with mode 0600",
+          "Distinct failed-release destination",
+          "Exact failed-release enrollment digest",
+          "Operation label retain-failed-release-guest"
+        ],
+        "fixed_rename": "/run/a733-guests/endurance -> /run/a733-guests/.endurance-failed-retained-20261108",
+        "preserved_smoke_path": "/run/a733-guests/.endurance-smoke-retained-20261108 is never referenced or modified",
+        "manifest_sha256": "2bfbb4a0f69b90415c9e23361448c1f38149320be3b9fd1803a1088a9dcae41a; matches endurance-release-enroll-receipt.json",
+        "target": "Exact boot ID, NVMe serial 134807190FC700149277, p5 UUID 298b281a-d10e-44eb-bdb9-285e27eaafad, sysfs minor and major 259; held parent bound to that filesystem.",
+        "lock": "O_NOFOLLOW/O_NONBLOCK; authenticated root:root regular file 0600, single link, same device as RAM /run, named inode matches held fd; exclusive nonblocking flock retained until process exit. New lock creation changes RAM only.",
+        "quiescence": "Exact inactive/dead endurance unit with zero main/control PIDs and no UID 60002 process; repeated immediately before rename.",
+        "source": "No-follow parent/source opens; root-owned non-writable parent; exact root:60002 0710 source directory; source/held-parent filesystem and source inode rechecked.",
+        "enrollment": "No-follow root:root regular 0400 single-link bounded manifest with exact digest; mutable disk content hashes are not revalidated against stale enrollment metadata.",
+        "nonreplacement": "Reviewed scripts/enroll-guest.py rename_new calls libc renameat2 with RENAME_NOREPLACE=1; preexisting destination also rejected before publication.",
+        "durability": "Same-parent rename followed by parent fsync and destination device/inode equality.",
+        "runtime_guard": "Reviewed configs/host-management.py authenticates RO NVMe root, same-namespace RW STATE and state binds, tmpfs /run/overlay, kernel/payload/package-state and management identity/config.",
+        "dependency_hashes": {
+          "scripts/enroll-guest.py": "04e12b68426d3c1137f9835e098dc20a3c0370c97de7ada592fb4e1e2b7db64e",
+          "configs/host-management.py": "a6cc8ec90f90050efc16fda6567d666aadd5fcb2a12b468b050ab9fd52ca6052"
+        },
+        "dependency_evidence": "Both local dependency hashes match the historical corrected-host complete installed closure. No current-board read performed in this review.",
+        "preservation": "No erase/unlink, data rewrite, enrollment filesystem-hash update, service start or disk launch occurs. Directory rename necessarily changes namespace metadata only."
+      },
+      "checks": {
+        "python_syntax": "pass",
+        "exact_requested_script_hash": "pass",
+        "baseline_diff_scope": "pass",
+        "local_rename_inode_and_content_preservation": "pass",
+        "local_existing_destination_EEXIST": "pass",
+        "local_parent_fsync": "pass",
+        "local_distinct_smoke_fixture_untouched": "pass",
+        "hardware_execution": false
+      },
+      "evidence_read": [
+        "AGENTS.md",
+        "docs/agent-routing.md",
+        "docs/implementation-status.md",
+        "docs/hypervisor-plan.md",
+        "tmp/retain-endurance-smoke-20261108.py",
+        "tmp/retain-endurance-smoke-review-20261108.json",
+        "scripts/enroll-guest.py",
+        "configs/host-management.py",
+        "docs/evidence/corrected-host-boot-20261108.json",
+        "out/vgic-nvme-image-20261108/corrected-host-runtime-verification.json",
+        "out/vgic-nvme-image-20261108/endurance-release-enroll-receipt.json"
+      ],
+      "limitations": [
+        "No physical execution or fresh current-boot dependency verification performed.",
+        "Local rename fixtures do not establish A733 durability or hardware acceptance.",
+        "Original 24-hour endurance failure remains unexplained; no healthy or clean-shutdown claim is made for that run."
+      ]
+    },
+    "result": [
+      {
+        "operation": "retain-failed-release-guest",
+        "source": "/run/a733-guests/endurance",
+        "destination": "/run/a733-guests/.endurance-failed-retained-20261108",
+        "guest_uuid": "298b281a-d10e-44eb-bdb9-285e27eaafad",
+        "source_inode": 6673,
+        "rename_only": true,
+        "hardware_acceptance": false
+      },
+      {
+        "retained": true,
+        "parent_fsynced": true,
+        "inode_unchanged": true,
+        "hardware_acceptance": false
+      }
+    ]
+  },
+  "nvme_smart_baseline": {
+    "critical_warning": 0,
+    "media_errors": 0,
+    "unsafe_shutdowns": 77,
+    "error_log_entries": 153,
+    "latest_error_status": 8194,
+    "raw": "out/serial-recovery-20261109/endurance-health-and-storage-baseline.jsonl"
+  },
+  "original_failure_cause": "unexplained; this run does not retroactively prove its cause"
+}

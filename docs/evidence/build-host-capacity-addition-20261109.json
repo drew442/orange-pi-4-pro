@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "date": "2026-11-09",
-  "status": "prepared; additional growth not authorized or executed",
+  "status": "authorized and executed",
   "builder": "build.drewnet.online",
   "target": "/dev/ubuntu-vg/ubuntu-lv",
   "lv_uuid": "Wacdne-hf6p-osvg-5IiF-iVD0-Dlgt-6iflHh",
@@ -20,11 +20,12 @@
     "schema": 1,
     "review_date": "2026-11-09",
     "result": "PASS",
-    "scope": "Independent read-only review of the prepared additional 6 GiB Ubuntu builder root LV/ext4 growth proposal. This report does not authorize or execute it.",
+    "scope": "Independent review of the prepared exact additional 6 GiB Ubuntu builder root LV/ext4 growth, including correction of the findmnt formatting guard and addition of a read-only --check path. Review does not itself execute growth.",
     "script": {
       "path": "tmp/build-host-growth-20261109/apply.sh",
-      "sha256": "79930be84c2a83974f2ffd5b38940d999dfef801ec17a77428bef828aec944b1",
-      "bash_syntax": "PASS; bash -n only, script not executed"
+      "sha256": "4ce6988213ab5002d2f4bfb90816bec9306f28393b01e94ae9009abf8385b250",
+      "bash_syntax": "PASS; bash -n only, script not executed",
+      "previous_reviewed_sha256": "79930be84c2a83974f2ffd5b38940d999dfef801ec17a77428bef828aec944b1"
     },
     "blockers": [],
     "target": {
@@ -51,7 +52,7 @@
     "findings": [
       "Target guards bind hostname, exact LV UUID and original size, exact root source/type/device, minimum free VG capacity, and pinned root-private pre-growth metadata backup. The prepared script hash matches the requested pin.",
       "Exact final-size lvextend and the original-size guard prevent repeated additive growth. The supplied LVM test-mode stderr explicitly disables metadata updates; post-test LV and VG values retain their original sizes.",
-      "The prior exact 20 GiB approval was consumed by the November 7 execution. This additional 6 GiB is a separate pending operator yes/no decision; known A733 SD/NVMe/SPI authorization does not cover it.",
+      "The prior exact 20 GiB approval was consumed by the November 7 execution. New builder capacity authorization has now been reported by the coordinator; this exact 6 GiB application is within it. A733 SD/NVMe/SPI authorization remains a separate scope.",
       "Failure handling is correct: retain any enlarged LV if resize2fs fails, stop, inspect actual LV/filesystem state, and perform a separately controlled resume. Never shrink or restore pre-growth VG metadata. The old-size guard deliberately blocks blindly rerunning this script after LV growth.",
       "The backup hash protects LVM metadata identity, not filesystem contents. Actual free space must be measured after ext4 growth; retain the unchanged 23760999827-byte admission and runtime resource floors before construction/replay. The projected capacity is not proof that all later phases fit."
     ],
@@ -64,11 +65,43 @@
       "docs/evidence/build-host-capacity-execution-20261107.json",
       "out/serial-recovery-20261109/builder-growth-readonly-inventory.txt",
       "out/serial-recovery-20261109/builder-growth-preparation.txt",
-      "out/serial-recovery-20261109/builder-growth-preparation.stderr"
+      "out/serial-recovery-20261109/builder-growth-preparation.stderr",
+      "tmp/build-host-growth-20261109/apply.sh",
+      "out/serial-recovery-20261109/builder-growth-guard-check.txt",
+      "out/serial-recovery-20261109/builder-growth-guard-check.stderr"
     ],
     "limitations": [
-      "No SSH, builder writes, volume/filesystem operations, script execution, device actions, delegation, commit or push performed. Only this local review report was written.",
+      "No SSH, builder writes, volume/filesystem operations, script execution, device actions, delegation, commit or push performed by this reviewer. Only this local review report was written. Runtime --check evidence was read from coordinator-supplied captures.",
       "No physical A733 acceptance claim; the separate 24-hour KVM workload and project A733/2 GB SD/250 GB NVMe/minimal-host/zero-routine-SD-write requirements remain unaffected."
-    ]
-  }
+    ],
+    "authorization": "Coordinator reports the operator has now approved allocation of all available builder free space. The reviewed application still grows only to the same exact 94459920384-byte final LV size, consuming 6 GiB. No further capacity approval is required for this subset of the reported approval.",
+    "correction_review": {
+      "result": "PASS",
+      "blockers": [],
+      "changes": [
+        "findmnt uses -nr for root source, filesystem type, major/minor and final reporting; raw output avoids alignment padding in the exact comparisons.",
+        "Argument validation accepts exactly one of --apply or --check. All identity, size, capacity, backup-hash and absent-after-backup checks run before the --check branch. That branch exits successfully before lvextend or any filesystem mutation.",
+        "Exact target size, UUID, old-size guard, backup pin and failure policy remain unchanged."
+      ],
+      "runtime_guard_evidence": {
+        "result": "PASS",
+        "stdout": "out/serial-recovery-20261109/builder-growth-guard-check.txt",
+        "stderr": "out/serial-recovery-20261109/builder-growth-guard-check.stderr",
+        "observation": "Captured stdout reports pinned metadata backup OK and all prepared target guards passed without LV/filesystem change; captured stderr is empty."
+      },
+      "first_apply_observation": "Coordinator reports the first --apply stopped at the padded MAJ:MIN comparison before mutation; the observed --check confirms the corrected original-size preflight now passes. No destructive command was executed by this reviewer.",
+      "documentation_followup": "Coordinator owns replacing the stale embedded old script snapshot with this reviewed hash and corrected script before integration."
+    }
+  },
+  "authorization": {
+    "operator_text": "any free space may be expanded into without the need to request approval. consider all free space available on the host approved for use.",
+    "scope": "Ubuntu build host build.drewnet.online; future use/expansion of its available free capacity is approved without another permission request"
+  },
+  "actual_lv_bytes": 94459920384,
+  "actual_vg_free_bytes": 38625345536,
+  "filesystem_bytes": 92650086400,
+  "free_bytes_after": 25303740416,
+  "guard_passed_after": true,
+  "metadata_after_sha256": "7e262747d5751dc33c7acc492455c27c2573bb64982fc5cbce8c12c051bbfa84",
+  "initial_attempt": "Stopped before mutation because formatted findmnt MAJ:MIN had trailing padding; raw-output correction and read-only full guard check passed before attempt02"
 }

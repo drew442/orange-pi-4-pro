@@ -19,21 +19,24 @@ not a successful continuous capture. Preserve complete logs before any rotation.
 
 A733 currently has `CONFIG_MAGIC_SYSRQ=y`, `CONFIG_MAGIC_SYSRQ_SERIAL=y` and
 runtime `kernel.sysrq=1`. Sending UART BREAK then **only `h`** produced the actual
-kernel help response. This proves the bidirectional path; it neither rebooted
-the board nor authenticated a serial shell. Normal serial root password login
-remains locked.
+kernel help response. This first test proved the bidirectional path. Later, the RAM installer
+shell restored its existing `/run` mount after an accidental overmount hid the
+SSH privilege-separation directory; SSH returned without reboot or storage
+writes. Normal installed-host serial root password login remains locked.
 
 [Linux SysRq documentation](https://docs.kernel.org/admin-guide/sysrq.html)
 describes BREAK followed within five seconds by a command. Diagnostic `w`, `m`
 and `t` can provide blocked-task, memory and task-state evidence when SSH fails.
-Only help has been physically tested here. Keep the receiver running while
+Help and controlled RAM-installer reboot have been physically tested. Keep the receiver running while
 writing through a separate UART descriptor; the reader need not be stopped.
 
 Emergency recovery requires separate controlled actions: request sync and wait
 for its completion, request read-only remount and wait for completion, then
-request reboot. The reboot command alone skips those steps. UART reboot and
-recovery during a hung kernel remain **unperformed**; a fully locked kernel may
-not process SysRq. Routine boot tests should use clean systemd reboot instead.
+request reboot. The reboot command alone skips those steps. A controlled BREAK + `b` now physically rebooted the RAM installer into the
+protected host after sync and confirmation that NVMe was completely idle. See
+[maintenance evidence](evidence/protected-state-maintenance-20261109.json).
+Recovery during a hung kernel remains **unperformed**; a fully locked kernel
+may not process SysRq. Routine boot tests should use clean systemd reboot instead.
 
 ## Reset wiring
 

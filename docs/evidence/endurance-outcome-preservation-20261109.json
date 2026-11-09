@@ -1,0 +1,93 @@
+{
+  "schema": 1,
+  "date": "2026-11-09",
+  "classification": "automatic read-only preservation armed; no run acceptance granted",
+  "hardware_acceptance": false,
+  "artifacts_captured_yet": false,
+  "review": {
+    "reviewed_utc": "2026-11-09T03:07:21.182878+00:00",
+    "reviewer": {
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "high",
+      "role": "independent read-only reviewer"
+    },
+    "decision": "PASS",
+    "scope": "Read-only one-shot outcome evidence preservation for the fixed physical endurance run; no hardware acceptance or service installation approval.",
+    "sources": {
+      "scripts/preserve-known-endurance-outcome.py": "259fef75311c1818afb81810115e0ca499520bf07b0bf40a2bf2b6d606610a72",
+      "tests/test_preserve_known_endurance_outcome.py": "a8d89ed0fa5fe4a97572772091f43dc8382a35aa0728d4aa7fe4699e4240e68a"
+    },
+    "blocking_findings": [],
+    "checks": [
+      "All thirteen focused unittest cases pass independently; they exercise ordinary files and local subprocesses/mocks only. git diff --check also passes.",
+      "SSH target, identity, host-key alias and strict checking are fixed; remote command source only reads systemctl state, specified RAM logs, journals, dmesg and conditionally NVMe health/error logs.",
+      "NVMe commands are skipped unless a successful, nontruncated local systemctl observation reports LoadState=loaded, ActiveState=inactive/failed and MainPID=0. Running or unloaded/missing collector observations cannot enable them.",
+      "Exit 2 remains pending_external_completion; ENDURANCE_PASS text cannot grant acceptance. Local summary and remote snapshot retain unreviewed classification and hardware_acceptance=false, including boot mismatch.",
+      "Both subprocess streams and elapsed time are bounded; SSH has a 150-second deadline. Base64 expansion of maximum captured transport plus other artifacts remains below the 32 MiB artifact cap.",
+      "Fresh mode-0700 output directory, exclusive mode-0600 file creation and final-component nofollow checks prevent replacement/clobbering within the expected trusted Drew-owned workspace. File tails reject final symlinks and nonregular files.",
+      "Drew owns the mode-0600 SSH key and can traverse the mode-0700 SSH directory. Service must run as Drew with ordinary known-hosts access; actual SSH authentication was not exercised.",
+      "All three journal captures report record caps, captured counts and possible_truncation on record/byte limits, timeout or unsuccessful commands.",
+      "Closed CLI phase choices select only the original fixed collector-exit path or separate fixed scheduled-final path; each refuses existing output and retains private permissions, floor/budget checks and unreviewed classification. Neither phase changes remote commands or permits arbitrary targets."
+    ],
+    "nonblocking_limitations": [
+      {
+        "location": "scripts/preserve-known-endurance-outcome.py:preserve",
+        "detail": "Each phase remains one-shot: an early manual invocation, SSH failure, crash or partial write consumes that phase directory. Its later invocation refuses rather than retrying/replacing evidence. The independent final directory prevents an earlier collector-exit snapshot from consuming final capture, but does not provide retries within either phase."
+      },
+      {
+        "location": "Persistent timer/OnFailure integration outside reviewed source",
+        "detail": "The proposed persistent final timer can request a late capture after off-board downtime, but cannot recover board RAM evidence already lost to power loss/reboot, guarantee prior UART continuity or prove completion. Exact installed units, calendar, runtime identity and behavior were not exercised by this review. An active collector at scheduled time still skips NVMe health."
+      },
+      {
+        "location": "scripts/preserve-known-endurance-outcome.py:preserve",
+        "detail": "Output operations rely on the trusted workspace parent and same-user execution. Final-component O_NOFOLLOW is not protection against a hostile process able to rename ancestor directories; no privileged execution or hostile-parent security guarantee is established."
+      }
+    ],
+    "hardware_actions": "None: no SSH, service actions, hardware execution, device writes, reboot, activation or workload disturbance.",
+    "acceptance": "Genuine completion, normal guest/CPU exit, post-run health and all other physical release gates remain coordinator review requirements.",
+    "delta_review": "PASS: requested journal metadata, loaded-unit health guard and two fixed independent capture phases are correctly implemented; no blocking findings."
+  },
+  "staged_helper": {
+    "path": "/var/lib/a733-endurance-preserver-20261109/preserve.py",
+    "sha256": "259fef75311c1818afb81810115e0ca499520bf07b0bf40a2bf2b6d606610a72",
+    "owner": "root",
+    "mode": "0444"
+  },
+  "on_failure_unit": "a733-endurance-outcome-preserve-20261109.service",
+  "collector_main_pid_preserved_at_install": 3869075,
+  "final_timer": "a733-endurance-outcome-final-20261109.timer",
+  "deadline_utc": "2026-11-10 02:16:00 UTC",
+  "timer_persistent": true,
+  "unit_verification": "systemd-analyze verify passed; collector still active with same MainPID and OnFailure set; timer active with exact deadline",
+  "outputs": [
+    "out/endurance-outcome-20261109-01",
+    "out/endurance-outcome-20261109-final"
+  ],
+  "limits": "Fresh per-phase directory refusal, explicit journal/byte limits, trusted workspace and volatile remote RAM; boot mismatch/missing data remain unreviewed and never imply pass",
+  "units": {
+    "a733-endurance-outcome-final-20261109.timer": {
+      "sha256": "eeae74e7b753515a25e253513366a3cd0bccc740301dfc7e11ab1f3a043ae51e",
+      "text": "[Unit]\nDescription=Preserve the known A733 outcome after its 24-hour deadline\n[Timer]\nOnCalendar=2026-11-10 02:16:00 UTC\nAccuracySec=1s\nPersistent=true\nUnit=a733-endurance-outcome-final-20261109.service\n[Install]\nWantedBy=timers.target\n"
+    },
+    "a733-endurance-outcome-preserve-20261109.service": {
+      "sha256": "004be26b3a36fc7e5362eecf39dcbefab5c2f0be3f9b98bc827316e9df161991",
+      "text": "[Unit]\nDescription=Preserve unreviewed evidence after the known A733 collector exits\n[Service]\nType=oneshot\nUser=drew\nGroup=drew\nWorkingDirectory=/home/drew/orange-pi-4-pro\nExecStart=/usr/bin/python3 -I -B /var/lib/a733-endurance-preserver-20261109/preserve.py --phase collector-exit\nNoNewPrivileges=yes\nCapabilityBoundingSet=\nMemoryMax=256M\nLimitFSIZE=64M\nTimeoutStartSec=300\nUMask=0077\nStandardOutput=journal\nStandardError=journal\n"
+    },
+    "collector-onfailure.conf": {
+      "sha256": "3764e7ff19db72051590271ade344f63bfdb7ed964211bc0eec7ba60675fa213",
+      "text": "[Unit]\nOnFailure=a733-endurance-outcome-preserve-20261109.service\n"
+    },
+    "a733-endurance-outcome-final-20261109.service": {
+      "sha256": "0c4b21379f5247c312bd8880fdb763b1d0f3fd1530b7782668d4f1dd11d64b21",
+      "text": "[Unit]\nDescription=Preserve final unreviewed evidence for the known A733 run\n[Service]\nType=oneshot\nUser=drew\nGroup=drew\nWorkingDirectory=/home/drew/orange-pi-4-pro\nExecStart=/usr/bin/python3 -I -B /var/lib/a733-endurance-preserver-20261109/preserve.py --phase scheduled-final\nNoNewPrivileges=yes\nCapabilityBoundingSet=\nMemoryMax=256M\nLimitFSIZE=64M\nTimeoutStartSec=300\nUMask=0077\nStandardOutput=journal\nStandardError=journal\n"
+    }
+  },
+  "qualified_jammy_suite": {
+    "tests": 2039,
+    "errors": 0,
+    "failures": 0,
+    "skips": 0,
+    "seconds": 72.273,
+    "log": "out/serial-recovery-20261109/armed-outcome-final-jammy-validation.log"
+  }
+}

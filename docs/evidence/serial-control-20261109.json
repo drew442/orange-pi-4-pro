@@ -82,5 +82,15 @@
       "sha256": "dc36ce665c1a365e469520abe8789c61a59e7872b47b147cd4aae93d1e4ad955"
     }
   ],
-  "hardware_acceptance": false
+  "hardware_acceptance": false,
+  "controlled_ram_reset": {
+    "performed": true,
+    "ram_boot_id": "81a80ab6-b31b-4a37-8a68-701a1b1f6f3a",
+    "preconditions": "sync and flushed maintenance writes; all NVMe idle in RAM root",
+    "uart_command": "BREAK then b",
+    "observed": "sysrq: Resetting at RAM uptime598.127702",
+    "next_host_boot_id": "dd8d6f67-d297-4f3b-bc9a-8a41c9742051",
+    "hung_kernel_recovery_proven": false,
+    "release_boot_cycle_counted": false
+  }
 }

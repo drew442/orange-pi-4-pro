@@ -37,8 +37,8 @@ for boot0/U-Boot writes.
 | Ethernet | Vendor binding, DHCP, route/DNS/TLS and repeatable cold boot | Preparation DHCP/DNS/TLS observed; [installed DHCP and both SSH keys pass after repair](installed-host-repair-results-20261108.md); corrected-host automatic NTP passes; repeatable cold boot remains open |
 | Installation | Fresh deployment on actual card and nominal 250 GB SSD | [November 7 write/readback and installed root A boot observed](evidence/installed-host-first-boot-20261107.json); [management repair passes](installed-host-repair-results-20261108.md); independent deployment reproduction remains open |
 | Boot reliability | 10 cold boots and 10 warm reboots, matched firmware/SSD | Pending |
-| Workload | 24 hours: CPU/disk/network, temperatures/memory/NVMe errors | [60-second physical smoke passes; release attempt lost management](endurance-run-20261108.md), full run pending |
-| SD policy | SD removed, or full-card hashes plus write counters/firmware audit | No mounted SD; one zero-write snapshot; full gate pending |
+| Workload | 24 hours: CPU/disk/network, temperatures/memory/NVMe errors | [Fresh protected-host run is active](endurance-run-20261109.md); previous failed run remains separate, full duration pending |
+| SD policy | SD removed, or full-card hashes plus write counters/firmware audit | No mounted SD; continuous zero-write samples and [whole-media baseline/prefix match](evidence/protected-sd-baseline-20261109.json) pass; firmware audit and later comparison pending |
 | Update/recovery | Interrupted update, rollback, missing NVMe, disposable data | Pending |
 | Backup | Off-device backup restored and checked | [Authenticated physical restoration, KVM restart and checkpoints pass](evidence/corrected-host-guest-restore-20261108.json) |
 | Security | Unique keys, no shared secrets, limited guest privileges/services | Pending |

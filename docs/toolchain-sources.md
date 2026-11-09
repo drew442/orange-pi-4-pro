@@ -139,6 +139,6 @@ closure, a rebuild of the compiler binary, legal sufficiency or public binary
 redistribution clearance. [Vendor boot-input grants](evidence/vendor-boot-license-inventory-20261106.json)
 remain independently unresolved. The board now passes
 [management repair and SSH](installed-host-repair-results-20261108.md) and
-[partial actual KVM CPU/disk execution](first-kvm-results-20261108.md). Guest
-networking, clean restart and the remaining physical
+[actual KVM CPU/disk/network and clean restart](kvm-vgic-results-20261108.md).
+The [new 24-hour run](endurance-run-20261109.md) and remaining physical
 [release acceptance](hardware-validation.md) are still open.

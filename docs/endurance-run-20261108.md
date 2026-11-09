@@ -5,10 +5,11 @@ and the [60-second physical smoke test](evidence/endurance-smoke-physical-202611
 The release-mode workload started at **2026-11-08 11:06:24 UTC** and requires
 86400 guest-monotonic seconds. This attempt **failed management reachability**:
 the collector lost SSH at elapsed 300.005 seconds, after its last valid guest
-sample at elapsed 357 seconds. The board still answers ping at its recorded MAC
-and address, but port 22 refuses connections. Guest/load/observer state after
-that loss is unknown; no remote stop or reboot was performed. Serial console
-output is required before diagnosing or recovering. This is not a release pass.
+sample at elapsed 357 seconds. At that failure the board answered ping at its recorded MAC and address while
+port 22 refused connections. Subsequent guest/load/observer state was not
+observed before the user restarted the boards. Independent UART capture is now
+available; the protected host is running a [fresh attempt](endurance-run-20261109.md).
+The original failure remains unexplained and is not a release pass.
 
 [Run metadata](evidence/endurance-release-run-20261108.json) records exact boot,
 guest, enrollment and process identities. The original smoke directory was

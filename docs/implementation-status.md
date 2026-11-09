@@ -1,201 +1,115 @@
 # Implementation status
 
-Updated 2026-11-09. See [build reproduction status](build-reproduction-status.md)
-for construction history and evidence links. Physical release acceptance and
-independent deployment reproduction remain incomplete. SSH has recovered and an
-independent UART capture/control host is available; goal work has resumed.
-The original endurance failure remains unexplained. A captured boot exposed
-unsafe filesystem-only read-only STATE probing; block-level protection is reviewed
-and tested, with a replacement bootstrap being prepared.
+Updated 2026-11-09. Physical release acceptance and independent deployment
+reproduction remain incomplete. The protected boot pair now runs a real KVM
+workload with independent UART capture. The previous SSH failure remains
+unexplained; it is not reclassified as a pass.
 
-## Current state
+## Current installation
 
-- **Board and storage:** Orange Pi 4 Pro A733; actual SD size
-  **1,977,614,336 bytes** (SU02G); NVMe size **256,060,514,304 bytes**,
-  serial **134807190FC700149277**, SPCC M.2 PCIe SSD, firmware EDFM20.0,
-  512/512-byte sectors. SD CID `035344535530324780716f216e00a8f5`.
-  Minimal Linux/KVM/QEMU is the target.
-  Preserve zero routine SD writes; prefer SPI-to-NVMe with SD removed, otherwise
-  use immutable SD boot files. Leave attached heatsinks in place.
-- **Running now:** Corrected VGIC host at **192.168.1.116**, boot ID
-  `2e32858c-1ef8-4ae5-860f-9959cd38a1e0`; pinned SSH, read-only NVMe p2 root,
-  STATE `360d…`, complete 40-file tool closure and automatic NTP pass again.
-  No failed units or management restarts were observed. A read-only slot-B
-  preparation passed with console guard monitoring; no selection was applied.
-  The user reported accidental restarts of both boards; these are not classified
-  cold/warm acceptance cycles. [Current serial evidence](evidence/serial-control-20261109.json).
-- **Out-of-band console:** `orangepi@192.168.1.117` captures A733 UART via
-  `ttyS3-capture.service` to `/var/log/ttyS3.log`. That directory is RAM-backed;
-  a bounded independent relay now preserves output on codex. UART BREAK + SysRq
-  help physically passes; UART reboot is untested. No GPIO wiring was added.
-- **STATE probe fix:** Captured legacy boot performed orphan cleanup despite
-  `ro,noload`. Reviewed boot/export changes enforce kernel block RO before probe;
-  [four real ext4 fixtures](evidence/state-block-protection-20261109.json), including
-  synthetic legacy orphans, preserve complete source bytes and all write counters.
-  Two protected SD constructions now match byte for byte; independent artifact
-  review and deployment are pending. Physical dirty recovery remains open.
-  [Construction evidence](evidence/protected-state-bootstrap-20261109.json).
-- **Previous NVMe host:** The earlier `00fd…` host was repaired before replacement.
-  Trusted live SSH verified DHCP `192.168.1.116/24` on `end0`, MAC
-  `10:f4:ae:90:5e:57`, and acceptance of both authorized keys. SSH remains
-  public-key-only from any source/subnet. That repair did not require reinstallation. See
-  [repair results](installed-host-repair-results-20261108.md).
-- **Actual KVM guest core tests pass:** [Physical CPU/disk/network, clean
-  poweroff/checkpoint/restart](kvm-vgic-results-20261108.md) advance the disk
-  **1 → 2 → 3** under nonroot KVM/GICv3. Both durable checkpoints pass.
-  Counter 3 retains exact exit **1/0**; counter 2's garbage-collected exit fields
-  remain an explicit observation gap. The earlier counter-1 host stop is not
-  reclassified as clean. Final corrected-host deployment/endurance remain open.
-- **VGIC diagnostic:** The [approved SD write and physical warm boot pass](vgic-live-boot-20261108.md).
-  Boot ID `7f1f07c4-5a4f-469f-97a7-612406d915a2` has the maintenance property
-  `<1 9 4>`, **KVM_CAP_IRQCHIP=1**, GIC system-register CPU interface and
-  `vgic interrupt IRQ9`. DHCP/SSH returned on the existing installation.
-  The counter-1 guest disk and original enrollment survived unchanged;
-  off-device guest backup and guarded p5 activation pass. [Normal-GIC guest tests](kvm-vgic-results-20261108.md) now pass; this remains
-  a diagnostic host, not final release acceptance.
-- **Guest backup and restoration:** The stopped counter-3 guest and both checkpoint
-  records have an [authenticated backup on builder and codex](evidence/vgic-counter3-backup-20261108.json).
-  [Physical restoration and KVM boots 3 → 4 → 5](evidence/corrected-host-guest-restore-20261108.json)
-  now pass on the corrected host; both new checkpoints are durable.
-- **Endurance:** The [60-second physical smoke](evidence/endurance-smoke-physical-20261108.json)
-  passes with four KVM vCPUs, four additional nonroot host workers, verified
-  network transfers, three disk cycles and independently observed clean exit.
-  The [24-hour run](endurance-run-20261108.md) started **2026-11-08 11:06:24 UTC**;
-  it **failed management reachability** at collector elapsed 300.005 seconds.
-  Last valid guest sample is elapsed 357 seconds/cycle 12; temperatures were below
-  29 °C, available memory 11,589,748 KiB, NVMe kernel errors absent and SD writes
-  zero. Root cause remains unexplained by retained logs. Subsequent guest/load
-  state was not observed before the user restarted the boards. Serial capture
-  is now active for reproduction.
-  Its initial 86-second telemetry gap is also recorded. The
-  [read-only offline journal exporter](offline-host-journal.md) passes independent
-  review and [real ext4 loop checks](evidence/offline-journal-loop-20261108.json);
-  actual board recovery export is unperformed. See the [current image map](current-images.md).
-- **Corrected candidate:** Runtime-fixed roots, matched state and bootstrap
-  passed construction, readback/inspection and independent artifact review;
-  the corrected VGIC chain now physically boots. The matched full-NVMe producer (source `6c34629`, tag
-  `timesync-runtime-fixes-01`) now passes construction, producer readback and
-  final environment checks, independent complete stream verification and
-  independent artifact review. Hardware acceptance remains open. See
-  [construction evidence](production-nvme-runtime-fixes.md).
-- **Corrected VGIC bootstrap:** [Two constructions and independent artifact review](vgic-runtime-bootstrap.md) pass from `18af215`; raw/gzip/initramfs bytes match.
-  The 256 MiB image fits the actual SD and selects corrected state `360d…`.
-  Matched NVMe derivation, approved writes and actual corrected-host boot now pass;
-  historical construction records retain their construction-time classification.
-- **Private SSH RAM installer:** [Construction, independent review and ARM
-  session tests](evidence/ssh-ram-installer-20261108.json) pass. The private
-  256 MiB SD candidate preserves firmware/kernel/VGIC and both authorized keys.
-  Actual RAM boot, Ed25519 login, PTY and idle-NVMe observations now pass.
-  Full VGIC NVMe construction and producer readback pass after preserving empty
-  `lost+found`; [independent complete artifact comparison now passes](evidence/vgic-nvme-image-20261108.json).
-  The installation preserved same-board identity using the reviewed
-  [STATE helper](known-host-state-personalization.md), then used the reviewed
-  [known SD writer](known-bootstrap-sd-writer.md) for the matched bootstrap.
-  Both maintenance helpers now completed physical writes with durable receipts.
-  The full NVMe stream was installed without readback, then identity was restored;
-  its original stream hash does not describe the personalized whole device.
-- **SPI:** Original backup and a private candidate derived from it are reviewed;
-  the XM25QU128C, JEDEC `204118`, 16 MiB backup is blank (`0xff`).
-  The [fresh read-only live comparison](spi-live-plan-results-20261108.md)
-  matches the retained baseline, candidate and all 256 unit pins. The candidate
-  is prepared, not programmed.
-  Independent recovery proof and a reviewed programmer remain pending.
-  Programming is authorized for this known target once those prerequisites pass.
+- **Target:** Orange Pi 4 Pro A733, observed 12 GiB RAM/eight CPUs; actual SD
+  **1,977,614,336 bytes**, SU02G CID `035344535530324780716f216e00a8f5`;
+  NVMe **256,060,514,304 bytes**, SPCC M.2 PCIe SSD, serial
+  `134807190FC700149277`, firmware EDFM20.0, 512/512-byte sectors.
+  Leave both attached heatsinks in place. Diagnostic inventory is sufficient.
+- **Host:** `root@192.168.1.116`, boot
+  `dd8d6f67-d297-4f3b-bc9a-8a41c9742051`; pinned Ed25519 SSH, read-only NVMe p2
+  root, STATE UUID `360dfb39-f49f-487e-b307-0bb887c854c5`, authenticated 40-file
+  tool closure and automatic NTP pass. Both public keys are retained, accessible
+  from any subnet; fresh RSA login is not repeated.
+- **Boot update:** Reviewed 256 MiB protected SD and 512 MiB NVMe p1-only writes
+  pass; roots, STATE and GUESTS were retained. Live original BOOT backup is
+  authenticated off-device. No installation readback was requested.
+  [Physical receipts](evidence/protected-state-maintenance-20261109.json),
+  [current images](current-images.md).
+- **STATE protection:** Legacy serial captured orphan cleanup despite `ro,noload`.
+  Reviewed boot/export changes enforce block RO before probing; four real ext4
+  fixtures, including legacy orphans, preserve all source bytes/write counters.
+  Protected host boot passes; physical dirty-journal recovery is still pending.
+  [Evidence](evidence/state-block-protection-20261109.json).
+- **Serial:** `orangepi@192.168.1.117`, `ttyS3-capture.service`,
+  `/var/log/ttyS3.log` (volatile). Native codex relay
+  `a733-uart-relay-20261109-01.service` preserves output off-board.
+  UART help, RAM-shell recovery and controlled RAM-installer reset pass.
+  No GPIO wiring was added; a fully locked kernel remains outside SysRq proof.
+  [Control procedure](remote-serial-control.md).
 
-## Acceptance requirements and evidence
+## Hardware workload and acceptance
 
-The preparation and diagnostic SD boots enter EL2 on all eight CPUs. They do
-not establish final host acceptance: an actual KVM guest is required. Vendor
-images exceed the SD capacity. The board inventory and pinned compatible
-firmware/kernel inputs are in [diagnostic inventory](board-diagnostic-20261104.md)
-and [source locks](../configs/diagnostic-sources.lock.json).
+The [fresh 24-hour run](endurance-run-20261109.md) began **2026-11-09 02:10:42 UTC**:
+actual four-vCPU nonroot KVM, four additional nonroot host workers, disk cycles,
+physical network transfers, temperatures, memory, NVMe kernel errors and exact
+SD write counters. Guest run UUID is `59af604a-cf2e-4c8f-9fd5-e26b8283d14c`.
+Completion is pending, no earlier than approximately **November 10 02:11 UTC**.
+The endpoint was recorded at elapsed zero; first full telemetry is elapsed
+10 seconds. Do not reboot the A733, UART bridge or codex during this test.
 
-The corrected 221-package host now synchronizes time automatically and masks
-machine-id commit. Packaged account creation and the ROM-free launcher now run
-on the corrected host; restored guest counter **3 → 4 → 5**, CPU, disk, network
-and independently observed clean exits pass. Durable checkpoint 4 passes;
-checkpoint 5 also passes. See [restoration evidence](evidence/corrected-host-guest-restore-20261108.json). Reported
-power/cooling is a 67 W USB-PD adapter and 10.4 mm six-layer whole-board copper
-heatsink; negotiated power, fan and thermal endurance remain unproven.
+Native collector `a733-offboard-endurance-collector-20261109.service` and the
+UART relay are independent of this chat. Reviewed read-only outcome preservation
+is armed on collector exit and at **November 10 02:16 UTC**, with separate private
+snapshots. It never grants acceptance; coordinator review of console, exact exit
+records, duration, health and telemetry remains mandatory.
 
-Physical gates still include: completing
-final corrected-host guest validation and proving
-automatic time and corrected state behavior; 10 cold and 10 warm boots; a
-24-hour CPU/disk/network/thermal workload; SPI-to-NVMe boot with SD removed or
-verified zero routine writes on fallback; interrupted-update rollback;
-missing-NVMe and dirty-journal recovery; off-device guest restoration; and
-independent deployment reproduction. See [hardware validation](hardware-validation.md)
-and the [hypervisor plan](hypervisor-plan.md) for gate definitions.
+| Gate | Evidence/status |
+| --- | --- |
+| Diagnostic image fits actual 2 GB SD; EL2 on all eight CPUs | Passed; vendor images were not used |
+| Actual KVM CPU/disk/network, clean shutdown/checkpoint/restart | [Passed](kvm-vgic-results-20261108.md); corrected-host restoration advances 3 → 4 → 5 |
+| Protected host boot, management, time and identity | Passed; current full release acceptance remains open |
+| 24-hour workload | Running; no final pass claimed |
+| 10 cold and 10 warm boots with matched firmware/SSD | Pending; accidental user restarts and the controlled RAM reset are not counted |
+| SPI-to-NVMe with SD removed | Unprogrammed; independent recovery and reviewed programmer prerequisites pending |
+| Immutable SD fallback | Linux writes remain zero; [whole-card baseline](evidence/protected-sd-baseline-20261109.json) and exact written prefix match pass; post-workload/shutdown/reboot comparison and firmware audit pending |
+| Interrupted update, rollback, missing NVMe, dirty journal | Software preparation/review pass; required physical recovery cases pending |
+| Off-device guest backup/restoration | [Counter-3 backup and physical restoration](evidence/corrected-host-guest-restore-20261108.json) pass |
+| Coherent protected full image and independent deployment reproduction | Full stream builds underway; artifact review and reproduced deployment pending |
 
-Physical write rules: installation uses one expanded write with progress;
-readback is optional. Do not benchmark the board to diagnose installation
-duration. Leave heatsinks attached. Before any destructive operation, show and revalidate
-the exact device identity and write plan. Operator authorization now persists
-for the known SD, NVMe and SPI; ask yes/no only for a new target or scope.
-Existing exact-NVMe erase authorization persists; revalidate its identity and
-idle state before any future concrete write. SPI programming still requires its independent recovery and reviewed
-programmer/rollback prerequisites. Builder checks and emulation do not
-count as physical acceptance.
+The [previous release run](endurance-run-20261108.md) lost SSH at collector
+elapsed 300.005 seconds, last valid guest elapsed 357/cycle 12. Later state was
+unobserved before user restarts. Its guest directory is retained separately;
+no clean shutdown or completed endurance is claimed. Reported power/cooling is a
+67 W USB-PD adapter and 10.4 mm six-layer whole-board copper heatsink; negotiated
+power and full thermal endurance remain unproven.
 
-## Build and host evidence
+## Construction, resources and authorization
 
-- The corrected-chain root components, state and bootstrap have passed their
-  documented construction and inspection checks. The full NVMe producer is
-  complete; independent stream inspection and artifact review pass.
-  Corrected VGIC-chain physical boot now passes.
-- Actual old-seed retirement removed **91,578** entries; all **7** protected
-  postchecks passed. Source/quarantine are absent and the probe, mask, records,
-  active builder and backups remain. Free space at completion was
-  **23,848,976,384 bytes**, before later validation staging.
-- Four duplicate native archives were retired after 25 Ubuntu fixtures and
-  independent review, recovering **552,181,760 allocated bytes**. Canonical
-  copies remain on both hosts; restore has not been exercised. The unchanged
-  initial admission guard is **23,760,999,827 bytes**. Native free at completion was **872,210,432 bytes**; preserve its 256 MiB floor.
-  Runtime floors remain **3,000,000,000 free disk bytes** and
-  **1,000,000,000 available memory bytes**. Recheck actual resources before
-  subsequent jobs. Do not reduce the guard or
-  grow the LV without authorization. See [native archive retention](native-archive-retention-20261108.md)
-  and [capacity assessment](build-host-assessment.md).
-- [Coherent-build capacity retention](coherent-build-capacity-20261108.md) now
-  retires three superseded expanded cache files, keeping their verified encoded
-  recovery copies and all current corrected inputs. Builder free at completion
-  is **24,076,783,616 bytes**; recheck each new source/capsule budget.
-- [Historical kernel-cache relocation](native-kernel-cache-relocation-20261108.md)
-  preserves a verified 893 MB generated archive on builder and releases native
-  capacity for current images. Native free at completion was 1,165,426,688 bytes;
-  remeasure above its unchanged 256 MiB floor. Restoration is unperformed.
-- Latest privileged Ubuntu suite: **1,960 tests**, no skips, errors or failures;
-  five shell suites and five diagnostic assembly cases pass. See the
-  [latest record](evidence/state-block-protection-20261109.json). Jammy lacks `tomllib`;
-  all five TOML files passed the separate native parser. These are host
-  checks only, not hardware acceptance.
-- Source/licensing work remains incomplete: licensing for 26 vendor boot inputs
-  is unresolved; GCC and DejaGNU sources remain unacquired; notice presence does
-  not establish legal sufficiency or public redistribution clearance. See
-  [license inventory](evidence/vendor-boot-license-inventory-20261106.json),
-  [toolchain sources](toolchain-sources.md) and [userspace notices](userspace-notices.md).
+- Protected SD and NVMe BOOT components each have two byte-matching constructions
+  and independent actual-artifact review. Two fresh full NVMe stream builds run
+  on the qualified Ubuntu 22.04 builder, preserving all bytes outside BOOT.
+  [Producer](protected-state-nvme-image.md); no full-stream artifact pass yet.
+- Latest complete privileged Ubuntu suite: **2,039 tests**, zero skips/errors/
+  failures; five shell suites and five diagnostic assembly cases also pass.
+  All five TOML files parse separately on codex. These are software checks.
+- Builder LV now **94,459,920,384 bytes**, VG free **38,625,345,536 bytes**;
+  free immediately after growth **25,303,740,416 bytes**. The operator approves
+  **all free capacity on the Ubuntu build host for use/expansion without another
+  permission request**. Revalidate exact targets and retain independent review.
+  [Growth evidence](evidence/build-host-capacity-addition-20261109.json).
+- Full-NVMe admission remains **23,760,999,827 free bytes**; runtime floors remain
+  **3,000,000,000 disk bytes / 1,000,000,000 available memory bytes**. Start
+  compilation with two jobs; retain generated files and sources outside Git.
+- Known board SD/NVMe/SPI writes remain authorized. Revalidate the exact target
+  and concrete plan; ask yes/no only for unapproved targets/scope. SPI recovery
+  prerequisites remain mandatory. Normal installation uses one write with
+  progress; readback is optional. Do not benchmark hardware to diagnose install
+  duration or remove heatsinks.
+- Licensing/source inventory remains incomplete for 26 vendor boot inputs;
+  exact Linaro GCC/DejaGNU sources remain unacquired. No public binary
+  redistribution clearance is claimed. [Inventory](toolchain-sources.md).
 
 ## Next actions
 
-1. Build, independently inspect and deploy the protected STATE bootstrap, then
-   reproduce management/endurance with the independent serial monitor. Preserve
-   kernel/control evidence on any recurrence. Complete the full 24-hour workload;
-   the previous attempt remains failed.
-2. The verified `timesync-runtime-fixes-01` image is retained on both hosts;
-   recheck resource floors before transfers. Integrate and
-   validate matching NVMe-first firmware and VGIC DT separately; physically
-   validate automatic time and identity behavior.
-3. Demonstrate independent SPI recovery before proposing programming. Capture
-   U-Boot NVMe file reads, then test matched NVMe-first boot and manual SD
-   fallback. Review rollback and revalidate the authorized exact live write target.
-4. Complete the physical gates listed above and reproduce deployment from the
-   guide. Do not claim release completion until the [plan](hypervisor-plan.md)
-   and [release acceptance](hardware-validation.md) pass.
+1. Observe the new 24-hour run and serial capture. Preserve kernel/control
+   evidence on recurrence. Audit final guest/CPU exits, duration and post-run
+   health; pending collector exit 2 alone is not acceptance.
+2. Complete both full-image constructions, independently inspect actual gzip,
+   logical raw/range/GPT hashes and matching bytes, then reproduce deployment.
+   Keep the running hardware workload undisturbed.
+3. Prepare SPI recovery/programming and matched NVMe-first firmware trials.
+   Otherwise finish complete immutable-SD proof. The blank XM25QU128C SPI backup
+   and successful SD boot do not alone prove recovery after broken SPI firmware.
+4. Complete the remaining physical gates in [hardware validation](hardware-validation.md)
+   and the [plan](hypervisor-plan.md). Finish only after acceptance and reproduced
+   deployment, preserving the earlier observation gaps.
 
-## Detailed records
-
-The [build reproduction index](build-reproduction-status.md) links component,
-installer, update/recovery, candidate delivery, firmware, SPI, ROM and guest
-construction records. Current installed-host management evidence is in
-[repair results](installed-host-repair-results-20261108.md); retained deployment
-instructions are in [the deployment guide](deploy-personalized-20261106.md).
+Detailed history is indexed by [build reproduction status](build-reproduction-status.md),
+[host assessment](build-host-assessment.md) and the linked evidence records.

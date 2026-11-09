@@ -314,3 +314,14 @@ Then pin the board's actual kernel, bootloader, binary firmware and toolchain in
 - [Pinned board](https://github.com/orangepi-xunlong/orangepi-build/blob/a95129bf30ea11886cc35f08ebb3e69695a26656/external/config/boards/orangepi4pro.conf) and [family](https://github.com/orangepi-xunlong/orangepi-build/blob/a95129bf30ea11886cc35f08ebb3e69695a26656/external/config/sources/families/sun60iw2.conf): actual current/legacy selections. Current source differs from the older manual's branch mapping.
 
 Read-only host checks: `cat /etc/os-release`, `uname -m`, `nproc`, `free -b`, `df -B1 .`, `command -v docker podman debootstrap qemu-aarch64-static`, `dpkg-query`, and `apt-cache policy`. Source inspected with a shallow `next` clone and `git rev-parse HEAD`; verify the recorded commit when reproducing. This assessment does not claim a successful build or complete network/preflight validation.
+
+## November 9 capacity and standing authorization
+
+The [reviewed additional 6 GiB growth](build-host-capacity-addition-20261109.md)
+now completes: LV 94,459,920,384 bytes, VG free 38,625,345,536 bytes, filesystem
+free 25,303,740,416 bytes. The full-NVMe admission remains 23,760,999,827 bytes;
+runtime floors remain unchanged. The operator authorizes all available free
+space on this Ubuntu build host for use/expansion without another permission
+request. Revalidate exact targets, retain independent review and measure fresh
+capacity before each job. This supersedes earlier instructions to request
+permission for further builder-capacity allocation.
