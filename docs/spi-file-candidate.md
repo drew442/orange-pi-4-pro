@@ -82,9 +82,13 @@ backup and manifest immutable, alongside the candidate and source provenance.
 Installed management and original SPI retention now pass. Demonstrate
 the recovery route and capture the [U-Boot NVMe read test](spi-boot-investigation.md#resolved-source-policy-and-remaining-candidate-work).
 The current backup-derived candidate passes independent inspection. Review the
-actual programmer, rollback and matched NVMe boot files before presenting the
-exact physical target and proposed write for a simple yes/no confirmation.
-No physical SPI write is authorized by a successful assembly or its tests.
+actual programmer, rollback and matched NVMe boot files before programming.
+Revalidate the exact physical target and proposed write; the operator
+[authorizes the known SPI target](evidence/storage-write-authorization-20261108.json),
+so ask yes/no only for unapproved targets or scope. Assembly/tests do not grant
+authorization or recovery proof. The
+[callback transaction engine](spi-unit-transaction.md) is software preparation;
+a physical adapter and demonstrated recovery are still required.
 
 After approved programming, prove cold boot with the SD removed, actual KVM
 guest execution and the full [hardware acceptance procedure](hardware-validation.md).

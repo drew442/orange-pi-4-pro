@@ -1,0 +1,504 @@
+{
+  "schema": 1,
+  "date": "2026-11-09",
+  "classification": "SPI transaction API software preparation; no physical adapter or programming route",
+  "hardware_acceptance": false,
+  "source_artifacts": {
+    "scripts/spi-unit-transaction.py": {
+      "bytes": 9566,
+      "sha256": "6002270dfd2251c16ef8d9ad2fa0a6caa6e279ef346c11c52fa31fcce4c95d0d"
+    },
+    "tests/test_spi_unit_transaction.py": {
+      "bytes": 12548,
+      "sha256": "77d9d2e57f152277c67746ce0fad7a7089f51234014332cdd1fb8fc4513e7110"
+    },
+    "docs/spi-unit-transaction.md": {
+      "bytes": 7150,
+      "sha256": "6474c595140a9d31f78f44bda73ee1032237b0d2b2e518d17d28a88467bea8ab"
+    }
+  },
+  "independent_review": {
+    "report": "tmp/spi-transaction-review-20261109.json",
+    "sha256": "de581bf70e2624660872827ab7527c802258dabfd5675c839ed538800d8854f0",
+    "summary": {
+      "classification": "Independent source review, 25 host tests and actual-source simulated NOR rehearsal; no hardware acceptance",
+      "date": "2026-11-09",
+      "frozen_inputs_before_and_after": {
+        "docs/spi-unit-transaction.md": {
+          "bytes": 7150,
+          "sha256": "6474c595140a9d31f78f44bda73ee1032237b0d2b2e518d17d28a88467bea8ab"
+        },
+        "out/spi-backup-20261108-01/spi.bin": {
+          "bytes": 16777216,
+          "sha256": "dffab0dd410657cb30c7b2fd7f2586a4792e8472e58882b3532581f8111a646d"
+        },
+        "out/spi-nvme-original-20261108/a733-spi-nvme.bin": {
+          "bytes": 16777216,
+          "sha256": "83edcd7f448e8353163666016a6bae3e9b70d041a5e4d8454f48931839205e90"
+        },
+        "scripts/spi-unit-transaction.py": {
+          "bytes": 9566,
+          "sha256": "6002270dfd2251c16ef8d9ad2fa0a6caa6e279ef346c11c52fa31fcce4c95d0d"
+        },
+        "tests/test_spi_unit_transaction.py": {
+          "bytes": 12548,
+          "sha256": "77d9d2e57f152277c67746ce0fad7a7089f51234014332cdd1fb8fc4513e7110"
+        }
+      },
+      "generated_raw_images": false,
+      "hardware_acceptance": false,
+      "independent_probes": [
+        {
+          "name": "tampered_plan_sha256",
+          "pass": true,
+          "receipt_canonical_sha256": "0ff41717c87806e8fd121d1bfbe0b5c8b181f2feed7837ab0e71cff205dff7e6",
+          "stage": "fresh-current-read"
+        },
+        {
+          "name": "tampered_hardware_acceptance",
+          "pass": true,
+          "receipt_canonical_sha256": "9b0465c764fa0e807b262722f58f3d06c4c714024512ecd8c035a68feb9cfc45",
+          "stage": "fresh-current-read"
+        },
+        {
+          "name": "tampered_execution_order",
+          "pass": true,
+          "receipt_canonical_sha256": "9b0465c764fa0e807b262722f58f3d06c4c714024512ecd8c035a68feb9cfc45",
+          "stage": "fresh-current-read"
+        },
+        {
+          "name": "stale_full_current_image",
+          "pass": true,
+          "receipt_canonical_sha256": "f2882e97ffa0966d84e9f1a83c8dbade01be9fb656381b7dc59c5c86a6afbab7",
+          "stage": "fresh-current-read"
+        },
+        {
+          "name": "preserved_corruption_237568",
+          "pass": true
+        },
+        {
+          "name": "preserved_corruption_262143",
+          "pass": true
+        },
+        {
+          "name": "preserved_corruption_1654784",
+          "pass": true
+        },
+        {
+          "name": "preserved_corruption_16777215",
+          "pass": true
+        },
+        {
+          "name": "interrupted_intent_capture",
+          "pass": true,
+          "receipt_canonical_sha256": "b9ebae21ef4bd51870218e55918a48d10b6e5b66f7cf1b786fdb77f9e27bd536",
+          "stage": "erase-intent-event"
+        },
+        {
+          "name": "unit_drift_after_plan_capture",
+          "pass": true,
+          "receipt_canonical_sha256": "2be35ae3f48e21db832127b5a84818b93ecc630a669dd64b69cf9b05e4777d4e",
+          "stage": "unit-current-read"
+        },
+        {
+          "name": "caller_plan_mutation_after_freeze_is_ineffective",
+          "pass": true
+        }
+      ],
+      "limits": [
+        "All callbacks, guard success and event capture are simulated in memory; event capture is not off-board durability proof.",
+        "Actual pinned production bytes were used without pin overrides; no raw image file was created.",
+        "No board, MTD, SSH, service or running 24-hour KVM workload was accessed or disturbed.",
+        "No physical adapter, bound-descriptor identity, namespace/quiescence, registered independent ROM recovery or hardware persistence was tested.",
+        "Future physical adapter requires held authenticated source closure, identity/quiescence checks, independently proven recovery, durable off-board capture and authorization handling honoring persisted authority.",
+        "Install header-last order provides neither atomicity nor ROM recovery guarantees; power-loss recovery and SD-removed NVMe/KVM hardware acceptance remain unperformed.",
+        "Interrupted images with altered preserved bytes are intentionally rejected and require independently reviewed recovery rather than loosening the plan.",
+        "Real SPI remains unprogrammed; these results cannot establish A733 boot, 2 GB SD fallback immutability or nominal 250 GB NVMe acceptance."
+      ],
+      "physical_device_access": false,
+      "physical_spi_writes": false,
+      "production_source_pins_patched": false,
+      "result": "PASS",
+      "reviewed_context": [
+        "AGENTS.md",
+        "docs/agent-routing.md",
+        "docs/implementation-status.md",
+        "docs/hypervisor-plan.md",
+        "docs/spi-file-candidate.md",
+        "docs/spi-live-plan.md",
+        "docs/spi-live-plan-results-20261108.md",
+        "docs/evidence/spi-original-backup-20261108.json",
+        "docs/evidence/storage-write-authorization-20261108.json"
+      ],
+      "schema": 1,
+      "source_review": {
+        "algorithm": "Exact fixed immutable complete-image source pins; canonical fresh-plan equality; fixed reviewed order; per-unit current hashes; intent before erase; full-unit reconstruction; guarded short writes; unit and full-image readback; conservative no-recovery exceptions.",
+        "blocking_findings": [],
+        "device_boundary": "Engine imports hashlib/json only and contains no CLI, file/device open, ioctl, process, network or physical adapter.",
+        "documentation": "Reviewed adjacent docs accurately separate software preparation, persisted known-target authorization, independent recovery and physical acceptance."
+      },
+      "ssh_or_service_operations": false,
+      "targeted_test_command": "python3 -m unittest discover -s tests -p 'test_spi_unit_transaction.py' -v",
+      "targeted_tests": {
+        "errors": 0,
+        "failures": 0,
+        "passed": 25,
+        "run": 25
+      },
+      "rehearsals": {
+        "actual_source_fresh_pinned_partial_restore": {
+          "all_preserved_bytes_equal_original": true,
+          "callback_count": 634,
+          "callback_trace_canonical_sha256": "823f0cac64de313dac4b9ae05b9d6364b0699ac700f7311580f50f5514536374",
+          "erase_order": [
+            4
+          ],
+          "event_count": 29,
+          "event_list_canonical_sha256": "fdfb5ad72f0ec63dedbdbd10f3f9d3dcd70348373afc123bfa88b45bc427f224",
+          "final_image_sha256": "dffab0dd410657cb30c7b2fd7f2586a4792e8472e58882b3532581f8111a646d",
+          "plan_sha256": "85f0a9692f9dd727b036dd86ab11118accf0f0eff4cd9c170ccb11c6f541a5f1",
+          "receipt": {
+            "active_unit": null,
+            "attempted_units": [
+              4
+            ],
+            "completed_units": [
+              4
+            ],
+            "erase_attempted_bytes": 65536,
+            "final_sha256": "dffab0dd410657cb30c7b2fd7f2586a4792e8472e58882b3532581f8111a646d",
+            "final_verified": true,
+            "hardware_acceptance": false,
+            "mutation_possible": true,
+            "plan_sha256": "85f0a9692f9dd727b036dd86ab11118accf0f0eff4cd9c170ccb11c6f541a5f1",
+            "schema": 1,
+            "skipped_units": [
+              0,
+              1,
+              2,
+              3,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25
+            ],
+            "stage": "complete",
+            "success": true,
+            "write_attempted_bytes": 65536,
+            "write_confirmed_bytes": 65536
+          },
+          "receipt_canonical_sha256": "188a51d138c3e52349c28fca2fe68ec92f940c21cc01cffeba531d358c25c320",
+          "unchanged_units_26_through_255": true,
+          "write_callbacks": 16
+        },
+        "actual_source_install_with_short_writes": {
+          "all_preserved_bytes_equal_original": true,
+          "callback_count": 4912,
+          "callback_trace_canonical_sha256": "5bc41bf09d99a37ed783855d00a9206e63b85a70e58e712e7d0e5e8b054473f5",
+          "erase_order": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            1,
+            2,
+            3,
+            0
+          ],
+          "event_count": 54,
+          "event_list_canonical_sha256": "4535dadeed9b3ec8284ff2dd73782f4556746c9c7ac1fd065de2d99d30b2d36e",
+          "final_image_sha256": "83edcd7f448e8353163666016a6bae3e9b70d041a5e4d8454f48931839205e90",
+          "plan_sha256": "1ae1c742c7b2547e27555e25a3bee43600881853b8958486d36c570fea5f5286",
+          "receipt": {
+            "active_unit": null,
+            "attempted_units": [
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              1,
+              2,
+              3,
+              0
+            ],
+            "completed_units": [
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              1,
+              2,
+              3,
+              0
+            ],
+            "erase_attempted_bytes": 1703936,
+            "final_sha256": "83edcd7f448e8353163666016a6bae3e9b70d041a5e4d8454f48931839205e90",
+            "final_verified": true,
+            "hardware_acceptance": false,
+            "mutation_possible": true,
+            "plan_sha256": "1ae1c742c7b2547e27555e25a3bee43600881853b8958486d36c570fea5f5286",
+            "schema": 1,
+            "skipped_units": [],
+            "stage": "complete",
+            "success": true,
+            "write_attempted_bytes": 4372160,
+            "write_confirmed_bytes": 1703936
+          },
+          "receipt_canonical_sha256": "b8600c6930a8b1e4af90f598507dae839918a3fc6e41f4906c1eb3db3103e349",
+          "unchanged_units_26_through_255": true,
+          "write_callbacks": 2080
+        },
+        "actual_source_interrupted_package_install": {
+          "all_preserved_bytes_equal_original": true,
+          "callback_count": 269,
+          "callback_trace_canonical_sha256": "c4db09aa3e1f0161a9ea2bc19e852c0d67b18f11523d05c9bebd443d8668c1f9",
+          "erase_order": [
+            4
+          ],
+          "event_count": 2,
+          "event_list_canonical_sha256": "c1ef39bccf38d773e26928fc577f4b1f6145390cb8e6176d5587e15bfb2e1d01",
+          "final_image_sha256": "381505a8ad0aa6191ee59331ae8340e464d86c4976875e1589043643c4ad7b05",
+          "plan_sha256": "1ae1c742c7b2547e27555e25a3bee43600881853b8958486d36c570fea5f5286",
+          "receipt": {
+            "active_unit": 4,
+            "attempted_units": [
+              4
+            ],
+            "completed_units": [],
+            "erase_attempted_bytes": 65536,
+            "error": "KeyboardInterrupt: simulated interruption after accepted package prefix",
+            "final_verified": false,
+            "hardware_acceptance": false,
+            "mutation_possible": true,
+            "plan_sha256": "1ae1c742c7b2547e27555e25a3bee43600881853b8958486d36c570fea5f5286",
+            "schema": 1,
+            "skipped_units": [],
+            "stage": "write",
+            "success": false,
+            "write_attempted_bytes": 8192,
+            "write_confirmed_bytes": 4096
+          },
+          "receipt_canonical_sha256": "05f7dfcaee9b3a349fe8e2401b053c88d155c26e554a9b2516b4a496991e41f5",
+          "unchanged_units_26_through_255": true,
+          "write_callbacks": 2
+        },
+        "actual_source_restore": {
+          "all_preserved_bytes_equal_original": true,
+          "callback_count": 1584,
+          "callback_trace_canonical_sha256": "988ae304be78246481f4582f6fac4944a4884a54c3ed01a533f72d8612260ea0",
+          "erase_order": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25
+          ],
+          "event_count": 54,
+          "event_list_canonical_sha256": "f6a10703e42a8967e5f5a9d316e948958dd2ff935a300ac251344a0aef2225a2",
+          "final_image_sha256": "dffab0dd410657cb30c7b2fd7f2586a4792e8472e58882b3532581f8111a646d",
+          "plan_sha256": "a5c33c1aa4d8573e1a83896c6285170dfe052b3b98bfb6ff34f6bd2ba81657db",
+          "receipt": {
+            "active_unit": null,
+            "attempted_units": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25
+            ],
+            "completed_units": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25
+            ],
+            "erase_attempted_bytes": 1703936,
+            "final_sha256": "dffab0dd410657cb30c7b2fd7f2586a4792e8472e58882b3532581f8111a646d",
+            "final_verified": true,
+            "hardware_acceptance": false,
+            "mutation_possible": true,
+            "plan_sha256": "a5c33c1aa4d8573e1a83896c6285170dfe052b3b98bfb6ff34f6bd2ba81657db",
+            "schema": 1,
+            "skipped_units": [],
+            "stage": "complete",
+            "success": true,
+            "write_attempted_bytes": 1703936,
+            "write_confirmed_bytes": 1703936
+          },
+          "receipt_canonical_sha256": "8b93ae7ba0f7c41f92e41d8cf5e4165f8c761920268f02def5f5fc09b3b8e87e",
+          "unchanged_units_26_through_255": true,
+          "write_callbacks": 416
+        }
+      }
+    }
+  },
+  "independent_rehearsal_source": {
+    "path": "tmp/spi-transaction-rehearsal-20261109.py",
+    "sha256": "7bf44351e7da34172a1aef71546f796c393e93d218573efb0e2b7e6e936ded32"
+  },
+  "qualified_validation": {
+    "host": "build.drewnet.online Ubuntu22.04",
+    "python_tests": 2090,
+    "seconds": 67.87,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "log": "out/serial-recovery-20261109/spi-transaction-jammy-validation.log",
+    "shell_and_diagnostic": "pass",
+    "shell_suites": 5,
+    "diagnostic_assembly_tests": 5,
+    "runner_exit_status": 0,
+    "log_sha256": "acd2b511be63d9080ac3480ff577b1bef3f202664a74a6cf76a6676a54b4d46d",
+    "builder_staged_source_hashes_match": true,
+    "builder_free_bytes_after": 24203051008,
+    "toml_files_parsed": 5
+  },
+  "deployment": {
+    "staged_to_board": false,
+    "physical_adapter_available": false,
+    "spi_programmed": false,
+    "recovery_proven": false,
+    "sd_removed_nvme_boot_proven": false,
+    "current_kvm_workload_undisturbed": true
+  },
+  "limitations": [
+    "Actual-input rehearsals use a bytearray NOR model; callbacks do not prove MTD identity, timing, persistence or physical restoration.",
+    "Programming order supplies no atomicity or ROM recovery guarantee.",
+    "Future adapter requires independent review, registered recovery proof, authenticated sources, exact-target validation, persisted authorization and durable off-board progress evidence."
+  ]
+}

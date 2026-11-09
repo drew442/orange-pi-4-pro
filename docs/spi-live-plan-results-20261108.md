@@ -22,5 +22,7 @@ no erase/program operation. All five gates—physical writes, recovery proof,
 authorization, hardware acceptance and programmer availability—remain false.
 This is an observed point-in-time match. Before any programming, prove independent
 recovery and matched NVMe boot-file loading, review a programmer/rollback path,
-revalidate the live target and obtain exact-target yes/no. No SPI, SD or NVMe
+revalidate the live target and honor the persisted
+[known-target authorization](evidence/storage-write-authorization-20261108.json).
+Request yes/no only for unapproved targets or scope. No SPI, SD or NVMe
 write occurred during this comparison, and it does not establish boot acceptance.

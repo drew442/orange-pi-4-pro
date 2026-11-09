@@ -78,6 +78,7 @@ host tests establish rejection behavior, not physical device validation. A
 successful live comparison would establish only the observed read-only match.
 It does not prove independent recovery, U-Boot NVMe loading, a safe programmer,
 SPI-to-NVMe boot, SD-removed boots, zero routine SD writes or complete real-KVM
-acceptance. Those physical gates and exact-target yes/no authorization remain
-with the coordinator. Preserve the A733, 2 GB SD, nominal 250 GB NVMe and minimal
+acceptance. Those physical gates and exact-target validation remain with the
+coordinator. The [known SPI authorization](evidence/storage-write-authorization-20261108.json)
+persists; the planner itself grants none. Preserve the A733, 2 GB SD, nominal 250 GB NVMe and minimal
 host requirements.
