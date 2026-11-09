@@ -85,9 +85,11 @@ protocols; global policy is not applied. Root password is locked, SSH is key-onl
 and bound to the selected address, and the running guest is UID/GID 60002 with
 empty capabilities; these observations do not waive the resolver finding.
 A focused creation-mode fix passes independent review and the full privileged
-Ubuntu suite. Rebuilt A/B roots,
-updated distribution artifacts and physical policy/listener verification remain
-required. The active endurance host is unchanged.
+Ubuntu suite. Two [corrected root constructions](public-config-roots-20261109.md)
+now pass independent artifact review and all four full filesystem readbacks;
+full distribution/STATE-selector integration
+and physical policy/listener verification remain required. The active endurance
+host is unchanged.
 
 ## Construction, resources and authorization
 

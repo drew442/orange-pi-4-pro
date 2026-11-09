@@ -1,0 +1,550 @@
+{
+  "schema": 1,
+  "recorded_utc": "2026-11-09T13:24:51.123136+00:00",
+  "classification": "Two corrected root constructions independently reviewed with all four complete filesystem readbacks; distribution integration and hardware verification pending",
+  "hardware_acceptance": false,
+  "physical_storage_written": false,
+  "source_fix": "docs/evidence/management-runtime-exposure-20261109.json",
+  "source_revision": "4f40843365566ae4ada9b7377b75bba3f40c3360",
+  "constructions": {
+    "01": {
+      "phase": "/var/lib/a733-clean-replay-20261106/host-roots-timesync-public-dirs-01",
+      "output": "work/project/out/host-payload-timesync-public-dirs-01",
+      "source_revision": "4f40843365566ae4ada9b7377b75bba3f40c3360",
+      "source_files": 845,
+      "producer_receipt": {
+        "bytes": 200970,
+        "sha256": "81d700ba1c9414e0e794bdf9f8dfb71872c88f2b025f14dfa691d9612f3eee93"
+      },
+      "manifest": {
+        "bytes": 32613,
+        "sha256": "1f82b9e85c5fbcbac65af695b699ee0048fb397faeba2e3eeb652eeb584adb6c"
+      },
+      "images": {
+        "root-A.ext4": {
+          "bytes": 4294967296,
+          "sha256": "299b1f2f74e11c71c89b9ee249dfd43bdc741ac3e90addc763a9626bbbb5aed6"
+        },
+        "root-A.ext4.gz": {
+          "bytes": 143471704,
+          "sha256": "ddbc237a5c447eeacfcd25588f2542c778656d113eb55144c685616edd2caf97"
+        },
+        "root-B.ext4": {
+          "bytes": 4294967296,
+          "sha256": "48b9876f72f28d4a10f7458dd81a96b95da00d13ae00783b39f7c30067fa94f7"
+        },
+        "root-B.ext4.gz": {
+          "bytes": 143471589,
+          "sha256": "74679187340549ddcb7f50fc88aced8d5c14d6d316c76b458c0e813ddbbe1203"
+        }
+      },
+      "readback_expectations": {
+        "A": {
+          "expected": {
+            "bytes": 3744535,
+            "sha256": "d8e01935f8d03dc0453d3dfbfcce6abceca70c15975c196c0ad14d0b0107cc7e"
+          },
+          "independent_image_readback": false,
+          "members": 16368,
+          "stability": {
+            "bytes": 57,
+            "sha256": "4ef667d780cc43bd45c96bec9bcee954a72cbacd82f4a4ec3b2fa17ad4e0ba01"
+          }
+        },
+        "B": {
+          "expected": {
+            "bytes": 3744535,
+            "sha256": "f0c6fb1ba458b6efd07a0888ef82a0fd2b14bba4f461dbf529cdca9939a5876c"
+          },
+          "independent_image_readback": false,
+          "members": 16368,
+          "stability": {
+            "bytes": 57,
+            "sha256": "57a766cccbe0f267fa81c75be87e553490341fd7d1117ee518c796ccd8629828"
+          }
+        }
+      },
+      "initial_required_free_bytes": 19020719554,
+      "minimum_free_bytes": 20619448320,
+      "minimum_available_memory_bytes": 7300349952,
+      "final_resources": {
+        "available_memory_bytes": 7464357888,
+        "free_bytes": 21109792768,
+        "time": 1794230151.703044
+      },
+      "host_inventory_unchanged": true,
+      "mapped_processes_final": [],
+      "phase_mounts_final": []
+    },
+    "02": {
+      "phase": "/var/lib/a733-clean-replay-20261106/host-roots-timesync-public-dirs-02",
+      "output": "work/project/out/host-payload-timesync-public-dirs-02",
+      "source_revision": "4f40843365566ae4ada9b7377b75bba3f40c3360",
+      "source_files": 845,
+      "producer_receipt": {
+        "bytes": 201246,
+        "sha256": "25ea1ae3035299d134ca6ac6d2788f335910c321295248eeb46c3baae82b0732"
+      },
+      "manifest": {
+        "bytes": 32613,
+        "sha256": "908e3ee7471aff1cd04ef94f2c983ae73f27fb979e8054846b5cc05a2ce56d5f"
+      },
+      "images": {
+        "root-A.ext4": {
+          "bytes": 4294967296,
+          "sha256": "63aed09d6a05a030ba52b17f29486819378d232c5c167642ebbaefff5e6a0afa"
+        },
+        "root-A.ext4.gz": {
+          "bytes": 143469645,
+          "sha256": "cf29c7a6f537f23e233685a1ecde168869875d7b0bcd1a31a945788786211c93"
+        },
+        "root-B.ext4": {
+          "bytes": 4294967296,
+          "sha256": "f31b4c336387b0b70f4d3c3b7476ff2ac500b99ac5bfdcd01ac51c04f4302bda"
+        },
+        "root-B.ext4.gz": {
+          "bytes": 143469502,
+          "sha256": "6d2d3be65e3bb3f71c6f325d876c8ba14c99584c30c5f2ec47adde858a4b2e4e"
+        }
+      },
+      "readback_expectations": {
+        "A": {
+          "expected": {
+            "bytes": 3744535,
+            "sha256": "361b3762763c87c38ee066d9cbdab13f284ab397897261249dc35d6f69cff0a9"
+          },
+          "independent_image_readback": false,
+          "members": 16368,
+          "stability": {
+            "bytes": 57,
+            "sha256": "4ef667d780cc43bd45c96bec9bcee954a72cbacd82f4a4ec3b2fa17ad4e0ba01"
+          }
+        },
+        "B": {
+          "expected": {
+            "bytes": 3744535,
+            "sha256": "141d2c277889ead46328b434c6b3eb166190fe308a67ae46a074fb088ae8df4d"
+          },
+          "independent_image_readback": false,
+          "members": 16368,
+          "stability": {
+            "bytes": 57,
+            "sha256": "57a766cccbe0f267fa81c75be87e553490341fd7d1117ee518c796ccd8629828"
+          }
+        }
+      },
+      "initial_required_free_bytes": 19020719554,
+      "minimum_free_bytes": 19199344640,
+      "minimum_available_memory_bytes": 7312564224,
+      "final_resources": {
+        "available_memory_bytes": 7491457024,
+        "free_bytes": 19689689088,
+        "time": 1794230400.7188394
+      },
+      "host_inventory_unchanged": true,
+      "mapped_processes_final": [],
+      "phase_mounts_final": []
+    }
+  },
+  "independent_reviews": {
+    "first": {
+      "path": "tmp/public-config-roots-artifact-review-20261109.json",
+      "bytes": 433538,
+      "sha256": "7f698a79577e8d7740312f969b54193fb96e2c609501463504c5ade4f4ebe637",
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "high",
+      "result": "PASS",
+      "summary": {
+        "complete_tools_closure_per_slot": 40,
+        "directly_extracted_files_per_slot": 46,
+        "full_filesystem_readback": false,
+        "gzip_expansions_match_raw": true,
+        "kernel_boot_modules_policy_unchanged": true,
+        "payload_artifacts_authenticated": 86,
+        "source_files_authenticated": 845
+      },
+      "limits": [
+        "No physical installation, boot, resolver service/listener repair or hardware acceptance established.",
+        "Complete-tree historical deltas use bound producer expected trees, not independent full readback.",
+        "Expected metadata includes mode/uid/gid/mtime_ns/xattrs/type/link/device/content and hardlink fields; physical ext4 timestamps lose fractional seconds; atime/ctime/crtime are outside review."
+      ]
+    },
+    "repeat": {
+      "path": "tmp/public-config-roots-repeat-review-20261109.json",
+      "bytes": 367714,
+      "sha256": "fac689b55a1c9a95556c10e56588045e4b94117a18334bb26cf3031f864358e3",
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "high",
+      "result": "PASS",
+      "summary": {
+        "all_non_root_artifact_pins_equal_01": true,
+        "complete_expected_tree_content_and_nonmtime_metadata_equal_01": true,
+        "direct_files_per_slot": 46,
+        "full_filesystem_readback": false,
+        "full_gzip_expansions_match_raw": true,
+        "maintenance_closure_files_per_slot": 40,
+        "payload_artifacts_authenticated": 86,
+        "source_files_authenticated": 845
+      },
+      "limits": [
+        "No physical installation, boot, service/listener repair or hardware acceptance established.",
+        "Complete expected-tree comparison uses producer-captured stages; independent full filesystem readback remains coordinator-owned.",
+        "No byte-identical filesystem reproduction claim. atime/ctime/crtime and normalized creation seeds/times are outside expected-tree equivalence."
+      ]
+    }
+  },
+  "full_filesystem_readback": {
+    "01": {
+      "artifact_files_authenticated": 86,
+      "classification": "Independent physical ext4 readback against producer-captured stage; no hardware acceptance",
+      "controller": {
+        "bytes": 33471,
+        "sha256": "80e843d499bcc2f6d299d6022dc7edf83d73842405e95b38b0f32eee72dcda30"
+      },
+      "full_namespace_metadata_content_readback": true,
+      "hardware_acceptance": false,
+      "independent_expected_stage_correctness": false,
+      "producer_receipt": {
+        "bytes": 200970,
+        "sha256": "81d700ba1c9414e0e794bdf9f8dfb71872c88f2b025f14dfa691d9612f3eee93"
+      },
+      "root_manifest": {
+        "bytes": 32613,
+        "sha256": "1f82b9e85c5fbcbac65af695b699ee0048fb397faeba2e3eeb652eeb584adb6c"
+      },
+      "schema": 1,
+      "slots": {
+        "A": {
+          "allowed_extra_empty_directory": "lost+found",
+          "character_devices": 8,
+          "expected": {
+            "bytes": 3744535,
+            "sha256": "d8e01935f8d03dc0453d3dfbfcce6abceca70c15975c196c0ad14d0b0107cc7e"
+          },
+          "fast_symlinks": 1756,
+          "hardlink_groups": [
+            [
+              "usr/bin/gunzip",
+              "usr/bin/uncompress"
+            ],
+            [
+              "usr/bin/perl",
+              "usr/bin/perl5.36.0"
+            ],
+            [
+              "usr/bin/perlbug",
+              "usr/bin/perlthanks"
+            ]
+          ],
+          "hardware_acceptance": false,
+          "image": {
+            "bytes": 4294967296,
+            "sha256": "299b1f2f74e11c71c89b9ee249dfd43bdc741ac3e90addc763a9626bbbb5aed6"
+          },
+          "image_mtime_policy": "source whole seconds; root from actual superblock s_mkfs_time",
+          "image_path": "/var/lib/a733-clean-replay-20261106/host-roots-timesync-public-dirs-01/work/project/out/host-payload-timesync-public-dirs-01/root-A.ext4",
+          "input_identity_unchanged": true,
+          "long_symlinks_dumped": 99,
+          "namespace_members": 16368,
+          "out_of_scope_metadata": [
+            "atime",
+            "ctime",
+            "crtime"
+          ],
+          "production_build_acceptance": false,
+          "raw_xattrs": 1,
+          "regular_bytes_read": 451240558,
+          "root_creation_time_seconds": 1794230020,
+          "source_fractional_mtime_members": 465,
+          "source_nanosecond_metadata_preserved": false,
+          "stability": {
+            "bytes": 57,
+            "sha256": "4ef667d780cc43bd45c96bec9bcee954a72cbacd82f4a4ec3b2fa17ad4e0ba01"
+          },
+          "symlinks": 1855,
+          "unique_regular_inodes": 12699
+        },
+        "B": {
+          "allowed_extra_empty_directory": "lost+found",
+          "character_devices": 8,
+          "expected": {
+            "bytes": 3744535,
+            "sha256": "f0c6fb1ba458b6efd07a0888ef82a0fd2b14bba4f461dbf529cdca9939a5876c"
+          },
+          "fast_symlinks": 1756,
+          "hardlink_groups": [
+            [
+              "usr/bin/gunzip",
+              "usr/bin/uncompress"
+            ],
+            [
+              "usr/bin/perl",
+              "usr/bin/perl5.36.0"
+            ],
+            [
+              "usr/bin/perlbug",
+              "usr/bin/perlthanks"
+            ]
+          ],
+          "hardware_acceptance": false,
+          "image": {
+            "bytes": 4294967296,
+            "sha256": "48b9876f72f28d4a10f7458dd81a96b95da00d13ae00783b39f7c30067fa94f7"
+          },
+          "image_mtime_policy": "source whole seconds; root from actual superblock s_mkfs_time",
+          "image_path": "/var/lib/a733-clean-replay-20261106/host-roots-timesync-public-dirs-01/work/project/out/host-payload-timesync-public-dirs-01/root-B.ext4",
+          "input_identity_unchanged": true,
+          "long_symlinks_dumped": 99,
+          "namespace_members": 16368,
+          "out_of_scope_metadata": [
+            "atime",
+            "ctime",
+            "crtime"
+          ],
+          "production_build_acceptance": false,
+          "raw_xattrs": 1,
+          "regular_bytes_read": 451240558,
+          "root_creation_time_seconds": 1794230079,
+          "source_fractional_mtime_members": 465,
+          "source_nanosecond_metadata_preserved": false,
+          "stability": {
+            "bytes": 57,
+            "sha256": "57a766cccbe0f267fa81c75be87e553490341fd7d1117ee518c796ccd8629828"
+          },
+          "symlinks": 1855,
+          "unique_regular_inodes": 12699
+        }
+      },
+      "state": "complete",
+      "success": true
+    },
+    "02": {
+      "artifact_files_authenticated": 86,
+      "classification": "Independent physical ext4 readback against producer-captured stage; no hardware acceptance",
+      "controller": {
+        "bytes": 33471,
+        "sha256": "80e843d499bcc2f6d299d6022dc7edf83d73842405e95b38b0f32eee72dcda30"
+      },
+      "full_namespace_metadata_content_readback": true,
+      "hardware_acceptance": false,
+      "independent_expected_stage_correctness": false,
+      "producer_receipt": {
+        "bytes": 201246,
+        "sha256": "25ea1ae3035299d134ca6ac6d2788f335910c321295248eeb46c3baae82b0732"
+      },
+      "root_manifest": {
+        "bytes": 32613,
+        "sha256": "908e3ee7471aff1cd04ef94f2c983ae73f27fb979e8054846b5cc05a2ce56d5f"
+      },
+      "schema": 1,
+      "slots": {
+        "A": {
+          "allowed_extra_empty_directory": "lost+found",
+          "character_devices": 8,
+          "expected": {
+            "bytes": 3744535,
+            "sha256": "361b3762763c87c38ee066d9cbdab13f284ab397897261249dc35d6f69cff0a9"
+          },
+          "fast_symlinks": 1756,
+          "hardlink_groups": [
+            [
+              "usr/bin/gunzip",
+              "usr/bin/uncompress"
+            ],
+            [
+              "usr/bin/perl",
+              "usr/bin/perl5.36.0"
+            ],
+            [
+              "usr/bin/perlbug",
+              "usr/bin/perlthanks"
+            ]
+          ],
+          "hardware_acceptance": false,
+          "image": {
+            "bytes": 4294967296,
+            "sha256": "63aed09d6a05a030ba52b17f29486819378d232c5c167642ebbaefff5e6a0afa"
+          },
+          "image_mtime_policy": "source whole seconds; root from actual superblock s_mkfs_time",
+          "image_path": "/var/lib/a733-clean-replay-20261106/host-roots-timesync-public-dirs-02/work/project/out/host-payload-timesync-public-dirs-02/root-A.ext4",
+          "input_identity_unchanged": true,
+          "long_symlinks_dumped": 99,
+          "namespace_members": 16368,
+          "out_of_scope_metadata": [
+            "atime",
+            "ctime",
+            "crtime"
+          ],
+          "production_build_acceptance": false,
+          "raw_xattrs": 1,
+          "regular_bytes_read": 451240558,
+          "root_creation_time_seconds": 1794230266,
+          "source_fractional_mtime_members": 465,
+          "source_nanosecond_metadata_preserved": false,
+          "stability": {
+            "bytes": 57,
+            "sha256": "4ef667d780cc43bd45c96bec9bcee954a72cbacd82f4a4ec3b2fa17ad4e0ba01"
+          },
+          "symlinks": 1855,
+          "unique_regular_inodes": 12699
+        },
+        "B": {
+          "allowed_extra_empty_directory": "lost+found",
+          "character_devices": 8,
+          "expected": {
+            "bytes": 3744535,
+            "sha256": "141d2c277889ead46328b434c6b3eb166190fe308a67ae46a074fb088ae8df4d"
+          },
+          "fast_symlinks": 1756,
+          "hardlink_groups": [
+            [
+              "usr/bin/gunzip",
+              "usr/bin/uncompress"
+            ],
+            [
+              "usr/bin/perl",
+              "usr/bin/perl5.36.0"
+            ],
+            [
+              "usr/bin/perlbug",
+              "usr/bin/perlthanks"
+            ]
+          ],
+          "hardware_acceptance": false,
+          "image": {
+            "bytes": 4294967296,
+            "sha256": "f31b4c336387b0b70f4d3c3b7476ff2ac500b99ac5bfdcd01ac51c04f4302bda"
+          },
+          "image_mtime_policy": "source whole seconds; root from actual superblock s_mkfs_time",
+          "image_path": "/var/lib/a733-clean-replay-20261106/host-roots-timesync-public-dirs-02/work/project/out/host-payload-timesync-public-dirs-02/root-B.ext4",
+          "input_identity_unchanged": true,
+          "long_symlinks_dumped": 99,
+          "namespace_members": 16368,
+          "out_of_scope_metadata": [
+            "atime",
+            "ctime",
+            "crtime"
+          ],
+          "production_build_acceptance": false,
+          "raw_xattrs": 1,
+          "regular_bytes_read": 451240558,
+          "root_creation_time_seconds": 1794230327,
+          "source_fractional_mtime_members": 465,
+          "source_nanosecond_metadata_preserved": false,
+          "stability": {
+            "bytes": 57,
+            "sha256": "57a766cccbe0f267fa81c75be87e553490341fd7d1117ee518c796ccd8629828"
+          },
+          "symlinks": 1855,
+          "unique_regular_inodes": 12699
+        }
+      },
+      "state": "complete",
+      "success": true
+    }
+  },
+  "first_reader_failure": {
+    "unit": "a733-public-config-roots-readback-20261109-01.service",
+    "exit_status": 1,
+    "error": "input parent changed",
+    "retained_log": "out/public-config-roots-20261109-01/readback-01.log",
+    "explanation": "Concurrent construction/review created ancestor directory entries while the strict reader held input-parent metadata. Preserve refusal; no artifact mutation was established. Serialized retry passed without weakening guards."
+  },
+  "integration": {
+    "selected_construction": "01",
+    "new_slot_marker_sha256": {
+      "A": "286494073ce3a0b69443f96389dbbce11ab015705f7e9f05c7a7cf06503da866",
+      "B": "521e86e5446c35f0d87f71c302126b47a0fa1ba32214e98c62c3c79ce9ddf8f8"
+    },
+    "old_distribution_selected_A_marker_sha256": "e1cc0395cd97e222e7d8146c05fa703e3ae9373b34bf1e24fbfb91a7e63dfa61",
+    "state_selector_must_change": true,
+    "preserve_existing_STATE_UUID": "360dfb39-f49f-487e-b307-0bb887c854c5",
+    "preserve_current_external_protected_BOOT": true,
+    "fresh_full_image": "pending",
+    "matched_maintenance_candidates": "pending",
+    "physical_policy_verification": "pending"
+  },
+  "limits": [
+    "No physical installation or resolver repair performed; active endurance host unchanged.",
+    "Two constructions on the same qualified builder, not two independent clean build environments.",
+    "Same expected namespace, contents and non-mtime metadata; 465 expected mtimes per slot differ.",
+    "Actual filesystem creation/check/write times, directory hash seeds and checksums differ; raw byte-identical root reproduction remains unproven.",
+    "Historical root payload records include baseline DTB provenance; preserve the current external VGIC DTB/BOOT."
+  ],
+  "retained_evidence": {
+    "out/public-config-roots-20261109-01/build-unit-01.txt": {
+      "bytes": 168,
+      "sha256": "ab930db39fbdae945d313607c5ccf963b34e03d56a71163f4237144faa76e7dc"
+    },
+    "out/public-config-roots-20261109-01/build-unit-02.txt": {
+      "bytes": 168,
+      "sha256": "5c4d20242239ea17961603e46c4ceb50a746919a500a78bd82b44637760b805a"
+    },
+    "out/public-config-roots-20261109-01/builder-metadata.tar": {
+      "bytes": 389120,
+      "sha256": "bd461a12cca66ea7d69ee30aea8ddde69d6c7abbb92eb39eb4cdac915c5eed90"
+    },
+    "out/public-config-roots-20261109-01/full-readback-01.json": {
+      "bytes": 3994,
+      "sha256": "64c231c04816d2c62c79068fa64a5b3d0ac8c3335e57d15cf57e09362f19b602"
+    },
+    "out/public-config-roots-20261109-01/manifest-01.json": {
+      "bytes": 32613,
+      "sha256": "1f82b9e85c5fbcbac65af695b699ee0048fb397faeba2e3eeb652eeb584adb6c"
+    },
+    "out/public-config-roots-20261109-01/manifest-02.json": {
+      "bytes": 32613,
+      "sha256": "908e3ee7471aff1cd04ef94f2c983ae73f27fb979e8054846b5cc05a2ce56d5f"
+    },
+    "out/public-config-roots-20261109-01/plan-01.json": {
+      "bytes": 184177,
+      "sha256": "0033da46676ce31a7988697c68d251ddfb605b5dc8ac9cad0a3ee87d363cdb80"
+    },
+    "out/public-config-roots-20261109-01/plan-02.json": {
+      "bytes": 184177,
+      "sha256": "8d37827902b3471701483aee9108d79b5e2abbaa66597aba73d6958d1508e4a8"
+    },
+    "out/public-config-roots-20261109-01/producer-01.json": {
+      "bytes": 200970,
+      "sha256": "81d700ba1c9414e0e794bdf9f8dfb71872c88f2b025f14dfa691d9612f3eee93"
+    },
+    "out/public-config-roots-20261109-01/producer-02.json": {
+      "bytes": 201246,
+      "sha256": "25ea1ae3035299d134ca6ac6d2788f335910c321295248eeb46c3baae82b0732"
+    },
+    "out/public-config-roots-20261109-01/readback-01.log": {
+      "bytes": 6417,
+      "sha256": "da83aa81f6c0e3a70fecbd0c7ff2bfe70cbccbfd9445840e2fddb87bb717c7d5"
+    },
+    "out/public-config-roots-20261109-01/readback-02.log": {
+      "bytes": 4540,
+      "sha256": "6c06074f598b6a9b972de002e1acfb284769d66f1177df801b75d4a3cb50afb9"
+    },
+    "out/public-config-roots-20261109-01/readback-unit-failed-01.txt": {
+      "bytes": 179,
+      "sha256": "730e591fda2b0084ed22dd3c1e28f9a5a9e395d8265577e7850ebc8a58ab09ff"
+    },
+    "out/public-config-roots-20261109-01/full-readback-02.json": {
+      "bytes": 3994,
+      "sha256": "03a3388c4430c803f0da19c41989f00c584465dbb8c4ef567351e1e7ebd38239"
+    },
+    "out/public-config-roots-20261109-01/readback-03.log": {
+      "bytes": 4540,
+      "sha256": "f4fc7707344f59d49655a5725ceb79f889587c88144a8f690c22cb57d621e257"
+    },
+    "out/public-config-roots-20261109-01/readback-unit-02.txt": {
+      "bytes": 177,
+      "sha256": "bea9ea1e645725bd39db67b57536059a5c526f342507501128ca1e8274e62d36"
+    },
+    "out/public-config-roots-20261109-01/readback-unit-03.txt": {
+      "bytes": 177,
+      "sha256": "f14535d1a1c256fc9f0bf8a6deb4cc9be5e27ad3fc67fad99596aadbb0c7dd61"
+    }
+  },
+  "documentation_review": {
+    "path": "tmp/public-config-roots-documentation-review-20261109.json",
+    "bytes": 2297,
+    "sha256": "367a6c90aeeaa9812a324af2f7301ed50ee48cb3a33aa8f560eef29973363bff",
+    "result": "PASS"
+  }
+}

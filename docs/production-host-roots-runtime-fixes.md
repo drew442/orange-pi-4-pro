@@ -7,6 +7,9 @@ inspection pass. **These are components, not installation-ready images.**
 These exact roots now back the protected full-image candidate and running
 host. [Current matched maintenance candidates](matched-host-updates-20261109.md)
 are retained; physical update/rollback testing remains pending.
+New [resolver-readable root components](public-config-roots-20261109.md) are
+constructed separately; these historical roots retain the resolver-directory
+finding. Their artifacts and evidence are not relabeled.
 
 [Evidence and exact artifact pins](evidence/production-host-roots-runtime-fixes-20261108.json)
 bind source `f40c151fb8957db41ede80fbd758880a5d901efe`, all 676 committed files,
