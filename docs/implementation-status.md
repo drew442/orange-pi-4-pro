@@ -90,9 +90,9 @@ now pass independent artifact review and all four full filesystem readbacks;
 [Matched maintenance candidates](public-config-maintenance-20261109.md) also
 pass independent actual-artifact review. Full distribution/STATE-selector
 integration and physical policy/listener verification remain required. The
-[registered STATE launcher and reader](public-config-state.md) preserve the
-current protected BOOT UUID while changing the selected-root marker; construction
-is pending. The active endurance
+[matched STATE component](public-config-state.md) now passes construction, full
+filesystem readback and independent artifact review, preserving the current
+protected BOOT UUID and authenticating the new root-A marker. The active endurance
 host is unchanged.
 
 ## Construction, resources and authorization

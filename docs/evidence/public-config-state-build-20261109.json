@@ -1,0 +1,202 @@
+{
+  "schema": 1,
+  "recorded_utc": "2026-11-09T14:04:53.048492+00:00",
+  "classification": "Matched resolver-readable STATE component constructed, fully read back and independently reviewed; distribution integration and hardware verification pending",
+  "hardware_acceptance": false,
+  "physical_storage_written": false,
+  "source_revision": "3f923a887f8cb2b51f17d9d255faf84b48734401",
+  "source_files": 857,
+  "phase": "/var/lib/a733-clean-replay-20261106/host-state-timesync-public-dirs-01",
+  "output": "work/project/out/host-state-timesync-public-dirs-01",
+  "producer_receipt": {
+    "bytes": 209297,
+    "sha256": "26375aeb3d2510f75af489a5e30da25dfb931232c5c483f5f18cd83fe4962561"
+  },
+  "state_manifest": {
+    "bytes": 15468,
+    "sha256": "0c6a76a38743924cf5919ac0ba9f5cf2a4eae818b0b312a01c2d4c590283ae03"
+  },
+  "images": {
+    "state.ext4": {
+      "bytes": 8589934592,
+      "sha256": "2e9d3dcf4dcabfaead65e125e7778c0aed092eeb665e67f3559719d08e3564ec"
+    },
+    "state.ext4.gz": {
+      "bytes": 10009266,
+      "sha256": "72bcd88acb8878f8ec2ec0ce059e5d66c35a6db69bd124a3bd45a8f7365c36ec"
+    }
+  },
+  "state_uuid": "360dfb39-f49f-487e-b307-0bb887c854c5",
+  "boot_selection": {
+    "KERNEL_RELEASE": "6.6.98-a733-diag",
+    "ROOT_MARKER_SHA256": "286494073ce3a0b69443f96389dbbce11ab015705f7e9f05c7a7cf06503da866",
+    "ROOT_UUID": "a7330000-0000-4000-8000-00000000000a",
+    "SCHEMA": "1",
+    "SLOT": "A"
+  },
+  "parent_roots": {
+    "phase": "/var/lib/a733-clean-replay-20261106/host-roots-timesync-public-dirs-01",
+    "manifest": {
+      "bytes": 32613,
+      "sha256": "1f82b9e85c5fbcbac65af695b699ee0048fb397faeba2e3eeb652eeb584adb6c"
+    }
+  },
+  "full_filesystem_readback": {
+    "success": true,
+    "image": {
+      "bytes": 8589934592,
+      "sha256": "2e9d3dcf4dcabfaead65e125e7778c0aed092eeb665e67f3559719d08e3564ec"
+    },
+    "expected": {
+      "bytes": 279128,
+      "sha256": "ee9c732d5605198494ec0a0649174635ad810e9c42b2f7aee58816bda6cbcf29"
+    },
+    "stability": {
+      "bytes": 98,
+      "sha256": "02bf7b7fc4e2c6cdc70cf05d24bd21f66d5d875d3e8114882d246f6c150a81a1"
+    },
+    "filesystem": {
+      "allowed_extra_empty_directory": "lost+found",
+      "character_devices": 0,
+      "expected": {
+        "bytes": 279128,
+        "sha256": "ee9c732d5605198494ec0a0649174635ad810e9c42b2f7aee58816bda6cbcf29"
+      },
+      "fast_symlinks": 3,
+      "filesystem_root_metadata": {
+        "gid": 0,
+        "mode": "0755",
+        "type": "directory",
+        "uid": 0
+      },
+      "full_namespace_metadata_content_readback": true,
+      "hardlink_groups": [],
+      "hardware_acceptance": false,
+      "image": {
+        "bytes": 8589934592,
+        "sha256": "2e9d3dcf4dcabfaead65e125e7778c0aed092eeb665e67f3559719d08e3564ec"
+      },
+      "image_mtime_policy": "source whole seconds; root from actual superblock s_mkfs_time",
+      "input_identity_unchanged": true,
+      "long_symlinks_dumped": 0,
+      "namespace_members": 1172,
+      "out_of_scope_metadata": [
+        "atime",
+        "ctime",
+        "crtime"
+      ],
+      "production_build_acceptance": false,
+      "raw_xattrs": 0,
+      "regular_bytes_read": 7337572,
+      "root_creation_time_seconds": 1794232102,
+      "root_metadata_policy": "mkfs root 0755 root:root; source/staging root 0700 root:root",
+      "source_fractional_mtime_members": 15,
+      "source_nanosecond_metadata_preserved": false,
+      "source_root_metadata": {
+        "gid": 0,
+        "mode": 448,
+        "uid": 0
+      },
+      "stability": {
+        "bytes": 98,
+        "sha256": "02bf7b7fc4e2c6cdc70cf05d24bd21f66d5d875d3e8114882d246f6c150a81a1"
+      },
+      "symlinks": 3,
+      "unique_regular_inodes": 1115
+    },
+    "artifact_files_authenticated": 38,
+    "controller": {
+      "bytes": 10499,
+      "sha256": "90d2f91db8224674798fa1790c09b21baa0368f9247c7e9000c5f649c88acfe6"
+    }
+  },
+  "independent_review": {
+    "path": "tmp/public-config-state-artifact-review-20261109.json",
+    "bytes": 15960,
+    "sha256": "edd8cd5d543a6631a14dbf354988b87ab252bbed08975da9708ef416359cbd9f",
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "result": "PASS",
+    "source_files_authenticated": 857,
+    "artifacts_authenticated": 38,
+    "package_entries": 1131,
+    "critical_file_extraction_independent": true,
+    "empty_private_host_key_directory": true,
+    "fresh_machine_identity": true,
+    "limits": [
+      "Software artifact evidence only; no board operations, installation, physical boot, service/listener repair or hardware acceptance.",
+      "Whole filesystem scope uses independently executed registered full-reader report; this review separately extracts critical bytes and metadata.",
+      "atime/ctime/crtime and fractional mtimes are outside full-reader equality; no raw reproducibility claim.",
+      "Compatible external protected BOOT must remain unchanged during later distribution integration."
+    ]
+  },
+  "resources": {
+    "initial_budget": {
+      "capsule_bytes": 138093894,
+      "git_staging_bound_bytes": 157985857,
+      "required_free_bytes": 19128692148,
+      "selector_peak_bytes": 5368709120,
+      "state_recipe_bytes": 18832612397,
+      "unpacked_bytes": 440908294
+    },
+    "minimum_free_bytes": 30055657472,
+    "minimum_available_memory_bytes": 7313788928,
+    "final": {
+      "available_memory_bytes": 7532937216,
+      "free_bytes": 30579265536,
+      "time": 1794232155.4141982
+    }
+  },
+  "isolation_postconditions": {
+    "host_inventory_unchanged": true,
+    "mapped_processes_final": [],
+    "phase_mounts_final": []
+  },
+  "native_retention": "Complete encoded STATE plus authenticated manifest and producer/full-reader records; no private SSH host key is present.",
+  "retained_evidence": {
+    "out/public-config-state-build-20261109-01/build-unit-01.txt": {
+      "bytes": 174,
+      "sha256": "4292f61df5c46c02bfc0193cf950ea1302a59bae3b2e9d757d9b9879188078b5"
+    },
+    "out/public-config-state-build-20261109-01/full-readback.json": {
+      "bytes": 245780,
+      "sha256": "3c16b2e858b2f459c7089c997713bdd5ab084a81d3c320f6d2e1bfbca2c88087"
+    },
+    "out/public-config-state-build-20261109-01/launch-observation.json": {
+      "bytes": 652,
+      "sha256": "64bf7c6599f151d91c948199a6a911bcd33aed03c2f0de601673e892d05f1840"
+    },
+    "out/public-config-state-build-20261109-01/manifest.json": {
+      "bytes": 15468,
+      "sha256": "0c6a76a38743924cf5919ac0ba9f5cf2a4eae818b0b312a01c2d4c590283ae03"
+    },
+    "out/public-config-state-build-20261109-01/producer.json": {
+      "bytes": 209297,
+      "sha256": "26375aeb3d2510f75af489a5e30da25dfb931232c5c483f5f18cd83fe4962561"
+    },
+    "out/public-config-state-build-20261109-01/readback-unit-01.txt": {
+      "bytes": 177,
+      "sha256": "a964fada213960d4522c7bf54bfd86fe821ddcacb6257bb54ad44b0ef87e6c72"
+    },
+    "out/public-config-state-build-20261109-01/source-history.bundle": {
+      "bytes": 3322723,
+      "sha256": "b36d76e05c1999a46d5b4dac1f5523783e6c1ae5cdbf2fbc62bf06cca4594d6b"
+    },
+    "out/public-config-state-build-20261109-01/state.ext4.gz": {
+      "bytes": 10009266,
+      "sha256": "72bcd88acb8878f8ec2ec0ce059e5d66c35a6db69bd124a3bd45a8f7365c36ec"
+    }
+  },
+  "limits": [
+    "Not a backup of the personalized running board; original identity and current guests need separate preservation before installation.",
+    "Fresh machine identity intentionally differs from historical STATE; no byte-identical STATE reconstruction claim.",
+    "Physical resolver policy/listener verification, fresh full distribution and deployment reproduction remain pending.",
+    "Preserve current protected BOOT and STATE UUID during integration."
+  ],
+  "documentation_review": {
+    "path": "tmp/public-config-state-documentation-review-20261109.json",
+    "bytes": 2094,
+    "sha256": "31638bcbe2cffd0d4c1cbd2d09ae891b77cea07b8076d8054834a7816c47d80f",
+    "result": "PASS"
+  }
+}

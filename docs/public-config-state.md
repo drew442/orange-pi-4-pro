@@ -4,8 +4,8 @@ The registered launcher and full reader prepare a STATE regular-file payload
 for [resolver-readable root construction 01](public-config-roots-20261109.md).
 [Independent reviews and 2,155 privileged Ubuntu tests](evidence/public-config-state-preparation-20261109.json)
 pass. These software checks and parent evidence do not establish a new installation,
-physical resolver repair or release acceptance. New STATE construction is still
-pending; the running endurance host remains unchanged.
+physical resolver repair or release acceptance. [Construction, full readback and independent artifact review](evidence/public-config-state-build-20261109.json)
+now pass. The running endurance host remains unchanged.
 
 The fixed [parent binding](evidence/public-config-roots-state-binding-20261109.json)
 authenticates the actual root producer receipt, root manifest, expected trees and
@@ -22,11 +22,11 @@ Its selector must authenticate new root A marker `286494…`, rather than the
 older distribution's `e1cc…` marker. The root package-state profile and immutable
 kernel/firmware interfaces remain compatible.
 
-## Prepared build invocation
+## Recorded build invocation
 
 Commit both controllers and their binding in the same authenticated source
 checkout before constructing STATE; the reader authenticates its presence in
-the producer's source closure. The prepared invocation is:
+the producer's source closure. The actual invocation used source `3f923a887f8cb2b51f17d9d255faf84b48734401`:
 
 ```sh
 sudo python3 -I -B \
@@ -41,19 +41,27 @@ sudo python3 -I -B \
   --state-uuid 360dfb39-f49f-487e-b307-0bb887c854c5
 ```
 
-Use `--plan` first. The controller authenticates the original two public keys,
+An actual `--plan` preceded construction. Use `--plan` first for later builds. The controller authenticates the original two public keys,
 management inputs, userspace and reviewed root. An existing phase refuses reuse;
 a later construction needs a fresh tag. Fresh machine identity intentionally
 changes between STATE constructions. SSH host private keys remain absent;
 this unpersonalized component is not a backup of the live board.
 
-After construction, authenticate the actual producer receipt and invoke
+The actual complete reader passed for producer receipt
+`26375aeb3d2510f75af489a5e30da25dfb931232c5c483f5f18cd83fe4962561`.
+For later constructions, authenticate the actual producer receipt and invoke
 `build/verify-host-state-public-dirs.py` with `--receipt`, the observed
 `--receipt-sha256` and a fresh `--output` outside the producer phase. Serialize
 input-ancestor directory changes while the strict full reader is active.
 The reader checks the complete filesystem plus selected-root marker, operator
 configuration/key fingerprints, ownership, attributes and clock-state policy.
-Independent actual-artifact review is also required before full-image packaging.
+Independent actual-artifact review also passes for all 38 artifacts, all 857
+source files and the complete gzip expansion. All 1,172 expected filesystem
+paths and 7,337,572 regular bytes pass full readback; direct critical-file
+extraction separately checks identity, keys, clock state and selector.
+The 8 GiB raw STATE hash is
+`2e9d3dcf4dcabfaead65e125e7778c0aed092eeb665e67f3559719d08e3564ec`;
+its 10,009,266-byte gzip and manifest pins are in the linked evidence.
 
 The new full distribution must combine these matched roots and STATE with the
 existing protected BOOT, updating partition hashes and selector metadata.
