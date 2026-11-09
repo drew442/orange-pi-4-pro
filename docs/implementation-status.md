@@ -132,6 +132,9 @@ power and full thermal endurance remain unproven.
    the complete Jammy suite and live read-only target/census checks. Physical
    maintenance and NVMe firmware handoff remain pending until workload evidence
    is retained. [Writer evidence](evidence/known-sd-trial-writer-preparation-20261109.json).
+   The same writer now has an explicitly selected private
+   [SSH RAM recovery profile](evidence/known-sd-recovery-profile-20261109.json)
+   for the later full-install transition; it does not change the protected default.
    The [transaction API](spi-unit-transaction.md) passes independent review and
    actual-input NOR-model rehearsals; it supplies no device-opening route.
    [Preparation evidence](evidence/spi-unit-transaction-20261109.json).

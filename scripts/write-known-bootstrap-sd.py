@@ -25,6 +25,8 @@ PROFILES = MappingProxyType({
     DEFAULT_PROFILE: (SOURCE_BYTES, SOURCE_SHA256),
     'nvme-first-trial-20261109': (268435456,
         '8470ff59290016bb2f99c051f371ab20ac431e75fd17dec4e0e0de5c665613d9'),
+    'ssh-ram-recovery-20261108': (268435456,
+        'd3a02224efdb2c2eeccc7115d84cd6c4b2d75c7d06580b8f7812d12a546bc3f6'),
 })
 # Pinned vendor include/linux/proc_ns.h, revision
 # 2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f, lines 41–42.

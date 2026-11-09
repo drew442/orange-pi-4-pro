@@ -1,0 +1,162 @@
+{
+  "schema": 1,
+  "date": "2026-11-09",
+  "classification": "fixed private SSH RAM recovery image profile; no current hardware maintenance",
+  "hardware_acceptance": false,
+  "source_git_baseline": "27387d9",
+  "sources": [
+    {
+      "path": "scripts/write-known-bootstrap-sd.py",
+      "bytes": 21661,
+      "sha256": "4769001ab4a4861ff8ffe26ad6aa427f9abe5430b48bb49918d6c1206b96c52a"
+    },
+    {
+      "path": "tests/test_known_bootstrap_sd_writer.py",
+      "bytes": 36183,
+      "sha256": "f82cd9c9b4852ee4465219c50803d2626a4f5fc257a8cbd951e73871f84af543"
+    }
+  ],
+  "profile": "ssh-ram-recovery-20261108",
+  "raw": {
+    "bytes": 268435456,
+    "sha256": "d3a02224efdb2c2eeccc7115d84cd6c4b2d75c7d06580b8f7812d12a546bc3f6"
+  },
+  "private_compressed_artifact": {
+    "path": "out/ssh-ram-installer-20261108/a733-ssh-installer.img.gz",
+    "bytes": 41229263,
+    "sha256": "2f9cdd006e6d5c2c59e5ed1aba68f3ed7dd267a7f61b3672e590d926468c4eec",
+    "scope": "same board only; contains original private SSH host key; no content printed/extracted for this review"
+  },
+  "independent_review": {
+    "record": {
+      "path": "tmp/known-sd-recovery-profile-review-20261109.json",
+      "bytes": 3320,
+      "sha256": "4eb159f0d144a3594f95696148d9baead6eae50458d23ca6d7d526c35afc2e5a"
+    },
+    "summary": {
+      "schema": 1,
+      "date": "2026-11-09",
+      "decision": "PASS",
+      "classification": "Focused independent review of third finite recovery profile; no hardware invocation",
+      "blockers": [],
+      "source_hashes": {
+        "scripts/write-known-bootstrap-sd.py": "4769001ab4a4861ff8ffe26ad6aa427f9abe5430b48bb49918d6c1206b96c52a",
+        "tests/test_known_bootstrap_sd_writer.py": "f82cd9c9b4852ee4465219c50803d2626a4f5fc257a8cbd951e73871f84af543"
+      },
+      "baseline_writer_sha256": "14f97000094054f9eaac252759413fdded3a62085f34424d1a0fd2c36b3429e2",
+      "reviewed_delta": [
+        "Exactly one immutable PROFILES entry is added: ssh-ram-recovery-20261108, 268435456 raw bytes, d3a02224efdb2c2eeccc7115d84cd6c4b2d75c7d06580b8f7812d12a546bc3f6. Removing those two source lines reproduces the complete previously reviewed 14f source byte-for-byte.",
+        "Protected default and trial pins, exact SD target/CID/size, source/report protections, namespace/census/claim guards, write bounds/flush and receipt control flow are unchanged.",
+        "Tests assert all three fixed pins, repeated recovery/trial/protected/recovery/default invocations and every other-profile same-length hash mismatch without an additional write callback."
+      ],
+      "validation": {
+        "focused_tests": 34,
+        "exit_code": 0,
+        "raw_test_output": "..................................\n----------------------------------------------------------------------\nRan 34 tests in 0.045s\n\nOK\n",
+        "artifact": {
+          "result": "PASS",
+          "compressed_bytes": 41229263,
+          "compressed_sha256": "2f9cdd006e6d5c2c59e5ed1aba68f3ed7dd267a7f61b3672e590d926468c4eec",
+          "raw_bytes": 268435456,
+          "raw_sha256": "d3a02224efdb2c2eeccc7115d84cd6c4b2d75c7d06580b8f7812d12a546bc3f6",
+          "gzip_CRC_and_EOF": "PASS",
+          "bounded_stream": "no raw file written; expansion refused beyond 268435456 bytes",
+          "private_content_printed_or_extracted": false
+        },
+        "prior_physical_evidence": "docs/evidence/ssh-ram-installer-physical-20261108.json",
+        "prior_physical_evidence_assessment": "Same raw/gzip pins were physically written and warm-booted on the known A733 with strict existing SSH identity. No guest was launched in that RAM installer; historical construction UNBOOTED labels do not override later physical evidence."
+      },
+      "source_paths_read": [
+        "scripts/write-known-bootstrap-sd.py",
+        "tests/test_known_bootstrap_sd_writer.py",
+        "docs/ssh-installer-remote-boot-20261108.md",
+        "docs/evidence/ssh-ram-installer-physical-20261108.json"
+      ],
+      "remaining_uncertainty": [
+        "Combined qualified Jammy rerun and updated documentation/pins remain coordinator work.",
+        "No current source plan, SD write, transition, reboot, SSH, service, Git or hardware operation performed. Wait for completed 24-hour workload and retained outcome before any transition.",
+        "Existing private image contains same-board SSH identity; keep it private and never publish/extract its private-key contents.",
+        "This finite profile does not establish independent recovery from corrupt SPI, actual NVMe installation, KVM guest or final release acceptance.",
+        "Existing report-fsync multi-JSON limitation remains: require exit 0 and one complete valid receipt."
+      ],
+      "changed_files_by_reviewer": [
+        "tmp/known-sd-recovery-profile-review-20261109.json"
+      ]
+    }
+  },
+  "previous_physical_boot_evidence": {
+    "path": "docs/evidence/ssh-ram-installer-physical-20261108.json",
+    "bytes": 9853,
+    "sha256": "d95c9f01e803b63820a4c23c0bf3d96e15d6e725ebb578cafd320e4e8b982a76"
+  },
+  "change_scope": "Only one fixed two-line profile entry in production code; target/CID/geometry, namespace/proc/source guards, write bounds and flush behavior unchanged. Protected default remains ab5e. No generic hash or target override. Tests now exercise all three profiles and rejection of every other same-length payload without another write callback.",
+  "jammy_validation": {
+    "builder": "drew@build.drewnet.online Ubuntu22.04",
+    "project": "/var/lib/a733-known-sd-recovery-profile-validation-20261109-01",
+    "unit": "a733-known-sd-recovery-profile-validation-20261109-01",
+    "python_tests": 2139,
+    "errors": 0,
+    "failures": 0,
+    "skips": 0,
+    "shell_suites": 5,
+    "diagnostic_assembly_cases": 5,
+    "source_postcheck": {
+      "source_files_unchanged": 842,
+      "source_lock_sha256": "ff9dc059c7680cdd6975a36b8714a53f1ee0148f0237104bba153bc1a77cfd39",
+      "free_bytes_after_validation": 22582800384,
+      "hardware_acceptance": false
+    },
+    "effective_limits": {
+      "MemoryMax": 3221225472,
+      "CPUQuotaPerSecUSec": "2s"
+    },
+    "records": [
+      {
+        "path": "out/known-sd-recovery-profile-20261109-01/jammy-validation.log",
+        "bytes": 15855,
+        "sha256": "134b38f96473374b89bf75aa01ae263f30120eb288afe478f1ffa27b634ed96a"
+      },
+      {
+        "path": "out/known-sd-recovery-profile-20261109-01/validation-unit.txt",
+        "bytes": 202,
+        "sha256": "50bd71c0a919f3a3080b683d579fdd9d875a15a570c8954c1e1af0b141209d81"
+      },
+      {
+        "path": "out/known-sd-recovery-profile-20261109-01/validation-launch.log",
+        "bytes": 788,
+        "sha256": "06dea9b68c77b56baf806f85b7e1deb7d2fab6fa5223efc67aa7c343dcf062c6"
+      },
+      {
+        "path": "out/known-sd-recovery-profile-20261109-01/source-lock.json",
+        "bytes": 134178,
+        "sha256": "ff9dc059c7680cdd6975a36b8714a53f1ee0148f0237104bba153bc1a77cfd39"
+      },
+      {
+        "path": "out/known-sd-recovery-profile-20261109-01/source-postcheck.json",
+        "bytes": 206,
+        "sha256": "56791401ca50128f71eccd594951dd4c3749f390bea1b8e82faa94cd7ab60b19"
+      },
+      {
+        "path": "out/known-sd-recovery-profile-20261109-01/source.tar",
+        "bytes": 9881600,
+        "sha256": "737c1105949d1140df7d0d0b57087b9e2e6375b72e9273e5abdac6a679c4d305"
+      },
+      {
+        "path": "out/known-sd-recovery-profile-20261109-01/source-history.bundle",
+        "bytes": 3252876,
+        "sha256": "f61956f0dfda1d56606ccca788cf0a33f0b0d7852096eacdc1d3d2d609700d08"
+      }
+    ]
+  },
+  "native_checks": {
+    "TOML_files_parsed": 5,
+    "whitespace": "PASS"
+  },
+  "limits": [
+    "Original private image has historical physical boot evidence; this new writer profile has not written or booted it.",
+    "No raw source staging, /run expansion, SD/NVMe/SPI writes, reboot or workload/service change occurred for this profile preparation.",
+    "Retain the 24-hour workload outcome and required backups before transition; source/report require private /run tmpfs and a fresh independently verified installed-session boot UUID. Retain successful write receipt before reboot.",
+    "RAM DHCP address may differ; retain strict known-host identity checking. Normalize RAM root mode only after verifying rootfs, then use the new RAM boot UUID for later operations.",
+    "A recovery SD boot does not prove recovery after corrupted SPI, nor replace KVM/boot-cycle/update/rollback and reproduced-deployment gates."
+  ]
+}

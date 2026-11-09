@@ -208,7 +208,9 @@ class ProfileTests(unittest.TestCase):
             'protected-state-20261109': (268435456,
                 'ab5e8c2c846cbbd51b61bef6831d7e4d1498c29fefbf47d74301b1f3bb0ad207'),
             'nvme-first-trial-20261109': (268435456,
-                '8470ff59290016bb2f99c051f371ab20ac431e75fd17dec4e0e0de5c665613d9')})
+                '8470ff59290016bb2f99c051f371ab20ac431e75fd17dec4e0e0de5c665613d9'),
+            'ssh-ram-recovery-20261108': (268435456,
+                'd3a02224efdb2c2eeccc7115d84cd6c4b2d75c7d06580b8f7812d12a546bc3f6')})
 
     def invoke(self, args):
         output = io.StringIO()
@@ -218,8 +220,8 @@ class ProfileTests(unittest.TestCase):
 
     def test_repeated_main_profiles_and_default_do_not_leak(self):
         boot = '11111111-1111-4111-8111-111111111111'
-        protected, trial = tuple(w.PROFILES)
-        payloads = {protected: b'protected', trial: b'trial----'}
+        protected, trial, recovery = tuple(w.PROFILES)
+        payloads = {protected: b'protected', trial: b'trial----', recovery: b'recovery-'}
         pins = {name: (len(data), hashlib.sha256(data).hexdigest())
                 for name, data in payloads.items()}
         with tempfile.TemporaryDirectory() as folder, fixture_root_ownership(), \
@@ -228,7 +230,7 @@ class ProfileTests(unittest.TestCase):
                 mock.patch.object(w, 'target_identity', return_value=('identity', {(179, 0)})), \
                 mock.patch.object(w, 'idle_target'), mock.patch.object(w, 'PROFILES', pins), \
                 mock.patch.object(w, 'write_payload', return_value=9) as write:
-            for selected in (trial, protected, trial, None):
+            for selected in (recovery, trial, protected, recovery, None):
                 profile = selected or protected
                 path = Path(folder) / 'image'
                 path.write_bytes(payloads[profile])
@@ -245,13 +247,15 @@ class ProfileTests(unittest.TestCase):
                 self.assertEqual(status, 0)
                 self.assertEqual(report['status'], 'write-complete')
                 self.assertEqual(write.call_args.kwargs['profile'], profile)
-                other = trial if profile == protected else protected
-                status, report = self.invoke([str(path), '--expected-boot-id', boot,
-                                            '--profile', other, '--write'])
-                self.assertEqual(status, 1)
-                self.assertEqual(report['profile'], other)
-                self.assertEqual(report['source']['sha256'], pins[other][1])
-                self.assertIn('SHA-256 mismatch', report['error'])
+                for other in pins.keys() - {profile}:
+                    calls_before = write.call_count
+                    status, report = self.invoke([str(path), '--expected-boot-id', boot,
+                                                 '--profile', other, '--write'])
+                    self.assertEqual(status, 1)
+                    self.assertEqual(report['profile'], other)
+                    self.assertEqual(report['source']['sha256'], pins[other][1])
+                    self.assertIn('SHA-256 mismatch', report['error'])
+                    self.assertEqual(write.call_count, calls_before)
             self.assertEqual(w.SOURCE_SHA256,
                 'ab5e8c2c846cbbd51b61bef6831d7e4d1498c29fefbf47d74301b1f3bb0ad207')
 

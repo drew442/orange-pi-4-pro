@@ -20,7 +20,7 @@ Stop if either identity differs; these are same-board instructions.
 | `out/protected-nvme-candidate-20261109/nvme.img.gz` | `584a958c63fb01f62c2162c733aeb004082088952c6e428d6406087492e315e2` |
 | Adjacent `manifest.json` | `f19b5b58c12030422b36c203471026209731fa413ea1ce8d9196121861cf8eb5` |
 | `scripts/personalize-known-host-state.py` | `59772d1a55df6edf44c6e1c80c0c09bde4fbcbeff9bf4ef957fda1c5dcef9321` |
-| `scripts/write-known-bootstrap-sd.py` | `14f97000094054f9eaac252759413fdded3a62085f34424d1a0fd2c36b3429e2` |
+| `scripts/write-known-bootstrap-sd.py` | `4769001ab4a4861ff8ffe26ad6aa427f9abe5430b48bb49918d6c1206b96c52a` |
 
 The gzip is **545636009 bytes**; its single expansion is **256060514304 bytes**,
 SHA-256 `675d6ba87e53daaf3517f331948a3be5924d79ec21a5143c7bc9f5dda4f0b386`.
@@ -47,12 +47,18 @@ explains the three intended file replacements.
 
 ## Enter the existing private RAM recovery environment
 
-After evidence retention and a clean poweroff, flash the **SSH RAM recovery**
-SD from [current images](current-images.md), following that page's exact-card
+After evidence retention, the coordinator can use the reviewed
+[known SD writer](known-bootstrap-sd-writer.md) from the quiescent installed host
+with `--profile ssh-ram-recovery-20261108`, the private recovery raw image and
+that installed session's verified boot UUID. Run its read-only plan, then the
+preauthorized progress-enabled write; retain the successful receipt off-board
+before a clean reboot. Source staging requires sufficient private `/run` tmpfs
+capacity. The historical November 8 one-off writer is unnecessary.
+
+If remote maintenance is unavailable, power off and flash the **SSH RAM recovery**
+SD from [current images](current-images.md), using that page's exact-card
 identification, source verification and progress-enabled write procedure.
 Capture serial at 115200 8N1. The host bootstrap SD is a different image.
-A coordinator remote SD transition needs its own current-boot plan/review; the
-historical November 8 writer's hardcoded boot ID cannot be reused.
 
 Boot recovery and identify its actual DHCP address through the lease/serial log.
 Use strict SSH host checking and `HostKeyAlias=192.168.1.116`, with the existing
@@ -140,7 +146,7 @@ encoded image. The SD writer authenticates its fixed raw image itself. On the bo
 sha256sum -c - <<'PINS'
 f19b5b58c12030422b36c203471026209731fa413ea1ce8d9196121861cf8eb5  /run/a733-payload/manifest.json
 59772d1a55df6edf44c6e1c80c0c09bde4fbcbeff9bf4ef957fda1c5dcef9321  /run/a733-payload/personalize-known-host-state.py
-14f97000094054f9eaac252759413fdded3a62085f34424d1a0fd2c36b3429e2  /run/a733-payload/write-known-bootstrap-sd.py
+4769001ab4a4861ff8ffe26ad6aa427f9abe5430b48bb49918d6c1206b96c52a  /run/a733-payload/write-known-bootstrap-sd.py
 ae3930cec481912a164361e11c926ca02d81561a49c0fc49b70514dd19d3d06e  /run/a733-payload/identity.tar
 PINS
 ```

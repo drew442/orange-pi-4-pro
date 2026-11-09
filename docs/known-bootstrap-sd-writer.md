@@ -7,7 +7,7 @@ The current 24-hour workload must finish and its outcome be retained before any
 SD write. The helper does not stop workloads or reboot the board.
 
 Its reviewed source SHA-256 is
-`14f97000094054f9eaac252759413fdded3a62085f34424d1a0fd2c36b3429e2`.
+`4769001ab4a4861ff8ffe26ad6aa427f9abe5430b48bb49918d6c1206b96c52a`.
 It has no external binary dependencies. In the RAM installer, initramfs starts
 `/` at mode 1777; normalize that RAM-only directory to 0755 before maintenance.
 
@@ -23,12 +23,13 @@ This changes RAM metadata only; no physical filesystem is mounted or written. It
 with 512-byte logical sectors. There are no alternate device or hash switches.
 It never selects NVMe or SPI.
 
-Both finite profiles write exactly **268,435,456 bytes**:
+All three finite profiles write exactly **268,435,456 bytes**:
 
 | Explicit `--profile` | Raw SHA-256 |
 | --- | --- |
 | `protected-state-20261109` (default) | `ab5e8c2c846cbbd51b61bef6831d7e4d1498c29fefbf47d74301b1f3bb0ad207` |
 | `nvme-first-trial-20261109` | `8470ff59290016bb2f99c051f371ab20ac431e75fd17dec4e0e0de5c665613d9` |
+| `ssh-ram-recovery-20261108` | `d3a02224efdb2c2eeccc7115d84cd6c4b2d75c7d06580b8f7812d12a546bc3f6` |
 
 The protected profile's raw bootstrap input has SHA-256
 `ab5e8c2c846cbbd51b61bef6831d7e4d1498c29fefbf47d74301b1f3bb0ad207`.
@@ -43,6 +44,13 @@ Its firmware is unchanged. The explicit trial profile uses the separately
 boot0 and BOOT while changing the registered U-Boot package. It remains unbooted.
 The profile is never inferred from a filename; the selected pin applies to
 source authentication, plans, writes and receipts. There is no hash override.
+
+The recovery profile writes the already [physically tested private SSH RAM
+image](ssh-installer-remote-boot-20261108.md). It contains this board's original
+private SSH host key and must be used only on this board. Keep the artifact
+private. It starts an independent RAM environment for maintenance; it does not
+automatically install NVMe. Its addition and artifact verification have separate
+[review evidence](evidence/known-sd-recovery-profile-20261109.json).
 
 The known-target write is covered by the operator's persisted
 [storage authorization](evidence/storage-write-authorization-20261108.json).
@@ -102,6 +110,14 @@ invocations. Keep the default or explicitly select `protected-state-20261109`
 when restoring the protected bootstrap. Require exit 0 and one complete valid
 receipt; report-file presence alone does not establish completion. A report
 write failure can leave multiple JSON objects and a nonzero exit.
+
+To enter the private RAM environment after retaining the workload outcome,
+select `--profile ssh-ram-recovery-20261108` for both plan and write, using the
+recovery raw image. Retain the successful write receipt off-board, then request
+a clean reboot. Read the actual RAM-mode DHCP address from serial/leases and
+use the pinned host identity; the previous RAM boot used `.115`. The caller
+boot UUID for this write belongs to the installed session, before reboot.
+Later RAM operations require that new RAM session's independently verified UUID.
 
 ## Guards and scope
 
