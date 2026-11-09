@@ -12,6 +12,11 @@ matched candidate; it remains unexecuted and waits for retained workload evidenc
 
 Paths below are relative to `/home/drew/orange-pi-4-pro` on codex.
 
+For later inactive-root maintenance, use the separately authenticated
+[matched A/B update kit](matched-host-updates-20261109.md). Its root-payload
+manifest differs from the whole-NVMe installer manifest below. Physical update
+and rollback tests remain pending until workload evidence is retained.
+
 | Purpose | Existing artifact |
 | --- | --- |
 | SSH RAM recovery, same board | `out/ssh-ram-installer-20261108/a733-ssh-installer.img.gz` |

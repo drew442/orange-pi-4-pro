@@ -24,8 +24,9 @@ does not establish application/state compatibility. Preserve the compatible
 kernel/DTB/initramfs stack; routine selection never writes SD, SPI, root blocks
 or the boot partition.
 
-Stage the complete authenticated [maintenance package](maintenance-tools.md)
-on NVMe or RAM on the installed host.
+Use the matching authenticated installed `/usr/lib/a733-tools` tree when
+available; otherwise stage the complete [portable package](maintenance-tools.md)
+on NVMe or RAM. See the [current matched inputs](matched-host-updates-20261109.md).
 Release manifests must be root-owned, mode `0400`, with one link and safe
 non-symlink ancestors. The tool checks source storage, actual running mounts,
 NVMe model/serial/capacity, GPT, partition roles, current selector and kernel ABI.
@@ -36,11 +37,12 @@ metadata and hold the descriptor through publication.
 
 The following is prototype CLI usage. Enter a root shell with `sudo -i`, then
 set every `A733_*` value from actual host inventory and a trusted release
-record; there is no default target. Stage the tools at the stated root-owned
-package path before use. These commands have not been reproduced on the board.
+record; there is no default target. Set the tool path to the verified installed
+tree or authenticated staged package. These commands have not been reproduced
+on the board.
 
 ```sh
-: "${A733_TOOLS:?Set absolute staged a733-tools directory}"
+: "${A733_TOOLS:?Set absolute authenticated a733-tools directory}"
 : "${A733_NVME_TARGET:?Set the exact whole-NVMe stable path}"
 : "${A733_NVME_MODEL:?Set the exact model}"
 : "${A733_NVME_SERIAL:?Set the exact serial}"
@@ -62,8 +64,9 @@ chmod 0400 /run/a733-state/updates/selection-plan.json
 
 Create private package-wrapper, release and plan directories with root
 ownership and mode `0700`; the package tree uses read-only files and directories.
-The host does not preinstall a package wrapper. Review
-the complete plan before `apply`. It requires an interactive terminal,
+Current roots include the authenticated `/usr/lib/a733-tools` tree; see the
+[current matched payload record](matched-host-updates-20261109.md). Older prototype
+hosts needed explicit wrapper staging. Review the complete plan before `apply`. It requires an interactive terminal,
 `BACKUP VERIFIED`, and the exact displayed `SELECT` phrase binding intent, slot,
 serial, partition, byte count and plan hash. There is no force/unattended switch.
 For cancellation, use `--intent cancel-pending`, the currently running slot,
@@ -143,6 +146,7 @@ including the helper-return boundary; independent review verified conservative
 receipts and restored masks. The 367-case suite passes on Jammy without skips,
 plus four separate diagnostic cases and shell regressions at that checkpoint.
 The later [maintenance package](maintenance-tools.md) adds the source closure
-and preparation-SD integration. Actual host health, booted rollback and all
-physical acceptance remain open. The later offline controller has separate
+and preparation-SD integration. Actual newly selected-root health, booted rollback and complete
+physical release acceptance remain open. Current installed-host health is
+recorded separately in [implementation status](implementation-status.md). The later offline controller has separate
 [software recovery evidence](host-recovery.md#native-software-evidence).

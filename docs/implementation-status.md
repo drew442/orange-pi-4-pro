@@ -83,6 +83,11 @@ power and full thermal endurance remain unproven.
 - Latest complete privileged Ubuntu suite: **2,090 tests**, zero skips/errors/
   failures; five shell suites and five diagnostic assembly cases also pass.
   All five TOML files parse separately on codex. These are software checks.
+- [Matched A/B maintenance candidates](matched-host-updates-20261109.md) now
+  pass independent complete artifact review and are retained on both hosts.
+  They use root-payload manifest `4f28…`, distinct from the whole-drive manifest.
+  A read-only check matches all 40 installed maintenance files; physical update,
+  activation and rollback remain unperformed. Preserve the running workload.
 - Builder LV now **94,459,920,384 bytes**, VG free **38,625,345,536 bytes**;
   free immediately after growth **25,303,740,416 bytes**. The operator approves
   **all free capacity on the Ubuntu build host for use/expansion without another

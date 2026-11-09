@@ -1,0 +1,504 @@
+{
+  "schema": 1,
+  "date": "2026-11-09",
+  "classification": "matched current A/B update candidates and maintenance delivery preparation; physical maintenance unperformed",
+  "hardware_acceptance": false,
+  "source_commit": "1e17745f1a91b72564a61dd6bf56366e1e75a32a",
+  "producer": {
+    "builder": "build.drewnet.online Ubuntu22.04",
+    "unit": "a733-matched-updates-preparation-20261109-01.service",
+    "result": {
+      "schema": 1,
+      "classification": "regular-file candidate and portable tools preparation only",
+      "hardware_acceptance": false,
+      "source_closure": {
+        "build/host-initramfs.py": {
+          "bytes": 12506,
+          "sha256": "96c19c387b04a9e753e6eb658ef1ba7373f0cd4d58a46d8ee90c8a1348f9481d"
+        },
+        "build/host-payload.py": {
+          "bytes": 28046,
+          "sha256": "30c003e983b9123bae30c9c5cdd45cde4fab88ccd06179433171eaa8aa34ba32"
+        },
+        "build/host-state.py": {
+          "bytes": 19494,
+          "sha256": "44bbbba45b94b8e58cb150e90491fd41126b8fcc1f4e377d90792ad8ce450d2f"
+        },
+        "build/host-storage-tools.py": {
+          "bytes": 4985,
+          "sha256": "e8d54568a6f43552996021a6a0a3178769564238be34a8642fca9d304f8f9750"
+        },
+        "build/maintenance-tools.py": {
+          "bytes": 14315,
+          "sha256": "4f646bce7ab74318d172661ac9e94fcf3da060e884a12a9aaef57fd3f32fa6ab"
+        },
+        "build/root-selection.py": {
+          "bytes": 10427,
+          "sha256": "816a58fb61d4d2212413a337da8e1f8332f63ec1531e4c9af183dbf692ded338"
+        },
+        "build/timesync-state.py": {
+          "bytes": 17588,
+          "sha256": "2ab686430f5e794aad7a55ebee348356c624315055ba2e9230e911cd00cc82e5"
+        },
+        "configs/guest_backup.py": {
+          "bytes": 6738,
+          "sha256": "449a623551e76177bc4fb5aafb477ac8e57c147f1d9ad2a4e564ccd467b43486"
+        },
+        "configs/guest_backup_chunks.py": {
+          "bytes": 2706,
+          "sha256": "f2cde5024d1a833f6d953ed0d8c4388eae28a13ee3a86367c41f562973b31ccc"
+        },
+        "configs/guest_config.py": {
+          "bytes": 6627,
+          "sha256": "b3bf7098828be6d131a65b1d7307d7578cc2852768e0f181012a3479736aa041"
+        },
+        "configs/guest_identity.py": {
+          "bytes": 1997,
+          "sha256": "d7d126f015e64c7d2f26a6cad8686b90c7892c00ea9ab552e4fc36b9254d5e84"
+        },
+        "configs/guest_manifest.py": {
+          "bytes": 6364,
+          "sha256": "e4407e98d6ccee39b4437f88de9c885965e15ec4c59be085ce6b89115d6fd6c6"
+        },
+        "configs/host-management.py": {
+          "bytes": 26171,
+          "sha256": "a6cc8ec90f90050efc16fda6567d666aadd5fcb2a12b468b050ab9fd52ca6052"
+        },
+        "configs/host_config.py": {
+          "bytes": 6785,
+          "sha256": "805f036f5bb685d9ddd6ff66c0de4c2dac97d7b40e1a61b8f21e7d513496c1f0"
+        },
+        "configs/package_state.py": {
+          "bytes": 13113,
+          "sha256": "809630ebba9d927b6ad5034899a88a8a8fcf3401f94ff6f223f92f6fbfa9c6eb"
+        },
+        "docs/evidence/diagnostic-20261104.json": {
+          "bytes": 2224,
+          "sha256": "6d743d81ee27ced3b55cbcd218bbf0693743be66e85d074e59a052c8819fde1c"
+        },
+        "scripts/acquire-nvme.py": {
+          "bytes": 17568,
+          "sha256": "17edaf927764f9feba0fb19bf3dbeb90356e24df1ceed7960eb155d9154b7e42"
+        },
+        "scripts/activate-guest-storage.py": {
+          "bytes": 17823,
+          "sha256": "f147d977556ba0aaeaa954c10c2a01e69e0bcacb013e9725195ce2fd30ad37d4"
+        },
+        "scripts/backup-guest.py": {
+          "bytes": 9419,
+          "sha256": "e566d2426a7c6a876b63bc49592a63d5276642c4e1c7c28adb5a4c69d24cf47a"
+        },
+        "scripts/checkpoint-guest.py": {
+          "bytes": 12703,
+          "sha256": "50c01b06819adfc9bc1f1bd13ba20ae1acac660518f653f9b103567c515dec20"
+        },
+        "scripts/enroll-guest.py": {
+          "bytes": 23309,
+          "sha256": "04e12b68426d3c1137f9835e098dc20a3c0370c97de7ada592fb4e1e2b7db64e"
+        },
+        "scripts/guest-accounts.py": {
+          "bytes": 15412,
+          "sha256": "3b047df1be2b1548b31a3a94caac6541f3b6d407b08e9575f5b4c5fbc8644073"
+        },
+        "scripts/guest-checkpoint-policy.py": {
+          "bytes": 12977,
+          "sha256": "e7779518ad5a4d002b827d48b60c9d93d418d2283004a9df2ee088aab1c6a30f"
+        },
+        "scripts/guest-mount-target.py": {
+          "bytes": 7267,
+          "sha256": "037bf594538939707f3df1e1105da90c2a25397d34b356c73d48fad273b54e73"
+        },
+        "scripts/guest-restore-https.py": {
+          "bytes": 11507,
+          "sha256": "4ac8bd9de94617ea5ce4eceae2a215aa122b2ff5ee7d25febe71c159cb032a96"
+        },
+        "scripts/guest-restore-source.py": {
+          "bytes": 6178,
+          "sha256": "976317a90a6d6a5ae4cc7ee350871e14c051b08b1f08fd0832c230ec73646f05"
+        },
+        "scripts/guest-storage.py": {
+          "bytes": 8915,
+          "sha256": "64cd02b2e01fe8f58b0c425f6bfb2ae8849ab2b3b7f4022e4d712604a396ed44"
+        },
+        "scripts/host-recovery-target.py": {
+          "bytes": 9770,
+          "sha256": "9901e568384fd7d4e5722e22eac84e936640f05e8fee4900b06d2b2b987e960b"
+        },
+        "scripts/host-update-target.py": {
+          "bytes": 13517,
+          "sha256": "e4d11cc2457497b2339aa39d19077ab90489ec2fb10a1bc3c5f4afa127c59ab3"
+        },
+        "scripts/index-guest-backup.py": {
+          "bytes": 8657,
+          "sha256": "7ba70ec494740075fd98e926cb38a51e1ca6d044e4c027d49fde3ad8b22c1c35"
+        },
+        "scripts/install-nvme.py": {
+          "bytes": 26072,
+          "sha256": "6f356eb05ea891981966c1d08b7174fe331823da3cd118971cfd5b2c37110b12"
+        },
+        "scripts/launch-kvm-guest.py": {
+          "bytes": 11141,
+          "sha256": "3685d1de95314ba5dbe3d8c2a6becd1fceb415b09094be74995c10fa0a99a775"
+        },
+        "scripts/nvme_layout.py": {
+          "bytes": 6162,
+          "sha256": "742a71575d94c9be29e01af3f50dc0d0639b38800c3e5a86ded49ac8906e518f"
+        },
+        "scripts/plan-nvme.py": {
+          "bytes": 7815,
+          "sha256": "8ed9075de6ab4425457aa3f309847f2e66b134691f0fe80ac5eb7c43f1746e31"
+        },
+        "scripts/prepare-host-update.py": {
+          "bytes": 13492,
+          "sha256": "464d44d7c8e868fd72f85f3ac5d6095d7d18d205528b0f55c379c9b2b30c3b4b"
+        },
+        "scripts/recover-host-root.py": {
+          "bytes": 21526,
+          "sha256": "64ed3b156338a7ba51de646260883f353090e16be1f36c44815f4327df7f3a40"
+        },
+        "scripts/restore-guest.py": {
+          "bytes": 22062,
+          "sha256": "4ae09706f9085b7427acb890333bc464bac8c78027b522ee86172cca708e3bd5"
+        },
+        "scripts/select-host-root.py": {
+          "bytes": 20047,
+          "sha256": "646b608cf5dc3fbd3f1411a49ace41192ee0dec4472199240f87cc1c1073fd89"
+        },
+        "scripts/update-host.py": {
+          "bytes": 16334,
+          "sha256": "7e244244e36eabf6ef64b2640029cb05e77b43a8aed121257254dd3a6908433d"
+        },
+        "scripts/verify-guest-backup.py": {
+          "bytes": 15832,
+          "sha256": "af48fc57f66f6d7c3f151cf3509f9e840917b121cbd6de447875c694a7a31e0d"
+        },
+        "tests/verify_host_update_candidates.py": {
+          "bytes": 5321,
+          "sha256": "80ceb8da6ae467b6ba4867768ade6a8cfaf35acc1c4c258fdf5801c088c8bfc9"
+        }
+      },
+      "source_payload_manifest": {
+        "path": "/var/lib/a733-clean-replay-20261106/host-roots-timesync-runtime-fixes-01/work/project/out/host-payload-timesync-runtime-fixes-01/manifest.json",
+        "bytes": 32613,
+        "sha256": "4f28d75a14323c52aa976b00f957b56913b75472a07a717672abd33d439b97b9"
+      },
+      "elapsed_seconds": 35.278595926996786,
+      "resources": [
+        {
+          "free_bytes": 24202973184,
+          "available_memory_bytes": 7567962112
+        },
+        {
+          "free_bytes": 23748866048,
+          "available_memory_bytes": 7563300864
+        },
+        {
+          "free_bytes": 23294763008,
+          "available_memory_bytes": 7554699264
+        },
+        {
+          "free_bytes": 23293976576,
+          "available_memory_bytes": 7548325888
+        }
+      ],
+      "original_inputs_unchanged": true,
+      "outputs": {
+        "A": {
+          "candidate.json": {
+            "bytes": 8856,
+            "sha256": "f6a49381e79c28671ccda057c363fcdf856570d798994ffbec12fabd4f72a4c1"
+          },
+          "manifest.json": {
+            "bytes": 32613,
+            "sha256": "4f28d75a14323c52aa976b00f957b56913b75472a07a717672abd33d439b97b9"
+          },
+          "selected.conf": {
+            "bytes": 179,
+            "sha256": "bd27df59dbdb53680db09cf6f7cfd80ceb73aa89c7ade0a627fa76ff4aabd20a"
+          },
+          "root.ext4": {
+            "bytes": 4294967296,
+            "sha256": "d868571e89216762ce9d8d2b8209884b958c53b7be97a215d8c4ddbc96ab7940"
+          }
+        },
+        "B": {
+          "candidate.json": {
+            "bytes": 8856,
+            "sha256": "97dcd1b7fdbd541cf2319ee4279e960fcd7caad817be663ba72d84765431ec64"
+          },
+          "manifest.json": {
+            "bytes": 32613,
+            "sha256": "4f28d75a14323c52aa976b00f957b56913b75472a07a717672abd33d439b97b9"
+          },
+          "selected.conf": {
+            "bytes": 179,
+            "sha256": "5b21720f596ac853adf894e0003fbb071d2ff6e01d9ceb532086f3deaf09dab7"
+          },
+          "root.ext4": {
+            "bytes": 4294967296,
+            "sha256": "3369a8b4c4b0f7dd9ed33740db3bd86b0d868154bc8195c66806ee0e73f3bdab"
+          }
+        }
+      },
+      "maintenance_package": "/var/lib/a733-maintenance-validation-20261108-01/project/out/maintenance-tools-matched-20261109-01",
+      "physical_storage_written": false,
+      "package_files": {
+        "manifest.json": {
+          "bytes": 16312,
+          "sha256": "df70eed2e91561a75c270916822765f83dcc7c65c5fcee717584ab35bd70a1d6"
+        },
+        "tools.tar.gz": {
+          "bytes": 124128,
+          "sha256": "bbd617d6765323baf2d885d93451d1ebdd6600b8c6ad9aa3aaf7499838b23934"
+        }
+      }
+    },
+    "exit_status": 0,
+    "source_path": "tmp/matched-updates-20261109-01/prepare.py",
+    "source_sha256": "06f1d755b50ac8899030cabc401ca12ca6b10d4a7a838b4ea7edae7822caa63b",
+    "source_text": "import hashlib,json,os,subprocess,time\nfrom pathlib import Path\nPROJECT=Path('/var/lib/a733-maintenance-validation-20261108-01/project')\nBASE=Path('/var/lib/a733-matched-updates-20261109-01')\nPAYLOAD=Path('/var/lib/a733-clean-replay-20261106/host-roots-timesync-runtime-fixes-01/work/project/out/host-payload-timesync-runtime-fixes-01')\nPIN='4f28d75a14323c52aa976b00f957b56913b75472a07a717672abd33d439b97b9'\nlock=json.loads((BASE/'source-lock.json').read_text())\ndef sources():\n for name,record in lock.items():\n  path=PROJECT/name\n  assert path.is_file() and not path.is_symlink(),name\n  data=path.read_bytes()\n  assert {'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()}==record,name\n\ndef resources():\n v=os.statvfs(BASE);free=v.f_bavail*v.f_frsize\n mem=int(next(x.split()[1] for x in Path('/proc/meminfo').read_text().splitlines() if x.startswith('MemAvailable:')))*1024\n assert free>=3_000_000_000 and mem>=1_000_000_000,(free,mem)\n return {'free_bytes':free,'available_memory_bytes':mem}\nsources()\nassert resources()['free_bytes']>=2*4294967296+1073741824\nbody=(PAYLOAD/'manifest.json').read_bytes()\nassert len(body)==32613 and hashlib.sha256(body).hexdigest()==PIN\nbefore={name:(p.stat().st_dev,p.stat().st_ino,p.stat().st_mode,p.stat().st_uid,p.stat().st_gid,p.stat().st_nlink,p.stat().st_size,p.stat().st_mtime_ns,p.stat().st_ctime_ns) for name in ['manifest.json','root-A.ext4','root-B.ext4'] for p in [PAYLOAD/name]}\nstarted=time.monotonic();samples=[resources()]\nfor slot in ('A','B'):\n output=BASE/('candidate-'+slot)\n assert not output.exists()\n print('Preparing current root slot '+slot+' as regular files only',flush=True)\n subprocess.run(['python3','-I','-B',str(PROJECT/'scripts/prepare-host-update.py'),str(PAYLOAD/('root-'+slot+'.ext4')),str(output),'--slot',slot,'--payload-manifest',str(PAYLOAD/'manifest.json'),'--manifest-sha256',PIN,'--storage-kind','external'],check=True)\n samples.append(resources())\npackage=PROJECT/'out/maintenance-tools-matched-20261109-01'\nassert not package.exists()\nprint('Packaging current portable maintenance source closure',flush=True)\nsubprocess.run(['python3','-I','-B',str(PROJECT/'build/maintenance-tools.py'),str(package)],check=True)\nsamples.append(resources());sources()\nfor name,wanted in before.items():\n p=PAYLOAD/name;s=p.stat();assert (s.st_dev,s.st_ino,s.st_mode,s.st_uid,s.st_gid,s.st_nlink,s.st_size,s.st_mtime_ns,s.st_ctime_ns)==wanted,name\nreport={'schema':1,'classification':'regular-file candidate and portable tools preparation only','hardware_acceptance':False,'source_closure':lock,'source_payload_manifest':{'path':str(PAYLOAD/'manifest.json'),'bytes':len(body),'sha256':PIN},'elapsed_seconds':time.monotonic()-started,'resources':samples,'original_inputs_unchanged':True,'outputs':{},'maintenance_package':str(package),'physical_storage_written':False}\nfor slot in ('A','B'):\n directory=BASE/('candidate-'+slot)\n report['outputs'][slot]={name:{'bytes':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for name in ['candidate.json','manifest.json','selected.conf'] for p in [directory/name]}\n report['outputs'][slot]['root.ext4']=json.loads((directory/'candidate.json').read_text())['root']\nreport['package_files']={name:{'bytes':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for name in ['manifest.json','tools.tar.gz'] for p in [package/name]}\nfd=os.open(BASE/'result.json',os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o600)\nwith os.fdopen(fd,'w') as f:json.dump(report,f,indent=2);f.write('\\n');f.flush();os.fsync(f.fileno())\nfd=os.open(BASE,os.O_RDONLY|os.O_DIRECTORY);os.fsync(fd);os.close(fd)\nprint('Prepared both candidates and portable package; independent artifact review required',flush=True)\n",
+    "unit_and_tools_record": {
+      "path": "out/matched-updates-20261109-01/builder-unit-and-tools.txt",
+      "sha256": "5e6487d2fbdef7fcc16c1c0f3f922fc9e9aa1951b693e42f0acb479dc2469fe4"
+    }
+  },
+  "independent_artifact_review": {
+    "path": "tmp/matched-update-artifact-review-20261109.json",
+    "sha256": "666e64156332cbf48eefa328499de2e1e9f4df6d160b3653f9844087eeffd5b5",
+    "result": {
+      "classification": "independent regular-file A/B and portable tools artifact inspection only",
+      "hardware_acceptance": false,
+      "physical_updates_performed": false,
+      "source_commit": "1e17745f1a91b72564a61dd6bf56366e1e75a32a",
+      "source_lock": {
+        "bytes": 5740,
+        "sha256": "e8b700f1b2ee28cfc43f8c15f0a211b9336ac08bc8ba83fa48616b8c0861acd0"
+      },
+      "source_closure_pins": 41,
+      "producer_result": {
+        "bytes": 8627,
+        "sha256": "fecb94dbd5b8c4d5c3e8725f9074ade9d47bd51224bcd41edac7c80ae7a16b70"
+      },
+      "source_manifest": {
+        "bytes": 32613,
+        "sha256": "4f28d75a14323c52aa976b00f957b56913b75472a07a717672abd33d439b97b9"
+      },
+      "slots": {
+        "A": {
+          "files": {
+            "manifest.json": {
+              "bytes": 32613,
+              "sha256": "4f28d75a14323c52aa976b00f957b56913b75472a07a717672abd33d439b97b9"
+            },
+            "selected.conf": {
+              "bytes": 179,
+              "sha256": "bd27df59dbdb53680db09cf6f7cfd80ceb73aa89c7ade0a627fa76ff4aabd20a"
+            },
+            "candidate.json": {
+              "bytes": 8856,
+              "sha256": "f6a49381e79c28671ccda057c363fcdf856570d798994ffbec12fabd4f72a4c1"
+            },
+            "root.ext4": {
+              "bytes": 4294967296,
+              "sha256": "d868571e89216762ce9d8d2b8209884b958c53b7be97a215d8c4ddbc96ab7940"
+            }
+          },
+          "root_marker": {
+            "bytes": 16383,
+            "sha256": "e1cc0395cd97e222e7d8146c05fa703e3ae9373b34bf1e24fbfb91a7e63dfa61"
+          },
+          "filesystem_uuid": "a7330000-0000-4000-8000-00000000000a",
+          "original_identity": {
+            "device": 64512,
+            "inode": 1885032,
+            "mode": 33152,
+            "uid": 1048576,
+            "gid": 1048576,
+            "links": 1,
+            "bytes": 4294967296,
+            "mtime_ns": 1794099623295578046,
+            "ctime_ns": 1794099623295578046
+          },
+          "private_mode_0400_root_owners": true,
+          "directory_mode": "0700",
+          "selector_reconstructed_from_actual_marker": true,
+          "source_payload_and_whole_nvme_root_pin_match": true,
+          "ext4_readonly_feature_without_journal": true,
+          "receipt_bindings_match": true
+        },
+        "B": {
+          "files": {
+            "manifest.json": {
+              "bytes": 32613,
+              "sha256": "4f28d75a14323c52aa976b00f957b56913b75472a07a717672abd33d439b97b9"
+            },
+            "selected.conf": {
+              "bytes": 179,
+              "sha256": "5b21720f596ac853adf894e0003fbb071d2ff6e01d9ceb532086f3deaf09dab7"
+            },
+            "candidate.json": {
+              "bytes": 8856,
+              "sha256": "97dcd1b7fdbd541cf2319ee4279e960fcd7caad817be663ba72d84765431ec64"
+            },
+            "root.ext4": {
+              "bytes": 4294967296,
+              "sha256": "3369a8b4c4b0f7dd9ed33740db3bd86b0d868154bc8195c66806ee0e73f3bdab"
+            }
+          },
+          "root_marker": {
+            "bytes": 16383,
+            "sha256": "48cac4faeb4f5562b9bd28fba34a7b3dcd4da3e94b2fd0194be2e91586abc3e1"
+          },
+          "filesystem_uuid": "a7330000-0000-4000-8000-00000000000b",
+          "original_identity": {
+            "device": 64512,
+            "inode": 1885036,
+            "mode": 33152,
+            "uid": 1048576,
+            "gid": 1048576,
+            "links": 1,
+            "bytes": 4294967296,
+            "mtime_ns": 1794099682820607767,
+            "ctime_ns": 1794099682820607767
+          },
+          "private_mode_0400_root_owners": true,
+          "directory_mode": "0700",
+          "selector_reconstructed_from_actual_marker": true,
+          "source_payload_and_whole_nvme_root_pin_match": true,
+          "ext4_readonly_feature_without_journal": true,
+          "receipt_bindings_match": true
+        }
+      },
+      "resources": [
+        {
+          "free_bytes": 24202973184,
+          "available_memory_bytes": 7567962112
+        },
+        {
+          "free_bytes": 23748866048,
+          "available_memory_bytes": 7563300864
+        },
+        {
+          "free_bytes": 23294763008,
+          "available_memory_bytes": 7554699264
+        },
+        {
+          "free_bytes": 23293976576,
+          "available_memory_bytes": 7548325888
+        }
+      ],
+      "portable_package": {
+        "manifest": {
+          "bytes": 16312,
+          "sha256": "df70eed2e91561a75c270916822765f83dcc7c65c5fcee717584ab35bd70a1d6"
+        },
+        "archive": {
+          "bytes": 124128,
+          "sha256": "bbd617d6765323baf2d885d93451d1ebdd6600b8c6ad9aa3aaf7499838b23934"
+        },
+        "source_files": 39,
+        "files_including_package_metadata": 40,
+        "archive_members": 46,
+        "entrypoints": {
+          "acquire-nvme": "scripts/acquire-nvme.py",
+          "activate-guest-storage": "scripts/activate-guest-storage.py",
+          "backup-guest": "scripts/backup-guest.py",
+          "checkpoint-guest": "scripts/checkpoint-guest.py",
+          "enroll-guest": "scripts/enroll-guest.py",
+          "guest-accounts": "scripts/guest-accounts.py",
+          "index-guest-backup": "scripts/index-guest-backup.py",
+          "install-nvme": "scripts/install-nvme.py",
+          "launch-kvm-guest": "scripts/launch-kvm-guest.py",
+          "plan-nvme": "scripts/plan-nvme.py",
+          "prepare-host-update": "scripts/prepare-host-update.py",
+          "recover-host-root": "scripts/recover-host-root.py",
+          "restore-guest": "scripts/restore-guest.py",
+          "select-host-root": "scripts/select-host-root.py",
+          "update-host": "scripts/update-host.py",
+          "verify-guest-backup": "scripts/verify-guest-backup.py"
+        },
+        "all_source_bytes_match_git_source_lock": true,
+        "separate_import_only_smoke": {
+          "entrypoint_imports": 16,
+          "main_blocks_executed": false
+        },
+        "archive_no_links_traversal_duplicates_or_special_members": true,
+        "archive_tree_rootfs_runtime_and_provenance_bytes_match": true,
+        "ownership_modes_and_deterministic_archive_metadata_match": true
+      },
+      "all_held_regular_file_identities_unchanged": true,
+      "producer_candidate_fsync_boundary": "code explicitly fsyncs all four files, candidate stage and publication parent; producer exit0 recorded",
+      "portable_publication_fsync": "not established: package builder writes/closes/renames without fsync",
+      "boot_lineage": "Root marker board.dtb 4d7d964a... is diagnostic base lineage; current VGIC/protected external BOOT is separate and must be preserved.",
+      "limitations": [
+        "No physical update, activation, rollback, recovery, boot or KVM acceptance.",
+        "A and B contain the same package/runtime version; no cross-version upgrade/migration proof.",
+        "Pinned source closure and matching captured files do not establish OS clean-room reproduction.",
+        "Portable package durable publication not established by producer; integrity inspection passes."
+      ],
+      "status": "PASS artifact integrity; portable publication durability remains unproven",
+      "elapsed_seconds": 12.956184142036363
+    }
+  },
+  "portable_package_durability_postcheck": {
+    "captured_utc": "2026-11-09T09:20:49Z",
+    "classification": "explicit portable package post-publication durability check",
+    "files_synced": 42,
+    "directories_synced_including_parent": 8,
+    "content_written": false,
+    "hardware_acceptance": false,
+    "root": "/var/lib/a733-maintenance-validation-20261108-01/project/out/maintenance-tools-matched-20261109-01"
+  },
+  "native_retention": {
+    "schema": 1,
+    "captured_utc": "2026-11-09T09:23:58Z",
+    "classification": "off-board compressed update-root retention and complete logical expansion checks",
+    "hardware_acceptance": false,
+    "roots": {
+      "A": {
+        "encoded": {
+          "bytes": 143469395,
+          "sha256": "e74f7ee18b5c2f0fb364870ff208c1a46ea140db5c7e32208d00fc4c2affc161"
+        },
+        "complete_expansion": {
+          "bytes": 4294967296,
+          "sha256": "d868571e89216762ce9d8d2b8209884b958c53b7be97a215d8c4ddbc96ab7940"
+        },
+        "native_path": "out/matched-updates-20261109-01/candidate-A/root.ext4.gz",
+        "raw_image_staged": false
+      },
+      "B": {
+        "encoded": {
+          "bytes": 143469243,
+          "sha256": "0327ef98eac45d1c7e973d8231d1a8afd020d8640ca5a22178335a1559085bef"
+        },
+        "complete_expansion": {
+          "bytes": 4294967296,
+          "sha256": "3369a8b4c4b0f7dd9ed33740db3bd86b0d868154bc8195c66806ee0e73f3bdab"
+        },
+        "native_path": "out/matched-updates-20261109-01/candidate-B/root.ext4.gz",
+        "raw_image_staged": false
+      }
+    }
+  },
+  "native_checksum_record": {
+    "path": "out/matched-updates-20261109-01/SHA256SUMS",
+    "sha256": "8b71fe9bc791b1d44ac27ec88e1d57cb30ee32675736b6da87b6e1380f7a46eb"
+  },
+  "installed_availability": {
+    "path": "out/matched-updates-20261109-01/installed-tool-availability.json",
+    "sha256": "3a2346206854a110d3e9ab015e1a24377fc12cb5f0a797528ca6e981caa4bfc3",
+    "boot_id": "dd8d6f67-d297-4f3b-bc9a-8a41c9742051",
+    "kernel_release": "6.6.98-a733-diag",
+    "matched_files": 40,
+    "read_only": true,
+    "maintenance_command_invoked": false
+  },
+  "limits": [
+    "Current A/B roots are the same userspace version; no cross-version migration proof.",
+    "Diagnostic DTB hashes in root-marker lineage do not describe current external VGIC/protected BOOT; preserve actual working stack.",
+    "No board update, selector publication, activation, interruption, rollback or recovery performed.",
+    "Current roots/STATE and guest checkpoints still require off-device backup checks before later physical maintenance.",
+    "Resource observations are stage-boundary samples; package producer has no fsync guarantee, closed separately by recorded coordinator postcheck."
+  ]
+}

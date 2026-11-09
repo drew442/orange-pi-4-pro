@@ -1,9 +1,10 @@
 # Host updates and manual rollback
 
-Historical generated paths below may have been archived. Consult the
-[retention map](build-cache-retention.md#replay-and-prototype-output-retention)
-before reusing them; use the [personalized deployment](deploy-personalized-20261106.md)
-for the current installation.
+Use the [current matched A/B payloads](matched-host-updates-20261109.md) for the
+protected installation's roots, manifest pin and maintenance tree. Generated
+November 4 paths below are historical examples; they bind a different payload.
+Consult the [retention map](build-cache-retention.md#replay-and-prototype-output-retention)
+before attempting to reuse any historical generated path.
 
 Routine updates must replace the inactive 4 GiB NVMe root, verify its complete
 contents, and then explicitly publish its selector on NVMe state. The current
@@ -15,12 +16,12 @@ and failed-boot recovery remain unvalidated.
 Do not copy a prepared selector into live state by hand. Physical update and
 interruption testing remain release gates.
 
-For the opt-in `timesync-20261106` source profile, root and state profile,
+For the `timesync-20261106` source profile used by this release, root and state profile,
 package-state, clock-helper provenance and state UUID must agree. The time-aware
 management tools reject mismatched provenance and old management tools reject
 the `a733-management-v2-timesync` profile. New tools accept v1 roots for
-rollback. These source checks have passed component testing; no complete
-production root/state/NVMe build or installed update has been tested.
+rollback. Current production root/state/NVMe artifacts now pass construction and artifact
+inspection. Actual installed update and recovery trials remain unperformed.
 
 ## Prepare a compatible root candidate
 
@@ -106,8 +107,9 @@ deploy previously recorded bootstrap images.
 
 `scripts/update-host.py` requires the complete authenticated
 [maintenance package](maintenance-tools.md) on NVMe or RAM, root privileges and
-the expected live host mounts/configuration. The preparation SD includes it at
-`/usr/lib/a733-tools/scripts/update-host.py`; host use requires explicit staging.
+the expected live host mounts/configuration. The current installed host includes the matching controller at
+`/usr/lib/a733-tools/scripts/update-host.py`. Revalidate its authenticated tree;
+only hosts or recovery runtimes lacking that tree need portable-package staging.
 The candidate directory and its three authoritative files must be root-owned with modes `0700` and `0400`.
 Candidate receipts are informational; the writer authenticates the manifest,
 entire root and proposed selector again. Every held source file is checked for
@@ -116,8 +118,9 @@ SD/MMC backing and inactive-target overlap, including individual bind mounts.
 The read-only `prepare` command requires explicit `--target`, `--expected-model`,
 `--expected-serial`, `--expected-bytes`, `--slot`, `--candidate` and
 `--manifest-sha256` arguments. These must come from the actual host inventory and
-trusted release record. No physical target is available yet, so no universal
-device path or deployment command is supplied. `--slot` must be opposite the
+trusted release record. The known target is recorded in
+[implementation status](implementation-status.md); revalidate that live identity
+before preparing any device plan. Physical staging remains unperformed. `--slot` must be opposite the
 running slot; a pending selection change requires a reboot before staging.
 
 Save the resulting JSON plan on NVMe or RAM. Invoke `apply` with the same
