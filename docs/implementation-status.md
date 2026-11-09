@@ -100,7 +100,8 @@ and software checks; its first full stream now completes with producer exit 0,
 with independent actual-artifact verification running. A [build-only normalization profile](deterministic-host-roots.md)
 now passes independent review and pinned Ubuntu tests. Its first production
 attempt failed a strict parent-directory stability guard during reviewer setup;
-a fresh serialized construction is running. Full-size root byte-repeat proof
+a fresh serialized construction now passes producer checks and its repeat is
+running. Independent readback and full-size root byte-repeat proof
 remains pending. The active endurance host is unchanged.
 
 ## Construction, resources and authorization

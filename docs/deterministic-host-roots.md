@@ -5,9 +5,9 @@ filesystem metadata while retaining the installed maintenance sources and
 payload-marker contents. [Independent source reviews and 2,178 privileged Ubuntu tests](evidence/deterministic-roots-preparation-20261109.json)
 pass. The first 4 GiB pair was generated, but its producer failed final parent-directory
 stability verification during parallel reviewer setup. It remains a failed
-attempt; a fresh serialized construction is running. Successful construction,
-complete readback and repeat-byte comparison remain pending. No hardware
-acceptance is claimed.
+attempt. A fresh serialized construction now passes producer checks and its
+repeat is running. Independent complete readback and repeat-byte comparison
+remain pending. No hardware acceptance is claimed.
 
 The earlier [two resolver-readable roots](public-config-roots-20261109.md)
 match contents and non-mtime metadata, but differ in 465 expected mtimes per
@@ -74,9 +74,10 @@ launcher using the same `--project`, `--userspace`, `--diagnostic`, `--tag` and
 retains tag `timesync-deterministic-01` as failed: reviewer directory
 creation at 2026-11-09 15:19:30 UTC coincided with the final strict parent check.
 The failed receipt records unchanged package inventory and cleared mapped
-processes/mounts. A fresh `timesync-deterministic-02` is running from committed
-source `50bc9e70698d4a09c3705594dcc61c64e1715cb9`, with one CPU and a 3 GiB
-memory ceiling. Use `timesync-deterministic-03` for its later repeat; keep all
+processes/mounts. A fresh `timesync-deterministic-02` now passes producer checks from committed
+source `50bc9e70698d4a09c3705594dcc61c64e1715cb9`; its repeat
+`timesync-deterministic-03` is running. Both use one CPU and a 3 GiB memory
+ceiling. Independent actual-artifact review remains pending. Keep all
 shared ancestor directory creation serialized with strict verification. Failed
 or consumed tags cannot be reused. Keep the existing pinned
 userspace and diagnostic inputs. Fully read back all four resulting filesystems,

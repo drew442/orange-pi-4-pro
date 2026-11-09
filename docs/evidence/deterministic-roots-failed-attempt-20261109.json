@@ -31,6 +31,25 @@
     "out/deterministic-host-roots-20261109-01/failed-01-unit.txt": {
       "bytes": 228,
       "sha256": "8f2b82c34f33924f033b8280ea6644d8a31fa0dd0b132686e9124139e39e7ef2"
+    },
+    "out/deterministic-host-roots-20261109-01/success-02-receipt.json": {
+      "bytes": 208120,
+      "sha256": "478cc403d395b9521a55cb3673a063cb44fca309db3f45a5198407ce50d47df3"
+    },
+    "out/deterministic-host-roots-20261109-01/success-02-unit.txt": {
+      "bytes": 120,
+      "sha256": "9a2a6999e01f633fd9958ffb97047574393c15329ff26d904947b6df28923e06"
+    },
+    "out/deterministic-host-roots-20261109-01/success-02-manifest.json": {
+      "bytes": 33481,
+      "sha256": "c1bcc7d23d22bd487534ba17ea447055881a044350829608360aa92ca24283f2"
     }
+  },
+  "recovery_status": {
+    "successful_producer_tag": "timesync-deterministic-02",
+    "independent_artifact_review": "pending",
+    "repeat_tag": "timesync-deterministic-03",
+    "repeat_state": "running as observed 2026-11-09 15:24 UTC",
+    "producer_pass_is_not_hardware_acceptance": true
   }
 }
