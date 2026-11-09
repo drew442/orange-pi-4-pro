@@ -97,8 +97,10 @@ together. Compare Linux write counters and source/serial firmware behavior too:
 an identical-content write can leave the hash unchanged. Do not run a filesystem
 repair or auto-mount the card read-write as part of measurement.
 
-The first diagnostic candidate configures no disk mounts and no persistent
-environment, but opaque firmware still needs observation. Record image-region
+The [current firmware source audit](sd-firmware-write-policy.md) binds the
+protected SD firmware and selected startup path. It identifies disabled ordinary
+write paths and remaining conditional/opaque behavior; it does not establish
+hardware acceptance. Opaque firmware still needs the planned observations. Record image-region
 readback separately from full-card hashing: the image is 256 MiB and may be
 smaller than the actual card, whereas this gate covers every card byte.
 

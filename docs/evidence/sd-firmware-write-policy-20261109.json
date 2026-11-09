@@ -1,0 +1,206 @@
+{
+  "schema": 1,
+  "date": "2026-11-09",
+  "operation": "independent-offline-current-sd-firmware-write-policy-audit",
+  "hardware_acceptance": false,
+  "scope": "Bounded selected-path source/config/provenance audit; no hardware contact or image modification; archive members read directly without tree extraction.",
+  "source_audit_complete": true,
+  "immutable_sd_hardware_gate_complete": false,
+  "project_invariants": [
+    "Orange Pi 4 Pro A733",
+    "actual 1977614336-byte SD",
+    "nominal 250 GB NVMe",
+    "minimal host",
+    "zero routine SD writes"
+  ],
+  "firmware_provenance": {
+    "uboot_commit": "b791be842935b27268ae3d00e943a9075495f30a",
+    "protected_sd_sha256": "ab5e8c2c846cbbd51b61bef6831d7e4d1498c29fefbf47d74301b1f3bb0ad207",
+    "first_32_mib_sha256": "da4a8db3aba8255a78ed2b60a251c9835dfa0b5f471f1f0590fe09abb722b556",
+    "boot0_sha256": "9213f1c56ef932930d43b5751e8937bea0e9ae7460ec16187cc1b0dffdb75345",
+    "boot_package_sha256": "b20c3d1133aee6474416bc9846b0bf94d5439aa12d7f7555b44607105ddab3b6",
+    "uboot_unpacked_sha256": "f552def6c493e39e40951c2b82db73fb41f2fa678271d6a259b15f83e0cb1c7c",
+    "chain": [
+      "docs/evidence/protected-sd-baseline-20261109.json binds physical first 256 MiB to protected SD image",
+      "docs/evidence/protected-state-bootstrap-20261109.json binds protected image and unchanged firmware prefix to corrected VGIC base",
+      "docs/evidence/vgic-runtime-bootstrap-20261108.json and authenticated retained base-bootstrap-manifest bind preserved prefix to EL2 boot0/package",
+      "docs/evidence/el2-diagnostic-20261104.json authenticates retained EL2 artifact manifest; frozen replay reproduces exact package/U-Boot",
+      "Original docs/evidence/diagnostic-provenance-20261104.json has the same config but different pre-EL2 binary/package; it alone is insufficient as current firmware anchor"
+    ],
+    "chain_limit": "Uses retained/committed preservation evidence; this audit does not reread hardware or reconstruct the current image."
+  },
+  "authenticated_local_inputs": {
+    "out/frozen-uboot-replay-20261106/success-02/work/project/out/uboot-replay-frozen-20261106-01/artifacts/uboot.config": {
+      "bytes": 35703,
+      "sha256": "253f9c77878c20e9146bfb35d5d80819f5314dd30ec489e5551f02e518002bb9"
+    },
+    "out/frozen-uboot-replay-20261106/success-02/work/project/out/uboot-replay-frozen-20261106-01/artifacts/uboot-pinned-source.tar": {
+      "bytes": 163031040,
+      "sha256": "63e1c785c5fafa621ae66d784e7a7da43c129e6a78e3cc578437ec0e38fab7c3"
+    },
+    "out/frozen-uboot-replay-20261106/success-02/work/project/out/uboot-replay-frozen-20261106-01/artifacts/original-artifact-manifest.json": {
+      "bytes": 15974,
+      "sha256": "749d5ba0e95a516edfc4bf671b51d2533fb0588bc0d3abcdce090d1a081b3a32"
+    },
+    "out/frozen-uboot-replay-20261106/success-02/work/project/out/uboot-replay-frozen-20261106-01/artifacts/source-provenance.json": {
+      "bytes": 4389,
+      "sha256": "c5994409e340ef75802c1f297022848e941039e1eae05d6d171f6809d4c76ffa"
+    },
+    "out/frozen-uboot-replay-20261106/success-02/work/project/out/uboot-replay-frozen-20261106-01/artifacts/uboot-unpacked.bin": {
+      "bytes": 1192546,
+      "sha256": "f552def6c493e39e40951c2b82db73fb41f2fa678271d6a259b15f83e0cb1c7c"
+    },
+    "out/frozen-uboot-replay-20261106/success-02/work/project/out/uboot-replay-frozen-20261106-01/artifacts/boot_package.fex": {
+      "bytes": 1392640,
+      "sha256": "b20c3d1133aee6474416bc9846b0bf94d5439aa12d7f7555b44607105ddab3b6"
+    }
+  },
+  "selected_source_members": {
+    "env/nowhere.c": {
+      "bytes": 701,
+      "sha256": "7b3dc106b2015077984dd2da54232b977b7b4521891d3fc55a553eb870485a63",
+      "relevant_lines": [
+        21,
+        34
+      ],
+      "url": "https://github.com/orangepi-xunlong/u-boot-orangepi/blob/b791be842935b27268ae3d00e943a9075495f30a/env/nowhere.c#L21"
+    },
+    "board/sunxi/Makefile": {
+      "bytes": 1758,
+      "sha256": "f2e6c835f904ff20f617d8e3ff206e873bf5291d42ea37106d209d7b439487e5",
+      "relevant_lines": [
+        32,
+        38
+      ],
+      "url": "https://github.com/orangepi-xunlong/u-boot-orangepi/blob/b791be842935b27268ae3d00e943a9075495f30a/board/sunxi/Makefile#L32"
+    },
+    "board/sunxi/board_helper.c": {
+      "bytes": 41364,
+      "sha256": "3d3ce60c268ec9a73018a3a149553f40e6b247ab140328ba4179ead9be2e3d64",
+      "relevant_lines": [
+        682,
+        745
+      ],
+      "url": "https://github.com/orangepi-xunlong/u-boot-orangepi/blob/b791be842935b27268ae3d00e943a9075495f30a/board/sunxi/board_helper.c#L682"
+    },
+    "board/sunxi/board_common.c": {
+      "bytes": 23983,
+      "sha256": "d6112215cca4d8e365261bdb9e8130d9e656cc502039f276a684265b6d5881cf",
+      "relevant_lines": [
+        697,
+        787
+      ],
+      "url": "https://github.com/orangepi-xunlong/u-boot-orangepi/blob/b791be842935b27268ae3d00e943a9075495f30a/board/sunxi/board_common.c#L697"
+    },
+    "include/bootcount.h": {
+      "bytes": 2129,
+      "sha256": "07fdd24d33e1e24c244890fd9da2b05d30c5fc5f5ffa4a2ccbf2a4591a5a153a",
+      "relevant_lines": [
+        13,
+        88
+      ],
+      "url": "https://github.com/orangepi-xunlong/u-boot-orangepi/blob/b791be842935b27268ae3d00e943a9075495f30a/include/bootcount.h#L13"
+    },
+    "include/config_distro_bootcmd.h": {
+      "bytes": 17323,
+      "sha256": "1f94119bbae366ffa7d0d20200dde3c0c2427c30e6e325790ded4ccdc3a31a91",
+      "relevant_lines": [
+        389,
+        450
+      ],
+      "url": "https://github.com/orangepi-xunlong/u-boot-orangepi/blob/b791be842935b27268ae3d00e943a9075495f30a/include/config_distro_bootcmd.h#L389"
+    },
+    "sprite/sunxi_boot_param.c": {
+      "bytes": 2850,
+      "sha256": "b9492893575df78c2c98a328a3a24af1786bc76ab1420dc63fbd6c13402b867b",
+      "relevant_lines": [
+        97,
+        112
+      ],
+      "url": "https://github.com/orangepi-xunlong/u-boot-orangepi/blob/b791be842935b27268ae3d00e943a9075495f30a/sprite/sunxi_boot_param.c#L97"
+    },
+    "common/board_r.c": {
+      "bytes": 23740,
+      "sha256": "cabf941b20e306c2a117fa19c7dd48bf0407469bc476a53bf0b3922812a5ad7f",
+      "relevant_lines": [
+        604,
+        621
+      ],
+      "url": "https://github.com/orangepi-xunlong/u-boot-orangepi/blob/b791be842935b27268ae3d00e943a9075495f30a/common/board_r.c#L604"
+    },
+    "drivers/sunxi_flash/sunxi_flash.c": {
+      "bytes": 24079,
+      "sha256": "152a496dcd0679cca7d770c3fa4859c510f6d0d3462497c1835a353205ffe5bc",
+      "relevant_lines": [
+        276,
+        364
+      ],
+      "url": "https://github.com/orangepi-xunlong/u-boot-orangepi/blob/b791be842935b27268ae3d00e943a9075495f30a/drivers/sunxi_flash/sunxi_flash.c#L276"
+    },
+    "drivers/sunxi_flash/mmc/sdmmc.c": {
+      "bytes": 29537,
+      "sha256": "f704372fd259db6424ae506fa12f20a8620e8916bcfbad6777b13efe3cb232a6",
+      "relevant_lines": [
+        755,
+        812
+      ],
+      "url": "https://github.com/orangepi-xunlong/u-boot-orangepi/blob/b791be842935b27268ae3d00e943a9075495f30a/drivers/sunxi_flash/mmc/sdmmc.c#L755"
+    },
+    "board/sunxi/sunxi_keybox.c": {
+      "bytes": 9716,
+      "sha256": "ff4e14713ff115929fcdeae468801edbcf4a5cca2d455fcf1764975ac34bcc78",
+      "relevant_lines": [
+        115,
+        258
+      ],
+      "url": "https://github.com/orangepi-xunlong/u-boot-orangepi/blob/b791be842935b27268ae3d00e943a9075495f30a/board/sunxi/sunxi_keybox.c#L115"
+    },
+    "board/sunxi/sunxi_bootargs.c": {
+      "bytes": 16419,
+      "sha256": "172764f8568ef165e7a2d33d7d6d9dc6ee7fe242f27bc857ceed74c8b555a72e",
+      "relevant_lines": [
+        235,
+        255
+      ],
+      "url": "https://github.com/orangepi-xunlong/u-boot-orangepi/blob/b791be842935b27268ae3d00e943a9075495f30a/board/sunxi/sunxi_bootargs.c#L235"
+    }
+  },
+  "disabled_routine_paths": [
+    "ENV_IS_NOWHERE=y; all persistent ENV_IS_IN backends unset; env/nowhere.c registers init only, no storage save/load hook. CMD_SAVEENV unset.",
+    "BOOTCOUNT_LIMIT unset; include/bootcount.h makes bootcount_inc a no-op when neither SPL nor ordinary limit is enabled. No SPL_BOOTCOUNT_LIMIT assignment exists in retained config.",
+    "BOOTCMD_SKIP_MISC=y removes misc command consumption/clear-write path in board_helper.c. SUNXI_SWITCH_SYSTEM unset excludes env-save A/B-switch object.",
+    "No CONFIG_SUNXI_OTA_TURNNING assignment; board_common.c OTA boot0 update call excluded. SUNXI_AUTO_UPDATE, SUNXI_FDT_SAVE, SUNXI_RECOVERY_BOOT0_COPY0 disabled."
+  ],
+  "normal_script": "Retained host boot.cmd hash matches current source; boot.scr retained hash f1ba10868782026d6fa4392b5e5f60db7953e8a340539f750ad710fb2b2032f1. U-Boot selects mmc0 then distro scan; boot files namespace has only reviewed boot.scr and payloads. Script loads payloads to RAM, changes RAM env/bootargs and FDT buffer, calls bootm or loops. No persistent write command. setenv/fdt resize do not themselves save environment or DTB to SD.",
+  "enabled_but_inert_selected_paths": [
+    "SUNXI_BOOT_PARAM=y, but sunxi_bootparam_down immediately returns before download/write.",
+    "SUNXI_UPDATE_GPT=y, but normal-init sunxi_update_gpt call commented.",
+    "SUNXI_USER_KEY=y, but update_user_data immediately returns."
+  ],
+  "residual_limits": [
+    "CMD_MMC, CMD_EXT4_WRITE, SUNXI_FLASH, SUNXI_BURN and secure-storage/keybox support remain compiled; firmware is not globally incapable of writing. Manual update/recovery commands are outside routine reviewed script.",
+    "Generic flash init invokes update_backup_boot0. MMC implementation skips in SUNXI_NORMAL_MODE but can mirror boot0 in another runtime mode; no fresh runtime mode proof collected here.",
+    "Keybox init can reencrypt/write stored keys when secure OS, key list and error conditions hold. No keybox_list assignment was found in pinned text source inputs, and missing list leaves count zero. This is not a universal statement about opaque secure firmware or all possible runtime conditions.",
+    "Opaque boot0, TF-A/monitor, SCP and other packed firmware behavior is not proved by U-Boot config/source. Linux counters omit pre-kernel I/O; equal hashes cannot detect same-content writes."
+  ],
+  "remaining_evidence": [
+    "Preserve active 24-hour workload and UART capture through scheduled November 10 02:16 UTC outcome retention.",
+    "After workload outcome retention, perform original planned whole-card comparison after workload/shutdown and final matched cold/warm boot series, retaining exact SD CID, hashes and Linux write counters.",
+    "Review matching serial boot/shutdown records for storage/update/recovery modes and unexpected writes, including normal-mode backup-boot0 skip and keybox behavior where printed. Escalate observed contradictions; no new mandatory external instrument or replacement image gate is introduced."
+  ],
+  "conclusion": "Documentation can record this bounded current-firmware source audit now. Complete zero-routine-SD-write hardware acceptance still needs planned fresh physical evidence and cannot be marked passed.",
+  "coordinator_supplied_serial_observation": {
+    "independently_read_by_this_auditor": false,
+    "reported_protected_boot_line": 2229,
+    "reported_text": "[07.014]workmode = 0,storage type = 1",
+    "interpretation": "Reported ordinary work/storage selection supports current normal SD boot; it is not the separate sunxi_get_securemode result and does not alone close backup-boot0, keybox, opaque-stage or future-boot behavior.",
+    "other_reported_observation": "bootparam magic error line 2183; no keybox/reencrypt/secure-storage/misc-write text marker. Absence of markers is not proof of no writes."
+  },
+  "review_provenance": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "report_path": "tmp/sd-firmware-write-policy-audit-20261109.json",
+    "report_bytes": 11614,
+    "report_sha256": "6245955f0c7f3a265640eb56de7d5d3d5831bbc812e87d800e851cc9e1594902"
+  }
+}

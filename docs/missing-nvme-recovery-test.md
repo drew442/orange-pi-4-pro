@@ -76,6 +76,7 @@ protected boot script to replace bootargs. Do not save environment changes.
 Verify normal NVMe detection, expected root/STATE selection, pinned SSH identity
 and management, then execute an actual KVM guest. Preserve both faulted and
 normal boot IDs and console records. This closes only the fault-injected
-missing-storage path when actually demonstrated; physical disconnected-SSD,
-SPI recovery, dirty-journal recovery and all other acceptance gates remain
-separate. No result has been claimed by this preparation.
+Linux missing-storage path when actually demonstrated. It does not establish
+physically disconnected-SSD behavior. SPI recovery, dirty-journal recovery and
+other acceptance gates remain separate. No result has been claimed by this
+preparation.
