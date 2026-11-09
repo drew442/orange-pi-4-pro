@@ -109,8 +109,9 @@ privileged focused review; full-suite revalidation and final guide review pass. 
 - The [isolated full-NVMe composer launcher](isolated-nvme-composition.md)
   passes independent source/procedure review. It prepares execution of unchanged
   producer `81f907…` in the frozen Ubuntu namespace using the same held components;
-  actual isolated composition remains unperformed. No new image or OS rebuild
-  is claimed by preparation.
+  [actual attempt 02 is now running](evidence/isolated-nvme-composition-running-20261109.json)
+  with a validated namespace probe after [repairing four empty legacy bind targets](evidence/frozen-builder-anchor-repair-20261109.json).
+  Complete image/cleanup results remain pending; no OS rebuild is claimed.
 - Latest complete privileged Ubuntu suite: **2,264 tests**, zero skips/errors/
   failures; five shell suites and five diagnostic assembly cases also pass.
   All five TOML files parse separately on codex. These are software checks.

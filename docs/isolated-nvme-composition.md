@@ -1,7 +1,7 @@
 # Compose the current NVMe image inside the frozen builder
 
 **Launcher preparation; independent code review and 2,264 privileged Ubuntu
-tests pass. Actual isolated composition is pending.** Hardware acceptance is unchanged.
+tests pass. Actual isolated composition is running; final result is pending.** Hardware acceptance is unchanged.
 [Preparation evidence](evidence/isolated-nvme-composition-preparation-20261109.json).
 Do not interrupt the A733 endurance workload for this builder-only job.
 
@@ -92,6 +92,7 @@ namespace check then passed. Its private/runtime exclusions still apply.
 No image hash, producer code or validation guard was relaxed.
 
 The first failed unit/log remain retained. The new attempt uses tag
-`20261109-02`; its actual outcome remains pending. Future callers must use an
+`20261109-02`; its [actual namespace probe and live process](evidence/isolated-nvme-composition-running-20261109.json)
+are validated and composition has begun. Its actual outcome remains pending. Future callers must use an
 unused tag and a pristine authenticated builder; do not bypass a failed anchor
 check or remove unknown paths.

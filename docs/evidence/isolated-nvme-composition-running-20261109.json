@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "date": "2026-11-09",
+  "classification": "Actual isolated composer running after authenticated frozen-tree repair; no complete artifact result yet",
+  "hardware_acceptance": false,
+  "composition_complete": false,
+  "artifact_result": "PENDING",
+  "unit": {
+    "MainPID": "4111752",
+    "CPUQuotaPerSecUSec": "2s",
+    "MemoryMax": "3221225472",
+    "ActiveState": "activating",
+    "SubState": "start"
+  },
+  "namespace_probe": {
+    "uid_base": 1048576,
+    "uid_count": 65536,
+    "network_interfaces": [
+      "lo"
+    ],
+    "ipv6_loopback_routes": [
+      "00000000000000000000000000000001 80 00000000000000000000000000000000 00 00000000000000000000000000000000 00000100 00000001 00000000 00000001       lo",
+      "00000000000000000000000000000000 00 00000000000000000000000000000000 00 00000000000000000000000000000000 ffffffff 00000001 00000000 00200200       lo",
+      "00000000000000000000000000000001 80 00000000000000000000000000000000 00 00000000000000000000000000000000 00000000 00000002 00000000 80200001       lo",
+      "00000000000000000000000000000000 00 00000000000000000000000000000000 00 00000000000000000000000000000000 ffffffff 00000001 00000000 00200200       lo"
+    ],
+    "prohibited_capability_mask": "0xa631000"
+  },
+  "namespace_probe_validated_by_pinned_helper": true,
+  "source_project": "/var/lib/a733-isolated-nvme-source-20261109-01/project",
+  "outer_source_commit": "13af36a1fd94007fd36c8e4ab46487290ef78ab0",
+  "producer_source_commit": "81f907481b12e9639ad23752966e05166074f96f",
+  "phase": "/var/lib/a733-clean-replay-20261106/isolated-nvme-20261109-02",
+  "expected_output": "/var/lib/a733-clean-replay-20261106/isolated-nvme-20261109-02/output/public-config-nvme-image-isolated-20261109-02",
+  "namespace_pid_observation": {
+    "stubinit": 4114477,
+    "composer": 4114478,
+    "host_uid": 1048576
+  },
+  "retained_probe": {
+    "path": "out/isolated-nvme-execution-20261109-01/running-02-namespace-proof.json",
+    "bytes": 1072,
+    "sha256": "2ef24f2605cd01fa70baea8fd4f5b8275f34d58bc6ac9e77eef15ade7c2d23e3"
+  },
+  "limits": [
+    "Live handles/probe and progress establish running work, not a completed image or final cleanup.",
+    "Exact target hashes, full producer verification and final environment invariants remain required.",
+    "The same held components are used; no new OS installation or compiler/kernel rebuild is claimed.",
+    "No A733/UART bridge/native LVM changes are part of this builder-only job."
+  ]
+}
