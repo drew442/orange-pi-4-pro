@@ -111,8 +111,10 @@ host is unchanged.
   retirement of six redundant transfer files. Both protected copies and all
   24 historical canonical raw/gzip files retain their identities and metadata.
   [Actual cleanup evidence](evidence/native-loose-transfer-retirement-20261109.json).
-- Builder LV now **94,459,920,384 bytes**, VG free **38,625,345,536 bytes**;
-  free immediately after growth **25,303,740,416 bytes**. The operator approves
+- Builder LV now **107,344,822,272 bytes**, VG free **25,740,443,648 bytes**;
+  filesystem free after the reviewed additional 12 GiB growth is
+  **31,798,525,952 bytes**. [Latest growth](evidence/build-host-public-config-capacity-20261109.json)
+  preserves the exact LV/VG identities and unchanged admission/runtime guards. The operator approves
   **all free capacity on the Ubuntu build host for use/expansion without another
   permission request**. Revalidate exact targets and retain independent review.
   [Growth evidence](evidence/build-host-capacity-addition-20261109.json).

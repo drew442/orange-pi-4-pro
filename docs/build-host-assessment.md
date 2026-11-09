@@ -325,3 +325,11 @@ space on this Ubuntu build host for use/expansion without another permission
 request. Revalidate exact targets, retain independent review and measure fresh
 capacity before each job. This supersedes earlier instructions to request
 permission for further builder-capacity allocation.
+
+The [subsequent reviewed 12 GiB extension](evidence/build-host-public-config-capacity-20261109.json)
+now completes after the resolver-readable root constructions: LV
+107,344,822,272 bytes, VG free 25,740,443,648 bytes, filesystem available
+31,798,525,952 bytes. Exact UUIDs, ordinary-LV type and ext4 root mapping were
+revalidated before growth and between LV and filesystem operations. All admission
+and runtime guards remain unchanged; the standing builder-capacity authority
+continues to apply. Native codex LVM and Orange Pi storage were unchanged.

@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "classification": "Approved Ubuntu builder root LV and ext4 growth completed; no board storage writes",
+  "hardware_acceptance": false,
+  "authorization": "All free capacity on build.drewnet.online is approved for use/expansion without another permission request.",
+  "target": {
+    "host": "drew@build.drewnet.online",
+    "lv_path": "/dev/ubuntu-vg/ubuntu-lv",
+    "lv_uuid": "Wacdne-hf6p-osvg-5IiF-iVD0-Dlgt-6iflHh",
+    "vg_uuid": "cSa2Pd-Xpsw-3sf0-ZuPr-ZG5i-ODrj-c3SHlL"
+  },
+  "reason": "Corrected root constructions reduced free capacity below unchanged full NVMe admission; expand existing LV for full-image integration.",
+  "size_before_bytes": 94459920384,
+  "added_bytes": 12884901888,
+  "size_after_bytes": 107344822272,
+  "vg_free_before_bytes": 38625345536,
+  "vg_free_after_bytes": 25740443648,
+  "filesystem_total_before_bytes": 92650086400,
+  "filesystem_total_after_bytes": 105328644096,
+  "filesystem_free_before_bytes": 19634180096,
+  "filesystem_free_after_bytes": 31798525952,
+  "full_nvme_admission_bytes": 23760999827,
+  "disk_floor_bytes": 3000000000,
+  "memory_floor_bytes": 1000000000,
+  "commands": [
+    "lvextend --size 107344822272B /dev/ubuntu-vg/ubuntu-lv",
+    "resize2fs /dev/ubuntu-vg/ubuntu-lv"
+  ],
+  "execution_guards": "Exact LV/VG UUID, expected old size/free extents, ordinary non-pool LV, read-write ext4 root mapping checked immediately before growth; exact new LV/VG sizes rechecked before resize2fs and afterward. Absolute final size follows independent review recommendation.",
+  "proposal": {
+    "path": "tmp/public-config-capacity-proposal-20261109.json",
+    "sha256": "ea119c4ac0a4fb2d76af4466fdd05732005f46b60af8c943e3bf2b9ac82710b2"
+  },
+  "independent_review": {
+    "path": "tmp/public-config-capacity-review-20261109.json",
+    "sha256": "5f4d5b24d622de7429d4c33210b56821ceaf9c2b4a8d8fd8111f3639497b6104",
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "result": "PASS"
+  },
+  "receipt": {
+    "path": "out/public-config-capacity-20261109-01/growth-receipt.json",
+    "bytes": 9512,
+    "sha256": "888e5794d87d4c6a5e87c6604349ebb19b5c51baac4120cd3c9896e90408b8ba",
+    "started_utc": "2026-11-09T13:29:07.838592+00:00",
+    "finished_utc": "2026-11-09T13:29:08.185706+00:00",
+    "success": true
+  },
+  "physical_board_storage_written": false,
+  "native_codex_lvm_changed": false
+}
