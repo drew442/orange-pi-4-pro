@@ -39,7 +39,9 @@ and its indexes/manifests. Also take fresh backups of current guests, including
 the counter-5 state, plus completed/failed endurance evidence; counter-3 does not
 contain later data. A full reinstall erases the retained failed-run guest directories.
 Complete the [changed inactive-slot interruption and rollback cases](normalized-maintenance-20261109.md)
-first, preserving their evidence. Keep private host identity separately. No preservation of
+first, preserving their evidence. Use [offline STATE/root preservation](host-state-backup.md) for the paired host
+backup; its execution and a guarded raw STATE restore remain unproven. Keep
+private host identity separately. No preservation of
 unrelated original user data is claimed or required by the discard authorization.
 
 The original same-board identity archive is root-private on the builder:

@@ -3,18 +3,20 @@
 The sender streams an enrolled guest's manifest, checkpoint history, kernel,
 initramfs and disk to another machine. The receiver authenticates the compressed
 archive before decoding it, verifies every member and independently reads back
-the new files. These tools prepare backup artifacts. Guest restoration, a
-restored KVM boot and off-device retention still require validation. The [counter-3 diagnostic guest backup](evidence/vgic-counter3-backup-20261108.json)
-now passes actual off-device transfer and receiver readback on builder and codex.
-It includes both checkpoint records. Restoration and a restored KVM boot remain
-untested.
+the new files. The [counter-3 guest backup](evidence/vgic-counter3-backup-20261108.json)
+passes off-device transfer and receiver readback on builder and codex, including
+both checkpoint records. Its [physical corrected-host restoration](evidence/corrected-host-guest-restore-20261108.json)
+passes authenticated restore, actual nonroot KVM runs advancing 3 → 4 → 5,
+clean shutdown and checkpoints. This establishes that specific restore; a fresh
+backup of the current counter-5 disk and normalized deployment remain unperformed.
 
 Use the complete installed tree at `/usr/lib/a733-tools` on the new immutable
 A/B root or a trusted complete portable tool tree on RAM or NVMe; do not copy a
 single script without its imported modules. The older published recovery SD
 image has not been refreshed. See [guest tools availability](guest-tools-package.md).
 The [diagnostic host KVM guest](kvm-vgic-results-20261108.md) passes core tests;
-final corrected-host deployment and restoration remain unvalidated.
+the corrected installed host also passes the recorded restore. Full release
+acceptance and independent normalized-image deployment remain open.
 
 ## Prepare a consistent source
 
@@ -37,7 +39,8 @@ older verified backups before planning any history-retention change.
 
 ## Transfer to a separate machine
 
-The following is prospective installed-board usage, not a reproduced deployment.
+The following is a reusable installed-board procedure. The linked counter-3
+evidence records one physical transfer and restore; new backups need their own receipts.
 Install the complete current tool tree on the board at `/usr/lib/a733-tools`.
 Do not copy only the sender script to match the remote path. An older root can
 use a complete trusted portable tool tree and a reviewed adapted remote absolute
@@ -140,20 +143,23 @@ it. `backup-verification.json` records artifact checks, while the final receipt
 records publication/durability. Neither establishes power-loss survival or a
 successful restored guest.
 
-## Restoration and acceptance still required
+## Restoration scope and remaining acceptance
 
 Do not copy a backup directory over an enrolled guest. The
 [fresh-destination restore controller](guest-restoration.md) validates the
 destination NVMe/account, rebinds installation identity, preserves source
 provenance and refuses existing files. [Pinned HTTPS delivery](guest-restore-delivery.md)
-avoids local archive staging; physical restoration remains unproven.
-Host state, boot firmware and pre-installation physical-media
-backups are separate requirements; this guest archive does not replace them.
+avoids board-local archive staging. The counter-3 physical restore above passed;
+new archives and destinations require their own restoration checks.
+[Host STATE and root preservation](host-state-backup.md), boot firmware and
+pre-installation physical-media backups are separate requirements; this guest
+archive does not replace them.
 
 Acceptance must restore disposable data from the separate machine, verify its
 contents and boot the restored guest using actual KVM. Record the shutdown,
-transfer, readback, restoration and workload evidence together. Current tests
-exercise file preservation on the builder only.
+transfer, readback, restoration and workload evidence together. The following
+fixture tests exercise file preservation on the builder; the linked November 8
+evidence separately records physical transfer and restore.
 
 The actual pinned fixture probe runs from a protected complete checkout on the
 prepared Jammy builder, using its existing authenticated input paths:

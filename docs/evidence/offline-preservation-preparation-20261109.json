@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "date": "2026-11-09",
+  "classification": "Reviewed offline preservation procedure; physical backup and host restore remain unperformed",
+  "hardware_acceptance": false,
+  "physical_storage_written": false,
+  "backup_performed": false,
+  "host_state_restore_performed": false,
+  "reviews": {
+    "initial": {
+      "path": "tmp/offline-preservation-review-20261109.json",
+      "bytes": 6295,
+      "sha256": "8149d67abd810bda3f583d3989acf3e3a5643528d483b723f2da761dee651f28",
+      "result": "FAIL",
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "high"
+    },
+    "fixed": {
+      "path": "tmp/offline-preservation-rereview-20261109.json",
+      "bytes": 5694,
+      "sha256": "c9253a35859acac3aa5e9e1eef37a833e32127733229eca19ca68734a621b089",
+      "result": "PASS",
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "high"
+    }
+  },
+  "reviewed_document_sha256": "1bcb9c24cc726c7bad29aaec3abc0353095116febc1c25b5a97f53794b3fa08b",
+  "coordinator_post_review_change": "Replace review-pending label with preparation-review-pass and link this evidence; recipe unchanged.",
+  "checks": [
+    "Shell blocks parse with bash -n",
+    "Embedded Python heredocs parse",
+    "Reviewer small in-memory gzip probes reject truncated, excess and short payloads",
+    "git diff --check"
+  ],
+  "limits": [
+    "No A733, UART bridge or private identity archive accessed.",
+    "Successful backup is not a tested host restore.",
+    "Guarded paired raw STATE/root restoration is not implemented; do not improvise raw writes.",
+    "Current guest/endurance data require separate fresh backups before erasure."
+  ]
+}

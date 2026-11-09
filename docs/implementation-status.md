@@ -162,6 +162,8 @@ privileged focused review; full-suite revalidation and final guide review pass. 
    The earlier protected-image preflight remains historical; do not substitute
    its older image for the final corrected distribution. Preserve same-board
    identity, current guests and prior failure evidence before whole-drive erasure.
+   [Offline STATE/root preservation](host-state-backup.md) is prepared; physical
+   backup and a guarded paired STATE/root restoration remain open.
 3. Independently review the final normalized deployment bindings and preflight
    before physical installation; both full streams now pass complete artifact
    verification. Actual fresh installation and deployment reproduction are open.

@@ -3,8 +3,11 @@
 The host uses unprivileged QEMU processes with KVM explicitly required. The
 current fixture launcher authenticates kernel, initramfs and raw disk inputs,
 retains their open descriptors through exec, and coordinates cooperating
-launchers with a nonblocking exclusive disk lock. This is preparation code;
-no A733 guest has executed and no hardware gate has passed.
+launchers with a nonblocking exclusive disk lock. The
+[physical A733 guest](kvm-vgic-results-20261108.md) passes CPU, disk, network,
+clean shutdown, checkpoint and restart checks. The [corrected-host restore](evidence/corrected-host-guest-restore-20261108.json)
+advances the retained counter-3 guest through 4 and 5 using actual nonroot KVM.
+Full hardware release acceptance remains open.
 The optional [isolated loopback TCP profile](guest-networking.md) adds a single
 explicit host forward while preserving the default restricted backend.
 
@@ -35,13 +38,15 @@ on fixed builder storage, never use SD for routine guest work.
 p5 mount and locked service accounts. The prepared personalized root artifacts
 include these controllers in the complete maintenance tree at
 `/usr/lib/a733-tools/scripts/`; the current-root manifest records their
-contents. The artifacts have not been installed or booted on the board and do
-not invoke activation automatically. The mount controller grants root-directory
+contents. The current protected host has booted with its authenticated
+management tool closure; see [installation status](implementation-status.md).
+Activation is explicit. The mount controller grants root-directory
 traversal only after validating the mounted device.
 [Explicit enrollment](guest-enrollment.md) now publishes protected per-guest
-directories and working disks; KVM device access and runtime integration remain. The account helper recreates fixed,
+directories and working disks. The account helper recreates fixed,
 locked identities in RAM `/etc` without administration or disk memberships.
-Neither procedure has been reproduced on hardware.
+Physical enrollment, account preparation and launch are recorded in the linked
+KVM results; new deployments require their own receipts.
 See [current managed host roots](current-host-roots.md) for prepared-artifact
 status and hardware gates.
 
@@ -53,8 +58,9 @@ CPU/RAM budgets using the [fixture procedure](guest-fixture.md). Retain both
 `scripts/launch-kvm-guest.py` and its adjacent `guest-storage.py` when staging
 these tools. The prepared personalized root artifacts include both in the
 complete maintenance tree at `/usr/lib/a733-tools/scripts/`. See
-[current managed host roots](current-host-roots.md). These artifacts have not
-been installed or booted on the board.
+[current managed host roots](current-host-roots.md). The current protected boot
+pair has booted; this does not validate the prospective normalized full-image
+installation.
 
 Input leaves must be nonempty regular files with one hard link. Verification
 reads exactly the captured size, rejects inode/size/mode/timestamp/link changes,
@@ -75,9 +81,9 @@ disk hash only after a clean shutdown and review before the next launch.
 
 The command fixes `virt,gic-version=host`, `-accel kvm`, `-cpu host`, explicit
 memory/vCPU counts and a raw file backend. Restricted user networking exposes
-no forwarded listener. The physical guest still must prove CPU, disk
-persistence, networking, clean shutdown and restart; fixture console markers
-alone do not establish KVM acceleration.
+no forwarded listener. The linked physical runs prove CPU, disk persistence,
+networking, clean shutdown and restart for that installation. Fixture console markers alone do not
+establish KVM acceleration.
 
 Upstream references: [QEMU 7.2 invocation and file backends](https://gitlab.com/qemu-project/qemu/-/blob/v7.2.0/qemu-options.hx),
 [Python descriptor inheritance](https://docs.python.org/3/library/os.html#inheritance-of-file-descriptors),
@@ -85,15 +91,20 @@ Upstream references: [QEMU 7.2 invocation and file backends](https://gitlab.com/
 
 ## Remaining operational work
 
-Exercise the packaged explicit activation controllers on the board. Integrate
-boot activation, supervised launch/shutdown, bounded logs/resource
-limits and isolated network policy. The explicit
-[checkpoint controller](guest-checkpoints.md) now records stopped-disk hashes;
-actual clean shutdown and restart remain unproven. Implement consistent off-device backup and restore for stopped guest
-disks and host state, then test restoration and failed-boot recovery. No
-snapshot or successful packaging run counts as a backup restoration. Preserve
-all [hardware acceptance gates](hardware-validation.md), including the actual
-KVM guest and 24-hour workload.
+Retain a fresh stopped, checkpointed backup of the current counter-5 guest using
+[the backup protocol](guest-backups.md) before reinstalling; the physically
+restored counter-3 archive omits later data. Preserve completed and failed
+endurance guest directories separately, together with native UART, journals and
+telemetry. The automatic outcome preserver captures evidence, not guest disks.
+Follow [offline STATE and root preservation](host-state-backup.md) before any
+journal replay or destructive install. Host STATE restoration and failed-boot
+recovery remain separate unvalidated paths.
+
+The [24-hour KVM workload](endurance-run-20261109.md) remains active until no
+earlier than November 10 02:11 UTC, with final outcome capture scheduled for
+02:16 UTC. Do not interrupt it. Preserve all remaining
+[hardware acceptance gates](hardware-validation.md); the specific guest restore
+does not establish complete release acceptance or normalized deployment.
 
 ## Verified software checks
 
@@ -111,8 +122,9 @@ input paths were renamed and replaced, ARM `qemu-img` 7.2.22 reported the origin
 size and copied the original bytes from every held descriptor. The verifier
 uses authenticated userspace in a private PID/mount namespace with read-only
 proc, only `/dev/null`, no sys/dev bind and no block devices. It uses the
-launcher's file-only dry-run mode and read-only descriptors; writable QEMU disk
-operation, system kernel/initramfs loaders, VM startup and KVM are untested.
+launcher's file-only dry-run mode and read-only descriptors; that probe does not
+exercise writable QEMU disks, system kernel/initramfs loaders, VM startup or KVM. The later physical evidence above covers actual
+guest execution separately.
 The configured binfmt interpreter pathname/hash was checked; the kernel-retained
 F interpreter descriptor was not independently inspected.
 
