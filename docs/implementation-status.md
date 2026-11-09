@@ -124,13 +124,13 @@ privileged focused review; full-suite revalidation and final guide review pass. 
   canonical raw/gzip files remain. Avoid another large native copy and keep
   bulk backups on the builder. Earlier [duplicate-transfer retirement](evidence/native-loose-transfer-retirement-20261109.json)
   remains recorded separately.
-- Builder LV now **107,344,822,272 bytes**, VG free **25,740,443,648 bytes**;
-  filesystem free after the reviewed additional 12 GiB growth is
-  **31,798,525,952 bytes**. [Latest growth](evidence/build-host-public-config-capacity-20261109.json)
-  preserves the exact LV/VG identities and unchanged admission/runtime guards. The operator approves
-  **all free capacity on the Ubuntu build host for use/expansion without another
-  permission request**. Revalidate exact targets and retain independent review.
-  [Growth evidence](evidence/build-host-capacity-addition-20261109.json).
+- Builder LV now **128,819,658,752 bytes**, VG free **4,265,607,168 bytes**;
+  filesystem available after the reviewed additional 20 GiB growth is
+  **43,622,555,648 bytes**. [Latest exact-target growth](evidence/isolated-composition-capacity-20261109.json)
+  retains the LV/VG/filesystem UUIDs, ordinary linear LV and ext4 root mapping.
+  It admits conservative component staging plus unchanged full-composer guards.
+  All free capacity on this builder remains authorized for use/expansion without
+  another permission request; revalidate exact targets and retain independent review.
 - Full-NVMe admission remains **23,760,999,827 free bytes**; runtime floors remain
   **3,000,000,000 disk bytes / 1,000,000,000 available memory bytes**. Start
   compilation with two jobs; retain generated files and sources outside Git.

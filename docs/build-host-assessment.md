@@ -333,3 +333,11 @@ now completes after the resolver-readable root constructions: LV
 revalidated before growth and between LV and filesystem operations. All admission
 and runtime guards remain unchanged; the standing builder-capacity authority
 continues to apply. Native codex LVM and Orange Pi storage were unchanged.
+
+The [subsequent reviewed 20 GiB extension](evidence/isolated-composition-capacity-20261109.json)
+now completes for isolated NVMe composition: LV 128,819,658,752 bytes, VG free
+4,265,607,168 bytes, filesystem available 43,622,555,648 bytes. The exact
+LV/VG/filesystem UUIDs and mounted ext4 root were revalidated before growth and
+between LV and filesystem operations. Conservative logical component staging is
+budgeted separately from unchanged composer admission and runtime floors.
+Native codex LVM and Orange Pi storage were unchanged.

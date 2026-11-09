@@ -1,0 +1,151 @@
+{
+  "schema": 1,
+  "date": "2026-11-09",
+  "classification": "Reviewed authorized Ubuntu builder LV/ext4 growth for isolated composition",
+  "hardware_acceptance": false,
+  "orange_pi_storage_written": false,
+  "native_codex_lvm_changed": false,
+  "authorization": "Standing operator approval for all free capacity on Ubuntu builder; no new permission needed",
+  "review": {
+    "path": "tmp/isolated-composition-capacity-review-20261109.json",
+    "bytes": 5118,
+    "sha256": "8b0b0dcd2b64ff618c54ed5be6a0d0fe42b901edfcd7984768af482fd6cd7ab0",
+    "result": "PASS",
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high"
+  },
+  "events": [
+    {
+      "observation": {
+        "block": {
+          "fstype": "ext4",
+          "mountpoints": [
+            "/"
+          ],
+          "path": "/dev/mapper/ubuntu--vg-ubuntu--lv",
+          "size": 107344822272,
+          "type": "lvm",
+          "uuid": "bb90e190-be63-4324-a020-c80583437401"
+        },
+        "filesystem_available_bytes": 23342379008,
+        "filesystem_total_bytes": 105328644096,
+        "lv": {
+          "lv_attr": "-wi-ao----",
+          "lv_path": "/dev/ubuntu-vg/ubuntu-lv",
+          "lv_size": "107344822272",
+          "lv_uuid": "Wacdne-hf6p-osvg-5IiF-iVD0-Dlgt-6iflHh",
+          "segtype": "linear",
+          "vg_free": "25740443648",
+          "vg_uuid": "cSa2Pd-Xpsw-3sf0-ZuPr-ZG5i-ODrj-c3SHlL"
+        },
+        "memory_available": [
+          "MemAvailable:    7204264 kB"
+        ],
+        "mount": {
+          "fstype": "ext4",
+          "options": "rw,relatime",
+          "source": "/dev/mapper/ubuntu--vg-ubuntu--lv",
+          "target": "/"
+        }
+      },
+      "stage": "before"
+    },
+    {
+      "output": "  Size of logical volume ubuntu-vg/ubuntu-lv changed from 99.97 GiB (25593 extents) to 119.97 GiB (30713 extents).\n  Logical volume ubuntu-vg/ubuntu-lv successfully resized.\n",
+      "stage": "lvextend-result"
+    },
+    {
+      "observation": {
+        "block": {
+          "fstype": "ext4",
+          "mountpoints": [
+            "/"
+          ],
+          "path": "/dev/mapper/ubuntu--vg-ubuntu--lv",
+          "size": 128819658752,
+          "type": "lvm",
+          "uuid": "bb90e190-be63-4324-a020-c80583437401"
+        },
+        "filesystem_available_bytes": 23342370816,
+        "filesystem_total_bytes": 105328644096,
+        "lv": {
+          "lv_attr": "-wi-ao----",
+          "lv_path": "/dev/ubuntu-vg/ubuntu-lv",
+          "lv_size": "128819658752",
+          "lv_uuid": "Wacdne-hf6p-osvg-5IiF-iVD0-Dlgt-6iflHh",
+          "segtype": "linear",
+          "vg_free": "4265607168",
+          "vg_uuid": "cSa2Pd-Xpsw-3sf0-ZuPr-ZG5i-ODrj-c3SHlL"
+        },
+        "memory_available": [
+          "MemAvailable:    7229724 kB"
+        ],
+        "mount": {
+          "fstype": "ext4",
+          "options": "rw,relatime",
+          "source": "/dev/mapper/ubuntu--vg-ubuntu--lv",
+          "target": "/"
+        }
+      },
+      "stage": "after-lv-before-filesystem"
+    },
+    {
+      "output": "resize2fs 1.46.5 (30-Dec-2021)\nFilesystem at /dev/ubuntu-vg/ubuntu-lv is mounted on /; on-line resizing required\nold_desc_blocks = 13, new_desc_blocks = 15\nThe filesystem on /dev/ubuntu-vg/ubuntu-lv is now 31450112 (4k) blocks long.\n\n",
+      "stage": "resize2fs-result"
+    },
+    {
+      "hardware_acceptance": false,
+      "observation": {
+        "block": {
+          "fstype": "ext4",
+          "mountpoints": [
+            "/"
+          ],
+          "path": "/dev/mapper/ubuntu--vg-ubuntu--lv",
+          "size": 128819658752,
+          "type": "lvm",
+          "uuid": "bb90e190-be63-4324-a020-c80583437401"
+        },
+        "filesystem_available_bytes": 43622555648,
+        "filesystem_total_bytes": 126466625536,
+        "lv": {
+          "lv_attr": "-wi-ao----",
+          "lv_path": "/dev/ubuntu-vg/ubuntu-lv",
+          "lv_size": "128819658752",
+          "lv_uuid": "Wacdne-hf6p-osvg-5IiF-iVD0-Dlgt-6iflHh",
+          "segtype": "linear",
+          "vg_free": "4265607168",
+          "vg_uuid": "cSa2Pd-Xpsw-3sf0-ZuPr-ZG5i-ODrj-c3SHlL"
+        },
+        "memory_available": [
+          "MemAvailable:    7230580 kB"
+        ],
+        "mount": {
+          "fstype": "ext4",
+          "options": "rw,relatime",
+          "source": "/dev/mapper/ubuntu--vg-ubuntu--lv",
+          "target": "/"
+        }
+      },
+      "stage": "complete",
+      "success": true
+    }
+  ],
+  "retained": {
+    "out/isolated-composition-capacity-20261109-01/execution.jsonl": {
+      "bytes": 2738,
+      "sha256": "91584ed7e20dbf90b335957813718d746fc84d5c9b2bfae3a2171c139990f754"
+    },
+    "out/isolated-composition-capacity-20261109-01/execute.py": {
+      "bytes": 2597,
+      "sha256": "410dae0df0c354a323c685059a72e0a354547d1a2ee34c6e560fdfd88e7c09a2"
+    }
+  },
+  "unchanged_guards": {
+    "core_full_nvme_admission_bytes": 23760999827,
+    "logical_input_copy_bytes": 17725604333,
+    "initial_combined_admission_before_margin_bytes": 41486604160,
+    "runtime_disk_floor_bytes": 3000000000,
+    "runtime_memory_floor_bytes": 1000000000
+  }
+}
