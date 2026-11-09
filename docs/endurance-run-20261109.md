@@ -83,3 +83,19 @@ for 1,977,614,336 bytes. Its first 256 MiB exactly match the written protected
 image, and Linux write counters remain zero. This baseline was collected after
 the workload started; later whole-media comparisons and firmware audit are still
 required. It is not an installation step or a throughput benchmark.
+
+## Twelve-hour observation
+
+The [retained prefix audit](evidence/endurance-prefix-12h-20261109.json) covers
+1,454 complete samples through guest elapsed 43,600 seconds, cycle 1,454.
+Audited telemetry checks have no failures: exact SD identity/unmounted state and
+zero write/discard/flush counters, no observed NVMe kernel errors, KVM execution
+and progress, one-MiB network payloads and selected Ethernet link. Maximum
+collector sample gap is 30.339 seconds. Observed SoC thermal zones range
+18.786–35.526 °C; minimum available memory is 11,904,503,808 bytes.
+
+A direct coordinator observation also confirms the original guest, host CPU and
+exit-observer PIDs remain active with zero restarts and the original boot ID.
+The prefix alone does not establish continuous host-worker/observer history.
+Final exits, SMART health and the full 24-hour endpoint remain pending. This is
+a partial observation, not endurance or release acceptance.

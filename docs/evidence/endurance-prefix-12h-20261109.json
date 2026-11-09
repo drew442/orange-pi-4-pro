@@ -1,0 +1,88 @@
+{
+  "schema": 1,
+  "classification": "Physical endurance prefix beyond12hours only; full24hour and release acceptance pending",
+  "hardware_acceptance": false,
+  "raw_prefix_audit": {
+    "path": "out/serial-recovery-20261109/endurance-prefix-audit-20261109-12h.json",
+    "bytes": 2113,
+    "sha256": "5661b58773e15e4de5823019e17e3cbc382dc5c8bfeccfef320a3bf9e7024396"
+  },
+  "audit": {
+    "captured_utc": "2026-11-09T14:17:48.225417+00:00",
+    "classification": "12-hour prefix audit; 24-hour completion unproven",
+    "hardware_acceptance": false,
+    "sample_file": "out/endurance-physical-release-20261109-01/samples.jsonl",
+    "audited_prefix_bytes": 10490762,
+    "audited_prefix_sha256": "23f127bf41daa42419a206b0dc58872eb0a2325542d01e80f331d0586ba4e09f",
+    "ignored_unfinished_tail_bytes": 0,
+    "samples": 1454,
+    "first_guest_seconds": 10.0,
+    "last_guest_seconds": 43600.0,
+    "last_collector_elapsed_seconds": 43590.779,
+    "last_cycles": 1454,
+    "max_sample_gap_seconds": 30.338999999999942,
+    "guest_elapsed_monotonic": true,
+    "cycles_monotonic": true,
+    "observed_soc_temperature_range_celsius": [
+      18.786,
+      35.526
+    ],
+    "minimum_mem_available_bytes": 11904503808,
+    "sd_identity": {
+      "device": "mmcblk1",
+      "major_minor": "179:0",
+      "cid": "035344535530324780716f216e00a8f5",
+      "model": "SU02G",
+      "size_bytes": 1977614336
+    },
+    "checks": {
+      "boot_and_run_consistent": true,
+      "guest_state_running": true,
+      "guest_elapsed_monotonic": true,
+      "cycles_monotonic": true,
+      "collector_elapsed_monotonic": true,
+      "sample_gap_under_120s": true,
+      "observed_nvme_errors_empty": true,
+      "sd_identity_consistent": true,
+      "sd_unmounted": true,
+      "sd_write_discard_flush_counters_zero": true,
+      "kvm_4_vcpu_fds": true,
+      "qemu_kvm_and_smp4": true,
+      "four_guest_cpu_workers_alive": true,
+      "one_mib_payload_present": true,
+      "physical_network_end0_gigabit": true,
+      "recorded_qemu_pid_matches_unit": true
+    },
+    "failed_checks": [],
+    "unchecked_checks": [
+      "original guest/CPU/observer PID continuity against initial capture",
+      "observer exit status",
+      "SMART baseline/final health",
+      "24-hour endpoint and final guest clean shutdown/checkpoint/restart criteria"
+    ],
+    "limits": [
+      "Endpoint-at-zero record is separate; first full telemetry record begins at guest elapsed 10 seconds.",
+      "SMART ioctl reports not implemented in telemetry; health not established.",
+      "No 24-hour completion or release acceptance claimed."
+    ]
+  },
+  "coordinator_supplement": {
+    "path": "out/serial-recovery-20261109/endurance-12h-unit-observation-20261109.json",
+    "bytes": 725,
+    "sha256": "20aacfaa72a10923923ca393583546bad3426242af51f058f9a2d6b08ec8bac4",
+    "prefix_digest_and_count_verified": true,
+    "original_guest_cpu_observer_PIDs_currently_running": true,
+    "scope": "Current direct unit observation supplements prefix telemetry; continuous observer/hostCPU history not asserted."
+  },
+  "extraction": {
+    "model": "gpt-6-luna",
+    "reasoning_effort": "low",
+    "cost": "not exposed",
+    "review": "Coordinator independently verified exact retained prefix SHA/count/last elapsed and directly checked current original units, boot ID and zero restarts."
+  },
+  "limits": [
+    "No full24hour endpoint, clean final exits, post-run SMART or release acceptance asserted.",
+    "First full telemetry starts at guest elapsed10seconds; endpointzero is recorded separately.",
+    "Original hostCPU/observer continuity is not covered by the entire prefix; current observation supplements it without inventing continuous evidence."
+  ]
+}

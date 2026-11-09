@@ -44,7 +44,9 @@ physical network transfers, temperatures, memory, NVMe kernel errors and exact
 SD write counters. Guest run UUID is `59af604a-cf2e-4c8f-9fd5-e26b8283d14c`.
 Completion is pending, no earlier than approximately **November 10 02:11 UTC**.
 The endpoint was recorded at elapsed zero; first full telemetry is elapsed
-10 seconds. Do not reboot the A733, UART bridge or codex during this test.
+10 seconds. A [12-hour prefix audit](evidence/endurance-prefix-12h-20261109.json)
+now covers 1,454 samples through guest elapsed 43,600 seconds with no failed
+audited checks; final completion, exits and health remain pending. Do not reboot the A733, UART bridge or codex during this test.
 
 Native collector `a733-offboard-endurance-collector-20261109.service` and the
 UART relay are independent of this chat. Reviewed read-only outcome preservation
