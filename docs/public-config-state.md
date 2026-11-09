@@ -5,7 +5,7 @@ for [resolver-readable root construction 01](public-config-roots-20261109.md).
 [Independent reviews and 2,155 privileged Ubuntu tests](evidence/public-config-state-preparation-20261109.json)
 pass. These software checks and parent evidence do not establish a new installation,
 physical resolver repair or release acceptance. [Construction, full readback and independent artifact review](evidence/public-config-state-build-20261109.json)
-now pass. The running endurance host remains unchanged.
+now pass. The installed host remains unchanged.
 
 The fixed [parent binding](evidence/public-config-roots-state-binding-20261109.json)
 authenticates the actual root producer receipt, root manifest, expected trees and

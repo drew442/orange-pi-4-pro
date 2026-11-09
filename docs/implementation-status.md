@@ -1,8 +1,8 @@
 # Implementation status
 
 Updated 2026-11-09. Physical release acceptance and independent deployment
-reproduction remain incomplete. The protected boot pair now runs a real KVM
-workload with independent UART capture. The previous SSH failure remains
+reproduction remain incomplete. The protected boot pair demonstrated a real KVM
+workload with independent UART capture; the qualifying run is now stopped. The previous SSH failure remains
 unexplained; it is not reclassified as a pass.
 
 ## Current installation
@@ -41,34 +41,37 @@ unexplained; it is not reclassified as a pass.
 
 ## Hardware workload and acceptance
 
-The [fresh 24-hour run](endurance-run-20261109.md) began **2026-11-09 02:10:42 UTC**:
-actual four-vCPU nonroot KVM, four additional nonroot host workers, disk cycles,
-physical network transfers, temperatures, memory, NVMe kernel errors and exact
-SD write counters. Guest run UUID is `59af604a-cf2e-4c8f-9fd5-e26b8283d14c`.
-Completion is pending, no earlier than approximately **November 10 02:11 UTC**.
-The endpoint was recorded at elapsed zero; first full telemetry is elapsed
-10 seconds. A [12-hour prefix audit](evidence/endurance-prefix-12h-20261109.json)
-now covers 1,454 samples through guest elapsed 43,600 seconds with no failed
-audited checks; final completion, exits and health remain pending. Do not reboot the A733, UART bridge or codex during this test.
+The operator revised endurance to **eight hours (28,800 seconds)** and accepts
+already collected qualifying data without rerunning. The [November 9 run](endurance-run-20261109.md)
+began at 02:10:42 UTC with actual four-vCPU nonroot KVM, four additional nonroot
+host workers, disk cycles and physical network transfers. Its 2,423 complete
+telemetry samples reach guest elapsed **72,669 seconds** (20 h 11 min), cycle
+2,422; original guest run UUID is `59af604a-cf2e-4c8f-9fd5-e26b8283d14c`.
+The legacy guest remains historically configured for 86,400 seconds. The
+coordinator deliberately stopped collector, guest and host workers after the
+operator's change. No guest-generated `ENDURANCE_PASS` or clean guest filesystem
+shutdown is claimed for this operator stop; separate functional guest shutdown,
+checkpoint and restart evidence remains valid.
 
-Native collector `a733-offboard-endurance-collector-20261109.service` and the
-UART relay are independent of this chat. Reviewed read-only outcome preservation
-is armed on collector exit and at **November 10 02:16 UTC**, with separate private
-snapshots. It never grants acceptance; coordinator review of console, exact exit
-records, duration, health and telemetry remains mandatory.
-A [reviewed live preflight repair](evidence/endurance-journal-selector-repair-20261109.json)
-now uses compact journal boot IDs; the protected capture copy was replaced
-without restarting the workload, collector or UART relay.
+Both fixed outcome-preservation phases were explicitly captured immediately.
+The obsolete November 10 02:16 timer is stopped and disabled. UART capture/relay remain live;
+the A733 has not rebooted. [Whole-data audit and post-workload checks](evidence/eight-hour-endurance-result-20261109.json)
+now pass the revised eight-hour workload gate. The complete SD hash still
+matches its baseline and all recorded write fields remain zero. Final SMART has zero critical warnings/media errors,
+with the existing 153 error-log entries and 77 unsafe shutdowns unchanged.
+The historical [12-hour audit](evidence/endurance-prefix-12h-20261109.json) and
+[preflight repair](evidence/endurance-journal-selector-repair-20261109.json) remain
+retained with their original metadata. No new eight-hour test is required. Release acceptance remains incomplete.
 
 | Gate | Evidence/status |
 | --- | --- |
 | Diagnostic image fits actual 2 GB SD; EL2 on all eight CPUs | Passed; vendor images were not used |
 | Actual KVM CPU/disk/network, clean shutdown/checkpoint/restart | [Passed](kvm-vgic-results-20261108.md); corrected-host restoration advances 3 → 4 → 5 |
 | Protected host boot, management, time and identity | Passed; current full release acceptance remains open |
-| 24-hour workload | Running; no final pass claimed |
+| Eight-hour workload | [Passed using retained >20-hour data](evidence/eight-hour-endurance-result-20261109.json); no rerun |
 | 10 cold and 10 warm boots with matched firmware/SSD | Pending; accidental user restarts and the controlled RAM reset are not counted |
 | SPI-to-NVMe with SD removed | Unprogrammed; registered independent recovery and physical SPI/SD-removed boot pending |
-| Immutable SD fallback | Linux writes remain zero; [whole-card baseline](evidence/protected-sd-baseline-20261109.json) and exact written prefix match pass; [bounded firmware source audit](sd-firmware-write-policy.md) complete; post-workload/shutdown/reboot comparison and serial reconciliation pending |
+| Immutable SD fallback | Linux writes remain zero and post-workload full-card hash matches; [whole-card baseline](evidence/protected-sd-baseline-20261109.json) and exact written prefix match pass; [bounded firmware source audit](sd-firmware-write-policy.md) complete; final shutdown/reboot comparison and serial reconciliation pending |
 | Interrupted update, rollback, missing NVMe, dirty journal | Software preparation/review pass; required physical recovery cases pending |
 | Off-device guest backup/restoration | [Counter-3 backup and physical restoration](evidence/corrected-host-guest-restore-20261108.json) pass |
 | Coherent normalized full image and independent deployment reproduction | [Two selected full streams match and pass independent artifact review](evidence/normalized-full-nvme-image-20261109.json); fresh installation and reproduced deployment pending |
@@ -78,7 +81,7 @@ elapsed 300.005 seconds, last valid guest elapsed 357/cycle 12. Later state was
 unobserved before user restarts. Its guest directory is retained separately;
 no clean shutdown or completed endurance is claimed. Reported power/cooling is a
 67 W USB-PD adapter and 10.4 mm six-layer whole-board copper heatsink; negotiated
-power and full thermal endurance remain unproven.
+power is not measured. Thermal workload evidence is retained for review.
 
 ## Resolver policy finding
 
@@ -87,14 +90,14 @@ found wildcard TCP/UDP 5355 listeners. The intended resolver drop-in disables
 LLMNR/mDNS, but its newly created directory is mode 0700 under the boot umask,
 so `systemd-resolve` cannot read it. The selected Ethernet link disables these
 protocols; global policy is not applied. Root password is locked, SSH is key-only
-and bound to the selected address, and the running guest is UID/GID 60002 with
+and bound to the selected address, and the observed guest was UID/GID 60002 with
 empty capabilities; these observations do not waive the resolver finding.
 The creation-mode fix is now in [normalized roots](deterministic-host-roots.md)
 with complete filesystem and raw/gzip repeat proof. The matched STATE selector
 and [two complete full-image streams](evidence/normalized-full-nvme-image-20261109.json)
 pass independent artifact review. The selected native candidate is
 `out/normalized-nvme-candidate-20261109/`; it is unbooted. Physical policy/listener
-verification remains required after installation; the active endurance host is
+verification remains required after installation; the installed host is
 unchanged. Deployment review found the old identity helper recognized only its
 predecessor's factory machine ID. A narrow two-factory fix passes independent
 privileged focused review; full-suite revalidation and final guide review pass. Image bytes and root/STATE pairing are unchanged by this external helper.
@@ -115,7 +118,7 @@ privileged focused review; full-suite revalidation and final guide review pass. 
   components in a fresh frozen-Ubuntu namespace. Frozen/source/host invariants
   and cleanup pass. The [initial bind-target repair](evidence/frozen-builder-anchor-repair-20261109.json)
   remains recorded separately. This is not a new OS/compiler rebuild or deployment.
-- Latest complete privileged Ubuntu suite: **2,264 tests**, zero skips/errors/
+- Latest complete privileged Ubuntu suite: **2,268 tests**, zero skips/errors/
   failures; five shell suites and five diagnostic assembly cases also pass.
   All five TOML files parse separately on codex. These are software checks.
 - [Normalized maintenance candidates](normalized-maintenance-20261109.md) use
@@ -124,7 +127,7 @@ privileged focused review; full-suite revalidation and final guide review pass. 
   uses manifest `4f28…`, selector hash `bd27…` and selected old-A root marker
   `e1cc…`. A read-only audit matches the 40
   installed old maintenance files. Live staging/activation/rollback remain
-  unperformed; preserve the workload until final evidence is retained.
+  unperformed; preserve current guests and host state before maintenance.
 - Native free space is now **513,011,712 bytes** after [byte-exact builder
   retention of ten validation source transfer archives](evidence/native-validation-source-retention-20261109.json)
   and retirement of their native copies (108,267,520 bytes). The unchanged
@@ -154,10 +157,14 @@ privileged focused review; full-suite revalidation and final guide review pass. 
 
 ## Next actions
 
-1. Observe the new 24-hour run and serial capture. The
+1. Preserve current guest/configuration data now that the qualifying workload and post-run checks pass. The
    [warm-reboot collector](warm-boot-validation.md) is independently reviewed
    and prepared for the SD route; it remains unexecuted and refuses active
-   workloads or missing retained outcome evidence. Count the final ten warm and
+   workloads or missing retained outcome evidence. The operator-stop snapshot was
+   captured after the transient collector unit was garbage-collected; its existing
+   retained-outcome check requires a loaded unit. Adapt and independently review
+   that check against the authenticated stop receipts before using the collector.
+   Do not fabricate a loaded unit or waive the idle-host checks. Count the final ten warm and
    ten cold boots only after choosing and installing the final release/boot route.
    An SD-removed SPI route needs corresponding collector adaptation. [Preparation evidence](evidence/warm-boot-preparation-20261109.json).
    Preserve kernel/control evidence on recurrence. Audit final guest/CPU exits, duration and post-run

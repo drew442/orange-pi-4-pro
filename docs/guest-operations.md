@@ -100,9 +100,22 @@ Follow [offline STATE and root preservation](host-state-backup.md) before any
 journal replay or destructive install. Host STATE restoration and failed-boot
 recovery remain separate unvalidated paths.
 
-The [24-hour KVM workload](endurance-run-20261109.md) remains active until no
-earlier than November 10 02:11 UTC, with final outcome capture scheduled for
-02:16 UTC. Do not interrupt it. Preserve all remaining
+The [November 9 KVM workload result](evidence/eight-hour-endurance-result-20261109.json)
+passes the current 8-hour (28,800-second) criterion with 72,659 measured seconds
+between first and last samples. The coordinator stopped the guest and native
+collector, CPU workers and management watch; QEMU host stop exited 0 and the CPU
+workers exited 2 after intentional interruption; the exit observer recorded the
+stop. No guest-requested shutdown or `ENDURANCE_PASS` is claimed. The original
+authenticated collector validator and watchdog revalidated all 2,423 samples,
+including thermal, nonroot KVM capability, disk and payload-hash checks; all
+passed through elapsed 72,669 seconds (cycle 2,422). Whole-card SD SHA-256 for
+1,977,614,336 bytes exactly matches baseline
+`401df09e666c22db8e8f9adbeecc0f385a910b1f41995e7a1d0bc68be3b64be5`; all
+counters are zero. SMART critical warning 0, media errors 0, error-log count 153
+and unsafe shutdown count 77 are unchanged from baseline. Full native UART and
+bridge snapshots (1,262,306 bytes) are byte-identical. Both preservation phases
+are complete. Required backups and remaining physical acceptance gates are still
+open. Preserve all remaining
 [hardware acceptance gates](hardware-validation.md); the specific guest restore
 does not establish complete release acceptance or normalized deployment.
 

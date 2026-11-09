@@ -2,8 +2,8 @@
 
 Two fresh A/B root constructions now contain the reviewed public-directory
 permission fix. They are **components awaiting distribution integration and
-physical verification**, not new installation images. The running endurance
-host and existing full images retain the [resolver finding](evidence/management-runtime-exposure-20261109.json).
+physical verification**, not new installation images. The installed
+host and historical full images retain the [resolver finding](evidence/management-runtime-exposure-20261109.json).
 
 [Artifact evidence and exact pins](evidence/public-config-roots-20261109.json)
 bind source `4f40843365566ae4ada9b7377b75bba3f40c3360`, all 845 committed files,

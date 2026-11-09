@@ -7,9 +7,10 @@ recovery from an actual interrupted journal on this board. This trial addresses
 the existing physical recovery finding; it is separate from normal installation
 and its optional readback policy.
 
-Do not interrupt [endurance](endurance-run-20261109.md). First retain and review
-its final outcome, post-workload NVMe health and full-card SD comparison, then
-preserve current guests, identity, failure evidence and the complete compatible
+The [November 9 workload result](evidence/eight-hour-endurance-result-20261109.json)
+passes the current 8-hour criterion. Post-workload NVMe health and full-card SD
+comparison are recorded there. First preserve current guests, identity, failure
+evidence and the complete compatible
 [ROOT-A/ROOT-B/STATE cohort](host-state-backup.md). Keep that original cohort
 immutable off-device. The known storage authorization persists; these are
 preconditions for execution, not another permission request.

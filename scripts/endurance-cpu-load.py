@@ -6,7 +6,7 @@ import os
 import signal
 import time
 
-DURATIONS = {'smoke': 60, 'release': 86400}
+DURATIONS = {'smoke': 60, 'release': 28800}
 
 
 def worker():

@@ -3,8 +3,13 @@
 `scripts/spi-unit-transaction.py` is an API-only engine used by the independently
 reviewed [caller preparation](known-spi-programmer.md). It imports only Python hashing/JSON support. It has no CLI,
 file opening, device opening, physical erase ioctl or hardware programming route.
-The active 24-hour real KVM workload must remain undisturbed. These host tests
-and callback receipts always report `hardware_acceptance: false`.
+The endurance duration criterion is now **8 hours (28,800 seconds)**; retained
+legacy A733 data exceeding that duration qualifies without a rerun. The
+[November 9 evidence](evidence/eight-hour-endurance-result-20261109.json) was
+revalidated and accepted for this duration gate. The coordinator stopped its
+native collector, guest, CPU workers and management watch. These host tests and
+callback receipts always report
+`hardware_acceptance: false`.
 
 The immutable source pins are the actual 16,777,216-byte
 [original backup and candidate](spi-original-backup-20261108.md):

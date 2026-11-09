@@ -143,5 +143,7 @@ redistribution clearance. [Vendor boot-input grants](evidence/vendor-boot-licens
 remain independently unresolved. The board now passes
 [management repair and SSH](installed-host-repair-results-20261108.md) and
 [actual KVM CPU/disk/network and clean restart](kvm-vgic-results-20261108.md).
-The [new 24-hour run](endurance-run-20261109.md) and remaining physical
-[release acceptance](hardware-validation.md) are still open.
+The [November 9 workload result](evidence/eight-hour-endurance-result-20261109.json)
+passes the 8-hour criterion using existing data (72,659 measured seconds);
+legacy A733 data meeting the threshold does not require a rerun. Remaining physical
+[release acceptance](hardware-validation.md) is still open.

@@ -2,8 +2,9 @@
 
 **Prepared trial; independent procedure review passes. Not hardware evidence.**
 [Preparation evidence](evidence/missing-nvme-trial-preparation-20261109.json).
-Run only after the active endurance workload, final outcome preservation,
-post-workload SD/health checks and current guest/STATE backups have completed.
+The [November 9 workload result](evidence/eight-hour-endurance-result-20261109.json)
+passes the 8-hour (28,800-second) criterion. Run only after current guest/STATE
+backups are complete and exact target/recovery prerequisites are satisfied.
 Keep heatsinks attached. This is a Linux driver fault injection on the actual
 board, not physical SSD removal or proof of every electrical/controller fault.
 

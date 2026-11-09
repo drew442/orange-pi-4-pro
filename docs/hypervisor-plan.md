@@ -107,9 +107,15 @@ Recovery documentation must cover missing NVMe, corrupt root, failed update, for
 
 Release only when evidence includes:
 
+The operator limits planned workload tests to eight hours (28,800 seconds).
+Existing runs already covering at least eight hours qualify from their retained
+data without an eight-hour rerun. Preserve historical durations and distinguish
+operator termination from guest-generated completion; this changes duration,
+not the required hardware observations.
+
 - A fresh build and installation using the actual 2 GB SD and 250 GB NVMe, with no hidden larger-card dependency.
 - At least ten successful cold boots and ten warm reboots on the recorded SSD and firmware combination.
-- A KVM-only guest completing CPU, disk and network checks; a 24-hour workload run with recorded temperatures, memory use and NVMe errors.
+- A KVM-only guest completing CPU, disk and network checks; an eight-hour workload run with recorded temperatures, memory use and NVMe errors.
 - SD removed in SPI mode, or unchanged full-card hashes across boot/workload/shutdown cycles in fallback mode. Also compare Linux block-write counters and audit firmware writes; hashing alone misses identical-content writes.
 - Successful interrupted-update recovery, host rollback, missing-NVMe recovery and backup restoration, tested on disposable data.
 - No default shared secrets; guest processes use limited privileges and management services are not exposed unintentionally.

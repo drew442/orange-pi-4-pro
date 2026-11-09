@@ -132,6 +132,18 @@ class ValidationTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             C.validate(fixture(), BOOT, 'release')
 
+    def test_release_duration_is_exact_and_legacy_evidence_needs_separate_review(self):
+        self.assertEqual(C.DURATIONS, {'smoke': 60, 'release': 28800})
+        for seconds in (28799, 28800, 28801, 86400):
+            data = fixture()
+            data['guest'].update(mode='release', required_seconds=seconds)
+            with self.subTest(seconds=seconds):
+                if seconds == 28800:
+                    self.assertEqual(C.validate(data, BOOT, 'release'), 'readonly_evidence')
+                else:
+                    with self.assertRaisesRegex(ValueError, 'duration'):
+                        C.validate(data, BOOT, 'release')
+
     def test_changed_ids_and_counters(self):
         original = fixture()
         for key, value in [('run_id', BOOT), ('elapsed_seconds', 0), ('cycles', 0), ('disk_counter', 0)]:
@@ -269,16 +281,26 @@ class RecordingTests(unittest.TestCase):
     def test_source_failure_does_not_relabel_previous_sample(self):
         data = fixture()
         data['guest']['mode'] = 'release'
-        data['guest']['required_seconds'] = 86400
+        data['guest']['required_seconds'] = 28800
         code, records = self.collect([data, ValueError('transport failed')])
         self.assertEqual(code, 1)
         self.assertEqual([record['result'] for record in records], ['readonly_evidence', 'failed'])
         self.assertNotIn('sample', records[-1])
 
+    def test_release_sample_bound_is_eight_hours_plus_three_samples(self):
+        data = fixture()
+        data['guest'].update(mode='release', required_seconds=28800)
+        # Frozen local time exercises the independent finite sample bound.
+        code, records = self.collect([data] * 963)
+        self.assertEqual(code, 2)
+        self.assertEqual(len(records), 964)
+        self.assertEqual(records[-1]['reason'], 'sample bound reached')
+        self.assertTrue(all(record['hardware_acceptance'] is False for record in records))
+
 
 class CpuTests(unittest.TestCase):
     def test_fixed_duration_profiles(self):
-        self.assertEqual(L.DURATIONS, {'smoke': 60, 'release': 86400})
+        self.assertEqual(L.DURATIONS, {'smoke': 60, 'release': 28800})
 
     def test_root_refused_before_fork(self):
         with patch.object(L.os, 'getuid', return_value=0), patch.object(L.os, 'fork') as fork:

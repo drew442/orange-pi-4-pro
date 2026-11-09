@@ -11,7 +11,7 @@ import types
 BASE_NAME = 'observe-first-kvm-exit.py'
 BASE_SHA256 = '334f79c44ca9033556f9a7752d837ada7f37c4c34a7c7a51798807e195faefb4'
 UNIT = b'a733-guest-endurance.service'
-TIMEOUTS = {'smoke': 300.0, 'release': 86700.0}
+TIMEOUTS = {'smoke': 300.0, 'release': 29100.0}
 MAX_SOURCE_BYTES = 65536
 
 

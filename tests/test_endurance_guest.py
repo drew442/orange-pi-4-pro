@@ -90,17 +90,54 @@ class ArchiveTests(unittest.TestCase):
             self.assertIn(b'MODE=smoke', next(e['data'] for e in entries if e['name'] == 'etc/endurance.conf'))
 
     def test_duration_modes(self):
-        self.assertEqual(M.duration_mode(), (86400, 'release'))
+        self.assertEqual(M.duration_mode(), (28800, 'release'))
         for seconds in (30, 60, 300):
             self.assertEqual(M.duration_mode(seconds), (seconds, 'smoke'))
-        for seconds in (0, 29, 301, 86400, True, '60'):
+        for seconds in (0, 29, 301, 28800, 86400, True, '60'):
             with self.assertRaises(ValueError):
                 M.duration_mode(seconds)
+
+    def test_release_manifest_and_embedded_config_agree(self):
+        raw, _ = M.repack(archive(), {'init': (stat.S_IFREG | 0o755,
+            (REPO / 'configs/endurance-guest-init').read_bytes())})
+        encoded = gzip.compress(raw, mtime=0)
+        with tempfile.TemporaryDirectory() as directory:
+            source = Path(directory) / 'source.gz'
+            source.write_bytes(encoded)
+            output = Path(tempfile.mkdtemp(prefix='endurance-guest-test-', dir=REPO / 'out'))
+            output.rmdir()
+            self.addCleanup(shutil.rmtree, output, True)
+            with mock.patch.object(M, 'BASE', M.HOST.record(encoded)):
+                manifest = M.build(source, output)
+            entries = M.HELPER.entries(gzip.decompress((output / 'initramfs.cpio.gz').read_bytes()))
+            config = next(e['data'] for e in entries if e['name'] == 'etc/endurance.conf')
+            self.assertEqual(manifest['mode'], 'release')
+            self.assertEqual(manifest['required_seconds'], 28800)
+            self.assertTrue(config.startswith(b'DURATION=28800\nMODE=release\n'))
+            self.assertFalse(manifest['hardware_acceptance'])
 
 
 class GuestSafetyTests(unittest.TestCase):
     def setUp(self):
         self.init = (REPO / 'configs/endurance-guest-init').read_text()
+
+    def test_guest_configuration_accepts_only_current_release_or_bounded_smoke(self):
+        # Execute the real configuration guard without any boot or device code.
+        guard = self.init.split('case "$DURATION:$MODE"', 1)[1].split('\nrun_id=', 1)[0]
+        guard = 'case "$DURATION:$MODE"' + guard
+        for mode, seconds, accepted in [('release', 28800, True),
+                                        ('release', 28799, False),
+                                        ('release', 28801, False),
+                                        ('release', 86400, False),
+                                        ('release', 60, False),
+                                        ('smoke', 30, True), ('smoke', 300, True),
+                                        ('smoke', 29, False), ('smoke', 301, False),
+                                        ('smoke', 28800, False), ('other', 28800, False)]:
+            with self.subTest(mode=mode, seconds=seconds):
+                result = subprocess.run(['sh', '-c', 'fail() { exit 42; };\n' + guard],
+                                        env={'MODE': mode, 'DURATION': str(seconds)},
+                                        capture_output=True, text=True)
+                self.assertEqual(result.returncode, 0 if accepted else 42)
 
     def test_identity_guards_precede_all_fixture_writes(self):
         script = self.init
@@ -120,7 +157,7 @@ class GuestSafetyTests(unittest.TestCase):
         line = next(line for line in self.init.splitlines() if "printf '{\"schema\"" in line)
         template = line.split("printf '", 1)[1].split("'", 1)[0].replace('\\n', '')
         status = json.loads(template % ('12345678-1234-1234-1234-123456789abc', 'release',
-                                       'running', '86400', '30', '2', '4', 'hash'))
+                                       'running', '28800', '30', '2', '4', 'hash'))
         self.assertEqual(set(status), {'schema', 'profile', 'run_id', 'mode', 'state',
                                       'required_seconds', 'elapsed_seconds', 'cycles',
                                       'disk_counter', 'cpu_workers', 'cpu_workers_alive', 'disk_sha256'})

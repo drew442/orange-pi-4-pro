@@ -1,14 +1,18 @@
 # Current images for this board
 
 The protected STATE bootstrap now boots at **192.168.1.116**, with read-only
-NVMe root, automatic time synchronization and a real KVM guest running.
-A [fresh 24-hour workload](endurance-run-20261109.md) is in progress with UART
-capture. Firmware currently loads the Linux boot files from SD and uses NVMe root.
+NVMe root and automatic time synchronization; actual KVM guest execution has
+been demonstrated. The workload is stopped.
+The [November 9 workload result](evidence/eight-hour-endurance-result-20261109.json)
+passes the 8-hour gate using 72,659 measured seconds. Final telemetry and
+preservation were reviewed; full-card SD hash matches the baseline and counters
+remain zero. Firmware currently loads the Linux boot files from SD and uses NVMe root.
 The matching NVMe BOOT component is installed; firmware loading it remains
 unperformed. No operator flashing is currently requested. Release acceptance remains
-incomplete; the previous endurance failure is still unexplained. The
+ incomplete; the previous endurance failure is still unexplained. The
 [prepared full deployment procedure](deploy-protected-20261109.md) uses this
-matched candidate; it remains unexecuted and waits for retained workload evidence.
+matched candidate; it remains unexecuted pending required backups and its other
+deployment prerequisites.
 
 Paths below are relative to `/home/drew/orange-pi-4-pro` on codex.
 
@@ -16,9 +20,10 @@ For later inactive-root maintenance, use the separately authenticated
 [normalized A/B update kit](normalized-maintenance-20261109.md), retaining the
 [old A rollback pair](matched-host-updates-20261109.md) separately. Its root-payload
 manifest differs from the whole-NVMe installer manifest below. Physical update
-and rollback tests remain pending until workload evidence is retained.
+and rollback tests remain pending until workload evidence is retained and reviewed.
 The separately retained [matched NVMe-first trial SD](matched-nvme-trial-sd-20261109.md)
-is unbooted and awaits a reviewed physical trial after the workload. It is not
+is unbooted and awaits a reviewed physical trial after workload evidence is
+retained and reviewed and required backups are complete. It is not
 the normal host bootstrap in the table.
 
 | Purpose | Existing artifact |

@@ -1,13 +1,15 @@
 # Prepared warm boot collection
 
-The collector is prepared and **unexecuted**. The running November 9 A733
-24-hour KVM workload must remain undisturbed. No warm or cold boot acceptance
-is claimed by this preparation or its mocked tests.
+The collector is prepared and **unexecuted**. The endurance duration criterion
+is 8 hours (28,800 seconds); retained legacy A733 data exceeding it qualifies
+without a rerun. The [November 9 result](evidence/eight-hour-endurance-result-20261109.json)
+passes that gate on revalidated telemetry. No warm or cold boot acceptance is
+claimed by this preparation or its mocked tests.
 
 `scripts/collect-known-warm-boots.py` defaults to a local plan and makes no SSH
 connection. Execution requires both `--execute` and a canonical nonzero
-`--expected-start-boot-id`. After the workload has stopped and native automatic
-outcome preservation has retained its snapshot, the prepared invocation is:
+`--expected-start-boot-id`. Run only after final outcome evidence is retained
+and reviewed and required backups are complete. The prepared invocation is:
 
 ```sh
 python3 scripts/collect-known-warm-boots.py --execute \

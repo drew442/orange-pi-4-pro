@@ -1,0 +1,361 @@
+{
+  "schema": 1,
+  "date": "2026-11-09",
+  "classification": "operator-revised eight-hour physical endurance acceptance using existing longer run",
+  "required_seconds": 28800,
+  "historical_guest_configuration_seconds": 86400,
+  "new_8h_run_required": false,
+  "workload_gate": "pass",
+  "release_acceptance": false,
+  "operator_stop": true,
+  "guest_generated_ENDURANCE_PASS_claimed": false,
+  "guest_requested_clean_shutdown_claimed": false,
+  "host_boot_id": "dd8d6f67-d297-4f3b-bc9a-8a41c9742051",
+  "guest_run_id": "59af604a-cf2e-4c8f-9fd5-e26b8283d14c",
+  "sample_records": 2423,
+  "sample_file": {
+    "path": "out/endurance-physical-release-20261109-01/samples.jsonl",
+    "bytes": 17530751,
+    "sha256": "70b1e9d5176b37b72d953f0190cc5a7abd46cb30063c26872fd94233ca760550"
+  },
+  "first_guest_seconds": 10,
+  "last_guest_seconds": 72669,
+  "covered_guest_seconds": 72659,
+  "last_guest_cycles": 2422,
+  "maximum_collector_sample_gap_seconds": 30.541999999994005,
+  "all_sample_checks": {
+    "boot_run_consistent": true,
+    "guest_running_releasing_prefix": true,
+    "guest_elapsed_monotonic": true,
+    "cycles_monotonic": true,
+    "collector_elapsed_monotonic": true,
+    "collector_sample_gap_under_120s": true,
+    "observed_nvme_errors_empty": true,
+    "sd_identity_consistent": true,
+    "sd_unmounted": true,
+    "sd_all_write_discard_flush_fields_zero": true,
+    "kvm_4_vcpu_fds": true,
+    "qemu_kvm_and_smp4": true,
+    "four_guest_cpu_workers_alive": true,
+    "one_mib_payload_present": true,
+    "physical_network_end0_gigabit": true,
+    "recorded_qemu_pid_matches_unit": true
+  },
+  "minimum_mem_available_bytes": 11902619648,
+  "thermal_ranges_celsius": {
+    "cpub_thermal_zone": [
+      17.98,
+      35.526
+    ],
+    "ddr_thermal_zone": [
+      17.236,
+      35.464
+    ],
+    "npu_thermal_zone": [
+      16.244,
+      33.294
+    ],
+    "cpul_thermal_zone": [
+      18.228,
+      35.526
+    ],
+    "gpu_thermal_zone": [
+      15.81,
+      34.038
+    ]
+  },
+  "coordinator_original_validator": {
+    "schema": 1,
+    "coordinator_revalidation": "all samples passed original authenticated legacy collector validator and watchdog, including thermal critical trips, exact nonroot/capability/KVM process and disk/network hashes",
+    "legacy_validator_git_revision": "60d55e9",
+    "legacy_validator_sha256": "0e34533a74691af16ce58d235df3055ef5637eceac76e3ead5f2be565812654c",
+    "sample_bytes": 17530751,
+    "sample_sha256": "70b1e9d5176b37b72d953f0190cc5a7abd46cb30063c26872fd94233ca760550",
+    "samples": 2423,
+    "required_seconds": 28800,
+    "historical_config_seconds": 86400,
+    "last_guest_elapsed_seconds": 72669,
+    "guest_clean_shutdown_claimed": false,
+    "overall_release_acceptance": false
+  },
+  "observer_guest_runtime_seconds": 72711.745,
+  "host_cpu_runtime_seconds": 72709.541932,
+  "host_cpu_stop_status": 2,
+  "post_run_health": {
+    "critical_warning": 0,
+    "media_errors": 0,
+    "error_log_entries": 153,
+    "unsafe_shutdowns": 77,
+    "baseline_unchanged": true,
+    "last_existing_error_status": 8194
+  },
+  "post_run_sd": {
+    "event": "postrun-full-sd-comparison",
+    "bytes": 1977614336,
+    "sha256": "401df09e666c22db8e8f9adbeecc0f385a910b1f41995e7a1d0bc68be3b64be5",
+    "baseline_sha256": "401df09e666c22db8e8f9adbeecc0f385a910b1f41995e7a1d0bc68be3b64be5",
+    "matches": true,
+    "sd_stat_before": [
+      3850,
+      0,
+      7729240,
+      645893,
+      0,
+      0,
+      0,
+      0,
+      0,
+      336448,
+      645893,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "sd_stat_after": [
+      5736,
+      0,
+      11591768,
+      963869,
+      0,
+      0,
+      0,
+      0,
+      0,
+      500936,
+      963869,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "uart": {
+    "utc": "2026-11-09T22:29:39.475737+00:00",
+    "relay_state": {
+      "MainPID": "3569662",
+      "NRestarts": "0",
+      "ActiveState": "active"
+    },
+    "native_bytes": 1262306,
+    "native_sha256": "7a76757307dd5d414c638868a252751b026ba91be10b4cfcdb95ef0020c55d59",
+    "bridge_bytes": 1262306,
+    "bridge_sha256": "7a76757307dd5d414c638868a252751b026ba91be10b4cfcdb95ef0020c55d59",
+    "native_is_exact_bridge_prefix": true
+  },
+  "preservation": {
+    "both_phases_completed": true,
+    "legacy_final_timer_stopped": true,
+    "final_phase_started_manually_now": true,
+    "automatic_SMART_skipped": "Collector transient unit was garbage-collected after reviewed manual stop; coordinator independently verified stopping and collected SMART separately without weakening preserver.",
+    "legacy_final_timer_disabled": true
+  },
+  "reviewed_findings": [
+    "Goodix touchscreen and sound probe messages are unrelated vendor headless-host boot findings; no NVMe kernel errors in any sample.",
+    "Earlier SD baseline attempt failed an overly strict devtmpfs atime identity comparison after a complete read; corrected baseline and final whole-card hashes match.",
+    "CPU unit status2 is the documented intentional-interruption outcome; QEMU exited0 following host SIGTERM. Neither is relabeled as guest-requested clean poweroff."
+  ],
+  "remaining": [
+    "Fresh normalized installation and independent deployment reproduction",
+    "Changed-slot interrupted update, rollback, missing NVMe and host restore cases",
+    "Final boot route, ten cold and ten warm boots, shutdown/reboot whole-card/firmware write reconciliation",
+    "Current guest/configuration/evidence backups before erasing storage"
+  ],
+  "software_validation": {
+    "schema": 1,
+    "result": "pass",
+    "unit_tests": 2268,
+    "unit_seconds": 78.334,
+    "unit_skips_errors_failures": 0,
+    "shell_suites": 5,
+    "diagnostic_cases": 5,
+    "diagnostic_seconds": 5.766,
+    "source_files_verified_before_after": 904,
+    "native_toml_files": 5,
+    "unit": {
+      "MainPID": "0",
+      "Result": "success",
+      "ExecMainCode": "1",
+      "ExecMainStatus": "0",
+      "CPUQuotaPerSecUSec": "2s",
+      "MemoryMax": "3221225472",
+      "ActiveState": "active",
+      "SubState": "exited"
+    },
+    "builder_base": "/var/lib/a733-eight-hour-policy-validation-20261109-01",
+    "source_archive_sha256": "a4755e2a7d295269291e01ea4d792b833989c2d13d0f37964ebdb8c1d911bef6"
+  },
+  "records": [
+    {
+      "path": "out/endurance-shortened-20261109-01/policy-change.json",
+      "bytes": 404,
+      "sha256": "007ace86675ad5efaea69ed877ab80487c33d3f9401b71cd6ddd360cf8c1ddb0"
+    },
+    {
+      "path": "out/endurance-shortened-20261109-01/native-stop-events.jsonl",
+      "bytes": 804,
+      "sha256": "93ce9226062231288cb5a454cde4035175cbabd947a0b4c227cc7da1441716d8"
+    },
+    {
+      "path": "out/endurance-shortened-20261109-01/board-prestop-03.json",
+      "bytes": 13154,
+      "sha256": "9c98371ef306f7925730f6e54fbad9f3b8d2b6f6ff1d7a9e726eac81cbbf060a"
+    },
+    {
+      "path": "out/endurance-shortened-20261109-01/board-stop-events.jsonl",
+      "bytes": 5511,
+      "sha256": "505bc9c4529e042c1b182e4106a898cca2e4314ca079982f40a368873b3ca374"
+    },
+    {
+      "path": "out/endurance-shortened-20261109-01/final-data-audit.json",
+      "bytes": 17074,
+      "sha256": "522c5dbd344724ca35cd935e9c853914625d01044d3ffcefc37811c74f28b4ad"
+    },
+    {
+      "path": "out/endurance-shortened-20261109-01/coordinator-data-review.json",
+      "bytes": 692,
+      "sha256": "322ab39be997d6057120202802be3fa6dc295bcfe644bff3849ed3f54cdd531b"
+    },
+    {
+      "path": "out/endurance-shortened-20261109-01/postrun-health-and-sd.jsonl",
+      "bytes": 1322,
+      "sha256": "8feb9463edb0e0f45cfa72e9fd81924eb0505b9e5c9e072f87b349d1b8f9c301"
+    },
+    {
+      "path": "out/endurance-shortened-20261109-01/postrun-health-and-sd.stderr",
+      "bytes": 595,
+      "sha256": "621e6df527866c824a1be5ad279ce3bd142b0b97d1168f1ad1c067e25b28479d"
+    },
+    {
+      "path": "out/endurance-shortened-20261109-01/uart-preservation.json",
+      "bytes": 417,
+      "sha256": "56f550a08ea9af806ad2d4264d4804bca317ce121ad86e51037215d86adfb34d"
+    },
+    {
+      "path": "out/endurance-shortened-20261109-01/uart-native-full-prefix.log",
+      "bytes": 1262306,
+      "sha256": "7a76757307dd5d414c638868a252751b026ba91be10b4cfcdb95ef0020c55d59"
+    },
+    {
+      "path": "out/endurance-shortened-20261109-01/uart-bridge-full-prefix.log",
+      "bytes": 1262306,
+      "sha256": "7a76757307dd5d414c638868a252751b026ba91be10b4cfcdb95ef0020c55d59"
+    },
+    {
+      "path": "out/endurance-shortened-20261109-01/earlier-baseline-unit-journal.txt",
+      "bytes": 662,
+      "sha256": "53d856a5df1aa7e2d98376b34b7b31c45472ba6ffd91402012f7e710ddee9868"
+    },
+    {
+      "path": "tmp/eight-hour-legacy-data-audit.py",
+      "bytes": 10929,
+      "sha256": "090c4a39a22f167b3cd66d0aa64293027e0c9151c77df584b3cf825765a08e83"
+    },
+    {
+      "path": "tmp/legacy-endurance-stop-review-20261109.json",
+      "bytes": 5740,
+      "sha256": "acf8d42dd71f24c3471a1c9b255de33e6b188a84874216d248d4ee653973affa"
+    },
+    {
+      "path": "tmp/eight-hour-policy-review-20261109.json",
+      "bytes": 4371,
+      "sha256": "b1d6a0fe807bb5234f33a691b3b41a7ebe32be2631da864ecd387fb0ac328ecf"
+    },
+    {
+      "path": "out/endurance-outcome-20261109-01/collector.json",
+      "bytes": 1153,
+      "sha256": "25c69116e55a082766cbc841852e282b683da0e4931d43342855f2aa3deaf6d2"
+    },
+    {
+      "path": "out/endurance-outcome-20261109-01/remote-transport.json",
+      "bytes": 1011940,
+      "sha256": "97fb7195c6e1269afc22c55dbe430f3e9114e3c7a8c4efd11a12040ac33372e5"
+    },
+    {
+      "path": "out/endurance-outcome-20261109-01/summary.json",
+      "bytes": 442,
+      "sha256": "6dc43d8430a1a56e547b44e2865f41ef6fac300a6f831deb6bd17e942de174ee"
+    },
+    {
+      "path": "out/endurance-outcome-20261109-01/uart-tail.json",
+      "bytes": 1398257,
+      "sha256": "523786a9d7bc1de44147cbbce5ea351915ac692fdbbc31e46975a0b75b8c8d08"
+    },
+    {
+      "path": "out/endurance-outcome-20261109-final/collector.json",
+      "bytes": 1153,
+      "sha256": "25c69116e55a082766cbc841852e282b683da0e4931d43342855f2aa3deaf6d2"
+    },
+    {
+      "path": "out/endurance-outcome-20261109-final/remote-transport.json",
+      "bytes": 1011940,
+      "sha256": "40fad820ef808b05af0d75350c20ea12256e1a4a10eeae586ae2379c69226962"
+    },
+    {
+      "path": "out/endurance-outcome-20261109-final/summary.json",
+      "bytes": 443,
+      "sha256": "a6047d7ae3c0c5ebefb8c5743f909faddccc88cea807f2f0a9d4c306dd4571fa"
+    },
+    {
+      "path": "out/endurance-outcome-20261109-final/uart-tail.json",
+      "bytes": 1398257,
+      "sha256": "348170db6c425e63459f672b7a30dde67bf911ac7c7ce3fc5ebd36c1c29c9221"
+    },
+    {
+      "path": "tmp/eight-hour-integration-review-20261109.json",
+      "bytes": 11317,
+      "sha256": "aa0fee1c54581405470aecf7e9f76a0702f91c8e5a31a0ede4e8d84f3f0cb9fe"
+    },
+    {
+      "path": "tmp/eight-hour-guest-artifact-review-20261109.json",
+      "bytes": 3299,
+      "sha256": "1ad81e1ba8ed9aa46eef572fb1337758ca0b83786c5298bd1cf6627840317570"
+    },
+    {
+      "path": "out/eight-hour-policy-validation-20261109-01/result.json",
+      "bytes": 671,
+      "sha256": "63ee1762914e2dedc28bab890789581fe801929dbf1770ba690a66c26a381c0a"
+    },
+    {
+      "path": "out/eight-hour-policy-validation-20261109-01/validation.log",
+      "bytes": 25165,
+      "sha256": "d1adc90c0fcb6ecb93641c8da11ce79552470b437522d4f516ce02d8ddd26245"
+    },
+    {
+      "path": "out/eight-hour-policy-validation-20261109-01/validation-unit.txt",
+      "bytes": 135,
+      "sha256": "d3e4fa8ecab92f7114cba88833e51b1b7fc1fcbd2259aead1c58d471611d8864"
+    },
+    {
+      "path": "out/eight-hour-policy-validation-20261109-01/staging.json",
+      "bytes": 636,
+      "sha256": "a5d226a8c70b2e0b3004ec13a7a1b06c2ef299fbe6a520f3c50708f31ab9662f"
+    },
+    {
+      "path": "out/endurance-shortened-20261109-01/final-timer-disabled.json",
+      "bytes": 156,
+      "sha256": "72ece5db39c5aa27b3e8c83934dcbdf89d29aa77e4d6c2320ae7c8aaae37cbd1"
+    }
+  ],
+  "future_eight_hour_guest": {
+    "hardware_execution": false,
+    "required_seconds": 28800,
+    "two_constructions_equal": true,
+    "native": "out/endurance-guest-release-8h-20261109-01",
+    "builder_project": "/var/lib/a733-eight-hour-policy-validation-20261109-01/guest-project",
+    "artifacts": {
+      "initramfs.cpio.gz": {
+        "bytes": 976723,
+        "sha256": "564f9445c03b1cf44d45326d385f1c9a33f0355bf42f007361aa7e8d2030bd8b"
+      },
+      "manifest.json": {
+        "bytes": 5074,
+        "sha256": "1f8593e6a07e864673e0ffe4c9bfd3b76eb0b1a96515f88ef20fbbd60e1b0088"
+      }
+    }
+  }
+}

@@ -38,7 +38,7 @@ HOST = HELPER.HOST
 
 def duration_mode(smoke_seconds=None):
     if smoke_seconds is None:
-        return 86400, 'release'
+        return 28800, 'release'
     if type(smoke_seconds) is not int or not 30 <= smoke_seconds <= 300:
         raise ValueError('smoke seconds must be an integer from 30 through 300')
     return smoke_seconds, 'smoke'

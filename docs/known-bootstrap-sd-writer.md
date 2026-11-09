@@ -3,8 +3,10 @@
 `scripts/write-known-bootstrap-sd.py` is a Python standard-library helper for
 explicit coordinator SD maintenance. It accepts a quiescent NVMe-rooted host or
 the private SSH RAM installer, with the SD unused and the source held on tmpfs.
-The current 24-hour workload must finish and its outcome be retained before any
-SD write. The helper does not stop workloads or reboot the board.
+Before any SD write, ensure required backups are complete. The
+[November 9 workload result](evidence/eight-hour-endurance-result-20261109.json)
+passes the current 8-hour (28,800-second) criterion. The helper does not stop
+workloads or reboot the board.
 
 Its reviewed source SHA-256 is
 `4769001ab4a4861ff8ffe26ad6aa427f9abe5430b48bb49918d6c1206b96c52a`.

@@ -1,5 +1,9 @@
 # Physical endurance run, 2026-11-08
 
+Current policy is eight hours; this historical failed attempt retains its original
+86,400-second configuration. It did not reach eight hours and is not reclassified
+as successful. Use qualifying later evidence without repeating an eight-hour run.
+
 The corrected host passed [restoration and KVM restart](evidence/corrected-host-guest-restore-20261108.json)
 and the [60-second physical smoke test](evidence/endurance-smoke-physical-20261108.json).
 The release-mode workload started at **2026-11-08 11:06:24 UTC** and requires
@@ -8,7 +12,8 @@ the collector lost SSH at elapsed 300.005 seconds, after its last valid guest
 sample at elapsed 357 seconds. At that failure the board answered ping at its recorded MAC and address while
 port 22 refused connections. Subsequent guest/load/observer state was not
 observed before the user restarted the boards. Independent UART capture is now
-available; the protected host is running a [fresh attempt](endurance-run-20261109.md).
+available; the [later run](endurance-run-20261109.md) now supplies qualifying
+eight-hour data and has stopped.
 The original failure remains unexplained and is not a release pass.
 
 [Run metadata](evidence/endurance-release-run-20261108.json) records exact boot,
@@ -39,7 +44,7 @@ error-log entry count 151 describes an unsupported command field; zero media
 errors and zero critical warning form the baseline. Any new error needs review.
 
 After the guest powers itself off, retain the complete console, require release
-`ENDURANCE_PASS` with elapsed at least 86400 and no `ENDURANCE_FAIL`, and correlate
+`ENDURANCE_PASS` with elapsed meeting the current 28800-second requirement and no `ENDURANCE_FAIL`, and correlate
 the run UUID with all samples. Require the independent observer's normal zero
 exit, ordered timestamps and successful cleanup, and the host CPU service's
 full duration/normal exit. Collector exit 2 means pending external evidence,

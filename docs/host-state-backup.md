@@ -2,10 +2,12 @@
 
 **UNEXECUTED procedure; independent preparation review passes.**
 [Review evidence](evidence/offline-preservation-preparation-20261109.json). This is preparation for
-same-board preservation, not a tested restore or permission to interrupt the
-[active endurance run](endurance-run-20261109.md). Wait for its actual end
-(no earlier than November 10 02:11 UTC), the 02:16 final capture and coordinator
-review. A timer firing is not proof that the workload has stopped.
+same-board preservation, not a tested restore. The
+[November 9 workload result](evidence/eight-hour-endurance-result-20261109.json)
+passes the 8-hour criterion; both phases of final preservation are complete and
+reviewed. These guest/STATE/root backups and subsequent restoration remain
+unperformed. The former 02:11/02:16 timing was only a planned 24-hour endpoint
+and is no longer a prerequisite.
 
 The A733 uses a 2 GB SD and nominal 250 GB NVMe; keep the minimal host and zero SD writes. These backups read only NVMe and stream directly to private
 fixed builder storage: codex has only about 425 MB free. No full raw staging,

@@ -2,7 +2,7 @@
 
 These tools support the Orange Pi 4 Pro A733's physical KVM endurance gate.
 They have software regression coverage only; their existence does not establish
-physical execution, 24-hour endurance, thermal stability or release acceptance.
+physical execution, 8-hour endurance, thermal stability or release acceptance.
 The coordinator must retain separate console, exit observer, duration, host-load,
 SMART and storage-write evidence. The 2 GB SD must have zero routine writes;
 all installed runtime state belongs on the nominal 250 GB NVMe.
@@ -19,16 +19,22 @@ python3 scripts/collect-kvm-endurance.py \
   --output out/endurance-smoke-fresh
 ```
 
-`--mode release` selects 86400 seconds; smoke selects 60. `--interval` is fixed at
+`--mode release` selects 28800 seconds; smoke selects 60. `--interval` is fixed at
 30 seconds, and `--guest-name` only accepts `endurance`. The output directory must
 be fresh, its parent must exist and have at least 256 MiB available. The collector
-creates a private directory and appends/fsyncs `samples.jsonl`, at most 2883 sample
+creates a private directory and appends/fsyncs `samples.jsonl`, at most 963 sample
 records plus a final record for release. Each metadata response is limited to
 64 KiB. The 1 MiB guest payload is retained only in bounded RAM, hashed on the
 workstation and discarded. There are no payload files. Responses are framed as
 `ENDURANCE1 PAYLOAD_LENGTH JSON_LENGTH\n`, exact payload bytes, then exact JSON
 bytes. Payload length must be zero for an inactive endpoint or exactly 1048576.
 Each SSH subprocess has a 30-second deadline and a bounded stdout reader.
+
+The current collector strictly matches a new release guest's 28800-second
+configuration. Existing legacy 86400-second evidence with at least eight hours
+of actual workload remains eligible for coordinator acceptance without rerunning
+the test. Preserve its original tools, configuration and records for that review;
+do not use the new collector to reinterpret or restart the legacy run.
 
 The collector uses the existing trusted host key under
 `HostKeyAlias=192.168.1.116`, strict host-key checking, batch mode and the supplied
@@ -40,7 +46,7 @@ host proc/sysfs, systemd service properties and kernel messages. It never change
 a service, VM, mount, device or boot state. Guest HTTP requests use the fixed
 host loopback port 18081 with proxies and redirects disabled. Each running sample
 transfers the actual zero-filled 1 MiB guest payload across the physical SSH/LAN
-path to the workstation (about 2.8 GiB across 24 hours).
+path to the workstation (about 0.94 GiB across 8 hours).
 
 Running samples require unchanged host/guest boot UUIDs, matching profile/mode,
 nondecreasing guest counters, four live guest CPU workers, known disk/payload
@@ -86,7 +92,7 @@ source/transport failure. A bounded decoded sample is retained alongside a
 validation failure when available; transport failures do not reuse an earlier
 sample. Exit 2 means pending external completion, including an
 inactive guest unit, or reaching the time/sample bound. A pending result is not a
-pass, even after 24 hours. An active unit with missing HTTP endpoints fails.
+pass, even after 8 hours. An active unit with missing HTTP endpoints fails.
 `ENDURANCE_PASS`, independent clean QEMU exit and the entire elapsed workload
 window require separate coordinator review. A 60-second smoke run cannot satisfy
 the release gate.

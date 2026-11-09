@@ -38,7 +38,7 @@ mkdir /www/cgi-bin || fail www-directory
 cp /etc/endurance-status.cgi /www/cgi-bin/status || fail status-cgi
 chmod 755 /www/cgi-bin/status || fail status-mode
 . /etc/endurance.conf
-case "$DURATION:$MODE" in 86400:release) ;; *)
+case "$DURATION:$MODE" in 28800:release) ;; *)
     [ "$MODE" = smoke ] || fail configuration
     case "$DURATION" in ''|*[!0-9]*) fail configuration ;; esac
     [ "$DURATION" -ge 30 ] && [ "$DURATION" -le 300 ] || fail configuration

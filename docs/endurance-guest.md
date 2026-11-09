@@ -26,11 +26,19 @@ its own and helper/source hashes. New records use epoch 1793750400; gzip uses
 mtime zero. A fresh direct `out/endurance-guest-NAME` directory is private
 (mode 0700), with mode 0600 output files. Outputs are ignored artifacts.
 
-The default is exactly 86400 seconds with manifest mode `release`. To prepare
+The default is exactly 28800 seconds with manifest mode `release`. To prepare
 an explicitly separate smoke fixture, add `--smoke-seconds 60` (allowed range
 30–300). Both modes record `hardware_acceptance: false`; smoke completion
-cannot satisfy a 24-hour gate. The guest reports lower-case modes in JSON and
+cannot satisfy an 8-hour gate. The guest reports lower-case modes in JSON and
 serial markers.
+
+The current acceptance threshold is eight hours. Existing measured workload
+evidence covering at least 28800 seconds qualifies for duration review without
+a new run, including an already-running legacy 86400-second guest. Its immutable
+configuration and historical records must remain unchanged; coordinator review
+must distinguish an operator stop from the legacy guest's automatic completion.
+The current producer and guest guard accept exactly 28800 seconds for new
+release fixtures, so a legacy artifact is not silently relabeled.
 
 Use the existing standard guest enrollment/rendering tools for a future VM
 named `endurance`, UID/GID 60002, four vCPUs, 256 MiB guest RAM and a 512 MiB
@@ -72,7 +80,7 @@ accepted by the CGI, and request data never becomes a command or path. Status
 is published by atomic rename in RAM. Its fixed schema is:
 
 ```json
-{"schema":1,"profile":"a733-kvm-endurance-v1","run_id":"guest-boot-UUID","mode":"release","state":"running","required_seconds":86400,"elapsed_seconds":30,"cycles":2,"disk_counter":1,"cpu_workers":4,"cpu_workers_alive":4,"disk_sha256":"expected-16-MiB-zero-digest"}
+{"schema":1,"profile":"a733-kvm-endurance-v1","run_id":"guest-boot-UUID","mode":"release","state":"running","required_seconds":28800,"elapsed_seconds":30,"cycles":2,"disk_counter":1,"cpu_workers":4,"cpu_workers_alive":4,"disk_sha256":"expected-16-MiB-zero-digest"}
 ```
 
 State is `running`, `finishing`, or best-effort `failed`; failure status uses
@@ -92,8 +100,27 @@ service/QEMU exit and guest-initiated shutdown. There is no remote confirmation
 wait, 120-second deadline, interactive fallback, or host stop requirement.
 
 Actual release validation still requires the corrected physical A733 host,
-real KVM evidence, a full release-mode 24-hour run, four additional low-priority
+real KVM evidence, at least eight measured hours of release workload (including
+qualifying legacy evidence), four additional low-priority
 host CPU workers, and the host collector's thermal, memory, NVMe health and
 network evidence. Preserve the 2 GB SD, nominal 250 GB NVMe, minimal host and
 zero routine SD writes requirements. A smoke pass, unit tests or emulation
 cannot replace those hardware observations.
+
+## Retained eight-hour package
+
+Two constructions on the Ubuntu 22.04 builder match byte for byte. The selected
+future-use package is `out/endurance-guest-release-8h-20261109-01/` on codex:
+
+| File | Bytes | SHA-256 |
+| --- | ---: | --- |
+| `initramfs.cpio.gz` | 976,723 | `564f9445c03b1cf44d45326d385f1c9a33f0355bf42f007361aa7e8d2030bd8b` |
+| `manifest.json` | 5,074 | `1f8593e6a07e864673e0ffe4c9bfd3b76eb0b1a96515f88ef20fbbd60e1b0088` |
+
+Independent archive inspection confirms the 28,800-second configuration and
+matching guard, exact source dependencies, original kernel/seed pins and all
+preserved archive records. This new package is unbooted. The accepted
+[existing longer run](evidence/eight-hour-endurance-result-20261109.json) supplies
+the eight-hour hardware evidence; packaging does not require another workload
+run. Preserve the stopped legacy fixture before any future fresh enrollment;
+do not silently replace its initramfs or manufacture a clean disk checkpoint.

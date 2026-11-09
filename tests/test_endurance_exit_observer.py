@@ -109,7 +109,7 @@ class EnduranceObserverTests(unittest.TestCase):
                 load.assert_not_called()
 
     def test_modes_delegate_fixed_unit_deadline_and_no_arguments(self):
-        for mode, timeout in [('smoke', 300.0), ('release', 86700.0)]:
+        for mode, timeout in [('smoke', 300.0), ('release', 29100.0)]:
             module = authenticated_module()
             saved = sys.argv
             def run():
@@ -139,8 +139,11 @@ class EnduranceObserverTests(unittest.TestCase):
             self.assertEqual(wrapper.main(['--mode', 'smoke']), 1)
         self.assertIs(sys.argv, saved)
 
-    def test_release_keeps_reference_until_simulated_24_hour_exit(self):
-        for mode, expected in [('release', 0), ('smoke', 1)]:
+    def test_release_reference_and_bounded_exit_grace(self):
+        for mode, exit_time, expected in [('release', 28800, 0),
+                                          ('release', 29099, 0),
+                                          ('release', 29100, 1),
+                                          ('smoke', 28800, 1)]:
             module = authenticated_module()
             events, now = [], [0.0]
             class Bus:
@@ -156,19 +159,19 @@ class EnduranceObserverTests(unittest.TestCase):
                     if self.initial:
                         self.initial = False
                         return 'inactive'
-                    return 'active' if now[0] < 86400 else 'inactive'
+                    return 'active' if now[0] < exit_time else 'inactive'
                 def snapshot(self):
                     return dict(LoadState='loaded', ActiveState='inactive', SubState='dead',
                                 Result='success', MainPID=0, ControlPID=0, ExecMainPID=123,
                                 ExecMainCode=1, ExecMainStatus=0,
                                 ExecMainStartTimestampMonotonic=1,
-                                ExecMainExitTimestampMonotonic=86400000001)
+                                ExecMainExitTimestampMonotonic=exit_time * 1000000 + 1)
             def sleep(_):
-                now[0] += 43200
+                now[0] = min(exit_time, now[0] + 14400)
             original = module.observe
             def observe(bus, emit):
                 return original(bus, emit, clock=lambda: now[0], sleep=sleep)
-            with self.subTest(mode=mode), patch.object(wrapper, 'load_observer', return_value=module), \
+            with self.subTest(mode=mode, exit_time=exit_time), patch.object(wrapper, 'load_observer', return_value=module), \
                     patch.object(module, 'Bus', Bus), patch.object(module, 'observe', side_effect=observe), \
                     patch.object(module, 'emit', side_effect=lambda record: events.append(record)), \
                     contextlib.redirect_stderr(io.StringIO()):
@@ -176,8 +179,8 @@ class EnduranceObserverTests(unittest.TestCase):
             self.assertEqual(events[0], ('ref', 0.0))
             self.assertEqual(events[1]['event'], 'ready')
             self.assertEqual(events[1]['unit'], 'a733-guest-endurance.service')
-            if mode == 'release':
-                self.assertEqual(events[-2], ('unref', 86400.0))
+            if expected == 0:
+                self.assertEqual(events[-2], ('unref', float(exit_time)))
                 self.assertEqual(events[-1]['event'], 'final')
             else:
                 self.assertEqual(events[-1][0], 'unref')

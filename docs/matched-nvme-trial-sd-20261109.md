@@ -3,7 +3,7 @@
 This **unbooted** 256 MiB image prepares the NVMe-first U-Boot trial with the
 current protected host boot files. Two constructions produce identical raw and
 gzip bytes; independent complete artifact review passes. No physical trial or
-SPI write has occurred. Leave the active endurance workload undisturbed;
+SPI write has occurred. The qualifying workload is stopped; complete required backups before a physical trial;
 no operator flashing is currently requested.
 
 The older [November 7 transports](nvme-firmware-test-sd.md) select obsolete STATE

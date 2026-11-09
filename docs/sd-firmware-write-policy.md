@@ -3,7 +3,8 @@
 The independent [source/configuration/provenance audit](evidence/sd-firmware-write-policy-20261109.json)
 is complete for the protected SD firmware. **Immutable-SD hardware acceptance
 remains open.** The audit changed no image and contacted no hardware. Do not
-interrupt the active endurance workload to gather later evidence.
+discard the retained workload evidence. Its post-workload full-SD comparison
+now matches; final shutdown/reboot reconciliation remains pending.
 
 The retained physical first 256 MiB matches protected image `ab5e8c…ad207`.
 Construction evidence preserves firmware prefix `da4a8d…2b556`, which binds SD

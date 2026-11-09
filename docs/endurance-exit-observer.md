@@ -24,11 +24,18 @@ script directory and user Python configuration from dependency imports:
 python3 -I /run/a733-endurance-observer/observe-endurance-kvm-exit.py --mode smoke
 ```
 
-`--mode` is required. `smoke` uses a 300-second budget; `release` uses 86,700
-seconds (24 hours plus five minutes). There is no arbitrary unit, timeout or
+`--mode` is required. `smoke` uses a 300-second budget; `release` uses 29,100
+seconds (8 hours plus five minutes). The extra five minutes only bounds launch
+and exit observation; it does not extend the eight-hour workload requirement.
+There is no arbitrary unit, timeout or
 source override. The host requires Python 3, `libsystemd.so.0`, a working system
 bus and permission for the fixed observer calls. Missing dependencies cause
 failure; no package installation or bus reconfiguration is attempted.
+
+Already-collected legacy workload evidence of at least eight hours qualifies
+for duration review without a new run. Preserve any active legacy observer and
+its original budget; starting this new wrapper cannot recover an earlier unit
+reference or substitute for the retained exit evidence.
 
 Run the observer before separately launching the guest. Wait for its flushed
 JSON `ready` record on stdout: this establishes that `RefUnit` succeeded and the
@@ -46,9 +53,9 @@ nonzero. The unchanged base observer's timeout error text still says
 actual monotonic deadline. Keep stdout and stderr as separate evidence streams.
 
 Host tests and this wrapper do **not** establish hardware acceptance. A clean
-exit alone does not prove a 24-hour run: independently retain console/KVM
+exit alone does not prove an 8-hour run: independently retain console/KVM
 workload evidence and measured guest duration, CPU/disk/network results,
 temperatures, memory use and NVMe errors. The coordinator must verify the actual
-24-hour hardware run and remaining [hardware gates](hardware-validation.md),
+8-hour hardware run and remaining [hardware gates](hardware-validation.md),
 including zero routine SD writes. A733, 2 GB SD, nominal 250 GB NVMe and the
 minimal host remain the deployment constraints.

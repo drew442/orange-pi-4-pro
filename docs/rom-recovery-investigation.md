@@ -8,9 +8,10 @@ a RAM recovery loader, flash restoration or recovery after a bad SPI bootloader.
 
 The [corrected host](evidence/corrected-host-boot-20261108.json), SSH, automatic time
 and restored KVM guest now pass. The [earlier endurance run](endurance-run-20261108.md) lost SSH management.
-Independent UART capture/control now works, and the
-[fresh 24-hour run](endurance-run-20261109.md) is in progress. Defer USB recovery
-experiments and reboots until its outcome is retained. Keep both heatsinks attached.
+Independent UART capture/control now works.
+The [November 9 run](evidence/eight-hour-endurance-result-20261109.json) passes
+the 8-hour workload gate. Defer USB recovery experiments and reboots until
+required backups are complete. Keep both heatsinks attached.
 
 ## What the sources establish
 

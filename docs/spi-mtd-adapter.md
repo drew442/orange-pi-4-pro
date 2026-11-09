@@ -5,7 +5,7 @@
 there is no command-line interface, device opening, source staging or complete
 production programmer. Importing it performs no device or libc operation.
 Independent host review passes; physical SPI programming remains unperformed.
-Leave the active endurance workload undisturbed.
+The qualifying endurance workload is stopped; required backups and independent physical SPI recovery remain prerequisites.
 
 ## Descriptor and operation contract
 

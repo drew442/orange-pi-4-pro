@@ -85,8 +85,11 @@ This stream is an **unpersonalized distribution**, not a backup of the current
 board. Its whole-device hash cannot describe the installed personalized NVMe.
 Do not write it over the running board to deploy this BOOT fix. Physical BOOT
 maintenance uses the separate reviewed component updater and live rollback
-capsule. The ongoing physical 24-hour KVM run and its independent UART capture
-must remain undisturbed.
+capsule. The [November 9 physical KVM run](evidence/eight-hour-endurance-result-20261109.json)
+passes the current 8-hour duration gate on revalidated retained data. Required
+backups and remaining physical acceptance gates still precede disruptive
+maintenance; this result does not establish clean guest shutdown or overall
+release acceptance.
 
 Validation uses:
 

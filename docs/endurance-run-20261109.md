@@ -1,101 +1,83 @@
-# Physical endurance run, 2026-11-09
+# Physical endurance result, 2026-11-09
 
-The protected STATE SD/NVMe boot pair now physically boots with read-only root,
-automatic time synchronization and the authenticated 40-file management tool
-set. Its [maintenance receipts](evidence/protected-state-maintenance-20261109.json)
-record the exact writes, backup and UART reset. SPI remains unprogrammed.
+The **eight-hour workload gate passes using the existing longer run**. The
+operator shortened all planned tests above eight hours to eight hours and
+explicitly accepted existing qualifying data without a rerun. The protected
+STATE host ran an actual four-vCPU nonroot KVM guest with disk cycles, physical
+network transfers and four additional low-priority host CPU workers.
+[Result and raw-record pins](evidence/eight-hour-endurance-result-20261109.json).
+Overall release acceptance remains incomplete.
 
-A fresh release-mode KVM workload started **2026-11-09 02:10:42 UTC**, host boot
+The run began **2026-11-09 02:10:42 UTC**, host boot
 `dd8d6f67-d297-4f3b-bc9a-8a41c9742051`, guest run
-`59af604a-cf2e-4c8f-9fd5-e26b8283d14c`. It requires **86400 guest-monotonic
-seconds**; completion is expected no earlier than approximately **November 10,
-02:11 UTC**. This is an ongoing test, not a release pass.
-[Run metadata](evidence/endurance-release-run-20261109.json) records the initial
-samples, services, actual host CPU workers and storage identities.
+`59af604a-cf2e-4c8f-9fd5-e26b8283d14c`. Its immutable guest was originally
+configured for 86,400 seconds. Preserve that historical metadata: the coordinator
+stopped the collector and guest after the operator changed the requirement.
+This is an operator stop, with no claim of guest-generated `ENDURANCE_PASS` or
+clean guest filesystem shutdown. Separate [actual clean guest shutdown,
+checkpoint and restart](kvm-vgic-results-20261108.md) evidence remains valid.
+No new eight-hour workload is required.
 
-| Location | Service or evidence |
-| --- | --- |
-| A733 | `a733-guest-endurance.service`: four KVM vCPUs, UID/GID 60002, 512 MiB limit |
-| A733 | `a733-endurance-host-cpu-release-20261109.service`: four nice-19 UID/GID 65534 workers |
-| A733 | `a733-endurance-release-exit-observer-20261109.service`: retained D-Bus unit reference |
-| A733 | `a733-management-watch-endurance-20261109.service`: bounded console guard/address snapshots |
-| codex | `a733-offboard-endurance-collector-20261109.service` |
-| codex | `out/endurance-physical-release-20261109-01/samples.jsonl` |
-| codex | `a733-uart-relay-20261109-01.service`; `out/serial-recovery-20261109/serial-live.log` |
+## Retained physical observations
 
-The collector transfers and authenticates a 1 MiB guest payload over physical
-Ethernet every 30 seconds. It checks actual KVM/VGIC/four-vCPU descriptors,
-nonroot restrictions, disk cycles, thermal trips, memory, network counters,
-NVMe kernel errors and exact SD identity/write counters. The endpoint was observed
-at guest elapsed zero; the first full collector sample is elapsed **10 seconds**.
-No full telemetry is claimed for those initial ten seconds. The collector is an
-independent native systemd service, not a shell background process.
+- **2,423 samples**, guest elapsed 10 through **72,669 seconds**, covering
+  72,659 seconds (more than 20 hours), final cycle 2,422. Maximum collector gap
+  is 30.542 seconds. The endpoint-at-zero record remains separate; no full
+  telemetry is claimed for the initial ten seconds.
+- Every sample passes the original authenticated collector validator and
+  progress watchdog: actual KVM/VGIC/four-vCPU descriptors, nonroot restrictions,
+  four live guest workers, disk and one-MiB network payload hashes, physical
+  Ethernet counters, thermal trips, memory and exact SD identity/write counters.
+  No observed NVMe kernel errors or guest failure markers occur.
+- Observed SoC temperatures span **15.810–35.526 °C**, below recorded critical
+  trips. Minimum available memory is **11,902,619,648 bytes**. These are recorded
+  sensor readings, not measurements of negotiated adapter power.
+- Original guest PID 2153, CPU parent 2169 and exit observer 2098 were observed
+  without restarts. The observer retained guest runtime 72,711.745 seconds.
+  Host CPU runtime was 72,709.542 seconds; status 2 follows its intentional
+  interruption handler. QEMU exited zero after host SIGTERM. These exit values
+  do not establish guest-initiated poweroff.
+- All 1,194 management-watch guards pass, maximum interval 61.11 seconds. This
+  periodic evidence does not claim continuous observation of every host worker.
+- Post-run SMART remains at zero critical warnings/media errors, 153 error-log
+  entries and 77 unsafe shutdowns. The existing latest invalid-field status
+  8194 is unchanged; this is not an empty-error-log claim.
+- The complete **1,977,614,336-byte SD** still hashes to
+  `401df09e666c22db8e8f9adbeecc0f385a910b1f41995e7a1d0bc68be3b64be5`,
+  matching its [baseline](evidence/protected-sd-baseline-20261109.json). Every
+  recorded Linux write/discard/flush field is zero. Final shutdown/reboot and
+  firmware reconciliation remain part of immutable-SD acceptance; a matching
+  hash alone cannot detect same-content firmware writes.
 
-The previous failed release guest was retained by a reviewed nonreplacing rename
-to `/run/a733-guests/.endurance-failed-retained-20261108`, preserving inode 6673.
-The original smoke directory remains; the fresh guest directory has inode 6678.
-Their deterministic enrollment manifests can share a hash despite different
-mutable disks. The failed run is not classified as clean or successful, and
-its original management failure remains unexplained.
+The earlier failed baseline capture was a devtmpfs atime identity-check refusal,
+then corrected and repeated successfully. Goodix/sound probe findings are
+retained with the headless vendor boot evidence. Neither is silently removed
+from the logs. The [previous failed workload](endurance-run-20261108.md) remains
+separate and unexplained; this result does not reclassify it.
 
-Before this run, NVMe SMART reported zero critical warning and media errors,
-77 unsafe shutdowns, and 153 error-log entries. Its latest entry is the existing
-invalid-field status 8194. These are baselines, not a clean error-log claim;
-review any subsequent change against the captured command and kernel evidence.
-The UART reset was performed only after syncing/flushing writes with NVMe idle
-in the RAM installer; it is not counted as a release boot cycle.
+## Preservation and next work
 
-After guest poweroff, preserve complete console and observer output under
-`/run/corrected-kvm`, require matching `ENDURANCE_PASS` with elapsed at least
-86400 and no `ENDURANCE_FAIL`, and correlate the run UUID with every sample.
-Require independently observed normal zero guest exit and cleanup, plus the
-host CPU service's full duration and normal zero exit. Collector exit 2 requests
-external completion evidence; it never grants acceptance. Recheck NVMe health,
-management continuity and SD counters. The bridge's `/var/log` is volatile, so
-check the off-board UART relay before relying on its continuity.
+Collector, guest, CPU workers and management watch are stopped. The exit
+observer finished normally. The old November 10 02:16 timer was stopped and disabled; both
+fixed preserver phases were explicitly run immediately and retained under
+`out/endurance-outcome-20261109-01` and `out/endurance-outcome-20261109-final`.
+Their original `scheduled-final` phase label does not change the recorded actual
+capture time. The collector transient unit was already garbage-collected, so
+its conservative preserver skipped SMART; the coordinator independently
+confirmed the stop and retained a separate read-only SMART capture.
 
-Ten cold and ten warm boots, SPI recovery/SD-removed boot or complete immutable
-SD fallback proof, interrupted update/recovery, dirty-journal/missing-NVMe tests,
-a coherent full distribution image and independent deployment reproduction remain
-separate acceptance gates. Do not reboot either board during this workload.
+The bridge capture and native relay remain running. Their retained complete
+1,262,306-byte console prefixes are identical. Raw telemetry, both outcome
+captures, stop receipts, observer/watch files, full UART prefixes and health/SD
+observations are private under `out/`; no guest disk backup is implied.
 
-## Automatic evidence preservation
-
-The [reviewed preserver](evidence/endurance-outcome-preservation-20261109.json)
-is armed on collector exit and with a persistent native timer for
-**2026-11-10 02:16 UTC**. Its protected standalone copy is independent of later
-repository edits. It stores separate fresh snapshots in
-`out/endurance-outcome-20261109-01` and `out/endurance-outcome-20261109-final`,
-including raw exit fields, RAM observer/watch/load files, bounded journals and
-health observations when the collector is confirmed stopped. SSH errors, missing
-files, boot mismatches and possible truncation are retained explicitly. These
-are unreviewed captures; no automatic pass or recovery is attempted.
-
-A [live read-only preflight and independent review](evidence/endurance-journal-selector-repair-20261109.json)
-found and corrected the journal boot selector before final capture: this target
-requires the compact 32-character boot ID. The protected copy was atomically
-replaced at November 9 12:55:58 UTC, without restarting services or changing the
-workload. All three journals now return records from the expected boot.
-
-The [whole-SD baseline](evidence/protected-sd-baseline-20261109.json) is now
-`401df09e666c22db8e8f9adbeecc0f385a910b1f41995e7a1d0bc68be3b64be5`
-for 1,977,614,336 bytes. Its first 256 MiB exactly match the written protected
-image, and Linux write counters remain zero. This baseline was collected after
-the workload started; later whole-media comparisons and firmware audit are still
-required. It is not an installation step or a throughput benchmark.
-
-## Twelve-hour observation
-
-The [retained prefix audit](evidence/endurance-prefix-12h-20261109.json) covers
-1,454 complete samples through guest elapsed 43,600 seconds, cycle 1,454.
-Audited telemetry checks have no failures: exact SD identity/unmounted state and
-zero write/discard/flush counters, no observed NVMe kernel errors, KVM execution
-and progress, one-MiB network payloads and selected Ethernet link. Maximum
-collector sample gap is 30.339 seconds. Observed SoC thermal zones range
-18.786–35.526 °C; minimum available memory is 11,904,503,808 bytes.
-
-A direct coordinator observation also confirms the original guest, host CPU and
-exit-observer PIDs remain active with zero restarts and the original boot ID.
-The prefix alone does not establish continuous host-worker/observer history.
-Final exits, SMART health and the full 24-hour endpoint remain pending. This is
-a partial observation, not endurance or release acceptance.
+Before any reinstall, preserve current guests, original identity and paired
+ROOT-A/ROOT-B/STATE using the reviewed [backup procedure](host-state-backup.md).
+The stopped endurance disk is a forensic artifact: do not manufacture a clean
+checkpoint or repair it before preservation. Then complete changed-slot
+interruption/rollback, the fresh normalized installation, recovery and restored
+host/KVM checks, the final boot route, ten cold/ten warm boots and independently
+reproduced deployment. Future release guest, collector and host load default to
+**28,800 seconds**; observation grace is for termination capture, not a longer
+workload test. Original sources, archived evidence and generated artifacts keep
+their historical hashes.

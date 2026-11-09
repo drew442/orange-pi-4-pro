@@ -243,7 +243,7 @@ Record the actual new boot ID, root/state identities, 40-file installed tool
 closure, DHCP/address, host fingerprint, SSH login, automatic NTP and SD counters.
 Restore the authenticated guest backup using [guest restoration](guest-restoration.md)
 and demonstrate actual KVM execution/checkpoint/restart on the fresh installation.
-Reconcile final firmware/SSD identity with the 24-hour run and boot-cycle records;
+Reconcile final firmware/SSD identity with the qualifying eight-hour workload data and boot-cycle records;
 count no accidental restart as a measured cycle. Full SD comparisons, firmware
 write audit, cold/warm cycles, interrupted update, rollback, missing NVMe and
 SPI recovery remain [physical acceptance gates](hardware-validation.md).

@@ -3,9 +3,9 @@
 **Preparation only; independent code/procedure review and 2,245 privileged Ubuntu
 tests pass. Physical backup and host restoration remain unperformed.**
 [Preparation evidence](evidence/known-host-state-restore-preparation-20261109.json).
-Do not interrupt the [active endurance run](endurance-run-20261109.md). Finish
-outcome retention, health/SD checks and [off-device preservation](host-state-backup.md)
-first. This procedure is for restoring that preserved host, not migrating its
+The [November 9 workload result](evidence/eight-hour-endurance-result-20261109.json)
+passes the 8-hour criterion. Complete and verify health/SD checks and
+[off-device backups](host-state-backup.md) before restoration. This procedure is for restoring that preserved host, not migrating its
 old selector onto the normalized root pair.
 
 `scripts/restore-known-host-state.py` restores only `/dev/nvme0n1p2`, `p3` and

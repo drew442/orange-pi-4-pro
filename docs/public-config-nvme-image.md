@@ -4,7 +4,7 @@ Two fresh-checkout constructions now match **every raw and gzip byte** and pass
 [independent actual-artifact verification](evidence/normalized-full-nvme-image-20261109.json).
 The selected distribution is **unpersonalized and unbooted**. Physical installation,
 resolver-policy checks and independent deployment reproduction remain pending.
-Leave the running endurance host undisturbed.
+The qualifying workload is stopped and retained; preserve current guest and host backups before installation.
 
 | Artifact | Bytes | SHA-256 |
 | --- | ---: | --- |

@@ -3,7 +3,9 @@
 **Historical second-candidate procedure.** Its `feaa…` STATE and payloads are
 not the current protected `360d…` candidate. Use the [current image map](current-images.md)
 and [prepared protected deployment guide](deploy-protected-20261109.md).
-Leave the active endurance workload undisturbed; no reinstallation is requested.
+The [November 9 workload result](evidence/eight-hour-endurance-result-20261109.json)
+passes the current 8-hour duration gate. Required backups must precede any
+disruptive work; no reinstallation is requested here.
 The commands below are retained as historical construction/rehearsal context.
 
 
@@ -178,4 +180,4 @@ Only after this matched normal boot and management work, consider the [matching 
 
 Return artifact pins, actual endpoint/CA fingerprint (no private keys), full serial logs, acquisition/plan/result and exit statuses, live drive geometry, selected root/state identities, DHCP/time/management logs, and separate successful SSH results for both keys. Run [first actual KVM acceptance](kvm-first-guest.md), selecting its closed **`candidate-repeat-20261107`** profile: running KVM VM/vCPU descriptors, CPU/disk/network PASS, clean shutdown/restart and persisted counter. `/dev/kvm` and build checks are insufficient.
 
-Physical repair, SSH/KVM, automatic time, independent recovery/off-device SPI backup, interrupted update/rollback, dirty-journal/missing-NVMe recovery, guest restore, 10 cold/10 warm boots, 24-hour endurance and zero routine SD writes remain required under [hardware validation](hardware-validation.md). Prove zero writes with full-card hashes, Linux counters and firmware audit; prefer eventual SPI-to-NVMe with SD removed only after its separate recovery and exact-target yes/no gates. Record independent deployment reproduction separately; no release acceptance is claimed here.
+Physical repair, SSH/KVM, automatic time, independent recovery/off-device SPI backup, interrupted update/rollback, dirty-journal/missing-NVMe recovery, guest restore, 10 cold/10 warm boots, [passed 8-hour endurance gate](evidence/eight-hour-endurance-result-20261109.json) and zero routine SD writes remain part of [hardware validation](hardware-validation.md). Prove zero writes with full-card hashes, Linux counters and firmware audit; prefer eventual SPI-to-NVMe with SD removed only after its separate recovery and exact-target yes/no gates. Record independent deployment reproduction separately; no release acceptance is claimed here.

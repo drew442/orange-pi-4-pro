@@ -99,8 +99,10 @@ passes two matching streams and independent full artifact comparison. Preserve
 the separate historical registrations; do not relabel old candidates as current.
 
 Current protected boot, automatic time and actual KVM CPU/disk/network execution
-pass; the fresh 24-hour workload remains active. Physical inactive-slot update,
+pass; the [November 9 workload result](evidence/eight-hour-endurance-result-20261109.json)
+passes the current 8-hour criterion. Physical inactive-slot update,
 interruption, booted rollback/recovery and independently reproduced full deployment
-remain open. Use the guarded matched maintenance path only after workload evidence
-and required backups are retained. These root-component build results alone do
+remain open. Use the guarded matched maintenance path only after final workload
+evidence is retained and reviewed and required backups are complete. These
+root-component build results alone do
 not establish the remaining [hardware acceptance](hardware-validation.md).

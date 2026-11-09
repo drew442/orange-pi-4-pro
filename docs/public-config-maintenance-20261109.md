@@ -3,7 +3,7 @@
 New A/B update candidates and portable tools now match the
 [corrected root construction 01](public-config-roots-20261109.md).
 Independent actual-artifact review passes. They have **not** been applied to
-the Orange Pi, and the active endurance host remains unchanged.
+the Orange Pi, and the installed host remains unchanged.
 [Evidence and exact pins](evidence/public-config-maintenance-20261109.json)
 separate file preparation from physical update, activation and rollback.
 
