@@ -1,0 +1,92 @@
+{
+  "schema": 1,
+  "date": "2026-11-09",
+  "classification": "Reviewed isolated NVMe composer launcher preparation; actual namespace composition unperformed",
+  "hardware_acceptance": false,
+  "physical_storage_written": false,
+  "actual_isolated_composition_performed": false,
+  "producer_source_commit": "81f907481b12e9639ad23752966e05166074f96f",
+  "sources": {
+    "build/launch-isolated-nvme-composition.py": {
+      "bytes": 25924,
+      "sha256": "f1e3808137c92ada140a49ad0ac5deca1caea8849773796df8a3b3578b1924fd"
+    },
+    "tests/test_isolated_nvme_composition.py": {
+      "bytes": 16387,
+      "sha256": "219548fc25b7fab79a115db4865c82347e2317a969f10153c2b8f2b72e190644"
+    }
+  },
+  "reviews": {
+    "initial": {
+      "path": "tmp/isolated-nvme-composition-code-review-20261109.json",
+      "bytes": 4006,
+      "sha256": "21dc5ab505d44f729be2d6a98585a0edcd7bcd7e75b935d6a82a7fbfdfc5fbbe",
+      "result": "FAIL",
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "high"
+    },
+    "fixed": {
+      "path": "tmp/isolated-nvme-composition-code-rereview-20261109.json",
+      "bytes": 3203,
+      "sha256": "4afffbcb538e98d5da294658604642db249fe58f7d9194de7361f42f9e8ec7d8",
+      "result": "PASS",
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "high"
+    },
+    "documentation": {
+      "path": "tmp/isolated-nvme-composition-documentation-review-20261109.json",
+      "bytes": 3153,
+      "sha256": "73eaca2c5b16cd1b7f1c0e156a284b0a786bca6d7d963d90b99e4eabb17a42ff",
+      "result": "PASS",
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "high"
+    }
+  },
+  "validation": {
+    "builder_path": "/var/lib/a733-isolated-composition-validation-20261109-01",
+    "unit": "a733-isolated-composition-validation-20261109-01.service",
+    "result": "success",
+    "exit_status": 0,
+    "cpu_quota_percent": 100,
+    "memory_max_bytes": 3221225472,
+    "tests": 2264,
+    "seconds": 74.648,
+    "skips": 0,
+    "failures": 0,
+    "errors": 0,
+    "shell_suites": 5,
+    "diagnostic_cases": 5,
+    "source_files_checked_before_after": 896,
+    "builder_filesystem_available_bytes_after": 43602857984,
+    "builder_memory_available_bytes_after": 7347269632,
+    "retained": {
+      "out/isolated-composition-validation-20261109-01/validation.log": {
+        "bytes": 25177,
+        "sha256": "f4c51eb2aaf7994896c3f217eea52e399f2ef38575518c687c3f54656826c719"
+      },
+      "out/isolated-composition-validation-20261109-01/validation-unit.txt": {
+        "bytes": 120,
+        "sha256": "9a2a6999e01f633fd9958ffb97047574393c15329ff26d904947b6df28923e06"
+      },
+      "out/isolated-composition-validation-20261109-01/source-lock.json": {
+        "bytes": 143219,
+        "sha256": "7645829afa9a789a5f209440857f450be3609348bca4c17bd4b060f144f38f3c"
+      },
+      "out/isolated-composition-validation-20261109-01/source-history.bundle": {
+        "bytes": 3516891,
+        "sha256": "cce1750b13339b875a0d655d3fb6b716ce3df039cba31f0bbfb1996b43515a79"
+      }
+    }
+  },
+  "limits": [
+    "Actual ROOT historical-anchor and namespace integration await execution.",
+    "Reuses the same authenticated held components; no compiler/kernel rebuild or new OS package installation is claimed.",
+    "Historical ROOT comparison uses reviewed UID/GID/translated-xattr mapping policy; exact host xattr values must remain unchanged before/after.",
+    "No A733, UART bridge, native LVM or target storage access occurred in implementation/review.",
+    "Future output must match existing exact raw/gzip pins; mismatch remains failure."
+  ],
+  "native_toml_checks": {
+    "files": 5,
+    "parser": "Python tomllib"
+  }
+}

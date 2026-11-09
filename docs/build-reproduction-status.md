@@ -41,9 +41,9 @@ physical installation. Fresh machine identity is intentionally installation
 specific; the same-board personalization step preserves this board's private
 identity without changing the selected root pairing.
 
-Latest complete privileged validation is **2,245 Python tests**, zero skips,
+Latest complete privileged validation is **2,264 Python tests**, zero skips,
 errors or failures, plus five shell suites and five diagnostic assembly cases.
-Five TOML files parse separately on codex. [Retained suite and restore preparation](evidence/known-host-state-restore-preparation-20261109.json)
+Five TOML files parse separately on codex. [Retained suite and isolated-composer preparation](evidence/isolated-nvme-composition-preparation-20261109.json)
 record the source pins and initial validation-environment failures. These are
 software checks.
 
@@ -66,3 +66,7 @@ evidence and Git history: [cross-day account dates](userspace-account-date-repla
 [protected full-image predecessor](evidence/protected-full-nvme-image-20261109.json)
 and [resolver-readable predecessor](evidence/public-config-nvme-image-20261109.json).
 Their old pending-status statements describe those checkpoints, not current gates.
+
+The [isolated final-composer launcher](isolated-nvme-composition.md) now passes
+independent review and the full suite. It does not change the producer or held
+components; its actual namespace execution remains pending.

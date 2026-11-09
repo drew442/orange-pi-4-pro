@@ -106,7 +106,12 @@ privileged focused review; full-suite revalidation and final guide review pass. 
   [Current evidence](evidence/normalized-full-nvme-image-20261109.json). Same-builder
   repetition is established; independent clean-builder/deployment reproduction
   and physical installation remain open.
-- Latest complete privileged Ubuntu suite: **2,245 tests**, zero skips/errors/
+- The [isolated full-NVMe composer launcher](isolated-nvme-composition.md)
+  passes independent source/procedure review. It prepares execution of unchanged
+  producer `81f907…` in the frozen Ubuntu namespace using the same held components;
+  actual isolated composition remains unperformed. No new image or OS rebuild
+  is claimed by preparation.
+- Latest complete privileged Ubuntu suite: **2,264 tests**, zero skips/errors/
   failures; five shell suites and five diagnostic assembly cases also pass.
   All five TOML files parse separately on codex. These are software checks.
 - [Normalized maintenance candidates](normalized-maintenance-20261109.md) use

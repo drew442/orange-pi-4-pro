@@ -2,7 +2,7 @@
 
 The signed Ubuntu Base seed now passes an actual isolation probe on
 `drew@build.drewnet.online`. This is the AMD64 build environment. The current
-Orange Pi installation continues to use the [personalized deployment](deploy-personalized-20261106.md).
+Orange Pi installation uses the [protected boot pair](current-images.md).
 The [fresh offline installation of 842 packages](evidence/builder-offline-install-20261106.json)
 now passes. The installed builder filesystem has also been frozen, exported
 twice, restored with metadata, and checked. These builder checks supply no A733
@@ -136,7 +136,12 @@ Image, DTB, configuration and all 332 regular module files from the original
 authenticated initramfs. Independent manifest review, complete package/source
 postchecks and namespace cleanup pass. [Both full deployment SD images](sd-image-reproduction.md)
 now reproduce their raw/gzip bytes with regenerated initramfs files and a tracked
-recipe. NVMe/root/userspace reconstruction remains pending.
+recipe. [Userspace/time-profile replay](account-date-replay-driver.md) and
+[normalized root reconstruction](deterministic-host-roots.md) now pass in this
+restored namespace. [Two final NVMe streams](evidence/normalized-full-nvme-image-20261109.json)
+also match, composed on the prepared host. The separately reviewed
+[isolated composer launcher](isolated-nvme-composition.md) prepares that unchanged
+serializer for the frozen namespace; actual execution remains pending.
 Keep service, capability/device and network restrictions throughout the remaining
 build work. Hardware KVM execution and all
 [release gates](hardware-validation.md) remain separate requirements; no
