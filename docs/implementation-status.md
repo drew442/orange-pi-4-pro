@@ -101,7 +101,9 @@ with independent actual-artifact verification running. A [build-only normalizati
 now has two independently reviewed full-size constructions matching complete
 raw/gzip bytes, all four filesystem readbacks and the existing marker/STATE
 pairing. The finite normalized full-image profile now passes independent code review
-and privileged Ubuntu tests; its integrated distribution remains unbuilt. The active endurance host is unchanged.
+and 2,180 privileged Ubuntu tests. Two full streams are running from fresh
+checkouts of `81f9074`; completed construction and actual-artifact review remain
+pending. The active endurance host is unchanged.
 
 ## Construction, resources and authorization
 

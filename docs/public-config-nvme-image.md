@@ -63,8 +63,12 @@ Use the normalized root directory
 for `A733_NEW_ROOTS` and add `--root-profile deterministic-20261109` to the
 prepared invocation. The fresh repeat is tag `timesync-deterministic-03`.
 Independent source review and complete actual-root verification now pass.
-Integrated full-image construction and its independent artifact verification
-remain required before installation. Neither normalized integrated distribution
+Two integrated constructions are running from separate fresh checkouts of
+`81f907481b12e9639ad23752966e05166074f96f` under
+`/var/lib/a733-normalized-nvme-source-20261109-01/project-01` and `project-02`,
+with output suffixes `deterministic-20261109-01` and `-02`. Their quotas are two
+and one CPU respectively, each with a 3 GiB ceiling. Completed construction
+and independent artifact verification remain required before installation. Neither normalized integrated distribution
 nor physical installation is claimed here. See [root normalization](deterministic-host-roots.md).
 
 Admission remains **23,760,999,827 available bytes**. Runtime floors remain
