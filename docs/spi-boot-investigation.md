@@ -1,11 +1,12 @@
 # SPI-to-NVMe boot investigation
 
 SPI-to-NVMe with the SD removed remains the preferred release mode. The first
-physical diagnostic log identifies SPI as **XM25QU128C, 16 MiB**. No SPI backup,
-programming or SD-removed NVMe boot has been performed. The user authorizes SPI
-work with exact-target/proposed-write details and yes/no confirmation before
-programming. No concrete SPI write has been confirmed. Leave attached heatsinks
-in place; software identity is sufficient.
+physical diagnostic log identifies SPI as **XM25QU128C, 16 MiB**. The
+[original backup and backup-derived candidate](spi-original-backup-20261108.md)
+are retained and reviewed. Programming and SD-removed boot remain unperformed.
+The [known SPI target is authorized](evidence/storage-write-authorization-20261108.json);
+independent recovery and programmer review remain prerequisites. Leave attached
+heatsinks in place; software identity is sufficient.
 
 ## Pinned source findings
 
@@ -56,7 +57,8 @@ The reviewed diagnostic U-Boot explicitly restricts `boot_targets` to `mmc0`.
 Copying its boot package into SPI would not by itself implement NVMe-first boot.
 A separately reviewed SPI/NVMe boot policy must preserve the compatible firmware,
 read-only environment and EL2 handoff while selecting NVMe boot files. The [EL2 diagnostic](el2-diagnostic.md) has physically initialized KVM, but
-SPI boot and guest execution remain untested.
+SPI boot remains untested; [actual KVM guest execution](kvm-vgic-results-20261108.md)
+now passes on the SD-booted host.
 
 ## Resolved source policy and remaining candidate work
 
@@ -97,8 +99,10 @@ preserves the final >4 GB guard, with unchanged runtime floors.
 The [file-only SPI assembler](spi-file-candidate.md) now combines the pinned
 components with an authenticated backup while preserving all other bytes,
 including gaps and partial erase units. A [synthetic-baseline fixture](evidence/spi-file-assembly-20261107.json)
-produces identical files/manifests on the Jammy builder and codex. No physical
-backup-derived board candidate or programmer exists; never flash these fixtures.
+produces identical files/manifests on the Jammy builder and codex. The
+[physical backup-derived candidate](spi-original-backup-20261108.md) now
+passes independent file review. An actual programmer remains unprepared; never
+flash synthetic fixtures.
 
 After installed management works, a serial-only **read test** can establish the
 NVMe file path without programming SPI. Interrupt U-Boot autoboot and capture:
@@ -127,8 +131,8 @@ this is a file-read test, not SPI boot acceptance.
 The [read-only backup tool and procedure](spi-backup.md) now provide exact-device
 inspection and a two-read, verified 16 MiB RAM backup with progress. Only private
 tmpfs output is accepted, and active swap is refused. Transfer and verify the
-backup off-device before poweroff. Host fixtures and independent review do not
-establish that a physical backup has been made.
+backup off-device before poweroff. The [physical backup and off-device retention](spi-original-backup-20261108.md)
+now pass; source fixtures alone would not establish that result.
 
 The [ROM recovery investigation](rom-recovery-investigation.md) now provides a
 pinned, version-only host FEL probe with source/ELF inspection and no memory or
@@ -150,10 +154,10 @@ Before proposing any SPI write:
 4. Demonstrate U-Boot NVMe scan/read and a compatible boot-file layout. Prepare
    and independently inspect a new regular-file SPI candidate and its exact
    byte/erase-unit plan; keep it distinct from SD images.
-5. Present the exact physical target and proposed write, then request yes/no
-   confirmation before programming. The user authorized preparing SPI deployment
-   using this confirmation style; no concrete SPI write has occurred.
-   NVMe erase permission does not authorize this operation.
+5. Present and revalidate the exact physical target and proposed write. The
+   [known SPI authorization](evidence/storage-write-authorization-20261108.json)
+   persists; request yes/no only for unapproved targets or scope. No concrete SPI
+   write has occurred.
 
 After authorized programming, physically prove SD-removed cold boot, actual KVM
 guest execution, rollback/recovery and the full release cycle/workload tests.

@@ -7,8 +7,10 @@ was checked. This prepares identification; it does not establish USB ROM entry,
 a RAM recovery loader, flash restoration or recovery after a bad SPI bootloader.
 
 The [corrected host](evidence/corrected-host-boot-20261108.json), SSH, automatic time
-and restored KVM guest now pass. The [24-hour endurance run](endurance-run-20261108.md)
-lost SSH management; capture the requested serial diagnostics before USB recovery experiments. Keep both heatsinks attached.
+and restored KVM guest now pass. The [earlier endurance run](endurance-run-20261108.md) lost SSH management.
+Independent UART capture/control now works, and the
+[fresh 24-hour run](endurance-run-20261109.md) is in progress. Defer USB recovery
+experiments and reboots until its outcome is retained. Keep both heatsinks attached.
 
 ## What the sources establish
 

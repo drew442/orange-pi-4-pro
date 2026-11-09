@@ -60,15 +60,17 @@ A subsequent [read-only live comparison](spi-live-plan-results-20261108.md) now
 confirms the baseline still matches and all candidate unit/preservation pins
 agree. It adds no programming authorization or recovery proof.
 
-The current operator action remains the [VGIC SD trial](next-host-boot-20261108.md).
-Do not substitute this SPI file or reinstall NVMe. The installed NVMe BOOT
-partition still contains the old Linux DT; a working SPI-to-NVMe path needs a
-compatible, hardware-validated boot-file set there as well.
+The [protected host](implementation-status.md) now runs the fresh endurance
+workload. Matching protected NVMe BOOT files are installed; U-Boot loading those
+files remains untested. Leave the workload undisturbed until its outcome is
+retained.
 
-Before proposing programming, demonstrate recovery independent of a programmed
-SPI bootloader, test U-Boot NVMe file loading and the matched Linux boot files,
-prepare and independently review the actual programmer and rollback procedure,
-then identify the exact live target/write and request simple **yes/no**
-authorization. The all-`0xff` backup and successful SD boot do not by themselves
+Before programming, demonstrate recovery independent of a programmed SPI
+bootloader, test U-Boot NVMe file loading and the matched Linux boot files,
+and prepare and independently review the actual programmer and rollback
+procedure. Revalidate the exact live target/write. The operator's
+[known SPI authorization](evidence/storage-write-authorization-20261108.json)
+persists; ask yes/no only for unapproved targets or scope.
+The all-`0xff` backup and successful SD boot do not by themselves
 prove recovery after a bad programmed bootloader. SD-removed cold boots, real
 KVM guest completion and full release acceptance remain open.

@@ -7,10 +7,11 @@ host safety tests and independent source review. [Preparation evidence](evidence
 records the tests and review. It does not erase/program flash, install anything,
 change boot selection or prove recovery.
 
-Installed DHCP and both SSH keys now pass after the repair. The next operator
-action is the [VGIC SD trial](next-host-boot-20261108.md); no additional backup
-command is needed for that trial. The commands below remain available for a
-later capture of changed flash. Keep both heatsinks attached. The target is:
+Installed DHCP, both SSH keys and real KVM execution pass. The
+[fresh endurance run](endurance-run-20261109.md) is in progress; leave it
+undisturbed. The original off-device backup remains retained, and SPI is
+unprogrammed. The commands below remain available for a later capture of changed
+flash. Keep both heatsinks attached. The target is:
 
 | Field | Required value |
 | --- | --- |
