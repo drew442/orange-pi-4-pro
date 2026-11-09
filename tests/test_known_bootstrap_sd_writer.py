@@ -91,6 +91,11 @@ def fixture_root_ownership():
 
 
 class SourceTests(unittest.TestCase):
+    def test_protected_bootstrap_pin(self):
+        self.assertEqual(w.SOURCE_BYTES, 268435456)
+        self.assertEqual(w.SOURCE_SHA256,
+                         "ab5e8c2c846cbbd51b61bef6831d7e4d1498c29fefbf47d74301b1f3bb0ad207")
+
     def test_held_source_hash_identity_and_path(self):
         payload = b'\0tiny fixture\0'
         with tempfile.TemporaryDirectory() as folder:

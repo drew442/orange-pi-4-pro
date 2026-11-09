@@ -7,8 +7,10 @@ layout, corrected VGIC DTB, compatible kernel, firmware and SD boot commands.
 The 2 GB SD, nominal 250 GB NVMe, minimal host and zero routine SD write
 requirements remain physical acceptance gates. A real KVM guest is required.
 
-This recipe has focused software fixture coverage. **No full candidate has
-been built by this implementation task, and no hardware acceptance is claimed.**
+Two fresh output constructions on the qualified Ubuntu builder produce identical
+raw/gzip SD images and initramfs artifacts. See [construction evidence](evidence/protected-state-bootstrap-20261109.json).
+This is software construction evidence; physical boot and hardware acceptance
+remain pending.
 NVMe BOOT derivation and any physical installation are separate work.
 
 From a trusted, quiescent checkout on the qualified builder, use a fresh output:

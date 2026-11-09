@@ -18,10 +18,12 @@ with 512-byte logical sectors. There are no alternate device or hash switches.
 It never selects NVMe or SPI.
 
 The exact raw bootstrap input is **268,435,456 bytes**, SHA-256
-`f02c74b4c001f1608d0005b6ff23fe82bffa8c02f71e19e5b6573819125ae383`.
+`ab5e8c2c846cbbd51b61bef6831d7e4d1498c29fefbf47d74301b1f3bb0ad207`.
 Its builder location is
-`/var/lib/a733-vgic-runtime-bootstrap-project-20261108-01/project/out/host-sd-vgic-runtime-corrected-01/a733-host-sd.img`.
-This corrected host bootstrap selects state `360d…` and remains **UNBOOTED**.
+`/var/lib/a733-maintenance-validation-20261108-01/project/out/protected-state-bootstrap-20261109-01/a733-host-sd.img`.
+This protected STATE bootstrap selects state `360d…` and remains **UNBOOTED**.
+It replaces the historical `f02c…` input pin; that earlier image physically
+booted, but did not block writes during its initial filesystem probe.
 The source firmware is unchanged. Consult the evolving status document for the
 matched full-NVMe construction state and hardware gates.
 

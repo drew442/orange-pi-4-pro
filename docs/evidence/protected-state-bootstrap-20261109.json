@@ -1,0 +1,2064 @@
+{
+  "schema": 1,
+  "date": "2026-11-09",
+  "classification": "software construction only; physical bootstrap boot pending",
+  "hardware_acceptance": false,
+  "source_commit": "67c44c816456ec84d5e068b2953906fa09072a12",
+  "builder": "drew@build.drewnet.online",
+  "builds": [
+    {
+      "output": "/var/lib/a733-maintenance-validation-20261108-01/project/out/protected-state-bootstrap-20261109-01",
+      "manifest": "out/serial-recovery-20261109/protected-sd-build-01.stdout",
+      "manifest_sha256": "f3daf6fcea58fd371a850e2d9dd4be572ccb7184f06a5da4f4ff142f42b189cc",
+      "resources": {
+        "before": {
+          "free_bytes": 20969652224,
+          "available_memory_bytes": 7664963584
+        },
+        "after": {
+          "free_bytes": 20640436224,
+          "available_memory_bytes": 7476011008
+        },
+        "scratch_budget": 1073741824,
+        "disk_floor": 3000000000,
+        "memory_floor": 1000000000,
+        "after_scratch_cleanup": {
+          "free_bytes": 20674400256,
+          "available_memory_bytes": 7482679296
+        }
+      },
+      "firmware_prefix": {
+        "bytes": 33554432,
+        "sha256": "da4a8db3aba8255a78ed2b60a251c9835dfa0b5f471f1f0590fe09abb722b556"
+      }
+    },
+    {
+      "output": "/var/lib/a733-maintenance-validation-20261108-01/project/out/protected-state-bootstrap-20261109-02",
+      "manifest": "out/serial-recovery-20261109/protected-sd-build-02.stdout",
+      "manifest_sha256": "9204e0d2818d05ac206494ffb23609452336a148c740c1e41fc442fb2a582a64",
+      "resources": {
+        "before": {
+          "free_bytes": 20674281472,
+          "available_memory_bytes": 7662043136
+        },
+        "after": {
+          "free_bytes": 20345065472,
+          "available_memory_bytes": 7467831296
+        },
+        "scratch_budget": 1073741824,
+        "disk_floor": 3000000000,
+        "memory_floor": 1000000000,
+        "after_scratch_cleanup": {
+          "free_bytes": 20379029504,
+          "available_memory_bytes": 7475376128
+        }
+      },
+      "firmware_prefix": {
+        "bytes": 33554432,
+        "sha256": "da4a8db3aba8255a78ed2b60a251c9835dfa0b5f471f1f0590fe09abb722b556"
+      }
+    }
+  ],
+  "matching_artifacts": {
+    "uInitrd": {
+      "bytes": 4763312,
+      "sha256": "2149513ae5cf90f1edb6047e6ebf8ba903dc86c55b4b43754a5a2cfd3368c786"
+    },
+    "a733-host-sd.img": {
+      "bytes": 268435456,
+      "sha256": "ab5e8c2c846cbbd51b61bef6831d7e4d1498c29fefbf47d74301b1f3bb0ad207"
+    },
+    "initramfs.cpio.gz": {
+      "bytes": 4763248,
+      "sha256": "5ca1dbccaf7ac13f203f39631b47319c8e04d7e07af4d4bbcd5ac946893c9abf"
+    },
+    "a733-host-sd.img.gz": {
+      "bytes": 17273154,
+      "sha256": "450e30f0b8169da7471396dbc97d44185426c3da61cc83d8425acab74ccef18c"
+    }
+  },
+  "same_artifacts_in_two_fresh_output_directories": true,
+  "independent_clean_environment_replay": false,
+  "patch_log_difference": "Output-specific temporary pathnames; logs are not reproducible artifacts.",
+  "nvme_written": false,
+  "sd_written": false,
+  "independent_review": {
+    "schema": 1,
+    "date": "2026-11-09T01:50:15.876526+00:00",
+    "operation": "independent-actual-protected-state-sd-artifact-review",
+    "decision": "PASS",
+    "hardware_acceptance": false,
+    "physical_storage_written": false,
+    "classification": "Software artifact verification only; UNBOOTED",
+    "source_commit": "67c44c816456ec84d5e068b2953906fa09072a12",
+    "actual_output": "/var/lib/a733-maintenance-validation-20261108-01/project/out/protected-state-bootstrap-20261109-01",
+    "actual_base": "/var/lib/a733-vgic-runtime-bootstrap-project-20261108-01/project/out/host-sd-vgic-runtime-corrected-01/a733-host-sd.img",
+    "resources_before": {
+      "free_bytes": 19798990848,
+      "available_memory_bytes": 7659307008
+    },
+    "blockers": [],
+    "checks": {
+      "gzip_expansion": {
+        "bytes": 268435456,
+        "sha256": "ab5e8c2c846cbbd51b61bef6831d7e4d1498c29fefbf47d74301b1f3bb0ad207"
+      },
+      "firmware_prefix": {
+        "bytes": 33554432,
+        "sha256": "da4a8db3aba8255a78ed2b60a251c9835dfa0b5f471f1f0590fe09abb722b556"
+      },
+      "mbr": [
+        {
+          "type": 131,
+          "start_sector": 65536,
+          "sectors": 458752
+        },
+        {
+          "type": 0,
+          "start_sector": 0,
+          "sectors": 0
+        },
+        {
+          "type": 0,
+          "start_sector": 0,
+          "sectors": 0
+        },
+        {
+          "type": 0,
+          "start_sector": 0,
+          "sectors": 0
+        }
+      ],
+      "boot_namespace": {
+        "entries": [
+          ".",
+          "boot",
+          "boot/boot.cmd",
+          "boot/boot.scr",
+          "boot/dtb",
+          "boot/dtb/allwinner",
+          "boot/dtb/allwinner/sun60i-a733-orangepi-4-pro.dtb",
+          "boot/uImage",
+          "boot/uInitrd",
+          "lost+found"
+        ],
+        "entry_count": 10,
+        "metadata": "Exact normalized debugfs stat equality for all entries, including uid/gid/mode/links/flags/generation/version/project/ACL/timestamps/extra inode fields; only inode allocation, extents, blockcount excluded; uInitrd size allowed. No xattrs on any entry.",
+        "base": {
+          ".": {
+            "metadata": "Inode: ALLOCATION   Type: directory    Mode:  0755   Flags: 0x80000\nGeneration: 0    Version: 0x00000000:00000000\nUser:     0   Group:     0   Project:     0   Size: 4096\nFile ACL: 0\nLinks: 4   Blockcount: ALLOCATION\nFragment:  Address: 0    Number: 0    Size: 0\n ctime: 0xb406d1c0:00000003 -- Wed Dec  1 05:53:04 2337\n atime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\n mtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\ncrtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\nSize of extra inode fields: 32\n"
+          },
+          "boot": {
+            "metadata": "Inode: ALLOCATION   Type: directory    Mode:  0755   Flags: 0x80000\nGeneration: 0    Version: 0x00000000:00000000\nUser:     0   Group:     0   Project:     0   Size: 4096\nFile ACL: 0\nLinks: 3   Blockcount: ALLOCATION\nFragment:  Address: 0    Number: 0    Size: 0\n ctime: 0xb406d1c0:00000003 -- Wed Dec  1 05:53:04 2337\n atime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\n mtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\ncrtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\nSize of extra inode fields: 32\n"
+          },
+          "boot/uInitrd": {
+            "metadata": "Inode: ALLOCATION   Type: regular    Mode:  0644   Flags: 0x80000\nGeneration: 0    Version: 0x00000000:00000000\nUser:     0   Group:     0   Project:     0   Size: PAYLOAD\nFile ACL: 0\nLinks: 1   Blockcount: ALLOCATION\nFragment:  Address: 0    Number: 0    Size: 0\n ctime: 0xb406d1c0:00000003 -- Wed Dec  1 05:53:04 2337\n atime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\n mtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\ncrtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\nSize of extra inode fields: 32\n",
+            "data": {
+              "bytes": 4762436,
+              "sha256": "b10bdad8671a32b4157bf6f7ff553618024fc928e59caf691b529c8658b12d16"
+            }
+          },
+          "boot/uImage": {
+            "metadata": "Inode: ALLOCATION   Type: regular    Mode:  0644   Flags: 0x80000\nGeneration: 0    Version: 0x00000000:00000000\nUser:     0   Group:     0   Project:     0   Size: 27283528\nFile ACL: 0\nLinks: 1   Blockcount: ALLOCATION\nFragment:  Address: 0    Number: 0    Size: 0\n ctime: 0xb406d1c0:00000003 -- Wed Dec  1 05:53:04 2337\n atime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\n mtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\ncrtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\nSize of extra inode fields: 32\n",
+            "data": {
+              "bytes": 27283528,
+              "sha256": "6f9269755c4c2bc196c094899fa1ff20292f4d762c4000f77fcbb0887d5f154a"
+            }
+          },
+          "boot/dtb": {
+            "metadata": "Inode: ALLOCATION   Type: directory    Mode:  0755   Flags: 0x80000\nGeneration: 0    Version: 0x00000000:00000000\nUser:     0   Group:     0   Project:     0   Size: 4096\nFile ACL: 0\nLinks: 3   Blockcount: ALLOCATION\nFragment:  Address: 0    Number: 0    Size: 0\n ctime: 0xb406d1c0:00000003 -- Wed Dec  1 05:53:04 2337\n atime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\n mtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\ncrtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\nSize of extra inode fields: 32\n"
+          },
+          "boot/dtb/allwinner": {
+            "metadata": "Inode: ALLOCATION   Type: directory    Mode:  0755   Flags: 0x80000\nGeneration: 0    Version: 0x00000000:00000000\nUser:     0   Group:     0   Project:     0   Size: 4096\nFile ACL: 0\nLinks: 2   Blockcount: ALLOCATION\nFragment:  Address: 0    Number: 0    Size: 0\n ctime: 0xb406d1c0:00000003 -- Wed Dec  1 05:53:04 2337\n atime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\n mtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\ncrtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\nSize of extra inode fields: 32\n"
+          },
+          "boot/dtb/allwinner/sun60i-a733-orangepi-4-pro.dtb": {
+            "metadata": "Inode: ALLOCATION   Type: regular    Mode:  0644   Flags: 0x80000\nGeneration: 0    Version: 0x00000000:00000000\nUser:     0   Group:     0   Project:     0   Size: 209344\nFile ACL: 0\nLinks: 1   Blockcount: ALLOCATION\nFragment:  Address: 0    Number: 0    Size: 0\n ctime: 0xb406d1c0:00000003 -- Wed Dec  1 05:53:04 2337\n atime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\n mtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\ncrtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\nSize of extra inode fields: 32\n",
+            "data": {
+              "bytes": 209344,
+              "sha256": "1ba8f5926c0d76d12479bafcfcfce66be4a934ccfb6a5bcbcc7f7aa86c07f9f4"
+            }
+          },
+          "boot/boot.scr": {
+            "metadata": "Inode: ALLOCATION   Type: regular    Mode:  0644   Flags: 0x80000\nGeneration: 0    Version: 0x00000000:00000000\nUser:     0   Group:     0   Project:     0   Size: 1187\nFile ACL: 0\nLinks: 1   Blockcount: ALLOCATION\nFragment:  Address: 0    Number: 0    Size: 0\n ctime: 0xb406d1c0:00000003 -- Wed Dec  1 05:53:04 2337\n atime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\n mtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\ncrtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\nSize of extra inode fields: 32\n",
+            "data": {
+              "bytes": 1187,
+              "sha256": "f1ba10868782026d6fa4392b5e5f60db7953e8a340539f750ad710fb2b2032f1"
+            }
+          },
+          "boot/boot.cmd": {
+            "metadata": "Inode: ALLOCATION   Type: regular    Mode:  0644   Flags: 0x80000\nGeneration: 0    Version: 0x00000000:00000000\nUser:     0   Group:     0   Project:     0   Size: 1115\nFile ACL: 0\nLinks: 1   Blockcount: ALLOCATION\nFragment:  Address: 0    Number: 0    Size: 0\n ctime: 0xb406d1c0:00000003 -- Wed Dec  1 05:53:04 2337\n atime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\n mtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\ncrtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\nSize of extra inode fields: 32\n",
+            "data": {
+              "bytes": 1115,
+              "sha256": "d65f4dc811150fed3ab9b67722e6b327341d388b0263907380c9bf59497fd93f"
+            }
+          },
+          "lost+found": {
+            "metadata": "Inode: ALLOCATION   Type: directory    Mode:  0700   Flags: 0x80000\nGeneration: 0    Version: 0x00000000:00000000\nUser:     0   Group:     0   Project:     0   Size: 16384\nFile ACL: 0\nLinks: 2   Blockcount: ALLOCATION\nFragment:  Address: 0    Number: 0    Size: 0\n ctime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\n atime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\n mtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\ncrtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\nSize of extra inode fields: 32\n"
+          }
+        },
+        "candidate": {
+          ".": {
+            "metadata": "Inode: ALLOCATION   Type: directory    Mode:  0755   Flags: 0x80000\nGeneration: 0    Version: 0x00000000:00000000\nUser:     0   Group:     0   Project:     0   Size: 4096\nFile ACL: 0\nLinks: 4   Blockcount: ALLOCATION\nFragment:  Address: 0    Number: 0    Size: 0\n ctime: 0xb406d1c0:00000003 -- Wed Dec  1 05:53:04 2337\n atime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\n mtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\ncrtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\nSize of extra inode fields: 32\n"
+          },
+          "boot": {
+            "metadata": "Inode: ALLOCATION   Type: directory    Mode:  0755   Flags: 0x80000\nGeneration: 0    Version: 0x00000000:00000000\nUser:     0   Group:     0   Project:     0   Size: 4096\nFile ACL: 0\nLinks: 3   Blockcount: ALLOCATION\nFragment:  Address: 0    Number: 0    Size: 0\n ctime: 0xb406d1c0:00000003 -- Wed Dec  1 05:53:04 2337\n atime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\n mtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\ncrtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\nSize of extra inode fields: 32\n"
+          },
+          "boot/uInitrd": {
+            "metadata": "Inode: ALLOCATION   Type: regular    Mode:  0644   Flags: 0x80000\nGeneration: 0    Version: 0x00000000:00000000\nUser:     0   Group:     0   Project:     0   Size: PAYLOAD\nFile ACL: 0\nLinks: 1   Blockcount: ALLOCATION\nFragment:  Address: 0    Number: 0    Size: 0\n ctime: 0xb406d1c0:00000003 -- Wed Dec  1 05:53:04 2337\n atime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\n mtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\ncrtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\nSize of extra inode fields: 32\n",
+            "data": {
+              "bytes": 4763312,
+              "sha256": "2149513ae5cf90f1edb6047e6ebf8ba903dc86c55b4b43754a5a2cfd3368c786"
+            }
+          },
+          "boot/uImage": {
+            "metadata": "Inode: ALLOCATION   Type: regular    Mode:  0644   Flags: 0x80000\nGeneration: 0    Version: 0x00000000:00000000\nUser:     0   Group:     0   Project:     0   Size: 27283528\nFile ACL: 0\nLinks: 1   Blockcount: ALLOCATION\nFragment:  Address: 0    Number: 0    Size: 0\n ctime: 0xb406d1c0:00000003 -- Wed Dec  1 05:53:04 2337\n atime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\n mtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\ncrtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\nSize of extra inode fields: 32\n",
+            "data": {
+              "bytes": 27283528,
+              "sha256": "6f9269755c4c2bc196c094899fa1ff20292f4d762c4000f77fcbb0887d5f154a"
+            }
+          },
+          "boot/dtb": {
+            "metadata": "Inode: ALLOCATION   Type: directory    Mode:  0755   Flags: 0x80000\nGeneration: 0    Version: 0x00000000:00000000\nUser:     0   Group:     0   Project:     0   Size: 4096\nFile ACL: 0\nLinks: 3   Blockcount: ALLOCATION\nFragment:  Address: 0    Number: 0    Size: 0\n ctime: 0xb406d1c0:00000003 -- Wed Dec  1 05:53:04 2337\n atime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\n mtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\ncrtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\nSize of extra inode fields: 32\n"
+          },
+          "boot/dtb/allwinner": {
+            "metadata": "Inode: ALLOCATION   Type: directory    Mode:  0755   Flags: 0x80000\nGeneration: 0    Version: 0x00000000:00000000\nUser:     0   Group:     0   Project:     0   Size: 4096\nFile ACL: 0\nLinks: 2   Blockcount: ALLOCATION\nFragment:  Address: 0    Number: 0    Size: 0\n ctime: 0xb406d1c0:00000003 -- Wed Dec  1 05:53:04 2337\n atime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\n mtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\ncrtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\nSize of extra inode fields: 32\n"
+          },
+          "boot/dtb/allwinner/sun60i-a733-orangepi-4-pro.dtb": {
+            "metadata": "Inode: ALLOCATION   Type: regular    Mode:  0644   Flags: 0x80000\nGeneration: 0    Version: 0x00000000:00000000\nUser:     0   Group:     0   Project:     0   Size: 209344\nFile ACL: 0\nLinks: 1   Blockcount: ALLOCATION\nFragment:  Address: 0    Number: 0    Size: 0\n ctime: 0xb406d1c0:00000003 -- Wed Dec  1 05:53:04 2337\n atime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\n mtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\ncrtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\nSize of extra inode fields: 32\n",
+            "data": {
+              "bytes": 209344,
+              "sha256": "1ba8f5926c0d76d12479bafcfcfce66be4a934ccfb6a5bcbcc7f7aa86c07f9f4"
+            }
+          },
+          "boot/boot.scr": {
+            "metadata": "Inode: ALLOCATION   Type: regular    Mode:  0644   Flags: 0x80000\nGeneration: 0    Version: 0x00000000:00000000\nUser:     0   Group:     0   Project:     0   Size: 1187\nFile ACL: 0\nLinks: 1   Blockcount: ALLOCATION\nFragment:  Address: 0    Number: 0    Size: 0\n ctime: 0xb406d1c0:00000003 -- Wed Dec  1 05:53:04 2337\n atime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\n mtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\ncrtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\nSize of extra inode fields: 32\n",
+            "data": {
+              "bytes": 1187,
+              "sha256": "f1ba10868782026d6fa4392b5e5f60db7953e8a340539f750ad710fb2b2032f1"
+            }
+          },
+          "boot/boot.cmd": {
+            "metadata": "Inode: ALLOCATION   Type: regular    Mode:  0644   Flags: 0x80000\nGeneration: 0    Version: 0x00000000:00000000\nUser:     0   Group:     0   Project:     0   Size: 1115\nFile ACL: 0\nLinks: 1   Blockcount: ALLOCATION\nFragment:  Address: 0    Number: 0    Size: 0\n ctime: 0xb406d1c0:00000003 -- Wed Dec  1 05:53:04 2337\n atime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\n mtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\ncrtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\nSize of extra inode fields: 32\n",
+            "data": {
+              "bytes": 1115,
+              "sha256": "d65f4dc811150fed3ab9b67722e6b327341d388b0263907380c9bf59497fd93f"
+            }
+          },
+          "lost+found": {
+            "metadata": "Inode: ALLOCATION   Type: directory    Mode:  0700   Flags: 0x80000\nGeneration: 0    Version: 0x00000000:00000000\nUser:     0   Group:     0   Project:     0   Size: 16384\nFile ACL: 0\nLinks: 2   Blockcount: ALLOCATION\nFragment:  Address: 0    Number: 0    Size: 0\n ctime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\n atime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\n mtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\ncrtime: 0x6aea7580:00000000 -- Wed Nov  4 00:00:00 2026\nSize of extra inode fields: 32\n"
+          }
+        },
+        "e2fsck_fn": "PASS both actual partitions",
+        "vgic_interrupts": [
+          1,
+          9,
+          4
+        ]
+      },
+      "init": {
+        "base": {
+          "bytes": 15116,
+          "sha256": "82515ff0fb49d0d3399f3cc3546a768742bd50db6500452bafa6ae1d105c3964"
+        },
+        "candidate": {
+          "bytes": 17650,
+          "sha256": "2cf52e1cee8d4f2050fe3a90eca0a0a8c50b6f30718d210667f7273f9f08ab12"
+        },
+        "metadata": "All original newc fields and prefix bytes preserved except size"
+      },
+      "cpio": {
+        "total_records": 425,
+        "preserved_other_records": 424,
+        "encoded_record_map": {
+          "bin": {
+            "bytes": 116,
+            "sha256": "5bd7e844f1e23a97ae0fdbfc41de11f0babf01c5a40aa17d30ffad77bd6e9917"
+          },
+          "bin/busybox": {
+            "bytes": 1794644,
+            "sha256": "fae0e3951bcdc2c1ebfb7faf2862c0367fed5819f78c6ac9fa8dfed1c75230c5"
+          },
+          "bin/sh": {
+            "bytes": 128,
+            "sha256": "9c26f1b41aaba919b2e1f010be92b05618604c22cf3f726c4e3dac9438e84e4e"
+          },
+          "dev": {
+            "bytes": 116,
+            "sha256": "37921d1325a6ebad4bed876f6ba5723b782c405e4d5ed440cfcbe1696dca6009"
+          },
+          "etc": {
+            "bytes": 116,
+            "sha256": "6fd74720864708a140de4a72875390bb1c10d26e51c8f37310b4ecdb62036875"
+          },
+          "etc/a733-boot.conf": {
+            "bytes": 212,
+            "sha256": "ab722f50b2d52594d78d134d905e9746572d9041f2398bb918ecb8b605f76caf"
+          },
+          "etc/host-storage-resolver.sh": {
+            "bytes": 9912,
+            "sha256": "87352cd0c63afb4a8c46c1d9289c27a7421b1eb609534fda0315e9566b0f533d"
+          },
+          "lib": {
+            "bytes": 116,
+            "sha256": "a89a1e73d6e1319855f58bf79685dea8f6c1c94694fc382f4e6567858cdb6767"
+          },
+          "lib/aarch64-linux-gnu": {
+            "bytes": 132,
+            "sha256": "797e4a2e472cd146bb1a4a17275c693aa0b6010cff228bc5206ea4e161fe219a"
+          },
+          "lib/aarch64-linux-gnu/libblkid.so.1": {
+            "bytes": 396396,
+            "sha256": "551da67e7e109614499892786f7e1e27d0680b569ab2a5f8a44c8e207285ff67"
+          },
+          "lib/aarch64-linux-gnu/libc.so.6": {
+            "bytes": 1651552,
+            "sha256": "471762859f3873b21524d0daf2238920c99c21acdb4c13546a0ffe4c58862227"
+          },
+          "lib/ld-linux-aarch64.so.1": {
+            "bytes": 203048,
+            "sha256": "45ed08948e812cf00316328c5ceb5c292bef23d895a4c6bdd95a1b1eca4dd1c3"
+          },
+          "lib/modules": {
+            "bytes": 124,
+            "sha256": "6fc97d37301e7afdf7690d95449b12c239b1a0d327a9ed740d00932af4dc8763"
+          },
+          "lib/modules/6.6.98-a733-diag": {
+            "bytes": 140,
+            "sha256": "02e995e7084645348d6c3c75047dc9735dd1389039bf2c803ac94d699d626a3d"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel": {
+            "bytes": 148,
+            "sha256": "b5f2896d8fc53f4314057dfe62b60f99b991b7ff538bece6a6d2942bcd5474c7"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp": {
+            "bytes": 152,
+            "sha256": "1b99bee75c3b64d5d91ac1b7fc08e149ebe171f87f88b717228792226191bfab"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp/drivers": {
+            "bytes": 160,
+            "sha256": "a298f81cea209e290f47d399dbbc3a6150beb8ae57274c07ce82b2905cd83dde"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp/drivers/devfreq": {
+            "bytes": 168,
+            "sha256": "e3ee7c2c2ce4cb428e8fff73e7a95f298bb8bd182495b806884f7defe5aed03e"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp/drivers/devfreq/sun55iw3-devfreq.ko": {
+            "bytes": 30204,
+            "sha256": "fd5bc550f940e9c247be1912426cad2dfb0f8efd1a1cc16a310aa2459448e50e"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp/drivers/di": {
+            "bytes": 164,
+            "sha256": "da4c31dc49b8bf38c21076a03e0911c5ced2a176800408c93da4a1a4e2269776"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp/drivers/di/deinterlace.ko": {
+            "bytes": 157840,
+            "sha256": "e3fdd40c218815c7d6ea1c8cfe134e1f96c14b122f6c50e707bff412c9d780fd"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp/drivers/g2d": {
+            "bytes": 164,
+            "sha256": "629af3afdf079de80ec527de093e6ce6a236a4676290f8d57d10da50f944583d"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp/drivers/g2d/g2d_sunxi.ko": {
+            "bytes": 151784,
+            "sha256": "07d0d29685bb0d453ca7f91ca917e62cedcbac6daeb1d5c5ee4924660aa59cd9"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp/drivers/ir-rx": {
+            "bytes": 164,
+            "sha256": "fc62ab9f016bc4f3308fe8edafcfa509e0a9b4aa1c3da36311c9c4a4c013babc"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp/drivers/ir-rx/sunxi-ir-rx.ko": {
+            "bytes": 60860,
+            "sha256": "df0fdbd2a5cf49b0cf74f8885b4a15e6f2e1dd17af33085bfc7edb499e94ad71"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp/drivers/net": {
+            "bytes": 164,
+            "sha256": "5136bf0a33ea77da3cda4901067b9e26244fd180e1f2b9b602c4b4bc6eb40a96"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp/drivers/net/wireless": {
+            "bytes": 172,
+            "sha256": "43c1fcaa71b66777ef5ab8233ef483ea99a89e3dada3f8503cc5d0777cdad66d"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp/drivers/net/wireless/aic8800": {
+            "bytes": 180,
+            "sha256": "1286bc8bdac7636b06144d5298da9b38bc955d883f78768b2697767ababb37cf"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp/drivers/net/wireless/aic8800/aic8800_bsp": {
+            "bytes": 192,
+            "sha256": "888ac7c14cef097cba8fbe9488a6babb47ef09d6698858ecbc86545a5afc0f3c"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp/drivers/net/wireless/aic8800/aic8800_bsp/aic8800_bsp.ko": {
+            "bytes": 139832,
+            "sha256": "df8b3ff274fd7c874935d99eca6f3dca1912c52594021ede00b3bee203b187d9"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp/drivers/net/wireless/aic8800/aic8800_btlpm": {
+            "bytes": 196,
+            "sha256": "9908231a01eec452ec1a4b5eaee09ef5378cfb999283751bb02567b91f777ca6"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp/drivers/net/wireless/aic8800/aic8800_btlpm/aic8800_btlpm.ko": {
+            "bytes": 30460,
+            "sha256": "c831be90e63010bd2866c2a363c9a7ff353c1e1a7c9845d4664967c52a1bc977"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp/drivers/net/wireless/aic8800/aic8800_fdrv": {
+            "bytes": 192,
+            "sha256": "4b44d3b7acb6a0e1398eaee0be6138a9c62e564390ecfc21e6b5c198feb633b2"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp/drivers/net/wireless/aic8800/aic8800_fdrv/aic8800_fdrv.ko": {
+            "bytes": 484840,
+            "sha256": "8b51b27508b78deb88da93207de4b24dd56e9cdb30e8a7ba17c014f957a888e0"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp/drivers/npu": {
+            "bytes": 164,
+            "sha256": "e3cf8c1ade937dffff4f7dc5e2edeeec1bc8591f6381f76050af84ca0e733dc3"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp/drivers/npu/aw_nna_vip": {
+            "bytes": 176,
+            "sha256": "11e25f8af182ce5d873daa38c3cbc024ab45dead4b0eb572fea49d2d3b7ba774"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp/drivers/npu/aw_nna_vip/vip2": {
+            "bytes": 180,
+            "sha256": "62678f926dcf0c5777ec9fd2bcc42497ad6b08faecf0b4c6c37b49c2eba002f1"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp/drivers/npu/aw_nna_vip/vip2/vipcore.ko": {
+            "bytes": 400024,
+            "sha256": "5a631cc9c90fab808fb876df36d4cfd7ec6177633f8777a6ba8f941358a54bb5"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp/drivers/stmmac": {
+            "bytes": 168,
+            "sha256": "1a7a3b037cc7248371cec141e2839781d9b4923cad016a80c9995004cd066966"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp/drivers/stmmac/sunxi-stmmac.ko": {
+            "bytes": 56376,
+            "sha256": "9607ff04c7d1e29ec0e8fbcf482b8d3b710de1685b12212435145737ae283536"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp/drivers/ve": {
+            "bytes": 164,
+            "sha256": "c8a5d1f236f8a605466b6702de903643998d8a3eeba9ef52d95cccd3864588f8"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp/drivers/ve/cedar-ve": {
+            "bytes": 172,
+            "sha256": "72485547dcde55771687e80b6afc59843b1d7d99ae5c4ad4481f89b3eb8008a4"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp/drivers/ve/cedar-ve/sunxi-ve.ko": {
+            "bytes": 79400,
+            "sha256": "83800e47b057efc5686a3be1f072c1c774a5e851271459af297344c42d34b1cf"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp/drivers/vin": {
+            "bytes": 164,
+            "sha256": "f8b52cd0c2f00c6050fc61d056153ea83f6803197c9de3ea6c223d9b974fba6e"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp/drivers/vin/modules": {
+            "bytes": 172,
+            "sha256": "3b47e2471fe86ad807e03eb6caa88582a663b7c3c889d6b935380440163c222a"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp/drivers/vin/modules/actuator": {
+            "bytes": 180,
+            "sha256": "3a15acabf61ace266597560aa8b17c6650ad8aafa87bbb5a6ae596fe5759265d"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp/drivers/vin/modules/actuator/actuator.ko": {
+            "bytes": 4840,
+            "sha256": "ee4e3df63c88d4549eeecc3f76b5004c4d56cd41bc03429b62c39ac61a9af905"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp/drivers/vin/modules/actuator/cn3927_act.ko": {
+            "bytes": 13252,
+            "sha256": "0becfa56b96f14181a11dfb5fc4304dc6d0c208f79e64a268b7f2d3979994929"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp/drivers/vin/modules/sensor": {
+            "bytes": 180,
+            "sha256": "77a18b851acb6e1f8529da39659c91bbbacdc9d06bf0b2ecdb9d84b2066659e1"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp/drivers/vin/modules/sensor/gc030a_mipi.ko": {
+            "bytes": 21352,
+            "sha256": "452f7004acc315a922cd37f66b8c1a62ec4c7b383cf5cf69314ccb3cdef27451"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp/drivers/vin/modules/sensor/gc05a2_mipi.ko": {
+            "bytes": 20624,
+            "sha256": "4dc3de00cfebbfb5e045e91b696ce5314d91bf359b4b30a8f5977ef04ab1e844"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp/drivers/vin/modules/sensor/imx219.ko": {
+            "bytes": 27732,
+            "sha256": "30e53f2c176a993ee3619b274b71f3c307c6b9206c0ca12389cd59f6452f5986"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp/drivers/vin/modules/sensor/ov13850_mipi.ko": {
+            "bytes": 20660,
+            "sha256": "577e229e3fc920bb4773b840bb76c87755258d46946ce77d23fb3f142400c64d"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp/drivers/vin/vin_io.ko": {
+            "bytes": 85028,
+            "sha256": "9aa6243fc25d3ac8b4f33073f13bbb555400018d3b0d0f61360167bd451ab52c"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/bsp/drivers/vin/vin_v4l2.ko": {
+            "bytes": 452008,
+            "sha256": "6b4e6dbacefb0c6f14e84ebf3c42c1b1a37d4306f49dab3d0d03975b1c7c6221"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers": {
+            "bytes": 156,
+            "sha256": "34a765171a5912c8f11667a0beea66b4f6468ef964bcd3c6f00fa59d4ddd5930"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/bluetooth": {
+            "bytes": 164,
+            "sha256": "d4f5f11f1d736e83f19df854c9557ccc5988a2e6c8652e3b38594168d9d46c55"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/bluetooth/btbcm.ko": {
+            "bytes": 23080,
+            "sha256": "ed89329c0ae1d346428f2b95966718f8dbcc8b548a5b052d7c0ba88210d7f80d"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/bluetooth/btintel.ko": {
+            "bytes": 65352,
+            "sha256": "d45e837b91934e510f12599a91303f9e38fd0f11be2d6bb7a719b3d2ce8b2394"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/bluetooth/btrtl.ko": {
+            "bytes": 31352,
+            "sha256": "a56b277809a02ee882f8fd3d305164297cc56a10f11aec0a5d6762445fd358c2"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/bluetooth/btsdio.ko": {
+            "bytes": 11008,
+            "sha256": "3fc1415aeefe258d0dbb4eee52e101d0767129f67e347d76d5b2318c80f0e88c"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/bluetooth/btusb.ko": {
+            "bytes": 80104,
+            "sha256": "fab2177196b1954619334c611811fa0dbd0622891c5c0e8e02a376b746072a03"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/bluetooth/hci_uart.ko": {
+            "bytes": 34856,
+            "sha256": "da887d8486f7ee0d49be6ea20fe9b38d1b7c5b13c2a529f6c5d60acf8ad55e74"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/hwmon": {
+            "bytes": 160,
+            "sha256": "d44dce153ef8aece137433f014955ee4a4500e10de4dabd9f890ccf5918446a3"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/hwmon/pwm-fan.ko": {
+            "bytes": 16596,
+            "sha256": "f5edd66264ad92400640289b7fd53374dd26ad02f9c24149f013095287daaeb0"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/input": {
+            "bytes": 160,
+            "sha256": "dbf43c1a91b26d35c214f750bbc526e313535d14af10d8e14217fd01ef2d55b2"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/input/joydev.ko": {
+            "bytes": 25580,
+            "sha256": "844c7a2e805e4cb66d5635eadac4f3c4bf1956a7606bfdff613bd531036c3e95"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/input/touchscreen": {
+            "bytes": 172,
+            "sha256": "ff227036dae1d479feaf9d59477dc93f923a862c1d513454b16d5c58cf747904"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/input/touchscreen/goodix_ts.ko": {
+            "bytes": 37052,
+            "sha256": "7ff0c6b4c7b956e79eef4761369a8dbd10c96944c8cd289dc8c32de69d84c9d9"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media": {
+            "bytes": 160,
+            "sha256": "79522f13099d757f903ef9a58710a96ca361a5c439dfa6a139cdd05d0475bd63"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/common": {
+            "bytes": 168,
+            "sha256": "8cdb94fed60a5d998bb885745da5fac9e24b92e2e057a827c07d05f0a2beea17"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/common/videobuf2": {
+            "bytes": 180,
+            "sha256": "cce6d9139c5798be47d45b715a352beb7226485a2e2e7eb1f511eb1535d8c87e"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/common/videobuf2/videobuf2-dma-contig.ko": {
+            "bytes": 19604,
+            "sha256": "7276e719d437239dc85d8e189913de79e32f2688a93bdbfdb2a61ad2325a52ae"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends": {
+            "bytes": 176,
+            "sha256": "4f8f5104bfa27ff5e705311382c6f843eb51507752b30de4db5fad4555fcb9f1"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/a8293.ko": {
+            "bytes": 8440,
+            "sha256": "be4826622d680727e9742b86dcb588830f75a2df9826e939278e6fadcc6af217"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/af9033.ko": {
+            "bytes": 35048,
+            "sha256": "03cdae62572c3d2b735dce0dabbb16ed452359f294a520d14f4798937ca2f3c6"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/ascot2e.ko": {
+            "bytes": 9724,
+            "sha256": "8f2a0217a1762656e7a18cad13463e21905ea8c7fabdca335a0ec9ab23821a66"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/atbm8830.ko": {
+            "bytes": 15532,
+            "sha256": "b6b272f73d3576c7c686c18b8d5126eced63c6fdd7ab401934d679f27fc8defe"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/au8522_common.ko": {
+            "bytes": 13240,
+            "sha256": "ae90fd73083ebfceb9828a61cec286bef733c8c82ec5f63d8708de93f893256b"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/au8522_decoder.ko": {
+            "bytes": 17320,
+            "sha256": "0bdde1f6e8372564c90b81ab53897b6dde1f57232d80ca21a19094fc3376fbe1"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/au8522_dig.ko": {
+            "bytes": 18772,
+            "sha256": "242dc8910b3d569d9c90f0356113fcc55e786307495e051e20ced3bad17a8912"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/bcm3510.ko": {
+            "bytes": 19524,
+            "sha256": "1aec0f73b95c1954895be593b2f2ed89d3c24815d35b6b0943dc02a965a8d98c"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/cx22700.ko": {
+            "bytes": 11860,
+            "sha256": "d23049684ab245b29ae6736efe4ba34efcfebb67bfa10cd9e9fa826f9a832159"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/cx22702.ko": {
+            "bytes": 11900,
+            "sha256": "02e89c27ef33d5039307fe2b1eaa8ea0b9cfd21c9934b443eba95275320dbcdb"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/cx24110.ko": {
+            "bytes": 14356,
+            "sha256": "b3b1678e719bc1e47df04fb34fa07c82c7e39775e30a6adf5c91640f2e04fd8e"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/cx24113.ko": {
+            "bytes": 16044,
+            "sha256": "f65a66aee375b7b6a5c9ef1e3fd6d25db89e91c6da9a74800b04c9f7240ffa5b"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/cx24116.ko": {
+            "bytes": 31092,
+            "sha256": "97ca0e9c6a1b3340a998b09c3387b2765f30f677db2b467ade34f5910db5a041"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/cx24117.ko": {
+            "bytes": 21468,
+            "sha256": "e4d7d0119ac293fe2ae3cceb1ef301595cbb95c53843c1a63cfc1198a8fa7afa"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/cx24120.ko": {
+            "bytes": 19692,
+            "sha256": "4de7cee0cd0ffe5ffba34f9d2f983d2fc8964fc4c60fe5be9a014b6d99f73428"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/cx24123.ko": {
+            "bytes": 30028,
+            "sha256": "f1253a90cd1c49a86b299872a8cd0afecd954c4ed8c5283f59244039c5e7a83f"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/cxd2099.ko": {
+            "bytes": 16212,
+            "sha256": "b9b0907e95aa578ec233bc45ebf1438fbebdf656cfc94f3ab739cc183b4498b0"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/cxd2820r.ko": {
+            "bytes": 25092,
+            "sha256": "cbadc3f1e42a8a2ea916ca32e52fceed335fe373195ea504154b5e62598feab0"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/cxd2841er.ko": {
+            "bytes": 50308,
+            "sha256": "ba90e5c6dcceaa87d8bde0ade740c4a9d567a675505f3239c52481c6d0862b4e"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/cxd2880": {
+            "bytes": 184,
+            "sha256": "28bf96dbfaaabd206c0c412ebac025537c10684dbcf3ae6bbd0e1acd4f3349ae"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/cxd2880/cxd2880.ko": {
+            "bytes": 97004,
+            "sha256": "a49e24fa51e1e190257255e59000c8c8a1099af154b34bbafc3b324ad148a11f"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/dib0070.ko": {
+            "bytes": 17028,
+            "sha256": "ed570ecffa732ed8149b1421f748c0e6e1a3f2450f334d6389d82310470499f8"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/dib0090.ko": {
+            "bytes": 46388,
+            "sha256": "c6badef2273b781f87f690659d29134afb53487eb6885dc98d68c1c0ed8a3983"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/dib3000mb.ko": {
+            "bytes": 40636,
+            "sha256": "23e4a6fc3dd8f1461061a1989849332088a9107acf15962272133d1573770096"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/dib3000mc.ko": {
+            "bytes": 21228,
+            "sha256": "005e45afeb3a7d53877ec76fd22b9eb71ada99eb2a6200e99efb8022c4d5033a"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/dib7000m.ko": {
+            "bytes": 26156,
+            "sha256": "41d6bf6b475e1d4e957729e8b3b5f34550ab7bb15b9579b71597f56c41bc53ac"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/dib7000p.ko": {
+            "bytes": 46508,
+            "sha256": "3a60cdb3e09f510b54c55658d92f254fa3414e205d9e15cec3cbf1c21136dcaf"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/dib8000.ko": {
+            "bytes": 110660,
+            "sha256": "8caa57e5c9f8f2ba3bf553c1d0829a418a7f9d8e499db3d7811b1fbbb9949d8c"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/dib9000.ko": {
+            "bytes": 52132,
+            "sha256": "1aa70a1f80bc59449bd5e24d781035fae8c8d0d652f2e9f5dcecf153cb7678c3"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/dibx000_common.ko": {
+            "bytes": 16104,
+            "sha256": "cb3a7449dacc46b0c5b8cdaaa7068baeff98d3bb04e5899dc99f37911f1e1219"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/drx39xyj": {
+            "bytes": 184,
+            "sha256": "13a7609d1f4f29a445da7068771d2775f3332c8d50e1939b57dd383d7b71cdd3"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/drx39xyj/drx39xyj.ko": {
+            "bytes": 85484,
+            "sha256": "41a9678416caf71d52e9c8a7c0722735d03e49e4a5fc08fd2939b33c9574c0e9"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/drxd.ko": {
+            "bytes": 33336,
+            "sha256": "7a5883211cf956d45956b6acebb98220983f3f84e8f55dbd4f5855ccf8387628"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/drxk.ko": {
+            "bytes": 83088,
+            "sha256": "d400a74e41806f699256f9fc102ada8c86733428011082f7a2609923d344821a"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/ds3000.ko": {
+            "bytes": 22976,
+            "sha256": "af8451a0b4684449846f7bbec78be5ecd3a190bee3fcbdb7b8c2722e914f3760"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/dvb-pll.ko": {
+            "bytes": 23852,
+            "sha256": "8ad62b026930dc77c8ddf212094456043a953029985fc7f2aae9cfeab9d17cdf"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/ec100.ko": {
+            "bytes": 8664,
+            "sha256": "bc4aeb71b21c8af4cdee32cd03c0d4a23e4899f3f56f3ca3edfad82aa44c05e5"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/helene.ko": {
+            "bytes": 17032,
+            "sha256": "d88aee331d0560ab5529e6098c23f8ffab012b1a42479034f295e3e90e200437"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/horus3a.ko": {
+            "bytes": 9132,
+            "sha256": "325e82ec189c1188e2234a638454afc88302dea56ea4b645e0596df754f135c3"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/isl6405.ko": {
+            "bytes": 5820,
+            "sha256": "daea8eb6a7d243e5d432a101911eb2c6905f2aaf3585f08aeaa9665ec71f1bd8"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/isl6421.ko": {
+            "bytes": 6628,
+            "sha256": "e5c157e342f7df3e86c97b32e73a05e93a49680110f5f21b1f4d3635e73393a7"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/isl6423.ko": {
+            "bytes": 8396,
+            "sha256": "15d6ca808544a76b788e0e4f97d99479b9a306d6d1bc0d28e961a7337e04d47e"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/itd1000.ko": {
+            "bytes": 13860,
+            "sha256": "984565774bfa134d8010ce891334d279923cf2a25e04ac23f0821820917e72ae"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/ix2505v.ko": {
+            "bytes": 10012,
+            "sha256": "3a9cb0edf877ad99bf1cfb41aaab2e9ebd6a7c567201f0c0f170ecceb164c721"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/l64781.ko": {
+            "bytes": 13608,
+            "sha256": "03360bc401cf51a1905e81d95916d7e1c166ac6ffe01961343ec532a31e431c7"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/lg2160.ko": {
+            "bytes": 29136,
+            "sha256": "2f3adfef10831d1b3db03e4e1355b29aadced8152b0a29d0fe9c4912b01ebf1d"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/lgdt3305.ko": {
+            "bytes": 33708,
+            "sha256": "682d1ac565f807fc8fadbc0863fcbc9add7ece8a4af7e750bd042c175333e094"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/lgdt330x.ko": {
+            "bytes": 22540,
+            "sha256": "6f269a9e357a99cac09df8f11ca0909691ce563c9e525965efaee91171c6e6ef"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/lgs8gl5.ko": {
+            "bytes": 11844,
+            "sha256": "63113c9f088e171d093c4e046be9fa2eae644e80ee7ab4036136b12ae4649eb5"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/lgs8gxx.ko": {
+            "bytes": 23764,
+            "sha256": "ce93d8c64fcf658b551c3126c556ff486f7c09139975627fecdfb8322642ca7f"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/lnbh25.ko": {
+            "bytes": 6752,
+            "sha256": "88bbd7d8131281584f11bd93d2855b4ee6f3502632519659699f72bc7e6cf25b"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/lnbh29.ko": {
+            "bytes": 6448,
+            "sha256": "32e226575626ef3ca80d5e10fe72d9cb1c4d7c1a17cfc78f8f57093034b3727d"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/lnbp21.ko": {
+            "bytes": 6744,
+            "sha256": "dff1cdcc1eac9627db569d17ad0621050e186af2e54c18157a2575bc8ba5a453"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/lnbp22.ko": {
+            "bytes": 7912,
+            "sha256": "ad4de32dcffe76373ecd046cd3a9439648d67ee9150278353799f5810c9aeba9"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/m88rs2000.ko": {
+            "bytes": 15116,
+            "sha256": "76f332f082fabcf43b1e8703a4fc841f51602b47367419d3d1c6634368cc85dd"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/mb86a16.ko": {
+            "bytes": 36844,
+            "sha256": "807dccce0975dc134d1e2c1c1f73323ee6d85943f1d0e46c59c5565d9320cc5d"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/mb86a20s.ko": {
+            "bytes": 21044,
+            "sha256": "96e9e05b90f31101853f7746766bf2c49464df885caab0a98c94c4cd17f4c897"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/mn88443x.ko": {
+            "bytes": 17020,
+            "sha256": "060bcc1d8085fc903d42cc71f4ddb93bc41f8636ea63ff4c11775aa80578d3ce"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/mn88472.ko": {
+            "bytes": 15172,
+            "sha256": "543ff70dca9a721590f20bb6c115a24e21d5d6c936506694680c7a7fb157015a"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/mn88473.ko": {
+            "bytes": 15780,
+            "sha256": "5477b964fcf75162bed4640aa6722bc797e9654b52541a3a81bd5a130101258d"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/mt312.ko": {
+            "bytes": 16176,
+            "sha256": "afa7dc89bac668901eef6884d72f1a3394c853bfba645cc42db79a420872160e"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/mt352.ko": {
+            "bytes": 13680,
+            "sha256": "86d5ed3a5967def5f80a5fc3382a62a8aaacbcc1656efb54912f4cfc83fa3e39"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/mxl5xx.ko": {
+            "bytes": 28256,
+            "sha256": "3f5b265806dec9f7ca2e8c517a750c3ed829a311a5362d5c843bd6a2e85abf2b"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/mxl692.ko": {
+            "bytes": 17048,
+            "sha256": "7382644c6097b5566df4faa185554f2a6c31ef2a37a7555542a9ca3d86d1245e"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/nxt200x.ko": {
+            "bytes": 19468,
+            "sha256": "71cf5a88371736bc2b6095685ee8acff307a9fb18caf8d2b297baf658b3b5977"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/nxt6000.ko": {
+            "bytes": 16132,
+            "sha256": "75c39ef164a01354b2838834ba5280c3a47fd705047683879a210b50feae5f8f"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/or51132.ko": {
+            "bytes": 17420,
+            "sha256": "a01b2b51a70906f78f200b4c5973690eccaca8a7310379c3e32b15868cde1716"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/or51211.ko": {
+            "bytes": 19476,
+            "sha256": "43b345e1e39f80338ad71e8405fe6b32620f08b4fdf075498c97ac639b88d855"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/s5h1409.ko": {
+            "bytes": 19980,
+            "sha256": "c496c21c71f422a59b58e57e94a51de6b1fd3f94c8935c25d57ec1c153c74207"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/s5h1411.ko": {
+            "bytes": 18972,
+            "sha256": "76df52e978bc9f7d2f952574eb35310b7abce32427a8375d80058827b88b9174"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/s5h1420.ko": {
+            "bytes": 22764,
+            "sha256": "b1b34b9b230ac77704169db9c592cc622d8fbcfb8ea0b0030d4506d694624bc2"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/s5h1432.ko": {
+            "bytes": 10052,
+            "sha256": "368185039669ad9ed268d57841cd2121e027ddf558ce03cc41697b6307dfbda3"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/s921.ko": {
+            "bytes": 16976,
+            "sha256": "1fa63e3d52527905b67b1782b285cb0fac761ec365f6e9832a22808719b086cd"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/si2165.ko": {
+            "bytes": 22296,
+            "sha256": "ffe09853790a27c9ab7e52aac5a66e9c8acd4ad397429db62915645f77012d28"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/si21xx.ko": {
+            "bytes": 19760,
+            "sha256": "160683c3891bc36a2d6628df103d88cc2264867b48e9b08b36de7d41c39c1c78"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/sp2.ko": {
+            "bytes": 10712,
+            "sha256": "24740c58ec3d8ad81c4aceb9c218b0844417fe76aeeda01de465090f858cee39"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/sp887x.ko": {
+            "bytes": 14216,
+            "sha256": "85ec7bee0c1f7ddacec28f3f5458f36e467401e45835d36aca3e84e7e4170deb"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/stb0899.ko": {
+            "bytes": 57564,
+            "sha256": "5984db53e596d44c5d83a0f7bb5ed8f80c700c95b26eb91dc3985bdf601c41c7"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/stb6000.ko": {
+            "bytes": 9332,
+            "sha256": "54f123f5d5189d5c7e345f0663394bfba8a4d9ce52523fa0a6768b3297732ed7"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/stb6100.ko": {
+            "bytes": 13876,
+            "sha256": "a55e1f724c83582cf429d85a6d7f17e5b9ba7e6ea43449056d7650f5f8fe7017"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/stv0288.ko": {
+            "bytes": 16572,
+            "sha256": "a79f41a8161321304df6ecdaa5c3455811604910dc2260575e98dc5b9b9fd236"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/stv0297.ko": {
+            "bytes": 13196,
+            "sha256": "202a3217040fd2b1921a1dc4637a1333f58231328b81fb42a9927037b5f0ecb3"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/stv0299.ko": {
+            "bytes": 20708,
+            "sha256": "bc8dbf029b33b9eb044090ec2c243fec3b651026bd2d666bcc48ca9f85dcc543"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/stv0367.ko": {
+            "bytes": 59452,
+            "sha256": "b438eca3ef79f9eb451f95dccb56e2b9886d6ef1e5b39d42b5860db5df76c973"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/stv0900.ko": {
+            "bytes": 97500,
+            "sha256": "37ff3bd3f156862b2265fab3f20531532f5274578b2a09e32435690d4f1fa134"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/stv090x.ko": {
+            "bytes": 86388,
+            "sha256": "7534e6219aaa7d18ae35b98aaaa37c976b885a424630fede7d5d00614812e7fd"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/stv0910.ko": {
+            "bytes": 21924,
+            "sha256": "9391e242e073ca71ac8022eeae0aab4470904f95d1446475d277ef390ab261e1"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/stv6110.ko": {
+            "bytes": 11004,
+            "sha256": "e07dffdb93e2464d741952e253cf1018283b22b964a532925a4efcba1b1916a0"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/stv6110x.ko": {
+            "bytes": 15988,
+            "sha256": "511812cadcdeed6dc7c7c5c0c9c293d68d538491a47615adb0d811b26ce88b75"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/stv6111.ko": {
+            "bytes": 10524,
+            "sha256": "57edcb6cf62c03f471e3ee4c8df82be4d01459463b8b121b001efbd565314bc9"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/tc90522.ko": {
+            "bytes": 18140,
+            "sha256": "750e759cecbb64095fa10118e0680c76e16a3731c2d77626a3ffda979f9fdadf"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/tda10021.ko": {
+            "bytes": 12108,
+            "sha256": "962ebed0a6b8b61e3bc60b8bcc47d5302a8cc0b9cb2e4c600dd67656a6eb5ed0"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/tda10023.ko": {
+            "bytes": 11228,
+            "sha256": "adafa54d46a69ce8b425c19e908064d88129c7820f6a715a583f85af2560e60e"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/tda10048.ko": {
+            "bytes": 22524,
+            "sha256": "03d34e70756835a256092f3a3d4e767692db1e3f22387cc4884319abbbd348d7"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/tda1004x.ko": {
+            "bytes": 31188,
+            "sha256": "b55ed3335d8e85342e753ba4a8764583c00a22511f89bdbb5d1a306d3e0afa80"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/tda10071.ko": {
+            "bytes": 19484,
+            "sha256": "1903ca9f219aa9321a76bf1c5ee5e9228bec060f91b593055b688910cbabcfc7"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/tda10086.ko": {
+            "bytes": 18364,
+            "sha256": "7b1c612996711b594ecd8a57f6f509ca49c4ae103dc7bd441abf2984d90a3cf0"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/tda18271c2dd.ko": {
+            "bytes": 26384,
+            "sha256": "5b02134591b243cf55a1891c2da54bdc26402753269d20a029ab242bee9abb3b"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/tda665x.ko": {
+            "bytes": 8052,
+            "sha256": "938aae46c86e85f0a0148df981b82a5d72b7b302fc9c73ce91d9ea29ec849d4a"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/tda8083.ko": {
+            "bytes": 12996,
+            "sha256": "3d33104fa9412e709ef0e9c17d0376e59e5e1e83f47aebde077b5189a107bf88"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/tda8261.ko": {
+            "bytes": 7636,
+            "sha256": "ceaddf4aab850af0de537879113dc1b37287dae91f975f550c545335db1c6b1f"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/tda826x.ko": {
+            "bytes": 8604,
+            "sha256": "8cab0f39754fd10b0769c5ea4230060ce0140a628e2627e6fcc2a9ed1ba32946"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/ts2020.ko": {
+            "bytes": 16000,
+            "sha256": "b6f3cfe3760abf30ebcafe90255c024cf7f11a73f71716304087fdbd280c0c9f"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/tua6100.ko": {
+            "bytes": 7188,
+            "sha256": "31a2e760f60b1b1f99d1f0ccbf5294331c395d7aff974b43c698fe21a50a882e"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/ves1820.ko": {
+            "bytes": 11524,
+            "sha256": "aa212ea416dda6c004512359c1063a2f881474140c437bfe9f429a5fe538cbfe"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/ves1x93.ko": {
+            "bytes": 12972,
+            "sha256": "b539785443d3655e429060ff9e9796808793c99dfa2d2fe5f7573ed555a3f8da"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/zd1301_demod.ko": {
+            "bytes": 13584,
+            "sha256": "abc5a70ff81d0408370d23c6bab2c35e43f7c36f44fb9a662f15ccae74e3028f"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/zl10036.ko": {
+            "bytes": 12364,
+            "sha256": "81450a4a7d5d36916dc135fddb5d56806c3733b8a310455e5c8b3822d6a4e088"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/zl10039.ko": {
+            "bytes": 11372,
+            "sha256": "d597f6b0a0f80a9f4c92aa64986205b68c3ae0fad6732b2e8d645cb90742e6ad"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/dvb-frontends/zl10353.ko": {
+            "bytes": 14628,
+            "sha256": "389cfc5cdc96719063d1aea723c8941883f171938d16196476990a047f1021b2"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/spi": {
+            "bytes": 164,
+            "sha256": "c7e1de88e96c6e932ef9c222053a7f2959f6e1e83dad43a465a903d4236cef63"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/spi/cxd2880-spi.ko": {
+            "bytes": 22996,
+            "sha256": "2a7a63eb391b653d5f104819d9f0b9363ccc519f7c0d48fb40af31ca4a81faf3"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/tuners": {
+            "bytes": 168,
+            "sha256": "ab769fe172ef7b5b50a58af3b378c7e3e721f8828f2866fd8414ad60915b4a9c"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/tuners/e4000.ko": {
+            "bytes": 16128,
+            "sha256": "ef72a5a472aa9413b38b74948eb9dc7aa2dd8792328f8c2e8f52debb8e09ae21"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/tuners/fc0011.ko": {
+            "bytes": 10492,
+            "sha256": "a5af14a6f7ba038a3f25fccc09870822408fe894fa7971922d6c549acf53f75c"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/tuners/fc0012.ko": {
+            "bytes": 11404,
+            "sha256": "65e8d5792a2815d58f8c9bafd3cb50f5105f6a2257c2cd1fd8de2077c61b8ea9"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/tuners/fc0013.ko": {
+            "bytes": 15572,
+            "sha256": "30e43f8e6e65567fa4d054f28b8e07a6258e9f5a0ae2d5cb188609f23a85645b"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/tuners/fc2580.ko": {
+            "bytes": 14276,
+            "sha256": "11ee0a84676b2c29b40758b7f3b23305578c9e79879da5d5935661e5b017c6a0"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/tuners/it913x.ko": {
+            "bytes": 11532,
+            "sha256": "e57f4938c158a76e70c8d4bc7c6f60c0e801d902d95d37f979d21b9f371977d3"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/tuners/m88rs6000t.ko": {
+            "bytes": 15352,
+            "sha256": "2e3b71dafa7da939b65609d93139f9997193bdf56e4b37fd50193482df3ac2be"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/tuners/max2165.ko": {
+            "bytes": 14364,
+            "sha256": "70229f37e5816127d5697706769ebe7d193b4e41541a63fac48474736e00e522"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/tuners/mc44s803.ko": {
+            "bytes": 8820,
+            "sha256": "967c5f04df9270c35b1a08877b85f609960c7828f136d5e59c9df2f3cf0ab6fb"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/tuners/msi001.ko": {
+            "bytes": 11348,
+            "sha256": "a7a07279db4e72756039dcfd858d46a68d0e435c8d121769177c694c4c982e6f"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/tuners/mt2060.ko": {
+            "bytes": 15124,
+            "sha256": "ed8d31368a84e06f0f4d19ffacdfe1835c4a8d76c2c8b852d851d8c8d1764fe2"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/tuners/mt2063.ko": {
+            "bytes": 30252,
+            "sha256": "835a251f9c5533e86dc24eb1653da584e915aaee91ac48cbd8fe6accc603f1bc"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/tuners/mt20xx.ko": {
+            "bytes": 20668,
+            "sha256": "df742c3e88ad301969ee11e7a80733e7be4d49b6c1aceb196e88f18fa68d2c31"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/tuners/mt2131.ko": {
+            "bytes": 13052,
+            "sha256": "60216c4f5fc22ba88e1c5f601feb655dd41cf4e52958d14041d40f21e20386e1"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/tuners/mt2266.ko": {
+            "bytes": 14716,
+            "sha256": "342b7980eb26273ff830ea20e632b6532f97cd6be9aab722b17b7f6e6d3c3e98"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/tuners/mxl301rf.ko": {
+            "bytes": 10660,
+            "sha256": "4440c68a454810f33444dd125268f2b232cf9b6d1bc5e0dea1b6da2e14e6a931"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/tuners/mxl5005s.ko": {
+            "bytes": 36540,
+            "sha256": "34d29d27ab7c73279e39527ad8d3a455630d0fb70df049e3f06c55783689bdb1"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/tuners/mxl5007t.ko": {
+            "bytes": 21484,
+            "sha256": "06e2b7700aa225ad79ea121d3395650f7329849d114bb979fe0c505019dae1f7"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/tuners/qm1d1b0004.ko": {
+            "bytes": 8672,
+            "sha256": "634dc039a18e97b5da9ee7b13386b2d737c5748c5bd2313aa70a79e7f93da3ca"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/tuners/qm1d1c0042.ko": {
+            "bytes": 13040,
+            "sha256": "290eada845fcd7c30231ac9c686ce96603860b2ac4d55a4dfb874f71c91c6ba9"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/tuners/qt1010.ko": {
+            "bytes": 9708,
+            "sha256": "7b092703f8ad868a2f5a3ad0dc50d532c2265df777ab930ea1d754932281362c"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/tuners/r820t.ko": {
+            "bytes": 29728,
+            "sha256": "d636fcbf8e00d64441921d1a216efbbf9e75946f7998d9c9b32f3f972e479985"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/tuners/si2157.ko": {
+            "bytes": 21060,
+            "sha256": "3089b14572dc54709887d15044b1a049157462e5b38eb6f73974c7b04e5abcb7"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/tuners/tda18212.ko": {
+            "bytes": 9908,
+            "sha256": "45e68f506298ca3ee247faf9f833e198fc4c34606e8d7000eefe7845a257da9a"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/tuners/tda18218.ko": {
+            "bytes": 8340,
+            "sha256": "caae17c4026217a88f5f138248c882cd795590c13798a27a9be0cf9cff7b529f"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/tuners/tda18250.ko": {
+            "bytes": 15628,
+            "sha256": "10e707f7a0cf5c2f1122b7a0551a151085031772bbf942ee00324d55f774748d"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/tuners/tda18271.ko": {
+            "bytes": 72860,
+            "sha256": "a04d73570b159fcd0e96bd3b02ea8cc5044f6ef5bb4a6aa6ea81b3898aaffb4f"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/tuners/tda827x.ko": {
+            "bytes": 19604,
+            "sha256": "45aac7417d79613a7d38e0560e187357128fe3aea57153eb5052fd8ae9fe60b1"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/tuners/tda8290.ko": {
+            "bytes": 27036,
+            "sha256": "fac3f6cb4b7380f1f84bb01774bc0429cf4658b7c7f5e96b95eff224ecaa2211"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/tuners/tda9887.ko": {
+            "bytes": 22852,
+            "sha256": "d1a0ebefee27e44a44bceab2fd9d921f59112c15320fa5e087ae99ae6a012e5b"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/tuners/tea5761.ko": {
+            "bytes": 11180,
+            "sha256": "333c37c8c5c9d002801014b4b4c8f29dd92085d8fe15a6d082c05549b19c4e7a"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/tuners/tea5767.ko": {
+            "bytes": 13868,
+            "sha256": "ddd83bc6e8d842d70c14129b48473c013545299033a1b424924ba0fb52286701"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/tuners/tua9001.ko": {
+            "bytes": 9292,
+            "sha256": "a7020247d565305dfc7f3d90b209beb546364425bdd28c535d782c3bb43d963b"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/tuners/tuner-simple.ko": {
+            "bytes": 23800,
+            "sha256": "c4553a8ba6660aef1bfbb7f511774c7eadd32d55d0caa92e96a591d4a337acde"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/tuners/tuner-types.ko": {
+            "bytes": 29656,
+            "sha256": "eb42fbe18a2fa0465b90be5bff69948a17cd9ae532e924df9a7b039efc83af25"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/tuners/xc2028.ko": {
+            "bytes": 40732,
+            "sha256": "e529f90636debcd87139c99d87c80bb5968703b6ad4f9690af8860553d6b9ff8"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/tuners/xc4000.ko": {
+            "bytes": 45684,
+            "sha256": "9328c94d743aef8f03d3d58aa6675708a1271d16de0af344d5cb01fcf36d91ce"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/tuners/xc5000.ko": {
+            "bytes": 37884,
+            "sha256": "7029e4b4521f2516e56f6feb703e26409e6324e4cf7bd42cff3c755bdbca15b4"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/usb": {
+            "bytes": 164,
+            "sha256": "1a64c25115604c55b32e79e19d6e45d2f68460c75f080479d5a7299d0c683803"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/usb/uvc": {
+            "bytes": 168,
+            "sha256": "fb87c178e81d7a91be767bb88ed322c2d4eb3ba7a07d05acff398857956323cc"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/media/usb/uvc/uvcvideo.ko": {
+            "bytes": 165708,
+            "sha256": "f83d4ede01f5b5aaa81260f2552347d9d9ec75d412e1648bb9e68e77e9cd4ac1"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/net": {
+            "bytes": 160,
+            "sha256": "bd162b5abd0eb09d75f8cc7f477d17e78f94a3d9f773dd6bd9628a6ed967d9fd"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/net/dummy.ko": {
+            "bytes": 11632,
+            "sha256": "1735e5d9a08f8e13793a13dbdf2f30408e71d2de13263dba80bb45427db4f01a"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/net/ipvlan": {
+            "bytes": 168,
+            "sha256": "e37cb17d51ee88c1c5703a38d1e0f3c90767be660fd3fb554fead8dd39a3ab47"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/net/ipvlan/ipvlan.ko": {
+            "bytes": 47872,
+            "sha256": "7e18001a7f8085afec7af4d091ff6f8b072031a488f2bba490361eaf38c9a5fa"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/net/macvlan.ko": {
+            "bytes": 35220,
+            "sha256": "50ecd2fa955f37be17a7e7dad3901216e52fc87c26902f581f6720e1e83ba45d"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/net/phy": {
+            "bytes": 164,
+            "sha256": "fef74f674d09de6855ba6326745ce552b85d5359f967a3564f41bfc412c0b891"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/net/phy/motorcomm.ko": {
+            "bytes": 24832,
+            "sha256": "32d1dd022ba351f7bad775c5dff0e9f5d6be32b719fe4c5c25967da0a920e456"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/net/usb": {
+            "bytes": 164,
+            "sha256": "b9b6d950e1117b1259e3886e78f9a625b8446946b6c4bf625cb277c8c047406c"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/net/usb/r8152.ko": {
+            "bytes": 139500,
+            "sha256": "effdbf25930fde56feae76d17851d2dff8500ed0855983e274bf3f3e050bd868"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/net/usb/r8153_ecm.ko": {
+            "bytes": 8952,
+            "sha256": "70a05ec95b4e7bd35909333214d2d67f71df7e9ad69aedd504a195d2d7320a91"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/net/veth.ko": {
+            "bytes": 39328,
+            "sha256": "f28c976d96d735723f4b57436b1448224597c416c7294c23ba52b360eedab347"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/usb": {
+            "bytes": 160,
+            "sha256": "1b7d5a67fd7a9b5486906d0f70c2022d5451d16e5f571068e3a95a8167d33abd"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/usb/gadget": {
+            "bytes": 168,
+            "sha256": "89ab724de05922c45e968801611a76bc7a31cbdd076fec80dc88081ad076e4e5"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/usb/gadget/function": {
+            "bytes": 176,
+            "sha256": "00a77692f583a73b60d28e420f92b020fcb8908240d03c116a188f096ce747a2"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/usb/gadget/function/usb_f_uac2.ko": {
+            "bytes": 54996,
+            "sha256": "98330a8d97a534a98a8a1161ac670c289a9baddf2d666ec49a9802e537b9c91e"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/usb/gadget/legacy": {
+            "bytes": 172,
+            "sha256": "d372761a7951fe2ee513fc5720d7e5193b63b3d529745627d9eb9bf7e3e7d224"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/usb/gadget/legacy/g_audio.ko": {
+            "bytes": 15776,
+            "sha256": "44673aa4890162dccc6a7c847a3acd5cb7b538fae6d2741038969a402b48e8d3"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/usb/serial": {
+            "bytes": 168,
+            "sha256": "8345910f31abbe22e9c504916e75e52c4ac00ebc7a80b735163d1472faa3c94a"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/usb/serial/ch341.ko": {
+            "bytes": 17384,
+            "sha256": "46b0ef1e14fb3f61653e0c664ade9be1cde411950322683a23fed9779aa0390a"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/usb/serial/cp210x.ko": {
+            "bytes": 47048,
+            "sha256": "ba03a10195e6b7d8a7c91b100ac1f4e5de44809074dad218ccd5380f81385e91"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/usb/serial/ftdi_sio.ko": {
+            "bytes": 140556,
+            "sha256": "5309388668c4c74852a28207c590d1df4fe41c972573e3264ee1344e71ba3258"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/drivers/usb/serial/pl2303.ko": {
+            "bytes": 28392,
+            "sha256": "4e1c38cf600080a975929fffa8a333c3011cc030172db0d23055a397f9c5a59b"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net": {
+            "bytes": 152,
+            "sha256": "b33bb6c509700f0f4570359c75e059dc1a354ca02dca045005842446c35caf53"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/bluetooth": {
+            "bytes": 160,
+            "sha256": "33fd6e967896e1205ad06bb6b870a71e3b1fac7c56ae9f3dd6994f148d82ad4c"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/bluetooth/bnep": {
+            "bytes": 168,
+            "sha256": "0e6e2a20766ccf40a409621e97bcc4677177c311289dab9bc1f7903e9aa367f4"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/bluetooth/bnep/bnep.ko": {
+            "bytes": 28152,
+            "sha256": "1e767cae67dc076cb7e6a3701de6115ad9879b3ffc2b1a22a21e1cb39fbe1172"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/bluetooth/hidp": {
+            "bytes": 168,
+            "sha256": "8b0e4bf1ffdc2249d667421b5659c4a7410927ef96dabbf6afd3210698dc023e"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/bluetooth/hidp/hidp.ko": {
+            "bytes": 37240,
+            "sha256": "1f0e5e100aab2ed8bd99a7339a144d3aed68a7de835dfa912b868908234ec3bc"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/bluetooth/rfcomm": {
+            "bytes": 168,
+            "sha256": "1b65c42ff83c617bd287ae58364d1967344e32cbd03dde2baa27fc61a21bacfe"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/bluetooth/rfcomm/rfcomm.ko": {
+            "bytes": 75660,
+            "sha256": "e724e5840e13e44399dd9150741cbbc8a2e9059fd009a7bf2cd930619973f468"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/bridge": {
+            "bytes": 160,
+            "sha256": "ac9c421313933c4a64c2c82d1dbed68767cc62a535164c1e6ad3df595440e4a9"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/bridge/br_netfilter.ko": {
+            "bytes": 34440,
+            "sha256": "b6f20508a2d72a177c567e7a797f3badcb93bbeb9c81077c3682c878677cb2f3"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/bridge/netfilter": {
+            "bytes": 168,
+            "sha256": "d7cc6af34a99908cd177e9646198e840d46837adc200d2b490e8dbf1070168af"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/bridge/netfilter/nf_conntrack_bridge.ko": {
+            "bytes": 10632,
+            "sha256": "ce2c320a31978b725ef27bf1c85f2c649047d2cf2bcf011c576eb8a554413e12"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/ipv4": {
+            "bytes": 156,
+            "sha256": "4c6cb192d4955d3ebbcfd6c85eccd10901cd27ac88d19a74109bb9179fd31a06"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/ipv4/netfilter": {
+            "bytes": 168,
+            "sha256": "d845c9fd9c4f171c324576a8969b292992f7bc41fed05e4edd64afd8401c8b62"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/ipv4/netfilter/iptable_nat.ko": {
+            "bytes": 8852,
+            "sha256": "213c4fa8372b22f454da411322c7bff068c07ebe95b271df71711bd3c4928807"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/ipv4/netfilter/nf_dup_ipv4.ko": {
+            "bytes": 6324,
+            "sha256": "2492f2e83a7ef136bb811889c4ca821974ee46d473d83cd276879d18d712a8e7"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/ipv4/netfilter/nf_nat_h323.ko": {
+            "bytes": 14372,
+            "sha256": "aa5dcd0c51de564fdd655d25c63bcd83c19066fa1079aa90e665fd60e1e861e0"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/ipv4/netfilter/nf_nat_pptp.ko": {
+            "bytes": 9252,
+            "sha256": "13fb06d7047632b4511283fd7cc45c0d6c812bc869c8e397d46af46f8c6ef8bb"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/ipv4/netfilter/nft_reject_ipv4.ko": {
+            "bytes": 6776,
+            "sha256": "fcdd0098a92a4ff2c74664cd33ea18c779688342eca5488271d7642747866a38"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/ipv6": {
+            "bytes": 156,
+            "sha256": "06671ec94dc56f12e364f5a23756343fb91009f233780b7987d395b5f1efd74b"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/ipv6/netfilter": {
+            "bytes": 168,
+            "sha256": "9eb7f2c51b6a62a736f0a51a7f8d6d0725142b6376e7a4bb9b84c1772c9ca6bc"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/ipv6/netfilter/ip6table_nat.ko": {
+            "bytes": 8872,
+            "sha256": "422aeb24b2c203c6623897ed4f706d0119c4399b0ee8dbb07454382c9bae607c"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/ipv6/netfilter/nf_dup_ipv6.ko": {
+            "bytes": 6348,
+            "sha256": "e2fcad9a676c7ba74cf8fb7af6b2c0cd033a053d3a1f52e2a33ab517fedd2298"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/ipv6/netfilter/nft_reject_ipv6.ko": {
+            "bytes": 6776,
+            "sha256": "b55fdfc40c0a61e98d9802d82f4239171665b0b50c4d04aaba6337fa1447d7f9"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter": {
+            "bytes": 160,
+            "sha256": "2134f827e0a6503508822153fb80ee62f9bac0f192d97846517834031f05e25a"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/ipset": {
+            "bytes": 168,
+            "sha256": "85cf4eaa661a9e5f6088fd35cbcc1cf93f0b9b3522e253574b6feeaf73dcf952"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/ipset/ip_set.ko": {
+            "bytes": 59384,
+            "sha256": "7b4270910febcb56960283603144ffbd02823ab8bbd5d9f5451e4ff225bda437"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/ipvs": {
+            "bytes": 168,
+            "sha256": "008073bb24f19e23a3216c663f2b1a668e21eb065007c384de9eb11e73390f18"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/ipvs/ip_vs.ko": {
+            "bytes": 206896,
+            "sha256": "e853192f4a5effb922dae2a7636cb3dc1e6f01d8ff9cb95e1ce65bed74f92d03"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/ipvs/ip_vs_rr.ko": {
+            "bytes": 6436,
+            "sha256": "f11d2ab4b5ab08e17db51d42363b04fc581a09b1fed25099086213e393e7d214"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nf_conncount.ko": {
+            "bytes": 21360,
+            "sha256": "316d72508326b581254261439b40f2185aca29c49af8fdd7847e6ca3d23d52f8"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nf_conntrack.ko": {
+            "bytes": 199568,
+            "sha256": "2e6364a36f74cd798bfca6e9c97e1a431e6320370bc9c0d054a6c160c6c362f9"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nf_conntrack_amanda.ko": {
+            "bytes": 11008,
+            "sha256": "4a291a0ce2bc175bcc13d0fd9cd7359b6b92ca113f9651a2fc407c41f64a602b"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nf_conntrack_broadcast.ko": {
+            "bytes": 4836,
+            "sha256": "32110e79b6497a0a740c3482d99f12c7c0a71bc6af69beb2f23036b40124a5e0"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nf_conntrack_ftp.ko": {
+            "bytes": 15836,
+            "sha256": "330ffe1c87f51a904a2edfa0245fc7c659ee9dbcb71afce0b2cd143ec435e011"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nf_conntrack_h323.ko": {
+            "bytes": 67224,
+            "sha256": "b224080e652b4965be4a0071b5e4743a100ccb404844802d577406abc028c5d6"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nf_conntrack_irc.ko": {
+            "bytes": 14132,
+            "sha256": "e5d8def2fabe35b5c17716caeafcd6ca2771d81cca6f5f4656d9bdb3576d5858"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nf_conntrack_netbios_ns.ko": {
+            "bytes": 7068,
+            "sha256": "c8d3b634c4bcec19ebc426715ac153294d0c90967d062c639626b21193b7346a"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nf_conntrack_netlink.ko": {
+            "bytes": 62248,
+            "sha256": "d0c10f2ef56d9bd96912b95e3a27117dfae06758ccd7afb22795d6d9320c044b"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nf_conntrack_pptp.ko": {
+            "bytes": 12216,
+            "sha256": "9c89e8d3623f525c2c05062a89c2753aa412c5ec20047a93df91d2a20cd30b04"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nf_conntrack_sane.ko": {
+            "bytes": 11488,
+            "sha256": "6712a54551e307ad269ef5961b4978d023ea892d3885b80df2b9e7b397906203"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nf_conntrack_sip.ko": {
+            "bytes": 42572,
+            "sha256": "4205c8508767c989c035870d63f0dd9207b9f58e504e77e7db9afe18369b28f4"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nf_conntrack_tftp.ko": {
+            "bytes": 11896,
+            "sha256": "7922a0ce73122fd0bb0bcd8ca539f53748146ec92828c8fcfc6fc1e42a5f3c53"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nf_dup_netdev.ko": {
+            "bytes": 6676,
+            "sha256": "870bc4d8392cbcb3288c2592141c5ac91310122c5383ac24ada2ebea268cd80c"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nf_flow_table.ko": {
+            "bytes": 48988,
+            "sha256": "1441b36548bebd32c1316bff5898844991e02dd7f8d99824c3da0638180bfb42"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nf_flow_table_inet.ko": {
+            "bytes": 7616,
+            "sha256": "c0c90f0033ddd47f34786f1cd61fd982ed1f633ced6d9cbb11827cdc32d3b152"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nf_nat.ko": {
+            "bytes": 53532,
+            "sha256": "a7a614cf2e03a693c4ffe20cf87a792739911222ca01d93bccb51c5bfac512b9"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nf_nat_amanda.ko": {
+            "bytes": 7428,
+            "sha256": "03e97da5c5e2dd470b0645a8b6aae4cd9d138edaa8716cb046e30007991e8385"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nf_nat_ftp.ko": {
+            "bytes": 8736,
+            "sha256": "14131096a50e7e02c4f9db1c461157025278564f10f3f7e4b6e423292aa4e6e9"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nf_nat_irc.ko": {
+            "bytes": 8384,
+            "sha256": "a3899213e45fba706bbd42cc9f8ac93c1341c3620a6462fbb1134dbdf28a84da"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nf_nat_sip.ko": {
+            "bytes": 18904,
+            "sha256": "00b1d487f6d0489bafc2762a985a8cbcee2a184b95e866d33109f87eb05f11f9"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nf_nat_tftp.ko": {
+            "bytes": 6800,
+            "sha256": "1b7bb8c708c84a5517ebf3e17b573aa450ba8e4ee3b2db23ff636dd48a461267"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nf_synproxy_core.ko": {
+            "bytes": 29028,
+            "sha256": "c55c303ad559ca091210f62ed405b4332f116447499d0e9572d7c8b1073bc4d4"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nf_tables.ko": {
+            "bytes": 335976,
+            "sha256": "06421f74194391d2892fc8bab56af36784263c120910b2f9847de56cd83e2508"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nfnetlink.ko": {
+            "bytes": 21728,
+            "sha256": "b76911eac3749b4b1f2098b7ba49049f8189bbe86c82b8a0a190f399ccbb653e"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nfnetlink_acct.ko": {
+            "bytes": 17772,
+            "sha256": "cff925a647bdcf5e02347ae1d83a9c1411c44c40f830a78203d12eb6210ecbf7"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nfnetlink_hook.ko": {
+            "bytes": 11772,
+            "sha256": "0ca1403bd699aa5a13785d8172b326dd174b72a23252d4ae1e96bbff1ab4f70d"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nfnetlink_log.ko": {
+            "bytes": 23540,
+            "sha256": "d0a82a6b6305a47a123b6b59b886080a9e4caa1d162ce54a5f769c49c64fd5f0"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nfnetlink_osf.ko": {
+            "bytes": 11660,
+            "sha256": "362b85ca68645e4e741f1c6cc71c84db80b382dba694ca042c2fcd7d87f875bf"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nfnetlink_queue.ko": {
+            "bytes": 27652,
+            "sha256": "35932b999762cfc1368ff00db3da59874031c7e62037e1d8d365bdbb1df8a616"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nft_chain_nat.ko": {
+            "bytes": 7692,
+            "sha256": "ee3a17da84a435a98f404a1ae2390477f1f3c49546e806746ea8465cfbd16838"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nft_compat.ko": {
+            "bytes": 19664,
+            "sha256": "14ae464434173177c17d470bb2964cc5d598482c3d999324792ab5864777c3cb"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nft_connlimit.ko": {
+            "bytes": 10636,
+            "sha256": "35da9e41b9c097c498e052c7424160acf091ad0e002f26357075619e7d23cef0"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nft_ct.ko": {
+            "bytes": 19188,
+            "sha256": "011d7c317d83e69ff62b0afa031bb55b5a3b59e2f84c78ce4e9a0482183453e2"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nft_dup_netdev.ko": {
+            "bytes": 7148,
+            "sha256": "d2f66034da8865b85cde024db7885e450513a6a60b561e5e4d83df0a545f33a6"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nft_fwd_netdev.ko": {
+            "bytes": 9140,
+            "sha256": "18c81c3dfda6f4b2528c237a608a28f2cda0ef557e505f086599044e5eb028ca"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nft_hash.ko": {
+            "bytes": 10076,
+            "sha256": "b2da7c871ed4e241e999348bb09839e5cf12ccc8ec7c8bb3108a986101bfe20e"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nft_limit.ko": {
+            "bytes": 12832,
+            "sha256": "abe8edf501bb0310d99da9ac8167268381a54a4c5aba867ea37796cde6c2a288"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nft_log.ko": {
+            "bytes": 10580,
+            "sha256": "66db66d7afb60fffd15fb0e1bba9e5eae1388ccdd40d799c9025befef059df75"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nft_masq.ko": {
+            "bytes": 10428,
+            "sha256": "4e97d84512185dfbeb72c15f62b87cc7fac9b68dfdbd745138c2d77bfbd3adc8"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nft_nat.ko": {
+            "bytes": 9996,
+            "sha256": "a671ddb844cb82b92a4a36388593a778707c07a01dbff65fd8c737ebfdde4192"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nft_numgen.ko": {
+            "bytes": 9352,
+            "sha256": "9f0c7ed4ac6a6427d869a735cffd4d496bff31c78e2fbe4f8901d89ed18ed609"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nft_osf.ko": {
+            "bytes": 8436,
+            "sha256": "021c78e94589b4b8b700d8e7e23f7b26b67bd4a7a74294a2d48935cf28bc3e35"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nft_queue.ko": {
+            "bytes": 10032,
+            "sha256": "e389b934613cf763d9d297fa0fa148954d827a95c5367cceeee039e38ec570ed"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nft_quota.ko": {
+            "bytes": 10184,
+            "sha256": "a0aee1661d705612d3a408b366693abe286631c697993fe4706d097f3f0e4307"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nft_redir.ko": {
+            "bytes": 10176,
+            "sha256": "c728e6dffe390a8ece3e8f59a9226cd7fc815e8df9794946274bf364bed07cdb"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nft_reject.ko": {
+            "bytes": 7272,
+            "sha256": "5edea3eee631e71524b71e890b9a50c67df941cf9c20e345375fe08ecb0c9b6e"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nft_reject_inet.ko": {
+            "bytes": 7356,
+            "sha256": "9b8391d91a741694cbd7e2acd70c5e2b9a43e106591fd5a83238c2fc810300ca"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nft_reject_netdev.ko": {
+            "bytes": 7904,
+            "sha256": "ff18013f8a9d2a59292019f936c4741e508d1050f0f70bd84a5721c14c9a75d2"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nft_socket.ko": {
+            "bytes": 10576,
+            "sha256": "b565d56027ba347d243896b7897186a9758484ccf4008862262b9608746c7f18"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nft_synproxy.ko": {
+            "bytes": 12240,
+            "sha256": "ed984a62d872897ede9a4f46d456806ec3476cce85276e84da50e7c85e073c4d"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nft_tproxy.ko": {
+            "bytes": 10544,
+            "sha256": "d81fa26f531336e6dd070e5290bbfa049803e50bfc20e53834c6ec3aed0703b3"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nft_tunnel.ko": {
+            "bytes": 15488,
+            "sha256": "17d7717c8581c08518fc2845ac23e209a7083908d4e1a34543246ee14b4196bd"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/nft_xfrm.ko": {
+            "bytes": 9212,
+            "sha256": "fbae226df4000b62d79501dab89238e201ec94bf3466caee5189f3050698d2a2"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_AUDIT.ko": {
+            "bytes": 8916,
+            "sha256": "894dd718afe77209f8047586da18f4661398dd9a35617027262c3eb8831ac159"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_CHECKSUM.ko": {
+            "bytes": 7592,
+            "sha256": "4c0a61f39f8e5c36ed253c49c0babec9ad70012554107711e29579169b198972"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_CLASSIFY.ko": {
+            "bytes": 6088,
+            "sha256": "8704db9eea19267a17df78c7baa7cc8526dfc7bffc081b0fbbdb144efff0a17a"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_CONNSECMARK.ko": {
+            "bytes": 9244,
+            "sha256": "ed78e2898a029cdd058da8e413d2aecff00a746f17fcc708fea47745b8528b5d"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_CT.ko": {
+            "bytes": 12300,
+            "sha256": "a7021501600da3f306a3279ef57903d67d04f300bf6c75b21dbca17904952996"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_DSCP.ko": {
+            "bytes": 7676,
+            "sha256": "582e2236a9cc4823e262c5cf63796e4ae7d38c3a01d68b672c706807fb4d93d3"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_HL.ko": {
+            "bytes": 7020,
+            "sha256": "0e96889066dcf1b9cbf40ff54a0992d8a7117f02e0389c3559877351569fa379"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_HMARK.ko": {
+            "bytes": 9780,
+            "sha256": "4af8ba041cf13ca0f9a24646846b62902b59fc1411c876c412e0721bf916980a"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_IDLETIMER.ko": {
+            "bytes": 15712,
+            "sha256": "cfef93ece2e8cd7006d742079d43fedd722850d0a288fa1ba30224d3e00d0f02"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_LED.ko": {
+            "bytes": 9316,
+            "sha256": "88fce4b8f69c144f4549f1a107d6e42e45ce6221ed5ca077a87eaf2edefcc799"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_LOG.ko": {
+            "bytes": 7188,
+            "sha256": "38821ea556f61d726d587c34d746a05474b36bb3e9a648394d730882eed519c1"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_MASQUERADE.ko": {
+            "bytes": 7356,
+            "sha256": "66442a35b4e21a7efc422d29e3d6cfacfe7fcd0389ed8b4ca7e1e1614ceeb4fb"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_NETMAP.ko": {
+            "bytes": 7648,
+            "sha256": "742e6706ecb453a5efcf746704aeec14da1e70a57ebca81d1c89c194f58b08c7"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_NFLOG.ko": {
+            "bytes": 7148,
+            "sha256": "1c8b276f5035e347e3c9eba9b3c6cb635fad267484210a7c8662739acd287a30"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_NFQUEUE.ko": {
+            "bytes": 10152,
+            "sha256": "d6c5003d12d26e50622a56eef0e23b36e78adca14e966d31c44e5a6ded52e73c"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_RATEEST.ko": {
+            "bytes": 12520,
+            "sha256": "ffa48a592f256c6a0edd826df25d45ebc44af2af41f6bdc8b97f43ecd74f28ce"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_REDIRECT.ko": {
+            "bytes": 7184,
+            "sha256": "0a29fc31dc07c88455cdca0ef278851671e5af7af52ad581ede1e431a8ccf03f"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_TCPOPTSTRIP.ko": {
+            "bytes": 7412,
+            "sha256": "ae93f8881858e31645e45e1e2bf4bd1f6fc54b2fb80be93d7a0b0f9962db6ed1"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_TEE.ko": {
+            "bytes": 10692,
+            "sha256": "79e2144ee3e264cf167245095aa7113bc8ff3ca2ab6e33cb57de90cc8a9b9faf"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_addrtype.ko": {
+            "bytes": 9376,
+            "sha256": "ee64506cd515dd5007dca1502faeb8a42f3be25d7707f3fdac1d6c2f6b109a26"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_cgroup.ko": {
+            "bytes": 10496,
+            "sha256": "bf5bb1a7542a022b632b91f5cb8ed4ff2881848a775dec2f0ff4409a0a52eda0"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_cluster.ko": {
+            "bytes": 8880,
+            "sha256": "e89b68cfa9dfcb3ef8f4ca4efc99c0c4adc0f3a50af5c3f937c8e09625e0a6c2"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_connbytes.ko": {
+            "bytes": 7688,
+            "sha256": "135749583bad0c638e6bcd4811905036dfc05087f318b144a7eb7d3daae1a713"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_connlabel.ko": {
+            "bytes": 8264,
+            "sha256": "01c0d39dfac45ed926fe18a425c2654966a6da121e8e79ac728ff7024103e5da"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_connlimit.ko": {
+            "bytes": 7200,
+            "sha256": "6d99d2192985ff6013acf8435c1983e64f6b69890b036c28c9a6ccf2ced1e05b"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_connmark.ko": {
+            "bytes": 9864,
+            "sha256": "e4143bddb0da55abf237732957c069afb4f51b181f0fae0ea6d73e85477415cb"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_conntrack.ko": {
+            "bytes": 9216,
+            "sha256": "3f44b40666cbae580dc488f576790cfa8efd9959454d70d4c4328a139994a4b6"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_cpu.ko": {
+            "bytes": 6084,
+            "sha256": "1bef22fff25d0988c31186d8a5abf91ba0d269ffbe427a13af754e7777893b46"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_dccp.ko": {
+            "bytes": 7780,
+            "sha256": "97541c29a88e9d28e3d4fbd9b49df7f597e4e24ff04de2a5db8cf99ba336f5f8"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_devgroup.ko": {
+            "bytes": 5888,
+            "sha256": "8b2de60c619f4d85d79406a1ff969bc65d36abf942e6203872e77ee4b172c5af"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_dscp.ko": {
+            "bytes": 6636,
+            "sha256": "ed968ab4b1fe05e8f3e3973659dad20cfc4eced68d870c13dd8dcd0424115def"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_esp.ko": {
+            "bytes": 6324,
+            "sha256": "543c226bf2e2fcf428b835d4f7bd4f16e1a6a6433b63f4820e7095fad2ad6dce"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_hashlimit.ko": {
+            "bytes": 27248,
+            "sha256": "e17e586065c5dd0324b01a5e5a983557f5bbb57387a95dc4976eaa394f12cfd5"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_helper.ko": {
+            "bytes": 7256,
+            "sha256": "fc155374c5c5cc3c2dc6dba9c5a98f5fb321bf0b235c421116c02125c71641ae"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_ipcomp.ko": {
+            "bytes": 7144,
+            "sha256": "9201048d6cded3badad3c64f9a0fe699930d3c109fe7f03896719be075bc456e"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_iprange.ko": {
+            "bytes": 6528,
+            "sha256": "38136dc61b9b18fb9c65b5e1d954fd5e3f51cbf8ec473f4182fbf0eaf7a05cd4"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_ipvs.ko": {
+            "bytes": 7892,
+            "sha256": "4be9d0006f989468c174d49affe780f2e6a101e8833a1a38827673d2d455bb5f"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_l2tp.ko": {
+            "bytes": 11820,
+            "sha256": "bf47e54f1280d3e089753d89cc96b991ccdd00c79aed853efaf8f085afbbae20"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_length.ko": {
+            "bytes": 6088,
+            "sha256": "181d358c3d85414ed059389bca8c41754e57bb65d123415fa9a0d1ae2683effa"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_limit.ko": {
+            "bytes": 8620,
+            "sha256": "02e63c5e0c03c84ba1256dcdf104e5199b30937754c5fb5e7590a9eab6a75ea4"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_mac.ko": {
+            "bytes": 5732,
+            "sha256": "faaaaceef7c880bd62b97980e3f44ffa67503bb3a25ea328fc48203292186e5e"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_nat.ko": {
+            "bytes": 10748,
+            "sha256": "49d169f96a73ea8a11a941349cb6e623122093d1c46b1c5ea4c7b6ddcc550570"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_nfacct.ko": {
+            "bytes": 7384,
+            "sha256": "1c745dea2a3a3e0d709cc9c15ff00f29b4cf794f24715c815375aa5403b48d7d"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_osf.ko": {
+            "bytes": 6188,
+            "sha256": "25bf4f81bfa00643fa512de34daa6eda6f1a182c4f84ab097c2fb59593ef1af0"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_owner.ko": {
+            "bytes": 7012,
+            "sha256": "291627fc0f7cebf73c73846e411d43a75a0d229ebec36b2802f96c5e8007bd91"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_physdev.ko": {
+            "bytes": 7544,
+            "sha256": "bea3ac3135e2c990d98de19982c7638d460bcb6ae27c3e8514e9d5c6e47e7303"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_pkttype.ko": {
+            "bytes": 5816,
+            "sha256": "23adbc611488cfa293279afa52cf7b58be3e60d9f6b76ff926455347860538c7"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_policy.ko": {
+            "bytes": 8160,
+            "sha256": "7847064fc4c2f40f1589124c07b03b471e049cec37a634ccb9af2f64f4a53b14"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_quota.ko": {
+            "bytes": 6404,
+            "sha256": "260b953d9370c659ffafaa4102db4acd92a0f8af8d88740c9947715a991a6fd5"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_rateest.ko": {
+            "bytes": 6976,
+            "sha256": "4a69f7da106b973923f61c9b3c7f0a3c3aa64fd2031387f21df7a6a6781bc490"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_realm.ko": {
+            "bytes": 5628,
+            "sha256": "382b37921330b1622ba8946b80989496d12005fb220d1194d4311e421273608c"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_recent.ko": {
+            "bytes": 24472,
+            "sha256": "0376d988fb9a61f597d933a95053de2a468cd45ac383a35d80534719e3c845e8"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_sctp.ko": {
+            "bytes": 7428,
+            "sha256": "1fa9e829708e7c417821e5f8674878400fe431f98289c50241d257c5e46aa9d6"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_socket.ko": {
+            "bytes": 11552,
+            "sha256": "91355cbeec91956107ec66435b2f02e1f8d4403fac39305fa2507a62fb96ada4"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_state.ko": {
+            "bytes": 6940,
+            "sha256": "16ccb20f4385d91f530afabb63433913db84467c48c25499a5a3cf4ed1272e25"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_statistic.ko": {
+            "bytes": 6800,
+            "sha256": "a88896c7240dd5b512be164d63baffc815b8d706a53eb644ca1fb11d3d451a80"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_string.ko": {
+            "bytes": 6384,
+            "sha256": "6966a25720da6ba19d60e1373000c92a56ba78c5747a3d23c86b61e496be2bf2"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_tcpmss.ko": {
+            "bytes": 6472,
+            "sha256": "1d05de540bec4adc8653d6b142558094f48022abbd5028666cbb8f1792f1e511"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_time.ko": {
+            "bytes": 8468,
+            "sha256": "cf5fa2796683a5edeb90b16d0929f754aede17f2d3648816e6a374287cd67cbb"
+          },
+          "lib/modules/6.6.98-a733-diag/kernel/net/netfilter/xt_u32.ko": {
+            "bytes": 7012,
+            "sha256": "0268b0247e9bb2db948d290a232a8a9f853e6c7433546c2b83e36f722a5dc314"
+          },
+          "lib/modules/6.6.98-a733-diag/modules.alias": {
+            "bytes": 85688,
+            "sha256": "cd0e87fc73953a57515cecbe05b97e3ed79876606462bcb849c94fa3216043b5"
+          },
+          "lib/modules/6.6.98-a733-diag/modules.alias.bin": {
+            "bytes": 93912,
+            "sha256": "843c3589f3a3f2feb0d50606272e3d94c4f984b75f21a198f636e87c85e0ce25"
+          },
+          "lib/modules/6.6.98-a733-diag/modules.builtin": {
+            "bytes": 24264,
+            "sha256": "7790634a12fa5f0fedf2c45415f61e2176540a2422fb1537329764ca8107ce40"
+          },
+          "lib/modules/6.6.98-a733-diag/modules.builtin.alias.bin": {
+            "bytes": 48896,
+            "sha256": "0c8e26db5b3672c5a10b9130ee7fd7b79c23c6c4456f187ef01444e1e9d8748a"
+          },
+          "lib/modules/6.6.98-a733-diag/modules.builtin.bin": {
+            "bytes": 27132,
+            "sha256": "c86c18001a0aab25327dc2a0aa9aa0c6cacf42fe229ea6ccfa2a24ee934fcbc5"
+          },
+          "lib/modules/6.6.98-a733-diag/modules.builtin.modinfo": {
+            "bytes": 133692,
+            "sha256": "3c0cd6c96a07670b6c3fa5a4730a1ec77f54282eee24197f8333c2506e791715"
+          },
+          "lib/modules/6.6.98-a733-diag/modules.dep": {
+            "bytes": 19968,
+            "sha256": "9b94c2f19b67f5a0913f60884fde54bdeb1216ac992b82407c68121e78ad11cc"
+          },
+          "lib/modules/6.6.98-a733-diag/modules.dep.bin": {
+            "bytes": 34516,
+            "sha256": "b1154ca317d6e419fec24a5708987cbbcc50dd4e73400e760e3a9586c9880afe"
+          },
+          "lib/modules/6.6.98-a733-diag/modules.devname": {
+            "bytes": 156,
+            "sha256": "fc31b0ecd247b2019a158aa98ceff9cd886e0afda6d47a4cf8834c0612442236"
+          },
+          "lib/modules/6.6.98-a733-diag/modules.order": {
+            "bytes": 13160,
+            "sha256": "aa3e6d4ec289f7f7d3db50922d42b29aa54249ca5739a226827215143806b4eb"
+          },
+          "lib/modules/6.6.98-a733-diag/modules.softdep": {
+            "bytes": 284,
+            "sha256": "1bea4becfe34c4fceaedde8ff13b111a46ea15b53d65b38ff68ad9fe0548491b"
+          },
+          "lib/modules/6.6.98-a733-diag/modules.symbols": {
+            "bytes": 27284,
+            "sha256": "480740d500208a575d8802a1037c055b9b741fdc1b9c84ef154b71cb587200e5"
+          },
+          "lib/modules/6.6.98-a733-diag/modules.symbols.bin": {
+            "bytes": 36776,
+            "sha256": "fe3a6b28c25402ddc6728ba08295bd6783a896c5c25d72f739a21f771f11dde2"
+          },
+          "newroot": {
+            "bytes": 120,
+            "sha256": "b3959ab575b63d2995c7356e01cbc112246086e45427b16e76f3a3578d699de7"
+          },
+          "proc": {
+            "bytes": 116,
+            "sha256": "703890fcac2030f1a9e670042159e7f20a6b942cfa90fe892aacfa9b35c8a0b9"
+          },
+          "run": {
+            "bytes": 116,
+            "sha256": "1edddea99498902b61234babbaed58b01a14d40d3e1f90364acd126585baa1fb"
+          },
+          "sbin": {
+            "bytes": 116,
+            "sha256": "1ffdb34d068ea7d6a34dcec87ae6609f1969725c0af54c35b50f477fe55393b0"
+          },
+          "sbin/blkid": {
+            "bytes": 198980,
+            "sha256": "776b2811a7a9abcd9728a13c79600777d9902c028dec063074e716279c92986c"
+          },
+          "sys": {
+            "bytes": 116,
+            "sha256": "8c6674e9173716af16c9ee208d25393a9be77401f2d735c25430275941d5f018"
+          },
+          "tmp": {
+            "bytes": 116,
+            "sha256": "e35a36d0f48cf84388c4e7ae9c19029bd3c9122f00e2bc521f1fea5bf2111cad"
+          },
+          "usr": {
+            "bytes": 116,
+            "sha256": "6f49280b660ee41909d212601b9d7a9951150c420624649f6daf76bc4133560f"
+          },
+          "usr/share": {
+            "bytes": 120,
+            "sha256": "3bb3ecda3184a8770456fa354904dd16d55ad2eaaed0a6df6d89ef9e46555c65"
+          },
+          "usr/share/licenses": {
+            "bytes": 132,
+            "sha256": "5b463d84cc74ae2f10776238e0187fdc899053c14155761d5185d8d6d4cad22e"
+          },
+          "usr/share/licenses/GPL-2.0.txt": {
+            "bytes": 18172,
+            "sha256": "7077b180c8cf3f2045e116263dccf81dd816587f92ada00d1d4634471d2d3a95"
+          },
+          "usr/share/licenses/busybox-copyright.txt": {
+            "bytes": 1264,
+            "sha256": "2a6442f7ce662ca67c05b11073979b4effbe30c0b989a27534bcaa063975eca2"
+          },
+          "usr/share/licenses/storage-tools": {
+            "bytes": 144,
+            "sha256": "a04bb87f24593b217396579eacf219cf33e000eed0e2ee9be5b9ef2405e09649"
+          },
+          "usr/share/licenses/storage-tools/libblkid1-copyright": {
+            "bytes": 23404,
+            "sha256": "b3c384b79de7b525ab6ecb4633ba83b47f1b3d6c0cbcbbfe745999f2bb9ad972"
+          },
+          "usr/share/licenses/storage-tools/libc6-copyright": {
+            "bytes": 25628,
+            "sha256": "764337411e899464e67ab8d061a67bc921527f25f1f4f16fd4c97fb30ebf143e"
+          },
+          "usr/share/licenses/storage-tools/util-linux-copyright": {
+            "bytes": 23404,
+            "sha256": "01dbbd1ea528ff8ea312c7e51d08b8762e66efc44a7f3577ade5e2d5bf25d2ed"
+          },
+          "TRAILER!!!": {
+            "bytes": 124,
+            "sha256": "ac799015ef52050f7efdd9f47b8d412babe8cf615370a7cea70f833deb2fab10"
+          }
+        },
+        "tail_bytes": 0,
+        "tail_preserved": true,
+        "legacy_header_crc_data_crc_length": "PASS both actual uInitrd files",
+        "legacy_header_only_changed_fields": [
+          "hcrc",
+          "data_size",
+          "dcrc"
+        ],
+        "busybox": {
+          "bytes": 1794520,
+          "sha256": "0a41864f87a0737804f0f4a68a1cfa1ed22374f4f75a1be3eb376e2659ce1316"
+        },
+        "boot_config": "STATE_UUID=360dfb39-f49f-487e-b307-0bb887c854c5\nKERNEL_RELEASE=6.6.98-a733-diag\n"
+      },
+      "source_closure": "Remote actual bytes, producer manifest, native SUCCESS stdout and local git objects at recorded commit agree for all eight source files."
+    },
+    "manifest": {
+      "bytes": 96866,
+      "sha256": "f3daf6fcea58fd371a850e2d9dd4be572ccb7184f06a5da4f4ff142f42b189cc"
+    },
+    "sources": {
+      "build/protected-state-bootstrap.py": {
+        "bytes": 15523,
+        "sha256": "8257a30349a409aa57bc1d4d92263e6f37d9bc8a8f10833325b2eff2324b9fb5"
+      },
+      "build/vgic-nvme-image.py": {
+        "bytes": 21985,
+        "sha256": "75a19faad5b06cbd103630425925793693a78f9176a809bad8def30372a23149"
+      },
+      "build/vgic-runtime-bootstrap.py": {
+        "bytes": 14774,
+        "sha256": "6fc8e0662cc3a314c3ee224d587629a856505e3c68153c9311afde903b69cd45"
+      },
+      "build/vgic-host-sd.py": {
+        "bytes": 13742,
+        "sha256": "65067be9e06270a29d8f2187a79b1a0af428270f689e8db95c27bb34961db9a5"
+      },
+      "build/assemble-host.py": {
+        "bytes": 21448,
+        "sha256": "c9ed33c9526d6660965f00b97e6c226880eba985706b3bbc71c017fee8e9b77f"
+      },
+      "build/verify-host-roots.py": {
+        "bytes": 33471,
+        "sha256": "80e843d499bcc2f6d299d6022dc7edf83d73842405e95b38b0f32eee72dcda30"
+      },
+      "tests/verify_nvme_image.py": {
+        "bytes": 15781,
+        "sha256": "d9e9342136af125df2eb9dfe1d832183244f13cd28c7ac3e2a4d7f1ca976b8fb"
+      },
+      "configs/host-init": {
+        "bytes": 17650,
+        "sha256": "2cf52e1cee8d4f2050fe3a90eca0a0a8c50b6f30718d210667f7273f9f08ab12"
+      }
+    },
+    "outputs": {
+      "uInitrd": {
+        "bytes": 4763312,
+        "sha256": "2149513ae5cf90f1edb6047e6ebf8ba903dc86c55b4b43754a5a2cfd3368c786"
+      },
+      "a733-host-sd.img": {
+        "bytes": 268435456,
+        "sha256": "ab5e8c2c846cbbd51b61bef6831d7e4d1498c29fefbf47d74301b1f3bb0ad207"
+      },
+      "initramfs.cpio.gz": {
+        "bytes": 4763248,
+        "sha256": "5ca1dbccaf7ac13f203f39631b47319c8e04d7e07af4d4bbcd5ac946893c9abf"
+      },
+      "patch.log": {
+        "bytes": 6270,
+        "sha256": "29d4f84ce1f37446084b4d59ac7059f166fbfa0f5a6556170af43b641ff638c2"
+      },
+      "a733-host-sd.img.gz": {
+        "bytes": 17273154,
+        "sha256": "450e30f0b8169da7471396dbc97d44185426c3da61cc83d8425acab74ccef18c"
+      }
+    },
+    "base": {
+      "bytes": 268435456,
+      "sha256": "f02c74b4c001f1608d0005b6ff23fe82bffa8c02f71e19e5b6573819125ae383"
+    },
+    "resources_after": {
+      "free_bytes": 19798986752,
+      "available_memory_bytes": 7346814976
+    },
+    "remote_scratch_removed": true,
+    "remaining_acceptance": [
+      "Candidate physically UNBOOTED",
+      "dirty-STATE recovery and management retention",
+      "zero routine SD writes",
+      "actual KVM guest on this candidate",
+      "NVMe BOOT derivative and installation",
+      "remaining release gates in docs/implementation-status.md"
+    ]
+  }
+}

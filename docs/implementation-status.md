@@ -32,7 +32,9 @@ and tested, with a replacement bootstrap being prepared.
   `ro,noload`. Reviewed boot/export changes enforce kernel block RO before probe;
   [four real ext4 fixtures](evidence/state-block-protection-20261109.json), including
   synthetic legacy orphans, preserve complete source bytes and all write counters.
-  The fixed bootstrap is not yet built/deployed; physical dirty recovery remains open.
+  Two protected SD constructions now match byte for byte; independent artifact
+  review and deployment are pending. Physical dirty recovery remains open.
+  [Construction evidence](evidence/protected-state-bootstrap-20261109.json).
 - **Previous NVMe host:** The earlier `00fd…` host was repaired before replacement.
   Trusted live SSH verified DHCP `192.168.1.116/24` on `end0`, MAC
   `10:f4:ae:90:5e:57`, and acceptance of both authorized keys. SSH remains
