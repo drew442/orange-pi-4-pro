@@ -1,5 +1,9 @@
 # Current A/B maintenance payloads
 
+New [resolver-readable maintenance candidates](public-config-maintenance-20261109.md)
+are prepared separately for the corrected roots. The artifacts below retain
+the earlier installed-root pairing for rollback; they are not relabeled.
+
 The matched update candidates and portable maintenance package now pass
 independent **regular-file artifact review**. No physical root update,
 activation, interrupted-update recovery or rollback has been performed.

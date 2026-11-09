@@ -87,8 +87,9 @@ empty capabilities; these observations do not waive the resolver finding.
 A focused creation-mode fix passes independent review and the full privileged
 Ubuntu suite. Two [corrected root constructions](public-config-roots-20261109.md)
 now pass independent artifact review and all four full filesystem readbacks;
-full distribution/STATE-selector integration
-and physical policy/listener verification remain required. The active endurance
+[Matched maintenance candidates](public-config-maintenance-20261109.md) also
+pass independent actual-artifact review. Full distribution/STATE-selector
+integration and physical policy/listener verification remain required. The active endurance
 host is unchanged.
 
 ## Construction, resources and authorization

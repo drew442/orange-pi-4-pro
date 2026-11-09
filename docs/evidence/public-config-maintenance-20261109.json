@@ -1,0 +1,639 @@
+{
+  "schema": 1,
+  "recorded_utc": "2026-11-09T13:42:13.597193+00:00",
+  "classification": "Corrected resolver-readable A/B file-only update candidates and portable tools; physical application pending",
+  "hardware_acceptance": false,
+  "physical_storage_written": false,
+  "source_revision": "4f40843365566ae4ada9b7377b75bba3f40c3360",
+  "source_project": "/var/lib/a733-public-config-roots-20261109-01/project",
+  "payload_manifest": {
+    "bytes": 32613,
+    "sha256": "1f82b9e85c5fbcbac65af695b699ee0048fb397faeba2e3eeb652eeb584adb6c"
+  },
+  "candidates": {
+    "A": {
+      "builder_directory": "/var/lib/a733-public-config-maintenance-20261109-01/candidate-A",
+      "candidate": {
+        "classification": "preparation only; no installed updater or hardware acceptance",
+        "compatibility": {
+          "management_runtime": {
+            "files": {
+              "usr/lib/orangepi-hypervisor/host-management.py": {
+                "bytes": 26395,
+                "sha256": "66fbeaf8a939ad073f183b88a3910bfd62794ffa9c485f2c1f1adac5ab5f8728"
+              },
+              "usr/lib/orangepi-hypervisor/host_config.py": {
+                "bytes": 6785,
+                "sha256": "805f036f5bb685d9ddd6ff66c0de4c2dac97d7b40e1a61b8f21e7d513496c1f0"
+              },
+              "usr/lib/orangepi-hypervisor/package_state.py": {
+                "bytes": 13113,
+                "sha256": "809630ebba9d927b6ad5034899a88a8a8fcf3401f94ff6f223f92f6fbfa9c6eb"
+              },
+              "usr/lib/systemd/system/a733-management-ssh.service": {
+                "bytes": 391,
+                "sha256": "f1aa1611777b9f91f4c1b731e0c8aaf286bfa61baaf373eb866d08abe20c2e37"
+              }
+            },
+            "profile": "a733-management-v2-timesync"
+          },
+          "package_state": {
+            "manifest": {
+              "bytes": 191053,
+              "sha256": "d4ba40ab4a06835d7df062ad4553aa5744efd72db167fe4dc50753969dc2d09d"
+            },
+            "profile": "a733-package-state-v1"
+          },
+          "sources": {
+            "Image": {
+              "bytes": 27283464,
+              "sha256": "9df974c55fa61a77e8fe812652780dad471527eb9615c27838f481887d4c50e7"
+            },
+            "board.dtb": {
+              "bytes": 209320,
+              "sha256": "4d7d964a54668cf5dc12cd4bf7e72a625c79883541272aeba1a91adbbedb86ed"
+            },
+            "initramfs.cpio.gz": {
+              "bytes": 3650395,
+              "sha256": "e2b09f56f4df8cfd52b98c0f1fe018c92a0806d8cac6ee065c6ac31b15e6ca30"
+            },
+            "kernel.config": {
+              "bytes": 212080,
+              "sha256": "8a29d9c36e52db7e8a7d6ff757dc69e660f4273c99e5f00c5dbc5a9b7e060675"
+            },
+            "rootfs.tar.gz": {
+              "bytes": 138093095,
+              "sha256": "0ead62c982344bfa3a796027e2f07ce0d8402e7033122707e01a9a3f8860f248"
+            },
+            "rootfs_metadata": {
+              "helper": {
+                "bytes": 12414,
+                "sha256": "b08095583bf53ddc37d445fe9f86d0ab924647b90d5ecd343efed9321f6fff2f"
+              },
+              "profile": "fakeroot-raw-xattrs-v1"
+            },
+            "timesync_state": {
+              "directory": "var/lib/systemd/timesync",
+              "helper": {
+                "bytes": 17588,
+                "sha256": "2ab686430f5e794aad7a55ebee348356c624315055ba2e9230e911cd00cc82e5"
+              },
+              "identity": 996,
+              "schema": 1
+            },
+            "userspace_profile": {
+              "archive": {
+                "bytes": 138093095,
+                "sha256": "0ead62c982344bfa3a796027e2f07ce0d8402e7033122707e01a9a3f8860f248"
+              },
+              "bom": {
+                "bytes": 4346433,
+                "sha256": "dd5064e28d8b2751ce7285b83b649e94121dd04b6d70e0650ac2439bd32d79d7"
+              },
+              "epoch": 1790812800,
+              "evidence": {
+                "docs/evidence/timesync-execution-20261107.json": {
+                  "bytes": 7887,
+                  "sha256": "c18b2e967bc602c7051d249f34819323e0f38551e274542d95fb4e4b40c99cd6"
+                }
+              },
+              "inventory": {
+                "lock_sha256": "2e97a93bfa02ebd89b7d437df1c9c946a5e14f76b40823d54a3f1a59ab3d0d43",
+                "packages": 221
+              },
+              "members": 15909,
+              "profile": "timesync-20261106",
+              "profile_lock": {
+                "bytes": 7337,
+                "sha256": "5e5317a5bf1449125f1fb4b10a767b39162f27b0f729411337900ba0b7c3b380"
+              },
+              "raw_tar": {
+                "bytes": 468592640,
+                "sha256": "7559c4c1247e3598d3d879b4e2d0cb385a0216d60aabefa5519391a47386c86e"
+              },
+              "resolver": {
+                "bytes": 13536,
+                "sha256": "fee8022ef629eef43c4748d7cd510b498e382dfce6aeae33fdc5ea8e6ff8426b"
+              },
+              "sources": {
+                "build/configure-host-userspace.py": {
+                  "bytes": 22122,
+                  "sha256": "0ff4f8538723ac1a4fe6f43d1ff6d73b6e0e36f22daa8eb31fa97d8553b8c95f"
+                },
+                "build/configure-timesync-userspace.py": {
+                  "bytes": 26348,
+                  "sha256": "eb41dae44c46ef5cb9aaa4a319ac17eedaedd9447b28e0f2120e17b68ab651c5"
+                },
+                "build/debootstrap-adapter.py": {
+                  "bytes": 18308,
+                  "sha256": "d10f8a8ea1e83a0b659582d895e98bf8553165dbfc2469aab54eab82e1c501ea"
+                },
+                "build/export-host-userspace.py": {
+                  "bytes": 28217,
+                  "sha256": "1cd49563c43fe7ddd78d309ef2d9fe48b2ad1d1d29ee6d7050374db12be118ed"
+                },
+                "build/export-timesync-userspace.py": {
+                  "bytes": 11762,
+                  "sha256": "8bddb7a0500b160c1772c30dbac0ca0ab7cac6e3f1e6de8464b743513d65716a"
+                },
+                "build/launch-timesync-userspace.py": {
+                  "bytes": 33819,
+                  "sha256": "12bca34664c99b6621378b43807da69e1265dff4fe0b9d4f42251aa78f1ee787"
+                },
+                "build/launch-userspace-configuration.py": {
+                  "bytes": 25631,
+                  "sha256": "08a8bb767987f2a9496ee92d03260fdb5b61bd1f486b9ab00fd04f7ad4633598"
+                },
+                "build/launch-userspace-pipeline.py": {
+                  "bytes": 20436,
+                  "sha256": "3338fe97521287124cae5c61b2631deee977ad575e5d713b6ab4d1a6385c22e7"
+                },
+                "build/offline-userspace-repo.py": {
+                  "bytes": 19197,
+                  "sha256": "bb8a4c71595f9867e4f7cf2958a2bf5bca6e0d81c49819eb1b7483957b0a4911"
+                },
+                "build/prepare-host-userspace.py": {
+                  "bytes": 18830,
+                  "sha256": "86a3432aea83ae408a38d18f07eb48b2d2a8b59adb7b23b14bfcadfdf6a772a9"
+                },
+                "build/timesync-identity.py": {
+                  "bytes": 8173,
+                  "sha256": "5ee1f6d3a2b3211189d0f45a2c007a45c1a950fb960cb7b75b5fe2a47a767909"
+                },
+                "build/userspace-bootstrap-api.py": {
+                  "bytes": 27185,
+                  "sha256": "365fd1681e5b5fbce8062771d54082862482995b48ef6b42f6f2b05464b26964"
+                },
+                "configs/builder-replay-packages-20261106.lock.tsv": {
+                  "bytes": 32546,
+                  "sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425"
+                },
+                "configs/host-timesync-inputs.lock.json": {
+                  "bytes": 3837,
+                  "sha256": "b183b9df1c19241420c6939c4487dcf4894ae60daa3827d73589a6e112918a5f"
+                },
+                "configs/host-timesync-package-hashes.lock.tsv": {
+                  "bytes": 28789,
+                  "sha256": "58f2027166e566f485e9fabccb6a7259c05ad1d882193a8392ee93d60652ebff"
+                },
+                "configs/host-timesync-packages.lock.tsv": {
+                  "bytes": 6712,
+                  "sha256": "2e97a93bfa02ebd89b7d437df1c9c946a5e14f76b40823d54a3f1a59ab3d0d43"
+                },
+                "configs/host-timesync-sysusers.conf": {
+                  "bytes": 170,
+                  "sha256": "d3873e161fa2ba8cee53de2a675b1ed8af9145c7151ba7a2775634c480766079"
+                },
+                "configs/host-userspace-package-hashes.lock.tsv": {
+                  "bytes": 28638,
+                  "sha256": "f2f613e79d9c1abc1689e19cfe81b624d9d2ac3beeb322fd5788980d919f7d86"
+                },
+                "configs/host-userspace-packages.lock.tsv": {
+                  "bytes": 6671,
+                  "sha256": "f2abf03d0d6e7fd506560689093220514cbf1acc678f7560562026d6ca6564a6"
+                },
+                "configs/host-userspace-source-archives.lock.json": {
+                  "bytes": 122443,
+                  "sha256": "f75bae857ffcfdfcfe5b7062880850d14b9f40bcdc7296f1999aa6a901fd6185"
+                },
+                "docs/evidence/time-sync-package-input-20261106.json": {
+                  "bytes": 2617,
+                  "sha256": "acaa7643bd375d58bf68b935b6eb3fbe04c35ede73cd293e94f48dcf87ae55cd"
+                }
+              }
+            }
+          }
+        },
+        "kernel_release": "6.6.98-a733-diag",
+        "manifest": {
+          "bytes": 32613,
+          "identity": {
+            "bytes": 32613,
+            "ctime_ns": 1794230144844119458,
+            "device": 64512,
+            "inode": 1981168,
+            "mtime_ns": 1794230144844119458
+          },
+          "path": "/var/lib/a733-clean-replay-20261106/host-roots-timesync-public-dirs-01/work/project/out/host-payload-timesync-public-dirs-01/manifest.json",
+          "sha256": "1f82b9e85c5fbcbac65af695b699ee0048fb397faeba2e3eeb652eeb584adb6c"
+        },
+        "operation": "file-only-host-update-candidate",
+        "root": {
+          "bytes": 4294967296,
+          "sha256": "299b1f2f74e11c71c89b9ee249dfd43bdc741ac3e90addc763a9626bbbb5aed6"
+        },
+        "root_uuid": "a7330000-0000-4000-8000-00000000000a",
+        "schema": 1,
+        "selector": {
+          "bytes": 179,
+          "sha256": "3c76b96c328b4508ff407c8594352e04389664e97ced6f0a09284cade5bd027b"
+        },
+        "slot": "A",
+        "source": {
+          "identity": {
+            "bytes": 4294967296,
+            "ctime_ns": 1794230022292150447,
+            "device": 64512,
+            "inode": 1997657,
+            "mtime_ns": 1794230022292150447
+          },
+          "path": "/var/lib/a733-clean-replay-20261106/host-roots-timesync-public-dirs-01/work/project/out/host-payload-timesync-public-dirs-01/root-A.ext4"
+        },
+        "staging": {
+          "required_free_bytes": 5368709120,
+          "reserve_bytes": 1073741824,
+          "storage_kind": "external"
+        }
+      },
+      "files": {
+        "candidate.json": {
+          "bytes": 8848,
+          "sha256": "c3cff854d7de33dc4500e418638d5c371d6eedf1c617320e1c07f5093f54842e"
+        },
+        "selected.conf": {
+          "bytes": 179,
+          "sha256": "3c76b96c328b4508ff407c8594352e04389664e97ced6f0a09284cade5bd027b"
+        },
+        "manifest.json": {
+          "bytes": 32613,
+          "sha256": "1f82b9e85c5fbcbac65af695b699ee0048fb397faeba2e3eeb652eeb584adb6c"
+        }
+      }
+    },
+    "B": {
+      "builder_directory": "/var/lib/a733-public-config-maintenance-20261109-01/candidate-B",
+      "candidate": {
+        "classification": "preparation only; no installed updater or hardware acceptance",
+        "compatibility": {
+          "management_runtime": {
+            "files": {
+              "usr/lib/orangepi-hypervisor/host-management.py": {
+                "bytes": 26395,
+                "sha256": "66fbeaf8a939ad073f183b88a3910bfd62794ffa9c485f2c1f1adac5ab5f8728"
+              },
+              "usr/lib/orangepi-hypervisor/host_config.py": {
+                "bytes": 6785,
+                "sha256": "805f036f5bb685d9ddd6ff66c0de4c2dac97d7b40e1a61b8f21e7d513496c1f0"
+              },
+              "usr/lib/orangepi-hypervisor/package_state.py": {
+                "bytes": 13113,
+                "sha256": "809630ebba9d927b6ad5034899a88a8a8fcf3401f94ff6f223f92f6fbfa9c6eb"
+              },
+              "usr/lib/systemd/system/a733-management-ssh.service": {
+                "bytes": 391,
+                "sha256": "f1aa1611777b9f91f4c1b731e0c8aaf286bfa61baaf373eb866d08abe20c2e37"
+              }
+            },
+            "profile": "a733-management-v2-timesync"
+          },
+          "package_state": {
+            "manifest": {
+              "bytes": 191053,
+              "sha256": "d4ba40ab4a06835d7df062ad4553aa5744efd72db167fe4dc50753969dc2d09d"
+            },
+            "profile": "a733-package-state-v1"
+          },
+          "sources": {
+            "Image": {
+              "bytes": 27283464,
+              "sha256": "9df974c55fa61a77e8fe812652780dad471527eb9615c27838f481887d4c50e7"
+            },
+            "board.dtb": {
+              "bytes": 209320,
+              "sha256": "4d7d964a54668cf5dc12cd4bf7e72a625c79883541272aeba1a91adbbedb86ed"
+            },
+            "initramfs.cpio.gz": {
+              "bytes": 3650395,
+              "sha256": "e2b09f56f4df8cfd52b98c0f1fe018c92a0806d8cac6ee065c6ac31b15e6ca30"
+            },
+            "kernel.config": {
+              "bytes": 212080,
+              "sha256": "8a29d9c36e52db7e8a7d6ff757dc69e660f4273c99e5f00c5dbc5a9b7e060675"
+            },
+            "rootfs.tar.gz": {
+              "bytes": 138093095,
+              "sha256": "0ead62c982344bfa3a796027e2f07ce0d8402e7033122707e01a9a3f8860f248"
+            },
+            "rootfs_metadata": {
+              "helper": {
+                "bytes": 12414,
+                "sha256": "b08095583bf53ddc37d445fe9f86d0ab924647b90d5ecd343efed9321f6fff2f"
+              },
+              "profile": "fakeroot-raw-xattrs-v1"
+            },
+            "timesync_state": {
+              "directory": "var/lib/systemd/timesync",
+              "helper": {
+                "bytes": 17588,
+                "sha256": "2ab686430f5e794aad7a55ebee348356c624315055ba2e9230e911cd00cc82e5"
+              },
+              "identity": 996,
+              "schema": 1
+            },
+            "userspace_profile": {
+              "archive": {
+                "bytes": 138093095,
+                "sha256": "0ead62c982344bfa3a796027e2f07ce0d8402e7033122707e01a9a3f8860f248"
+              },
+              "bom": {
+                "bytes": 4346433,
+                "sha256": "dd5064e28d8b2751ce7285b83b649e94121dd04b6d70e0650ac2439bd32d79d7"
+              },
+              "epoch": 1790812800,
+              "evidence": {
+                "docs/evidence/timesync-execution-20261107.json": {
+                  "bytes": 7887,
+                  "sha256": "c18b2e967bc602c7051d249f34819323e0f38551e274542d95fb4e4b40c99cd6"
+                }
+              },
+              "inventory": {
+                "lock_sha256": "2e97a93bfa02ebd89b7d437df1c9c946a5e14f76b40823d54a3f1a59ab3d0d43",
+                "packages": 221
+              },
+              "members": 15909,
+              "profile": "timesync-20261106",
+              "profile_lock": {
+                "bytes": 7337,
+                "sha256": "5e5317a5bf1449125f1fb4b10a767b39162f27b0f729411337900ba0b7c3b380"
+              },
+              "raw_tar": {
+                "bytes": 468592640,
+                "sha256": "7559c4c1247e3598d3d879b4e2d0cb385a0216d60aabefa5519391a47386c86e"
+              },
+              "resolver": {
+                "bytes": 13536,
+                "sha256": "fee8022ef629eef43c4748d7cd510b498e382dfce6aeae33fdc5ea8e6ff8426b"
+              },
+              "sources": {
+                "build/configure-host-userspace.py": {
+                  "bytes": 22122,
+                  "sha256": "0ff4f8538723ac1a4fe6f43d1ff6d73b6e0e36f22daa8eb31fa97d8553b8c95f"
+                },
+                "build/configure-timesync-userspace.py": {
+                  "bytes": 26348,
+                  "sha256": "eb41dae44c46ef5cb9aaa4a319ac17eedaedd9447b28e0f2120e17b68ab651c5"
+                },
+                "build/debootstrap-adapter.py": {
+                  "bytes": 18308,
+                  "sha256": "d10f8a8ea1e83a0b659582d895e98bf8553165dbfc2469aab54eab82e1c501ea"
+                },
+                "build/export-host-userspace.py": {
+                  "bytes": 28217,
+                  "sha256": "1cd49563c43fe7ddd78d309ef2d9fe48b2ad1d1d29ee6d7050374db12be118ed"
+                },
+                "build/export-timesync-userspace.py": {
+                  "bytes": 11762,
+                  "sha256": "8bddb7a0500b160c1772c30dbac0ca0ab7cac6e3f1e6de8464b743513d65716a"
+                },
+                "build/launch-timesync-userspace.py": {
+                  "bytes": 33819,
+                  "sha256": "12bca34664c99b6621378b43807da69e1265dff4fe0b9d4f42251aa78f1ee787"
+                },
+                "build/launch-userspace-configuration.py": {
+                  "bytes": 25631,
+                  "sha256": "08a8bb767987f2a9496ee92d03260fdb5b61bd1f486b9ab00fd04f7ad4633598"
+                },
+                "build/launch-userspace-pipeline.py": {
+                  "bytes": 20436,
+                  "sha256": "3338fe97521287124cae5c61b2631deee977ad575e5d713b6ab4d1a6385c22e7"
+                },
+                "build/offline-userspace-repo.py": {
+                  "bytes": 19197,
+                  "sha256": "bb8a4c71595f9867e4f7cf2958a2bf5bca6e0d81c49819eb1b7483957b0a4911"
+                },
+                "build/prepare-host-userspace.py": {
+                  "bytes": 18830,
+                  "sha256": "86a3432aea83ae408a38d18f07eb48b2d2a8b59adb7b23b14bfcadfdf6a772a9"
+                },
+                "build/timesync-identity.py": {
+                  "bytes": 8173,
+                  "sha256": "5ee1f6d3a2b3211189d0f45a2c007a45c1a950fb960cb7b75b5fe2a47a767909"
+                },
+                "build/userspace-bootstrap-api.py": {
+                  "bytes": 27185,
+                  "sha256": "365fd1681e5b5fbce8062771d54082862482995b48ef6b42f6f2b05464b26964"
+                },
+                "configs/builder-replay-packages-20261106.lock.tsv": {
+                  "bytes": 32546,
+                  "sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425"
+                },
+                "configs/host-timesync-inputs.lock.json": {
+                  "bytes": 3837,
+                  "sha256": "b183b9df1c19241420c6939c4487dcf4894ae60daa3827d73589a6e112918a5f"
+                },
+                "configs/host-timesync-package-hashes.lock.tsv": {
+                  "bytes": 28789,
+                  "sha256": "58f2027166e566f485e9fabccb6a7259c05ad1d882193a8392ee93d60652ebff"
+                },
+                "configs/host-timesync-packages.lock.tsv": {
+                  "bytes": 6712,
+                  "sha256": "2e97a93bfa02ebd89b7d437df1c9c946a5e14f76b40823d54a3f1a59ab3d0d43"
+                },
+                "configs/host-timesync-sysusers.conf": {
+                  "bytes": 170,
+                  "sha256": "d3873e161fa2ba8cee53de2a675b1ed8af9145c7151ba7a2775634c480766079"
+                },
+                "configs/host-userspace-package-hashes.lock.tsv": {
+                  "bytes": 28638,
+                  "sha256": "f2f613e79d9c1abc1689e19cfe81b624d9d2ac3beeb322fd5788980d919f7d86"
+                },
+                "configs/host-userspace-packages.lock.tsv": {
+                  "bytes": 6671,
+                  "sha256": "f2abf03d0d6e7fd506560689093220514cbf1acc678f7560562026d6ca6564a6"
+                },
+                "configs/host-userspace-source-archives.lock.json": {
+                  "bytes": 122443,
+                  "sha256": "f75bae857ffcfdfcfe5b7062880850d14b9f40bcdc7296f1999aa6a901fd6185"
+                },
+                "docs/evidence/time-sync-package-input-20261106.json": {
+                  "bytes": 2617,
+                  "sha256": "acaa7643bd375d58bf68b935b6eb3fbe04c35ede73cd293e94f48dcf87ae55cd"
+                }
+              }
+            }
+          }
+        },
+        "kernel_release": "6.6.98-a733-diag",
+        "manifest": {
+          "bytes": 32613,
+          "identity": {
+            "bytes": 32613,
+            "ctime_ns": 1794230144844119458,
+            "device": 64512,
+            "inode": 1981168,
+            "mtime_ns": 1794230144844119458
+          },
+          "path": "/var/lib/a733-clean-replay-20261106/host-roots-timesync-public-dirs-01/work/project/out/host-payload-timesync-public-dirs-01/manifest.json",
+          "sha256": "1f82b9e85c5fbcbac65af695b699ee0048fb397faeba2e3eeb652eeb584adb6c"
+        },
+        "operation": "file-only-host-update-candidate",
+        "root": {
+          "bytes": 4294967296,
+          "sha256": "48b9876f72f28d4a10f7458dd81a96b95da00d13ae00783b39f7c30067fa94f7"
+        },
+        "root_uuid": "a7330000-0000-4000-8000-00000000000b",
+        "schema": 1,
+        "selector": {
+          "bytes": 179,
+          "sha256": "27ea5d897aa590de9efbe42800894b6a0645ec855ef68012897684f87efe2971"
+        },
+        "slot": "B",
+        "source": {
+          "identity": {
+            "bytes": 4294967296,
+            "ctime_ns": 1794230082041135206,
+            "device": 64512,
+            "inode": 1997661,
+            "mtime_ns": 1794230082041135206
+          },
+          "path": "/var/lib/a733-clean-replay-20261106/host-roots-timesync-public-dirs-01/work/project/out/host-payload-timesync-public-dirs-01/root-B.ext4"
+        },
+        "staging": {
+          "required_free_bytes": 5368709120,
+          "reserve_bytes": 1073741824,
+          "storage_kind": "external"
+        }
+      },
+      "files": {
+        "candidate.json": {
+          "bytes": 8848,
+          "sha256": "e7b60acccd4fda9722b1a3eea123bfb06c567aaf0da2f7c2eaa14d55ada620aa"
+        },
+        "selected.conf": {
+          "bytes": 179,
+          "sha256": "27ea5d897aa590de9efbe42800894b6a0645ec855ef68012897684f87efe2971"
+        },
+        "manifest.json": {
+          "bytes": 32613,
+          "sha256": "1f82b9e85c5fbcbac65af695b699ee0048fb397faeba2e3eeb652eeb584adb6c"
+        }
+      }
+    }
+  },
+  "portable": {
+    "builder_directory": "/var/lib/a733-public-config-roots-20261109-01/project/out/maintenance-tools-public-dirs-20261109-01",
+    "manifest": {
+      "bytes": 16312,
+      "sha256": "1ce0e5daaf760a8407914986dc61314c13091239be68db5948a2765de0c21d97"
+    },
+    "archive": {
+      "bytes": 124193,
+      "sha256": "87279790979079ef707a817931fc958e440e44204239e7b5897a86de231056bf"
+    },
+    "native_directory": "out/public-config-maintenance-20261109-01/portable"
+  },
+  "independent_review": {
+    "path": "tmp/public-config-maintenance-artifact-review-20261109.json",
+    "bytes": 37644,
+    "sha256": "e0733dd04b356783391417ce4b2c843adecdd774d313085f31a3e82334055637",
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "result": "PASS",
+    "summary": {
+      "archive_file_members": 40,
+      "archive_members": 46,
+      "candidate_selectors_match_actual_markers": 2,
+      "full_4GiB_candidate_hashes_verified": 2,
+      "hardware_acceptance": false,
+      "portable_closure_files_verified": 40,
+      "recipe_records_verified": 40,
+      "safe_actual_modes_owners_links": true,
+      "safe_archive_modes_owners_no_links": true,
+      "source_files_equal_project_and_root_provenance": 39
+    },
+    "limits": [
+      "Regular-file artifact validation only; no physical update, activation, rollback, recovery, full-image integration or resolver/listener repair established.",
+      "Candidate raw equality binds them to previously reviewed root construction01; this review directly extracts markers and management helper rather than rerunning the full filesystem reader.",
+      "Durability is producer-reported with matching audited fsync script/log and current publication counts; this integrity review does not independently repeat fsync or simulate power loss."
+    ]
+  },
+  "producer_outcome": {
+    "initial_unit": "a733-public-config-maintenance-20261109-01.service",
+    "initial_result": "exit-code",
+    "initial_status": 1,
+    "initial_failure": "Both candidate preparers completed; portable packager then refused output outside repo/out/maintenance-tools-NAME. Candidates were not rerun.",
+    "completion_unit": "a733-public-config-maintenance-finish-20261109-01.service",
+    "completion_result": "success",
+    "completion_status": 0,
+    "completion_scope": "Portable package created at valid fresh path and all published candidate/portable files and directories fsynced.",
+    "durability": {
+      "files": 50,
+      "directories": 12
+    },
+    "directory_counter_semantics": "The value12 counts directory-fsync calls, including repeated publication parents; it is not a claim of12 distinct directories."
+  },
+  "retained_evidence": {
+    "out/public-config-maintenance-20261109-01/build.log": {
+      "bytes": 18803,
+      "sha256": "9c011b22070060d0cd7b36370bba5dfa84a9cdca8f1f17a721d1b12b849d36dc"
+    },
+    "out/public-config-maintenance-20261109-01/candidate-A/candidate.json": {
+      "bytes": 8848,
+      "sha256": "c3cff854d7de33dc4500e418638d5c371d6eedf1c617320e1c07f5093f54842e"
+    },
+    "out/public-config-maintenance-20261109-01/candidate-A/manifest.json": {
+      "bytes": 32613,
+      "sha256": "1f82b9e85c5fbcbac65af695b699ee0048fb397faeba2e3eeb652eeb584adb6c"
+    },
+    "out/public-config-maintenance-20261109-01/candidate-A/selected.conf": {
+      "bytes": 179,
+      "sha256": "3c76b96c328b4508ff407c8594352e04389664e97ced6f0a09284cade5bd027b"
+    },
+    "out/public-config-maintenance-20261109-01/candidate-B/candidate.json": {
+      "bytes": 8848,
+      "sha256": "e7b60acccd4fda9722b1a3eea123bfb06c567aaf0da2f7c2eaa14d55ada620aa"
+    },
+    "out/public-config-maintenance-20261109-01/candidate-B/manifest.json": {
+      "bytes": 32613,
+      "sha256": "1f82b9e85c5fbcbac65af695b699ee0048fb397faeba2e3eeb652eeb584adb6c"
+    },
+    "out/public-config-maintenance-20261109-01/candidate-B/selected.conf": {
+      "bytes": 179,
+      "sha256": "27ea5d897aa590de9efbe42800894b6a0645ec855ef68012897684f87efe2971"
+    },
+    "out/public-config-maintenance-20261109-01/durability.json": {
+      "bytes": 33,
+      "sha256": "d9c6f60d3246a661767d9722df86208c1c3927de2dfab803a7c427b8c9288257"
+    },
+    "out/public-config-maintenance-20261109-01/finish.log": {
+      "bytes": 20789,
+      "sha256": "0472c61a7b03a353fa35dcd9685bd2b70b53e2e8a11a09be48259599ce7b1a3c"
+    },
+    "out/public-config-maintenance-20261109-01/metadata.tar": {
+      "bytes": 133120,
+      "sha256": "d46b15a4c1c91000de2b06fb58fe23027a3a25d2ca4d1e36d20f7d2a0f68bed1"
+    },
+    "out/public-config-maintenance-20261109-01/portable/manifest.json": {
+      "bytes": 16312,
+      "sha256": "1ce0e5daaf760a8407914986dc61314c13091239be68db5948a2765de0c21d97"
+    },
+    "out/public-config-maintenance-20261109-01/portable/tools.tar.gz": {
+      "bytes": 124193,
+      "sha256": "87279790979079ef707a817931fc958e440e44204239e7b5897a86de231056bf"
+    },
+    "out/public-config-maintenance-20261109-01/portable.tar": {
+      "bytes": 143360,
+      "sha256": "923aaf0a5ffc22264f6dd8c6d37a9925f62c8c1caa054619b90697e44a91841e"
+    },
+    "out/public-config-maintenance-20261109-01/unit-failed-01.txt": {
+      "bytes": 122,
+      "sha256": "73d4724ab6348bea9bcf039baa10b1d0b395da89e31def3bf4ab1eeb7f21e1d9"
+    },
+    "out/public-config-maintenance-20261109-01/unit-finish-01.txt": {
+      "bytes": 120,
+      "sha256": "6bb8bb11dc748e06470e3261ed554a01864d89147ddd331a3ec4ac3bd3652376"
+    }
+  },
+  "limits": [
+    "No physical inactive-slot stage, activation, rollback, full-image installation or resolver repair performed.",
+    "New candidates use root-payload manifest1f82, distinct from existing root payload4f28 and whole-drive manifestf19.",
+    "Native retains candidate metadata and portable package only; complete sparse raw candidates remain on builder.",
+    "Running endurance host remains unchanged."
+  ],
+  "documentation_review": {
+    "path": "tmp/public-config-maintenance-documentation-review-20261109.json",
+    "bytes": 2625,
+    "sha256": "a396c79cda087fe9934ef39948b020be07c416ae19ceb1fbfbd1cbb98a178cd6",
+    "result": "PASS"
+  }
+}
