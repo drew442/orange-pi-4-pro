@@ -59,10 +59,16 @@ python3 -B /run/a733-payload/personalize-known-host-state.py \
 
 The default plan performs no mount or physical write. It validates the entire
 source archive, serial/model/geometry, block ioctls, raw p4 superblock UUID/label,
+4 KiB block size and exact 8 GiB filesystem block count (including its high word),
 all NVMe holders, mounts in process namespaces, swaps, open process files and
-memory mappings. Destination metadata is inspected only during apply. Repeat
-the same invocation with `--apply` after reviewing the plan and completing the
-full image installation. Apply repeats source and target guards, mounts only
+memory mappings. Before any mount, the raw superblock must have `has_journal`
+(compat `0x4`), no incompatibility bits outside `0x2c6` (which excludes
+`JOURNAL_DEV`, `0x8`), an all-zero journal UUID, internal journal inode 8 and
+`journal_dev` zero. These checks contain journal writes to the selected STATE
+filesystem rather than another device. Destination metadata is inspected only
+during apply. Repeat the same invocation with `--apply` after reviewing the
+plan and completing the full image installation. Apply repeats source and
+target guards, mounts only
 p4 as `rw,nosuid,nodev,noexec`, verifies mountinfo and device identity, checks
 STATE's root-owned marker and 996:996 0755 timesync directory, then checks every
 destination before mutation. It creates only absent `identity` and
@@ -78,6 +84,17 @@ mount, because a kernel claim could prevent the mount. Concurrent root device
 or namespace changes are outside its protection; keep other storage tools
 stopped until completion. Ext4 mount/unmount can update filesystem metadata,
 in addition to the three intended file replacements.
+Dirty journal recovery and legacy or file-orphan cleanup remain permitted by
+this explicitly authorized writable apply procedure. These conditions do not
+make a filesystem eligible for an unprotected read-only probe or export.
+
+The 2026-11-09 journal-containment change is source and host-fixture validation
+only; it has not been staged or exercised on the board. The completed physical
+identity restoration in the
+[2026-11-08 install receipt](evidence/corrected-host-install-20261108.json)
+remains historical evidence for the source used then. Future staging must pin
+the changed helper's source SHA256 separately; that receipt and existing image
+hashes do not validate this version.
 
 JSON output contains public file hashes, names and modes, change progress,
 completion/durability and `hardware_acceptance: false`. No source contents are

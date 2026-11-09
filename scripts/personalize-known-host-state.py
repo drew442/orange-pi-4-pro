@@ -246,6 +246,15 @@ def validate_superblock(data):
     require(len(data) == 1024 and data[56:58] == b'\x53\xef' and
             str(uuid.UUID(bytes=bytes(data[104:120]))) == STATE_UUID and
             data[120:136].rstrip(b'\0') == b'a733-state', 'STATE superblock differs')
+    u32 = lambda offset: struct.unpack_from('<I', data, offset)[0]
+    require(u32(24) == 2 and u32(4) == PART_SIZE // 4096 and u32(336) == 0,
+            'STATE block geometry differs')
+    require(u32(92) & 4 and not u32(96) & ~0x2c6,
+            'unsupported ext4 or journal features')
+    require(data[208:224] == bytes(16) and u32(224) == 8 and u32(228) == 0,
+            'internal journal inode 8 required; external journal refused')
+    # Apply explicitly authorizes writable recovery of this STATE. Dirty journal
+    # and orphan metadata are permitted; external journal devices are never used.
 
 
 def verify_mount(path, identity):

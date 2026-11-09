@@ -1,8 +1,9 @@
 # Offline installed-host journal export
 
 Use this diagnostic fallback only if serial cannot restore installed-host SSH.
-[Independent source review and host regressions](evidence/offline-journal-preparation-20261108.json)
-pass. The helper has **not been run on the board**. It does not establish
+The [initial preparation record](evidence/offline-journal-preparation-20261108.json)
+predates the mandatory block protection added after the dirty-ext4 source review.
+The revised helper has **not been run on the board**. It does not establish
 hardware acceptance, fix SSH, or authorize a new installation.
 
 Capture the requested live serial-console text first. Power off before changing
@@ -19,7 +20,10 @@ is needed in the RAM installer. It is exclusively pinned to SPCC M.2 PCIe SSD
 serial `134807190FC700149277`, 256060514304 bytes, and 8 GiB ext4 STATE partition
 `/dev/nvme0n1p4`, UUID `360dfb39-f49f-487e-b307-0bb887c854c5`, label `a733-state`.
 Its checks require an internal journal at inode 8, no external journal, and the
-known partition geometry. Unsupported ext4 features cause refusal.
+known partition geometry. Unsupported ext4 features, including orphan-file
+compatibility and orphan-present flags, cause refusal. Legacy orphan-list state
+and a dirty journal may be inspected only under the block protection below;
+skipping replay can expose stale or inconsistent filesystem contents.
 
 Before export, inspect `/proc/self/mountinfo`, `/proc/swaps`, boot ID and RAM
 root permissions over the authenticated connection. All swap must be disabled;
@@ -55,15 +59,40 @@ name only after status zero and successful gzip/tar validation. A failed SSH
 connection or export can leave partial output; discard it. Never print journal
 contents into routine logs. If cleanup reports a failed unmount, inspect the
 remaining private `/run/a733-journal-*` mount before rebooting; the helper retains
-its mountpoint and refuses a successful archive.
+its mountpoint, leaves STATE block read-only and refuses a successful archive.
+A failed protection, revalidation or flag restoration also refuses an archive.
+Inspect the kernel block read-only flag as well as mounts after any failure; do
+not automatically clear it or retry with a writable mount.
 
 The helper checks every NVMe partition is unmounted across visible process mount
 namespaces, has no holders, active swap, block-device FDs, mapped files or process
-references. It uses libc `mount` with `MS_RDONLY|MS_NOSUID|MS_NODEV|MS_NOEXEC`
+references. It records the original STATE `BLKROGET` flag (0 or 1), claims
+only the validated fixed partition exclusively, and sets `BLKROSET=1` when
+needed. It verifies both the ioctl and sysfs read-only flags, retains a checked
+read-only partition descriptor, releases the exclusive claim before the kernel
+mount, and rechecks identity, geometry, internal journal and idle state. It uses
+libc `mount` with `MS_RDONLY|MS_NOSUID|MS_NODEV|MS_NOEXEC`
 and ext4 `noload`, then verifies mount identity, read-only flags and kernel-reported
-journal replay suppression. No filesystem repair, replay or physical write call
-is performed. This is a trusted quiescent recovery operation; concurrent hostile
-root is outside its threat model.
+journal replay suppression. Filesystem `ro,noload` alone is insufficient:
+the pinned ext4 kernel can clean legacy orphans or update error metadata on a
+writable block device. Its orphan cleanup checks block-device read-only state
+and skips cleanup under this protection. The exporter rejects unsupported
+orphan-file formats and retains all external-journal exclusions.
+
+After a normal successful unmount, the helper verifies protection is still 1 and
+revalidates the same fixed partition's identity, geometry, internal journal and
+unmounted/idle state before restoring an original flag of 0. An original flag of
+1 stays 1. A failed unmount or failed validation before restoring 0 cannot
+clear the verified protection. If restoration or its readback fails, the helper
+revalidates the held descriptor's device identity, geometry and internal journal
+before attempting to set RO=1 again and verifying ioctl/sysfs agreement. It
+refuses an archive even when protection is successfully reasserted. If that
+revalidation, protective ioctl or final verification fails, it explicitly reports
+the block read-only state as uncertain; a failed export does not guarantee RO=1.
+`BLKROSET` changes only kernel write eligibility; it is not a filesystem
+write, repair or replay operation. No physical write call is performed. This is a
+trusted quiescent recovery operation; concurrent hostile root is outside its
+threat model.
 
 Only `var/log/journal` is traversed using held directory descriptors and
 `O_NOFOLLOW`. Directories must be root-owned without group/other write permission
@@ -78,14 +107,17 @@ below the journal root. Missing/empty persistent journals cause refusal. An
 oversized journal needs a separately reviewed approach, not a raised live limit.
 
 Selected bytes are retained in bounded RAM until the owned mount is unmounted.
-The helper then rechecks idle disk identity and Linux NVMe **and known SD** write,
+The helper then verifies the original kernel flags have been preserved/restored,
+rechecks idle disk identity and Linux NVMe **and known SD** write,
 discard and flush counters; any change refuses output. Only after these checks
 are complete does it stream gzip tar to stdout. Archive members retain exact
 relative names and file ownership/mode/mtime, with nanosecond source mtime and
 SHA-256 recorded in `export-receipt.json`. The receipt records the actual RAM boot
-ID, fixed source identity, successful unmount, counters and
-`hardware_acceptance: false`. Counter equality covers this Linux export interval;
-it is not the full-card hash, firmware audit or endurance acceptance proof.
+ID, fixed source identity, successful unmount, original/restored block flag,
+verified mount-time block protection, counters and
+`hardware_acceptance: false`. Counter sampling covers the whole Linux export
+interval, including setting and restoring the kernel flag; equality is required
+even for discard/flush activity. Counter equality is not the full-card hash, firmware audit or endurance acceptance proof.
 
 On the coordinator, validate the member allowlist and receipt SHA-256 values in a
 private directory. Inspect the exported journal with a compatible offline
@@ -100,8 +132,10 @@ hardware result is claimed by the helper tests.
 The [Ubuntu loop-fixture record](evidence/offline-journal-loop-20261108.json)
 now passes two fresh 64 MiB clean ext4 filesystems: an exact synthetic archive
 roundtrip and refusal of an unexpected nonjournal file. Both mounts use the
-production read-only/noload implementation. Complete source hashes and Linux
-write/discard/flush counters stay unchanged across the export, and independent
+low-level read-only/noload implementation, bypassing the new mandatory physical
+block-protection wrapper. This clean-filesystem record does not validate the
+revised protection lifecycle or dirty-orphan behavior. Complete source hashes
+and Linux write/discard/flush counters stay unchanged across the export, and independent
 postchecks find no remaining fixture loops or directories. Counter fields follow
 [Linux I/O statistics](https://docs.kernel.org/admin-guide/iostats.html).
 
@@ -109,11 +143,12 @@ The harness accepts no device argument and formats only its newly created held
 regular files in a private mount namespace. Source review precedes execution.
 Initial fixture runs detected attachment-time flush activity before export;
 waiting for device events before baseline sampling resolved that setup race.
-The exporter and its strict counter checks were not changed.
+The strict counter checks remain unchanged in the revised exporter.
 
 The synthetic bytes are not real systemd journals. The physical-target/RAM-entry
 policy is bypassed solely to call filesystem helpers with the new loop device;
-this does not establish actual A733 export or dirty-journal recovery. To repeat
+this does not establish actual A733 export, ARM kernel block-protection behavior
+or dirty-journal recovery. Those checks remain untested on the board. To repeat
 on the prepared builder, run the reviewed `tests/verify_known_host_journal_loop.py`
 as root from its protected project tree, with no arguments. No compilation or
 package installation is required.

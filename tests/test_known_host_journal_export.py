@@ -141,7 +141,12 @@ class JournalExportTests(unittest.TestCase):
                               (96, 0x2c2), (224, 8)]:
             struct.pack_into('<I', data, offset, value)
         helper.validate_superblock(data)
-        for offset, value in [(224, 0), (228, 1), (208, 1), (96, 0x102c2), (92, 0)]:
+        # Recovery and legacy orphan metadata remain useful for protected reads.
+        dirty = bytearray(data)
+        struct.pack_into('<I', dirty, 96, 0x2c6)
+        struct.pack_into('<I', dirty, 232, 1)
+        helper.validate_superblock(dirty)
+        for offset, value in [(224, 0), (228, 1), (208, 1), (96, 0x102c2), (92, 0), (92, 0x1004), (100, 0x10000)]:
             with self.subTest(offset=offset):
                 bad = bytearray(data)
                 struct.pack_into('<I', bad, offset, value)
@@ -214,11 +219,184 @@ class JournalExportTests(unittest.TestCase):
                 patch.object(helper, 'write_counters', side_effect=[{'x': [0]}, {'x': [1]}]), \
                 patch.object(helper, 'inspect_target', return_value={helper.PART.name: '0:1'}), \
                 patch.object(helper.tempfile, 'mkdtemp', return_value=str(self.root)), \
-                patch.object(helper, 'mounted_journal', return_value=[]), \
+                patch.object(helper, 'protected_journal', return_value=([], 0)), \
                 patch.object(helper, 'emit_archive') as emit:
             with self.assertRaisesRegex(ValueError, 'write counters changed'):
                 helper.execute('fixture', io.BytesIO())
             emit.assert_not_called()
+
+
+class BlockProtectionTests(unittest.TestCase):
+    """Model kernel RO flags, not physical I/O; exercise production lifecycle."""
+    def run_protected(self, original=0, failure=None):
+        with tempfile.TemporaryDirectory() as directory:
+            point = Path(directory) / 'mount'
+            point.mkdir()
+            state = {'ro': original, 'closed': [], 'changes': [], 'mounts': 0}
+            identities = {helper.PART.name: '259:4'}
+
+            def validate(fd, identity, expected_ro=None):
+                self.assertIn(fd, (10, 11))
+                self.assertNotIn(fd, state['closed'])
+                self.assertEqual(identity, '259:4')
+                if failure == 'wrongfd':
+                    raise ValueError('held STATE descriptor identity differs')
+                if expected_ro is not None:
+                    helper.require(state['ro'] == expected_ro, 'protection differs')
+                return state['ro']
+
+            def ioctl(fd, command, data):
+                self.assertEqual(command, 0x125d)
+                value = struct.unpack('=I', data)[0]
+                state['changes'].append(value)
+                if failure == 'set' and value == 1:
+                    raise OSError('RO set refused')
+                if failure == 'restore' and value == 0:
+                    raise OSError('RO restore refused')
+                if failure != 'ignored-set':
+                    state['ro'] = value
+
+            def mount(_point):
+                self.assertEqual(state['ro'], 1, 'mount requires block RO')
+                self.assertIn(10, state['closed'], 'exclusive claim must be released')
+                self.assertNotIn(11, state['closed'], 'held descriptor required')
+                state['mounts'] += 1
+
+            def inspect(**kwargs):
+                self.assertEqual(kwargs, {'expected_state_ro': 1, 'held_fd': 11})
+                self.assertEqual(state['ro'], 1)
+                if failure == 'post-identity' and state['mounts']:
+                    raise ValueError('target identity changed')
+                return identities
+
+            def unmount(_point):
+                if failure == 'unmount':
+                    raise OSError('unmount failed')
+
+            with patch.object(helper.os, 'open', side_effect=[10, 11]), \
+                    patch.object(helper.os, 'close', side_effect=state['closed'].append), \
+                    patch.object(helper, 'validate_state_fd', side_effect=validate), \
+                    patch.object(helper, 'validate_state_identity'), \
+                    patch.object(helper.fcntl, 'ioctl', side_effect=ioctl), \
+                    patch.object(helper, 'inspect_target', side_effect=inspect), \
+                    patch.object(helper, 'mount_readonly', side_effect=mount), \
+                    patch.object(helper, 'verify_mount'), \
+                    patch.object(helper, 'collect_journal', return_value=['fixture']), \
+                    patch.object(helper, 'unmount', side_effect=unmount):
+                if failure:
+                    with self.assertRaises((OSError, ValueError)):
+                        helper.protected_journal(point, identities)
+                else:
+                    self.assertEqual(helper.protected_journal(point, identities),
+                                     (['fixture'], original))
+            return state
+
+    def test_block_ro_enforced_before_mount_then_restored(self):
+        state = self.run_protected()
+        self.assertEqual(state['changes'], [1, 0])
+        self.assertEqual(state['ro'], 0)
+        self.assertEqual(state['closed'], [10, 11])
+
+    def test_preserve_preexisting_block_ro(self):
+        state = self.run_protected(original=1)
+        self.assertEqual(state['changes'], [])
+        self.assertEqual(state['ro'], 1)
+
+    def test_ro_refusal_ignored_set_and_wrong_fd_never_mount(self):
+        for failure in ('set', 'ignored-set', 'wrongfd'):
+            with self.subTest(failure=failure):
+                state = self.run_protected(failure=failure)
+                self.assertEqual(state['mounts'], 0)
+                self.assertNotIn(0, state['changes'])
+
+    def test_failed_unmount_or_revalidation_never_restores_rw(self):
+        for failure in ('unmount', 'post-identity'):
+            with self.subTest(failure=failure):
+                state = self.run_protected(failure=failure)
+                self.assertEqual(state['changes'], [1])
+                self.assertEqual(state['ro'], 1)
+
+    def test_failed_restore_reports_failure_and_retains_ro(self):
+        state = self.run_protected(failure='restore')
+        self.assertEqual(state['changes'], [1, 0, 1])
+        self.assertEqual(state['ro'], 1)
+
+    def test_post_clear_sysfs_failure_reprotects_only_revalidated_device(self):
+        info = SimpleNamespace(st_mode=stat.S_IFBLK | 0o600, st_rdev=os.makedev(259, 4),
+                               st_ino=1, st_dev=1)
+        for failure in ('readback', 'reprotect-ioctl', 'reprotect-identity', 'reprotect-readback'):
+            with self.subTest(failure=failure):
+                state = {'ro': 1, 'changes': [], 'identity_checks': 0}
+
+                def fstat(_fd):
+                    state['identity_checks'] += 1
+                    if failure == 'reprotect-identity' and 0 in state['changes']:
+                        raise ValueError('identity lost')
+                    return info
+
+                def ioctl_number(_fd, command, _fmt):
+                    return {0x80081272: helper.PART_SIZE, 0x1268: 512,
+                            0x127b: 512, 0x125e: state['ro']}[command]
+
+                def ioctl(_fd, _command, data):
+                    value = struct.unpack('=I', data)[0]
+                    # Protection must have freshly passed identity validation.
+                    if value == 1:
+                        self.assertGreaterEqual(state['identity_checks'], 3)
+                    state['changes'].append(value)
+                    if value == 1 and failure == 'reprotect-ioctl':
+                        raise OSError('cannot reprotect')
+                    state['ro'] = value
+
+                def read_sysfs():
+                    if state['ro'] == 0 or (failure == 'reprotect-readback' and
+                                            state['changes'] == [0, 1]):
+                        raise OSError('sysfs read failed after flag change')
+                    return str(state['ro'])
+
+                with patch.object(helper.os, 'fstat', side_effect=fstat), \
+                        patch.object(Path, 'lstat', return_value=info), \
+                        patch.object(helper.os, 'pread', return_value=b'fixture'), \
+                        patch.object(helper, 'validate_superblock'), \
+                        patch.object(helper, 'ioctl_number', side_effect=ioctl_number), \
+                        patch.object(helper.fcntl, 'ioctl', side_effect=ioctl), \
+                        patch.object(Path, 'read_text', side_effect=read_sysfs):
+                    message = 'protection reasserted' if failure == 'readback' else 'state uncertain'
+                    with self.assertRaisesRegex(ValueError, message):
+                        helper.restore_state_writable(10, '259:4')
+                if failure == 'reprotect-identity':
+                    self.assertEqual(state['changes'], [0], 'never ioctl unvalidated device')
+                else:
+                    self.assertEqual(state['changes'], [0, 1])
+                self.assertEqual(state['ro'], 0 if failure in
+                                 ('reprotect-ioctl', 'reprotect-identity') else 1)
+
+    def test_actual_fd_validator_requires_ioctl_and_sysfs_ro_agreement(self):
+        info = SimpleNamespace(st_mode=stat.S_IFBLK | 0o600, st_rdev=os.makedev(259, 4),
+                               st_ino=1, st_dev=1)
+        for ioctl_ro, sysfs_ro in ((0, '0'), (1, '0'), (0, '1')):
+            with self.subTest(ioctl_ro=ioctl_ro, sysfs_ro=sysfs_ro), \
+                    patch.object(helper.os, 'fstat', return_value=info), \
+                    patch.object(Path, 'lstat', return_value=info), \
+                    patch.object(helper.os, 'pread', return_value=b'fixture'), \
+                    patch.object(helper, 'validate_superblock'), \
+                    patch.object(helper, 'ioctl_number',
+                                 side_effect=[helper.PART_SIZE, 512, 512, ioctl_ro]), \
+                    patch.object(Path, 'read_text', return_value=sysfs_ro):
+                with self.assertRaisesRegex(ValueError, 'protection differs'):
+                    helper.validate_state_fd(10, '259:4', 1)
+
+    def test_actual_fd_validator_rejects_wrong_device_before_ioctl(self):
+        info = SimpleNamespace(st_mode=stat.S_IFBLK | 0o600, st_rdev=os.makedev(259, 4),
+                               st_ino=1, st_dev=1)
+        wrong = SimpleNamespace(**vars(info))
+        wrong.st_rdev = os.makedev(259, 5)
+        with patch.object(helper.os, 'fstat', return_value=wrong), \
+                patch.object(Path, 'lstat', return_value=info), \
+                patch.object(helper, 'ioctl_number') as ioctl:
+            with self.assertRaisesRegex(ValueError, 'descriptor identity differs'):
+                helper.validate_state_fd(10, '259:4')
+            ioctl.assert_not_called()
 
 
 if __name__ == '__main__':

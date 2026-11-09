@@ -122,6 +122,11 @@ hi_cleanup() {
         esac
     done
     HI_MOUNTS=
+    # Restore only a block flag we changed, after all our mounts are gone.
+    if [ "${HI_STATE_RO_OWNED:-0}" = 1 ]; then
+        hi_state_restore || hi_error "could not verify safe STATE block-RO cleanup"
+    fi
+    return 0
 }
 hi_readonly_root() {
     hi_readonly_mount /newroot
@@ -237,14 +242,60 @@ hi_state_valid() {
     if [ -n "$HI_MACHINE_ID" ]; then [ "$HI_MACHINE_ID" = "$identity" ] || return 1; fi
     HI_MACHINE_ID=$identity
 }
+# ext4 superblock bytes are read without mounting. Refuse external journal
+# devices/UUIDs before either probe or authorized replay. The pinned state recipe
+# uses reserved internal journal inode 8. Byte decoding is endian-independent.
+hi_internal_journal() {
+    local bytes byte index magic_lo magic_hi compat incompat
+    bytes=$(hi_bb od -An -v -tu1 -j 1024 -N 236 "$STATE_DEVICE") || return 1
+    index=0; magic_lo=; magic_hi=; compat=; incompat=
+    for byte in $bytes; do
+        case "$byte" in ''|*[!0-9]*|????*) return 1 ;; esac
+        [ "$byte" -le 255 ] || return 1
+        case "$index" in
+            56) magic_lo=$byte ;; 57) magic_hi=$byte ;;
+            92) compat=$byte ;; 96) incompat=$byte ;;
+            208|209|210|211|212|213|214|215|216|217|218|219|220|221|222|223|225|226|227|228|229|230|231)
+                [ "$byte" = 0 ] || return 1 ;;
+            224) [ "$byte" = 8 ] || return 1 ;;
+        esac
+        index=$((index + 1))
+    done
+    [ "$index" = 236 ] && [ "$magic_lo" = 83 ] && [ "$magic_hi" = 239 ] &&
+    [ "$((compat & 4))" = 4 ] && [ "$((incompat & 8))" = 0 ]
+}
+hi_state_same() {
+    hs_identity "${STATE_DEVICE##*/}" && [ "$HS_ID" = "$STATE_ID" ] && [ "$HS_PARENT" = "$STATE_PARENT" ] &&
+    hs_filesystem "${STATE_DEVICE##*/}" && [ "$HS_UUID" = "$STATE_UUID" ] && [ "$HS_TYPE" = ext4 ] &&
+    hs_idle "${STATE_DEVICE##*/}" "$STATE_ID" "$1" && hs_table "$STATE_PARENT"
+}
+hi_state_restore() {
+    [ "${HI_STATE_RO_OWNED:-0}" = 1 ] || return 0
+    # hs_idle checks mountinfo as well as holders. Never clear RO after a failed
+    # unmount or against a substituted device, even in the failure cleanup path.
+    hi_state_same readonly && hi_internal_journal || return 1
+    [ "$HI_STATE_ORIGINAL_RO" = 0 ] &&
+    [ "$(hi_bb blockdev --getro "$STATE_DEVICE")" = 1 ] || return 1
+    hi_bb blockdev --setrw "$STATE_DEVICE" &&
+    [ "$(hi_bb blockdev --getro "$STATE_DEVICE")" = 0 ] || return 1
+    HI_STATE_RO_OWNED=0
+}
 hi_state() {
     hi_bb mkdir -m 0700 "$HI_STATE_MOUNT" || return 1
+    hi_state_same writable && hi_internal_journal || return 1
+    HI_STATE_ORIGINAL_RO=$(hi_bb blockdev --getro "$STATE_DEVICE") || return 1
+    [ "$HI_STATE_ORIGINAL_RO" = 0 ] || return 1
+    # ro,noload alone permits ext4 orphan/error handling writes on this kernel.
+    # Claim cleanup ownership before the ioctl, whose failure may be ambiguous.
+    HI_STATE_RO_OWNED=1
+    hi_bb blockdev --setro "$STATE_DEVICE" &&
+    [ "$(hi_bb blockdev --getro "$STATE_DEVICE")" = 1 ] &&
+    hi_state_same readonly || return 1
     hi_mount "$HI_STATE_MOUNT" -t ext4 -o ro,noload,nodev,nosuid "$STATE_DEVICE" || return 1
     hi_state_valid || return 1
     hi_unmount_state || return 1
-    hs_identity "${STATE_DEVICE##*/}" && [ "$HS_ID" = "$STATE_ID" ] && [ "$HS_PARENT" = "$STATE_PARENT" ] &&
-    hs_filesystem "${STATE_DEVICE##*/}" && [ "$HS_UUID" = "$STATE_UUID" ] && [ "$HS_TYPE" = ext4 ] &&
-    hs_idle "${STATE_DEVICE##*/}" "$STATE_ID" writable && hs_table "$STATE_PARENT" || return 1
+    hi_state_restore || return 1
+    hi_state_same writable && hi_internal_journal || return 1
     # Journal replay is permitted only on selected, prevalidated NVMe state.
     hi_mount "$HI_STATE_MOUNT" -t ext4 -o rw,nodev,nosuid "$STATE_DEVICE" || return 1
     hi_state_valid
@@ -303,6 +354,7 @@ hi_management() {
 }
 hi_handoff() {
     HI_MOUNTS=; HI_MACHINE_ID=; HI_STATE_MOUNT=/run/a733-state
+    HI_STATE_RO_OWNED=0; HI_STATE_ORIGINAL_RO=
     hi_mount /proc -t proc -o nosuid,nodev,noexec proc &&
     hi_mount /sys -t sysfs -o nosuid,nodev,noexec sysfs &&
     hi_mount /dev -t devtmpfs -o nosuid devtmpfs &&

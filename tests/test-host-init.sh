@@ -34,7 +34,10 @@ hs_filesystem() {
     HS_UUID=$state_uuid; HS_TYPE=ext4
     [ ! -e "$fixture/changed-uuid" ] || HS_UUID=$root_uuid
 }
-hs_idle() { [ ! -f "$fixture/became-busy" ]; }
+hs_idle() {
+    [ ! -f "$fixture/became-busy" ] && [ ! -f "$fixture/state-mounted" ] || return 1
+    [ "$3" != writable ] || [ "$(cat "$fixture/block-ro")" = 0 ]
+}
 hs_table() { [ ! -f "$fixture/changed-table" ]; }
 hi_switch() { printf 'switch_root /newroot /sbin/init\n' >> "$fixture/log"; }
 
@@ -44,6 +47,23 @@ hi_bb() {
     local command=$1 arg path target count value
     shift
     case "$command" in
+        blockdev)
+            printf 'blockdev %s\n' "$*" >> "$fixture/log"
+            [ "$2" = /dev/nvme0n1p4 ] || return 1
+            case "$1" in
+                --getro) cat "$fixture/block-ro" ;;
+                --setro) [ -f "$fixture/ignore-setro" ] || printf '1\n' > "$fixture/block-ro"
+                    [ ! -f "$fixture/change-on-setro" ] || touch "$fixture/changed-device" ;;
+                --setrw) [ ! -f "$fixture/state-mounted" ] || return 1
+                    [ -f "$fixture/ignore-setrw" ] || printf '0\n' > "$fixture/block-ro" ;;
+                *) return 1 ;;
+            esac
+            return ;;
+        od)
+            printf 'superblock %s\n' "$*" >> "$fixture/log"
+            [ "${!#}" = /dev/nvme0n1p4 ] || return 1
+            /bin/busybox od -An -v -tu1 -j 1024 -N 236 "$fixture/state-device"
+            return ;;
         chroot)
             printf 'management %s\n' "$*" >> "$fixture/log"
             [ ! -f "$fixture/fail-management" ]; return ;;
@@ -61,6 +81,16 @@ hi_bb() {
             printf 'mount %s\n' "$*" >> "$fixture/log"
             target=${!#}
             if [ -f "$fixture/fail-mount" ] && [ "$target" = "$(cat "$fixture/fail-mount")" ]; then return 1; fi
+            if [ "$target" = /run/a733-state ]; then
+                touch "$fixture/state-mounted"
+                if [[ "$*" == *ro,noload* ]] && [ -f "$fixture/orphan" ]; then
+                    if [ "$(cat "$fixture/block-ro")" = 1 ]; then
+                        printf 'orphan write blocked by block RO\n' >> "$fixture/log"
+                    else
+                        printf 'orphan cleanup wrote disk\n' >> "$fixture/log"
+                    fi
+                fi
+            fi
             case "$*" in
                 *'rw,nodev,nosuid'*)
                     [ ! -f "$fixture/mutate-marker" ] || printf 'wrong\n' > "$state/.a733-state"
@@ -75,7 +105,14 @@ hi_bb() {
         umount)
             printf 'umount %s\n' "$*" >> "$fixture/log"
             if [ "$1" = /run/a733-state ] && [ -f "$fixture/replace-on-unmount" ]; then touch "$fixture/changed-device"; fi
-            [ ! -f "$fixture/fail-umount" ] || [ "$1" != "$(cat "$fixture/fail-umount")" ] ;;
+            [ ! -f "$fixture/fail-umount" ] || [ "$1" != "$(cat "$fixture/fail-umount")" ] || return 1
+            case "$1" in /run/a733-state|/newroot/run/a733-state)
+                rm -f "$fixture/state-mounted"
+                if [ -f "$fixture/external-on-unmount" ]; then
+                    printf '\001' | dd of="$fixture/state-device" bs=1 seek=1232 conv=notrunc status=none
+                fi ;;
+            esac
+            return 0 ;;
         sleep) printf 'sleep %s\n' "$*" >> "$fixture/log"; return 0 ;;
         uname)
             if [ -e "$fixture/kernel" ]; then cat "$fixture/kernel"; else printf '6.6.98-a733-diag\n'; fi ;;
@@ -143,6 +180,11 @@ $(hi_package_items)
 END_ITEMS
     find "$fixture/newroot" -type d -exec chmod go-w {} +
     find "$fixture/newroot" -type f -exec chmod go-w {} +
+    truncate -s 2048 "$fixture/state-device"
+    printf '\123\357' | dd of="$fixture/state-device" bs=1 seek=1080 conv=notrunc status=none
+    printf '\004' | dd of="$fixture/state-device" bs=1 seek=1116 conv=notrunc status=none
+    printf '\010' | dd of="$fixture/state-device" bs=1 seek=1248 conv=notrunc status=none
+    printf '0\n' > "$fixture/block-ro"
     : > "$fixture/log"
 }
 fail() { echo "FAIL: $*" >&2; cat "$fixture/log" >&2; exit 1; }
@@ -166,6 +208,7 @@ reset_fixture
 selection_before=$(sha256sum "$state/boot/selected.conf")
 success 'provisioned root and state'
 [ "$(sha256sum "$state/boot/selected.conf")" = "$selection_before" ] || fail 'boot changed selection'
+[ "$(cat "$fixture/block-ro")" = 0 ] || fail 'successful probe did not restore original writable state'
 python3 - "$fixture/log" <<'PY'
 import sys
 lines = open(sys.argv[1]).read().splitlines()
@@ -175,7 +218,12 @@ assert index('rw,nodev,nosuid') < index('read-selector') < index('resolve-root')
 assert index('devtmpfs /dev') < index('console') < index('resolve')
 assert index('--move /dev /newroot/dev') < index('management /newroot /usr/bin/python3 -I -B') < index('switch_root ')
 assert index('ro,noload,nodev,nosuid') < index('umount /run/a733-state')
-assert index('umount /run/a733-state') < index('probe nvme0n1p4') < index('rw,nodev,nosuid')
+assert index('blockdev --setro') < index('ro,noload,nodev,nosuid')
+assert index('umount /run/a733-state') < index('blockdev --setrw') < index('rw,nodev,nosuid')
+assert [line for line in lines if line.startswith('blockdev ')] == [
+    'blockdev --getro /dev/nvme0n1p4', 'blockdev --setro /dev/nvme0n1p4',
+    'blockdev --getro /dev/nvme0n1p4', 'blockdev --getro /dev/nvme0n1p4',
+    'blockdev --setrw /dev/nvme0n1p4', 'blockdev --getro /dev/nvme0n1p4']
 assert index('rw,nodev,nosuid') < index('--bind /newroot/run/a733-state/var') < index('-t overlay')
 assert index('-t overlay') < index('--bind /newroot/run/a733-state/identity/machine-id')
 assert index('size=64M,mode=1777,nodev,nosuid tmpfs /newroot/tmp') < index('--move /proc')
@@ -188,6 +236,41 @@ PY
 [ "$(stat -c %a "$fixture/newroot/run/etc-upper")" = 755 ] || fail 'overlay /etc root mode'
 [ "$(stat -c %a "$fixture/newroot/run/etc-work")" = 700 ] || fail 'overlay work mode'
 
+
+
+reset_fixture; printf '1\n' > "$fixture/block-ro"; reject 'preexisting RO is never owned or cleared'
+! grep -q 'blockdev --set' "$fixture/log" || fail 'changed preexisting block RO'
+reset_fixture; touch "$fixture/ignore-setrw"; reject 'kernel writable restoration verification failed'
+[ "$(cat "$fixture/block-ro")" = 1 ] || fail 'failed restoration lost protection'
+reset_fixture; touch "$fixture/ignore-setro"; reject 'kernel block RO verification failed'
+! grep -q 'ro,noload,nodev,nosuid' "$fixture/log" || fail 'mounted after failed RO verification'
+! grep -q 'blockdev --setrw' "$fixture/log" || fail 'restored without confirmed owned RO'
+reset_fixture; touch "$fixture/change-on-setro"; reject 'target changed while setting block RO'
+! grep -q 'blockdev --setrw' "$fixture/log" || fail 'restored substituted target'
+reset_fixture; touch "$fixture/orphan"; success 'orphan writes blocked during initial probe'
+grep -q '^orphan write blocked by block RO$' "$fixture/log" || fail 'orphan protection not exercised'
+! grep -q '^orphan cleanup wrote disk$' "$fixture/log" || fail 'probe allowed orphan write'
+reset_fixture; printf '/run/a733-state\n' > "$fixture/fail-umount"; reject 'failed probe unmount retains block RO'
+[ "$(cat "$fixture/block-ro")" = 1 ] || fail 'RO lost after unmount failure'
+! grep -q 'blockdev --setrw' "$fixture/log" || fail 'restored RW while mounted'
+reset_fixture; touch "$fixture/external-on-unmount"; reject 'external journal introduced after probe'
+! grep -q 'blockdev --setrw' "$fixture/log" || fail 'restored external journal source'
+for external in uuid inode device journal-device no-journal truncated; do
+    reset_fixture
+    case "$external" in
+        uuid) offset=1232; byte='\001' ;;
+        inode) offset=1248; byte='\011' ;;
+        device) offset=1252; byte='\001' ;;
+        journal-device) offset=1120; byte='\010' ;;
+        no-journal) offset=1116; byte='\000' ;;
+        truncated) truncate -s 1200 "$fixture/state-device" ;;
+    esac
+    if [ "$external" != truncated ]; then
+        printf '%b' "$byte" | dd of="$fixture/state-device" bs=1 seek="$offset" conv=notrunc status=none
+    fi
+    reject "raw journal guard $external"
+    ! grep -q 'blockdev --setro' "$fixture/log" || fail 'invalid journal reached probe'
+done
 
 reset_fixture; printf 'wrong\n' > "$fixture/newroot/usr/lib/orangepi-hypervisor/package-state/FORMAT"; reject 'package ABI' yes
 reset_fixture; touch "$fixture/ignore-package-ro"; reject 'package bind remount ignored' yes
@@ -248,6 +331,7 @@ reset_fixture; chmod 666 "$state/identity/machine-id"; reject 'identity mode'
 reset_fixture; mv "$state/identity/machine-id" "$fixture/id"; ln -s "$fixture/id" "$state/identity/machine-id"; reject 'identity symlink'
 reset_fixture; touch "$fixture/changed-uuid"; reject 'state UUID changed after RO unmount'
 reset_fixture; touch "$fixture/replace-on-unmount"; reject 'state block identity replaced after RO unmount'
+! grep -q 'blockdev --setrw' "$fixture/log" || fail 'restored replaced target after unmount'
 reset_fixture; touch "$fixture/became-busy"; reject 'state became busy before RW'
 reset_fixture; touch "$fixture/changed-table"; reject 'GPT changed before RW'
 reset_fixture; touch "$fixture/mutate-marker"; reject 'state marker changed on RW mount' yes

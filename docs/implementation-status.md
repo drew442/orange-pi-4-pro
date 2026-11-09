@@ -1,10 +1,12 @@
 # Implementation status
 
-Updated 2026-11-08. See [build reproduction status](build-reproduction-status.md)
+Updated 2026-11-09. See [build reproduction status](build-reproduction-status.md)
 for construction history and evidence links. Physical release acceptance and
-independent deployment reproduction remain incomplete. Hardware work is blocked
-pending the requested serial-console evidence; reviewed read-only journal
-recovery preparation and its builder filesystem checks are complete.
+independent deployment reproduction remain incomplete. SSH has recovered and an
+independent UART capture/control host is available; goal work has resumed.
+The original endurance failure remains unexplained. A captured boot exposed
+unsafe filesystem-only read-only STATE probing; block-level protection is reviewed
+and tested, with a replacement bootstrap being prepared.
 
 ## Current state
 
@@ -15,16 +17,22 @@ recovery preparation and its builder filesystem checks are complete.
   Minimal Linux/KVM/QEMU is the target.
   Preserve zero routine SD writes; prefer SPI-to-NVMe with SD removed, otherwise
   use immutable SD boot files. Leave attached heatsinks in place.
-- **Running now:** The corrected VGIC host physically boots at **192.168.1.116**,
-  boot ID `7c31dc06-b2a4-43ee-a049-4747ae54bc10` at its verified boot. SSH is now
-  refused while ping still responds; serial diagnostics are requested. Read-only NVMe p2 root,
-  STATE `360d…`, the complete 40-file installed tool closure and 221-package
-  manifest pass. Existing pinned SSH identity and Ed25519 login pass;
-  automatic NTP reports synchronized. Early Linux SD write/discard/flush
-  counters are zero. See [corrected physical boot](evidence/corrected-host-boot-20261108.json).
-  The approved full NVMe install, identity restoration and SD switch pass;
-  [write receipts](evidence/corrected-host-install-20261108.json) include the
-  full-card acceptance baseline. RSA login has not been repeated on this boot.
+- **Running now:** Corrected VGIC host at **192.168.1.116**, boot ID
+  `2e32858c-1ef8-4ae5-860f-9959cd38a1e0`; pinned SSH, read-only NVMe p2 root,
+  STATE `360d…`, complete 40-file tool closure and automatic NTP pass again.
+  No failed units or management restarts were observed. A read-only slot-B
+  preparation passed with console guard monitoring; no selection was applied.
+  The user reported accidental restarts of both boards; these are not classified
+  cold/warm acceptance cycles. [Current serial evidence](evidence/serial-control-20261109.json).
+- **Out-of-band console:** `orangepi@192.168.1.117` captures A733 UART via
+  `ttyS3-capture.service` to `/var/log/ttyS3.log`. That directory is RAM-backed;
+  a bounded independent relay now preserves output on codex. UART BREAK + SysRq
+  help physically passes; UART reboot is untested. No GPIO wiring was added.
+- **STATE probe fix:** Captured legacy boot performed orphan cleanup despite
+  `ro,noload`. Reviewed boot/export changes enforce kernel block RO before probe;
+  [four real ext4 fixtures](evidence/state-block-protection-20261109.json), including
+  synthetic legacy orphans, preserve complete source bytes and all write counters.
+  The fixed bootstrap is not yet built/deployed; physical dirty recovery remains open.
 - **Previous NVMe host:** The earlier `00fd…` host was repaired before replacement.
   Trusted live SSH verified DHCP `192.168.1.116/24` on `end0`, MAC
   `10:f4:ae:90:5e:57`, and acceptance of both authorized keys. SSH remains
@@ -54,8 +62,10 @@ recovery preparation and its builder filesystem checks are complete.
   it **failed management reachability** at collector elapsed 300.005 seconds.
   Last valid guest sample is elapsed 357 seconds/cycle 12; temperatures were below
   29 °C, available memory 11,589,748 KiB, NVMe kernel errors absent and SD writes
-  zero. Root cause and subsequent guest/load state are unknown; serial output is
-  requested. Its initial 86-second telemetry gap is also recorded. The
+  zero. Root cause remains unexplained by retained logs. Subsequent guest/load
+  state was not observed before the user restarted the boards. Serial capture
+  is now active for reproduction.
+  Its initial 86-second telemetry gap is also recorded. The
   [read-only offline journal exporter](offline-host-journal.md) passes independent
   review and [real ext4 loop checks](evidence/offline-journal-loop-20261108.json);
   actual board recovery export is unperformed. See the [current image map](current-images.md).
@@ -152,9 +162,9 @@ count as physical acceptance.
   preserves a verified 893 MB generated archive on builder and releases native
   capacity for current images. Native free at completion was 1,165,426,688 bytes;
   remeasure above its unchanged 256 MiB floor. Restoration is unperformed.
-- Latest privileged Ubuntu suite: **1,941 tests**, no skips, errors or failures;
+- Latest privileged Ubuntu suite: **1,960 tests**, no skips, errors or failures;
   five shell suites and five diagnostic assembly cases pass. See the
-  [latest record](evidence/offline-journal-preparation-20261108.json). Jammy lacks `tomllib`;
+  [latest record](evidence/state-block-protection-20261109.json). Jammy lacks `tomllib`;
   all five TOML files passed the separate native parser. These are host
   checks only, not hardware acceptance.
 - Source/licensing work remains incomplete: licensing for 26 vendor boot inputs
@@ -165,11 +175,10 @@ count as physical acceptance.
 
 ## Next actions
 
-1. Obtain the requested serial console output for SSH refusal during the failed
-   endurance attempt, establish the cause and recover management. Preserve on-board
-   observer/console evidence before any restart if accessible. Corrected boot,
-   packaged tools, automatic time and guest restoration passed earlier. Repeat
-   the full endurance run after the fault is resolved.
+1. Build, independently inspect and deploy the protected STATE bootstrap, then
+   reproduce management/endurance with the independent serial monitor. Preserve
+   kernel/control evidence on any recurrence. Complete the full 24-hour workload;
+   the previous attempt remains failed.
 2. The verified `timesync-runtime-fixes-01` image is retained on both hosts;
    recheck resource floors before transfers. Integrate and
    validate matching NVMe-first firmware and VGIC DT separately; physically

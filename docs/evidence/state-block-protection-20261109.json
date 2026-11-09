@@ -1,0 +1,1573 @@
+{
+  "schema": 1,
+  "date": "2026-11-09",
+  "classification": "Block-protected clean/synthetic-orphan ext4 loop fixtures on prepared Ubuntu22 x86-64 only",
+  "actual_A733_export_performed": false,
+  "hardware_acceptance": false,
+  "result": {
+    "checks": [
+      {
+        "allocated_fixture_bytes": 8577024,
+        "attachment_block_ro_before_normalization": 1,
+        "block_ro_original": 0,
+        "block_ro_restored": 0,
+        "check": "original-ro-zero",
+        "image_bytes": 67108864,
+        "internal_journal_inode": 8,
+        "orphan_fixture_is_actual_crash_journal": false,
+        "owned_mount_cleaned": true,
+        "resources_exported": {
+          "disk_free_bytes": 20961099776,
+          "memory_available_bytes": 7660548096
+        },
+        "resources_prepared": {
+          "disk_free_bytes": 20961095680,
+          "memory_available_bytes": 7665672192
+        },
+        "source_after": {
+          "sha256": "119df3988f073bc55f24f96f67fe8e123ae7d5deecd6da4a8a506c8cc08451e2",
+          "write_discard_flush_counters": [
+            20,
+            0,
+            0,
+            17,
+            0,
+            0,
+            0,
+            0,
+            20,
+            17
+          ]
+        },
+        "source_before": {
+          "sha256": "119df3988f073bc55f24f96f67fe8e123ae7d5deecd6da4a8a506c8cc08451e2",
+          "write_discard_flush_counters": [
+            20,
+            0,
+            0,
+            17,
+            0,
+            0,
+            0,
+            0,
+            20,
+            17
+          ]
+        },
+        "stages": [
+          {
+            "block_ro": 0,
+            "stage": "before-protected_journal",
+            "stat": [
+              1201,
+              0,
+              45686,
+              46,
+              20,
+              0,
+              0,
+              17,
+              0,
+              45,
+              82,
+              0,
+              0,
+              0,
+              0,
+              20,
+              17
+            ],
+            "sysfs_ro": 0
+          },
+          {
+            "block_ro": 1,
+            "stage": "after-mount_readonly",
+            "stat": [
+              1208,
+              0,
+              45784,
+              46,
+              20,
+              0,
+              0,
+              17,
+              0,
+              45,
+              82,
+              0,
+              0,
+              0,
+              0,
+              20,
+              17
+            ],
+            "sysfs_ro": 1
+          },
+          {
+            "block_ro": 1,
+            "stage": "after-verify_mount",
+            "stat": [
+              1208,
+              0,
+              45784,
+              46,
+              20,
+              0,
+              0,
+              17,
+              0,
+              45,
+              82,
+              0,
+              0,
+              0,
+              0,
+              20,
+              17
+            ],
+            "sysfs_ro": 1
+          },
+          {
+            "block_ro": 1,
+            "stage": "after-collect_journal",
+            "stat": [
+              1214,
+              0,
+              45832,
+              47,
+              20,
+              0,
+              0,
+              17,
+              0,
+              45,
+              82,
+              0,
+              0,
+              0,
+              0,
+              20,
+              17
+            ],
+            "sysfs_ro": 1
+          },
+          {
+            "block_ro": 1,
+            "stage": "after-unmount",
+            "stat": [
+              1214,
+              0,
+              45832,
+              47,
+              20,
+              0,
+              0,
+              17,
+              0,
+              45,
+              82,
+              0,
+              0,
+              0,
+              0,
+              20,
+              17
+            ],
+            "sysfs_ro": 1
+          },
+          {
+            "block_ro": 0,
+            "stage": "after-protected_journal",
+            "stat": [
+              1214,
+              0,
+              45832,
+              47,
+              20,
+              0,
+              0,
+              17,
+              0,
+              45,
+              82,
+              0,
+              0,
+              0,
+              0,
+              20,
+              17
+            ],
+            "sysfs_ro": 0
+          }
+        ],
+        "synthetic_legacy_last_orphan": 0,
+        "verified_mount_flags": [
+          "ro",
+          "noload",
+          "noexec",
+          "nodev",
+          "nosuid"
+        ]
+      },
+      {
+        "allocated_fixture_bytes": 8577024,
+        "attachment_block_ro_before_normalization": 0,
+        "block_ro_original": 1,
+        "block_ro_restored": 1,
+        "check": "original-ro-one",
+        "image_bytes": 67108864,
+        "internal_journal_inode": 8,
+        "orphan_fixture_is_actual_crash_journal": false,
+        "owned_mount_cleaned": true,
+        "resources_exported": {
+          "disk_free_bytes": 20961099776,
+          "memory_available_bytes": 7632228352
+        },
+        "resources_prepared": {
+          "disk_free_bytes": 20961095680,
+          "memory_available_bytes": 7635877888
+        },
+        "source_after": {
+          "sha256": "d7a6be0bc2cebeed888babc10d9256aface00be800f6016d28d670a05cde3b9f",
+          "write_discard_flush_counters": [
+            22,
+            0,
+            0,
+            19,
+            0,
+            0,
+            0,
+            0,
+            22,
+            19
+          ]
+        },
+        "source_before": {
+          "sha256": "d7a6be0bc2cebeed888babc10d9256aface00be800f6016d28d670a05cde3b9f",
+          "write_discard_flush_counters": [
+            22,
+            0,
+            0,
+            19,
+            0,
+            0,
+            0,
+            0,
+            22,
+            19
+          ]
+        },
+        "stages": [
+          {
+            "block_ro": 1,
+            "stage": "before-protected_journal",
+            "stat": [
+              1323,
+              0,
+              50408,
+              50,
+              22,
+              0,
+              0,
+              19,
+              0,
+              49,
+              89,
+              0,
+              0,
+              0,
+              0,
+              22,
+              19
+            ],
+            "sysfs_ro": 1
+          },
+          {
+            "block_ro": 1,
+            "stage": "after-mount_readonly",
+            "stat": [
+              1330,
+              0,
+              50506,
+              50,
+              22,
+              0,
+              0,
+              19,
+              0,
+              49,
+              89,
+              0,
+              0,
+              0,
+              0,
+              22,
+              19
+            ],
+            "sysfs_ro": 1
+          },
+          {
+            "block_ro": 1,
+            "stage": "after-verify_mount",
+            "stat": [
+              1330,
+              0,
+              50506,
+              50,
+              22,
+              0,
+              0,
+              19,
+              0,
+              49,
+              89,
+              0,
+              0,
+              0,
+              0,
+              22,
+              19
+            ],
+            "sysfs_ro": 1
+          },
+          {
+            "block_ro": 1,
+            "stage": "after-collect_journal",
+            "stat": [
+              1336,
+              0,
+              50554,
+              50,
+              22,
+              0,
+              0,
+              19,
+              0,
+              49,
+              90,
+              0,
+              0,
+              0,
+              0,
+              22,
+              19
+            ],
+            "sysfs_ro": 1
+          },
+          {
+            "block_ro": 1,
+            "stage": "after-unmount",
+            "stat": [
+              1336,
+              0,
+              50554,
+              50,
+              22,
+              0,
+              0,
+              19,
+              0,
+              49,
+              90,
+              0,
+              0,
+              0,
+              0,
+              22,
+              19
+            ],
+            "sysfs_ro": 1
+          },
+          {
+            "block_ro": 1,
+            "stage": "after-protected_journal",
+            "stat": [
+              1336,
+              0,
+              50554,
+              50,
+              22,
+              0,
+              0,
+              19,
+              0,
+              49,
+              90,
+              0,
+              0,
+              0,
+              0,
+              22,
+              19
+            ],
+            "sysfs_ro": 1
+          }
+        ],
+        "synthetic_legacy_last_orphan": 0,
+        "verified_mount_flags": [
+          "ro",
+          "noload",
+          "noexec",
+          "nodev",
+          "nosuid"
+        ]
+      },
+      {
+        "allocated_fixture_bytes": 8577024,
+        "attachment_block_ro_before_normalization": 0,
+        "block_ro_original": 0,
+        "block_ro_restored": 0,
+        "check": "synthetic-legacy-orphan",
+        "image_bytes": 67108864,
+        "internal_journal_inode": 8,
+        "orphan_fixture_is_actual_crash_journal": false,
+        "owned_mount_cleaned": true,
+        "resources_exported": {
+          "disk_free_bytes": 20961095680,
+          "memory_available_bytes": 7640154112
+        },
+        "resources_prepared": {
+          "disk_free_bytes": 20961095680,
+          "memory_available_bytes": 7639052288
+        },
+        "source_after": {
+          "sha256": "4de61bc3c4a9934f53ff5d6a2f363f87ab54af39c20c58c9c317a516fb145511",
+          "write_discard_flush_counters": [
+            24,
+            0,
+            0,
+            21,
+            0,
+            0,
+            0,
+            0,
+            24,
+            21
+          ]
+        },
+        "source_before": {
+          "sha256": "4de61bc3c4a9934f53ff5d6a2f363f87ab54af39c20c58c9c317a516fb145511",
+          "write_discard_flush_counters": [
+            24,
+            0,
+            0,
+            21,
+            0,
+            0,
+            0,
+            0,
+            24,
+            21
+          ]
+        },
+        "stages": [
+          {
+            "block_ro": 0,
+            "stage": "before-protected_journal",
+            "stat": [
+              1444,
+              0,
+              55098,
+              53,
+              24,
+              0,
+              0,
+              21,
+              0,
+              51,
+              95,
+              0,
+              0,
+              0,
+              0,
+              24,
+              21
+            ],
+            "sysfs_ro": 0
+          },
+          {
+            "block_ro": 1,
+            "stage": "after-mount_readonly",
+            "stat": [
+              1451,
+              0,
+              55196,
+              53,
+              24,
+              0,
+              0,
+              21,
+              0,
+              51,
+              95,
+              0,
+              0,
+              0,
+              0,
+              24,
+              21
+            ],
+            "sysfs_ro": 1
+          },
+          {
+            "block_ro": 1,
+            "stage": "after-verify_mount",
+            "stat": [
+              1451,
+              0,
+              55196,
+              53,
+              24,
+              0,
+              0,
+              21,
+              0,
+              51,
+              95,
+              0,
+              0,
+              0,
+              0,
+              24,
+              21
+            ],
+            "sysfs_ro": 1
+          },
+          {
+            "block_ro": 1,
+            "stage": "after-collect_journal",
+            "stat": [
+              1457,
+              0,
+              55244,
+              53,
+              24,
+              0,
+              0,
+              21,
+              0,
+              51,
+              95,
+              0,
+              0,
+              0,
+              0,
+              24,
+              21
+            ],
+            "sysfs_ro": 1
+          },
+          {
+            "block_ro": 1,
+            "stage": "after-unmount",
+            "stat": [
+              1457,
+              0,
+              55244,
+              53,
+              24,
+              0,
+              0,
+              21,
+              0,
+              51,
+              95,
+              0,
+              0,
+              0,
+              0,
+              24,
+              21
+            ],
+            "sysfs_ro": 1
+          },
+          {
+            "block_ro": 0,
+            "stage": "after-protected_journal",
+            "stat": [
+              1457,
+              0,
+              55244,
+              53,
+              24,
+              0,
+              0,
+              21,
+              0,
+              51,
+              95,
+              0,
+              0,
+              0,
+              0,
+              24,
+              21
+            ],
+            "sysfs_ro": 0
+          }
+        ],
+        "synthetic_legacy_last_orphan": 16,
+        "verified_mount_flags": [
+          "ro",
+          "noload",
+          "noexec",
+          "nodev",
+          "nosuid"
+        ]
+      },
+      {
+        "allocated_fixture_bytes": 8585216,
+        "attachment_block_ro_before_normalization": 0,
+        "block_ro_original": 0,
+        "block_ro_restored": 0,
+        "check": "unexpected-file-refused",
+        "image_bytes": 67108864,
+        "internal_journal_inode": 8,
+        "orphan_fixture_is_actual_crash_journal": false,
+        "owned_mount_cleaned": true,
+        "resources_exported": {
+          "disk_free_bytes": 20961087488,
+          "memory_available_bytes": 7590850560
+        },
+        "resources_prepared": {
+          "disk_free_bytes": 20961083392,
+          "memory_available_bytes": 7574319104
+        },
+        "source_after": {
+          "sha256": "72715a6e19ab72043d67c137ba7335a954b42b5a4a2c214773ea843771f3d6d2",
+          "write_discard_flush_counters": [
+            26,
+            0,
+            0,
+            22,
+            0,
+            0,
+            0,
+            0,
+            26,
+            22
+          ]
+        },
+        "source_before": {
+          "sha256": "72715a6e19ab72043d67c137ba7335a954b42b5a4a2c214773ea843771f3d6d2",
+          "write_discard_flush_counters": [
+            26,
+            0,
+            0,
+            22,
+            0,
+            0,
+            0,
+            0,
+            26,
+            22
+          ]
+        },
+        "stages": [
+          {
+            "block_ro": 0,
+            "stage": "before-protected_journal",
+            "stat": [
+              1565,
+              0,
+              59788,
+              56,
+              26,
+              0,
+              0,
+              22,
+              0,
+              55,
+              102,
+              0,
+              0,
+              0,
+              0,
+              26,
+              22
+            ],
+            "sysfs_ro": 0
+          },
+          {
+            "block_ro": 1,
+            "stage": "after-mount_readonly",
+            "stat": [
+              1572,
+              0,
+              59886,
+              56,
+              26,
+              0,
+              0,
+              22,
+              0,
+              55,
+              102,
+              0,
+              0,
+              0,
+              0,
+              26,
+              22
+            ],
+            "sysfs_ro": 1
+          },
+          {
+            "block_ro": 1,
+            "stage": "after-verify_mount",
+            "stat": [
+              1572,
+              0,
+              59886,
+              56,
+              26,
+              0,
+              0,
+              22,
+              0,
+              55,
+              102,
+              0,
+              0,
+              0,
+              0,
+              26,
+              22
+            ],
+            "sysfs_ro": 1
+          },
+          {
+            "block_ro": 1,
+            "stage": "after-collect_journal",
+            "stat": [
+              1578,
+              0,
+              59934,
+              56,
+              26,
+              0,
+              0,
+              22,
+              0,
+              55,
+              102,
+              0,
+              0,
+              0,
+              0,
+              26,
+              22
+            ],
+            "sysfs_ro": 1
+          },
+          {
+            "block_ro": 1,
+            "stage": "after-unmount",
+            "stat": [
+              1578,
+              0,
+              59934,
+              56,
+              26,
+              0,
+              0,
+              22,
+              0,
+              55,
+              102,
+              0,
+              0,
+              0,
+              0,
+              26,
+              22
+            ],
+            "sysfs_ro": 1
+          },
+          {
+            "block_ro": 0,
+            "stage": "after-protected_journal",
+            "stat": [
+              1578,
+              0,
+              59934,
+              56,
+              26,
+              0,
+              0,
+              22,
+              0,
+              55,
+              102,
+              0,
+              0,
+              0,
+              0,
+              26,
+              22
+            ],
+            "sysfs_ro": 0
+          }
+        ],
+        "synthetic_legacy_last_orphan": 0,
+        "verified_mount_flags": [
+          "ro",
+          "noload",
+          "noexec",
+          "nodev",
+          "nosuid"
+        ]
+      }
+    ],
+    "classification": "new private synthetic ext4 loop fixtures only; production protected_journal uses real block RO; fixed A733/RAM-entry, physical-device and whole-host idle policy bypassed by explicit fixture adapter; synthetic legacy orphan is not an actual crash journal",
+    "cleanup": "owned mounts removed, loops detached, fixture paths deleted",
+    "fixture_patches": [
+      "PART=owned newly allocated loop",
+      "PART_SIZE=64 MiB",
+      "inspect_target=fixture identity and production validate_state_fd"
+    ],
+    "hardware_acceptance": false,
+    "resources_after": {
+      "disk_free_bytes": 20969676800,
+      "memory_available_bytes": 7523864576
+    },
+    "resources_before": {
+      "disk_free_bytes": 20969680896,
+      "memory_available_bytes": 7670546432
+    },
+    "schema": 2,
+    "source_sha256": "3a54ca3536f0df7599f6a8722d14f465cbe9cfb774865623d9a5e622ad7bbb1c"
+  },
+  "postcheck": {
+    "matching_loops": [],
+    "remaining_workspaces": [],
+    "removed_empty_failed_workspace": "/var/tmp/a733-journal-loop-ted3a4hk",
+    "loop5_ro_after_cleanup": "0",
+    "hardware_acceptance": false
+  },
+  "reviews": [
+    {
+      "source": {
+        "path": "tmp/boot-block-ro-review-20261109.json",
+        "bytes": 7622,
+        "sha256": "038325e39908a97cacb83864b06aa09f76a06f47a4115813988246a1ef456967"
+      },
+      "record": {
+        "schema": 1,
+        "date": "2026-11-09",
+        "operation": "independent-boot-state-block-ro-source-review",
+        "decision": "PASS for bounded source integration, with explicit failure-state and evidence limitations below. No blocking defect identified in reviewed patch.",
+        "hardware_acceptance": false,
+        "scope": {
+          "only_written_file": "tmp/boot-block-ro-review-20261109.json",
+          "source_edits": false,
+          "board_actions": false,
+          "ssh_actions": false,
+          "mount_or_loop_actions": false,
+          "delegation": false,
+          "commit": false
+        },
+        "reviewed_sources": {
+          "configs/host-init": "2cf52e1cee8d4f2050fe3a90eca0a0a8c50b6f30718d210667f7273f9f08ab12",
+          "tests/test-host-init.sh": "60d4c9b0309a64a31258269568639c5517384ab94035322bc5d1d721da5ac92d",
+          "configs/host-storage-resolver.sh": "6b5096fa16f473796c41dcc82636bb4d06381d5f00a33438ef392ae32a911798"
+        },
+        "defects": [],
+        "findings": [
+          {
+            "result": "pass",
+            "path": "configs/host-init:283",
+            "fact": "Before initial mount: revalidate exact state partition identity, parent, UUID, type, idle state and GPT; raw journal containment; require original BLKROGET=0; claim flag ownership before potentially ambiguous ioctl; set RO and verify BLKROGET=1; revalidate identity again. No SD block flag is changed."
+          },
+          {
+            "result": "pass",
+            "path": "configs/host-init:248",
+            "fact": "Raw parser reads at most 236 bytes from primary superblock offset 1024, validates each token as decimal byte 0..255, and requires exactly 236 bytes. Checks magic bytes 0x53/0xef, HAS_JOURNAL compat bit4, absence of JOURNAL_DEV incompat bit8, all 16 external journal UUID bytes zero, full LE32 journal inode exactly8, and all four journal device bytes zero. Bytewise checks avoid host endianness and shell 32-bit arithmetic issues. Orphan fields may remain nonzero intentionally because the probe is block protected."
+          },
+          {
+            "result": "pass",
+            "path": "configs/host-init:294",
+            "fact": "Initial state marker, directories and machine-id are checked while selected partition is block RO. A failed marker check aborts handoff; cleanup may restore only original block writability after unmount and revalidation, but never attempts a writable filesystem mount or bypasses marker validation."
+          },
+          {
+            "result": "pass",
+            "path": "configs/host-init:272",
+            "fact": "RO release requires same identity/parent/UUID/ext4, no mounts or holders, GPT and raw internal-journal guard, original flag0 and current confirmed flag1. Refused identity, busy mount, malformed inventory or journal containment prevents setrw. Failed unmount cannot be bypassed by clearing HI_MOUNTS because production hs_idle checks kernel mountinfo independently."
+          },
+          {
+            "result": "pass",
+            "path": "configs/host-init:297",
+            "fact": "After release, writability plus target identity/UUID/idle/GPT/raw journal guard are rechecked before authorized RW recovery; marker and machine-id are checked again after recovery. A setrw verification failure aborts before RW filesystem mounting."
+          },
+          {
+            "result": "pass",
+            "path": "configs/host-init:328",
+            "fact": "RO ownership is cleared only after successful setrw verification. /run move and subsequent runtime setup are reachable only after this clear, so late cleanup cannot accidentally clear another block flag. Existing moved mount tracking unmounts state at /newroot/run/a733-state; failure restore paths still rely on actual major:minor mountinfo."
+          }
+        ],
+        "fault_semantics": [
+          {
+            "scenario": "setro succeeds but immediate getro exits failure without output; later cleanup verification succeeds",
+            "independently_observed": "No probe mount and no RW filesystem mount. Cleanup safely restores original flag: ro=0, owned=0, setrw calls=1. Therefore this failure does not promise retained RO."
+          },
+          {
+            "scenario": "setrw succeeds but immediate getro exits failure without output; cleanup sees actual flag0",
+            "independently_observed": "No RW filesystem mount. ro=0, owned=1, setrw calls=1. Cleanup refuses a second setrw and prints could not verify safe STATE block-RO cleanup. This means protection may already be released; uncertainty is reported correctly. Do not claim every restoration or verification failure leaves the device RO."
+          },
+          {
+            "scenario": "setrw is ignored and returns success, getro remains1",
+            "suite_observed": "126-fixture suite rejects and confirms flag1. Existing failed restoration lost protection assertion is valid only for this deliberately ignored ioctl case."
+          },
+          {
+            "scenario": "setro is ignored and getro remains0",
+            "suite_observed": "126-fixture suite rejects before any probe mount and performs no setrw."
+          }
+        ],
+        "checks": [
+          {
+            "command": "bash tests/test-host-init.sh",
+            "exit_code": 0,
+            "result": "host init: 126 fixtures passed (no real mounts or hardware checks)"
+          },
+          {
+            "command": "bash -n configs/host-init tests/test-host-init.sh",
+            "exit_code": 0
+          },
+          {
+            "command": "/bin/busybox sh -n configs/host-init",
+            "exit_code": 0
+          },
+          {
+            "command": "git diff --check -- configs/host-init tests/test-host-init.sh",
+            "exit_code": 0
+          },
+          {
+            "command": "In-memory extension of sourced production fixture harness; inject one getro command failure immediately after each successful RO/RW ioctl",
+            "exit_code": 0,
+            "result": "Both handoffs reject, neither reaches RW filesystem mount, cleanup flag states and stderr captured above. No source edits."
+          },
+          {
+            "command": "sha256sum reviewed source files before and after checks",
+            "result": "Unchanged hashes listed above"
+          }
+        ],
+        "nonblocking_notes": [
+          "Consider retaining the two transient getro fault injections as repository fixtures, especially to prevent future claims that every failure retains RO. The current suite primarily simulates ignored ioctls rather than successful ioctls followed by unreadable status.",
+          "The state probe relies on successful exact-source mount in the quiescent PID1 environment plus validated file content. It does not separately assert the mounted state major:minor/type/ro flags through mountinfo. Such an assertion would strengthen attestation but no concurrent services or substitution mechanism is present in this bounded boot path.",
+          "The fixture orphan message models expected ext4 block-RO behavior. It is not an executed ext4 orphan-cleanup test and establishes no source-sector invariance on a real filesystem."
+        ],
+        "supplied_evidence_not_independently_rerun": {
+          "pinned_arm_busybox_sha256": "0a41864f87a0737804f0f4a68a1cfa1ed22374f4f75a1be3eb376e2659ce1316",
+          "coordinator_report": "Pinned ARM BusyBox blockdev --getro/--setro/--setrw and od support tested under QEMU; ARM syntax check passes.",
+          "serial_context": "Prior independent review records actual A733 legacy ro,noload orphan cleanup at about7.61s in out/serial-recovery-20261109/serial-after-restart-65369.log; this review does not classify old probe as strictly nonwriting."
+        },
+        "remaining_acceptance": "Coordinator retains artifact construction, independent artifact verification and physical A733 dirty-state boot/SD-write/KVM acceptance. Host fixtures, native syntax and ARM emulation cannot substitute for physical evidence.",
+        "invariants": [
+          "Orange Pi4 Pro A733",
+          "2 GB SD",
+          "nominal250 GB NVMe",
+          "minimal host",
+          "zero routine SD writes",
+          "leave heatsinks attached",
+          "actual KVM guest for physical acceptance"
+        ]
+      }
+    },
+    {
+      "source": {
+        "path": "tmp/journal-block-ro-review-20261109.json",
+        "bytes": 8631,
+        "sha256": "61723007b96ea715d1c83db6c7a1777efb95686c81e53b2f7d6a06fb5e7b8d6e"
+      },
+      "record": {
+        "schema": 1,
+        "date": "2026-11-09",
+        "operation": "independent-source-review-block-protected-journal-export",
+        "hardware_acceptance": false,
+        "decision": "pass independent source and mocked lifecycle review; real protected ext4 fixture and physical A733 evidence remain separate prerequisites",
+        "scope": {
+          "only_written_file": "tmp/journal-block-ro-review-20261109.json",
+          "source_edits": false,
+          "physical_storage_opened": false,
+          "ssh": false,
+          "mounts_or_loops": false,
+          "delegation": false,
+          "commit": false
+        },
+        "sha256": {
+          "scripts/export-known-host-journal.py": "3a54ca3536f0df7599f6a8722d14f465cbe9cfb774865623d9a5e622ad7bbb1c",
+          "tests/test_known_host_journal_export.py": "abfac15845297687a80a775f4fb89c80c265a23ffdca3fad6c154c31fb65df0f",
+          "docs/offline-host-journal.md": "e31e8c0332d511e6efcca5c8eb9d8f794c0c5f44ab949f9cc3abd5b510a96f1c"
+        },
+        "existing_suite": {
+          "command": "python3 -B -m unittest discover -s tests -p test_known_host_journal_export.py -v",
+          "tests": 21,
+          "failures": 0,
+          "errors": 0
+        },
+        "diff_check": "git diff --check passed",
+        "independent_mock_checks": [
+          {
+            "name": "strict-counter-refusal",
+            "result": "pass",
+            "cases": 20,
+            "details": "Mutated each of ten modeled write/discard/flush fields for both whole NVMe and known SD; every mutation refused before emit_archive."
+          },
+          {
+            "name": "actual-counter-field-selection",
+            "result": "pass",
+            "details": "Production write_counters selects write fields 4:8 and discard/flush fields 11: for both fixed disks; CID is checked."
+          },
+          {
+            "name": "independent-open-flags-and-lifecycle",
+            "result": "pass",
+            "details": "Exclusive O_RDONLY|O_NOFOLLOW|O_NONBLOCK claim; separate nonexclusive held descriptor; claim closed before mount; held descriptor retained through post-unmount revalidation; original zero restored only afterwards."
+          },
+          {
+            "name": "late-restore-readback-failure",
+            "result": "defect-reproduced",
+            "details": "BLKROSET(0) succeeds, subsequent validator raises; exception propagates but kernel RO model remains 0 and no reassertion is attempted."
+          }
+        ],
+        "findings": [
+          {
+            "severity": "medium",
+            "path": "scripts/export-known-host-journal.py",
+            "lines": [
+              219,
+              223,
+              256,
+              257
+            ],
+            "issue": "A successful BLKROSET(0) followed by failed readback/revalidation leaves STATE writable while operation reports failure. Existing failed-restore test only simulates ioctl refusal, so does not establish protection remains enabled for all failed restoration paths. Documentation line85 and comment248 overstate failure behavior.",
+            "recommendation": "Either narrow documentation to explicitly describe possibly-cleared/unknown flag after post-clear verification failure, or add reviewed best-effort RO reassertion on the still identity-validated descriptor. Never blindly ioctl after an identity mismatch. Add a late readback-failure regression.",
+            "status": "resolved by restore_state_writable and explicit uncertain-state documentation"
+          }
+        ],
+        "reviewed_properties": [
+          "Production execute uses protected_journal; no writable mount fallback.",
+          "Set and ioctl/sysfs verification precede ro,noload mount. Exclusive claim is released before mount; checked nonexclusive FD pins exact block object through cleanup.",
+          "Descriptor validator checks named-node fstat/lstat type/rdev/inode/filesystem match, fixed expected device and geometry, UUID/label/internal journal and both RO representations.",
+          "Full target identity/parent/geometry/holder/idle validation occurs before mount and before restoring zero. Failed mount, failed unmount or failed pre-restore postvalidation cannot reach clear-RO ioctl.",
+          "Original RO=1 is preserved. Restoring original zero after collection failure is allowed only if normal unmount and complete postvalidation succeed.",
+          "Unknown incompat/external-journal and orphan-file/orphan-present guards remain; legacy orphan metadata is allowed only through protected production mount.",
+          "Owned mountpoint, mount identity/options, FD-relative traversal, name/ownership/mode/device/hardlink/bounds checks retained. Trusted quiescent root model excludes hostile concurrent root.",
+          "Whole known SD and NVMe counters retain strict equality, including write/discard/flush; any change refuses archive."
+        ],
+        "limitations": [
+          "No physical A733 operations or hardware acceptance.",
+          "No loop/filesystem protection test performed by this reviewer; coordinator must obtain disposable real ext4 block-RO lifecycle evidence before live use.",
+          "Historical loop fixture bypasses revised protection wrapper and cannot establish its kernel behavior.",
+          "No extra validation of configs/host-init or other files beyond handed-off kernel-review context."
+        ],
+        "coordinator_fix_decision": "Preserve/reassert RO only after validating the held descriptor identity. Best-effort reassert BLKROSET(1) on the same validated FD after post-clear verification failure, with regression. Explicitly report uncertain flag state if reassertion or verification fails; never claim all failed ioctl/readback paths stay protected. Fix not implemented by reviewer.",
+        "initial_review_sha256": {
+          "scripts/export-known-host-journal.py": "07b6662b759bdac4f6bc1d5ec184aa41afe12e0f5f875f5ad8c62e79896ddbe1",
+          "tests/test_known_host_journal_export.py": "f2d4587b3dd94cd8e26969bcc15bdae3e956ef8cc5ef4d95efb2c68ea98ff897",
+          "docs/offline-host-journal.md": "4a8340a342284cb67d1e5d27ff5b120dfbb6514c8649555571f1a15b135f7d2f"
+        },
+        "remaining_findings": [],
+        "delta_review": {
+          "decision": "pass",
+          "tests": 21,
+          "failures": 0,
+          "errors": 0,
+          "diff_check": "passed",
+          "independent_actual_validator_mock_cases": [
+            {
+              "case": "restore-success",
+              "result": "pass",
+              "ioctls": [
+                0
+              ],
+              "final_mock_ro": 0,
+              "message": null
+            },
+            {
+              "case": "late-sysfs",
+              "result": "pass",
+              "ioctls": [
+                0,
+                1
+              ],
+              "final_mock_ro": 1,
+              "message": "STATE restoration failed; block read-only protection reasserted; no archive"
+            },
+            {
+              "case": "second-postclear-check",
+              "result": "pass",
+              "ioctls": [
+                0,
+                1
+              ],
+              "final_mock_ro": 1,
+              "message": "STATE restoration failed; block read-only protection reasserted; no archive"
+            },
+            {
+              "case": "geometry-loss",
+              "result": "pass",
+              "ioctls": [
+                0
+              ],
+              "final_mock_ro": 0,
+              "message": "STATE restoration failed; block read-only state uncertain; no archive"
+            },
+            {
+              "case": "journal-loss",
+              "result": "pass",
+              "ioctls": [
+                0
+              ],
+              "final_mock_ro": 0,
+              "message": "STATE restoration failed; block read-only state uncertain; no archive"
+            },
+            {
+              "case": "node-loss",
+              "result": "pass",
+              "ioctls": [
+                0
+              ],
+              "final_mock_ro": 0,
+              "message": "STATE restoration failed; block read-only state uncertain; no archive"
+            },
+            {
+              "case": "ignored-reprotect",
+              "result": "pass",
+              "ioctls": [
+                0,
+                1
+              ],
+              "final_mock_ro": 0,
+              "message": "STATE restoration failed; block read-only state uncertain; no archive"
+            },
+            {
+              "case": "reprotect-sysfs",
+              "result": "pass",
+              "ioctls": [
+                0,
+                1
+              ],
+              "final_mock_ro": 1,
+              "message": "STATE restoration failed; block read-only state uncertain; no archive"
+            }
+          ],
+          "notes": [
+            "Independent mocks run production validate_state_identity and validate_superblock against a valid dirty legacy-orphan superblock. They do not mock away identity, geometry, internal-journal checks.",
+            "Post-clear sysfs failure and failure on the extra final zero validation both reassert and verify RO1, then refuse success.",
+            "Changed node inode, geometry or internal journal prevent any protective ioctl; explicitly uncertain outcome is correct.",
+            "Ignored protective ioctl and failed protective readback both report uncertain.",
+            "Best-effort protective ioctl executes only after exact named/held node match, geometry and internal-journal validation. No blind ioctl follows identity loss.",
+            "Original mount protection ordering and strict counters are unchanged by this delta."
+          ]
+        }
+      }
+    },
+    {
+      "source": {
+        "path": "tmp/protected-journal-loop-review-20261109.json",
+        "bytes": 8179,
+        "sha256": "062be1070b366f0426381a0b5a62ea74910f8a17cbb713c975854fbc89f5a959"
+      },
+      "record": {
+        "schema": 1,
+        "date": "2026-11-09",
+        "operation": "independent-protected-journal-loop-preprivileged-source-safety-review",
+        "decision": "pass for coordinator-controlled privileged fixture execution on prepared Jammy builder, including owned-loop RO normalization delta",
+        "blocking_defects": [],
+        "reviewed_fixture": {
+          "path": "tests/verify_known_host_journal_loop.py",
+          "sha256": "466f0f13136b337aa2d7df282736c682b6535ec261fdee2d28880bea8dd4932c"
+        },
+        "reviewed_production": {
+          "path": "scripts/export-known-host-journal.py",
+          "sha256": "3a54ca3536f0df7599f6a8722d14f465cbe9cfb774865623d9a5e622ad7bbb1c"
+        },
+        "scope": {
+          "only_written_file": "tmp/protected-journal-loop-review-20261109.json",
+          "privileged_execution": false,
+          "mount_or_loop_operations": false,
+          "ssh_or_hardware_operations": false,
+          "source_edits": false,
+          "delegation": false,
+          "commit": false
+        },
+        "checks": [
+          {
+            "result": "pass",
+            "subject": "No device/source arguments",
+            "evidence": "Fixture main parser accepts no positional or custom options; source location and 64 MiB image size are fixed (lines 32-41, 499-502)."
+          },
+          {
+            "result": "pass",
+            "subject": "Formatting and debugfs confined to new regular files",
+            "evidence": "Root-owned 0700 private directories; O_CREAT|O_EXCL|O_NOFOLLOW 0600 held image; identity/type/link/size checks; mke2fs and debugfs receive /proc/self/fd/N with pass_fds, not caller paths. debugfs mutation occurs before attachment and requires loop absent/allocation flag false (lines 85-112,155-193)."
+          },
+          {
+            "result": "pass",
+            "subject": "Just-allocated owned loop verification",
+            "evidence": "losetup --find --show uses only private owned image. Returned /dev/loopN block node, sysfs dev, backing path and inode, offset/sizelimit, exact size and empty holders checked before use; allocation uncertainty set before subprocess (lines 113-132,200-209)."
+          },
+          {
+            "result": "pass",
+            "subject": "Uncertain allocation retention",
+            "evidence": "cleanup refuses before filesystem or mount inspection when allocation may have occurred but loop identity is not proved (lines 225-228). Mock timeout, nonzero exit and decoding error all preserve uncertainty with zero device operations."
+          },
+          {
+            "result": "pass",
+            "subject": "Explicit adapter preserves production protections",
+            "evidence": "Only PART, PART_SIZE and inspect_target are replaced. Adapter checks owned loop mounts and invokes unchanged production validate_state_fd, including actual BLKROGET, geometry, superblock and held-node identity. Production protected_journal, BLKROSET, mount/verify/traverse/unmount and archive implementations execute through wrappers (lines 297-380)."
+          },
+          {
+            "result": "pass",
+            "subject": "Read-only state and strict unchanged-source evidence",
+            "evidence": "udevadm settle before baseline. Trace calls real validate_state_fd and sysfs RO. Checks demand RO1 after mount, verify, collect and unmount, exact original RO at entry/exit, and byte-identical full-image SHA256 plus exact writes/discards/flushes counters before detach (lines 193-196,211-223,338-343,363-423). Production validates RO1 immediately before mount."
+          },
+          {
+            "result": "pass",
+            "subject": "Four independent cases",
+            "evidence": "Each case gets a fresh 64 MiB image: original RO0 restoration, original RO1 preservation, debugfs-preseeded legacy orphan, and unexpected nonjournal refusal. Successful archives verify bytes and metadata; negative fixture requires exact collector refusal and full cleanup/RO/hash/counter checks (lines 381-432,457-468)."
+          },
+          {
+            "result": "pass",
+            "subject": "Cleanup preserves export protection and normalizes only after successful assertions",
+            "evidence": "Original RO1 remains set throughout production export, normal unmount, restoration/trace checks and full SHA/counter assertions. export_assertions_passed is set only after those checks and final resource check. Cleanup first refuses uncertain allocation or remaining mounts and revalidates owned backing identity; only successful fixtures then invoke exclusive normalization before owned detach. Failed fixtures do not enter cleanup normalization. Detach and backing-disappearance checks still precede deletion."
+          }
+        ],
+        "executed_nonprivileged_checks": [
+          {
+            "check": "Python compile() in memory, no pycache",
+            "result": "pass"
+          },
+          {
+            "check": "allocation_retention_probe() with subprocess.check_output mocked",
+            "result": "pass",
+            "mock_allocation_failures_retained": 3,
+            "device_operations": 0
+          },
+          {
+            "check": "Exact fixture and production SHA256 rechecked before writing record",
+            "result": "pass"
+          },
+          {
+            "check": "Delta in-memory compilation, exclusive normalization success mock and mounted/identity refusal mocks",
+            "result": "pass",
+            "device_operations": 0
+          }
+        ],
+        "limitations": [
+          "This is source-safety review and mock evidence only; no real loop, ioctl, mount, export or cleanup was executed by reviewer.",
+          "Fixture deliberately bypasses A733/RAM-entry, physical NVMe identity and whole-host idle policy. It does not establish those production guards or actual board acceptance.",
+          "Synthetic legacy s_last_orphan is not a real crash image or journal recovery test. The source issue is documented separately in tmp/readonly-orphan-probe-review-20261109.json.",
+          "Coordinator must inspect actual Jammy runtime results. No claim of physical A733 dirty-state recovery, boot, KVM, SD/NVMe counters, or release acceptance follows."
+        ],
+        "hardware_acceptance": false,
+        "invariants": [
+          "Orange Pi 4 Pro A733",
+          "2 GB SD",
+          "nominal 250 GB NVMe",
+          "minimal host",
+          "zero routine SD writes",
+          "actual KVM guest required for hardware acceptance"
+        ],
+        "previous_reviewed_fixture_sha256": "9720dcd712186fedaf820b654c45a1b0fa8c449e901d15366051163bdc598453",
+        "delta_review": {
+          "trigger_evidence": "out/serial-recovery-20261109/protected-journal-loop-01.stderr",
+          "trigger_observation": "First attempt traces show RO0 restored and RO1 preserved across production export; reused loop5 then fails third-case initial-RO0 assertion after fresh image attachment. This stderr does not itself contain full-image hash receipt evidence.",
+          "production_source_unchanged": true,
+          "decision": "pass; no blocking safety defect found in normalization delta",
+          "normalization_scope": "Only just-allocated, verified owned loop/backing image; no source/device arguments added. Setup normalization occurs before RO1 preset and hash/counter baseline. Teardown normalization occurs only after export_assertions_passed, outside measured export window.",
+          "guards": "Fixture.check validates regular-file and backing/sysfs/geometry/holders identity. Same-namespace mount/path absence checked before opening. O_RDONLY|O_NOFOLLOW|O_NONBLOCK|O_EXCL claim rejects an active external block mount. Production descriptor/superblock/RO checks precede and follow production set_state_ro(0). No production code or policy changed.",
+          "failure_behavior": "Identity or mount refusal before mutation prevents normalization. No automatic retry, RW mount or normalization after failed export assertions. Any normalization validation failure stops cleanup and retains owned loop/image rather than proceeding to detach/delete.",
+          "assertion_timing": "Export SHA256 and complete write/discard/flush equality, stage RO1 protection, original flag restoration and synthetic orphan preservation remain mandatory before export_assertions_passed is set. Normalization is separately logged as outside_export_measurements.",
+          "mock_checks": {
+            "in_memory_compile": "pass",
+            "existing_allocation_retention_cases": 3,
+            "normalization_success_with_exclusive_fd_and_validate_set_readback": "pass",
+            "mounted_refusal_before_open": "pass",
+            "identity_failure_before_open": "pass",
+            "device_operations": 0
+          },
+          "runtime_execution_by_reviewer": false,
+          "hardware_acceptance": false
+        }
+      }
+    },
+    {
+      "source": {
+        "path": "tmp/readonly-orphan-probe-review-20261109.json",
+        "bytes": 10335,
+        "sha256": "8f647b0edf08efb9b4f0e8080039f91765415c7f60a2c8cbd86417efb6c8ac7b"
+      },
+      "record": {
+        "schema": 1,
+        "date": "2026-11-09",
+        "operation": "independent-readonly-orphan-probe-source-review",
+        "hardware_acceptance": false,
+        "scope": {
+          "only_written_file": "tmp/readonly-orphan-probe-review-20261109.json",
+          "board_actions": false,
+          "ssh_actions": false,
+          "mount_or_loop_actions": false,
+          "source_edits": false,
+          "delegation": false,
+          "commit": false
+        },
+        "decision": "Changes required before describing the current exporter or initial boot probe as strictly nonwriting on dirty ext4. Preserve target identity and prewrite marker verification; do not bypass them with an unconditional RW mount.",
+        "primary_sources": [
+          {
+            "url": "https://github.com/orangepi-xunlong/linux-orangepi/blob/2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f/fs/ext4/orphan.c#L380",
+            "facts": "Lines 393-424 skip cleanup only if no legacy orphan/no orphan-file blocks, block device RO, unsupported RW features or existing filesystem error. Otherwise even SB_RDONLY is temporarily cleared. Lines 455-489 process list/file orphans; line 508 restores original flags. Lines 583-593 initialize orphan-file blocks when compat feature exists."
+          },
+          {
+            "url": "https://github.com/orangepi-xunlong/linux-orangepi/blob/2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f/fs/ext4/super.c#L5382",
+            "facts": "NOLOAD controls journal initialization at 5397; orphan info initialization 5587 and cleanup 5606 are separate later operations. Therefore noload does not suppress orphan cleanup. Error handler at 725-736 commits error information if block device writable even for an RO mount; sb_rdonly return is at 749."
+          },
+          {
+            "url": "https://github.com/orangepi-xunlong/linux-orangepi/blob/2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f/fs/ext4/ext4.h#L1342",
+            "facts": "Superblock little-endian feature masks are at 0x5c/0x60/0x64, journal UUID/inum/dev at 0xd0/0xe0/0xe4, legacy s_last_orphan at 0xe8. Compat ORPHAN_FILE=0x1000 at line 2006; RO_COMPAT_ORPHAN_PRESENT=0x10000 at 2027."
+          },
+          {
+            "url": "https://www.kernel.org/doc/html/v6.6/admin-guide/ext4.html",
+            "facts": "Mount-options documentation describes ro,noload for preventing writes and warns that skipping recovery on an unclean filesystem exposes inconsistencies. Pinned implementation above gives the more specific orphan/error-path behavior."
+          }
+        ],
+        "source_verification_note": "Read pinned vendor raw source via urllib in memory. Browser extraction returned upstream-like line numbering/content for vendor URLs; line numbers here were checked against direct bytes (vendor ext4.h 3846 lines, orphan.c 652, super.c 7516). Upstream Linux v6.6.98 was separately read and has matching relevant behavior.",
+        "observations": [
+          {
+            "path": "out/serial-recovery-20261109/serial-first-98101.log",
+            "lines": "1050-1056",
+            "fact": "RO without journal at 7.576853, unmount, recovery complete and RW. This file does not contain orphan-cleanup lines."
+          },
+          {
+            "path": "out/serial-recovery-20261109/serial-after-restart-65369.log",
+            "lines": "535-542",
+            "fact": "At 7.610969 orphan cleanup on readonly fs; at 7.622402 one orphan inode deleted; RO without journal; unmount; at 7.784008 one orphan inode deleted; recovery complete; RW. serial-live.log has the same lines."
+          },
+          {
+            "path": "configs/host-init",
+            "lines": "240-250",
+            "fact": "hi_state mounts ro,noload, validates directories/marker/machine-id, unmounts, revalidates identity/UUID/idle/GPT, then mounts RW for journal recovery and revalidates state."
+          },
+          {
+            "path": "configs/host-storage-resolver.sh",
+            "lines": "36,86-114,151-174",
+            "fact": "Resolver itself uses blkid -p and identity/idle/GPT checks without mounting. It requires writable STATE eligibility, so its read-only name does not imply block-level RO. No raw internal-journal/orphan guard is present."
+          },
+          {
+            "path": "scripts/export-known-host-journal.py",
+            "lines": "170-181,199-206,346-357",
+            "fact": "Raw validation already restricts target geometry and incompat mask 0x2c6, has_journal, journal UUID zero/inum8/dev0. It lacks legacy and file-orphan guards. Counters checked after unmount detect changes after the event; refusal cannot undo a mount-induced write."
+          },
+          {
+            "path": "scripts/personalize-known-host-state.py",
+            "lines": "244-249,343-358",
+            "fact": "Default plan is unmounted and read-only. Apply explicitly mounts RW before in-filesystem checks and raw validator currently checks only UUID/label/magic. This is a separately authorized write helper, not proof that journal containment is safe; preserve/widen raw internal-journal guard before its first RW mount too."
+          }
+        ],
+        "read_only_memory_check": {
+          "command": "python3 -B, construct valid synthetic superblock and call production validate_superblock; no storage opened",
+          "result": {
+            "legacy_last_orphan_1": "accepted",
+            "compat_orphan_file_0x1000": "accepted",
+            "rocompat_orphan_present_0x10000": "accepted",
+            "journal_dev_1": "refused"
+          }
+        },
+        "exporter_guard_recommendation": {
+          "before_any_mount": [
+            "Preserve all existing fixed-device, quiescent-RAM, geometry, incompat-feature and internal-journal checks.",
+            "Read exactly 1024-byte primary superblock from partition offset 1024 through verified O_RDONLY descriptor. Require LE32 at offset 232 (0xe8), s_last_orphan, == 0.",
+            "For narrow supported policy require (LE32 at 92 & 0x1000)==0 and (LE32 at 100 & 0x10000)==0; refusing ORPHAN_PRESENT alone is insufficient because cleanup visits allocated orphan-file blocks without testing that bit.",
+            "Do not conflate RECOVER bit 0x4 with orphan safety. noload suppresses journal replay; allowing RECOVER with no orphan metadata retains the existing best-effort unjournalled export semantics. Refusing RECOVER as an additional conservative policy is valid but rejects more useful crash exports.",
+            "Revalidate identity and raw guard immediately before mount in the quiescent environment. Keep post-unmount counters as evidence."
+          ],
+          "strict_zero_write_requirement": "These guards close observed orphan-cleanup paths, not arbitrary ext4-corruption/error writes. For an unconditional nonwriting-source promise require verified block-device RO protection throughout mounting/traversal/unmount, or use a verified RO copy and mount only the copy. Do not automatically repair or fall back to RW after refusal.",
+          "preserve_external_journal_protection": "has_journal required; journal UUID all zero; inode8; journal_dev0; JOURNAL_DEV incompat excluded. Enforce this before any writable mount, not after mountinfo inspection."
+        },
+        "boot_options": [
+          {
+            "option": "Fail closed on orphan metadata",
+            "effect": "Add raw pre-mount guard; orphan state reaches recovery shell without probing the filesystem. Requires reviewed recovery procedure to regain boot after such a crash; preserve authorized write target and validate marker safely before RW recovery."
+          },
+          {
+            "option": "Block-protected initial probe",
+            "effect": "After exact identity/idle/internal-journal validation, save p4 RO state, set and verify block-level RO using a packaged/tested primitive, then ro,noload probe and verify mount identity and STATE marker/machine-id. Unmount normally and prove no owned mount remains. Revalidate same node major:minor/parent/UUID/internal-journal/GPT/idle, restore write eligibility for that same p4 only, verify it, then perform existing authorized RW recovery and post-replay state checks. Any verification/unmount failure stops handoff; never clear RO on an uncertain device. No SD RO flag changes or SD writes."
+          },
+          {
+            "option": "Read only copy for investigation",
+            "effect": "Preserve raw source through verified read-only access to independent storage, inspect/recover only owned copy first. Requires capacity/tools and explicit evidence separation; do not mount original RW before source identity/marker verification."
+          }
+        ],
+        "meaningful_tests": [
+          "Unit cases: valid clean + RECOVER-only with last_orphan0 allowed under chosen policy; reject s_last_orphan values 1 and 0xffffffff; reject orphan_file even with ORPHAN_PRESENT clear; reject ORPHAN_PRESENT alone; retain external UUID/inum/dev/JOURNAL_DEV exclusions. Assert mount function never called on refused input.",
+          "Owned-file/loop regression: construct disposable ext4 with valid checksum and a legacy orphan entry (or reproducible abrupt-stop image), prove production preflight refuses before mount and full source SHA256/write sectors remain unchanged. Existing clean loop test does not exercise this case.",
+          "For block-RO option, on only a newly owned loop containing orphan state: verify BLKROGET=1 before ro,noload mount, marker read and normal unmount, no source changes; deliberate wrong marker must cause zero RW attempts. Then restore only known loop eligibility and separately exercise validated RW journal recovery.",
+          "Boot fixture ordering: external journal, changed identity/parent, invalid marker, failed RO verification and failed unmount all prevent writable mount/RO-release; identity and internal-journal revalidation must precede recovery. No detach bypass in production.",
+          "Physical A733 dirty-state boot/export and SD/NVMe counter evidence remain distinct acceptance gates; no model reasoning or x86 fixture substitutes."
+        ],
+        "unknowns": [
+          "No raw before/after bytes or block-write counters for the serial orphan episode were obtained in this review; logs demonstrate cleanup execution, not exact sectors or durability.",
+          "The repeated one-inode message does not establish two different deleted files; journal replay can alter orphan metadata. Deleted inode/path and relation to failed management/endurance are unknown.",
+          "Exporter was not used on board; no actual exporter-induced physical writes are established.",
+          "Current post-restart raw orphan flags and filesystem consistency are unknown. No SSH diagnosis or recovery is performed here."
+        ],
+        "invariants": [
+          "Orange Pi 4 Pro A733",
+          "2 GB SD",
+          "nominal 250 GB NVMe",
+          "minimal host",
+          "zero routine SD writes",
+          "leave heatsinks attached",
+          "actual KVM guest for physical acceptance"
+        ]
+      }
+    }
+  ],
+  "records": [
+    {
+      "path": "out/serial-recovery-20261109/protected-journal-loop-01.stderr",
+      "bytes": 3635,
+      "sha256": "e5cde58434104f78afdc9bc763c7852a97c99dfc0ffa81c53e1c70de6535b274"
+    },
+    {
+      "path": "out/serial-recovery-20261109/protected-journal-loop-02.json",
+      "bytes": 7909,
+      "sha256": "3386293b5da697b2696a946f9a2fed564bf5dd18391f735f3312dd0cc65311d8"
+    },
+    {
+      "path": "out/serial-recovery-20261109/protected-journal-loop-02.stderr",
+      "bytes": 6102,
+      "sha256": "d804172144ce40539bf0ed376963f75ba994ecfe92f500d17f5a0a315088b564"
+    },
+    {
+      "path": "out/serial-recovery-20261109/protected-loop-kernel-excerpt.txt",
+      "bytes": 2376,
+      "sha256": "7dd6f5da6b97d15c7f4c3dcb724bb40e4d6e9a6c6042043160d59bd91ab17219"
+    },
+    {
+      "path": "out/serial-recovery-20261109/block-ro-full-jammy-validation.log",
+      "bytes": 8745,
+      "sha256": "d6500b0fae956bf4b58a8c729d6ae2a4282471100aed4afd2e4f81b2b684c074"
+    },
+    {
+      "path": "out/serial-recovery-20261109/protected-bootstrap-jammy-tests.log",
+      "bytes": 106,
+      "sha256": "a5ee1cb4ab49a30268965813b91e2398ad600fedf02ef76889c9ed935df75b80"
+    }
+  ],
+  "software_checks": {
+    "full_unittest": 1960,
+    "host_init_shell_fixtures": 126,
+    "new_sd_recipe_focused_jammy_tests": 8,
+    "full_suite_failures_errors_skips": 0
+  },
+  "limits": [
+    "Fixed physical NVMe and RAM-entry policies are replaced only in the fixture adapter; real fd, block RO, geometry, superblock, mount, archive and counter checks execute.",
+    "Synthetic orphan metadata is not an actual crash journal or physical dirty-recovery acceptance.",
+    "First fixture attempt correctly failed on a reused loop minor retaining RO1; fixture-owned normalization now occurs outside export measurements without weakening production guards."
+  ],
+  "identity_writer_review": {
+    "schema": 1,
+    "date": "2026-11-09",
+    "operation": "independent-identity-journal-containment-review",
+    "result": "pass",
+    "defects": [],
+    "reviewed_source_sha256": {
+      "scripts/personalize-known-host-state.py": "59772d1a55df6edf44c6e1c80c0c09bde4fbcbeff9bf4ef957fda1c5dcef9321",
+      "tests/test_known_host_state_personalization.py": "a937896d9cd88fd104662da186172700867826e66124a4b9e9139ee557029199",
+      "docs/known-host-state-personalization.md": "24ebb8baa070ed915bf903c0672a73f542dbd4a555334149ec82d109984a0cc3"
+    },
+    "scope": "Read-only source review and synthetic host fixtures only. No source edits, physical devices, mounts, loop allocations, SSH, delegation or commit. Original orphan review preserved.",
+    "findings": [
+      {
+        "location": "scripts/personalize-known-host-state.py:244",
+        "result": "pass",
+        "evidence": "LE32 offset24=2 selects 4096-byte blocks. Offset4=PART_SIZE/4096 and offset336=0 enforce exact 8 GiB filesystem count, including high word. Existing 8 GiB partition/block ioctl guards remain unchanged."
+      },
+      {
+        "location": "scripts/personalize-known-host-state.py:252",
+        "result": "pass",
+        "evidence": "has_journal bit4 required. Python precedence makes not u32(96) & ~0x2c6 reject every incompat bit outside the mask. Exhaustive single-bit synthetic check accepted only bit indexes 1,2,6,7,9. JOURNAL_DEV bit3 is excluded. RECOVER bit2 remains permitted."
+      },
+      {
+        "location": "scripts/personalize-known-host-state.py:254",
+        "result": "pass",
+        "evidence": "Requires all 16 journal UUID bytes zero, LE32 journal inode=8 and LE32 journal_dev=0 before mount, preventing external-journal redirection. No orphan refusal added, appropriately retaining sanctioned RW replay/cleanup behavior."
+      },
+      {
+        "location": "scripts/personalize-known-host-state.py:239,346-364",
+        "result": "pass",
+        "evidence": "Production inspect_target reads raw p4 superblock through O_RDONLY verified fd and validates it. execute calls inspect_target initially and again on apply after repeating runtime/archive guards; neither mountpoint creation nor RW mount occurs until both return matching identity. Subsequent mountinfo check remains in place."
+      },
+      {
+        "location": "tests/test_known_host_state_personalization.py:129",
+        "result": "pass",
+        "evidence": "Seven distinct journal/feature failures are tested through both apply preflights, asserting expected inspection count and no tempfile/mount subprocess calls. Fixture calls production raw validator; mocked inspect_target isolates hardware while source review confirms real wiring. Positive dirty RECOVER plus legacy/file-orphan metadata remains allowed."
+      },
+      {
+        "location": "docs/known-host-state-personalization.md:60",
+        "result": "pass",
+        "evidence": "Documents pre-mount raw guards, permitted RW metadata/recovery changes and source/fixture-only evidence status. Explicitly separates historical physical restore receipt from this new source version."
+      }
+    ],
+    "unchanged_guard_confirmation": {
+      "method": "AST comparison against git HEAD for every top-level production function, plus focused full diff",
+      "changed_functions": [
+        "validate_superblock"
+      ],
+      "evidence": "Only validate_superblock changed. Archive, target identity, namespace/idle guards, mount, file mutation and cleanup functions are unchanged."
+    },
+    "validation": [
+      {
+        "command": "python3 -B -m unittest discover -s tests -p 'test_known_host_state_personalization.py' -v",
+        "exit_code": 0,
+        "run": 20,
+        "passed": 15,
+        "skipped": 5,
+        "note": "Nonroot run; five real ownership fixtures skipped."
+      },
+      {
+        "command": "sudo -n python3 -B -m unittest discover -s tests -p 'test_known_host_state_personalization.py' -v",
+        "exit_code": 0,
+        "run": 20,
+        "passed": 20,
+        "skipped": 0,
+        "note": "All synthetic fixtures; no physical target or mount opened."
+      },
+      {
+        "command": "git diff --check -- scripts/personalize-known-host-state.py tests/test_known_host_state_personalization.py docs/known-host-state-personalization.md",
+        "exit_code": 0
+      },
+      {
+        "command": "python3 -B in-memory exhaustive incompat single-bit and AST comparison checks",
+        "exit_code": 0,
+        "accepted_single_bit_indexes": [
+          1,
+          2,
+          6,
+          7,
+          9
+        ],
+        "refused_single_bit_count": 27
+      }
+    ],
+    "primary_reference": {
+      "url": "https://github.com/orangepi-xunlong/linux-orangepi/blob/2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f/fs/ext4/super.c#L5989",
+      "verification": "Direct pinned raw source read in memory. ext4_load_journal reads journal_inum and journal_dev; lines6011-6014 refuse both inode and device before lines6017-6024 choose internal vs external journal. Thus superblock mount-option journal_dev overrides cannot cause external journal loading while fixed inode8 remains present."
+    },
+    "limitations": [
+      "This is a containment/source/host-fixture pass, not real filesystem replay or A733 hardware acceptance.",
+      "No changed helper staging or physical use is established. Any future physical use must pin this SHA256, revalidate authorized exact target, and retain quiescent recovery assumptions.",
+      "This helper intentionally mounts STATE RW during apply. Its pass does not resolve strictly readonly exporter or boot-probe findings in tmp/readonly-orphan-probe-review-20261109.json."
+    ]
+  },
+  "final_full_suite": {
+    "path": "out/serial-recovery-20261109/final-source-jammy-validation.log",
+    "bytes": 8386,
+    "sha256": "6dc1d16a8b2ca31d6b0925408196961d0359eea87020877de925a7e93c65f753",
+    "tests": 1960,
+    "seconds": 56.257,
+    "runner_exit": 0,
+    "native_tomllib_files": 5
+  }
+}

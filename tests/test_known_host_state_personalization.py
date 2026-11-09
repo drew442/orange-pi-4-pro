@@ -5,6 +5,7 @@ import importlib.util
 import io
 import os
 from pathlib import Path
+import struct
 import sys
 import tarfile
 import tempfile
@@ -43,6 +44,17 @@ def fixture(extra=None, mode=None, pax=None, include_directories=True):
             tar.addfile(extra, io.BytesIO(b''))
     fp = 'SHA256:' + base64.b64encode(hashlib.sha256(blob).digest()).decode().rstrip('=')
     return stream.getvalue(), files, fp
+
+
+def superblock_fixture():
+    data = bytearray(1024)
+    data[56:58] = b'\x53\xef'
+    data[104:120] = uuid.UUID(M.STATE_UUID).bytes
+    data[120:130] = b'a733-state'
+    for offset, value in ((4, M.PART_SIZE // 4096), (24, 2),
+                          (92, 0x3c), (96, 0x2c2), (100, 0x46b), (224, 8)):
+        struct.pack_into('<I', data, offset, value)
+    return data
 
 
 class ArchiveTests(unittest.TestCase):
@@ -88,15 +100,60 @@ class ArchiveTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'missing identity file or directory'):
             self.parse(data, fp)
 
-    def test_superblock_uuid_and_label(self):
-        data = bytearray(1024)
-        data[56:58] = b'\x53\xef'
-        data[104:120] = uuid.UUID(M.STATE_UUID).bytes
-        data[120:130] = b'a733-state'
+
+class SuperblockTests(unittest.TestCase):
+    def test_known_profile_with_internal_journal_is_allowed(self):
+        data = superblock_fixture()
         M.validate_superblock(data)
-        data[104] ^= 1
+
+    def test_dirty_journal_and_orphan_metadata_remain_allowed_for_rw_recovery(self):
+        data = superblock_fixture()
+        for offset, value in ((92, 0x103c), (96, 0x2c6), (100, 0x1046b), (232, 1)):
+            struct.pack_into('<I', data, offset, value)
+        M.validate_superblock(data)
+
+    def test_identity_and_block_geometry_are_required(self):
+        for offset in (4, 24, 56, 104, 120, 336):
+            data = superblock_fixture()
+            data[offset] ^= 1
+            with self.subTest(offset=offset), self.assertRaises(ValueError):
+                M.validate_superblock(data)
         with self.assertRaises(ValueError):
-            M.validate_superblock(data)
+            M.validate_superblock(superblock_fixture()[:-1])
+
+    def test_unsafe_journal_is_refused_before_either_apply_preflight_mount(self):
+        # Exercise the production raw validator through both execute preflights.
+        # No target node, mountpoint or subprocess is opened by these fixtures.
+        cases = [('external UUID', 208, 1), ('external device', 228, 1),
+                 ('missing inode', 224, 0), ('other inode', 224, 9),
+                 ('journal device feature', 96, 0x2ca),
+                 ('unsupported incompat', 96, 0x102c2),
+                 ('missing has_journal', 92, 0x38)]
+        for name, offset, value in cases:
+            data = superblock_fixture()
+            struct.pack_into('<I', data, offset, value)
+            with self.subTest(name=name), self.assertRaises(ValueError):
+                M.validate_superblock(data)
+            for refused_preflight in (1, 2):
+                checks = []
+                def inspect():
+                    checks.append(None)
+                    M.validate_superblock(data if len(checks) == refused_preflight
+                                          else superblock_fixture())
+                    return {M.PART.name: '259:4'}
+                args = mock.Mock(expected_boot_id=str(uuid.uuid4()),
+                                 source_archive=Path('/run/source'), apply=True)
+                with self.subTest(name=name, preflight=refused_preflight), \
+                        mock.patch.object(M, 'runtime_guard'), \
+                        mock.patch.object(M, 'source_files', return_value=fixture()[1]), \
+                        mock.patch.object(M, 'inspect_target', side_effect=inspect), \
+                        mock.patch.object(M.tempfile, 'mkdtemp') as mkdtemp, \
+                        mock.patch.object(M.subprocess, 'run') as run:
+                    with self.assertRaises(ValueError):
+                        M.execute(args, {'changed_files': []})
+                    self.assertEqual(len(checks), refused_preflight)
+                    mkdtemp.assert_not_called()
+                    run.assert_not_called()
 
 
 @unittest.skipUnless(os.geteuid() == 0, 'real ownership checks require root')

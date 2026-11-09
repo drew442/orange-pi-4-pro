@@ -2,9 +2,11 @@
 """Opt-in real ext4 journal-export check, using only newly created 64 MiB loops.
 
 Run as root, with no arguments, on the prepared builder after independent review.
-Only PART is replaced in the production helper. Its fixed physical-device and
-RAM-entry policy is deliberately not invoked: this validates filesystem export,
-not physical A733 recovery, SD/NVMe identity, boot, or hardware acceptance.
+PART, PART_SIZE and inspect_target are adapted to each owned loop. Production
+protected_journal and its real block-RO and filesystem helpers run unchanged.
+Fixed A733/RAM-entry and physical-device/global-idle policy is bypassed.
+This validates export, not physical A733 recovery, SD/NVMe identity, boot,
+or hardware acceptance.
 JSON evidence goes to stdout; commands and retention diagnostics go to stderr.
 """
 import argparse
@@ -15,6 +17,7 @@ import importlib.util
 import io
 import json
 import os
+import re
 from pathlib import Path
 import shutil
 import signal
@@ -28,6 +31,8 @@ from unittest import mock
 
 REPO = Path(__file__).resolve().parents[1]
 SOURCE = REPO / 'scripts/export-known-host-journal.py'
+REVIEWED_SOURCE_SHA256 = '3a54ca3536f0df7599f6a8722d14f465cbe9cfb774865623d9a5e622ad7bbb1c'
+STATE_UUID = '360dfb39-f49f-487e-b307-0bb887c854c5'
 SIZE = 64 * 1024**2
 MAX_SPACE = 256 * 1024**2
 RAM_RESERVE = 1_000_000_000
@@ -90,6 +95,7 @@ class Fixture:
         self.loop = None
         self.loop_device = None
         self.allocation_may_exist = False
+        self.export_assertions_passed = False
         self.point = self.directory / 'mount'
         self.point_id = None
 
@@ -126,7 +132,7 @@ class Fixture:
         self.loop_device = device
         return base
 
-    def prepare(self, unexpected):
+    def prepare(self, unexpected, legacy_orphan=False):
         seed = self.directory / 'seed'
         seed.mkdir(mode=0o2755)
         current = seed
@@ -150,7 +156,8 @@ class Fixture:
         self.check()
         # mke2fs receives the held regular image FD, never a caller-supplied path/device.
         run(['mke2fs', '-q', '-F', '-t', 'ext4', '-b', '4096', '-m', '0',
-             '-O', 'has_journal', '-E', 'lazy_itable_init=0,lazy_journal_init=0,nodiscard',
+             '-U', STATE_UUID, '-L', 'a733-state', '-O', 'has_journal',
+             '-E', 'lazy_itable_init=0,lazy_journal_init=0,nodiscard',
              '-d', str(seed), '/proc/self/fd/' + str(self.fd)], pass_fds=(self.fd,))
         self.check()
         os.fsync(self.fd)
@@ -158,6 +165,32 @@ class Fixture:
         require(sb[56:58] == b'\x53\xef' and int.from_bytes(sb[92:96], 'little') & 4
                 and sb[208:224] == bytes(16) and int.from_bytes(sb[224:228], 'little') == 8
                 and int.from_bytes(sb[228:232], 'little') == 0, 'internal journal inode 8 required')
+        self.legacy_orphan_inode = 0
+        if legacy_orphan:
+            # Synthetic legacy s_last_orphan only: this is not a real crash or
+            # dirty-journal fixture. debugfs can write only our held regular file,
+            # before any block device is attached. Use the known seed file inode.
+            self.check()
+            require(self.loop is None and not self.allocation_may_exist,
+                    'legacy orphan preparation requires an unattached owned image')
+            target = '/proc/self/fd/' + str(self.fd)
+            command = ['debugfs', '-R', 'stat /' + JOURNAL, target]
+            print('+ ' + ' '.join(command), file=sys.stderr, flush=True)
+            listing = subprocess.check_output(command, text=True, timeout=30,
+                                              pass_fds=(self.fd,))
+            match = re.search(r'\bInode:\s+([0-9]+)', listing)
+            require(match is not None, 'seed journal inode not found')
+            self.legacy_orphan_inode = int(match.group(1))
+            require(11 <= self.legacy_orphan_inode <= int.from_bytes(sb[:4], 'little'),
+                    'seed journal inode outside fixture inode table')
+            self.check()
+            run(['debugfs', '-w', '-R', 'set_super_value last_orphan ' +
+                 str(self.legacy_orphan_inode), target], pass_fds=(self.fd,))
+            self.check()
+            os.fsync(self.fd)
+        sb = os.pread(self.fd, 1024, 1024)
+        require(int.from_bytes(sb[232:236], 'little') == self.legacy_orphan_inode,
+                'synthetic legacy orphan superblock differs')
         self.allocate_loop()
         # Loop attachment emits uevents; drain host probes before baseline sampling.
         run(['udevadm', 'settle', '--timeout=15'])
@@ -202,6 +235,12 @@ class Fixture:
             # it failed: do not retry, detach, delete paths, or hide that failure.
             require(not rows, 'mount remains after production cleanup; retain fixture and loop')
             self.check()
+            if self.export_assertions_passed:
+                # The RO1 preservation assertion and all byte/counter checks
+                # have finished. Do not leave our temporary kernel flag set on
+                # a loop minor that the next fixture or another caller may reuse.
+                normalize_fixture_ro(control, self)
+                self.check()
             run(['losetup', '--detach', str(self.loop)])
             backing = Path('/sys/class/block') / self.loop.name / 'loop/backing_file'
             for _ in range(50):
@@ -262,41 +301,134 @@ def allocation_retention_probe():
     return {'mock_allocation_failures_retained': len(failures), 'device_operations': 0}
 
 
-def exercise(control, fixture, unexpected):
-    fixture.prepare(unexpected)
+def fixture_inspector(control, fixture, expected_state_ro=None, held_fd=None):
+    """Replace only physical target/global-idle policy, never production FD checks.
+
+    The private fixture identity, backing file, geometry and holders are checked
+    by Fixture.check(). This adapter checks this namespace's loop mounts; the
+    production whole-host process/swap/namespace idle scan is deliberately not
+    exercised. The production held FD is validated directly, rather than treated
+    as an external user. No physical target or entry-guard acceptance is implied.
+    """
+    fixture.check()
+    require(not any(e['dev'] == fixture.loop_device or e['path'] == str(fixture.point)
+                    for e in control.mounts()), 'owned fixture remains mounted')
+    if held_fd is None:
+        fd = os.open(fixture.loop, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+        try:
+            control.validate_state_fd(fd, fixture.loop_device, expected_state_ro)
+        finally:
+            os.close(fd)
+    else:
+        control.validate_state_fd(held_fd, fixture.loop_device, expected_state_ro)
+    fixture.check()
+    return {fixture.loop.name: fixture.loop_device}
+
+
+def fixture_ro(control, fixture):
+    fixture.check()
+    fd = os.open(fixture.loop, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    try:
+        # Actual production BLKROGET, sysfs RO, held identity, geometry and SB.
+        return control.validate_state_fd(fd, fixture.loop_device)
+    finally:
+        os.close(fd)
+
+
+def normalize_fixture_ro(control, fixture):
+    """Reset only our unmounted owned loop's temporary kernel RO metadata.
+
+    A detached loop minor can retain BLKROSET across backing-file replacements.
+    This setup/teardown operation is outside the export measurements. The
+    exclusive block claim also rejects a mount outside our private namespace;
+    all production identity/geometry/SB/BLKROGET/sysfs checks remain active.
+    """
+    fixture.check()
+    require(fixture.loop is not None and fixture.loop_device is not None,
+            'validated owned loop required for RO normalization')
+    require(not any(e['dev'] == fixture.loop_device or e['path'] == str(fixture.point)
+                    for e in control.mounts()),
+            'owned fixture mounted; refusing RO normalization')
+    with mock.patch.object(control, 'PART', fixture.loop), \
+            mock.patch.object(control, 'PART_SIZE', SIZE):
+        fd = os.open(fixture.loop, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_EXCL)
+        try:
+            fixture.check()
+            before = control.validate_state_fd(fd, fixture.loop_device)
+            if before == 1:
+                control.set_state_ro(fd, fixture.loop_device, 0)
+            control.validate_state_fd(fd, fixture.loop_device, 0)
+            fixture.check()
+        finally:
+            os.close(fd)
+    row = {'stage': 'owned-loop-ro-normalization', 'block_ro_before': before,
+           'block_ro_after': 0, 'outside_export_measurements': True}
+    print(json.dumps(row, sort_keys=True), file=sys.stderr, flush=True)
+    return before
+
+
+def exercise(control, fixture, name, original_ro=0, unexpected=False, legacy_orphan=False):
+    fixture.prepare(unexpected, legacy_orphan)
     prepared_resources = resources()
     allocated = sum(path.lstat().st_blocks * 512 for path in fixture.directory.rglob('*'))
     require(allocated <= MAX_SPACE, 'allocated fixture exceeds 256 MiB budget')
-    before = fixture.fingerprint()
-    receipt = {'hardware_acceptance': False, 'fixture': True, 'source_sha256': before['sha256']}
-    fixture.check()  # Immediately before the production mount/verify/collect/unmount sequence.
     stages = []
+
     def trace(label):
         base = fixture.check()
         fields = (base / 'stat').read_text().split()
-        row = {'stage': label, 'stat': [int(x) for x in fields]}
+        row = {'stage': label, 'stat': [int(x) for x in fields],
+               'block_ro': fixture_ro(control, fixture),
+               'sysfs_ro': int(control.node_ro(fixture.loop).read_text())}
         stages.append(row)
         print(json.dumps(row, sort_keys=True), file=sys.stderr, flush=True)
-    trace('before-production-mount')
-    with mock.patch.object(control, 'PART', fixture.loop), ExitStack() as patches:
-        for name in ('mount_readonly', 'verify_mount', 'collect_journal', 'unmount'):
-            original = getattr(control, name)
-            def traced(*args, _original=original, _name=name, **kwargs):
+
+    def inspect(expected_state_ro=None, held_fd=None):
+        return fixture_inspector(control, fixture, expected_state_ro, held_fd)
+
+    # Explicit fixture-only adaptations. All production protection, restore,
+    # mount/verify/collect/ordinary-unmount functions call through unchanged.
+    with ExitStack() as patches:
+        patches.enter_context(mock.patch.object(control, 'PART', fixture.loop))
+        patches.enter_context(mock.patch.object(control, 'PART_SIZE', SIZE))
+        patches.enter_context(mock.patch.object(control, 'inspect_target', inspect))
+        attachment_ro = normalize_fixture_ro(control, fixture)
+        require(fixture_ro(control, fixture) == 0, 'owned loop RO normalization failed')
+        if original_ro == 1:
+            fd = os.open(fixture.loop, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+            try:
+                control.set_state_ro(fd, fixture.loop_device, 1)
+            finally:
+                os.close(fd)
+        require(fixture_ro(control, fixture) == original_ro, 'original fixture RO differs')
+        # prepare() has already settled attachment uevents; sample only after
+        # original-flag setup. Flag changes never relax hash/counter equality.
+        before = fixture.fingerprint()
+        receipt = {'hardware_acceptance': False, 'fixture': True,
+                   'source_sha256': before['sha256']}
+        identities = inspect(expected_state_ro=original_ro)
+        trace('before-protected_journal')
+        for method in ('mount_readonly', 'verify_mount', 'collect_journal', 'unmount'):
+            original = getattr(control, method)
+
+            def traced(*args, _original=original, _name=method, **kwargs):
                 try:
                     return _original(*args, **kwargs)
                 finally:
                     trace('after-' + _name)
-            patches.enter_context(mock.patch.object(control, name, traced))
+
+            patches.enter_context(mock.patch.object(control, method, traced))
         if unexpected:
             try:
-                control.mounted_journal(fixture.point, fixture.loop_device)
+                control.protected_journal(fixture.point, identities)
             except ValueError as error:
                 require(str(error) == 'unselected file in journal subtree',
                         'negative fixture failed for an unexpected reason: ' + str(error))
             else:
                 raise ValueError('unexpected nonjournal file was accepted')
         else:
-            files = control.mounted_journal(fixture.point, fixture.loop_device)
+            files, observed_original_ro = control.protected_journal(fixture.point, identities)
+            require(observed_original_ro == original_ro, 'reported original RO differs')
             require(len(files) == 1 and files[0][0] == JOURNAL and files[0][2] == PAYLOAD,
                     'synthetic journal bytes differ')
             info = files[0][1]
@@ -312,24 +444,44 @@ def exercise(control, fixture, unexpected):
                         'archive metadata differs')
                 require(json.load(archive.extractfile('export-receipt.json')) == receipt,
                         'gzip/tar receipt differs')
+        trace('after-protected_journal')
+        require(fixture_ro(control, fixture) == original_ro, 'original block RO was not restored')
+        inspect(expected_state_ro=original_ro)
+        require([row['stage'] for row in stages] ==
+                ['before-protected_journal', 'after-mount_readonly', 'after-verify_mount',
+                 'after-collect_journal', 'after-unmount', 'after-protected_journal'],
+                'production stage trace differs')
+        require(all(row['block_ro'] == row['sysfs_ro'] == 1 for row in stages[1:-1])
+                and stages[0]['block_ro'] == stages[-1]['block_ro'] == original_ro,
+                'production mount lacked block RO or original flag was not restored')
     require(not fixture.point.exists() and not any(e['dev'] == fixture.loop_device
             for e in control.mounts()), 'production helper did not clean its owned mount')
     after = fixture.fingerprint()  # Must precede detach; hashing covers every logical byte.
     require(before == after, 'source image SHA or loop write/discard/flush counters changed: ' +
             json.dumps({'before': before, 'after': after, 'stages': stages}, sort_keys=True))
-    return {'check': 'unexpected-file-refused' if unexpected else 'journal-archive-roundtrip',
-            'source_before': before, 'source_after': after, 'image_bytes': SIZE,
+    require(int.from_bytes(os.pread(fixture.fd, 4, 1024 + 232), 'little') ==
+            fixture.legacy_orphan_inode, 'synthetic legacy orphan field changed')
+    exported_resources = resources()
+    fixture.export_assertions_passed = True
+    return {'check': name, 'source_before': before, 'source_after': after,
+            'attachment_block_ro_before_normalization': attachment_ro,
+            'image_bytes': SIZE, 'block_ro_original': original_ro,
+            'block_ro_restored': stages[-1]['block_ro'], 'stages': stages,
             'verified_mount_flags': ['ro', 'noload', 'noexec', 'nodev', 'nosuid'],
             'owned_mount_cleaned': True, 'internal_journal_inode': 8,
+            'synthetic_legacy_last_orphan': fixture.legacy_orphan_inode,
+            'orphan_fixture_is_actual_crash_journal': False,
             'allocated_fixture_bytes': allocated, 'resources_prepared': prepared_resources,
-            'resources_exported': resources()}
+            'resources_exported': exported_resources}
 
 
 def verify():
     require(os.geteuid() == 0, 'root required')
     require(Path('/proc/self/uid_map').read_text().split() == ['0', '0', '4294967295'],
             'initial user namespace required')
-    for tool in ('mke2fs', 'losetup', 'mount', 'udevadm'):
+    require(hashlib.sha256(SOURCE.read_bytes()).hexdigest() == REVIEWED_SOURCE_SHA256,
+            'production helper differs from independently reviewed SHA256')
+    for tool in ('mke2fs', 'debugfs', 'losetup', 'mount', 'udevadm'):
         require(shutil.which(tool) is not None, tool + ' required')
     before = resources()
     private_namespace()
@@ -345,11 +497,15 @@ def verify():
 
     old_term = signal.signal(signal.SIGTERM, interrupted)
     try:
-        for name, unexpected in (('positive', False), ('negative', True)):
+        cases = [('original-ro-zero', 0, False, False),
+                 ('original-ro-one', 1, False, False),
+                 ('synthetic-legacy-orphan', 0, False, True),
+                 ('unexpected-file-refused', 0, True, False)]
+        for name, original_ro, unexpected, legacy_orphan in cases:
             resources()
             current = Fixture(workspace, name)
             try:
-                result.append(exercise(control, current, unexpected))
+                result.append(exercise(control, current, name, original_ro, unexpected, legacy_orphan))
             finally:
                 current.cleanup(control)
             current = None
@@ -371,8 +527,13 @@ def verify():
     after = resources()
     require(before['disk_free_bytes'] - after['disk_free_bytes'] <= MAX_SPACE,
             'disk consumption exceeded 256 MiB budget')
-    return {'schema': 1, 'hardware_acceptance': False,
-            'classification': 'new private synthetic ext4 loop fixtures only; fixed physical-device and RAM-entry policy bypassed by calling filesystem helpers directly',
+    return {'schema': 2, 'hardware_acceptance': False,
+            'classification': ('new private synthetic ext4 loop fixtures only; production '
+                               'protected_journal uses real block RO; fixed A733/RAM-entry, '
+                               'physical-device and whole-host idle policy bypassed by explicit '
+                               'fixture adapter; synthetic legacy orphan is not an actual crash journal'),
+            'fixture_patches': ['PART=owned newly allocated loop', 'PART_SIZE=64 MiB',
+                                'inspect_target=fixture identity and production validate_state_fd'],
             'source_sha256': hashlib.sha256(SOURCE.read_bytes()).hexdigest(),
             'checks': result, 'resources_before': before, 'resources_after': after,
             'cleanup': 'owned mounts removed, loops detached, fixture paths deleted'}

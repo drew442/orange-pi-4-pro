@@ -1,0 +1,86 @@
+{
+  "schema": 1,
+  "date": "2026-11-09",
+  "capture_host": {
+    "ssh": "orangepi@192.168.1.117",
+    "hostname": "orangepioneplus",
+    "kernel": "5.4.65-sunxi64",
+    "service": "ttyS3-capture.service",
+    "device": "/dev/ttyS3",
+    "format": "115200 8N1 raw no echo no flow control",
+    "source_log": "/var/log/ttyS3.log",
+    "log_backing": "/dev/zram0 ext4 (volatile across capture-host reboot)"
+  },
+  "offboard_relay": {
+    "service": "a733-uart-relay-20261109-01.service",
+    "file": "out/serial-recovery-20261109/serial-live.log",
+    "maximum_file_bytes": 67108864,
+    "observed_active": true
+  },
+  "serial_control": {
+    "sysrq_help_break_h_physically_observed": true,
+    "host_kernel_config": [
+      "CONFIG_MAGIC_SYSRQ=y",
+      "CONFIG_MAGIC_SYSRQ_SERIAL=y"
+    ],
+    "runtime_sysrq": 1,
+    "reboot_over_uart_tested": false,
+    "gpio_wiring_added": false
+  },
+  "host_boots_observed": [
+    "9675961c-f179-411f-8754-3ece7bece5f5",
+    "2e32858c-1ef8-4ae5-860f-9959cd38a1e0"
+  ],
+  "user_report": "Accidentally restarted both devices during initial reconnection; repeat boot classification not established.",
+  "ssh_recovered": true,
+  "old_failure_cause": "Unproven; retained previous boot entries include guest logs but no management failure explanation.",
+  "current_readonly_slot_B_prepare": "pass; no selector apply/root change; guard monitor remained pass",
+  "records": [
+    {
+      "path": "out/serial-recovery-20261109/serial-first-98101.log",
+      "bytes": 98101,
+      "sha256": "b7c1f8f0f41afb617686b8bf701c99323568cb1f8a1f2bfd540dbdf5ca7161eb"
+    },
+    {
+      "path": "out/serial-recovery-20261109/serial-after-restart-65369.log",
+      "bytes": 65369,
+      "sha256": "cb246e4843ad5b839832786383ef4c8c8c153cba95bdd27ac7efdb298530a0b4"
+    },
+    {
+      "path": "out/serial-recovery-20261109/capture-service-and-storage.txt",
+      "bytes": 555,
+      "sha256": "fce762b2a704a58584039069552ace84adc1bba267e18905315a1845f502cc45"
+    },
+    {
+      "path": "out/serial-recovery-20261109/offboard-relay-service.txt",
+      "bytes": 973,
+      "sha256": "41c4d46f1fff405a6523fa38e56873700f1196cbbe5760b5473b4c34ad428627"
+    },
+    {
+      "path": "out/serial-recovery-20261109/failed-boot-journal.export",
+      "bytes": 828382,
+      "sha256": "ccbbc4dfb6d27b10caa9d5b58ba3f154b714e52e48f903ed82c559a2eb0870bc"
+    },
+    {
+      "path": "out/serial-recovery-20261109/slot-B-prepare-ram-source.json",
+      "bytes": 3498,
+      "sha256": "a0a849a02446f60004fb5d642dbbbbfc0d435452a4873ffbb096363a56a58f7c"
+    },
+    {
+      "path": "out/serial-recovery-20261109/post-prepare-state.txt",
+      "bytes": 1342,
+      "sha256": "89051fc58d4c3ad48c7d83b3230cfcb9b1623676394e4463ca4ff7a2fc97eced"
+    },
+    {
+      "path": "out/serial-recovery-20261109/current-runtime-verification.json",
+      "bytes": 6274,
+      "sha256": "41a70aa9b700ff8761aaef3d95fb8dc7a5e7d73b2e0fb244a6f34c3fe09758ed"
+    },
+    {
+      "path": "out/serial-recovery-20261109/current-state-superblock.json",
+      "bytes": 341,
+      "sha256": "dc36ce665c1a365e469520abe8789c61a59e7872b47b147cd4aae93d1e4ad955"
+    }
+  ],
+  "hardware_acceptance": false
+}

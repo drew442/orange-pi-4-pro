@@ -2,7 +2,7 @@
 
 ## Purpose and Current State
 
-Build a minimal KVM/QEMU host for the **Orange Pi 4 Pro A733**, using a 2 GB SD card and nominal 250 GB NVMe. Read `docs/implementation-status.md` first, then relevant sections of `docs/hypervisor-plan.md`. Diagnostic/preparation SD boots enter EL2 on all eight CPUs. A real nonroot KVM guest now passes CPU/disk/network, clean shutdown, checkpoint and restart tests. Installed NVMe boot, DHCP and both SSH keys now pass after repair. The corrected VGIC host passed boot, automatic NTP and restored KVM guest counter 3 → 4 → 5. Its endurance attempt lost SSH at 192.168.1.116 while ping remained reachable; serial diagnosis is pending. See status for artifact and acceptance gates.
+Build a minimal KVM/QEMU host for the **Orange Pi 4 Pro A733**, using a 2 GB SD card and nominal 250 GB NVMe. Read `docs/implementation-status.md` first, then relevant sections of `docs/hypervisor-plan.md`. Diagnostic/preparation SD boots enter EL2 on all eight CPUs. A real nonroot KVM guest now passes CPU/disk/network, clean shutdown, checkpoint and restart tests. Installed NVMe boot, DHCP and both SSH keys now pass after repair. The corrected VGIC host passed boot, automatic NTP and restored KVM guest counter 3 → 4 → 5. SSH recovered; independent UART capture/control is available through orangepi@192.168.1.117. The endurance failure remains unexplained, and a reviewed block-RO STATE-probe fix awaits bootstrap deployment. See status for artifact and acceptance gates.
 
 Vendor images exceed the available SD capacity. Use diagnostic outputs for inventory; leave attached heatsinks in place. Prefer SPI-to-NVMe boot; otherwise keep SD boot files read-only with zero routine writes. Require an actual KVM guest for hardware acceptance.
 

@@ -90,7 +90,7 @@ def runtime_guard(expected_boot):
             'proc filesystem required')
 
 
-def idle(ids):
+def idle(ids, held_fd=None):
     require(not any(e['dev'] in ids for e in mounts()), 'NVMe is mounted')
     swaps = Path('/proc/swaps').read_text().splitlines()
     require(swaps and swaps[0].split() == ['Filename', 'Type', 'Size', 'Used', 'Priority'],
@@ -106,6 +106,9 @@ def idle(ids):
             require(not any(e['dev'] in ids for e in mounts((proc / 'mountinfo').read_text())),
                     'NVMe mounted in another namespace')
             for link in [proc / 'cwd', proc / 'root', proc / 'exe', *list((proc / 'fd').iterdir())]:
+                if (held_fd is not None and proc.name == str(os.getpid()) and
+                        link == proc / 'fd' / str(held_fd)):
+                    continue  # Only our exact, validated, read-only STATE descriptor.
                 try:
                     info = link.stat()
                 except FileNotFoundError:
@@ -125,7 +128,7 @@ def ioctl_number(fd, command, fmt):
     return struct.unpack(fmt, fcntl.ioctl(fd, command, bytes(struct.calcsize(fmt))))[0]
 
 
-def inspect_target():
+def inspect_target(expected_state_ro=None, held_fd=None):
     nodes = [DISK, *sorted(Path('/dev').glob('nvme0n1p*'))]
     ids = set()
     identities = {}
@@ -153,14 +156,20 @@ def inspect_target():
     require(p4.resolve().parent == base.resolve() and int(p4.joinpath('partition').read_text()) == 4 and
             int(p4.joinpath('start').read_text()) == PART_START and
             int(p4.joinpath('size').read_text()) * 512 == PART_SIZE, 'STATE geometry differs')
-    idle(ids)  # Before opening either device ourselves.
+    idle(ids, held_fd)  # No external device references are permitted.
     for path, size in ((DISK, SIZE), (PART, PART_SIZE)):
         fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
         try:
             require(dev_id(os.fstat(fd).st_rdev) == identities[path.name], 'opened device differs')
             for cmd, fmt, expected in ((0x80081272, '=Q', size), (0x1268, '=I', 512),
-                                       (0x127b, '=I', 512), (0x125e, '=I', 0)):
+                                       (0x127b, '=I', 512)):
                 require(ioctl_number(fd, cmd, fmt) == expected, 'block ioctl geometry differs')
+            ro = ioctl_number(fd, 0x125e, '=I')
+            allowed_ro = (0,)
+            if path == PART:
+                allowed_ro = (0, 1) if expected_state_ro is None else (expected_state_ro,)
+            require(ro in allowed_ro, 'block read-only flag differs')
+            require(int(node_ro(path).read_text()) == ro, 'sysfs read-only flag differs')
             if path == PART:
                 validate_superblock(os.pread(fd, 1024, 1024))
         finally:
@@ -177,8 +186,104 @@ def validate_superblock(data):
             'STATE block geometry differs')
     require(u32(92) & 4 and not u32(96) & ~0x2c6,
             'unsupported ext4 or journal features')
+    require(not u32(92) & 0x1000 and not u32(100) & 0x10000,
+            'unsupported ext4 orphan-file features')
+    # Legacy s_last_orphan may be nonzero: production mounts require block RO,
+    # which makes the pinned ext4 implementation skip orphan cleanup.
     require(data[208:224] == bytes(16) and u32(224) == 8 and u32(228) == 0,
             'internal journal inode 8 required; external journal refused')
+
+
+def node_ro(path):
+    return Path('/sys/class/block') / path.name / 'ro'
+
+
+def validate_state_identity(fd, identity):
+    """Recheck held node, geometry and internal journal before changing its flag."""
+    info, named = os.fstat(fd), PART.lstat()
+    require(stat.S_ISBLK(info.st_mode) and stat.S_ISBLK(named.st_mode) and
+            info.st_rdev == named.st_rdev and info.st_ino == named.st_ino and
+            info.st_dev == named.st_dev and dev_id(info.st_rdev) == identity,
+            'held STATE descriptor identity differs')
+    for cmd, fmt, expected in ((0x80081272, '=Q', PART_SIZE), (0x1268, '=I', 512),
+                               (0x127b, '=I', 512)):
+        require(ioctl_number(fd, cmd, fmt) == expected, 'held STATE geometry differs')
+    validate_superblock(os.pread(fd, 1024, 1024))
+
+
+def validate_state_fd(fd, identity, expected_ro=None):
+    validate_state_identity(fd, identity)
+    ro = ioctl_number(fd, 0x125e, '=I')  # BLKROGET
+    require(ro in (0, 1) and (expected_ro is None or ro == expected_ro),
+            'STATE block read-only protection differs')
+    require(int(node_ro(PART).read_text()) == ro, 'STATE sysfs read-only protection differs')
+    return ro
+
+
+def set_state_ro(fd, identity, value):
+    validate_state_fd(fd, identity)
+    # BLKROSET changes the kernel flag; this does not write filesystem data.
+    fcntl.ioctl(fd, 0x125d, struct.pack('=I', value))
+    validate_state_fd(fd, identity, value)
+
+
+def restore_state_writable(fd, identity):
+    """Restore an original zero, re-protecting a validated device on failure."""
+    try:
+        set_state_ro(fd, identity, 0)
+        validate_state_fd(fd, identity, 0)
+    except (OSError, ValueError) as restore_error:
+        try:
+            # Read-only readback may itself have failed. Revalidate device and
+            # filesystem identity independently before attempting a protective ioctl.
+            validate_state_identity(fd, identity)
+            fcntl.ioctl(fd, 0x125d, struct.pack('=I', 1))
+            validate_state_fd(fd, identity, 1)
+        except (OSError, ValueError) as protection_error:
+            raise ValueError('STATE restoration failed; block read-only state uncertain; '
+                             'no archive') from protection_error
+        raise ValueError('STATE restoration failed; block read-only protection reasserted; '
+                         'no archive') from restore_error
+
+
+def protected_journal(point, identities):
+    """Mount behind block RO; restore eligibility only after proved unmount."""
+    identity = identities[PART.name]
+    claim = held = None
+    try:
+        claim = os.open(PART, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_EXCL)
+        original_ro = validate_state_fd(claim, identity)
+        if original_ro == 0:
+            set_state_ro(claim, identity, 1)
+        validate_state_fd(claim, identity, 1)
+        held = os.open(PART, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+        validate_state_fd(held, identity, 1)
+        os.close(claim)
+        claim = None  # Kernel mount must not run with an exclusive block claim.
+        require(inspect_target(expected_state_ro=1, held_fd=held) == identities,
+                'target identity changed before protected mount')
+        validate_state_fd(held, identity, 1)
+        cleanup = {'unmounted': False}
+        try:
+            return mounted_journal(point, identity, cleanup), original_ro
+        finally:
+            # idle() proves no mount/reference remains across visible namespaces.
+            # Failed unmount/pre-restore checks cannot clear the verified RO flag.
+            require(cleanup['unmounted'],
+                    'normal unmount not proved; STATE remains block read-only')
+            validate_state_fd(held, identity, 1)
+            require(inspect_target(expected_state_ro=1, held_fd=held) == identities,
+                    'target identity changed after protected unmount')
+            validate_state_fd(held, identity, 1)
+            if original_ro == 0:
+                restore_state_writable(held, identity)
+            else:
+                validate_state_fd(held, identity, 1)
+    finally:
+        if claim is not None:
+            os.close(claim)
+        if held is not None:
+            os.close(held)
 
 
 def write_counters():
@@ -315,7 +420,7 @@ def collect_journal(root):
     return result
 
 
-def mounted_journal(point, identity):
+def mounted_journal(point, identity, cleanup_state=None):
     mounted = False
     try:
         mount_readonly(point)
@@ -325,6 +430,8 @@ def mounted_journal(point, identity):
     finally:
         if mounted:
             unmount(point)
+            if cleanup_state is not None:
+                cleanup_state['unmounted'] = True
         # Do not remove a mountpoint after a failed unmount.
         point.rmdir()
 
@@ -348,18 +455,21 @@ def execute(expected_boot, output):
     runtime_guard(expected_boot)
     before = write_counters()
     identity = inspect_target()
-    print('Validated RAM boot and fixed STATE identity; mounting read-only,noload.', file=sys.stderr)
+    print('Validated RAM boot and fixed STATE identity; protecting block device before mount.', file=sys.stderr)
     point = Path(tempfile.mkdtemp(prefix='a733-journal-', dir='/run'))
-    files = mounted_journal(point, identity[PART.name])
+    files, original_ro = protected_journal(point, identity)
     runtime_guard(expected_boot)
-    require(inspect_target() == identity, 'target identity changed after export')
+    require(inspect_target(expected_state_ro=original_ro) == identity,
+            'target identity changed after export')
     after = write_counters()
     require(before == after, 'SD or NVMe write counters changed; refusing archive')
     receipt = {'schema': 1, 'operation': 'offline-persistent-journal-export',
                'boot_id': expected_boot, 'hardware_acceptance': False,
                'source': str(PART), 'state_uuid': STATE_UUID,
                'mount_flags': ['ro', 'nosuid', 'nodev', 'noexec', 'noload'],
-               'unmounted': True, 'write_counters_before': before,
+               'unmounted': True, 'block_ro_during_mount': 1,
+               'block_ro_original': original_ro, 'block_ro_restored': original_ro,
+               'write_counters_before': before,
                'write_counters_after': after,
                'members': [{'path': name, 'size': len(data),
                             'sha256': hashlib.sha256(data).hexdigest(),
