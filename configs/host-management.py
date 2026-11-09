@@ -325,6 +325,10 @@ def ram_directory(path):
     if not path.exists():
         ram_directory(path.parent)
         path.mkdir(mode=0o755)
+        secure_path(path, directory=True)
+        # main's private umask must not hide public RAM configuration from
+        # unprivileged systemd services. Preserve modes of existing directories.
+        path.chmod(0o755)
     secure_path(path, directory=True)
 
 

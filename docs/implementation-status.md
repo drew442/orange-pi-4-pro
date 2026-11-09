@@ -75,6 +75,20 @@ no clean shutdown or completed endurance is claimed. Reported power/cooling is a
 67 W USB-PD adapter and 10.4 mm six-layer whole-board copper heatsink; negotiated
 power and full thermal endurance remain unproven.
 
+## Resolver policy finding
+
+A [read-only listener audit](evidence/management-runtime-exposure-20261109.json)
+found wildcard TCP/UDP 5355 listeners. The intended resolver drop-in disables
+LLMNR/mDNS, but its newly created directory is mode 0700 under the boot umask,
+so `systemd-resolve` cannot read it. The selected Ethernet link disables these
+protocols; global policy is not applied. Root password is locked, SSH is key-only
+and bound to the selected address, and the running guest is UID/GID 60002 with
+empty capabilities; these observations do not waive the resolver finding.
+A focused creation-mode fix passes independent review and the full privileged
+Ubuntu suite. Rebuilt A/B roots,
+updated distribution artifacts and physical policy/listener verification remain
+required. The active endurance host is unchanged.
+
 ## Construction, resources and authorization
 
 - Protected SD and NVMe BOOT components each have two byte-matching constructions
@@ -83,7 +97,7 @@ power and full thermal endurance remain unproven.
   inspection and unchanged outside-BOOT bytes pass. Native candidate is
   `out/protected-nvme-candidate-20261109/nvme.img.gz`; fresh installation is
   unperformed. [Evidence](evidence/protected-full-nvme-image-20261109.json).
-- Latest complete privileged Ubuntu suite: **2,139 tests**, zero skips/errors/
+- Latest complete privileged Ubuntu suite: **2,141 tests**, zero skips/errors/
   failures; five shell suites and five diagnostic assembly cases also pass.
   All five TOML files parse separately on codex. These are software checks.
 - [Matched A/B maintenance candidates](matched-host-updates-20261109.md) now
@@ -127,7 +141,10 @@ power and full thermal endurance remain unproven.
    accepts the actual manifest and RAM tool pins; physical execution and clean
    independent reproduction remain unperformed. Keep the running
    workload undisturbed until its evidence is retained.
-3. Prepare SPI recovery/programming and matched NVMe-first firmware trials.
+3. Build corrected roots for the resolver directory finding and refresh the
+   matched maintenance/full-install artifacts. Preserve current compatible BOOT;
+   verify the policy physically after retaining endurance evidence.
+4. Prepare SPI recovery/programming and matched NVMe-first firmware trials.
    The [matched trial SD](matched-nvme-trial-sd-20261109.md) now has two identical
    constructions and independent complete artifact review; it preserves current
    protected BOOT and SD boot0. Its finite-profile
@@ -146,7 +163,7 @@ power and full thermal endurance remain unproven.
    the complete programmer and recovery/durability gate integration remain pending.
    Otherwise finish complete immutable-SD proof. The blank XM25QU128C SPI backup
    and successful SD boot do not alone prove recovery after broken SPI firmware.
-4. Complete the remaining physical gates in [hardware validation](hardware-validation.md)
+5. Complete the remaining physical gates in [hardware validation](hardware-validation.md)
    and the [plan](hypervisor-plan.md). Finish only after acceptance and reproduced
    deployment, preserving the earlier observation gaps.
 

@@ -2,13 +2,16 @@
 import base64
 import copy
 import hashlib
-from contextlib import redirect_stderr, redirect_stdout
+from contextlib import contextmanager, redirect_stderr, redirect_stdout
 import importlib.util
 import io
 import json
+import os
 from pathlib import Path
+import stat
 import struct
 import subprocess
+import sys
 import tempfile
 import unittest
 from unittest.mock import Mock, patch
@@ -127,7 +130,85 @@ class ValidationTests(unittest.TestCase):
             self.assertIn('SystemMaxUse=128M', contents['/etc/systemd/journald.conf.d/90-a733-state.conf'])
             self.assertIn('Type=ether', contents['/etc/systemd/network/00-a733-management.network'])
             self.assertIn('IPv6AcceptRA=no', contents['/etc/systemd/network/00-a733-management.network'])
+            self.assertEqual(contents['/etc/systemd/resolved.conf.d/90-a733-management.conf'],
+                             '[Resolve]\nLLMNR=no\nMulticastDNS=no\nDNSStubListener=yes\n')
             command.assert_not_called()
+
+
+class RamDirectoryTests(unittest.TestCase):
+    @contextmanager
+    def fixture(self):
+        # Root runs exercise production ancestor/ownership validation; /tmp's
+        # world-writable parent is deliberately unsuitable for secure_path.
+        with tempfile.TemporaryDirectory(dir='/run' if os.geteuid() == 0 else None) as temp:
+            root = Path(temp)
+            if os.geteuid() == 0:
+                yield root
+            else:
+                def fixture_secure(path, mode=None, directory=False):
+                    # Permit the unprivileged fixture's uid and temporary root,
+                    # while checking actual filesystem types and permissions.
+                    path = Path(path)
+                    for item in [path, *path.parents]:
+                        if item == root.parent:
+                            break
+                        info = item.lstat()
+                        M.require(stat.S_ISDIR(info.st_mode) and
+                                  info.st_uid == os.geteuid() and
+                                  not info.st_mode & 0o7022, 'unsafe fixture directory')
+                    return path.lstat()
+                with patch.object(M, 'secure_path', side_effect=fixture_secure):
+                    yield root
+
+    def test_private_umask_creates_public_config_parents_and_preserves_private_dirs(self):
+        with self.fixture() as root:
+            root.chmod(0o755)
+            private = root / 'state/identity/ssh'
+            private.mkdir(parents=True, mode=0o700)
+            private.parent.chmod(0o700)
+            private.parent.parent.chmod(0o700)
+            existing = [root, private.parent.parent, private.parent, private]
+            before = {path: stat.S_IMODE(path.stat().st_mode) for path in existing}
+            parents = [root / 'etc/systemd' / name for name in
+                       ('network', 'resolved.conf.d', 'journald.conf.d',
+                        'system/multi-user.target.wants')]
+            old_umask = os.umask(0o077)
+            try:
+                for parent in parents:
+                    M.ram_directory(parent)
+                M.ram_directory(private)
+                config = parents[1] / '90-a733-management.conf'
+                M.atomic_write(config, '[Resolve]\nLLMNR=no\nMulticastDNS=no\n', 0o644)
+            finally:
+                os.umask(old_umask)
+            for path in [root / 'etc', *(root / 'etc').rglob('*')]:
+                self.assertEqual(stat.S_IMODE(path.stat().st_mode),
+                                 0o755 if path.is_dir() else 0o644, str(path))
+            self.assertEqual({path: stat.S_IMODE(path.stat().st_mode) for path in existing}, before)
+            if os.geteuid() == 0:
+                result = subprocess.run(
+                    [sys.executable, '-c', 'import pathlib, sys; print(pathlib.Path(sys.argv[1]).read_text())',
+                     str(config)], user=65534, group=65534, extra_groups=[],
+                    check=True, capture_output=True, text=True)
+                self.assertIn('LLMNR=no', result.stdout)
+
+    def test_untrusted_parent_is_rejected_without_creation_or_mode_changes(self):
+        with self.fixture() as root:
+            private = root / 'private'
+            private.mkdir(mode=0o700)
+            link = root / 'link'
+            link.symlink_to(private, target_is_directory=True)
+            with self.assertRaises(ValueError):
+                M.ram_directory(link / 'resolved.conf.d')
+            self.assertFalse((private / 'resolved.conf.d').exists())
+            self.assertEqual(stat.S_IMODE(private.stat().st_mode), 0o700)
+            unsafe = root / 'unsafe'
+            unsafe.mkdir()
+            unsafe.chmod(0o777)
+            with self.assertRaises(ValueError):
+                M.ram_directory(unsafe / 'resolved.conf.d')
+            self.assertFalse((unsafe / 'resolved.conf.d').exists())
+            self.assertEqual(stat.S_IMODE(unsafe.stat().st_mode), 0o777)
 
 
 class TimesyncGuardTests(unittest.TestCase):

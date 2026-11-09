@@ -1,0 +1,204 @@
+{
+  "boot_id": "dd8d6f67-d297-4f3b-bc9a-8a41c9742051",
+  "commands": {
+    "listeners": {
+      "argv": [
+        "ss",
+        "-lntup"
+      ],
+      "returncode": 0,
+      "stdout": "Netid State  Recv-Q Send-Q      Local Address:Port  Peer Address:PortProcess                                    \nudp   UNCONN 0      0                 0.0.0.0:5355       0.0.0.0:*    users:((\"systemd-resolve\",pid=1631,fd=11))\nudp   UNCONN 0      0              127.0.0.54:53         0.0.0.0:*    users:((\"systemd-resolve\",pid=1631,fd=19))\nudp   UNCONN 0      0           127.0.0.53%lo:53         0.0.0.0:*    users:((\"systemd-resolve\",pid=1631,fd=17))\nudp   UNCONN 0      0      192.168.1.116%end0:68         0.0.0.0:*    users:((\"systemd-network\",pid=1612,fd=18))\nudp   UNCONN 0      0                    [::]:5355          [::]:*    users:((\"systemd-resolve\",pid=1631,fd=13))\ntcp   LISTEN 0      128         192.168.1.116:22         0.0.0.0:*    users:((\"sshd\",pid=1671,fd=3))            \ntcp   LISTEN 0      1               127.0.0.1:18081      0.0.0.0:*    users:((\"qemu-system-aar\",pid=2153,fd=13))\ntcp   LISTEN 0      4096        127.0.0.53%lo:53         0.0.0.0:*    users:((\"systemd-resolve\",pid=1631,fd=18))\ntcp   LISTEN 0      4096              0.0.0.0:5355       0.0.0.0:*    users:((\"systemd-resolve\",pid=1631,fd=12))\ntcp   LISTEN 0      4096           127.0.0.54:53         0.0.0.0:*    users:((\"systemd-resolve\",pid=1631,fd=20))\ntcp   LISTEN 0      4096                 [::]:5355          [::]:*    users:((\"systemd-resolve\",pid=1631,fd=14))\n",
+      "stderr": ""
+    },
+    "resolver_status": {
+      "argv": [
+        "resolvectl",
+        "status"
+      ],
+      "returncode": 0,
+      "stdout": "Global\n       Protocols: +LLMNR +mDNS -DNSOverTLS DNSSEC=no/unsupported\nresolv.conf mode: stub\n\nLink 2 (ip_vti0)\nCurrent Scopes: none\n     Protocols: -DefaultRoute +LLMNR -mDNS -DNSOverTLS DNSSEC=no/unsupported\n\nLink 3 (ip6_vti0)\nCurrent Scopes: none\n     Protocols: -DefaultRoute +LLMNR -mDNS -DNSOverTLS DNSSEC=no/unsupported\n\nLink 4 (sit0)\nCurrent Scopes: none\n     Protocols: -DefaultRoute +LLMNR -mDNS -DNSOverTLS DNSSEC=no/unsupported\n\nLink 5 (ip6tnl0)\nCurrent Scopes: none\n     Protocols: -DefaultRoute +LLMNR -mDNS -DNSOverTLS DNSSEC=no/unsupported\n\nLink 6 (end0)\n    Current Scopes: DNS\n         Protocols: +DefaultRoute -LLMNR -mDNS -DNSOverTLS DNSSEC=no/unsupported\nCurrent DNS Server: 192.168.1.1\n       DNS Servers: 192.168.1.1\n",
+      "stderr": ""
+    },
+    "resolver_reader": {
+      "argv": [
+        "runuser",
+        "-u",
+        "systemd-resolve",
+        "--",
+        "cat",
+        "/etc/systemd/resolved.conf.d/90-a733-management.conf"
+      ],
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "cat: /etc/systemd/resolved.conf.d/90-a733-management.conf: Permission denied\n"
+    },
+    "root_password_state": {
+      "argv": [
+        "passwd",
+        "-S",
+        "root"
+      ],
+      "returncode": 0,
+      "stdout": "root L 2026-11-06 0 99999 7 -1\n",
+      "stderr": ""
+    },
+    "guest_limits": {
+      "argv": [
+        "systemctl",
+        "show",
+        "a733-guest-endurance.service",
+        "-p",
+        "MainPID",
+        "-p",
+        "User",
+        "-p",
+        "Group",
+        "-p",
+        "NoNewPrivileges",
+        "-p",
+        "CapabilityBoundingSet",
+        "-p",
+        "AmbientCapabilities",
+        "-p",
+        "MemoryMax",
+        "-p",
+        "TasksMax"
+      ],
+      "returncode": 0,
+      "stdout": "MainPID=2153\nMemoryMax=536870912\nTasksMax=256\nCapabilityBoundingSet=\nAmbientCapabilities=\nUser=a733-vm-endurance\nGroup=a733-vm-endurance\nNoNewPrivileges=yes\n",
+      "stderr": ""
+    },
+    "ssh_effective": {
+      "argv": [
+        "/usr/sbin/sshd",
+        "-T",
+        "-f",
+        "/run/a733-management/sshd_config"
+      ],
+      "returncode": 0,
+      "stdout": "listenaddress 192.168.1.116:22\npermitrootlogin without-password\npubkeyauthentication yes\npasswordauthentication no\nkbdinteractiveauthentication no\ndisableforwarding yes\nauthenticationmethods publickey\n",
+      "stderr": ""
+    }
+  },
+  "paths": {
+    "/etc/systemd/resolved.conf.d": {
+      "mode": "0o700",
+      "uid": 0,
+      "gid": 0
+    },
+    "/etc/systemd/resolved.conf.d/90-a733-management.conf": {
+      "mode": "0o644",
+      "uid": 0,
+      "gid": 0,
+      "contents": "[Resolve]\nLLMNR=no\nMulticastDNS=no\nDNSStubListener=yes\n"
+    }
+  },
+  "guest_process": {
+    "Uid": "60002\t60002\t60002\t60002",
+    "Gid": "60002\t60002\t60002\t60002",
+    "Groups": "103 60002",
+    "CapInh": "0000000000000000",
+    "CapPrm": "0000000000000000",
+    "CapEff": "0000000000000000",
+    "CapBnd": "0000000000000000",
+    "CapAmb": "0000000000000000",
+    "NoNewPrivs": "1"
+  },
+  "schema": 1,
+  "observed_utc": "2026-11-09T13:08:24.154270+00:00",
+  "classification": "Read-only runtime exposure finding; resolver policy unreadable by service user",
+  "hardware_acceptance": false,
+  "hardware_changed": false,
+  "decision": "Repair new public configuration directory modes under restrictive umask; preserve running endurance until outcome retained. Rebuild and physically verify before claiming resolution.",
+  "software_repair": {
+    "classification": "Independent review and full privileged Ubuntu suite pass; rebuilt artifacts and physical verification pending",
+    "sources": {
+      "configs/host-management.py": "66fbeaf8a939ad073f183b88a3910bfd62794ffa9c485f2c1f1adac5ab5f8728",
+      "tests/test_host_management.py": "05e2a640f9764fabbdff595b1c8433e9a2eb1e929f19271d59ef5c26932c44e1"
+    },
+    "independent_review": {
+      "schema": 1,
+      "review_date": "2026-11-09",
+      "result": "PASS",
+      "scope": "Independent review of current uncommitted public RAM configuration directory mode fix; tracked files read-only.",
+      "source_sha256": {
+        "configs/host-management.py": "66fbeaf8a939ad073f183b88a3910bfd62794ffa9c485f2c1f1adac5ab5f8728",
+        "tests/test_host_management.py": "05e2a640f9764fabbdff595b1c8433e9a2eb1e929f19271d59ef5c26932c44e1"
+      },
+      "checks": [
+        {
+          "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -p test_host_management.py -v",
+          "user": "drew uid 1000",
+          "passed": 40,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0
+        },
+        {
+          "command": "sudo -n env PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -p test_host_management.py -v",
+          "user": "root uid 0",
+          "passed": 40,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0
+        },
+        {
+          "command": "git diff --check -- configs/host-management.py tests/test_host_management.py",
+          "exit_code": 0
+        },
+        {
+          "check": "In-memory chmod removal mutation under root",
+          "result": "Expected regression detected: new directory 0700 instead of 0755; unsafe-parent test still passes; no source mutations."
+        }
+      ],
+      "review_findings": [
+        "New directories are created only after recursively validating trusted root-owned ancestors, then validated before chmod and again afterward. Existing directory modes are preserved.",
+        "Production secure_path rejects symlink parents and group/world writable or special-bit directories. Unprivileged replacement races are excluded by trusted parent ownership/modes; concurrent malicious root mutations are outside this trust model.",
+        "Implementation retains process private umask 0077; no temporary process-global umask relaxation is introduced.",
+        "Root test uses production secure_path and a real uid/gid 65534 subprocess to read generated public configuration.",
+        "Existing STATE identity/SSH directory modes are preserved; runtime_guard is unchanged and remains before prepare mutations.",
+        "The shared helper also gives a newly created /run/a733-management directory mode 0755; its SSH configuration and lock remain 0600. No SSH key directory uses this creation path."
+      ],
+      "hardware_changed": false,
+      "hardware_acceptance": false,
+      "limitations": "Software review only. Existing live 0700 configuration directories are intentionally not repaired by this new-directory fix. Rebuild/deploy/reboot and real service-reader/listener verification remain coordinator-owned after workload evidence preservation.",
+      "blocking_findings": []
+    },
+    "behavior": "Explicitly set new public RAM directories to 0755 after trusted-path validation; inherited umask077 no longer removes read/search permissions. Existing directory modes are preserved.",
+    "additional_scope": "New /run/a733-management also becomes0755; its sshd_config and lock remain0600. Private host key stays in protected STATE.",
+    "upstream": "https://docs.python.org/3.10/library/os.html#os.mkdir",
+    "physical_fix_applied": false,
+    "artifact_requirement": "Rebuild managed A/B roots and update full installation artifacts; existing protected root images retain the bug. Preserve compatible external BOOT, firmware, kernel and DTB.",
+    "physical_verification": "After endurance retention and booting corrected roots, require readable resolver drop-in as systemd-resolve, global LLMNR/mDNS disabled, no TCP/UDP5355 wildcard listeners, ordinary DHCP/DNS/NTP and pinned SSH retained; verify exact SD zero-write counters.",
+    "qualified_jammy_validation": {
+      "project": "/var/lib/a733-public-config-directory-validation-20261109-01",
+      "unit": "a733-public-config-directory-validation-20261109-01",
+      "tests": 2141,
+      "errors": 0,
+      "failures": 0,
+      "skips": 0,
+      "shell_suites": 5,
+      "diagnostic_cases": 5,
+      "source_files_checked_before_after": 844,
+      "unit_exit": 0,
+      "cpu_quota_percent": 200,
+      "memory_max_bytes": 3221225472,
+      "builder_free_bytes_after": 22532333568,
+      "builder_mem_available_after": 7533314048,
+      "logs": {
+        "out/public-config-directory-validation-20261109-01/jammy-validation.log": {
+          "bytes": 16290,
+          "sha256": "71e239c57528ce2f2b8812616bf25e4f972669820b5958888ae5d5f95c852612"
+        },
+        "out/public-config-directory-validation-20261109-01/validation-unit.txt": {
+          "bytes": 120,
+          "sha256": "189fa4fbbe445b6fbede4c0a0716f528924572dbfe999476b9f09a199365806e"
+        },
+        "out/public-config-directory-validation-20261109-01/source-lock.json": {
+          "bytes": 134535,
+          "sha256": "54807c6d811fd649c3a6b81c0fbd0adcb88a5b546386cb1e2d20b16260fdc53a"
+        }
+      }
+    }
+  }
+}

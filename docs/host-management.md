@@ -106,6 +106,23 @@ On-board systemd boot, DHCP renewal/rebinding, trusted host-key verification,
 actual operator login, persistence across reboot and recovery remain required.
 No listener or KVM guest execution is established by these software checks.
 
+## Resolver directory correction
+
+The [November 9 read-only runtime audit](evidence/management-runtime-exposure-20261109.json)
+found the resolver drop-in present but unreadable by `systemd-resolve`: its new
+directory inherited mode 0700 from the boot umask. Wildcard LLMNR listeners
+remained despite the intended global policy. The selected Ethernet link already
+has LLMNR/mDNS disabled. Source now explicitly sets newly created public RAM
+configuration directories to 0755 after validation, preserving existing directory
+modes and private identity directories. Python documents that
+[`mkdir` applies the process umask](https://docs.python.org/3.10/library/os.html#os.mkdir).
+
+Existing root images and the live endurance host retain this finding. The source
+fix alone does not repair an existing 0700 directory. Build corrected roots and
+refresh installation artifacts, then verify resolver-user readability, disabled
+global policy and absent TCP/UDP 5355 listeners physically. Keep the running
+endurance workload unchanged until its evidence is retained.
+
 ## Upstream references
 
 Policy follows the pinned [OpenSSH 9.2 portable configuration manual](https://raw.githubusercontent.com/openssh/openssh-portable/V_9_2_P1/sshd_config.5),
