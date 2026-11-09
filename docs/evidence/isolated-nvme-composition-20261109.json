@@ -1,0 +1,119 @@
+{
+  "schema": 1,
+  "date": "2026-11-09",
+  "classification": "Actual unchanged serializer replay in the authenticated restored Ubuntu namespace; independently verified encoded identity to the canonical full-image artifact",
+  "hardware_acceptance": false,
+  "physical_storage_written": false,
+  "image_booted": false,
+  "fresh_installation_performed": false,
+  "independent_deployment_reproduced": false,
+  "new_os_package_installation_or_compiler_rebuild": false,
+  "producer_source_commit": "81f907481b12e9639ad23752966e05166074f96f",
+  "outer_source_commit": "13af36a1fd94007fd36c8e4ab46487290ef78ab0",
+  "phase": "/var/lib/a733-clean-replay-20261106/isolated-nvme-20261109-02",
+  "artifact_directory": "/var/lib/a733-clean-replay-20261106/isolated-nvme-20261109-02/output/public-config-nvme-image-isolated-20261109-02",
+  "unit": {
+    "name": "a733-isolated-nvme-composition-20261109-02.service",
+    "state": "active/exited",
+    "main_pid": 0,
+    "result": "success",
+    "exec_main_status": 0,
+    "start_utc": "2026-11-09 19:58:12",
+    "exit_utc": "2026-11-09 20:55:21",
+    "cpu_quota_percent": 200,
+    "memory_max_bytes": 3221225472
+  },
+  "files": {
+    "nvme.img": {
+      "bytes": 256060514304,
+      "sha256": "1fa9144d7a1269066c91a94bfb105a9ac4e4083d4707dd6791e8ac2f26902cd9"
+    },
+    "nvme.img.gz": {
+      "bytes": 545581074,
+      "sha256": "3bc02f46d272dcac591d435fff2b1bc98d4fb048569fb2120746145929a8ad64"
+    }
+  },
+  "manifest": {
+    "bytes": 118399,
+    "sha256": "83816a91b4594808e5610e44d81ed9cff45dfde3766ee1b8f3b51de021b7e689"
+  },
+  "tool_versions": {
+    "python": "3.10.12 (main, Aug 31 2026, 10:18:17) [GCC 11.4.0]",
+    "zlib": "1.2.11"
+  },
+  "producer_seconds_before_publication": 3325.4979655069765,
+  "resources": {
+    "samples": 667,
+    "minimum_free_bytes": 41476571136,
+    "minimum_available_memory_bytes": 7384141824
+  },
+  "frozen_before": {
+    "bytes": 26714583,
+    "sha256": "88819f357852ff19b0cc2d38cfe6a4566e392427a03e22e68dda896a28a9ab0b"
+  },
+  "frozen_after": {
+    "bytes": 26714583,
+    "sha256": "88819f357852ff19b0cc2d38cfe6a4566e392427a03e22e68dda896a28a9ab0b"
+  },
+  "final_checks": {
+    "frozen_builder_unchanged": true,
+    "held_and_staged_inputs_reauthenticated": true,
+    "host_configuration_unchanged": true,
+    "host_inventory_unchanged": true,
+    "runtime_anchors_unchanged": true,
+    "sources_unchanged": true,
+    "staged_sources_unchanged": true,
+    "mapped_processes_final": [],
+    "phase_mounts_final": []
+  },
+  "producer_derivation_checks": {
+    "base_crc_eof_raw_hash_verified": true,
+    "both_gpt_tables_verified": true,
+    "output_gzip_full_expansion_verified": true,
+    "generated_single_member_wire_verified": true,
+    "all_inputs_held_reauthenticated": true
+  },
+  "independent_review": {
+    "path": "tmp/isolated-nvme-artifact-review-20261109.json",
+    "bytes": 14344,
+    "sha256": "1179ed9cd7a8173263803ae782e11326059a9d7840a56aa1198f7ffc6461d774",
+    "result": "PASS",
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "producer_source_files_rehashed": 872,
+    "outer_source_files_rehashed": 898,
+    "complete_encoded_byte_comparison_bytes": 545581074,
+    "additional_raw_decode_performed": false,
+    "raw_proof_basis": "Exact encoded byte identity composed with the authenticated prior complete independent raw/GPT/framing/component review, SHA-256 03d432fd62a303d7722723acee6a1add040e167abcd9cd75bda7a03ce02e1540"
+  },
+  "retained": {
+    "out/isolated-nvme-execution-20261109-01/success-02-receipt.json": {
+      "bytes": 446176,
+      "sha256": "a9a8e9c81ed13330d45ff1d699b267b2c3e867e1e216eb24a9b3f5b5c432b59b"
+    },
+    "out/isolated-nvme-execution-20261109-01/success-02-manifest.json": {
+      "bytes": 118399,
+      "sha256": "83816a91b4594808e5610e44d81ed9cff45dfde3766ee1b8f3b51de021b7e689"
+    },
+    "out/isolated-nvme-execution-20261109-01/success-02-unit.txt": {
+      "bytes": 221,
+      "sha256": "23426f6ceb93a8a94376a2816973f33fbb927faa45e1961cc2f8ac9fc168775d"
+    },
+    "out/isolated-nvme-execution-20261109-01/success-02-runtime.log": {
+      "bytes": 139310,
+      "sha256": "6940d0bd4f19bad4176947131a83c60ee372d6798d9d27ee7990c35992fc94b4"
+    },
+    "out/isolated-nvme-execution-20261109-01/running-02-namespace-proof.json": {
+      "bytes": 1072,
+      "sha256": "2ef24f2605cd01fa70baea8fd4f5b8275f34d58bc6ac9e77eef15ade7c2d23e3"
+    }
+  },
+  "limits": [
+    "This is the same immutable builder image and held components in a fresh isolated namespace; it is not a new independently provisioned OS or end-to-end compiler/kernel rebuild.",
+    "Full frozen-tree pre/post equality and large-input postchecks remain authenticated guarded-launcher observations, not additional independent repeated scans.",
+    "Original freeze policy excludes private/runtime contents and atime/ctime; historical translated ACL/capability policy and exact covered host xattr pre/post checks retain their documented scopes.",
+    "No new raw256GB file was staged or independently decoded by the final reviewer; the producer did perform complete verification.",
+    "The selected native distribution remains unchanged because all encoded bytes match; no large native copy is needed.",
+    "Physical fresh installation, independent deployment reproduction and remaining hardware gates are still open."
+  ]
+}

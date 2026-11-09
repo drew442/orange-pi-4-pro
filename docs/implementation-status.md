@@ -106,12 +106,12 @@ privileged focused review; full-suite revalidation and final guide review pass. 
   [Current evidence](evidence/normalized-full-nvme-image-20261109.json). Same-builder
   repetition is established; independent clean-builder/deployment reproduction
   and physical installation remain open.
-- The [isolated full-NVMe composer launcher](isolated-nvme-composition.md)
-  passes independent source/procedure review. It prepares execution of unchanged
-  producer `81f907…` in the frozen Ubuntu namespace using the same held components;
-  [actual attempt 02 is now running](evidence/isolated-nvme-composition-running-20261109.json)
-  with a validated namespace probe after [repairing four empty legacy bind targets](evidence/frozen-builder-anchor-repair-20261109.json).
-  Complete image/cleanup results remain pending; no OS rebuild is claimed.
+- [Actual isolated NVMe composition](evidence/isolated-nvme-composition-20261109.json)
+  now passes independent artifact/environment review: the complete 545,581,074-byte
+  gzip matches the canonical target. Producer `81f907…` used the same held
+  components in a fresh frozen-Ubuntu namespace. Frozen/source/host invariants
+  and cleanup pass. The [initial bind-target repair](evidence/frozen-builder-anchor-repair-20261109.json)
+  remains recorded separately. This is not a new OS/compiler rebuild or deployment.
 - Latest complete privileged Ubuntu suite: **2,264 tests**, zero skips/errors/
   failures; five shell suites and five diagnostic assembly cases also pass.
   All five TOML files parse separately on codex. These are software checks.

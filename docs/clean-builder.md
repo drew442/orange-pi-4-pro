@@ -141,7 +141,9 @@ recipe. [Userspace/time-profile replay](account-date-replay-driver.md) and
 restored namespace. [Two final NVMe streams](evidence/normalized-full-nvme-image-20261109.json)
 also match, composed on the prepared host. The separately reviewed
 [isolated composer launcher](isolated-nvme-composition.md) prepares that unchanged
-serializer for the frozen namespace; actual execution remains pending.
+serializer in the frozen namespace; [actual execution and independent artifact
+review now pass](evidence/isolated-nvme-composition-20261109.json). The same held
+components are reused; no new OS/compiler rebuild or physical deployment is claimed.
 Keep service, capability/device and network restrictions throughout the remaining
 build work. Hardware KVM execution and all
 [release gates](hardware-validation.md) remain separate requirements; no

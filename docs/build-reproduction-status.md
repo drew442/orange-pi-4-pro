@@ -12,7 +12,7 @@ acceptance and independent deployment reproduction remain incomplete; see
 | Normalized A/B roots | [Two fresh 4 GiB pairs](deterministic-host-roots.md) match all raw/gzip bytes, all four full filesystem readbacks and maintenance markers | Same qualified builder; physical corrected-root policy verification is pending |
 | Matched STATE | [Full 8 GiB construction/readback](public-config-state.md), SHA `2e9d3d…`, selects normalized A marker `286494…` and preserves UUID `360dfb39-f49f-487e-b307-0bb887c854c5` | This is an unpersonalized component, not a backup of the running board |
 | Protected boot pair | [Protected SD/NVMe BOOT evidence](evidence/protected-state-maintenance-20261109.json); 256 MiB SD SHA `ab5e…`, NVMe BOOT SHA `cc2a…`; actual protected host boot passes | Firmware loading Linux files from NVMe and SPI/SD-removed boot remain unperformed |
-| Normalized full NVMe | [Two fresh-checkout streams](evidence/normalized-full-nvme-image-20261109.json) match all raw/gzip bytes; complete independent hashes, framing/EOF, GPT and replacement inclusion pass | Fresh installation and independent deployment reproduction remain pending |
+| Normalized full NVMe | [Two fresh-checkout streams](evidence/normalized-full-nvme-image-20261109.json) match all raw/gzip bytes; complete independent hashes, framing/EOF, GPT and replacement inclusion pass | [Isolated serialization also passes](evidence/isolated-nvme-composition-20261109.json); fresh installation and independent deployment reproduction remain pending |
 | Matched maintenance | [Normalized candidates](normalized-maintenance-20261109.md) pass full source/copy comparison and offline old/new API checks; old A rollback pair is retained separately | Live guards, interruption, activation and manual rollback remain physical gates |
 | SPI preparation | [Caller/capture](known-spi-programmer.md) and underlying engine/backend pass independent source review and the privileged Ubuntu suite | Recovery proof is unregistered; write admission is disabled before device opening |
 
@@ -67,6 +67,7 @@ evidence and Git history: [cross-day account dates](userspace-account-date-repla
 and [resolver-readable predecessor](evidence/public-config-nvme-image-20261109.json).
 Their old pending-status statements describe those checkpoints, not current gates.
 
-The [isolated final-composer launcher](isolated-nvme-composition.md) now passes
-independent review and the full suite. It does not change the producer or held
-components; its actual namespace execution remains pending.
+The [isolated final-composer execution](isolated-nvme-composition.md) now passes
+independent review, with exact encoded identity to the canonical target and
+unchanged frozen/source/host state. It does not change the producer or held
+components and does not establish a new OS/kernel/toolchain rebuild.
