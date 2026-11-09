@@ -1,0 +1,502 @@
+{
+  "schema": 1,
+  "date": "2026-11-09",
+  "classification": "native redundant transfer-file retirement; no hardware operation",
+  "hardware_acceptance": false,
+  "purpose": "Restore native evidence/output headroom while retaining two complete protected canonical historical raw/gzip sets.",
+  "source_record": {
+    "path": "docs/evidence/historical-root-retention-20261106.json",
+    "sha256": "2ec1540102be1e0e29c947f445f4cbb017a0993901b994136058295e5d39cf19"
+  },
+  "independent_review": {
+    "reviewer": "independent Sol high safety review",
+    "result": "PASS",
+    "scope": "Corrected frozen one-off six-loose-transfer-file retirement source and fresh private root fixtures only",
+    "supersedes_for_corrected_hash_only": "tmp/native-loose-retirement-review-20261109.json",
+    "reviewed_sha256": {
+      "tmp/native-loose-retirement-20261109/retire.py": "60ef2b31b884682dc8566d32697003f5e56a3a33177546a56f66c4b72248e259",
+      "tmp/native-loose-retirement-20261109/test_retire.py": "82c5223f0d41d2d45a7d7e3718484b928ca10aaa2941e507f34b3af210dae56c",
+      "tmp/native-transport-retirement-20261109/retire.py": "d3b16a28e0c377d2b6f872e988a2e17d3190d7b31e3bf05935412ff57d347aaa",
+      "tmp/native-loose-review-20261109/probe.py": "2ddb696a14a92fd2171ca577d9546b886e5023e429286cd2c4631935199f7b2b"
+    },
+    "checks": {
+      "supplied_root_fixture_suite": {
+        "command": "sudo -n python3 tmp/native-loose-retirement-20261109/test_retire.py",
+        "tests": 50,
+        "passed": 50,
+        "failed": 0,
+        "exit": 0
+      },
+      "independent_private_root_fixture_suite": {
+        "command": "sudo -n python3 tmp/native-loose-review-20261109/probe.py",
+        "tests": 14,
+        "passed": 14,
+        "failed": 0,
+        "exit": 0
+      },
+      "local_kernel_source_constant_check": {
+        "source": "/usr/src/linux-hwe-7.0-headers-7.0.0-42/include/uapi/linux/nsfs.h",
+        "lines": [
+          50,
+          51
+        ],
+        "USER_NS_INIT_INO": "0xEFFFFFFD",
+        "PID_NS_INIT_INO": "0xEFFFFFFC",
+        "matches_frozen_guard": true
+      },
+      "hashes_rechecked_after_tests": true
+    },
+    "resolved_original_blockers": [
+      {
+        "id": "canonical_atime_changes",
+        "result": "resolved",
+        "lines": [
+          "retire.py:141",
+          "retire.py:173",
+          "retire.py:185",
+          "test_retire.py:290",
+          "test_retire.py:299"
+        ],
+        "evidence": "Every canonical gzip FD enables and verifies O_NOATIME before any content read. Unsupported, denied or unverified enablement refuses before hashing. Deliberately old canonical gzip atimes remain unchanged in independent plan probe; supplied plan/retire regressions preserve identity plus atime for gzip and all twenty-four raw/gzip fixture paths. No timestamp-restoration writes are used."
+      },
+      {
+        "id": "restricted_pid_proc_view",
+        "result": "resolved within explicit one-off native Linux environment admission",
+        "lines": [
+          "retire.py:88",
+          "retire.py:95",
+          "retire.py:166",
+          "retire.py:192",
+          "retire.py:200"
+        ],
+        "evidence": "Fixed source-verified initial PID/user namespace inode pins admit only the known initial namespaces. Self and proc PID1 device/inode pairs match, NS_GET_NSTYPE is checked, and parent probe must return EPERM. Full proc mount root/type/device, unrestricted hidepid/subset, admitted submounts and PID1/self visibility are checked. A real private PID namespace with a live outer fixture reader now refuses on the initial PID pin. Actual private user namespace, mocked empty proc listing and restricted mount fixtures refuse. Guard repeats at initial admission and before every census; later guard failure stops additional fixture unlinks."
+      }
+    ],
+    "positive_review_findings": [
+      "Previous source/library authentication, immutable authority pin, fixed six-name source closure, canonical path/ownership/mode/link constraints and no CLI path/pin overrides remain intact",
+      "All eighteen held gzip inodes are distinct and fully size/hash proved before any unlink; canonical descriptors remain held through all six anchored source unlinks",
+      "Task FD/maps census plus canonical/surviving-source path and FD stability checks repeat before each mutation; nonroot reader and denied maps fail closed",
+      "Only six fixed source basenames are unlinked relative to the held qualified inbox parent; every other fixture path and the inbox directory remain",
+      "Parent fsync and absence/stability postchecks stop on error; attempted, removed and durable receipt fields conservatively record partial results",
+      "Independent postcheck and fsync failure probes verify further deletion stops and CLI JSON error receipts return exit 1",
+      "All descriptors close before measured free-space reporting; no cache image content, raw canonical file or old tar operation is mutated by the reviewed code"
+    ],
+    "blockers": [],
+    "limits_and_required_preconditions": [
+      "PASS applies only to the exact frozen implementation/test/library hashes above and the stated six authenticated source paths; it is not a recommendation based on filenames alone.",
+      "Trusted, quiescent root and Drew plus stable mounts remain explicit assumptions. Checks do not defeat hostile privileged writers, injected code, malicious mounts or continuously racing trusted accounts.",
+      "The initial namespace inode admission is intentionally Linux/kernel specific and unknown environments fail closed. No override was added.",
+      "No production plan, actual cache hashing or retirement was performed; coordinator must perform the production proof and inspect exact identity/hash receipts before any actual retirement.",
+      "No Git command, SSH, board, hardware, block device, service, collector/relay or running KVM workload access was performed. Local kernel header source and process/proc state were read only for guards and fixtures.",
+      "Private namespace tests affect only fresh child process namespaces/proc mounts and fixture files. No production source was unlinked.",
+      "Original BLOCKED report remains unchanged. This PASS does not retrospectively qualify the original implementation.",
+      "No hardware acceptance conclusion or production free-space attribution is made."
+    ]
+  },
+  "previous_blocked_review": {
+    "path": "tmp/native-loose-retirement-review-20261109.json",
+    "bytes": 6531,
+    "sha256": "e03707c276c90be0f7483797d31c174552769d10971052e8d03c2bdf32af6d3a"
+  },
+  "implementation": {
+    "path": "tmp/native-loose-retirement-20261109/retire.py",
+    "bytes": 11684,
+    "sha256": "60ef2b31b884682dc8566d32697003f5e56a3a33177546a56f66c4b72248e259"
+  },
+  "tests": {
+    "path": "tmp/native-loose-retirement-20261109/test_retire.py",
+    "bytes": 17792,
+    "sha256": "82c5223f0d41d2d45a7d7e3718484b928ca10aaa2941e507f34b3af210dae56c"
+  },
+  "implementation_source": "#!/usr/bin/env python3\n\"\"\"Plan (default) or retire exactly six authenticated loose transfer duplicates.\n\nRequires a trusted, quiescent root and Drew account during the operation. Held\nFDs and repeated checks detect ordinary races, not a hostile privileged writer.\nNo board, service, raw image, or transport archive operation is performed.\n\"\"\"\nimport argparse\nimport contextlib\nimport errno\nimport fcntl\nimport hashlib\nimport json\nimport os\nfrom pathlib import Path\nimport re\nimport stat\nimport sys\nimport types\n\nOLD = Path('/home/drew/orange-pi-4-pro/tmp/native-transport-retirement-20261109/retire.py')\nOLD_SHA = 'd3b16a28e0c377d2b6f872e988a2e17d3190d7b31e3bf05935412ff57d347aaa'\n\n\ndef load_guards():\n    \"\"\"Read pinned bytes through held, trusted, no-follow path components.\"\"\"\n    with contextlib.ExitStack() as stack:\n        fd = os.open('/', os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)\n        stack.callback(os.close, fd)\n        for component in OLD.parts[1:-1]:\n            fd = os.open(component, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=fd)\n            stack.callback(os.close, fd)\n            s = os.fstat(fd)\n            if s.st_uid not in (0, 1000) or s.st_gid not in (0, 1000) or s.st_mode & 2:\n                raise RuntimeError('untrusted guard source ancestor')\n        parent_fd = fd\n        fd = os.open(OLD.name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=parent_fd)\n        stack.callback(os.close, fd)\n        before = os.fstat(fd)\n        if not (stat.S_ISREG(before.st_mode) and before.st_uid == before.st_gid == 1000\n                and before.st_nlink == 1 and stat.S_IMODE(before.st_mode) == 0o664):\n            raise RuntimeError('unsafe guard source')\n        chunks = []\n        while True:\n            chunk = os.read(fd, 65536)\n            if not chunk:\n                break\n            chunks.append(chunk)\n        raw = b''.join(chunks)\n        after = os.fstat(fd)\n        fields = ('st_dev', 'st_ino', 'st_mode', 'st_uid', 'st_gid', 'st_nlink', 'st_size', 'st_mtime_ns', 'st_ctime_ns')\n        linked = os.stat(OLD.name, dir_fd=parent_fd, follow_symlinks=False)\n        if any(getattr(before, f) != getattr(after, f) or getattr(after, f) != getattr(linked, f) for f in fields):\n            raise RuntimeError('guard source changed')\n        if hashlib.sha256(raw).hexdigest() != OLD_SHA:\n            raise RuntimeError('guard source SHA mismatch')\n    module = types.ModuleType('authenticated_retention_guards')\n    exec(compile(raw, str(OLD), 'exec'), module.__dict__)\n    return module\n\n\nguards = load_guards()\nHeld, hash_fd, idle, require = guards.Held, guards.hash_fd, guards.idle, guards.require\nNAMES = guards.NAMES\nINBOX = guards.REPO / 'out/historical-root-retention-20261106/inbox'\n\n\ndef validate_entries(entries, root):\n    require(set(entries) == set(NAMES), 'unexpected entry closure')\n    for name in NAMES:\n        e = entries[name]\n        require(type(e['bytes']) is int and e['bytes'] > 0, 'invalid byte count')\n        require(isinstance(e['sha256'], str) and re.fullmatch('[0-9a-f]{64}', e['sha256']), 'invalid hash')\n        require([c['path'] for c in e['native_copies']] ==\n                [str(root / tier / name) for tier in ('primary', 'secondary')], 'copy path mismatch')\n\n\ndef production_spec():\n    # The authenticated old routine reads only the SHA-pinned immutable Git record.\n    # It does not open the now-absent tar envelope or execute its old operation.\n    old = guards.production_spec()\n    spec = {k: old[k] for k in ('root', 'entries', 'uid', 'gid', 'copy_uid', 'copy_gid')}\n    spec['inbox'] = INBOX\n    validate_entries(spec['entries'], spec['root'])\n    return spec\n\n\n# One-off Linux admission pins: include/uapi/linux/nsfs.h in the installed\n# linux-hwe-7.0 headers defines PID_NS_INIT_INO/USER_NS_INIT_INO. These match\n# the native host's observed initial namespace inodes. Unknown kernels refuse.\nINITIAL_PID_INO = 0xEFFFFFFC\nINITIAL_USER_INO = 0xEFFFFFFD\n\n\ndef proc_view_guard():\n    \"\"\"Require this known Linux host's initial namespaces and unrestricted proc.\n\n    EPERM from NS_GET_PARENT also occurs in child PID namespaces, so it is\n    only corroboration; the fixed initial namespace inode admission is required.\n    Trusted quiescent root remains a precondition, including mount stability.\n    \"\"\"\n    with contextlib.ExitStack() as stack:\n        for kind, inode, ns_type in (('pid', INITIAL_PID_INO, 0x20000000),\n                                     ('user', INITIAL_USER_INO, 0x10000000)):\n            stamps = []\n            for who in ('self', '1'):\n                fd = os.open(f'/proc/{who}/ns/{kind}', os.O_RDONLY)\n                stack.callback(os.close, fd)\n                st = os.fstat(fd)\n                require(st.st_ino == inode, f'not pinned initial {kind} namespace')\n                require(fcntl.ioctl(fd, 0xb703) == ns_type, 'namespace type mismatch')\n                try:\n                    parent = fcntl.ioctl(fd, 0xb702)\n                except OSError as exc:\n                    require(exc.errno == errno.EPERM, 'ambiguous namespace parent probe')\n                else:\n                    os.close(parent)\n                    raise RuntimeError('namespace has a parent')\n                stamps.append((st.st_dev, st.st_ino))\n            require(stamps[0] == stamps[1], f'proc PID1 {kind} namespace differs')\n        with open('/proc/self/mountinfo') as stream:\n            records = [line.split() for line in stream]\n        mounts = [r for r in records if r[4] == '/proc']\n        require(len(mounts) == 1, 'ambiguous proc mount')\n        record = mounts[0]\n        sep = record.index('-')\n        require(record[3] == '/' and record[sep + 1] == 'proc', 'not full proc filesystem')\n        major, minor = map(int, record[2].split(':'))\n        require(os.stat('/proc').st_dev == os.makedev(major, minor), 'proc mount identity mismatch')\n        opts = set(record[5].split(',')) | set(record[sep + 3].split(','))\n        require(all(not o.startswith('hidepid=') or o == 'hidepid=0' for o in opts), 'restricted proc hidepid')\n        require(all(not o.startswith('subset=') or o == 'subset=all' for o in opts), 'restricted proc subset')\n        # Existing binfmt_misc mounts cannot hide task directories. Any other\n        # proc submount is outside this one-off admitted environment.\n        require(all(not r[4].startswith('/proc/') or r[4] == '/proc/sys/fs/binfmt_misc'\n                    for r in records), 'unexpected proc submount')\n        visible = os.listdir('/proc')\n        require('1' in visible and str(os.getpid()) in visible, 'incomplete proc PID visibility')\n\n\ndef enable_noatime(fd):\n    \"\"\"Prevent metadata writes before the first canonical content read.\"\"\"\n    require(hasattr(os, 'O_NOATIME'), 'O_NOATIME unavailable')\n    flags = fcntl.fcntl(fd, fcntl.F_GETFL)\n    fcntl.fcntl(fd, fcntl.F_SETFL, flags | os.O_NOATIME)\n    require(fcntl.fcntl(fd, fcntl.F_GETFL) & os.O_NOATIME, 'O_NOATIME not enabled')\n\n\nclass RetirementError(RuntimeError):\n    def __init__(self, cause, report):\n        super().__init__(str(cause))\n        self.report = report\n\n\ndef operation(spec, retire=False, idle_check=idle):\n    \"\"\"Fixture spec injection is Python-only; CLI has no path or pin overrides.\"\"\"\n    inbox, root, entries = Path(spec['inbox']), Path(spec['root']), spec['entries']\n    report = {'scope': 'only six fixed loose gzip transfer copies; preserve all canonical raw/gzip files and metadata',\n              'assumption': 'trusted quiescent root and Drew; not a hostile-root defense',\n              'retire_requested': retire, 'proof_complete': False, 'complete': False,\n              'copies': [], 'sources': [], 'attempted': [], 'removed': [], 'durable': []}\n    failure = None\n    try:\n        require(os.geteuid() == 0, 'root required for protected copies and complete /proc census')\n        validate_entries(entries, root)\n        proc_view_guard()\n        with contextlib.ExitStack() as stack:\n            held = Held(stack)\n            held.directory(root, spec['copy_uid'], spec['copy_gid'], private=True)\n            for tier in ('primary', 'secondary'):\n                held.directory(root / tier, spec['copy_uid'], spec['copy_gid'], private=True)\n                for name in NAMES:\n                    item = held.file(root / tier / name, spec['copy_uid'], spec['copy_gid'], 0o600)\n                    enable_noatime(item[1])\n            canonical = list(held.files)\n            parent = held.directory(inbox, spec['uid'], spec['gid'])\n            require(stat.S_IMODE(os.fstat(parent).st_mode) == 0o775, 'wrong inbox mode')\n            sources = [held.file(inbox / name, spec['uid'], spec['gid'], 0o664) for name in NAMES]\n            require(len({f[2][:2] for f in held.files}) == 18, 'aliased inode')\n            # All eighteen full hashes precede any idleness check or deletion.\n            for item in held.files:\n                path, fd, stamp = item\n                entry = entries[path.name]\n                require(stamp[6] == entry['bytes'], f'size mismatch: {path}')\n                digest = hash_fd(fd, entry['bytes'])\n                require(digest == entry['sha256'], f'hash mismatch: {path}')\n                detail = {'path': str(path), 'identity': stamp, 'sha256': digest,\n                          'allocated_bytes': stamp[-1] * 512}\n                report['copies' if item in canonical else 'sources'].append(detail)\n            held.stable()\n            for item in sources:\n                proc_view_guard()\n                idle_check(item)\n            held.stable()\n            report['proof_complete'] = True\n            remaining = list(sources)\n            if retire:\n                for item in sources:\n                    # Repeat the all-task FD/maps census immediately before each unlink.\n                    proc_view_guard()\n                    idle_check(item)\n                    held.stable(canonical + remaining)\n                    path = item[0]\n                    report['attempted'].append(str(path))\n                    os.unlink(path.name, dir_fd=parent)\n                    report['removed'].append(str(path))\n                    remaining.remove(item)  # Unlinked FD has changed nlink/ctime.\n                    os.fsync(parent)\n                    report['durable'].append(str(path))\n                    try:\n                        os.stat(path.name, dir_fd=parent, follow_symlinks=False)\n                    except FileNotFoundError:\n                        pass\n                    else:\n                        raise RuntimeError('removed source still present')\n                    held.stable(canonical + remaining)\n            report['complete'] = True\n    except Exception as exc:\n        failure = exc\n        report['error'] = f'{type(exc).__name__}: {exc}'\n    # ExitStack has closed ALL files, including unlinked source FDs, before space measurement.\n    try:\n        space = os.statvfs(inbox)\n        report['free_bytes_after_descriptors_closed'] = space.f_bavail * space.f_frsize\n    except OSError as exc:\n        report['space_measurement_error'] = str(exc)\n    if failure is not None:\n        raise RetirementError(failure, report) from failure\n    return report\n\n\ndef main():\n    parser = argparse.ArgumentParser(description=__doc__)\n    parser.add_argument('--retire', action='store_true', help='unlink only six qualified fixed loose transfer files')\n    args = parser.parse_args()\n    try:\n        result = operation(production_spec(), args.retire)\n    except RetirementError as exc:\n        print(json.dumps(exc.report, indent=2))\n        return 1\n    print(json.dumps(result, indent=2))\n    return 0\n\n\nif __name__ == '__main__':\n    sys.exit(main())\n",
+  "authenticated_guard_source": {
+    "path": "tmp/native-transport-retirement-20261109/retire.py",
+    "bytes": 10364,
+    "sha256": "d3b16a28e0c377d2b6f872e988a2e17d3190d7b31e3bf05935412ff57d347aaa"
+  },
+  "commands": [
+    "sudo -n nice -n 10 python3 -I -B tmp/native-loose-retirement-20261109/retire.py",
+    "sudo -n nice -n 10 python3 -I -B tmp/native-loose-retirement-20261109/retire.py --retire"
+  ],
+  "receipts": [
+    {
+      "path": "out/native-loose-retirement-20261109-01/before.json",
+      "bytes": 9687,
+      "sha256": "af24504a1b44ad26e4a91085bae656ea40ec57e55acb11c2c01a0398ae99f662"
+    },
+    {
+      "path": "out/native-loose-retirement-20261109-01/plan.json",
+      "bytes": 8189,
+      "sha256": "40151aa1a5e82d27abd037f284faba7603a3d978209d7cad276bc42f8747ea8d"
+    },
+    {
+      "path": "out/native-loose-retirement-20261109-01/retirement.json",
+      "bytes": 9935,
+      "sha256": "255c7e691e85d54550cadb8111bb74b5feee19a74f9af40eab6633f03a12be5f"
+    },
+    {
+      "path": "out/native-loose-retirement-20261109-01/after.json",
+      "bytes": 321,
+      "sha256": "328c7a6e1186a94fc07c199b1967de93adbca440ece470ca8a81e41f87bc34d0"
+    }
+  ],
+  "operation": {
+    "scope": "only six fixed loose gzip transfer copies; preserve all canonical raw/gzip files and metadata",
+    "assumption": "trusted quiescent root and Drew; not a hostile-root defense",
+    "retire_requested": true,
+    "proof_complete": true,
+    "complete": true,
+    "copies": [
+      {
+        "path": "/var/lib/a733-historical-root-retention-20261106/primary/current-A.ext4.gz",
+        "identity": [
+          64512,
+          4492664,
+          33152,
+          0,
+          0,
+          1,
+          143415593,
+          1794008610581630563,
+          1794008610581630563,
+          280112
+        ],
+        "sha256": "c80955d80719d4bba239158356645db87be7afc0948b5542207c9c42b208e92c",
+        "allocated_bytes": 143417344
+      },
+      {
+        "path": "/var/lib/a733-historical-root-retention-20261106/primary/current-B.ext4.gz",
+        "identity": [
+          64512,
+          4492668,
+          33152,
+          0,
+          0,
+          1,
+          143415652,
+          1794008631196716637,
+          1794008631196716637,
+          280112
+        ],
+        "sha256": "8a21d898de41a3b29d16bba313321d0d3b7afa662e85844fe940be64a385a89c",
+        "allocated_bytes": 143417344
+      },
+      {
+        "path": "/var/lib/a733-historical-root-retention-20261106/primary/guest-A.ext4.gz",
+        "identity": [
+          64512,
+          4492672,
+          33152,
+          0,
+          0,
+          1,
+          143416603,
+          1794008652479798720,
+          1794008652479798720,
+          280112
+        ],
+        "sha256": "d7e5b509118a18fed19efb447fffac12da635582f896020b93b09009a1810105",
+        "allocated_bytes": 143417344
+      },
+      {
+        "path": "/var/lib/a733-historical-root-retention-20261106/primary/guest-B.ext4.gz",
+        "identity": [
+          64512,
+          4492675,
+          33152,
+          0,
+          0,
+          1,
+          143415900,
+          1794008673419873030,
+          1794008673419873030,
+          280112
+        ],
+        "sha256": "641b207c8f077a5f0332f4ba78e7dd1228b2c4bac31559ba810c66e0ebecd3e8",
+        "allocated_bytes": 143417344
+      },
+      {
+        "path": "/var/lib/a733-historical-root-retention-20261106/primary/operator-A.ext4.gz",
+        "identity": [
+          64512,
+          4492680,
+          33152,
+          0,
+          0,
+          1,
+          143413586,
+          1794008694263940899,
+          1794008694263940899,
+          280112
+        ],
+        "sha256": "adc704a4098b481492c620c04a0c8461d5b7738df0bd4d5a653c62f7cbfd4256",
+        "allocated_bytes": 143417344
+      },
+      {
+        "path": "/var/lib/a733-historical-root-retention-20261106/primary/operator-B.ext4.gz",
+        "identity": [
+          64512,
+          4492684,
+          33152,
+          0,
+          0,
+          1,
+          143413606,
+          1794008714869002248,
+          1794008714869002248,
+          280112
+        ],
+        "sha256": "263c87d2c9e87e114c651cfa78a15a1027615a9f523a6fa25be569b2b82c8e76",
+        "allocated_bytes": 143417344
+      },
+      {
+        "path": "/var/lib/a733-historical-root-retention-20261106/secondary/current-A.ext4.gz",
+        "identity": [
+          64512,
+          4492667,
+          33152,
+          0,
+          0,
+          1,
+          143415593,
+          1794008630842715215,
+          1794008630842715215,
+          280112
+        ],
+        "sha256": "c80955d80719d4bba239158356645db87be7afc0948b5542207c9c42b208e92c",
+        "allocated_bytes": 143417344
+      },
+      {
+        "path": "/var/lib/a733-historical-root-retention-20261106/secondary/current-B.ext4.gz",
+        "identity": [
+          64512,
+          4492671,
+          33152,
+          0,
+          0,
+          1,
+          143415652,
+          1794008652103797330,
+          1794008652103797330,
+          280112
+        ],
+        "sha256": "8a21d898de41a3b29d16bba313321d0d3b7afa662e85844fe940be64a385a89c",
+        "allocated_bytes": 143417344
+      },
+      {
+        "path": "/var/lib/a733-historical-root-retention-20261106/secondary/guest-A.ext4.gz",
+        "identity": [
+          64512,
+          4492651,
+          33152,
+          0,
+          0,
+          1,
+          143416603,
+          1794008673055871792,
+          1794008673055871792,
+          280112
+        ],
+        "sha256": "d7e5b509118a18fed19efb447fffac12da635582f896020b93b09009a1810105",
+        "allocated_bytes": 143417344
+      },
+      {
+        "path": "/var/lib/a733-historical-root-retention-20261106/secondary/guest-B.ext4.gz",
+        "identity": [
+          64512,
+          4492678,
+          33152,
+          0,
+          0,
+          1,
+          143415900,
+          1794008693904939781,
+          1794008693904939781,
+          280112
+        ],
+        "sha256": "641b207c8f077a5f0332f4ba78e7dd1228b2c4bac31559ba810c66e0ebecd3e8",
+        "allocated_bytes": 143417344
+      },
+      {
+        "path": "/var/lib/a733-historical-root-retention-20261106/secondary/operator-A.ext4.gz",
+        "identity": [
+          64512,
+          4492683,
+          33152,
+          0,
+          0,
+          1,
+          143413586,
+          1794008714513001235,
+          1794008714513001235,
+          280112
+        ],
+        "sha256": "adc704a4098b481492c620c04a0c8461d5b7738df0bd4d5a653c62f7cbfd4256",
+        "allocated_bytes": 143417344
+      },
+      {
+        "path": "/var/lib/a733-historical-root-retention-20261106/secondary/operator-B.ext4.gz",
+        "identity": [
+          64512,
+          4492687,
+          33152,
+          0,
+          0,
+          1,
+          143413606,
+          1794008735432058004,
+          1794008735432058004,
+          280112
+        ],
+        "sha256": "263c87d2c9e87e114c651cfa78a15a1027615a9f523a6fa25be569b2b82c8e76",
+        "allocated_bytes": 143417344
+      }
+    ],
+    "sources": [
+      {
+        "path": "/home/drew/orange-pi-4-pro/out/historical-root-retention-20261106/inbox/current-A.ext4.gz",
+        "identity": [
+          64512,
+          4492649,
+          33204,
+          1000,
+          1000,
+          1,
+          143415593,
+          1794008550274339090,
+          1794008550274339090,
+          280112
+        ],
+        "sha256": "c80955d80719d4bba239158356645db87be7afc0948b5542207c9c42b208e92c",
+        "allocated_bytes": 143417344
+      },
+      {
+        "path": "/home/drew/orange-pi-4-pro/out/historical-root-retention-20261106/inbox/current-B.ext4.gz",
+        "identity": [
+          64512,
+          4492652,
+          33204,
+          1000,
+          1000,
+          1,
+          143415652,
+          1794008550465340111,
+          1794008550465340111,
+          280112
+        ],
+        "sha256": "8a21d898de41a3b29d16bba313321d0d3b7afa662e85844fe940be64a385a89c",
+        "allocated_bytes": 143417344
+      },
+      {
+        "path": "/home/drew/orange-pi-4-pro/out/historical-root-retention-20261106/inbox/guest-A.ext4.gz",
+        "identity": [
+          64512,
+          4492653,
+          33204,
+          1000,
+          1000,
+          1,
+          143416603,
+          1794008550651341105,
+          1794008550651341105,
+          280112
+        ],
+        "sha256": "d7e5b509118a18fed19efb447fffac12da635582f896020b93b09009a1810105",
+        "allocated_bytes": 143417344
+      },
+      {
+        "path": "/home/drew/orange-pi-4-pro/out/historical-root-retention-20261106/inbox/guest-B.ext4.gz",
+        "identity": [
+          64512,
+          4492654,
+          33204,
+          1000,
+          1000,
+          1,
+          143415900,
+          1794008550835342089,
+          1794008550835342089,
+          280112
+        ],
+        "sha256": "641b207c8f077a5f0332f4ba78e7dd1228b2c4bac31559ba810c66e0ebecd3e8",
+        "allocated_bytes": 143417344
+      },
+      {
+        "path": "/home/drew/orange-pi-4-pro/out/historical-root-retention-20261106/inbox/operator-A.ext4.gz",
+        "identity": [
+          64512,
+          4492655,
+          33204,
+          1000,
+          1000,
+          1,
+          143413586,
+          1794008551028343120,
+          1794008551028343120,
+          280112
+        ],
+        "sha256": "adc704a4098b481492c620c04a0c8461d5b7738df0bd4d5a653c62f7cbfd4256",
+        "allocated_bytes": 143417344
+      },
+      {
+        "path": "/home/drew/orange-pi-4-pro/out/historical-root-retention-20261106/inbox/operator-B.ext4.gz",
+        "identity": [
+          64512,
+          4492656,
+          33204,
+          1000,
+          1000,
+          1,
+          143413606,
+          1794008551214344111,
+          1794008551214344111,
+          280112
+        ],
+        "sha256": "263c87d2c9e87e114c651cfa78a15a1027615a9f523a6fa25be569b2b82c8e76",
+        "allocated_bytes": 143417344
+      }
+    ],
+    "attempted": [
+      "/home/drew/orange-pi-4-pro/out/historical-root-retention-20261106/inbox/current-A.ext4.gz",
+      "/home/drew/orange-pi-4-pro/out/historical-root-retention-20261106/inbox/current-B.ext4.gz",
+      "/home/drew/orange-pi-4-pro/out/historical-root-retention-20261106/inbox/guest-A.ext4.gz",
+      "/home/drew/orange-pi-4-pro/out/historical-root-retention-20261106/inbox/guest-B.ext4.gz",
+      "/home/drew/orange-pi-4-pro/out/historical-root-retention-20261106/inbox/operator-A.ext4.gz",
+      "/home/drew/orange-pi-4-pro/out/historical-root-retention-20261106/inbox/operator-B.ext4.gz"
+    ],
+    "removed": [
+      "/home/drew/orange-pi-4-pro/out/historical-root-retention-20261106/inbox/current-A.ext4.gz",
+      "/home/drew/orange-pi-4-pro/out/historical-root-retention-20261106/inbox/current-B.ext4.gz",
+      "/home/drew/orange-pi-4-pro/out/historical-root-retention-20261106/inbox/guest-A.ext4.gz",
+      "/home/drew/orange-pi-4-pro/out/historical-root-retention-20261106/inbox/guest-B.ext4.gz",
+      "/home/drew/orange-pi-4-pro/out/historical-root-retention-20261106/inbox/operator-A.ext4.gz",
+      "/home/drew/orange-pi-4-pro/out/historical-root-retention-20261106/inbox/operator-B.ext4.gz"
+    ],
+    "durable": [
+      "/home/drew/orange-pi-4-pro/out/historical-root-retention-20261106/inbox/current-A.ext4.gz",
+      "/home/drew/orange-pi-4-pro/out/historical-root-retention-20261106/inbox/current-B.ext4.gz",
+      "/home/drew/orange-pi-4-pro/out/historical-root-retention-20261106/inbox/guest-A.ext4.gz",
+      "/home/drew/orange-pi-4-pro/out/historical-root-retention-20261106/inbox/guest-B.ext4.gz",
+      "/home/drew/orange-pi-4-pro/out/historical-root-retention-20261106/inbox/operator-A.ext4.gz",
+      "/home/drew/orange-pi-4-pro/out/historical-root-retention-20261106/inbox/operator-B.ext4.gz"
+    ],
+    "free_bytes_after_descriptors_closed": 1280180224
+  },
+  "postcheck": {
+    "time_utc": "2026-11-09T10:02:32.222608+00:00",
+    "canonical_files_unchanged_including_atime": 24,
+    "sources_removed_and_parent_fsynced": 6,
+    "inbox_directory_retained": true,
+    "free_bytes": 1280147456,
+    "removed_logical_bytes": 860490940,
+    "removed_allocated_bytes": 860504064,
+    "hardware_acceptance": false
+  },
+  "limits": [
+    "Known Linux initial PID/user namespace inode admission; unrestricted host proc view; trusted quiescent root/Drew and stable mounts required.",
+    "All 18 gzip files hash-verified before deletion; all 24 canonical raw/gzip inode and metadata records, including access times, unchanged. Raw content was not reread during this cleanup.",
+    "Filesystem free-space change includes unrelated host activity; removed allocation is measured separately.",
+    "Only six loose transfer duplicates removed; inbox directory, both canonical copies and all other files retained.",
+    "No Orange Pi storage, boot, SPI, workload or service changes."
+  ]
+}

@@ -88,6 +88,10 @@ power and full thermal endurance remain unproven.
   They use root-payload manifest `4f28…`, distinct from the whole-drive manifest.
   A read-only check matches all 40 installed maintenance files; physical update,
   activation and rollback remain unperformed. Preserve the running workload.
+- Native evidence capacity is **1,280,147,456 free bytes** after reviewed
+  retirement of six redundant transfer files. Both protected copies and all
+  24 historical canonical raw/gzip files retain their identities and metadata.
+  [Actual cleanup evidence](evidence/native-loose-transfer-retirement-20261109.json).
 - Builder LV now **94,459,920,384 bytes**, VG free **38,625,345,536 bytes**;
   free immediately after growth **25,303,740,416 bytes**. The operator approves
   **all free capacity on the Ubuntu build host for use/expansion without another
