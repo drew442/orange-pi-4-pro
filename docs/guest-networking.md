@@ -9,7 +9,9 @@ Guests retain QEMU's restricted user network. An optional, explicitly configured
 TCP forward binds only to host `127.0.0.1`, targeting `10.0.2.15` inside that
 guest's private user network. No bridge, TAP, host route, firewall or management
 interface is changed. There is no outward NAT profile in this implementation.
-Actual board networking and a KVM guest network exchange remain unproven.
+[Actual nonroot KVM HTTP exchange](kvm-vgic-results-20261108.md) and later
+[changed-B/rolled-back-A exchanges](physical-host-update-rollback-20261110.md)
+pass on the physical board. Final release acceptance remains incomplete.
 
 QEMU documents that `restrict=on` isolates the guest from the host/outside while
 allowing explicitly configured forwarding. The fixed host address avoids the

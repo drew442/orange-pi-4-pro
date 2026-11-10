@@ -1,4 +1,9 @@
-# Current managed host root components
+# Historical managed host root components, November 4
+
+This page preserves the November 4 component checkpoint. For the selected
+normalized roots and full distribution use [current images](current-images.md)
+and [implementation status](implementation-status.md). The unperformed checks
+below describe this historical checkpoint, not the current hardware record.
 
 Fresh immutable A/B roots now contain the current complete maintenance and guest
 management tree, including optional isolated loopback networking. They preserve
