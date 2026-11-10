@@ -95,6 +95,11 @@ NVMe before staging. Record the intended RAM boot UUID off-board and set
 `A733_RAM_BOOT_ID` to that exact value in the following session. A UUID observed
 on an unexpected host is not a valid identity check.
 
+The older RAM image's banner warns against payload staging in `/run`. This
+procedure deliberately permits only the bounded 545581074-byte compressed
+distribution on this observed 12 GiB board under the guards above. The expanded
+256060514304-byte image is never staged; it is decoded directly to NVMe.
+
 The RAM image's authenticated [source manifest](evidence/ssh-ram-installer-20261108.json)
 records these installed tool pins. Verify them on the board before using them:
 

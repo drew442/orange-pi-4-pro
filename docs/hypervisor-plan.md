@@ -46,7 +46,7 @@ Proposed NVMe GPT layout, subject to bootloader filesystem support:
 
 Calculate from actual bytes, not a presumed 250 GiB. Use stable PARTUUIDs or filesystem UUIDs. Keep root read-only, `/run` and `/tmp` in bounded tmpfs, and persistent state on NVMe. Disable disk swap initially; evaluate bounded zram after memory measurements. Snapshots are not backups.
 
-SD artifacts must fit the actual card byte count, including bootloader reservations and partition tables. Target an uncompressed installer image below 1.8 GB decimal and fail packaging if it exceeds the device. Stream the NVMe payload over wired networking or read it from USB; do not stage a large payload on SD or in RAM. No larger temporary SD is available or required by this plan; the first diagnostic image must also fit the available card.
+SD artifacts must fit the actual card byte count, including bootloader reservations and partition tables. Target an uncompressed installer image below 1.8 GB decimal and fail packaging if it exceeds the device. Stream the NVMe payload over wired networking or read it from USB; never stage the expanded NVMe image on SD or in RAM. The recorded 12 GiB board also permits the selected 545,581,074-byte compressed distribution in private RAM under the deployment guide's 2 GiB tmpfs limit, no-swap check and 3 GiB available-memory admission. Decode directly to NVMe with progress; larger distributions require streamed delivery or identified external storage. No larger temporary SD is available or required by this plan; the first diagnostic image must also fit the available card.
 
 ## Agent work packages and dependency gates
 
