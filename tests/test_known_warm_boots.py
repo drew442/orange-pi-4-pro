@@ -28,6 +28,42 @@ def response(boot=START, **changes):
     return dict(returncode=0, timed_out=False, truncated=False,
                 stdout_b64=base64.b64encode(json.dumps(data).encode()).decode())
 
+# Exact retained first warm-request SSH response (2026-11-10); no device access.
+CLOSED_REQUEST = {
+    'argv': ['ssh', '-T', '-i', '/home/drew/.ssh/id_ed25519', '-o', 'IdentitiesOnly=yes', '-o', 'BatchMode=yes', '-o', 'StrictHostKeyChecking=yes', '-o', 'HostKeyAlias=192.168.1.116', '-o', 'ConnectTimeout=5', 'root@192.168.1.116', 'python3 -I -B -'],
+    'returncode': 255,
+    'timed_out': False,
+    'truncated': False,
+    'stdout_b64': (
+        'eyJyZWxlYXNlX2JpbmRpbmciOiB7Im1hbmlmZXN0X3NoYTI1NiI6ICIzY2JlMjhkNjE1NGQxYmRlYjhkMzY0YmQwZjhiZjgy'
+        'YjYxZmQ0MGFmN2JlMjdmYmQ0OTY5NTc3MWM0ZmFkMDhmIiwgImd6aXBfc2hhMjU2IjogIjNiYzAyZjQ2ZDI3MmRjYWM1OTFk'
+        'NDM1ZmZmMmIxYmM5OGQ0ZmIwNDg1NjlmYjIxMjA3NDYxNDU5MjlhOGFkNjQiLCAicmF3X3NoYTI1NiI6ICIxZmE5MTQ0ZDdh'
+        'MTI2OTA2NmM5MWE5NGJmYjEwNWE5YWM0ZTQwODNkNDcwN2RkNjc5MWU4YWMyZjI2OTAyY2Q5IiwgInNsb3QiOiAiQSIsICJy'
+        'b290X2RldmljZSI6ICIvZGV2L252bWUwbjFwMiIsICJyb290X2lkIjogIjI1OToyIiwgImJvb3Rfcm91dGUiOiAia25vd24t'
+        'U1UwMkctU0Q7IGluZGVwZW5kZW50IGZpcm13YXJlIGF1ZGl0IGFuZCBzZXJpYWwgcmV2aWV3IHJlcXVpcmVkIn0sICJmaWxl'
+        'X2hhc2hlcyI6IHsiL3Vzci9saWIvb3JhbmdlcGktaHlwZXJ2aXNvci9ob3N0LW1hbmFnZW1lbnQucHkiOiAiNjZmYmVhZjhh'
+        'OTM5YWQwNzNmMTgzYjg4YTM5MTBiZmQ2Mjc5NGZmYTljNDg1ZjJjMWYxYWRhYzVhYjVmODcyOCIsICIvdXNyL2xpYi9vcmFu'
+        'Z2VwaS1oeXBlcnZpc29yL3BheWxvYWQuanNvbiI6ICIyODY0OTQwNzNjZTNhMGI2OTQ0M2Y5NjM4OWRiYmNlMTFhYjAxNTcw'
+        'NWY3ZTlmMDVjN2E3Y2YwNjUwM2RhODY2IiwgIi9ydW4vYTczMy1zdGF0ZS9ib290L3NlbGVjdGVkLmNvbmYiOiAiM2M3NmI5'
+        'NmMzMjhiNDUwOGZmNDA3Yzg1OTQzNTJlMDQzODk2NjRlOTdjZWQ2ZjBhMDkyODRjYWRlNWJkMDI3YiJ9LCAicm9vdF9kZXZp'
+        'Y2UiOiAiL2Rldi9udm1lMG4xcDIiLCAicm9vdF9pZCI6ICIyNTk6MiIsICJib290X2lkIjogImQ5ZTk0ZDU0LTc5YmItNDlj'
+        'My1hZDcyLTI2NzJhOWM3MWM2YSIsICJndWFyZHNfcGFzc2VkIjogdHJ1ZSwgImhhcmR3YXJlX2FjY2VwdGFuY2UiOiBmYWxz'
+        'ZSwgImt2bV9hcGkiOiAxMiwgImlycWNoaXAiOiAxLCAibnRwIjogInllcyIsICJjcHVzIjogIjAtNyIsICJzZF9zdGF0Ijog'
+        'WzE5NjQsIDAsIDM4NjY3MTIsIDMxMjY4NCwgMCwgMCwgMCwgMCwgMCwgMTY1MDMyLCAzMTI2ODQsIDAsIDAsIDAsIDAsIDAs'
+        'IDBdLCAidW5pdHMiOiBbXSwgImVsMiI6IHRydWUsICJrZXJuZWwiOiAiNi42Ljk4LWE3MzMtZGlhZyIsICJuYW1lc3BhY2Vz'
+        'IjogeyJwaWQiOiB7ImRldiI6IDQsICJpbm9kZSI6IDQwMjY1MzE4MzZ9LCAidXNlciI6IHsiZGV2IjogNCwgImlub2RlIjog'
+        'NDAyNjUzMTgzN30sICJtbnQiOiB7ImRldiI6IDQsICJpbm9kZSI6IDQwMjY1MzE4NDF9fSwgIm1hbmFnZW1lbnRfYWRkcmVz'
+        'cyI6ICIxOTIuMTY4LjEuMTE2IiwgInN0YXRlX21hcmtlciI6ICJhNzMzLXN0YXRlLXYxXG4zNjBkZmIzOS1mNDlmLTQ4N2Ut'
+        'YjMwNy0wYmI4ODdjODU0YzUiLCAibnZtZSI6IHsic2VyaWFsIjogIjEzNDgwNzE5MEZDNzAwMTQ5Mjc3IiwgIm1vZGVsIjog'
+        'IlNQQ0MgTS4yIFBDSWUgU1NEIiwgImJ5dGVzIjogMjU2MDYwNTE0MzA0fSwgInNkIjogeyJjaWQiOiAiMDM1MzQ0NTM1NTMw'
+        'MzI0NzgwNzE2ZjIxNmUwMGE4ZjUiLCAibW9kZWwiOiAiU1UwMkciLCAiYnl0ZXMiOiAxOTc3NjE0MzM2fSwgImluaXRpYWxp'
+        'emF0aW9uX2xvZyI6IFsiWyAgICAwLjMwNTY2OV0gQ1BVOiBBbGwgQ1BVKHMpIHN0YXJ0ZWQgYXQgRUwyIiwgIlsgICAgMS43'
+        'OTY2NzNdIGt2bSBbMV06IFZIRSBtb2RlIGluaXRpYWxpemVkIHN1Y2Nlc3NmdWxseSJdfQo='
+    ),
+    'stderr_b64': 'Q29ubmVjdGlvbiB0byAxOTIuMTY4LjEuMTE2IGNsb3NlZCBieSByZW1vdGUgaG9zdC4NCg==',
+}
+CLOSED_BOOT = json.loads(base64.b64decode(CLOSED_REQUEST['stdout_b64']))['boot_id']
+
 
 class WarmTests(unittest.TestCase):
     def setUp(self):
@@ -70,6 +106,88 @@ class WarmTests(unittest.TestCase):
         self.assertEqual(sum(reboot for _, reboot in calls), 10)
         self.assertEqual(len([x for x in self.events() if x['event'] == 'observed']), 10)
         self.assertTrue(all(x['hardware_acceptance'] is False for x in self.events()))
+
+    def test_exact_closed_request_is_admission_only_then_one_observed_boot(self):
+        original = json.dumps(CLOSED_REQUEST, sort_keys=True)
+        records = iter([response(CLOSED_BOOT), CLOSED_REQUEST, response(START),
+                        response(START, release_binding={})])
+        calls = []
+        def probe(expected=None, reboot=False, timeout=30):
+            calls.append(reboot)
+            return next(records)
+        with self.assertRaisesRegex(ValueError, 'release binding'), contextlib.redirect_stdout(io.StringIO()):
+            w.collect(self.evidence, CLOSED_BOOT, probe, lambda: 'retained')
+        events = self.events()
+        self.assertEqual(calls, [False, True, False, False])
+        self.assertEqual(events[-1]['completed'], 1)
+        self.assertEqual(json.dumps(CLOSED_REQUEST, sort_keys=True), original)
+        self.assertEqual(next(e['transport'] for e in events if e['event'] == 'request-response'), CLOSED_REQUEST)
+        closed = next(e for e in events if e['event'] == 'reboot-admission-transport-closed')
+        self.assertEqual(closed['command_exit'], 'UNKNOWN')
+        self.assertEqual(closed['completed'], 0)
+        self.assertEqual([e['boot_id'] for e in events if e['event'] == 'observed'], [START])
+
+    def test_ten_closed_request_sequences(self):
+        current, requests = [1], []
+        def probe(expected=None, reboot=False, timeout=30):
+            old = str(uuid.UUID(int=current[0]))
+            if not reboot:
+                return response(old)
+            requests.append(expected)
+            data = json.loads(base64.b64decode(CLOSED_REQUEST['stdout_b64']))
+            data['boot_id'] = old
+            current[0] += 1
+            return {**CLOSED_REQUEST, 'stdout_b64': base64.b64encode(json.dumps(data).encode()).decode()}
+        with contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(w.collect(self.evidence, START, probe, lambda: 'retained'), 10)
+        self.assertEqual(len(requests), 10)
+        self.assertEqual(len([e for e in self.events() if e['event'] == 'observed']), 10)
+        self.assertEqual(len([e for e in self.events() if e['event'] == 'reboot-admission-transport-closed']), 10)
+
+    def test_closed_request_failures_stop_before_polling_or_more_requests(self):
+        invalid = [{**CLOSED_REQUEST, **changes} for changes in (
+            {'timed_out': True}, {'truncated': True}, {'returncode': 1},
+            {'stdout_b64': ''}, {'stdout_b64': 'e30='}, {'stdout_b64': '!'},
+            {'stderr_b64': ''}, {'stderr_b64': '!'},
+            {'stderr_b64': base64.b64encode(b'Connection reset by peer\n').decode()})]
+        data = json.loads(base64.b64decode(CLOSED_REQUEST['stdout_b64']))
+        for key in data:
+            missing = {k: v for k, v in data.items() if k != key}
+            invalid.append({**CLOSED_REQUEST, 'stdout_b64': base64.b64encode(json.dumps(missing).encode()).decode()})
+        for changes in ({'release_binding': {}}, {'boot_id': START}, {'guards_passed': False},
+                        {'namespaces': {}}, {'units': [{'unit': 'a733-guest', 'MainPID': '9', 'ActiveState': 'active', 'SubState': 'running'}]},
+                        {'state_marker': 'wrong'}, {'initialization_log': []}):
+            invalid.append({**CLOSED_REQUEST, 'stdout_b64': base64.b64encode(json.dumps({**data, **changes}).encode()).decode()})
+        for raw in invalid:
+            with self.subTest(raw=raw):
+                records = iter([response(CLOSED_BOOT), raw])
+                calls = []
+                def probe(expected=None, reboot=False, timeout=30):
+                    calls.append(reboot)
+                    return next(records)
+                with self.assertRaises((ValueError, KeyError, TypeError)), contextlib.redirect_stdout(io.StringIO()):
+                    w.collect(self.evidence, CLOSED_BOOT, probe, lambda: 'retained')
+                self.assertEqual(calls, [False, True])
+                self.assertEqual(self.events()[-1]['completed'], 0)
+
+    def test_closed_request_is_not_ordinary_probe_success(self):
+        with self.assertRaisesRegex(ValueError, 'SSH probe failed'):
+            w.decode(CLOSED_REQUEST)
+
+    def test_closed_request_old_boot_hits_deadline_without_reissue_or_count(self):
+        ticks, requests = [0], []
+        def probe(expected=None, reboot=False, timeout=30):
+            if reboot:
+                requests.append(expected)
+                return CLOSED_REQUEST
+            return response(CLOSED_BOOT)
+        def sleep(seconds): ticks[0] += seconds
+        with self.assertRaisesRegex(ValueError, 'deadline'), contextlib.redirect_stdout(io.StringIO()):
+            w.collect(self.evidence, CLOSED_BOOT, probe, lambda: 'retained', lambda: ticks[0], sleep)
+        self.assertEqual(requests, [CLOSED_BOOT])
+        self.assertEqual(ticks[0], 300)
+        self.assertEqual(self.events()[-1]['completed'], 0)
+        self.assertFalse(any(e['event'] == 'observed' for e in self.events()))
 
     def test_selected_bytes_use_canonical_root_selection_format(self):
         spec = importlib.util.spec_from_file_location('warm_test_selection', ROOT / 'build/root-selection.py')

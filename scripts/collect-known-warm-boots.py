@@ -453,6 +453,47 @@ def decode(record):
     return data
 
 
+def decode_reboot_admission(record):
+    """Validate guards after the known SSH close without claiming command exit."""
+    if record.get('returncode') != 255:
+        return decode(record), False
+    require(record.get('timed_out') is False and record.get('truncated') is False,
+            'reboot admission SSH timeout/oversized')
+    require(base64.b64decode(record['stderr_b64'], validate=True) ==
+            b'Connection to 192.168.1.116 closed by remote host.\r\n',
+            'unexpected reboot admission SSH close')
+    # Normalize a copy solely to reuse JSON/guard validation. The original
+    # returncode remains 255 in retained evidence; systemctl's exit is unknown.
+    data = decode({**record, 'returncode': 0})
+    require(data['management_address'] == '192.168.1.116' and
+            data['state_marker'] == 'a733-state-v1\n360dfb39-f49f-487e-b307-0bb887c854c5' and
+            data['nvme'] == {'serial': '134807190FC700149277', 'model': 'SPCC M.2 PCIe SSD', 'bytes': 256060514304} and
+            data['sd'] == {'cid': '035344535530324780716f216e00a8f5', 'model': 'SU02G', 'bytes': 1977614336},
+            'reboot admission identity differs')
+    namespaces = data['namespaces']
+    require(set(namespaces) == {'pid', 'user', 'mnt'} and
+            namespaces['pid'] == {'dev': 4, 'inode': 0xeffffffc} and
+            namespaces['user'] == {'dev': 4, 'inode': 0xeffffffd} and
+            set(namespaces['mnt']) == {'dev', 'inode'} and
+            namespaces['mnt']['dev'] == 4 and
+            type(namespaces['mnt']['inode']) is int and namespaces['mnt']['inode'] > 0,
+            'reboot admission namespace proof differs')
+    require(type(data['units']) is list and all(
+            set(row) == {'unit', 'MainPID', 'ActiveState', 'SubState'} and
+            row['MainPID'] == '0' and
+            (row['ActiveState'] in ('inactive', 'failed') or
+             (row['ActiveState'] == 'active' and row['SubState'] == 'exited')) and
+            isinstance(row['unit'], str) for row in data['units']),
+            'reboot admission workload running')
+    log = data['initialization_log']
+    require(type(log) is list and all(isinstance(line, str) for line in log) and
+            any('All CPU(s) started at EL2' in line for line in log) and
+            any('VHE mode initialized successfully' in line for line in log) and
+            not any('HYP mode not available' in line for line in log),
+            'reboot admission initialization log differs')
+    return data, True
+
+
 class Evidence:
     def __init__(self, tag):
         require(re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_-]{0,79}', tag), 'invalid tag')
@@ -493,7 +534,12 @@ def collect(evidence, start, probe=transport, preserved=retained_outcome, clock=
             deadline = clock() + 300
             raw = probe(current, reboot=True)
             evidence.save('request-response', cycle=cycle, transport=raw)
-            require(decode(raw)['boot_id'] == current, 'reboot admission differs')
+            admission, transport_closed = decode_reboot_admission(raw)
+            require(admission['boot_id'] == current, 'reboot admission differs')
+            if transport_closed:
+                evidence.save('reboot-admission-transport-closed', cycle=cycle, boot_id=current,
+                              classification='transport-closed-before-command-exit',
+                              command_exit='UNKNOWN', completed=completed)
             while True:
                 require(clock() < deadline, '300-second new-boot deadline exceeded')
                 raw = probe(timeout=min(30, max(.01, deadline - clock())))
