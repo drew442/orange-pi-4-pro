@@ -11,7 +11,8 @@ checkpoint and restart. The eight-hour workload gate passes using retained
 longer-run data, without another endurance run. Physical host restoration,
 changed-root update, selection interruption/cancellation and healthy manual
 rollback also pass with independent UART capture/control. The earlier SSH failure
-remains unexplained. **Release acceptance is incomplete.**
+remains unexplained. **Release acceptance is incomplete:** ten physical cold boots and their final
+SD comparison remain. See the [release checklist](docs/release-acceptance.md).
 
 The [build/deployment plan](docs/hypervisor-plan.md),
 [selected architecture](docs/architecture.md),

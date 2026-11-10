@@ -123,4 +123,17 @@ not the required hardware observations.
 
 Final documentation must include architecture and boot-chain diagrams, pinned component versions, build commands and host prerequisites, byte-accurate image layouts, installer usage, guest creation and networking, SD write policy, update/rollback procedures, recovery, backup/restore, known SSD limitations, and test logs. Link upstream references beside the relevant instructions. A second agent or operator must follow the guide from a clean environment and report discrepancies.
 
-Use the Ubuntu 22.04 build host at `drew@build.drewnet.online` described in `docs/build-host-assessment.md`. The diagnostic stack and binary inputs are locked, and physical first boot has supplied RAM, SD and NVMe inventory. The reviewed EL2 handoff has now booted physically with KVM VHE initialization. The preparation boot has demonstrated automatic vendor PHY binding, DHCP, routing/DNS and verified HTTPS after manual clock correction; installed DHCP and both SSH keys now pass after repair; the diagnostic host now passes real KVM guest CPU/disk/network, clean shutdown, checkpoint and restart tests; corrected-host validation and repeated-boot management reliability remain open. See [implementation status](implementation-status.md) for the current deployment artifacts and evidence. Continue minimal host and installer work while hardware results are pending. Full clean-build reproducibility and firmware licensing remain open. Implementation completion requires the above hardware results; a diagnostic build does not imply a working hypervisor.
+Use the Ubuntu 22.04 build host at `drew@build.drewnet.online` described in
+[build-host assessment](build-host-assessment.md). The diagnostic stack and
+binary inputs are locked, and diagnostic inventory identifies the actual RAM,
+SD and NVMe without heatsink removal. Fresh normalized installation,
+management/identity, actual nonroot KVM/checkpoint/restart, update/rollback,
+controlled recovery and independent deployment reproduction now pass. Ten
+final warm reboots and their full-SD comparison also pass. Ten genuine cold
+boots and the final cold-series SD comparison remain required. See the
+[release checklist](release-acceptance.md) for requirement-level evidence,
+[construction index](build-reproduction-status.md) for the precise scope of
+build repetition and [source inventory](toolchain-sources.md) for unresolved
+provenance. Continue useful preparation while operator hardware steps await
+input. Implementation completion requires the full acceptance evidence above;
+a diagnostic build alone does not establish a working released hypervisor.

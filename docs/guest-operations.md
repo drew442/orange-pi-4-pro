@@ -121,9 +121,8 @@ CPU/RAM budgets using the [fixture procedure](guest-fixture.md). Retain both
 `scripts/launch-kvm-guest.py` and its adjacent `guest-storage.py` when staging
 these tools. The prepared personalized root artifacts include both in the
 complete maintenance tree at `/usr/lib/a733-tools/scripts/`. See
-[current managed host roots](current-host-roots.md). The current protected boot
-pair has booted; this does not validate the prospective normalized full-image
-installation.
+[current managed host roots](current-host-roots.md). The protected boot pair and normalized full-image installation now pass
+[physical deployment and restored-guest KVM/checkpoint/restart](independent-deployment-20261110.md).
 
 Input leaves must be nonempty regular files with one hard link. Verification
 reads exactly the captured size, rejects inode/size/mode/timestamp/link changes,
@@ -162,7 +161,8 @@ erasure. [Forensic copies](guest-preservation-20261109.md) retain failed and smo
 endurance data separately; outcome preservation is not a guest-disk backup.
 [Paired host STATE/root restoration](paired-host-restore-20261110.md) and
 [controlled offline selection recovery](controlled-ssh-recovery-20261110.md)
-also pass. Final boot reliability and SD qualification remain separate gates.
+also pass. Ten [warm boots](warm-boot-validation.md) and their SD comparison pass;
+ten [cold boots](cold-boot-validation.md) and their final SD comparison remain open.
 
 The [November 9 KVM workload result](evidence/eight-hour-endurance-result-20261109.json)
 passes the current 8-hour (28,800-second) criterion with 72,659 measured seconds
@@ -178,10 +178,10 @@ passed through elapsed 72,669 seconds (cycle 2,422). Whole-card SD SHA-256 for
 counters are zero. SMART critical warning 0, media errors 0, error-log count 153
 and unsafe shutdown count 77 are unchanged from baseline. Full native UART and
 bridge snapshots (1,262,306 bytes) are byte-identical. Both preservation phases
-are complete. Required backups and remaining physical acceptance gates are still
-open. Preserve all remaining
-[hardware acceptance gates](hardware-validation.md); the specific guest restore
-does not establish complete release acceptance or normalized deployment.
+are complete. Required host/guest backups and physical normalized deployment
+now pass through the separately linked records above. The remaining
+[release gates](release-acceptance.md) require ten physical cold boots and their
+final SD comparison; this historical endurance result does not establish those.
 
 ## Verified software checks
 

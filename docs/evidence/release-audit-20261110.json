@@ -1,0 +1,65 @@
+{
+  "schema": 1,
+  "date": "2026-11-10",
+  "operation": "Coordinator release evidence consistency audit",
+  "release_acceptance": false,
+  "remaining_physical_evidence": [
+    "Ten genuine cold boots",
+    "Cold-series UART and physical power attestations",
+    "Final complete SD comparison and counter/firmware reconciliation",
+    "Verified custody of completed cold evidence"
+  ],
+  "rechecked_evidence": {
+    "docs/evidence/normalized-host-install-20261110.json": {
+      "records_rechecked": 20,
+      "bytes": 7178,
+      "sha256": "0d6d9a31be58f74063b9214f30e462368d511f2f013fcacf262771aff6508c35"
+    },
+    "docs/evidence/normalized-guest-restore-20261110.json": {
+      "records_rechecked": 86,
+      "bytes": 20815,
+      "sha256": "c656c6bb6fee7cb495a27c5667f90b0dca4e65ff0edf6060a7ec3b06d221d984"
+    },
+    "docs/evidence/final-warm-boots-20261110.json": {
+      "records_rechecked": 18,
+      "bytes": 4826,
+      "sha256": "db81136425d355533889388e7003b8335f8218d71343a03d14d02ff120fcbcc2"
+    }
+  },
+  "live_read_only_host": {
+    "raw_record": "tmp/release-audit-live-host-20261110.json",
+    "bytes": 2622,
+    "sha256": "9caa4ea626e5252908456fb9d14d584011599b063eebb073769957ac290b98d9",
+    "boot_id": "274af3d8-156c-4de8-a1ed-688c89b5aaa4",
+    "guards_passed": true,
+    "ntp": "yes",
+    "root_device": "/dev/nvme0n1p2",
+    "sd_stat": [
+      1964,
+      0,
+      3866712,
+      311122,
+      0,
+      0,
+      0,
+      0,
+      0,
+      165048,
+      311122,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "serial_capture_services": {
+    "native_main_pid": 3569662,
+    "native_restarts": 0,
+    "native_active": true,
+    "bridge_main_pid": 604,
+    "bridge_active": true
+  },
+  "scope": "Rechecked current evidence pins and live release/device/readiness guards. No reboot, poweroff, KVM relaunch, image readback, SPI write or endurance rerun."
+}

@@ -1,7 +1,9 @@
 # Build reproduction status
 
-Updated 2026-11-09. This index describes construction evidence. Physical release
-acceptance and independent deployment reproduction remain incomplete; see
+Updated 2026-11-10. This index describes construction evidence.
+[Independent physical deployment reproduction](independent-deployment-20261110.md)
+passes; physical release acceptance still needs ten cold boots and their final
+SD comparison. See
 [implementation status](implementation-status.md).
 
 ## Current component chain
@@ -9,11 +11,11 @@ acceptance and independent deployment reproduction remain incomplete; see
 | Component | Verified result | Remaining scope |
 | --- | --- | --- |
 | Pinned userspace | [Account-date/time-profile replay](account-date-replay-driver.md) preserves the 221-package archive and full 15,909-member readback; archive SHA `0ead62…` | Complete independently provisioned builder reproduction remains open |
-| Normalized A/B roots | [Two fresh 4 GiB pairs](deterministic-host-roots.md) match all raw/gzip bytes, all four full filesystem readbacks and maintenance markers | Same qualified builder; physical corrected-root policy verification is pending |
+| Normalized A/B roots | [Two fresh 4 GiB pairs](deterministic-host-roots.md) match all raw/gzip bytes, all four full filesystem readbacks and maintenance markers | Same qualified builder; corrected policy passes on both normalized B and fresh A ([physical evidence](implementation-status.md#acceptance-evidence)) |
 | Matched STATE | [Full 8 GiB construction/readback](public-config-state.md), SHA `2e9d3d…`, selects normalized A marker `286494…` and preserves UUID `360dfb39-f49f-487e-b307-0bb887c854c5` | This is an unpersonalized component, not a backup of the running board |
 | Protected boot pair | [Protected SD/NVMe BOOT evidence](evidence/protected-state-maintenance-20261109.json); 256 MiB SD SHA `ab5e…`, NVMe BOOT SHA `cc2a…`; actual protected host boot passes | Firmware loading Linux files from NVMe and SPI/SD-removed boot remain unperformed |
-| Normalized full NVMe | [Two fresh-checkout streams](evidence/normalized-full-nvme-image-20261109.json) match all raw/gzip bytes; complete independent hashes, framing/EOF, GPT and replacement inclusion pass | [Isolated serialization also passes](evidence/isolated-nvme-composition-20261109.json); fresh installation and independent deployment reproduction remain pending |
-| Matched maintenance | [Normalized candidates](normalized-maintenance-20261109.md) pass full source/copy comparison and offline old/new API checks; old A rollback pair is retained separately | Live guards, interruption, activation and manual rollback remain physical gates |
+| Normalized full NVMe | [Two fresh-checkout streams](evidence/normalized-full-nvme-image-20261109.json) match all raw/gzip bytes; complete independent hashes, framing/EOF, GPT and replacement inclusion pass | [Isolated serialization also passes](evidence/isolated-nvme-composition-20261109.json); [fresh installation and independent deployment reproduction pass](independent-deployment-20261110.md) |
+| Matched maintenance | [Normalized candidates](normalized-maintenance-20261109.md) pass full source/copy comparison and offline old/new API checks; old A rollback pair is retained separately | [Live guards, interruption, activation and manual rollback pass physically](physical-host-update-rollback-20261110.md) |
 | SPI preparation | [Caller/capture](known-spi-programmer.md) and underlying engine/backend pass independent source review and the privileged Ubuntu suite | Recovery proof is unregistered; write admission is disabled before device opening |
 
 The selected full gzip is **545,581,074 bytes**, SHA-256
@@ -22,7 +24,9 @@ Its logical size is **256,060,514,304 bytes**, SHA-256
 `1fa9144d7a1269066c91a94bfb105a9ac4e4083d4707dd6791e8ac2f26902cd9`.
 Both 118,399-byte manifests retain separate timing/resource measurements.
 The native selected artifact is `out/normalized-nvme-candidate-20261109/`.
-It is unbooted and must be personalized for this same board before use.
+The distribution was installed and personalized on this board; normalized A and
+restored KVM/checkpoint/restart pass. The factory artifact still requires
+same-board personalization on any later full installation.
 
 ## What repetition proves
 
@@ -36,16 +40,19 @@ the old 256 GB stream was not decoded again in this review.
 
 This establishes repeatability on one qualified Ubuntu 22.04 builder with those
 fixed component inputs. It does not establish an independently provisioned
-builder, a fresh rebuild of every toolchain component or a second operator's
-physical installation. Fresh machine identity is intentionally installation
+builder or a fresh rebuild of every toolchain component. The separate
+[physical reproduction record](independent-deployment-20261110.md) establishes
+that later installation. Fresh machine identity is intentionally installation
 specific; the same-board personalization step preserves this board's private
 identity without changing the selected root pairing.
 
-Latest complete privileged validation is **2,264 Python tests**, zero skips,
+Latest complete privileged validation is **2,304 Python tests**, zero skips,
 errors or failures, plus five shell suites and five diagnostic assembly cases.
-Five TOML files parse separately on codex. [Retained suite and isolated-composer preparation](evidence/isolated-nvme-composition-preparation-20261109.json)
-record the source pins and initial validation-environment failures. These are
-software checks.
+Five TOML files parse separately on codex. The
+[cold-collector validation](evidence/cold-boot-collector-validation-20261110.json)
+records source pins and actual terminal results. Earlier
+[isolated-composer preparation](evidence/isolated-nvme-composition-preparation-20261109.json)
+retains its corrected validation-environment failures. These are software checks.
 
 ## Resources and unresolved inputs
 

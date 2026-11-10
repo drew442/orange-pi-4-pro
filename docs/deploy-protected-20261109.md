@@ -255,7 +255,9 @@ Restore the authenticated guest backup using [guest restoration](guest-restorati
 and demonstrate actual KVM execution/checkpoint/restart on the fresh installation.
 Reconcile final firmware/SSD identity with the qualifying eight-hour workload data and boot-cycle records;
 count no accidental restart as a measured cycle. Full SD comparisons, firmware
-write audit and final cold/warm cycles remain [physical acceptance gates](hardware-validation.md).
+write audit and [ten warm cycles](warm-boot-validation.md) now pass.
+Ten [cold cycles](cold-boot-validation.md) and their final SD comparison remain
+[physical acceptance gates](hardware-validation.md).
 Interrupted update, rollback, NVMe-driver fault recovery and dirty-STATE recovery
 already have retained physical evidence linked above; do not repeat them solely
 for this installation. SPI recovery is required before SPI programming; the

@@ -10,7 +10,11 @@ The [corrected host](evidence/corrected-host-boot-20261108.json) now passes auto
 NTP and [restored KVM boots 3 → 4 → 5](evidence/corrected-host-guest-restore-20261108.json).
 The [physical changed-B update and old-A rollback](physical-host-update-rollback-20261110.md)
 also pass with actual KVM counters 7/8 and retained clean exits.
-Release acceptance remains incomplete. Host-only checks are recorded separately in
+[Fresh normalized deployment and independent reproduction](independent-deployment-20261110.md)
+also pass with restored KVM 5→6→7. Ten [warm reboots](warm-boot-validation.md)
+and their complete SD comparison pass; ten [cold boots](cold-boot-validation.md)
+and the final SD comparison remain open. See the [release checklist](release-acceptance.md).
+Host-only checks are recorded separately in
 [implementation status](implementation-status.md) and the diagnostic guide.
 Never infer a passed board test from a build, model review or QEMU emulation.
 
@@ -37,14 +41,14 @@ for boot0/U-Boot writes.
 | NVMe | PCIe/NVMe enumeration, errors and stable repeated access | Enumeration, qualifying workload and physical update/restore readbacks pass; admin invalid-field/power-cycle correlation is recorded with origin unproved |
 | KVM | EL2 messages plus guest execution with KVM explicitly required | [Actual nonroot KVM CPU/disk/network, clean poweroff/checkpoints and restart](kvm-vgic-results-20261108.md) pass on the diagnostic VGIC host; corrected-host restoration and KVM restart also pass; full release remains open |
 | Ethernet | Vendor binding, DHCP, route/DNS/TLS and repeatable cold boot | Preparation DHCP/DNS/TLS observed; [installed DHCP and both SSH keys pass after repair](installed-host-repair-results-20261108.md); corrected-host automatic NTP passes; repeatable cold boot remains open |
-| Installation | Fresh deployment on actual card and nominal 250 GB SSD | [November 7 write/readback and installed root A boot observed](evidence/installed-host-first-boot-20261107.json); [management repair passes](installed-host-repair-results-20261108.md); independent deployment reproduction remains open |
-| Boot reliability | 10 cold boots and 10 warm reboots, matched firmware/SSD | Pending |
+| Installation | Fresh deployment on actual card and nominal 250 GB SSD | [Fresh normalized full installation](evidence/normalized-host-install-20261110.json) passes with streamed source hash, exit 0 and no optional readback; [independent physical deployment reproduction](independent-deployment-20261110.md) passes |
+| Boot reliability | 10 cold boots and 10 warm reboots, matched firmware/SSD | [Ten warm boots pass](evidence/final-warm-boots-20261110.json); [ten genuine cold boots](cold-boot-validation.md) pending |
 | Workload | Eight hours: CPU/disk/network, temperatures/memory/NVMe errors | [Legacy run exceeded 20 hours](endurance-run-20261109.md) and was operator-stopped; [data/health/SD checks pass](evidence/eight-hour-endurance-result-20261109.json), no eight-hour rerun required; previous failed run remains separate |
-| SD policy | SD removed, or full-card hashes plus write counters/firmware audit | No mounted SD; continuous zero-write samples and [whole-media baseline/prefix match](evidence/protected-sd-baseline-20261109.json) pass; [bounded firmware audit](sd-firmware-write-policy.md) complete; final shutdown/reboot comparison pending |
+| SD policy | SD removed, or full-card hashes plus write counters/firmware audit | No mounted SD; continuous zero-write samples and [whole-media baseline/prefix match](evidence/protected-sd-baseline-20261109.json) pass; [bounded firmware audit](sd-firmware-write-policy.md) complete; [warm shutdown/reboot comparison passes](evidence/final-warm-boots-20261110.json); final cold-series comparison pending |
 | Update/recovery | Interrupted update, rollback, missing NVMe, disposable data | [Changed-B interruption/retry, publication interruptions/cancellation and healthy old-A rollback pass](physical-host-update-rollback-20261110.md). [Controlled SSH/offline-root recovery](controlled-ssh-recovery-20261110.md), [NVMe-driver fault recovery](missing-nvme-recovery-test.md) and [actual dirty-STATE crash/export/replay](dirty-state-recovery-trial.md) pass with subsequent KVM execution; physical SSD removal and power cuts are not claimed |
 | Backup | Off-device guest/configuration backup restored and checked | [Guest restoration, KVM restart and checkpoints pass](evidence/corrected-host-guest-restore-20261108.json); [paired host restoration, interrupted retry, restored configuration and actual KVM pass](paired-host-restore-20261110.md) |
-| Security | Unique keys, no shared secrets, limited guest privileges/services | Pending |
-| Reproduction | Independent operator follows clean build/deployment guide | Pending |
+| Security | Unique keys, no shared secrets, limited guest privileges/services | [Original identity/configuration restored](evidence/normalized-host-install-20261110.json), root password locked, both supplied keys retained; [real KVM UID/GID/capability/NoNewPrivileges checks](evidence/normalized-guest-restore-20261110.json) pass; resolver policy passes on final A/B |
+| Reproduction | Independent operator follows clean build/deployment guide | [Physical deployment from clean RAM environment passes](independent-deployment-20261110.md); [build repetition has the documented fixed-input scope](build-reproduction-status.md) |
 
 ## KVM gate
 

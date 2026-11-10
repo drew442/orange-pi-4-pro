@@ -110,14 +110,16 @@ binary redistribution clearance is claimed. [Source inventory](toolchain-sources
 
 ## Resources and next actions
 
-Latest privileged Ubuntu 22.04 suite: **2286 tests**, zero skips/errors/failures,
-five shell suites and five diagnostic cases; all five TOMLs parse. The final-A warm collector now authenticates release/root/policy and stops on
+Latest privileged Ubuntu 22.04 suite: **2304 tests**, zero skips/errors/failures,
+five shell suites and five diagnostic cases; all five TOMLs parse.
+[Cold-collector suite evidence](evidence/cold-boot-collector-validation-20261110.json)
+records the latest run. The final-A warm collector authenticates release/root/policy and stops on
 actual remote release refusal; [software evidence](evidence/final-warm-binding-validation-20261110.json)
 retains independent review and the initial corrected validation-environment failure. Host checks do not prove
 hardware acceptance.
 
-Latest sampled available space: codex **345886720 bytes**, above the 256 MiB floor;
-builder **41013968896 bytes**, MemAvailable **7486029824 bytes**. Keep bulk sources,
+Latest recorded available space: codex **330342400 bytes**, above the 256 MiB floor;
+builder **40938356736 bytes**, MemAvailable **7376642048 bytes**. Keep bulk sources,
 raw images and backups on the builder. Builder LV is 128819658752 bytes with
 4265607168 bytes VG free; all its free capacity is approved for use/expansion.
 Native codex LVM is outside that approval. Recheck exact targets/resources and
@@ -135,11 +137,13 @@ or add another eight-hour run solely for the revised duration policy.
    KVM 5→6→7 and [reproduced procedure](independent-deployment-20261110.md).
    Its [349-record verified metadata copy](evidence/normalized-deployment-custody-20261110.json)
    is durable on the builder; private identity material is excluded.
-4. Bind the prepared [warm collector](warm-boot-validation.md) to the final root/image/
-   boot route, then collect ten warm and ten genuine cold boots plus final SD/hash/
-   firmware reconciliation. Its authenticated operator-stop admission and final-A release binding pass software review;
-   missing or failed captures and active workloads are still refused.
-5. Complete the [plan's release audit](hypervisor-plan.md#release-acceptance-and-documentation)
+4. Preserve the completed [ten warm boots and matching SD comparison](warm-boot-validation.md).
+   Collect ten genuine [cold boots](cold-boot-validation.md), then reconcile
+   their serial/power evidence and final whole-SD comparison. The guided collector
+   passes independent review and software tests; physical power removal remains
+   an operator step. No endurance rerun is needed.
+5. Complete the [release checklist](release-acceptance.md) against the
+   [plan](hypervisor-plan.md#release-acceptance-and-documentation)
    and documentation/source inventory. Finish only when acceptance and reproduced
    deployment are evidenced. Historical build details remain in
    [build reproduction status](build-reproduction-status.md).
