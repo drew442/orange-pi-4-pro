@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "date": "2026-11-10",
+  "operation": "durable off-device second copy of bounded physical update/rollback records",
+  "archive": {
+    "builder_base": "/var/lib/a733-physical-update-rollback-evidence-20261110-01",
+    "bytes": 942080,
+    "sha256": "617786db12e188be0dea8ffc9d3ef28ff3d268f43964724394b426e2368e6c15",
+    "stored_readback_matches": true,
+    "file_base_parent_fsynced": true
+  },
+  "copied_result": {
+    "path": "docs/evidence/physical-host-update-rollback-20261110.json",
+    "bytes": 28497,
+    "sha256": "d45542d8756925de64f77a44960eb05819ad752bd1baa2ac707d6de1b462b663"
+  },
+  "records": 111,
+  "raw_images_included": false,
+  "private_archive": true
+}

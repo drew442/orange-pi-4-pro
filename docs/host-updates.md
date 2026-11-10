@@ -120,7 +120,8 @@ The read-only `prepare` command requires explicit `--target`, `--expected-model`
 `--manifest-sha256` arguments. These must come from the actual host inventory and
 trusted release record. The known target is recorded in
 [implementation status](implementation-status.md); revalidate that live identity
-before preparing any device plan. Physical staging remains unperformed. `--slot` must be opposite the
+before preparing any device plan. [Physical changed-B staging and interruption/retry now pass](physical-host-update-rollback-20261110.md).
+`--slot` must be opposite the
 running slot; a pending selection change requires a reboot before staging.
 
 Save the resulting JSON plan on NVMe or RAM. Invoke `apply` with the same
@@ -145,7 +146,8 @@ On failure, assume the inactive slot may be incomplete whenever a write was
 attempted. The report preserves attempted, written and verified byte counts.
 Selection is never written by this command. A full explicit retry needs a new
 plan after any changed slot bytes. SIGKILL or power loss may leave no report;
-actual hardware interruption/recovery tests remain open. Advisory locks require
+the recorded handled-SIGTERM physical case passes; power-cut behavior remains
+unproved. Advisory locks require
 cooperating maintenance tools; privileged raw-device users are not a supported
 concurrency model.
 

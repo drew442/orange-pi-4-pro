@@ -7,9 +7,11 @@ immutable SD boot files with zero routine SD writes.
 Start with [implementation status](docs/implementation-status.md) and the
 [current images](docs/current-images.md). The corrected installation has booted,
 synchronized time and run a real KVM guest through restoration, clean shutdown,
-checkpoint and restart. The protected host now runs a fresh 24-hour workload
-with independent UART capture/control; the earlier SSH failure remains
-unexplained. **Release acceptance is incomplete.**
+checkpoint and restart. The eight-hour workload gate passes using retained
+longer-run data, without another endurance run. Physical host restoration,
+changed-root update, selection interruption/cancellation and healthy manual
+rollback also pass with independent UART capture/control. The earlier SSH failure
+remains unexplained. **Release acceptance is incomplete.**
 
 The [build/deployment plan](docs/hypervisor-plan.md),
 [Ubuntu build-host assessment](docs/build-host-assessment.md),

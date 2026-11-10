@@ -1,0 +1,732 @@
+{
+  "schema": 1,
+  "date": "2026-11-10",
+  "operation": "physical changed inactive root update selection interruption cancellation and healthy running-root rollback",
+  "result": "PASS",
+  "release_acceptance": false,
+  "target": {
+    "disk": "/dev/nvme0n1",
+    "serial": "134807190FC700149277",
+    "namespace_bytes": 256060514304,
+    "staged_partition": "/dev/nvme0n1p3",
+    "staged_bytes": 4294967296,
+    "state_uuid": "360dfb39-f49f-487e-b307-0bb887c854c5"
+  },
+  "compatible_boot_preserved": {
+    "sd_prefix_sha256": "ab5e8c2c846cbbd51b61bef6831d7e4d1498c29fefbf47d74301b1f3bb0ad207",
+    "nvme_boot_sha256": "cc2ad988fdc57579178766acaf09c71d688aaadec94b722593192cb24426c313",
+    "explicit_SD_or_SPI_write_performed": false,
+    "full_card_hash_or_firmware_handoff_claimed": false
+  },
+  "source": {
+    "old_B_raw_sha256": "3369a8b4c4b0f7dd9ed33740db3bd86b0d868154bc8195c66806ee0e73f3bdab",
+    "old_B_actual_marker_sha256": "48cac4faeb4f5562b9bd28fba34a7b3dcd4da3e94b2fd0194be2e91586abc3e1",
+    "normalized_B_raw_sha256": "42fb2becf66c25a4cbb7844a6ab84ba12ab3f53c0d5d283acc8d42e63b124ab2",
+    "normalized_manifest_sha256": "c1bcc7d23d22bd487534ba17ea447055881a044350829608360aa92ca24283f2",
+    "source_storage": "new private sparse regular file on STATE p4",
+    "no_raw_image_staged_on_codex_or_SD": true
+  },
+  "inactive_write_interruption": {
+    "signal": 15,
+    "pid": 2524,
+    "console_trigger_bytes": 1073741824,
+    "accepted_bytes": 1103101952,
+    "child_exit": 1,
+    "actual_error": "InterruptedError: received signal 15",
+    "target_modified": true,
+    "selector_writes": false,
+    "activation_ready": false,
+    "exact_durable_prefix_claimed": false,
+    "actual_target_metadata_changed": true,
+    "A_marker_selector_GPT_retained": true,
+    "p3_exclusive_claim_reopened_closed": true,
+    "recovered_A_boot_id": "53ddb8c0-5bb8-4232-9b03-bd204b7b11e1"
+  },
+  "retry": {
+    "new_plan_bound_changed_metadata": true,
+    "process_exit": 0,
+    "bytes_written": 4294967296,
+    "bytes_read_back": 4294967296,
+    "readback_sha256": "42fb2becf66c25a4cbb7844a6ab84ba12ab3f53c0d5d283acc8d42e63b124ab2",
+    "activation_ready": true,
+    "selector_writes": false
+  },
+  "publication_before": {
+    "process_exit": 1,
+    "actual_error": "InterruptedError: received signal 15",
+    "journal_durable": true,
+    "selection_attempted": false,
+    "selection_published": false,
+    "observed_old_A_selector": true
+  },
+  "publication_after": {
+    "process_exit": 1,
+    "actual_error": "InterruptedError: received signal 15",
+    "journal_durable": true,
+    "selection_published": true,
+    "publication_durable": true,
+    "observed_B_selector": true,
+    "running_root_switched": false
+  },
+  "pending_cancellation": {
+    "process_exit": 0,
+    "success": true,
+    "durable": true,
+    "old_manifest_used": true,
+    "observed_old_A_selector": true
+  },
+  "normalized_B": {
+    "boot_id": "2ec8feae-b716-4490-a648-d5b5e9e5e7ce",
+    "root_marker_sha256": "521e86e5446c35f0d87f71c302126b47a0fa1ba32214e98c62c3c79ce9ddf8f8",
+    "selector_sha256": "27ea5d897aa590de9efbe42800894b6a0645ec855ef68012897684f87efe2971",
+    "authenticated_tool_files": 40,
+    "management_identity_config_unchanged": true,
+    "NTP_synchronized": true,
+    "resolver_mode": "0755",
+    "global_LLMNR_mDNS_disabled": true,
+    "no_5355_or_5353_listeners": true,
+    "actual_KVM_pid": 1887,
+    "guest_counter_before": 6,
+    "guest_counter_after": 7,
+    "UID_GID": 60001,
+    "capabilities_zero": true,
+    "NoNewPrivileges": true,
+    "VM_vCPU_VGIC_fds_captured": true,
+    "CPU_disk_loopback_HTTP_pass": true,
+    "physical_guest_throughput_test_claimed": false,
+    "guest_requested_poweroff": true,
+    "observer_retained_raw_QEMU_exit_zero": true,
+    "checkpoint_durable": true,
+    "checkpoint_manifest_sha256": "a4f10e5744c544801d3eb01873041ac49ea962fc03d58534fad67458596539a0"
+  },
+  "healthy_live_rollback": {
+    "process_exit": 0,
+    "publication_durable": true,
+    "old_A_manifest_sha256": "4f28d75a14323c52aa976b00f957b56913b75472a07a717672abd33d439b97b9",
+    "old_A_raw_sha256": "d868571e89216762ce9d8d2b8209884b958c53b7be97a215d8c4ddbc96ab7940",
+    "old_A_fully_reauthenticated_by_controller": true,
+    "boot_id": "987d0392-ec8d-491c-a711-33abe07d614c",
+    "root_marker_sha256": "e1cc0395cd97e222e7d8146c05fa703e3ae9373b34bf1e24fbfb91a7e63dfa61",
+    "selector_sha256": "bd27df59dbdb53680db09cf6f7cfd80ceb73aa89c7ade0a627fa76ff4aabd20a",
+    "authenticated_tool_files": 40,
+    "management_identity_config_unchanged": true,
+    "NTP_synchronized": true,
+    "actual_KVM_pid": 1866,
+    "guest_counter_before": 7,
+    "guest_counter_after": 8,
+    "UID_GID": 60001,
+    "capabilities_zero": true,
+    "NoNewPrivileges": true,
+    "VM_vCPU_VGIC_fds_captured": true,
+    "CPU_disk_loopback_HTTP_pass": true,
+    "guest_requested_poweroff": true,
+    "observer_retained_raw_QEMU_exit_zero": true,
+    "checkpoint_durable": true,
+    "checkpoint_manifest_sha256": "aab3db8c869d6411b1cc44eefa00a8093df821e5ebb32986f42f7c36e2766f7b",
+    "stopped_disk_sha256": "bc7c62711cbd8b718ef724f437402224f7ad927772e123cc6be8c12197c8261d",
+    "guest_running_now": false,
+    "inactive_RAM_unit_rebound_to_counter8": true
+  },
+  "SD_policy_observations": "Linux write/discard/flush fields zero in recorded host boot and stopped post-guest snapshots; no whole-card or prekernel write claim",
+  "post_B_SMART_snapshot": {
+    "critical_warning": 0,
+    "media_errors": 0,
+    "unsafe_shutdowns": 77,
+    "baseline_error_entries": 153,
+    "error_entries": 157,
+    "baseline_power_cycles": 97,
+    "power_cycles": 101,
+    "latest_admin_status": 8194,
+    "latest_parameter_location": 40,
+    "latest_namespace_id": 0,
+    "latest_LBA": 0,
+    "interpretation": "Same latest admin invalid-field shape as baseline; equal count/power-cycle increases are correlation, originating command unproved",
+    "predates_final_A_reboot": true,
+    "current_final_A_SMART_claimed": false
+  },
+  "production_controllers_modified": false,
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "result": "PASS",
+    "final_report": {
+      "path": "tmp/inactive-update-final-evidence-review-20261110.json",
+      "bytes": 9693,
+      "sha256": "b2f30398c3e2486a85bbe5062d796470c37404fcf4786710fa9ef2be4ba76e4d"
+    }
+  },
+  "existing_software_validation": "2274 privileged Ubuntu tests, five shell suites and five diagnostic cases; unchanged production helpers, no rerun for documentation/hardware evidence only",
+  "remaining": [
+    "Controlled failed-health/offline RAM root-selection recovery",
+    "Missing-NVMe and actual dirty-journal physical recovery",
+    "Fresh normalized full-image installation and reproduced deployment",
+    "Restore new counter5 archive and verify actual KVM",
+    "Final boot route and ten warm/ten genuine cold boots with SD/firmware reconciliation",
+    "Independent SPI recovery/programming/SD-removed boot or completed immutable-SD fallback",
+    "Source/license inventory and release audit"
+  ],
+  "limits": [
+    "Handled process interruptions are not power cuts",
+    "Healthy live rollback is not failed-health or offline recovery",
+    "New B resolver correction passes physically; live old A retains its known finding",
+    "Original off-device host/guest archives remain immutable; current fixture advances are disposable test data",
+    "No new endurance workload was started and no eight-hour rerun is required by duration-policy change"
+  ],
+  "records": [
+    {
+      "path": "out/inactive-update-20261110-01/A-rollback-boot-check.json",
+      "bytes": 7583,
+      "sha256": "407845d7343f12cb9dc093af7e3ff0767c23140fd18196846840fc7eb86cce3b"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/A-rollback-boot-check.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/A-rollback-boot-uart.log",
+      "bytes": 109839,
+      "sha256": "610b1b86c213b906804287ac4f0d9d6dffeccd605cddedffad2c621caa1a8a95"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/A-rollback-guest-exit-observer.jsonl",
+      "bytes": 417,
+      "sha256": "cb01aab5d46597f2f15b6a620dc8d7351a10f4138a539f776a124d73698582e5"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/A-rollback-guest-exit-observer.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/A-rollback-guest-mount-plan.json",
+      "bytes": 2429,
+      "sha256": "a6ef64b63c483b75a24ecfbd1b7d18bb5b0028423e52cc4cf3a62d2fb9b9125f"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/A-rollback-guest-mount-receipt.txt",
+      "bytes": 530,
+      "sha256": "891538f0f650ffd0dd8b8b7bcc3723e91e2ec1fd94f0efc15c064e096911ca90"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/A-rollback-guest-preparation.json",
+      "bytes": 1324,
+      "sha256": "ee33b1e71b7f35f44f617236b57e1412984d37fdd5a0ec8d023a285cb36ec19d"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/A-rollback-guest-preparation.stderr",
+      "bytes": 176,
+      "sha256": "28099b6fa6d7d7db9857abad4daed1d787424966ef8e6e104836388526b1e71c"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/A-rollback-guest-start.txt",
+      "bytes": 50,
+      "sha256": "7d5572b2da7c98884a7f77bcec987df5fd081580b1edd9c244878c7bae791b1c"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/A-rollback-kvm-clean-exit.json",
+      "bytes": 15849,
+      "sha256": "6746e7dff4646379486bb7215dbc95b0f1162c2c74f9c6367f9dc9f32d2b318c"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/A-rollback-kvm-clean-exit.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/A-rollback-kvm-running.json",
+      "bytes": 16168,
+      "sha256": "92b3095d11e0c1a38279ead9bdda94616c7a04252e582aa0eb55770c8da74b00"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/A-rollback-kvm-running.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/A-rollback-reboot-ssh.json",
+      "bytes": 74,
+      "sha256": "0a9b1eb02f0a90eb0358959d238504cc3a03e0778100b277dbe30c997deb1ca5"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/A-rollback-reboot-start.json",
+      "bytes": 234,
+      "sha256": "4b2cd6072d767343aa15d23baf46f9715801cd2b7234ea2f6b2c1ccf11eb5252"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/B-boot-check.json",
+      "bytes": 2503,
+      "sha256": "640c178fbda83d507385b2cd45fb5c88fb9f53172dddb4d9ccb903529c8d6ddd"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/B-boot-check.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/B-boot-uart.log",
+      "bytes": 109746,
+      "sha256": "39651a775414640ba9dc5009a88584a0a90961961f5b4e9c4046485904ebaeab"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/B-guest-exit-observer.jsonl",
+      "bytes": 417,
+      "sha256": "846fe223e82488cacd8081907ce6c3caf644bbe3e8c602c09f77dea85cffd601"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/B-guest-exit-observer.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/B-guest-mount-plan.json",
+      "bytes": 2429,
+      "sha256": "ca3b6fc61a32ef01ea67c1908e179bf21b5d4f25306c5ccbd1127cb43d05a507"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/B-guest-mount-receipt.txt",
+      "bytes": 530,
+      "sha256": "ff6ab78aa66bc6691927e68873390a5186b159d212e858a00a62a78938442464"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/B-guest-preparation.json",
+      "bytes": 1324,
+      "sha256": "9cb35403e539b8d0fc8a5d45abb44fd924184cd8e7117d487fdf621ca16993f2"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/B-guest-preparation.stderr",
+      "bytes": 176,
+      "sha256": "28099b6fa6d7d7db9857abad4daed1d787424966ef8e6e104836388526b1e71c"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/B-kvm-clean-exit.json",
+      "bytes": 15849,
+      "sha256": "cc2bf1bc95588f0e24d907a9d17714bc5dc874cb3cba65a9b8c5e87f376046c6"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/B-kvm-clean-exit.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/B-kvm-running.json",
+      "bytes": 16168,
+      "sha256": "1588dca49331277b32f29593f11f0fd7d578021b22e5d74d8c089f5cf0256f91"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/B-kvm-running.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/B-post-guest-and-rollback.json",
+      "bytes": 2683,
+      "sha256": "6c0b2d2bf0c32b10593721344c4fd59c79227e8f8443988bf9771d8780dc057d"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/B-post-maintenance-error-log.json",
+      "bytes": 1520,
+      "sha256": "c63973f5836ead78d337dc3f70841d2f78ad0f5f7a4526b2407ce17bbcacd42f"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/B-reboot-ssh.json",
+      "bytes": 74,
+      "sha256": "0a9b1eb02f0a90eb0358959d238504cc3a03e0778100b277dbe30c997deb1ca5"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/B-reboot-start.json",
+      "bytes": 214,
+      "sha256": "e33202643ec79f9717157f880d3ba8b2d95855622ec695aa06b2e2430eafa2e6"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/cancel-A-exit.json",
+      "bytes": 27,
+      "sha256": "6bbc2c1455749ac16e2cea00427b30390aa019fe2f954d866aaadb6b4152ecbc"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/cancel-A-observed.conf",
+      "bytes": 179,
+      "sha256": "bd27df59dbdb53680db09cf6f7cfd80ceb73aa89c7ade0a627fa76ff4aabd20a"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/cancel-A-plan.json",
+      "bytes": 3530,
+      "sha256": "6f82addabd26dab82e9eda007a08da04c3e3e1d10169a5240e58284fa59745f1"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/cancel-A-receipt.json",
+      "bytes": 2370,
+      "sha256": "820ca54e43de36fb0b14a49d8e940d980f20ee018773a849b2bfd8bd09a6bec8"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/cancel-A.tty",
+      "bytes": 4782,
+      "sha256": "5ca1b3cfe328e0bbedd8fa6770b4f4ef5641afc60533604828abf5865fd89360"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/candidate-B-manifest.json",
+      "bytes": 33481,
+      "sha256": "c1bcc7d23d22bd487534ba17ea447055881a044350829608360aa92ca24283f2"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/candidate-B-selected.conf",
+      "bytes": 179,
+      "sha256": "27ea5d897aa590de9efbe42800894b6a0645ec855ef68012897684f87efe2971"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/candidate-receiver.json",
+      "bytes": 273,
+      "sha256": "0ecf95ed5e8e60a4379e24878f95a59a5caa22a2c9c18f295a6dc0652613b5d4"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/candidate-receiver.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/candidate-source.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/candidate-transfer.json",
+      "bytes": 150,
+      "sha256": "ef85294a02962b25b7176af4599826fe753d540bcb57a088dccc44177062ba08"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/checkpoint-counter7-plan.json",
+      "bytes": 3703,
+      "sha256": "5c8a12e755558d034ddf043894b015290df0372db3bf62fa42629b84d900a065"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/checkpoint-counter7-receipt.json",
+      "bytes": 603,
+      "sha256": "0c82951c0f7f984853796be9923e65843acacb4949cb94dd20f212b4e2804671"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/checkpoint-counter8-plan.json",
+      "bytes": 3703,
+      "sha256": "da5d8116fa124c7024c854e822d22391e5b91302844feed824802960090183b9"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/checkpoint-counter8-receipt.json",
+      "bytes": 603,
+      "sha256": "a4db64c3196e9b898325f167a889f970d1cad55512513a0d83e66a2060ce121b"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/counter7-enrollment.json",
+      "bytes": 1503,
+      "sha256": "a4f10e5744c544801d3eb01873041ac49ea962fc03d58534fad67458596539a0"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/counter8-enrollment.json",
+      "bytes": 1503,
+      "sha256": "aab3db8c869d6411b1cc44eefa00a8093df821e5ebb32986f42f7c36e2766f7b"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/counter8-next-unit.json",
+      "bytes": 1321,
+      "sha256": "f590a85e0c61a8433b0243da40eb973026847255656dd87470c797bae99a2135"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/counter8-next-unit.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/guest-observer-source-pin.json",
+      "bytes": 139,
+      "sha256": "db0478bf424e3ad4ccea7e4856c8f7af6d4186da710bc6104ab791c4d1acd777"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/inactive-B-before-marker.json",
+      "bytes": 16383,
+      "sha256": "48cac4faeb4f5562b9bd28fba34a7b3dcd4da3e94b2fd0194be2e91586abc3e1"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/interrupted-reboot-ssh.json",
+      "bytes": 92,
+      "sha256": "14964e945e656da1ac95c4b748ab964ef9e127c5bc9916bce14a25833735a88e"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/interrupted-reboot-start.json",
+      "bytes": 200,
+      "sha256": "75d956db28d78418f359f2881d7faf3c56c0a326dbdadaa57c28c7b138899407"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/interrupted-recovery-A-uart.log",
+      "bytes": 109488,
+      "sha256": "254e73af596db62cda6b040f2c0d646608624c914e56e9f8adc8d0ac9a7b5754"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/interrupted-recovery-A.json",
+      "bytes": 490,
+      "sha256": "e3ab464963a87dc7d393ebea4b922ef1b33a027a5cc25a09efadfa9cca3dbf96"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/interruption-process-exits.json",
+      "bytes": 102,
+      "sha256": "57e8b0836c97c45823c2d2e26435b63b21477e16b55fcbf56e058e27ba7ab4f6"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/normalized-tools-manifest.json",
+      "bytes": 16312,
+      "sha256": "1ce0e5daaf760a8407914986dc61314c13091239be68db5948a2765de0c21d97"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/post-interruption.json",
+      "bytes": 2035,
+      "sha256": "b47a316be6408a4bbe90ffcd4854cdb8e9c5caaf798e75d86305125aa616e9f4"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/post-interruption.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/rollback-A-exit.json",
+      "bytes": 27,
+      "sha256": "6bbc2c1455749ac16e2cea00427b30390aa019fe2f954d866aaadb6b4152ecbc"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/rollback-A-plan.json",
+      "bytes": 3524,
+      "sha256": "0856a07a68496c7eb4d3a193741437d1c6f0d73ac612320c7e35823a1bee1bd3"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/rollback-A-receipt.json",
+      "bytes": 2364,
+      "sha256": "a950aebacbc10cd04660a84e0233755b78dc330405aba63c4e2380e361a54eb9"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/rollback-A.tty",
+      "bytes": 4762,
+      "sha256": "7b56aa055d4f6d81ab576f88e18ec40f4e83dd51a650de939278e79d3090d167"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/select-B-after-receipt.json",
+      "bytes": 2417,
+      "sha256": "35fcf01c4efc6cf9a764fcb666653c31e0c944afdd3ba9c623a69573908cdd6b"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/select-B-after.tty",
+      "bytes": 4766,
+      "sha256": "45d4554c2e967e8ae8788d56b94d4044ff1e47534e60feaad8ca5082772f7543"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/select-B-before-receipt.json",
+      "bytes": 2165,
+      "sha256": "55f7efb9be67d6f71c75a9210f4abc35e1e793e9507c5aeecde8d66cc8f9ccab"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/select-B-before.tty",
+      "bytes": 4767,
+      "sha256": "83eeca19da32532a638d2d3d86728190a5c2b7724068ab233cadae62b7da3cf1"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/select-B-complete-exit.json",
+      "bytes": 27,
+      "sha256": "6bbc2c1455749ac16e2cea00427b30390aa019fe2f954d866aaadb6b4152ecbc"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/select-B-complete-observed.conf",
+      "bytes": 179,
+      "sha256": "27ea5d897aa590de9efbe42800894b6a0645ec855ef68012897684f87efe2971"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/select-B-complete-plan.json",
+      "bytes": 3525,
+      "sha256": "f4bec6d5c13439bae81991efce9009f841002336c8c840fa44abbfc633002126"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/select-B-complete-receipt.json",
+      "bytes": 2365,
+      "sha256": "dffa4361091c6a1184ea0ec52c90c2b0d45756934756cc847515e385c68e3778"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/select-B-complete.tty",
+      "bytes": 4778,
+      "sha256": "ff7ce011065f542133a34b95003d267d789b4025079efea489b7cdbe8942e19d"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/select-B-plan.json",
+      "bytes": 3525,
+      "sha256": "f4bec6d5c13439bae81991efce9009f841002336c8c840fa44abbfc633002126"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/select-after-exits.json",
+      "bytes": 50,
+      "sha256": "f01ab3cd61e4b12f17f7f7912ded6b3e14f683aa3eb077cf6a5f2827346a4fbe"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/select-after-observed.conf",
+      "bytes": 179,
+      "sha256": "27ea5d897aa590de9efbe42800894b6a0645ec855ef68012897684f87efe2971"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/select-after-watch.jsonl",
+      "bytes": 696,
+      "sha256": "96e017628fa234806d169e61f41eba29195e4c9f6b3f5049f98ebca7deb68136"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/select-after-watch.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/select-before-exits.json",
+      "bytes": 50,
+      "sha256": "f01ab3cd61e4b12f17f7f7912ded6b3e14f683aa3eb077cf6a5f2827346a4fbe"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/select-before-observed.conf",
+      "bytes": 179,
+      "sha256": "bd27df59dbdb53680db09cf6f7cfd80ceb73aa89c7ade0a627fa76ff4aabd20a"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/select-before-watch.jsonl",
+      "bytes": 699,
+      "sha256": "003c896ed255203613ea3ecf36a288bb6e79d51845ea94bb7dec594d51e9236d"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/select-before-watch.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/select-journal.json",
+      "bytes": 2781,
+      "sha256": "da0c656cc6ae124fb9a2eb77c1479e559caeb427b11f634e0da48e63f8d3b010"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/source-stage-admission.json",
+      "bytes": 144,
+      "sha256": "75f0860f9464fd0469c664d676c36a871f3f6e985574926895a5e9fbae134d8e"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/stage-01.tty",
+      "bytes": 5023,
+      "sha256": "2aa5781e1364a24b0114f435cb29ad06132afe4ff1458625714b9c8b7ec09cf2"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/stage-02.tty",
+      "bytes": 5466,
+      "sha256": "af1fbeb7d5e2edf5ec12c6863b030d60c8e5b87039d68b21b7e06622ab6c972c"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/stage-complete-02.json",
+      "bytes": 2328,
+      "sha256": "56d0b0e815af8dd27d20e011d55a4f42bd816b17ffed0048b26688c0f70e1240"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/stage-complete-exit.json",
+      "bytes": 27,
+      "sha256": "6bbc2c1455749ac16e2cea00427b30390aa019fe2f954d866aaadb6b4152ecbc"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/stage-interrupted-01.json",
+      "bytes": 2196,
+      "sha256": "4ae9b1ac81ceef753c6fa21d482541dd1e2c40f6a6b447aea05d4fd0b6bf9dd3"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/stage-plan-01.json",
+      "bytes": 3721,
+      "sha256": "4e582425da15b4bc50a8527580c5bee0d09e83609932faf50655cb99db0e0e0e"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/stage-plan-02.json",
+      "bytes": 3721,
+      "sha256": "c27253eea68a119ade45d08eff8929224c3ef2c1181579c063f33d00025603ac"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/watch-events.jsonl",
+      "bytes": 543,
+      "sha256": "aa52ca796e668ec1c3e5fe7a45e485efc9ada1a0f7ccf4d3c86baeb5f7245539"
+    },
+    {
+      "path": "out/inactive-update-20261110-01/watch.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "tmp/inactive-update-physical-review-20261110.json",
+      "bytes": 7016,
+      "sha256": "dca84d1b95727ea4e2ce0d4c1ebf20d3c05f87520de70b4d929b1403de8f11a9"
+    },
+    {
+      "path": "tmp/inactive-update-interruption-review-20261110.json",
+      "bytes": 5387,
+      "sha256": "b74286152b39dd82518ccab03867844652628d45e69f5cd5217001e9c01de0df"
+    },
+    {
+      "path": "tmp/inactive-update-retry-review-20261110.json",
+      "bytes": 3876,
+      "sha256": "16cb9ba5c66ac2908f794054a980d06a07083d7637106ce139621085cd4faf3f"
+    },
+    {
+      "path": "tmp/root-selection-physical-plan-review-20261110.json",
+      "bytes": 5067,
+      "sha256": "8dace25ec32f1b086b0a351fc3b9fa394b3c6ba19f2b735b3d9c0d69fde64de6"
+    },
+    {
+      "path": "tmp/root-selection-physical-outcome-review-20261110.json",
+      "bytes": 5089,
+      "sha256": "80e8552312ee7c5dfe3181ee8e717d569e0da457a2e07a21a8684dca2c2d2c6c"
+    },
+    {
+      "path": "tmp/booted-rollback-physical-plan-review-20261110.json",
+      "bytes": 6571,
+      "sha256": "312782c57616dbf651e5adb6e789278c29ead6fa9305f6361bc0bdd0e088028d"
+    },
+    {
+      "path": "tmp/inactive-update-final-evidence-review-20261110.json",
+      "bytes": 9693,
+      "sha256": "b2f30398c3e2486a85bbe5062d796470c37404fcf4786710fa9ef2be4ba76e4d"
+    },
+    {
+      "path": "tmp/stage-inactive-update-20261110.py",
+      "bytes": 4952,
+      "sha256": "ea269fa195b26d8abf4b1b3237c4eb220eff6a69d8b45345cf5b246db78b0537"
+    },
+    {
+      "path": "tmp/watch-inactive-update-20261110.py",
+      "bytes": 11948,
+      "sha256": "0ba31de11bc6f02729ff3980f2416abb2ecb2944857a319e700df44877184f7b"
+    },
+    {
+      "path": "tmp/check-interrupted-inactive-update-20261110.py",
+      "bytes": 1728,
+      "sha256": "472b86c665ad1bb8609c425580fd180d585cc7192b8fb14c03bf086557bd4687"
+    },
+    {
+      "path": "tmp/watch-root-selection-20261110.py",
+      "bytes": 13923,
+      "sha256": "d7a8cf94f9669bfa4c93c9727f834288f74f63bc666a4de5198a390e714779c8"
+    },
+    {
+      "path": "tmp/check-normalized-B-boot-20261110.py",
+      "bytes": 2658,
+      "sha256": "5a65bd6f0bd32ba16782c70c50af25875c083cfeff796f24542461697760d815"
+    },
+    {
+      "path": "tmp/confirm-slot-B-guest-20261110.py",
+      "bytes": 2068,
+      "sha256": "ea087dd12257089d50012158f3b9a2fa4ae47424c9791b3c83c0908f6f9bfcc6"
+    },
+    {
+      "path": "scripts/update-host.py",
+      "bytes": 16334,
+      "sha256": "7e244244e36eabf6ef64b2640029cb05e77b43a8aed121257254dd3a6908433d"
+    },
+    {
+      "path": "scripts/select-host-root.py",
+      "bytes": 20047,
+      "sha256": "646b608cf5dc3fbd3f1411a49ace41192ee0dec4472199240f87cc1c1073fd89"
+    },
+    {
+      "path": "scripts/observe-first-kvm-exit.py",
+      "bytes": 7357,
+      "sha256": "334f79c44ca9033556f9a7752d837ada7f37c4c34a7c7a51798807e195faefb4"
+    }
+  ]
+}

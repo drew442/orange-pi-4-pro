@@ -1,9 +1,11 @@
 # Normalized host maintenance candidates
 
-The normalized A/B update candidates now pass independent actual-artifact review.
-They have not been staged, activated or rolled back on the Orange Pi. [Exact
-pins and offline compatibility evidence](evidence/normalized-maintenance-20261109.json)
-separate these regular-file results from physical acceptance.
+Normalized B now passes [physical changed-root update and rollback](physical-host-update-rollback-20261110.md):
+interrupted p3 write, old-A recovery boot, complete retry/readback, selector
+interruptions before/after publication, pending cancellation, B boot/KVM and
+manual rollback to old A with KVM. Normalized A remains unbooted. The original
+[artifact pins and offline compatibility evidence](evidence/normalized-maintenance-20261109.json)
+remain distinct from those later physical results.
 
 Builder candidates are
 `/var/lib/a733-normalized-maintenance-20261109-01/candidate-A` and `candidate-B`.
@@ -34,7 +36,7 @@ separate from the SPI caller/capture preparation. The first private review harne
 used the archive root name for the published tree path and failed; the corrected
 harness passes, with the initial failure retained and no artifact change.
 
-## Physical test order after endurance
+## Recorded physical test order
 
 First retain and review the full endurance outcome, exit records, UART capture,
 NVMe health and post-workload SD measurements. Preserve current STATE/identity, guests
@@ -60,8 +62,9 @@ Offline execution of the authenticated old updater's complete `Source` reader
 accepts new B, and its selection-manifest reader accepts `c1…`. Corrected tooling
 accepts retained old A's metadata/selector. Actual-marker and synthetic-mount
 fixtures preserve old A plus STATE UUID and refuse staging while B is pending.
-These are compatibility checks; real block-target, mounted-root, timesync and
-runtime guards have not been exercised by this review. Stop on any live mismatch.
+That earlier review established compatibility checks. The later physical run
+exercised real block-target, mounted-root, timesync and runtime guards. Continue
+to stop on any live mismatch.
 
 Fresh installation and independent deployment reproduction follow these cases,
 using the final independently verified distribution. Select the final boot route

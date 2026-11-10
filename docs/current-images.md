@@ -1,11 +1,12 @@
 # Current images for this board
 
 The board is running the **restored protected host at 192.168.1.116**, boot
-`0ff0e3d0-eddd-4d27-9777-af8ccfe6f88c`, with the original pinned SSH identity.
+`987d0392-ec8d-491c-a711-33abe07d614c`, with the original pinned SSH identity.
 The card contains the protected normal-host bootstrap below. Read-only old root
 A and writable restored STATE pass management checks; an actual nonroot KVM guest
-advanced its disk from counter 5 to 6 and is stopped/checkpointed.
-[Physical paired restoration](paired-host-restore-20261110.md).
+advanced its disk through counters 7/8 on normalized B and rolled-back old A,
+and is stopped/checkpointed. Inactive B now holds the normalized root.
+[Physical update and rollback](physical-host-update-rollback-20261110.md).
 No operator flashing is requested.
 
 The [eight-hour workload gate](evidence/eight-hour-endurance-result-20261109.json)
@@ -21,9 +22,9 @@ Paths below are relative to `/home/drew/orange-pi-4-pro` on codex.
 For later inactive-root maintenance, use the separately authenticated
 [normalized A/B update kit](normalized-maintenance-20261109.md), retaining the
 [old A rollback pair](matched-host-updates-20261109.md) separately. Its root-payload
-manifest differs from the whole-NVMe installer manifest below. Physical update
-and rollback tests remain pending; workload evidence and required backups are
-now retained and reviewed.
+manifest differs from the whole-NVMe installer manifest below. The changed-B
+update, interruption, selection and healthy live rollback cases now pass physically. Failed-health/offline recovery and final normalized full
+installation remain separate gates.
 The separately retained [matched NVMe-first trial SD](matched-nvme-trial-sd-20261109.md)
 is unbooted and awaits a reviewed physical trial. Its workload evidence and
 backup prerequisites now pass. It is not

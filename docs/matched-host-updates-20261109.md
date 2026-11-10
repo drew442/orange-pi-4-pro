@@ -4,11 +4,12 @@ New [resolver-readable maintenance candidates](public-config-maintenance-2026110
 are prepared separately for the corrected roots. The artifacts below retain
 the earlier installed-root pairing for rollback; they are not relabeled.
 
-The matched update candidates and portable maintenance package now pass
-independent **regular-file artifact review**. No physical root update,
-activation, interrupted-update recovery or rollback has been performed.
-Leave the active November 9 endurance run undisturbed. These artifacts prepare
-later physical tests; they do not authorize starting those tests now.
+The retained old pairing and portable maintenance package passed independent
+regular-file review. The [eight-hour workload](evidence/eight-hour-endurance-result-20261109.json)
+has completed using retained data. The subsequent
+[physical normalized-B update and old-A rollback](physical-host-update-rollback-20261110.md)
+passes; use the old A metadata here only for that retained old root. Do not use
+its old B source as though it were the newly staged normalized B.
 
 ## Use the root manifest, not the whole-drive manifest
 
@@ -145,7 +146,7 @@ that authority again.
 Use [inactive-slot staging](host-updates.md), [explicit activation/manual rollback](host-root-selection.md)
 and [offline recovery](host-recovery.md) with the current root-manifest pin and
 matching tool tree. Those controllers retain their own plan, backup and TTY
-requirements; the bundle changes none of their behavior. Physical staging,
-interruption, booted rollback, dirty-journal recovery and missing-NVMe recovery
-still need their own reviewed procedures and hardware evidence. An automatic
+requirements; the bundle changes none of their behavior. The recorded changed-B staging/interruption and healthy booted rollback now
+pass. Failed-health/offline selection, dirty-journal and missing-NVMe recovery
+still need their own hardware evidence. An automatic
 rollback mechanism is not claimed.
