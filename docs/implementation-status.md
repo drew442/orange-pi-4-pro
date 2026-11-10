@@ -107,9 +107,10 @@ binary redistribution clearance is claimed. [Source inventory](toolchain-sources
 
 ## Resources and next actions
 
-Latest privileged Ubuntu 22.04 suite: **2274 tests**, zero skips/errors/failures,
-five shell suites and five diagnostic cases; all five TOMLs parse. Production
-controllers were unchanged during the physical cases. Host checks do not prove
+Latest privileged Ubuntu 22.04 suite: **2281 tests**, zero skips/errors/failures,
+five shell suites and five diagnostic cases; all five TOMLs parse. The final-A warm collector now authenticates release/root/policy and stops on
+actual remote release refusal; [software evidence](evidence/final-warm-binding-validation-20261110.json)
+retains independent review and the initial corrected validation-environment failure. Host checks do not prove
 hardware acceptance.
 
 Latest sampled available space: codex **372191232 bytes**, above the 256 MiB floor;
@@ -131,7 +132,7 @@ or add another eight-hour run solely for the revised duration policy.
    restore the newly preserved guest archive and verify actual KVM and final policy.
 4. Bind the prepared [warm collector](warm-boot-validation.md) to the final root/image/
    boot route, then collect ten warm and ten genuine cold boots plus final SD/hash/
-   firmware reconciliation. Its authenticated operator-stop evidence admission passes;
+   firmware reconciliation. Its authenticated operator-stop admission and final-A release binding pass software review;
    missing or failed captures and active workloads are still refused.
 5. Complete the [plan's release audit](hypervisor-plan.md#release-acceptance-and-documentation)
    and documentation/source inventory. Finish only when acceptance and reproduced

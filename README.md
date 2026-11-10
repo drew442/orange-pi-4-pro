@@ -14,6 +14,7 @@ rollback also pass with independent UART capture/control. The earlier SSH failur
 remains unexplained. **Release acceptance is incomplete.**
 
 The [build/deployment plan](docs/hypervisor-plan.md),
+[selected architecture](docs/architecture.md),
 [Ubuntu build-host assessment](docs/build-host-assessment.md),
 [serial guide](docs/diagnostic-image.md) and
 [hardware acceptance record](docs/hardware-validation.md) define the work and

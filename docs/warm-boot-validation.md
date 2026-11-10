@@ -136,3 +136,8 @@ behavior only. A local-only invocation of `retained_outcome()` on November 9
 admitted `out/endurance-outcome-20261109-01` after the focused tests passed;
 no transport or reboot was invoked and `hardware_acceptance=false`. Final image,
 root and boot-route binding still require coordinator review before execution.
+
+[Final release-binding validation](evidence/final-warm-binding-validation-20261110.json)
+records independent review, 39 focused cases and the privileged 2281-test suite.
+The initial full-suite snapshot lacked required Git context; its failure and
+corrected environment are retained. No hardware boot count follows from these checks.

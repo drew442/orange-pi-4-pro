@@ -1,0 +1,78 @@
+{
+  "schema": 1,
+  "date": "2026-11-10",
+  "operation": "Final normalized A warm collector release binding",
+  "full_ubuntu_tests": 2281,
+  "full_ubuntu_errors": 0,
+  "full_ubuntu_failures": 0,
+  "shell_suites": 5,
+  "diagnostic_cases": 5,
+  "source_files_locked_before_after": 923,
+  "targeted_tests": 39,
+  "independent_review": "Sol high; actual remote terminal mismatch correction accepted",
+  "builder_base": "/var/lib/a733-final-warm-binding-validation-20261110-01",
+  "unit": {
+    "MainPID": "0",
+    "Result": "success",
+    "ExecMainCode": "1",
+    "ExecMainStatus": "0",
+    "CPUQuotaPerSecUSec": "2s",
+    "MemoryMax": "3221225472",
+    "ActiveState": "active",
+    "SubState": "exited"
+  },
+  "records": {
+    "out/normalized-deployment-coordinator-20261110-01/suite-stage.json": {
+      "bytes": 444,
+      "sha256": "d03222f6391d243544464e33c76df72c98e9f1c1fe6b95b2a161305e51cbb892"
+    },
+    "out/normalized-deployment-coordinator-20261110-01/suite-terminal.stdout": {
+      "bytes": 135,
+      "sha256": "d3e4fa8ecab92f7114cba88833e51b1b7fc1fcbd2259aead1c58d471611d8864"
+    },
+    "out/normalized-deployment-coordinator-20261110-01/suite-terminal.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/normalized-deployment-coordinator-20261110-01/suite-builder-resources.stdout": {
+      "bytes": 413,
+      "sha256": "b911f71805f8865111b3c9a3a3248499413755359b3701abf361acf90326b5de"
+    },
+    "out/normalized-deployment-coordinator-20261110-01/suite-builder-resources.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/normalized-deployment-coordinator-20261110-01/suite-records.tar": {
+      "bytes": 296960,
+      "sha256": "aee3e17d73cbebf707680d7b072bd7419f9f640de24f236fbf9ea4f82f6544fd"
+    },
+    "out/normalized-deployment-coordinator-20261110-01/suite-records-transfer.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/normalized-deployment-coordinator-20261110-01/warm-binding-review-snapshot.json": {
+      "bytes": 58841,
+      "sha256": "7e9976cfb721a164c6b5b2e52db92135e252add7815600efc4352b6368cefca4"
+    }
+  },
+  "hardware_acceptance": false,
+  "board_or_reboot_actions": false,
+  "initial_environment_failure_retained": true,
+  "native_toml_files_parsed": 5,
+  "source": {
+    "scripts/collect-known-warm-boots.py": {
+      "bytes": 31216,
+      "sha256": "3a09ea4cf1f5ac38e56f7aa3f9b2736d008280c96d8b894812164a8d405aed1a"
+    },
+    "tests/test_known_warm_boots.py": {
+      "bytes": 34315,
+      "sha256": "f292f5441c77991fdc6888d7a0d7fbe860953a223d209fa80c3dedde156c143b"
+    }
+  },
+  "limitations": [
+    "Software checks only; no warm/cold cycle or final image hardware acceptance claimed.",
+    "Initial full suite omitted required Git context and failed; terminal logs and the corrected-environment run are retained.",
+    "Factory distribution pins precede same-board identity restoration.",
+    "Firmware boot path still requires independent serial/audit and full-SD boundary evidence."
+  ]
+}
