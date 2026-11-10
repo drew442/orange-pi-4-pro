@@ -3,8 +3,11 @@
 Use this diagnostic fallback only if serial cannot restore installed-host SSH.
 The [initial preparation record](evidence/offline-journal-preparation-20261108.json)
 predates the mandatory block protection added after the dirty-ext4 source review.
-The revised helper has **not been run on the board**. It does not establish
-hardware acceptance, fix SSH, or authorize a new installation.
+The revised helper **passed on the board on November 10** against actual dirty
+STATE, keeping block RO1 and `noload` through normal unmount with unchanged
+counters in its own interval. [Physical evidence](evidence/dirty-state-physical-20261110.json)
+and private custody retain the exported bytes. This diagnostic result alone does
+not establish whole release acceptance, fix SSH, or authorize a new installation.
 
 Capture the requested live serial-console text first. Power off before changing
 the card. Boot the already proven private RAM installer
@@ -148,7 +151,8 @@ The strict counter checks remain unchanged in the revised exporter.
 The synthetic bytes are not real systemd journals. The physical-target/RAM-entry
 policy is bypassed solely to call filesystem helpers with the new loop device;
 this does not establish actual A733 export, ARM kernel block-protection behavior
-or dirty-journal recovery. Those checks remain untested on the board. To repeat
+or dirty-journal recovery. The separate [November 10 physical trial](dirty-state-recovery-trial.md)
+now supplies that bounded hardware evidence; the software fixtures do not. To repeat
 on the prepared builder, run the reviewed `tests/verify_known_host_journal_loop.py`
 as root from its protected project tree, with no arguments. No compilation or
 package installation is required.

@@ -1,0 +1,1022 @@
+{
+  "schema": 1,
+  "date": "2026-11-10",
+  "classification": "actual disposable STATE fsync/direct-SysRq crash, protected export, normal ext4 replay and actual KVM",
+  "functional_result": "pass",
+  "release_acceptance": false,
+  "precrash_RAM_boot_id": "597391e8-1ad5-4a04-a27d-f21e243fa960",
+  "postcrash_RAM_boot_id": "ed6c34cf-b7a0-48ed-b512-2cba29878b3a",
+  "recovered_old_A_boot_id": "487a3021-fb8f-4300-924f-31d17aed18b9",
+  "crash_plan_sha256": "5aa0809396fac1e02637928312e882173e5c576b8907bbcdc12c28ed784f1845",
+  "nonce": "363ae51b-6d77-4cb4-9e47-3377497edeb2",
+  "actual_STATE_dirty_indicators": {
+    "before_crash_RECOVER": false,
+    "after_crash_RECOVER": true,
+    "JBD2_sequence": 4037,
+    "JBD2_start": 429,
+    "descriptor_block": 429,
+    "commit_block": 437,
+    "journal_end_block": 438,
+    "marker_filename_journal_offset": 1781940,
+    "independent_offline_transaction_checksums_validated": false
+  },
+  "dirty_source_custody": {
+    "builder_base": "/var/lib/a733-dirty-state-preservation-20261110-01",
+    "p4_archive": {
+      "archive_bytes": 20956096,
+      "archive_sha256": "9efcbf98bced9ad243af59e6f7c4f342fe2e2d5c79ec064a18fc8e4ab7a31ccc",
+      "decoded_bytes": 8589934592,
+      "decoded_sha256": "528d3e74563b2520951f886ca4ea0c2d8625872c0bd64bda8ddb6c714a4eb62b",
+      "expected_source_bytes": 8589934592,
+      "partition": 4,
+      "raw_hash_origin": "receiver-derived; no independent source hash",
+      "success": true
+    },
+    "inspector_artifacts": {
+      "builder_archive": "/var/lib/a733-dirty-state-preservation-20261110-01/inspector.tar.gz",
+      "bytes": 2473954,
+      "encoded_sha256": "81e24ad559f1b8e84c42c40586fc0215945c641ca5e66bbccc258d38f9a65304",
+      "decoded_tar_bytes": 67133440,
+      "members": {
+        "inode8-dump.stderr": {
+          "bytes": 28,
+          "sha256": "600dc7f6657b8e8c2436ed3a67e6e8f6a58c906bc4f51012e0796673278b74c7"
+        },
+        "inode8-dump.stdout": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "inode8-bmap0.stderr": {
+          "bytes": 28,
+          "sha256": "600dc7f6657b8e8c2436ed3a67e6e8f6a58c906bc4f51012e0796673278b74c7"
+        },
+        "inode8-bmap0.stdout": {
+          "bytes": 8,
+          "sha256": "62e3af79f6640e88a48eb4019c0ac7fb9d33f951ed0985f04208ba68f9105ae6"
+        },
+        "inode8-stat.stderr": {
+          "bytes": 28,
+          "sha256": "600dc7f6657b8e8c2436ed3a67e6e8f6a58c906bc4f51012e0796673278b74c7"
+        },
+        "inode8-stat.stdout": {
+          "bytes": 569,
+          "sha256": "1cbe7d639be064deabb3a08795083273912ff580a984c1b8cc4b509e6c5765b7"
+        },
+        "filesystem-superblock.bin": {
+          "bytes": 1024,
+          "sha256": "809ad8f284cf1096bd2f6f9c446e9d16bf90c635696d2540982a6bfd6df0f02d"
+        },
+        "preflight.json": {
+          "bytes": 1970,
+          "sha256": "b5954d06448e09aad88d9c5a7432587c43dcb61fa5573a3d84e86cb359c3be1e"
+        },
+        "journal-inode8.bin": {
+          "bytes": 67108864,
+          "sha256": "8a8165757635c9d3037a4b7491dfac78c0dd1055e1f26be2591158e6b4ce6720"
+        }
+      },
+      "gzip_CRC_EOF_verified": true,
+      "all_member_sizes_hashes_verified": true,
+      "file_base_parent_fsynced": true,
+      "mode": "0400",
+      "raw_inspector_success_claimed": false
+    },
+    "persistent_journal_export": {
+      "bytes": 1986533,
+      "sha256": "38aa8f8cca661dadb115058a256687e30c46a8a5d7f4bbe7b0e4b56c15cb9738",
+      "members": 6,
+      "block_RO_original_during_restored": [
+        1,
+        1,
+        1
+      ],
+      "unmounted": true,
+      "separate_counter_scope_unchanged": true
+    }
+  },
+  "protected_exporter_sha256": "3a54ca3536f0df7599f6a8722d14f465cbe9cfb774865623d9a5e622ad7bbb1c",
+  "kernel_recovery_complete_observed": true,
+  "recovered_marker_sha256": "ae50b93165caf4314cff0a7fddcdeafc5e18049189d2ffaccb04cc88d015e074",
+  "original_identity_and_configuration_hashes_preserved": true,
+  "guest_counter": 11,
+  "enrollment_checkpoint_number": 8,
+  "guest_manifest_sha256": "3193cb24133742bccc3662778d60637e60887a8b8ba8cb31c9b3becbe6483f7d",
+  "guest_disk_sha256": "d064e72c0fe304cc9d3e70e3b4fe24eade2a86a594b59627e397ee7a4273fa8c",
+  "actual_nonroot_KVM_CPU_disk_network_and_guest_poweroff": true,
+  "independent_guest_exit_code_status": [
+    1,
+    0
+  ],
+  "guest_checkpoint_durable_and_RAM_unit_refreshed": true,
+  "routine_SD_write_discard_flush_fields_zero": true,
+  "cohort_restore_optional_readback_requested": false,
+  "SPI_written": false,
+  "release_boots_counted": 0,
+  "post_recovery_SMART": {
+    "critical_warning": 0,
+    "media_errors": 0,
+    "unsafe_shutdowns": 80,
+    "admin_error_log_entries": 162,
+    "cause_of_increments_proven": false
+  },
+  "independent_review_model": "gpt-6.1-sol",
+  "independent_review_effort": "high",
+  "material_limits": [
+    "First worker refused pre-mount due wrong UART4:64 assumption; actual241:0/platform/driver binding corrected, attempt01 preserved; no GO/marker/crash in first attempt",
+    "Raw inspector177 exited1 due strict counter inequality; it remains refused. Three zero-sector write/flush events with unchanged sectors fit primary-source read-only debugfs open-time fsync, but exact attribution is inference",
+    "Separate unchanged protected exporter passed with p4 blockRO1/noload and its own unchanged counter scope after the existing three flushes",
+    "Initial offdevice logdump -S without FS context SIGSEGV preserved; primary source identifies NULL current_fs path; corrected journal-only logdump -f exited0 without board device access",
+    "Offline logdump found active matching descriptor/commit but transaction checksums were not independently validated",
+    "Return console reports original system.journal corrupted or uncleanly shut down, renamed/replaced; protected export validates bytes, not application journal structural integrity; cause not attributed",
+    "OldA retains known resolver-policy defect; final normalized distribution not installed",
+    "This is warm direct-SysRq reset, not physical power-cut, SPI recovery, final immutable-SD or final boot-cycle acceptance"
+  ],
+  "metadata_custody_record": "docs/evidence/dirty-state-physical-custody-20261110.json",
+  "records": [
+    {
+      "path": "out/dirty-state-physical-20261110-01/RAM-entry.json",
+      "bytes": 1088,
+      "sha256": "c619acfa5539c4526b9d99295a83b3bf51cd843e4f555ec9ebe0263584c9b6e1"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/RAM-entry.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/RAM-transition-reboot.json",
+      "bytes": 155,
+      "sha256": "3efeeabbe0f15ef689b03994582c1b1c6937c598dfc405fa4002b608a09f8436"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/attempt-01/crash-UART-boundary.json",
+      "bytes": 157,
+      "sha256": "ef86c53d9f69c85738a7d4cb5f423236098a2a6ffccfea7061b4ece1ea862baa"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/attempt-01/crash-arm-observed.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/attempt-01/crash-error.json",
+      "bytes": 186,
+      "sha256": "07cae3fdf212197117e7dd45cc56ee0ca52195a2b04d4a1f15a3d90795f591b9"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/attempt-01/crash-intent.json",
+      "bytes": 691,
+      "sha256": "4f78981e4773b68abcb0af16900d934ab0a9ec46dbe77c65772e76c162ea9807"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/attempt-01/crash-launch.json",
+      "bytes": 410,
+      "sha256": "73f7f8841f2c93176f56015217fe2777f81c02e880ecba5e951182e5cb64d9eb"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/attempt-01/crash-launch.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/attempt-01/helper.py",
+      "bytes": 15987,
+      "sha256": "404fb22cca9aa58f5969735c3e8f7ca76434bdaec99948a9ac231f2d0d3995d5"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/attempt-01/host-checks.json",
+      "bytes": 5972,
+      "sha256": "8fccda39f8011139bf52999f0377b5783d6e40e863b05ead72a9ec7768c5dd3a"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/attempt-01/manual-RO-reset.json",
+      "bytes": 2428,
+      "sha256": "045584a9b0faf0d90093465500c21a315110a81070f32ad93248225e1cf79b50"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/attempt-01/manual-RO-reset.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/attempt-01/refusal-and-live-state.json",
+      "bytes": 1050,
+      "sha256": "a8eff1bdf743eefe5216e5e7d8ee98ece5d52c1c3796253b7cdb386bab6a8a75"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/attempt-01/review.json",
+      "bytes": 30133,
+      "sha256": "b7fde6ce9e2f4256225056e06c895800c57e8a8466c4b7b760445de852494618"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/attempt-01/worker.stderr",
+      "bytes": 236,
+      "sha256": "7017c827b8f4a6cad65f67d71e02f22f095921264b5506892a86c4fac4c7e3b5"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/attempt-01/worker.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/attempt-02/GO-publication.json",
+      "bytes": 224,
+      "sha256": "c620aaa6565573b27c978ee517df0c528d226800a404b1ce0e941a786488decb"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/attempt-02/crash-UART-boundary.json",
+      "bytes": 157,
+      "sha256": "bad8fc46e9d6fd17ebacc9a7e7d828d0be25e5193e95fb6dd06d9bb8b67885e6"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/attempt-02/crash-arm-observed.log",
+      "bytes": 662,
+      "sha256": "877af3cb271d29362a289df0cd869abf00a9c6caabd1da7e43f5a4c44a4a6c3c"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/attempt-02/crash-arm-receipt.json",
+      "bytes": 875,
+      "sha256": "76f8ff327cca695053aa5d8464f2044183e6863c1964f197c9a2d873adece774"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/attempt-02/crash-launch.json",
+      "bytes": 410,
+      "sha256": "a13f9784dd10d292d19e849b7eb43cd8562dee900c98c74a0ceb43354b09168e"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/attempt-02/crash-launch.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/attempt-02/crash-plan.json",
+      "bytes": 3161,
+      "sha256": "5aa0809396fac1e02637928312e882173e5c576b8907bbcdc12c28ed784f1845"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/attempt-02/crash-through-restart-prefix.log",
+      "bytes": 4063,
+      "sha256": "71581ee882491290ea7445097b8e11e41eeec57a043dbeef3e0267a1e7ae4c46"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/attempt-02/source-stage.json",
+      "bytes": 240,
+      "sha256": "163d3aa6dbb1cd5d4326985b8fd924f6b4e46d9aab91523f54745b1ef8e3227a"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/attempt-02/source-stage.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/before-RO-context-exit.json",
+      "bytes": 16,
+      "sha256": "35d6b47e7203be50f8af52b6cadefff325c8246f70b53beda24fb23448a0e62d"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/before-RO-context.json",
+      "bytes": 2504,
+      "sha256": "ff2150cb7a0f98554eeffacb3fe95604fc19f6f482ece62b02745c55c6496f1d"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/before-RO-context.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/capture-boundary.json",
+      "bytes": 66,
+      "sha256": "cf28bc0e6f793033c9ad9dee10c44d76fb6e066d43b559638b58e92bc8af2016"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/cohort-apply-exit.json",
+      "bytes": 78,
+      "sha256": "fb953ae86ff873ea447b292819627b2961ac2dfb9f812616a8f0bf6614654628"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/cohort-apply-final.json",
+      "bytes": 3039,
+      "sha256": "d28fd98088735fdead38431f4f49729062178884eed1d2b3892c1a8d8cde9422"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/cohort-apply-progress.json",
+      "bytes": 2301,
+      "sha256": "ad75537f2a922f2eeeea9e88ad49d5916505a4c14406d20ffce1d64160eaee22"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/cohort-apply-terminal.log",
+      "bytes": 7206,
+      "sha256": "57dbfa8637fd155d493f7fddf72553092eff832b628051632379c75ee3fbe130"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/cohort-prepare-exit.json",
+      "bytes": 16,
+      "sha256": "35d6b47e7203be50f8af52b6cadefff325c8246f70b53beda24fb23448a0e62d"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/cohort-prepare-terminal.json",
+      "bytes": 2438,
+      "sha256": "a553fb2478f5a03488528eb815192ae88922909658ac79b3fc6b335d9ac4571f"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/cohort-prepare.stderr",
+      "bytes": 457,
+      "sha256": "9dfc59e0a553615fb3cd23a59b91e956f70f1fceb739aaa2f6dd71f5873ff42b"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/cohort-restore-plan.json",
+      "bytes": 1598,
+      "sha256": "dfdca654301ed55104b0a2a7150e7f8c68b3cdf91d2bf932ccbfcd6bf9ac9876"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/continuous-bridge-ARM-through-recovery.log",
+      "bytes": 190839,
+      "sha256": "d9ab8a3cbf7c14b3ba82c1aee1f408475b90c0430810378d5fc486048cab4696"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/continuous-capture-comparison.json",
+      "bytes": 466,
+      "sha256": "b73fda06844c9c9a6f7adccbbac9e8ddd812df62158e56cd05ea5d78b49e11da"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/continuous-native-ARM-through-recovery.log",
+      "bytes": 190839,
+      "sha256": "d9ab8a3cbf7c14b3ba82c1aee1f408475b90c0430810378d5fc486048cab4696"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/continuous-native-preparation-through-recovery.log",
+      "bytes": 287930,
+      "sha256": "d03d2b919d096bc456f9343b623746257a3cb341f846670cdd031a94bb0846cb"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/crash-UART-boundary.json",
+      "bytes": 157,
+      "sha256": "ef86c53d9f69c85738a7d4cb5f423236098a2a6ffccfea7061b4ece1ea862baa"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/crash-arm-observed.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/crash-launch.json",
+      "bytes": 410,
+      "sha256": "73f7f8841f2c93176f56015217fe2777f81c02e880ecba5e951182e5cb64d9eb"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/crash-launch.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/crash-plan.json",
+      "bytes": 3161,
+      "sha256": "5aa0809396fac1e02637928312e882173e5c576b8907bbcdc12c28ed784f1845"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/crash-plan.sha256",
+      "bytes": 65,
+      "sha256": "dd3e13e90445b82ff4798f693e8096864e7cbd3424bf11282e0e0cf60557b158"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/crash-source-stage.json",
+      "bytes": 708,
+      "sha256": "c0c642153cf1b9ef82a78d1a4e8a68e6d18b5e69f3158df4376349e17fe4894c"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/crash-source-stage.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/RAM-entry.json",
+      "bytes": 918,
+      "sha256": "47bfa3ce15a382ccbe560d1383d51503b40df36cee9d0b671a365ed68e0bdedc"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/RAM-entry.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/before-RO-context-exit.json",
+      "bytes": 16,
+      "sha256": "35d6b47e7203be50f8af52b6cadefff325c8246f70b53beda24fb23448a0e62d"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/before-RO-context.json",
+      "bytes": 2508,
+      "sha256": "1240e66e8096f2d4bd8358925793cbad00613e04d20abb1840f1fc85b16cd597"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/before-RO-context.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/block-protection-exit.json",
+      "bytes": 16,
+      "sha256": "35d6b47e7203be50f8af52b6cadefff325c8246f70b53beda24fb23448a0e62d"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/block-protection.json",
+      "bytes": 2167,
+      "sha256": "d187475adbdca624a797a5902fc8c0e77906e92a5487e01c8c17584224fe21f1"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/block-protection.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/fresh-after-preservation.json",
+      "bytes": 2777,
+      "sha256": "24e9cd50b76f1c02a6a9570c3daf551eef33b1b99bfba7b94f46fe83f8a69fde"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/fresh-after-preservation.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/guest-activation-plan.json",
+      "bytes": 2429,
+      "sha256": "a6ef64b63c483b75a24ecfbd1b7d18bb5b0028423e52cc4cf3a62d2fb9b9125f"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/guest-activation-prepare.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/guest-activation-terminal.txt",
+      "bytes": 1341,
+      "sha256": "c8dbd56a240255c722260fbb80543205bcb6d541eed3746406f2c83a7975e4d1"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/guest-checkpoint-exit.json",
+      "bytes": 56,
+      "sha256": "0a0799198565cea3e39d24de77889f75874b346bd802f5261ddfb39c2de6e2b3"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/guest-checkpoint-final.json",
+      "bytes": 664,
+      "sha256": "ce416f23b975df42b8a7903757901dc8c548f9897e8dc912169fc32ce38fe67b"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/guest-checkpoint-plan.json",
+      "bytes": 3703,
+      "sha256": "890842bb577cd754b39dccdfc8b789f0a376cce19bb08e264343f51311f343f8"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/guest-checkpoint-terminal.txt",
+      "bytes": 1676,
+      "sha256": "c6a3bd5eab7d67f7afdfa38de54a4d662e1cba3f6db269420a08f5da87c77328"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/guest-clean-shutdown.json",
+      "bytes": 15855,
+      "sha256": "a9b26afbb9a769243c98da81573464d70dc188532ddc29ddae9122c9cf29ebc5"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/guest-clean-shutdown.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/guest-final-collection.json",
+      "bytes": 1560,
+      "sha256": "f405b086041912d42a3686b67e60e8c5741ba1d9267e0a499b0f3ce97d8512d0"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/guest-final-collection.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/guest-observer-and-start.json",
+      "bytes": 360,
+      "sha256": "e64e0d484320460c9ebb929422faa2ede663ee40f6f646cdc38e3d0075d21c6a"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/guest-observer-and-start.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/guest-running.json",
+      "bytes": 16172,
+      "sha256": "136bd36cfc3ea8b2a16fa112d40a5f8d6d1e9f7b5a7c0ece19f3621f3067fc8a"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/guest-running.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/guest-unit-prepare.json",
+      "bytes": 1324,
+      "sha256": "bfdfd21bc384d31cfaf53393875fd35a5b3cedfa43aa6249dc19f81f2c6987f1"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/guest-unit-prepare.stderr",
+      "bytes": 176,
+      "sha256": "28099b6fa6d7d7db9857abad4daed1d787424966ef8e6e104836388526b1e71c"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/identity-and-SD-comparison.json",
+      "bytes": 384,
+      "sha256": "2438ef4f148743d28eb0fd1ed24ace9f846162d4976ed652515a006c68e75c45"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/inspector-artifact-custody.json",
+      "bytes": 1451,
+      "sha256": "4590072c99c6c24376f4c8aa6d16bfc2f5f3a6830c75f8cec56bb0b3cf96f766"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/inspector-artifact-custody.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/inspector-artifact-receiver.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/inspector-artifact-source.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/inspector-artifact-transfer.json",
+      "bytes": 148,
+      "sha256": "fd7662acb7ca7ffb22ed7c2d28d28e2b6a7f45758eb7357f0d481b9676cd9a11"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/inspector-exit.json",
+      "bytes": 16,
+      "sha256": "dcb857d0e07b6bd93afc2f442c85c8c76497e858ab1bbd5504757006b3e199fc"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/inspector.stderr",
+      "bytes": 421,
+      "sha256": "c1ca579685698bc3b04df299d8aa01a158c80b4735445816b2386d0fc50fa3f2"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/inspector.stdout",
+      "bytes": 43,
+      "sha256": "86d84ad19a24d5fc8716e75c22814249ef4f7f49bcef7219406db16bfce645b0"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/normal-replay-UART-boundary.json",
+      "bytes": 54,
+      "sha256": "d2015716eb000a6b13e2636e646bc6fd1fc6f80806f95c199c901a8042219ef3"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/normal-replay-console-prefix.log",
+      "bytes": 99686,
+      "sha256": "b3ff551714feacb6cdeb9af19bd9334756900811d893033b09ab0107b4b8769b"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/normal-replay-reboot.json",
+      "bytes": 344,
+      "sha256": "b838ffb74827408f7c70698cfca0785baec5032cf48ed9e9e74148c3c68bac0c"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/post-recovery-smart.json",
+      "bytes": 647,
+      "sha256": "bdeb342ebe281a541c436ad0c867a086ae0ac6effb86f67ae0a71b118112724b"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/post-recovery-smart.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/preserved-journal-logdump.json",
+      "bytes": 995,
+      "sha256": "75ed25acb495afc3bc3acf6929c46b6c42591042aa173b9287d7c47e9e0fce28"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/preserved-journal-logdump.stderr",
+      "bytes": 28,
+      "sha256": "600dc7f6657b8e8c2436ed3a67e6e8f6a58c906bc4f51012e0796673278b74c7"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/preserved-journal-logdump.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/preserved-journal-scan.json",
+      "bytes": 992,
+      "sha256": "3b940233ac27a7130e7000de25576bc0b3678ba1a87f9a814692f80b3750c793"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/preserved-journal-scan.stderr",
+      "bytes": 28,
+      "sha256": "600dc7f6657b8e8c2436ed3a67e6e8f6a58c906bc4f51012e0796673278b74c7"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/preserved-journal-scan.stdout",
+      "bytes": 226,
+      "sha256": "38d685202a5078482e6699baf485bca44c8975123063effa85d57ad21a048b11"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/protected-export-custody.json",
+      "bytes": 2658,
+      "sha256": "ac6efd93b72c5c5ff4ecf34dbeb11d3898afb0fc2cb18bd678b555c8b12d4506"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/protected-export-custody.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/protected-export-preparation.json",
+      "bytes": 2378,
+      "sha256": "85d36634bf611bf52179446db93a513e543273c11c4972f053b862732eb8b7f8"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/protected-export-preparation.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/protected-export-receiver.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/protected-export-transfer.json",
+      "bytes": 151,
+      "sha256": "114126f18137eb909cc9692061728d20a958ba6bd730c224ccfe04723898ae7e"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/protected-export.stderr",
+      "bytes": 158,
+      "sha256": "28ef035c16d60109d80770020dfdf8018a84fb16a82d71316d059bab5602f209"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/protected-sd-plan-terminal.json",
+      "bytes": 639,
+      "sha256": "33f9f21fccac3bb871c2a9bbf24b586dacdb0c61db0504277c9a5ae09722b179"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/protected-sd-plan.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/protected-sd-source-stage.json",
+      "bytes": 143,
+      "sha256": "6bc1ee997e396de593eeeffb8a022c90224d3cdd8b5a8d3d02d7e0f4a574cb64"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/protected-sd-write-exit.json",
+      "bytes": 16,
+      "sha256": "35d6b47e7203be50f8af52b6cadefff325c8246f70b53beda24fb23448a0e62d"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/protected-sd-write-terminal.json",
+      "bytes": 657,
+      "sha256": "d0fd1c3fa9120c4cac4f22788a434fa9b604cc4158343dae12c6b956e2154ea4"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/protected-sd-write.stderr",
+      "bytes": 736,
+      "sha256": "07f395c950dc90e4b408f08e7bc910b894a8d3ab15c70780e951fc18bd228878"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/replayed-A-host.json",
+      "bytes": 7580,
+      "sha256": "6efd8cdb44ba315cf14cafeb8c9cc56753cf49aae96cabd3606b6e045cd6968a"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/replayed-A-host.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/retained-accounts-plan.json",
+      "bytes": 588,
+      "sha256": "3948163d487d86636e57662d95365db61c7aff5b11cee4bee726b3c141523000"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/retained-accounts-receipt.json",
+      "bytes": 175,
+      "sha256": "d5fdf41673881eec73e107396eb0d015fa380d0b73f52d706382949ff85d090d"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/retained-enrollment-counter11.json",
+      "bytes": 1503,
+      "sha256": "3193cb24133742bccc3662778d60637e60887a8b8ba8cb31c9b3becbe6483f7d"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/retained-filesystem-superblock.bin",
+      "bytes": 1024,
+      "sha256": "809ad8f284cf1096bd2f6f9c446e9d16bf90c635696d2540982a6bfd6df0f02d"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/retained-http-confirmation.json",
+      "bytes": 112,
+      "sha256": "b3181691b649eaaba2be7d3839d49c9e9b152d871a83d4fed056f2a5b9cea8e5"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/retained-identities.json",
+      "bytes": 76,
+      "sha256": "46a4ce9920bd3299aecf245f440b44135cfe2a76d2ed3c02971886fa5e11db3d"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/retained-inode8-bmap0.stderr",
+      "bytes": 28,
+      "sha256": "600dc7f6657b8e8c2436ed3a67e6e8f6a58c906bc4f51012e0796673278b74c7"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/retained-inode8-bmap0.stdout",
+      "bytes": 8,
+      "sha256": "62e3af79f6640e88a48eb4019c0ac7fb9d33f951ed0985f04208ba68f9105ae6"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/retained-inode8-dump.stderr",
+      "bytes": 28,
+      "sha256": "600dc7f6657b8e8c2436ed3a67e6e8f6a58c906bc4f51012e0796673278b74c7"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/retained-inode8-dump.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/retained-inode8-stat.stderr",
+      "bytes": 28,
+      "sha256": "600dc7f6657b8e8c2436ed3a67e6e8f6a58c906bc4f51012e0796673278b74c7"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/retained-inode8-stat.stdout",
+      "bytes": 569,
+      "sha256": "1cbe7d639be064deabb3a08795083273912ff580a984c1b8cc4b509e6c5765b7"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/retained-journal-evidence-wire.json",
+      "bytes": 8400,
+      "sha256": "fc2662a904b1c9d794cb7c4cd70479536fdf66db9f6b37f992bafa20d0401299"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/retained-journal-evidence.json",
+      "bytes": 5564,
+      "sha256": "993223809e490f2e63fe2dbd347845f1cebc27edc50f70dba90e4c3ecd160777"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/retained-journal-evidence.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/retained-observer.jsonl",
+      "bytes": 417,
+      "sha256": "316d9a7531455a0f76994fb0b85a42ccc893bb07fc3108e72bc4a49f6869be62"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/retained-observer.py",
+      "bytes": 7357,
+      "sha256": "334f79c44ca9033556f9a7752d837ada7f37c4c34a7c7a51798807e195faefb4"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/retained-observer.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/retained-preflight.json",
+      "bytes": 1970,
+      "sha256": "b5954d06448e09aad88d9c5a7432587c43dcb61fa5573a3d84e86cb359c3be1e"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/tools-stage.json",
+      "bytes": 206,
+      "sha256": "909879ad75f542234a9f510bb683d0752e0288af680e45a7ded16bd52727be53"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/tools-stage.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/trial-state-backup/builder-start.json",
+      "bytes": 156,
+      "sha256": "1ab27a467de2147289e462f86b81cf5d2a83855ec1faabac293f61f7f1bc0893"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/trial-state-backup/events.jsonl",
+      "bytes": 719,
+      "sha256": "f5ee21c95ecbf501a29fc6e545778e73343e5da2af319597ead3a97ec6b52577"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/trial-state-backup/p4-receipt.json",
+      "bytes": 366,
+      "sha256": "4a95e399157f7bca97323776a8243a309ef6e664da0b678ab9e35c291c389446"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/trial-state-backup/p4-receiver.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/trial-state-backup/p4-source-after.json",
+      "bytes": 1245,
+      "sha256": "9e15af925d4c3635fc8119ad9ea4b8434abe01d8d99b4146f19d734e74041e41"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/trial-state-backup/p4-source-before.json",
+      "bytes": 1224,
+      "sha256": "abd36d99c0433ec213ab09fea43754d44cba7dcb2624fa85087fe1be654205a3"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/trial-state-backup/p4-source.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/trial-state-backup/p4-transfer.json",
+      "bytes": 171,
+      "sha256": "d9e0cfa62af9e7a8eaaa46f2cdd215572955ada71aae695533f5be30d817ab25"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/trial-state-backup/source-final.json",
+      "bytes": 1245,
+      "sha256": "9e15af925d4c3635fc8119ad9ea4b8434abe01d8d99b4146f19d734e74041e41"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/post-crash/trial-state-backup/source-start.json",
+      "bytes": 1224,
+      "sha256": "abd36d99c0433ec213ab09fea43754d44cba7dcb2624fa85087fe1be654205a3"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/preservation-coverage.json",
+      "bytes": 1165,
+      "sha256": "f56d96eab2ff4332c7f09d1e7e7848419125db376ee94b425f7671050534da4e"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/private-ram-sd-source-stage.json",
+      "bytes": 257,
+      "sha256": "3fe3e8fb99973dfcd26a3dcbb357c370b1193c3d4286994a77b31d72134133a6"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/ram-sd-plan-terminal.json",
+      "bytes": 649,
+      "sha256": "79933544ee8cfa6c8ca6a6fd7b21c494cfff30f992cd974224ffb0a6caabef06"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/ram-sd-plan.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/ram-sd-write-exit.json",
+      "bytes": 16,
+      "sha256": "35d6b47e7203be50f8af52b6cadefff325c8246f70b53beda24fb23448a0e62d"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/ram-sd-write-terminal.json",
+      "bytes": 667,
+      "sha256": "d6b0da43d01647f1198567ce8716ddfddce03f346ddd1be6b9b8ae684aa6a704"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/ram-sd-write.stderr",
+      "bytes": 746,
+      "sha256": "fc750e6f778a94ed6e930442084e800c9530875e76b23d4ef552224b643e77bd"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/stage.json",
+      "bytes": 199,
+      "sha256": "892d03a26e3db2b9bb03076f3c93641edba6268d95ebec5aa535b758a62cb74d"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/tools-stage.json",
+      "bytes": 206,
+      "sha256": "74d85749f469522ac4bc4a90f6fc83eb80a32d05a31c4677f1b3c28c5d1dc692"
+    },
+    {
+      "path": "out/dirty-state-physical-20261110-01/tools-stage.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "tmp/inspect-dirty-state-journal-20261110.py",
+      "bytes": 23451,
+      "sha256": "177fb5dd7653873c2a0693a3a34affcea42160c84854499d8f9d793382ec9717"
+    },
+    {
+      "path": "tmp/dirty-state-inspector-checks-20261110.json",
+      "bytes": 2936,
+      "sha256": "50082fc8c979437073b8b9a0eed7e3ed59cbe3a75951842e212cdb34e091939f"
+    },
+    {
+      "path": "tmp/crash-disposable-state-20261110.py",
+      "bytes": 16924,
+      "sha256": "1170ba33b9cba5d84f38853b1fbca0fd0a1ccd83f1a7086ec6048abb9e059de0"
+    },
+    {
+      "path": "tmp/dirty-state-crash-helper-checks-20261110.json",
+      "bytes": 7540,
+      "sha256": "06184f1968a93aec94030001793c53d8a5890c29181358d119375da93cc3fc58"
+    },
+    {
+      "path": "tmp/dirty-state-live-trial-review-20261110.json",
+      "bytes": 71998,
+      "sha256": "1a5acf1b21050074d47df68d255075c395f2a18d4d7271778aab9ae6d39fdcf3"
+    },
+    {
+      "path": "tmp/stage-dirty-state-crash-20261110.py",
+      "bytes": 2489,
+      "sha256": "01f2900344affd996c85b298afcb4d6b6d2d825f2bdfe202649e334f93cec75b"
+    },
+    {
+      "path": "tmp/launch-dirty-state-crash-20261110.py",
+      "bytes": 2767,
+      "sha256": "fc093d87ff94bb3ef5d5ef94122b426dc275e645cf37ebe7fcd867e04706988b"
+    },
+    {
+      "path": "tmp/publish-dirty-state-GO-20261110.py",
+      "bytes": 3793,
+      "sha256": "d58b6cd4e83fbf42495251164234602820b30e2a9fc3e7c86e78e5adcbd73f0a"
+    },
+    {
+      "path": "tmp/preserve-dirty-crash-refusal-20261110.py",
+      "bytes": 2409,
+      "sha256": "c70b4343d905cc0c7466bc2a3059f1c85fee3951dbdfa3f3b7345e333fd7328c"
+    },
+    {
+      "path": "tmp/reset-dirty-state-preparation-ro-20261110.py",
+      "bytes": 3254,
+      "sha256": "3d81e28505fc18d70f4570975c9cce5d2c3d80bca7a92a7f6bc312882ee55bbc"
+    },
+    {
+      "path": "tmp/launch-dirty-state-crash-02-20261110.py",
+      "bytes": 2778,
+      "sha256": "fa6c7e8107f7cec7d12e79457f4e22758313d17342dea93c6543f4220a289d2b"
+    },
+    {
+      "path": "tmp/publish-dirty-state-GO-02-20261110.py",
+      "bytes": 3804,
+      "sha256": "4e02c20ddc67e7b7f3c98483505f6a8afbc0f1fb518dce56e06970afc71c7d85"
+    },
+    {
+      "path": "tmp/protect-postcrash-dirty-state-20261110.py",
+      "bytes": 3087,
+      "sha256": "89c7d1c74ac87adf5df78d26ac4917dd20db77557d87b8added0deaaedbf8b3a"
+    },
+    {
+      "path": "tmp/preserve-dirty-state-p4-20261110.py",
+      "bytes": 6066,
+      "sha256": "08948fcf19a82a237d4d99e5516c15ff3bec7a5b7c42a53d17e7a288841eb55d"
+    },
+    {
+      "path": "tmp/preserve-dirty-inspector-artifacts-20261110.py",
+      "bytes": 3890,
+      "sha256": "18b213a4efe56dd8fd0c1c7d21f4f851d460892ed1ef4af22b79446d05102307"
+    },
+    {
+      "path": "tmp/parse-preserved-dirty-journal-20261110.py",
+      "bytes": 2992,
+      "sha256": "26cdf5165302a20cc7314d9d94eb032cbd7f577b63cdc6bf2c6394990fc01b3f"
+    },
+    {
+      "path": "tmp/scan-preserved-dirty-journal-20261110.py",
+      "bytes": 3027,
+      "sha256": "02d87363f2387b6c0e77d785fc16ef38e00fce9445126f2e163445e734d877b9"
+    },
+    {
+      "path": "tmp/prepare-protected-dirty-journal-export-20261110.py",
+      "bytes": 3899,
+      "sha256": "a6d5c107e2d4537779329978e5fb84a57ecc96cc08e6887a37fd8944341ab4a4"
+    },
+    {
+      "path": "tmp/run-protected-dirty-journal-export-20261110.py",
+      "bytes": 3516,
+      "sha256": "dcc5bad9d3a6a2f29af53c5dec39c36c2a5789c50407a6bfd3faf4af8e2eea34"
+    },
+    {
+      "path": "tmp/confirm-dirty-state-guest-20261110.py",
+      "bytes": 2467,
+      "sha256": "f325f081bd23d5af079ceba57f84d5d978823cb65c0a5c6879c2bca138d68e2a"
+    },
+    {
+      "path": "tmp/collect-post-dirty-state-guest-20261110.py",
+      "bytes": 3423,
+      "sha256": "17ea7eb833357c874d91681f7f1301ca43922bd955806a19ee51026980ed9cd1"
+    },
+    {
+      "path": "tmp/retain-dirty-state-UART-20261110.py",
+      "bytes": 1759,
+      "sha256": "039046775d27065ff1c053e05584b3e9fb121c57ed06a04f4275c5e5cbee0d75"
+    },
+    {
+      "path": "tmp/record-dirty-state-result-20261110.py",
+      "bytes": 5966,
+      "sha256": "e4816a8771fd20833897999eddb8e3b503b5e66a68eba18a2535fbd1d4578426"
+    }
+  ]
+}

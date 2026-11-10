@@ -1,21 +1,21 @@
 # Current images for this board
 
-The board is running the **restored protected host at 192.168.1.116**, boot
-`987d0392-ec8d-491c-a711-33abe07d614c`, with the original pinned SSH identity.
-The card contains the protected normal-host bootstrap below. Read-only old root
-A and writable restored STATE pass management checks; an actual nonroot KVM guest
-advanced its disk through counters 7/8 on normalized B and rolled-back old A,
-and is stopped/checkpointed. Inactive B now holds the normalized root.
-[Physical update and rollback](physical-host-update-rollback-20261110.md).
+The board is running the **original protected host at 192.168.1.116**, boot
+`487a3021-fb8f-4300-924f-31d17aed18b9`, with original pinned SSH identity.
+The card contains the protected normal-host bootstrap below. Original root A
+is read-only; STATE is writable after the [actual dirty-journal recovery](dirty-state-recovery-trial.md).
+Guest counter 11 is stopped and durably checkpointed. Both root slots currently
+contain the original compatible cohort; the normalized full image is not installed.
 No operator flashing is requested.
 
 The [eight-hour workload gate](evidence/eight-hour-endurance-result-20261109.json)
-passes using retained longer-run data. [All four guest directories](guest-preservation-20261109.md)
-and the [original compatible ROOT-A/ROOT-B/STATE cohort](evidence/offline-host-preservation-20261110.json)
-are preserved off-device. RAM recovery boot `732ffcf6…9c96` at `.115` has ended.
-NVMe BOOT is unchanged; firmware loading it remains untested. Release acceptance
-and [fresh normalized deployment](deploy-protected-20261109.md) remain incomplete;
-the previous endurance failure is still unexplained.
+passes using retained longer-run data. Original guests/forensics, the complete
+compatible host cohort and the actual dirty STATE source are preserved privately
+off-device. Controlled SSH/offline selection and NVMe-driver fault recovery also
+pass with actual KVM. RAM recovery boots have ended. NVMe BOOT is unchanged;
+firmware loading it remains untested. Release acceptance and
+[fresh normalized deployment](deploy-protected-20261109.md) remain incomplete;
+the earlier uncontrolled SSH failure remains unexplained.
 
 Paths below are relative to `/home/drew/orange-pi-4-pro` on codex.
 
@@ -23,8 +23,8 @@ For later inactive-root maintenance, use the separately authenticated
 [normalized A/B update kit](normalized-maintenance-20261109.md), retaining the
 [old A rollback pair](matched-host-updates-20261109.md) separately. Its root-payload
 manifest differs from the whole-NVMe installer manifest below. The changed-B
-update, interruption, selection and healthy live rollback cases now pass physically. Failed-health/offline recovery and final normalized full
-installation remain separate gates.
+update, interruption, selection and healthy live rollback cases now pass physically. Failed-health/offline recovery now passes; final normalized full
+installation remains pending.
 The separately retained [matched NVMe-first trial SD](matched-nvme-trial-sd-20261109.md)
 is unbooted and awaits a reviewed physical trial. Its workload evidence and
 backup prerequisites now pass. It is not

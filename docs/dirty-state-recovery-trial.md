@@ -1,7 +1,10 @@
 # Physical dirty-STATE recovery trial
 
-**Design preparation only; no crash, journal export or recovery is performed by
-this document.** The existing [block-protection evidence](evidence/state-block-protection-20261109.json)
+**November 10 physical crash, protected export, normal recovery and KVM pass.**
+[Execution evidence](evidence/dirty-state-physical-20261110.json) pins 177 records;
+[verified private custody](evidence/dirty-state-physical-custody-20261110.json)
+preserves their second copy. The full dirty STATE image and journal artifacts
+are separately retained privately on the builder. The existing [block-protection evidence](evidence/state-block-protection-20261109.json)
 uses software loop fixtures and synthetic orphan metadata. It does not prove
 recovery from an actual interrupted journal on this board. This trial addresses
 the existing physical recovery finding; it is separate from normal installation
@@ -101,45 +104,72 @@ Run an actual KVM guest and retain its CPU/disk/network and clean-exit evidence.
 Reconcile SD counters with the intentional maintenance writes; this trial is
 not one of the final ten clean warm or ten cold boots.
 
-## Execution bindings still required
+## Execution bindings for future trials
 
-No executable crash command is authorized by a guessed boot ID or placeholder
-backup pin. Before the physical trial, independently review the exact live-bound
-mount, marker/fsync, reset and raw-journal-inspection commands, their tool
-availability and the full recovery route. The dirty-journal input and executable
-crash recipe do not exist yet; cohort restoration alone is not a reviewed crash
-plan. If any
-stage fails, retain evidence in RAM and restore the complete authenticated
-original cohort using its unchanged procedure; do not splice an old selector
-onto normalized roots or continue after an ambiguous partial restore.
+The dated plan/helper below are retained evidence, not reusable authorization for
+another boot. Bind a fresh actual RAM boot, exact compatible cohort, source hashes
+and target before independent review. Never run a guessed boot ID or placeholder
+backup pin. Failures require retaining RAM evidence and restoring the complete
+original cohort, not splicing old STATE onto different roots.
 
-## November 10 live preparation
+## November 10 physical result
 
-Actual private RAM boot `597391e8-1ad5-4a04-a27d-f21e243fa960` at `.115` passes
-pinned SSH, rootfs/tmpfs, no swap, no NVMe filesystem mounts and exact target
-checks. Independent review approved the authenticated 256 MiB RAM SD prefix
-write and clean transition. SD maintenance is separate from routine-write proof.
+The original 4/4/8 GiB ROOT-A/ROOT-B/STATE cohort was restored and flushed from
+verified streams in RAM boot `597391e8-1ad5-4a04-a27d-f21e243fa960`. Optional
+readback was omitted; no raw readback hash match is claimed. GPT/BOOT/p5/SD/SPI
+were preserved. The unchanged target preflight passed with all RO flags zero;
+STATE initially had RECOVER false.
 
-The unchanged paired-restoration controller applied reviewed plan
-`dfdca654301ed55104b0a2a7150e7f8c68b3cdf91d2bf932ccbfcd6bf9ac9876`
-with original index `44e8fc1f…64372e`. All 4/4/8 GiB decoded stream hashes/lengths,
-accepted writes and flushes pass, with zero exit and matching terminal/progress
-receipts. Optional readback was not requested; no raw readback hash match is
-claimed. GPT/BOOT/p5/SD/SPI were preserved by this operation. The originals remain
-immutable on the builder; the newly restored cohort is disposable.
+Attempt 01 refused before mount/marker/GO because its UART guard assumed 4:64.
+Actual `ttyS0` is 241:0 on `2500000.uart`, driver `uart-ng`. The refusal and unchanged
+STATE were retained. After independently reviewed correction and resetting only
+the four preparation RO flags, attempt 02 emitted a fresh nonce-bound UART ARM.
+The coordinator atomically published GO. The worker mounted only disposable p4,
+created the exclusive marker, fsynced it and its parent, then directly requested
+one SysRq `b` without intervening sync/unmount. UART records mount and reset.
 
-The full trusted 40-file closure is staged in RAM. The unchanged
-`host-recovery-target.py` snapshot passes with all six RO flags zero, and the
-restored STATE superblock has RECOVER false. Actual ARM environment/process/SD
-guards pass. The pinned debugfs is version 1.47.0, SHA-256 `7aca7f…bfe51`.
-The one-off inspector `tmp/inspect-dirty-state-journal-20261110.py`, SHA-256
-`177fb5dd…c9717`, passes host fixtures and independent source review; its complete
-postcrash inspection remains unperformed. It requires all six block-RO flags set
-and a fresh actual postcrash boot binding; dirty indicators alone do not prove
-committed transactions.
+Postcrash RAM boot `ed6c34cf-b7a0-48ed-b512-2cba29878b3a` mounted no NVMe filesystem.
+After unchanged RO0 preflight, all six nodes were protected RO1. STATE now had
+RECOVER true; the extracted journal began at block 429, sequence 4037. Offline
+parsing of the preserved regular file found descriptor 429 and matching commit
+437, then end 438. The marker filename occurs in journal data block 435.
+Independent offline transaction checksums were not validated.
 
-Raw preparation receipts are under ignored `out/dirty-state-physical-20261110-01/`.
-No marker creation, dirty reset, dirty-image preservation, protected journal
-export or physical replay has been performed. The exact live-bound crash recipe
-still needs independent review before execution. Completed controlled SSH and
-NVMe-driver recovery cases remain accepted without repetition.
+The one-off raw inspector **refused** its final counter-equality check: three
+zero-sector writes/flushes appeared, with written sectors/discards unchanged.
+Its dump and all diagnostics are retained; no successful-inspector claim is made.
+[e2fsprogs 1.47.0](https://github.com/tytso/e2fsprogs/blob/v1.47.0/lib/ext2fs/unix_io.c)
+calls fsync when opening an I/O channel even read-only. The pinned kernel
+[constructs zero-sector flush writes](https://github.com/orangepi-xunlong/linux-orangepi/blob/2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f/block/blk-flush.c#L449)
+and [allows them on RO devices](https://github.com/orangepi-xunlong/linux-orangepi/blob/2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f/block/blk-core.c#L473).
+This fits the three debugfs opens; exact historical attribution remains inference.
+An initial off-device `logdump -S -f` without filesystem context also faulted due
+to the tool's [NULL-context path](https://github.com/tytso/e2fsprogs/blob/v1.47.0/debugfs/logdump.c).
+The corrected journal-only `logdump -f` succeeded without board device access.
+
+Before replay, the complete 8 GiB dirty p4, exact 64 MiB journal/diagnostics and
+later exported persistent journals were verified and retained mode 0400 under
+`/var/lib/a733-dirty-state-preservation-20261110-01/` on the builder. Original
+matched-cohort backups remain separate and immutable. Only parent RO was then
+cleared; p1–p5 stayed RO1. The **unchanged protected exporter** passed its separate
+counter scope, keeping p4 RO1 during `ro,noload`, normally unmounting, and exporting
+six journal files with byte hashes and counters unchanged from the three-flush
+baseline. This success does not erase the raw inspector's refusal.
+
+The reviewed protected SD prefix was restored and flushed, then a mount-free RAM
+reboot produced old-A boot `487a3021-fb8f-4300-924f-31d17aed18b9`. UART shows the
+protected probe/unmount followed by actual ext4 recovery complete and RW mount.
+The recovered marker matches SHA-256 `ae50b931…15e074`; original identity/configuration,
+SSH and NTP pass. Actual nonroot KVM CPU, disk counter 10 → 11 and loopback HTTP
+pass, followed by guest-requested poweroff and independently retained raw zero
+exit. Counter 11 is durably checkpointed in enrollment `3193cb24…483f7d`
+(checkpoint ordinal 8), and the inactive RAM unit uses the new disk pin. Linux
+SD write/discard/flush fields remain zero in the installed boot.
+
+The return console reports original `system.journal` corrupted or uncleanly shut
+down and renamed/replaced. Its cause is unproven; byte export does not establish
+application-journal integrity. Post-recovery SMART has critical warnings/media
+errors 0, unsafe shutdowns 80 and admin errors 162; increases are not attributed
+to a particular command. Old A retains the known resolver-policy defect; final
+normalized installation remains pending. No physical power-cut, SPI recovery,
+final immutable-SD, final boot-cycle or overall release acceptance is claimed.

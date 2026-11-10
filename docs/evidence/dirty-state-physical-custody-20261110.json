@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "date": "2026-11-10",
+  "operation": "verified private second copy of dirty-STATE crash and protected recovery and actual KVM evidence",
+  "archive": {
+    "builder_base": "/var/lib/a733-dirty-state-metadata-evidence-20261110-01",
+    "bytes": 1341440,
+    "sha256": "f3bbb4398a8fe8e1b1e3a6b35b48916decd4bea01cd8318c66b4fca64f1c0386",
+    "stored_readback_matches": true,
+    "file_base_parent_fsynced": true,
+    "members_verified": 178,
+    "records_verified": 177,
+    "private_archive": true,
+    "raw_images_included": false
+  },
+  "copied_result": {
+    "path": "docs/evidence/dirty-state-physical-20261110.json",
+    "bytes": 41922,
+    "sha256": "835dfa1cd50d839c71a49ab5a3469d358c92be1197d15f21eeb3a05c6333c244"
+  }
+}

@@ -1,7 +1,7 @@
 # Deploy the normalized image on the recorded A733
 
 **Prepared procedure; fresh installation and independent physical reproduction
-are unperformed. Do not run while the November 9 endurance workload is active.**
+are unperformed. The accepted November 9 workload has ended; do not rerun it.**
 Use [current images](current-images.md) rather than the older November 6/7
 payloads or delivery endpoints. The selected normalized distribution now passes
 paired independent full-stream verification; physical installation is unperformed.
@@ -31,18 +31,21 @@ The 118399-byte manifest binds STATE UUID
 [artifact comparison](evidence/normalized-full-nvme-image-20261109.json) pass.
 This distribution contains no copy of the board's installed private identity.
 
-Before leaving the installed host, retain and review the endurance outcome,
-observer/CPU exits, full UART capture and post-workload SD measurements off-board.
-The [automatic preserver](endurance-run-20261109.md) does not grant acceptance.
-Retain the authenticated [counter-3 guest backup](evidence/corrected-host-guest-restore-20261108.json)
-and its indexes/manifests. Also take fresh backups of current guests, including
-the counter-5 state, plus completed/failed endurance evidence; counter-3 does not
-contain later data. A full reinstall erases the retained failed-run guest directories.
-Complete the [changed inactive-slot interruption and rollback cases](normalized-maintenance-20261109.md)
-first, preserving their evidence. Use [offline STATE/root preservation](host-state-backup.md) for the paired host
-backup; its execution and a guarded raw STATE restore remain unproven. Keep
-private host identity separately. No preservation of
-unrelated original user data is claimed or required by the discard authorization.
+The existing pre-installation preservation gates now pass: the qualifying
+[eight-hour workload](evidence/eight-hour-endurance-result-20261109.json),
+[original counter-5/forensic guest custody](guest-preservation-20261109.md),
+[compatible host backup and physical restoration](paired-host-restore-20261110.md),
+[changed update/rollback](physical-host-update-rollback-20261110.md),
+[controlled offline recovery](controlled-ssh-recovery-20261110.md),
+[NVMe-driver fault recovery](missing-nvme-recovery-test.md) and
+[dirty-journal recovery](dirty-state-recovery-trial.md). Retain their private
+archives and evidence; do not repeat completed acceptance cases. Later functional
+guest counters 6–11 and STATE test additions are disposable; original counter-5
+and failed-run archives remain immutable. Restore the new counter-5 archive after
+fresh installation, then prove actual KVM. Use the complete compatible host cohort
+for contingency restoration, never an old STATE image alone over different roots.
+Keep private host identity separately. No unrelated original user data needs
+preservation under the existing discard authorization.
 
 The original same-board identity archive is root-private on the builder:
 `/var/lib/a733-original-host-identity-20261108-01/identity.tar`, **10240 bytes**,
