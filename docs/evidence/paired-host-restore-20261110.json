@@ -1,0 +1,447 @@
+{
+  "schema": 1,
+  "date": "2026-11-10",
+  "operation": "physical paired ROOT-A ROOT-B STATE restore",
+  "result": "pass",
+  "host_restore_case_pass": true,
+  "release_acceptance": false,
+  "normalized_distribution_installed": false,
+  "source_backup_evidence": "docs/evidence/offline-host-preservation-20261110.json",
+  "source_backup_index_sha256": "44e8fc1f551f7e3a0be3ad537e48631d1fbe4d090f689e18fa28f811ee64372e",
+  "original_archives_immutable": true,
+  "target": {
+    "serial": "134807190FC700149277",
+    "model": "SPCC M.2 PCIe SSD",
+    "namespace_bytes": 256060514304,
+    "write_partitions": [
+      2,
+      3,
+      4
+    ],
+    "raw_partition_bytes": [
+      4294967296,
+      4294967296,
+      8589934592
+    ]
+  },
+  "ram_boot_id": "732ffcf6-d815-4ec0-80d5-02e9ecb69c96",
+  "interruption": {
+    "type": "handled SIGTERM 15 during actual NVMe p2 stream",
+    "child_exit": 1,
+    "partial_p2_bytes": 140213361,
+    "p3_p4_attempted": false,
+    "power_cut_claimed": false,
+    "same_ram_full_retry": true
+  },
+  "retry": {
+    "process_exit": 0,
+    "status": "restore-complete",
+    "progress_report_sha256": "944b7f73e8fa4923352b17cb42ceb7b57263638a0d47059665f821c8e21efcfe",
+    "stream_flush_readback_all_partitions": true,
+    "targets_closed_and_idle": true,
+    "reprotected_read_only_before_boot": true
+  },
+  "sd_maintenance": {
+    "profile": "protected-state-20261109",
+    "prefix_bytes_written": 268435456,
+    "target_bytes": 1977614336,
+    "cid": "035344535530324780716f216e00a8f5",
+    "raw_sha256": "ab5e8c2c846cbbd51b61bef6831d7e4d1498c29fefbf47d74301b1f3bb0ad207",
+    "write_flush_exit": 0,
+    "readback_performed": false,
+    "routine_write_claimed": false
+  },
+  "restored_host": {
+    "boot_id": "0ff0e3d0-eddd-4d27-9777-af8ccfe6f88c",
+    "address": "192.168.1.116",
+    "authenticated_tool_files": 40,
+    "runtime_guard": true,
+    "root_marker_sha256": "e1cc0395cd97e222e7d8146c05fa703e3ae9373b34bf1e24fbfb91a7e63dfa61",
+    "selector_sha256": "bd27df59dbdb53680db09cf6f7cfd80ceb73aa89c7ade0a627fa76ff4aabd20a",
+    "ntp": "yes",
+    "original_management_identity_preserved": true,
+    "both_public_keys_and_any_subnet_policy": true
+  },
+  "kvm": {
+    "actual_execution": true,
+    "pid": 1860,
+    "uid_gid": 60001,
+    "capabilities_zero": true,
+    "no_new_privs": true,
+    "vm_vcpu_vgic_fds_captured": true,
+    "counter_before": 5,
+    "counter_after": 6,
+    "cpu_disk_loopback_http_pass": true,
+    "host_forward_loopback_only": true,
+    "new_wired_guest_throughput_test_claimed": false,
+    "guest_requested_clean_shutdown": true,
+    "manager_success_same_invocation": true,
+    "invocation": "2c8ef549a6dd4a22aa7352a9e0fb7ad2",
+    "raw_exit_fields_retained": false,
+    "raw_exit_zero_claimed": false,
+    "checkpoint_durable": true,
+    "checkpoint_manifest_sha256": "5486d205d643b149884a8bfa3083338f536c3b7aa00b565a0b7748474d9dff46",
+    "stopped_disk_sha256": "501fdc3fa51ce5326f80032735202f2c829de3c0fe7926156a4195c1ad0b4c0f",
+    "guest_running_now": false,
+    "ram_unit_rebound_to_counter6_without_start": true
+  },
+  "observed_host_boot_and_guest_sd_write_discard_flush_fields_zero": true,
+  "reviews": {
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "plan_result": "PASS",
+    "restore_outcome_result": "PASS",
+    "boot_evidence_result": "PASS"
+  },
+  "software_validation": "Production helper bytes unchanged from reviewed and passing full privileged suite; no source-code change in this physical run",
+  "limits": [
+    "Handled process interruption is not a power-cut test",
+    "Existing p5 guest reused; new counter5 archive restoration still pending",
+    "Reboot SSH observation timed out after30s; no reboot retry; actual UART and new authenticated host boot establish transition",
+    "Unit GC discarded detailed raw QEMU exit fields; initial strict snapshot refused; retained invocation-bound journal supports guest poweroff/manager success without fabricated exit fields",
+    "Immutable-SD final boot counts/whole-card comparison and SPI recovery/SD-removed boot remain open",
+    "Fresh normalized deployment, changed inactive update/rollback, missing NVMe and dirty-journal cases remain open"
+  ],
+  "records": [
+    {
+      "path": "out/paired-host-restore-20261110-01/apply-complete-02-exit.json",
+      "bytes": 16,
+      "sha256": "e8cfe601a7e2762e17f7bf533044f84e714ac09a5af0186ccd93a58eb88f5ba8"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/apply-complete-02-terminal.json",
+      "bytes": 2453,
+      "sha256": "983359c0ae5af71ad2451da2f4662c99778b38a6d513f879eeaceec91877f123"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/apply-complete-02.json",
+      "bytes": 2297,
+      "sha256": "944b7f73e8fa4923352b17cb42ceb7b57263638a0d47059665f821c8e21efcfe"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/apply-complete-02.stderr",
+      "bytes": 6457,
+      "sha256": "ad8affa91bbea61032702b424add8038a656650d8bfc442885034c6ccf1b1aac"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/apply-interrupted-01-terminal.json",
+      "bytes": 2353,
+      "sha256": "59e6a311d5c57f0014b512fc5a3c024e3a0ef776f3d46bf918aec3edafb85efc"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/apply-interrupted-01.json",
+      "bytes": 2353,
+      "sha256": "59e6a311d5c57f0014b512fc5a3c024e3a0ef776f3d46bf918aec3edafb85efc"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/apply-interrupted-01.stderr",
+      "bytes": 686,
+      "sha256": "69c67344e249867795ca4eadca73963e28bdea3fba4f747d6f4a67433dcd7067"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/checkpoint-counter6-plan.json",
+      "bytes": 3703,
+      "sha256": "f4d48b478be5db931ad7612cbb26b37f52523d7064e1353b0e8b267b98d86fc3"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/checkpoint-counter6-receipt.json",
+      "bytes": 603,
+      "sha256": "1b28739b7440c2a25c5d13f16e72c04ad83d33a3b20795a04350ad0ca1f1946c"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/counter6-enrollment.json",
+      "bytes": 1503,
+      "sha256": "5486d205d643b149884a8bfa3083338f536c3b7aa00b565a0b7748474d9dff46"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/counter6-next-unit.json",
+      "bytes": 1193,
+      "sha256": "43d9dfea0f9276ca4da8fec7198e24607b923bbd4d442bdeb0ee2fc0496e0cde"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/counter6-next-unit.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/guest-account-receipt.json",
+      "bytes": 175,
+      "sha256": "d5fdf41673881eec73e107396eb0d015fa380d0b73f52d706382949ff85d090d"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/guest-forward-wired-probe.json",
+      "bytes": 121,
+      "sha256": "b243872d623bee48cc5998d675bbc48009b8f2b6243a360f8a2e8dcd95f1fef0"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/guest-mount-plan.json",
+      "bytes": 2429,
+      "sha256": "a6ef64b63c483b75a24ecfbd1b7d18bb5b0028423e52cc4cf3a62d2fb9b9125f"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/guest-mount-receipt.txt",
+      "bytes": 530,
+      "sha256": "891538f0f650ffd0dd8b8b7bcc3723e91e2ec1fd94f0efc15c064e096911ca90"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/guest-preparation.json",
+      "bytes": 1324,
+      "sha256": "6689fc97cf9eae7f98e295f2371332196af7a2e3ad4e820db2ae04f8555424bd"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/guest-preparation.stderr",
+      "bytes": 176,
+      "sha256": "28099b6fa6d7d7db9857abad4daed1d787424966ef8e6e104836388526b1e71c"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/interrupt-live.stderr",
+      "bytes": 686,
+      "sha256": "69c67344e249867795ca4eadca73963e28bdea3fba4f747d6f4a67433dcd7067"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/interrupt-wrapper-01.json",
+      "bytes": 938,
+      "sha256": "54785b45e8f46286357d7d3ec8b7e0828ed71815abe54ccfdf51d66258d362f4"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/interrupt-wrapper-exit.json",
+      "bytes": 16,
+      "sha256": "e8cfe601a7e2762e17f7bf533044f84e714ac09a5af0186ccd93a58eb88f5ba8"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/interrupt-wrapper-terminal.json",
+      "bytes": 182,
+      "sha256": "826871958aa5d24f94dd376dec8ff0e55b6ef86ff88f0348638195b45140627e"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/plan-01.json",
+      "bytes": 1597,
+      "sha256": "4f4e2adccbee42bc36d35cade290d1178fc5cd9e0e6efcf71b3f6d5adb6c1ed0"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/plan-02.json",
+      "bytes": 1597,
+      "sha256": "4f4e2adccbee42bc36d35cade290d1178fc5cd9e0e6efcf71b3f6d5adb6c1ed0"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/post-guest-host.json",
+      "bytes": 351,
+      "sha256": "cdb2997ae4ff15a4ced6840ff7da17360552a39b2572a898f316b7ff4f8f1fda"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/post-guest-host.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/post-retry-census.json",
+      "bytes": 271,
+      "sha256": "a2e0f074018f1bc1a79bcf4596559bceffbdefdda3d41d60463d8f64ae3d9dd4"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/post-retry-census.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/prepare-01-exit.json",
+      "bytes": 16,
+      "sha256": "e8cfe601a7e2762e17f7bf533044f84e714ac09a5af0186ccd93a58eb88f5ba8"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/prepare-01-terminal.json",
+      "bytes": 2437,
+      "sha256": "1d21d37332c9350892d3f5b2b9aab6968279e00a6fbe511233111d4bf6e899d7"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/prepare-01.json",
+      "bytes": 2289,
+      "sha256": "d26bda3c9c329d3fd935dc4bb4f524c0ba6adeff8ed1c04955e3c5003b1983a1"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/prepare-01.stderr",
+      "bytes": 457,
+      "sha256": "bba327c5ff934e3d54377c92a344e2ed8922ee7b3522fd851f32a292f0d8b8ae"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/prepare-02-exit.json",
+      "bytes": 16,
+      "sha256": "e8cfe601a7e2762e17f7bf533044f84e714ac09a5af0186ccd93a58eb88f5ba8"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/prepare-02-terminal.json",
+      "bytes": 2437,
+      "sha256": "1d21d37332c9350892d3f5b2b9aab6968279e00a6fbe511233111d4bf6e899d7"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/prepare-02.json",
+      "bytes": 2289,
+      "sha256": "d26bda3c9c329d3fd935dc4bb4f524c0ba6adeff8ed1c04955e3c5003b1983a1"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/prepare-02.stderr",
+      "bytes": 457,
+      "sha256": "253aac7c4da9ee164d76603a3f05296bc6b09bcfe79376007c024cb98773e680"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/reboot-ssh.json",
+      "bytes": 310,
+      "sha256": "437ebe32633c08f4ce48d955e83776d22a1e75df0db82dc56ce239170a5a8ccf"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/reboot-start.json",
+      "bytes": 205,
+      "sha256": "0ef1e4f58d9a2bc96689731e9f02f4dd0652bbeec5070d77f3e879c1c330c3a0"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/restored-boot-uart.log",
+      "bytes": 105384,
+      "sha256": "c6d53504f298e7b374008039cf2c60c01a3faac7713adac541e671250b880bb2"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/restored-host-check.json",
+      "bytes": 7583,
+      "sha256": "f4df40676b6cd261ec11e6d50125fdd22264734e7c3af4e697905568e73b1cf8"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/restored-host-check.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/restored-kvm-clean-exit.json",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/restored-kvm-clean-exit.stderr",
+      "bytes": 237,
+      "sha256": "afcf9e658fbbb3b9614b7f15178bc91c93493399bd45c8ca22d6443907668fa8"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/restored-kvm-clean-journal-audit.json",
+      "bytes": 256097,
+      "sha256": "65f1a50662bab9654d0b3eb411a1ee5cab33ed0e37e1259581953c7f040406d1"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/restored-kvm-clean-journal-audit.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/restored-kvm-running.json",
+      "bytes": 16168,
+      "sha256": "fdd811065b5ee25aef51c1d03172d559b2ef4e2f2659b1754cfc9dda95521e83"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/restored-kvm-running.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/sd-plan-terminal.json",
+      "bytes": 639,
+      "sha256": "a7c510182bbbb5898e0c3e4eac228b6b61832533084fe45880b41337cd454107"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/sd-plan.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/sd-source-stage.json",
+      "bytes": 143,
+      "sha256": "6bc1ee997e396de593eeeffb8a022c90224d3cdd8b5a8d3d02d7e0f4a574cb64"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/sd-write-exit.json",
+      "bytes": 16,
+      "sha256": "e8cfe601a7e2762e17f7bf533044f84e714ac09a5af0186ccd93a58eb88f5ba8"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/sd-write-terminal.json",
+      "bytes": 657,
+      "sha256": "eb4724d49f1b21244dec279c6fd777f4abae17788b6b5f1f2e55eef725c02ddd"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/sd-write.stderr",
+      "bytes": 736,
+      "sha256": "394a388bb06aadfd1975492c262f87ad9ca7cf512f179571dfe659dd26dd07d2"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/stage.json",
+      "bytes": 199,
+      "sha256": "bb9d292df3734ddde7fad4ad96305a625f65823a36a5af022cc0e6df91ed315b"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/write-eligibility.json",
+      "bytes": 219,
+      "sha256": "292fb56065535239b7d44978efc37f89f939a6f33a6637115f3a370e554f55e8"
+    },
+    {
+      "path": "out/paired-host-restore-20261110-01/write-eligibility.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "tmp/paired-restore-physical-plan-review-20261110.json",
+      "bytes": 8175,
+      "sha256": "631aab939ce1b8419ac7e318b0f1e121eaef97fd2b8b0887f642ea3f4b4ccced"
+    },
+    {
+      "path": "tmp/paired-restore-physical-outcome-review-20261110.json",
+      "bytes": 8836,
+      "sha256": "cde9b80826abfe3a729fe0f092b27e5ea36b1ece08b3a5c90ddfb8149389f457"
+    },
+    {
+      "path": "tmp/paired-restore-boot-evidence-review-20261110.json",
+      "bytes": 9561,
+      "sha256": "f646f4e3ca5166704c09d93eeee7524d42f9d69702a41e8765893fe53abb090a"
+    },
+    {
+      "path": "tmp/stage-paired-restore-20261110.py",
+      "bytes": 3147,
+      "sha256": "9d30a2bfc5265a853e4840eb4efa66fd02a45912258d08248f9db14576074700"
+    },
+    {
+      "path": "tmp/prepare-paired-restore-20261110.py",
+      "bytes": 3241,
+      "sha256": "5ca2fd36ba56612c1f71f8819505cb32baa5800c2d83b424860aca571eb0834c"
+    },
+    {
+      "path": "tmp/paired-restore-interrupt-wrapper-20261110.py",
+      "bytes": 4014,
+      "sha256": "010487c2508b8e504f3df29f2fbd9999caedddd0be0a017c2ec0b5d0f5a0facd"
+    },
+    {
+      "path": "tmp/retry-paired-restore-20261110.py",
+      "bytes": 2496,
+      "sha256": "4c1d8e1c6d6274199c79aca7b207f225e07270bf60e82640f8651b9683eeb6c1"
+    },
+    {
+      "path": "tmp/paired-restore-postcheck-20261110.py",
+      "bytes": 1347,
+      "sha256": "0e2efff1f1d20f01e0c1006bb4b3c20f21c89a6068aabceae26ec506bac057a4"
+    },
+    {
+      "path": "tmp/stage-protected-sd-20261110.py",
+      "bytes": 2449,
+      "sha256": "eef0adf6ae1bd962cd7b97980fe9d73f5770d63168029bbf0ea7564137cf7bf5"
+    },
+    {
+      "path": "tmp/check-restored-host-20261110.py",
+      "bytes": 2056,
+      "sha256": "0bf0f2f779b57c35a33024b977e00a6846b47ae847afcd7cdb95f2cf3224b942"
+    },
+    {
+      "path": "tmp/prepare-restored-firstkvm-20261110.py",
+      "bytes": 2182,
+      "sha256": "515f8610d9b585526e13881575dcf2ee68023d26116f1fa304d2f1d4e085a845"
+    },
+    {
+      "path": "tmp/observe-restored-firstkvm-20261110.py",
+      "bytes": 2101,
+      "sha256": "260e3ea26cf6fe3ee9b4ffc8c22e7af23446794a8f9c01db225d9d4fd52c69b5"
+    }
+  ]
+}

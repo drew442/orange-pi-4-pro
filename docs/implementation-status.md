@@ -12,21 +12,23 @@ unexplained; it is not reclassified as a pass.
   NVMe **256,060,514,304 bytes**, SPCC M.2 PCIe SSD, serial
   `134807190FC700149277`, firmware EDFM20.0, 512/512-byte sectors.
   Leave both attached heatsinks in place. Diagnostic inventory is sufficient.
-- **Current maintenance session:** private SSH RAM recovery at `root@192.168.1.115`,
-  using `HostKeyAlias=192.168.1.116` and the original pinned key. Boot
-  `732ffcf6-d815-4ec0-80d5-02e9ecb69c96`; RAM root mode 0755, no swap or mounted
-  NVMe filesystems. Complete 40-file recovery tools authenticate under
-  `/run/a733-tools`. Namespace and p1–p5 are block-RO with idle/consumer checks.
-  [Physical RAM entry](evidence/offline-preservation-ram-entry-20261109.json).
-- **Preserved installation:** the prior protected host at `.116`, boot
-  `dd8d6f67-d297-4f3b-bc9a-8a41c9742051`, used read-only NVMe p2 root and STATE
-  UUID `360dfb39-f49f-487e-b307-0bb887c854c5`. Management, automatic NTP and both
-  public SSH keys passed. Its roots, STATE and GUESTS remain intact offline.
-- **Current SD:** the approved first-256-MiB write of private recovery image
-  `d3a022…6bc3f6` completed with fsync/flush and booted physically. No installation
-  readback was requested. Protected normal-host SD `ab5e8c…ad207` remains retained
-  for restoration. NVMe BOOT `cc2ad9…26c313` and SPI are unchanged; firmware
-  loading NVMe BOOT remains untested. [Images](current-images.md).
+- **Current installed host:** restored protected old root A at `root@192.168.1.116`,
+  boot `0ff0e3d0-eddd-4d27-9777-af8ccfe6f88c`, original pinned SSH key. NVMe p2
+  is read-only; STATE UUID `360dfb39-f49f-487e-b307-0bb887c854c5` is writable.
+  All 40 installed maintenance files authenticate; runtime management, NTP,
+  both authorized keys and any-subnet policy pass. GUESTS p5 is mounted; the
+  functional KVM guest is stopped and durably checkpointed at counter 6,
+  manifest `5486d205d643b149884a8bfa3083338f536c3b7aa00b565a0b7748474d9dff46`.
+  [Physical paired restoration](paired-host-restore-20261110.md).
+- **Original preservation:** old boot `dd8d6f67-d297-4f3b-bc9a-8a41c9742051`
+  ROOT-A/B/STATE archives remain immutable off-device, alongside the counter-5
+  guest and stopped forensic archives. RAM boot `732ffcf6…9c96` has ended;
+  `.115` is not the current maintenance endpoint.
+- **Current SD:** the protected normal-host prefix `ab5e8c…ad207` was restored
+  using the approved exact-card writer and booted physically. This explicit
+  maintenance write is recorded separately from zero routine-write observations.
+  No SD installation readback was requested. NVMe BOOT `cc2ad9…26c313` and SPI
+  are unchanged; firmware loading NVMe BOOT remains untested. [Images](current-images.md).
 - **STATE protection:** Legacy serial captured orphan cleanup despite `ro,noload`.
   Reviewed boot/export changes enforce block RO before probing; four real ext4
   fixtures, including legacy orphans, preserve all source bytes/write counters.
@@ -77,7 +79,8 @@ retained with their original metadata. No new eight-hour test is required. Relea
 | 10 cold and 10 warm boots with matched firmware/SSD | Pending; accidental user restarts and the controlled RAM reset are not counted |
 | SPI-to-NVMe with SD removed | Unprogrammed; registered independent recovery and physical SPI/SD-removed boot pending |
 | Immutable SD fallback | Qualifying workload writes were zero and its pre-maintenance full-card hash matched; [whole-card baseline](evidence/protected-sd-baseline-20261109.json) and exact written prefix match pass; [bounded firmware source audit](sd-firmware-write-policy.md) complete; final shutdown/reboot comparison and serial reconciliation pending |
-| Interrupted update, rollback, missing NVMe, dirty journal | Software preparation/review pass; required physical recovery cases pending |
+| Paired host restoration | [Physical interrupted p2 restore, complete retry/readback, restored configuration and actual KVM pass](paired-host-restore-20261110.md); handled SIGTERM, not a power-cut test |
+| Interrupted inactive update, rollback, missing NVMe, dirty journal | Software preparation/review pass; these physical cases remain pending |
 | Off-device guest backup/restoration | [Counter-3 physical restoration](evidence/corrected-host-guest-restore-20261108.json) passes; [current counter-5 off-device backup](evidence/current-counter5-backup-20261109.json) now passes durable receiver readback; new archive restore pending |
 | Coherent normalized full image and independent deployment reproduction | [Two selected full streams match and pass independent artifact review](evidence/normalized-full-nvme-image-20261109.json); fresh installation and reproduced deployment pending |
 
@@ -166,7 +169,8 @@ privileged focused review; full-suite revalidation and final guide review pass. 
    forensic copies](guest-preservation-20261109.md) are verified off-device.
    The [offline compatible ROOT-A/ROOT-B/STATE cohort](evidence/offline-host-preservation-20261110.json)
    now passes full receiver verification and independent custody review. Keep its
-   original archives immutable; physical paired restoration remains pending. The
+   original archives immutable; [physical paired restoration](paired-host-restore-20261110.md)
+   now passes interruption/retry, restored boot/configuration and actual KVM. The
    [warm-reboot collector](warm-boot-validation.md) is independently reviewed
    and prepared for the SD route; it remains unexecuted and refuses active
    workloads or missing retained outcome evidence. The operator-stop snapshot was
@@ -177,8 +181,8 @@ privileged focused review; full-suite revalidation and final guide review pass. 
    before execution. Count the final ten warm and
    ten cold boots only after choosing and installing the final release/boot route.
    An SD-removed SPI route needs corresponding collector adaptation. [Preparation evidence](evidence/warm-boot-preparation-20261109.json).
-   Preserve kernel/control evidence on recurrence. Audit final guest/CPU exits, duration and post-run
-   health; pending collector exit 2 alone is not acceptance.
+   Preserve kernel/control evidence on recurrence. Retain the accepted workload
+   outcome and its explicit operator-stop/exit limitations.
 2. After retaining the workload outcome and backups, run the
    [changed inactive-slot interruption and manual rollback cases](normalized-maintenance-20261109.md)
    on the current old host. Both normalized candidates now pass independent
@@ -189,10 +193,9 @@ privileged focused review; full-suite revalidation and final guide review pass. 
    The earlier protected-image preflight remains historical; do not substitute
    its older image for the final corrected distribution. Preserve same-board
    identity, current guests and prior failure evidence before whole-drive erasure.
-   [Offline STATE/root preservation](host-state-backup.md) is prepared; physical
-   backup now passes, while [paired STATE/root restoration](known-host-state-restore.md) remains
-   a physical gate; the external controller now passes independent review and
-   the full Ubuntu suite without changing installed image bytes.
+   [Offline STATE/root preservation](host-state-backup.md) and physical paired
+   restoration pass. Keep the original cohort immutable; the restored installation
+   is the old compatible pair, not the final normalized distribution.
 3. Independently review the final normalized deployment bindings and preflight
    before physical installation; both full streams now pass complete artifact
    verification. Actual fresh installation and deployment reproduction are open.

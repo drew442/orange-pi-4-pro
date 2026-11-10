@@ -1,17 +1,17 @@
 # Current images for this board
 
-The board is temporarily in **private SSH RAM recovery at 192.168.1.115**,
-boot `732ffcf6-d815-4ec0-80d5-02e9ecb69c96`. Use strict host-key checking with
-`HostKeyAlias=192.168.1.116` and the original pinned key. NVMe is unmounted and
-all six namespace/partition block flags are read-only for offline preservation.
-The card currently contains the recovery SD below; the protected normal-host SD
-is retained for restoration. [Physical transition](evidence/offline-preservation-ram-entry-20261109.json).
+The board is running the **restored protected host at 192.168.1.116**, boot
+`0ff0e3d0-eddd-4d27-9777-af8ccfe6f88c`, with the original pinned SSH identity.
+The card contains the protected normal-host bootstrap below. Read-only old root
+A and writable restored STATE pass management checks; an actual nonroot KVM guest
+advanced its disk from counter 5 to 6 and is stopped/checkpointed.
+[Physical paired restoration](paired-host-restore-20261110.md).
 No operator flashing is requested.
 
-The prior protected host demonstrated real KVM execution and the
-[eight-hour workload gate](evidence/eight-hour-endurance-result-20261109.json)
-passes using its retained longer run. [All four guest directories are preserved](guest-preservation-20261109.md).
-The offline compatible ROOT-A/ROOT-B/STATE copy is next and remains unperformed.
+The [eight-hour workload gate](evidence/eight-hour-endurance-result-20261109.json)
+passes using retained longer-run data. [All four guest directories](guest-preservation-20261109.md)
+and the [original compatible ROOT-A/ROOT-B/STATE cohort](evidence/offline-host-preservation-20261110.json)
+are preserved off-device. RAM recovery boot `732ffcf6…9c96` at `.115` has ended.
 NVMe BOOT is unchanged; firmware loading it remains untested. Release acceptance
 and [fresh normalized deployment](deploy-protected-20261109.md) remain incomplete;
 the previous endurance failure is still unexplained.
@@ -22,10 +22,11 @@ For later inactive-root maintenance, use the separately authenticated
 [normalized A/B update kit](normalized-maintenance-20261109.md), retaining the
 [old A rollback pair](matched-host-updates-20261109.md) separately. Its root-payload
 manifest differs from the whole-NVMe installer manifest below. Physical update
-and rollback tests remain pending until workload evidence is retained and reviewed.
+and rollback tests remain pending; workload evidence and required backups are
+now retained and reviewed.
 The separately retained [matched NVMe-first trial SD](matched-nvme-trial-sd-20261109.md)
-is unbooted and awaits a reviewed physical trial after workload evidence is
-retained and reviewed and required backups are complete. It is not
+is unbooted and awaits a reviewed physical trial. Its workload evidence and
+backup prerequisites now pass. It is not
 the normal host bootstrap in the table.
 
 | Purpose | Existing artifact |

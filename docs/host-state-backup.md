@@ -5,11 +5,13 @@
 [Review evidence](evidence/offline-preservation-preparation-20261109.json).
 The [eight-hour workload result](evidence/eight-hour-endurance-result-20261109.json)
 and [guest preservation](guest-preservation-20261109.md) are complete. Raw
-ROOT-A/ROOT-B/STATE backup is complete; physical host restoration remains pending.
+ROOT-A/ROOT-B/STATE backup and [physical paired host restoration](paired-host-restore-20261110.md)
+now pass.
 
 [Physical RAM entry and source protection](evidence/offline-preservation-ram-entry-20261109.json)
-now pass at `.115`, boot `732ffcf6-d815-4ec0-80d5-02e9ecb69c96`. NVMe is
-unmounted; namespace and p1–p5 are block read-only. Do not repeat the
+were recorded at `.115`, boot `732ffcf6-d815-4ec0-80d5-02e9ecb69c96`, with NVMe
+unmounted and all six nodes block read-only. That RAM session has ended after
+physical restoration; see current status before issuing live commands. Do not repeat the
 pre-protection snapshot against those flags: it intentionally requires RO=0.
 Retain protection throughout the raw copies; no filesystem mount or replay is
 permitted first.
@@ -196,6 +198,7 @@ Routine readback is optional; use it for physical restoration acceptance.
 The complete original set is preserved privately on the builder. Its trusted
 1,361-byte index SHA-256 is
 `44e8fc1f551f7e3a0be3ad537e48631d1fbe4d090f689e18fa28f811ee64372e`.
-No host restoration has been performed. Keep this original set immutable,
-test interrupted retry and verify same-board boot,
-configuration/management and an actual KVM guest before claiming host restore.
+Keep this original set immutable. The [physical restoration result](paired-host-restore-20261110.md)
+now records interrupted retry, same-board boot/configuration/management and an
+actual KVM guest. It does not establish power-cut behavior or a fresh normalized
+installation.

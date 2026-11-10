@@ -1,19 +1,19 @@
 # Guest storage and account activation
 
-Explicit controllers now prepare and apply guest-storage mounting and locked
-service identities. The prepared personalized A/B root artifacts include the
-current 39-file maintenance tree at `/usr/lib/a733-tools`, including these
-controllers; the authoritative manifest records its contents. See
-[current managed host roots](current-host-roots.md). Stage a trusted tree on
-NVMe or RAM only after actual installation planning. The documented portable
-archive is an earlier build, and the published recovery SD image is an older
-subset; neither has been refreshed to this prepared artifact. See
-[guest tools availability](guest-tools-package.md) for the earlier portable
-package details. The managed host has not
-been installed or booted and no KVM guest has passed. [Guest enrollment](guest-enrollment.md) now publishes the private directory
-and protected assets. Automatic boot integration and production supervision
-remain work in progress. No physical
-activation or KVM guest has been demonstrated.
+Explicit controllers prepare and apply guest-storage mounting and locked
+service identities. The current installed host includes the authenticated
+40-file maintenance tree (including `package.json`) at `/usr/lib/a733-tools`.
+[Physical guest results](kvm-vgic-results-20261108.md) establish storage/account
+activation and actual nonroot KVM execution; the
+[corrected-host guest restoration](evidence/corrected-host-guest-restore-20261108.json)
+advanced the disk counter through 4 and 5. These observations do not establish
+acceptance of the unbooted normalized distribution. See
+[implementation status](implementation-status.md) for the current maintenance
+session and remaining gates.
+
+Activation and guest startup remain explicit. Enrollment publishes private
+per-guest directories and protected assets; recreate locked RAM service accounts
+and review the unit before starting a guest after a host reboot.
 
 ## Mount the installation's guest filesystem
 
@@ -30,9 +30,9 @@ be the sole full-filesystem ext4 mount at `/run/a733-guests`, with
 recipe's internal journal inode 8 is allowed. External journal device/UUID
 references and the journal-device feature are refused before mounting.
 
-The following is prospective CLI usage after hardware inventory, backups and
-explicit operator approval. These commands have not been reproduced on the
-board. Enter a root shell and set every value from the actual installation:
+The following shows the controller interface. Physical activation is recorded
+in the linked evidence; a fresh installation needs its own verified target and
+receipts. Enter a root shell and set every value from the actual installation:
 
 ```sh
 : "${A733_GUEST_TOOLS:?Set absolute trusted complete installed or portable tool tree}"

@@ -1,13 +1,13 @@
 # Restore the recorded host's paired roots and STATE
 
-**Preparation only; independent code/procedure review and 2,245 privileged Ubuntu
-tests pass. [Original offline backup](evidence/offline-host-preservation-20261110.json)
-and independent custody review now pass; physical host restoration remains unperformed.**
-[Preparation evidence](evidence/known-host-state-restore-preparation-20261109.json).
-The [November 9 workload result](evidence/eight-hour-endurance-result-20261109.json)
-passes the 8-hour criterion. Complete and verify health/SD checks and
-[off-device backups](host-state-backup.md) before restoration. This procedure is for restoring that preserved host, not migrating its
-old selector onto the normalized root pair.
+**Physical paired restoration now passes:** interrupted p2 write, full retry
+with readback, restored management/configuration and an actual nonroot KVM guest.
+[Result and limitations](paired-host-restore-20261110.md).
+The [original offline backup](evidence/offline-host-preservation-20261110.json)
+remains immutable. [Independent preparation review](evidence/known-host-state-restore-preparation-20261109.json)
+and privileged software validation remain distinct from this physical result.
+This procedure restores the preserved host; it does not migrate the old selector
+onto the normalized root pair.
 
 `scripts/restore-known-host-state.py` restores only `/dev/nvme0n1p2`, `p3` and
 `p4`, in that order. The fixed namespace is the 256060514304-byte SPCC M.2 PCIe
@@ -161,5 +161,5 @@ This check does not replace the recorded process exit. A terminal file alone
 also cannot prove success if its output write failed. Final software
 success is not hardware acceptance: boot the preserved compatible route, verify
 selected root, restored configuration and pinned management identity, then run
-an actual KVM guest. Preserve interrupted-retry evidence separately. No such
-physical host restore has been performed yet.
+an actual KVM guest. Preserve interrupted-retry evidence separately. The [recorded physical run](paired-host-restore-20261110.md) meets these
+restored-host checks; fresh normalized installation remains separate.
