@@ -1,10 +1,11 @@
 # Preserve installed STATE and both roots before reinstalling
 
-**Raw cohort copy remains UNEXECUTED; independent preparation review passes.**
+**Original offline cohort copy and independent custody review pass.**
+[Completed preservation](evidence/offline-host-preservation-20261110.json).
 [Review evidence](evidence/offline-preservation-preparation-20261109.json).
 The [eight-hour workload result](evidence/eight-hour-endurance-result-20261109.json)
 and [guest preservation](guest-preservation-20261109.md) are complete. Raw
-ROOT-A/ROOT-B/STATE backup and host restoration remain unperformed.
+ROOT-A/ROOT-B/STATE backup is complete; physical host restoration remains pending.
 
 [Physical RAM entry and source protection](evidence/offline-preservation-ram-entry-20261109.json)
 now pass at `.115`, boot `732ffcf6-d815-4ec0-80d5-02e9ecb69c96`. NVMe is
@@ -192,6 +193,9 @@ binds all three archives to an off-device verified index, claims all targets
 before writing roots then STATE, and reports partial attempts conservatively.
 Routine readback is optional; use it for physical restoration acceptance.
 
-No backup or host restoration has been performed by this preparation. Preserve
-the complete set, test interrupted retry and verify same-board boot,
+The complete original set is preserved privately on the builder. Its trusted
+1,361-byte index SHA-256 is
+`44e8fc1f551f7e3a0be3ad537e48631d1fbe4d090f689e18fa28f811ee64372e`.
+No host restoration has been performed. Keep this original set immutable,
+test interrupted retry and verify same-board boot,
 configuration/management and an actual KVM guest before claiming host restore.

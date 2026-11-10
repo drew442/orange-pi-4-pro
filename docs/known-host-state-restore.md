@@ -1,7 +1,8 @@
 # Restore the recorded host's paired roots and STATE
 
 **Preparation only; independent code/procedure review and 2,245 privileged Ubuntu
-tests pass. Physical backup and host restoration remain unperformed.**
+tests pass. [Original offline backup](evidence/offline-host-preservation-20261110.json)
+and independent custody review now pass; physical host restoration remains unperformed.**
 [Preparation evidence](evidence/known-host-state-restore-preparation-20261109.json).
 The [November 9 workload result](evidence/eight-hour-endurance-result-20261109.json)
 passes the 8-hour criterion. Complete and verify health/SD checks and

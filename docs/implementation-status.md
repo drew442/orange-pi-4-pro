@@ -1,6 +1,6 @@
 # Implementation status
 
-Updated 2026-11-09. Physical release acceptance and independent deployment
+Updated 2026-11-10. Physical release acceptance and independent deployment
 reproduction remain incomplete. The protected boot pair demonstrated a real KVM
 workload with independent UART capture; the qualifying run is now stopped. The previous SSH failure remains
 unexplained; it is not reclassified as a pass.
@@ -164,7 +164,9 @@ privileged focused review; full-suite revalidation and final guide review pass. 
 
 1. Current counter-5 guest backup and [all three stopped endurance-directory
    forensic copies](guest-preservation-20261109.md) are verified off-device.
-   Preserve the offline compatible ROOT-A/ROOT-B/STATE cohort next. The
+   The [offline compatible ROOT-A/ROOT-B/STATE cohort](evidence/offline-host-preservation-20261110.json)
+   now passes full receiver verification and independent custody review. Keep its
+   original archives immutable; physical paired restoration remains pending. The
    [warm-reboot collector](warm-boot-validation.md) is independently reviewed
    and prepared for the SD route; it remains unexecuted and refuses active
    workloads or missing retained outcome evidence. The operator-stop snapshot was
@@ -187,8 +189,8 @@ privileged focused review; full-suite revalidation and final guide review pass. 
    its older image for the final corrected distribution. Preserve same-board
    identity, current guests and prior failure evidence before whole-drive erasure.
    [Offline STATE/root preservation](host-state-backup.md) is prepared; physical
-   backup and [paired STATE/root restoration](known-host-state-restore.md) remain
-   physical gates; the external controller now passes independent review and
+   backup now passes, while [paired STATE/root restoration](known-host-state-restore.md) remains
+   a physical gate; the external controller now passes independent review and
    the full Ubuntu suite without changing installed image bytes.
 3. Independently review the final normalized deployment bindings and preflight
    before physical installation; both full streams now pass complete artifact

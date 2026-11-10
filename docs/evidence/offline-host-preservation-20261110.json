@@ -1,0 +1,82 @@
+{
+  "schema": 1,
+  "date": "2026-11-10",
+  "operation": "original offline ROOT-A ROOT-B STATE preservation",
+  "result": "pass",
+  "host_restore_performed": false,
+  "release_acceptance": false,
+  "source_boot_id": "732ffcf6-d815-4ec0-80d5-02e9ecb69c96",
+  "source_serial": "134807190FC700149277",
+  "source_namespace_bytes": 256060514304,
+  "source_retained_unmounted_block_read_only": true,
+  "builder_base": "/var/lib/a733-pre-reinstall-preservation-20261109-01",
+  "index": {
+    "path": "out/offline-host-preservation-20261109-01/index.json",
+    "bytes": 1361,
+    "sha256": "44e8fc1f551f7e3a0be3ad537e48631d1fbe4d090f689e18fa28f811ee64372e"
+  },
+  "archives": [
+    {
+      "archive": "p2.img.gz",
+      "encoded_bytes": 143648152,
+      "encoded_sha256": "c6b4484220362ce96d215f519bbb10d17f0433e1b0cdd15dd9828041aa766aa3",
+      "number": 2,
+      "raw_bytes": 4294967296,
+      "raw_sha256": "d868571e89216762ce9d8d2b8209884b958c53b7be97a215d8c4ddbc96ab7940"
+    },
+    {
+      "archive": "p3.img.gz",
+      "encoded_bytes": 143647075,
+      "encoded_sha256": "06e510d7eb2084f646c420e1dafa0843589bdc34994a1dcf3e6c928af22ed41e",
+      "number": 3,
+      "raw_bytes": 4294967296,
+      "raw_sha256": "3369a8b4c4b0f7dd9ed33740db3bd86b0d868154bc8195c66806ee0e73f3bdab"
+    },
+    {
+      "archive": "p4.img.gz",
+      "encoded_bytes": 20952700,
+      "encoded_sha256": "d3fb82378916c553d04f4ef42d9fc9d040c7bcd3319eb966f2d1d2098fc111a9",
+      "number": 4,
+      "raw_bytes": 8589934592,
+      "raw_sha256": "fe5f84db191d0ea29caa1a83bcd4da022089769a2e8aa1b25cfdeb12bb87b0a9"
+    }
+  ],
+  "total_encoded_bytes": 308247927,
+  "raw_hash_origin": "receiver-derived during full stored gzip decode; no independent source raw hash",
+  "source_and_destination_ssh_exits": 0,
+  "decoded_crc_eof_and_exact_lengths_verified": true,
+  "all_archive_receipt_index_files_and_directory_and_parent_fsynced": true,
+  "inventory": {
+    "path": "out/offline-host-preservation-20261109-01/inventory.json",
+    "bytes": 5840,
+    "sha256": "2275a9bf0085a0289b50a3629f69cd819335c7898a42b5bf83ba55f0c54aa944"
+  },
+  "custody": {
+    "path": "out/offline-host-preservation-20261109-01/custody-finalization.json",
+    "bytes": 319,
+    "sha256": "9ee908af3992702ebb97d2ceae9a6873e0d50349469ad9e6073bd22dc88fd06a"
+  },
+  "final_idle_census": {
+    "path": "out/offline-host-preservation-20261109-01/final-census.json",
+    "bytes": 318,
+    "sha256": "92e191de97aa6d5c4332768dae660aa0237941ffb3d8f97ad74d7c5b98cfd6f8"
+  },
+  "review": {
+    "path": "tmp/offline-cohort-review-20261109.json",
+    "bytes": 16452,
+    "sha256": "eed7bce91fec92ddfb86cd926b0f51c38f6e31697252a6ae3015128a3db7e990"
+  },
+  "review_result": "PASS",
+  "review_model": "gpt-6.1-sol",
+  "review_effort": "high",
+  "remaining": [
+    "Physical interrupted paired restore and retry",
+    "Compatible boot, restored configuration and management identity",
+    "Actual KVM execution after restored host boot"
+  ],
+  "limits": [
+    "No source mount, filesystem repair, journal replay, NVMe write or SPI programming",
+    "BOOT pin is the retained compatible artifact; restore preflight must verify actual BOOT before writing",
+    "Independent review rehashed compressed archives and reused authenticated successful full-decode receipts; no extra 16GiB decode"
+  ]
+}
