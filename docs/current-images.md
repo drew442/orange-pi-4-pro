@@ -1,19 +1,19 @@
 # Current images for this board
 
-The board is running the **original protected host at 192.168.1.116**, boot
-`487a3021-fb8f-4300-924f-31d17aed18b9`, with original pinned SSH identity.
-The card contains the protected normal-host bootstrap below. Original root A
-is read-only; STATE is writable after the [actual dirty-journal recovery](dirty-state-recovery-trial.md).
-Guest counter 11 is stopped and durably checkpointed. Both root slots currently
-contain the original compatible cohort; the normalized full image is not installed.
-No operator flashing is requested.
+The board is in **SSH RAM recovery at 192.168.1.115**, boot
+`5e051870-626c-4da2-bb93-05fc29178614`, original pinned identity with strict SSH
+`HostKeyAlias=192.168.1.116`. The card contains the SSH recovery bootstrap.
+An independent operator is applying the reviewed normalized whole-NVMe image as
+one stream with no optional readback. Installation success, identity restoration,
+protected host SD restoration and final host boot remain unestablished.
+Do not boot incomplete NVMe contents. No operator flashing is requested.
 
 The [eight-hour workload gate](evidence/eight-hour-endurance-result-20261109.json)
 passes using retained longer-run data. Original guests/forensics, the complete
 compatible host cohort and the actual dirty STATE source are preserved privately
 off-device. Controlled SSH/offline selection and NVMe-driver fault recovery also
-pass with actual KVM. RAM recovery boots have ended. NVMe BOOT is unchanged;
-firmware loading it remains untested. Release acceptance and
+pass with actual KVM. Current RAM maintenance is for fresh deployment;
+firmware loading NVMe BOOT remains untested. Release acceptance and
 [fresh normalized deployment](deploy-protected-20261109.md) remain incomplete;
 the earlier uncontrolled SSH failure remains unexplained.
 
@@ -35,7 +35,7 @@ the normal host bootstrap in the table.
 | SSH RAM recovery, same board | `out/ssh-ram-installer-20261108/a733-ssh-installer.img.gz` |
 | Retained protected host SD bootstrap | `out/serial-recovery-20261109/protected-sd-retained-01/a733-host-sd.img.gz` |
 | Current protected NVMe BOOT component | `out/serial-recovery-20261109/protected-nvme-retained-01/boot.ext4.gz` |
-| Normalized full NVMe candidate, fresh installation unperformed | `out/normalized-nvme-candidate-20261109/nvme.img.gz` |
+| Normalized full NVMe candidate, installation in progress | `out/normalized-nvme-candidate-20261109/nvme.img.gz` |
 | Historical full NVMe base, requiring the protected BOOT update | `out/vgic-nvme-image-20261108/retained-02/nvme.img.gz` |
 
 The two SD artifacts each expand to **268,435,456 bytes**, fitting the actual
@@ -85,7 +85,7 @@ The historical NVMe base stream expands to **256,060,514,304 bytes**, SHA-256
 Its producer manifest is retained at `out/vgic-nvme-image-20261108/build-02.stdout`
 (35,023 bytes, SHA-256 `addfcafe239a2aa075435383cc4742869d256d98beecd2526806da206d98f4a2`).
 Same-board identity was restored after installation and BOOT was subsequently
-updated, so neither unpersonalized full-stream hash describes the current NVMe.
+updated, so that historical unpersonalized stream does not describe the later installed state.
 Use the selected normalized candidate above for the authorized fresh installation
 and independent reproduction in the [deployment guide](deploy-protected-20261109.md).
 The historical base is retained for provenance and recovery.
