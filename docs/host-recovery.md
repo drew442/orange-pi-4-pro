@@ -8,9 +8,10 @@ guest partitions are not rewritten. Recovery changes regular files on NVMe
 state; mounting that filesystem can also replay its journal.
 
 The [maintenance package](maintenance-tools.md) and preparation initramfs now
-include the controller and its source closure. No physical failed-boot recovery
-has been demonstrated; networking, recovery boot and the procedure still require
-board validation. Keep the [diagnostic serial guide](diagnostic-image.md)
+include the controller and its source closure. [Controlled SSH failure followed
+by RAM recovery, offline root selection, protected host boot and actual KVM](controlled-ssh-recovery-20261110.md)
+has passed physically. That controlled case does not establish recovery from a
+fully hung kernel. Keep the [diagnostic serial guide](diagnostic-image.md)
 available; do not change SPI before proving board recovery.
 
 ## Preparation and authorization
@@ -36,7 +37,8 @@ Enter a root shell, set the required values from actual inventory and trusted
 release records, and use the following prototype CLI form. The directories
 must have root ownership and mode `0700`; manifests and
 review plans must be root-owned regular files with one link and mode `0400`.
-These commands have not been reproduced on the board.
+The linked physical record retains the actual same-board invocation and receipts;
+the variables below must still be bound to each intended recovery session.
 
 ```sh
 : "${A733_NVME_TARGET:?Set exact whole-NVMe stable path}"
@@ -101,9 +103,13 @@ retrying because journal replay or earlier recovery may have changed state.
 
 No automatic reboot or running-root switch occurs. After an explicit boot,
 verify the selected marker, NVMe-backed state, management reachability and actual
-KVM guest execution. Missing NVMe, both roots failing authentication, corrupt
-state requiring repair, backup restoration and interrupted SPI recovery remain
-separate required recovery paths. All physical release gates remain open.
+KVM guest execution. [NVMe-driver fault recovery](missing-nvme-recovery-test.md),
+[paired host backup restoration](paired-host-restore-20261110.md) and
+[dirty-STATE protected export/replay](dirty-state-recovery-trial.md) also have
+separate physical evidence. Neither both-root corruption requiring repair nor
+interrupted SPI recovery is established by those cases. SPI programming remains
+gated on independent recovery proof. See the [acceptance record](hardware-validation.md)
+for completed and remaining release gates.
 
 ## Native software evidence
 
@@ -122,7 +128,8 @@ ownership, read-only claims, full hashes and archive/publication execute.
 Cleanup removed its private mounts, loop and backing file, independently checked
 from the builder afterward. The run took 1:28.36 with 36,784 KiB peak process RSS.
 It does not exercise dirty-journal transactions after a crash, physical failed
-boot, backup restore, or KVM. The new tool remains untested on ARM and unpackaged.
+boot, backup restore, or KVM. Those fixture limits are separate from the later
+packaged ARM execution in the linked controlled recovery record.
 
 Verified command on the Jammy builder:
 
