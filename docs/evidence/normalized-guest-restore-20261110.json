@@ -1,0 +1,422 @@
+{
+  "schema": 1,
+  "date": "2026-11-10",
+  "classification": "Physical preserved counter-5 archive restoration and actual nonroot KVM checkpoint/restart on fresh normalized A",
+  "result": "pass",
+  "host_boot_id": "d9e94d54-79bb-49c3-ad72-2672a9c71c6a",
+  "source_archive": {
+    "bytes": 3394269,
+    "sha256": "ba85b804690a50bd12b4e001b11cfe404896c78e70e4d87855c1523145b297e2",
+    "source_manifest_sha256": "0b4b439236715ff308c9efab823159ed97fe5dfe010ed4a366091161dc1647fd"
+  },
+  "destination_guest_uuid": "298b281a-d10e-44eb-bdb9-285e27eaafad",
+  "restored_manifest_sha256": "0fecc409be4a522ea09dbbf034eb45b61cdda1e9bd0ca1dea6e076ae7409a9f1",
+  "actual_guest_runs": [
+    {
+      "counter": 6,
+      "PID": 2553,
+      "independent_live_KVM_probe": true,
+      "guest_requested_powerdown": true,
+      "raw_ExecMainCode": 1,
+      "raw_ExecMainStatus": 0,
+      "host_stop_or_guest_kill_sent": false
+    },
+    {
+      "counter": 7,
+      "PID": 3018,
+      "independent_live_KVM_probe": true,
+      "guest_requested_powerdown": true,
+      "raw_ExecMainCode": 1,
+      "raw_ExecMainStatus": 0,
+      "host_stop_or_guest_kill_sent": false
+    }
+  ],
+  "disk_counter_progression": [
+    5,
+    6,
+    7
+  ],
+  "original_history_records_preserved": 4,
+  "final_history_records": 6,
+  "final_checkpoint_chain_number": 2,
+  "final_manifest_sha256": "768a0138781926b2fa7765fcf87f5fa444edfda4a004dc0a171d7daed59759fb",
+  "final_stopped_disk_sha256": "bea84eb95db444a3ea923db1ea58cabda4cc0f7392140bf45b4b2c64d1bca3fb",
+  "final_inactive_RAM_unit_sha256": "a3b5f136eccd5423ea6ccce3e99a76a16305d41b2727339317846914f9ac022a",
+  "final_guest_stopped_PID0": true,
+  "actual_CPU_disk_network_guest_poweroff_and_restart": true,
+  "coordinator_independent_live_KVM_acceptance": true,
+  "no_TCG_or_container_substitute": true,
+  "independent_procedure_reproduction": "pass for full same-board installation, identity, protected SD, restored guest and checkpoint/restart; final reliability series remains separate",
+  "operator_report_sha256": "20bca5728cfa44bfb91c08abc809292e157eb992d1c2e4b17271f5324071111c",
+  "independent_operator_model": "gpt-6.1-sol",
+  "independent_operator_effort": "medium",
+  "independent_review_model": "gpt-6.1-sol",
+  "independent_review_effort": "high",
+  "extra_endurance_run": false,
+  "measured_release_boots_counted": 0,
+  "SPI_written": false,
+  "release_acceptance": false,
+  "post_install_health": {
+    "critical_warning": 0,
+    "media_errors": 0,
+    "temperature_kelvin": 298,
+    "unsafe_shutdowns": 80,
+    "admin_error_entries": 164,
+    "cause_of_admin_error_count_proven": false
+  },
+  "material_limits": [
+    "Root/STATE/GUESTS and guests are physical NVMe; full installation readback remained optional and was skipped",
+    "Original four history records retained unchanged; restoration deliberately starts a new checkpoint chain, so final checkpoint2 is not disk counter7",
+    "Mount hint caused wrapper JSON refusal after successful controller mount; original output retained, no repeat mount",
+    "Wrong history dirname in unit wrapper refused before unit creation; corrected to authenticated .checkpoints, no repeat restore",
+    "Referenced observer raw exitCode1/status0 is authoritative; later current guest unit properties can be reset by garbage collection",
+    "smartctl is absent from minimal host; its failed invocation opened no device; installed nvme smart-log exit0 supplied health snapshot",
+    "No ten warm/cold cycles, final whole-SD boundary comparison, SPI or SD-removed boot accepted by this record"
+  ],
+  "records": {
+    "out/normalized-deployment-coordinator-20261110-01/counter6-independent-live-proof.json": {
+      "bytes": 16594,
+      "sha256": "ab9909208bf1572f6047643db2a910f0cebea0ae61d69723fae3d1268756aa4b"
+    },
+    "out/normalized-deployment-coordinator-20261110-01/counter6-independent-live-proof.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/normalized-deployment-coordinator-20261110-01/counter7-independent-live-proof.json": {
+      "bytes": 31565,
+      "sha256": "c0013a53bac11331749d725e8242e773574faaa69af56f0af27a7493032e8ab9"
+    },
+    "out/normalized-deployment-coordinator-20261110-01/counter7-independent-live-proof.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/normalized-deployment-coordinator-20261110-01/post-install-NVMe-health.json": {
+      "bytes": 850,
+      "sha256": "934bafc828de1cd9e1c8074a9b0aa0c5ce819dc7872dbdc7cdd4e67937470180"
+    },
+    "out/normalized-deployment-coordinator-20261110-01/post-install-NVMe-health.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/normalized-deployment-coordinator-20261110-01/post-install-SMART.json": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/normalized-deployment-coordinator-20261110-01/post-install-SMART.stderr": {
+      "bytes": 557,
+      "sha256": "274590b82d1565255cdaa435ece92d387af01a01346a56409af11de70089d317"
+    },
+    "out/release-deployment-20261110-01/100-retain-counter7-HTTP-confirmation.json.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/release-deployment-20261110-01/100-retain-counter7-HTTP-confirmation.json.stdout": {
+      "bytes": 133,
+      "sha256": "65b56f4cc8ea21f6c773cd4a9500d851d8c2ae405922eab9c8c7d842040ad633"
+    },
+    "out/release-deployment-20261110-01/100-retain-counter7-checkpoint-plan.json.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/release-deployment-20261110-01/100-retain-counter7-checkpoint-plan.json.stdout": {
+      "bytes": 3703,
+      "sha256": "141fe379e10e54e58f24318ce427f63ec455417b840020c04a9c248b7cf5e267"
+    },
+    "out/release-deployment-20261110-01/100-retain-counter7-confirmation-request-intent.json.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/release-deployment-20261110-01/100-retain-counter7-confirmation-request-intent.json.stdout": {
+      "bytes": 137,
+      "sha256": "df2ec4c2fbf8720a8d9d21110a16512f9d0af92c27618d6fbb31922f0dfaadd9"
+    },
+    "out/release-deployment-20261110-01/100-retain-counter7-observer.jsonl.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/release-deployment-20261110-01/100-retain-counter7-observer.jsonl.stdout": {
+      "bytes": 419,
+      "sha256": "b1277d32b5967db4f9240749f210282aad3ad054bf1423c0f3216584b547b3fa"
+    },
+    "out/release-deployment-20261110-01/100-retain-counter7-observer.stderr.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/release-deployment-20261110-01/100-retain-counter7-observer.stderr.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/release-deployment-20261110-01/100-retain-counter7-terminal-evidence.json.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/release-deployment-20261110-01/100-retain-counter7-terminal-evidence.json.stdout": {
+      "bytes": 30895,
+      "sha256": "96e31d5ba98197d7b29e9229db836f9e8a38c4ea04e418c7aaa5df9ca12588aa"
+    },
+    "out/release-deployment-20261110-01/103-fresh-checkpoint7-Inspection-FD-consumer-disk-guards.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/release-deployment-20261110-01/103-fresh-checkpoint7-Inspection-FD-consumer-disk-guards.stdout": {
+      "bytes": 3703,
+      "sha256": "141fe379e10e54e58f24318ce427f63ec455417b840020c04a9c248b7cf5e267"
+    },
+    "out/release-deployment-20261110-01/104-counter7-checkpoint-apply-PTY.log": {
+      "bytes": 1144,
+      "sha256": "46ad99a4485a2ec51677bbf99adf7d61d78353ba9b4accfe7cda13c965046181"
+    },
+    "out/release-deployment-20261110-01/105-retain-counter7-checkpoint-result.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/release-deployment-20261110-01/105-retain-counter7-checkpoint-result.stdout": {
+      "bytes": 603,
+      "sha256": "a27f88109bf4891a902b5c98492339af12c6c55a74d19ac0ccdf839f7b934aab"
+    },
+    "out/release-deployment-20261110-01/106-final-checkpoint2-history-unit-inactive-verification.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/release-deployment-20261110-01/106-final-checkpoint2-history-unit-inactive-verification.stdout": {
+      "bytes": 3749,
+      "sha256": "3774750306e5b3910df51ae0b77a81e5cba263aab598f73810b47cd5811da5b5"
+    },
+    "out/release-deployment-20261110-01/107-final-host-read-only-policy-SD-fullclosure.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/release-deployment-20261110-01/107-final-host-read-only-policy-SD-fullclosure.stdout": {
+      "bytes": 10611,
+      "sha256": "81cc0e7dab4a128f8e5eadadd1e04bd0d8d272a184cec5dc07eae11bce046658"
+    },
+    "out/release-deployment-20261110-01/108-continuous-UART-through-final-checkpoint.log": {
+      "bytes": 224472,
+      "sha256": "8a06cb27576dcd45909c49d789c3f6bed0e6fcf6e7b9540006b3b70acf82b692"
+    },
+    "out/release-deployment-20261110-01/75-actual-read-only-guest-restoration-plan.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/release-deployment-20261110-01/75-actual-read-only-guest-restoration-plan.stdout": {
+      "bytes": 2882,
+      "sha256": "81e59b7bf38c7966d7cf541cddd30e0f48c1a7fc10f532b7a2c3043a20051f42"
+    },
+    "out/release-deployment-20261110-01/78-guest-restore-apply-PTY.log": {
+      "bytes": 571,
+      "sha256": "ea6002d8a7a0d820f1b126792bec1e139b54155467ff01198dad651d472ec596"
+    },
+    "out/release-deployment-20261110-01/79-retained-guest-restoration-result.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/release-deployment-20261110-01/79-retained-guest-restoration-result.stdout": {
+      "bytes": 532,
+      "sha256": "95d3ae68c2cbe2e820cf3ef07e0cb1c189bb428b75d9488d3b75c78a4c7bebc9"
+    },
+    "out/release-deployment-20261110-01/82b-prepare-rendered-guest-and-observer-units.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/release-deployment-20261110-01/82b-prepare-rendered-guest-and-observer-units.stdout": {
+      "bytes": 2295,
+      "sha256": "6b1254a06e5ac0e2697cf6c26ad88dc14f0577861e843f6d818e39caf2c186d3"
+    },
+    "out/release-deployment-20261110-01/84-authorized-counter6-start-capture-only.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/release-deployment-20261110-01/84-authorized-counter6-start-capture-only.stdout": {
+      "bytes": 416,
+      "sha256": "39a5c01113108df36e793e55d8b2f4dd28ff4a3ac0be5114f6e14fc9ea26c37a"
+    },
+    "out/release-deployment-20261110-01/85-retain-counter6-launch-intent.json.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/release-deployment-20261110-01/85-retain-counter6-launch-intent.json.stdout": {
+      "bytes": 237,
+      "sha256": "c73b46bc1eaf0930c6a133dbf3962e304fea389bec943d7672a71dece576582e"
+    },
+    "out/release-deployment-20261110-01/85-retain-counter6-observer-readiness.json.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/release-deployment-20261110-01/85-retain-counter6-observer-readiness.json.stdout": {
+      "bytes": 437,
+      "sha256": "6e4e103b39774fd36529155d55820c2e3d76543b1041fb732cfa518e376ca8d8"
+    },
+    "out/release-deployment-20261110-01/85-retain-counter6-running-KVM-proof.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/release-deployment-20261110-01/85-retain-counter6-running-KVM-proof.stdout": {
+      "bytes": 16602,
+      "sha256": "6bc0874242d79b00e31cc03c660ed4de8f47b7ae38709644b5ec3a22f1883bfa"
+    },
+    "out/release-deployment-20261110-01/85-retain-observer.jsonl.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/release-deployment-20261110-01/85-retain-observer.jsonl.stdout": {
+      "bytes": 85,
+      "sha256": "3dc3d61852ccfb64f3699531e592a719f5c6a08e307b51c451c58b8653604c4b"
+    },
+    "out/release-deployment-20261110-01/87-authorized-counter6-confirm-final-readonly-checkpoint.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/release-deployment-20261110-01/87-authorized-counter6-confirm-final-readonly-checkpoint.stdout": {
+      "bytes": 425,
+      "sha256": "13e4fb9def216a5ef391388b933c8a9d642f979e47e204f948e7a5f809c8b230"
+    },
+    "out/release-deployment-20261110-01/88-retain-counter6-HTTP-confirmation.json.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/release-deployment-20261110-01/88-retain-counter6-HTTP-confirmation.json.stdout": {
+      "bytes": 133,
+      "sha256": "b70ad2c2d3b450320d33046f739ade8f56754ad0d7ae2cdfb8650fe880497771"
+    },
+    "out/release-deployment-20261110-01/88-retain-counter6-checkpoint-plan.json.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/release-deployment-20261110-01/88-retain-counter6-checkpoint-plan.json.stdout": {
+      "bytes": 3462,
+      "sha256": "142fe89595e80b30e0723dbf3b6e9fd170751b92a59bb43ce1c3af7a4ef37cde"
+    },
+    "out/release-deployment-20261110-01/88-retain-counter6-confirmation-request-intent.json.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/release-deployment-20261110-01/88-retain-counter6-confirmation-request-intent.json.stdout": {
+      "bytes": 137,
+      "sha256": "1e4384fb6442794788ef3b0807617813eda7832ed4fe3ebf4bd942c905055c09"
+    },
+    "out/release-deployment-20261110-01/88-retain-counter6-terminal-evidence.json.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/release-deployment-20261110-01/88-retain-counter6-terminal-evidence.json.stdout": {
+      "bytes": 15926,
+      "sha256": "6e6f4eaf9aeb6e891c47ae530688d5d236508615aac87b78082e814c8add461c"
+    },
+    "out/release-deployment-20261110-01/88-retain-observer.jsonl.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/release-deployment-20261110-01/88-retain-observer.jsonl.stdout": {
+      "bytes": 419,
+      "sha256": "a906e2b541e8d99237966958f6fa5c8fbca1b2684c8efcf6c8e63b3fe13b4227"
+    },
+    "out/release-deployment-20261110-01/88-retain-observer.stderr.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/release-deployment-20261110-01/88-retain-observer.stderr.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/release-deployment-20261110-01/91-counter6-checkpoint-apply-PTY.log": {
+      "bytes": 1144,
+      "sha256": "aec635549cc5ef05574b4fe586dd104dc37b06807ed89f133b2a489e564984e9"
+    },
+    "out/release-deployment-20261110-01/92-retain-counter6-checkpoint-result.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/release-deployment-20261110-01/92-retain-counter6-checkpoint-result.stdout": {
+      "bytes": 603,
+      "sha256": "be65d48f248507514b05dfd2c2df77e0bb6fdf92bb4b610886a83a77c3e17e5b"
+    },
+    "out/release-deployment-20261110-01/94-prepare-counter7-guest-observer-units.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/release-deployment-20261110-01/94-prepare-counter7-guest-observer-units.stdout": {
+      "bytes": 4080,
+      "sha256": "2f63ccb8431cd1815682ffac48b98f6eff448da91b088f20695b8f3792a4edef"
+    },
+    "out/release-deployment-20261110-01/96-authorized-counter7-restart-capture-only.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/release-deployment-20261110-01/96-authorized-counter7-restart-capture-only.stdout": {
+      "bytes": 416,
+      "sha256": "811daf64caac9933e8c732e5ccecbc43b34c974139b1202c260fe7b18c152fbd"
+    },
+    "out/release-deployment-20261110-01/97-retain-counter7-launch-intent.json.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/release-deployment-20261110-01/97-retain-counter7-launch-intent.json.stdout": {
+      "bytes": 237,
+      "sha256": "394913e360aaf836b2062ffcde7ed3c259ea3bd4a7606fdcebcfa2a5ffb03283"
+    },
+    "out/release-deployment-20261110-01/97-retain-counter7-observer-readiness.json.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/release-deployment-20261110-01/97-retain-counter7-observer-readiness.json.stdout": {
+      "bytes": 437,
+      "sha256": "36f5e02c6c00efc19a8452c1f755f1c07a19f0a7402c2c3c5f6304309cc0c66a"
+    },
+    "out/release-deployment-20261110-01/97-retain-counter7-observer.jsonl.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/release-deployment-20261110-01/97-retain-counter7-observer.jsonl.stdout": {
+      "bytes": 85,
+      "sha256": "3dc3d61852ccfb64f3699531e592a719f5c6a08e307b51c451c58b8653604c4b"
+    },
+    "out/release-deployment-20261110-01/97-retain-counter7-running-KVM-proof.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/release-deployment-20261110-01/97-retain-counter7-running-KVM-proof.stdout": {
+      "bytes": 31573,
+      "sha256": "55d755972d99ce7f5ce15da0816e0641198da8d810f91f688bf5ca412ec2a7a6"
+    },
+    "out/release-deployment-20261110-01/99-authorized-counter7-confirm-final-readonly-checkpoint.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/release-deployment-20261110-01/99-authorized-counter7-confirm-final-readonly-checkpoint.stdout": {
+      "bytes": 425,
+      "sha256": "2305761a2cc177758af64aca30f65f8431c4aca94eebfb5cca83bd7d2d864d16"
+    },
+    "out/release-deployment-20261110-01/commands.json": {
+      "bytes": 401850,
+      "sha256": "8e519c82dd05a79a9ae7c3b0ffa1eb4216297f8953f93ba3ea5c463c14ab1c7a"
+    },
+    "out/release-deployment-20261110-01/independent-deployment-report.md": {
+      "bytes": 14046,
+      "sha256": "20bca5728cfa44bfb91c08abc809292e157eb992d1c2e4b17271f5324071111c"
+    },
+    "out/release-deployment-20261110-01/operator-counter6-result.json": {
+      "bytes": 1058,
+      "sha256": "f013e5f0984a9b504c5175074e96c520ddb414bc9753b773ba0aff7cbd33624f"
+    },
+    "out/release-deployment-20261110-01/operator-counter7-result.json": {
+      "bytes": 1117,
+      "sha256": "fb6f2ef8d4ae24044b3b3dd310cf5a5506482cdf83414c4ae5046a45540ebcb2"
+    },
+    "out/release-deployment-20261110-01/operator-final-checkpoint7-completion.json": {
+      "bytes": 728,
+      "sha256": "657ace83e6a6df704b63be5b203a2c1c7f1eddd680a66282774c5ff98f86b5e2"
+    },
+    "out/release-deployment-20261110-01/operator-guest-activation-completion.json": {
+      "bytes": 1551,
+      "sha256": "1e9744f01227691a93fb97f47b9a8def1ffe101acf423496f849b6a0a4fb1d3f"
+    },
+    "out/release-deployment-20261110-01/operator-guest-prerequisite-plans.json": {
+      "bytes": 1662,
+      "sha256": "7b9bdf2dfd926729d0bb042257021f082c066b74e11e680f4902c6399d5e8fd5"
+    },
+    "out/release-deployment-20261110-01/operator-guest-restoration-completion.json": {
+      "bytes": 632,
+      "sha256": "678e187ef09e2d3f4c3f0b0006913f541d6942e2dcd2082839703a0e6338b8c9"
+    }
+  }
+}

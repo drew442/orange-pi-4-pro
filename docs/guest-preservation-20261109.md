@@ -1,5 +1,9 @@
 # Guest preservation before physical maintenance
 
+This is the November 9 preservation checkpoint. The original source files were
+later erased during the authorized normalized installation; the off-device
+archives remain intact. [Fresh counter-5 restoration and KVM restart now pass](evidence/normalized-guest-restore-20261110.json).
+
 The current guest data is retained on the separate Ubuntu builder before any
 new NVMe erasure. This checkpoint completes guest preservation, not host STATE
 backup, new-archive restoration or release acceptance. Original source files

@@ -35,8 +35,8 @@ published recovery SD image has not been refreshed. See
 [diagnostic KVM guest](kvm-vgic-results-20261108.md) and its
 [counter-3 off-device backup](evidence/vgic-counter3-backup-20261108.json) now pass;
 [physical counter-3 restoration and KVM advancement through 4/5](evidence/corrected-host-guest-restore-20261108.json)
-also pass. The separately preserved counter-5 archive needs its own restoration
-on the fresh normalized installation. Choose [direct HTTPS delivery](guest-restore-delivery.md)
+also pass. [The separately preserved counter-5 archive now also restores on normalized A
+and runs KVM through 6, checkpoint and restart to 7](evidence/normalized-guest-restore-20261110.json). Choose [direct HTTPS delivery](guest-restore-delivery.md)
 to avoid local encoded staging. For the local-file mode below, copy the verified archive from the separate backup
 machine to a **protected directory on the selected NVMe**, outside every enrolled
 guest directory. Its ancestors must be root-owned without shared write access;

@@ -1,8 +1,9 @@
 # Deploy the normalized image on the recorded A733
 
-**The independently operated fresh installation and first normalized A boot
-now pass. Restored-guest validation and complete procedure reproduction remain
-pending. The accepted November 9 workload has ended; do not rerun it.**
+**Fresh normalized installation, preserved guest restoration/KVM/checkpoint/restart
+and [independent procedure reproduction](independent-deployment-20261110.md) pass.
+Final release boot-series/SD acceptance remains open. The accepted November 9
+workload has ended; do not rerun it.**
 Use [current images](current-images.md) rather than the older November 6/7
 payloads or delivery endpoints. The selected normalized distribution now passes
 paired independent full-stream verification and [physical installation](evidence/normalized-host-install-20261110.json).

@@ -5,8 +5,17 @@ the compatible vendor A733 kernel, device tree and firmware. It uses KVM/QEMU
 and supervised unprivileged guests. There is no desktop or libvirt dependency.
 [Current images](current-images.md) identify exact artifacts;
 [implementation status](implementation-status.md) separates physical evidence
-from remaining release gates. The final normalized host has booted; restored-guest and boot-cycle acceptance
-remain pending.
+from remaining release gates. The final normalized host has booted and passed restored-guest KVM/checkpoint/
+restart; final boot-cycle acceptance remains pending.
+
+The plan's minimal Debian option is retained for this deployment: its first
+normalized-A observation reports **437968896 bytes used** on the 4 GiB root
+filesystem, with MemTotal 12161560 KiB and MemAvailable 11798000 KiB before any
+guest launch. These are point observations, not a memory benchmark. The pinned
+221-package userspace is maintained by building/reviewing an inactive root;
+on-board APT mutation is not the update mechanism. Final boot reliability is
+still a release gate. The [installation record](evidence/normalized-host-install-20261110.json)
+pins the measurements and preserves the compatible board stack.
 
 ## Boot chain and recovery
 

@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "date": "2026-11-10",
+  "operation": "Private normalized deployment metadata custody",
+  "source_and_destination_exit": 0,
+  "archive_bytes": 2744320,
+  "archive_sha256": "c05836e954a1d3761c9befede895c95eb365e27355cbcce22c5dc5eaf3362722",
+  "source_records": 349,
+  "inventory_sha256": "b9ea31da049b3d5d671a8927fd36aaeaa284f20d0d2ef6d0daf690a77ba8d0b8",
+  "builder_receipt": {
+    "archive_bytes": 2744320,
+    "archive_sha256": "c05836e954a1d3761c9befede895c95eb365e27355cbcce22c5dc5eaf3362722",
+    "members": 350,
+    "all_members_verified": true,
+    "private_identity_excluded": true,
+    "builder_base": "/var/lib/a733-normalized-deployment-evidence-20261110-01",
+    "success": true,
+    "durable": true
+  },
+  "private_identity_file_excluded": "out/release-deployment-20261110-01/identity.tar",
+  "full_images_excluded": true,
+  "archive_member_hashes_verified_at_receiver": true,
+  "native_sources_unchanged_after_transfer": true,
+  "hardware_acceptance": false
+}

@@ -1,13 +1,15 @@
 # Current images for this board
 
 The board is running **normalized A at 192.168.1.116**, boot
-`d9e94d54-79bb-49c3-ad72-2672a9c71c6a`, with its original pinned SSH identity.
+`032799ae-d642-4337-8880-1858abbb9baa` after the first guarded warm request, with its original pinned SSH identity.
 The independent operator's full NVMe write, original identity restoration and
 protected host SD restoration completed successfully. Root p2 is read-only;
 40 tool files, original configuration/keys, DHCP/NTP and resolver policy pass
 independent coordinator checks. [Physical installation record](evidence/normalized-host-install-20261110.json).
-Preserved guest restoration/execution and final release boot-series acceptance
-remain pending. No operator flashing is requested.
+[Preserved guest restoration and KVM 5→6→7/checkpoint/restart](evidence/normalized-guest-restore-20261110.json)
+and [independent deployment reproduction](independent-deployment-20261110.md) pass.
+The first warm collector attempt stopped on SSH closure during reboot; the new
+host is healthy and no cycle was counted. Final boot-series acceptance remains pending. No operator flashing is requested.
 
 The [eight-hour workload gate](evidence/eight-hour-endurance-result-20261109.json)
 passes using retained longer-run data. Original guests/forensics, the complete
@@ -25,7 +27,7 @@ For later inactive-root maintenance, use the separately authenticated
 [old A rollback pair](matched-host-updates-20261109.md) separately. Its root-payload
 manifest differs from the whole-NVMe installer manifest below. The changed-B
 update, interruption, selection and healthy live rollback cases now pass physically. Failed-health/offline recovery now passes; final normalized full
-installation and first A boot pass; guest validation remains pending.
+installation and first A boot pass; restored KVM and independent reproduction also pass.
 The separately retained [matched NVMe-first trial SD](matched-nvme-trial-sd-20261109.md)
 is unbooted and awaits a reviewed physical trial. Its workload evidence and
 backup prerequisites now pass. It is not

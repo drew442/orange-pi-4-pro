@@ -50,6 +50,69 @@ KVM results; new deployments require their own receipts.
 See [current managed host roots](current-host-roots.md) for prepared-artifact
 status and hardware gates.
 
+## Render the enrolled guest's service
+
+After activation and enrollment/restoration, render a service from the **trusted
+current** enrollment manifest. Repeat rendering after each durable checkpoint,
+because the disk hash changes. Keep the guest stopped throughout replacement.
+Use the manifest hash from the reviewed restoration/checkpoint receipt; hashing
+an unexplained current file does not supply a trusted replacement pin.
+
+The installed rendering API below produced the physically exercised services
+on the normalized host. Its output was independently compared with the actual
+inactive RAM unit. For the `firstkvm` fixture, run in an installed root shell:
+
+```sh
+: "${A733_ENROLLMENT_SHA256:?Set the trusted current enrollment hash}"
+umask 077
+A733_UNIT_REVIEW_DIR=$(mktemp -d /run/a733-unit-review.XXXXXX)
+python3 -I -B - "$A733_ENROLLMENT_SHA256" > "$A733_UNIT_REVIEW_DIR/a733-guest-firstkvm.service" <<'PY'
+from pathlib import Path
+import grp, hashlib, importlib.util, sys
+root = Path('/usr/lib/a733-tools')
+def load(name):
+    spec = importlib.util.spec_from_file_location('unit_' + name, root / 'configs' / (name + '.py'))
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+raw = Path('/run/a733-guests/firstkvm/enrollment.json').read_bytes()
+assert hashlib.sha256(raw).hexdigest() == sys.argv[1]
+manifest = load('guest_manifest').validate_manifest(raw)
+assert manifest['config']['name'] == 'firstkvm'
+assert manifest['guest_uuid'] == '298b281a-d10e-44eb-bdb9-285e27eaafad'
+print(load('guest_config').render_unit(manifest['config'],
+      str(root / 'scripts/launch-kvm-guest.py'), grp.getgrnam('kvm').gr_gid), end='')
+PY
+systemd-analyze verify "$A733_UNIT_REVIEW_DIR/a733-guest-firstkvm.service"
+cat "$A733_UNIT_REVIEW_DIR/a733-guest-firstkvm.service"
+systemctl show a733-guest-firstkvm.service -p ActiveState -p MainPID -p ControlPID
+```
+
+Stop on any error, running guest, or unexpected identity/configuration. Review
+the nonroot UID/GID, KVM group, resource limits, KVM-only launcher, empty
+capability sets, NoNewPrivileges and loopback-only forward before installing:
+
+```sh
+install -o root -g root -m 0644 "$A733_UNIT_REVIEW_DIR/a733-guest-firstkvm.service" \
+  /run/systemd/system/a733-guest-firstkvm.service
+systemctl daemon-reload
+```
+
+For acceptance capture, start the [exit observer](guest-exit-observer.md) and
+require its `ready` record **before** `systemctl start a733-guest-firstkvm.service`.
+The fixture waits at most 120 seconds for a host HTTP confirmation. During that
+window, capture the real QEMU PID/arguments, KVM VM/vCPU/VGIC descriptors,
+nonroot capability restrictions and console CPU/disk results. Read
+`http://127.0.0.1:18080/cgi-bin/probe`; only after validating its actual counter,
+send one request to the same URL with `?confirm=COUNTER`. Persist that response,
+guest powerdown console and the referenced observer's raw exit record. Host
+SIGTERM or a later reset unit status does not prove guest-requested shutdown.
+Then use [checkpointing](guest-checkpoints.md) before another launch. Service
+installation alone starts nothing and does not survive a host reboot.
+
+Upstream: [systemd 252 execution restrictions](https://www.freedesktop.org/software/systemd/man/252/systemd.exec.html)
+and [service lifecycle](https://www.freedesktop.org/software/systemd/man/252/systemd.service.html).
+
 ## Input lifetime and launch
 
 Keep a trusted immutable fixture seed off the writable working path. Copy the
@@ -91,16 +154,15 @@ Upstream references: [QEMU 7.2 invocation and file backends](https://gitlab.com/
 
 ## Remaining operational work
 
-The [current counter-5 backup](evidence/current-counter5-backup-20261109.json)
-now passes authenticated transfer and durable independent receiver readback.
-Keep it before reinstalling and confirm its source remains stopped and unchanged;
-the physically restored counter-3 archive omits later data. Restoration of the
-new archive belongs to fresh-install validation. Completed, failed and smoke-test endurance directories now have
-[verified forensic copies](guest-preservation-20261109.md); keep their original
-metadata and the separate native UART, journals and telemetry. The automatic outcome preserver captures evidence, not guest disks.
-Follow [offline STATE and root preservation](host-state-backup.md) before any
-journal replay or destructive install. Host STATE restoration and failed-boot
-recovery remain separate unvalidated paths.
+The [preserved counter-5 backup](evidence/current-counter5-backup-20261109.json)
+has now [restored on fresh normalized A and run actual KVM through 6 and restart
+into 7](evidence/normalized-guest-restore-20261110.json), with durable checkpoints
+and original history preserved. Keep the immutable archive before any later
+erasure. [Forensic copies](guest-preservation-20261109.md) retain failed and smoke
+endurance data separately; outcome preservation is not a guest-disk backup.
+[Paired host STATE/root restoration](paired-host-restore-20261110.md) and
+[controlled offline selection recovery](controlled-ssh-recovery-20261110.md)
+also pass. Final boot reliability and SD qualification remain separate gates.
 
 The [November 9 KVM workload result](evidence/eight-hour-endurance-result-20261109.json)
 passes the current 8-hour (28,800-second) criterion with 72,659 measured seconds

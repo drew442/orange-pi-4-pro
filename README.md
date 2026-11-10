@@ -5,8 +5,8 @@ A minimal Linux KVM/QEMU host for the **Orange Pi 4 Pro A733**, using the actual
 immutable SD boot files with zero routine SD writes.
 
 Start with [implementation status](docs/implementation-status.md) and the
-[current images](docs/current-images.md). The corrected installation has booted,
-synchronized time and run a real KVM guest through restoration, clean shutdown,
+[current images](docs/current-images.md). The fresh normalized installation and independent deployment reproduction pass,
+including original guest restoration, actual nonroot KVM, clean shutdown,
 checkpoint and restart. The eight-hour workload gate passes using retained
 longer-run data, without another endurance run. Physical host restoration,
 changed-root update, selection interruption/cancellation and healthy manual
