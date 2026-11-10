@@ -14,19 +14,27 @@ the privileged Ubuntu **2304-test** suite pass, with five shell suites and five
 diagnostic cases. [Validation](evidence/cold-boot-collector-validation-20261110.json).
 No physical cold boot follows from these software checks.
 
-When you are ready to perform the physical steps, run from the repository:
+When you are ready to perform the physical steps, run on codex in an
+interactive terminal. The installed host is at `192.168.1.116`.
 
 ```sh
-python3 scripts/collect-known-cold-boots.py
+cd /home/drew/orange-pi-4-pro
+boot_id=$(ssh -T -o BatchMode=yes -o StrictHostKeyChecking=yes \
+  root@192.168.1.116 'cat /proc/sys/kernel/random/boot_id') &&
+tag="normalized-a-protected-sd-$(date -u +%Y%m%dT%H%M%S%NZ)" &&
 python3 scripts/collect-known-cold-boots.py --execute \
-  --expected-start-boot-id 274af3d8-156c-4de8-a1ed-688c89b5aaa4 \
-  --tag normalized-a-protected-sd-20261110-01
+  --expected-start-boot-id "$boot_id" --tag "$tag"
 ```
 
-The first command only prints the plan and makes no network connection. The
-second requires a local interactive terminal, a fresh tag and the exact current
-host boot UUID. If the board has rebooted since this record, obtain a fresh UUID
-and coordinator readiness check; a mismatch refuses before poweroff.
+The first SSH command reads the current boot UUID. The collector checks that
+same UUID and the full release and device guards before requesting poweroff.
+A restart between those checks causes a refusal. The timestamp gives each
+attempt its own evidence directory. Keep failed attempts for review.
+
+The first operator attempt reached the host over SSH but used the previous
+boot UUID. The saved remote error was `boot ID differs`, reported by the
+collector as `SSH probe failed/timeout/oversized`. It stopped before requesting
+poweroff. Read the current UUID as shown above when starting a new attempt.
 
 For each of ten cycles, the collector checks the release, exact storage targets,
 idle host, synchronized clock and zero SD write counters. It requests one clean
@@ -44,7 +52,7 @@ partial series. If it stops, leave the evidence intact and send the last screen
 messages before starting another attempt.
 
 Evidence is retained privately under
-`out/cold-boots-normalized-a-protected-sd-20261110-01/events.jsonl`.
+`out/cold-boots-<tag>/events.jsonl`.
 Return that path and the terminal's final result; the coordinator will also
 review the continuous off-board UART archive and perform one full-card SD
 comparison at the series boundary. There is no whole-card read on each boot.

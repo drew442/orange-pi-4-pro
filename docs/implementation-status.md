@@ -8,7 +8,10 @@ and is not reclassified as a pass.
 ## Live board and constraints
 
 - **Current:** normalized A at `root@192.168.1.116`, original pinned identity,
-  boot `274af3d8-156c-4de8-a1ed-688c89b5aaa4` after ten guarded warm reboots.
+  boot `d9d2448e-8aa0-434f-9d04-f287fb1a6c02` passes read-only release guards.
+  The ten guarded warm reboots ended at `274af3d8-156c-4de8-a1ed-688c89b5aaa4`.
+  The first cold attempt supplied that older UUID and stopped before poweroff.
+  The [cold procedure](cold-boot-validation.md) now reads the current UUID at launch.
   Actual observations are under `out/warm-boots-normalized-a-protected-sd-20261110-02/`. Whole-NVMe installation completed
   with exit 0, expected streamed source hash and **no readback**. Original identity
   restoration/fsync/unmount and protected SD restoration pass. Independent operator
