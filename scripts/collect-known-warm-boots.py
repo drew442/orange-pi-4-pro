@@ -3,6 +3,7 @@
 import argparse
 import base64
 import importlib.util
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -16,6 +17,11 @@ REPO = Path(__file__).resolve().parents[1]
 BOOT = 'dd8d6f67-d297-4f3b-bc9a-8a41c9742051'
 RUN = '59af604a-cf2e-4c8f-9fd5-e26b8283d14c'
 LIMIT = 1024 * 1024
+STOP_RESULT = 'docs/evidence/eight-hour-endurance-result-20261109.json'
+STOP_RESULT_SHA256 = '7168f8d1604c4aa375c862d045c07fd6b37be599c73196743b6ef63e0feaf679'
+STOP_BASE = 'out/endurance-shortened-20261109-01/'
+PRESTOP_PIN = (17939, '07fbbd203dbabf2858bc9807f1e3fab2c103045c081fe11e212493818995c7a1')
+COLLECTOR = 'a733-offboard-endurance-collector-20261109.service'
 _spec = importlib.util.spec_from_file_location('preserve_endurance', REPO / 'scripts/preserve-known-endurance-outcome.py')
 TRANSPORT = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(TRANSPORT)
@@ -234,6 +240,96 @@ def preserved_snapshot(snap, uart_record):
             os.close(fd)
 
 
+def retained_read(path, limit=32 * LIMIT):
+    """Read regular, stable local evidence without following symlink ancestry."""
+    path = Path(path)
+    for parent in path.parents:
+        require(not parent.is_symlink(), 'symlink preservation parent')
+    fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    try:
+        before = os.fstat(fd)
+        require(stat.S_ISREG(before.st_mode) and before.st_nlink == 1 and
+                before.st_size <= limit, 'unsafe/oversized preservation')
+        with os.fdopen(fd, 'rb', closefd=False) as stream:
+            raw = stream.read(limit + 1)
+        after = os.fstat(fd)
+        fields = ('st_dev', 'st_ino', 'st_size', 'st_mtime_ns', 'st_ctime_ns')
+        require(len(raw) <= limit and len(raw) == before.st_size and
+                all(getattr(before, k) == getattr(after, k) == getattr(path.lstat(), k)
+                    for k in fields), 'preservation changed during read')
+        return raw
+    finally:
+        os.close(fd)
+
+
+def operator_stop_proof(directory, captures):
+    """Authenticate only the reviewed historical transient-unit GC exception."""
+    raw = retained_read(REPO / STOP_RESULT, LIMIT)
+    require(hashlib.sha256(raw).hexdigest() == STOP_RESULT_SHA256, 'stop result hash differs')
+    result = json.loads(raw)
+    require(result['host_boot_id'] == BOOT and result['guest_run_id'] == RUN and
+            result['operator_stop'] is True, 'stop proof run differs')
+    records = result['records']
+    pins = {r['path']: r for r in records}
+    require(len(pins) == len(records), 'duplicate stop proof records')
+
+    def pinned(relative, supplied=None):
+        pin = pins[relative]
+        data = retained_read(REPO / relative, LIMIT * 32) if supplied is None else supplied
+        require(len(data) == pin['bytes'] and hashlib.sha256(data).hexdigest() == pin['sha256'],
+                'stop proof record hash differs')
+        return data
+
+    require(set(captures) == {'summary.json', 'collector.json', 'remote-transport.json',
+                              'uart-tail.json'}, 'manual-stop raw captures incomplete')
+    for name, data in captures.items():
+        pinned(str(directory.relative_to(REPO) / name), data)
+    policy = json.loads(pinned(STOP_BASE + 'policy-change.json'))
+    require(policy['termination_classification'] ==
+            'planned operator stop; guest-requested clean shutdown not established' and
+            policy['hardware_acceptance'] is False, 'operator stop intent absent')
+    native_raw = retained_read(REPO / STOP_BASE / 'native-prestop-units.txt', LIMIT)
+    require((len(native_raw), hashlib.sha256(native_raw).hexdigest()) == PRESTOP_PIN,
+            'native prestop hash differs')
+    native = [dict(line.split('=', 1) for line in group.splitlines() if '=' in line)
+              for group in native_raw.decode().strip().split('\n\n')]
+    collectors = [row for row in native if row.get('Id') == COLLECTOR]
+    require(len(collectors) == 1, 'native prestop collector absent/duplicate')
+    collector = collectors[0]
+    require(all(collector.get(k) == v for k, v in dict(LoadState='loaded',
+            ActiveState='active', SubState='running', MainPID='3869075',
+            InvocationID='e14e2bae19e04a9baa203eb1b2480627').items()) and
+            '--boot-id ' + BOOT in collector['ExecStart'], 'native prestop collector differs')
+    events = json_lines(pinned(STOP_BASE + 'native-stop-events.jsonl'))
+    require([row.get('operation') for row in events] ==
+            ['stop-attempt', 'stop-result', 'stop-attempt', 'stop-result'] and
+            events[2]['unit'] == events[3]['unit'] == COLLECTOR and
+            events[3]['returncode'] == 0 and type(events[3]['returncode']) is int and
+            events[3]['stderr'] == '' and all(events[3]['state'].get(k) == v for k, v in
+            dict(MainPID='0', ActiveState='inactive', SubState='dead').items()),
+            'native collector stop incomplete')
+    prestop = json.loads(pinned(STOP_BASE + 'board-prestop-03.json'))
+    require(prestop['boot_id'] == BOOT, 'board stop boot differs')
+    board = json_lines(pinned(STOP_BASE + 'board-stop-events.jsonl'))
+    require([r.get('event') for r in board] == ['operator-stop-attempt',
+            'operator-stop-result', 'guest-raw-exit-before-observer-release',
+            'operator-stop-attempt', 'operator-stop-result', 'observer-after-guest-exit',
+            'management-watch-state', 'management-watch-stop', 'all-terminal'],
+            'board stop sequence incomplete')
+    for attempt, stopped, unit, pid, status in ((board[0], board[1], TRANSPORT.UNITS[0], '2153', '0'),
+                                               (board[3], board[4], TRANSPORT.UNITS[1], '2169', '2')):
+        require(attempt['unit'] == stopped['unit'] == unit and
+                attempt['before']['LoadState'] == 'loaded' and
+                attempt['before']['MainPID'] == pid and stopped['returncode'] == 0 and
+                type(stopped['returncode']) is int and stopped['stderr'] == '' and
+                stopped['after']['MainPID'] == '0' and stopped['after']['ExecMainStatus'] == status,
+                'board workload stop incomplete')
+    require(board[2]['state'] == board[1]['after'] and
+            board[2]['guest_requested_shutdown'] is False and
+            board[5]['state']['MainPID'] == '0' and board[7]['returncode'] == 0 and
+            all(row['MainPID'] == '0' for row in board[8]['units']), 'board exit receipt incomplete')
+
+
 def retained_outcome():
     """Admit retained failed outcomes too, but never failed evidence captures."""
     for name in ('endurance-outcome-20261109-01', 'endurance-outcome-20261109-final'):
@@ -241,11 +337,10 @@ def retained_outcome():
         try:
             def load(name):
                 path = directory / name
-                require(not directory.is_symlink() and not path.is_symlink(), 'symlink preservation')
-                with path.open('rb') as stream:
-                    raw = stream.read(32 * LIMIT + 1)
-                require(len(raw) <= 32 * LIMIT, 'oversized preservation')
+                raw = retained_read(path)
+                captures[name] = raw
                 return json.loads(raw)
+            captures = {}
             summary = load('summary.json')
             no_capture_errors(summary)
             require(summary['expected_boot_id'] == BOOT and summary['guest_run_id'] == RUN and summary['phase'] in TRANSPORT.PHASES, 'wrong retained run')
@@ -253,13 +348,22 @@ def retained_outcome():
             remote = load('remote-transport.json')
             props = dict(line.split('=', 1) for line in
                          capture_bytes(collector, 65536).decode().splitlines() if '=' in line)
-            require(props.get('LoadState') == 'loaded' and props.get('ActiveState') in ('inactive', 'failed') and props.get('MainPID') == '0', 'collector not stopped')
+            collected = props.get('LoadState') == 'not-found'
+            if collected:
+                require(all(props.get(k) == v for k, v in dict(Id=COLLECTOR,
+                        ActiveState='inactive', SubState='dead', MainPID='0', Result='success',
+                        ExecMainCode='0', ExecMainStatus='0', InvocationID='').items()),
+                        'unsupported garbage-collected collector state')
+            else:
+                require(props.get('LoadState') == 'loaded' and props.get('ActiveState') in ('inactive', 'failed') and props.get('MainPID') == '0', 'collector not stopped')
             snap = json.loads(capture_bytes(remote, 20 * LIMIT))
             try:
                 uart = load('uart-tail.json')
             except FileNotFoundError:
                 uart = None
             preserved_snapshot(snap, uart)
+            if collected:
+                operator_stop_proof(directory, captures)
             return str(directory)
         except (OSError, ValueError, KeyError, TypeError, AttributeError):
             continue

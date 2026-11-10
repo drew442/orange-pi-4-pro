@@ -123,7 +123,7 @@ privileged focused review; full-suite revalidation and final guide review pass. 
   components in a fresh frozen-Ubuntu namespace. Frozen/source/host invariants
   and cleanup pass. The [initial bind-target repair](evidence/frozen-builder-anchor-repair-20261109.json)
   remains recorded separately. This is not a new OS/compiler rebuild or deployment.
-- Latest complete privileged Ubuntu suite: **2,268 tests**, zero skips/errors/
+- Latest complete privileged Ubuntu suite: **2,274 tests**, zero skips/errors/
   failures; five shell suites and five diagnostic assembly cases also pass.
   All five TOML files parse separately on codex. These are software checks.
 - [Normalized maintenance candidates](normalized-maintenance-20261109.md) use
@@ -170,10 +170,11 @@ privileged focused review; full-suite revalidation and final guide review pass. 
    [warm-reboot collector](warm-boot-validation.md) is independently reviewed
    and prepared for the SD route; it remains unexecuted and refuses active
    workloads or missing retained outcome evidence. The operator-stop snapshot was
-   captured after the transient collector unit was garbage-collected; its existing
-   retained-outcome check requires a loaded unit. Adapt and independently review
-   that check against the authenticated stop receipts before using the collector.
-   Do not fabricate a loaded unit or waive the idle-host checks. Count the final ten warm and
+   captured after the transient collector unit was garbage-collected. A narrow
+   [authenticated stop-receipt exception](evidence/warm-stop-admission-20261110.json)
+   now passes independent review and the full Ubuntu suite (2,274 tests); live
+   root/SD/idle/reboot guards remain unchanged. Bind the final root and boot route
+   before execution. Count the final ten warm and
    ten cold boots only after choosing and installing the final release/boot route.
    An SD-removed SPI route needs corresponding collector adaptation. [Preparation evidence](evidence/warm-boot-preparation-20261109.json).
    Preserve kernel/control evidence on recurrence. Audit final guest/CPU exits, duration and post-run

@@ -1,6 +1,7 @@
 import base64
 import contextlib
 import importlib.util
+import hashlib
 import io
 import json
 from pathlib import Path, PurePosixPath
@@ -242,6 +243,148 @@ class PreservationTests(unittest.TestCase):
         record = json.loads(path.read_text())
         record['size_at_open'] += 1
         path.write_text(json.dumps(record))
+        with self.assertRaises(ValueError): w.retained_outcome()
+
+
+class ManualStopTests(unittest.TestCase):
+    """Data-shaped GC captures require an independently pinned proof chain."""
+    capture = staticmethod(PreservationTests.capture)
+    tail = staticmethod(PreservationTests.tail)
+    fixture = PreservationTests.fixture
+    save = PreservationTests.save
+
+    def setUp(self):
+        PreservationTests.setUp(self)
+        self.proof_files = {}
+        self.collector_props = dict(Id=w.COLLECTOR, LoadState='not-found',
+            ActiveState='inactive', SubState='dead', MainPID='0', Result='success',
+            ExecMainCode='0', ExecMainStatus='0', InvocationID='')
+        self.write_collector()
+        self.native = dict(Id=w.COLLECTOR, LoadState='loaded', ActiveState='active',
+            SubState='running', MainPID='3869075', InvocationID='e14e2bae19e04a9baa203eb1b2480627',
+            ExecStart='python3 collector --boot-id '+w.BOOT)
+        self.events = [dict(operation=op, unit=unit) for unit in
+            ('a733-endurance-outcome-final-20261109.timer', w.COLLECTOR)
+            for op in ('stop-attempt', 'stop-result')]
+        self.events[-1].update(returncode=0, stderr='', state=dict(MainPID='0', ActiveState='inactive', SubState='dead'))
+        self.board = []
+        for unit, pid, status in ((w.TRANSPORT.UNITS[0], '2153', '0'),
+                                  (w.TRANSPORT.UNITS[1], '2169', '2')):
+            self.board.extend([dict(event='operator-stop-attempt', unit=unit,
+                before=dict(LoadState='loaded', MainPID=pid)),
+                dict(event='operator-stop-result', unit=unit, returncode=0, stderr='',
+                     after=dict(MainPID='0', ExecMainStatus=status))])
+            if pid == '2153':
+                self.board.append(dict(event='guest-raw-exit-before-observer-release',
+                    state=self.board[-1]['after'].copy(), guest_requested_shutdown=False))
+        self.board.extend([dict(event='observer-after-guest-exit', state=dict(MainPID='0')),
+            dict(event='management-watch-state'), dict(event='management-watch-stop', returncode=0),
+            dict(event='all-terminal', units=[dict(MainPID='0') for _ in w.TRANSPORT.UNITS])])
+        self.bind_proof()
+
+    def write_collector(self):
+        data = ('\n'.join(k+'='+v for k, v in self.collector_props.items())+'\n').encode()
+        (self.directory / 'collector.json').write_text(json.dumps(self.capture(data)))
+
+    def bind_proof(self):
+        def lines(rows): return ''.join(json.dumps(row)+'\n' for row in rows).encode()
+        self.proof_files.update({
+            w.STOP_BASE+'policy-change.json': json.dumps(dict(hardware_acceptance=False,
+                termination_classification='planned operator stop; guest-requested clean shutdown not established')).encode(),
+            w.STOP_BASE+'native-stop-events.jsonl': lines(self.events),
+            w.STOP_BASE+'board-prestop-03.json': json.dumps(dict(boot_id=w.BOOT)).encode(),
+            w.STOP_BASE+'board-stop-events.jsonl': lines(self.board)})
+        for name in ('summary.json', 'collector.json', 'remote-transport.json', 'uart-tail.json'):
+            self.proof_files[str(self.directory.relative_to(self.root) / name)] = (self.directory / name).read_bytes()
+        for relative, raw in self.proof_files.items():
+            path = self.root / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(raw)
+        native = ('\n'.join(k+'='+v for k, v in self.native.items())+'\n').encode()
+        (self.root / w.STOP_BASE / 'native-prestop-units.txt').write_bytes(native)
+        result = dict(host_boot_id=w.BOOT, guest_run_id=w.RUN, operator_stop=True,
+            records=[dict(path=p, bytes=len(raw), sha256=hashlib.sha256(raw).hexdigest())
+                     for p, raw in self.proof_files.items()])
+        raw = json.dumps(result).encode()
+        path = self.root / w.STOP_RESULT
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(raw)
+        # Fixture trust anchors replace only the production digest, never validation.
+        w.STOP_RESULT_SHA256 = hashlib.sha256(raw).hexdigest()
+        w.PRESTOP_PIN = (len(native), hashlib.sha256(native).hexdigest())
+
+    def tearDown(self):
+        PreservationTests.tearDown(self)
+        w.STOP_RESULT_SHA256 = '7168f8d1604c4aa375c862d045c07fd6b37be599c73196743b6ef63e0feaf679'
+        w.PRESTOP_PIN = (17939, '07fbbd203dbabf2858bc9807f1e3fab2c103045c081fe11e212493818995c7a1')
+
+    def test_authenticated_manual_stop_admits_gc(self):
+        self.assertEqual(w.retained_outcome(), str(self.directory))
+
+    def test_each_missing_changed_or_truncated_proof_refuses(self):
+        paths = [self.root / p for p in self.proof_files] + [self.root / w.STOP_RESULT,
+            self.root / w.STOP_BASE / 'native-prestop-units.txt']
+        for path in paths:
+            original = path.read_bytes()
+            for replacement in (None, original+b' ', original[:len(original)//2]):
+                with self.subTest(path=path.name, replacement=replacement is None):
+                    if replacement is None: path.unlink()
+                    else: path.write_bytes(replacement)
+                    with self.assertRaises(ValueError): w.retained_outcome()
+                    path.write_bytes(original)
+
+    def test_proof_semantics_refuse_even_with_fixture_hashes_rebound(self):
+        cases = [('native', 'MainPID', '42'), ('native', 'LoadState', 'not-found'),
+                 ('native', 'ExecStart', '--boot-id '+START), ('events', 'returncode', 1),
+                 ('events', 'returncode', True), ('events', 'state', dict(MainPID='42'))]
+        for target, key, value in cases:
+            record = self.native if target == 'native' else self.events[-1]
+            previous = record[key]
+            record[key] = value
+            self.bind_proof()
+            with self.assertRaises(ValueError): w.retained_outcome()
+            record[key] = previous
+        self.bind_proof()
+        self.board[-1]['units'][0]['MainPID'] = '2153'
+        self.bind_proof()
+        with self.assertRaises(ValueError): w.retained_outcome()
+
+    def test_unsupported_not_found_state_refuses(self):
+        for key, value in [('ActiveState', 'active'), ('SubState', 'failed'),
+                           ('MainPID', '42'), ('ExecMainStatus', '1'), ('Id', 'other')]:
+            previous = self.collector_props[key]
+            self.collector_props[key] = value
+            self.write_collector()
+            self.bind_proof()
+            with self.assertRaises(ValueError): w.retained_outcome()
+            self.collector_props[key] = previous
+        self.write_collector()
+
+    def test_wrong_retained_run_boot_or_incomplete_capture_refuses(self):
+        for key, value in [('guest_run_id', START), ('actual_boot_id', START),
+                           ('expected_boot_id', START)]:
+            original = self.snapshot[key]
+            self.snapshot[key] = value
+            self.save()
+            self.write_collector()
+            self.bind_proof()
+            with self.assertRaises(ValueError): w.retained_outcome()
+            self.snapshot[key] = original
+        self.snapshot = self.fixture()
+        for filename in w.TRANSPORT.FILES:
+            original = self.snapshot['files']
+            self.snapshot['files'] = [r for r in original if r['path'].rsplit('/', 1)[-1] != filename]
+            self.save()
+            self.write_collector()
+            self.bind_proof()
+            with self.assertRaises(ValueError): w.retained_outcome()
+            self.snapshot['files'] = original
+
+    def test_symlink_proof_refuses(self):
+        path = self.root / w.STOP_BASE / 'native-stop-events.jsonl'
+        real = path.with_suffix('.saved')
+        path.rename(real)
+        path.symlink_to(real)
         with self.assertRaises(ValueError): w.retained_outcome()
 
 

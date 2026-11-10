@@ -40,6 +40,25 @@ retain guest/CPU/observer exit fields and show these workloads stopped. Guest,
 kernel and manager journals must contain records from the known boot; the guest
 journal must retain an exit/stop outcome. A nonempty dmesg capture is mandatory.
 
+A narrow historical exception accepts the off-board collector's captured
+`LoadState=not-found`, `ActiveState=inactive`, `SubState=dead`, `MainPID=0`
+after its reviewed manual stop and systemd transient-unit garbage collection.
+It requires the exact committed November 9 result SHA-256
+`7168f8d1604c4aa375c862d045c07fd6b37be599c73196743b6ef63e0feaf679`,
+its size/hash-pinned policy intent, native stop events, board prestop and raw
+exit receipts, and all four size/hash-pinned preservation records for the
+selected phase. The separate native loaded-unit prestop archive is pinned to
+17,939 bytes and SHA-256
+`07fbbd203dbabf2858bc9807f1e3fab2c103045c081fe11e212493818995c7a1`;
+it binds collector PID `3869075`, its original invocation and boot argument.
+The native collector stop must return zero and retain terminal properties.
+Proof reads require bounded, regular, single-link files, reject symlink ancestry,
+and check file identity/metadata stability during each read. Missing, changed,
+truncated or mismatched proof refuses the exception. The existing loaded-unit
+branch and all complete-capture requirements remain in force. This exception
+neither reconstructs a loaded unit nor establishes the current host is idle;
+the independent live checks below still run before any reboot.
+
 All six preserver `FILES` are mandatory: observer JSONL and stderr,
 management-watch JSONL and stderr, and host CPU stdout and stderr. Empty stderr
 and CPU output files are permitted when captured completely. Observer JSONL
@@ -99,4 +118,7 @@ remain separate gates.
 Local validation: `python3 -m unittest discover -s tests -p
  'test_known_warm_boots.py'` exercises mocked transport and the actual remote
 source with fake kernel/systemd interfaces. These tests establish software
-behavior only.
+behavior only. A local-only invocation of `retained_outcome()` on November 9
+admitted `out/endurance-outcome-20261109-01` after the focused tests passed;
+no transport or reboot was invoked and `hardware_acceptance=false`. Final image,
+root and boot-route binding still require coordinator review before execution.

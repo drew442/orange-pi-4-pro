@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "date": "2026-11-10",
+  "classification": "Authenticate manually stopped legacy endurance evidence before future warm boot tests",
+  "result": "pass",
+  "hardware_acceptance": false,
+  "transport_or_reboot_invoked": false,
+  "targeted_tests": 32,
+  "full_ubuntu_tests": 2274,
+  "shell_suites": 5,
+  "diagnostic_cases": 5,
+  "native_toml_files": 5,
+  "source_files_locked_before_after": 908,
+  "unit": {
+    "MainPID": "0",
+    "Result": "success",
+    "ExecMainCode": "1",
+    "ExecMainStatus": "0",
+    "CPUQuotaPerSecUSec": "2s",
+    "MemoryMax": "3221225472",
+    "ActiveState": "active",
+    "SubState": "exited"
+  },
+  "builder_base": "/var/lib/a733-warm-stop-validation-20261109-01",
+  "records": [
+    {
+      "path": "out/warm-stop-validation-20261110-01/source-lock.json",
+      "bytes": 125228,
+      "sha256": "8462e16c28388beeaa435285038497eb2fc28a6bc67702dce4eaab03cc7ed069"
+    },
+    {
+      "path": "out/warm-stop-validation-20261110-01/unit.txt",
+      "bytes": 135,
+      "sha256": "d3e4fa8ecab92f7114cba88833e51b1b7fc1fcbd2259aead1c58d471611d8864"
+    },
+    {
+      "path": "out/warm-stop-validation-20261110-01/validate.sh",
+      "bytes": 916,
+      "sha256": "7212ec45bc337b3f19aba929f18fc7aa59ba74e5a9bdf5ff1a24b3f6f0610643"
+    },
+    {
+      "path": "out/warm-stop-validation-20261110-01/validation-staging-failure.log",
+      "bytes": 26286,
+      "sha256": "d8a9ed240de60df0c2acb6bb6f93b39f432ad57be81e7ab0d6c240e874a36549"
+    },
+    {
+      "path": "out/warm-stop-validation-20261110-01/validation.log",
+      "bytes": 25171,
+      "sha256": "6bb1d5546e8a868637a73196369a1c7ad8ab54949bfefd8a02ac2191bbc68dec"
+    },
+    {
+      "path": "tmp/warm-stop-evidence-review-20261109.json",
+      "bytes": 2445,
+      "sha256": "66897589320a69da62cc699e18f7aff083db8e6fc1a53b4415d3c5d5d224eb16"
+    }
+  ],
+  "review": {
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "result": "PASS"
+  },
+  "limits": [
+    "First suite staging retained native owner/mode and refused two protected imports; corrected root-owned non-group-writable staging passed without source content changes",
+    "Final root, image and boot route binding and ten actual warm boots remain unperformed",
+    "Legacy result and stop evidence are authenticated without requiring another eight-hour workload"
+  ]
+}
