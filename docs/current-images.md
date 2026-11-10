@@ -1,7 +1,7 @@
 # Current images for this board
 
 The board is running **normalized A at 192.168.1.116** with its original pinned
-SSH identity. A guarded warm-reboot series is active; current boot IDs are recorded
+SSH identity, boot `274af3d8-156c-4de8-a1ed-688c89b5aaa4`. Ten warm reboots completed; records are
 under `out/warm-boots-normalized-a-protected-sd-20261110-02/`.
 The independent operator's full NVMe write, original identity restoration and
 protected host SD restoration completed successfully. Root p2 is read-only;
@@ -10,16 +10,16 @@ independent coordinator checks. [Physical installation record](evidence/normaliz
 [Preserved guest restoration and KVM 5→6→7/checkpoint/restart](evidence/normalized-guest-restore-20261110.json)
 and [independent deployment reproduction](independent-deployment-20261110.md) pass.
 The first warm collector attempt stopped on SSH closure during reboot; the new
-host was healthy and no cycle was counted. The corrected series 02 is now
-running. Final boot-series acceptance remains pending. No operator flashing is requested.
+host was healthy and no cycle was counted. The corrected series 02 completed ten
+clean warm reboots, with matching serial sequences and unchanged complete SD hash.
+Ten genuine [cold boots](cold-boot-validation.md) remain pending. No operator flashing is requested.
 
 The [eight-hour workload gate](evidence/eight-hour-endurance-result-20261109.json)
 passes using retained longer-run data. Original guests/forensics, the complete
 compatible host cohort and the actual dirty STATE source are preserved privately
 off-device. Controlled SSH/offline selection and NVMe-driver fault recovery also
 pass with actual KVM. The fresh installation has returned to normal protected-SD boot;
-firmware loading NVMe BOOT remains untested. Release acceptance and
-[fresh normalized deployment](deploy-protected-20261109.md) remain incomplete;
+firmware loading NVMe BOOT remains untested. [Fresh normalized deployment](deploy-protected-20261109.md) passes; release acceptance remains incomplete;
 the earlier uncontrolled SSH failure remains unexplained.
 
 Paths below are relative to `/home/drew/orange-pi-4-pro` on codex.

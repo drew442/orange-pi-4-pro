@@ -1,0 +1,11 @@
+{
+  "archive": "/var/lib/a733-final-warm-evidence-20261110-01/evidence.tar",
+  "bytes": 5754880,
+  "sha256": "7090ebeec6917212d232bf21ae12f73f7e417985ca2715925ed0895eca6b907b",
+  "verified_files": 33,
+  "fsynced": true,
+  "transfer_exit": 0,
+  "inventory_sha256": "d5095ac263c048741282eff0a17e4ffdafc6934b8d71ee6c8f13f94ab075e85f",
+  "source_files_unchanged_after_transfer": true,
+  "private_keys_or_images_included": false
+}

@@ -1,0 +1,53 @@
+{
+  "schema": 1,
+  "date": "2026-11-10",
+  "operation": "Guided genuine cold boot collector preparation",
+  "software_result": "pass",
+  "physical_cold_boots": 0,
+  "hardware_acceptance": false,
+  "focused_mock_tests": 18,
+  "full_Ubuntu_tests": 2304,
+  "full_Ubuntu_errors_failures_skips": 0,
+  "shell_suites": 5,
+  "diagnostic_cases": 5,
+  "locked_source_files": 933,
+  "builder_base": "/var/lib/a733-cold-collector-validation-20261110-01",
+  "unit": {
+    "MainPID": "0",
+    "Result": "success",
+    "ExecMainCode": "1",
+    "ExecMainStatus": "0",
+    "CPUQuotaPerSecUSec": "2s",
+    "MemoryMax": "3221225472",
+    "ActiveState": "active",
+    "SubState": "exited"
+  },
+  "source_lock_sha256": "23830694bae8ce4d235c4dba78cd070a3c323a1f3933aed796f52d0c86b99645",
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "result": "no software safety blocker found",
+    "sha256": "54fce3aa56850da75e7e48696d7636f83c7908aba5def319d842d9ed062df32b"
+  },
+  "source": {
+    "scripts/collect-known-cold-boots.py": {
+      "bytes": 12863,
+      "sha256": "3c9805c59c31ca89e2f91f4bdbb5bda97f03a40ae5bc37d07f229e8f49c60467"
+    },
+    "tests/test_known_cold_boots.py": {
+      "bytes": 11650,
+      "sha256": "3a53cefc6219fc111f6eb3bb7b236599ae9bea2dba4c1d13b855e2b4d567d1e1"
+    },
+    "scripts/collect-known-warm-boots.py": {
+      "bytes": 34070,
+      "sha256": "431a5b054d7a5a304c61b0a00e160ad47a7868451ee06c9c5af3b17485d4a572"
+    }
+  },
+  "receipts": {
+    "out/cold-collector-validation-20261110-01/receipts.tar": {
+      "bytes": 163840,
+      "sha256": "9b5ebe273e10954b56f935233533d3b43a0b9948bc44e700011de7e8b0c8f36c"
+    }
+  },
+  "board_actions_in_validation": false
+}

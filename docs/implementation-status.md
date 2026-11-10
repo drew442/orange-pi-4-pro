@@ -8,8 +8,8 @@ and is not reclassified as a pass.
 ## Live board and constraints
 
 - **Current:** normalized A at `root@192.168.1.116`, original pinned identity,
-  guarded warm-series 02 is running. Boot IDs change during this test;
-  actual observations are under `out/warm-boots-normalized-a-protected-sd-20261110-02/`. Whole-NVMe installation completed
+  boot `274af3d8-156c-4de8-a1ed-688c89b5aaa4` after ten guarded warm reboots.
+  Actual observations are under `out/warm-boots-normalized-a-protected-sd-20261110-02/`. Whole-NVMe installation completed
   with exit 0, expected streamed source hash and **no readback**. Original identity
   restoration/fsync/unmount and protected SD restoration pass. Independent operator
   and coordinator checks authenticate 40 tool files, root p2 read-only, STATE,
@@ -58,8 +58,8 @@ and is not reclassified as a pass.
 | Guest backup/restoration | [Counter-3 archive restored and advanced 4/5](evidence/corrected-host-guest-restore-20261108.json). [Counter-5 archive](evidence/current-counter5-backup-20261109.json) and [forensic copies](guest-preservation-20261109.md) remain preserved; [fresh archive restoration and actual KVM 5→6→7/checkpoint/restart now pass](evidence/normalized-guest-restore-20261110.json) |
 | Failed health/offline root selection, missing NVMe, dirty journal | [Controlled SSH/offline-root recovery/KVM 9 passes](controlled-ssh-recovery-20261110.md). [NVMe-driver fault → serial shell → ordinary B → KVM 10 passes](missing-nvme-recovery-test.md); physical disconnection is not claimed. [Actual dirty crash → protected export → ext4 replay/marker → KVM 11 passes](dirty-state-recovery-trial.md), with verified custody. Initial raw inspector counter refusal remains retained; no broader claim |
 | Fresh normalized full installation and deployment reproduction | [Matching full streams](evidence/normalized-full-nvme-image-20261109.json) and [isolated composition](evidence/isolated-nvme-composition-20261109.json) pass. B alone has booted through the updater; [full installation](evidence/normalized-host-install-20261110.json), [fresh restored KVM](evidence/normalized-guest-restore-20261110.json) and [independent procedure reproduction](independent-deployment-20261110.md) pass |
-| Final 10 warm and 10 cold boots | Protected-SD final A is selected for qualification. Attempt 01 stopped after one reboot request when SSH closed before command exit; independent observation confirms a healthy distinct boot. Collector counted zero. The corrected, independently reviewed series 02 is now running; cold boots remain pending |
-| SPI removed-SD boot or immutable SD | SPI recovery/programming/SD-removed boot pending. Qualifying workload SD counters and pre-maintenance whole-card hash matched; [bounded firmware audit](sd-firmware-write-policy.md) passes. Final complete-card baseline matches `401df0…64be5`, prefix `ab5e8c…ad207` and zero counters. Defined-series final comparison and serial reconciliation remain pending |
+| Final 10 warm and 10 cold boots | Protected-SD final A is selected for qualification. Attempt 01 stopped after one reboot request when SSH closed before command exit; independent observation confirms a healthy distinct boot. Collector counted zero. The corrected series 02 completed ten distinct guarded boots, independently matched to ten clean serial reboot/SD-loading/EL2 sequences. Cold boots remain pending |
+| SPI removed-SD boot or immutable SD | SPI recovery/programming/SD-removed boot pending. Qualifying workload SD counters and pre-maintenance whole-card hash matched; [bounded firmware audit](sd-firmware-write-policy.md) passes. Final complete-card baseline matches `401df0…64be5`, prefix `ab5e8c…ad207` and zero counters. Post-warm whole-card comparison matches the baseline and prefix, with zero Linux write/discard/flush counters; ten warm serial sequences reconcile. [Result](evidence/final-warm-boots-20261110.json) and [verified builder custody](evidence/final-warm-custody-20261110.json). Final cold-series comparison remains pending |
 
 The original host cohort and counter-5/forensic archives remain private and
 immutable on the Ubuntu builder. Later counter 6–11 changes are disposable
@@ -78,7 +78,7 @@ The normalized fix now passes physically on **both B and fresh A**: directory
 0755, global LLMNR/mDNS disabled and no 5355/5353 listeners. Root password stays
 locked and SSH key-only. [Prior policy/update result](physical-host-update-rollback-20261110.md).
 The fresh host also passes the final-A collector's **read-only** live preflight;
-warm attempt 01 stopped before counting any cycle; its separately observed reboot is healthy. Series 02 is active; no cold cycles have run yet. Installer RAM serial retained three
+warm attempt 01 stopped before counting any cycle; its separately observed reboot is healthy. Series 02 has ten warm boots and matching SD boundary hashes; no cold cycles have run yet. The [guided cold collector](cold-boot-validation.md) is prepared for operator power removal. Installer RAM serial retained three
 CMA allocation failures; successful install/flush/hash receipts do not explain
 their cause or establish a kernel-clean run.
 

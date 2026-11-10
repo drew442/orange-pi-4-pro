@@ -1,0 +1,113 @@
+{
+  "schema": 1,
+  "date": "2026-11-10",
+  "result": "pass",
+  "scope": "Ten clean warm reboots of final normalized A using protected SD; unchanged full SD across baseline, stopped attempt01 and completed series02. Cold boots not performed.",
+  "release_acceptance": false,
+  "warm_reboots": 10,
+  "distinct_boot_ids_including_start": 11,
+  "start_boot_id": "032799ae-d642-4337-8880-1858abbb9baa",
+  "final_boot_id": "274af3d8-156c-4de8-a1ed-688c89b5aaa4",
+  "serial": {
+    "inode": 4502197,
+    "start_offset": 4230664,
+    "end_offset": 5346520,
+    "sha256": "2bd8805cbc11c5f735d78590ccc61f1cdcda4283adc6ec7e1650dfc9fb646187",
+    "clean_shutdown_SD_loading_EL2_sequences": 10,
+    "extra_reset_sequences": 0
+  },
+  "readiness_seconds_range": [
+    52.228,
+    82.172
+  ],
+  "request_transport_exit": 255,
+  "request_command_exit": "UNKNOWN for all ten; only later distinct fully guarded boots count",
+  "sd": {
+    "bytes": 1977614336,
+    "cid": "035344535530324780716f216e00a8f5",
+    "baseline_and_post_warm_sha256": "401df09e666c22db8e8f9adbeecc0f385a910b1f41995e7a1d0bc68be3b64be5",
+    "first_256_MiB_sha256": "ab5e8c2c846cbbd51b61bef6831d7e4d1498c29fefbf47d74301b1f3bb0ad207",
+    "Linux_write_discard_flush_fields_zero": true,
+    "full_reads_at_boundaries_only": true
+  },
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "sha256": "5607c2946439f0adea39669d940d22c87983d73fdd9f705316efa72581cb9504"
+  },
+  "firmware_write_audit": "docs/sd-firmware-write-policy.md; bounded vendor-source audit, opaque firmware limitations retained",
+  "records": {
+    "out/final-sd-qualification-20261110-01/baseline-completion.json": {
+      "bytes": 293,
+      "sha256": "e33ba5e222caef00b9696bde05acf433adcf4657d7d013ad82d3923e2b6b3150"
+    },
+    "out/final-sd-qualification-20261110-01/baseline-process.json": {
+      "bytes": 497,
+      "sha256": "7161be5674b5d42b598314bff53238a025bb693e4e4d09b23dc301cb8ea23acc"
+    },
+    "out/final-sd-qualification-20261110-01/baseline.json": {
+      "bytes": 749,
+      "sha256": "db56b39df53c79c77adeca5c6fc9bf3d91409506053e30ae0dad853d7c3b4d40"
+    },
+    "out/final-sd-qualification-20261110-02/admitted-series02-review.json": {
+      "bytes": 29962,
+      "sha256": "26675dac18ca221dff1df3a084e0f5272b823ca6894fb3ad848593929ca3e815"
+    },
+    "out/final-sd-qualification-20261110-02/closed-independent-review.json": {
+      "bytes": 57036,
+      "sha256": "5607c2946439f0adea39669d940d22c87983d73fdd9f705316efa72581cb9504"
+    },
+    "out/final-sd-qualification-20261110-02/full-suite-admission.json": {
+      "bytes": 2413,
+      "sha256": "a6cc8448e83b24317d4549749189f9e8da9d6c47a2ff0534df859429ece465ff"
+    },
+    "out/final-sd-qualification-20261110-02/post-warm-sd-completion.json": {
+      "bytes": 294,
+      "sha256": "675c3da05f5273e8f34777207383e3753a41c1fec12827a948d511c24d7dc257"
+    },
+    "out/final-sd-qualification-20261110-02/post-warm-sd-process.json": {
+      "bytes": 498,
+      "sha256": "57b436d8a56adbd93c126e5b6c9fb7c7958fffb8dd7618c1b985f2c8e466e613"
+    },
+    "out/final-sd-qualification-20261110-02/post-warm-sd-progress.stderr": {
+      "bytes": 575,
+      "sha256": "298eb0be94e5836210d2fd81c50cbb664de0d189b146a277ce7e6ad21ace285f"
+    },
+    "out/final-sd-qualification-20261110-02/post-warm-sd.json": {
+      "bytes": 757,
+      "sha256": "5aec5590baa12426fc417b8d8547f0434cba28eed967eda8eb7411cccbabb438"
+    },
+    "out/final-sd-qualification-20261110-02/warm-immediate-idle-transport.json": {
+      "bytes": 2606,
+      "sha256": "06c478f3f8ac3e4f0c690ebbafc3735700f4e443e025062c35bd765617f701be"
+    },
+    "out/final-sd-qualification-20261110-02/warm-process.json": {
+      "bytes": 422,
+      "sha256": "01c40ed150fbe9524a40e097a16e60a4ef792f709016b0f940f44505c03b0b17"
+    },
+    "out/final-sd-qualification-20261110-02/warm-timestamped-events.jsonl": {
+      "bytes": 35421,
+      "sha256": "929a8dea17edf3295a8061b4ecbfbea81df5ae875eedb03b95dd7efc7888cf54"
+    },
+    "out/warm-boots-normalized-a-protected-sd-20261110-02/events.jsonl": {
+      "bytes": 143500,
+      "sha256": "c4b5397a3d3a4180ad84db3907eb56bfca58fca9aadb983c896fc70979bcd532"
+    },
+    "scripts/collect-known-warm-boots.py": {
+      "bytes": 34070,
+      "sha256": "431a5b054d7a5a304c61b0a00e160ad47a7868451ee06c9c5af3b17485d4a572"
+    },
+    "tmp/capture-post-warm-known-sd-20261110.py": {
+      "bytes": 2361,
+      "sha256": "d24a4d5138ebb7cfcb0222c0ac7de6dd7a6204ec4c2211321fa3fd4ed6b9421b"
+    },
+    "tmp/run-final-warm-series-20261110-02.py": {
+      "bytes": 7381,
+      "sha256": "80a973f821a45e5bf07afbdb752e74fce5e70232ef579589194228ad0970928e"
+    },
+    "tmp/run-post-warm-sd-comparison-20261110.py": {
+      "bytes": 2014,
+      "sha256": "cc8b9be290daf585e3cadd1a788df27388067181178c90c0dd0788f427bbef36"
+    }
+  }
+}

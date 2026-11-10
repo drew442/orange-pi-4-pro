@@ -1,13 +1,23 @@
 # Final warm boot collection
 
-The guarded final normalized-A series is **in progress**. An earlier attempt
-stopped after its first request when SSH closed during reboot; that collector
-counted zero, and the separately observed host was healthy. The corrected
-request handling is validated before the new series. The endurance duration criterion
-is 8 hours (28,800 seconds); retained legacy A733 data exceeding it qualifies
-without a rerun. The [November 9 result](evidence/eight-hour-endurance-result-20261109.json)
-passes that gate on revalidated telemetry. No warm or cold boot acceptance is
-claimed by this preparation or its mocked tests.
+The final normalized-A protected-SD series completed **ten clean warm reboots**.
+Independent review matched ten distinct guarded new boot UUIDs to exactly ten
+serial shutdown/SD-loading/Linux EL2/VHE sequences; readiness took 52–83 seconds.
+The complete 1,977,614,336-byte SD hash stayed
+`401df09e666c22db8e8f9adbeecc0f385a910b1f41995e7a1d0bc68be3b64be5`,
+with prefix `ab5e8c…ad207` and zero Linux write/discard/flush counters.
+[Physical result](evidence/final-warm-boots-20261110.json) and
+[verified second-copy custody](evidence/final-warm-custody-20261110.json).
+
+Attempt 01 stopped after its first request when SSH closed during reboot; it
+counted zero, and a separate observation found a healthy new boot. The corrected
+series 02 preserves each request-side exit 255 as unknown command exit and counts
+only the later distinct fully ready boot. It did not resume attempt 01.
+
+The endurance duration criterion is eight hours (28,800 seconds); retained
+[longer-run data](evidence/eight-hour-endurance-result-20261109.json) qualifies
+without a rerun. Ten genuine [cold boots](cold-boot-validation.md) remain
+unperformed. No release completion follows from the warm series alone.
 
 `scripts/collect-known-warm-boots.py` defaults to a local plan and makes no SSH
 connection. Execution requires both `--execute` and a canonical nonzero
@@ -129,8 +139,8 @@ SysRq reset and power cycling are never issued. Every record keeps
 and independently reconcile it with physical acceptance. Full SD byte comparison
 is a separate later step; the collector avoids whole-card or root hashing on
 each boot. Ten cold boots require manual power-cycle evidence and remain
-**unperformed**. SPI boot, dirty-journal recovery and release acceptance also
-remain separate gates.
+**unperformed**. SPI boot and release acceptance remain separate from this result;
+[dirty-journal recovery](dirty-state-recovery-trial.md) has its own completed physical evidence.
 
 Local validation: `python3 -m unittest discover -s tests -p
  'test_known_warm_boots.py'` exercises mocked transport and the actual remote
@@ -156,9 +166,9 @@ passes all checks within the existing deadline; the request is never repeated.
 Ordinary transport failures, timeouts/truncation and malformed or mismatched
 proof remain refused. Attempt 01 is not silently resumed or relabeled successful.
 
-The live series uses `out/warm-boots-normalized-a-protected-sd-20261110-02/`
+The completed series used `out/warm-boots-normalized-a-protected-sd-20261110-02/`
 plus UTC/monotonic timestamps and serial offsets under
 `out/final-sd-qualification-20261110-02/`. The execution envelope preserves the
 unchanged reviewed collector source and stops further local requests if its
-capture fails. Physical acceptance still requires all ten observed boots,
-serial reconciliation and the final whole-SD comparison.
+capture fails. The ten observed boots, serial reconciliation and whole-SD comparison now pass.
+Cold-series acceptance remains separate.
