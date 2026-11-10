@@ -107,7 +107,8 @@ Recovery documentation must cover missing NVMe, corrupt root, failed update, for
 
 Release only when evidence includes:
 
-The operator limits planned workload tests to eight hours (28,800 seconds).
+The operator caps every planned test longer than eight hours at eight hours
+(28,800 seconds), including all former 24-hour tests.
 Existing runs already covering at least eight hours qualify from their retained
 data without an eight-hour rerun. Preserve historical durations and distinguish
 operator termination from guest-generated completion; this changes duration,
