@@ -7,28 +7,24 @@ and is not reclassified as a pass.
 
 ## Live board and constraints
 
-- **Current:** `root@192.168.1.116`, original pinned SSH key, boot
-  `82ac09d1-3257-41e9-b3b7-1ea7df1047ed`. Normalized root B is read-only on p3;
-  STATE is writable; GUESTS is mounted. Independently reviewed offline
-  recovery selected B from RAM boot `14b1fb2d-165f-47aa-9797-80d32c46cdb9`
-  after a controlled management-SSH stop on old A. Durable publication, owned
-  STATE cleanup and protected-SD restoration pass; the resulting B boot passes
-  authenticated root/tools/selector, management, NTP, EL2/VHE and observed zero
-  SD-write checks. Post-recovery actual KVM CPU/disk/network, guest-requested
-  poweroff and independently retained raw zero exit pass.
-  A subsequent [NVMe-driver fault/recovery](missing-nvme-recovery-test.md) passes
-  faulted serial shell, ordinary B return and actual KVM.
-  The functional guest is stopped at durable counter **10**, enrollment SHA-256
+- **Current:** private RAM at `root@192.168.1.115`, original pinned SSH identity,
+  boot `597391e8-1ad5-4a04-a27d-f21e243fa960`; NVMe filesystems are unmounted,
+  swap absent and all NVMe block-RO flags zero. The complete original p2/p3/p4
+  cohort was restored from authenticated streams and flushed for the dirty-journal
+  trial; optional readback was omitted. The unchanged target preflight passes,
+  and STATE's initial RECOVER flag is false. No dirty crash/replay has occurred.
+  [Live preparation](dirty-state-recovery-trial.md#november-10-live-preparation).
+  GUESTS p5 retains stopped counter **10**, enrollment SHA-256
   `46e1d743fc90bdbb1a207a22ec398126cb7ce9363f58a9ddc784c37db7590e6c`;
-  its inactive RAM unit matches the new disk pin.
-  [Physical update/rollback](physical-host-update-rollback-20261110.md).
+  recreate its RAM unit from that enrollment after the next installed-host boot.
 - **Target:** A733, observed 12 GiB/eight CPUs. SD is SU02G,
   **1977614336 bytes**, CID `035344535530324780716f216e00a8f5`.
   NVMe is SPCC M.2 PCIe SSD, **256060514304 bytes**, serial
   `134807190FC700149277`, firmware EDFM20.0, 512/512 sectors. Diagnostic inventory
   is sufficient; leave heatsinks attached. Reported supply is 67 W USB-PD with
   passive 10.4 mm six-layer whole-board copper cooling; negotiated power is unmeasured.
-- **Boot route:** restored protected normal-host SD prefix `ab5e8c…ad207`; NVMe BOOT
+- **Boot route:** current private RAM SD prefix `d3a022…6bc3f6`; protected
+  normal-host prefix `ab5e8c…ad207` is retained for restoration. NVMe BOOT
   `cc2ad9…26c313` is retained but firmware loading it is untested. SPI is unchanged.
   Explicit maintenance SD writes are separated from routine-write observations.
   No normal installation readback was requested. [Current images](current-images.md).
@@ -62,8 +58,9 @@ and is not reclassified as a pass.
 
 The original host cohort and counter-5/forensic archives remain private and
 immutable on the Ubuntu builder. Later counter 6–10 changes are disposable
-functional-test data with retained evidence/checkpoints. RAM boot `.115` has
-ended after successful offline selection and B boot. Raw receipts remain under
+functional-test data with retained evidence/checkpoints. The earlier RAM boot
+ended after successful offline selection and B boot; the current RAM boot is
+now preparing the dirty-journal trial. Completed-case raw receipts remain under
 `out/failed-health-recovery-20261110-01/` with a verified private second copy on
 the builder; see the linked custody receipt.
 Do not restore old STATE alone over a different root pair.
@@ -76,8 +73,10 @@ The earlier uncontrolled SSH failure remains unexplained.
 
 Old A previously exposed wildcard 5355 listeners: its root management code creates
 `/etc/systemd/resolved.conf.d` as 0700, preventing the resolver from reading policy.
-The normalized directory-mode fix now **passes physically on B**: directory 0755,
-global LLMNR/mDNS disabled and no 5355/5353 listeners. New normalized A is not yet
+The normalized directory-mode fix **passed physically on B**: directory 0755,
+global LLMNR/mDNS disabled and no 5355/5353 listeners. That B slot was deliberately
+replaced by the original compatible cohort for the dirty-journal trial; its
+canonical normalized source remains preserved. New normalized A is not yet
 booted. Root password remains locked, SSH key-only, and observed QEMU identities
 have empty capabilities and NoNewPrivileges. [Policy and update result](physical-host-update-rollback-20261110.md).
 
@@ -95,7 +94,8 @@ The selected full distribution is `out/normalized-nvme-candidate-20261109/`:
 545581074-byte gzip SHA-256
 `3bc02f46d272dcac591d435fff2b1bc98d4fb048569fb2120746145929a8ad64`,
 manifest `3cbe28…ad08f`. It is a factory distribution requiring the reviewed
-same-board identity helper; it does not describe the current mixed-root drive.
+same-board identity helper. The drive currently holds the restored original
+cohort for the dirty-journal trial.
 [Deployment guide](deploy-protected-20261109.md). Preserve the compatible kernel,
 DTB and firmware; root provenance's old diagnostic DTB is not the current boot DTB.
 Licensing/source inventory remains incomplete for 26 vendor boot inputs and two

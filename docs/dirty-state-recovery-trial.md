@@ -106,8 +106,40 @@ not one of the final ten clean warm or ten cold boots.
 No executable crash command is authorized by a guessed boot ID or placeholder
 backup pin. Before the physical trial, independently review the exact live-bound
 mount, marker/fsync, reset and raw-journal-inspection commands, their tool
-availability and the full recovery route. The cohort and dirty-journal inputs
-do not exist yet, so this design is not a completed device write plan. If any
+availability and the full recovery route. The dirty-journal input and executable
+crash recipe do not exist yet; cohort restoration alone is not a reviewed crash
+plan. If any
 stage fails, retain evidence in RAM and restore the complete authenticated
 original cohort using its unchanged procedure; do not splice an old selector
 onto normalized roots or continue after an ambiguous partial restore.
+
+## November 10 live preparation
+
+Actual private RAM boot `597391e8-1ad5-4a04-a27d-f21e243fa960` at `.115` passes
+pinned SSH, rootfs/tmpfs, no swap, no NVMe filesystem mounts and exact target
+checks. Independent review approved the authenticated 256 MiB RAM SD prefix
+write and clean transition. SD maintenance is separate from routine-write proof.
+
+The unchanged paired-restoration controller applied reviewed plan
+`dfdca654301ed55104b0a2a7150e7f8c68b3cdf91d2bf932ccbfcd6bf9ac9876`
+with original index `44e8fc1f…64372e`. All 4/4/8 GiB decoded stream hashes/lengths,
+accepted writes and flushes pass, with zero exit and matching terminal/progress
+receipts. Optional readback was not requested; no raw readback hash match is
+claimed. GPT/BOOT/p5/SD/SPI were preserved by this operation. The originals remain
+immutable on the builder; the newly restored cohort is disposable.
+
+The full trusted 40-file closure is staged in RAM. The unchanged
+`host-recovery-target.py` snapshot passes with all six RO flags zero, and the
+restored STATE superblock has RECOVER false. Actual ARM environment/process/SD
+guards pass. The pinned debugfs is version 1.47.0, SHA-256 `7aca7f…bfe51`.
+The one-off inspector `tmp/inspect-dirty-state-journal-20261110.py`, SHA-256
+`177fb5dd…c9717`, passes host fixtures and independent source review; its complete
+postcrash inspection remains unperformed. It requires all six block-RO flags set
+and a fresh actual postcrash boot binding; dirty indicators alone do not prove
+committed transactions.
+
+Raw preparation receipts are under ignored `out/dirty-state-physical-20261110-01/`.
+No marker creation, dirty reset, dirty-image preservation, protected journal
+export or physical replay has been performed. The exact live-bound crash recipe
+still needs independent review before execution. Completed controlled SSH and
+NVMe-driver recovery cases remain accepted without repetition.
