@@ -1,8 +1,11 @@
 # Controlled SSH failure and offline root selection
 
 The controlled SSH-service failure, UART transition into RAM, offline root-B
-selection and subsequent protected boot pass. The post-recovery guest check is
-pending; this document does not close the complete recovery or release gate.
+selection, subsequent protected boot and post-recovery actual KVM guest pass.
+[Evidence](evidence/controlled-ssh-recovery-20261110.json) pins 96 bounded records;
+[verified private builder custody](evidence/controlled-ssh-recovery-custody-20261110.json)
+preserves their second copy. This closes this controlled service-failure case;
+broader physical recovery and release gates remain open.
 
 On installed old-A boot `987d0392-ec8d-491c-a711-33abe07d614c`, a separate
 systemd oneshot stopped only `a733-management-ssh.service`. Its nonce-bound UART
@@ -49,7 +52,25 @@ Raw receipts are in ignored `out/failed-health-recovery-20261110-01/`.
 The staging wrapper reused the original RAM-SD preparation stdout filename;
 that original stdout is no longer retained. Its prior independent review and
 actual write/exit receipts remain intact. The replacement protected-SD plan has
-a distinct filename; no original stdout was reconstructed. Complete the
-post-recovery KVM check and evidence custody before closing this case. SPI,
+a distinct filename; no original stdout was reconstructed. SPI,
 missing-NVMe, dirty-journal, corrupt-root and power-cut recovery are outside this
 trial's proof.
+
+After boot, the existing guest ran as UID/GID 60001 with empty capabilities and
+NoNewPrivileges. PID 1956 held actual KVM VM, vCPU and VGIC descriptors and used
+`-accel kvm -cpu host`. CPU/disk/network checks passed with disk counter 8 → 9.
+The guest requested poweroff; the prestarted independent observer retained
+ExecMainCode 1, ExecMainStatus 0 and matching timestamps/PID. Counter 9 is durably
+checkpointed in enrollment `217cc43d…1727a7` (enrollment checkpoint number **6**),
+and its inactive RAM service was refreshed with the new disk pin. SD write,
+discard and flush counters remained zero.
+
+The initial readiness adapter expected a MainPID field in the observer's ready
+event and refused before launching the guest. The correction checked its actual
+ActiveState schema and the same live observer PID 1920 separately. The observer
+was not restarted. An initial read-only journal collector likewise refused an
+incorrect mode-0400 assumption; source and actual stat establish mode 0600.
+Both errors remain retained. Builder custody initially refused a Python-version
+API mismatch after writing/flushing its 471040-byte archive; a compatible
+chunked reader verified that same archive and all 96 records without rewriting
+or retransmitting it. The custody receipt records this limitation.

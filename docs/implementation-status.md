@@ -9,15 +9,16 @@ and is not reclassified as a pass.
 
 - **Current:** `root@192.168.1.116`, original pinned SSH key, boot
   `c2dc588f-97d9-4bee-8fce-f1ede4550f4d`. Normalized root B is read-only on p3;
-  STATE is writable; GUESTS remains unmounted. Independently reviewed offline
+  STATE is writable; GUESTS is mounted. Independently reviewed offline
   recovery selected B from RAM boot `14b1fb2d-165f-47aa-9797-80d32c46cdb9`
   after a controlled management-SSH stop on old A. Durable publication, owned
   STATE cleanup and protected-SD restoration pass; the resulting B boot passes
   authenticated root/tools/selector, management, NTP, EL2/VHE and observed zero
-  SD-write checks. The post-recovery guest check remains pending.
-  The functional guest is stopped at durable counter **8**, enrollment SHA-256
-  `aab3db8c869d6411b1cc44eefa00a8093df821e5ebb32986f42f7c36e2766f7b`;
-  recreate its RAM unit from that checkpoint after installed-host boot.
+  SD-write checks. Post-recovery actual KVM CPU/disk/network, guest-requested
+  poweroff and independently retained raw zero exit pass.
+  The functional guest is stopped at durable counter **9**, enrollment SHA-256
+  `217cc43d31fe7be99e3dd5712f547db5678a26db57b1ca6effd300c53a1727a7`;
+  its inactive RAM unit matches the new disk pin.
   [Physical update/rollback](physical-host-update-rollback-20261110.md).
 - **Target:** A733, observed 12 GiB/eight CPUs. SD is SU02G,
   **1977614336 bytes**, CID `035344535530324780716f216e00a8f5`.
@@ -52,16 +53,17 @@ and is not reclassified as a pass.
 | Original host backup/restoration | [Immutable offline cohort](evidence/offline-host-preservation-20261110.json) and [physical interrupted restore/full retry/boot/KVM](paired-host-restore-20261110.md) pass |
 | Changed inactive update and manual rollback | [Physical p3 interruption, A recovery boot, complete B retry, selector interruption before/after publication, cancellation, B boot/KVM and old-A rollback/KVM pass](physical-host-update-rollback-20261110.md); handled SIGTERM, not power cuts |
 | Guest backup/restoration | [Counter-3 archive restored and advanced 4/5](evidence/corrected-host-guest-restore-20261108.json). [Current preserved counter-5 archive](evidence/current-counter5-backup-20261109.json) and [three forensic directories](guest-preservation-20261109.md) verified off-device; new counter-5 archive restore remains pending |
-| Failed health/offline root selection, missing NVMe, dirty journal | [Controlled SSH stop → UART → RAM → offline B selection → protected B boot pass](controlled-ssh-recovery-20261110.md); post-recovery KVM and evidence custody remain pending. Missing-NVMe and dirty-journal physical gates remain open; [missing-NVMe procedure](missing-nvme-recovery-test.md) and [dirty-STATE design](dirty-state-recovery-trial.md) are prepared/reviewed. Dirty-journal live inputs/commands still need binding |
+| Failed health/offline root selection, missing NVMe, dirty journal | [Controlled SSH stop → UART → RAM → offline B selection → protected B boot → actual KVM/counter 9 pass](controlled-ssh-recovery-20261110.md), with verified builder evidence custody. Missing-NVMe and dirty-journal physical gates remain open; [missing-NVMe procedure](missing-nvme-recovery-test.md) and [dirty-STATE design](dirty-state-recovery-trial.md) are prepared/reviewed. Dirty-journal live inputs/commands still need binding |
 | Fresh normalized full installation and deployment reproduction | [Matching full streams](evidence/normalized-full-nvme-image-20261109.json) and [isolated composition](evidence/isolated-nvme-composition-20261109.json) pass. B alone has booted through the updater; final full installation/reproduction remains unperformed |
 | Final 10 warm and 10 cold boots | Pending after selecting/installing final distribution and boot route; test/accidental reboots are not counted |
 | SPI removed-SD boot or immutable SD | SPI recovery/programming/SD-removed boot pending. Qualifying workload SD counters and pre-maintenance whole-card hash matched; [bounded firmware audit](sd-firmware-write-policy.md) passes. Final shutdown/reboot comparison and serial reconciliation remain pending |
 
 The original host cohort and counter-5/forensic archives remain private and
-immutable on the Ubuntu builder. Later counter 6/7/8 changes are disposable
+immutable on the Ubuntu builder. Later counter 6/7/8/9 changes are disposable
 functional-test data with retained evidence/checkpoints. RAM boot `.115` has
-ended after successful offline selection and B boot; raw receipts remain under
-`out/failed-health-recovery-20261110-01/` until the case is complete.
+ended after successful offline selection and B boot. Raw receipts remain under
+`out/failed-health-recovery-20261110-01/` with a verified private second copy on
+the builder; see the linked custody receipt.
 Do not restore old STATE alone over a different root pair.
 
 [Controlled recovery details](controlled-ssh-recovery-20261110.md) preserve the
@@ -115,9 +117,8 @@ runtime disk/memory guards remain unchanged. Normal installation uses one stream
 write with progress and optional troubleshooting readback; do not benchmark hardware
 or add another eight-hour run solely for the revised duration policy.
 
-1. Finish post-recovery KVM and evidence custody for the controlled failed-health
-   case; retain its completed selection/boot substeps without repeating them.
-   Run missing-NVMe and actual dirty-journal cases using immutable original backups
+1. Retain the completed controlled failed-health recovery/KVM case without repeating
+   it. Run missing-NVMe and actual dirty-journal cases using immutable original backups
    and independent review. Preserve kernel/control evidence if SSH fails again.
 2. Prove SPI recovery and matched NVMe-first firmware operation where possible;
    otherwise finish immutable-SD acceptance. Keep the SPI proof gate intact.

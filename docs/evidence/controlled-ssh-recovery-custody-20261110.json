@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "date": "2026-11-10",
+  "operation": "verified private second copy of controlled SSH recovery and actual KVM evidence",
+  "archive": {
+    "builder_base": "/var/lib/a733-controlled-ssh-recovery-evidence-20261110-01",
+    "bytes": 471040,
+    "sha256": "b93f7504308b55b9e6eb863c402143315d68733e62cfd56cd992c152c5dd136c",
+    "stored_readback_matches": true,
+    "file_base_parent_fsynced": true,
+    "members_verified": 97,
+    "records_verified": 96,
+    "private_archive": true,
+    "raw_images_included": false,
+    "existing_archive_verified_without_rewrite": true,
+    "initial_verifier_error": "Builder Python3.10 lacks hashlib.file_digest; initial transfer/length/hash/fsync succeeded before verification refused. Original error retained; compatible chunked read verified the same archive."
+  },
+  "copied_result": {
+    "path": "docs/evidence/controlled-ssh-recovery-20261110.json",
+    "bytes": 21220,
+    "sha256": "ac6b172e73edb1e336dc61a445037f19a0af94e8049269459dba80ad50f3a2c4"
+  }
+}

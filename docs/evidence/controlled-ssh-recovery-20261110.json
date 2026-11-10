@@ -1,0 +1,523 @@
+{
+  "schema": 1,
+  "date": "2026-11-10",
+  "classification": "physical controlled SSH-service failure, UART RAM recovery, offline root selection, protected B boot and actual KVM",
+  "functional_result": "pass",
+  "whole_release_accepted": false,
+  "scope_exclusions": [
+    "physical SSD removal",
+    "fully hung kernel",
+    "power-cut crash recovery",
+    "corrupt-root recovery",
+    "dirty-journal replay",
+    "SPI recovery"
+  ],
+  "old_A_boot_id": "987d0392-ec8d-491c-a711-33abe07d614c",
+  "RAM_boot_id": "14b1fb2d-165f-47aa-9797-80d32c46cdb9",
+  "recovered_B_boot_id": "c2dc588f-97d9-4bee-8fce-f1ede4550f4d",
+  "offline_plan_sha256": "61de3e4af98d4632c6d6683f86cf82cb6dfc5a9738e19773f37e90c68c5449c2",
+  "guest_counter": 9,
+  "guest_enrollment_checkpoint_number": 6,
+  "guest_manifest_sha256": "217cc43d31fe7be99e3dd5712f547db5678a26db57b1ca6effd300c53a1727a7",
+  "guest_disk_sha256": "d766bd9d1d9e653f1b114173dfe34889849c73eb508df68c4f1fce87f27a731d",
+  "guest_exit_observer_started_before_guest": true,
+  "guest_requested_poweroff": true,
+  "observed_raw_ExecMainCode": 1,
+  "observed_raw_ExecMainStatus": 0,
+  "guest_checkpoint_durable": true,
+  "routine_SD_write_counters_zero": true,
+  "normal_install_readback_requested": false,
+  "independent_review_model": "gpt-6.1-sol",
+  "independent_review_effort": "high",
+  "anomalies": [
+    "First emergency-sync completion unobserved; new request after verbosity change completed",
+    "ext4 journald warning interleaved nonce-bound RO observer JSON; original bytes retained and only timestamped kernel records removed for independent reconstruction",
+    "Original RAM SD prepare stdout superseded by staging-wrapper filename reuse; prior review and actual write receipts retained; no recreated stdout claimed",
+    "Oneoff readiness adapter expected missing MainPID field, aborted before guest start; correction checked ActiveState plus same live observer PID, no restart",
+    "Journal collection initially assumed mode0400; refused without writes; source journal_store and actualstat establish correct0600; original refusal retained",
+    "Obsolete RAM SSH transport terminated only after new installed boot authenticated"
+  ],
+  "custody_record": "docs/evidence/controlled-ssh-recovery-custody-20261110.json",
+  "records": [
+    {
+      "path": "out/failed-health-recovery-20261110-01/RAM-entry.json",
+      "bytes": 788,
+      "sha256": "cef696cf826f9a0862d6388a624eb6055f4c00bc07626eaa32bb7f4098ce67ef"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/RAM-entry.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/after-fault-TCP22.json",
+      "bytes": 195,
+      "sha256": "fd09ee5d292a54e473995b879e1b12eb74ccaf125e7cdae9f1ea9f692413d09d"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/before-fault-TCP22.json",
+      "bytes": 118,
+      "sha256": "46154be9fd0f63bc85a22b6b6cdb54315bc1dd8b4444801a4f5df5c95093e2c9"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/evidence-path-note.json",
+      "bytes": 395,
+      "sha256": "2e3b15c5944955875683b424fafbe120f22b21537956638aa6ea3fb10449cd3d"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/guest-activation-command.json",
+      "bytes": 298,
+      "sha256": "2f2a40cf302b206221a242708197583b914e8e404c517a07154189d016a4a015"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/guest-activation-plan.json",
+      "bytes": 2429,
+      "sha256": "ca3b6fc61a32ef01ea67c1908e179bf21b5d4f25306c5ccbd1127cb43d05a507"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/guest-activation-prepare.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/guest-activation-terminal.txt",
+      "bytes": 1341,
+      "sha256": "14d96ca3d37f0a64a206b954c4ac3401d958725b4a4996464d58175de1adc5c9"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/guest-checkpoint-exit.json",
+      "bytes": 56,
+      "sha256": "0a0799198565cea3e39d24de77889f75874b346bd802f5261ddfb39c2de6e2b3"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/guest-checkpoint-final.json",
+      "bytes": 664,
+      "sha256": "b9da1379d33fa8f0104eefc3abbde4ed8fb23fb2be14166470251fa3baad1eb9"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/guest-checkpoint-plan.json",
+      "bytes": 3703,
+      "sha256": "98f057d1050392e7bcf9d18166451615fb3aa84ba8bf2879144723607e350f8c"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/guest-checkpoint-terminal.txt",
+      "bytes": 1676,
+      "sha256": "7fbe44e195963637c3ec4ee730a9167568e8a0fde9da34f6bd1a52e59128efad"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/guest-clean-shutdown.json",
+      "bytes": 15849,
+      "sha256": "d8f02f5aa5e4fdaa621ac914f3b2fb11a488c4444b34a176cebaa6c5decb2346"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/guest-clean-shutdown.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/guest-final-collection.json",
+      "bytes": 1417,
+      "sha256": "f3ade98028d5ad17ab2a176df70ddb540a7f2c903ace36fb37c7e6195443602a"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/guest-final-collection.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/guest-observer-and-start.json",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/guest-observer-and-start.stderr",
+      "bytes": 94,
+      "sha256": "de3f96087c82def767ebb128288e6d132d628ef5720da53c7277b5300ccbe911"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/guest-ready-correction-and-start.json",
+      "bytes": 375,
+      "sha256": "e9bb93c7de91e05e54282be2126e918c65a64493af75544a3ac2b47a223646a4"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/guest-ready-correction-and-start.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/guest-running.json",
+      "bytes": 16168,
+      "sha256": "e4bc674e16b9a2741965b8a3991ccd66de5bf82c4da524851597c8e7dd16ff72"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/guest-running.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/guest-unit-prepare.json",
+      "bytes": 1324,
+      "sha256": "f3797819ef08c84b2a4b1aba4cee8e00ae82c777efeb6c3b3cb28a072b6410bf"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/guest-unit-prepare.stderr",
+      "bytes": 176,
+      "sha256": "28099b6fa6d7d7db9857abad4daed1d787424966ef8e6e104836388526b1e71c"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/health-job-unit-properties.txt",
+      "bytes": 322,
+      "sha256": "5bf058fd40b83417202425d62defaff7138e6f19bb959f8a13ed011fd4ce34d2"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/health-job-unit.txt",
+      "bytes": 410,
+      "sha256": "e28b952d3752a5ededb8b923eb4d40393c389978296b08bb5f0d1cb4fbc6c7c8"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/health-start-ssh.json",
+      "bytes": 58,
+      "sha256": "a10becd067482e718f7638152070cca4cd665f641209030b682d6f046ce3c045"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/health-start.json",
+      "bytes": 179,
+      "sha256": "1c41d369dbc6e2ef0eb6010fd1db9c66f905ba93fe5df3ae372cd070fc2dd95f"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/health-stop-uart-result.json",
+      "bytes": 851,
+      "sha256": "a74521ef80f59d838eecafa73c51f6a416c5ea1779e4c8fc986017683fcb1e2f"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/health-stop-uart.log",
+      "bytes": 1157,
+      "sha256": "034358fe112f7468257a2aaed3c3d702c6154c2e260e1418e9344953a4fc69ce"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/journal-collection-initial-mode-assumption.stderr",
+      "bytes": 88,
+      "sha256": "2ced987dad4029cab6df102c7a5a71733968fec1c359f021f083bd28c6bbfd02"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/management-unit-and-sockets.txt",
+      "bytes": 1671,
+      "sha256": "f7ae49b813f274e96a05cdc4ce58f2f42ed7a229fb711577f71d157a1920625f"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/normal-reboot-offset.json",
+      "bytes": 94,
+      "sha256": "e4f9cc37a38d2568a50157136f9cfef0e150b884d4b6570a7cf6335a461af54f"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/normal-reboot-result.json",
+      "bytes": 159,
+      "sha256": "63a696b20fa5feca65f9b3a495b66224abd766657e4e060eb528f0b8839c9e0a"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/old-reboot-SSH-transport-cleanup.json",
+      "bytes": 278,
+      "sha256": "9ba9afc02242e3a2e13169454900460f99701297b3ef91666b6bfdf1d67fb35d"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/preservation-coverage.json",
+      "bytes": 1164,
+      "sha256": "da6ec20875570c92273deb76f15557a86bc148f11cd8ba9c8017676f8f46ee03"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/private-ram-sd-source-stage.json",
+      "bytes": 257,
+      "sha256": "cd3e7ad03d8cdd0bdcda20a8e056970e6032114b1ab57bdac06deab874f5091a"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/protected-sd-plan-terminal.json",
+      "bytes": 639,
+      "sha256": "9ea34fbf2ab34e7d9f05f7c22433221f523dc6330c705ff6c7dd6a19508571fa"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/protected-sd-plan.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/protected-sd-source-stage.json",
+      "bytes": 143,
+      "sha256": "6bc1ee997e396de593eeeffb8a022c90224d3cdd8b5a8d3d02d7e0f4a574cb64"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/protected-sd-write-exit.json",
+      "bytes": 12,
+      "sha256": "5bc232b82de377a5655a39a2af9d7ae0fc868de5b9df957e18905cb914606c88"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/protected-sd-write-terminal.json",
+      "bytes": 657,
+      "sha256": "6c956fadcc37ee61660bd27eba43490758082f054e31870e5f1629831020532a"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/protected-sd-write.stderr",
+      "bytes": 736,
+      "sha256": "66271e923b78f9bf98c9c0ae08f45da584a527ea5ef36c1d657ec02af8cfb7a4"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/recovered-B-boot.json",
+      "bytes": 2500,
+      "sha256": "7e8b0ac2488e63aa174fbdec7b835f95236ccf221be7308be61a8fe749917d86"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/recovered-B-boot.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/recovery-apply-exit.json",
+      "bytes": 56,
+      "sha256": "e73757992f7c3291a03a371905803a27ba092596514d7c83323b075d5a63fc5d"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/recovery-apply-final.json",
+      "bytes": 2644,
+      "sha256": "6fd445b0caa5097c39cbf728042af8e1b14e1b4d3539058cbda487250c875c4f"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/recovery-apply-terminal.txt",
+      "bytes": 8321,
+      "sha256": "6911bb6f516131ffb362c44869b8e7a85d6ca858a73228957e7d66bed9224db9"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/recovery-cleanup-independent.json",
+      "bytes": 201,
+      "sha256": "db4396fc7a28ed0908b07c4c8be29c8cd8a7bdbdcb1bc609445f7065a3183d96"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/recovery-cleanup-independent.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/recovery-command.json",
+      "bytes": 465,
+      "sha256": "a3f368cf10c157e6f5e4ed71b0b7eeb5a2bbfb68692218c7440aee48e664d7fa"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/recovery-journal-after-boot.json",
+      "bytes": 3126,
+      "sha256": "774aeff63bd1c3a37a48c4d795c0f22756eb2356ccf68c0121ec155a7b5d531a"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/recovery-journal-after-boot.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/recovery-plan.json",
+      "bytes": 3151,
+      "sha256": "1d0238cdacbd7898e5725d606ba0ce0243deb33736d144726498719798479847"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/recovery-prepare-exit.json",
+      "bytes": 12,
+      "sha256": "5bc232b82de377a5655a39a2af9d7ae0fc868de5b9df957e18905cb914606c88"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/recovery-prepare-transport.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/recovery-prepare.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/recovery-source-stage.json",
+      "bytes": 207,
+      "sha256": "83efa49298f24fe810e683daf387c3f2cafe50bd8117d2b8bac6208a5c4933e0"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/recovery-source-stage.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/retained-accounts-plan.json",
+      "bytes": 588,
+      "sha256": "3948163d487d86636e57662d95365db61c7aff5b11cee4bee726b3c141523000"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/retained-accounts-receipt.json",
+      "bytes": 175,
+      "sha256": "d5fdf41673881eec73e107396eb0d015fa380d0b73f52d706382949ff85d090d"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/retained-enrollment-counter9.json",
+      "bytes": 1503,
+      "sha256": "217cc43d31fe7be99e3dd5712f547db5678a26db57b1ca6effd300c53a1727a7"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/retained-identities.json",
+      "bytes": 76,
+      "sha256": "46a4ce9920bd3299aecf245f440b44135cfe2a76d2ed3c02971886fa5e11db3d"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/retained-observer.jsonl",
+      "bytes": 417,
+      "sha256": "55137a9ce30da4c7a09ce25c2a3234952f1ee7b50f7889d12772d4d4ede7ea0b"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/retained-observer.py",
+      "bytes": 7357,
+      "sha256": "334f79c44ca9033556f9a7752d837ada7f37c4c34a7c7a51798807e195faefb4"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/retained-observer.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/sd-write-exit.json",
+      "bytes": 16,
+      "sha256": "e8cfe601a7e2762e17f7bf533044f84e714ac09a5af0186ccd93a58eb88f5ba8"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/sd-write-terminal.json",
+      "bytes": 663,
+      "sha256": "51097f0223804f682480ec34d487a78ba13d94b5f05a69856cf08a673b4be93a"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/sd-write.stderr",
+      "bytes": 742,
+      "sha256": "bb6b4d79ddbbfa180ce71a995f8866f1a7c8d8d0c08859c6e8685bd988703af3"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/uart-diagnostic-9-send.json",
+      "bytes": 115,
+      "sha256": "7bc471535d1d187d504e3ef1fd6fe594206bc9c49bc47156f150006454d4be14"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/uart-diagnostic-response.log",
+      "bytes": 124,
+      "sha256": "1d91afe4b50d58e426f53cb478f1f323c762d25a6af1c2635b96ea46d63f97f9"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/uart-diagnostic-w-send.json",
+      "bytes": 115,
+      "sha256": "0a80ae7a2e372824da3b171e2376094206d43172265b83ce99ed650ff51bc9fd"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/uart-help-offset.json",
+      "bytes": 105,
+      "sha256": "78317091bdb0d20df21b86c0f709afec1fdcc6d60b4beef342987dc157a88fce"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/uart-help-response.log",
+      "bytes": 351,
+      "sha256": "8b637be089aae0731ee86821996321400a7b56ac69235ff86c8126e728829492"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/uart-help-send.json",
+      "bytes": 115,
+      "sha256": "980057a8d9e450d0ad7a56563cca4bce3e075176206d25d7d68c3bf514641b00"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/uart-reboot-offset.json",
+      "bytes": 142,
+      "sha256": "47a139e7ff322cd48ad1528580e49150950d999793dbdb01d25b2beb6fefd32a"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/uart-reboot-send.json",
+      "bytes": 209,
+      "sha256": "7d6ef8117f694c4f0bc537cc302e9ae04e421abf5dca64d14b36569aed8decb3"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/uart-remount-check.json",
+      "bytes": 310,
+      "sha256": "a8d91f641023205617ac9157ffe9bda751a27e7ba56dab245e52d159fa75b8a2"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/uart-remount-observer-result.json",
+      "bytes": 2333,
+      "sha256": "8a43dd0dec7ef87a6d8c2581684f39f2ab8a9c7f9a40255c62812fd4d4b6c0bf"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/uart-remount-response.log",
+      "bytes": 4078,
+      "sha256": "30a9f5ab6a76eb0c9324df31c9e2fecb98f474f0643b7ff92731b27fc1d76038"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/uart-remount-send.json",
+      "bytes": 115,
+      "sha256": "1c9b55195f5a1d778881c72fcce5b51007e5982b5cf51dea99271c211d7bb9b5"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/uart-sync-response.log",
+      "bytes": 38,
+      "sha256": "dd1120b75d5d66a39ef5b8dfad1fea2180f50176f2ff8edfcb356492c8162a5c"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/uart-sync-send.json",
+      "bytes": 115,
+      "sha256": "c2ff489fb512c781b6c5e91bc7175699a758c08e609d91de1a9606c2abdee5f0"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/uart-sync-visible-check.json",
+      "bytes": 155,
+      "sha256": "3ee5c2988e566bebec8687672f69efbcdb891d132d0355e57a5034eec6e228db"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/uart-sync-visible-response.log",
+      "bytes": 78,
+      "sha256": "6afc1c1c8b4ea43a54c870bf8daa32fc6fdad32b5d23f7f2edad5c661460708f"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/uart-sync-visible-send.json",
+      "bytes": 115,
+      "sha256": "c2ff489fb512c781b6c5e91bc7175699a758c08e609d91de1a9606c2abdee5f0"
+    },
+    {
+      "path": "out/failed-health-recovery-20261110-01/uart-trial-through-B-boot.log",
+      "bytes": 198035,
+      "sha256": "2dc009f1e613352e9ff8dbb71d918c181153ae8d4cdf03659aada5fd815937c1"
+    },
+    {
+      "path": "tmp/failed-health-ram-recovery-review-20261110.json",
+      "bytes": 49469,
+      "sha256": "8f7595a851b4278ea74dc6602962a63c50ce523ae482ad00870b224fb6fd3f99"
+    },
+    {
+      "path": "tmp/controlled-ssh-health-failure-20261110.py",
+      "bytes": 4349,
+      "sha256": "c08b2ef79c2179aaa2363ad3045f0df6eb9206debb462efe0909685f8fb7c061"
+    },
+    {
+      "path": "tmp/send-a733-uart-sysrq-20261110.py",
+      "bytes": 735,
+      "sha256": "fab17022e4025e644e374424f3997fa455f9c495cd3862892b47a1e5ef5909ba"
+    },
+    {
+      "path": "tmp/send-a733-uart-diagnostic-20261110.py",
+      "bytes": 727,
+      "sha256": "614f99d6f519b0573b5d0c5f08e9edb4adb0b2840a25354ea533e3b0d70870ae"
+    },
+    {
+      "path": "tmp/stage-offline-recovery-20261110.py",
+      "bytes": 4316,
+      "sha256": "bbf7a29f8d0b1e92f7f94231ecb0da8283f7e52bf6bde6209d159c1877b67c31"
+    },
+    {
+      "path": "tmp/post-recovery-firstkvm-prepare-20261110.py",
+      "bytes": 2783,
+      "sha256": "02238d4dd9b48cd595c3b5787dd865ee56757beadeaebae77fe856d84c2f8142"
+    },
+    {
+      "path": "tmp/collect-post-recovery-guest-20261110.py",
+      "bytes": 3387,
+      "sha256": "9e3f3ee0194f3952408ab24d794e6cd725fc679b2d701f809984acf877fa62e0"
+    },
+    {
+      "path": "tmp/record-controlled-recovery-result-20261110.py",
+      "bytes": 4413,
+      "sha256": "95afa0c6cfaffbacdb1b3381ae9f08b1ed1ce524eaef3fd2a2d4c889c9a939b6"
+    }
+  ]
+}
