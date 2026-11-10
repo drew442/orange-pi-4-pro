@@ -1,7 +1,10 @@
 # Exercise missing-NVMe recovery on the physical board
 
-**Prepared trial; independent procedure review passes. Not hardware evidence.**
-[Preparation evidence](evidence/missing-nvme-trial-preparation-20261109.json).
+**Physical driver-fault trial and recovery pass on November 10.**
+[Execution evidence](evidence/missing-nvme-physical-20261110.json) pins 89 records;
+[verified private builder custody](evidence/missing-nvme-physical-custody-20261110.json)
+retains their second copy. [Earlier preparation](evidence/missing-nvme-trial-preparation-20261109.json)
+remains a historical record of the unexecuted design.
 The [November 9 workload result](evidence/eight-hour-endurance-result-20261109.json)
 passes the 8-hour (28,800-second) criterion. Run only after current guest/STATE
 backups are complete and exact target/recovery prerequisites are satisfied.
@@ -62,16 +65,20 @@ At the recovery prompt, record:
 /bin/busybox cat /proc/cmdline
 /bin/busybox cat /proc/sys/kernel/random/boot_id
 /bin/busybox cat /proc/mounts
-/bin/busybox ls -ld /sys/bus/pci/drivers/nvme /sys/class/block/nvme0n1 /dev/nvme0n1
+/bin/busybox ls -ld /sys/bus/pci/drivers/nvme /sys/class/block/nvme* /dev/nvme*
+/bin/busybox cat /sys/class/block/mmcblk1/device/cid /sys/class/block/mmcblk1/stat
 ```
 
-The last command should report absent entries. Require the injected bootarg,
+The `ls` command should report absent entries; the final command records the
+known SD CID and counters. Require the injected bootarg,
 no Linux NVMe namespace/driver, no NVMe root/STATE/GUESTS mount, the expected
 handoff failure and a usable serial shell. If the driver/namespace exists or
 normal host boot occurs, injection failed: retain the result and do not count
 it as missing-NVMe recovery. Do not mount, format or repair anything in this test.
 
-From the recovery shell, use `/bin/busybox reboot -f` after retaining evidence. Interrupt
+From the recovery shell, use `/bin/busybox reboot -f` only after retaining evidence
+and confirming that no NVMe or SD filesystem is mounted. If these conditions
+are unproven, stop and inspect; do not force a reboot. Interrupt
 the next countdown and confirm no blacklist remains, or allow the ordinary
 protected boot script to replace bootargs. Do not save environment changes.
 Verify normal NVMe detection, expected root/STATE selection, pinned SSH identity
@@ -79,5 +86,33 @@ and management, then execute an actual KVM guest. Preserve both faulted and
 normal boot IDs and console records. This closes only the fault-injected
 Linux missing-storage path when actually demonstrated. It does not establish
 physically disconnected-SSD behavior. SPI recovery, dirty-journal recovery and
-other acceptance gates remain separate. No result has been claimed by this
-preparation.
+other acceptance gates remain separate.
+
+## Observed November 10 result
+
+Normal B boot `c2dc588f-97d9-4bee-8fce-f1ede4550f4d` was shut down orderly.
+A single bridge-side SPACE intercepted the fresh countdown; an actual U-Boot
+prompt was required before any command. Version, SU02G SD, partition 1 and load
+addresses matched. Kernel/initramfs/DTB loads returned 27283528/4763312/209344
+bytes, FDT commands succeeded and the injected bootargs were printed before boot.
+
+Fault boot `9139b509-f429-443f-8b18-d858bee49174` retained the blacklist, lacked
+the NVMe driver and all NVMe device paths, failed STATE resolution and reached
+a usable serial root shell with no NVMe/SD mounts. One mount-free shell reboot
+returned to B boot `82ac09d1-3257-41e9-b3b7-1ea7df1047ed`. Its actual cmdline
+had no blacklist; NVMe identity, selected B/STATE, management, NTP and all 40 tool
+files passed. Native and bridge copies of the continuous 197595-byte interval
+match exactly. Linux SD write/discard/flush fields were zero before, during and
+after the trial; this does not replace final full-card/firmware reconciliation.
+
+Actual nonroot KVM PID 1832 passed CPU, disk counter 9 → 10 and loopback HTTP.
+The guest requested poweroff, and its prestarted observer retained raw exit zero.
+Counter 10 is durably checkpointed by enrollment `46e1d743…590e6c` (checkpoint
+ordinal 7); the inactive RAM unit uses its new disk pin. The initial final
+collector refused an immediate observer-unit status assertion; later read-only
+verification confirmed the same observer's terminal success, without a guest
+rerun, observer restart or repeated HTTP confirmation. That initial response body
+was validated before refusal but not separately retained; the running HTTP body,
+guest network PASS, observer records, original source and error are preserved.
+No physical SSD removal, cold boot, SPI, hung-kernel or full release acceptance
+is claimed by this trial.

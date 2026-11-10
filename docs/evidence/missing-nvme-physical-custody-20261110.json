@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "date": "2026-11-10",
+  "operation": "verified private second copy of missing-NVMe driver fault recovery and actual KVM evidence",
+  "archive": {
+    "builder_base": "/var/lib/a733-missing-nvme-evidence-20261110-01",
+    "bytes": 727040,
+    "sha256": "4908de2aa3886ee02253efc0b795ee0d33a46115d879af75ad7aca514cab8930",
+    "stored_readback_matches": true,
+    "file_base_parent_fsynced": true,
+    "members_verified": 90,
+    "records_verified": 89,
+    "private_archive": true,
+    "raw_images_included": false
+  },
+  "copied_result": {
+    "path": "docs/evidence/missing-nvme-physical-20261110.json",
+    "bytes": 20056,
+    "sha256": "32a8f9ca4983975a15b607893ca8f0af0a69c4d454dd34b852406a9e99944ce7"
+  }
+}

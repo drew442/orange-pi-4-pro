@@ -1,0 +1,503 @@
+{
+  "schema": 1,
+  "date": "2026-11-10",
+  "classification": "actual-board Linux built-in NVMe-driver fault injection and recovery, followed by actual nonroot KVM",
+  "functional_result": "pass",
+  "release_acceptance": false,
+  "physical_SSD_removed": false,
+  "physical_storage_firmware_or_boot_files_written_by_injection": false,
+  "scope_exclusions": [
+    "electrically disconnected SSD",
+    "all controller/electrical faults",
+    "cold boot reliability",
+    "SPI boot/recovery",
+    "fully hung kernel",
+    "dirty journal replay",
+    "immutable-SD final acceptance"
+  ],
+  "normal_before_boot_id": "c2dc588f-97d9-4bee-8fce-f1ede4550f4d",
+  "fault_boot_id": "9139b509-f429-443f-8b18-d858bee49174",
+  "normal_return_boot_id": "82ac09d1-3257-41e9-b3b7-1ea7df1047ed",
+  "temporary_bootarg": "initcall_blacklist=nvme_init",
+  "fault_observations": [
+    "injected cmdline observed",
+    "NVMe PCI driver registration absent",
+    "all NVMe namespace and numbered device paths absent",
+    "STATE resolution failure",
+    "usable serial root recovery shell",
+    "no NVMe or SD mounts",
+    "SD write/discard/flush counters zero"
+  ],
+  "return_observations": [
+    "blacklist absent from actual cmdline",
+    "NVMe driver/controller/namespace and exact identity restored",
+    "expected normalized B root and STATE selection",
+    "original pinned management identity/configuration and NTP",
+    "all40 authenticated tool files",
+    "nonroot actual KVM VM/vCPU/VGIC descriptors with cap0/NoNewPrivileges",
+    "CPU/disk9-to10/loopbackHTTP pass",
+    "guest-requested poweroff with prestarted observer rawCode1/Status0",
+    "durable updated enrollment and refreshed inactive RAM unit",
+    "SD write/discard/flush counters zero"
+  ],
+  "guest_counter": 10,
+  "enrollment_checkpoint_number": 7,
+  "guest_manifest_sha256": "46e1d743fc90bdbb1a207a22ec398126cb7ce9363f58a9ddc784c37db7590e6c",
+  "guest_disk_sha256": "5780c719856c85b5c8df79847477661bf9609d57892ccc1a1a4e9a893c68a97a",
+  "release_boot_count": 0,
+  "independent_review_model": "gpt-6.1-sol",
+  "independent_review_effort": "high",
+  "limits": [
+    "A single SPACE and fresh-log timing do not alone prove interception; actual U-Boot prompt was required and observed before commands",
+    "Initial finalcollector refused immediate own-observer-unit status; later read-only actual terminal verification used same completed guest/observer, without rerun/restart/HTTP resend",
+    "Initial confirmation HTTP body was validated before that refusal but not separately retained; running HTTP body, guest network PASS, raw observer result and original source/stderr are retained"
+  ],
+  "custody_record": "docs/evidence/missing-nvme-physical-custody-20261110.json",
+  "records": [
+    {
+      "path": "out/missing-nvme-physical-20261110-01/board-preflight.json",
+      "bytes": 526,
+      "sha256": "594cd03a545a5cd21ebb842f1d2da31bbc8ea9631c1cc2e6ebe53d4a319db491"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/board-preflight.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/bridge-preflight.json",
+      "bytes": 205,
+      "sha256": "237d1b7ade289658dedb8e025129b3ad62053548bc025c844a45bdb3cb217a3d"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/bridge-preflight.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/capture-boundary.json",
+      "bytes": 151,
+      "sha256": "0241ca52e1f765d96e2a6e3a23d57c26989e1b1be102128756346cecbbbb404b"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/clean-reboot-request.json",
+      "bytes": 204,
+      "sha256": "da8190fd900c7c87976bf8d5f2d68829ec0bc1bd5dfa2a30cd737562cb4bef18"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/command-environment.console",
+      "bytes": 234,
+      "sha256": "04e67cfcd35ca458d4021402fbfe5dddd90c1f9eedd996120ac5f44f8af981a3"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/command-environment.json",
+      "bytes": 237,
+      "sha256": "c46c4a9bdc940f3054a2a47de48a1256d2dde7377695c0475530c195cd44f603"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/command-fdt-address.console",
+      "bytes": 24,
+      "sha256": "2042a8f3d5fc88c297f352a6ca07327e6de5af1fa118798ee468833b362df99d"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/command-fdt-address.json",
+      "bytes": 237,
+      "sha256": "0ba5f7a48d8f46ae08554f7f17161fa0bb20319f6d82b7f28e209d68ad856da8"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/command-fdt-resize.console",
+      "bytes": 21,
+      "sha256": "e388cb8612d049edcb71b7ad5bd1c2a0a8a5011522727e9771fa2c387acd689a"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/command-fdt-resize.json",
+      "bytes": 236,
+      "sha256": "d8f63e632e2d9ca0771c7353af9bcbc27d4c3e891b1ae97a3b0c11310ad16a8b"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/command-load-dtb.console",
+      "bytes": 119,
+      "sha256": "3afeb570097d783558d52209d8a966aebba01a42e3c4b0623d8c3d238f1062d5"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/command-load-dtb.json",
+      "bytes": 234,
+      "sha256": "c63cd998477dced2996fc02e6e6de58aaa6e9ce3dda4e276c2b0a6cedfea6a8c"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/command-load-initrd.console",
+      "bytes": 85,
+      "sha256": "3a7750c4c46f394d9194e5df598b3b1eff7a2a77be2deebd3a8af06eae454f09"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/command-load-initrd.json",
+      "bytes": 237,
+      "sha256": "d9e1e88781089b360746984589af9752e693db37d579e9220bae804ddc6391f4"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/command-load-kernel.console",
+      "bytes": 85,
+      "sha256": "1b2171834b6c765d7938634af944a20e26c7454f8196960ddde1c02d7854a92e"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/command-load-kernel.json",
+      "bytes": 237,
+      "sha256": "85ddb4c73fe507c526e94c661612bb3291b051548c3af3378a3f51e7c35a7c62"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/command-mmc-info.console",
+      "bytes": 239,
+      "sha256": "0eca711626deb14bd691b05f2f9385d86bdaf6297e9aba0d35d3728eae1d9b4f"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/command-mmc-info.json",
+      "bytes": 233,
+      "sha256": "447e885e58f5c096cc437e9c0a2a087c028e7628f634264b574deff6545f513f"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/command-mmc.console",
+      "bytes": 38,
+      "sha256": "39bef93ad6beef7293f1b5d02e14690c884dff6c79eade1960e3b8de8283cac9"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/command-mmc.json",
+      "bytes": 229,
+      "sha256": "3773468af138d337ba07dcab8d06f5299cea334d513e391e05d7d310afaedb2c"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/command-partitions.console",
+      "bytes": 171,
+      "sha256": "9f771b4aa2d6024e83b3b06cd44b680f914b2b413b958f96d2480f87ec62ef68"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/command-partitions.json",
+      "bytes": 236,
+      "sha256": "863a865446efaa359fd29bbe4293e480041b6bf7ebcefde93f772817d50188dc"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/command-set-bootargs.console",
+      "bytes": 180,
+      "sha256": "0ab56c5f9857f70b7d50cf7baf6bb484e40057a6c463add71189ab05b906fba3"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/command-set-bootargs.json",
+      "bytes": 239,
+      "sha256": "1100e58a7df44b06d95046af6bca5174bc484069141db6dd6c9e221fed5f6240"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/command-show-bootargs.console",
+      "bytes": 192,
+      "sha256": "e4f273b2893515d16360d25a6e5166cb83539af946ca45a732aeb65ffbbcd9e2"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/command-show-bootargs.json",
+      "bytes": 239,
+      "sha256": "0de09b42546f6b3ced7575dae4f49a7e654292a689d402dc8bb0a20eab785648"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/command-version.console",
+      "bytes": 281,
+      "sha256": "5f09c3677b4541d44c87b8849eac4e84a8d35067f77c15d1f2d76420833d662c"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/command-version.json",
+      "bytes": 232,
+      "sha256": "66ce796e67df2ca29ac44ecfc8c339823873724f248162dd5cfeca3f0e91fa6f"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/continuous-bridge-trial-through-return.log",
+      "bytes": 197595,
+      "sha256": "746198826832d4a4f0eef96efbf2d125bdc1f9e74558d6dd5bf40d14f6c13c49"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/continuous-capture-comparison.json",
+      "bytes": 431,
+      "sha256": "91f091a5b296a64389a3cf94369f9d01483913bbcccb57fa9868da3343fa9765"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/continuous-native-trial-through-return.log",
+      "bytes": 197595,
+      "sha256": "746198826832d4a4f0eef96efbf2d125bdc1f9e74558d6dd5bf40d14f6c13c49"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/fault-SD-check.json",
+      "bytes": 758,
+      "sha256": "e3e0ab08307b32e33444011fb354fb8975ffd56cf87a27844ba7dd552c2cd37f"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/fault-SD-read-send.json",
+      "bytes": 146,
+      "sha256": "0274abeaf47534790acdd3a1e036f9b2c3179e6192d595e33c1713cc2dcee97a"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/fault-SD-read.console",
+      "bytes": 853,
+      "sha256": "48f403005ab11993a98b00c14a96473a702a8972b805ba660b4afffc73fb6d1c"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/fault-boot-send.json",
+      "bytes": 347,
+      "sha256": "3bf04ae2107b9ce6a8d508a75c89e594f8fa10303bbb395198962cfe14ff9a60"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/fault-observation-result.json",
+      "bytes": 958,
+      "sha256": "463a26eb591d4cbfac799796d5c973e20dabdaa9de43268369164ad2aa33e185"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/fault-observation-send.json",
+      "bytes": 242,
+      "sha256": "a2ba038076c5ccb50809700d18b431162eb8bc814f163a299feffb3640bafca9"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/fault-observation.console",
+      "bytes": 1555,
+      "sha256": "eeb290a911f7fa7098bb2880edc8576a619249df19cb94ec4be8290900480cd3"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/fault-trial-through-recovery-request.log",
+      "bytes": 92870,
+      "sha256": "cfe5fc8a72158cbbd6da6465d70cbe4d19fb7c987b28db9eab5e1157775832e1"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/guest-activation-plan.json",
+      "bytes": 2429,
+      "sha256": "ca3b6fc61a32ef01ea67c1908e179bf21b5d4f25306c5ccbd1127cb43d05a507"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/guest-activation-prepare.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/guest-activation-terminal.txt",
+      "bytes": 1341,
+      "sha256": "14d96ca3d37f0a64a206b954c4ac3401d958725b4a4996464d58175de1adc5c9"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/guest-checkpoint-exit.json",
+      "bytes": 56,
+      "sha256": "0a0799198565cea3e39d24de77889f75874b346bd802f5261ddfb39c2de6e2b3"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/guest-checkpoint-final.json",
+      "bytes": 664,
+      "sha256": "910d9947ae5868cadd4652d905bead4c58862ceb687856b9ab757027dbc9969d"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/guest-checkpoint-plan.json",
+      "bytes": 3703,
+      "sha256": "9afe994c249fd7e5c8323594d3b8ce5de57dc0d490dfe9d90847f678dbf28a50"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/guest-checkpoint-terminal.txt",
+      "bytes": 1676,
+      "sha256": "6bc9ea9e3cfe02a28566c4f2af9ab496fa616a2e12444bbd62717d808112b7c9"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/guest-clean-shutdown.json",
+      "bytes": 15914,
+      "sha256": "54d25eb3ce60a62e4d88b11cd0f961c926998e73aacbb6ba68bbbbebe4e2e43d"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/guest-clean-shutdown.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/guest-final-collection.json",
+      "bytes": 1418,
+      "sha256": "3a1056e1620789346798f98229cb7c76c8b6e411bc5a5bbcd7aa8e7ee1072bf2"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/guest-final-collection.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/guest-observer-and-start.json",
+      "bytes": 361,
+      "sha256": "802484a5d2a3a7bb5bc74137be94345cd97e2d1e160a0857be3d8c5ce996b588"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/guest-observer-and-start.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/guest-observer-unit-initial-assertion.stderr",
+      "bytes": 89,
+      "sha256": "a9ac2d01f73684097a907ecfdf15649987af7bc9ba8a734bd5144212a4c92775"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/guest-running.json",
+      "bytes": 16171,
+      "sha256": "87d0df80dab476013419eae3af794c8dd8ddac1e249765af371eb297f9f98a72"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/guest-running.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/guest-unit-prepare.json",
+      "bytes": 1324,
+      "sha256": "322247bfe60a9571deac5babab3e91d6846e5d45d8b02b186cd36b160f485fe8"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/guest-unit-prepare.stderr",
+      "bytes": 176,
+      "sha256": "28099b6fa6d7d7db9857abad4daed1d787424966ef8e6e104836388526b1e71c"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/interceptor-events.jsonl",
+      "bytes": 404,
+      "sha256": "b1f4571431fcf92a5af2cf2f36c9dc63215bf83660f5d19939dd8fdeefab1e5b"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/interceptor-exit.json",
+      "bytes": 47,
+      "sha256": "3872cc9a3d4b96069fb897fb4497045248f89ca5a1a17a530b63197a0ffcd16b"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/interceptor.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/normal-B-boot.json",
+      "bytes": 2500,
+      "sha256": "9a086c365763f2cfab8377432e10cdb0f38211f0b7b274e0abd562d7ba19d2e9"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/normal-B-boot.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/normal-return-runtime.json",
+      "bytes": 5017,
+      "sha256": "3b702f5b4f236b50d22575d35adaa9e3ffa70da8ab0f565fa597457488bf9030"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/normal-return-runtime.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/recovery-reboot-send.json",
+      "bytes": 354,
+      "sha256": "b78851b20f8462e59cdeaec5986486e945e68a54cd20f1a90500daf0c4630483"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/relay-preflight.json",
+      "bytes": 66,
+      "sha256": "363d3cd6cf4cc9e7ad41119be344b0d7e81057d3c7d67a4b546926619fc26893"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/retained-accounts-plan.json",
+      "bytes": 588,
+      "sha256": "3948163d487d86636e57662d95365db61c7aff5b11cee4bee726b3c141523000"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/retained-accounts-receipt.json",
+      "bytes": 175,
+      "sha256": "d5fdf41673881eec73e107396eb0d015fa380d0b73f52d706382949ff85d090d"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/retained-enrollment-counter10.json",
+      "bytes": 1503,
+      "sha256": "46e1d743fc90bdbb1a207a22ec398126cb7ce9363f58a9ddc784c37db7590e6c"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/retained-identities.json",
+      "bytes": 76,
+      "sha256": "46a4ce9920bd3299aecf245f440b44135cfe2a76d2ed3c02971886fa5e11db3d"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/retained-observer.jsonl",
+      "bytes": 417,
+      "sha256": "f308765a63e9be437240b844277b1138c8ee73fd40ab65ea0306f5c1ff59ee52"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/retained-observer.py",
+      "bytes": 7357,
+      "sha256": "334f79c44ca9033556f9a7752d837ada7f37c4c34a7c7a51798807e195faefb4"
+    },
+    {
+      "path": "out/missing-nvme-physical-20261110-01/retained-observer.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "tmp/missing-nvme-live-trial-review-20261110.json",
+      "bytes": 28039,
+      "sha256": "3b10624d4f03a9c089967285af4c81f763575f7f1aa43919c557244b7ecfc578"
+    },
+    {
+      "path": "tmp/intercept-a733-uboot-20261110.py",
+      "bytes": 3769,
+      "sha256": "9bef5cc2191cc99b8b1c58781a192e0202c48fa615e754ba1ee09aa87cebc7f3"
+    },
+    {
+      "path": "tmp/send-a733-missing-nvme-command-20261110.py",
+      "bytes": 2876,
+      "sha256": "0aaa5a5691aab95ec3582ca5cfbe1ddb08b2efb3ad8c25b20ccb7ae59f983010"
+    },
+    {
+      "path": "tmp/preflight-missing-nvme-trial-20261110.py",
+      "bytes": 4532,
+      "sha256": "d9194234067dcd9eb2f468d9a1633adef631ae8ab68cb01e47b68b7722034202"
+    },
+    {
+      "path": "tmp/arm-missing-nvme-intercept-20261110.py",
+      "bytes": 1235,
+      "sha256": "a1d1c8c46b558708193f591b4f219fddf6d9188d16cedc1ee5a822b4e2e8f543"
+    },
+    {
+      "path": "tmp/run-missing-nvme-command-20261110.py",
+      "bytes": 1550,
+      "sha256": "885b2588a0fd211dce8f0be19fb86c79c74408383411e1cdcaee5a60dcf02fcf"
+    },
+    {
+      "path": "tmp/observe-missing-nvme-physical-20261110.py",
+      "bytes": 2905,
+      "sha256": "3cd87e07d32073cd7c31515ce7774dec00c6ffee63306b097c9f8b3c5a6742da"
+    },
+    {
+      "path": "tmp/read-fault-sd-and-mounts-20261110.py",
+      "bytes": 2546,
+      "sha256": "3bd9ea5e527af432c43eeaa07f3eac09d341a22c04e6a63011c3c7e9a800cbc2"
+    },
+    {
+      "path": "tmp/post-missing-nvme-firstkvm-prepare-20261110.py",
+      "bytes": 2799,
+      "sha256": "479a3e5cf8fc77da4feb7e6ec69fa40858c73c7853448d174e891727b5f78d2e"
+    },
+    {
+      "path": "tmp/initial-confirm-missing-nvme-guest-20261110.py",
+      "bytes": 2079,
+      "sha256": "46b702cf43e8711924f618238b7049f8c633bb5a253692c852020e990642ded1"
+    },
+    {
+      "path": "tmp/collect-stopped-missing-nvme-guest-20261110.py",
+      "bytes": 2116,
+      "sha256": "59a42511ad5be5c6f03a8b1674809fba217f4d06ac63e2b9ea6e2cd545ff9cd3"
+    },
+    {
+      "path": "tmp/collect-post-missing-nvme-guest-20261110.py",
+      "bytes": 3388,
+      "sha256": "d34426b2577d9ffb0d65afe1472a3863e6cbd37defd4c0597097c4c66ad7feb0"
+    },
+    {
+      "path": "tmp/collect-missing-nvme-return-20261110.py",
+      "bytes": 3629,
+      "sha256": "046d0493b95724223617f80d0d92c837609d04057e27d3b2072353efc60a780c"
+    },
+    {
+      "path": "tmp/record-missing-nvme-result-20261110.py",
+      "bytes": 3874,
+      "sha256": "0f22205c242c01fee819fa353445b749a39db4b8b64c6753c174d4a1cfbfd5e6"
+    }
+  ]
+}
