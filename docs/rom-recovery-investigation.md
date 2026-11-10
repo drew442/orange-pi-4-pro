@@ -36,6 +36,22 @@ That depends on working boot0 and does not prove an entry path independent of
 corrupted SPI. Forced ROM entry and a compatible RAM diagnostic still need their
 own physical demonstration.
 
+### November 10 upstream recheck
+
+[Read-only metadata](evidence/rom-upstream-recheck-20261110.json) confirms PR 223
+is still open at head `6362299a409eece76bdf820c08792b26e7862b23`.
+A [November 9 report](https://github.com/linux-sunxi/sunxi-tools/pull/223#issuecomment-6739008936)
+describes cold-FEL tests of an expanded SRAM layout on a **Radxa Cubie A7Z with
+LPDDR4**. This is another board's result.
+
+[PR 258](https://github.com/linux-sunxi/sunxi-tools/pull/258), closed without merge
+at `d33b361a0fd4e6296f572ca82a9cc5a80d99cf88`, reports Orange Pi 4 Pro LPDDR5
+initialization through mainline SPL and FEL. Its [review](https://github.com/linux-sunxi/sunxi-tools/pull/258#pullrequestreview-5448218001)
+raises SRAM placement concerns. These are useful leads for a separately pinned,
+reviewed recovery experiment; they do not establish this board's ROM entry or
+restoration. No proposal was adopted or uploaded. The version-only probe and
+compatible installed firmware remain unchanged, and SPI admission remains closed.
+
 ## Version-only protocol boundary
 
 The transport source is

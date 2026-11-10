@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "checked_utc": "2026-11-10T04:36:12Z",
+  "method": "GitHub connector fetch_pr; read-only",
+  "pr223": {
+    "url": "https://github.com/linux-sunxi/sunxi-tools/pull/223",
+    "state": "open",
+    "merged": false,
+    "base_sha": "34dfa20f8284273085666436e4cac09af19646c8",
+    "head_sha": "6362299a409eece76bdf820c08792b26e7862b23",
+    "november9_report_url": "https://github.com/linux-sunxi/sunxi-tools/pull/223#issuecomment-6739008936",
+    "november9_report_board": "Radxa Cubie A7Z A733 1 GiB LPDDR4; not this Orange Pi"
+  },
+  "pr258": {
+    "url": "https://github.com/linux-sunxi/sunxi-tools/pull/258",
+    "state": "closed",
+    "merged": false,
+    "base_sha": "d7bbd172a5da601a08f94479de308c6fb714a19a",
+    "head_sha": "d33b361a0fd4e6296f572ca82a9cc5a80d99cf88",
+    "author_claim": "Orange Pi 4 Pro LPDDR5 initialization via mainline U-Boot SPL and FEL with PR257; not reproduced here",
+    "review_url": "https://github.com/linux-sunxi/sunxi-tools/pull/258#pullrequestreview-5448218001"
+  },
+  "adopted_source_changes": false,
+  "physical_usb_probe": false,
+  "independent_spi_recovery_proven": false
+}
