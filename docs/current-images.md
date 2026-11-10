@@ -86,7 +86,9 @@ Its producer manifest is retained at `out/vgic-nvme-image-20261108/build-02.stdo
 (35,023 bytes, SHA-256 `addfcafe239a2aa075435383cc4742869d256d98beecd2526806da206d98f4a2`).
 Same-board identity was restored after installation and BOOT was subsequently
 updated, so neither unpersonalized full-stream hash describes the current NVMe.
-No NVMe reinstall is requested.
+Use the selected normalized candidate above for the authorized fresh installation
+and independent reproduction in the [deployment guide](deploy-protected-20261109.md).
+The historical base is retained for provenance and recovery.
 
 ## Flash an SD after diagnosis calls for it
 
