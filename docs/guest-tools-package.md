@@ -1,8 +1,16 @@
 # Installed and portable guest tools
 
-[Refreshed current roots](current-host-roots.md) now include the latest networking
-tool tree and pass the fixed-seed ARM workflow. The earlier artifact pins below
-remain valid for their original builds.
+Use the installed **40-file** tree at `/usr/lib/a733-tools` on the selected
+[normalized distribution](current-images.md); it includes isolated loopback
+networking. [Physical KVM](kvm-vgic-results-20261108.md) and
+[update/rollback](physical-host-update-rollback-20261110.md) records authenticate
+their respective installed closures. A fresh installation needs its own closure
+and execution receipts. Automatic guest startup remains an explicit operation.
+
+The package counts, portable archives and root pins below describe the
+**historical November 4 builds**, retained for reproduction and older-root
+maintenance. Their unperformed-status statements describe that checkpoint.
+Do not replace the current installed tree with an older archive.
 
 
 The current immutable A/B root build includes the complete maintenance and guest
