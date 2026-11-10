@@ -1,18 +1,19 @@
 # Current images for this board
 
-The board is in **SSH RAM recovery at 192.168.1.115**, boot
-`5e051870-626c-4da2-bb93-05fc29178614`, original pinned identity with strict SSH
-`HostKeyAlias=192.168.1.116`. The card contains the SSH recovery bootstrap.
-An independent operator is applying the reviewed normalized whole-NVMe image as
-one stream with no optional readback. Installation success, identity restoration,
-protected host SD restoration and final host boot remain unestablished.
-Do not boot incomplete NVMe contents. No operator flashing is requested.
+The board is running **normalized A at 192.168.1.116**, boot
+`d9e94d54-79bb-49c3-ad72-2672a9c71c6a`, with its original pinned SSH identity.
+The independent operator's full NVMe write, original identity restoration and
+protected host SD restoration completed successfully. Root p2 is read-only;
+40 tool files, original configuration/keys, DHCP/NTP and resolver policy pass
+independent coordinator checks. [Physical installation record](evidence/normalized-host-install-20261110.json).
+Preserved guest restoration/execution and final release boot-series acceptance
+remain pending. No operator flashing is requested.
 
 The [eight-hour workload gate](evidence/eight-hour-endurance-result-20261109.json)
 passes using retained longer-run data. Original guests/forensics, the complete
 compatible host cohort and the actual dirty STATE source are preserved privately
 off-device. Controlled SSH/offline selection and NVMe-driver fault recovery also
-pass with actual KVM. Current RAM maintenance is for fresh deployment;
+pass with actual KVM. The fresh installation has returned to normal protected-SD boot;
 firmware loading NVMe BOOT remains untested. Release acceptance and
 [fresh normalized deployment](deploy-protected-20261109.md) remain incomplete;
 the earlier uncontrolled SSH failure remains unexplained.
@@ -24,7 +25,7 @@ For later inactive-root maintenance, use the separately authenticated
 [old A rollback pair](matched-host-updates-20261109.md) separately. Its root-payload
 manifest differs from the whole-NVMe installer manifest below. The changed-B
 update, interruption, selection and healthy live rollback cases now pass physically. Failed-health/offline recovery now passes; final normalized full
-installation remains pending.
+installation and first A boot pass; guest validation remains pending.
 The separately retained [matched NVMe-first trial SD](matched-nvme-trial-sd-20261109.md)
 is unbooted and awaits a reviewed physical trial. Its workload evidence and
 backup prerequisites now pass. It is not
@@ -35,7 +36,7 @@ the normal host bootstrap in the table.
 | SSH RAM recovery, same board | `out/ssh-ram-installer-20261108/a733-ssh-installer.img.gz` |
 | Retained protected host SD bootstrap | `out/serial-recovery-20261109/protected-sd-retained-01/a733-host-sd.img.gz` |
 | Current protected NVMe BOOT component | `out/serial-recovery-20261109/protected-nvme-retained-01/boot.ext4.gz` |
-| Normalized full NVMe candidate, installation in progress | `out/normalized-nvme-candidate-20261109/nvme.img.gz` |
+| Normalized full NVMe distribution, installed and personalized on this board | `out/normalized-nvme-candidate-20261109/nvme.img.gz` |
 | Historical full NVMe base, requiring the protected BOOT update | `out/vgic-nvme-image-20261108/retained-02/nvme.img.gz` |
 
 The two SD artifacts each expand to **268,435,456 bytes**, fitting the actual

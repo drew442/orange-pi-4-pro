@@ -7,29 +7,26 @@ and is not reclassified as a pass.
 
 ## Live board and constraints
 
-- **Current maintenance:** RAM installer `root@192.168.1.115`, strict SSH alias
-  `192.168.1.116` and original identity, boot
-  `5e051870-626c-4da2-bb93-05fc29178614`. Independent operator entered RAM after
-  a reviewed SD write and clean reboot. The reviewed normalized whole-drive
-  installation is running as one stream with optional readback omitted, after
-  namespace/raw-consumer/no-swap checks. Native operator/SSH PIDs
-  `3926043`/`3926059`, actual plan `0e0c31d3…e91e3`; receipts/progress are under
-  `out/release-deployment-20261110-01/`. Installation success, identity restoration
-  and final host boot are not yet established. The prior
-  [dirty-STATE recovery/KVM counter 11](dirty-state-recovery-trial.md#november-10-physical-result)
-  and original compatible cohort remain preserved off-device.
+- **Current:** normalized A at `root@192.168.1.116`, original pinned identity,
+  boot `d9e94d54-79bb-49c3-ad72-2672a9c71c6a`. Whole-NVMe installation completed
+  with exit 0, expected streamed source hash and **no readback**. Original identity
+  restoration/fsync/unmount and protected SD restoration pass. Independent operator
+  and coordinator checks authenticate 40 tool files, root p2 read-only, STATE,
+  original configuration/keys, DHCP/NTP and corrected resolver policy. GUESTS
+  activation and preserved counter-5 restoration are being prepared; no guest
+  has run on this fresh installation yet. [Physical installation record](evidence/normalized-host-install-20261110.json).
 - **Target:** A733, observed 12 GiB/eight CPUs. SD is SU02G,
   **1977614336 bytes**, CID `035344535530324780716f216e00a8f5`.
   NVMe is SPCC M.2 PCIe SSD, **256060514304 bytes**, serial
   `134807190FC700149277`, firmware EDFM20.0, 512/512 sectors. Diagnostic inventory
   is sufficient; leave heatsinks attached. Reported supply is 67 W USB-PD with
   passive 10.4 mm six-layer whole-board copper cooling; negotiated power is unmeasured.
-- **Boot route:** current SSH RAM recovery SD prefix `d3a022…6bc3f6`.
-  Protected host SD `ab5e8c…ad207` is staged for restoration after successful
-  NVMe installation and identity restoration. NVMe BOOT `cc2ad9…26c313` is in the
-  selected distribution; firmware loading it is untested. SPI is unchanged.
-  Explicit maintenance SD writes are separated from routine-write observations.
-  No normal installation readback was requested. [Current images](current-images.md).
+- **Boot route:** protected normal-host SD prefix `ab5e8c…ad207` restored;
+  serial shows SD Linux-file loading. NVMe BOOT `cc2ad9…26c313` was included in
+  the installation; firmware loading it remains untested. SPI is unchanged.
+  Linux SD write/discard/flush fields remain zero after the fresh host boot.
+  Explicit maintenance writes are separate from routine observations.
+  [Current images](current-images.md).
 - **Serial:** bridge `orangepi@192.168.1.117`, `ttyS3-capture.service`, volatile
   `/var/log/ttyS3.log`; native relay `a733-uart-relay-20261109-01.service` retains
   output off-board. UART help, RAM shell and controlled SysRq recovery pass;
@@ -54,13 +51,13 @@ and is not reclassified as a pass.
 | Changed inactive update and manual rollback | [Physical p3 interruption, A recovery boot, complete B retry, selector interruption before/after publication, cancellation, B boot/KVM and old-A rollback/KVM pass](physical-host-update-rollback-20261110.md); handled SIGTERM, not power cuts |
 | Guest backup/restoration | [Counter-3 archive restored and advanced 4/5](evidence/corrected-host-guest-restore-20261108.json). [Current preserved counter-5 archive](evidence/current-counter5-backup-20261109.json) and [three forensic directories](guest-preservation-20261109.md) verified off-device; new counter-5 archive restore remains pending |
 | Failed health/offline root selection, missing NVMe, dirty journal | [Controlled SSH/offline-root recovery/KVM 9 passes](controlled-ssh-recovery-20261110.md). [NVMe-driver fault → serial shell → ordinary B → KVM 10 passes](missing-nvme-recovery-test.md); physical disconnection is not claimed. [Actual dirty crash → protected export → ext4 replay/marker → KVM 11 passes](dirty-state-recovery-trial.md), with verified custody. Initial raw inspector counter refusal remains retained; no broader claim |
-| Fresh normalized full installation and deployment reproduction | [Matching full streams](evidence/normalized-full-nvme-image-20261109.json) and [isolated composition](evidence/isolated-nvme-composition-20261109.json) pass. B alone has booted through the updater; independent operator's final full installation is running, not yet accepted |
+| Fresh normalized full installation and deployment reproduction | [Matching full streams](evidence/normalized-full-nvme-image-20261109.json) and [isolated composition](evidence/isolated-nvme-composition-20261109.json) pass. B alone has booted through the updater; independent operator's full installation and first normalized A boot pass; guest restoration/KVM and complete procedure reproduction remain pending |
 | Final 10 warm and 10 cold boots | Pending after selecting/installing final distribution and boot route; test/accidental reboots are not counted |
 | SPI removed-SD boot or immutable SD | SPI recovery/programming/SD-removed boot pending. Qualifying workload SD counters and pre-maintenance whole-card hash matched; [bounded firmware audit](sd-firmware-write-policy.md) passes. Final shutdown/reboot comparison and serial reconciliation remain pending |
 
 The original host cohort and counter-5/forensic archives remain private and
 immutable on the Ubuntu builder. Later counter 6–11 changes are disposable
-functional-test data with retained evidence/checkpoints. Current RAM maintenance is for the fresh normalized deployment. Completed cases have private raw receipts in their linked `out/` directories
+functional-test data with retained evidence/checkpoints. The fresh normalized installation has returned from RAM to the host. Completed cases have private raw receipts in their linked `out/` directories
 and verified second copies on the builder.
 Do not restore old STATE alone over a different root pair.
 
@@ -70,14 +67,14 @@ The earlier uncontrolled SSH failure remains unexplained.
 
 ## Findings and release inputs
 
-The prior old A exposed wildcard 5355 listeners: its root management code creates
-`/etc/systemd/resolved.conf.d` as 0700, preventing the resolver from reading policy.
-The normalized directory-mode fix **passed physically on B**: directory 0755,
-global LLMNR/mDNS disabled and no 5355/5353 listeners. That B slot was deliberately
-replaced by the original compatible cohort for the dirty-journal trial; its
-canonical normalized source remains preserved. New normalized A is not yet
-booted. Root password remains locked, SSH key-only, and observed QEMU identities
-have empty capabilities and NoNewPrivileges. [Policy and update result](physical-host-update-rollback-20261110.md).
+The prior old A exposed wildcard 5355 because its resolver directory was 0700.
+The normalized fix now passes physically on **both B and fresh A**: directory
+0755, global LLMNR/mDNS disabled and no 5355/5353 listeners. Root password stays
+locked and SSH key-only. [Prior policy/update result](physical-host-update-rollback-20261110.md).
+The fresh host also passes the final-A collector's **read-only** live preflight;
+no measured warm/cold cycles have run yet. Installer RAM serial retained three
+CMA allocation failures; successful install/flush/hash receipts do not explain
+their cause or establish a kernel-clean run.
 
 Legacy serial showed orphan cleanup despite `ro,noload`. Protected bootstrap
 now enforces block RO before STATE probing; real ext4 software fixtures and
@@ -87,9 +84,9 @@ kernel replay, exact marker and KVM. The raw debugfs inspector refused three
 zero-sector flushes; its refusal and source-backed interpretation are retained.
 [Protection](evidence/state-block-protection-20261109.json).
 
-Post-recovery SMART shows critical warnings/media errors 0, unsafe shutdowns 80
+Before reinstall, dirty-trial recovery SMART showed critical warnings/media errors 0, unsafe shutdowns 80
 and admin errors 162. Prior invalid-field entries had baseline status/parameter;
-the exact causes of increments are not proven. The return console also reports
+the exact causes of increments are not proven. That older return console also reported
 an original persistent journal corrupted/unclean and renamed/replaced; byte export
 does not prove application-journal integrity or identify its cause.
 
@@ -97,8 +94,8 @@ The selected full distribution is `out/normalized-nvme-candidate-20261109/`:
 545581074-byte gzip SHA-256
 `3bc02f46d272dcac591d435fff2b1bc98d4fb048569fb2120746145929a8ad64`,
 manifest `3cbe28…ad08f`. It is a factory distribution requiring the reviewed
-same-board identity helper. The drive is currently being replaced by the
-reviewed installation; do not boot its incomplete contents.
+same-board identity helper. The full installation, original identity preservation and first protected-SD
+normalized A boot now pass; fresh guest validation remains pending.
 [Deployment guide](deploy-protected-20261109.md). Preserve the compatible kernel,
 DTB and firmware; root provenance's old diagnostic DTB is not the current boot DTB.
 Licensing/source inventory remains incomplete for 26 vendor boot inputs and two
@@ -113,8 +110,8 @@ actual remote release refusal; [software evidence](evidence/final-warm-binding-v
 retains independent review and the initial corrected validation-environment failure. Host checks do not prove
 hardware acceptance.
 
-Latest sampled available space: codex **372191232 bytes**, above the 256 MiB floor;
-builder **41076981760 bytes**, MemAvailable **7537065984 bytes**. Keep bulk sources,
+Latest sampled available space: codex **345886720 bytes**, above the 256 MiB floor;
+builder **41013968896 bytes**, MemAvailable **7486029824 bytes**. Keep bulk sources,
 raw images and backups on the builder. Builder LV is 128819658752 bytes with
 4265607168 bytes VG free; all its free capacity is approved for use/expansion.
 Native codex LVM is outside that approval. Recheck exact targets/resources and
@@ -128,8 +125,9 @@ or add another eight-hour run solely for the revised duration policy.
    if the earlier unexplained SSH failure recurs.
 2. Prove SPI recovery and matched NVMe-first firmware operation where possible;
    otherwise finish immutable-SD acceptance. Keep the SPI proof gate intact.
-3. Reproduce fresh final normalized installation, personalize the same-board identity,
-   restore the newly preserved guest archive and verify actual KVM and final policy.
+3. Retain the independently operated fresh installation and first A boot. Restore
+   the preserved counter-5 archive, verify actual KVM/checkpoint/restart and complete
+   the independent deployment report.
 4. Bind the prepared [warm collector](warm-boot-validation.md) to the final root/image/
    boot route, then collect ten warm and ten genuine cold boots plus final SD/hash/
    firmware reconciliation. Its authenticated operator-stop admission and final-A release binding pass software review;

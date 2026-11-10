@@ -1,10 +1,11 @@
 # Deploy the normalized image on the recorded A733
 
-**Prepared procedure; fresh installation and independent physical reproduction
-are unperformed. The accepted November 9 workload has ended; do not rerun it.**
+**The independently operated fresh installation and first normalized A boot
+now pass. Restored-guest validation and complete procedure reproduction remain
+pending. The accepted November 9 workload has ended; do not rerun it.**
 Use [current images](current-images.md) rather than the older November 6/7
 payloads or delivery endpoints. The selected normalized distribution now passes
-paired independent full-stream verification; physical installation is unperformed.
+paired independent full-stream verification and [physical installation](evidence/normalized-host-install-20261110.json).
 This procedure destroys the entire recorded
 NVMe, including STATE and guests. The operator's [known storage authorization](evidence/storage-write-authorization-20261108.json)
 persists. The installer displays its exact target and asks one yes/no question.

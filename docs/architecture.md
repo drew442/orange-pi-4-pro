@@ -5,7 +5,8 @@ the compatible vendor A733 kernel, device tree and firmware. It uses KVM/QEMU
 and supervised unprivileged guests. There is no desktop or libvirt dependency.
 [Current images](current-images.md) identify exact artifacts;
 [implementation status](implementation-status.md) separates physical evidence
-from remaining release gates. The final normalized installation is in progress.
+from remaining release gates. The final normalized host has booted; restored-guest and boot-cycle acceptance
+remain pending.
 
 ## Boot chain and recovery
 

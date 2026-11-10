@@ -1,0 +1,152 @@
+{
+  "schema": 1,
+  "date": "2026-11-10",
+  "classification": "Physical normalized whole-drive installation, same-board identity preservation and first protected-SD A boot",
+  "result": "pass within recorded scope",
+  "target": {
+    "path": "/dev/nvme0n1",
+    "model": "SPCC M.2 PCIe SSD",
+    "serial": "134807190FC700149277",
+    "bytes": 256060514304
+  },
+  "distribution": {
+    "gzip_sha256": "3bc02f46d272dcac591d435fff2b1bc98d4fb048569fb2120746145929a8ad64",
+    "manifest_sha256": "3cbe28d6154d1bdeb8d364bd0f8bf82b61fd40af7be27fbd49695771c4fad08f",
+    "factory_raw_sha256": "1fa9144d7a1269066c91a94bfb105a9ac4e4083d4707dd6791e8ac2f26902cd9"
+  },
+  "RAM_boot_id": "5e051870-626c-4da2-bb93-05fc29178614",
+  "installed_boot_id": "d9e94d54-79bb-49c3-ad72-2672a9c71c6a",
+  "installer_result": {
+    "bytes_attempted": 256060514304,
+    "bytes_verified": 0,
+    "bytes_written": 256060514304,
+    "existing_data_policy": "discard-authorized",
+    "readback_requested": false,
+    "source_sha256": "1fa9144d7a1269066c91a94bfb105a9ac4e4083d4707dd6791e8ac2f26902cd9",
+    "success": true,
+    "target_modified": true
+  },
+  "original_identity_restored_fsynced_unmounted": true,
+  "original_public_fingerprint": "SHA256:Epfegy9GsJ6ng4/0EH3dZmir7beQj5uYTnIbE4JPfEI",
+  "protected_SD": {
+    "cid": "035344535530324780716f216e00a8f5",
+    "bytes": 1977614336,
+    "prefix_bytes_written": 268435456,
+    "prefix_source_sha256": "ab5e8c2c846cbbd51b61bef6831d7e4d1498c29fefbf47d74301b1f3bb0ad207"
+  },
+  "actual_root": "/dev/nvme0n1p2",
+  "actual_root_marker_sha256": "286494073ce3a0b69443f96389dbbce11ab015705f7e9f05c7a7cf06503da866",
+  "actual_selector_sha256": "3c76b96c328b4508ff407c8594352e04389664e97ced6f0a09284cade5bd027b",
+  "authenticated_installed_tool_files": 40,
+  "coordinator_independent_readonly_check": "pass",
+  "DHCP_SSH_NTP": "pass; original identity/configuration and supplied authorized-key file hashes match",
+  "resolver_directory_mode": "0755",
+  "LLMNR_mDNS_listeners_absent": true,
+  "root_password_locked": true,
+  "SD_write_discard_flush_fields_zero": true,
+  "actual_KVM_execution_on_this_fresh_install_not_part_of_this_record": true,
+  "measured_release_boots_counted": 0,
+  "SPI_written": false,
+  "release_acceptance": false,
+  "independent_operator": {
+    "model": "gpt-6.1-sol",
+    "effort": "medium",
+    "fresh_context": true,
+    "scope": "Guide reproduced through fresh host boot; guest restoration/execution still pending at this checkpoint"
+  },
+  "independent_stage_review": {
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "scope": "Actual NVMe, identity and SD plans admitted independently before writes"
+  },
+  "discrepancies": [
+    "Initial native UART manager lookup corrected to system manager; capture not restarted",
+    "RAM plan permissions corrected to0600 within0700 directory without content changes",
+    "Historical RAM banner conflicts with explicitly bounded compressed-RAM staging; plan and guide clarified",
+    "Installer RAM kernel emitted three CMA allocation failures; cause unproved; successful installer receipt retained",
+    "RAM dmesg request arrived after reboot and failed255; continuous UART retains observed messages, no repeat reboot",
+    "Old RAM reboot SSH transport remained open despite proven new host boot; verified obsolete local client terminated, exit255 retained"
+  ],
+  "records": {
+    "out/release-deployment-20261110-01/26-actual-read-only-NVMe-prepare.stdout": {
+      "bytes": 3162,
+      "sha256": "6a630eab0e06d6d76de0874cd5a61fb317e33f0f425eb424febaec09f6b1b65a"
+    },
+    "out/release-deployment-20261110-01/33-NVMe-apply-PTY.log": {
+      "bytes": 15077,
+      "sha256": "bb31425233f0ebda299b08f4f6fb27a363c0935ca69daae3ce91b8438753c249"
+    },
+    "out/release-deployment-20261110-01/34-NVMe-apply-retained-result.stdout": {
+      "bytes": 306,
+      "sha256": "fbe2c137ddf73a812b54cab381bc6bbe3e77cfc7afecedc0f19f73b677fa911e"
+    },
+    "out/release-deployment-20261110-01/35-actual-read-only-identity-plan.stdout": {
+      "bytes": 1051,
+      "sha256": "5b2b6ec3ae4e69bbb39b13cb1967e40074ce239066d2c2e85531990fdcba0d55"
+    },
+    "out/release-deployment-20261110-01/43-actual-identity-apply.stdout": {
+      "bytes": 1108,
+      "sha256": "788eafa7b3087d3eaeaf48e6ad2ef84828f3264f69e23bb3ed27607a07f2ac7a"
+    },
+    "out/release-deployment-20261110-01/44-actual-read-only-protected-SD-plan.stdout": {
+      "bytes": 634,
+      "sha256": "1b3db9736244543352a3ad5fbfe98da4e5b9f1d0bf54090aca0b98f20fc66833"
+    },
+    "out/release-deployment-20261110-01/49-protected-SD-write.stdout": {
+      "bytes": 652,
+      "sha256": "c0734a5119dc97abcb7743846e911636cd38a012b76dfeaeeb74536ee572e2ef"
+    },
+    "out/release-deployment-20261110-01/49-protected-SD-write.stderr": {
+      "bytes": 731,
+      "sha256": "f11df2e4e9e81e51fcb246841024c4038ef94cf002f852b784ed4f8e6930d5af"
+    },
+    "out/release-deployment-20261110-01/50-retain-protected-SD-write-receipt.stdout": {
+      "bytes": 652,
+      "sha256": "c0734a5119dc97abcb7743846e911636cd38a012b76dfeaeeb74536ee572e2ef"
+    },
+    "out/release-deployment-20261110-01/55-new-host-dmesg.stdout": {
+      "bytes": 84873,
+      "sha256": "9b47ab2c992213199439a8f588bc799933d69c9cb869624047a69bb11225ed85"
+    },
+    "out/release-deployment-20261110-01/57-final-normalized-host-read-only-check.stdout": {
+      "bytes": 10421,
+      "sha256": "eceaecf4ba004e6c0e5171607664feefd3735180d7a51beb512c92538202bba5"
+    },
+    "out/release-deployment-20261110-01/58-protected-host-return-UART.log": {
+      "bytes": 100577,
+      "sha256": "2024ab8455a9c93a84d6a0cf0d3da863277d88721f34cd51a7ea1cb425aa1e36"
+    },
+    "out/release-deployment-20261110-01/59-obsolete-reboot-SSH-termination.json": {
+      "bytes": 535,
+      "sha256": "2b3e4d187492bf406fd416bf2c7bc8990c2cf7d17d337615e1487fd6b42875c9"
+    },
+    "out/release-deployment-20261110-01/operator-NVMe-install-completion.json": {
+      "bytes": 1605,
+      "sha256": "4e6c4fc66061f612e912eed7b7039e1f5097df716c6bda6011578bddf8086dcc"
+    },
+    "out/release-deployment-20261110-01/operator-identity-completion.json": {
+      "bytes": 710,
+      "sha256": "20d3c58b87fabdaf402c284addca36d6308495d17879c991bf0a94b563f33bc5"
+    },
+    "out/release-deployment-20261110-01/operator-first-normalized-host.json": {
+      "bytes": 1797,
+      "sha256": "850856750b269ce6ae2915d28caad675e6ad66e61ef7824320598703d13fd4c2"
+    },
+    "out/normalized-deployment-coordinator-20261110-01/final-host.json": {
+      "bytes": 10421,
+      "sha256": "340301e8a82db990562c8eafaede5d1055ed033ac592407e020823a70a1c7918"
+    },
+    "out/normalized-deployment-coordinator-20261110-01/final-host-exit.json": {
+      "bytes": 474,
+      "sha256": "86bb3b61e18b171b06389acb4ce2618efb0bb76e7bc8452d723f7987707ee5b4"
+    },
+    "out/normalized-deployment-coordinator-20261110-01/warm-actual-read-only-preflight.json": {
+      "bytes": 2684,
+      "sha256": "0df9423fd91ca3d6999963163dc62ef259adfa5023b87c9dcf85efc253687408"
+    },
+    "tmp/final-a-boot-extraction-20261110.json": {
+      "bytes": 6090,
+      "sha256": "436df570a3952d5abb6c2a3feb5be6dbecabfdac57313521abf86aa9ca243a1c"
+    }
+  }
+}
