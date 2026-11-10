@@ -1,6 +1,9 @@
-# Prepared warm boot collection
+# Final warm boot collection
 
-The collector is prepared and **unexecuted**. The endurance duration criterion
+The guarded final normalized-A series is **in progress**. An earlier attempt
+stopped after its first request when SSH closed during reboot; that collector
+counted zero, and the separately observed host was healthy. The corrected
+request handling is validated before the new series. The endurance duration criterion
 is 8 hours (28,800 seconds); retained legacy A733 data exceeding it qualifies
 without a rerun. The [November 9 result](evidence/eight-hour-endurance-result-20261109.json)
 passes that gate on revalidated telemetry. No warm or cold boot acceptance is
@@ -38,7 +41,7 @@ firmware loaded Linux from SD rather than NVMe. Bind the series to the actual
 final boot route through retained serial logs, the firmware audit and complete
 SD hashes at the series boundaries. Do not add full-card hashing to each boot.
 
-This command has **not been run**. Replace the UUID with a fresh observation;
+Do not start another copy while a series is active. Replace the UUID with a fresh observation;
 the collector refuses any mismatch. The existing storage/reboot authorization
 applies; there is no new typed confirmation. Execution always targets
 `root@192.168.1.116`, using `/home/drew/.ssh/id_ed25519`, strict known-host
@@ -134,10 +137,28 @@ Local validation: `python3 -m unittest discover -s tests -p
 source with fake kernel/systemd interfaces. These tests establish software
 behavior only. A local-only invocation of `retained_outcome()` on November 9
 admitted `out/endurance-outcome-20261109-01` after the focused tests passed;
-no transport or reboot was invoked and `hardware_acceptance=false`. Final image,
-root and boot-route binding still require coordinator review before execution.
+no transport or reboot was invoked at that historical checkpoint and
+`hardware_acceptance=false`. The current final-A profile and execution envelope
+received independent review before the separately admitted physical series.
 
 [Final release-binding validation](evidence/final-warm-binding-validation-20261110.json)
 records independent review, 39 focused cases and the privileged 2281-test suite.
 The initial full-suite snapshot lacked required Git context; its failure and
 corrected environment are retained. No hardware boot count follows from these checks.
+
+
+The [request-close correction](evidence/warm-reboot-disconnect-validation-20261110.json)
+passes 44 focused cases and the privileged **2286-test** suite. Only the actual
+observed request-side SSH close 255 with complete authenticated guards and exact
+client message is admitted. Its original return code is retained and command
+exit is explicitly **unknown**. No boot is counted until a distinct ready boot
+passes all checks within the existing deadline; the request is never repeated.
+Ordinary transport failures, timeouts/truncation and malformed or mismatched
+proof remain refused. Attempt 01 is not silently resumed or relabeled successful.
+
+The live series uses `out/warm-boots-normalized-a-protected-sd-20261110-02/`
+plus UTC/monotonic timestamps and serial offsets under
+`out/final-sd-qualification-20261110-02/`. The execution envelope preserves the
+unchanged reviewed collector source and stops further local requests if its
+capture fails. Physical acceptance still requires all ten observed boots,
+serial reconciliation and the final whole-SD comparison.

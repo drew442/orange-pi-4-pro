@@ -1,7 +1,8 @@
 # Current images for this board
 
-The board is running **normalized A at 192.168.1.116**, boot
-`032799ae-d642-4337-8880-1858abbb9baa` after the first guarded warm request, with its original pinned SSH identity.
+The board is running **normalized A at 192.168.1.116** with its original pinned
+SSH identity. A guarded warm-reboot series is active; current boot IDs are recorded
+under `out/warm-boots-normalized-a-protected-sd-20261110-02/`.
 The independent operator's full NVMe write, original identity restoration and
 protected host SD restoration completed successfully. Root p2 is read-only;
 40 tool files, original configuration/keys, DHCP/NTP and resolver policy pass
@@ -9,7 +10,8 @@ independent coordinator checks. [Physical installation record](evidence/normaliz
 [Preserved guest restoration and KVM 5→6→7/checkpoint/restart](evidence/normalized-guest-restore-20261110.json)
 and [independent deployment reproduction](independent-deployment-20261110.md) pass.
 The first warm collector attempt stopped on SSH closure during reboot; the new
-host is healthy and no cycle was counted. Final boot-series acceptance remains pending. No operator flashing is requested.
+host was healthy and no cycle was counted. The corrected series 02 is now
+running. Final boot-series acceptance remains pending. No operator flashing is requested.
 
 The [eight-hour workload gate](evidence/eight-hour-endurance-result-20261109.json)
 passes using retained longer-run data. Original guests/forensics, the complete

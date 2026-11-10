@@ -1,0 +1,66 @@
+{
+  "schema": 1,
+  "date": "2026-11-10",
+  "operation": "Guarded reboot request SSH-close handling",
+  "result": "pass",
+  "focused_tests": 44,
+  "full_Ubuntu_tests": 2286,
+  "full_Ubuntu_failures_errors_skips": 0,
+  "shell_suites": 5,
+  "diagnostic_cases": 5,
+  "source_files_locked_before_after": 929,
+  "builder_base": "/var/lib/a733-reboot-close-validation-20261110-01",
+  "unit": {
+    "MainPID": "0",
+    "Result": "success",
+    "ExecMainCode": "1",
+    "ExecMainStatus": "0",
+    "CPUQuotaPerSecUSec": "2s",
+    "MemoryMax": "3221225472",
+    "ActiveState": "active",
+    "SubState": "exited"
+  },
+  "source": {
+    "scripts/collect-known-warm-boots.py": {
+      "bytes": 34070,
+      "sha256": "431a5b054d7a5a304c61b0a00e160ad47a7868451ee06c9c5af3b17485d4a572"
+    },
+    "tests/test_known_warm_boots.py": {
+      "bytes": 42467,
+      "sha256": "5cb70f4da49c04a6c16a654efeb67d05d4f3da4763f7555f47d9f32678dc3404"
+    }
+  },
+  "records": {
+    "out/reboot-close-validation-20261110-01/git-transfer.json": {
+      "bytes": 91,
+      "sha256": "0c62f7792103eda2398a3b8490a3a20f90244fa6727a6c1ca4bc3f4d43379c50"
+    },
+    "out/reboot-close-validation-20261110-01/git-transfer.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/reboot-close-validation-20261110-01/receipts.tar": {
+      "bytes": 163840,
+      "sha256": "eba81c4210b62d064beb8cc435694f7cfa72a942da61a4296f44d198504f75cb"
+    },
+    "out/reboot-close-validation-20261110-01/suite-stage.json": {
+      "bytes": 438,
+      "sha256": "224647c95ef359af8f609c34bf65f11f4bc16bcdbebd5820480ee567e5b12a53"
+    },
+    "out/reboot-close-validation-20261110-01/suite-stage.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/reboot-close-validation-20261110-01/terminal.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/reboot-close-validation-20261110-01/terminal.stdout": {
+      "bytes": 135,
+      "sha256": "d3e4fa8ecab92f7114cba88833e51b1b7fc1fcbd2259aead1c58d471611d8864"
+    }
+  },
+  "board_actions_in_validation": false,
+  "hardware_acceptance": false,
+  "scope": "Request-only exact authenticated SSH close255/fullguard admission; rawexitUNKNOWN retained; count only distinctreadyboot. No reboot retry/resume."
+}

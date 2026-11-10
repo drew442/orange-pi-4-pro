@@ -8,7 +8,8 @@ and is not reclassified as a pass.
 ## Live board and constraints
 
 - **Current:** normalized A at `root@192.168.1.116`, original pinned identity,
-  current observed boot `032799ae-d642-4337-8880-1858abbb9baa`. Whole-NVMe installation completed
+  guarded warm-series 02 is running. Boot IDs change during this test;
+  actual observations are under `out/warm-boots-normalized-a-protected-sd-20261110-02/`. Whole-NVMe installation completed
   with exit 0, expected streamed source hash and **no readback**. Original identity
   restoration/fsync/unmount and protected SD restoration pass. Independent operator
   and coordinator checks authenticate 40 tool files, root p2 read-only, STATE,
@@ -57,7 +58,7 @@ and is not reclassified as a pass.
 | Guest backup/restoration | [Counter-3 archive restored and advanced 4/5](evidence/corrected-host-guest-restore-20261108.json). [Counter-5 archive](evidence/current-counter5-backup-20261109.json) and [forensic copies](guest-preservation-20261109.md) remain preserved; [fresh archive restoration and actual KVM 5→6→7/checkpoint/restart now pass](evidence/normalized-guest-restore-20261110.json) |
 | Failed health/offline root selection, missing NVMe, dirty journal | [Controlled SSH/offline-root recovery/KVM 9 passes](controlled-ssh-recovery-20261110.md). [NVMe-driver fault → serial shell → ordinary B → KVM 10 passes](missing-nvme-recovery-test.md); physical disconnection is not claimed. [Actual dirty crash → protected export → ext4 replay/marker → KVM 11 passes](dirty-state-recovery-trial.md), with verified custody. Initial raw inspector counter refusal remains retained; no broader claim |
 | Fresh normalized full installation and deployment reproduction | [Matching full streams](evidence/normalized-full-nvme-image-20261109.json) and [isolated composition](evidence/isolated-nvme-composition-20261109.json) pass. B alone has booted through the updater; [full installation](evidence/normalized-host-install-20261110.json), [fresh restored KVM](evidence/normalized-guest-restore-20261110.json) and [independent procedure reproduction](independent-deployment-20261110.md) pass |
-| Final 10 warm and 10 cold boots | Protected-SD final A is selected for qualification. Attempt 01 stopped after one reboot request when SSH closed before command exit; independent observation confirms a healthy distinct boot. Collector counted zero; native request-close handling is being corrected before a new series. Cold boots remain pending |
+| Final 10 warm and 10 cold boots | Protected-SD final A is selected for qualification. Attempt 01 stopped after one reboot request when SSH closed before command exit; independent observation confirms a healthy distinct boot. Collector counted zero. The corrected, independently reviewed series 02 is now running; cold boots remain pending |
 | SPI removed-SD boot or immutable SD | SPI recovery/programming/SD-removed boot pending. Qualifying workload SD counters and pre-maintenance whole-card hash matched; [bounded firmware audit](sd-firmware-write-policy.md) passes. Final complete-card baseline matches `401df0…64be5`, prefix `ab5e8c…ad207` and zero counters. Defined-series final comparison and serial reconciliation remain pending |
 
 The original host cohort and counter-5/forensic archives remain private and
@@ -77,7 +78,7 @@ The normalized fix now passes physically on **both B and fresh A**: directory
 0755, global LLMNR/mDNS disabled and no 5355/5353 listeners. Root password stays
 locked and SSH key-only. [Prior policy/update result](physical-host-update-rollback-20261110.md).
 The fresh host also passes the final-A collector's **read-only** live preflight;
-warm attempt 01 stopped before counting any cycle; its separately observed reboot is healthy. No measured cold cycles have run yet. Installer RAM serial retained three
+warm attempt 01 stopped before counting any cycle; its separately observed reboot is healthy. Series 02 is active; no cold cycles have run yet. Installer RAM serial retained three
 CMA allocation failures; successful install/flush/hash receipts do not explain
 their cause or establish a kernel-clean run.
 
@@ -109,7 +110,7 @@ binary redistribution clearance is claimed. [Source inventory](toolchain-sources
 
 ## Resources and next actions
 
-Latest privileged Ubuntu 22.04 suite: **2281 tests**, zero skips/errors/failures,
+Latest privileged Ubuntu 22.04 suite: **2286 tests**, zero skips/errors/failures,
 five shell suites and five diagnostic cases; all five TOMLs parse. The final-A warm collector now authenticates release/root/policy and stops on
 actual remote release refusal; [software evidence](evidence/final-warm-binding-validation-20261110.json)
 retains independent review and the initial corrected validation-environment failure. Host checks do not prove
