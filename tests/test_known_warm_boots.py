@@ -21,7 +21,9 @@ START = str(uuid.UUID(int=1))
 def response(boot=START, **changes):
     data = dict(boot_id=boot, guards_passed=True, hardware_acceptance=False,
                 kvm_api=12, irqchip=1, ntp='yes', cpus='0-7', sd_stat=[0]*17,
-                el2=True, kernel='6.6.98-a733-diag')
+                el2=True, kernel='6.6.98-a733-diag',
+                release_binding=w.RELEASE_BINDING.copy(), file_hashes=w.RELEASE_FILES.copy(),
+                root_device='/dev/nvme0n1p2', root_id='259:2')
     data.update(changes)
     return dict(returncode=0, timed_out=False, truncated=False,
                 stdout_b64=base64.b64encode(json.dumps(data).encode()).decode())
@@ -69,6 +71,41 @@ class WarmTests(unittest.TestCase):
         self.assertEqual(len([x for x in self.events() if x['event'] == 'observed']), 10)
         self.assertTrue(all(x['hardware_acceptance'] is False for x in self.events()))
 
+    def test_selected_bytes_use_canonical_root_selection_format(self):
+        spec = importlib.util.spec_from_file_location('warm_test_selection', ROOT / 'build/root-selection.py')
+        selection = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(selection)
+        values = selection.parse(w.SELECTED_BYTES)
+        self.assertEqual(selection.serialize(values), w.SELECTED_BYTES)
+        self.assertEqual(values['SLOT'], 'A')
+        self.assertEqual(values['ROOT_MARKER_SHA256'],
+                         w.RELEASE_FILES['/usr/lib/orangepi-hypervisor/payload.json'])
+        self.assertEqual(hashlib.sha256(w.SELECTED_BYTES).hexdigest(),
+                         w.RELEASE_FILES['/run/a733-state/boot/selected.conf'])
+
+    def test_release_binding_and_each_file_hash_are_required(self):
+        for changes in ({'release_binding': {}}, {'root_device': '/dev/nvme0n1p3'},
+                        {'root_id': '259:3'}, {'file_hashes': {}}):
+            with self.subTest(changes=changes), self.assertRaisesRegex(ValueError, 'release binding'):
+                w.decode(response(**changes))
+        for path in w.RELEASE_FILES:
+            hashes = w.RELEASE_FILES.copy()
+            hashes[path] = '0'*64
+            with self.subTest(path=path), self.assertRaisesRegex(ValueError, 'release binding'):
+                w.decode(response(file_hashes=hashes))
+
+    def test_post_reboot_release_mismatch_stops_series_without_more_reboots(self):
+        calls = []
+        def probe(expected=None, reboot=False, timeout=30):
+            calls.append(reboot)
+            if len(calls) < 3:
+                return response()
+            return response(str(uuid.UUID(int=2)), release_binding={})
+        with self.assertRaisesRegex(ValueError, 'release binding'), contextlib.redirect_stdout(io.StringIO()):
+            w.collect(self.evidence, START, probe, lambda: 'retained')
+        self.assertEqual(calls, [False, True, False])
+        self.assertEqual(self.events()[-1]['completed'], 0)
+
     def test_no_preservation_never_probes(self):
         def refuse(): raise ValueError('not retained')
         with self.assertRaises(ValueError):
@@ -76,7 +113,7 @@ class WarmTests(unittest.TestCase):
         self.assertEqual(self.events()[-1]['completed'], 0)
 
     def test_invalid_admission_never_requests_reboot(self):
-        for changes in ({'kvm_api': 11}, {'irqchip': 0}, {'el2': False}, {'ntp': 'no'}, {'cpus': '0-6'}, {'sd_stat': [0]*4+[1]+[0]*12}):
+        for changes in ({'kvm_api': 11}, {'irqchip': 0}, {'el2': False}, {'ntp': 'no'}, {'cpus': '0-6'}, {'release_binding': {}}, {'file_hashes': {}}, {'sd_stat': [0]*4+[1]+[0]*12}):
             calls = []
             def probe(*a, **k):
                 calls.append(k)
@@ -391,7 +428,7 @@ class ManualStopTests(unittest.TestCase):
 
 class RemoteGuardTests(unittest.TestCase):
     """Run the actual remote source with a fixed fake kernel/systemd transport."""
-    def run_remote(self, *, fd_target='socket:[1]', unit_pid='0', model='SPCC M.2 PCIe SSD', inode=None, reboot=False, ntp='yes', log='All CPU(s) started at EL2\nkvm: VHE mode initialized successfully\n', api=12, irq=1, sd_field=None):
+    def run_remote(self, *, fd_target='socket:[1]', unit_pid='0', model='SPCC M.2 PCIe SSD', inode=None, reboot=False, ntp='yes', log='All CPU(s) started at EL2\nkvm: VHE mode initialized successfully\n', api=12, irq=1, sd_field=None, release_change=None, root_source='/dev/nvme0n1p2', transport_record=False, metadata_change=None):
         files = {
             '/proc/sys/kernel/random/boot_id': START,
             '/run/a733-state/.a733-state': 'a733-state-v1\n360dfb39-f49f-487e-b307-0bb887c854c5',
@@ -406,6 +443,20 @@ class RemoteGuardTests(unittest.TestCase):
             '/sys/devices/system/cpu/online': '0-7',
             '/proc/1/task/1/mountinfo': '1 0 259:2 / / ro - ext4 /dev/nvme0n1p2 ro',
         }
+        # Fixture source executes into the module only after its captured hash passes.
+        module_bytes = b'fixture_module_loaded = True\n'
+        payload_bytes = b'{"slot":"A","fixture":"normalized-release"}\n'
+        files.update({
+            '/usr/lib/orangepi-hypervisor/host-management.py': module_bytes.decode(),
+            '/usr/lib/orangepi-hypervisor/payload.json': payload_bytes.decode(),
+            '/run/a733-state/boot/selected.conf': w.SELECTED_BYTES.decode(),
+            '/proc/self/mountinfo': 'fixture mount table',
+        })
+        fixture_hashes = {path: hashlib.sha256(files[path].encode()).hexdigest() for path in w.RELEASE_FILES}
+        if release_change:
+            path, contents = release_change
+            if contents is None: del files[path]
+            else: files[path] = contents
         if sd_field is not None:
             counters = [0]*17
             counters[sd_field] = 1
@@ -413,14 +464,27 @@ class RemoteGuardTests(unittest.TestCase):
         class FakePath(PurePosixPath):
             def lstat(self):
                 import stat
-                return types.SimpleNamespace(st_mode=(stat.S_IFREG|0o644 if self.suffix == '.py' else stat.S_IFDIR|0o755), st_uid=0, st_nlink=1)
+                if str(self) in w.RELEASE_FILES and str(self) not in files:
+                    raise FileNotFoundError(str(self))
+                result = types.SimpleNamespace(st_mode=(stat.S_IFREG|0o644 if str(self) in files and str(self) != '/proc/self/mountinfo' else stat.S_IFDIR|0o755), st_uid=0, st_gid=0, st_nlink=1, st_dev=1, st_ino=2, st_size=len(files.get(str(self), '')), st_mtime_ns=1, st_ctime_ns=1)
+                if metadata_change and str(self) == metadata_change[0]:
+                    for key, value in metadata_change[1].items(): setattr(result, key, value)
+                return result
             def exists(self): return False
             def iterdir(self):
                 return iter([FakePath(p) for p in {
                     '/proc': ['/proc/1'], '/proc/1/task': ['/proc/1/task/1'],
                     '/proc/1/task/1/fd': ['/proc/1/task/1/fd/3']
                 }.get(str(self), [])])
-        def read(path, mode): return io.BytesIO(files[str(path)].encode())
+        class File(io.BytesIO):
+            def fileno(self): return -1
+        def read(path, mode):
+            if str(path) not in files: raise FileNotFoundError(str(path))
+            stream = File(files[str(path)].encode())
+            stream.info = FakePath(path).lstat()
+            opened_stream[0] = stream
+            return stream
+        opened_stream = [None]
         def nsstat(path):
             name = str(path).rsplit('/', 1)[-1]
             return types.SimpleNamespace(st_dev=1, st_ino=inode or {'pid':0xeffffffc, 'user':0xeffffffd, 'mnt':3}[name])
@@ -428,7 +492,7 @@ class RemoteGuardTests(unittest.TestCase):
         def opened(path, flags):
             descriptors[len(descriptors)+4] = str(path)
             return len(descriptors)+3
-        def fstat(fd): return nsstat(descriptors[fd])
+        def fstat(fd): return opened_stream[0].info if fd == -1 else nsstat(descriptors[fd])
         def ioctl(fd, op, arg=None):
             if op == 0xae00: return api
             if op == 0xae03: return irq
@@ -438,7 +502,8 @@ class RemoteGuardTests(unittest.TestCase):
             if argv[0] == 'dmesg': return log.encode()
             if argv[1] == 'list-units': return b'[{"unit":"a733-endurance-host-cpu-release-20261109.service"}]'
             return ('ActiveState=active\nSubState=exited\nMainPID='+unit_pid+'\n').encode()
-        management = types.SimpleNamespace(runtime_guard=lambda: {}, current_address=lambda config: '192.168.1.116')
+        management = types.SimpleNamespace(runtime_guard=lambda: {}, current_address=lambda config: '192.168.1.116',
+            mount_table=lambda data: {'/': [dict(source=root_source, id='259:2', root='/', flags={'ro'})]})
         loader = types.SimpleNamespace(exec_module=lambda module: None)
         with contextlib.ExitStack() as stack:
             for target, value in {
@@ -451,13 +516,91 @@ class RemoteGuardTests(unittest.TestCase):
             }.items(): stack.enter_context(patch(target, value))
             run = stack.enter_context(patch('subprocess.run'))
             output = stack.enter_context(contextlib.redirect_stdout(io.StringIO()))
-            exec(w.REMOTE, {'EXPECTED': START, 'REBOOT': reboot})
+            errors = stack.enter_context(contextlib.redirect_stderr(io.StringIO()))
+            source = w.REMOTE.replace('RELEASE_FILES = ' + repr(w.RELEASE_FILES),
+                                      'RELEASE_FILES = ' + repr(fixture_hashes), 1)
+            code = 0
+            try:
+                exec(source, {'EXPECTED': START, 'REBOOT': reboot})
+            except SystemExit as error:
+                if not transport_record: raise
+                code = error.code
+            except (ValueError, OSError):
+                if not transport_record: raise
+                code = 1
+            if transport_record:
+                return dict(returncode=code, timed_out=False, truncated=False,
+                            stdout_b64=base64.b64encode(output.getvalue().encode()).decode(),
+                            stderr_b64=base64.b64encode(errors.getvalue().encode()).decode()), run.call_args_list
             return output.getvalue(), run.call_args_list
 
     def test_remote_idle_active_exited_is_allowed_and_clean_command(self):
         raw, calls = self.run_remote(reboot=True)
         self.assertTrue(json.loads(raw)['guards_passed'])
         self.assertEqual(calls[0].args[0], ['systemctl', 'reboot'])
+
+    def test_remote_wrong_marker_selector_and_module_refuse_before_reboot(self):
+        for path in w.RELEASE_FILES:
+            with self.subTest(path=path), self.assertRaises(SystemExit) as error:
+                self.run_remote(reboot=True, release_change=(path, 'changed-release\n'))
+            self.assertEqual(error.exception.code, 78)
+
+    def test_remote_other_slot_root_refuses(self):
+        with self.assertRaises(SystemExit) as error:
+            self.run_remote(reboot=True, root_source='/dev/nvme0n1p3')
+        self.assertEqual(error.exception.code, 78)
+
+    def test_real_remote_release_refusals_stop_polling_without_further_reboots(self):
+        cases = [dict(release_change=(path, 'changed-release\n')) for path in w.RELEASE_FILES]
+        cases += [dict(root_source='/dev/nvme0n1p3')]
+        cases += [dict(release_change=(path, None)) for path in w.RELEASE_FILES]
+        cases += [dict(metadata_change=(path, {'st_nlink': 2})) for path in w.RELEASE_FILES]
+        for changes in cases:
+            with self.subTest(changes=changes):
+                refusal, remote_calls = self.run_remote(transport_record=True, reboot=True, **changes)
+                self.assertEqual(refusal['returncode'], w.RELEASE_REFUSAL_CODE)
+                self.assertEqual(remote_calls, [])
+                self.assertIn(b'Final release refused:', base64.b64decode(refusal['stderr_b64']))
+                records = iter([response(), response(), refusal])
+                calls = []
+                def probe(expected=None, reboot=False, timeout=30):
+                    calls.append(reboot)
+                    return next(records)
+                with tempfile.TemporaryDirectory() as directory, patch.object(w, 'REPO', Path(directory)):
+                    (Path(directory) / 'out').mkdir()
+                    evidence = w.Evidence('terminal')
+                    try:
+                        with self.assertRaises(w.TerminalReleaseRefusal), contextlib.redirect_stdout(io.StringIO()):
+                            w.collect(evidence, START, probe, lambda: 'retained')
+                    finally:
+                        evidence.close()
+                    events = [json.loads(line) for line in (evidence.path / 'events.jsonl').read_text().splitlines()]
+                self.assertEqual(calls, [False, True, False])
+                self.assertEqual(events[-1]['completed'], 0)
+                self.assertEqual(events[-2]['transport'], refusal)
+
+    def test_generic_remote_startup_failure_still_retries(self):
+        startup, remote_calls = self.run_remote(transport_record=True, ntp='no')
+        self.assertEqual(startup['returncode'], 1)
+        self.assertEqual(remote_calls, [])
+        boot2 = str(uuid.UUID(int=2))
+        records = iter([response(), response(), startup, response(boot2),
+                        response(boot2, release_binding={})])
+        calls = []
+        def probe(expected=None, reboot=False, timeout=30):
+            calls.append(reboot)
+            return next(records)
+        with tempfile.TemporaryDirectory() as directory, patch.object(w, 'REPO', Path(directory)):
+            (Path(directory) / 'out').mkdir()
+            evidence = w.Evidence('retry')
+            try:
+                with self.assertRaisesRegex(ValueError, 'release binding'), contextlib.redirect_stdout(io.StringIO()):
+                    w.collect(evidence, START, probe, lambda: 'retained', sleep=lambda seconds: None)
+            finally:
+                evidence.close()
+            events = [json.loads(line) for line in (evidence.path / 'events.jsonl').read_text().splitlines()]
+        self.assertEqual(calls, [False, True, False, False, False])
+        self.assertEqual(events[-1]['completed'], 1)
 
     def test_remote_vm_and_vcpu_refuse(self):
         for target in ('anon_inode:kvm-vm', 'anon_inode:kvm-vcpu:0'):

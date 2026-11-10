@@ -26,11 +26,35 @@ _spec = importlib.util.spec_from_file_location('preserve_endurance', REPO / 'scr
 TRANSPORT = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(TRANSPORT)
 
-REMOTE = r'''
-import fcntl, importlib.util, json, os, pathlib, re, stat, subprocess, sys, uuid
+# Fixed final normalized distribution; authenticated manifest and root-selection.py
+# serialize(boot_selection) were checked when preparing this finite collector.
+RELEASE_REFUSAL_CODE = 78
+RELEASE_BINDING = {
+    'manifest_sha256': '3cbe28d6154d1bdeb8d364bd0f8bf82b61fd40af7be27fbd49695771c4fad08f',
+    'gzip_sha256': '3bc02f46d272dcac591d435fff2b1bc98d4fb048569fb2120746145929a8ad64',
+    'raw_sha256': '1fa9144d7a1269066c91a94bfb105a9ac4e4083d4707dd6791e8ac2f26902cd9',
+    'slot': 'A', 'root_device': '/dev/nvme0n1p2', 'root_id': '259:2',
+    'boot_route': 'known-SU02G-SD; independent firmware audit and serial review required',
+}
+SELECTED_BYTES = (b'SCHEMA=1\nSLOT=A\nROOT_UUID=a7330000-0000-4000-8000-00000000000a\n'
+                  b'ROOT_MARKER_SHA256=286494073ce3a0b69443f96389dbbce11ab015705f7e9f05c7a7cf06503da866\n'
+                  b'KERNEL_RELEASE=6.6.98-a733-diag\n')
+RELEASE_FILES = {
+    '/usr/lib/orangepi-hypervisor/host-management.py': '66fbeaf8a939ad073f183b88a3910bfd62794ffa9c485f2c1f1adac5ab5f8728',
+    '/usr/lib/orangepi-hypervisor/payload.json': '286494073ce3a0b69443f96389dbbce11ab015705f7e9f05c7a7cf06503da866',
+    '/run/a733-state/boot/selected.conf': '3c76b96c328b4508ff407c8594352e04389664e97ced6f0a09284cade5bd027b',
+}
+
+REMOTE = ('RELEASE_BINDING = ' + repr(RELEASE_BINDING) + '\nRELEASE_FILES = ' + repr(RELEASE_FILES) +
+          '\nSELECTED_BYTES = ' + repr(SELECTED_BYTES) + '\n') + r'''
+import fcntl, hashlib, importlib.util, json, os, pathlib, re, stat, subprocess, sys, uuid
 P = pathlib.Path
 def require(ok, why):
     if not ok: raise ValueError(why)
+def release_require(ok, why):
+    if not ok:
+        print('Final release refused: ' + why[:300], file=sys.stderr, flush=True)
+        raise SystemExit(78)
 def read(path, limit=1048576):
     with open(path, 'rb') as f: data = f.read(limit + 1)
     require(len(data) <= limit, 'oversized read')
@@ -47,16 +71,48 @@ for name, kind, inode in [('pid', 0x20000000, 0xeffffffc), ('user', 0x10000000, 
         require(fcntl.ioctl(fd, 0xb703) == kind and (inode is None or a.st_ino == inode), 'initial namespace required')
         namespaces[name] = {'dev': a.st_dev, 'inode': a.st_ino}
     finally: os.close(fd)
+def stamp(info):
+    return tuple(getattr(info, field) for field in ('st_dev', 'st_ino', 'st_mode', 'st_uid', 'st_gid', 'st_nlink', 'st_size', 'st_mtime_ns', 'st_ctime_ns'))
+def capture_release_bytes(path, limit=1048576):
+    # Root-owned ancestry and held metadata bind the hash to captured bytes.
+    for parent in reversed(P(path).parents):
+        info = parent.lstat()
+        release_require(stat.S_ISDIR(info.st_mode) and info.st_uid == 0 and not info.st_mode & 0o7022, 'unsafe release parent')
+    before = P(path).lstat()
+    release_require(stat.S_ISREG(before.st_mode) and before.st_uid == 0 and before.st_nlink == 1 and not before.st_mode & 0o7022, 'unsafe release file')
+    with open(path, 'rb') as stream:
+        held = os.fstat(stream.fileno())
+        release_require(stamp(held) == stamp(before), 'release file changed before read')
+        data = stream.read(limit + 1)
+        release_require(len(data) <= limit and stamp(os.fstat(stream.fileno())) == stamp(held), 'release file changed during read')
+    release_require(stamp(P(path).lstat()) == stamp(before), 'release file changed after read')
+    return data
+def protected_bytes(path, limit=1048576):
+    try:
+        return capture_release_bytes(path, limit)
+    except OSError:
+        release_require(False, 'release file unavailable: ' + path)
 path = '/usr/lib/orangepi-hypervisor/host-management.py'
-# Verify protected ancestry before importing the installed module.
-for parent in reversed(P(path).parents):
-    s = parent.lstat()
-    require(stat.S_ISDIR(s.st_mode) and s.st_uid == 0 and not s.st_mode & 0o7022, 'unsafe module parent')
-s = P(path).lstat()
-require(stat.S_ISREG(s.st_mode) and s.st_uid == 0 and s.st_nlink == 1 and not s.st_mode & 0o7022, 'unsafe installed module')
+module_bytes = protected_bytes(path)
+file_hashes = {path: hashlib.sha256(module_bytes).hexdigest()}
+release_require(file_hashes[path] == RELEASE_FILES[path], 'management module release differs')
 spec = importlib.util.spec_from_file_location('a733_management', path)
 m = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(m)
+# Execute the captured authenticated bytes, without reopening the module path.
+exec(compile(module_bytes, path, 'exec'), m.__dict__)
+# Inspect the actual root before runtime_guard so a wrong final slot/device/RO
+# policy is terminal even if that guard would also reject the mount layout.
+root_rows = m.mount_table(read('/proc/self/mountinfo')).get('/', [])
+release_require(len(root_rows) == 1, 'final A root mount missing or ambiguous')
+root = root_rows[0]
+release_require(root['source'] == RELEASE_BINDING['root_device'] and root['id'] == RELEASE_BINDING['root_id'] and root['root'] == '/' and 'ro' in root['flags'] and 'rw' not in root['flags'], 'final A root device differs')
+for path in RELEASE_FILES:
+    if path in file_hashes: continue
+    data = protected_bytes(path, 4096 if path.endswith('selected.conf') else 1048576)
+    file_hashes[path] = hashlib.sha256(data).hexdigest()
+    release_require(file_hashes[path] == RELEASE_FILES[path], 'release file differs: ' + path)
+    if path.endswith('selected.conf'):
+        release_require(data == SELECTED_BYTES, 'final A selector differs')
 config = m.runtime_guard()
 require(m.current_address(config) == '192.168.1.116', 'management address differs')
 boot = read('/proc/sys/kernel/random/boot_id')
@@ -109,7 +165,7 @@ try: api, irq = fcntl.ioctl(fd, 0xae00, 0), fcntl.ioctl(fd, 0xae03, 0)
 finally: os.close(fd)
 require(api == 12 and irq == 1, 'KVM API/IRQCHIP differs')
 require(read('/proc/sys/kernel/random/boot_id') == boot, 'boot changed during probe')
-print(json.dumps({'boot_id': boot, 'guards_passed': True, 'hardware_acceptance': False, 'kvm_api': api, 'irqchip': irq, 'ntp': ntp, 'cpus': '0-7', 'sd_stat': stats, 'units': observed, 'el2': True, 'kernel': os.uname().release, 'namespaces': namespaces, 'management_address': '192.168.1.116', 'state_marker': marker, 'nvme': {'serial': read(nv + 'device/serial'), 'model': read(nv + 'device/model'), 'bytes': int(read(nv + 'size')) * 512}, 'sd': {'cid': read(sd / 'device/cid'), 'model': read(sd / 'device/name'), 'bytes': int(read(sd / 'size')) * 512}, 'initialization_log': [line for line in log.splitlines() if 'All CPU(s) started at EL2' in line or 'VHE mode initialized successfully' in line]}), flush=True)
+print(json.dumps({'release_binding': RELEASE_BINDING, 'file_hashes': file_hashes, 'root_device': root['source'], 'root_id': root['id'], 'boot_id': boot, 'guards_passed': True, 'hardware_acceptance': False, 'kvm_api': api, 'irqchip': irq, 'ntp': ntp, 'cpus': '0-7', 'sd_stat': stats, 'units': observed, 'el2': True, 'kernel': os.uname().release, 'namespaces': namespaces, 'management_address': '192.168.1.116', 'state_marker': marker, 'nvme': {'serial': read(nv + 'device/serial'), 'model': read(nv + 'device/model'), 'bytes': int(read(nv + 'size')) * 512}, 'sd': {'cid': read(sd / 'device/cid'), 'model': read(sd / 'device/name'), 'bytes': int(read(sd / 'size')) * 512}, 'initialization_log': [line for line in log.splitlines() if 'All CPU(s) started at EL2' in line or 'VHE mode initialized successfully' in line]}), flush=True)
 if REBOOT:
     require(read('/proc/sys/kernel/random/boot_id') == EXPECTED, 'boot changed before reboot')
     subprocess.run(['systemctl', 'reboot'], check=True, timeout=20)
@@ -375,7 +431,13 @@ def transport(expected=None, reboot=False, timeout=30):
     return TRANSPORT.bounded_command(TRANSPORT.ssh_argv(), LIMIT, timeout=timeout, source=source)
 
 
+class TerminalReleaseRefusal(ValueError):
+    pass
+
+
 def decode(record):
+    if record.get('returncode') == RELEASE_REFUSAL_CODE:
+        raise TerminalReleaseRefusal('remote final release refused (exit 78)')
     require(record['returncode'] == 0 and not record['timed_out'] and not record['truncated'], 'SSH probe failed/timeout/oversized')
     raw = base64.b64decode(record['stdout_b64'], validate=True)
     require(len(raw) <= LIMIT, 'oversized response')
@@ -383,6 +445,9 @@ def decode(record):
     canonical(data['boot_id'])
     require(data['guards_passed'] is True and data['hardware_acceptance'] is False, 'remote guards failed')
     require(data['kvm_api'] == 12 and data['irqchip'] == 1 and data['ntp'] == 'yes' and data['cpus'] == '0-7' and data['el2'] is True and data['kernel'] == '6.6.98-a733-diag', 'readiness differs')
+    require(data.get('release_binding') == RELEASE_BINDING and data.get('file_hashes') == RELEASE_FILES and
+            data.get('root_device') == RELEASE_BINDING['root_device'] and
+            data.get('root_id') == RELEASE_BINDING['root_id'], 'final release binding differs')
     stats = data['sd_stat']
     require(len(stats) == 17 and all(type(x) is int and x >= 0 for x in stats) and not any(stats[4:8] + stats[11:17]), 'SD counters differ')
     return data
@@ -435,7 +500,13 @@ def collect(evidence, start, probe=transport, preserved=retained_outcome, clock=
                 evidence.save('poll', cycle=cycle, transport=raw)
                 try:
                     data = decode(raw)
-                except (ValueError, KeyError, TypeError):
+                except (ValueError, KeyError, TypeError) as error:
+                    if isinstance(error, TerminalReleaseRefusal):
+                        raise
+                    # Transport failures while booting can recover; a successful
+                    # JSON response with a release mismatch must stop this series.
+                    if raw.get('returncode') == 0 and not raw.get('timed_out') and not raw.get('truncated'):
+                        raise
                     data = None
                 if data and data['boot_id'] != current:
                     require(data['boot_id'] not in seen, 'reused boot ID; stopping')

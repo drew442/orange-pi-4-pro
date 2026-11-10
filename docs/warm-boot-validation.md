@@ -24,6 +24,20 @@ collector currently requires the known SD card; it is prepared for the immutable
 SD route. A selected SPI route with SD removed needs corresponding collector
 adaptation and physical validation before its ten-boot series.
 
+The collector now binds every pre-reboot, reboot-admission and ready-boot
+response to the selected normalized **A** distribution: manifest `3cbe28…ad08f`,
+gzip `3bc02f…ad64`, payload marker `286494…a866`, selector `3c76b9…027b`,
+management module `66fbea…8728` and read-only `/dev/nvme0n1p2` (`259:2`).
+It authenticates captured module bytes before executing its runtime guard.
+A different release, slot, selector or policy refuses further reboots/counts.
+The distribution raw hash is the factory input before same-board identity
+restoration, not a hash of the personalized running drive.
+
+These small file checks do not identify every firmware component or prove the
+firmware loaded Linux from SD rather than NVMe. Bind the series to the actual
+final boot route through retained serial logs, the firmware audit and complete
+SD hashes at the series boundaries. Do not add full-card hashing to each boot.
+
 This command has **not been run**. Replace the UUID with a fresh observation;
 the collector refuses any mismatch. The existing storage/reboot authorization
 applies; there is no new typed confirmation. Execution always targets
