@@ -1,27 +1,27 @@
 # Current images for this board
 
-The board is running **normalized A at 192.168.1.116** with its original pinned
-SSH identity, boot `0882e9b9-a75d-4ca5-b05c-7c458eade3f5`. Ten warm reboots completed; records are
-under `out/warm-boots-normalized-a-protected-sd-20261110-02/`.
-The independent operator's full NVMe write, original identity restoration and
-protected host SD restoration completed successfully. Root p2 is read-only;
-40 tool files, original configuration/keys, DHCP/NTP and resolver policy pass
-independent coordinator checks. [Physical installation record](evidence/normalized-host-install-20261110.json).
-[Preserved guest restoration and KVM 5→6→7/checkpoint/restart](evidence/normalized-guest-restore-20261110.json)
-and [independent deployment reproduction](independent-deployment-20261110.md) pass.
-The first warm collector attempt stopped on SSH closure during reboot; the new
-host was healthy and no cycle was counted. The corrected series 02 completed ten
-clean warm reboots, with matching serial sequences and unchanged complete SD hash.
-Ten physical [cold boots and their final SD comparison](evidence/final-cold-boots-20261111.json)
-pass. [Release acceptance](release-acceptance.md) passes for this protected-SD route.
+The board runs **normalized A at 192.168.1.116 from SPI/NVMe with SD removed**,
+with its original pinned SSH identity. Current boot is
+`5858af7a-977e-4a9b-971e-6d71ae7858d3`. SPI cold/warm boot, SSH/NTP and real
+nonroot KVM CPU/disk/HTTP, clean shutdown, checkpoints and restart pass.
+Current test-guest checkpoint is 4 with eight history records; its current unit
+is rendered and the guest is stopped. [Operational evidence](evidence/spi-operational-20261111.json).
 
-The [eight-hour workload gate](evidence/eight-hour-endurance-result-20261109.json)
-passes using retained longer-run data. Original guests/forensics, the complete
-compatible host cohort and the actual dirty STATE source are preserved privately
-off-device. Controlled SSH/offline selection and NVMe-driver fault recovery also
-pass with actual KVM. The fresh installation has returned to normal protected-SD boot;
-firmware loading NVMe BOOT remains untested. [Fresh normalized deployment](deploy-protected-20261109.md) passes; release acceptance passes for the recorded protected-SD configuration;
-the earlier uncontrolled SSH failure remains unexplained.
+The earlier full installation and independent deployment reproduction pass.
+The earlier protected-SD route also passed ten warm/ten cold boots and complete
+SD comparisons. The eight-hour workload criterion remains accepted from retained
+longer-run data. Original guests/forensics and the compatible host cohort remain
+preserved off-device. [Release record](release-acceptance.md).
+
+The factory SPI candidate is
+`out/spi-nvme-original-20261108/a733-spi-nvme.bin`, 16777216 bytes, SHA-256
+`83edcd7f448e8353163666016a6bae3e9b70d041a5e4d8454f48931839205e90`.
+Vendor calibration changes its 2 KiB parameter area during boot. The latest
+private running-flash snapshot is
+`out/spi-nvme-hardware-20261111-01/postwarm-spi.bin`, SHA-256
+`e829cf7b08fa9753866df7de727b2d1b92bb5c525f3bbf4cd94315d528dc275a`.
+Future SPI writes require a fresh reviewed plan accounting for that metadata.
+Keep both original and calibrated backups. [SPI procedure](spi-sd-boot-20261111.md).
 
 Paths below are relative to `/home/drew/orange-pi-4-pro` on codex.
 
@@ -32,9 +32,9 @@ manifest differs from the whole-NVMe installer manifest below. The changed-B
 update, interruption, selection and healthy live rollback cases now pass physically. Failed-health/offline recovery now passes; final normalized full
 installation and first A boot pass; restored KVM and independent reproduction also pass.
 The separately retained [matched NVMe-first trial SD](matched-nvme-trial-sd-20261109.md)
-is unbooted and awaits a reviewed physical trial. Its workload evidence and
-backup prerequisites now pass. It is not
-the normal host bootstrap in the table.
+remains an optional unbooted artifact. Direct NVMe loading and SPI operation
+now have their own physical evidence. The trial image is separate from the
+normal recovery bootstrap in the table.
 
 | Purpose | Existing artifact |
 | --- | --- |

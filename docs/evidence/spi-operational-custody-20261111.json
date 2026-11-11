@@ -1,0 +1,14 @@
+{
+  "archive": "/var/lib/a733-spi-operation-20261111-01/operational-evidence.tar",
+  "bytes": 1157120,
+  "sha256": "ca319037fab0733a0c5514efa9921c8d03f2d01b3db76d62e8c5b28248ce86dd",
+  "verified_records": 113,
+  "fsynced": true,
+  "transfer_exit": 0,
+  "source_records_unchanged": true,
+  "images_and_private_keys_excluded": true,
+  "calibrated_SPI_backups_separately_retained": [
+    "/var/lib/a733-spi-operation-20261111-01/postboot-spi.bin",
+    "/var/lib/a733-spi-operation-20261111-01/postwarm-spi.bin"
+  ]
+}

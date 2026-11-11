@@ -1,48 +1,49 @@
 # Implementation status
 
-Updated 2026-11-11. **Release acceptance and independent physical deployment
-reproduction pass for the recorded A733 using the immutable SD fallback.**
-Actual KVM, the eight-hour workload, ten warm reboots, ten physical cold boots,
-complete SD comparisons, update/rollback and controlled recovery all pass.
-The earlier November 8 SSH failure remains unexplained. See the
-[release checklist](release-acceptance.md) for the accepted scope and limitations.
+Updated 2026-11-11. **The current system operates from SPI and NVMe with SD
+physically removed.** SPI cold boot, warm restart, original SSH identity,
+automatic NTP and actual nonroot KVM CPU/disk/HTTP tests pass. The guest persisted
+counter 7→8→9 across checkpointing and host restart. Independent review passes.
+[Operational evidence](evidence/spi-operational-20261111.json) and
+[verified off-device custody](evidence/spi-operational-custody-20261111.json).
 
-## Current SPI objective
+The earlier protected-SD release and independently reproduced deployment remain
+accepted, including ten warm/ten cold boots and the eight-hour workload from
+retained >20-hour data. Those ten-cycle records cover that earlier boot route.
+The earlier November 8 SSH failure remains unexplained.
 
-The operator requested operation with SD removed and authorized SPI programming.
-Manual U-Boot NVMe-file boot passed. SPI programming and complete readback now
-pass after independent source/plan review and 2310 privileged tests. A reboot
-with SD inserted still selected SD boot0 and passed the host release guards.
-The board is cleanly powered off for operator SD removal. SPI/NVMe boot with
-SD absent and actual KVM execution remain the current completion checks.
-[Procedure and evidence](spi-sd-boot-20261111.md).
+## Current SPI result
+
+The identified XM25QU128C received the reviewed firmware with complete readback.
+SD recovery after programming passed. The operator then removed SD and restored
+power. SPI/NVMe cold boot and warm restart both passed, followed by real KVM
+runs on each host boot. Vendor U-Boot updates its 2 KiB calibration metadata
+while preserving boot0 and the firmware package. Current calibrated flash and
+the original blank backup are retained off-device. Future SPI writes require
+a fresh metadata-aware reviewed plan. [Procedure](spi-sd-boot-20261111.md).
 
 ## Live board and constraints
 
 - **Current:** normalized A at `root@192.168.1.116`, original pinned identity,
-  cleanly powered off after post-program SD recovery boot
-  `96e14dbb-496b-4484-9e7d-c9eaf3773dfa`. Its read-only release guards passed. Root p2 is read-only;
-  original configuration/keys, DHCP/NTP and resolver policy pass. Fresh full
-  installation completed with a streamed source hash and optional readback off.
-  The restored counter-5 guest ran real nonroot KVM through 6, clean shutdown,
-  checkpoint and restart into 7. Last checkpoint **2**, manifest `768a0138…759fb`,
-  has six verified history records. Guest is stopped. Recreate RAM accounts/units
-  after host reboot using the [guest operations guide](guest-operations.md).
-  [Installation](evidence/normalized-host-install-20261110.json),
-  [guest proof](evidence/normalized-guest-restore-20261110.json),
-  [reproduced deployment](independent-deployment-20261110.md),
-  [cold boot/SD proof](evidence/final-cold-boots-20261111.json).
+  SPI boot `5858af7a-977e-4a9b-971e-6d71ae7858d3`. SD is absent. Final release,
+  NVMe A/STATE, SSH/NTP, eight-CPU EL2/VHE and KVM readiness guards pass.
+  The SPI-host guest tests ran QEMU PIDs 2066/2044 as locked UID/GID 60001 with
+  actual VM/vCPU/VGIC descriptors. Both guests requested clean poweroff and
+  exited zero. Current checkpoint **4**, manifest `c47520b6…bc60f`, disk
+  `fb46ba77…e6efa`, has eight verified history records. Guest is stopped and its
+  current RAM unit is rendered for the next launch. Recreate accounts/units
+  explicitly after host reboot. [Guest operations](guest-operations.md).
 - **Target:** A733, observed 12 GiB/eight CPUs. SD is SU02G,
   **1977614336 bytes**, CID `035344535530324780716f216e00a8f5`.
   NVMe is SPCC M.2 PCIe SSD, **256060514304 bytes**, serial
   `134807190FC700149277`, firmware EDFM20.0, 512/512 sectors. Diagnostic inventory
   is sufficient; leave heatsinks attached. Reported supply is 67 W USB-PD with
   passive 10.4 mm six-layer whole-board copper cooling; negotiated power is unmeasured.
-- **Boot route:** protected normal-host SD prefix `ab5e8c…ad207` restored;
-  serial shows SD Linux-file loading. NVMe BOOT `cc2ad9…26c313` was included in
-  the installation; firmware loading it remains untested. SPI now holds the reviewed NVMe-first firmware, full readback SHA `83edcd…05e90`.
-  Linux SD write/discard/flush fields remain zero after the fresh host boot.
-  Explicit maintenance writes are separate from routine observations.
+- **Boot route:** SPI boot0/EL2 firmware/U-Boot → NVMe p1 `/boot/` → selected
+  read-only NVMe root and writable STATE. NVMe BOOT remains `cc2ad9…26c313`.
+  Programmed factory SPI hash is `83edcd…05e90`. The current post-warm snapshot
+  is `e829cf…275a`; all differences are vendor metadata at `[260096,262144)`.
+  The known 2 GB SD stays available off-device for recovery.
   [Current images](current-images.md).
 - **Serial:** bridge `orangepi@192.168.1.117`, `ttyS3-capture.service`, volatile
   `/var/log/ttyS3.log`; native relay `a733-uart-relay-20261109-01.service` retains
@@ -52,7 +53,7 @@ SD absent and actual KVM execution remain the current completion checks.
   [Procedure](remote-serial-control.md).
 - Known board SD/NVMe/SPI writes remain authorized. Revalidate exact targets and
   retain independent review; ask yes/no only for unapproved targets or scope.
-  Prefer SPI-to-NVMe with SD removed, otherwise complete immutable-SD proof.
+  SPI-to-NVMe with SD removed now operates on the recorded hardware.
   The registered source-backed SD recovery policy replaces the earlier
   USB-FEL-specific prerequisite. Physical SPI programming and SD-priority recovery now pass.
   [Programming evidence](evidence/spi-programming-20261111.json). [Programmer](known-spi-programmer.md).
@@ -62,7 +63,7 @@ SD absent and actual KVM execution remain the current completion checks.
 | Gate | Current evidence |
 | --- | --- |
 | Diagnostic fits actual 2 GB SD; all eight CPUs at EL2 | Passed; oversized vendor images were not used |
-| Actual nonroot KVM CPU/disk/network, poweroff/checkpoint/restart | [Initial passes](kvm-vgic-results-20261108.md), [restored host counter 6](paired-host-restore-20261110.md), and normalized B/rolled-back A counters 7/8 with retained zero exits |
+| Actual nonroot KVM CPU/disk/network, poweroff/checkpoint/restart | [SPI-host counters 8/9 and checkpoint/restart pass](evidence/spi-operational-20261111.json). [Initial passes](kvm-vgic-results-20261108.md), [restored host counter 6](paired-host-restore-20261110.md), and normalized B/rolled-back A counters 7/8 with retained zero exits |
 | Management and identity | Installed DHCP, NTP, pinned SSH and both authorized keys pass; any-subnet configuration retained through update/rollback |
 | Eight-hour workload | [Passed from retained >20-hour data](evidence/eight-hour-endurance-result-20261109.json); 2423 samples reach 72669 guest seconds/cycle 2422, with temperatures/memory/disk/network/KVM and post-run health/SD checks. Original 86400-second metadata remains historical. Operator stop is not guest-generated ENDURANCE_PASS or clean guest poweroff. Old timer is stopped/disabled; no rerun |
 | Original host backup/restoration | [Immutable offline cohort](evidence/offline-host-preservation-20261110.json) and [physical interrupted restore/full retry/boot/KVM](paired-host-restore-20261110.md) pass |
@@ -70,8 +71,8 @@ SD absent and actual KVM execution remain the current completion checks.
 | Guest backup/restoration | [Counter-3 archive restored and advanced 4/5](evidence/corrected-host-guest-restore-20261108.json). [Counter-5 archive](evidence/current-counter5-backup-20261109.json) and [forensic copies](guest-preservation-20261109.md) remain preserved; [fresh archive restoration and actual KVM 5→6→7/checkpoint/restart now pass](evidence/normalized-guest-restore-20261110.json) |
 | Failed health/offline root selection, missing NVMe, dirty journal | [Controlled SSH/offline-root recovery/KVM 9 passes](controlled-ssh-recovery-20261110.md). [NVMe-driver fault → serial shell → ordinary B → KVM 10 passes](missing-nvme-recovery-test.md); physical disconnection is not claimed. [Actual dirty crash → protected export → ext4 replay/marker → KVM 11 passes](dirty-state-recovery-trial.md), with verified custody. Initial raw inspector counter refusal remains retained; no broader claim |
 | Fresh normalized full installation and deployment reproduction | [Matching full streams](evidence/normalized-full-nvme-image-20261109.json) and [isolated composition](evidence/isolated-nvme-composition-20261109.json) pass. B alone has booted through the updater; [full installation](evidence/normalized-host-install-20261110.json), [fresh restored KVM](evidence/normalized-guest-restore-20261110.json) and [independent procedure reproduction](independent-deployment-20261110.md) pass |
-| Final 10 warm and 10 cold boots | [Ten guarded warm reboots](evidence/final-warm-boots-20261110.json) and [ten operator-performed cold boots](evidence/final-cold-boots-20261111.json) pass independent serial/device/release review. Each cold cycle has clean UART powerdown, physical USB-C removal attestation and a distinct fully ready boot |
-| SPI removed-SD boot or immutable SD | Immutable-SD fallback passes. [Final cold-series comparison](evidence/final-cold-boots-20261111.json) matches complete-card SHA `401df0…64be5` and prefix `ab5e8c…ad207`, with Linux write/discard/flush fields zero. [Firmware audit](sd-firmware-write-policy.md) passes within its stated limits. [Cold metadata custody](evidence/final-cold-custody-20261111.json) is verified off-device. SPI remains unqualified |
+| Protected-SD final 10 warm and 10 cold boots | [Ten guarded warm reboots](evidence/final-warm-boots-20261110.json) and [ten operator-performed cold boots](evidence/final-cold-boots-20261111.json) pass independent serial/device/release review. Each cold cycle has clean UART powerdown, physical USB-C removal attestation and a distinct fully ready boot |
+| SPI removed-SD boot or immutable SD | Immutable-SD fallback passes. [Final cold-series comparison](evidence/final-cold-boots-20261111.json) matches complete-card SHA `401df0…64be5` and prefix `ab5e8c…ad207`, with Linux write/discard/flush fields zero. [Firmware audit](sd-firmware-write-policy.md) passes within its stated limits. [Cold metadata custody](evidence/final-cold-custody-20261111.json) is verified off-device. [SPI/NVMe operational cold/warm boot and KVM now pass](evidence/spi-operational-20261111.json) |
 
 The original host cohort and counter-5/forensic archives remain private and
 immutable on the Ubuntu builder. Later counter 6–11 changes are disposable
@@ -124,9 +125,9 @@ binary redistribution clearance is claimed. [Source inventory](toolchain-sources
 
 ## Resources and next actions
 
-Latest privileged Ubuntu 22.04 suite: **2304 tests**, zero skips/errors/failures,
+Latest privileged Ubuntu 22.04 suite: **2310 tests**, zero skips/errors/failures,
 five shell suites and five diagnostic cases; all five TOMLs parse.
-[Cold-collector suite evidence](evidence/cold-boot-collector-validation-20261110.json)
+[SPI policy suite evidence](evidence/spi-sd-policy-validation-20261111.json)
 records the latest run. The final-A warm collector authenticates release/root/policy and stops on
 actual remote release refusal; [software evidence](evidence/final-warm-binding-validation-20261110.json)
 retains independent review and the initial corrected validation-environment failure. Host checks do not prove
@@ -151,8 +152,9 @@ guest and forensic archives off-device. Qualifying firmware, kernel/DTB and
 storage identities are recorded in the evidence. Changes to that combination
 need appropriate validation before extending the acceptance claim.
 
-SPI recovery/programming and SD-removed boot remain prospective work. The
-qualified protected-SD fallback satisfies this release. Keep source/license
-inventory limits explicit. The [completed release audit](evidence/release-acceptance-20261111.json)
+SPI programming, SD-priority recovery and SD-removed operation now pass.
+Retain the original and calibrated SPI snapshots. The strict initial programming
+plan is stale after vendor metadata initialization. Keep source/license inventory
+limits explicit. The [completed release audit](evidence/release-acceptance-20261111.json)
 and [construction index](build-reproduction-status.md) identify the evidence and
 precise reproduction scope.

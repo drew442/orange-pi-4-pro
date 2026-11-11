@@ -13,6 +13,10 @@ exact media. The [coordinator audit](evidence/release-acceptance-20261111.json)
 records requirement-level conclusions, artifact hashes and source evidence.
 Completed tests remain accepted under the operator's eight-hour policy.
 
+The subsequent [SPI operational goal](spi-sd-boot-20261111.md) also passes,
+with SD removed, cold/warm host boots and actual KVM persistence through 7→8→9.
+The ten-cycle records below retain their original protected-SD scope.
+
 ## Required hardware evidence
 
 | Plan requirement | Evidence and present conclusion |

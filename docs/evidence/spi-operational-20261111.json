@@ -1,0 +1,466 @@
+{
+  "schema": 1,
+  "date": "2026-11-11",
+  "objective": "Make the system operational without the SD card installed",
+  "result": "pass",
+  "goal_completion": true,
+  "current_host": {
+    "address": "192.168.1.116",
+    "boot_id": "5858af7a-977e-4a9b-971e-6d71ae7858d3",
+    "root_device": "/dev/nvme0n1p2",
+    "STATE_uuid": "360dfb39-f49f-487e-b307-0bb887c854c5",
+    "SD_present": false,
+    "NTP": "yes",
+    "online_CPUs": "0-7",
+    "EL2_VHE": true,
+    "kernel": "6.6.98-a733-diag"
+  },
+  "physical_operator_confirmation": "User confirmed SD removal and USB-C power restoration with done.",
+  "boot_evidence": {
+    "cold_SPI_boot": "461104ad-de37-4fbe-8ecc-c81c10203b9a",
+    "warm_SPI_boot": "5858af7a-977e-4a9b-971e-6d71ae7858d3",
+    "UART_storage_type": 3,
+    "U-Boot_target": "nvme 0:1 /boot/",
+    "SD_recovery_after_programming_boot": "96e14dbb-496b-4484-9e7d-c9eaf3773dfa"
+  },
+  "actual_KVM": {
+    "counters": [
+      7,
+      8,
+      9
+    ],
+    "QEMU_PIDs": [
+      2066,
+      2044
+    ],
+    "uid_gid": 60001,
+    "actual_VM_vCPU_VGIC_descriptors_observed": true,
+    "zero_capabilities_NoNewPrivileges": true,
+    "CPU_disk_HTTP_pass": true,
+    "guest_requested_shutdown_raw_exit0_both_runs": true,
+    "checkpoint_and_restart_across_host_reboot": true,
+    "final_checkpoint": 4,
+    "final_manifest_sha256": "c47520b6d87cae6db6032827f58442d35ba389576712cb1be5e020a19e2bc60f",
+    "final_disk_sha256": "fb46ba776d5468d250dd56d018fd50f939e5f897c6f5b3676257dc0413ce6efa",
+    "history_records": 8,
+    "guest_stopped_and_current_RAM_unit_rendered": true
+  },
+  "SPI": {
+    "device": "/dev/mtd0",
+    "partname": "XM25QU128C",
+    "JEDEC": "204118",
+    "bytes": 16777216,
+    "factory_program_and_full_readback_sha256": "83edcd7f448e8353163666016a6bae3e9b70d041a5e4d8454f48931839205e90",
+    "after_cold_boot_sha256": "812038f8291faffc0a404dc06afa2d1f7b52f2404ead566b79b44eef4bca1be8",
+    "after_warm_boot_sha256": "e829cf7b08fa9753866df7de727b2d1b92bb5c525f3bbf4cd94315d528dc275a",
+    "vendor_mutable_metadata_range": [
+      260096,
+      262144
+    ],
+    "boot0_and_firmware_package_bytes_unchanged_after_both_boots": true,
+    "metadata_changes_after_first_boot": 2046,
+    "additional_metadata_changes_after_warm_boot": 66
+  },
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "operational_review_sha256": "fada94e06be83ce4091d89b7b4bda3a0879c3c6cd9259fba561f2fad2f2c9638",
+    "boot_calibration_review_sha256": "9a7e694d401375fa109f28435f2e65e95d7611a75382a940db3655d76dc5d812"
+  },
+  "validation": {
+    "full_privileged_tests": 2310,
+    "shell_suites": 5,
+    "diagnostic_cases": 5,
+    "failures_errors_skips": 0
+  },
+  "scope": "One SD-free physical cold boot, one SD-free warm reboot and two real KVM runs with persistent guest data. Prior ten-warm/ten-cold release records cover the earlier protected-SD configuration.",
+  "known_limitations": [
+    "Vendor U-Boot updates SPI boot parameters during startup; full-flash hashes vary within the measured2048-byte region. Identical-content erase/program cycles are also possible.",
+    "The original strict-gap install/restore plan is stale after metadata initialization. Future SPI writes need a fresh complete read and reviewed metadata-aware plan. Preserve the known SD recovery card and original/calibrated SPI backups.",
+    "Guest service accounts and units are explicitly recreated in RAM after host reboot. The test guest is stopped; the current unit is rendered against checkpoint4.",
+    "Original vendor source/license inventory gaps and earlier unexplained SSH failure remain documented in implementation status."
+  ],
+  "required_work_remaining": [],
+  "records": {
+    "out/spi-nvme-hardware-20261111-01/SD-removal-observed.json": {
+      "bytes": 202,
+      "sha256": "f2f6a7f8535dafcf7ffb4a7cdf89e4636aa63f70126374e5f6f47e4efd4a0d0a"
+    },
+    "out/spi-nvme-hardware-20261111-01/SD-removal-poweroff-UART.log": {
+      "bytes": 11007,
+      "sha256": "7c3048674fd26bdb8ce51cb51a3becbd085a2b03fadd7bddc9eb71592dc54f8f"
+    },
+    "out/spi-nvme-hardware-20261111-01/SD-removal-poweroff-request.json": {
+      "bytes": 2719,
+      "sha256": "87721a79f8a705dae1c7b714fbe75d25a88ab83a64019ef091ea50b9649945bc"
+    },
+    "out/spi-nvme-hardware-20261111-01/SD-removal-ready.json": {
+      "bytes": 202,
+      "sha256": "7b41c4335c15ba6c616d2a6090f96988f435c039d3c5b9ba004fe37bd021d774"
+    },
+    "out/spi-nvme-hardware-20261111-01/SPI-first-boot-UART.log": {
+      "bytes": 99780,
+      "sha256": "1ab81fcdc84ab6b345d8106aeadd6673dcf1dbb12d91c45b841211e15e1900cd"
+    },
+    "out/spi-nvme-hardware-20261111-01/SPI-first-boot-observed-UART.log": {
+      "bytes": 99970,
+      "sha256": "3404ec8313261bf2dd9724b58fbbd0ea3c6e5eb6fa1f55b441a18d8e190d2515"
+    },
+    "out/spi-nvme-hardware-20261111-01/SPI-first-boot-polls-after-power.jsonl": {
+      "bytes": 3076,
+      "sha256": "89c147717a2f9592955af38e1edc2e348449b29aeeecfce41b10b5b7096096fb"
+    },
+    "out/spi-nvme-hardware-20261111-01/SPI-first-boot-polls.jsonl": {
+      "bytes": 63348,
+      "sha256": "f95520024878a19589aff3ee1063a792d00f15011943a5a78a811925e5b09673"
+    },
+    "out/spi-nvme-hardware-20261111-01/SPI-first-boot-result.json": {
+      "bytes": 1867,
+      "sha256": "2b78017611944e2d9df39a887fabbd326c1ec675fbec69f7b96b7d6bf0901140"
+    },
+    "out/spi-nvme-hardware-20261111-01/SPI-warm-boot-UART.log": {
+      "bytes": 115492,
+      "sha256": "b01863a5a957516ea94dd18a562574d3ae33885a3404c4de08bf044670cf0efe"
+    },
+    "out/spi-nvme-hardware-20261111-01/SPI-warm-boot-polls.jsonl": {
+      "bytes": 11730,
+      "sha256": "0c90b53ed38ae201e4ee424e1f103f4c9e5dc776142584c5328370670796b786"
+    },
+    "out/spi-nvme-hardware-20261111-01/SPI-warm-boot-result.json": {
+      "bytes": 1867,
+      "sha256": "cdc3aca1743be72d14ca95aac13f12ed3a16f25ebaf031876f80ac48a7c0eeb3"
+    },
+    "out/spi-nvme-hardware-20261111-01/SPI-warm-reboot-request.json": {
+      "bytes": 2686,
+      "sha256": "f8425bad07209f553ed85d2452abce19ff732cd24846aac9a1c53420ed9aad89"
+    },
+    "out/spi-nvme-hardware-20261111-01/calibrated-flash-custody.json": {
+      "bytes": 183,
+      "sha256": "7abbd1ad322f8cc7c075bf4eefc7686db7d884eee2f544c101702c10cc4a5352"
+    },
+    "out/spi-nvme-hardware-20261111-01/closed-boot-and-calibration-review.json": {
+      "bytes": 18711,
+      "sha256": "9a7e694d401375fa109f28435f2e65e95d7611a75382a940db3655d76dc5d812"
+    },
+    "out/spi-nvme-hardware-20261111-01/closed-operational-review.json": {
+      "bytes": 16508,
+      "sha256": "fada94e06be83ce4091d89b7b4bda3a0879c3c6cd9259fba561f2fad2f2c9638"
+    },
+    "out/spi-nvme-hardware-20261111-01/counter8-HTTP-confirmation.json": {
+      "bytes": 133,
+      "sha256": "597beb877c74d440dd434d91cbd44d681dd1502af5113627c86a6294f4521f3a"
+    },
+    "out/spi-nvme-hardware-20261111-01/counter8-checkpoint-PTY.log": {
+      "bytes": 1109,
+      "sha256": "587b523ed5657921d17d2c718a43e145b576fa55130477bb8c184977bd06d12d"
+    },
+    "out/spi-nvme-hardware-20261111-01/counter8-checkpoint-plan.json": {
+      "bytes": 3703,
+      "sha256": "242ed3050582ef2a7dc67c64430692dd1312b21726e11f5e9f8aa040189932b7"
+    },
+    "out/spi-nvme-hardware-20261111-01/counter8-checkpoint-result.json": {
+      "bytes": 603,
+      "sha256": "bbbb2efb28d43fbfa4d977c25308c0e1ae010786ade9fb2a16782d38d94de1bf"
+    },
+    "out/spi-nvme-hardware-20261111-01/counter8-confirm.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/spi-nvme-hardware-20261111-01/counter8-confirm.stdout": {
+      "bytes": 421,
+      "sha256": "de0f9d497f9c79028a7d5bb7183be05e834d55d444d2938420dacf19219c5f81"
+    },
+    "out/spi-nvme-hardware-20261111-01/counter8-final-checkpoint-state.json": {
+      "bytes": 3151,
+      "sha256": "6c93455ab3ca9cbea4ccba4252c6eb95f98a716bbcce472bf03e49e4a3000609"
+    },
+    "out/spi-nvme-hardware-20261111-01/counter8-independent-live-KVM.json": {
+      "bytes": 16594,
+      "sha256": "5f4f874a561291de3b6d7a5f013defbb8eaa26808cccb49c388c476d04d6fdbf"
+    },
+    "out/spi-nvme-hardware-20261111-01/counter8-independent-live-KVM.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/spi-nvme-hardware-20261111-01/counter8-launch.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/spi-nvme-hardware-20261111-01/counter8-launch.stdout": {
+      "bytes": 411,
+      "sha256": "936021e97ce6c0bbc1aeaba64057f668fc5b772999919f35c33c1a1f1f79e6ec"
+    },
+    "out/spi-nvme-hardware-20261111-01/counter8-running-KVM-evidence.json": {
+      "bytes": 16613,
+      "sha256": "d2499303e2b14507b4035538b423c0ccd5dbbc3f71530907fdd78681b70ee8e8"
+    },
+    "out/spi-nvme-hardware-20261111-01/counter8-terminal-evidence.json": {
+      "bytes": 15924,
+      "sha256": "2db8d32de8969a8beada5a3c2751b39bd06ef7d0bba7b4c192a284467a08a288"
+    },
+    "out/spi-nvme-hardware-20261111-01/counter9-HTTP-confirmation.json": {
+      "bytes": 133,
+      "sha256": "d6c40dd74c267e76fd5d583e177c133ea48e26c3010cf0f47b3e368d5aadefdc"
+    },
+    "out/spi-nvme-hardware-20261111-01/counter9-checkpoint-PTY.log": {
+      "bytes": 1109,
+      "sha256": "8ebc23951563a17ffdd0ce27cf194fbb747c1bb17e3d001dd4e5a22650ed3457"
+    },
+    "out/spi-nvme-hardware-20261111-01/counter9-checkpoint-plan.json": {
+      "bytes": 3703,
+      "sha256": "a07374412580463f9a400f53e37d07a528d809d64a37731143e3b39fba9d21d4"
+    },
+    "out/spi-nvme-hardware-20261111-01/counter9-checkpoint-result.json": {
+      "bytes": 603,
+      "sha256": "deebe4c6ce734795bad15c87e419d6be9fcbd3c3c2016690a3fcbca52a9e2167"
+    },
+    "out/spi-nvme-hardware-20261111-01/counter9-confirm.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/spi-nvme-hardware-20261111-01/counter9-confirm.stdout": {
+      "bytes": 421,
+      "sha256": "68aa00c083af4379c57af3e3ca845adcb3d56806442652154eb24ea962a00b2f"
+    },
+    "out/spi-nvme-hardware-20261111-01/counter9-independent-live-KVM.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/spi-nvme-hardware-20261111-01/counter9-independent-live-KVM.stdout": {
+      "bytes": 16618,
+      "sha256": "d33f54e874ca56b8507d7a9f4181fa6e63c451ab4ed42bec434a51c776bf1c6a"
+    },
+    "out/spi-nvme-hardware-20261111-01/counter9-launch.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/spi-nvme-hardware-20261111-01/counter9-launch.stdout": {
+      "bytes": 412,
+      "sha256": "745de1ea0fb7282667726f3edbc87c2831b5a20efcfc8636ffc5c752888067e2"
+    },
+    "out/spi-nvme-hardware-20261111-01/counter9-observer.jsonl": {
+      "bytes": 417,
+      "sha256": "c401e780766ef010a3abea1e13b5a0b4de7310b262c3fdcab55264f10ca2d5f9"
+    },
+    "out/spi-nvme-hardware-20261111-01/counter9-observer.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/spi-nvme-hardware-20261111-01/counter9-running-KVM-evidence.json": {
+      "bytes": 16613,
+      "sha256": "5b913d494e371c19ee40d8fb739c5dfa25c3de7184747a92592846ba4ee3af46"
+    },
+    "out/spi-nvme-hardware-20261111-01/counter9-terminal-evidence.json": {
+      "bytes": 15924,
+      "sha256": "d88d36df7ba2da2e26b4691dadf138cf63969b483a909a357519ee522e5b9577"
+    },
+    "out/spi-nvme-hardware-20261111-01/final-SPI-host-guard.json": {
+      "bytes": 2546,
+      "sha256": "fb4ba86e91dfdaab10036113d7732b560aff71e943c16d49a3dcf0c1301e50a2"
+    },
+    "out/spi-nvme-hardware-20261111-01/final-checkpoint4-and-ready-unit.json": {
+      "bytes": 3552,
+      "sha256": "56c7cb47b4c2664b3e4c722189b93a512991fd7fc56780399f16861e0a53bebb"
+    },
+    "out/spi-nvme-hardware-20261111-01/final-checkpoint4-and-ready-unit.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/spi-nvme-hardware-20261111-01/guest-accounts-apply.stderr": {
+      "bytes": 176,
+      "sha256": "6246b3150a3dcaa94724c9816d3369ee99be956f190b96da8a67ef3048f98fce"
+    },
+    "out/spi-nvme-hardware-20261111-01/guest-accounts-plan.json": {
+      "bytes": 588,
+      "sha256": "d2aa89a9cb8473dc829378941be162865c69f803beff992bbd2f91bf5a81263c"
+    },
+    "out/spi-nvme-hardware-20261111-01/guest-accounts-result.json": {
+      "bytes": 175,
+      "sha256": "3f0b6af798bbd9c77170b2e0ecd4713bcda9a351420739f022acea664d96df69"
+    },
+    "out/spi-nvme-hardware-20261111-01/guest-mount-apply-PTY.log": {
+      "bytes": 834,
+      "sha256": "e76ccb66decc9f1a5156031fe64f62901c047abc7965a9d121feddb77acfa035"
+    },
+    "out/spi-nvme-hardware-20261111-01/guest-mount-plan.json": {
+      "bytes": 2429,
+      "sha256": "611e6d2cc078a1623fe97fccf874949ad2d5a99482dddee79df7a8ad7cc38640"
+    },
+    "out/spi-nvme-hardware-20261111-01/guest-mount-result.stdout": {
+      "bytes": 530,
+      "sha256": "973dd4c1745d04e071d70a61ad2dc0dfa2da7cfd20dec5a46f6a3c86b75c830c"
+    },
+    "out/spi-nvme-hardware-20261111-01/guest-prepare.json": {
+      "bytes": 1523,
+      "sha256": "e5c0f4c41126ea844857222c8b0509f8d1fadb51c83aac5d6536c78423c88686"
+    },
+    "out/spi-nvme-hardware-20261111-01/guest-prepare.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/spi-nvme-hardware-20261111-01/guest-render.json": {
+      "bytes": 2236,
+      "sha256": "26ecf79ad3d974524aa112f4818be1b42f413610fba2357a62fec06ee34dbc20"
+    },
+    "out/spi-nvme-hardware-20261111-01/guest-render.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/spi-nvme-hardware-20261111-01/guest9-accounts-apply.stderr": {
+      "bytes": 176,
+      "sha256": "6246b3150a3dcaa94724c9816d3369ee99be956f190b96da8a67ef3048f98fce"
+    },
+    "out/spi-nvme-hardware-20261111-01/guest9-accounts-plan.json": {
+      "bytes": 588,
+      "sha256": "d2aa89a9cb8473dc829378941be162865c69f803beff992bbd2f91bf5a81263c"
+    },
+    "out/spi-nvme-hardware-20261111-01/guest9-accounts-result.json": {
+      "bytes": 175,
+      "sha256": "3f0b6af798bbd9c77170b2e0ecd4713bcda9a351420739f022acea664d96df69"
+    },
+    "out/spi-nvme-hardware-20261111-01/guest9-mount-apply-PTY.log": {
+      "bytes": 834,
+      "sha256": "e76ccb66decc9f1a5156031fe64f62901c047abc7965a9d121feddb77acfa035"
+    },
+    "out/spi-nvme-hardware-20261111-01/guest9-mount-plan.json": {
+      "bytes": 2429,
+      "sha256": "611e6d2cc078a1623fe97fccf874949ad2d5a99482dddee79df7a8ad7cc38640"
+    },
+    "out/spi-nvme-hardware-20261111-01/guest9-mount-result.stdout": {
+      "bytes": 530,
+      "sha256": "973dd4c1745d04e071d70a61ad2dc0dfa2da7cfd20dec5a46f6a3c86b75c830c"
+    },
+    "out/spi-nvme-hardware-20261111-01/guest9-prepare.json": {
+      "bytes": 1523,
+      "sha256": "dd19bf0d8ea24a93061ed7fcd20bf57898e72e1cd93686f0f39be4483dfc0c96"
+    },
+    "out/spi-nvme-hardware-20261111-01/guest9-prepare.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/spi-nvme-hardware-20261111-01/guest9-render.json": {
+      "bytes": 2442,
+      "sha256": "115c7493474d37ec5a7d37b78064fb53496295d5c7efd7abf8925dde231a9782"
+    },
+    "out/spi-nvme-hardware-20261111-01/guest9-render.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/spi-nvme-hardware-20261111-01/immediate-preprogram-guard.json": {
+      "bytes": 2602,
+      "sha256": "e100a04262fbb9a42c509cc2cdce629fb153eedea83729431de7c2b00fa19bb4"
+    },
+    "out/spi-nvme-hardware-20261111-01/intercept.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/spi-nvme-hardware-20261111-01/intercept.stdout": {
+      "bytes": 404,
+      "sha256": "8c3a8545d951cde13a8cee8fb61d52d3c3315af80c783bd252cb80896984bebc"
+    },
+    "out/spi-nvme-hardware-20261111-01/known_hosts": {
+      "bytes": 95,
+      "sha256": "7c27f18f7bb44b4113e72a240792fd9fe325fa3e85702ea36ae5b403d0829e2a"
+    },
+    "out/spi-nvme-hardware-20261111-01/nvme-boot-UART.log": {
+      "bytes": 94785,
+      "sha256": "1de0f405fbc5e74f5dc4a70f7dfc1aa1617abebca5b446a1ed41c99786ee1bc4"
+    },
+    "out/spi-nvme-hardware-20261111-01/nvme-boot-command.json": {
+      "bytes": 103,
+      "sha256": "e30c0c5684b567d4597f42c713b99f1882a965d9e5c8a4cb75dcce75e6f43a17"
+    },
+    "out/spi-nvme-hardware-20261111-01/nvme-boot-live-guard.json": {
+      "bytes": 530,
+      "sha256": "777b7a7a9319fce4f18fc554778611af2a8c3863e0a295777c1dc351918b1ab8"
+    },
+    "out/spi-nvme-hardware-20261111-01/nvme-boot-ready-guard.json": {
+      "bytes": 2602,
+      "sha256": "e100a04262fbb9a42c509cc2cdce629fb153eedea83729431de7c2b00fa19bb4"
+    },
+    "out/spi-nvme-hardware-20261111-01/nvme-load-test.jsonl": {
+      "bytes": 236,
+      "sha256": "675d30a43fa7e3fd0d221d5102688b64f25f2efefbdb1833883fdd899552cf96"
+    },
+    "out/spi-nvme-hardware-20261111-01/nvme-read-test-reboot.json": {
+      "bytes": 2696,
+      "sha256": "1631702ea29daef95ecc96bdb7a63b261d86c5e76035f4647b8152874d62adf3"
+    },
+    "out/spi-nvme-hardware-20261111-01/nvme-read-test.jsonl": {
+      "bytes": 1187,
+      "sha256": "961e3284cd7539dfd1f933c87db97a0e3084721179a5174ddc9465a323ad766f"
+    },
+    "out/spi-nvme-hardware-20261111-01/observer.jsonl": {
+      "bytes": 417,
+      "sha256": "117780c14557f2d899793e1d1059589589161281bc58c266f9cedd934f8b9b9a"
+    },
+    "out/spi-nvme-hardware-20261111-01/observer.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "out/spi-nvme-hardware-20261111-01/physical-plan.json": {
+      "bytes": 7937,
+      "sha256": "3b8912c8a5c7dc4ac9658694ee1a97404831f335ef89be714cab63b836405765"
+    },
+    "out/spi-nvme-hardware-20261111-01/physical-plan.stderr": {
+      "bytes": 439,
+      "sha256": "bc2049d1be8255a6f214b810e88f82e57205e80dd46d25986635cf79d8d4d745"
+    },
+    "out/spi-nvme-hardware-20261111-01/postboot-flash-difference.json": {
+      "bytes": 401,
+      "sha256": "9283ea6b9a4c8219523a930d124c49da2cc6bfe0ebf364284f3921ee667d9ef1"
+    },
+    "out/spi-nvme-hardware-20261111-01/postboot-flash-read.json": {
+      "bytes": 214,
+      "sha256": "4e777f6ecd0401ea88ff74fc759447af54b4eeb4d2e276bf88eb9b80c38f38c6"
+    },
+    "out/spi-nvme-hardware-20261111-01/postprogram-SD-recovery-UART.log": {
+      "bytes": 112996,
+      "sha256": "791ab8ecdfb9044b28b81366a40dcab4f6a6a85a6db0707627bbb768bf6af337"
+    },
+    "out/spi-nvme-hardware-20261111-01/postprogram-SD-recovery-polls.jsonl": {
+      "bytes": 11696,
+      "sha256": "7fecf7c0ee3c415000b17ceb37019e9e73e952145531dd993743bbf2edcb5dbb"
+    },
+    "out/spi-nvme-hardware-20261111-01/postprogram-SD-recovery-reboot.json": {
+      "bytes": 2676,
+      "sha256": "e9e16e3af57ee04f61986ac8c7b704085dd9ece68b960b7975c2cea93083a4de"
+    },
+    "out/spi-nvme-hardware-20261111-01/postprogram-SD-recovery-result.json": {
+      "bytes": 2356,
+      "sha256": "396c4e6c78d211a414d2e264a0d77a6a4b966ae60dd49a9085529609f2716f51"
+    },
+    "out/spi-nvme-hardware-20261111-01/postwarm-flash-custody.json": {
+      "bytes": 183,
+      "sha256": "ef7df09fe7986fecff47df7319ed6dfd82696bc317664c48dc17ef4e4c28e204"
+    },
+    "out/spi-nvme-hardware-20261111-01/postwarm-flash-difference.json": {
+      "bytes": 1344,
+      "sha256": "7854e3ae2382b8eb4bc656c462b81e7ed6b9ee03f57ca0fbae18b3ea41a7c057"
+    },
+    "out/spi-nvme-hardware-20261111-01/postwarm-flash-read.json": {
+      "bytes": 214,
+      "sha256": "d1a9bdeebd220b4ff604402e641c9e8c9212cd3c8e15f5a9819ed5e6916795d5"
+    },
+    "out/spi-nvme-hardware-20261111-01/programming-custody.json": {
+      "bytes": 191,
+      "sha256": "8b7fe809897db1cbb576d3154045dc88cdab6e2b6f09273d5aa57f7043abbf97"
+    },
+    "out/spi-nvme-hardware-20261111-01/programming-events.jsonl": {
+      "bytes": 20448,
+      "sha256": "43b1d7f8cbb7503a2da591458adee04e827f261b7242ee455b0396c49829cde1"
+    },
+    "out/spi-nvme-hardware-20261111-01/programming-terminal.json": {
+      "bytes": 1804,
+      "sha256": "920e9b343b818ac992474ef6fdef27b4f42957001a26d6c2fa0a366475aad518"
+    },
+    "out/spi-nvme-hardware-20261111-01/staged-input-pins.json": {
+      "bytes": 961,
+      "sha256": "6f6039e8439891ba52f50fe93019b652ef38bbc116ec6bfcdc77368eb11ab452"
+    },
+    "out/spi-nvme-hardware-20261111-01/unprivileged-capture-refusal.json": {
+      "bytes": 238,
+      "sha256": "82b0c09e1c539fe234d57b26b7dc7589daa90c709d36fdf5f10120ee870a9a1a"
+    }
+  }
+}

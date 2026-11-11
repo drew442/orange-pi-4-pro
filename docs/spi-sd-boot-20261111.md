@@ -1,7 +1,9 @@
 # Qualify SPI-to-NVMe boot on the recorded A733
 
 The operator requested operation with the SD physically removed and explicitly
-authorized SPI programming on November 11. This is the current objective.
+authorized SPI programming on November 11. **The system now operates without SD.** SPI cold/warm boots and two actual KVM
+runs pass independent review. [Operational result](evidence/spi-operational-20261111.json)
+and [verified custody](evidence/spi-operational-custody-20261111.json).
 The prior protected-SD release evidence remains retained.
 
 ## Recovery route
@@ -46,12 +48,12 @@ The target is `/dev/mtd0`, character `90:0`, XM25QU128C, JEDEC `204118`,
 16,777,216 bytes with 65,536-byte erase units. A fresh complete read matches
 original SHA-256
 `dffab0dd410657cb30c7b2fd7f2586a4792e8472e58882b3532581f8111a646d`.
-The desired backup-derived SPI image is
+The initial programmed backup-derived SPI image was
 `83edcd7f448e8353163666016a6bae3e9b70d041a5e4d8454f48931839205e90`.
-The canonical live plan digest is
+The initial programming plan digest was
 `1ae1c742c7b2547e27555e25a3bee43600881853b8958486d36c570fea5f5286`.
 
-The transaction reconstructs erase units 0–25, preserving bytes outside boot0
+The completed transaction reconstructed erase units 0–25, preserving bytes outside boot0
 `[0,237568)` and boot package `[262144,1654784)`. Units 26–255 are untouched.
 Its order is units 4–25, then 1, 2, 3 and header unit 0 last. The existing guarded
 programmer and off-device durable event capture enforce exact source, image,
@@ -85,3 +87,49 @@ and stopped before starting SSH. The unchanged controller then ran as root with
 private root-owned native staging. A local post-run parser initially expected
 the wrong final event tag, then accepted the actual `programmer_outcome` receipt.
 Programming was executed once.
+
+## First SD-free boot and SPI calibration
+
+The operator removed SD and restored power. The captured cold boot selected
+SPI NOR (storage type 3), identified the XM25QU128C, and loaded Linux from
+NVMe partition 1. Boot `461104ad-de37-4fbe-8ecc-c81c10203b9a` passed the
+SD-absence, original identity, NVMe A/STATE, SSH, NTP, eight-CPU EL2/VHE and
+KVM readiness checks. Real nonroot QEMU PID 2066 subsequently passed CPU,
+NVMe disk counter 7→8 and HTTP checks, then guest-requested poweroff with
+raw exit status 0. Checkpoint 3 is durable.
+
+Vendor U-Boot initializes its 2 KiB boot-parameter/calibration area at
+`[260096,262144)` during SPI startup. Its unaligned-write warning continues
+through a real write path. The first boot changed 2,046 bytes entirely within
+that area. Boot0 and the complete U-Boot/firmware package remain byte-identical
+to the programmed input. The initialized 16 MiB flash SHA-256 is
+`812038f8291faffc0a404dc06afa2d1f7b52f2404ead566b79b44eef4bca1be8`.
+A verified, fsynced snapshot is retained on the builder at
+`/var/lib/a733-spi-operation-20261111-01/postboot-spi.bin`.
+
+The original strict-gap programming plan is stale after this vendor metadata
+initialization. Future installation or restoration requires a fresh complete
+flash read and an independently reviewed plan accounting for these bytes. Keep
+the known SD recovery path and both original/initialized backups. Identical
+post-boot hashes cannot establish absence of repeated identical-content writes.
+Source findings and the measured difference are retained in the final evidence.
+
+## Completed SD-free restart and guest persistence
+
+Warm SPI/NVMe boot `5858af7a-977e-4a9b-971e-6d71ae7858d3` passed with SD
+still absent. The guest resumed from checkpoint 3, ran as nonroot QEMU PID 2044
+with real VM/vCPU/VGIC descriptors, advanced disk counter 8→9 and passed HTTP.
+It requested clean poweroff with raw exit status 0. Checkpoint 4 is durable,
+manifest `c47520b6d87cae6db6032827f58442d35ba389576712cb1be5e020a19e2bc60f`,
+disk `fb46ba776d5468d250dd56d018fd50f939e5f897c6f5b3676257dc0413ce6efa`.
+All eight history records verify. The guest is stopped and its current RAM
+service is rendered for the next launch. Accounts/units need explicit recreation
+after future host reboots as described in the guest operations guide.
+
+The post-warm SPI hash is
+`e829cf7b08fa9753866df7de727b2d1b92bb5c525f3bbf4cd94315d528dc275a`.
+Its 66 changed bytes relative to the first initialized snapshot remain within
+the same vendor parameter area. Every boot0/package byte still matches the
+factory candidate. Preserve both calibrated snapshots. The operational checks
+cover one cold and one warm SPI boot. The previous ten-cycle release records
+cover the earlier protected-SD configuration.

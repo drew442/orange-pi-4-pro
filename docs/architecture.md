@@ -15,28 +15,26 @@ filesystem, with MemTotal 12161560 KiB and MemAvailable 11798000 KiB before any
 guest launch. These are point observations, not a memory benchmark. The pinned
 221-package userspace is maintained by building/reviewing an inactive root;
 on-board APT mutation is not the update mechanism. Final boot reliability is
-still a release gate. The [installation record](evidence/normalized-host-install-20261110.json)
+documented by the accepted route-specific boot records. The [installation record](evidence/normalized-host-install-20261110.json)
 pins the measurements and preserves the compatible board stack.
 
 ## Boot chain and recovery
 
-The working fallback loads Linux boot files from the actual 2 GB SD, then uses
-NVMe for the selected read-only host root and writable state. Routine operation
-does not mount SD. The compatible protected bootstrap has passed physical boot,
-recovery and KVM cases. Final normalized boot-cycle acceptance passes.
+The current route starts in SPI and reads Linux boot files from NVMe p1.
+SD is physically removed. Cold/warm host boots and actual KVM execution pass.
+The original protected SD remains available as a recovery card through the
+ROM's documented SMHC0-first normal boot order.
 
 ```mermaid
 flowchart TD
-  ROM[A733 boot ROM] --> SD[SD boot0 and compatible EL2 firmware package]
-  SD --> UB[Vendor U-Boot]
-  UB --> FILES[SD kernel, VGIC DTB and protected host initramfs]
+  ROM[A733 boot ROM] --> SPI[SPI boot0 and compatible EL2 firmware package]
+  SPI --> UB[Vendor U-Boot NVMe target]
+  UB --> FILES[NVMe p1 kernel, VGIC DTB and protected initramfs]
   FILES --> SELECT[NVMe STATE: block-RO probe of selected.conf]
   SELECT --> ROOT[Selected NVMe root A or B, mounted read-only]
   ROOT --> HOST[systemd host: RAM configuration and NVMe state]
-  SELECT -->|Missing or invalid storage| RESCUE[Serial RAM recovery shell]
-  ROM -.->|Preferred, unproven| SPI[SPI firmware with SD removed]
-  SPI -.-> NVBOOT[NVMe kernel, DTB and initramfs]
-  NVBOOT -.-> SELECT
+  ROM -. recovery SD inserted .-> SD[Known SD recovery firmware]
+  SD -.-> RESCUE[Protected host or private RAM recovery]
 ```
 
 The [protected initramfs](../configs/host-init) resolves STATE by UUID, validates
@@ -48,12 +46,12 @@ chain. The [firmware write audit](sd-firmware-write-policy.md) records opaque an
 conditional firmware limits; full-card comparisons and serial observations at
 defined boot-series boundaries remain required.
 
-[SPI preparation](known-spi-programmer.md) and the separate
-[SD-to-NVMe firmware trial](matched-nvme-trial-sd-20261109.md) are not physical
-boot proofs. SPI programming requires independent recovery first. If SPI cannot
-be qualified, the SD fallback remains within the plan, with zero routine writes.
-Kernel/DTB/initramfs replacement in that fallback is explicit SD maintenance;
-ordinary host root updates stay on NVMe.
+[SPI programming and SD-removed operation](spi-sd-boot-20261111.md) now have
+physical evidence. Vendor U-Boot writes its 2 KiB calibration area on startup;
+boot0 and the firmware package remain unchanged in the measured snapshots.
+A current backup and reviewed metadata-aware plan are required for future SPI
+writes. Ordinary host root updates stay on NVMe. Explicit SD maintenance remains
+available for the retained recovery card.
 
 ## Storage and mutable state
 
