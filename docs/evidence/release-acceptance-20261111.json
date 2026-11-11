@@ -1,0 +1,291 @@
+{
+  "schema": 1,
+  "date": "2026-11-11",
+  "result": "pass",
+  "release_acceptance": true,
+  "deployment_reproduced": true,
+  "accepted_scope": "Recorded Orange Pi 4 Pro A733 with SU02G1977614336-byte SD and SPCC256060514304-byte NVMe using protected immutable SD boot files and NVMe root/state/guests.",
+  "final_host_boot_id": "0882e9b9-a75d-4ca5-b05c-7c458eade3f5",
+  "host_address": "192.168.1.116",
+  "required_work_remaining": [],
+  "requirements": {
+    "actual_2GB_SD_and_nominal_250GB_NVMe_installation": {
+      "result": "pass",
+      "evidence": {
+        "docs/evidence/normalized-host-install-20261110.json": {
+          "bytes": 7178,
+          "sha256": "0d6d9a31be58f74063b9214f30e462368d511f2f013fcacf262771aff6508c35"
+        },
+        "docs/evidence/normalized-full-nvme-image-20261109.json": {
+          "bytes": 21891,
+          "sha256": "27d1e4e0c5a724b99663cb7549765f1f62100ba658e27f921e4469741a5df7c0"
+        },
+        "docs/evidence/isolated-nvme-composition-20261109.json": {
+          "bytes": 5337,
+          "sha256": "49d3de74de379be97ea3d98c2b7094d9a986f0c0f8ab9490fd9fe4557f2b83fb"
+        }
+      }
+    },
+    "pinned_sources_toolchains_firmware_packages_reproducible_recipes": {
+      "result": "pass",
+      "evidence": {
+        "configs/diagnostic-sources.lock.json": {
+          "bytes": 2273,
+          "sha256": "aa39f5fca29244ca961fc3f422d7110adca6975d2c6a29f80afd9d1d2f4b4821"
+        },
+        "configs/linaro-source-inputs.lock.json": {
+          "bytes": 13895,
+          "sha256": "feac3b1883e95473806624f7ee1c6da58e77fa6190536c1ea30586cb5f6e70a0"
+        },
+        "docs/build-reproduction-status.md": {
+          "bytes": 6209,
+          "sha256": "a84d62b22a9b18a419fef4a7020648246caee99afc57d5271842cfc622ebd95f"
+        },
+        "docs/build-host-assessment.md": {
+          "bytes": 25265,
+          "sha256": "df166b503b5944b7d071102a224cb4ff22f04e450dda5a5da9b6125f49e9f9f6"
+        },
+        "docs/toolchain-sources.md": {
+          "bytes": 8851,
+          "sha256": "ad0b9b5e88ae946f93817b36438361de6d45719b9e928a91f2fe11946ba27477"
+        }
+      }
+    },
+    "minimal_headless_host_and_NVMe_layout": {
+      "result": "pass",
+      "evidence": {
+        "docs/architecture.md": {
+          "bytes": 6880,
+          "sha256": "f2f4b99d12f628070387eed1c3932b8a0657f5cfc3318abc2508233e36d43553"
+        },
+        "docs/evidence/normalized-host-install-20261110.json": {
+          "bytes": 7178,
+          "sha256": "0d6d9a31be58f74063b9214f30e462368d511f2f013fcacf262771aff6508c35"
+        }
+      }
+    },
+    "actual_KVM_CPU_disk_network_shutdown_checkpoint_restart": {
+      "result": "pass",
+      "evidence": {
+        "docs/evidence/normalized-guest-restore-20261110.json": {
+          "bytes": 20815,
+          "sha256": "c656c6bb6fee7cb495a27c5667f90b0dca4e65ff0edf6060a7ec3b06d221d984"
+        }
+      }
+    },
+    "8hour_workload_existing_qualifying_data": {
+      "result": "pass",
+      "evidence": {
+        "docs/evidence/eight-hour-endurance-result-20261109.json": {
+          "bytes": 12583,
+          "sha256": "7168f8d1604c4aa375c862d045c07fd6b37be599c73196743b6ef63e0feaf679"
+        }
+      }
+    },
+    "10_final_warm_and_10_physical_cold_boots": {
+      "result": "pass",
+      "evidence": {
+        "docs/evidence/final-warm-boots-20261110.json": {
+          "bytes": 4826,
+          "sha256": "db81136425d355533889388e7003b8335f8218d71343a03d14d02ff120fcbcc2"
+        },
+        "docs/evidence/final-cold-boots-20261111.json": {
+          "bytes": 4923,
+          "sha256": "999cf750f08494ad821ada525036c02090fa86e66f7a7e4b4918597608d602e4"
+        }
+      }
+    },
+    "immutable_SD_fallback_hashes_counters_firmware_audit": {
+      "result": "pass",
+      "evidence": {
+        "docs/evidence/final-cold-boots-20261111.json": {
+          "bytes": 4923,
+          "sha256": "999cf750f08494ad821ada525036c02090fa86e66f7a7e4b4918597608d602e4"
+        },
+        "docs/evidence/final-warm-boots-20261110.json": {
+          "bytes": 4826,
+          "sha256": "db81136425d355533889388e7003b8335f8218d71343a03d14d02ff120fcbcc2"
+        },
+        "docs/sd-firmware-write-policy.md": {
+          "bytes": 4202,
+          "sha256": "d311a64e3458ac333f9765d9565bc9e5e199cc2ea0fe51cef351a3216bf7d1d5"
+        }
+      }
+    },
+    "interrupted_update_and_manual_rollback": {
+      "result": "pass",
+      "evidence": {
+        "docs/physical-host-update-rollback-20261110.md": {
+          "bytes": 6318,
+          "sha256": "966ace9ded792aabd7cbd8f9c2e01dcb0fefc29e3a03289e5c51b986166442ea"
+        }
+      }
+    },
+    "missing_NVMe_and_management_root_recovery": {
+      "result": "pass",
+      "evidence": {
+        "docs/missing-nvme-recovery-test.md": {
+          "bytes": 7019,
+          "sha256": "6187b24714e9610ad7f2f414b11db223d2e7c2e19779e6a8d167a30c91159bc1"
+        },
+        "docs/controlled-ssh-recovery-20261110.md": {
+          "bytes": 4924,
+          "sha256": "fc6e0bae97243b77358c03691d05485d88175edcb4b19b0471b25092b5aa7996"
+        },
+        "docs/dirty-state-recovery-trial.md": {
+          "bytes": 12006,
+          "sha256": "387865a4ff9ff39cdf56ccc9234316bc799a36c388a6583f29c4e97423e5ce81"
+        }
+      }
+    },
+    "host_and_guest_offdevice_backup_and_tested_restoration": {
+      "result": "pass",
+      "evidence": {
+        "docs/paired-host-restore-20261110.md": {
+          "bytes": 4579,
+          "sha256": "ce2a358cd69609af0f74a1ce65383e77dd98f687c506904414b87c665f090e00"
+        },
+        "docs/evidence/normalized-guest-restore-20261110.json": {
+          "bytes": 20815,
+          "sha256": "c656c6bb6fee7cb495a27c5667f90b0dca4e65ff0edf6060a7ec3b06d221d984"
+        },
+        "docs/evidence/normalized-deployment-custody-20261110.json": {
+          "bytes": 992,
+          "sha256": "fee7383cc7e053d718676fbbd6753571b60b76ccfdef9ce828ff52c9093a8ade"
+        }
+      }
+    },
+    "unique_identity_supplied_SSH_keys_limited_guest_privileges": {
+      "result": "pass",
+      "evidence": {
+        "docs/evidence/normalized-host-install-20261110.json": {
+          "bytes": 7178,
+          "sha256": "0d6d9a31be58f74063b9214f30e462368d511f2f013fcacf262771aff6508c35"
+        },
+        "docs/evidence/normalized-guest-restore-20261110.json": {
+          "bytes": 20815,
+          "sha256": "c656c6bb6fee7cb495a27c5667f90b0dca4e65ff0edf6060a7ec3b06d221d984"
+        }
+      }
+    },
+    "independent_deployment_reproduction_and_review": {
+      "result": "pass",
+      "evidence": {
+        "docs/independent-deployment-20261110.md": {
+          "bytes": 5512,
+          "sha256": "03c95a4a467d6d8395687c5f6fab9d6e271f7eeae28d1ed81fe35de31d517e6c"
+        },
+        "docs/evidence/normalized-deployment-custody-20261110.json": {
+          "bytes": 992,
+          "sha256": "fee7383cc7e053d718676fbbd6753571b60b76ccfdef9ce828ff52c9093a8ade"
+        }
+      }
+    },
+    "progress_enabled_install_optional_readback": {
+      "result": "pass",
+      "evidence": {
+        "docs/deploy-protected-20261109.md": {
+          "bytes": 15007,
+          "sha256": "cae2dc593be24a2a2b449a60180fa9833fefe52a7b02271cb322fde857b740c5"
+        },
+        "docs/evidence/normalized-host-install-20261110.json": {
+          "bytes": 7178,
+          "sha256": "0d6d9a31be58f74063b9214f30e462368d511f2f013fcacf262771aff6508c35"
+        }
+      }
+    },
+    "architecture_build_install_guest_network_update_rollback_backup_recovery_documentation": {
+      "result": "pass",
+      "evidence": {
+        "docs/release-acceptance.md": {
+          "bytes": 8814,
+          "sha256": "0f4469dc8ca2fbe9708b3a4886eaf5b4ad25f9ef4f7d68b0703f9ded0db6e00f"
+        },
+        "docs/architecture.md": {
+          "bytes": 6880,
+          "sha256": "f2f4b99d12f628070387eed1c3932b8a0657f5cfc3318abc2508233e36d43553"
+        },
+        "docs/guest-operations.md": {
+          "bytes": 13429,
+          "sha256": "2c008a2ec67a79257b2eace3de30e38d7d562e859ca4f1c055ba75945a1555a0"
+        },
+        "docs/guest-enrollment.md": {
+          "bytes": 9610,
+          "sha256": "1f9eb94ddd73a7e4e3062ccdf734e8a301589af736c996c973bfa222a143c632"
+        },
+        "docs/guest-networking.md": {
+          "bytes": 9779,
+          "sha256": "f92e18b0f8969b158a9c09e92d9d8828b4a5e78da8a08e0a80865b10ad29e1f1"
+        },
+        "docs/normalized-maintenance-20261109.md": {
+          "bytes": 4650,
+          "sha256": "3a230fd7478f84a65ec02a55de214dbd712555d60a6288b1575decb2f1a11e25"
+        },
+        "docs/host-state-backup.md": {
+          "bytes": 11904,
+          "sha256": "dc54102d5e175a11e1d6ed5bec8a63c89976bee76588c70430a4fd99fadf88e3"
+        },
+        "docs/host-recovery.md": {
+          "bytes": 9067,
+          "sha256": "f909c0149007bafbb6fee9b6c55b3dd46fd2d5a2069a434dbbe3a691af1be122"
+        },
+        "docs/deploy-protected-20261109.md": {
+          "bytes": 15007,
+          "sha256": "cae2dc593be24a2a2b449a60180fa9833fefe52a7b02271cb322fde857b740c5"
+        }
+      }
+    },
+    "preserved_raw_evidence_and_verified_second_copies": {
+      "result": "pass",
+      "evidence": {
+        "docs/evidence/final-cold-custody-20261111.json": {
+          "bytes": 427,
+          "sha256": "78d6d21024c328775a3b75873a720f3d3e81ad0b77785a94354cb5cbd3687d99"
+        },
+        "docs/evidence/final-warm-custody-20261110.json": {
+          "bytes": 426,
+          "sha256": "ca92d51cbc7cfb0ab0bf2cde183b0c001fd2e8ad624bb2f19619d2fd8810ed0c"
+        },
+        "docs/evidence/normalized-deployment-custody-20261110.json": {
+          "bytes": 992,
+          "sha256": "fee7383cc7e053d718676fbbd6753571b60b76ccfdef9ce828ff52c9093a8ade"
+        }
+      }
+    }
+  },
+  "distribution_artifacts": {
+    "out/normalized-nvme-candidate-20261109/nvme.img.gz": {
+      "bytes": 545581074,
+      "sha256": "3bc02f46d272dcac591d435fff2b1bc98d4fb048569fb2120746145929a8ad64"
+    },
+    "out/normalized-nvme-candidate-20261109/manifest.json": {
+      "bytes": 118399,
+      "sha256": "3cbe28d6154d1bdeb8d364bd0f8bf82b61fd40af7be27fbd49695771c4fad08f"
+    },
+    "out/serial-recovery-20261109/protected-sd-retained-01/a733-host-sd.img.gz": {
+      "bytes": 17273154,
+      "sha256": "450e30f0b8169da7471396dbc97d44185426c3da61cc83d8425acab74ccef18c"
+    }
+  },
+  "test_policy": {
+    "maximum_planned_seconds": 28800,
+    "existing_longer_data_accepted": true,
+    "endurance_rerun_required": false
+  },
+  "validation": {
+    "last_privileged_Ubuntu_tests": 2304,
+    "failures_errors_skips": 0,
+    "shell_suites": 5,
+    "diagnostic_cases": 5,
+    "cold_review": "gpt-6.1-sol high independent",
+    "documentation_only_since_last_full_suite": true
+  },
+  "known_limitations": [
+    "SPI programming, independent ROM recovery and SD-removed boot remain unqualified. The accepted route uses the plan-approved SD fallback.",
+    "November8 uncontrolled SSH failure and three RAM-installer CMA allocation failures have unexplained causes; controlled recovery and final qualification results are retained.",
+    "Exact GCC/DejaGNU source copies and26vendor boot-input redistribution grants remain unresolved. Public binary redistribution clearance is unestablished. Compiler and firmware binary inputs are hash-pinned.",
+    "Fixed-input builds were repeated in fresh directories and isolated frozen stages on the qualified Ubuntu builder. Independent provisioning of another build machine and source rebuilding every compiler component are outside the demonstrated scope.",
+    "Physical USB-C disconnection intervals rely on operator attestations. Source/serial/counter/full-card evidence retains the firmware audits opaque-input and identical-content-write limits.",
+    "Interrupted updates used handled SIGTERM. Missing-NVMe recovery used a driver fault. Automatic rollback and fully locked-kernel remote reset remain unqualified."
+  ]
+}

@@ -7,7 +7,8 @@ launchers with a nonblocking exclusive disk lock. The
 [physical A733 guest](kvm-vgic-results-20261108.md) passes CPU, disk, network,
 clean shutdown, checkpoint and restart checks. The [corrected-host restore](evidence/corrected-host-guest-restore-20261108.json)
 advances the retained counter-3 guest through 4 and 5 using actual nonroot KVM.
-Full hardware release acceptance remains open.
+[Hardware release acceptance](release-acceptance.md) passes for the recorded
+protected-SD configuration.
 The optional [isolated loopback TCP profile](guest-networking.md) adds a single
 explicit host forward while preserving the default restricted backend.
 
@@ -162,7 +163,8 @@ endurance data separately; outcome preservation is not a guest-disk backup.
 [Paired host STATE/root restoration](paired-host-restore-20261110.md) and
 [controlled offline selection recovery](controlled-ssh-recovery-20261110.md)
 also pass. Ten [warm boots](warm-boot-validation.md) and their SD comparison pass;
-ten [cold boots](cold-boot-validation.md) and their final SD comparison remain open.
+ten [cold boots and their final SD comparison](evidence/final-cold-boots-20261111.json)
+also pass.
 
 The [November 9 KVM workload result](evidence/eight-hour-endurance-result-20261109.json)
 passes the current 8-hour (28,800-second) criterion with 72,659 measured seconds
@@ -179,9 +181,8 @@ counters are zero. SMART critical warning 0, media errors 0, error-log count 153
 and unsafe shutdown count 77 are unchanged from baseline. Full native UART and
 bridge snapshots (1,262,306 bytes) are byte-identical. Both preservation phases
 are complete. Required host/guest backups and physical normalized deployment
-now pass through the separately linked records above. The remaining
-[release gates](release-acceptance.md) require ten physical cold boots and their
-final SD comparison; this historical endurance result does not establish those.
+now pass through the separately linked records above. The subsequent [cold-series result](evidence/final-cold-boots-20261111.json)
+completes boot/SD qualification. See the [completed release checklist](release-acceptance.md).
 
 ## Verified software checks
 

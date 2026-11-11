@@ -1,29 +1,27 @@
 # Implementation status
 
-Updated 2026-11-10. Release acceptance remains incomplete. Fresh normalized installation and
-independent physical deployment reproduction now pass. Actual KVM and the revised eight-hour workload gate pass; no new
-endurance run is required. The earlier November 8 SSH failure remains unexplained
-and is not reclassified as a pass.
+Updated 2026-11-11. **Release acceptance and independent physical deployment
+reproduction pass for the recorded A733 using the immutable SD fallback.**
+Actual KVM, the eight-hour workload, ten warm reboots, ten physical cold boots,
+complete SD comparisons, update/rollback and controlled recovery all pass.
+The earlier November 8 SSH failure remains unexplained. See the
+[release checklist](release-acceptance.md) for the accepted scope and limitations.
 
 ## Live board and constraints
 
 - **Current:** normalized A at `root@192.168.1.116`, original pinned identity,
-  boot `d9d2448e-8aa0-434f-9d04-f287fb1a6c02` passes read-only release guards.
-  The ten guarded warm reboots ended at `274af3d8-156c-4de8-a1ed-688c89b5aaa4`.
-  The first cold attempt supplied that older UUID and stopped before poweroff.
-  The [cold procedure](cold-boot-validation.md) now reads the current UUID at launch.
-  Actual observations are under `out/warm-boots-normalized-a-protected-sd-20261110-02/`. Whole-NVMe installation completed
-  with exit 0, expected streamed source hash and **no readback**. Original identity
-  restoration/fsync/unmount and protected SD restoration pass. Independent operator
-  and coordinator checks authenticate 40 tool files, root p2 read-only, STATE,
-  original configuration/keys, DHCP/NTP and corrected resolver policy. The preserved
-  counter-5 archive restored and ran actual KVM **5 → 6 → checkpoint → restart → 7**,
-  with clean guest powerdown/raw zero exits. Final checkpoint **2**, manifest
-  `768a0138…759fb`, is durable; all six history records pass. Guest is stopped;
-  RAM accounts/units must be recreated after host reboot.
+  boot `0882e9b9-a75d-4ca5-b05c-7c458eade3f5`. Read-only live release guards
+  pass after the ten cold cycles and final SD comparison. Root p2 is read-only;
+  original configuration/keys, DHCP/NTP and resolver policy pass. Fresh full
+  installation completed with a streamed source hash and optional readback off.
+  The restored counter-5 guest ran real nonroot KVM through 6, clean shutdown,
+  checkpoint and restart into 7. Last checkpoint **2**, manifest `768a0138…759fb`,
+  has six verified history records. Guest is stopped. Recreate RAM accounts/units
+  after host reboot using the [guest operations guide](guest-operations.md).
   [Installation](evidence/normalized-host-install-20261110.json),
-  [guest proof](evidence/normalized-guest-restore-20261110.json) and
-  [independent reproduction](independent-deployment-20261110.md).
+  [guest proof](evidence/normalized-guest-restore-20261110.json),
+  [reproduced deployment](independent-deployment-20261110.md),
+  [cold boot/SD proof](evidence/final-cold-boots-20261111.json).
 - **Target:** A733, observed 12 GiB/eight CPUs. SD is SU02G,
   **1977614336 bytes**, CID `035344535530324780716f216e00a8f5`.
   NVMe is SPCC M.2 PCIe SSD, **256060514304 bytes**, serial
@@ -61,8 +59,8 @@ and is not reclassified as a pass.
 | Guest backup/restoration | [Counter-3 archive restored and advanced 4/5](evidence/corrected-host-guest-restore-20261108.json). [Counter-5 archive](evidence/current-counter5-backup-20261109.json) and [forensic copies](guest-preservation-20261109.md) remain preserved; [fresh archive restoration and actual KVM 5→6→7/checkpoint/restart now pass](evidence/normalized-guest-restore-20261110.json) |
 | Failed health/offline root selection, missing NVMe, dirty journal | [Controlled SSH/offline-root recovery/KVM 9 passes](controlled-ssh-recovery-20261110.md). [NVMe-driver fault → serial shell → ordinary B → KVM 10 passes](missing-nvme-recovery-test.md); physical disconnection is not claimed. [Actual dirty crash → protected export → ext4 replay/marker → KVM 11 passes](dirty-state-recovery-trial.md), with verified custody. Initial raw inspector counter refusal remains retained; no broader claim |
 | Fresh normalized full installation and deployment reproduction | [Matching full streams](evidence/normalized-full-nvme-image-20261109.json) and [isolated composition](evidence/isolated-nvme-composition-20261109.json) pass. B alone has booted through the updater; [full installation](evidence/normalized-host-install-20261110.json), [fresh restored KVM](evidence/normalized-guest-restore-20261110.json) and [independent procedure reproduction](independent-deployment-20261110.md) pass |
-| Final 10 warm and 10 cold boots | Protected-SD final A is selected for qualification. Attempt 01 stopped after one reboot request when SSH closed before command exit; independent observation confirms a healthy distinct boot. Collector counted zero. The corrected series 02 completed ten distinct guarded boots, independently matched to ten clean serial reboot/SD-loading/EL2 sequences. Cold boots remain pending |
-| SPI removed-SD boot or immutable SD | SPI recovery/programming/SD-removed boot pending. Qualifying workload SD counters and pre-maintenance whole-card hash matched; [bounded firmware audit](sd-firmware-write-policy.md) passes. Final complete-card baseline matches `401df0…64be5`, prefix `ab5e8c…ad207` and zero counters. Post-warm whole-card comparison matches the baseline and prefix, with zero Linux write/discard/flush counters; ten warm serial sequences reconcile. [Result](evidence/final-warm-boots-20261110.json) and [verified builder custody](evidence/final-warm-custody-20261110.json). Final cold-series comparison remains pending |
+| Final 10 warm and 10 cold boots | [Ten guarded warm reboots](evidence/final-warm-boots-20261110.json) and [ten operator-performed cold boots](evidence/final-cold-boots-20261111.json) pass independent serial/device/release review. Each cold cycle has clean UART powerdown, physical USB-C removal attestation and a distinct fully ready boot |
+| SPI removed-SD boot or immutable SD | Immutable-SD fallback passes. [Final cold-series comparison](evidence/final-cold-boots-20261111.json) matches complete-card SHA `401df0…64be5` and prefix `ab5e8c…ad207`, with Linux write/discard/flush fields zero. [Firmware audit](sd-firmware-write-policy.md) passes within its stated limits. [Cold metadata custody](evidence/final-cold-custody-20261111.json) is verified off-device. SPI remains unqualified |
 
 The original host cohort and counter-5/forensic archives remain private and
 immutable on the Ubuntu builder. Later counter 6–11 changes are disposable
@@ -80,10 +78,12 @@ The prior old A exposed wildcard 5355 because its resolver directory was 0700.
 The normalized fix now passes physically on **both B and fresh A**: directory
 0755, global LLMNR/mDNS disabled and no 5355/5353 listeners. Root password stays
 locked and SSH key-only. [Prior policy/update result](physical-host-update-rollback-20261110.md).
-The fresh host also passes the final-A collector's **read-only** live preflight;
-warm attempt 01 stopped before counting any cycle; its separately observed reboot is healthy. Series 02 has ten warm boots and matching SD boundary hashes; no cold cycles have run yet. The [guided cold collector](cold-boot-validation.md) is prepared for operator power removal. Installer RAM serial retained three
-CMA allocation failures; successful install/flush/hash receipts do not explain
-their cause or establish a kernel-clean run.
+The final host passes release/device guards after warm and cold qualification.
+The first cold invocation used a stale UUID and refused before poweroff; the
+[cold guide](cold-boot-validation.md) now reads the current UUID at launch.
+Installer RAM serial retained three CMA allocation failures whose cause remains
+unexplained. The successful install/flush/hash receipts and completed hardware
+qualification are retained with that limitation.
 
 Legacy serial showed orphan cleanup despite `ro,noload`. Protected bootstrap
 now enforces block RO before STATE probing; real ext4 software fixtures and
@@ -121,32 +121,27 @@ actual remote release refusal; [software evidence](evidence/final-warm-binding-v
 retains independent review and the initial corrected validation-environment failure. Host checks do not prove
 hardware acceptance.
 
-Latest recorded available space: codex **330342400 bytes**, above the 256 MiB floor;
-builder **40938356736 bytes**, MemAvailable **7376642048 bytes**. Keep bulk sources,
-raw images and backups on the builder. Builder LV is 128819658752 bytes with
-4265607168 bytes VG free; all its free capacity is approved for use/expansion.
-Native codex LVM is outside that approval. Recheck exact targets/resources and
-retain independent review; start compilation with two jobs. Build admission and
-runtime disk/memory guards remain unchanged. Normal installation uses one streamed
-write with progress and optional troubleshooting readback; do not benchmark hardware
-or add another eight-hour run solely for the revised duration policy.
+At final qualification, codex has more than 24 GB available. The last full-suite
+builder sample has 40938356736 bytes available and MemAvailable 7376642048 bytes.
+Keep bulk sources, images and backups on the builder. Its LV is 128819658752 bytes
+with 4265607168 bytes VG free. All free builder capacity is approved for use and
+expansion after exact-target revalidation and independent review. Native codex
+LVM is outside that approval. Retain resource guards and begin compilation with
+two jobs. Installation uses one progress-enabled streamed write with optional
+troubleshooting readback. The eight-hour workload remains accepted from existing
+data and requires no rerun.
 
-1. Retain completed controlled SSH, NVMe-driver fault and actual dirty-journal
-   recovery/KVM cases without repeating them. Preserve kernel/control evidence
-   if the earlier unexplained SSH failure recurs.
-2. Prove SPI recovery and matched NVMe-first firmware operation where possible;
-   otherwise finish immutable-SD acceptance. Keep the SPI proof gate intact.
-3. Retain the completed normalized installation, independently observed restored
-   KVM 5→6→7 and [reproduced procedure](independent-deployment-20261110.md).
-   Its [349-record verified metadata copy](evidence/normalized-deployment-custody-20261110.json)
-   is durable on the builder; private identity material is excluded.
-4. Preserve the completed [ten warm boots and matching SD comparison](warm-boot-validation.md).
-   Collect ten genuine [cold boots](cold-boot-validation.md), then reconcile
-   their serial/power evidence and final whole-SD comparison. The guided collector
-   passes independent review and software tests; physical power removal remains
-   an operator step. No endurance rerun is needed.
-5. Complete the [release checklist](release-acceptance.md) against the
-   [plan](hypervisor-plan.md#release-acceptance-and-documentation)
-   and documentation/source inventory. Finish only when acceptance and reproduced
-   deployment are evidenced. Historical build details remain in
-   [build reproduction status](build-reproduction-status.md).
+## Operation after acceptance
+
+Use [current images](current-images.md), the [reproduced installation guide](deploy-protected-20261109.md),
+[guest operations](guest-operations.md), [maintenance/rollback](normalized-maintenance-20261109.md)
+and [backup/recovery](host-state-backup.md). Preserve original private host,
+guest and forensic archives off-device. Qualifying firmware, kernel/DTB and
+storage identities are recorded in the evidence. Changes to that combination
+need appropriate validation before extending the acceptance claim.
+
+SPI recovery/programming and SD-removed boot remain prospective work. The
+qualified protected-SD fallback satisfies this release. Keep source/license
+inventory limits explicit. The [completed release audit](evidence/release-acceptance-20261111.json)
+and [construction index](build-reproduction-status.md) identify the evidence and
+precise reproduction scope.

@@ -1,9 +1,8 @@
 # Build reproduction status
 
-Updated 2026-11-10. This index describes construction evidence.
+Updated 2026-11-11. This index describes construction evidence.
 [Independent physical deployment reproduction](independent-deployment-20261110.md)
-passes; physical release acceptance still needs ten cold boots and their final
-SD comparison. See
+and [release acceptance on the protected-SD route](release-acceptance.md) pass. See
 [implementation status](implementation-status.md).
 
 ## Current component chain

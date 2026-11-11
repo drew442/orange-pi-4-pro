@@ -2,7 +2,7 @@
 
 **Fresh normalized installation, preserved guest restoration/KVM/checkpoint/restart
 and [independent procedure reproduction](independent-deployment-20261110.md) pass.
-Final release boot-series/SD acceptance remains open. The accepted November 9
+[Final release boot-series and SD acceptance](release-acceptance.md) pass. The accepted November 9
 workload has ended; do not rerun it.**
 Use [current images](current-images.md) rather than the older November 6/7
 payloads or delivery endpoints. The selected normalized distribution now passes
@@ -256,8 +256,8 @@ and demonstrate actual KVM execution/checkpoint/restart on the fresh installatio
 Reconcile final firmware/SSD identity with the qualifying eight-hour workload data and boot-cycle records;
 count no accidental restart as a measured cycle. Full SD comparisons, firmware
 write audit and [ten warm cycles](warm-boot-validation.md) now pass.
-Ten [cold cycles](cold-boot-validation.md) and their final SD comparison remain
-[physical acceptance gates](hardware-validation.md).
+Ten [cold cycles and their final SD comparison](evidence/final-cold-boots-20261111.json)
+also pass the [physical acceptance gates](hardware-validation.md).
 Interrupted update, rollback, NVMe-driver fault recovery and dirty-STATE recovery
 already have retained physical evidence linked above; do not repeat them solely
 for this installation. SPI recovery is required before SPI programming; the

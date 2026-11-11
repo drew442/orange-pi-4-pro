@@ -3,8 +3,8 @@
 The final normalized installation procedure was reproduced on the recorded A733
 from a fresh operator context and clean RAM installer boot. Full installation,
 same-board identity preservation, protected-SD boot, preserved guest restoration,
-actual KVM, clean shutdown, checkpoint and restart pass. **Release acceptance
-remains incomplete:** final boot-series and immutable-SD proof are separate.
+actual KVM, clean shutdown, checkpoint and restart pass. Subsequent [warm/cold boot qualification and immutable-SD evidence](release-acceptance.md)
+complete release acceptance for the recorded fallback configuration.
 [Installation evidence](evidence/normalized-host-install-20261110.json) and
 [restored-guest evidence](evidence/normalized-guest-restore-20261110.json) pin raw
 receipts. This does not claim an independently provisioned Ubuntu builder.

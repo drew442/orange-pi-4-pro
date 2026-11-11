@@ -1,7 +1,7 @@
 # Current images for this board
 
 The board is running **normalized A at 192.168.1.116** with its original pinned
-SSH identity, boot `274af3d8-156c-4de8-a1ed-688c89b5aaa4`. Ten warm reboots completed; records are
+SSH identity, boot `0882e9b9-a75d-4ca5-b05c-7c458eade3f5`. Ten warm reboots completed; records are
 under `out/warm-boots-normalized-a-protected-sd-20261110-02/`.
 The independent operator's full NVMe write, original identity restoration and
 protected host SD restoration completed successfully. Root p2 is read-only;
@@ -12,14 +12,15 @@ and [independent deployment reproduction](independent-deployment-20261110.md) pa
 The first warm collector attempt stopped on SSH closure during reboot; the new
 host was healthy and no cycle was counted. The corrected series 02 completed ten
 clean warm reboots, with matching serial sequences and unchanged complete SD hash.
-Ten genuine [cold boots](cold-boot-validation.md) remain pending. No operator flashing is requested.
+Ten physical [cold boots and their final SD comparison](evidence/final-cold-boots-20261111.json)
+pass. [Release acceptance](release-acceptance.md) passes for this protected-SD route.
 
 The [eight-hour workload gate](evidence/eight-hour-endurance-result-20261109.json)
 passes using retained longer-run data. Original guests/forensics, the complete
 compatible host cohort and the actual dirty STATE source are preserved privately
 off-device. Controlled SSH/offline selection and NVMe-driver fault recovery also
 pass with actual KVM. The fresh installation has returned to normal protected-SD boot;
-firmware loading NVMe BOOT remains untested. [Fresh normalized deployment](deploy-protected-20261109.md) passes; release acceptance remains incomplete;
+firmware loading NVMe BOOT remains untested. [Fresh normalized deployment](deploy-protected-20261109.md) passes; release acceptance passes for the recorded protected-SD configuration;
 the earlier uncontrolled SSH failure remains unexplained.
 
 Paths below are relative to `/home/drew/orange-pi-4-pro` on codex.
@@ -82,8 +83,8 @@ The normalized full candidate expands to **256,060,514,304 bytes**, SHA-256
 Its `manifest.json` (118,399 bytes, SHA-256
 `3cbe28d6154d1bdeb8d364bd0f8bf82b61fd40af7be27fbd49695771c4fad08f`) and
 `verification.json` are alongside the gzip. Two constructions and independent complete
-artifact inspection pass; [fresh installation and hardware release acceptance
-remain pending](evidence/normalized-full-nvme-image-20261109.json).
+artifact inspection pass. [Fresh installation](evidence/normalized-host-install-20261110.json)
+and [hardware release acceptance](release-acceptance.md) also pass.
 
 The historical NVMe base stream expands to **256,060,514,304 bytes**, SHA-256
 `835031b81d0320d6f9f35e74b9be67b494006c26a25fa9070f3e0a8f434ebc11`.

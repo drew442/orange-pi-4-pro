@@ -16,8 +16,8 @@ only the later distinct fully ready boot. It did not resume attempt 01.
 
 The endurance duration criterion is eight hours (28,800 seconds); retained
 [longer-run data](evidence/eight-hour-endurance-result-20261109.json) qualifies
-without a rerun. Ten genuine [cold boots](cold-boot-validation.md) remain
-unperformed. No release completion follows from the warm series alone.
+without a rerun. Ten physical [cold boots and their complete SD comparison](evidence/final-cold-boots-20261111.json)
+also pass. See [release acceptance](release-acceptance.md).
 
 `scripts/collect-known-warm-boots.py` defaults to a local plan and makes no SSH
 connection. Execution requires both `--execute` and a canonical nonzero
@@ -138,8 +138,8 @@ SysRq reset and power cycling are never issued. Every record keeps
 `hardware_acceptance=false`; the coordinator must review the complete series
 and independently reconcile it with physical acceptance. Full SD byte comparison
 is a separate later step; the collector avoids whole-card or root hashing on
-each boot. Ten cold boots require manual power-cycle evidence and remain
-**unperformed**. SPI boot and release acceptance remain separate from this result;
+each boot. Ten cold boots now have manual power-cycle evidence and
+[pass independent review](evidence/final-cold-boots-20261111.json). SPI boot remains unqualified;
 [dirty-journal recovery](dirty-state-recovery-trial.md) has its own completed physical evidence.
 
 Local validation: `python3 -m unittest discover -s tests -p
@@ -171,4 +171,4 @@ plus UTC/monotonic timestamps and serial offsets under
 `out/final-sd-qualification-20261110-02/`. The execution envelope preserves the
 unchanged reviewed collector source and stops further local requests if its
 capture fails. The ten observed boots, serial reconciliation and whole-SD comparison now pass.
-Cold-series acceptance remains separate.
+[Cold-series acceptance](evidence/final-cold-boots-20261111.json) also passes.

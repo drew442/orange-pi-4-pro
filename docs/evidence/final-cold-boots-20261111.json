@@ -1,0 +1,137 @@
+{
+  "schema": 1,
+  "date": "2026-11-11",
+  "result": "pass",
+  "scope": "Ten operator-performed cold boots of final normalized A on protected SD, reconciled with continuous UART and complete SD boundary comparison.",
+  "release_acceptance_owned_by": "coordinator; see release-acceptance-20261111.json",
+  "cold_boots": 10,
+  "distinct_boot_ids_including_start": 11,
+  "start_boot_id": "d9d2448e-8aa0-434f-9d04-f287fb1a6c02",
+  "final_boot_id": "0882e9b9-a75d-4ca5-b05c-7c458eade3f5",
+  "operator_power_removal_attestations": 10,
+  "operator_attestation": "USB-C power disconnected >=10 seconds and reconnected for each cycle",
+  "physical_duration_evidence": "operator attestations; recorded powerdown-to-attestation interval minimum26.3959seconds",
+  "serial": {
+    "inode": 4502197,
+    "start_offset": 9531594,
+    "end_offset": 10684216,
+    "sha256": "91e158454778f44e4f7a201477422bff615032ba81158012b3cce48385732c3a",
+    "embedded_chunks_matched": 279,
+    "embedded_bytes_matched": 1146736,
+    "clean_powerdown_SD_loading_EL2_sequences": 10,
+    "extra_reset_sequences": 0
+  },
+  "guards": {
+    "successful_complete_captures": 30,
+    "release_device_STATE_namespaces_exact": true,
+    "NTP_eight_CPUs_EL2_KVM_API12_IRQCHIP1": true,
+    "Linux_SD_write_discard_flush_zero": true
+  },
+  "request_command_exit": "UNKNOWN; ten exact SSH255 closes retained, subsequent clean UART powerdown and distinct ready boot verified",
+  "sd": {
+    "classification": "physical read-only post-cold release SD comparison; coordinator review required",
+    "hardware_acceptance": false,
+    "host_boot_id": "0882e9b9-a75d-4ca5-b05c-7c458eade3f5",
+    "host_uptime": "1054.20",
+    "sd_cid": "035344535530324780716f216e00a8f5",
+    "bytes": 1977614336,
+    "sha256": "401df09e666c22db8e8f9adbeecc0f385a910b1f41995e7a1d0bc68be3b64be5",
+    "first_256_mib_sha256": "ab5e8c2c846cbbd51b61bef6831d7e4d1498c29fefbf47d74301b1f3bb0ad207",
+    "expected_image_sha256": "ab5e8c2c846cbbd51b61bef6831d7e4d1498c29fefbf47d74301b1f3bb0ad207",
+    "first_256_mib_matches_written_image": true,
+    "before_stat": [
+      78,
+      0,
+      4184,
+      488,
+      0,
+      0,
+      0,
+      0,
+      0,
+      416,
+      488,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "after_stat": [
+      1964,
+      0,
+      3866712,
+      311083,
+      0,
+      0,
+      0,
+      0,
+      0,
+      164960,
+      311083,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "sha256": "38434f4bcfa88dfab475cebbc8ac35df38da7e01da683be3c7593b8be3b720ef"
+  },
+  "firmware_write_audit": "docs/sd-firmware-write-policy.md; opaque firmware and identical-content-write limitations retained",
+  "records": {
+    "out/cold-boots-normalized-a-protected-sd-20261111T020134959229662Z/events.jsonl": {
+      "bytes": 1830870,
+      "sha256": "7c121bbeff2e5fe7267b182de70a1c75fc0eed20ff5beceed0d5c4d6901ec60c"
+    },
+    "out/final-cold-qualification-20261111-01/closed-independent-review.json": {
+      "bytes": 16648,
+      "sha256": "38434f4bcfa88dfab475cebbc8ac35df38da7e01da683be3c7593b8be3b720ef"
+    },
+    "out/final-cold-qualification-20261111-01/live-guard-after.json": {
+      "bytes": 2622,
+      "sha256": "f310bc07a586277dbfcc6324a655fbf2145cf51c871634554cdc2c64844cf114"
+    },
+    "out/final-cold-qualification-20261111-01/live-guard-before.json": {
+      "bytes": 2602,
+      "sha256": "d9f43bf63700f17eea10972fa4ebcbe79a0aa3490a9c587163a527127f6ee7a9"
+    },
+    "out/final-cold-qualification-20261111-01/post-cold-sd-completion.json": {
+      "bytes": 294,
+      "sha256": "17c3fbba54a6333f141245b9dfb91838b767b05ed227b4d43ce663e0492c005e"
+    },
+    "out/final-cold-qualification-20261111-01/post-cold-sd-process.json": {
+      "bytes": 498,
+      "sha256": "e7449add1a94976507e6c58ddaad18241d21b39d97280cdf7d0be9e0a21b7dac"
+    },
+    "out/final-cold-qualification-20261111-01/post-cold-sd-progress.stderr": {
+      "bytes": 575,
+      "sha256": "afd007fe51ca0ea54dff5e566cea7807635a96b27d96e22c351d08673d90fb2b"
+    },
+    "out/final-cold-qualification-20261111-01/post-cold-sd.json": {
+      "bytes": 758,
+      "sha256": "a64b923444947f5eeed01988b33b626f948ac60a47fd270e90f6bae2da2b02dc"
+    },
+    "scripts/collect-known-cold-boots.py": {
+      "bytes": 12863,
+      "sha256": "3c9805c59c31ca89e2f91f4bdbb5bda97f03a40ae5bc37d07f229e8f49c60467"
+    },
+    "scripts/collect-known-warm-boots.py": {
+      "bytes": 34070,
+      "sha256": "431a5b054d7a5a304c61b0a00e160ad47a7868451ee06c9c5af3b17485d4a572"
+    },
+    "tmp/capture-post-cold-known-sd-20261111.py": {
+      "bytes": 2361,
+      "sha256": "68ed6871d100f39b19ce8830dfbe98e1ee3cc029ff1e20d49002664192b94567"
+    },
+    "tmp/run-post-cold-sd-comparison-20261111.py": {
+      "bytes": 2016,
+      "sha256": "e30deb0d7bd25f179be8abf238e33fcd475e56737353067a686cf960d4c15468"
+    }
+  }
+}

@@ -1,22 +1,27 @@
 # Release acceptance checklist
 
-Reviewed 2026-11-10 against the [plan](hypervisor-plan.md). **Release acceptance
-is incomplete.** Ten genuine cold boots of the final normalized-A/protected-SD
-combination and the subsequent SD boundary comparison remain unperformed.
-[Current status](implementation-status.md) identifies the running host and exact
-media. The [coordinator evidence audit](evidence/release-audit-20261110.json)
-rechecked 124 pinned installation/guest/warm records and the live read-only
-release guards without repeating hardware tests. Completed cases below must not be repeated solely to fill a newer date.
+Reviewed 2026-11-11 against the [plan](hypervisor-plan.md). **Release acceptance
+passes for this recorded A733 using the immutable SD fallback.** Ten warm
+reboots, ten operator-performed cold boots, the eight-hour workload gate and
+independently reproduced deployment all pass. The complete SD matches its
+retained boundary hash with zero Linux write/discard/flush counters.
+[Cold-series result](evidence/final-cold-boots-20261111.json) and
+[verified off-device custody](evidence/final-cold-custody-20261111.json).
+
+The [current status](implementation-status.md) identifies the running host and
+exact media. The [coordinator audit](evidence/release-acceptance-20261111.json)
+records requirement-level conclusions, artifact hashes and source evidence.
+Completed tests remain accepted under the operator's eight-hour policy.
 
 ## Required hardware evidence
 
 | Plan requirement | Evidence and present conclusion |
 | --- | --- |
 | Fresh build and installation using actual 2 GB SD and nominal 250 GB NVMe | [Construction index](build-reproduction-status.md), [full NVMe stream comparison](evidence/normalized-full-nvme-image-20261109.json), [isolated composition](evidence/isolated-nvme-composition-20261109.json) and [actual installation](evidence/normalized-host-install-20261110.json) pass. SD is 1977614336 bytes; NVMe is 256060514304 bytes. No larger card or expanded image staging is required. |
-| Ten warm reboots and ten cold boots on recorded firmware/SSD | [Ten warm reboots pass](evidence/final-warm-boots-20261110.json), with distinct guarded UUIDs and matching serial sequences. **Ten physical cold boots remain pending**; use the [guided procedure](cold-boot-validation.md). Software reboot/reset does not count as cold power removal. |
+| Ten warm reboots and ten cold boots on recorded firmware/SSD | [Ten warm reboots pass](evidence/final-warm-boots-20261110.json), with distinct guarded UUIDs and matching serial sequences. [Ten physical cold boots pass](evidence/final-cold-boots-20261111.json), with per-cycle operator power-removal attestations and matching clean-powerdown/SD/Linux/EL2 serial records. |
 | Actual accelerated guest, CPU/disk/network, shutdown/persistence/restart | [Fresh normalized A restoration and real KVM 5→6→7](evidence/normalized-guest-restore-20261110.json) pass, with live VM/vCPU/VGIC descriptors, nonroot processes, guest-requested shutdown/raw zero exits and durable checkpoints. KVM API probes alone are insufficient. |
 | Eight-hour workload with thermal/memory/NVMe observations | [Retained qualifying data passes](evidence/eight-hour-endurance-result-20261109.json). Original >20-hour duration and operator termination remain historical facts. No guest-generated completion or clean guest poweroff is inferred; separate functional runs establish shutdown. No endurance rerun is required. All future planned tests longer than eight hours are capped at eight hours. |
-| SPI with SD removed, or unchanged SD across boot/workload/shutdown with counters and firmware audit | The protected-SD fallback is selected. [Workload comparison](evidence/eight-hour-endurance-result-20261109.json), [warm comparison](evidence/final-warm-boots-20261110.json) and [bounded firmware audit](sd-firmware-write-policy.md) pass; **cold-series final comparison remains pending**. SPI is unchanged and unqualified. Hash equality does not detect identical-content writes; retain Linux counters and firmware-audit limitations. |
+| SPI with SD removed, or unchanged SD across boot/workload/shutdown with counters and firmware audit | The protected-SD fallback is selected. [Workload comparison](evidence/eight-hour-endurance-result-20261109.json), [warm comparison](evidence/final-warm-boots-20261110.json), [cold comparison](evidence/final-cold-boots-20261111.json) and [bounded firmware audit](sd-firmware-write-policy.md) pass. The accepted route uses SD boot files and NVMe root/state/guests. SPI remains unqualified. Hash equality does not detect identical-content writes; retain Linux counters and firmware-audit limitations. |
 | Interrupted update and rollback without touching guest disks | [Changed inactive-root retry, selector interruptions/cancellation and healthy old-A rollback](physical-host-update-rollback-20261110.md) pass with actual KVM. Interruption was handled SIGTERM, not physical power loss. Automatic rollback is not advertised. |
 | Missing NVMe and failed-root/management recovery | [NVMe-driver fault recovery](missing-nvme-recovery-test.md) and [controlled SSH/offline-root selection](controlled-ssh-recovery-20261110.md) pass with actual KVM afterward. Physical SSD removal and recovery from a fully locked kernel are not claimed. |
 | Host/configuration and guest backup restoration | [Paired host restoration and interrupted retry](paired-host-restore-20261110.md), [guest restoration](evidence/normalized-guest-restore-20261110.json) and [dirty STATE preservation/export/replay](dirty-state-recovery-trial.md) pass. Original private archives remain off-device. |
@@ -52,9 +57,10 @@ Keep these limitations explicit. Public binary redistribution clearance is not
 claimed; no new approval requirement is imposed on the authorized private
 same-board deployment.
 
-After the ten actual cold cycles, inspect all raw receipts, physical attestations
-and serial windows, compare the complete SD against the retained boundary hash,
-check counters and firmware identity, and preserve a verified off-device copy.
-Update this checklist from those results before making any release-completion
-claim. A mocked collector test or an unexplained accidental restart cannot close
-that gate.
+The final cold-series review reconciles all ten physical attestations, distinct
+ready boots and continuous UART windows. The complete SD comparison matches
+SHA-256 `401df09e666c22db8e8f9adbeecc0f385a910b1f41995e7a1d0bc68be3b64be5`
+across the final warm/cold interval. Counters stay zero and the firmware audit
+retains its stated opaque-input limitations. The final evidence has a verified,
+fsynced second copy on the builder. No required private-deployment acceptance
+work remains for the recorded hardware and selected fallback route.

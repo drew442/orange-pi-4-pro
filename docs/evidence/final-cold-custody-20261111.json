@@ -1,0 +1,11 @@
+{
+  "archive": "/var/lib/a733-final-cold-evidence-20261111-01/evidence.tar",
+  "bytes": 12625920,
+  "sha256": "6c3c57ad2a73042c44f4a8fa2d238fc38f5262f3d194c65e4d95216abbc7bfae",
+  "verified_files": 17,
+  "fsynced": true,
+  "transfer_exit": 0,
+  "inventory_sha256": "281bd34eb8664b386c0871f8bec38aa038b7589219900eb85fd4cdf57a894fc8",
+  "source_files_unchanged_after_transfer": true,
+  "private_keys_or_images_included": false
+}

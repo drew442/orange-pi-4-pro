@@ -6,7 +6,8 @@ and supervised unprivileged guests. There is no desktop or libvirt dependency.
 [Current images](current-images.md) identify exact artifacts;
 [implementation status](implementation-status.md) separates physical evidence
 from remaining release gates. The final normalized host has booted and passed restored-guest KVM/checkpoint/
-restart; final boot-cycle acceptance remains pending.
+restart. Ten final warm and ten physical cold boots and their complete SD
+comparisons pass through the [release checklist](release-acceptance.md).
 
 The plan's minimal Debian option is retained for this deployment: its first
 normalized-A observation reports **437968896 bytes used** on the 4 GiB root
@@ -22,7 +23,7 @@ pins the measurements and preserves the compatible board stack.
 The working fallback loads Linux boot files from the actual 2 GB SD, then uses
 NVMe for the selected read-only host root and writable state. Routine operation
 does not mount SD. The compatible protected bootstrap has passed physical boot,
-recovery and KVM cases; final normalized boot-cycle acceptance remains pending.
+recovery and KVM cases. Final normalized boot-cycle acceptance passes.
 
 ```mermaid
 flowchart TD

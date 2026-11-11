@@ -1,7 +1,9 @@
 # Final cold boot collection
 
-Ten genuine cold boots remain unperformed. The final normalized A image and
-protected SD route are installed. The eight-hour workload gate already passes
+Ten operator-performed cold boots of final normalized A with the protected SD
+route pass independent review and the complete SD boundary comparison.
+[Physical result](evidence/final-cold-boots-20261111.json).
+The procedure below is retained for future explicitly requested qualification. The eight-hour workload gate already passes
 from retained data; no endurance rerun is needed.
 
 The collector must run in your interactive terminal on **codex**, while you can
