@@ -30,8 +30,8 @@ FREE_FLOOR = 256 * 1048576
 TIMEOUT = 45
 FINGERPRINT = 'SHA256:Epfegy9GsJ6ng4/0EH3dZmir7beQj5uYTnIbE4JPfEI'
 HOST = '192.168.1.116'
-PROGRAMMER_PIN = '4ef03baf60e46bb9d6e88f90a870de8d67e871def8f5b012c19c50c8bf5d1efb'
-PROGRAMMER_SIZE = 25723
+PROGRAMMER_PIN = '596b0eb872c1ef993b16a3a288d5173823b937491ba5afca207025cf9658b4e5'
+PROGRAMMER_SIZE = 26051
 
 # The remote command executes this fixed bootstrap, never the supplied pathname.
 # Fixed pin/size arguments are embedded by ssh_argv, never read from CLI/env.

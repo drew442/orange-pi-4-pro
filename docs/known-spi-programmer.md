@@ -1,13 +1,19 @@
 # Known SPI programmer preparation
 
-The trusted caller and native event capture are **preparation only**. Independent
-source review and [2,218 privileged Ubuntu tests](evidence/known-spi-programmer-preparation-20261109.json)
-now pass. They have not opened or
-programmed physical SPI. `RECOVERY_PROOF_PIN=None` deliberately refuses write
-mode before device opening; there is no CLI or environment override. Registering
-proof requires the actual [independent ROM/RAM recovery demonstration](rom-recovery-investigation.md),
-coordinator acceptance and another reviewed source change. Known storage
-[authorization](evidence/storage-write-authorization-20261108.json) already persists.
+The trusted caller now registers the reviewed source-backed SD-priority
+recovery policy. The A733 ROM tables place SMHC0 before SPI, and the known SD
+recovery images have physically booted on this board. The exact registered proof
+is SHA-256 `ec9fe1e5ac371f2e984b3da6e053efdc44f2fa89aa624837731f2eabf56aba11`.
+The programmer binds that proof and the capture binds the programmer's exact
+26,051-byte source, SHA-256
+`596b0eb872c1ef993b16a3a288d5173823b937491ba5afca207025cf9658b4e5`.
+[Recovery policy and physical procedure](spi-sd-boot-20261111.md).
+
+The earlier `RECOVERY_PROOF_PIN=None` preparation required USB-FEL/RAM evidence.
+That specific method was a project precaution, now replaced by the documented
+ROM SD priority and tested SD recovery. Registration remains a reviewed source
+change. Runtime pin overrides remain unavailable. The operator explicitly
+authorized programming this identified chip.
 
 The fixed target is A733 `/dev/mtd0`, character **90:0**, `spi0.0`,
 XM25QU128C JEDEC **204118**, **16,777,216 bytes**, **65,536-byte** erase units and
@@ -39,8 +45,9 @@ change, including eventual registration of real recovery evidence.
 
 SSH targets only `root@192.168.1.116` with the recorded Ed25519 fingerprint.
 A sealed, parent-held known-hosts snapshot remains available through OpenSSH's
-inherited-descriptor cleanup. Remote arguments are constructed and quoted;
-there is no arbitrary command interface. Staging and actual use remain unperformed.
+inherited-descriptor cleanup. Remote arguments are constructed and quoted. Private RAM staging and read-only
+planning have succeeded. Physical programming and boot results are recorded in
+the [current SPI procedure](spi-sd-boot-20261111.md).
 
 ## Plan, durable events and failure
 
@@ -62,5 +69,5 @@ MTD has no assumed `fsync` persistence guarantee. Every receipt retains
 
 Host tests use fake descriptors, bytearray NOR, pipes and disposable subprocesses.
 They establish software ordering and refusal behavior. Actual MTD operation,
-independent recovery, flash restoration and SD-removed NVMe boot remain separate
-physical gates. Do not run this preparation during the active endurance workload.
+SD recovery and SD-removed NVMe boot require their own physical evidence.
+The qualifying workload has ended and its accepted data remains retained.

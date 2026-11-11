@@ -7,10 +7,19 @@ complete SD comparisons, update/rollback and controlled recovery all pass.
 The earlier November 8 SSH failure remains unexplained. See the
 [release checklist](release-acceptance.md) for the accepted scope and limitations.
 
+## Current SPI objective
+
+The operator requested operation with SD removed and authorized SPI programming.
+A manual U-Boot NVMe-file boot now passes on the installed normalized host. The
+registered recovery policy uses documented ROM SD priority and physically tested
+SD recovery. The guarded programmer is under independent review and full-suite
+validation before the first physical SPI write.
+[Procedure and evidence](spi-sd-boot-20261111.md).
+
 ## Live board and constraints
 
 - **Current:** normalized A at `root@192.168.1.116`, original pinned identity,
-  boot `0882e9b9-a75d-4ca5-b05c-7c458eade3f5`. Read-only live release guards
+  boot `a55b0c1c-91fc-4fee-80b7-3a963a20d72e` after manual NVMe-file boot. Read-only live release guards
   pass after the ten cold cycles and final SD comparison. Root p2 is read-only;
   original configuration/keys, DHCP/NTP and resolver policy pass. Fresh full
   installation completed with a streamed source hash and optional readback off.
@@ -43,8 +52,9 @@ The earlier November 8 SSH failure remains unexplained. See the
 - Known board SD/NVMe/SPI writes remain authorized. Revalidate exact targets and
   retain independent review; ask yes/no only for unapproved targets or scope.
   Prefer SPI-to-NVMe with SD removed, otherwise complete immutable-SD proof.
-  SPI programming still refuses before device open while independent recovery
-  proof is unregistered. [Programmer](known-spi-programmer.md).
+  The registered source-backed SD recovery policy replaces the earlier
+  USB-FEL-specific prerequisite. SPI programming remains pending concrete review
+  and completed validation. [Programmer](known-spi-programmer.md).
 
 ## Acceptance evidence
 

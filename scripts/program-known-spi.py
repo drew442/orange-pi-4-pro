@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Guarded known-A733 SPI plan/programmer preparation.
 
-Writes remain disabled until the coordinator registers a measured, ROM-independent
-recovery proof. No CLI or environment option can register that proof. Maintenance
-requires trusted quiescent root; census/flock are not kernel exclusion against
+Writes require the registered source-backed SD-priority recovery proof, including
+a separate physical SD recovery demonstration. No CLI or environment option can
+register that proof. Maintenance requires trusted quiescent root; census/flock are not kernel exclusion against
 hostile root. This tool never supplies hardware acceptance or automatic recovery.
 All staged inputs, including this tool and helpers, belong in private /run tmpfs.
 """
@@ -35,9 +35,10 @@ HELPERS = {
     'backup-spi.py': 'b160e3fe8e421e18e35aad34aff909e10b4dfca027178d80a4b202c711e2147d',
     'write-known-bootstrap-sd.py': '4769001ab4a4861ff8ffe26ad6aa427f9abe5430b48bb49918d6c1206b96c52a',
 }
-# Intentionally unregistered. Change only after independent physical demonstration
-# and coordinator review of the exact proof bytes. Never accept a runtime override.
-RECOVERY_PROOF_PIN = None
+# Coordinator-reviewed normal-ROM SD priority and physically demonstrated SD
+# recovery; this does not claim USB FEL or postprogram SD recovery was measured.
+# Register only reviewed exact proof bytes; never accept a runtime override.
+RECOVERY_PROOF_PIN = 'ec9fe1e5ac371f2e984b3da6e053efdc44f2fa89aa624837731f2eabf56aba11'
 MAX_LINE = 65536
 MAX_RECORDS = 4096
 MAX_TOTAL = 8 * 1048576
@@ -197,21 +198,23 @@ def board_guard(expected_boot, host):
 
 def recovery_gate(proof=None):
     require(RECOVERY_PROOF_PIN is not None,
-            'ROM-independent recovery proof is unregistered; SPI writes disabled')
+            'SD-priority recovery proof is unregistered; SPI writes disabled')
     require(proof is not None and sha(proof.data) == digest(RECOVERY_PROOF_PIN),
             'registered recovery proof pin mismatch')
     proof.check()
     value = json.loads(proof.data)
-    require(value.get('schema') == 1 and
-            value.get('operation') == 'known-a733-rom-independent-recovery' and
+    require(type(value) is dict and type(value.get('schema')) is int and
+            value.get('schema') == 1 and
+            value.get('operation') == 'known-a733-sd-priority-recovery' and
             value.get('compatible_hex') == COMPATIBLE.hex() and
             value.get('nvme_serial') == NVME[0] and
             value.get('spi') == dict(device=TARGET, dev='90:0', partname='XM25QU128C',
                                      jedec_id='204118', bytes=SIZE, erase_bytes=65536) and
-            value.get('method') == 'rom-usb-fel-compatible-ram' and
-            value.get('physical_demonstration') is True and
-            value.get('independent_of_spi_contents') is True,
-            'registered recovery proof identity/demonstration mismatch')
+            value.get('method') == 'rom-smhc0-priority-known-sd-recovery' and
+            value.get('rom_priority_source_verified') is True and
+            value.get('physical_sd_recovery_demonstrated') is True and
+            value.get('sd_before_spi_in_documented_normal_modes') is True,
+            'registered recovery proof identity/source/demonstration mismatch')
 
 
 def reject_consumer(info, link=''):
@@ -455,7 +458,7 @@ def main(argv=None):
     if args.mode == 'write':
         # Crucially, fail before ANY device open while proof is unregistered.
         require(RECOVERY_PROOF_PIN is not None,
-                'ROM-independent recovery proof is unregistered; SPI writes disabled')
+                'SD-priority recovery proof is unregistered; SPI writes disabled')
         authenticated_binding(required=True)
         require(args.plan and args.plan_sha256 and args.recovery_proof,
                 'write requires reviewed plan, digest and registered proof')

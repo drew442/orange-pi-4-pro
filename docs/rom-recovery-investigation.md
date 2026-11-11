@@ -1,4 +1,8 @@
-# Investigate ROM recovery before SPI programming
+# ROM USB recovery investigation
+
+The selected SPI recovery route now uses documented ROM SMHC0 priority and
+physically tested SD recovery. This replaces the earlier USB-FEL-specific
+programming prerequisite. [Current policy](spi-sd-boot-20261111.md).
 
 The host-side **version-only FEL probe** now builds in the frozen Ubuntu
 builder and passes source, ELF and package inspection. It has not contacted the
@@ -161,12 +165,9 @@ probe output and exit status. Multiple devices must be identified individually;
 the probe never selects the first matching device automatically. Do not use the
 stock tool's listing/SID or RAM/flash commands as substitute checks.
 
-Before SPI programming can be proposed, demonstrate entry independent of the
-installed SPI bootloader, boot a compatible RAM recovery environment without
-persistent writes, retain and verify the complete original flash off-device,
-and inspect the actual backup-derived candidate/erase-unit plan. The operator has [authorized the identified SPI target](evidence/storage-write-authorization-20261108.json);
-that authorization persists, while recovery and independent programmer review
-remain prerequisites.
-Version identification alone does not satisfy this gate. Actual restore testing,
-SD-removed SPI boot and all [hardware acceptance](hardware-validation.md), including
-real KVM guest execution, remain required.
+For qualification of USB FEL as an additional recovery method, demonstrate
+entry independent of the installed SPI bootloader and boot a compatible RAM
+recovery environment. The source-backed SD recovery policy currently selected
+for SPI programming is documented separately. Known-target programming
+authorization persists. USB version identification remains preliminary evidence
+for this optional recovery method. [Current SPI procedure](spi-sd-boot-20261111.md).

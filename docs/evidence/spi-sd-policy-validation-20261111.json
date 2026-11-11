@@ -1,0 +1,58 @@
+{
+  "schema": 1,
+  "date": "2026-11-11",
+  "result": "pass",
+  "operation": "Register source-backed SD recovery for authorized SPI programming",
+  "full_Ubuntu_tests": 2310,
+  "failures_errors_skips": 0,
+  "shell_suites": 5,
+  "diagnostic_cases": 5,
+  "focused_tests": 87,
+  "locked_source_files": 942,
+  "source_lock_sha256": "587c34234fe24ddbe06b3af71a716e1ce79eb2414a05c96266eaa6d6b891596d",
+  "builder_base": "/var/lib/a733-spi-sd-policy-validation-20261111-01",
+  "unit": {
+    "MainPID": "0",
+    "Result": "success",
+    "ExecMainCode": "1",
+    "ExecMainStatus": "0",
+    "CPUQuotaPerSecUSec": "2s",
+    "MemoryMax": "3221225472",
+    "ActiveState": "active",
+    "SubState": "exited"
+  },
+  "source": {
+    "scripts/program-known-spi.py": {
+      "bytes": 26051,
+      "sha256": "596b0eb872c1ef993b16a3a288d5173823b937491ba5afca207025cf9658b4e5"
+    },
+    "scripts/capture-known-spi-events.py": {
+      "bytes": 20522,
+      "sha256": "80da9440b857a2e3b18d090c333ed62b3fedb03e79031666ec28aeba30f7b357"
+    },
+    "tests/test_known_spi_programmer.py": {
+      "bytes": 38579,
+      "sha256": "e5c728523e792c0c47adf62475fd49137f62e3254e609a1f4593a971a9008e16"
+    },
+    "docs/evidence/spi-sd-recovery-policy-20261111.json": {
+      "bytes": 2433,
+      "sha256": "ec9fe1e5ac371f2e984b3da6e053efdc44f2fa89aa624837731f2eabf56aba11"
+    }
+  },
+  "independent_reviews": {
+    "tmp/spi-boot-path-audit-20261111.json": {
+      "bytes": 12969,
+      "sha256": "e884ce0534cd39e27f02e17b8c057235a1eb1ac2ec7c4ab5d2da3c99b6681746"
+    },
+    "tmp/spi-sd-recovery-gate-review-20261111.json": {
+      "bytes": 15327,
+      "sha256": "73526c30add2304a76e4416c04c6728d2b64bbe999fbfda7cb360d574fc6409f"
+    }
+  },
+  "receipt": {
+    "path": "out/spi-sd-policy-validation-20261111-01/receipts.tar",
+    "bytes": 163840,
+    "sha256": "3de833d51b7559cd0e0d631a09c5d2bc0f9cd80fbbb684e7683a0a5a2593a044"
+  },
+  "hardware_programming_in_this_validation": false
+}

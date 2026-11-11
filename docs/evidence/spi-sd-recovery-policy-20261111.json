@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "operation": "known-a733-sd-priority-recovery",
+  "compatible_hex": "78756e6c6f6e672c6f72616e676570692d342d70726f0061726d2c73756e3630697732703100",
+  "nvme_serial": "134807190FC700149277",
+  "spi": {
+    "device": "/dev/mtd0",
+    "dev": "90:0",
+    "partname": "XM25QU128C",
+    "jedec_id": "204118",
+    "bytes": 16777216,
+    "erase_bytes": 65536
+  },
+  "method": "rom-smhc0-priority-known-sd-recovery",
+  "rom_priority_source_verified": true,
+  "physical_sd_recovery_demonstrated": true,
+  "sd_before_spi_in_documented_normal_modes": true,
+  "rom_priority_source": {
+    "url": "https://gitlab.com/tina5.0_aiot/product/docs/-/blob/d0dc4d615be00b76e3a0818d0818eff8f69ffa15/A733/Hardware%E7%A1%AC%E4%BB%B6%E7%B1%BB%E6%96%87%E6%A1%A3/%E8%8A%AF%E7%89%87%E6%89%8B%E5%86%8C/A733_User%20Manual_V1.00.pdf",
+    "bytes": 75246396,
+    "sha256": "cdd77e5779d3c69d41b5f237f3db3db51c67fdf0f3aca9a2eedc77d9420f248d",
+    "printed_pages": [
+      13,
+      14
+    ],
+    "tables": [
+      "3-2",
+      "3-4"
+    ],
+    "independent_review_sha256": "e884ce0534cd39e27f02e17b8c057235a1eb1ac2ec7c4ab5d2da3c99b6681746"
+  },
+  "sd_recovery": {
+    "device": "/dev/mmcblk1",
+    "cid": "035344535530324780716f216e00a8f5",
+    "bytes": 1977614336,
+    "protected_prefix_sha256": "ab5e8c2c846cbbd51b61bef6831d7e4d1498c29fefbf47d74301b1f3bb0ad207",
+    "RAM_recovery_prefix_sha256": "d3a02224efdb2c2eeccc7115d84cd6c4b2d75c7d06580b8f7812d12a546bc3f6",
+    "physical_RAM_boot_id": "5e051870-626c-4da2-bb93-05fc29178614",
+    "evidence": "docs/evidence/normalized-host-install-20261110.json"
+  },
+  "fresh_nvme_boot": {
+    "boot_id": "a55b0c1c-91fc-4fee-80b7-3a963a20d72e",
+    "guard_sha256": "e100a04262fbb9a42c509cc2cdce629fb153eedea83729431de7c2b00fa19bb4",
+    "serial": "out/spi-nvme-hardware-20261111-01/nvme-boot-UART.log"
+  },
+  "original_SPI_backup_sha256": "dffab0dd410657cb30c7b2fd7f2586a4792e8472e58882b3532581f8111a646d",
+  "authorization": "user explicitly requested SPI programming and SD-removed operation on2026-11-11",
+  "recovery_procedure": "If NVMe/SPI boot fails, power off, insert the known recovery SD, boot via ROM SMHC0 priority, retain serial evidence, and restore the original SPI through the reviewed programmer.",
+  "physical_postprogram_SD_priority_test": "pending; perform after programming",
+  "independent_USB_FEL_recovery": "unperformed; source-backed SD-priority recovery is the selected method"
+}

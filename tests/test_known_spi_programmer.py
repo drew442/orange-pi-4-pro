@@ -23,6 +23,11 @@ def load(filename):
 
 P = load('program-known-spi.py')
 C = load('capture-known-spi-events.py')
+RECOVERY_PROOF = (ROOT / 'docs/evidence/spi-sd-recovery-policy-20261111.json').read_bytes()
+
+
+def recovery_proof(data=RECOVERY_PROOF):
+    return types.SimpleNamespace(data=data, check=Mock())
 
 
 class Nor:
@@ -108,6 +113,23 @@ class Integration(unittest.TestCase):
         self.assertEqual(self.events[-1]['event'], 'programmer_outcome')
         self.assertFalse(self.events[-1]['hardware_acceptance'])
 
+    def test_registered_sd_proof_guards_mocked_transaction(self):
+        proof = recovery_proof()
+        self.guard.side_effect = lambda: P.recovery_gate(proof)
+        result = self.run_plan()
+        self.assertTrue(result['success'])
+        self.assertFalse(result['hardware_acceptance'])
+        self.assertGreater(proof.check.call_count, 1)
+        self.assertEqual(bytes(self.nor.data), self.candidate)
+
+    def test_registered_proof_failure_prevents_mocked_target_open(self):
+        proof = recovery_proof(RECOVERY_PROOF + b' ')
+        self.guard.side_effect = lambda: P.recovery_gate(proof)
+        with self.assertRaisesRegex(ValueError, 'pin mismatch'):
+            self.run_plan()
+        self.assertEqual(self.opened, [])
+        self.assertEqual(self.nor.erases, [])
+
     def test_uncertain_erase_stops_then_fresh_partial_restore(self):
         self.nor.fail_erase = True
         with self.assertRaises(ValueError):
@@ -185,13 +207,86 @@ class Integration(unittest.TestCase):
 
 class Safety(unittest.TestCase):
     def test_unregistered_gate_refuses_before_any_open(self):
-        with patch.object(P.os, 'open', side_effect=AssertionError('must not open')):
+        with patch.object(P, 'RECOVERY_PROOF_PIN', None), \
+             patch.object(P.os, 'open', side_effect=AssertionError('must not open')):
             with self.assertRaisesRegex(ValueError, 'unregistered'):
                 P.main(['write', '--expected-boot-id', 'dd8d6f67-d297-4f3b-bc9a-8a41c9742051',
                         '--original', '/run/private/original', '--candidate', '/run/private/candidate',
                         '--helpers', '/run/private/helpers'])
             with self.assertRaisesRegex(ValueError, 'unregistered'):
                 P.recovery_gate(types.SimpleNamespace(data=b'{"recovery":true}'))
+
+    def test_registered_sd_policy_passes_exact_held_proof(self):
+        proof = recovery_proof()
+        self.assertEqual(P.sha(proof.data), P.RECOVERY_PROOF_PIN)
+        P.recovery_gate(proof)
+        proof.check.assert_called_once_with()
+        value = json.loads(proof.data)
+        self.assertEqual(value['independent_USB_FEL_recovery'],
+                         'unperformed; source-backed SD-priority recovery is the selected method')
+        self.assertEqual(value['physical_postprogram_SD_priority_test'],
+                         'pending; perform after programming')
+
+    def test_null_mismatched_and_changed_held_proofs_refuse(self):
+        for proof in (None, recovery_proof(RECOVERY_PROOF + b' ')):
+            with self.subTest(proof=proof), self.assertRaisesRegex(ValueError, 'pin mismatch'):
+                P.recovery_gate(proof)
+        proof = recovery_proof()
+        proof.check.side_effect = ValueError('held proof changed')
+        with self.assertRaisesRegex(ValueError, 'held proof changed'):
+            P.recovery_gate(proof)
+
+    def test_registered_policy_authenticates_recovery_media_and_source_evidence(self):
+        for section, key, value in (('sd_recovery', 'cid', 'other'),
+                                    ('sd_recovery', 'bytes', 1),
+                                    ('sd_recovery', 'protected_prefix_sha256', '0' * 64),
+                                    ('rom_priority_source', 'sha256', '0' * 64),
+                                    ('rom_priority_source', 'tables', ['other'])):
+            policy = json.loads(RECOVERY_PROOF)
+            policy[section][key] = value
+            with self.subTest(section=section, key=key), \
+                 self.assertRaisesRegex(ValueError, 'pin mismatch'):
+                P.recovery_gate(recovery_proof(P.canonical(policy)))
+
+    def test_registered_schema_requires_truthful_sd_class_and_separate_evidence(self):
+        # Patch only the test registration to reach schema validation; production
+        # has no runtime registration override. Start with the actual policy.
+        cases = [('schema', None), ('schema', True), ('schema', 2),
+                 ('operation', 'known-a733-rom-independent-recovery'),
+                 ('method', 'rom-usb-fel-compatible-ram'),
+                 ('compatible_hex', '00'), ('nvme_serial', 'other'), ('spi', {}),
+                 ('rom_priority_source_verified', None),
+                 ('rom_priority_source_verified', False),
+                 ('rom_priority_source_verified', 1),
+                 ('physical_sd_recovery_demonstrated', None),
+                 ('physical_sd_recovery_demonstrated', False),
+                 ('physical_sd_recovery_demonstrated', 1),
+                 ('sd_before_spi_in_documented_normal_modes', None),
+                 ('sd_before_spi_in_documented_normal_modes', False)]
+        for key, value in cases:
+            policy = json.loads(RECOVERY_PROOF)
+            if value is None:
+                del policy[key]
+            else:
+                policy[key] = value
+            data = P.canonical(policy)
+            with self.subTest(key=key, value=value), \
+                 patch.object(P, 'RECOVERY_PROOF_PIN', P.sha(data)), \
+                 self.assertRaisesRegex(ValueError, 'identity/source/demonstration mismatch'):
+                P.recovery_gate(recovery_proof(data))
+        old = json.loads(RECOVERY_PROOF)
+        old.update(operation='known-a733-rom-independent-recovery',
+                   method='rom-usb-fel-compatible-ram', physical_demonstration=True,
+                   independent_of_spi_contents=True)
+        for key in ('rom_priority_source_verified', 'physical_sd_recovery_demonstrated',
+                    'sd_before_spi_in_documented_normal_modes'):
+            del old[key]
+        for policy in (old, [], None):
+            data = P.canonical(policy)
+            with self.subTest(policy=policy), \
+                 patch.object(P, 'RECOVERY_PROOF_PIN', P.sha(data)), \
+                 self.assertRaisesRegex(ValueError, 'identity/source/demonstration mismatch'):
+                P.recovery_gate(recovery_proof(data))
 
     def test_arbitrary_proof_boolean_cannot_bypass_registered_hash(self):
         proof = types.SimpleNamespace(data=b'{"recovery":true}', check=Mock())
