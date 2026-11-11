@@ -69,3 +69,19 @@ U-Boot NVMe reads, actual Linux root/STATE, SSH and automatic NTP. Confirm the S
 is absent from Linux and run a real KVM guest with its CPU/disk/network,
 shutdown/checkpoint and restart checks. Reboot with SD absent and verify the
 same route. Record results before claiming completion.
+
+## Programming and SD recovery result
+
+The physical write completed with exit 0. All 26 changed units and the complete
+16 MiB flash match the reviewed candidate. The descriptor closed successfully,
+and 56 canonical events are retained off-device with a verified builder copy.
+The subsequent reboot with SD inserted selected SD boot0, reported storage
+type 1 and the SD host bootstrap, then passed the installed release guard on
+boot `96e14dbb-496b-4484-9e7d-c9eaf3773dfa`. Clean UART poweroff is confirmed
+for operator SD removal. [Programming evidence](evidence/spi-programming-20261111.json).
+
+The first native capture invocation lacked access to PID 1 namespace descriptors
+and stopped before starting SSH. The unchanged controller then ran as root with
+private root-owned native staging. A local post-run parser initially expected
+the wrong final event tag, then accepted the actual `programmer_outcome` receipt.
+Programming was executed once.

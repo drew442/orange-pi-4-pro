@@ -10,17 +10,18 @@ The earlier November 8 SSH failure remains unexplained. See the
 ## Current SPI objective
 
 The operator requested operation with SD removed and authorized SPI programming.
-A manual U-Boot NVMe-file boot now passes on the installed normalized host. The
-registered recovery policy uses documented ROM SD priority and physically tested
-SD recovery. The guarded programmer is under independent review and full-suite
-validation before the first physical SPI write.
+Manual U-Boot NVMe-file boot passed. SPI programming and complete readback now
+pass after independent source/plan review and 2310 privileged tests. A reboot
+with SD inserted still selected SD boot0 and passed the host release guards.
+The board is cleanly powered off for operator SD removal. SPI/NVMe boot with
+SD absent and actual KVM execution remain the current completion checks.
 [Procedure and evidence](spi-sd-boot-20261111.md).
 
 ## Live board and constraints
 
 - **Current:** normalized A at `root@192.168.1.116`, original pinned identity,
-  boot `a55b0c1c-91fc-4fee-80b7-3a963a20d72e` after manual NVMe-file boot. Read-only live release guards
-  pass after the ten cold cycles and final SD comparison. Root p2 is read-only;
+  cleanly powered off after post-program SD recovery boot
+  `96e14dbb-496b-4484-9e7d-c9eaf3773dfa`. Its read-only release guards passed. Root p2 is read-only;
   original configuration/keys, DHCP/NTP and resolver policy pass. Fresh full
   installation completed with a streamed source hash and optional readback off.
   The restored counter-5 guest ran real nonroot KVM through 6, clean shutdown,
@@ -39,7 +40,7 @@ validation before the first physical SPI write.
   passive 10.4 mm six-layer whole-board copper cooling; negotiated power is unmeasured.
 - **Boot route:** protected normal-host SD prefix `ab5e8c…ad207` restored;
   serial shows SD Linux-file loading. NVMe BOOT `cc2ad9…26c313` was included in
-  the installation; firmware loading it remains untested. SPI is unchanged.
+  the installation; firmware loading it remains untested. SPI now holds the reviewed NVMe-first firmware, full readback SHA `83edcd…05e90`.
   Linux SD write/discard/flush fields remain zero after the fresh host boot.
   Explicit maintenance writes are separate from routine observations.
   [Current images](current-images.md).
@@ -53,8 +54,8 @@ validation before the first physical SPI write.
   retain independent review; ask yes/no only for unapproved targets or scope.
   Prefer SPI-to-NVMe with SD removed, otherwise complete immutable-SD proof.
   The registered source-backed SD recovery policy replaces the earlier
-  USB-FEL-specific prerequisite. SPI programming remains pending concrete review
-  and completed validation. [Programmer](known-spi-programmer.md).
+  USB-FEL-specific prerequisite. Physical SPI programming and SD-priority recovery now pass.
+  [Programming evidence](evidence/spi-programming-20261111.json). [Programmer](known-spi-programmer.md).
 
 ## Acceptance evidence
 
