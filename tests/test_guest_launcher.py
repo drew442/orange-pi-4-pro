@@ -1,5 +1,6 @@
 """Host-only input lifetime checks; these do not launch QEMU or establish KVM."""
 import argparse
+import contextlib
 import fcntl
 import hashlib
 import importlib.util
@@ -21,6 +22,14 @@ spec.loader.exec_module(launcher)
 
 class GuestLauncherTests(unittest.TestCase):
     def setUp(self):
+        # Input/exec unit tests isolate admission; native admission has its own
+        # root/tmpfs/dropped-credential test module.
+        admission = mock.Mock()
+        admission.recheck.return_value = ()
+        boundary = mock.patch.object(launcher, 'launch_admission',
+                                     side_effect=lambda args: contextlib.nullcontext(admission))
+        boundary.start()
+        self.addCleanup(boundary.stop)
         storage = mock.patch.object(launcher.STORAGE, 'verify_guest_storage',
                                     return_value={'fixture': 'placement mocked; no NVMe acceptance'})
         storage.start()
@@ -319,13 +328,22 @@ print('original descriptors consumed')
         consumer.chmod(0o755)
         # This hook stands in for hardware checks, never evidence of actual KVM.
         code = """
-import importlib.util, os, sys
+import contextlib, importlib.util, os, sys
 from pathlib import Path
 spec = importlib.util.spec_from_file_location('launcher', sys.argv[1])
 m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
 sentinel = os.open(sys.argv[2], os.O_RDONLY)
 os.set_inheritable(sentinel, True)
-m.shutil.which = lambda name: sys.argv[3]
+consumer = sys.argv[3]
+class Admission:
+    def validate_inputs(self, guest): pass
+    def recheck(self): return ()
+m.launch_admission = lambda args: contextlib.nullcontext(Admission())
+native_exec = os.execv
+def execute(path, args):
+    assert path == '/usr/bin/qemu-system-aarch64'
+    native_exec(consumer, [consumer, *args[1:]])
+m.os.execv = execute
 def checked(args):
     for name in ('kernel', 'initrd', 'disk'):
         path = getattr(args, name)
@@ -334,8 +352,8 @@ def checked(args):
 m.require_launch_access = lambda args: None
 m.STORAGE.verify_guest_storage = lambda *a, **kw: {"fixture": "no hardware"}
 inherit = m.PreparedGuest.inherit_inputs
-def inherit_and_replace(guest):
-    inherit(guest)
+def inherit_and_replace(guest, optional_extra_fds=()):
+    inherit(guest, optional_extra_fds)
     checked(guest.args)
 m.PreparedGuest.inherit_inputs = inherit_and_replace
 sys.exit(m.main(sys.argv[4:]))

@@ -1,0 +1,111 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "result": "pass",
+  "scope": "Uninstalled nonroot enrolled manual-launch admission and root bootstrap namespace attestation; no startup service integration or physical acceptance",
+  "builder": "drew@build.drewnet.online",
+  "builder_base": "/var/lib/a733-manual-launch-validation-20261112-01",
+  "full_Ubuntu_tests": 2850,
+  "failures_errors_skips": 0,
+  "shell_suites": 5,
+  "diagnostic_cases": 5,
+  "locked_source_files": 1017,
+  "source_lock": {
+    "bytes": 163038,
+    "sha256": "461f0bd7ddaf60eb82c531d8a3c60003824d88d6058a0def58e5d557b6d69a5a",
+    "index_tree": "f434db98ea37b0d9015abc7621132aa42642028d"
+  },
+  "unit": {
+    "RuntimeMaxUSec": "8h",
+    "MainPID": "0",
+    "Result": "success",
+    "ExecMainCode": "1",
+    "ExecMainStatus": "0",
+    "CPUQuotaPerSecUSec": "2s",
+    "MemoryMax": "3221225472",
+    "ActiveState": "active",
+    "SubState": "exited"
+  },
+  "source": {
+    "build/maintenance-tools.py": {
+      "bytes": 15226,
+      "sha256": "3be4f2031eb9f6811113b6191d108aac68026761d35e00aaceb777e2afeee6b7"
+    },
+    "scripts/guest-launch-admission.py": {
+      "bytes": 13207,
+      "sha256": "b604a740cf79667ae46595ecfb2daff232a2a809f24ec61ec70160bccc8f6388"
+    },
+    "scripts/launch-kvm-guest.py": {
+      "bytes": 12907,
+      "sha256": "7558e1cf956e79a10918fb4a2b0996d7a810018da55b34a4bb0144467770a864"
+    },
+    "tests/test_guest_launch_admission.py": {
+      "bytes": 18834,
+      "sha256": "e796ed1cfe33a4322220f66c99d1039fed51718a33c021dc48b1382beb2532b7"
+    },
+    "tests/test_guest_launcher.py": {
+      "bytes": 18714,
+      "sha256": "3af520e38d3e8d49a3d89f7f153d8bc2ad5034bdc0698f4cc6d208de53be0d95"
+    },
+    "tests/test_host_payload.py": {
+      "bytes": 28099,
+      "sha256": "80cb9ae78aa8602b92419e7e8772527ef81b022547f97dfebf7ecae5e4ac5d2b"
+    },
+    "tests/test_kvm_launcher.py": {
+      "bytes": 8455,
+      "sha256": "88b06d99db95feb930f1b16e8e1ef4ed9e29be9363960dde0f8f37ac93cc6de4"
+    },
+    "tests/test_launch_deterministic_host_roots.py": {
+      "bytes": 11602,
+      "sha256": "6a44926062e9a9ba25ac131a56ec3774e766ad4280db2768551802313d7183b4"
+    },
+    "tests/test_maintenance_tools.py": {
+      "bytes": 17564,
+      "sha256": "9734f5a459467c08078b103182cdc6733b0afcb7a17d99b039c399abc17d2766"
+    }
+  },
+  "independent_review": {
+    "path": "out/manual-launch-validation-20261112-01/final-review.json",
+    "bytes": 86397,
+    "sha256": "e948c15883a658288ee9dd65b0b5a2201828bb2476f64ffdd8a5285a3200a3e4"
+  },
+  "resolved_findings": [
+    "ManualLaunch.close now rejects foreign PID/thread before changing state or releasing descriptors, even if already closed. Actual thread/fork probes prove creator locks survive until creator cleanup.",
+    "Namespace publication marks rename attempted before the syscall. Lost acknowledgment after actual rename reports uncertainty; exact-record retry synchronizes and preserves inode without repair/republication."
+  ],
+  "behavior": [
+    "Root-only prepare_runtime borrows the canonical original closed-bootstrap owner/actual EX lease and native root namespace proof, publishes protected tmpfs0440 namespace pins atomically with NOREPLACE/fsync and checks; never opens gate or closes borrowed owner.",
+    "Nonroot consumer compares own accessible namespaces to root pins; root PID1 namespace links remain inaccessible. Boot, fixed enrolled paths/directories, UID/GID quartets, KVM groups, zero capabilities and no-new-privileges checked before payload hashing.",
+    "Shared lease and stable guest EX precede disk/input locks; managed names/unknown runtime refuse. Exactly three inputs plus two readonly self-owned flocks survive same-PID exec; extra descriptors close-on-exec; admitted holder can finish after shutdown closure.",
+    "Actual launch fixes QEMU path to /usr/bin/qemu-system-aarch64. Generic standalone diagnostic --dry-run remains unchanged."
+  ],
+  "native_evidence": {
+    "final_admission_tests": 21,
+    "final_packaging_tests": 13,
+    "independent_additional_probes": 6,
+    "actual_syscalls": "Root tmpfs metadata/publication/fsync/rename, credential/capability drop, own namespaces and root-PID1 PermissionDenied, FD flocks, mount-namespace switch refusal, same-PID exec and close failures.",
+    "explicit_substitutions": "A733 platform callback/storage placement, manager state and Python exec surrogate for QEMU. No QEMU/KVM hardware execution established.",
+    "hardware_acceptance": false
+  },
+  "packaging": {
+    "current_sources": 58,
+    "runtime_files": 59,
+    "historical_sources": 39,
+    "entrypoints": 16,
+    "relocated_canonical_admission_and_nesting_identity": "pass"
+  },
+  "resources": {
+    "sampled_min_free_disk_bytes": 31573680128,
+    "sampled_min_available_memory_bytes": 7087030272,
+    "compilation_jobs": 2
+  },
+  "receipts": {
+    "native": "out/manual-launch-validation-20261112-01/receipts.tar",
+    "builder": "/var/lib/a733-manual-launch-validation-20261112-01/receipts.tar",
+    "bytes": 327680,
+    "sha256": "4cd1cc16fd16d58c37f06710639afae671d58bb983c0cfd6e742b48858036d10",
+    "verified_fsynced_both": true
+  },
+  "hardware_acceptance": false,
+  "remaining": "Bootstrap must call prepare_runtime before opening admission. Activation and global host maintenance closure; installed lifecycle services/coherent managed backup/restore/inactive-root deployment; physical SPI recovery/KVM/final boot qualification. Existing endurance data remains accepted."
+}

@@ -11,7 +11,7 @@ import stat
 import tempfile
 from types import SimpleNamespace
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 SPEC = importlib.util.spec_from_file_location(
     "kvm_launcher", Path(__file__).parents[1] / "scripts/launch-kvm-guest.py")
@@ -21,6 +21,12 @@ SPEC.loader.exec_module(launcher)
 
 class LauncherTests(unittest.TestCase):
     def setUp(self):
+        admission = Mock()
+        admission.recheck.return_value = ()
+        boundary = patch.object(launcher, 'launch_admission',
+                                side_effect=lambda args: contextlib.nullcontext(admission))
+        boundary.start()
+        self.addCleanup(boundary.stop)
         storage = patch.object(launcher.STORAGE, 'verify_guest_storage',
                                     return_value={'fixture': 'placement mocked; no NVMe acceptance'})
         storage.start()
@@ -131,19 +137,20 @@ class LauncherTests(unittest.TestCase):
         with contextlib.ExitStack() as stack:
             stack.enter_context(patch.object(launcher.os, "getuid", return_value=1000))
             stack.enter_context(patch.object(launcher.os, "geteuid", return_value=1000))
-            which = stack.enter_context(patch.object(launcher.shutil, "which", return_value=None))
+            binary = stack.enter_context(patch.object(launcher.os, "access", return_value=False))
             with self.assertRaisesRegex(ValueError, "not installed"):
                 launcher.require_launch_access(self.args)
-            which.return_value = "/usr/bin/qemu-system-aarch64"
+            binary.return_value = True
             mock_stat = stack.enter_context(patch.object(launcher.os, "stat"))
             mock_stat.return_value = SimpleNamespace(st_mode=stat.S_IFREG)
             with self.assertRaisesRegex(ValueError, "character device"):
                 launcher.require_launch_access(self.args)
             mock_stat.return_value = SimpleNamespace(st_mode=stat.S_IFCHR)
-            access = stack.enter_context(patch.object(launcher.os, "access", return_value=False))
+            binary.side_effect = [True, False]
+            access = binary
             with self.assertRaisesRegex(ValueError, "access to /dev/kvm"):
                 launcher.require_launch_access(self.args)
-            access.side_effect = [True, False]
+            access.side_effect = [True, True, False]
             with self.assertRaisesRegex(ValueError, "guest disk"):
                 launcher.require_launch_access(self.args)
 

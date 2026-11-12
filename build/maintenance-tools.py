@@ -43,7 +43,7 @@ SOURCES = tuple(sorted(LEGACY_SOURCES + (
     'scripts/managed-guest-supervisor.py',
     'scripts/managed-guest-fixture.py', 'configs/managed-guest-profile.lock.json',
     'configs/guest_checkpoint_records.py', 'scripts/managed-guest-checkpoint.py',
-    'scripts/guest-operation-admission.py',
+    'scripts/guest-operation-admission.py', 'scripts/guest-launch-admission.py',
 )))
 ENTRYPOINTS = {name: f'scripts/{name}.py' for name in (
     'install-nvme', 'acquire-nvme', 'plan-nvme', 'prepare-host-update',

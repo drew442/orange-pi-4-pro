@@ -12,6 +12,7 @@ here. Dry-run verifies inputs without requiring QEMU or /dev/kvm.
 """
 
 import argparse
+import contextlib
 import fcntl
 import errno
 import hashlib
@@ -195,9 +196,21 @@ class PreparedGuest:
                 "hardware_acceptance": "pending", "verified_inputs": self.inputs,
                 "argv": self.argv(), "storage_policy": self.storage or "not checked in file-only dry-run"}
 
-    def inherit_inputs(self):
-        """Pass only input descriptors beyond stdio into the QEMU process."""
-        held = set(self.fds.values())
+    def inherit_inputs(self, optional_extra_fds=()):
+        """Retain inputs plus the caller's two validated admission locks."""
+        if optional_extra_fds:
+            if (type(optional_extra_fds) is not tuple or len(optional_extra_fds) != 2
+                    or len(set(optional_extra_fds)) != 2
+                    or any(type(fd) is not int or fd <= 2 or fd in self.fds.values()
+                           for fd in optional_extra_fds)):
+                raise ValueError("Invalid admission descriptor set")
+            admission = admission_module().ADMISSION
+            for fd, mode in zip(optional_extra_fds, ("READ", "WRITE")):
+                admission._held_lock(fd, mode, os.getpid())
+                flags = fcntl.fcntl(fd, fcntl.F_GETFL)
+                if flags & os.O_ACCMODE != os.O_RDONLY or flags & os.O_PATH:
+                    raise ValueError("Admission descriptors must be readonly")
+        held = set(self.fds.values()) | set(optional_extra_fds)
         for entry in os.listdir("/proc/self/fd"):
             fd = int(entry)
             if fd > 2 and fd not in held:
@@ -211,7 +224,7 @@ class PreparedGuest:
             os.set_inheritable(fd, True)
 
 
-def prepare(args):
+def prepare(args, admission=None):
     guest = PreparedGuest(args)
     try:
         for name in ("kernel", "initrd", "disk"):
@@ -221,6 +234,8 @@ def prepare(args):
                                             guest.snapshots[name].st_ino)
                for name in ("kernel", "initrd")):
             raise ValueError("Mutable disk must be separate from kernel and initrd")
+        if admission is not None:
+            admission.validate_inputs(guest)
         # Validate storage before reading payload bytes: even a hash read can
         # cause atime writes on an incorrectly mounted SD filesystem.
         guest.storage = None
@@ -238,7 +253,7 @@ def prepare(args):
 def require_launch_access(args):
     if os.getuid() == 0 or os.geteuid() == 0:
         raise ValueError("Launch requires a non-root process with /dev/kvm access")
-    if not shutil.which("qemu-system-aarch64"):
+    if not os.access("/usr/bin/qemu-system-aarch64", os.X_OK):
         raise ValueError("qemu-system-aarch64 is not installed")
     if not stat.S_ISCHR(os.stat("/dev/kvm").st_mode):
         raise ValueError("/dev/kvm must be a character device")
@@ -248,22 +263,40 @@ def require_launch_access(args):
         raise ValueError("Read/write access to the guest disk is required")
 
 
+def admission_module():
+    # File-only dry-run remains standalone, including diagnostic source copies.
+    spec = importlib.util.spec_from_file_location(
+        'a733_manual_launch_admission', Path(__file__).with_name('guest-launch-admission.py'))
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def launch_admission(args):
+    return admission_module().ManualLaunch(args)
+
+
 def main(argv=None):
     args = parser().parse_args(argv)
     try:
         network_config(args)
-        if not args.dry_run:
-            require_launch_access(args)
-        with prepare(args) as guest:
+        with contextlib.ExitStack() as stack:
+            admission = None if args.dry_run else stack.enter_context(launch_admission(args))
+            if not args.dry_run:
+                require_launch_access(args)
+            guest = stack.enter_context(prepare(args, admission))
             if args.dry_run:
                 print(json.dumps(guest.report(), indent=2))
             else:
                 guest.verify_storage()
                 guest.validate_inputs()
                 argv = guest.argv(descriptor_paths=True)
-                guest.inherit_inputs()
+                admission.validate_inputs(guest)
+                argv[0] = "/usr/bin/qemu-system-aarch64"
+                guest.inherit_inputs(optional_extra_fds=admission.recheck())
+                admission.recheck()
                 os.execv(argv[0], argv)
-    except (OSError, ValueError) as error:
+    except (OSError, ValueError, RuntimeError) as error:
         print(f"launch-kvm-guest: {error}", file=sys.stderr)
         return 1
     return 0
