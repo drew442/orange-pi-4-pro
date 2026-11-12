@@ -1,0 +1,141 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "result": "pass",
+  "scope": "Uninstalled explicit managed guest controls, one-use start requests, scoped cleanup receipts and initial storage-policy publisher packaging. Native real locks/protected files and substituted A733/PID1/credential checks; no physical KVM/boot acceptance.",
+  "builder": "drew@build.drewnet.online",
+  "full_Ubuntu_tests": 3430,
+  "failures_errors_skips": 0,
+  "shell_suites": 5,
+  "diagnostic_cases": 5,
+  "parsed_TOML": 5,
+  "locked_source_files": 1088,
+  "source_lock": {
+    "bytes": 174381,
+    "sha256": "98fcdd8ee788105a7ac56c219f1ad7237f79f464cd4f763596bc1179a693efe5",
+    "index_tree": "b062824600513dc513d7207ea5d903b5ccf76686"
+  },
+  "source": {
+    "build/maintenance-tools.py": {
+      "bytes": 16186,
+      "sha256": "efe6a2eda7ce85388570264633f3b96084df7d876580997526ab4d96af459649"
+    },
+    "scripts/guest-explicit-request.py": {
+      "bytes": 13277,
+      "sha256": "a19e15602f3ef2a664a4b304c29955e3acbb58293db7fc2d95afdf2c32cbdd8d"
+    },
+    "scripts/guest-lifecycle.py": {
+      "bytes": 39140,
+      "sha256": "cb632eb6e87167cfa81afa5c10dd761d5143ccb09c0fc7485f6281d34480154e"
+    },
+    "scripts/manage-guests.py": {
+      "bytes": 14650,
+      "sha256": "1a3e77f7084c8573e4124dc5aa2893ac8cd619301654c41bb6df3c075276da9b"
+    },
+    "scripts/prepare-guest-boot.py": {
+      "bytes": 36049,
+      "sha256": "ac23c0371e5b6af68f80825128f19448556c15cd31c3c78339b126e66367797f"
+    },
+    "scripts/run-managed-guest.py": {
+      "bytes": 9800,
+      "sha256": "85ce91ebad036de109371ae88ec68d193b51a40338326f3b1467df7aeb58512b"
+    },
+    "tests/test_guest_explicit_request.py": {
+      "bytes": 15479,
+      "sha256": "99635c5033332d25dfdd6357316218ecf9dd8f405b59a2e2dda884dd6584b698"
+    },
+    "tests/test_guest_lifecycle_controller.py": {
+      "bytes": 29901,
+      "sha256": "90f0d562f0aa8a3de2f95b362a2d1bfb0abdd93a72c072879fa312665bbcc0cc"
+    },
+    "tests/test_host_payload.py": {
+      "bytes": 28570,
+      "sha256": "fbb5c5829eab19939734495806c4f1fcd7095d1f77a5f7b368b71462c0932eb8"
+    },
+    "tests/test_launch_deterministic_host_roots.py": {
+      "bytes": 11624,
+      "sha256": "b5bbd613b41a214dffddd00dba359ebdbcd843243adad7164bb0359250442cf6"
+    },
+    "tests/test_maintenance_tools.py": {
+      "bytes": 18899,
+      "sha256": "c42946fa90296ad8a0bf17328d7bbaa8382c38e872026c9c2b6198661fc1e04c"
+    },
+    "tests/test_manage_guests.py": {
+      "bytes": 22212,
+      "sha256": "52517bbf30671d8aaffc50be39676fa90fbc3ac918b9c36ba0fc76cd059fe1a2"
+    },
+    "tests/test_managed_guest_service.py": {
+      "bytes": 22475,
+      "sha256": "5cc9c897204077006a7fd3882f02187bd0086b0f540fb663be53ee5165ec8b0d"
+    },
+    "tests/test_prepare_guest_boot.py": {
+      "bytes": 27308,
+      "sha256": "cd418be2d782d9963de7e8022d3c6976aebed017ac6f8740cac55f6d11b7939b"
+    }
+  },
+  "independent_reviews": {
+    "explicit-controls-review-20261112.json": {
+      "bytes": 45534,
+      "sha256": "d4d67cd50e4d76c45738e53b2b6bb4da30088509b9c495a95d92c175890c8901"
+    },
+    "managed-restore-design-review-20261112.json": {
+      "bytes": 24506,
+      "sha256": "f12781b5bb87d6a7c872057b10baf5592ee6fd4c7728ce60e6b1304f5ae6caeb"
+    }
+  },
+  "units": {
+    "passing": {
+      "RuntimeMaxUSec": "8h",
+      "MainPID": "0",
+      "Result": "success",
+      "ExecMainStatus": "0",
+      "CPUQuotaPerSecUSec": "2s",
+      "MemoryMax": "3221225472",
+      "SubState": "exited"
+    },
+    "initial_failed": {
+      "RuntimeMaxUSec": "8h",
+      "MainPID": "0",
+      "Result": "exit-code",
+      "ExecMainStatus": "1",
+      "CPUQuotaPerSecUSec": "2s",
+      "MemoryMax": "3221225472",
+      "SubState": "failed"
+    }
+  },
+  "resource_sample_minima": {
+    "free_disk_bytes": 30190592000,
+    "MemAvailable_bytes": 6925484032
+  },
+  "packaging": {
+    "current_sources": 80,
+    "runtime_files": 81,
+    "entrypoints": 21,
+    "historical_sources": 39,
+    "management_runtime_files": 6
+  },
+  "custody": {
+    "bytes": 952320,
+    "sha256": "abc47988982f82bbedb907ab749fd51e8705f37ef0c79d1337bc42a0f72178fb",
+    "native": "out/guest-controls-validation-20261112-03/receipts.tar",
+    "builder": "/var/lib/a733-guest-controls-validation-20261112-03/receipts.tar"
+  },
+  "controls": "Root/native installed controls retain canonical shared admission, guest/disk exclusion and final registry checks. Fixed RAM unit bytes/PID1 settings, all-enabled budget and locked accounts precede create-once request. Pending no-op never requeues. Queue happens after policy/context cleanup with SH retained. Stop is bounded and progress-enabled; disable leaves current run untouched.",
+  "request": "Current boot/storage/name/manifest/ready-head/unit bindings. Atomic rename to consumed and directory durability complete before explicit admission. Matching consumed head blocks automatic fallback after uncertain consumption. Automatic starts remain once per boot. No initialization/reopening/custom QEMU arguments.",
+  "resolved_findings": [
+    "Missing-account constructor failure now preserves original error and conditional preparation guidance.",
+    "Source/RamDirectory construction cleanup preserves primary plus cleanup.",
+    "Run admission registry/Inspection cleanup preserves consumed/publication uncertainty plus cleanup.",
+    "Pending/consumed direct reads preserve semantic/metadata validation and cleanup errors.",
+    "Ordinary callback-free admission preserves early ready/once-per-boot refusal; explicit policy authenticates ready cohort before consumption."
+  ],
+  "retained_failures": [
+    "First full run3428 fails3: obsolete test_host_payload expected runtime/entrypoint counts78/20 (fixture corrected81/21), and two ordinary run-admission ordering expectations (restore early pure ready/once refusal in callback-free API; no fixture weakening). Prepared02 was never launched and is superseded by reviewed03. Preliminary packaging focused checks also exposed missing helper and old entrypoint fixture count; corrected before frozen full passing run. Runtime package validation remains strict."
+  ],
+  "limitations": [
+    "All new controls/services remain uninstalled; physical managed KVM autostart/shutdown/checkpoint/restart/restore/rollback remains mandatory.",
+    "Restore architecture reviewed, but coherent destination publisher/custody implementation and hardware validation remain pending; new restore worker files are excluded from this freeze.",
+    "Initial-policy publisher changes were independently reviewed separately; package import/closure now included.",
+    "No new endurance run; retained longer run satisfies eight hours."
+  ]
+}

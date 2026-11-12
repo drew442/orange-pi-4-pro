@@ -62,6 +62,31 @@ class OperationError(RuntimeError):
         super().__init__(f"{receipt['stage']}: {type(cause).__name__}: {cause}")
 
 
+def admission_failure(error):
+    detail = dict(type=type(error).__name__, error=str(error)[:1024])
+    if hasattr(error, 'receipt'):
+        detail['receipt'] = copy.deepcopy(error.receipt)
+    return detail
+
+
+class AdmissionCleanupError(RuntimeError):
+    def __init__(self, primary, cleanup):
+        self.receipt = dict(primary_error=admission_failure(primary),
+                            cleanup_error=admission_failure(cleanup))
+        super().__init__('run admission cleanup failed after primary failure')
+
+
+class AdmissionResources(ExitStack):
+    """Keep policy consumption/publication evidence when lock cleanup fails."""
+    def __exit__(self, error_type, error, traceback):
+        try:
+            return super().__exit__(error_type, error, traceback)
+        except BaseException as cleanup:
+            if error is None or cleanup is error:
+                raise
+            raise AdmissionCleanupError(error, cleanup) from error
+
+
 def receipt(operation, name):
     return dict(operation=operation, name=name, stage='validate', success=False,
                 hardware_acceptance=False, managed_prepare_attempted=False, marker_attempted=False,
@@ -170,8 +195,13 @@ class StateController:
                 'disk differs from trusted manifest; recovery required')
         return {key: config[key] for key in ('name', 'uid', 'gid')}
 
-    def admit_run(self, name, trusted_manifest_sha256, run_id, *, automatic=False):
-        """Persist admission and retain exclusion; this grants no checkpoint authority."""
+    def admit_run(self, name, trusted_manifest_sha256, run_id, *, automatic=False,
+                  admission_policy=None):
+        """Persist admission and retain exclusion; this grants no checkpoint authority.
+
+        A trusted optional policy runs after ready/registry checks under all
+        retained locks and returns the exact automatic flag before publication.
+        """
         result = receipt('admit-run', name)
         result.update(run_id=run_id, boot_id=self.boot_id,
                       manifest_sha256=trusted_manifest_sha256)
@@ -181,6 +211,8 @@ class StateController:
             REGISTRY._digest(trusted_manifest_sha256)
             REGISTRY._uuid(run_id)
             require(type(automatic) is bool, 'automatic must be boolean')
+            require(admission_policy is None or callable(admission_policy),
+                    'admission policy must be callable')
             require(name != 'firstkvm', 'firstkvm must remain manual')
             result['stage'] = 'guest-lock'
             lock = stack.enter_context(self.admission.guest_lock(name, self.lease, create=False))
@@ -194,7 +226,9 @@ class StateController:
                     self._inspection(inspection, name, trusted_manifest_sha256)
 
             result['stage'] = 'inspection'
-            with POLICY.Inspection(name, trusted_manifest_sha256) as inspected:
+            with AdmissionResources() as inspection_stack:
+                inspected = inspection_stack.enter_context(
+                    POLICY.Inspection(name, trusted_manifest_sha256))
                 inspection = inspected
                 guard()
                 identity = self._inspection(inspection, name, trusted_manifest_sha256)
@@ -205,10 +239,16 @@ class StateController:
                 require(all(previous[k] == v for k, v in identity.items()),
                         'head identity differs')
                 previous_pin = digest(previous_data)
-                admitted = HEAD.admit(previous, trusted_manifest_sha256, run_id, self.boot_id,
-                                      expected_head_sha256=previous_pin, automatic=automatic)
+                # Preserve the ordinary API's early ready/once-per-boot refusal.
+                # Explicit policy must consume its request only after the full
+                # ready cohort and current registry have been authenticated.
+                admitted = None
+                if admission_policy is None:
+                    admitted = HEAD.admit(
+                        previous, trusted_manifest_sha256, run_id, self.boot_id,
+                        expected_head_sha256=previous_pin, automatic=automatic)
                 # Registry lock is acquired last, never while waiting for a guest/disk.
-                with ExitStack() as registry_stack:
+                with AdmissionResources() as registry_stack:
                     registry_lock = registry_stack.enter_context(
                         self.admission.registry_lock(self.lease))
 
@@ -230,6 +270,19 @@ class StateController:
                             'unsupported managed shutdown/fixture profile')
                     _verify_ready(self, name, guest_lock=lock, inspection=inspection,
                                   head_store=store, head_data=previous_data, registry=(registry_store, registry_data, registry))
+                    if admission_policy is not None:
+                        result['stage'] = 'admission-policy'
+                        automatic = admission_policy(
+                            self, name, trusted_manifest_sha256, previous_data,
+                            lock, inspection, entry, registry_guard)
+                        require(type(automatic) is bool,
+                                'admission policy must return exact boolean')
+                        registry_guard()
+                    require(not automatic or entry['enabled'], 'automatic guest disabled')
+                    if admission_policy is not None:
+                        admitted = HEAD.admit(
+                            previous, trusted_manifest_sha256, run_id, self.boot_id,
+                            expected_head_sha256=previous_pin, automatic=automatic)
                     record = dict(schema=1, profile=RUN_PROFILE,
                                   storage=self.context.storage, **identity,
                                   run_id=run_id, boot_id=self.boot_id, automatic=automatic,
@@ -264,7 +317,7 @@ class StateController:
             try:
                 stack.close()
             except BaseException as close_error:
-                result['close_error'] = type(close_error).__name__
+                result['close_error'] = admission_failure(close_error)
             raise OperationError(result, error) from error
 
     def enroll(self, name, trusted_manifest_sha256, *, enabled=False, fixture_profile='none'):

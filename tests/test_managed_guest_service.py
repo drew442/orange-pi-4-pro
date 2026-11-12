@@ -27,6 +27,7 @@ def module(name, path):
 
 
 SERVICE = module('tested_managed_service', 'scripts/run-managed-guest.py')
+ACTUAL_CONSUME = SERVICE.EXPLICIT.consume
 NATIVE = module('service_native_fixture', 'tests/test_managed_checkpoint_producer_integration.py')
 M, L, S = NATIVE.M, NATIVE.L, NATIVE.S
 
@@ -59,7 +60,8 @@ class ServiceComposition(unittest.TestCase):
             c.supervisor = supervisor
             fixture.events.append('supervisor-new')
 
-        patches = [mock.patch.object(SERVICE, 'CP', M),
+        patches = [mock.patch.object(SERVICE.EXPLICIT, 'consume', return_value=True),
+                   mock.patch.object(SERVICE, 'CP', M),
                    mock.patch.object(SERVICE, 'LIFECYCLE', L),
                    mock.patch.object(SERVICE, 'SUPERVISOR', S),
                    mock.patch.object(SERVICE, 'ADMISSION', L.ADMISSION),
@@ -100,11 +102,74 @@ class ServiceComposition(unittest.TestCase):
         self.assertNotIn('gate:shutdown', self.events)
         self.assertTrue(M.authenticate_ready_cohort(self.case.controller, 'one')['success'])
 
+    def test_service_composes_explicit_policy_and_records_exact_flag(self):
+        def consume(controller, name, pin, head, lock, inspection, entry, guard):
+            self.assertIs(controller.lease, self.case.lease)
+            self.assertEqual(name, 'one')
+            self.assertEqual(entry['manifest_sha256'], pin)
+            guard()
+            return False
+        with mock.patch.object(SERVICE.EXPLICIT, 'consume', side_effect=consume) as policy:
+            self.assertTrue(self.execute()['success'])
+        policy.assert_called_once()
+        self.assertFalse(self.case.supervisor.run._record['automatic'])
+
+    def test_policy_rejects_non_boolean_without_admission_publication(self):
+        previous = self.case.head_path.read_bytes()
+        with mock.patch.object(SERVICE.EXPLICIT, 'consume', return_value=1):
+            with self.assertRaises(SERVICE.ServiceError):
+                self.execute()
+        self.assertEqual(self.case.head_path.read_bytes(), previous)
+        self.assertNotIn('supervisor-new', self.events)
+
+    def test_default_automatic_still_refuses_second_run_in_same_boot(self):
+        self.assertTrue(self.execute()['success'])
+        previous = self.case.head_path.read_bytes()
+        with self.assertRaises(SERVICE.ServiceError):
+            self.execute()
+        self.assertEqual(self.case.head_path.read_bytes(), previous)
+        self.assertEqual(self.events.count('supervisor-new'), 1)
+
     def test_native_admission_shared_guest_ex_and_checkpoint_publication(self):
+        self.native_explicit_case()
+
+    def test_native_policy_failure_before_consume_preserves_pending_and_head(self):
+        self.native_explicit_case('before')
+
+    def test_native_policy_failure_after_consume_blocks_lost_ack_retry(self):
+        self.native_explicit_case('after')
+
+    def test_native_consumption_and_registry_cleanup_failures_both_survive(self):
+        original_close, original_sync = L.ADMISSION.RegistryLock.close, os.fsync
+        previous = self.case.head_path.read_bytes()
+        def failed_close(lock):
+            original_close(lock)
+            raise OSError('final registry close failed')
+        def failed_sync(fd):
+            if os.readlink('/proc/self/fd/' + str(fd)).endswith('/boot/explicit') and any(
+                    name.startswith('consumed-') for name in os.listdir(fd)):
+                raise OSError('consumption directory fsync failed')
+            return original_sync(fd)
+        with mock.patch.object(L.ADMISSION.RegistryLock, 'close', failed_close), \
+                mock.patch.object(os, 'fsync', failed_sync):
+            with self.assertRaises(SERVICE.ServiceError) as caught:
+                self.native_explicit_case()
+        detail = caught.exception.receipt['nested_error']['publication_error']
+        self.assertTrue(detail['primary_error']['receipt']['consumed'])
+        self.assertTrue(detail['primary_error']['receipt']['uncertain'])
+        self.assertIn('final registry close failed', detail['cleanup_error']['error'])
+        self.assertEqual(self.case.head_path.read_bytes(), previous)
+        self.assertNotIn('supervisor-new', self.events)
+
+    def native_explicit_case(self, failure_mode=None):
         # Restore canonical capability types after the inherited synthetic setup.
         # The actual Admission creates protected files and native kernel flocks.
         admission_module = L.ADMISSION
         with tempfile.TemporaryDirectory(dir='/run', prefix='service-admission-') as folder:
+            Path(folder).chmod(0o755)
+            units, prepared = Path(folder) / 'units', Path(folder) / 'boot'
+            units.mkdir(mode=0o755)
+            prepared.mkdir(mode=0o700)
             with mock.patch.object(admission_module, 'Lease', self.actual_lease), \
                  mock.patch.object(admission_module, 'GuestLock', self.actual_guest), \
                  mock.patch.object(admission_module, 'RUNTIME_PARENT', folder), \
@@ -127,8 +192,48 @@ class ServiceComposition(unittest.TestCase):
                         admission_module._held_lock(supervisor.run.lease.fd, 'READ', os.getpid())
                         admission_module._held_lock(supervisor.run.guest_lock.fd, 'WRITE', os.getpid())
                         return original(supervisor)
-                    with mock.patch.object(S.Supervisor, 'start', start):
+                    helper = SERVICE.EXPLICIT
+                    receipts = []
+                    def explicit(controller, name, pin, head, lock, inspection, entry, guard):
+                        # CLI issue and service consume compose under the actual
+                        # retained SH/EX/inspection/final-registry custody.
+                        raw = helper.UNITS.render_managed(inspection.manifest['config']).encode()
+                        path = units / ('a733-managed-' + name + '.service')
+                        path.write_bytes(raw)
+                        path.chmod(0o444)
+                        receipts.append(helper.issue(controller, name, pin, head,
+                            helper.digest(raw), lock, guard, inspection=inspection, registry_entry=entry))
+                        if failure_mode == 'before':
+                            path.write_bytes(b'unit changed before consume')
+                        automatic = ACTUAL_CONSUME(controller, name, pin, head, lock,
+                                                   inspection, entry, guard)
+                        if failure_mode == 'after':
+                            raise OSError('lost acknowledgement after consume')
+                        return automatic
+                    with mock.patch.object(S.Supervisor, 'start', start), \
+                         mock.patch.object(helper.PREP, 'installed_guard'), \
+                         mock.patch.object(helper.PREP, 'UNIT_DIRECTORY', str(units)), \
+                         mock.patch.object(helper.PREP, 'PREPARED_DIRECTORY', str(prepared)), \
+                         mock.patch.object(helper, 'consume', side_effect=explicit):
+                        if failure_mode is not None:
+                            previous = self.case.head_path.read_bytes()
+                            with self.assertRaises(SERVICE.ServiceError):
+                                self.execute()
+                            self.assertEqual(self.case.head_path.read_bytes(), previous)
+                            self.assertNotIn('supervisor-new', self.events)
+                            self.assertEqual((prepared / 'explicit/pending-one.json').exists(),
+                                             failure_mode == 'before')
+                            with mock.patch.object(helper, 'consume', side_effect=ACTUAL_CONSUME):
+                                with self.assertRaises(SERVICE.ServiceError):
+                                    self.execute()
+                            self.assertEqual(self.case.head_path.read_bytes(), previous)
+                            return
                         result = self.execute()
+                    self.assertEqual(len(receipts), 1)
+                    self.assertFalse(self.case.supervisor.run._record['automatic'])
+                    self.assertFalse((prepared / 'explicit/pending-one.json').exists())
+                    self.assertTrue((prepared / 'explicit' / (
+                        'consumed-' + receipts[0]['request_id'] + '.json')).exists())
                     self.assertTrue(result['success'])
                     self.assertEqual(NATIVE.F.ManagedCheckpoint.head(self.case)['status'], 'ready')
                     with admission.admit() as lease:

@@ -175,8 +175,12 @@ class RamDirectory:
                         'unsafe RAM directory metadata')
             self.fd, self.mount = fd, run_mount
             self.check()
-        except BaseException:
-            self.close()
+        except BaseException as error:
+            try:
+                self.close()
+            except BaseException as cleanup:
+                raise CleanupError('RAM directory construction cleanup failed',
+                                   primary=error, cleanup=cleanup) from error
             raise
 
     @staticmethod
@@ -229,8 +233,12 @@ class Source:
                               dir_fd=directory)
             self.pin = STORE._metadata(os.fstat(self.fd))
             self.data = self.read()
-        except BaseException:
-            self.close()
+        except BaseException as error:
+            try:
+                self.close()
+            except BaseException as cleanup:
+                raise CleanupError('metadata source construction cleanup failed',
+                                   primary=error, cleanup=cleanup) from error
             raise
 
     def read(self):

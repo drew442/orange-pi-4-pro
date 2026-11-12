@@ -46,14 +46,14 @@ files must not be deleted or recreated to bypass a failed preparation.
 The fixed policy is `/run/a733-state/config/guest-storage.json`, root:root 0400
 on selected STATE. The reader retains descriptors and checks native root/STATE,
 NVMe identity, mount placement and exact canonical bytes before initialization.
-The candidate root recipes now package boot services, dispatch and teardown;
-initial policy publication still needs packaging/integration. No new controller
+The candidate root recipes package boot services, dispatch, teardown and initial
+policy publication. No new controller
 is installed or enabled on the board by these source checks.
 The current manual unit rendering procedure remains explicit.
 
 The [initial policy publisher source](../scripts/configure-guest-storage.py) now
 passes [separate focused review/checks](evidence/initial-policy-validation-20261112.json).
-It is not yet in the runtime package. Its explicit expected identity must match
+Its explicit expected identity must match
 the selected installed storage. Initialization EX protects the entire publication
 and cleanup; any existing runtime refuses initial setup. A different existing
 policy is never overwritten. An identical policy gets file/parent durability
@@ -103,6 +103,57 @@ explicit operation. [Software evidence](evidence/guest-service-validation-202611
 retains resolved findings, native probes, private systemd graph checks and the
 corrected full-suite result. No physical unmount or managed KVM result is supplied
 by those checks.
+
+## Explicit guest controls in the candidate
+
+`manage-guests.py` is a reviewed source candidate awaiting candidate construction
+and hardware validation. Do not copy it into the running released
+host or treat these examples as instructions to start the pending deployment.
+Once the matched candidate is installed, invoke its fixed packaged entrypoint:
+
+```sh
+python3 -I -B /usr/lib/a733-tools/scripts/manage-guests.py status
+python3 -I -B /usr/lib/a733-tools/scripts/manage-guests.py enroll autokvm --manifest-sha256 MANIFEST_SHA256
+python3 -I -B /usr/lib/a733-tools/scripts/manage-guests.py enable autokvm --manifest-sha256 MANIFEST_SHA256
+python3 -I -B /usr/lib/a733-tools/scripts/manage-guests.py start autokvm
+python3 -I -B /usr/lib/a733-tools/scripts/manage-guests.py stop autokvm
+python3 -I -B /usr/lib/a733-tools/scripts/manage-guests.py disable autokvm
+```
+
+Use the independent trusted current manifest hash for the named, already
+published enrollment. `enroll` here registers an existing enrollment for managed
+lifecycle; it does not create a guest disk or import an archive. It initially
+disables automatic launch. Fixture enrollment additionally requires its explicit
+supported `--fixture-profile`; ordinary guests default to `none`. `firstkvm`
+remains manually managed. Account creation belongs to the bootstrap preparation
+workflow. If the assigned locked RAM account is missing, start refuses before
+unit/request publication and directs the operator to reboot through preparation
+or finish the supported account workflow before managed enrollment.
+
+Start authenticates the current stopped ready cohort under actual shared
+admission, guest/disk exclusion and final registry lock. It checks every enabled
+guest's resource budget, publishes a new fixed RAM unit or verifies identical
+bytes, and checks the loaded PID1 contract. Different existing unit bytes refuse;
+regenerate them through fresh boot preparation. The request binds the current
+boot, storage, manifest, ready head and unit hash. After preparation cleanup,
+one nonblocking start request is queued while shared admission is retained.
+The service consumes the request once under its own fresh locks before run
+admission. This permits an explicit same-boot restart; automatic starts remain
+limited to one attempt per boot.
+
+An existing pending request is a verified no-op and is never queued again.
+Consumed requests for an unchanged ready head refuse another attempt, including
+after a lost acknowledgement. Inspect the receipt and protected lifecycle state
+before recovery; do not delete RAM records to force a retry. A start receipt
+acknowledges queueing, not successful VM execution or hardware acceptance.
+
+Stop issues one nonblocking stop and observes bounded completion for up to
+420 seconds, reporting progress. Failed/unknown acknowledgement, timeout or
+service failure requires inspection rather than automatic repetition. Disable
+changes future launch policy and does not stop an existing run; use stop when
+that is intended. Status requires available storage and open shared admission;
+an unavailable status reports that boundary and does not prove a guest failed.
+All commands emit structured receipts and report cleanup failures.
 
 ## Installed update and selection
 

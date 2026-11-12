@@ -27,6 +27,7 @@ _SPEC.loader.exec_module(MAINTENANCE)
 CP = MAINTENANCE.CP
 LIFECYCLE, SUPERVISOR = CP.LIFECYCLE, CP.SUPERVISOR
 ADMISSION, CONTEXT = LIFECYCLE.ADMISSION, LIFECYCLE.CONTEXT
+EXPLICIT = CONTEXT.module('managed_service_explicit', 'scripts/guest-explicit-request.py')
 NORMAL = MAINTENANCE.NORMAL
 require = ADMISSION.require
 
@@ -103,7 +104,8 @@ def run_service(name, *, stop_requested=None):
         pin = entries[0]['manifest_sha256']
         result.update(manifest_sha256=pin, run_id=str(uuid.uuid4()))
         result['stage'] = 'admit-run'
-        run = controller.admit_run(name, pin, result['run_id'], automatic=True)
+        run = controller.admit_run(name, pin, result['run_id'], automatic=True,
+                                   admission_policy=EXPLICIT.consume)
         result['stage'] = 'supervisor'
         supervisor = SUPERVISOR.Supervisor(run)
         if run._record['fixture_profile'] == CP.FIXTURE.PROFILE:

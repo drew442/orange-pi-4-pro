@@ -34,6 +34,19 @@ RAM = 12 * 1024**3
 
 
 class Boundary(unittest.TestCase):
+    def test_partial_constructors_preserve_primary_and_cleanup_failures(self):
+        for constructor, arguments in (
+                (M.RamDirectory, (M.UNIT_DIRECTORY, 0o755, lambda: None)),
+                (M.Source, (0, 'record.json', 0o400, 100, lambda: None))):
+            with self.subTest(constructor=constructor.__name__):
+                with patch.object(M.os, 'open', side_effect=OSError('primary open failure')), \
+                        patch.object(constructor, 'close', side_effect=OSError('cleanup failure')):
+                    with self.assertRaises(M.CleanupError) as caught:
+                        constructor(*arguments)
+                detail = M.failure_detail(caught.exception)['receipt']
+                self.assertIn('primary open failure', detail['primary_error']['error'])
+                self.assertIn('cleanup failure', detail['cleanup_error']['error'])
+
     def test_resource_failure_retains_primary_publication_and_cleanup(self):
         primary = M.STORE.PublicationError(dict(stage='directory-fsync',
             mutation_possible=True, published=True, durable=False, uncertain=True),

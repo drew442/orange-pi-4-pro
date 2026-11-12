@@ -20,6 +20,34 @@ STORAGE = dict(state_uuid='22222222-2222-4222-8222-222222222222',
 PIN = 'a' * 64
 
 
+class AdmissionCleanupTests(unittest.TestCase):
+    def test_registry_cleanup_retains_consumption_uncertainty(self):
+        primary = c.STORE.PublicationError(dict(stage='directory-fsync',
+            consumed=True, uncertain=True, request_id=BOOT), OSError('consume fsync failed'))
+        def failed_close():
+            raise OSError('registry close failed')
+        with self.assertRaises(c.AdmissionCleanupError) as caught:
+            with c.AdmissionResources() as resources:
+                resources.callback(failed_close)
+                raise primary
+        detail = caught.exception.receipt
+        self.assertTrue(detail['primary_error']['receipt']['consumed'])
+        self.assertTrue(detail['primary_error']['receipt']['uncertain'])
+        self.assertIn('registry close failed', detail['cleanup_error']['error'])
+
+    def test_inspection_cleanup_retains_nested_registry_failure(self):
+        primary = c.AdmissionCleanupError(ValueError('policy refused'), OSError('registry close failed'))
+        def failed_close():
+            raise OSError('inspection close failed')
+        with self.assertRaises(c.AdmissionCleanupError) as caught:
+            with c.AdmissionResources() as resources:
+                resources.callback(failed_close)
+                raise primary
+        detail = caught.exception.receipt
+        self.assertIn('policy refused', detail['primary_error']['receipt']['primary_error']['error'])
+        self.assertIn('inspection close failed', detail['cleanup_error']['error'])
+
+
 class ControllerTests(unittest.TestCase):
     def test_managed_fixture_enrollment_records_explicit_profile(self):
         with self.controller as controller:
