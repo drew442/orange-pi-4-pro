@@ -1,0 +1,68 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "scope": "Non-destructive off-device deployment preparation; no board write or boot",
+  "candidate_source": "2996365a11cb07deb20eb4325c90841de8ab820e",
+  "prepared_source": "/var/lib/a733-candidate-artifact-review-20261112-01/attempt-02/prepared-0-B",
+  "retained_metadata": "out/managed-root-candidate-20261112-02/prepared-B-metadata",
+  "files": {
+    "manifest.json": {
+      "bytes": 51618,
+      "sha256": "65f69d6a2f0b6346c0ca2f0257daa26836dd791918a4af795e70de730f8f424a"
+    },
+    "selected.conf": {
+      "bytes": 179,
+      "sha256": "39958be7dffc35100dc9b036bed20bcf091cb5fb4d9c8e8adcc6f04546bcf763"
+    },
+    "candidate.json": {
+      "bytes": 9332,
+      "sha256": "a088e6dc6ca66963e6647c330b8a425c8f6ab478d1ed834024f4ccf80aea1569"
+    }
+  },
+  "custody_receipt": {
+    "path": "out/managed-root-candidate-20261112-02/prepared-B-metadata/custody.json",
+    "bytes": 726,
+    "sha256": "378df50f765658d2a2aafff781762054b14dccddce27609eac9567dacb74d82d"
+  },
+  "candidate_root": {
+    "bytes": 4294967296,
+    "sha256": "fe842ff05584205b4fb9f930b3620bac04155c9f751488a8fb20a0d798dbd87c",
+    "gzip_bytes": 143661932,
+    "gzip_sha256": "380ec5c9c20e35f8480e5ff6d40ddc1ab258924f1074252668f84010b08dfbe0"
+  },
+  "review": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "result": "Builder-prepared layout accepted by historical Source; original draft requires guard moved before STATE writes",
+    "reviewer": "/root/deployment_recipe_review",
+    "basis": "Historical Source.NAMES is manifest.json/root.ext4/selected.conf; candidate.json is informational and not read. Existing actual prepared-0-B passed complete historical reader with production defaults."
+  },
+  "deployment_decision": "After fresh live guard, decode pinned gzip once with bounded sparse output and progress directly into root:root 0700 candidate directory/root.ext4; install pinned manifest.json and selected.conf as single-link root:root 0400 files. Existing Source retains full authentication. Do not run an extra onboard preparer copy/hash.",
+  "legacy_tools": {
+    "source_versions": [
+      "81f907481b12e9639ad23752966e05166074f96f",
+      "50bc9e70698d4a09c3705594dcc61c64e1715cb9"
+    ],
+    "identical_script_hashes": {
+      "prepare-host-update.py": "464d44d7c8e868fd72f85f3ac5d6095d7d18d205528b0f55c379c9b2b30c3b4b",
+      "update-host.py": "7e244244e36eabf6ef64b2640029cb05e77b43a8aed121257254dd3a6908433d",
+      "select-host-root.py": "646b608cf5dc3fbd3f1411a49ace41192ee0dec4472199240f87cc1c1073fd89"
+    },
+    "initial_migration": "Installed legacy CLI still requires full writer readback and two typed confirmation lines. Coordinator handles persisted authorization. Updated candidate CLI supports yes/no and optional readback after deployment."
+  },
+  "before_any_state_write": [
+    "Complete SPI recovery demonstration",
+    "Authenticate installed legacy closure from pinned retained producer manifest",
+    "Fresh expected boot ID and selected/running normalized A",
+    "Authenticated historical live snapshot, exact NVMe/STATE UUID and safe destination path",
+    "Fresh free-space and UART checks"
+  ],
+  "before_partition_or_selector_write": [
+    "Fresh concrete live plan and independent review",
+    "Preserve working A, BOOT/kernel/DTB/EL2, STATE/firstkvm and off-device backups",
+    "Interactive terminal for legacy apply; transfer-only ssh -T is not apply transport"
+  ],
+  "hardware_acceptance": false,
+  "deployment_executed": false,
+  "remaining": "Runnable transfer recipe and all live plans must satisfy the pre-STATE-write guard; draft is research and not approved for execution."
+}
