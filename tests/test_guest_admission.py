@@ -1,4 +1,6 @@
 """Host-only admission safety/concurrency checks; no KVM acceptance claim."""
+import contextlib
+import copy
 import importlib.util
 import fcntl
 import os
@@ -17,6 +19,7 @@ SPEC = importlib.util.spec_from_file_location(
 a = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(a)
 PRODUCTION_ANCESTOR = a._ancestor
+PRODUCTION_TMPFS = a._tmpfs
 
 
 class AdmissionTests(unittest.TestCase):
@@ -1018,6 +1021,362 @@ with a.Admission.open_existing(sys.argv[3], os.getgid()) as client:
         with self.assertRaises(a.AdmissionError):
             PRODUCTION_ANCESTOR(os.stat_result(fields))
 
+
+    def permit_setup(self):
+        if self.gid == 0:
+            # The older generic admission fixtures can use root's primary group.
+            # Managed permits deliberately require a distinct nonzero KVM role.
+            # Prepare a fresh fixture instead of relaxing or repairing production
+            # metadata checks, leaving the generic tests' original GID intact.
+            parent = Path(self.tmp.name) / 'managed'
+            parent.mkdir(mode=0o755)
+            self.gid = 1
+            self.path = parent / 'a733-admission'
+            a.RUNTIME_PARENT, a.RUNTIME = str(parent), str(self.path)
+            self.admission = a.initialize(self.boot, self.gid, lambda: 'running')
+            self.addCleanup(self.admission.close)
+        lease, guest = self.managed_setup()
+        self.admission.mark_managed('alpha', lease, guest, guard=lambda: None)
+        guest.close()
+        self.opened()
+        lease = self.admission.admit()
+        self.addCleanup(lease.close)
+        guest = self.admission.guest_lock('alpha', lease)
+        self.addCleanup(guest.close)
+        child = subprocess.Popen([sys.executable, '-c', 'import time; time.sleep(60)'])
+        def stop():
+            child.kill()
+            child.wait()
+        self.addCleanup(stop)
+        # Host-only tests simulate initial native namespaces. Real permission
+        # dropping/namespace acceptance remains separately qualified.
+        namespaces = {name: {'dev': 1, 'ino': a.INITIAL_NAMESPACES.get(name, 100)}
+                      for name in ('pid', 'user', 'mnt')}
+        original_stat = os.stat
+        def native_stat(path, *args, **kwargs):
+            if isinstance(path, str) and path.startswith(('/proc/self/ns/', '/proc/1/ns/')):
+                identity = namespaces[path.rsplit('/', 1)[1]]
+                return os.stat_result((stat.S_IFREG, identity['ino'], identity['dev'],
+                                       1, 0, 0, 0, 0, 0, 0))
+            return original_stat(path, *args, **kwargs)
+        namespace_patch = mock.patch.object(a.os, 'stat', side_effect=native_stat)
+        namespace_patch.start()
+        self.addCleanup(namespace_patch.stop)
+        boot_patch = mock.patch.object(a, '_boot_id', return_value=self.boot)
+        boot_patch.start()
+        self.addCleanup(boot_patch.stop)
+        config = {
+            'schema': 1, 'name': 'alpha', 'uid': 60002, 'gid': 60002,
+            'memory_mib': 256, 'memory_max_mib': 320, 'cpus': 1,
+            'kernel': {'bytes': 1024, 'sha256': 'a' * 64},
+            'initrd': {'bytes': 1024, 'sha256': 'b' * 64},
+            'disk': {'bytes': 4096, 'sha256': 'c' * 64},
+        }
+        record = {
+            'schema': 1, 'profile': a.PERMIT.PROFILE, 'run_id': str(uuid.uuid4()),
+            'boot_id': self.boot,
+            'storage': {'state_uuid': '11111111-1111-4111-8111-111111111111',
+                        'guest_uuid': '22222222-2222-4222-8222-222222222222',
+                        'nvme_serial': 'NVME-123'},
+            'config': config, 'manifest_sha256': 'd' * 64, 'head_sha256': 'e' * 64,
+            'host_payload_sha256': 'f' * 64,
+            'qemu': {'path': a.PERMIT.QEMU_PATH, 'bytes': 1024, 'sha256': '0' * 64},
+            'kvm_gid': self.gid, 'parent': a._process(os.getpid())[0],
+            'child': a._process(child.pid)[0], 'automatic': True,
+            'namespaces': namespaces,
+            'locks': {key: {'fd': cap.fd, 'dev': os.fstat(cap.fd).st_dev,
+                            'ino': os.fstat(cap.fd).st_ino}
+                      for key, cap in (('lease', lease), ('guest', guest))},
+        }
+        return record, lease, guest
+
+    @contextlib.contextmanager
+    def simulated_managed_child(self, record, **status_changes):
+        # This exercises validation, not actual privilege dropping or host
+        # namespace acceptance. Physical/privileged acceptance is separate.
+        parent, child = record['parent']['pid'], record['child']['pid']
+        original_stat, original_status = os.stat, a._status
+        status = original_status(child)
+        status.update(Uid=[str(record['config']['uid'])] * 4,
+                      Gid=[str(record['config']['gid'])] * 4,
+                      Groups=[str(self.gid)], NoNewPrivs=['1'])
+        for field in ('CapInh', 'CapPrm', 'CapEff', 'CapBnd', 'CapAmb'):
+            status[field] = ['0000000000000000']
+        status.update(status_changes)
+        def process_status(pid):
+            return status if pid == child else original_status(pid)
+        def native_stat(path, *args, **kwargs):
+            if isinstance(path, str) and '/ns/' in path and path.startswith('/proc/'):
+                if not path.startswith('/proc/self/ns/'):
+                    raise PermissionError('root namespace links are ptrace protected')
+                identity = record['namespaces'][path.rsplit('/', 1)[1]]
+                return os.stat_result((stat.S_IFREG, identity['ino'], identity['dev'],
+                                       1, 0, 0, 0, 0, 0, 0))
+            return original_stat(path, *args, **kwargs)
+        with mock.patch.object(a.os, 'getpid', return_value=child), \
+                mock.patch.object(a.os, 'getppid', return_value=parent), \
+                mock.patch.object(a, '_status', side_effect=process_status), \
+                mock.patch.object(a.os, 'stat', side_effect=native_stat):
+            yield
+
+    def test_permit_publication_idempotent_and_no_overwrite(self):
+        value, lease, guest = self.permit_setup()
+        guard = mock.Mock()
+        with self.admission.publish_permit(value, lease, guest, guard=guard) as handle:
+            self.assertEqual(handle.data, a.PERMIT.canonical(value))
+            info = os.fstat(handle.fd)
+            self.assertEqual(stat.S_IMODE(info.st_mode), 0o440)
+            self.assertEqual(info.st_nlink, 1)
+            self.assertFalse(os.get_inheritable(handle.fd))
+            detached = handle.value
+            detached['automatic'] = False
+            self.assertEqual(handle.value, value)
+            with self.admission.publish_permit(value, lease, guest, guard=guard) as retry:
+                self.assertEqual(os.fstat(retry.fd).st_ino, info.st_ino)
+            changed = dict(value, automatic=False)
+            with self.assertRaises(a.PublicationError):
+                self.admission.publish_permit(changed, lease, guest, guard=guard)
+            self.assertEqual(handle.recheck(), value)
+        self.assertGreater(guard.call_count, 10)
+
+    def test_permit_rejects_claims_and_actual_lock_mode(self):
+        value, lease, guest = self.permit_setup()
+        for field, replacement in (
+                ('boot_id', str(uuid.uuid4())), ('kvm_gid', self.gid + 1),
+                ('parent', dict(value['parent'], start_ticks=value['parent']['start_ticks'] + 1)),
+                ('child', dict(value['child'], start_ticks=value['child']['start_ticks'] + 1)),
+                ('locks', dict(value['locks'], lease=dict(value['locks']['lease'], ino=1)))):
+            with self.subTest(field=field), self.assertRaises(a.AdmissionError):
+                self.admission.publish_permit(dict(value, **{field: replacement}),
+                                              lease, guest, guard=lambda: None)
+        fcntl.flock(lease.fd, fcntl.LOCK_UN)
+        with self.assertRaises(a.AdmissionError):
+            self.admission.publish_permit(value, lease, guest, guard=lambda: None)
+        self.assertFalse((self.path / 'permits').exists())
+
+    def test_permit_guard_failure_and_partial_publication_fail_closed(self):
+        value, lease, guest = self.permit_setup()
+        def failed():
+            raise RuntimeError('admitted head changed')
+        with self.assertRaises(RuntimeError):
+            self.admission.publish_permit(value, lease, guest, guard=failed)
+        self.assertFalse((self.path / 'permits').exists())
+        original_write = os.write
+        def fail_after_write(fd, data):
+            original_write(fd, data)
+            raise OSError('write acknowledgement lost')
+        before = len(os.listdir('/proc/self/fd'))
+        with mock.patch.object(a.os, 'write', side_effect=fail_after_write):
+            with self.assertRaises(a.PublicationError) as caught:
+                self.admission.publish_permit(value, lease, guest, guard=lambda: None)
+        self.assertTrue(caught.exception.uncertain)
+        self.assertEqual(before, len(os.listdir('/proc/self/fd')))
+        target = self.path / 'permits' / (value['run_id'] + '.json')
+        self.assertEqual(stat.S_IMODE(target.stat().st_mode), 0o600)
+        inode = target.stat().st_ino
+        with self.assertRaises(a.AdmissionError):
+            self.admission.open_permit(value['run_id'])
+        with self.assertRaises(a.PublicationError):
+            self.admission.publish_permit(value, lease, guest, guard=lambda: None)
+        self.assertEqual(target.stat().st_ino, inode)
+
+    def test_permit_named_inode_bytes_metadata_and_directory_rechecks(self):
+        value, lease, guest = self.permit_setup()
+        handle = self.admission.publish_permit(value, lease, guest, guard=lambda: None)
+        self.addCleanup(handle.close)
+        target = self.path / 'permits' / (value['run_id'] + '.json')
+        target.chmod(0o640)
+        with self.assertRaises(a.AdmissionError):
+            handle.recheck()
+        target.chmod(0o440)
+        original = target.read_bytes()
+        target.chmod(0o640)
+        target.write_bytes(original.replace(b'"automatic":true', b'"automatic":false'))
+        target.chmod(0o440)
+        with self.assertRaises(a.AdmissionError):
+            handle.recheck()
+        target.chmod(0o640)
+        target.write_bytes(original)
+        target.chmod(0o440)
+        target.rename(target.with_suffix('.old'))
+        target.write_bytes(original)
+        os.chown(target, -1, self.gid)
+        target.chmod(0o440)
+        with self.assertRaises(a.AdmissionError):
+            handle.recheck()
+        with self.admission.open_permit(value['run_id']) as fresh:
+            directory = self.path / 'permits'
+            directory.rename(self.path / 'old-permits')
+            directory.mkdir(mode=0o710)
+            os.chown(directory, -1, self.gid)
+            with self.assertRaises(a.AdmissionError):
+                fresh.recheck()
+
+    def test_managed_inherited_borrows_exact_fds_and_ignores_gate_closure(self):
+        value, lease, guest = self.permit_setup()
+        with self.admission.publish_permit(value, lease, guest, guard=lambda: None) as handle:
+            self.admission.close_gate('shutdown')
+            with self.simulated_managed_child(value), \
+                    mock.patch.object(a.fcntl, 'flock', side_effect=AssertionError('flock called')), \
+                    mock.patch.object(a.os, 'dup', side_effect=AssertionError('dup called')):
+                borrowed = self.admission.validate_inherited(handle)
+                self.assertEqual(borrowed.fdtuple, (lease.fd, guest.fd))
+                borrowed.recheck()
+                self.assertFalse(hasattr(borrowed, 'close'))
+            os.fstat(lease.fd)
+            os.fstat(guest.fd)
+            # Runtime-only opening never touches gate or manager state.
+            with mock.patch.object(a.Admission, '_gate', side_effect=AssertionError('gate called')):
+                with a.Admission.open_runtime(self.boot, self.gid) as client:
+                    with client.open_permit(value['run_id']) as read:
+                        self.assertEqual(read.value, value)
+
+    def test_managed_inherited_rejects_credentials_namespace_and_unlocked_fd(self):
+        value, lease, guest = self.permit_setup()
+        with self.admission.publish_permit(value, lease, guest, guard=lambda: None) as handle:
+            with self.assertRaises(a.AdmissionError):
+                self.admission.validate_inherited(handle)
+            for change in ({'Uid': ['0'] * 4}, {'Gid': ['0'] * 4},
+                           {'Groups': [str(self.gid), '999']}, {'NoNewPrivs': ['0']},
+                           {'CapBnd': ['0001']}, {'NSpid': ['1', str(value['child']['pid'])]}):
+                with self.subTest(change=change), self.simulated_managed_child(value, **change):
+                    with self.assertRaises(a.AdmissionError):
+                        self.admission.validate_inherited(handle)
+            with self.simulated_managed_child(value):
+                borrowed = self.admission.validate_inherited(handle)
+                fcntl.flock(guest.fd, fcntl.LOCK_UN)
+                with self.assertRaises(a.AdmissionError):
+                    borrowed.recheck()
+
+    def test_fdinfo_bound_and_malformed_or_conflicting_locks(self):
+        value, lease, guest = self.permit_setup()
+        original = a._proc_read
+        fdinfo = '/proc/self/fdinfo/' + str(lease.fd)
+        data = original(fdinfo)
+        for altered in (data.replace(b'READ', b'WRITE'),
+                        data.replace(b'FLOCK', b'POSIX'), data + b'lock: duplicate\n',
+                        b'flags: 000000\nino: 1\n', data.replace(b' 0 EOF', b' 1 EOF')):
+            with mock.patch.object(a, '_proc_read', side_effect=lambda path:
+                                   altered if path == fdinfo else original(path)):
+                with self.assertRaises(a.AdmissionError):
+                    a._held_lock(lease.fd, 'READ', value['parent']['pid'])
+        huge = self.path / 'huge-proc'
+        huge.write_bytes(b'x' * (a.PROC_LIMIT + 1))
+        with self.assertRaises(a.AdmissionError):
+            a._proc_read(str(huge))
+
+    def test_permit_close_detaches_before_failed_close(self):
+        value, lease, guest = self.permit_setup()
+        handle = self.admission.publish_permit(value, lease, guest, guard=lambda: None)
+        number = handle.fd
+        original = os.close
+        def failed_close(fd):
+            original(fd)
+            if fd == number:
+                raise InterruptedError('closed')
+        with mock.patch.object(a.os, 'close', side_effect=failed_close):
+            with self.assertRaises(InterruptedError):
+                handle.close()
+        replacement = os.open('/dev/null', os.O_RDONLY)
+        try:
+            if replacement != number:
+                os.dup2(replacement, number)
+                original(replacement)
+                replacement = number
+            handle.close()
+            os.fstat(replacement)
+        finally:
+            original(replacement)
+
+
+    def test_proc_stat_uses_last_comm_delimiter_and_bounds_input(self):
+        # fields after comm start at state (field 3), starttime is field 22.
+        data = b'42 (odd ) comm\nwith ) parentheses) S 7 ' + b'0 ' * 17 + b'123 0\n'
+        with mock.patch.object(a, '_proc_read', return_value=data):
+            self.assertEqual(a._process(42), ({'pid': 42, 'start_ticks': 123}, 7))
+        with mock.patch.object(a, '_proc_read', return_value=data.replace(b') S ', b') Z ')):
+            with self.assertRaises(a.AdmissionError):
+                a._process(42)
+
+    def test_protected_file_metadata_with_real_tmpfs_and_single_link(self):
+        if not os.path.isdir('/dev/shm'):
+            self.skipTest('real tmpfs unavailable')
+        with tempfile.TemporaryDirectory(dir='/dev/shm') as directory:
+            target = Path(directory) / 'protected'
+            target.write_bytes(b'{}\n')
+            target.chmod(0o440)
+            fd = os.open(target, os.O_RDONLY | os.O_CLOEXEC)
+            try:
+                with mock.patch.object(a, '_tmpfs', side_effect=PRODUCTION_TMPFS):
+                    a._metadata(fd, 0o440, self.gid)
+                    os.link(target, Path(directory) / 'alias')
+                    with self.assertRaises(a.AdmissionError):
+                        a._metadata(fd, 0o440, self.gid)
+            finally:
+                os.close(fd)
+
+    def test_publication_close_failure_detaches_and_closes_return_handle(self):
+        value, lease, guest = self.permit_setup()
+        before = len(os.listdir('/proc/self/fd'))
+        original = os.close
+        failed = False
+        def close_then_fail(fd):
+            nonlocal failed
+            flags = fcntl.fcntl(fd, fcntl.F_GETFL)
+            is_writer = flags & os.O_ACCMODE == os.O_WRONLY
+            original(fd)
+            if is_writer and not failed:
+                failed = True
+                raise InterruptedError('close acknowledgement lost')
+        with mock.patch.object(a.os, 'close', side_effect=close_then_fail):
+            with self.assertRaises(a.PublicationError) as caught:
+                self.admission.publish_permit(value, lease, guest, guard=lambda: None)
+        self.assertTrue(failed)
+        self.assertEqual(caught.exception.stage, 'close')
+        self.assertEqual(before, len(os.listdir('/proc/self/fd')))
+        # Complete bytes remain authoritative and an exact explicit retry resyncs.
+        with self.admission.publish_permit(value, lease, guest, guard=lambda: None):
+            pass
+
+
+    def test_permit_root_attests_namespace_pins_and_initial_ids(self):
+        value, lease, guest = self.permit_setup()
+        for namespace in ('pid', 'user', 'mnt'):
+            for field in ('dev', 'ino'):
+                changed = copy.deepcopy(value)
+                changed['namespaces'][namespace][field] += 1
+                with self.subTest(namespace=namespace, field=field), \
+                        self.assertRaises(a.AdmissionError):
+                    self.admission.publish_permit(changed, lease, guest, guard=lambda: None)
+        changed = copy.deepcopy(value)
+        changed['namespaces']['pid']['ino'] += 1
+        original = os.stat
+        def nested_pid_stat(path, *args, **kwargs):
+            if path in ('/proc/self/ns/pid', '/proc/1/ns/pid'):
+                identity = changed['namespaces']['pid']
+                return os.stat_result((stat.S_IFREG, identity['ino'], identity['dev'],
+                                       1, 0, 0, 0, 0, 0, 0))
+            return original(path, *args, **kwargs)
+        with mock.patch.object(a.os, 'stat', side_effect=nested_pid_stat):
+            with self.assertRaisesRegex(a.AdmissionError, 'initial PID and user'):
+                self.admission.publish_permit(changed, lease, guest, guard=lambda: None)
+        self.assertFalse((self.path / 'permits').exists())
+
+    def test_managed_child_rejects_namespace_different_from_root_attestation(self):
+        value, lease, guest = self.permit_setup()
+        with self.admission.publish_permit(value, lease, guest, guard=lambda: None) as permit:
+            with self.simulated_managed_child(value):
+                original = os.stat
+                def moved_mount(path, *args, **kwargs):
+                    info = original(path, *args, **kwargs)
+                    if path == '/proc/self/ns/mnt':
+                        fields = list(info)
+                        fields[1] += 1
+                        return os.stat_result(fields)
+                    return info
+                with mock.patch.object(a.os, 'stat', side_effect=moved_mount):
+                    with self.assertRaisesRegex(a.AdmissionError, 'attested namespace differs'):
+                        self.admission.validate_inherited(permit)
 
 
 if __name__ == '__main__':

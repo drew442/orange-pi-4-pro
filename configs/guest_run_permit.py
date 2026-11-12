@@ -29,7 +29,7 @@ PROFILE = 'a733-managed-run-permit-v1'
 QEMU_PATH = '/usr/bin/qemu-system-aarch64'
 FIELDS = {'schema', 'profile', 'run_id', 'boot_id', 'storage', 'config',
           'manifest_sha256', 'head_sha256', 'host_payload_sha256', 'qemu',
-          'kvm_gid', 'parent', 'child', 'locks', 'automatic'}
+          'kvm_gid', 'parent', 'child', 'locks', 'namespaces', 'automatic'}
 
 
 def _consume(budget, count):
@@ -158,6 +158,15 @@ def validate_permit(data):
         _integer(identity['pid'], 1, MAX_PID, key + ' PID')
         _integer(identity['start_ticks'], 1, MAX_INTEGER, key + ' start ticks')
     require(value['parent']['pid'] != value['child']['pid'], 'parent and child PID collide')
+    namespaces = value['namespaces']
+    require(type(namespaces) is dict and set(namespaces) == {'pid', 'user', 'mnt'},
+            'invalid namespace fields')
+    for name in ('pid', 'user', 'mnt'):
+        identity = namespaces[name]
+        require(type(identity) is dict and set(identity) == {'dev', 'ino'},
+                'invalid ' + name + ' namespace identity')
+        _integer(identity['dev'], 0, MAX_INTEGER, name + ' namespace device')
+        _integer(identity['ino'], 1, MAX_INTEGER, name + ' namespace inode')
     locks = value['locks']
     require(type(locks) is dict and set(locks) == {'lease', 'guest'}, 'invalid lock fields')
     for key in ('lease', 'guest'):

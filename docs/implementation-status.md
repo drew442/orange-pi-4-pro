@@ -56,13 +56,22 @@ Managed-run permits, Linux process/QMP checks, bounded transport, versioned shut
 provenance and the shared checkpoint engine now pass independent review and
 **2603** privileged Ubuntu tests, five shell suites and five diagnostic cases.
 The Linux surrogate integration passes credentials, executable/UNIX-peer binding,
-QMP and raw wait; it ran no QEMU or KVM. Current packaging has 50 sources;
+QMP and raw wait; it ran no QEMU or KVM. Current packaging has 51 sources;
 historical recovery archives retain their strict 39-source boundary and pins.
 Resolved group/deadline/disk-binding findings and all preliminary logs are retained.
 [Runtime foundation evidence](evidence/managed-runtime-validation-20261112.json).
-These APIs remain uninstalled. Next software work is protected permit publication,
-inherited-lock adoption and managed launch, durable run/head/intent reconciliation,
-the root supervisor/boot services, all legacy admission and coherent backup/restore.
+Protected permit publication/inherited-lock adoption, durable run admission and
+immutable head transitions, and the paused KVM-only child launcher now pass
+independent review and **2661** privileged Ubuntu tests, five shell suites and five
+diagnostic cases. Native Linux proof confirms actual dropped credentials,
+root-attested self namespace checks, inherited locks surviving closure of parent
+copies, gate-closed adoption and ELF descriptor exec. Root namespace links remain
+inaccessible to the child; it gains no capabilities. The initial root-only test
+fixture errors and corrected retry are retained.
+[Managed launch evidence](evidence/managed-launch-validation-20261112.json).
+These helpers remain uninstalled. Root supervision is under implementation/review;
+durable outcome/checkpoint-intent reconciliation, boot services, all legacy
+admission and coherent backup/restore remain pending.
 Inactive-root deployment and physical acceptance remain pending. Two fresh managed power-key guest builds
 match all manifest files byte for byte with verified off-device artifact copies.
 [Fixture build evidence](evidence/managed-fixture-build-20261112.json). Its shutdown
@@ -171,17 +180,17 @@ binary redistribution clearance is claimed. [Source inventory](toolchain-sources
 
 ## Resources and next actions
 
-Latest privileged Ubuntu 22.04 suite: **2603 tests**, zero skips/errors/failures,
+Latest privileged Ubuntu 22.04 suite: **2661 tests**, zero skips/errors/failures,
 five shell suites and five diagnostic cases; all five TOMLs parse.
-[Managed runtime suite evidence](evidence/managed-runtime-validation-20261112.json)
+[Managed launch suite evidence](evidence/managed-launch-validation-20261112.json)
 records the latest run. The final-A warm collector authenticates release/root/policy and stops on
 actual remote release refusal; [software evidence](evidence/final-warm-binding-validation-20261110.json)
 retains independent review and the initial corrected validation-environment failure. Host checks do not prove
 hardware acceptance.
 
 At final qualification, codex has more than 24 GB available. The last full-suite
-builder suite sampled minima of 32798228480 bytes available and
-MemAvailable 7055437824 bytes.
+builder suite sampled minima of 32600240128 bytes available and
+MemAvailable 7105294336 bytes.
 Keep bulk sources, images and backups on the builder. Its LV is 128819658752 bytes
 with 4265607168 bytes VG free. All free builder capacity is approved for use and
 expansion after exact-target revalidation and independent review. Native codex

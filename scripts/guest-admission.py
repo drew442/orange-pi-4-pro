@@ -7,9 +7,11 @@ unless a launcher explicitly retains its validated shared lease descriptor.
 import contextlib
 import ctypes
 import fcntl
+import importlib.util
 import json
 import math
 import os
+from pathlib import Path
 import re
 import stat
 import time
@@ -21,6 +23,12 @@ PROFILE = 'a733-admission-v1'
 MAX_RECORD = 4096
 GATE_TIMEOUT = 5.0
 ROOT_UID = 0
+PROC_LIMIT = 65536
+INITIAL_NAMESPACES = {'pid': 0xEFFFFFFC, 'user': 0xEFFFFFFD}
+_SPEC = importlib.util.spec_from_file_location(
+    'admission_run_permit', Path(__file__).resolve().parents[1] / 'configs/guest_run_permit.py')
+PERMIT = importlib.util.module_from_spec(_SPEC)
+_SPEC.loader.exec_module(PERMIT)
 
 
 class AdmissionError(RuntimeError):
@@ -225,6 +233,180 @@ class GuestLock:
         self.close()
 
 
+def _proc_read(path):
+    with open(path, 'rb') as stream:
+        data = stream.read(PROC_LIMIT + 1)
+    require(0 < len(data) <= PROC_LIMIT, 'empty or oversized proc input')
+    return data
+
+
+def _boot_id():
+    return _proc_read('/proc/sys/kernel/random/boot_id').decode('ascii').strip()
+
+
+def _process(pid):
+    data = _proc_read('/proc/' + str(pid) + '/stat')
+    # comm may contain spaces, newlines and closing parentheses.
+    boundary = data.rfind(b') ')
+    require(boundary > 0, 'invalid process stat')
+    prefix, fields = data[:boundary], data[boundary + 2:].split()
+    require(prefix.split(b' (', 1)[0] == str(pid).encode('ascii') and
+            len(fields) >= 20 and fields[0] not in (b'Z', b'X', b'x'),
+            'invalid or dead process')
+    require(re.fullmatch(rb'[0-9]+', fields[1]) is not None and
+            re.fullmatch(rb'[0-9]+', fields[19]) is not None, 'invalid process identity')
+    return {'pid': pid, 'start_ticks': int(fields[19])}, int(fields[1])
+
+
+def _status(pid):
+    result = {}
+    for line in _proc_read('/proc/' + str(pid) + '/status').decode('ascii').splitlines():
+        if ':' in line:
+            key, value = line.split(':', 1)
+            require(key not in result, 'duplicate process status field')
+            result[key] = value.split()
+    return result
+
+
+def _held_lock(fd, mode, owner):
+    """Inspect the actual open description; never acquire or convert its flock."""
+    _readonly(fd)
+    info = os.fstat(fd)
+    fields = {}
+    for line in _proc_read('/proc/self/fdinfo/' + str(fd)).decode('ascii').splitlines():
+        key, separator, value = line.partition(':')
+        require(separator and key not in fields, 'invalid descriptor information')
+        fields[key] = value.strip()
+    require(re.fullmatch(r'[0-7]+', fields.get('flags', '')) is not None and
+            re.fullmatch(r'[0-9]+', fields.get('ino', '')) is not None,
+            'invalid descriptor flags/inode')
+    flags = int(fields['flags'], 8)
+    require(flags & os.O_ACCMODE == os.O_RDONLY and not flags & os.O_PATH and
+            int(fields['ino']) == info.st_ino, 'descriptor information differs')
+    match = re.fullmatch(r'[0-9]+: FLOCK\s+ADVISORY\s+(READ|WRITE)\s+'
+                         r'([0-9]+) ([0-9a-fA-F]+):([0-9a-fA-F]+):([0-9]+) 0 EOF',
+                         fields.get('lock', ''))
+    require(match is not None, 'missing or invalid inherited flock')
+    access, pid, major, minor, inode = match.groups()
+    require(access == mode and int(pid) == owner and
+            (int(major, 16), int(minor, 16), int(inode)) ==
+            (os.major(info.st_dev), os.minor(info.st_dev), info.st_ino),
+            'inherited flock identity or mode differs')
+    return info
+
+
+class Permit:
+    """Retained protected bytes, not launch or storage authority by themselves."""
+    def __init__(self, admission, run_id, directory, fd, data):
+        self.admission, self.run_id = admission, run_id
+        self.directory, self.fd, self.data = directory, fd, data
+
+    @property
+    def value(self):
+        return PERMIT.validate_permit(self.data)
+
+    def recheck(self):
+        require(self.fd is not None and self.directory is not None, 'permit closed')
+        self.admission._check_permits_directory(self.directory)
+        _readonly(self.fd)
+        self.admission._permit_named(self.fd, self.directory, self.run_id)
+        data = os.pread(self.fd, PERMIT.LIMIT + 1, 0)
+        require(data == self.data and PERMIT.canonical(PERMIT.validate_permit(data)) == data,
+                'permit bytes changed or noncanonical')
+        self.admission._permit_named(self.fd, self.directory, self.run_id)
+        require(self.value['run_id'] == self.run_id, 'permit run differs')
+        return self.value
+
+    def close(self):
+        fd, directory = self.fd, self.directory
+        self.fd = self.directory = None
+        try:
+            if fd is not None:
+                os.close(fd)
+        finally:
+            if directory is not None:
+                os.close(directory)
+
+    def __enter__(self):
+        self.recheck()
+        return self
+
+    def __exit__(self, *unused):
+        self.close()
+
+
+class ManagedLocks:
+    """Borrow exact inherited lock descriptions. Never dup, flock or close them.
+
+    The caller owns the permit and admission lifetimes. A gate closure is valid
+    during a run and does not invalidate this retained capability.
+    """
+    def __init__(self, admission, permit):
+        self.admission, self.permit = admission, permit
+        value = permit.recheck()
+        self.fds = self.fdtuple = (value['locks']['lease']['fd'], value['locks']['guest']['fd'])
+
+    def recheck(self):
+        value = self.permit.recheck()
+        admission = self.admission
+        require(value['boot_id'] == admission.boot_id == _boot_id() and
+                value['kvm_gid'] == admission.gid, 'managed host identity differs')
+        parent, child = value['parent'], value['child']
+        require(child['pid'] == os.getpid() and parent['pid'] == os.getppid(),
+                'permit is not for this direct child')
+        require(_process(child['pid']) == (child, parent['pid']) and
+                _process(parent['pid'])[0] == parent, 'stale managed process identity')
+        parent_status, child_status = _status(parent['pid']), _status(child['pid'])
+        require(parent_status.get('Uid') == [str(ROOT_UID)] * 4, 'managed parent is not root')
+        config = value['config']
+        require(child_status.get('Uid') == [str(config['uid'])] * 4 and
+                child_status.get('Gid') == [str(config['gid'])] * 4 and
+                child_status.get('Groups') == [str(admission.gid)] and
+                child_status.get('NoNewPrivs') == ['1'], 'managed child credentials differ')
+        for key in ('CapInh', 'CapPrm', 'CapEff', 'CapBnd', 'CapAmb'):
+            entry = child_status.get(key, [])
+            require(len(entry) == 1 and re.fullmatch(r'[0-9a-fA-F]+', entry[0]) is not None
+                    and int(entry[0], 16) == 0, 'managed child capabilities remain')
+        for pid, status in ((parent['pid'], parent_status), (child['pid'], child_status)):
+            require(status.get('NSpid') == [str(pid)], 'nested or unavailable PID namespace')
+        for namespace in ('pid', 'user', 'mnt'):
+            own = os.stat('/proc/self/ns/' + namespace)
+            # Cross-UID namespace links are ptrace protected on Linux. Root
+            # attested these exact identities before publishing this protected
+            # record; the nonroot child authenticates its own accessible links.
+            expected = value['namespaces'][namespace]
+            require((own.st_dev, own.st_ino) == (expected['dev'], expected['ino']),
+                    'managed attested namespace differs')
+            if namespace in INITIAL_NAMESPACES:
+                require(own.st_ino == INITIAL_NAMESPACES[namespace],
+                        'initial PID and user namespaces required')
+        lease = Lease(admission, self.fds[0])
+        # These temporary typed wrappers borrow; their close methods are never called.
+        admission._check_lease(lease)
+        directory = os.open('guests', os.O_PATH | os.O_DIRECTORY | os.O_NOFOLLOW
+                            | os.O_CLOEXEC, dir_fd=admission.directory)
+        try:
+            guest = GuestLock(admission, lease, config['name'], directory, self.fds[1])
+            guest.recheck()
+            for key, fd, mode in (('lease', self.fds[0], 'READ'),
+                                  ('guest', self.fds[1], 'WRITE')):
+                expected = value['locks'][key]
+                info = _held_lock(fd, mode, parent['pid'])
+                require((fd, info.st_dev, info.st_ino) ==
+                        (expected['fd'], expected['dev'], expected['ino']),
+                        'inherited descriptor binding differs')
+            require(admission.is_managed(config['name'], lease, guest),
+                    'managed name marker missing')
+        finally:
+            os.close(directory)
+        # Detect parent death/reparenting or PID reuse across all checks.
+        require(_process(parent['pid'])[0] == parent and
+                _process(child['pid']) == (child, parent['pid']) and
+                os.getppid() == parent['pid'], 'managed identity changed during verification')
+        self.permit.recheck()
+        return self.fds
+
+
 class RegistryLock:
     """Root-only final lock in lease/guest/disk/registry acquisition order."""
     def __init__(self, admission, lease, fd):
@@ -328,6 +510,205 @@ class Admission:
         except BaseException:
             instance.close()
             raise
+
+    @classmethod
+    def open_runtime(cls, boot_id, kvm_gid):
+        """Open only protected runtime directories, without taking the gate."""
+        instance = cls(boot_id, kvm_gid)
+        try:
+            instance._directories()
+            return instance
+        except BaseException:
+            instance.close()
+            raise
+
+    def _check_permits_directory(self, fd):
+        self.recheck()
+        info = _metadata(fd, 0o710, self.gid, True)
+        require(_same(info, os.stat('permits', dir_fd=self.directory,
+                                   follow_symlinks=False)), 'permit directory changed')
+
+    def _permit_named(self, fd, directory, run_id):
+        self._check_permits_directory(directory)
+        info = _metadata(fd, 0o440, self.gid)
+        require(_same(info, os.stat(_uuid(run_id) + '.json', dir_fd=directory,
+                                   follow_symlinks=False)), 'permit named inode changed')
+
+    def open_permit(self, run_id):
+        """Read protected canonical bytes; this alone grants no launch authority."""
+        _uuid(run_id)
+        self.recheck()
+        directory = os.open('permits', os.O_PATH | os.O_DIRECTORY | os.O_NOFOLLOW
+                            | os.O_CLOEXEC, dir_fd=self.directory)
+        fd = None
+        try:
+            self._check_permits_directory(directory)
+            fd = os.open(run_id + '.json', os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK
+                         | os.O_CLOEXEC, dir_fd=directory)
+            self._permit_named(fd, directory, run_id)
+            data = os.pread(fd, PERMIT.LIMIT + 1, 0)
+            result = Permit(self, run_id, directory, fd, data)
+            result.recheck()
+            return result
+        except BaseException:
+            try:
+                if fd is not None:
+                    os.close(fd)
+            finally:
+                os.close(directory)
+            raise
+
+    def validate_inherited(self, permit):
+        require(isinstance(permit, Permit) and permit.admission is self,
+                'retained permit from this admission required')
+        result = ManagedLocks(self, permit)
+        result.recheck()
+        return result
+
+    def _check_permit_publication(self, value, lease, guest_lock):
+        require(os.geteuid() == 0, 'root permit controller required')
+        require(value['boot_id'] == self.boot_id == _boot_id() and
+                value['kvm_gid'] == self.gid, 'permit host binding differs')
+        require(value['parent']['pid'] == os.getpid() and
+                _process(os.getpid())[0] == value['parent'] and
+                _status(os.getpid()).get('Uid') == [str(ROOT_UID)] * 4,
+                'permit parent identity differs')
+        require(_process(value['child']['pid']) == (value['child'], os.getpid()),
+                'permit child is not the current direct child')
+        for namespace in ('pid', 'user', 'mnt'):
+            own = os.stat('/proc/self/ns/' + namespace)
+            init = os.stat('/proc/1/ns/' + namespace)
+            expected = value['namespaces'][namespace]
+            require(_same(own, init) and
+                    (own.st_dev, own.st_ino) == (expected['dev'], expected['ino']),
+                    'permit native namespace binding differs')
+            if namespace in INITIAL_NAMESPACES:
+                require(own.st_ino == INITIAL_NAMESPACES[namespace],
+                        'initial PID and user namespaces required')
+        require(_status(os.getpid()).get('NSpid') == [str(os.getpid())],
+                'nested or unavailable parent PID namespace')
+        name = value['config']['name']
+        self._check_guest(name, lease, guest_lock)
+        require(not lease.exclusive, 'shared managed lease required')
+        for key, capability, mode in (('lease', lease, 'READ'),
+                                      ('guest', guest_lock, 'WRITE')):
+            expected = value['locks'][key]
+            info = _held_lock(capability.fd, mode, os.getpid())
+            require((capability.fd, info.st_dev, info.st_ino) ==
+                    (expected['fd'], expected['dev'], expected['ino']),
+                    'permit lock binding differs')
+        require(self.is_managed(name, lease, guest_lock), 'managed name marker missing')
+
+    def publish_permit(self, value, lease, guest_lock, *, guard):
+        """Publish a per-run pre-exec child binding with no overwrite or repair.
+
+        guard authenticates HostContext and the durable admitted head externally.
+        It runs around each mutation, as well as entry and final verification.
+        Partial protected files are retained on failure and cannot be adopted.
+        """
+        require(os.geteuid() == 0, 'root permit controller required')
+        require(callable(guard), 'trusted admitted-head guard required')
+        data = PERMIT.canonical(value)
+        value = PERMIT.validate_permit(data)
+        def check():
+            self._check_permit_publication(value, lease, guest_lock)
+            guard()
+            self._check_permit_publication(value, lease, guest_lock)
+        check()
+        directory = fd = result = None
+        stage, uncertain = 'directory', False
+        try:
+            try:
+                os.mkdir('permits', 0o710, dir_fd=self.directory)
+            except FileExistsError:
+                pass
+            else:
+                # O_PATH is retained separately; mutation descriptors are never
+                # returned to children or retained by a Permit.
+                check()
+                directory = os.open('permits', os.O_RDONLY | os.O_DIRECTORY
+                                    | os.O_NOFOLLOW | os.O_CLOEXEC, dir_fd=self.directory)
+                check()
+                os.fchown(directory, ROOT_UID, self.gid)
+                check()
+                os.fchmod(directory, 0o710)
+                check()
+                self._check_permits_directory(directory)
+                number, directory = directory, None
+                os.close(number)
+            check()
+            directory = os.open('permits', os.O_PATH | os.O_DIRECTORY | os.O_NOFOLLOW
+                                | os.O_CLOEXEC, dir_fd=self.directory)
+            self._check_permits_directory(directory)
+            filename = value['run_id'] + '.json'
+            stage = 'create'
+            check()
+            uncertain = True
+            try:
+                fd = os.open(filename, os.O_WRONLY | os.O_CREAT | os.O_EXCL
+                             | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC,
+                             0o600, dir_fd=directory)
+            except FileExistsError:
+                with self.open_permit(value['run_id']) as existing:
+                    require(existing.data == data, 'existing permit differs')
+                    check()
+                    os.fsync(existing.fd)
+                    check()
+            else:
+                check()
+                os.fchown(fd, ROOT_UID, self.gid)
+                check()
+                stage = 'write'
+                remaining = data
+                while remaining:
+                    count = os.write(fd, remaining)
+                    require(count > 0, 'short permit write')
+                    remaining = remaining[count:]
+                    check()
+                # Keep partially written bytes root-only until complete.
+                stage = 'file-fsync'
+                os.fsync(fd)
+                check()
+                os.fchmod(fd, 0o440)
+                check()
+                self._permit_named(fd, directory, value['run_id'])
+                os.fsync(fd)
+                check()
+            stage = 'directory-fsync'
+            self._check_permits_directory(directory)
+            _sync_directory(directory, self.gid)
+            check()
+            _sync_directory(self.directory, self.gid)
+            check()
+            stage = 'verify'
+            result = self.open_permit(value['run_id'])
+            try:
+                require(result.data == data, 'published permit differs')
+                check()
+                result.recheck()
+            except BaseException:
+                result.close()
+                raise
+        except BaseException as error:
+            raise PublicationError(stage, uncertain) from error
+        finally:
+            cleanup_error = None
+            descriptors = (fd, directory)
+            fd = directory = None
+            for number in descriptors:
+                if number is not None:
+                    try:
+                        os.close(number)
+                    except BaseException as error:
+                        if cleanup_error is None:
+                            cleanup_error = error
+            if cleanup_error is not None:
+                try:
+                    if result is not None:
+                        result.close()
+                finally:
+                    raise PublicationError('close', uncertain) from cleanup_error
+        return result
 
     def _directories(self):
         fd = os.open('/', os.O_PATH | os.O_DIRECTORY | os.O_CLOEXEC)

@@ -1,0 +1,204 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "result": "pass",
+  "scope": "Uninstalled root-published managed-run permits, inherited lock validation, durable admission/head chain and paused KVM-only child launcher; no root supervisor, checkpoint completion or boot-service acceptance",
+  "builder": "drew@build.drewnet.online",
+  "builder_base": "/var/lib/a733-managed-launch-validation-20261112-02",
+  "full_Ubuntu_tests": 2661,
+  "failures_errors_skips": 0,
+  "shell_suites": 5,
+  "diagnostic_cases": 5,
+  "locked_source_files": 993,
+  "source_lock": {
+    "bytes": 159005,
+    "sha256": "1a1745a64fbee13161b4a15324f3072ccbed69b02518e46877726dd0369a76d9"
+  },
+  "unit": {
+    "RuntimeMaxUSec": "8h",
+    "MainPID": "0",
+    "Result": "success",
+    "ExecMainCode": "1",
+    "ExecMainStatus": "0",
+    "CPUQuotaPerSecUSec": "2s",
+    "MemoryMax": "3221225472",
+    "ActiveState": "active",
+    "SubState": "exited"
+  },
+  "resources": {
+    "sampled_min_free_disk_bytes": 32600240128,
+    "sampled_min_available_memory_bytes": 7105294336,
+    "compilation_jobs": 2
+  },
+  "source": {
+    "build/maintenance-tools.py": {
+      "bytes": 14937,
+      "sha256": "aa46dc18dc87c7302ebb06a218c9738717019b6c0e894f5265bab9adbbf2e4a5"
+    },
+    "configs/guest_run_permit.py": {
+      "bytes": 8045,
+      "sha256": "61e32a51bec7fb5077b22e9eed709e60bf8b846b842f0743cf8dbe5cfb9bc183"
+    },
+    "docs/guest-autostart-design.md": {
+      "bytes": 24715,
+      "sha256": "d5e0b0b0a4db7d4500684b3263ae6352c794e7d60c13b027b84da02fc4cefcef"
+    },
+    "scripts/guest-admission.py": {
+      "bytes": 52421,
+      "sha256": "9bb286e3dc1d99d041a60f518bfb1d2e9e99cdbafbb35496a871be2c3bc9914b"
+    },
+    "scripts/guest-lifecycle.py": {
+      "bytes": 34840,
+      "sha256": "563b082c9940058aaedf3c3fd7017cf3d20bc0f15e274c7a358e1d82337fceca"
+    },
+    "scripts/guest-process-evidence.py": {
+      "bytes": 10684,
+      "sha256": "7e9011f3b6d2bb290ef13a737d9fb2a0dc29a689aa7fe257c91542aa3b370896"
+    },
+    "scripts/launch-managed-guest.py": {
+      "bytes": 12757,
+      "sha256": "832450f3f40238d8d6c620e4f8161817115c6f6cf6890805eb9c9c1dd1147f71"
+    },
+    "tests/test_guest_admission.py": {
+      "bytes": 67832,
+      "sha256": "4fa23a9720c426beb34087c3ac3ae50971082d7dad715ec4d7589b05ac2795fa"
+    },
+    "tests/test_guest_managed_run.py": {
+      "bytes": 25938,
+      "sha256": "0df39e811b2a3a1bbf59e9deb9b7b11098ca9748a553695841ea8411ba932182"
+    },
+    "tests/test_guest_process_evidence.py": {
+      "bytes": 12767,
+      "sha256": "b92437a67c6dbbb24e181119cb712059d273b46bfaa335525175f28d76f6244d"
+    },
+    "tests/test_guest_run_permit.py": {
+      "bytes": 9988,
+      "sha256": "436c002bf6d5a5c2c3c4c41b8c12c571b76258aa58902f4d063143e507a63aed"
+    },
+    "tests/test_host_payload.py": {
+      "bytes": 28099,
+      "sha256": "917fb2e612237317905acae9190a07fcc7e5beb11e78f329698c70a8378e3998"
+    },
+    "tests/test_launch_deterministic_host_roots.py": {
+      "bytes": 11602,
+      "sha256": "2594b2db05b6b325211cccee62d549ac32694451b6112f76d163c9cc69c81fb0"
+    },
+    "tests/test_launch_managed_guest.py": {
+      "bytes": 10926,
+      "sha256": "0cc74eb2c15bf95112ad70e2babd5642798c741b297b92ae9ec55329d73eb5b7"
+    },
+    "tests/test_maintenance_tools.py": {
+      "bytes": 16595,
+      "sha256": "b9957d227ec0c7aa3cd14bb8e1c7315f8f104a1060aa8464c238cadb291dd68e"
+    }
+  },
+  "independent_reviews": {
+    "out/managed-launch-20261112-01/durable-run-final-review.json": {
+      "bytes": 4373,
+      "sha256": "0f2e5e6806dbead36f61731eb1d5df9314a3eec82d1701c75f3a09f2d7c7a82a"
+    },
+    "out/managed-launch-20261112-01/managed-permit-adoption-final-review.json": {
+      "bytes": 7482,
+      "sha256": "b39538182b613ff33f4d2d8d18cb43c7a323d2b30ea211dbba7f37e72bae85a9"
+    },
+    "out/managed-launch-20261112-01/managed-launcher-final-review.json": {
+      "bytes": 6067,
+      "sha256": "7a73bb7d6a4017fd089370c6949dceab318373c69233936426e222fffd9fe78d"
+    }
+  },
+  "durability": "Immutable exact canonical before/after head transition published and synced before every managed CAS; immutable admission precedes admitted head; uncertain publication poisons the session and never blesses visible new bytes.",
+  "namespace_contract": "Root verifies PID/user/mount namespace dev/ino pins against self/PID1 and initial PID/user IDs before protected permit publication. Nonroot validates its own membership against those pins without reading root namespace links or gaining capabilities. Root QEMU witness independently compares actual parent/child membership to pins.",
+  "packaging": {
+    "current_sources": 51,
+    "runtime_files": 52,
+    "historical_sources": 39,
+    "entrypoints": 16,
+    "relocated_isolated_import_and_help": "pass"
+  },
+  "initial_builder_failure": {
+    "base": "/var/lib/a733-managed-launch-validation-20261112-01",
+    "tests": 2661,
+    "errors": 20,
+    "cause": "Root fixture used primary GID0 as KVM role, correctly refused by nonzero managed permit schema. One-file correction creates a fresh nonzero-group fixture and explicitly restores test file/directory GIDs after substitution. Root69/user69 admission tests pass and corrected full snapshot passes; production guard/source unchanged.",
+    "logs_retained": true
+  },
+  "native_probes": {
+    "admission-native-probe": {
+      "result": {
+        "result": "pass",
+        "scope": "Native Linux root-published permit, initial namespace pins, real setpriv credentials and inherited flock descriptions in private tmpfs subtree",
+        "hardware_acceptance": false,
+        "kvm_execution": false,
+        "storage_authenticated": false,
+        "production_runtime_path_used": false,
+        "child": {
+          "event": "inherited-ready",
+          "uid": 60002,
+          "gid": 60002,
+          "groups": [
+            108
+          ],
+          "root_namespace_readable": false,
+          "actual_flocks_verified": true,
+          "root_attested_self_namespaces_verified": true
+        },
+        "raw_wait_status": 0,
+        "gate_closed_during_adoption": true,
+        "locks_survived_parent_copy_close": true,
+        "reopen_after_child_exit": true,
+        "source_sha256": "9bb286e3dc1d99d041a60f518bfb1d2e9e99cdbafbb35496a871be2c3bc9914b"
+      },
+      "records": {
+        "admission-native-probe.py": {
+          "bytes": 6195,
+          "sha256": "ea053795d80976e96a5eb96d2d5b43cce49461f45cbdcc5665ac274d0a9a4a9d"
+        },
+        "admission-native-probe.stdout": {
+          "bytes": 786,
+          "sha256": "09636082c6110b5675f1ea175edc5bbbc0c0cc13170cda62e26911f60f777b1b"
+        },
+        "admission-native-probe.stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    "fdexec-native-probe": {
+      "result": {
+        "result": "pass",
+        "scope": "Native Python ELF descriptor exec after setpriv, with CLOEXEC fd",
+        "uid": 60002,
+        "gid": 60002,
+        "groups": [
+          108
+        ],
+        "hardware_acceptance": false,
+        "kvm_execution": false
+      },
+      "records": {
+        "fdexec-native-probe.py": {
+          "bytes": 930,
+          "sha256": "4d2f694f3a9eb158240f96d64a389cb00fb19edd1a330f2bd786d9781ac2b8d9"
+        },
+        "fdexec-native-probe.stdout": {
+          "bytes": 219,
+          "sha256": "ee4b86fb1c8bf56b0869a9f31115488dc0146a6e9801085c075faba22513b8f8"
+        },
+        "fdexec-native-probe.stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    }
+  },
+  "native_initial_fixture_failure": "Dropped child could not read private /home/drew checkout. Corrected probe stages exact root-owned 0444 source closure in its private searchable tmpfs subtree; initial stdout/stderr retained. No host home permissions changed.",
+  "receipts": {
+    "native": "out/managed-launch-20261112-01/receipts.tar",
+    "builder": "/var/lib/a733-managed-launch-validation-20261112-02/receipts.tar",
+    "bytes": 634880,
+    "sha256": "4ae6518abf9af5095e9e6b85a55f10989a12b0c5a93ae2febab9e79cb4144abd",
+    "verified_fsynced_both": true
+  },
+  "hardware_acceptance": false,
+  "remaining": "Actual root supervisor integration, authenticated fixture/outcome and durable checkpoint-intent reconciliation, coherent backup/restore, all legacy admission, boot services and inactive-root deployment; physical SPI restore/reinstall, real managed KVM and final boot qualification."
+}

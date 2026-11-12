@@ -9,6 +9,7 @@ import stat
 import struct
 import tempfile
 import unittest
+from types import SimpleNamespace
 from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -145,6 +146,9 @@ class NativeWaitTests(unittest.TestCase):
 
 
 class MockedWitnessTests(unittest.TestCase):
+    def namespace_stat(self, path):
+        pin = self.witness._permit['namespaces'][str(path).rsplit('/', 1)[-1]]
+        return SimpleNamespace(st_dev=pin['dev'], st_ino=pin['ino'])
     def setUp(self):
         self.parent = os.getpid()
         self.identity_patch = mock.patch.object(P, '_identity', side_effect=self.identity)
@@ -181,7 +185,8 @@ class MockedWitnessTests(unittest.TestCase):
         cases.extend((key + b': 0', key + b': 1') for key in
                      (b'CapInh', b'CapPrm', b'CapEff', b'CapBnd', b'CapAmb'))
         valid = status().replace(b'PPid: 100', f'PPid: {self.parent}'.encode())
-        with mock.patch.object(P, '_read', return_value=valid), mock.patch.object(P.os, 'stat'):
+        with mock.patch.object(P, '_read', return_value=valid), mock.patch.object(
+                P.os, 'stat', side_effect=self.namespace_stat):
             self.witness._credentials()
         for old, new in cases:
             data = status().replace(old, new).replace(b'PPid: 100', f'PPid: {self.parent}'.encode())
@@ -193,6 +198,13 @@ class MockedWitnessTests(unittest.TestCase):
         valid = status().replace(b'PPid: 100', f'PPid: {self.parent}'.encode())
         with mock.patch.object(P, '_read', return_value=valid), mock.patch.object(
                 P.os, 'stat', side_effect=[mock.Mock(st_dev=1, st_ino=1), mock.Mock(st_dev=1, st_ino=2)]):
+            with self.assertRaisesRegex(P.WitnessError, 'namespace'):
+                self.witness._credentials()
+
+    def test_matching_parent_and_child_still_require_permit_namespace_pin(self):
+        valid = status().replace(b'PPid: 100', f'PPid: {self.parent}'.encode())
+        with mock.patch.object(P, '_read', return_value=valid), mock.patch.object(
+                P.os, 'stat', return_value=SimpleNamespace(st_dev=123, st_ino=456)):
             with self.assertRaisesRegex(P.WitnessError, 'namespace'):
                 self.witness._credentials()
 

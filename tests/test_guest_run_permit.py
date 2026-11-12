@@ -29,6 +29,9 @@ def permit():
         'manifest_sha256': 'd' * 64, 'head_sha256': 'e' * 64,
         'host_payload_sha256': 'f' * 64,
         'qemu': {'path': P.QEMU_PATH, 'bytes': 1024, 'sha256': '0' * 64},
+        'namespaces': {'pid': {'dev': 4, 'ino': 0xEFFFFFFC},
+                       'user': {'dev': 4, 'ino': 0xEFFFFFFD},
+                       'mnt': {'dev': 4, 'ino': 4026531841}},
         'kvm_gid': 108, 'parent': {'pid': 100, 'start_ticks': 200},
         'child': {'pid': 101, 'start_ticks': 201},
         'locks': {'lease': {'fd': 3, 'dev': 0, 'ino': 1000},
@@ -75,7 +78,9 @@ class PermitTests(unittest.TestCase):
 
     def test_exact_field_sets(self):
         for path in ((), ('storage',), ('config',), ('qemu',), ('parent',),
-                     ('child',), ('locks',), ('locks', 'lease'), ('locks', 'guest')):
+                     ('child',), ('locks',), ('locks', 'lease'), ('locks', 'guest'),
+                     ('namespaces',), ('namespaces', 'pid'),
+                     ('namespaces', 'user'), ('namespaces', 'mnt')):
             for operation in ('extra', 'missing'):
                 record = permit()
                 target = record
@@ -124,6 +129,9 @@ class PermitTests(unittest.TestCase):
             bounds.extend([(('locks', role, 'fd'), 3, P.MAX_FD),
                            (('locks', role, 'dev'), 0, P.MAX_INTEGER),
                            (('locks', role, 'ino'), 1, P.MAX_INTEGER)])
+        for namespace in ('pid', 'user', 'mnt'):
+            bounds.extend([(('namespaces', namespace, 'dev'), 0, P.MAX_INTEGER),
+                           (('namespaces', namespace, 'ino'), 1, P.MAX_INTEGER)])
         for path, low, high in bounds:
             self.invalid(path, [True, False, low - 1, high + 1, 1.5, '1'])
             for value in (low, high):
@@ -133,6 +141,11 @@ class PermitTests(unittest.TestCase):
                 with self.subTest(path=path, value=value):
                     self.assertEqual(P.validate_permit(P.canonical(record)), record)
         self.invalid(('automatic',), [0, 1, None, 'true'])
+
+    def test_namespace_identity_objects_have_exact_typed_fields(self):
+        self.invalid(('namespaces',), [None, [], 'pid'])
+        for namespace in ('pid', 'user', 'mnt'):
+            self.invalid(('namespaces', namespace), [None, [], 1, True])
 
     def test_fixed_binary_and_identity_collisions(self):
         self.invalid(('qemu', 'path'), ['/tmp/qemu-system-aarch64',

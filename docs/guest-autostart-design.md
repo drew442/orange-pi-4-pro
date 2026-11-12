@@ -248,11 +248,21 @@ its direct child. The managed permit is root:KVM-group 0440 in the protected
 admission tree and binds run/boot/manifest, child PID/start ticks, parent PID/start
 ticks and both lock inode identities. Use a pre-exec barrier so the parent can
 publish the exact child permit before releasing it to setpriv/launcher exec.
+The permit also binds native PID/user/mount namespace device/inode identities.
+Root publication verifies them against itself and PID1, including the initial
+PID/user namespace IDs. The nonroot child compares its own accessible namespace
+links against those protected pins: Linux denies it access to root-parent/PID1
+namespace links. The root QEMU witness then rechecks actual parent/child
+membership against the permit. No extra child capabilities are granted.
 The nonroot launcher validates that permit against itself, inherited FDs and
 current storage, retaining only those two lock FDs and its input descriptors into
 QEMU. PID/start-tick checks prevent another process reusing a permit. Root holds
 its copies through checkpoint completion. No QMP FD is inherited with the chosen
-pathname transport. Boot preparation
+pathname transport. Root prepares `/run/a733-admission/qmp/` as root:KVM 0710
+and its `<run UUID>/` child as root:guest 0730. QEMU creates the initially absent
+`qmp.sock` there; the launcher checks retained ancestors and refuses an existing
+socket or symlink. The root-private controller directory stays separate.
+Boot preparation
 publishes root:KVM-group 0440 managed-name markers in the admission directory
 from p5 authority before opening the gate. Manual launch refuses those names;
 the root supervisor supplies a narrowly bound per-run managed permit. The permit

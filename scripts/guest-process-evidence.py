@@ -150,7 +150,9 @@ class ChildWitness:
         for name in ('pid', 'user', 'mnt'):
             supervisor = os.stat(f'/proc/{self._parent}/ns/{name}')
             child = os.stat(f'/proc/{self.pid}/ns/{name}')
-            require((supervisor.st_dev, supervisor.st_ino) == (child.st_dev, child.st_ino),
+            pin = self._permit['namespaces'][name]
+            require((supervisor.st_dev, supervisor.st_ino) == (child.st_dev, child.st_ino) ==
+                    (pin['dev'], pin['ino']),
                     'child namespace mismatch')
 
     def validate_child(self):

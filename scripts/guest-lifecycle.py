@@ -3,12 +3,15 @@
 
 Only explicit enrollment creates persistent directories and the initial head.
 Failures retain partial publications and RAM exclusion; recovery is explicit.
-This API has no CLI, launch, head transition, rollback or hardware acceptance.
+This API has no CLI, launch, checkpoint completion, rollback or hardware acceptance.
 """
+import base64
 import copy
-from contextlib import ExitStack
+from contextlib import ExitStack, contextmanager
 import hashlib
 import importlib.util
+import json
+import re
 from pathlib import Path
 
 BASE = Path(__file__).resolve().parents[1]
@@ -63,6 +66,7 @@ class StateController:
         self.context = CONTEXT.HostContext(expected_storage, lease, boot_id=boot_id)
         self.lease = lease
         self.admission = lease.admission
+        self.boot_id = boot_id
 
     def __enter__(self):
         self.context.__enter__()
@@ -153,6 +157,97 @@ class StateController:
         require(inspection.disk_record == config['disk'],
                 'disk differs from trusted manifest; recovery required')
         return {key: config[key] for key in ('name', 'uid', 'gid')}
+
+    def admit_run(self, name, trusted_manifest_sha256, run_id, *, automatic=False):
+        """Persist admission and retain exclusion; this grants no checkpoint authority."""
+        result = receipt('admit-run', name)
+        result.update(run_id=run_id, boot_id=self.boot_id,
+                      manifest_sha256=trusted_manifest_sha256)
+        stack = ExitStack()
+        inspection = None
+        try:
+            REGISTRY._digest(trusted_manifest_sha256)
+            REGISTRY._uuid(run_id)
+            require(type(automatic) is bool, 'automatic must be boolean')
+            require(name != 'firstkvm', 'firstkvm must remain manual')
+            result['stage'] = 'guest-lock'
+            lock = stack.enter_context(self.admission.guest_lock(name, self.lease, create=False))
+
+            def guard():
+                self.context.guard()
+                lock.recheck()
+                require(self.admission.is_managed(name, self.lease, lock),
+                        'managed marker missing; preparation/recovery required')
+                if inspection is not None:
+                    self._inspection(inspection, name, trusted_manifest_sha256)
+
+            result['stage'] = 'inspection'
+            with POLICY.Inspection(name, trusted_manifest_sha256) as inspected:
+                inspection = inspected
+                guard()
+                identity = self._inspection(inspection, name, trusted_manifest_sha256)
+                store = self._head_store(stack, name, guard)
+                previous_data = store.read('head.json', HEAD.LIMIT)
+                previous = HEAD.validate_head(previous_data)
+                self._storage(previous)
+                require(all(previous[k] == v for k, v in identity.items()),
+                        'head identity differs')
+                previous_pin = digest(previous_data)
+                admitted = HEAD.admit(previous, trusted_manifest_sha256, run_id, self.boot_id,
+                                      expected_head_sha256=previous_pin, automatic=automatic)
+                # Registry lock is acquired last, never while waiting for a guest/disk.
+                with ExitStack() as registry_stack:
+                    registry_lock = registry_stack.enter_context(
+                        self.admission.registry_lock(self.lease))
+
+                    def registry_guard():
+                        guard()
+                        registry_lock.recheck()
+
+                    _, _, registry = self._registry(registry_stack, registry_guard)
+                    require(registry is not None, 'registry is unconfigured')
+                    entries = [entry for entry in registry['guests'] if entry['name'] == name]
+                    require(len(entries) == 1, 'guest is not registered')
+                    entry = entries[0]
+                    require(all(entry[k] == v for k, v in identity.items()) and
+                            entry['manifest_sha256'] == trusted_manifest_sha256,
+                            'registry entry conflicts')
+                    require(not automatic or entry['enabled'], 'automatic guest disabled')
+                    record = dict(schema=1, profile=RUN_PROFILE,
+                                  storage=self.context.storage, **identity,
+                                  run_id=run_id, boot_id=self.boot_id, automatic=automatic,
+                                  manifest_sha256=trusted_manifest_sha256,
+                                  previous_head_sha256=previous_pin, previous_head=previous,
+                                  registry_generation=registry['generation'],
+                                  fixture_profile=entry['fixture_profile'])
+                    data = canonical_run(record)
+                    result['stage'] = 'run-directory'
+                    runs = stack.enter_context(store.child('runs', create=True))
+                    result['publications'].append(copy.deepcopy(runs.creation_receipt))
+                    result['stage'] = 'run-publication'
+                    result['admission_sha256'] = digest(data)
+                    result['publications'].append(runs.publish(run_id + '.json', data))
+                    result['stage'] = 'head-transition'
+                    new_data = HEAD.canonical(admitted)
+                    with publish_head_transition(store, previous_data, new_data, result):
+                        result.update(stage='head-publication', head_attempted=True)
+                        result['publications'].append(store.publish(
+                            'head.json', new_data, expected_sha256=previous_pin))
+                    result['head_sha256'] = digest(new_data)
+                    manifest = copy.deepcopy(inspection.manifest)
+                inspection = None
+            # Disk flock/input descriptors have closed before a child can launch.
+            session = ManagedRun(self, stack, lock, store, runs, record, manifest,
+                                 admitted, result)
+            session.recheck()
+            result.update(stage='complete', success=True)
+            return session
+        except BaseException as error:
+            try:
+                stack.close()
+            except BaseException as close_error:
+                result['close_error'] = type(close_error).__name__
+            raise OperationError(result, error) from error
 
     def enroll(self, name, trusted_manifest_sha256, *, enabled=False, fixture_profile='none'):
         result = receipt('enroll', name)
@@ -338,3 +433,287 @@ class StateController:
             return result
         except BaseException as error:
             raise OperationError(result, error) from error
+
+
+TRANSITION_LIMIT = 256 * 1024
+TRANSITION_PROFILE = 'a733-guest-head-transition-v1'
+TRANSITION_FIELDS = {'schema', 'profile', 'previous_head_sha256', 'new_head_sha256',
+                     'previous_head_base64', 'new_head_base64'}
+
+
+def validate_head_transition(data):
+    """Validate exact canonical before/after head bytes without adopting either."""
+    require(type(data) is bytes and 0 < len(data) <= TRANSITION_LIMIT,
+            'invalid head transition size')
+    text = data.decode('utf-8')
+    REGISTRY._check_depth(text)
+    value = json.loads(text, object_pairs_hook=REGISTRY.IDENTITY.unique_pairs,
+                       parse_constant=REGISTRY._reject_constant)
+    require(type(value) is dict and set(value) == TRANSITION_FIELDS,
+            'invalid head transition fields')
+    require(type(value['schema']) is int and value['schema'] == 1 and
+            value['profile'] == TRANSITION_PROFILE, 'invalid head transition schema/profile')
+    heads = []
+    for prefix in ('previous', 'new'):
+        pin, encoded = value[prefix + '_head_sha256'], value[prefix + '_head_base64']
+        REGISTRY._digest(pin)
+        require(type(encoded) is str and len(encoded) <= 4 * ((HEAD.LIMIT + 2) // 3),
+                'invalid encoded head size')
+        raw = base64.b64decode(encoded, validate=True)
+        head = HEAD.validate_head(raw)
+        require(HEAD.canonical(head) == raw and digest(raw) == pin and
+                base64.b64encode(raw).decode('ascii') == encoded,
+                'head transition bytes/hash differ')
+        heads.append(head)
+    previous, new = heads
+    require(new['sequence'] == previous['sequence'] + 1 and
+            new['previous_head_sha256'] == value['previous_head_sha256'] and
+            all(previous[key] == new[key] for key in ('storage', 'name', 'uid', 'gid')),
+            'head transition predecessor differs')
+    return value
+
+
+def head_transition(previous_data, new_data):
+    value = dict(schema=1, profile=TRANSITION_PROFILE,
+                 previous_head_sha256=digest(previous_data), new_head_sha256=digest(new_data),
+                 previous_head_base64=base64.b64encode(previous_data).decode('ascii'),
+                 new_head_base64=base64.b64encode(new_data).decode('ascii'))
+    data = (json.dumps(value, sort_keys=True, separators=(',', ':'),
+                       allow_nan=False) + '\n').encode('utf-8')
+    validate_head_transition(data)
+    return data
+
+
+@contextmanager
+def publish_head_transition(store, previous_data, new_data, result):
+    """Durably retain exact head edge before its CAS; exact retries sync, never adopt."""
+    data = head_transition(previous_data, new_data)
+    name = digest(previous_data) + '-' + digest(new_data) + '.json'
+    result['stage'] = 'head-transition-directory'
+    with store.child('transitions', create=True) as transitions:
+        result['publications'].append(copy.deepcopy(transitions.creation_receipt))
+        result['stage'] = 'head-transition-inspection'
+        try:
+            existing = transitions.read(name, TRANSITION_LIMIT)
+        except FileNotFoundError as error:
+            if error.filename != name:
+                raise
+            existing = None
+        if existing is None:
+            result['stage'] = 'head-transition-publication'
+            result['publications'].append(transitions.publish(name, data))
+        else:
+            validate_head_transition(existing)
+            require(existing == data, 'existing head transition differs')
+            result['stage'] = 'head-transition-synchronization'
+            result['synchronizations'].append(transitions.sync(
+                name, pin=digest(data), limit=TRANSITION_LIMIT))
+        previous_guard = store.guard
+
+        def chain_guard():
+            previous_guard()
+            transitions.read(name, TRANSITION_LIMIT, pin=digest(data))
+
+        store.guard = chain_guard
+        try:
+            chain_guard()
+            yield
+            chain_guard()
+        finally:
+            store.guard = previous_guard
+
+
+RUN_PROFILE = 'a733-guest-run-admission-v1'
+RUN_FIELDS = {'schema', 'profile', 'storage', 'name', 'uid', 'gid', 'run_id',
+              'boot_id', 'automatic', 'manifest_sha256', 'previous_head_sha256',
+              'previous_head', 'registry_generation', 'fixture_profile'}
+
+
+def _canonical_record(value):
+    data = (json.dumps(value, sort_keys=True, separators=(',', ':'),
+                       allow_nan=False) + '\n').encode('utf-8')
+    require(0 < len(data) <= HEAD.LIMIT, 'invalid run record size')
+    return data
+
+
+def validate_run(data):
+    """Validate bounded, unambiguous admission bytes, returning detached data."""
+    require(type(data) is bytes and 0 < len(data) <= HEAD.LIMIT, 'invalid run record size')
+    text = data.decode('utf-8')
+    REGISTRY._check_depth(text)
+    value = json.loads(text, object_pairs_hook=REGISTRY.IDENTITY.unique_pairs,
+                       parse_constant=REGISTRY._reject_constant)
+    require(type(value) is dict and set(value) == RUN_FIELDS, 'invalid run record fields')
+    require(type(value['schema']) is int and value['schema'] == 1 and
+            value['profile'] == RUN_PROFILE, 'invalid run schema/profile')
+    for key in ('run_id', 'boot_id'):
+        REGISTRY._uuid(value[key])
+    require(type(value['automatic']) is bool, 'automatic must be boolean')
+    generation = value['registry_generation']
+    require(type(generation) is int and 0 <= generation <= REGISTRY.MAX_GENERATION,
+            'invalid registry generation')
+    require(type(value['fixture_profile']) is str and
+            value['fixture_profile'] in REGISTRY.FIXTURE_PROFILES, 'invalid fixture profile')
+    previous = HEAD.validate_head(HEAD.canonical(value['previous_head']))
+    require(previous['storage'] == value['storage'] and
+            all(previous[key] == value[key] for key in
+                ('name', 'uid', 'gid', 'manifest_sha256')), 'run/prior head binding differs')
+    HEAD.admit(previous, value['manifest_sha256'], value['run_id'], value['boot_id'],
+               expected_head_sha256=value['previous_head_sha256'],
+               automatic=value['automatic'])
+    require(value['name'] != 'firstkvm', 'firstkvm must remain manual')
+    return value
+
+
+def canonical_run(value):
+    return _canonical_record(validate_run(_canonical_record(value)))
+
+
+class ManagedRun:
+    """Own retained stores/guest exclusion, borrowing the controller and lease.
+
+    mark_running requires the supervisor's authenticated direct child and paused
+    QMP readiness. No method here establishes that evidence or grants checkpoint
+    authority. A failed transition poisons this object even if rename succeeded.
+    """
+    def __init__(self, controller, stack, lock, store, runs, record, manifest, head, result):
+        self._controller, self._stack = controller, stack
+        self._lock, self._store, self._runs = lock, store, runs
+        self._record = validate_run(canonical_run(record))
+        self._manifest = copy.deepcopy(manifest)
+        self._head = HEAD.validate_head(HEAD.canonical(head))
+        self._head_pin = digest(HEAD.canonical(head))
+        self._admission_pin = digest(canonical_run(record))
+        self._closed = self._poisoned = False
+        self._receipt = result
+        self._placement_guard = store.guard
+        store.guard = self._record_guard
+
+    def _record_guard(self):
+        self._placement_guard()
+        data = self._runs.read(self.run_id + '.json', HEAD.LIMIT, pin=self._admission_pin)
+        require(validate_run(data) == self._record, 'admission record differs')
+
+    @property
+    def lease(self):
+        return self._controller.lease
+
+    @property
+    def guest_lock(self):
+        return self._lock
+
+    @property
+    def manifest(self):
+        return copy.deepcopy(self._manifest)
+
+    @property
+    def config(self):
+        return copy.deepcopy(self._manifest['config'])
+
+    @property
+    def run_id(self):
+        return self._record['run_id']
+
+    @property
+    def boot_id(self):
+        return self._record['boot_id']
+
+    @property
+    def head_sha256(self):
+        return self._head_pin
+
+    @property
+    def admission_sha256(self):
+        return self._admission_pin
+
+    @property
+    def receipt(self):
+        return copy.deepcopy(self._receipt)
+
+    def recheck(self):
+        require(not self._closed and not self._poisoned, 'run session closed or poisoned')
+        self._controller.context.guard()
+        self._lock.recheck()
+        require(self._controller.admission.is_managed(
+            self._record['name'], self.lease, self._lock), 'managed marker missing')
+        data = self._runs.read(self.run_id + '.json', HEAD.LIMIT, pin=self._admission_pin)
+        require(validate_run(data) == self._record, 'admission record differs')
+        require(self._record['storage'] == self._controller.context.storage,
+                'run storage identity differs')
+        data = self._store.read('head.json', HEAD.LIMIT, pin=self._head_pin)
+        head = HEAD.validate_head(data)
+        require(head == self._head and all(head[key] == self._record[key] for key in
+                ('storage', 'name', 'uid', 'gid', 'manifest_sha256', 'run_id')) and
+                head['last_boot_id'] == self.boot_id, 'current run head differs')
+        return copy.deepcopy(head)
+
+    def _transition(self, operation, builder):
+        result = receipt(operation, self._record['name'])
+        result.update(run_id=self.run_id, boot_id=self.boot_id,
+                      head_sha256=self._head_pin, admission_sha256=self._admission_pin)
+        self._pending_failure_receipt = None
+        try:
+            result['stage'] = 'run-recheck'
+            head = self.recheck()
+            new = builder(head)
+            if self._pending_failure_receipt is not None:
+                result['publications'].append(self._pending_failure_receipt)
+            data = HEAD.canonical(new)
+            result['stage'] = 'head-transition'
+            with publish_head_transition(self._store, HEAD.canonical(head), data, result):
+                result.update(stage='head-publication', head_attempted=True)
+                result['publications'].append(self._store.publish(
+                    'head.json', data, expected_sha256=self._head_pin))
+            # Never adopt a merely visible publication following an exception.
+            self._head, self._head_pin = new, digest(data)
+            result.update(stage='complete', success=True, head_sha256=self._head_pin)
+            self._receipt = result
+            return copy.deepcopy(result)
+        except BaseException as error:
+            if (self._pending_failure_receipt is not None and
+                    self._pending_failure_receipt not in result['publications']):
+                result['publications'].append(self._pending_failure_receipt)
+            self._poisoned = True
+            self._receipt = result
+            raise OperationError(result, error) from error
+
+    def mark_running(self):
+        """Persist externally authenticated direct-child/paused-QMP readiness."""
+        return self._transition('mark-running', lambda head: HEAD.mark_running(
+            head, expected_head_sha256=self._head_pin))
+
+    def mark_stopping(self):
+        """Persist externally authenticated stop request or observed self-shutdown."""
+        return self._transition('mark-stopping', lambda head: HEAD.mark_stopping(
+            head, expected_head_sha256=self._head_pin))
+
+    def quarantine(self, reasoncode):
+        """Retain exact failure authority; no force, adoption or reset is provided."""
+        def build(head):
+            require(type(reasoncode) is str and
+                    re.fullmatch(r'[a-z][a-z0-9-]{0,63}', reasoncode) is not None,
+                    'invalid quarantine reason code')
+            record = dict(schema=1, profile='a733-guest-run-failure-v1',
+                          **{key: copy.deepcopy(self._record[key]) for key in
+                             ('storage', 'name', 'uid', 'gid', 'run_id', 'boot_id',
+                              'manifest_sha256')},
+                          head_sha256=self._head_pin, head=head, code=reasoncode)
+            data = _canonical_record(record)
+            self._pending_failure_receipt = self._runs.publish(self.run_id + '.failure.json', data)
+            return HEAD.quarantine(head, digest(data), expected_head_sha256=self._head_pin)
+
+        return self._transition('quarantine', build)
+
+    def close(self):
+        if self._closed:
+            return
+        self._closed = True
+        stack, self._stack = self._stack, None
+        stack.close()  # ExitStack attempts every callback, without recycling FDs.
+
+    def __enter__(self):
+        self.recheck()
+        return self
+
+    def __exit__(self, *_args):
+        self.close()
