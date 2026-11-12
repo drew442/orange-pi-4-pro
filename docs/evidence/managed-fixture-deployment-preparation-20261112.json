@@ -1,0 +1,111 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "result": "pass: artifact-bound offline preparation and independent source review; hardware deployment pending",
+  "candidate_source": "2996365a11cb07deb20eb4325c90841de8ab820e",
+  "prepared_inputs": {
+    "schema": 1,
+    "source_archive": {
+      "bytes": 8453817,
+      "sha256": "ad271ab152a2307f763a2f9e565625111416fc29892a9227dfa10813a588a082",
+      "builder": "/var/lib/a733-guest-state-validation-20261112-02/managed-fixture-artifacts.tar.gz",
+      "native": "out/production-readiness-20261112-01/managed-fixture-artifacts.tar.gz",
+      "verified_fsynced_both": true
+    },
+    "files": {
+      "Image": {
+        "bytes": 5253128,
+        "sha256": "29ba9385454cfbde890cabd24ced727838658d939368ab52dfbf6d770433e959"
+      },
+      "initramfs.cpio.gz": {
+        "bytes": 975144,
+        "sha256": "315f6ff4398e477bf1e040cca3c60483dca88c68e99a9a3cda0ecd545b5d0da3"
+      },
+      "guest-disk.raw": {
+        "bytes": 134217728,
+        "sha256": "ff595fac0b9a7d990f099edc0dd0f9d4859fb9942e185d2f2377088ce32bd577"
+      },
+      "autokvm-qualification.json": {
+        "bytes": 481,
+        "sha256": "184aba539cd74ce504f901c0ae61ebb529cf67f300e0424f6948e93325860585"
+      },
+      "autokvm-qualification-accounts.json": {
+        "bytes": 67,
+        "sha256": "dc507e2bdb1cb61adbbb38da72fc863d49addc92d77b4ff1cf9faddcd6d024a0"
+      }
+    },
+    "candidate_source": "2996365a11cb07deb20eb4325c90841de8ab820e",
+    "board_writes": false,
+    "hardware_acceptance": false,
+    "purpose": "Preserve one exact reviewed seed payload and validated opt-in configs; no hardware enrollment or free-UID claim"
+  },
+  "prepared_custody": {
+    "local": "out/managed-fixture-deployment-20261112-01/prepared-metadata.tar.gz",
+    "builder": "/var/lib/a733-managed-fixture-deployment-20261112-01/prepared-metadata.tar.gz",
+    "bytes": 3995,
+    "sha256": "35d53dde6033db7bee8b20ebc6d7bca300faddff516f5c62388bd74458115bfb",
+    "verified_both_hosts": true,
+    "builder_original_seed_archive_revalidated": true
+  },
+  "expected_initial_enrollment": {
+    "path": "out/managed-fixture-deployment-20261112-01/initial-enrollment.expected.json",
+    "bytes": 1022,
+    "sha256": "921a5ad120829ea58bfcf9e3bd79342f996469d6609ed874c51c47a8dfcf7eba",
+    "scope": "Comparison reference for exact initial seed and fixed config/UUID; never install over guest metadata or reuse after checkpoint"
+  },
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "result": "pass",
+    "reviewed_inputs": {
+      "docs/managed-fixture-deployment.md": {
+        "bytes": 7708,
+        "sha256": "31cadacfa62b03410a42ea9835e0731c826b4d65bb023bfba9d0f56575848c52"
+      },
+      "configs/autokvm-qualification.json": {
+        "bytes": 481,
+        "sha256": "184aba539cd74ce504f901c0ae61ebb529cf67f300e0424f6948e93325860585"
+      },
+      "configs/autokvm-qualification-accounts.json": {
+        "bytes": 67,
+        "sha256": "dc507e2bdb1cb61adbbb38da72fc863d49addc92d77b4ff1cf9faddcd6d024a0"
+      },
+      "docs/evidence/managed-fixture-build-20261112.json": {
+        "bytes": 4312,
+        "sha256": "ee56f690df6825ca43093886d2d54b7821d4762b64fb0ec6b172fbc278c63fc4"
+      }
+    },
+    "checks": {
+      "configuration_validation": "Both inputs accepted by actual configs/guest_config.py and configs/guest_identity.py validate_config; exact shared autokvm UID/GID 60002; memory 256/512 MiB, 1 vCPU, isolated 18081->80.",
+      "cli_and_order": "Actual main/prepare/apply interfaces match all guide arguments: initial policy with admission runtime absent -> systemd storage bootstrap/empty managed registry -> explicit locked RAM account -> payload prepare/apply -> managed enroll enabled=False with managed-power-key-v1 -> enable -> one explicit start.",
+      "initial_bootstrap": "guest-boot-state.py creates an empty managed registry; guest-boot-accounts.py discovers only protected published enrollments (including manual firstkvm), so unpublished autokvm needs the explicit account step.",
+      "manifest": {
+        "construction": "Executed AST-selected records/manifest/canonical construction from actual enroll-guest.py stage_and_publish without I/O; validated with actual guest_manifest validator and canonical; bytes match retained expected reference.",
+        "bytes": 1022,
+        "sha256": "921a5ad120829ea58bfcf9e3bd79342f996469d6609ed874c51c47a8dfcf7eba"
+      },
+      "seed": "All five local seed records exactly match guide/receipt/config sources; all three payload files match build evidence and both producer directories in authenticated archive.",
+      "archive": {
+        "bytes": 8453817,
+        "sha256": "ad271ab152a2307f763a2f9e565625111416fc29892a9227dfa10813a588a082"
+      },
+      "bash_syntax_blocks": 3,
+      "preservation_and_gates": "Guide preserves BOOT, normalized A, firstkvm, original/SPI backups and accepted endurance evidence; native B boot/install and fresh independently reviewed live guard precede any STATE copy/command, and guarded input copy receipts are explicitly pending. No unguarded copy recipe is supplied.",
+      "acceptance_boundary": "Physical nonroot KVM CPU/disk/network, guest-owned shutdown/checkpoint/restart, unattended current-boot automatic run, maintenance/rollback/return, mount/shutdown ordering and final qualification remain required; explicit start is not automatic-boot acceptance."
+    },
+    "limitations": [
+      "Physical new B remains uninstalled/unbooted; this review establishes source/input/procedure consistency only.",
+      "No current target/account/resource availability claim; live planners and fresh independent review remain mandatory.",
+      "No endurance rerun; planned tests remain capped at eight hours."
+    ]
+  },
+  "board_writes": false,
+  "enrollment_or_start_executed": false,
+  "hardware_acceptance": false,
+  "remaining": [
+    "Complete SPI recovery and boot the matched B root",
+    "Fresh independently reviewed live guard and guarded STATE input transfer",
+    "Physical policy/bootstrap/account/enrollment/managed registration and real KVM demonstration",
+    "Coherent restore, rollback/return, final boot series and independent reproduction"
+  ]
+}

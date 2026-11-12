@@ -106,6 +106,7 @@ requires legacy confirmation/readback behavior; the new optional-readback UI
 becomes available only after booting the new root. The research transfer draft
 is not executable until its live guard precedes every STATE write.
 
+Use the [artifact-bound fixture setup](managed-fixture-deployment.md) after matched B boots.
 After deploying matched B, publish its explicit storage policy before runtime
 initialization, prepare the disposable locked account and payload, then register
 and enable the managed fixture. Prove actual nonroot KVM, unattended boot,

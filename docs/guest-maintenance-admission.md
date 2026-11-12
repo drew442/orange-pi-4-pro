@@ -106,14 +106,14 @@ by those checks.
 
 ## Explicit guest controls in the candidate
 
-`manage-guests.py` is a reviewed source candidate awaiting candidate construction
-and hardware validation. Do not copy it into the running released
+`manage-guests.py` is packaged in the reviewed candidate and awaits physical
+deployment and hardware validation. Do not copy it into the running released
 host or treat these examples as instructions to start the pending deployment.
 Once the matched candidate is installed, invoke its fixed packaged entrypoint:
 
 ```sh
 python3 -I -B /usr/lib/a733-tools/scripts/manage-guests.py status
-python3 -I -B /usr/lib/a733-tools/scripts/manage-guests.py enroll autokvm --manifest-sha256 MANIFEST_SHA256
+python3 -I -B /usr/lib/a733-tools/scripts/manage-guests.py enroll autokvm --manifest-sha256 MANIFEST_SHA256 --fixture-profile managed-power-key-v1
 python3 -I -B /usr/lib/a733-tools/scripts/manage-guests.py enable autokvm --manifest-sha256 MANIFEST_SHA256
 python3 -I -B /usr/lib/a733-tools/scripts/manage-guests.py start autokvm
 python3 -I -B /usr/lib/a733-tools/scripts/manage-guests.py stop autokvm
