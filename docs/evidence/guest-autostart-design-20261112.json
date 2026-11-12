@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "scope": "Coordinator architecture and independent source review; implementation and hardware gates remain pending",
+  "design": {
+    "path": "docs/guest-autostart-design.md",
+    "bytes": 20279,
+    "sha256": "7eb72b466a74d6b1022174d5c1ddb75412b31196dce37a8323218a98112e422b"
+  },
+  "independent_architecture_review": {
+    "path": "out/production-readiness-20261112-01/guest-autostart-architecture-review.json",
+    "bytes": 6936,
+    "sha256": "0927801e70bfe2e9ce667ed7894abd2ed1f89d192f96bbf7167561ac15935da8",
+    "result": "pass for bounded pure-state/protected-I/O packages"
+  },
+  "pure_registry": {
+    "tests": 12,
+    "full_repository_validation": "docs/evidence/spi-metadata-validation-20261112.json",
+    "runtime_installed": false
+  },
+  "QMP_primary_source_extraction": {
+    "path": "out/production-readiness-20261112-01/qmp-shutdown-source-evidence.json",
+    "bytes": 5407,
+    "sha256": "1e40b8183f7916b11d782531c506f03cf85e1cf30d130f6e2dec1d7a12730767",
+    "archives_lock": "configs/host-userspace-source-archives.lock.json",
+    "coordinator_checked": "KVM_SYSTEM_EVENT_SHUTDOWN and PSCI SYSTEM_OFF map to guest-shutdown; QAPI guest/reason event; separate raw exit/identity and guest OS shutdown behavior still required"
+  },
+  "hardware_acceptance": false,
+  "remaining": "Admission/protected state, supervision, checkpoint reconciliation, packaging, independent implementation review and actual KVM/rollback/shutdown tests."
+}
