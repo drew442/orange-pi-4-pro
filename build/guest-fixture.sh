@@ -3,8 +3,15 @@
 set -euo pipefail
 export LC_ALL=C TZ=UTC
 umask 022
-[[ $# == 3 ]] || { echo "Usage: $0 GIT_KERNEL_TREE STATIC_AARCH64_BUSYBOX NEW_OUTPUT_DIRECTORY" >&2; exit 2; }
+[[ $# == 3 || $# == 4 ]] || { echo "Usage: $0 GIT_KERNEL_TREE STATIC_AARCH64_BUSYBOX NEW_OUTPUT_DIRECTORY [managed-power-key-v1]" >&2; exit 2; }
+profile=legacy
+if [[ $# == 4 ]]; then
+    [[ $4 == managed-power-key-v1 ]] || { echo 'Unsupported guest fixture profile' >&2; exit 2; }
+    profile=$4
+fi
 repo=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)
+guest_init=$repo/configs/guest-init
+[[ $profile != managed-power-key-v1 ]] || guest_init=$repo/configs/managed-guest-init
 output=$(realpath -m -- "$3")
 [[ $(dirname -- "$output") == "$repo/out" && $(basename -- "$output") =~ ^guest-fixture-[A-Za-z0-9][A-Za-z0-9._-]*$ ]] || {
     echo 'Output must be a new direct repo/out/guest-fixture-NAME directory' >&2; exit 1;
@@ -35,12 +42,15 @@ PY
 [[ $(realpath -- "$(command -v aarch64-linux-gnu-gcc)") == /usr/bin/aarch64-linux-gnu-gcc-11 ]] || {
     echo 'Compiler must resolve to the Ubuntu-packaged GCC 11 executable' >&2; exit 1;
 }
-python3 - "$repo/configs/builder-packages.lock.tsv" <<'PY_PACKAGES'
+python3 - "$repo/configs/builder-packages.lock.tsv" "$profile" <<'PY_PACKAGES'
 from pathlib import Path
 import subprocess
 import sys
 locked = {line.split('\t')[0]: line for line in Path(sys.argv[1]).read_text().splitlines()}
-for package in ('gcc-11-aarch64-linux-gnu', 'binutils-aarch64-linux-gnu'):
+packages = ['gcc-11-aarch64-linux-gnu', 'binutils-aarch64-linux-gnu']
+if sys.argv[2] == 'managed-power-key-v1':
+    packages.append('qemu-user-static')
+for package in packages:
     current = subprocess.check_output(['dpkg-query', '-W', '-f=${binary:Package}\t${Version}\t${Architecture}', package], text=True)
     if current != locked[package]:
         raise SystemExit(f'Pinned builder package mismatch: {package}')
@@ -48,6 +58,40 @@ PY_PACKAGES
 header=$(readelf -h -- "$busybox")
 [[ $header == *ELF64* && $header == *AArch64* && $header == *'little endian'* ]] || { echo 'BusyBox is not ARM64 ELF' >&2; exit 1; }
 [[ $(readelf -l -- "$busybox") != *INTERP* && $(readelf -d -- "$busybox") != *'(NEEDED)'* ]] || { echo 'BusyBox must be static' >&2; exit 1; }
+if [[ $profile == managed-power-key-v1 ]]; then
+    command -v qemu-aarch64-static >/dev/null || { echo 'Missing qemu-aarch64-static' >&2; exit 1; }
+    [[ $(realpath -- "$(command -v qemu-aarch64-static)") == /usr/bin/qemu-aarch64-static ]] || {
+        echo 'Use the pinned Ubuntu qemu-user-static executable' >&2; exit 1;
+    }
+    # Host-only ARM userspace compatibility check, never KVM acceptance. Verify
+    # the exact parser flags and arm64 little-endian 24-byte input_event layout.
+    python3 - "$busybox" <<'PY_OD'
+import os, struct, subprocess, sys
+words = (1, 2, 3, 4, 5, 6, 7, 8, 1, 116, 1, 0)
+# Back-to-back reads share one pipe description just like the guest event fd.
+# A reader that prefetches the following record must fail this preflight.
+records = ((0,) * 12, words, (9, 8, 7, 6, 5, 4, 3, 2, 1, 116, 0, 0))
+reader, writer = os.pipe()
+try:
+    os.write(writer, b''.join(struct.pack('<12H', *row) for row in records))
+finally:
+    os.close(writer)
+try:
+    for expected in records:
+        probe = subprocess.run(['/usr/bin/qemu-aarch64-static', sys.argv[1], 'od',
+                                '-An', '-v', '-tu2', '-w24', '-N24'],
+                               stdin=reader, capture_output=True, timeout=10)
+        try:
+            valid = (probe.returncode == 0 and len(probe.stdout.splitlines()) == 1
+                     and tuple(map(int, probe.stdout.split())) == expected)
+        except ValueError:
+            valid = False
+        if not valid:
+            raise SystemExit('Pinned BusyBox lacks required exact-record od support: ' + probe.stderr.decode(errors='replace'))
+finally:
+    os.close(reader)
+PY_OD
+fi
 export SOURCE_DATE_EPOCH=${pins[3]}
 export KBUILD_BUILD_TIMESTAMP='2026-11-04 00:00:00 UTC'
 export KBUILD_BUILD_USER=builder KBUILD_BUILD_HOST=jammy KBUILD_BUILD_VERSION=1
@@ -60,13 +104,22 @@ git -C "$kernel" archive HEAD | tar -x -C "$output/src"
 # Empty .scmversion prevents setlocalversion discovering a surrounding Git checkout.
 : > "$output/src/.scmversion"
 cp -- "$repo/configs/guest-kernel.fragment" "$output/guest-kernel.fragment"
+if [[ $profile == managed-power-key-v1 ]]; then
+    cp -- "$repo/configs/managed-guest-kernel.fragment" "$output/managed-guest-kernel.fragment"
+fi
 kmake() { make -C "$output/src" ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- "$@"; }
 kmake tinyconfig > "$output/logs/kernel-config.log" 2>&1
 (cd "$output/src"; scripts/kconfig/merge_config.sh -m .config "$output/guest-kernel.fragment") >> "$output/logs/kernel-config.log" 2>&1
+if [[ $profile == managed-power-key-v1 ]]; then
+    (cd "$output/src"; scripts/kconfig/merge_config.sh -m .config "$output/managed-guest-kernel.fragment") >> "$output/logs/kernel-config.log" 2>&1
+fi
 kmake olddefconfig >> "$output/logs/kernel-config.log" 2>&1
 required=(ARCH_VEXPRESS ARM_PSCI_FW SMP ARM_GIC ARM_GIC_V3 ARM_GIC_V3_ITS PCI PCI_MSI PCI_HOST_GENERIC
     VIRTIO_MENU VIRTIO VIRTIO_PCI VIRTIO_BLK VIRTIO_NET BLOCK BLK_DEV EXT4_FS NET INET PACKET UNIX NETDEVICES NET_CORE BLK_DEV_INITRD
     RD_GZIP DEVTMPFS PROC_FS SYSFS TMPFS BINFMT_ELF BINFMT_SCRIPT PRINTK TTY SERIAL_AMBA_PL011 SERIAL_AMBA_PL011_CONSOLE POSIX_TIMERS FUTEX)
+if [[ $profile == managed-power-key-v1 ]]; then
+    required+=(INPUT INPUT_EVDEV INPUT_KEYBOARD KEYBOARD_GPIO GPIOLIB GPIO_PL061 ARM_AMBA IRQ_DOMAIN GPIOLIB_IRQCHIP)
+fi
 for symbol in "${required[@]}"; do
     grep -qx "CONFIG_${symbol}=y" "$output/src/.config" || { echo "Required guest symbol missing: $symbol" >&2; exit 1; }
 done
@@ -81,7 +134,7 @@ root=$output/initramfs-root
 mkdir -p -- "$root"/{bin,dev,proc,sys,tmp,run,mnt,etc,usr/share/licenses,www/cgi-bin}
 cp -- "$busybox" "$root/bin/busybox"
 ln -s busybox "$root/bin/sh"
-cp -- "$repo/configs/guest-init" "$root/init"
+cp -- "${guest_init:-$repo/configs/guest-init}" "$root/init"
 cp -- "$repo/configs/guest-network-cgi" "$root/www/cgi-bin/probe"
 cp -- "$repo/licenses/GPL-2.0.txt" "$repo/licenses/busybox-copyright.txt" "$root/usr/share/licenses/"
 chmod 0755 "$root/init" "$root/bin/busybox" "$root/www/cgi-bin/probe"
@@ -107,7 +160,7 @@ find "$root" -exec touch -h -d "@$SOURCE_DATE_EPOCH" {} +
 python3 -I -B "$repo/build/guest-seed.py" "$output/guest-disk.raw" > "$output/logs/disk-build.log" 2>&1
 cp -- "$repo/build/guest-fixture.sh" "$output/guest-fixture.sh"
 cp -- "$repo/build/guest-seed.py" "$output/guest-seed.py"
-cp -- "$repo/configs/guest-init" "$output/guest-init"
+cp -- "$guest_init" "$output/guest-init"
 cp -- "$repo/configs/guest-network-cgi" "$output/guest-network-cgi"
 cp -R -- "$repo/licenses" "$output/licenses"
 # Preserve the complete helper import/source closure, independent of the checkout.
@@ -116,7 +169,10 @@ tar --sort=name --mtime="@$SOURCE_DATE_EPOCH" --owner=0 --group=0 --numeric-owne
 # src/LICENSES and src/COPYING are retained alongside the full pinned source.
 (cd "$output"; sha256sum Image kernel.config initramfs.cpio.gz guest-disk.raw \
     guest-kernel.fragment guest-init guest-network-cgi guest-fixture.sh guest-seed.py guest-build-recipe.tar.gz diagnostic-sources.lock.json builder-packages.lock.tsv > SHA256SUMS)
-python3 - "$output" "${pins[0]}" "${pins[1]}" "${pins[2]}" <<'PY'
+if [[ $profile == managed-power-key-v1 ]]; then
+    (cd "$output"; sha256sum managed-guest-kernel.fragment >> SHA256SUMS)
+fi
+python3 - "$output" "${pins[0]}" "${pins[1]}" "${pins[2]}" "$profile" "${guest_init#"$repo/"}" <<'PY'
 import hashlib, json, os, pathlib, sys
 root = pathlib.Path(sys.argv[1])
 files = {}
@@ -129,6 +185,9 @@ assert seed['source_date_epoch'] == int(os.environ['SOURCE_DATE_EPOCH'])
 (root / 'artifact-manifest.json').write_text(json.dumps({
     'schema': 1, 'purpose': 'ARM64 QEMU virt KVM guest fixture; preparation only',
     'hardware_acceptance': 'pending', 'kernel_commit': sys.argv[2],
+    'profile': sys.argv[5], 'selected_init': sys.argv[6],
+    'extra_kernel_fragment': 'configs/managed-guest-kernel.fragment' if sys.argv[5] == 'managed-power-key-v1' else None,
+    'shutdown': 'host QMP system_powerdown -> GPIO KEY_POWER -> guest sync/poweroff; hardware unproven' if sys.argv[5] == 'managed-power-key-v1' else 'guest selfshutdown after HTTP confirmation',
     'busybox_binary_sha256': sys.argv[3], 'compiler_version': sys.argv[4],
     'source_date_epoch': 1793750400, 'compilation_jobs': 2,
     'disk_fixture_id': 'a733-kvm-guest-fixture-v1', 'initial_counter': 0,

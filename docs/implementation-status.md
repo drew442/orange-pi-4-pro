@@ -61,8 +61,10 @@ retain their strict 39-source boundary and original pins. The first combined run
 three packaging failures and successful corrected retry are retained.
 [State/bootstrap evidence](evidence/guest-state-validation-20261112.json).
 Legacy integration, supervision, checkpoint reconciliation, deployment packaging
-and physical acceptance remain pending. The managed power-key guest fixture is
-being built reproducibly; its shutdown path remains hardware-unproven.
+and physical acceptance remain pending. Two fresh managed power-key guest builds
+match all manifest files byte for byte with verified off-device artifact copies.
+[Fixture build evidence](evidence/managed-fixture-build-20261112.json). Its shutdown
+path remains hardware-unproven.
 
 ## Live board and constraints
 

@@ -1,0 +1,120 @@
+#!/bin/sh
+# Runs only as guest PID 1. Disk writes require the exact disposable fixture identity.
+[ "$$" -eq 1 ] || { echo "Guest init requires PID 1" >&2; exit 1; }
+export PATH=/bin
+/bin/busybox --install -s /bin
+fail() {
+    echo "FAIL $*"
+    while :; do
+        setsid cttyhack /bin/sh -i </dev/console >/dev/console 2>&1
+        sleep 1
+    done
+}
+mount -t proc proc /proc || fail proc
+mount -t sysfs sysfs /sys || fail sysfs
+mount -t devtmpfs devtmpfs /dev || fail devtmpfs
+exec </dev/console >/dev/console 2>&1
+mount -t tmpfs -o mode=1777,nosuid,nodev tmpfs /tmp || fail tmpfs
+mount -t tmpfs -o mode=0755,nosuid,nodev tmpfs /run || fail run
+printf 'a733-kvm-guest-fixture-v1\n' | sha256sum > /run/cpu.sha256 || fail checksum
+read -r checksum _ignored < /run/cpu.sha256
+[ "$checksum" = 5ab247be0ba27004a2adee73bc50d4a1dfcd98f16ef5fa32c024e5f1c5c29f1c ] || fail checksum
+printf 'PASS cpu sha256=%s\n' "$checksum"
+# Wait for built-in virtio block probing; never scan or format other disks.
+tries=0
+while [ ! -b /dev/vda ]; do
+    tries=$((tries + 1))
+    [ "$tries" -lt 10 ] || fail missing-fixture-disk
+    sleep 1
+done
+fixture_disk_identity() {
+    # Read only the fixed fixture superblock. Exact hex comparisons also reject
+    # short reads; NUL padding in the label is part of the required identity.
+    fixture_field() {
+        field=$(od -An -v -tx1 -j "$2" -N "$3" "$1" 2>/dev/null) || return 1
+        field=$(printf '%s' "$field" | tr -d ' \n') || return 1
+        [ "${#field}" -eq "$(( $3 * 2 ))" ] && [ "$field" = "$4" ]
+    }
+    fixture_field "$1" 1080 2 53ef &&
+        fixture_field "$1" 1116 12 28000000c20200006b040000 &&
+        fixture_field "$1" 1128 16 d67f33bae20146bc980b61901bbd1156 &&
+        fixture_field "$1" 1144 16 6b766d2d666978747572650000000000
+}
+fixture_disk_identity /dev/vda || fail disk-identity
+# noload prevents journal replay before the content marker is verified.
+mount -t ext4 -o ro,noload /dev/vda /mnt || fail disk-mount
+[ "$(cat /mnt/fixture-id)" = a733-kvm-guest-fixture-v1 ] || fail disk-marker
+counter=$(cat /mnt/counter) || fail disk-counter
+case "$counter" in ''|*[!0-9]*) fail disk-counter ;; esac
+# Bound arithmetic and forbid leading zeros (shell arithmetic can interpret octal).
+[ "${#counter}" -le 8 ] || fail disk-counter-range
+case "$counter" in 0|[1-9]*) ;; *) fail disk-counter-format ;; esac
+[ "$counter" = 0 ] || [ "${counter#0}" = "$counter" ] || fail disk-counter-format
+umount /mnt || fail disk-unmount
+mount -t ext4 -o rw /dev/vda /mnt || fail disk-write-mount
+next=$((counter + 1))
+printf '%s\n' "$next" > /mnt/counter || fail disk-write
+sync || fail disk-sync
+umount /mnt || fail disk-unmount
+printf 'PASS disk previous=%s counter=%s\n' "$counter" "$next"
+# Open the sole GPIO input before publishing any network readiness. Refuse
+# ambiguous devices instead of choosing the first event node.
+set -- /dev/input/event*
+[ "$#" -eq 1 ] && [ -c "$1" ] || fail managed-input-device
+[ "$(cat "/sys/class/input/${1##*/}/device/name")" = gpio-keys ] || fail managed-input-name
+exec 3<"$1" || fail managed-input-open
+ip link set lo up || fail loopback
+ip link set eth0 up || fail ethernet
+udhcpc -f -n -q -t 5 -T 3 -i eth0 -s /etc/udhcpc.script || fail dhcp
+# A real host request/response through an explicit loopback-only QEMU forward
+# proves more than a synthetic usernet gateway ping. No outward route is needed.
+printf '%s\n' "$next" > /run/a733-guest-network-counter || fail network-counter
+httpd -f -p 8080 -h /www &
+network_pid=$!
+printf 'READY network tcp=8080 counter=%s; host must verify and confirm HTTP response\n' "$next"
+tries=0
+while [ ! -f /run/a733-guest-network-confirmed ]; do
+    kill -0 "$network_pid" || fail network-server
+    tries=$((tries + 1))
+    [ "$tries" -le 120 ] || fail network-timeout
+    sleep 1
+done
+[ "$(cat /run/a733-guest-network-confirmed)" = "$next" ] || fail network-confirmation
+printf 'PASS network loopback-http counter=%s\n' "$next"
+printf 'PASS fixture counter=%s; READY managed-power-key-v1\n' "$next"
+# arm64 little-endian input_event is 16 bytes timeval, u16 type/code, s32
+# value. Classify one exact od record; return 2 for malformed input. This pure
+# decoder performs no actions and does not accept partial records.
+managed_power_event() {
+    [ "$#" -eq 12 ] || return 2
+    for word in "$@"; do
+        case "$word" in ''|*[!0-9]*) return 2 ;; esac
+        [ "${#word}" -le 5 ] && [ "$word" -le 65535 ] || return 2
+    done
+    shift 8
+    [ "$1" -eq 1 ] && [ "$2" -eq 116 ] && [ "$3" -eq 1 ] && [ "$4" -eq 0 ]
+}
+# Each od invocation reads only one event from the persistent descriptor. The
+# build preflight verifies the pinned ARM BusyBox flags and no read-ahead loss.
+# Pinned Linux drivers/input/evdev.c:558-606 returns only whole input_event
+# records (or an error), so this verified evdev node cannot yield padded odd
+# fragments that od could otherwise accept from arbitrary regular-file input.
+# HTTP remains served while waiting for a host-generated virtual power button.
+set -f
+while :; do
+    kill -0 "$network_pid" || fail network-server
+    event=$(od -An -v -tu2 -w24 -N24 <&3) || fail managed-input-read
+    set -- $event
+    managed_power_event "$@"
+    result=$?
+    case "$result" in
+        0)
+            sync || fail managed-power-key-sync
+            printf 'PASS managed-power-key-sync\n'
+            poweroff -f
+            fail poweroff
+            ;;
+        1) ;; # Release, repeat, EV_SYN and unrelated events are not power requests.
+        *) fail managed-input-record ;;
+    esac
+done

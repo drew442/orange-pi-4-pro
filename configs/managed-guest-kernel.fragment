@@ -1,0 +1,13 @@
+# QEMU virt guest only; GPIO power key for host QMP system_powerdown.
+# Pinned Linux 2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f:
+# drivers/input/Kconfig: INPUT_EVDEV under INPUT;
+# drivers/input/keyboard/Kconfig: KEYBOARD_GPIO under INPUT_KEYBOARD,
+# depends GPIOLIB; drivers/gpio/Kconfig: GPIO_PL061 depends ARM_AMBA,
+# selects IRQ_DOMAIN/GPIOLIB_IRQCHIP. ARM_AMBA is already selected by
+# ARM64 (arch/arm64/Kconfig). Verify all in final config.
+CONFIG_INPUT=y
+CONFIG_INPUT_EVDEV=y
+CONFIG_INPUT_KEYBOARD=y
+CONFIG_KEYBOARD_GPIO=y
+CONFIG_GPIOLIB=y
+CONFIG_GPIO_PL061=y

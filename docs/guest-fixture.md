@@ -1,12 +1,46 @@
 # Pinned KVM guest fixture
 
-The guest artifacts have been built and checked as files. **No guest has booted**
-and no hardware KVM result is established. The [physical diagnostic boot](board-diagnostic-20261104.md)
-entered EL1; an EL2 diagnostic handoff test is the next prerequisite.
+Actual nonroot KVM CPU/disk/HTTP, clean shutdown and checkpoint/restart now pass
+on the SPI/NVMe host. See [current implementation status](implementation-status.md)
+and [operational evidence](evidence/spi-operational-20261111.json). The original
+November 4 artifact records below describe file-only checks; they do not establish
+hardware results for those particular bytes.
 The current [HTTP network fixture](guest-networking.md) replaces gateway ping
 with a host request/confirmation. Its new artifact pins and build are documented
 there. The records below retain the earlier fixture used by file-only probes;
 do not combine its old initramfs pin with the new expected HTTP behavior.
+
+## Managed power-key fixture
+
+The separate `managed-power-key-v1` profile builds a virtual GPIO power-button
+driver and keeps the HTTP-confirmed guest running until a power-key event. It
+syncs before requesting guest poweroff. The legacy three-argument build keeps
+its existing init and kernel configuration. Keep `firstkvm` manually managed and
+use a separately enrolled disposable guest for automation tests.
+
+Two fresh Ubuntu 22.04 builds match every artifact-manifest file byte for byte.
+[Build evidence and complete hashes](evidence/managed-fixture-build-20261112.json)
+record the pinned kernel/compiler/BusyBox, source lock, resources and off-device
+artifact copies. Kernel `Image` is 5,253,128 bytes; initramfs is 975,144 bytes;
+the disposable disk is 134,217,728 bytes. This profile's actual KVM power-key and
+QMP shutdown path remains untested on the board.
+
+To reproduce on the prepared builder, using the exact pinned clean kernel tree
+and static ARM64 BusyBox:
+
+```sh
+bash build/guest-fixture.sh \
+  /var/lib/a733-managed-fixture-inputs-20261112-01/kernel-tree \
+  /var/lib/a733-managed-fixture-inputs-20261112-01/busybox-arm64 \
+  "$(pwd -P)/out/guest-fixture-managed-REBUILD" managed-power-key-v1
+```
+
+Choose a new output name. The recipe first verifies pinned packages and the
+ARM BusyBox parser's exact shared-FD input-event reads. That userspace check is
+not KVM acceptance. Final acceptance requires the real nonroot guest's CPU,
+disk/counter and HTTP evidence, continued execution after confirmation,
+authenticated QMP powerdown, guest sync, guest-owned SHUTDOWN, normal raw exit
+zero, durable checkpoint and restart.
 
 ## Build and provenance
 
