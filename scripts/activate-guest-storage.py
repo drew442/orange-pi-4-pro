@@ -7,6 +7,7 @@ uses a typed closed-bootstrap capability. Never formats, partitions or changes S
 """
 import argparse
 import contextlib
+import copy
 import fcntl
 import json
 import os
@@ -279,8 +280,60 @@ def failure(report, error):
 
 
 def apply(args, plan, report=None, *, plan_check=lambda: None):
-    """Manual activation retains interactive backup and exact-plan authorization."""
-    return _apply(args, plan, report, plan_check=plan_check, authorization=authorize)
+    """Activate installed storage under fresh pre-p5 maintenance custody.
+
+    Interactive authorization precedes admission closure. The original target
+    transaction retains custody through its complete cleanup before binding p5
+    and explicitly reopening admission. No runtime is initialized here.
+    """
+    report = new_report() if report is None else report
+    maintenance = None
+    maintenance_failure = None
+
+    def authorization(current):
+        nonlocal maintenance
+        authorize(current)
+        # Lazy loading keeps the bootstrap API independent of installed custody.
+        helper = adjacent('guest_activation_maintenance', 'guest-storage-maintenance.py')
+        storage = helper.M.registered_storage()
+        context = current['context']
+        require(storage == dict(state_uuid=context['state']['uuid'],
+                                guest_uuid=context['guest']['uuid'],
+                                nvme_serial=context['disk']['serial']),
+                'registered storage differs from reviewed activation plan')
+        maintenance = helper.StorageMaintenance(storage)
+
+    def check():
+        plan_check()
+        if maintenance is not None:
+            maintenance.recheck()
+
+    try:
+        _apply(args, plan, report, plan_check=check, authorization=authorization)
+        core_success = report['success'] and not report['cleanup_errors']
+        report['success'] = False
+        if core_success:
+            require(maintenance is not None, 'maintenance custody missing')
+            maintenance.bind_storage()
+            maintenance.finish_success()
+    except (Exception, KeyboardInterrupt) as error:
+        failure(report, error)
+        if hasattr(error, 'receipt'):
+            maintenance_failure = copy.deepcopy(error.receipt)
+    finally:
+        # _apply records authorization/acquisition errors itself.
+        if maintenance is not None:
+            try:
+                maintenance.close()
+            except (Exception, KeyboardInterrupt) as error:
+                failure(report, error)
+                report['cleanup_errors'].append(f'{type(error).__name__}: {error}')
+            report['maintenance'] = copy.deepcopy(maintenance.receipt)
+            report['success'] = (not report.get('errors') and not report['cleanup_errors']
+                                 and report['maintenance']['success'])
+        elif maintenance_failure is not None:
+            report['maintenance'] = maintenance_failure
+    return report
 
 
 def bootstrap_check(owner):
@@ -372,6 +425,8 @@ def _apply(args, plan, report=None, *, plan_check, authorization):
         report['success'] = True
     except (Exception, KeyboardInterrupt) as error:
         failure(report, error)
+        if hasattr(error, 'receipt'):
+            report['maintenance'] = copy.deepcopy(error.receipt)
     finally:
         if not report['success'] and owned is not None:
             try:

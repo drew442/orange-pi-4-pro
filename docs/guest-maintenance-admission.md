@@ -48,6 +48,27 @@ publication progress. It does not automatically repeat the transaction.
 cover the wiring. Earlier physical update/rollback results apply to the released
 software pinned in their own receipts.
 
+## Activate guest storage
+
+Normal installed activation requires the prepared runtime and protected registry.
+After the existing plan authorization, it compares the registry's STATE UUID,
+guest UUID and NVMe serial with the reviewed target. Pre-p5 custody authenticates
+selected STATE and closes admission before managed shutdown and exclusive lease
+acquisition. It retains custody throughout the original guarded mount, journal
+replay and permission transaction.
+
+After all target, directory and subsystem cleanup succeeds, explicit storage
+binding authenticates mounted p5 and the guest cohorts. Final checks and resource
+cleanup precede overall success. An unbound operation cannot reopen admission.
+The separate recurring bootstrap API still borrows its original closed owner;
+normal activation cannot initialize or adopt that owner.
+
+[Independent reviews and private-loop activation](evidence/guest-activation-admission-validation-20261112.json)
+pass. Physical validation and the complete boot coordinator remain pending.
+If activation fails with p5 absent, use a fresh boot or guarded recovery to restore
+the required context; the installed reopen command below requires mounted guest
+storage. Preserve failed receipts and avoid bypassing the closed gate.
+
 ## Recover a failed maintenance closure
 
 After the candidate is deployed and its boot preparation has succeeded, inspect

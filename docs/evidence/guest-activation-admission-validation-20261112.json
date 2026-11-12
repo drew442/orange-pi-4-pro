@@ -1,0 +1,154 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "result": "pass",
+  "scope": "Uninstalled pre-p5 installed maintenance custody and normal activation wrapper; actual private-loop kernel mount transactions with explicit platform/admission substitution; no physical NVMe/boot/KVM or recurring bootstrap acceptance",
+  "builder": "drew@build.drewnet.online",
+  "builder_base": "/var/lib/a733-guest-activation-validation-20261112-01",
+  "full_Ubuntu_tests": 3120,
+  "failures_errors_skips": 0,
+  "shell_suites": 5,
+  "diagnostic_cases": 5,
+  "parsed_TOML": 5,
+  "locked_source_files": 1047,
+  "source_lock": {
+    "bytes": 167916,
+    "sha256": "214730f54cd8e59d378794aade69873a34823137017eb5141b3f04f6ed3bec73",
+    "index_tree": "6d784933d998110f4684fe0bedcd1e1be91c3942"
+  },
+  "unit": {
+    "RuntimeMaxUSec": "8h",
+    "MainPID": "0",
+    "Result": "success",
+    "ExecMainStatus": "0",
+    "CPUQuotaPerSecUSec": "2s",
+    "MemoryMax": "3221225472",
+    "SubState": "exited"
+  },
+  "loop_unit": {
+    "MainPID": "0",
+    "Result": "success",
+    "ExecMainStatus": "0",
+    "SubState": "exited"
+  },
+  "source": {
+    "build/maintenance-tools.py": {
+      "bytes": 15732,
+      "sha256": "18b182a819e5441a50934fcdfde2568c29dcadb5a8ce2a0a9db250e80a5e7369"
+    },
+    "scripts/activate-guest-storage.py": {
+      "bytes": 22871,
+      "sha256": "06d3bfdbae86610e11a3dab0150f5dc0ec47c518e51ce1ec147b07a378fe6b3b"
+    },
+    "scripts/guest-storage-maintenance.py": {
+      "bytes": 7068,
+      "sha256": "9ee266364304d121d901bfe504fd2c7e1604f4b4311730bac75bdac8fa9a05da"
+    },
+    "tests/test_guest_activation_admission.py": {
+      "bytes": 15855,
+      "sha256": "f93e0a33309f858d1bb654bb6a0bcfb9e275472d799e0fa1fbe7cf5d7180062b"
+    },
+    "tests/test_guest_mount.py": {
+      "bytes": 18026,
+      "sha256": "48fa6c118b9638308c831a5838f604dc8be466f3702b58366aaad07ab4e933cd"
+    },
+    "tests/test_guest_storage_maintenance.py": {
+      "bytes": 16293,
+      "sha256": "9a775f218cfe7b7d6b9436a705e553d1a6c672fbde902c094bb9e90e49a06187"
+    },
+    "tests/test_host_payload.py": {
+      "bytes": 28099,
+      "sha256": "4066c33ab1c9c499cac3f3a0a36c1455d5c9414ea7c9ae21f49b076b5d718d9f"
+    },
+    "tests/test_launch_deterministic_host_roots.py": {
+      "bytes": 11602,
+      "sha256": "ae9ae59c14b060d8c449cfc6d254a9090e28478b3a9a2b284084621d2c3c6b7e"
+    },
+    "tests/test_maintenance_tools.py": {
+      "bytes": 18192,
+      "sha256": "ba6be33eed99aed4f4e99a8579c28f8900748d9417fbc9979190f20670deb63f"
+    },
+    "tests/verify_guest_mount_loop.py": {
+      "bytes": 26113,
+      "sha256": "21ceed53c6a72c1e5e5c37b05746ac5b16381060853f2cc5d166e7df73baf366"
+    }
+  },
+  "resource_sample_minima": {
+    "free_disk_bytes": 30892376064,
+    "MemAvailable_bytes": 7076884480
+  },
+  "independent_reviews": {
+    "premount": {
+      "path": "out/guest-activation-validation-20261112-01/premount-review.json",
+      "bytes": 3870,
+      "sha256": "0df391d6a1a53943a558df20385e677f625cc9227e68b98bd83b731f65c63d22"
+    },
+    "activation_and_loop_harness": {
+      "path": "out/guest-activation-validation-20261112-01/activation-review.json",
+      "bytes": 19388,
+      "sha256": "116c1219a34210dcc225205736aeaf93fb6e375ed31b6a08d821dcf31517443f"
+    }
+  },
+  "packaging": {
+    "current_sources": 68,
+    "runtime_files": 69,
+    "entrypoints": 20,
+    "historical_sources": 39,
+    "extracted_import_and_CLI_help": "pass"
+  },
+  "custody": {
+    "bytes": 471040,
+    "sha256": "8b7dde486d62531bfee9224ed647961b4ddd389d958c12fcfb1e57ac84aec2a5",
+    "native": "out/guest-activation-validation-20261112-01/receipts.tar",
+    "builder": "/var/lib/a733-guest-activation-validation-20261112-01/receipts.tar",
+    "unit": {
+      "RuntimeMaxUSec": "8h",
+      "MainPID": "0",
+      "Result": "success",
+      "ExecMainStatus": "0",
+      "CPUQuotaPerSecUSec": "2s",
+      "MemoryMax": "3221225472",
+      "SubState": "exited"
+    }
+  },
+  "premount": {
+    "native_tests": 23,
+    "independent_probes": 9,
+    "behavior": "Actual selected installed STATE UUID/NVMe serial before p5; fresh maintenance closure stops managed before nonblocking readonly EX, then KVM census. Explicit one-shot bind after target cleanup builds actual same-family physical controller/quiescence; unbound cannot reopen. Final inherited proof/census/cleanup remains mandatory.",
+    "limits": "No mounting or target authorization inside primitive; expected storage must match protected registry and reviewed activation plan in caller."
+  },
+  "activation": {
+    "native_tests": 20,
+    "core_bootstrap_tests": 32,
+    "independent_wrapper_probes": 8,
+    "independent_harness_probes": 7,
+    "behavior": "Original plan/TTY authorization precedes protected registry tuple equality (STATE/p5 UUID and NVMe serial), then pre-p5 exclusion. Every original target/namespace/mount/permission guard remains. Complete target/directory/lock cleanup precedes bind and explicit reopen; final close precedes overall success. Failure retains mount/permissions/cleanup and nested maintenance uncertainty.",
+    "bootstrap": "Original typed borrowed-bootstrap apply API remains unchanged except nested failure-receipt capture."
+  },
+  "loop": {
+    "result": "pass",
+    "classification": "private sparse-GPT native mount only; running-host/NVMe classification, active/state, installed maintenance/admission and TTY are explicit fixtures with no authority; no physical NVMe, boot or KVM acceptance",
+    "logical_disk_bytes": 250000000000,
+    "guest_bytes": 232281604096,
+    "internal_journal_inode": 8,
+    "reports": {
+      "idempotent": true,
+      "interrupted": false,
+      "retry": true
+    },
+    "operation_counts": {
+      "chmod": 1,
+      "mount": 2
+    },
+    "other_partition_sentinels_unchanged": true,
+    "guest_payload_preserved": true,
+    "cleanup": "owned guest/setup/private-run mounts removed; owned loop detached; workspace deleted; private namespace ends at process exit"
+  },
+  "limitations": [
+    "All code remains uninstalled; recurring boot coordinator/accounts/units and physical guest execution remain required.",
+    "Failed unbound activation leaves admission closed; no automatic retry or bootstrap/shutdown adoption is introduced.",
+    "Portable RAM exclusion/p5 clean-absence probe work is unstaged and excluded; frozen write-known-nvme-boot.py retains SHA 39adee8bd81186bc1665701843d393c9ceb7f16466fca304b6a3cf43993999d9.",
+    "Platform/admission/TTY replacements are explicit in loop harness; actual kernel loop/claims/mount/journal/permission and cleanup behavior are exercised.",
+    "Five unchanged TOML files reuse native tomllib parse retained in receipts; Ubuntu Python 3.10 has no tomllib."
+  ]
+}

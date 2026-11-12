@@ -51,6 +51,7 @@ SOURCES = tuple(sorted(LEGACY_SOURCES + (
     'scripts/verify-managed-guest-backup.py',
     'scripts/guest-boot-state.py',
     'scripts/run-managed-guest.py',
+    'scripts/guest-storage-maintenance.py',
 )))
 ENTRYPOINTS = {name: f'scripts/{name}.py' for name in (
     'install-nvme', 'acquire-nvme', 'plan-nvme', 'prepare-host-update',

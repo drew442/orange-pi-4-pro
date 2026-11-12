@@ -48,6 +48,12 @@ class Transaction(unittest.TestCase):
         self.patches.enter_context(patch.object(M.POLICY, 'guest_superblock'))
         self.stderr = self.patches.enter_context(contextlib.redirect_stderr(io.StringIO()))
 
+    def apply(self):
+        # Explicit transaction-core fixture: installed custody is composed in
+        # test_guest_activation_admission.py, never bypassed by a runtime flag.
+        return M._apply(self.args, self.plan, plan_check=lambda: None,
+                        authorization=M.authorize)
+
     def command(self, command, **kwargs):
         self.visible = command[0].endswith('/mount')
 
@@ -57,7 +63,7 @@ class Transaction(unittest.TestCase):
             self.assertIn('"mount_attempted": true', self.stderr.getvalue())
             self.visible = True
         self.run.side_effect = command
-        report = M.apply(self.args, self.plan)
+        report = self.apply()
         self.assertTrue(report['success'])
         self.assertTrue(report['mount_retained'])
         self.assertTrue(report['guest_may_be_modified'])
@@ -66,7 +72,7 @@ class Transaction(unittest.TestCase):
 
     def test_failed_mount_still_reports_possible_journal_replay(self):
         self.run.side_effect = OSError('mount failed')
-        report = M.apply(self.args, self.plan)
+        report = self.apply()
         self.assertFalse(report['success'])
         self.assertTrue(report['guest_may_be_modified'])
         self.assertTrue(report['mount_attempted'])
@@ -88,14 +94,14 @@ class Transaction(unittest.TestCase):
             self.visible = argv[0].endswith('/mount')
         self.run.side_effect = command
         with patch.object(M, 'activation_lock', side_effect=lock):
-            report = M.apply(self.args, self.plan)
+            report = self.apply()
         self.assertFalse(report['success'])
         self.assertFalse(report['mount_retained'])
         self.assertEqual(held, [])
 
     def test_plan_change_blocks_mount(self):
         self.make.side_effect = [self.plan, dict(self.plan, plan_sha256='changed')]
-        report = M.apply(self.args, self.plan)
+        report = self.apply()
         self.assertFalse(report['success'])
         self.assertFalse(report['guest_may_be_modified'])
         self.run.assert_not_called()
@@ -107,7 +113,7 @@ class Transaction(unittest.TestCase):
                 raise KeyboardInterrupt('SIGTERM after kernel mount')
             self.visible = False
         self.run.side_effect = command
-        report = M.apply(self.args, self.plan)
+        report = self.apply()
         self.assertFalse(report['success'])
         self.assertTrue(report['guest_may_be_modified'])
         self.assertFalse(report['mount_retained'])
@@ -120,7 +126,7 @@ class Transaction(unittest.TestCase):
                 raise OSError('busy')
             self.visible = True
         self.run.side_effect = command
-        report = M.apply(self.args, self.plan)
+        report = self.apply()
         self.assertFalse(report['success'])
         self.assertTrue(report['mount_retained'])
         self.assertIn('permission failure', report['errors'][0])
@@ -131,7 +137,7 @@ class Transaction(unittest.TestCase):
             self.visible = True
         self.run.side_effect = command
         with patch.object(M, 'checked_mount', side_effect=ValueError('foreign')):
-            report = M.apply(self.args, self.plan)
+            report = self.apply()
         self.assertFalse(report['success'])
         self.assertTrue(report['mount_retained'])
         self.assertEqual(self.run.call_count, 1)
@@ -140,7 +146,7 @@ class Transaction(unittest.TestCase):
     def test_replaced_owned_mount_never_unmounted(self):
         self.grant.side_effect = ValueError('failure')
         with patch.object(M, 'checked_mount', side_effect=[self.row, ('999',)]):
-            report = M.apply(self.args, self.plan)
+            report = self.apply()
         self.assertFalse(report['success'])
         self.assertTrue(report['mount_retained'])
         self.assertEqual(self.run.call_count, 1)
@@ -149,7 +155,7 @@ class Transaction(unittest.TestCase):
     def test_preexisting_mount_failure_never_unmounts(self):
         self.plan['mounted_before'], self.visible = True, True
         self.grant.side_effect = ValueError('mode mismatch')
-        report = M.apply(self.args, self.plan)
+        report = self.apply()
         self.assertFalse(report['success'])
         self.assertFalse(report['mount_attempted'])
         self.assertFalse(report['guest_may_be_modified'])
@@ -159,14 +165,14 @@ class Transaction(unittest.TestCase):
 
     def test_already_mounted_is_idempotent(self):
         self.plan['mounted_before'], self.visible = True, True
-        report = M.apply(self.args, self.plan)
+        report = self.apply()
         self.assertTrue(report['success'])
         self.assertFalse(report['guest_may_be_modified'])
         self.run.assert_not_called()
 
     def test_foreign_directory_rejected_before_mount(self):
         self.directory.check.side_effect = ValueError('foreign path')
-        report = M.apply(self.args, self.plan)
+        report = self.apply()
         self.assertFalse(report['success'])
         self.assertFalse(report['guest_may_be_modified'])
         self.run.assert_not_called()

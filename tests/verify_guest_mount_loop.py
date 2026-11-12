@@ -2,13 +2,15 @@
 """Opt-in native p5 activation check on a newly owned sparse GPT loop only.
 
 Run as root with no arguments; redirect stdout to retain the JSON evidence.
-NVMe/running-host classification and TTY authorization are fixtures. Actual
+NVMe/running-host classification, installed maintenance/admission and TTY
+authorization are explicit fixtures with no authority. Actual
 mounts, exclusive claims, locks, review storage, permissions and cleanup execute
 natively. This is no evidence of A733 boot, physical NVMe policy or KVM.
 """
 import argparse
 import copy
 import ctypes
+import fcntl
 import hashlib
 import importlib.util
 import json
@@ -20,6 +22,7 @@ import stat
 import subprocess
 import sys
 import tempfile
+import threading
 import time
 from types import SimpleNamespace
 from unittest import mock
@@ -32,6 +35,95 @@ SPEC.loader.exec_module(CONTROL)
 POLICY = CONTROL.POLICY
 require = CONTROL.require
 SIZE = 250_000_000_000
+
+
+def fixture_maintenance(storage, guard, unlocked):
+    """Test-only API custody; replaces platform/admission, grants no authority."""
+    instances = []
+
+    class FixtureStorageMaintenance:
+        def __init__(self, expected):
+            require(expected == storage, 'fixture storage tuple differs')
+            require(not instances or instances[-1].closed, 'fixture custody overlaps')
+            self.creator = os.getpid(), threading.get_ident()
+            self.closed = self.finished = self.binding_started = self.bound = False
+            self.checks = 0
+            self.events = ['create', 'unbound']
+            self.receipt = dict(fixture='platform and admission replaced; no authority',
+                                hardware_acceptance=False, success=False, storage_bound=False,
+                                open_attempted=False, open_acknowledged=False)
+            instances.append(self)
+            self.recheck()
+
+        def creator_check(self):
+            require((os.getpid(), threading.get_ident()) == self.creator,
+                    'fixture custody changed process/thread')
+
+        def recheck(self):
+            self.creator_check()
+            require(not self.closed and not self.finished, 'fixture custody ended')
+            guard()
+            self.checks += 1
+
+        def mutation(self):
+            self.recheck()
+            require(not self.binding_started and self.checks > 2,
+                    'mutation outside unbound fixture custody')
+
+        def bind_storage(self):
+            self.recheck()
+            require(not self.binding_started, 'fixture storage binding already attempted')
+            self.binding_started = True
+            unlocked()
+            self.bound = True
+            self.events.append('bind')
+            self.receipt['storage_bound'] = True
+
+        def finish_success(self):
+            self.recheck()
+            require(self.bound, 'fixture storage not bound')
+            unlocked()
+            self.finished = True
+            self.events.append('finish')
+            self.receipt.update(success=True, open_attempted=True, open_acknowledged=True)
+            return copy.deepcopy(self.receipt)
+
+        def close(self):
+            self.creator_check()
+            if self.closed:
+                return
+            unlocked()
+            self.closed = True
+            self.events.append('close')
+            self.receipt.update(events=list(self.events), rechecks=self.checks)
+
+    helper = SimpleNamespace(StorageMaintenance=FixtureStorageMaintenance,
+                             M=SimpleNamespace(registered_storage=lambda: copy.deepcopy(storage)))
+    return helper, instances
+
+
+def assert_custody(instances, successful):
+    require(len(instances) == len(successful), 'fixture custody acquisition count differs')
+    for held, success in zip(instances, successful):
+        require(held.closed and held.bound == held.finished == success,
+                'fixture custody outcome differs')
+        require(held.events == (['create', 'unbound', 'bind', 'finish', 'close'] if success else
+                                ['create', 'unbound', 'close']), 'fixture custody ordering differs')
+        require(held.checks > 2, 'transaction did not recheck fixture custody')
+
+
+def descriptor_snapshot():
+    descriptors = {}
+    for entry in Path('/proc/self/fd').iterdir():
+        try:
+            info = os.fstat(int(entry.name))
+            descriptors[int(entry.name)] = (info.st_dev, info.st_ino, os.readlink(entry))
+        except FileNotFoundError:
+            pass  # The directory iterator's own descriptor may already be closed.
+        except OSError as error:
+            if error.errno != 9:
+                raise
+    return descriptors
 
 
 class OwnedDisk:
@@ -187,7 +279,7 @@ def verify():
                      partition_uuid=encoded['partition_guids'][4])
         # These are explicit placeholders, never evidence of running NVMe state.
         context = dict(disk=disk, guest=guest, active={'slot': 'A', 'fixture': True},
-                       state={'major_minor': '0:999', 'fixture': True})
+                       state={'major_minor': '0:999', 'uuid': str(uuid.uuid4()), 'fixture': True})
         args = SimpleNamespace(target=owned.loop, expected_model=disk['model'],
                                expected_serial=disk['serial'], expected_bytes=SIZE, guest_uuid=guest_uuid)
 
@@ -223,11 +315,37 @@ def verify():
 
         counts = {'mount': 0, 'chmod': 0}
         interrupt = False
+        baseline_descriptors = None
+
+        def unlocked():
+            owned.partition(5)
+            require(descriptor_snapshot() == baseline_descriptors, 'activation retained core descriptors')
+            # Independent opens probe the actual locks. O_EXCL is inappropriate
+            # once the mounted filesystem owns the kernel's guest block claim.
+            for path in (CONTROL.LOCK, Path(owned.loop)):
+                fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+                try:
+                    fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                finally:
+                    os.close(fd)
+
+        storage = dict(state_uuid=context['state']['uuid'], guest_uuid=guest_uuid,
+                       nvme_serial=disk['serial'])
+        maintenance, custody = fixture_maintenance(storage, lambda: owned.partition(5), unlocked)
+        real_adjacent = CONTROL.adjacent
+
+        def fixture_helper(name, filename):
+            if (name, filename) == ('guest_activation_maintenance', 'guest-storage-maintenance.py'):
+                return maintenance
+            return real_adjacent(name, filename)
+
         real_chmod = os.fchmod
 
         def observed_run(command, *positional, **keywords):
             nonlocal interrupt
             if Path(command[0]).name in ('mount', 'umount'):
+                require(bool(custody), 'mount without fixture custody')
+                custody[-1].mutation()
                 owned.partition(5)
             value = real_run(command, *positional, **keywords)
             if Path(command[0]).name == 'mount':
@@ -238,16 +356,22 @@ def verify():
             return value
 
         def observed_chmod(fd, mode):
+            require(bool(custody), 'chmod without fixture custody')
+            custody[-1].mutation()
+            require(f'{os.major(os.fstat(fd).st_dev)}:{os.minor(os.fstat(fd).st_dev)}'
+                    == guest['major_minor'], 'chmod target differs from owned guest')
             counts['chmod'] += 1
             return real_chmod(fd, mode)
 
         def reviewed_apply(plan):
+            nonlocal baseline_descriptors
             path = Path('/run/review.json')
             path.write_bytes(CONTROL.WRITER.canonical_json(plan))
             path.chmod(0o400)
             review = CONTROL.Review(path, plan['context'])
             try:
                 require(review.value == plan, 'held reviewed plan differs')
+                baseline_descriptors = descriptor_snapshot()
                 return CONTROL.apply(args, plan, plan_check=review.check)
             finally:
                 review.close()
@@ -256,6 +380,7 @@ def verify():
         with mock.patch.object(CONTROL, 'snapshot', new=snapshot), \
              mock.patch.object(CONTROL, 'host_namespace', new=lambda: None), \
              mock.patch.object(CONTROL, 'authorize', new=lambda unused: None), \
+             mock.patch.object(CONTROL, 'adjacent', new=fixture_helper), \
              mock.patch.object(CONTROL.subprocess, 'run', new=observed_run), \
              mock.patch.object(CONTROL.os, 'fchmod', new=observed_chmod):
             plan = CONTROL.make_plan(args)
@@ -285,14 +410,17 @@ def verify():
                     and not idempotent['mount_attempted'] and not idempotent['guest_may_be_modified']
                     and not idempotent['permissions_may_be_modified'] and counts == before,
                     'idempotent apply changed guest: ' + json.dumps(idempotent))
+            assert_custody(custody, [False, True, True])
             owned.preserved()
             require(snapshot(args, True) == plan['context'], 'final actual GPT/context differs')
-        result = dict(classification='private sparse-GPT native mount only; running-host/NVMe classification, active/state and TTY are fixtures; no physical NVMe, boot or KVM acceptance',
+        result = dict(classification='private sparse-GPT native mount only; running-host/NVMe classification, active/state, installed maintenance/admission and TTY are explicit fixtures with no authority; no physical NVMe, boot or KVM acceptance',
                       logical_disk_bytes=SIZE, guest_bytes=guest['size_bytes'], guest_uuid=guest_uuid,
                       reports={'interrupted': interrupted, 'retry': success, 'idempotent': idempotent},
                       resources={'workspace': str(workspace), 'backing_inode': owned.backing_id,
                                  'loop': owned.loop, 'guest': str(paths[5]), 'namespace': os.readlink('/proc/self/ns/mnt')},
-                      counters=counts, actual_prepare_unmounted=True, internal_journal_inode=8,
+                      counters=counts, public_apply_fixture_custody_ordering_checked=True,
+                      core_descriptors_and_locks_released_before_binding=True,
+                      hardware_acceptance=False, actual_prepare_unmounted=True, internal_journal_inode=8,
                       preservation_sentinel_unchanged=True, other_partition_4k_sentinels_unchanged=True)
     finally:
         errors = []
