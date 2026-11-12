@@ -55,7 +55,7 @@ review, including actual unprivileged RAM permissions/flock checks.
 Managed-run permits, Linux process/QMP checks, bounded transport, versioned shutdown
 provenance and the shared checkpoint engine pass independent review.
 The Linux surrogate integration passes credentials, executable/UNIX-peer binding,
-QMP and raw wait; it ran no QEMU or KVM. Current packaging has 52 sources;
+QMP and raw wait; it ran no QEMU or KVM. Current packaging has 55 sources;
 historical recovery archives retain their strict 39-source boundary and pins.
 Resolved group/deadline/disk-binding findings and all preliminary logs are retained.
 [Runtime foundation evidence](evidence/managed-runtime-validation-20261112.json).
@@ -74,9 +74,16 @@ console and forced-cleanup syscalls with explicitly mocked platform/storage and
 executable/credential policy. Shutdown outcomes stay bound to the creating
 process/thread and do not authorize checkpointing on their own.
 [Supervisor software evidence](evidence/managed-supervisor-validation-20261112.json).
-These helpers remain uninstalled. Next are fixture validation and authenticated
-outcome/stopped-disk/checkpoint-intent reconciliation, then coherent backup/restore,
-all legacy admission and boot services.
+The managed fixture validator, retained stopped-disk publication custody and bounded
+outcome/intent/completion record schemas now pass independent review and **2722**
+privileged Ubuntu tests, five shell suites and five diagnostic cases. The stopped
+disk keeps its exclusive lock across exact manifest replacement while the original
+inspection remains stale. Record parsing grants no checkpoint authority.
+[Checkpoint foundation evidence](evidence/managed-checkpoint-foundation-validation-20261112.json)
+records source pins and verified receipt copies. These helpers remain uninstalled.
+The root checkpoint publisher, strict interrupted-publication reconciliation and
+shared ready-cohort verification are under implementation; coherent backup/restore,
+all legacy admission and boot services follow.
 Inactive-root deployment and physical acceptance remain pending. Two fresh managed power-key guest builds
 match all manifest files byte for byte with verified off-device artifact copies.
 [Fixture build evidence](evidence/managed-fixture-build-20261112.json). Its shutdown
@@ -185,17 +192,17 @@ binary redistribution clearance is claimed. [Source inventory](toolchain-sources
 
 ## Resources and next actions
 
-Latest privileged Ubuntu 22.04 suite: **2679 tests**, zero skips/errors/failures,
+Latest privileged Ubuntu 22.04 suite: **2722 tests**, zero skips/errors/failures,
 five shell suites and five diagnostic cases; all five TOMLs parse.
-[Managed supervisor suite evidence](evidence/managed-supervisor-validation-20261112.json)
+[Checkpoint foundation suite evidence](evidence/managed-checkpoint-foundation-validation-20261112.json)
 records the latest run. The final-A warm collector authenticates release/root/policy and stops on
 actual remote release refusal; [software evidence](evidence/final-warm-binding-validation-20261110.json)
 retains independent review and the initial corrected validation-environment failure. Host checks do not prove
 hardware acceptance.
 
 At final qualification, codex has more than 24 GB available. The last full-suite
-builder suite sampled minima of 32348270592 bytes available and
-MemAvailable 7048675328 bytes.
+builder suite sampled minima of 32244350976 bytes available and
+MemAvailable 7049998336 bytes.
 Keep bulk sources, images and backups on the builder. Its LV is 128819658752 bytes
 with 4265607168 bytes VG free. All free builder capacity is approved for use and
 expansion after exact-target revalidation and independent review. Native codex

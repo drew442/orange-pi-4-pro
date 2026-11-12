@@ -1,0 +1,18 @@
+{
+  "cpu_sha256": "5ab247be0ba27004a2adee73bc50d4a1dfcd98f16ef5fa32c024e5f1c5c29f1c",
+  "disk_bytes": 134217728,
+  "fixture_uuid": "d67f33ba-e201-46bc-980b-61901bbd1156",
+  "initrd": {
+    "bytes": 975144,
+    "sha256": "315f6ff4398e477bf1e040cca3c60483dca88c68e99a9a3cda0ecd545b5d0da3"
+  },
+  "kernel": {
+    "bytes": 5253128,
+    "sha256": "29ba9385454cfbde890cabd24ced727838658d939368ab52dfbf6d770433e959"
+  },
+  "label": "kvm-fixture",
+  "marker": "a733-kvm-guest-fixture-v1",
+  "profile": "managed-power-key-v1",
+  "schema": 1,
+  "source": "docs/evidence/managed-fixture-build-20261112.json"
+}

@@ -103,6 +103,9 @@ generation and intended update. Reuse the existing history/manifest transaction
 engine through a distinct evidence-authorized wrapper. The manual checkpoint
 command keeps its operator attestation; no synthetic prompt input or monkeypatch
 bypasses that contract.
+The [managed checkpoint contract](managed-checkpoint-design.md) specifies durable
+outcome/intent/completion records, custody transfer and interrupted publication
+reconciliation. Its runtime writer and ready-cohort verification remain pending.
 
 Keep manual manifests and checkpoint histories at their existing schema 1 and
 exact byte format. A changed managed disk instead produces schema 2,

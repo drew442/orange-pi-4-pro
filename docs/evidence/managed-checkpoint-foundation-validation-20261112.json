@@ -1,0 +1,130 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "result": "pass",
+  "scope": "Uninstalled managed fixture validator, retained stopped-disk publication custody and pure checkpoint record schemas; full root checkpoint publisher/cohort reconciliation excluded",
+  "builder": "drew@build.drewnet.online",
+  "builder_base": "/var/lib/a733-managed-checkpoint-foundation-validation-20261112-01",
+  "full_Ubuntu_tests": 2722,
+  "failures_errors_skips": 0,
+  "shell_suites": 5,
+  "diagnostic_cases": 5,
+  "locked_source_files": 1004,
+  "source_lock": {
+    "bytes": 160788,
+    "sha256": "19667bf2c5ff33eb2376dc19a9a04b1b02fe2b51678596455c796629304be2ed"
+  },
+  "unit": {
+    "RuntimeMaxUSec": "8h",
+    "MainPID": "0",
+    "Result": "success",
+    "ExecMainCode": "1",
+    "ExecMainStatus": "0",
+    "CPUQuotaPerSecUSec": "2s",
+    "MemoryMax": "3221225472",
+    "ActiveState": "active",
+    "SubState": "exited"
+  },
+  "resources": {
+    "sampled_min_free_disk_bytes": 32244350976,
+    "sampled_min_available_memory_bytes": 7049998336,
+    "compilation_jobs": 2
+  },
+  "source": {
+    "build/maintenance-tools.py": {
+      "bytes": 15106,
+      "sha256": "a5bd9e29b068c8cf849202a13b33115d6430a70844487b2ade8801f3b0856f70"
+    },
+    "configs/guest_checkpoint_records.py": {
+      "bytes": 15627,
+      "sha256": "62b8748bad9e41bf9c373d9c8502a3c1f2f0f45507bb49c45ca2ad9bf3649746"
+    },
+    "configs/managed-guest-profile.lock.json": {
+      "bytes": 599,
+      "sha256": "75e131be195098a7d3a9c26bd0c81a4f07f6730994bf186f240dd9a92d7554a7"
+    },
+    "docs/guest-autostart-design.md": {
+      "bytes": 24958,
+      "sha256": "fd087ba4320d21ff23d56576a01b47b5217d7213af4d1636f2f02813ddcc09b9"
+    },
+    "docs/managed-checkpoint-design.md": {
+      "bytes": 14010,
+      "sha256": "d02804e39d1921dfb8d4234ead15e4d5fbf0c63fc18d01fbd8cc1ccbcd1319e3"
+    },
+    "scripts/guest-checkpoint-policy.py": {
+      "bytes": 26823,
+      "sha256": "1b913ea723144b8fe1db612d83ac1996f4a3ae35635b7aa648b4af4a7d6facf5"
+    },
+    "scripts/managed-guest-fixture.py": {
+      "bytes": 22011,
+      "sha256": "ce9930acc81e80423c00741959e8de32bb13b1f7839c406f864ad787470415cb"
+    },
+    "tests/test_guest_checkpoint_records.py": {
+      "bytes": 17383,
+      "sha256": "2cdb915e545c65a105a180116615e380036f6d1518ab1376bc931e0f73aae30a"
+    },
+    "tests/test_guest_publication_custody.py": {
+      "bytes": 13493,
+      "sha256": "301cc4a8a95d32127939d6c72e209c4ec26d24f766162bdada42f8222e25b565"
+    },
+    "tests/test_host_payload.py": {
+      "bytes": 28099,
+      "sha256": "4da84bc69d42da8e29816a0ea78a79b5180a20730bd428f64351a6124c63a6a8"
+    },
+    "tests/test_launch_deterministic_host_roots.py": {
+      "bytes": 11602,
+      "sha256": "4676c26af1e35730efb806564acfa020a923f007d9d4eaa735dcb0cd645787d2"
+    },
+    "tests/test_maintenance_tools.py": {
+      "bytes": 16776,
+      "sha256": "773da0573174013cb2b117e5254dbc7c1c8252c1bfdaba3e53323f407061515b"
+    },
+    "tests/test_managed_guest_fixture_acceptance.py": {
+      "bytes": 21522,
+      "sha256": "5f9095d71c625f1b59b2e7b1118ea811506a132569a0c5fb85594a812d7df24b"
+    }
+  },
+  "independent_reviews": {
+    "fixture": {
+      "path": "out/managed-checkpoint-20261112-01/fixture-review.json",
+      "bytes": 9375,
+      "sha256": "4e0b1f8774acfaa829f90d42f2183866cba34434724894a0e5a71c33e5099853"
+    },
+    "custody": {
+      "path": "out/managed-checkpoint-20261112-01/custody-review.json",
+      "bytes": 4865,
+      "sha256": "3252d0778b6c62cc70e8942b1a6b466ab890c7c95d10dedb2d8f14b7afc58b9c"
+    },
+    "records": {
+      "path": "out/managed-checkpoint-20261112-01/records-review.json",
+      "bytes": 6104,
+      "sha256": "80b9c5f68bbfedb9eb372eb47c02bd4e8e6e3187ffe70b6269c6bc9be39131f4"
+    },
+    "design": {
+      "path": "out/managed-checkpoint-20261112-01/design-review.json",
+      "bytes": 6084,
+      "sha256": "9470ffdbc6a557970695a0642d26a2ca2adb53d59851fc71786b99b01a28d207"
+    }
+  },
+  "packaging": {
+    "current_sources": 55,
+    "runtime_files": 56,
+    "historical_sources": 39,
+    "entrypoints": 16
+  },
+  "reviewed_behavior": [
+    "Managed fixture proof binds actual retained supervisor/stopped outcome, fixed reproducible catalog, complete CPU/vCPU/VGIC census, disk counter and one-shot HTTP confirmation. Extra vCPUs, partial/duplicate console lines and debugfs cleanup failures are covered.",
+    "Typed stopped-disk custody retains the original exclusive disk flock over exact manifest/history publication; original Inspection remains stale after replacement. PID/thread, readonly descriptors, parent chains, inode and close-failure guards remain enforced.",
+    "Bounded outcome/intent/completion schemas bind exact raw manifest/history/permit bytes and replay supported QMP shutdown evidence. Parsing creates no execution or checkpoint authority.",
+    "Root runtime contract requires nonrecursive physical store guards, exact head transition boundaries, full completion verification and observable cleanup failures. These are integration requirements, not completed runtime evidence."
+  ],
+  "receipts": {
+    "native": "out/managed-checkpoint-20261112-01/receipts.tar",
+    "builder": "/var/lib/a733-managed-checkpoint-foundation-validation-20261112-01/receipts.tar",
+    "bytes": 235520,
+    "sha256": "59faae7f5e6415118d78ee9ff42b5aeecdb56522e18c1550f48ed64c62c4febe",
+    "verified_fsynced_both": true
+  },
+  "hardware_acceptance": false,
+  "remaining": "Root checkpoint publisher and strict recovery/ready-cohort integration; coherent managed backup/restore, legacy admission and installed boot services; inactive-root build/deployment; physical SPI recovery, actual managed KVM and final SPI boot series. Existing endurance data remains accepted."
+}

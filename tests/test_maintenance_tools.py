@@ -41,7 +41,7 @@ class MaintenanceToolsTests(unittest.TestCase):
 
     def test_real_sources_are_exact_and_allowlist_is_closed(self):
         values = TOOLS.entries()
-        self.assertEqual(len(TOOLS.SOURCES), 52)
+        self.assertEqual(len(TOOLS.SOURCES), 55)
         self.assertEqual(len(TOOLS.LEGACY_SOURCES), 39)
         self.assertEqual(set(TOOLS.SOURCES) - set(TOOLS.LEGACY_SOURCES), {
             'configs/guest_registry.py', 'configs/guest_lifecycle.py', 'configs/guest_qmp.py',
@@ -49,7 +49,9 @@ class MaintenanceToolsTests(unittest.TestCase):
             'scripts/guest-lifecycle-store.py', 'scripts/guest-lifecycle.py',
             'configs/guest_run_permit.py', 'scripts/guest-process-evidence.py',
             'scripts/guest-qmp-channel.py', 'scripts/guest-checkpoint-transaction.py',
-            'scripts/launch-managed-guest.py', 'scripts/managed-guest-supervisor.py'})
+            'scripts/launch-managed-guest.py', 'scripts/managed-guest-supervisor.py',
+            'scripts/managed-guest-fixture.py', 'configs/managed-guest-profile.lock.json',
+            'configs/guest_checkpoint_records.py'})
         self.assertIn('build/timesync-state.py', TOOLS.SOURCES)
         self.assertEqual(set(values), set(TOOLS.SOURCES) | {'package.json'})
         for name in TOOLS.SOURCES:
