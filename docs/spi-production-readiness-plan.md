@@ -69,11 +69,11 @@ SPI recovery can proceed alongside software work when the operator is available.
 
 The combined source `2996365`, including the four-management/two-guest-unit
 metadata split and operator-flow changes, now passes 3589 privileged Ubuntu tests,
-shell/diagnostic suites and independent review. Two fresh source checkouts are
-staged; construction follows independent admission. Old/new reader compatibility
-must also be exercised
-against the actual production artifacts using the full pinned historical checkout,
-without the fixture's substituted dependencies. Retain the working root and
+shell/diagnostic suites and independent review. Two fresh production constructions
+now match raw/gzip bytes and pass independent complete artifact checks.
+Whole historical/current production readers pass against new and retained roots,
+without fixture dependency substitutions. [Candidate artifacts](managed-root-candidate-20261112.md)
+remain uninstalled; hardware staging, rollback and return are still required. Retain the working root and
 verified newest guest cohort through rollback and return. See
 [compatibility evidence](evidence/guest-boot-metadata-compatibility-20261112.json)
 and [operator-flow evidence](evidence/maintenance-confirmation-progress-20261112.json).

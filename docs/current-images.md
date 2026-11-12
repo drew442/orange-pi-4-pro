@@ -1,11 +1,12 @@
 # Current images for this board
 
-The board runs **normalized A at 192.168.1.116 from SPI/NVMe with SD removed**,
-with its original pinned SSH identity. Current boot is
+The board last ran **normalized A at 192.168.1.116 from SPI/NVMe with SD removed**,
+with its original pinned SSH identity. Its last observed state is cleanly powered
+off, awaiting the retained recovery card and power restoration. Last boot ID is
 `5858af7a-977e-4a9b-971e-6d71ae7858d3`. SPI cold/warm boot, SSH/NTP and real
 nonroot KVM CPU/disk/HTTP, clean shutdown, checkpoints and restart pass.
-Current test-guest checkpoint is 4 with eight history records; its current unit
-is rendered and the guest is stopped. [Operational evidence](evidence/spi-operational-20261111.json).
+The retained test guest is stopped at checkpoint 4 with eight history records;
+RAM accounts/units must be prepared again after boot. [Operational evidence](evidence/spi-operational-20261111.json).
 
 The earlier full installation and independent deployment reproduction pass.
 The earlier protected-SD route also passed ten warm/ten cold boots and complete
@@ -25,10 +26,23 @@ Keep both original and calibrated backups. [SPI procedure](spi-sd-boot-20261111.
 
 Paths below are relative to `/home/drew/orange-pi-4-pro` on codex.
 
-For later inactive-root maintenance, use the separately authenticated
-[normalized A/B update kit](normalized-maintenance-20261109.md), retaining the
-[old A rollback pair](matched-host-updates-20261109.md) separately. Its root-payload
-manifest differs from the whole-NVMe installer manifest below. The changed-B
+## New uninstalled managed candidate
+
+The [managed root candidate](managed-root-candidate-20261112.md) has matching
+production constructions, independent complete filesystem/package checks and
+whole historical/current reader compatibility. It remains unbooted and
+unqualified on hardware. Its 4 GiB root components are for NVMe; keep the retained
+2 GB recovery card unchanged. Fresh inactive-B deployment and actual managed KVM,
+SPI recovery and final qualification remain pending.
+
+## Existing installed release and recovery inputs
+
+For this existing normalized release, use the authenticated
+[normalized A/B update kit](normalized-maintenance-20261109.md) and the exact
+[current normalized A rollback input](evidence/normalized-a-compatibility-custody-20261112.json).
+Keep the [earlier pre-normalization pair](matched-host-updates-20261109.md) as
+historical recovery evidence. The root-payload manifest differs from the whole-NVMe
+installer manifest below. The changed-B
 update, interruption, selection and healthy live rollback cases now pass physically. Failed-health/offline recovery now passes; final normalized full
 installation and first A boot pass; restored KVM and independent reproduction also pass.
 The separately retained [matched NVMe-first trial SD](matched-nvme-trial-sd-20261109.md)
@@ -54,7 +68,8 @@ The normal host bootstrap selects STATE UUID
 `360dfb39-f49f-487e-b307-0bb887c854c5` on the corrected NVMe. Earlier host SD
 images selecting `00fd…`, including the November 6 deployment and `0bb7…` VGIC
 trial, are incompatible with this new state. The independent RAM recovery image
-works without selecting that installed state. SPI remains unprogrammed.
+works without selecting that installed state. SPI is programmed; future writes
+require a fresh metadata-aware reviewed plan.
 
 ## Authenticate the selected download
 

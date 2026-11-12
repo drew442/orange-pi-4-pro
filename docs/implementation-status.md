@@ -69,10 +69,9 @@ architecture review. The following software components are reviewed and tested;
 | Single managed run controller | [Evidence](evidence/managed-service-validation-20261112.json). **3077** privileged Ubuntu tests and shell/diagnostic suites pass. Independent native shutdown/cleanup probes pass; healthy polling no longer spawns PID1 queries. Actual retained locks, run, fork/QMP surrogate and checkpoint compose with explicit platform/credential substitutions. No installed unit or hardware qualification. |
 | Pre-p5 maintenance and normal activation | [Evidence](evidence/guest-activation-admission-validation-20261112.json). **3120** privileged Ubuntu tests and shell/diagnostic suites pass. Independent helper/wrapper reviews and actual private-loop interruption/retry/idempotency, preservation and cleanup pass. Protected registry must match reviewed target; binding and reopening follow all target cleanup. Bootstrap borrowing remains separate. |
 
-Current packaging has **84 sources, 85 runtime files, 22 entrypoints**, six
-management runtime files in the earlier freeze; current combined packaging
-separately binds four management files and two guest boot units. The historical exact
-39-source recovery boundary remains intact. **All new controllers remain
+Current packaging has **84 sources, 85 runtime files, 22 entrypoints**, four
+management runtime files and two separately bound guest boot units. The historical
+exact 39-source recovery boundary remains intact. **All new controllers remain
 uninstalled.** Native/surrogate results ran no A733 guest and do not establish
 deployment acceptance.
 
@@ -152,8 +151,12 @@ All changes remain uninstalled. The combined frozen source `2996365` now passes
 without skips/errors/failures. All independent source reviews remain pinned;
 terminal unit and receipt copies are verified off-device.
 [Combined evidence](evidence/candidate-integration-validation-20261112.json).
-Two fresh root-owned clean source checkouts are staged for sequential production
-constructions; independent admission is pending. No new candidate image is built.
+Two fresh A/B root constructions now match all corresponding raw/gzip bytes and
+pass independent full filesystem/package/timestamp checks and whole historical/
+current reader interoperability. Encoded artifacts and review receipts have
+verified copies on both hosts. [Candidate artifacts](managed-root-candidate-20261112.md)
+and [independent review](evidence/managed-root-artifact-review-20261112.json).
+Neither candidate root has booted; physical deployment remains pending.
 
 The exact retained normalized A gzip, original producer manifest and selector
 are available on codex and the builder for reverse-compatibility checks. A bounded
@@ -276,7 +279,8 @@ retains the exact source freeze, terminal unit, independent reviews and verified
 receipts on both hosts. Sample minima are 29,489,291,264 bytes free and
 6,537,134,080 bytes MemAvailable. Source `2996365` includes the compatibility and
 operator-flow changes. These are software checks, not physical acceptance.
-Continue the reviewed sequential root builds and artifact/reader verification.
+Production root construction/repetition and artifact/reader verification now pass.
+Continue artifact-bound deployment preparation and SPI boot collector integration.
 Recovery-card boot awaits the operator; UART remains active with unchanged
 clean-powerdown output. Physical SPI recovery, deployment, actual managed KVM,
 final boot counts and independent procedure reproduction remain required.

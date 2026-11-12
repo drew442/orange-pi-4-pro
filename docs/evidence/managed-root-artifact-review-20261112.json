@@ -1,0 +1,268 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "result": "pass for independent production candidate artifacts and whole-reader compatibility",
+  "hardware_acceptance": false,
+  "source": {
+    "current": {
+      "revision": "2996365a11cb07deb20eb4325c90841de8ab820e",
+      "tracked_closure_sha256": "fca9b7836aaddccb04e822289d03a6c00030b0e3da4828d6d0b025f3b79f6aee",
+      "tracked_files": 1103,
+      "tree": "9b1c9d866b10aea352a4c950c21042ae29a8121b"
+    },
+    "historical": {
+      "revision": "50bc9e70698d4a09c3705594dcc61c64e1715cb9",
+      "tracked_closure_sha256": "aa848ab33c98093851aa89febeb1974ec8d9f30f63f11e1ae8299dff504322cc",
+      "tracked_files": 869,
+      "tree": "869799d28af896ec32650731e69f4d3c8b7235e9"
+    },
+    "repeat": {
+      "revision": "2996365a11cb07deb20eb4325c90841de8ab820e",
+      "tracked_closure_sha256": "fca9b7836aaddccb04e822289d03a6c00030b0e3da4828d6d0b025f3b79f6aee",
+      "tracked_files": 1103,
+      "tree": "9b1c9d866b10aea352a4c950c21042ae29a8121b"
+    }
+  },
+  "terminal_unit": {
+    "MainPID": "0",
+    "Result": "success",
+    "ExecMainStatus": "0",
+    "LoadState": "loaded",
+    "SubState": "exited"
+  },
+  "source_review": {
+    "bytes": 27488,
+    "sha256": "75990bf68fa907ff6da3cfc89ee4d9da1f15b02d423e67fef928978807fa4afd",
+    "native": "out/managed-root-candidate-20261112-02/artifact-review-summary.json",
+    "builder": "/var/lib/a733-managed-root-candidate-20261112-02/artifact-review-summary.json"
+  },
+  "raw_review": {
+    "bytes": 88479,
+    "sha256": "556f9bb9e1a3627a6328cd8943b7d3811ed0dd115a3f285bfe695abe55ca14e8"
+  },
+  "custody": {
+    "builder": "/var/lib/a733-candidate-artifact-review-20261112-01/custody-final.tar.gz",
+    "bytes": 7710410,
+    "native": "tmp/candidate-build-and-artifact-review-20261112/phase2-custody.tar.gz",
+    "native_hash_matches_builder": true,
+    "raw_ext4_files_excluded": true,
+    "sha256": "fd685f2e684102959a059ea5bebf5bb3b60b99284e717b0c72b47bac0e584f00",
+    "tar_members": 3409,
+    "tar_review_receipt_equals_native_copy": true
+  },
+  "manifest": {
+    "bytes": 51618,
+    "sha256": "65f69d6a2f0b6346c0ca2f0257daa26836dd791918a4af795e70de730f8f424a"
+  },
+  "roots": {
+    "root-A.ext4": {
+      "bytes": 4294967296,
+      "sha256": "a75cf5945c3572d4741841e9a411719bf422e6b3f533b52d7e122029156eb230"
+    },
+    "root-A.ext4.gz": {
+      "bytes": 143662109,
+      "sha256": "0f066fea6c32bfdfa4161b761b132889dabbdadbd1fd70b77ddb8554902c400d"
+    },
+    "root-B.ext4": {
+      "bytes": 4294967296,
+      "sha256": "fe842ff05584205b4fb9f930b3620bac04155c9f751488a8fb20a0d798dbd87c"
+    },
+    "root-B.ext4.gz": {
+      "bytes": 143661932,
+      "sha256": "380ec5c9c20e35f8480e5ff6d40ddc1ab258924f1074252668f84010b08dfbe0"
+    }
+  },
+  "encoded_off_device_custody": {
+    "schema": 1,
+    "date": "2026-11-12",
+    "source": "/var/lib/a733-clean-replay-20261106/host-roots-managed-runtime-20261112-02/work/project/out/host-payload-managed-runtime-20261112-02",
+    "native": "out/managed-root-candidate-20261112-02/artifacts",
+    "files": {
+      "root-A.ext4.gz": {
+        "bytes": 143662109,
+        "sha256": "0f066fea6c32bfdfa4161b761b132889dabbdadbd1fd70b77ddb8554902c400d"
+      },
+      "root-B.ext4.gz": {
+        "bytes": 143661932,
+        "sha256": "380ec5c9c20e35f8480e5ff6d40ddc1ab258924f1074252668f84010b08dfbe0"
+      },
+      "manifest.json": {
+        "bytes": 51618,
+        "sha256": "65f69d6a2f0b6346c0ca2f0257daa26836dd791918a4af795e70de730f8f424a"
+      }
+    },
+    "encoded_readback_verified": true,
+    "no_raw_images_copied": true,
+    "hardware_acceptance": false
+  },
+  "corresponding_complete_raw_and_gzip_comparisons": 4,
+  "complete_gzip_expansion_raw_checks": 4,
+  "full_filesystem_readbacks": 4,
+  "filesystem_per_slot": {
+    "character_devices": 8,
+    "namespace_members": 16415,
+    "raw_xattrs": 1,
+    "regular_bytes_read": 452079717,
+    "symlinks": 1855,
+    "unique_regular_inodes": 12746
+  },
+  "independent_semantics": {
+    "0-A": {
+      "all_extra_timestamp_fields_zero": true,
+      "all_four_times_epoch": 1793750400,
+      "entrypoints": 22,
+      "guest_boot_files": 2,
+      "maintenance_files": 85,
+      "maintenance_sources": 84,
+      "management_files": 4,
+      "namespace_members": 16416,
+      "superblock": {
+        "block_size": 4096,
+        "bytes": 4294967296,
+        "check_time": 1793750400,
+        "compat_flags": 56,
+        "creation_time": 1793750400,
+        "hash_seed": "a7330000-0000-4000-8000-00000000000a",
+        "label": "a733-root-A",
+        "mount_time": 0,
+        "ro_compat_flags": 5227,
+        "uuid": "a7330000-0000-4000-8000-00000000000a",
+        "write_time": 1793750400
+      },
+      "unique_inodes": 16413
+    },
+    "0-B": {
+      "all_extra_timestamp_fields_zero": true,
+      "all_four_times_epoch": 1793750400,
+      "entrypoints": 22,
+      "guest_boot_files": 2,
+      "maintenance_files": 85,
+      "maintenance_sources": 84,
+      "management_files": 4,
+      "namespace_members": 16416,
+      "superblock": {
+        "block_size": 4096,
+        "bytes": 4294967296,
+        "check_time": 1793750400,
+        "compat_flags": 56,
+        "creation_time": 1793750400,
+        "hash_seed": "a7330000-0000-4000-8000-00000000000b",
+        "label": "a733-root-B",
+        "mount_time": 0,
+        "ro_compat_flags": 5227,
+        "uuid": "a7330000-0000-4000-8000-00000000000b",
+        "write_time": 1793750400
+      },
+      "unique_inodes": 16413
+    },
+    "1-A": {
+      "all_extra_timestamp_fields_zero": true,
+      "all_four_times_epoch": 1793750400,
+      "entrypoints": 22,
+      "guest_boot_files": 2,
+      "maintenance_files": 85,
+      "maintenance_sources": 84,
+      "management_files": 4,
+      "namespace_members": 16416,
+      "superblock": {
+        "block_size": 4096,
+        "bytes": 4294967296,
+        "check_time": 1793750400,
+        "compat_flags": 56,
+        "creation_time": 1793750400,
+        "hash_seed": "a7330000-0000-4000-8000-00000000000a",
+        "label": "a733-root-A",
+        "mount_time": 0,
+        "ro_compat_flags": 5227,
+        "uuid": "a7330000-0000-4000-8000-00000000000a",
+        "write_time": 1793750400
+      },
+      "unique_inodes": 16413
+    },
+    "1-B": {
+      "all_extra_timestamp_fields_zero": true,
+      "all_four_times_epoch": 1793750400,
+      "entrypoints": 22,
+      "guest_boot_files": 2,
+      "maintenance_files": 85,
+      "maintenance_sources": 84,
+      "management_files": 4,
+      "namespace_members": 16416,
+      "superblock": {
+        "block_size": 4096,
+        "bytes": 4294967296,
+        "check_time": 1793750400,
+        "compat_flags": 56,
+        "creation_time": 1793750400,
+        "hash_seed": "a7330000-0000-4000-8000-00000000000b",
+        "label": "a733-root-B",
+        "mount_time": 0,
+        "ro_compat_flags": 5227,
+        "uuid": "a7330000-0000-4000-8000-00000000000b",
+        "write_time": 1793750400
+      },
+      "unique_inodes": 16413
+    }
+  },
+  "whole_historical_readers": 4,
+  "whole_current_reader_retained_A": 1,
+  "helper_or_AST_substitutions": false,
+  "default_production_guards_used": true,
+  "legacy": {
+    "encoded": {
+      "bytes": 143482835,
+      "sha256": "87b097024dd772d6752dfb6a605618cfb8a1ce208722d056fb1e91f8c0a6f2fa"
+    },
+    "manifest": {
+      "bytes": 33481,
+      "sha256": "c1bcc7d23d22bd487534ba17ea447055881a044350829608360aa92ca24283f2"
+    },
+    "raw": {
+      "bytes": 4294967296,
+      "sha256": "a9715b819348a8220ec8b3b1f41ef27db677baaa96014f5d1dfb7a22597decdd"
+    },
+    "selector": {
+      "bytes": 179,
+      "sha256": "3c76b96c328b4508ff407c8594352e04389664e97ced6f0a09284cade5bd027b"
+    }
+  },
+  "final_cleanup": {
+    "mapped_processes": [],
+    "phase_mounts": []
+  },
+  "final_outer_builder": {
+    "MemAvailable_bytes": 7519682560,
+    "final_inventory_sha256": "6151485f1de77042c29a49bcd1ab6ba35dc4a1c787fa93ef29d21cfe2281616a",
+    "final_outer_packages": 842,
+    "free_bytes": 23760297984,
+    "unchanged_from_independent_phase1": true
+  },
+  "sampled_resource_minima": {
+    "free_disk_bytes": 23784144896,
+    "MemAvailable_bytes": 7196266496
+  },
+  "retained_attempts": [
+    {
+      "attempt": 1,
+      "classification": "intentionally stopped verifier instrumentation attempt",
+      "reason": "Timestamp parser required one leading space although debugfs permits zero; corrected to optional leading space before checks ran; full verification rerun in fresh child directory. Original driver/pins/logs retained."
+    },
+    {
+      "attempt": 2,
+      "classification": "successful complete verifier",
+      "unit": "a733-candidate-artifact-review-20261112-02.service"
+    },
+    {
+      "attempt": "custody-1",
+      "classification": "archive packaging warning retained",
+      "reason": "tar returned nonzero when creating archive in scanned root; retained original archive and diagnostics. Explicit immutable input listing succeeded on second attempt."
+    }
+  ],
+  "namespace_count_scope": "Full readback16415 includes root and excludes separately allowed lost+found; semantic16416 includes both.",
+  "limits": [
+    "Regular-file construction/repetition/filesystem/package/timestamp/readers only. Current reader against retainedA is an artifact check, not a live-board rollback.",
+    "Neither new candidate root has booted. Actual targetsystemd252 mount/shutdown order, managed nonroot KVM, coherent physical restoration/disable/rollback/return and hostrestrictions remain mandatory.",
+    "Revised physical SPI restore/SDrecovery/reinstall demonstration, finalSPIcold/warmbootcounts and independentlyreproduceddeployment remain pending.",
+    "No private block-loop transaction executed in this review. Accepted endurance data reused. Source/license limitations remain documented."
+  ]
+}

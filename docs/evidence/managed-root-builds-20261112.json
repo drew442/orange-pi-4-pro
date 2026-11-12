@@ -1,0 +1,99 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "result": "two production candidate constructions pass independent regular-artifact and whole-reader review",
+  "hardware_acceptance": false,
+  "source_revision": "2996365a11cb07deb20eb4325c90841de8ab820e",
+  "source_tree": "9b1c9d866b10aea352a4c950c21042ae29a8121b",
+  "source_files": 1103,
+  "integration_evidence": "candidate-integration-validation-20261112.json",
+  "builder": "drew@build.drewnet.online",
+  "tags": [
+    "managed-runtime-20261112-02",
+    "managed-runtime-20261112-03"
+  ],
+  "units": {
+    "02": {
+      "MainPID": "0",
+      "Result": "success",
+      "ExecMainStatus": "0",
+      "SubState": "exited"
+    },
+    "03": {
+      "MainPID": "0",
+      "Result": "success",
+      "ExecMainStatus": "0",
+      "SubState": "exited"
+    }
+  },
+  "preflight_review": {
+    "bytes": 10880,
+    "sha256": "cdcb6c2063b80d4dcc7d3074acf180935e312c7a79ce1f5f2682dcfdd0c1ea62"
+  },
+  "receipt_pins": {
+    "02": {
+      "bytes": 259193,
+      "sha256": "db4de71f230ddf322ddff128f2db3deafc9ef1be5e23022c9602c804cde5f7b9"
+    },
+    "03": {
+      "bytes": 259196,
+      "sha256": "ed9daaf22bdd03bd16515356d27d7fc319be2a26a439ec62ad73ec35244d1bc5"
+    }
+  },
+  "manifest": {
+    "bytes": 51618,
+    "sha256": "65f69d6a2f0b6346c0ca2f0257daa26836dd791918a4af795e70de730f8f424a"
+  },
+  "manifest_bytes_identical": true,
+  "manifest_declared_artifacts_match": true,
+  "producer_authenticated_files_per_construction": 133,
+  "roots": {
+    "root-A.ext4": {
+      "bytes": 4294967296,
+      "sha256": "a75cf5945c3572d4741841e9a411719bf422e6b3f533b52d7e122029156eb230"
+    },
+    "root-A.ext4.gz": {
+      "bytes": 143662109,
+      "sha256": "0f066fea6c32bfdfa4161b761b132889dabbdadbd1fd70b77ddb8554902c400d"
+    },
+    "root-B.ext4": {
+      "bytes": 4294967296,
+      "sha256": "fe842ff05584205b4fb9f930b3620bac04155c9f751488a8fb20a0d798dbd87c"
+    },
+    "root-B.ext4.gz": {
+      "bytes": 143661932,
+      "sha256": "380ec5c9c20e35f8480e5ff6d40ddc1ab258924f1074252668f84010b08dfbe0"
+    }
+  },
+  "packaging": {
+    "maintenance_sources": 84,
+    "maintenance_runtime_files": 85,
+    "entrypoints": 22,
+    "management_files": 4,
+    "guest_boot_units": 2
+  },
+  "sampled_resource_minima": {
+    "free_disk_bytes": 26128527360,
+    "MemAvailable_bytes": 6943367168
+  },
+  "completed_cleanup": {
+    "host_inventory_unchanged": true,
+    "mapped_processes_empty": true,
+    "phase_mounts_empty": true
+  },
+  "independent_artifact_review": {
+    "status": "pass for regular artifacts; hardware acceptance pending",
+    "evidence": "managed-root-artifact-review-20261112.json",
+    "unit": "a733-candidate-artifact-review-20261112-02.service"
+  },
+  "raw_receipts_native": "out/managed-root-candidate-20261112-02",
+  "raw_phases_builder": [
+    "/var/lib/a733-clean-replay-20261106/host-roots-managed-runtime-20261112-02",
+    "/var/lib/a733-clean-replay-20261106/host-roots-managed-runtime-20261112-03"
+  ],
+  "limitations": [
+    "Independent actual-byte/artifact/whole-reader review passes; hardware acceptance remains separate.",
+    "New root components are4GiB NVMe artifacts, not SD images. Retain existing2GB recovery card; no boardstoragewrites performed.",
+    "Encoded off-device artifact custody passes. Physical SPI recovery/deployment/managedKVM/rollback/finalboots/independentreproduction remain pending. Existing endurance reused."
+  ]
+}
