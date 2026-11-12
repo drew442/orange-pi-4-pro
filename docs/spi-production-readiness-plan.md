@@ -236,6 +236,13 @@ runs and a tested rollback/disable path that preserves management access.
 
 ## 5. Complete SPI boot qualification on the final configuration
 
+The [boot-credit ledger](evidence/spi-boot-credit-ledger-20261112.json) binds the
+existing cold/warm boot UUIDs, immutable SPI component hashes, SSD identity and
+actual KVM counters 8/9. These are conditional route credits after identity
+comparison with the reinstalled firmware. The new managed build has no physical
+boot or autostart credit. Add qualifying demonstration records before computing
+the remaining shortfall; the protected-SD series is excluded.
+
 Freeze the firmware/SSD identity and final host automation before the remaining
 series. Identify firmware through boot0/package hashes and the declared metadata
 policy, recording complete flash snapshots separately. Normal vendor parameter

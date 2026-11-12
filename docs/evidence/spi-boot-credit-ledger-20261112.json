@@ -1,0 +1,104 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "purpose": "Proposed phase-5 credits; coordinator identity review and demo-boot accounting required",
+  "requirements": {
+    "cold": 10,
+    "warm": 10,
+    "source": "docs/spi-production-readiness-plan.md:239-248"
+  },
+  "identity": {
+    "nvme": {
+      "model": "SPCC M.2 PCIe SSD",
+      "serial": "134807190FC700149277",
+      "firmware": "EDFM20.0",
+      "source": "out/spi-nvme-hardware-20261111-01/SPI-first-boot-result.json:nvme; SPI-warm-boot-result.json:nvme",
+      "bytes": 256060514304
+    },
+    "spi": {
+      "device": "/dev/mtd0",
+      "part": "XM25QU128C",
+      "jedec": "204118",
+      "boot0_and_package_hashes": {
+        "boot0_range": [
+          0,
+          237568
+        ],
+        "boot0_sha256": "7f0babc242c1e4614c7243bd2c45a980e4385727ffbb544a7c8f2d324cf8dc07",
+        "firmware_package_range": [
+          262144,
+          1654784
+        ],
+        "firmware_package_sha256": "bdfe070a2c358de9dd0061b39609f604c0c12e9c25140903505f88799cc343be",
+        "postboot_snapshot_sha256": "812038f8291faffc0a404dc06afa2d1f7b52f2404ead566b79b44eef4bca1be8",
+        "postwarm_snapshot_sha256": "e829cf7b08fa9753866df7de727b2d1b92bb5c525f3bbf4cd94315d528dc275a"
+      },
+      "component_hash_source": "SHA-256 computed from retained full snapshots; both snapshots match referenced full-flash read receipts",
+      "metadata_interval": [
+        260096,
+        262144
+      ],
+      "metadata_observed_changes": {
+        "first_boot": 2046,
+        "warm_boot_additional": 66
+      },
+      "source": "docs/spi-sd-boot-20261111.md:56-57,101-115,129-134; out/spi-nvme-hardware-20261111-01/postboot-flash-read.json; postwarm-flash-read.json; postboot-spi.bin; postwarm-spi.bin"
+    }
+  },
+  "proposed_credits": {
+    "cold": [
+      {
+        "boot_id": "461104ad-de37-4fbe-8ecc-c81c10203b9a",
+        "sd_absent": true,
+        "kvm_receipt": "out/spi-nvme-hardware-20261111-01/counter8-running-KVM-evidence.json",
+        "boot_receipt": "out/spi-nvme-hardware-20261111-01/SPI-first-boot-result.json",
+        "uart": "out/spi-nvme-hardware-20261111-01/SPI-first-boot-observed-UART.log",
+        "source": "docs/evidence/spi-operational-20261111.json:boot_evidence.cold_SPI_boot,raw KVM receipt boot_id and HTTP_without_confirmation fields,records; docs/spi-sd-boot-20261111.md:91-99",
+        "actual_persisted_disk_counter": 8
+      }
+    ],
+    "warm": [
+      {
+        "boot_id": "5858af7a-977e-4a9b-971e-6d71ae7858d3",
+        "sd_absent": true,
+        "kvm_receipt": "out/spi-nvme-hardware-20261111-01/counter9-running-KVM-evidence.json",
+        "boot_receipt": "out/spi-nvme-hardware-20261111-01/SPI-warm-boot-result.json",
+        "uart": "out/spi-nvme-hardware-20261111-01/SPI-warm-boot-UART.log",
+        "source": "docs/evidence/spi-operational-20261111.json:boot_evidence.warm_SPI_boot,raw KVM receipt boot_id and HTTP_without_confirmation fields,records; docs/spi-sd-boot-20261111.md:117-127",
+        "actual_persisted_disk_counter": 9
+      }
+    ]
+  },
+  "proposed_observed": {
+    "cold": 1,
+    "warm": 1
+  },
+  "remaining": {
+    "cold": "10 - 1 = 9",
+    "warm": "10 - 1 = 9",
+    "condition": "subject to coordinator identity review and qualifying demonstration boot credit; recalculate after accepted demos"
+  },
+  "exclusions": {
+    "protected_sd_10_each_not_counted": true,
+    "final_managed_candidate_299_booted": false,
+    "final_autostart_credit": 0,
+    "source": "docs/implementation-status.md:Resources and next actions; docs/spi-production-readiness-plan.md:239-248"
+  },
+  "custody": {
+    "archive": "/var/lib/a733-spi-operation-20261111-01/operational-evidence.tar",
+    "sha256": "ca319037fab0733a0c5514efa9921c8d03f2d01b3db76d62e8c5b28248ce86dd",
+    "verified_records": 113,
+    "source": "docs/evidence/spi-operational-custody-20261111.json"
+  },
+  "source_note": "Summary actual_KVM.counters=[7,8,9] does not map counter values to runs; raw KVM receipts bind cold boot to persisted counter 8 and warm boot to persisted counter 9.",
+  "coordinator_review": {
+    "result": "existing operational route evidence confirmed; credit applicability remains conditional on unchanged final firmware code and SSD",
+    "final_managed_build_credit": 0,
+    "source": "2996365 remains unbooted",
+    "checks": [
+      "Full retained snapshot hashes and both immutable component hashes verified",
+      "Cold/warm boot UUIDs cross-checked against raw boot and KVM records",
+      "Protected-SD series excluded"
+    ]
+  }
+}
