@@ -12,12 +12,38 @@ _SPEC.loader.exec_module(CONFIG)
 require = CONFIG.require
 LIMIT = 65536
 PROFILE = 'a733-guest-enrollment-v1'
+MANAGED_PROFILE = 'a733-guest-enrollment-managed-v2'
 FILENAMES = {'kernel': 'Image', 'initrd': 'initramfs.cpio.gz', 'disk': 'disk.raw'}
 
 
 def digest(value):
     require(type(value) is str and re.fullmatch('[0-9a-f]{64}', value) is not None,
             'invalid SHA-256')
+    return value
+
+
+def validate_shutdown_provenance(value):
+    """Validate provenance structure, without granting shutdown authority."""
+    require(type(value) is dict and set(value) == {
+        'profile', 'run_id', 'boot_id', 'shutdown_profile', 'fixture_profile',
+        'evidence_sha256'}, 'invalid shutdown provenance fields')
+    require(type(value['profile']) is str and value['profile'] == 'a733-managed-shutdown-v1' and
+            type(value['shutdown_profile']) is str and
+            value['shutdown_profile'] == 'qmp-guest-shutdown-v1' and
+            type(value['fixture_profile']) is str and
+            value['fixture_profile'] in ('none', 'managed-power-key-v1'),
+            'invalid shutdown provenance profiles')
+    for key in ('run_id', 'boot_id'):
+        identifier = value[key]
+        require(type(identifier) is str and len(identifier) == 36,
+                'invalid shutdown provenance UUID')
+        try:
+            parsed = uuid.UUID(identifier)
+        except ValueError as error:
+            raise ValueError('invalid shutdown provenance UUID') from error
+        require(str(parsed) == identifier and parsed.int != 0,
+                'canonical nonzero shutdown provenance UUID required')
+    digest(value['evidence_sha256'])
     return value
 
 
@@ -33,7 +59,8 @@ def validate_manifest(data):
     fields = {'schema', 'profile', 'config', 'guest_uuid', 'files'}
     require(type(value) is dict and fields <= set(value) and
             set(value) <= fields | {'checkpoint', 'restoration'}, 'invalid manifest fields')
-    require(type(value['schema']) is int and value['schema'] == 1 and value['profile'] == PROFILE,
+    require(type(value['schema']) is int and type(value['profile']) is str and
+            (value['schema'], value['profile']) in ((1, PROFILE), (2, MANAGED_PROFILE)),
             'invalid manifest profile/schema')
     config = CONFIG.validate_config(json.dumps(value['config'], allow_nan=False))
     identifier = value['guest_uuid']
@@ -54,14 +81,18 @@ def validate_manifest(data):
                 'manifest file/config metadata differs')
     if 'checkpoint' in value:
         checkpoint = value['checkpoint']
+        shutdown_field = 'clean_shutdown_attested' if value['schema'] == 1 else 'shutdown_provenance'
         require(type(checkpoint) is dict and set(checkpoint) == {
-            'number', 'previous_manifest_sha256', 'previous_disk_sha256', 'clean_shutdown_attested'},
+            'number', 'previous_manifest_sha256', 'previous_disk_sha256', shutdown_field},
             'invalid checkpoint fields')
         require(type(checkpoint['number']) is int and 1 <= checkpoint['number'] <= 2147483647,
                 'invalid checkpoint number')
         digest(checkpoint['previous_manifest_sha256'])
         digest(checkpoint['previous_disk_sha256'])
-        require(checkpoint['clean_shutdown_attested'] is True, 'clean shutdown attestation required')
+        if value['schema'] == 1:
+            require(checkpoint['clean_shutdown_attested'] is True, 'clean shutdown attestation required')
+        else:
+            validate_shutdown_provenance(checkpoint['shutdown_provenance'])
     if 'restoration' in value:
         restoration = value['restoration']
         require(type(restoration) is dict and set(restoration) == {
@@ -88,6 +119,7 @@ def canonical(value):
 
 def proposed_manifest(current_manifest, old_manifest_sha, new_disk_record):
     current = validate_manifest(canonical(current_manifest))
+    require(current['schema'] == 1, 'manual checkpoint requires schema 1')
     digest(old_manifest_sha)
     require(type(new_disk_record) is dict and set(new_disk_record) == {'bytes', 'sha256'},
             'invalid new disk record')
@@ -104,6 +136,33 @@ def proposed_manifest(current_manifest, old_manifest_sha, new_disk_record):
         'previous_manifest_sha256': old_manifest_sha,
         'previous_disk_sha256': current['config']['disk']['sha256'],
         'clean_shutdown_attested': True,
+    }
+    return validate_manifest(canonical(proposed))
+
+
+def proposed_managed_manifest(current_manifest, old_manifest_sha, new_disk_record,
+                              shutdown_provenance):
+    """Describe a managed transition; the caller must authenticate shutdown evidence."""
+    validate_shutdown_provenance(shutdown_provenance)
+    current = validate_manifest(canonical(current_manifest))
+    digest(old_manifest_sha)
+    require(type(new_disk_record) is dict and set(new_disk_record) == {'bytes', 'sha256'},
+            'invalid new disk record')
+    require(type(new_disk_record['bytes']) is int and
+            new_disk_record['bytes'] == current['config']['disk']['bytes'], 'disk resizing refused')
+    digest(new_disk_record['sha256'])
+    if new_disk_record == current['config']['disk']:
+        return current
+    proposed = copy.deepcopy(current)
+    proposed['schema'] = 2
+    proposed['profile'] = MANAGED_PROFILE
+    proposed['config']['disk']['sha256'] = new_disk_record['sha256']
+    proposed['files']['disk.raw']['sha256'] = new_disk_record['sha256']
+    proposed['checkpoint'] = {
+        'number': current.get('checkpoint', {}).get('number', 0) + 1,
+        'previous_manifest_sha256': old_manifest_sha,
+        'previous_disk_sha256': current['config']['disk']['sha256'],
+        'shutdown_provenance': copy.deepcopy(shutdown_provenance),
     }
     return validate_manifest(canonical(proposed))
 

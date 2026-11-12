@@ -20,6 +20,7 @@ MAX_GUESTS = 32
 MAX_GENERATION = (1 << 63) - 1
 PROFILE = 'a733-guest-autostart-v1'
 SHUTDOWN_PROFILE = 'qmp-guest-shutdown-v1'
+FIXTURE_PROFILES = ('none', 'first-kvm-http-v1', 'managed-power-key-v1')
 FIELDS = {'schema', 'profile', 'generation', 'storage', 'guests'}
 GUEST_FIELDS = {'name', 'uid', 'gid', 'manifest_sha256', 'enabled',
                 'shutdown_profile', 'fixture_profile'}
@@ -108,7 +109,7 @@ def validate_registry(data):
         require(type(guest['enabled']) is bool, 'enabled must be boolean')
         require(guest['shutdown_profile'] == SHUTDOWN_PROFILE, 'invalid shutdown profile')
         require(type(guest['fixture_profile']) is str and
-                guest['fixture_profile'] in ('none', 'first-kvm-http-v1'), 'invalid fixture profile')
+                guest['fixture_profile'] in FIXTURE_PROFILES, 'invalid fixture profile')
         require(name != 'firstkvm' or not guest['enabled'], 'firstkvm must remain manual')
     value['guests'] = sorted(guests, key=lambda guest: guest['name'])
     return value

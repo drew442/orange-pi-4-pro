@@ -48,20 +48,22 @@ are no-ops; original blank restoration affects exactly units 0–25.
 [metadata policy](spi-calibration-policy.md). Physical SD recovery/restore/reinstall,
 unattended guest deployment and final qualification remain pending. The
 [guest lifecycle design](guest-autostart-design.md) passes independent architecture
-review; pure registry validation is committed. QMP, RAM admission and head-state APIs
-pass independent review and **2402** privileged Ubuntu tests with no skips/errors/
-failures, five shell suites and five diagnostic cases. A native builder probe
-confirms actual unprivileged permissions/flock with zero capabilities.
-[Foundation evidence](evidence/guest-foundation-validation-20261112.json). These
-APIs remain uninstalled. Protected store/context/controller, per-guest admission
-locks/managed markers and typed bootstrap storage activation now pass independent
-review and **2536** privileged Ubuntu tests, five shell suites and five diagnostic
-cases. Current maintenance packaging has 46 sources; historical recovery archives
-retain their strict 39-source boundary and original pins. The first combined run's
-three packaging failures and successful corrected retry are retained.
-[State/bootstrap evidence](evidence/guest-state-validation-20261112.json).
-Legacy integration, supervision, checkpoint reconciliation, deployment packaging
-and physical acceptance remain pending. Two fresh managed power-key guest builds
+review. Admission/registry/head APIs and protected store/context/controller pass
+review, including actual unprivileged RAM permissions/flock checks.
+[Foundation](evidence/guest-foundation-validation-20261112.json) and
+[state/bootstrap evidence](evidence/guest-state-validation-20261112.json).
+Managed-run permits, Linux process/QMP checks, bounded transport, versioned shutdown
+provenance and the shared checkpoint engine now pass independent review and
+**2603** privileged Ubuntu tests, five shell suites and five diagnostic cases.
+The Linux surrogate integration passes credentials, executable/UNIX-peer binding,
+QMP and raw wait; it ran no QEMU or KVM. Current packaging has 50 sources;
+historical recovery archives retain their strict 39-source boundary and pins.
+Resolved group/deadline/disk-binding findings and all preliminary logs are retained.
+[Runtime foundation evidence](evidence/managed-runtime-validation-20261112.json).
+These APIs remain uninstalled. Next software work is protected permit publication,
+inherited-lock adoption and managed launch, durable run/head/intent reconciliation,
+the root supervisor/boot services, all legacy admission and coherent backup/restore.
+Inactive-root deployment and physical acceptance remain pending. Two fresh managed power-key guest builds
 match all manifest files byte for byte with verified off-device artifact copies.
 [Fixture build evidence](evidence/managed-fixture-build-20261112.json). Its shutdown
 path remains hardware-unproven.
@@ -169,17 +171,17 @@ binary redistribution clearance is claimed. [Source inventory](toolchain-sources
 
 ## Resources and next actions
 
-Latest privileged Ubuntu 22.04 suite: **2536 tests**, zero skips/errors/failures,
+Latest privileged Ubuntu 22.04 suite: **2603 tests**, zero skips/errors/failures,
 five shell suites and five diagnostic cases; all five TOMLs parse.
-[Guest state/bootstrap suite evidence](evidence/guest-state-validation-20261112.json)
+[Managed runtime suite evidence](evidence/managed-runtime-validation-20261112.json)
 records the latest run. The final-A warm collector authenticates release/root/policy and stops on
 actual remote release refusal; [software evidence](evidence/final-warm-binding-validation-20261110.json)
 retains independent review and the initial corrected validation-environment failure. Host checks do not prove
 hardware acceptance.
 
 At final qualification, codex has more than 24 GB available. The last full-suite
-builder suite sampled minima of 37275299840 bytes available and
-MemAvailable 7098507264 bytes.
+builder suite sampled minima of 32798228480 bytes available and
+MemAvailable 7055437824 bytes.
 Keep bulk sources, images and backups on the builder. Its LV is 128819658752 bytes
 with 4265607168 bytes VG free. All free builder capacity is approved for use and
 expansion after exact-target revalidation and independent review. Native codex

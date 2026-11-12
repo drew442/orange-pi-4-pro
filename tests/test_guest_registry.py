@@ -25,6 +25,13 @@ def registry():
 
 
 class RegistryTests(unittest.TestCase):
+    def test_managed_shutdown_fixture_has_explicit_profile(self):
+        value = registry()
+        value['guests'][0]['fixture_profile'] = 'managed-power-key-v1'
+        self.assertEqual(REGISTRY.validate_registry(REGISTRY.canonical(value)), value)
+        value['guests'][0]['fixture_profile'] = 'managed-power-key-v2'
+        self.check_invalid(value)
+
     def check_invalid(self, value):
         with self.assertRaises(ValueError):
             REGISTRY.validate_registry(json.dumps(value))

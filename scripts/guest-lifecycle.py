@@ -162,7 +162,7 @@ class StateController:
             require(type(enabled) is bool, 'enabled must be boolean')
             require(name != 'firstkvm', 'firstkvm must remain manual')
             require(type(fixture_profile) is str and fixture_profile in
-                    ('none', 'first-kvm-http-v1'), 'invalid fixture profile')
+                    REGISTRY.FIXTURE_PROFILES, 'invalid fixture profile')
             result['stage'] = 'guest-lock'
             with ExitStack() as stack:
                 lock = stack.enter_context(self.admission.guest_lock(

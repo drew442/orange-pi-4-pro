@@ -25,14 +25,18 @@ artifact copies. Kernel `Image` is 5,253,128 bytes; initramfs is 975,144 bytes;
 the disposable disk is 134,217,728 bytes. This profile's actual KVM power-key and
 QMP shutdown path remains untested on the board.
 
-To reproduce on the prepared builder, using the exact pinned clean kernel tree
-and static ARM64 BusyBox:
+To reproduce from the retained root-owned builder snapshot, SSH to
+`drew@build.drewnet.online`, then use its exact pinned clean kernel tree and
+static ARM64 BusyBox:
 
 ```sh
+sudo -i
+cd /var/lib/a733-guest-state-validation-20261112-02/project
 bash build/guest-fixture.sh \
   /var/lib/a733-managed-fixture-inputs-20261112-01/kernel-tree \
   /var/lib/a733-managed-fixture-inputs-20261112-01/busybox-arm64 \
   "$(pwd -P)/out/guest-fixture-managed-REBUILD" managed-power-key-v1
+exit
 ```
 
 Choose a new output name. The recipe first verifies pinned packages and the

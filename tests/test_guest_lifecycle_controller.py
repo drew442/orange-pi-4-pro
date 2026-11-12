@@ -21,6 +21,13 @@ PIN = 'a' * 64
 
 
 class ControllerTests(unittest.TestCase):
+    def test_managed_fixture_enrollment_records_explicit_profile(self):
+        with self.controller as controller:
+            result = controller.enroll('autotest', PIN, fixture_profile='managed-power-key-v1')
+            self.assertTrue(result['success'])
+            self.assertEqual(controller.registry()['registry']['guests'][0]['fixture_profile'],
+                             'managed-power-key-v1')
+
     def setUp(self):
         tmp = tempfile.TemporaryDirectory()
         self.addCleanup(tmp.cleanup)

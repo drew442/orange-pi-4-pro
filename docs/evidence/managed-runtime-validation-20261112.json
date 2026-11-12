@@ -1,0 +1,218 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "result": "pass",
+  "scope": "Uninstalled managed-run permit, Linux process/QMP witness and bounded transport, versioned managed checkpoint provenance, shared publication engine and maintenance import closure. No installed supervisor or actual managed guest acceptance.",
+  "builder": "drew@build.drewnet.online",
+  "builder_base": "/var/lib/a733-managed-runtime-validation-20261112-02",
+  "full_Ubuntu_tests": 2603,
+  "failures_errors_skips": 0,
+  "shell_suites": 5,
+  "diagnostic_cases": 5,
+  "locked_source_files": 989,
+  "source_lock": {
+    "bytes": 158368,
+    "sha256": "9e135d71842f4be1514d854f4f454025d9b6a79712fefb606cac21db270c4d7e"
+  },
+  "unit": {
+    "RuntimeMaxUSec": "8h",
+    "MainPID": "0",
+    "Result": "success",
+    "ExecMainCode": "1",
+    "ExecMainStatus": "0",
+    "CPUQuotaPerSecUSec": "2s",
+    "MemoryMax": "3221225472",
+    "ActiveState": "active",
+    "SubState": "exited"
+  },
+  "resources": {
+    "sampled_min_free_disk_bytes": 32798228480,
+    "sampled_min_available_memory_bytes": 7055437824,
+    "compilation_jobs": 2
+  },
+  "source": {
+    "configs/guest_run_permit.py": {
+      "bytes": 7504,
+      "sha256": "49f47fef677aa44575c7b334746db0c8de97eddbd46ce7ddcf53b73d506ca3fd"
+    },
+    "configs/guest_manifest.py": {
+      "bytes": 9407,
+      "sha256": "d5fc6bcc9dd37a5ba9d5dcceacbca36c30485f6a8280b60ac3290d6c3fbd434b"
+    },
+    "configs/guest_backup.py": {
+      "bytes": 7213,
+      "sha256": "92547c85f02ef0f4a8d6174592792af179013aa03b3345f5b20b66a081187a4a"
+    },
+    "configs/guest_registry.py": {
+      "bytes": 6511,
+      "sha256": "fecd8f1292d96bb0d0b49627086c26c2bf819500913c50eef00cc2d846879735"
+    },
+    "scripts/guest-lifecycle.py": {
+      "bytes": 16631,
+      "sha256": "42c9e84c733f2e9a6d8bc4a60fcdd20b9c16a82607e1b09cff5b57689d33c7b5"
+    },
+    "scripts/guest-process-evidence.py": {
+      "bytes": 10585,
+      "sha256": "3a76c03e6811f2545127e0978211284792ac8ae9822b9f658adbc57a6fa4ef8d"
+    },
+    "scripts/guest-qmp-channel.py": {
+      "bytes": 8535,
+      "sha256": "9c72638cf98a37a558241e703f41f09367e8ec20221d793f6427d6a6f3852797"
+    },
+    "scripts/guest-checkpoint-transaction.py": {
+      "bytes": 8907,
+      "sha256": "60a65496baa01aa1cef1f4222e011809b990111b21d6f4f010e3830012c763e0"
+    },
+    "scripts/checkpoint-guest.py": {
+      "bytes": 7471,
+      "sha256": "aa7b310c86d5973cc12090edeb0beb224a4b0ef9c195d678de7b1073cf057381"
+    },
+    "build/maintenance-tools.py": {
+      "bytes": 14898,
+      "sha256": "841002c5c02f702e8bf236fc573a6d297553cc799d7b1115dd1d1cfdc59180c1"
+    },
+    "tests/test_guest_run_permit.py": {
+      "bytes": 9211,
+      "sha256": "b807184fbb966fd00c18a6e7b3c9352edcd84c2f7ec17a0e49bf23d6c603da92"
+    },
+    "tests/test_managed_checkpoint_manifest.py": {
+      "bytes": 15686,
+      "sha256": "ee78a88cac6d8afabba3d93577f1c07b2c7840ff3e4f3b08d9aab38d5c76336c"
+    },
+    "tests/test_guest_process_evidence.py": {
+      "bytes": 12055,
+      "sha256": "e2d2267a8062973d8ed38dfb06e0fe024ca3a40ce0cfe69d08e688d9f2fcfa57"
+    },
+    "tests/test_guest_qmp_channel.py": {
+      "bytes": 12885,
+      "sha256": "f069a9cc91dcda6ea5962eab3c0eec59343f849dadff65c96e5fd86a509a7870"
+    },
+    "tests/test_guest_checkpoint_transaction.py": {
+      "bytes": 12188,
+      "sha256": "86f501803370e8d6b25b188c612e9b55a0f8e4eb7ae2e024f9cdeea03f043abf"
+    },
+    "tests/test_guest_registry.py": {
+      "bytes": 10552,
+      "sha256": "876ab88b5f5b68afd7e6c8923294e44f7b0028b42f32a8d12d5b1aa41568a6ad"
+    },
+    "tests/test_guest_lifecycle_controller.py": {
+      "bytes": 28382,
+      "sha256": "fe5ec3050cc1d21e4e9ea49d907137bf8bbc3ae6331dcbc7fb7a0f9626d93e48"
+    },
+    "tests/test_maintenance_tools.py": {
+      "bytes": 16548,
+      "sha256": "c1895c63aac4611f13f73ede619646717eb9623a19055b78575c7d2e9d3a29ed"
+    },
+    "tests/test_host_payload.py": {
+      "bytes": 28099,
+      "sha256": "849ff7fea5fb27b7378fe07e7e031b26f34cdf77f3c0a79b01deb33f4e7fb7a9"
+    },
+    "tests/test_launch_deterministic_host_roots.py": {
+      "bytes": 11602,
+      "sha256": "b2470dbf3274132a6018af124e0ae59ab89d5e389c8019cb1aee1d5c7e007df5"
+    }
+  },
+  "independent_reviews": {
+    "out/production-readiness-20261112-01/managed-permit-final-review.json": {
+      "bytes": 3569,
+      "sha256": "5dbf328c0f0c5973fe812e52485798ba40cf5da910a950403d37be706e3f6c07"
+    },
+    "out/production-readiness-20261112-01/managed-manifest-final-review.json": {
+      "bytes": 5545,
+      "sha256": "c25596b29ccaa1b97062471eb2b8298e18127dddd9daeee25b3af3d0c1f0d5bf"
+    },
+    "out/production-readiness-20261112-01/managed-process-final-review.json": {
+      "bytes": 4056,
+      "sha256": "773dfc84102706a4d64050d0246efb6de81aac341cce36f080a1e812df4d4154"
+    },
+    "out/production-readiness-20261112-01/managed-channel-final-review.json": {
+      "bytes": 4038,
+      "sha256": "52a1142212d02cf64f24bd0f0f8798c35a4bd59dfcd10d45dc3095749eb2fcd0"
+    },
+    "out/production-readiness-20261112-01/checkpoint-core-final-review.json": {
+      "bytes": 6709,
+      "sha256": "98c88c2eddce0b81c17abc759185b6665a90c1d2550b32aa45f8d4ae374a93d0"
+    }
+  },
+  "resolved_findings": [
+    "Process supplementary Groups must be the sole KVM GID, excluding the primary guest GID",
+    "QMP greeting, command acknowledgement and EOF drain have hard ten-second caps; actual kernel O_NONBLOCK required",
+    "Checkpoint core binds plan/history/proposed disk to retained inspection; changed-as-unchanged refuses before flush"
+  ],
+  "manual_compatibility": "Manual schema1 CLI/TTY prompts/plan/history remain unchanged; independent 600-case manifest comparison and corrected privileged manual suites pass. Managed schema2 uses explicit shutdown provenance and mixed-version exact history. Schema parsing grants no shutdown authority.",
+  "packaging": {
+    "current_sources": 50,
+    "historical_sources": 39,
+    "entrypoints_unchanged": true,
+    "relocated_isolated_import_and_help": "pass"
+  },
+  "preliminary_run": {
+    "base": "/var/lib/a733-managed-runtime-validation-20261112-01",
+    "tests": 2600,
+    "result": "pass, but not final qualification: independent review identified untested disk-binding gap. Corrected two-file source delta and three rejection regressions pass the final 2603-case retry. Both complete logs retained."
+  },
+  "native_integration_probe": {
+    "result": "pass",
+    "scope": "Native Linux process credentials, executable identity, UNIX peer, QMP transport and raw wait integration using Python surrogate",
+    "surrogate": {
+      "path": "/usr/bin/python3.12",
+      "bytes": 8020928,
+      "sha256": "e50d468e8b0adfb05733f5b87b3cff34829c4a8c1aea50c865aa8bdfe4bb150f"
+    },
+    "uid": 60002,
+    "primary_gid": 60002,
+    "sole_supplementary_gid": 108,
+    "zero_capabilities": true,
+    "no_new_privileges": true,
+    "raw_wait_status": 0,
+    "qmp_eof_validated": true,
+    "files": {
+      "managed-runtime-native-probe.py": {
+        "bytes": 3890,
+        "sha256": "3923242ecd548d60cb02dd0edf754a4db31bbb80667edaee1acf8075bfcdd2c9"
+      },
+      "managed-runtime-native-probe.stdout": {
+        "bytes": 2313,
+        "sha256": "de6475a37086dcaeddf8ea2e1c5f705b45d99194ad46e199512789a188d89c6b"
+      },
+      "managed-runtime-native-probe.stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "qemu_execution": false,
+    "kvm_execution": false,
+    "hardware_acceptance": false
+  },
+  "receipts": {
+    "bytes": 604160,
+    "sha256": "a7bb85f5f31c4739e76a76fa041137c883f020e9667d87bdd51fc10529feaa58",
+    "native": "out/production-readiness-20261112-01/managed-runtime-validation-records.tar",
+    "builder": "/var/lib/a733-managed-runtime-validation-20261112-02/receipts.tar",
+    "verified_fsynced_both": true
+  },
+  "hardware_acceptance": false,
+  "remaining": "Root-owned run-permit publication and inherited-lock adoption; managed launcher; durable run/head/intent reconciliation; root supervisor and boot services; all legacy admission and managed-name exclusion; coherent backup/restore; inactive-root deployment, real KVM and final physical SPI recovery/boot qualification.",
+  "post_validation_formatting": {
+    "path": "scripts/guest-checkpoint-transaction.py",
+    "change": "Remove trailing blank line flagged by git diff --cached --check on newly staged file",
+    "validated_source": {
+      "bytes": 8908,
+      "sha256": "71cbaec2b3f4a4ee969246ea5d51f8a9799fc5cc2f28efc25a1c16b606a434d3"
+    },
+    "final_source": {
+      "bytes": 8907,
+      "sha256": "60a65496baa01aa1cef1f4222e011809b990111b21d6f4f010e3830012c763e0"
+    },
+    "exact_only_trailing_newline_change": true,
+    "AST_identical": true,
+    "targeted_check": "Native privileged manual checkpoint18 and shared-core10 tests pass with no skips/errors/failures; only trailing newline count changed, identical AST. Full 2603-case Ubuntu snapshot retains the recorded pre-format source.",
+    "receipts": {
+      "native": "out/production-readiness-20261112-01/checkpoint-format-receipts.tar",
+      "builder": "/var/lib/a733-managed-runtime-validation-20261112-02/format-receipts.tar",
+      "bytes": 20480,
+      "sha256": "5b904181c1f71f8f1a7227cbcc47e7904247ddabd706608b44ba6d65eb093ba6",
+      "verified_fsynced_both": true
+    }
+  }
+}

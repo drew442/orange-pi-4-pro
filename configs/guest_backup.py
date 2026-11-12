@@ -82,13 +82,15 @@ def decode(encoded, limit):
 
 
 def validate_record(name, data):
+    """Check exact supplied history bytes and structure, without shutdown authority."""
     require(type(name) is str and NAME_RE.fullmatch(name) is not None and
             type(data) is bytes and 0 < len(data) <= ENTRY_LIMIT, 'invalid checkpoint record')
     value = parse_json(data)
     fields = {'schema', 'operation', 'old_manifest', 'new_manifest', 'old_manifest_sha256',
               'new_manifest_sha256', 'old_manifest_base64', 'new_manifest_base64'}
     require(type(value) is dict and set(value) == fields and type(value['schema']) is int and
-            value['schema'] == 1 and value['operation'] == 'a733-guest-checkpoint-v1',
+            type(value['operation']) is str and (value['schema'], value['operation']) in (
+                (1, 'a733-guest-checkpoint-v1'), (2, 'a733-managed-guest-checkpoint-v2')),
             'invalid checkpoint record fields')
     old_raw = decode(value['old_manifest_base64'], MANIFEST.LIMIT)
     new_raw = decode(value['new_manifest_base64'], MANIFEST.LIMIT)
@@ -99,8 +101,13 @@ def validate_record(name, data):
     require(value['old_manifest'] == old and value['new_manifest'] == new and
             value['old_manifest_sha256'] == old_sha and value['new_manifest_sha256'] == new_sha and
             name == old_sha + '-' + new_sha + '.json', 'checkpoint content/hash mismatch')
-    require(new_raw == MANIFEST.canonical(new) and old != new and
-            MANIFEST.proposed_manifest(old, old_sha, new['config']['disk']) == new,
+    if value['schema'] == 1:
+        proposed = MANIFEST.proposed_manifest(old, old_sha, new['config']['disk'])
+    else:
+        require(new['schema'] == 2 and 'checkpoint' in new, 'managed checkpoint required')
+        proposed = MANIFEST.proposed_managed_manifest(
+            old, old_sha, new['config']['disk'], new['checkpoint']['shutdown_provenance'])
+    require(new_raw == MANIFEST.canonical(new) and old != new and proposed == new,
             'invalid checkpoint transition')
     return old, new, old_raw
 

@@ -91,7 +91,9 @@ shutdown profile; failure stays explicit and requires operator recovery.
 
 The disposable HTTP fixture gets a dedicated validator: verify real KVM,
 CPU/disk/network and its expected counter before exactly one HTTP confirmation.
-Its own poweroff must satisfy the same QMP/raw-exit contract. Fixture behavior
+The `managed-power-key-v1` fixture keeps HTTP and the VM alive after confirmation;
+QMP `system_powerdown` delivers the virtual GPIO power key, and the guest syncs
+before requesting poweroff. Its poweroff must satisfy the same QMP/raw-exit contract. Fixture behavior
 cannot silently become a production guest shutdown assumption.
 
 After clean exit, use the existing stopped-guest inspection and disk lock. Flush
@@ -101,6 +103,19 @@ generation and intended update. Reuse the existing history/manifest transaction
 engine through a distinct evidence-authorized wrapper. The manual checkpoint
 command keeps its operator attestation; no synthetic prompt input or monkeypatch
 bypasses that contract.
+
+Keep manual manifests and checkpoint histories at their existing schema 1 and
+exact byte format. A changed managed disk instead produces schema 2,
+`a733-guest-enrollment-managed-v2`, with `shutdown_provenance` naming the run,
+boot, supported shutdown/fixture profiles and evidence hash. It never sets
+`clean_shutdown_attested`. Managed history uses
+`a733-managed-guest-checkpoint-v2` and preserves exact before/after bytes, including
+the first schema-1-to-2 transition. Older roots reject the new schema and leave
+automation off. These fields describe provenance; only the retained supervisor
+evidence and durable run authority can authorize publication. Unchanged disks
+retain their manifest and require a separate durable run-completion record.
+The provenance hashes evidence that precedes the manifest, avoiding a digest
+cycle with the transition intent that contains the proposed manifest hash.
 
 Publish history and manifest durably, advance the p5 head, then update the STATE
 registry reference and complete the intent. Regenerate units only after completed
