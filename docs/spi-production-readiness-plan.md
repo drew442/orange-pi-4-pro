@@ -8,6 +8,12 @@ recovery-card transition. This plan completes production qualification and adds 
 guest operation. Physical restore/reinstall, unattended deployment and final qualification remain
 future work.
 
+The next deliverable is a reviewed, reproducible inactive-root candidate, not a
+production-ready declaration. Software integration can continue while the board
+awaits its recovery card. Physical recovery, final guest deployment and the
+remaining cold cycles need operator access; their completion dates depend on
+those transitions rather than an estimated number of development hours.
+
 ## Delivery order and current checkpoints
 
 | Phase | Current checkpoint | Completion condition |
@@ -251,6 +257,12 @@ results, rollback and backup procedures. Update status, current images,
 architecture and AGENTS.md. Keep raw logs, images and private keys outside Git.
 Commit coherent validated changes and push to main.
 
+The reproduced operating runbook must cover quarantine and closed-admission
+diagnosis, checkpoint/backup failures, disabling autostart, management recovery,
+backup custody and future host/SPI maintenance. State the implemented shutdown
+deadline and the safe outcome when shutdown or checkpoint cannot complete.
+Exercise these commands during reproduction rather than documenting them alone.
+
 Production signoff requires completed evidence from every phase, readable backups,
 reviewed metadata-aware SPI maintenance, verified SD recovery, opt-in unattended
 operation and the completed SPI boot counts. Record historical reliability and
@@ -270,12 +282,17 @@ where it changes boot/storage/rollback, and a coherent validated commit.
 
 | Order | Work package | Deliverable and acceptance gate |
 | --- | --- | --- |
-| A | Finish installed maintenance integration | Integrate reviewed update/selector admission; adapt and run the actual loop-device harnesses. Show that guests stop before exclusive maintenance, failures preserve explicit closed admission, and no target mutation follows reopening. Define an explicit recovery procedure for a failed closed maintenance session. |
-| B | Complete managed backup and restore | Finish the root sender, then authenticated source/receiver and coherent restore. Validate the actual ready cohort before streaming; restore matching disk, manifest, history and lifecycle authority. Test stale metadata, partial publication and retries. Prevent old host STATE restoration from silently replacing newer guest authority. The six-member archive parser alone cannot authorize restoration. |
-| C | Cover activation and RAM recovery | Review every remaining storage writer. Activation must close admission before mounting guest storage, then validate it before reopening. RAM recovery needs its own namespace-aware offline consumer/target checks; do not impose installed-host assumptions on it. Keep the portable recovery tool's verified dependency contract. |
+| A | Retain installed maintenance integration | Update/selector admission, actual loop checks and explicit closed-maintenance recovery are evidenced in status. Preserve these guarantees through the remaining integration; rerun affected checks when behavior changes. Guests stop before exclusive maintenance and target mutation ends before reopening. |
+| B | Complete managed backup and restore | Sender, historical decoder, receiver and local archive reader are validated foundations. Implement destination-authorized coherent restore of matching disk, manifest, history and lifecycle authority. Test stale metadata, partial publication and retries. Prevent old host STATE restoration from silently replacing newer guest authority. Archive validation alone cannot authorize restoration. |
+| C | Finish portable RAM recovery integration | Normal activation admission and its actual loop checks are evidenced. Finish reviewed offline exclusion for BOOT writes, paired restoration and RAM selection; validate the protected p5 metadata probe and public recovery path with disposable kernel loops. Retain exclusion through cleanup, refuse raw STATE restoration over managed metadata, and preserve the portable verified-helper dependency contract. |
 | D | Wire bootstrap and guest services | In one authenticated bootstrap ownership lifetime, activate storage, prepare registry/accounts, render RAM units and publish manual-launch namespace pins before opening admission. Order per-guest supervision and host shutdown; quarantine invalid guests while retaining SSH/NTP. Validate repeated preparation and failure cleanup without granting QEMU extra authority. |
 | E | Package and build the candidate | Include every required controller/service in pinned reproducible inactive-root recipes, rebuild on the Ubuntu builder and verify artifact sizes/hashes. Retain the working root and recovery card. Pass the repository checks and an independent review before deployment. |
 | F | Validate the installed candidate | Deploy to the inactive root and use the separate disposable managed guest. Prove actual nonroot KVM autostart, CPU/disk/network, guest-owned clean shutdown, checkpoint/restart, coherent backup/restore, disable and host rollback. Preserve the manually managed firstkvm cohort. Software fixtures cannot satisfy this gate. |
+
+E/F also retain and verify the installed host restrictions: read-only root,
+NVMe/RAM state placement, bounded runtime storage, limited nonroot QEMU authority,
+locked accounts, key-only SSH, expected listeners and recorded SD absence. Use
+the existing release checks where applicable and retain the actual results.
 
 A and B may proceed concurrently with disjoint file ownership; C and D depend
 on the reviewed admission and lifecycle contracts. E follows integration of
@@ -283,6 +300,40 @@ A–D, and F follows the reviewed candidate build. Phase 3 can proceed independe
 when physical access is available. Finish phases 3 and 4 before freezing the
 configuration and collecting the remaining phase-5 boots. Reassess earlier boot
 credit if firmware identity changes; record final automation checks separately.
+
+Before implementing D, settle two explicit interfaces: how the installer records
+the trusted storage identity before the first registry exists, and how one
+bootstrap process retains admission ownership through storage, accounts, runtime
+units and final opening. Fail closed for guest launch on missing or inconsistent
+policy while keeping management available. Define aggregate guest memory/task
+limits with host headroom and bounded shutdown behavior before packaging units.
+
+For B, the restore design must distinguish historical archive validation from
+fresh destination authority. Specify durable publication/retry ordering and
+preservation of unrelated guests and enable flags before implementation review.
+Use the disposable automation guest for physical restoration; preserve firstkvm.
+
+For E and phase 6, distinguish a fresh checkout using retained inputs from a
+fully independently provisioned builder. Reproduce the released procedure with
+its declared dependency locks and record any unavailable exact inputs; do not
+claim clean-builder reproduction from cached composition alone. Track the
+remaining exact toolchain sources and 26 vendor boot-input licensing gaps in
+[the source inventory](toolchain-sources.md). Local hardware qualification does
+not establish public binary redistribution clearance.
+
+Before deploying E, record a change-to-evidence matrix for the frozen candidate:
+
+| Changed area | Required evidence before carrying acceptance forward |
+| --- | --- |
+| SPI writer or metadata policy | Fresh reviewed plans and the phase-3 physical restore/reinstall demonstration; reassess boot credit if firmware code changes |
+| Maintenance, portable restoration or selection | Focused kernel-loop regressions plus applicable physical interruption/retry, selection and rollback on the released tools |
+| Managed lifecycle, backup/restore or boot units | Phase-F actual nonroot KVM autostart, coherent restore, checkpoint/restart, disable and host rollback |
+| Unchanged workload duration requirement | Retain the accepted endurance result; no qualifying endurance rerun |
+
+Identify reused records and their exact scope in that matrix. Passing historical
+tests on the manual or protected-SD release does not qualify changed managed
+restore or shutdown paths. Combine applicable physical demonstrations with the
+remaining boot series to avoid redundant cycles.
 
 ### Operator steps and evidence
 
