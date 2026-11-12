@@ -53,8 +53,16 @@ pass independent review and **2402** privileged Ubuntu tests with no skips/error
 failures, five shell suites and five diagnostic cases. A native builder probe
 confirms actual unprivileged permissions/flock with zero capabilities.
 [Foundation evidence](evidence/guest-foundation-validation-20261112.json). These
-APIs remain uninstalled; store/controller, legacy integration, supervision,
-checkpoint reconciliation, packaging and physical acceptance remain pending.
+APIs remain uninstalled. Protected store/context/controller, per-guest admission
+locks/managed markers and typed bootstrap storage activation now pass independent
+review and **2536** privileged Ubuntu tests, five shell suites and five diagnostic
+cases. Current maintenance packaging has 46 sources; historical recovery archives
+retain their strict 39-source boundary and original pins. The first combined run's
+three packaging failures and successful corrected retry are retained.
+[State/bootstrap evidence](evidence/guest-state-validation-20261112.json).
+Legacy integration, supervision, checkpoint reconciliation, deployment packaging
+and physical acceptance remain pending. The managed power-key guest fixture is
+being built reproducibly; its shutdown path remains hardware-unproven.
 
 ## Live board and constraints
 
@@ -159,16 +167,17 @@ binary redistribution clearance is claimed. [Source inventory](toolchain-sources
 
 ## Resources and next actions
 
-Latest privileged Ubuntu 22.04 suite: **2402 tests**, zero skips/errors/failures,
+Latest privileged Ubuntu 22.04 suite: **2536 tests**, zero skips/errors/failures,
 five shell suites and five diagnostic cases; all five TOMLs parse.
-[Guest foundation suite evidence](evidence/guest-foundation-validation-20261112.json)
+[Guest state/bootstrap suite evidence](evidence/guest-state-validation-20261112.json)
 records the latest run. The final-A warm collector authenticates release/root/policy and stops on
 actual remote release refusal; [software evidence](evidence/final-warm-binding-validation-20261110.json)
 retains independent review and the initial corrected validation-environment failure. Host checks do not prove
 hardware acceptance.
 
 At final qualification, codex has more than 24 GB available. The last full-suite
-builder sample has 40938356736 bytes available and MemAvailable 7376642048 bytes.
+builder suite sampled minima of 37275299840 bytes available and
+MemAvailable 7098507264 bytes.
 Keep bulk sources, images and backups on the builder. Its LV is 128819658752 bytes
 with 4265607168 bytes VG free. All free builder capacity is approved for use and
 expansion after exact-target revalidation and independent review. Native codex

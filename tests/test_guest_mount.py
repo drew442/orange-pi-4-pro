@@ -6,6 +6,8 @@ import io
 import os
 from pathlib import Path
 import stat
+import tempfile
+import uuid
 import types
 import unittest
 from unittest.mock import patch, Mock
@@ -34,7 +36,7 @@ class Transaction(unittest.TestCase):
         self.make = use('make_plan', return_value=self.plan)
         use('snapshot', return_value=self.context)
         use('authorize')
-        use('activation_lock', side_effect=lambda c: contextlib.nullcontext())
+        use('activation_lock', side_effect=lambda c, **k: contextlib.nullcontext())
         use('block_stream', side_effect=lambda *a, **k: contextlib.nullcontext(42))
         use('MountDirectory', return_value=self.directory)
         use('checked_command', side_effect=lambda name: '/usr/bin/' + name)
@@ -74,7 +76,7 @@ class Transaction(unittest.TestCase):
     def test_locks_held_during_failure_cleanup(self):
         held = []
         @contextlib.contextmanager
-        def lock(context):
+        def lock(context, **kwargs):
             held.append(True)
             try:
                 yield
@@ -170,7 +172,132 @@ class Transaction(unittest.TestCase):
         self.run.assert_not_called()
 
 
+class BootstrapTransaction(Transaction):
+    def setUp(self):
+        super().setUp()
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        a = M.ADMISSION
+        for change in (patch.object(a, 'RUNTIME', str(Path(self.tmp.name) / 'a733-admission')),
+                       patch.object(a, 'RUNTIME_PARENT', self.tmp.name),
+                       patch.object(a, 'ROOT_UID', os.getuid()), patch.object(a, '_tmpfs'),
+                       patch.object(a, '_ancestor'), patch.object(a.os, 'geteuid', return_value=0)):
+            self.patches.enter_context(change)
+        self.admission = a.initialize(str(uuid.uuid4()), os.getgid(), lambda: 'running')
+        # Close before patches and temporary directory are released.
+        self.patches.callback(self.admission.close)
+        self.owner = self.admission.bootstrap_owner
+        self.host = self.patches.enter_context(patch.object(M.CONTEXT, 'host_identity'))
+
+    def test_bootstrap_mount_without_manual_authorization_or_reopen(self):
+        guard = Mock()
+        report = M.apply_bootstrap(self.args, self.plan, self.owner, plan_check=guard)
+        self.assertTrue(report['success'])
+        M.authorize.assert_not_called()
+        self.assertGreater(guard.call_count, 4)
+        self.assertEqual(self.admission._read()['state'], 'closed')
+        self.assertIsNotNone(self.owner.lease.fd)
+        self.host.assert_called_with(self.admission.boot_id)
+
+    def test_invalid_capabilities_refuse_before_mount_or_permissions(self):
+        for kind in ('foreign', 'shared', 'closed', 'nonce', 'shutdown', 'maintenance',
+                     'boot', 'host', 'unlocked'):
+            with self.subTest(kind=kind):
+                owner = self.owner
+                old_nonce, old_reason = owner.nonce, owner.reason
+                lease_fd = owner.lease.fd
+                old_read = self.admission._read
+                extra = contextlib.ExitStack()
+                try:
+                    if kind == 'foreign':
+                        owner = types.SimpleNamespace(**vars(owner))
+                    elif kind == 'shared':
+                        owner.lease.exclusive = False
+                    elif kind == 'closed':
+                        owner.lease.fd = None
+                    elif kind == 'nonce':
+                        owner.nonce = str(uuid.uuid4())
+                    elif kind in ('shutdown', 'maintenance'):
+                        owner.reason = kind
+                    elif kind == 'boot':
+                        extra.enter_context(patch.object(self.admission, '_read',
+                            side_effect=lambda: dict(old_read(), boot_id=str(uuid.uuid4()))))
+                    elif kind == 'host':
+                        self.host.side_effect = ValueError('wrong boot/native host')
+                    elif kind == 'unlocked':
+                        import fcntl
+                        fcntl.flock(lease_fd, fcntl.LOCK_UN)
+                    report = M.apply_bootstrap(self.args, self.plan, owner)
+                    self.assertFalse(report['success'])
+                    self.run.assert_not_called()
+                    self.grant.assert_not_called()
+                    M.MountDirectory.assert_not_called()
+                finally:
+                    extra.close()
+                    owner = self.owner
+                    owner.nonce, owner.reason = old_nonce, old_reason
+                    owner.lease.fd, owner.lease.exclusive = lease_fd, True
+                    self.host.side_effect = None
+                    if kind == 'unlocked':
+                        fcntl.flock(lease_fd, fcntl.LOCK_EX)
+
+    def test_guard_failure_after_mount_retains_conservative_cleanup(self):
+        def guard():
+            if self.visible:
+                raise ValueError('registered plan guard changed')
+        report = M.apply_bootstrap(self.args, self.plan, self.owner, plan_check=guard)
+        self.assertFalse(report['success'])
+        self.assertTrue(report['guest_may_be_modified'])
+        self.assertTrue(report['mount_retained'])
+        self.assertTrue(report['cleanup_errors'])
+        self.grant.assert_not_called()
+        self.assertEqual(self.run.call_count, 1)
+
+    def test_manual_entrypoint_still_calls_authorize(self):
+        M.authorize.side_effect = ValueError('TTY required')
+        report = M.apply(self.args, self.plan)
+        self.assertFalse(report['success'])
+        self.run.assert_not_called()
+        M.authorize.assert_called_once_with(self.plan)
+
+
 class DescriptorPolicy(unittest.TestCase):
+    def test_manual_authorization_requires_tty_and_exact_backup_phrase(self):
+        plan = {'context': {'guest': {'serial': 'S', 'canonical_path': '/dev/p5',
+                                     'uuid': 'U'}}, 'plan_sha256': 'H'}
+        for terminal, text in ((False, ''), (True, 'wrong\n'),
+                               (True, 'BACKUP VERIFIED\nwrong\n')):
+            with self.subTest(terminal=terminal, text=text):
+                stdin, stderr = io.StringIO(text), io.StringIO()
+                stdin.isatty = stderr.isatty = lambda: terminal
+                with patch.object(M.sys, 'stdin', stdin), patch.object(M.sys, 'stderr', stderr):
+                    with self.assertRaises(ValueError):
+                        M.authorize(plan)
+        stdin = io.StringIO('BACKUP VERIFIED\nACTIVATE S /dev/p5 U H\n')
+        stderr = io.StringIO()
+        stdin.isatty = stderr.isatty = lambda: True
+        with patch.object(M.sys, 'stdin', stdin), patch.object(M.sys, 'stderr', stderr):
+            M.authorize(plan)
+
+    def test_bootstrap_has_no_cli_option(self):
+        with contextlib.redirect_stdout(io.StringIO()) as output:
+            with self.assertRaises(SystemExit) as exit_status:
+                M.main(['--help'])
+        self.assertEqual(exit_status.exception.code, 0)
+        self.assertNotIn('--bootstrap', output.getvalue())
+        arguments = ['prepare', '--target', '/dev/nvme0n1', '--expected-model', 'M',
+                     '--expected-serial', 'S', '--guest-uuid',
+                     '298b281a-d10e-44eb-bdb9-285e27eaafad',
+                     '--expected-bytes', '256060514304']
+        for options in (arguments + ['--bootstrap'], arguments + ['--authorized'],
+                        arguments + ['--no-authorize'], ['bootstrap'] + arguments[1:]):
+            with self.subTest(options=options), \
+                    contextlib.redirect_stderr(io.StringIO()), \
+                    patch.object(M, 'make_plan', side_effect=AssertionError('runtime reached')):
+                with self.assertRaises(SystemExit) as refused:
+                    M.main(options)
+                self.assertEqual(refused.exception.code, 2)
+
     def test_wrong_device_never_chmod(self):
         info = types.SimpleNamespace(st_dev=os.makedev(179, 1), st_uid=0, st_gid=0,
                                      st_mode=stat.S_IFDIR | 0o700)

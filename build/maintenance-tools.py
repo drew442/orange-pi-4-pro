@@ -16,7 +16,7 @@ import tarfile
 REPO = Path(__file__).resolve().parents[1]
 PROFILE = 'a733-maintenance-tools-v1'
 KERNEL_RELEASE = '6.6.98-a733-diag'
-SOURCES = tuple(sorted((
+LEGACY_SOURCES = tuple(sorted((
     'scripts/prepare-host-update.py', 'scripts/update-host.py', 'scripts/select-host-root.py',
     'scripts/recover-host-root.py', 'scripts/host-update-target.py', 'scripts/host-recovery-target.py',
     'scripts/install-nvme.py', 'scripts/acquire-nvme.py', 'scripts/plan-nvme.py', 'scripts/nvme_layout.py',
@@ -31,6 +31,13 @@ SOURCES = tuple(sorted((
     'scripts/checkpoint-guest.py', 'scripts/backup-guest.py', 'scripts/verify-guest-backup.py',
     'scripts/index-guest-backup.py', 'scripts/guest-restore-source.py',
     'scripts/guest-restore-https.py', 'scripts/restore-guest.py')))
+# Historical private SSH recovery archives preserve these exact 39 names.
+# Extend current packaging without redefining their authenticated boundary.
+SOURCES = tuple(sorted(LEGACY_SOURCES + (
+    'configs/guest_registry.py', 'configs/guest_lifecycle.py', 'configs/guest_qmp.py',
+    'scripts/guest-admission.py', 'scripts/guest-lifecycle-context.py',
+    'scripts/guest-lifecycle-store.py', 'scripts/guest-lifecycle.py',
+)))
 ENTRYPOINTS = {name: f'scripts/{name}.py' for name in (
     'install-nvme', 'acquire-nvme', 'plan-nvme', 'prepare-host-update',
     'update-host', 'select-host-root', 'recover-host-root',

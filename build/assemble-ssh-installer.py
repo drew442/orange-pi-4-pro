@@ -162,7 +162,7 @@ def validate_archive(data, manifest):
     actual = {name: {'mode': mode, **HOST.record(value)} for name, (mode, value) in entries.items()}
     if manifest.get('entries') != actual or manifest.get('expanded_bytes') != len(raw):
         raise ValueError('SSH manifest does not describe archive entries')
-    maintenance = {'usr/lib/a733-tools/' + name for name in (*SSH.TOOLS.SOURCES, 'package.json')}
+    maintenance = {'usr/lib/a733-tools/' + name for name in (*SSH.TOOLS.LEGACY_SOURCES, 'package.json')}
     if len(maintenance) != 40 or set(manifest.get('maintenance_preserved', [])) != maintenance:
         raise ValueError('40 preserved maintenance entries required')
     receipt = manifest.get('base_manifest_path')

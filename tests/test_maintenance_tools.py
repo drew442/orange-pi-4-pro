@@ -41,7 +41,12 @@ class MaintenanceToolsTests(unittest.TestCase):
 
     def test_real_sources_are_exact_and_allowlist_is_closed(self):
         values = TOOLS.entries()
-        self.assertEqual(len(TOOLS.SOURCES), 39)
+        self.assertEqual(len(TOOLS.SOURCES), 46)
+        self.assertEqual(len(TOOLS.LEGACY_SOURCES), 39)
+        self.assertEqual(set(TOOLS.SOURCES) - set(TOOLS.LEGACY_SOURCES), {
+            'configs/guest_registry.py', 'configs/guest_lifecycle.py', 'configs/guest_qmp.py',
+            'scripts/guest-admission.py', 'scripts/guest-lifecycle-context.py',
+            'scripts/guest-lifecycle-store.py', 'scripts/guest-lifecycle.py'})
         self.assertIn('build/timesync-state.py', TOOLS.SOURCES)
         self.assertEqual(set(values), set(TOOLS.SOURCES) | {'package.json'})
         for name in TOOLS.SOURCES:
@@ -81,6 +86,10 @@ for index, path in enumerate(sorted(package['source_records'])):
         load('relocated_' + str(index), path)
 restore = load('relocated_restore', 'scripts/restore-guest.py')
 restore.module('relocated_https', 'scripts/guest-restore-https.py')
+activation = load('relocated_activation', 'scripts/activate-guest-storage.py')
+context = load('relocated_context', 'scripts/guest-lifecycle-context.py')
+controller = load('relocated_controller', 'scripts/guest-lifecycle.py')
+assert activation.ADMISSION is context.ADMISSION is controller.ADMISSION
 assert loaded <= set(package['source_records'])
 print(json.dumps(sorted(loaded)))
 """

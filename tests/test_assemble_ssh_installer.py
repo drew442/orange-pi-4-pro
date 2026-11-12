@@ -69,7 +69,7 @@ class Safety(unittest.TestCase):
     def archive(self):
         regular = stat.S_IFREG | 0o644
         entries = {'init': (stat.S_IFREG | 0o755, b'#!/bin/sh\n')}
-        maintenance = sorted('usr/lib/a733-tools/' + name for name in (*SD.SSH.TOOLS.SOURCES, 'package.json'))
+        maintenance = sorted('usr/lib/a733-tools/' + name for name in (*SD.SSH.TOOLS.LEGACY_SOURCES, 'package.json'))
         entries.update({name: (regular, name.encode()) for name in maintenance})
         original = {'entries': {name: {'mode': entries[name][0], **SD.HOST.record(entries[name][1])}
                                 for name in maintenance}}

@@ -99,8 +99,8 @@ def base_manifest(data, entries):
     if (manifest.get('schema') != 1 or manifest.get('files', {}).get('initramfs.cpio.gz') != BASE or
             manifest.get('entries') != actual):
         raise ValueError('base manifest does not describe authenticated archive')
-    required = {'usr/lib/a733-tools/' + name for name in (*TOOLS.SOURCES, 'package.json')}
-    if len(TOOLS.SOURCES) != 39 or not required <= entries.keys():
+    required = {'usr/lib/a733-tools/' + name for name in (*TOOLS.LEGACY_SOURCES, 'package.json')}
+    if len(TOOLS.LEGACY_SOURCES) != 39 or not required <= entries.keys():
         raise ValueError('base maintenance package incomplete')
     if entries.get('etc/shadow') != (stat.S_IFREG | 0o600, b'root:!:1:0:99999:7:::\n'):
         raise ValueError('base root must remain locked without account expiry')

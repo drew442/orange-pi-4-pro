@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Explicit host-visible A733 NVMe p5 mount; no guest launch or hardware proof.
 
-Journal replay may write p5 even when mount fails. Requires a verified off-device
-backup and interactive authorization. Never formats, partitions or changes SD.
+Journal replay may write p5 even when mount fails. Manual CLI use requires a
+verified off-device backup and interactive authorization. Python boot preparation
+uses a typed closed-bootstrap capability. Never formats, partitions or changes SD.
 """
 import argparse
 import contextlib
@@ -27,6 +28,8 @@ def adjacent(name, filename):
 
 CONTROL = adjacent('guest_activation_control', 'select-host-root.py')
 POLICY = adjacent('guest_activation_policy', 'guest-mount-target.py')
+CONTEXT = adjacent('guest_activation_context', 'guest-lifecycle-context.py')
+ADMISSION = CONTEXT.ADMISSION
 PREP, WRITER, UPDATE = CONTROL.PREP, CONTROL.WRITER, CONTROL.UPDATE
 require = PREP.require
 MOUNTPOINT = Path('/run/a733-guests')
@@ -134,9 +137,10 @@ def block_stream(target, exclusive=False):
 
 
 @contextlib.contextmanager
-def activation_lock(context):
+def activation_lock(context, *, check=lambda: None):
     with PREP.safe_parent(LOCK.parent) as parent:
         storage_guard(parent, context, ram_only=True)
+        check()
         fd = os.open(LOCK.name, os.O_RDWR | os.O_CREAT | os.O_NOFOLLOW | os.O_NONBLOCK,
                      0o600, dir_fd=parent)
         try:
@@ -175,13 +179,15 @@ def checked_command(name):
 
 
 class MountDirectory:
-    def __init__(self, context):
+    def __init__(self, context, *, check=lambda: None):
+        self.check_authority = check
         self.stack, self.created, self.identity = contextlib.ExitStack(), False, None
         try:
             self.parent = self.stack.enter_context(PREP.safe_parent(MOUNTPOINT.parent))
             storage_guard(self.parent, context, ram_only=True)
             require(not fixed_entries(), 'mountpoint already mounted')
             try:
+                self.check_authority()
                 os.mkdir(MOUNTPOINT.name, 0o700, dir_fd=self.parent)
                 self.created = True
             except FileExistsError:
@@ -220,6 +226,7 @@ class MountDirectory:
         try:
             if self.created and not fixed_entries():
                 self.check()
+                self.check_authority()
                 os.rmdir(MOUNTPOINT.name, dir_fd=self.parent)
         finally:
             self.stack.close()
@@ -233,7 +240,7 @@ def checked_mount(args, context):
     return tuple(entries[0])
 
 
-def grant_traversal(args, context, identity, report):
+def grant_traversal(args, context, identity, report, *, check=lambda: None):
     require(checked_mount(args, context) == identity, 'guest mount replaced')
     with PREP.safe_parent(MOUNTPOINT.parent) as parent:
         fd = os.open(MOUNTPOINT.name, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW,
@@ -246,6 +253,7 @@ def grant_traversal(args, context, identity, report):
                     'guest root must be root:root mode 0700 or 0711')
             require(checked_mount(args, context) == identity, 'guest mount replaced before chmod')
             if stat.S_IMODE(info.st_mode) != 0o711:
+                check()
                 report['permissions_may_be_modified'] = report['guest_may_be_modified'] = True
                 os.fchmod(fd, 0o711)
                 os.fsync(fd)
@@ -271,6 +279,46 @@ def failure(report, error):
 
 
 def apply(args, plan, report=None, *, plan_check=lambda: None):
+    """Manual activation retains interactive backup and exact-plan authorization."""
+    return _apply(args, plan, report, plan_check=plan_check, authorization=authorize)
+
+
+def bootstrap_check(owner):
+    """Validate a borrowed closed-bootstrap capability; never opens admission."""
+    require(os.geteuid() == 0, 'bootstrap activation requires root')
+    require(type(owner) is ADMISSION.ClosureOwner, 'typed bootstrap closure owner required')
+    require(type(owner.admission) is ADMISSION.Admission, 'typed admission required')
+    require(owner.reason == 'bootstrap', 'bootstrap closure required')
+    lease = owner.lease
+    require(type(lease) is ADMISSION.Lease and lease.admission is owner.admission
+            and lease.exclusive is True, 'matching exclusive bootstrap lease required')
+    lease.recheck()
+    # A mutable Python flag alone does not establish a currently held EX flock.
+    data = CONTEXT.read_system('/proc/self/fdinfo/' + str(lease.fd), 65536).decode('ascii')
+    require(any(row.split()[2:6] == ['FLOCK', 'ADVISORY', 'WRITE', str(os.getpid())]
+                for row in data.splitlines() if row.startswith('lock:')),
+            'live exclusive bootstrap flock required')
+    CONTEXT.host_identity(owner.admission.boot_id)
+    with owner.admission._gate():
+        record = owner._matching()
+        require(record['boot_id'] == owner.admission.boot_id, 'bootstrap boot differs')
+
+
+def apply_bootstrap(args, plan, owner, report=None, *, plan_check=lambda: None):
+    """Python-only recurring activation under authenticated closed bootstrap.
+
+    The opt-in boot preparer supplies registered exact target arguments and its
+    current plan guard. This borrows owner/lease without closing or reopening it.
+    All existing device, filesystem and mount transaction checks still apply.
+    """
+    def check():
+        bootstrap_check(owner)
+        plan_check()
+    return _apply(args, plan, report, plan_check=check,
+                  authorization=lambda current: check())
+
+
+def _apply(args, plan, report=None, *, plan_check, authorization):
     report = new_report() if report is None else report
     directory, owned = None, None
     locks = contextlib.ExitStack()
@@ -281,8 +329,9 @@ def apply(args, plan, report=None, *, plan_check=lambda: None):
                       mount_may_be_visible=plan['mounted_before'], mount_retained=plan['mounted_before'])
         require(make_plan(args) == plan, 'current preflight differs from reviewed plan')
         plan_check()
-        authorize(plan)
-        locks.enter_context(activation_lock(context))
+        authorization(plan)
+        plan_check()
+        locks.enter_context(activation_lock(context, check=plan_check))
         locks.enter_context(block_stream(context['disk']))
         require(make_plan(args) == plan, 'plan changed after authorization/locks')
         plan_check()
@@ -291,13 +340,14 @@ def apply(args, plan, report=None, *, plan_check=lambda: None):
                 POLICY.guest_superblock(fd, context['guest']['uuid'], context['guest']['size_bytes'])
                 require(snapshot(args, False) == context, 'guest context changed while claimed')
                 plan_check()
-                directory = MountDirectory(context)
+                directory = MountDirectory(context, check=plan_check)
                 directory.check()
             # Kernel filesystem claim follows release of the read-only exclusive claim.
             require(snapshot(args, False) == context, 'context changed before mount')
             plan_check()
             directory.check()
             command = checked_command('mount')
+            plan_check()
             report.update(mount_attempted=True, mount_may_be_visible=True,
                           guest_may_be_modified=True)
             print(json.dumps(report, sort_keys=True), file=sys.stderr, flush=True)
@@ -316,7 +366,7 @@ def apply(args, plan, report=None, *, plan_check=lambda: None):
             identity = checked_mount(args, context)
             report.update(mount_may_be_visible=True, mount_retained=True)
         plan_check()
-        grant_traversal(args, context, identity, report)
+        grant_traversal(args, context, identity, report, check=plan_check)
         require(checked_mount(args, context) == identity, 'guest mount changed before success')
         plan_check()
         report['success'] = True
@@ -327,6 +377,7 @@ def apply(args, plan, report=None, *, plan_check=lambda: None):
             try:
                 require(checked_mount(args, context) == owned,
                         'owned mount replaced; retained for manual inspection')
+                plan_check()
                 subprocess.run([checked_command('umount'), str(MOUNTPOINT)], check=True)
                 require(not fixed_entries(), 'mount remains visible after unmount')
                 report['mount_retained'] = report['mount_may_be_visible'] = False

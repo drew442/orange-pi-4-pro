@@ -1,0 +1,165 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "result": "pass",
+  "scope": "Uninstalled lifecycle state store/context/controller, RAM per-guest locks/managed markers, typed boot storage API and current/historical maintenance source closure. No launch/supervision/checkpoint authority or physical acceptance.",
+  "builder": "drew@build.drewnet.online",
+  "builder_base": "/var/lib/a733-guest-state-validation-20261112-02",
+  "full_Ubuntu_tests": 2536,
+  "failures_errors_skips": 0,
+  "shell_suites": 5,
+  "diagnostic_cases": 5,
+  "locked_source_files": 978,
+  "source_lock": {
+    "bytes": 135102,
+    "sha256": "109c5ca7642cde9aa117d6341055150154e3cb27e12aabdb30d4863447fbdcf2"
+  },
+  "unit": {
+    "RuntimeMaxUSec": "8h",
+    "MainPID": "0",
+    "Result": "success",
+    "ExecMainCode": "1",
+    "ExecMainStatus": "0",
+    "CPUQuotaPerSecUSec": "2s",
+    "MemoryMax": "3221225472",
+    "ActiveState": "active",
+    "SubState": "exited"
+  },
+  "resources": {
+    "sampled_min_free_disk_bytes": 37275299840,
+    "sampled_min_available_memory_bytes": 7098507264,
+    "compilation_jobs": 2
+  },
+  "source": {
+    "scripts/guest-admission.py": {
+      "bytes": 34779,
+      "sha256": "a5f803ab8cfd52e37e9238c8e7ecc93ce9f860d4bfa5829bc83f409d65395642"
+    },
+    "scripts/guest-lifecycle-store.py": {
+      "bytes": 18288,
+      "sha256": "899d303c0fdaa8a7680da38176fea7af7f558e1d3f017b19e62af031558d7bec"
+    },
+    "scripts/guest-lifecycle-context.py": {
+      "bytes": 10269,
+      "sha256": "5d6fa1a9d26408de45057ceb28c11e080f3ef7c6435e9f97f00d8347bdb2820c"
+    },
+    "scripts/guest-lifecycle.py": {
+      "bytes": 16635,
+      "sha256": "dcb6429ab959bd5adc867e5346561a083c8ab9b0be0811097cb04cc82f9c01d4"
+    },
+    "scripts/activate-guest-storage.py": {
+      "bytes": 20439,
+      "sha256": "58db8889332e4fb1bd6c271fc0e69b16d8d8c35b4b260ea14614dbeb32e54ecb"
+    },
+    "build/maintenance-tools.py": {
+      "bytes": 14747,
+      "sha256": "09156d25b51f14579e8832782c43c060a0c0c617baf2bc34bcf72a280fb9ff1f"
+    },
+    "build/derive-ssh-installer.py": {
+      "bytes": 19234,
+      "sha256": "e6b4048373aa4eba27bd64227fe2c627ad4935f0e0a2ddfb7aa8d270330f450a"
+    },
+    "build/assemble-ssh-installer.py": {
+      "bytes": 17838,
+      "sha256": "6f0f58e1ce638d7581df58dee26198f1782383488e0a0c9ed612b2740d9fdd0b"
+    },
+    "tests/test_guest_admission.py": {
+      "bytes": 48618,
+      "sha256": "d574f6c21e3ac8f2bb744c40803a78c8f5bbec863515567b13008650534c1d3c"
+    },
+    "tests/test_guest_lifecycle_store.py": {
+      "bytes": 27913,
+      "sha256": "f446612513474a9559a0d0b8c78d4dd831e78d9fa013da878debd3762b9ee02c"
+    },
+    "tests/test_guest_lifecycle_context.py": {
+      "bytes": 14342,
+      "sha256": "fafde94b2c7737271bbee44af45076b8a8eeb046e230bb2500b2c3a510639356"
+    },
+    "tests/test_guest_lifecycle_controller.py": {
+      "bytes": 27973,
+      "sha256": "150c571e55eaca30cfed98135bf158b4756e11154651eaab08ac387037a9b0f1"
+    },
+    "tests/test_guest_mount.py": {
+      "bytes": 17911,
+      "sha256": "c07eaa20eab8e444effff155c977e9409e3e8c23ef45839282884f4b7a7b7920"
+    },
+    "tests/test_maintenance_tools.py": {
+      "bytes": 16381,
+      "sha256": "70e62aff988ff11720dce8a1f53386875f43a667af8656cb6dff156f5ff59ced"
+    },
+    "tests/test_assemble_ssh_installer.py": {
+      "bytes": 6649,
+      "sha256": "92cbd82200bfecae6d52adf2244687505ee9ae0c743a0bc216636368efa7192d"
+    },
+    "tests/test_host_payload.py": {
+      "bytes": 28099,
+      "sha256": "357d2be300da7de925539495241e7af8b312a8729d67655c958d4b7d72a32838"
+    },
+    "tests/test_launch_deterministic_host_roots.py": {
+      "bytes": 11602,
+      "sha256": "99a1130e3f91c5a18ec110607b05c650b1a0e59781828e3a1aecfe62dde1a964"
+    }
+  },
+  "independent_reviews": {
+    "out/production-readiness-20261112-01/guest-admission-guest-lock-final-review.json": {
+      "bytes": 5712,
+      "sha256": "b626e94e943c74a3f981a3fe30f79c81076e13fa16efc42bff2e31dc80253b56"
+    },
+    "out/production-readiness-20261112-01/guest-markers-final-review.json": {
+      "bytes": 6174,
+      "sha256": "6a39bf98f30dcbac7b757a23c633cd5c436a4a84d7f682304d0283642397e441"
+    },
+    "out/production-readiness-20261112-01/guest-store-final-review.json": {
+      "bytes": 18058,
+      "sha256": "2f9a9c92d98c7504c677d46115c0c13a52a92be0bdbbbffaf2342dacd10d78b4"
+    },
+    "out/production-readiness-20261112-01/guest-context-final-review.json": {
+      "bytes": 5398,
+      "sha256": "5d231f2fd1063c90188ff094da9400b454767351afe810ae12b4529dd0c3ba3e"
+    },
+    "out/production-readiness-20261112-01/guest-controller-final-review.json": {
+      "bytes": 21610,
+      "sha256": "457c3aaca220349f8e4f8be64ea04d99d43f0f360cdcd05bb171221c7104088f"
+    },
+    "out/production-readiness-20261112-01/guest-bootstrap-final-review.json": {
+      "bytes": 4918,
+      "sha256": "90083d6679a37513824f3b4d3600c504f7f05e154f0474854ade0f08d10dba36"
+    },
+    "out/production-readiness-20261112-01/guest-historical-closure-final-review.json": {
+      "bytes": 2909,
+      "sha256": "8b3ed9eb52476d1643d2067dd759b02166960ce1a6bd51d7fd7f4f208f497e5d"
+    },
+    "out/production-readiness-20261112-01/managed-fixture-final-review.json": {
+      "bytes": 7006,
+      "sha256": "c27e3ca2c456aaa2c5f439dab33d0255b13b1d20bca6a68d7194a403a8ea4c13"
+    }
+  },
+  "resolved_findings": [
+    "Post-publication retry must fsync exact held file and parent even when registry/head bytes already match",
+    "Immutable RAM managed exclusion marker published before persistent initial head",
+    "Actual bootstrap closure owner and exclusive lease required for noninteractive storage API",
+    "Shared admission module executes authenticated source bytes and refuses mismatched cache origin",
+    "Historical recovery archive remains strict original 39 sources; current maintenance closure is 46 sources"
+  ],
+  "initial_failed_run": {
+    "base": "/var/lib/a733-guest-state-validation-20261112-01",
+    "tests": 2530,
+    "failures": 2,
+    "errors": 1,
+    "cause": "Current maintenance source growth leaked into historical installer fixture admission; two current payload/source-count expectations stale. Fixed exact LEGACY_SOURCES boundary and current expectations; independent review passes. Initial logs preserved in receipt archive."
+  },
+  "native_permission_probe": {
+    "scope": "Builder isolated tmpfs/mount namespace; actual unprivileged managed-marker visibility, readonly flock and root-only registry lock; no hardware claim",
+    "record": "admission-marker-permissions-probe.stdout",
+    "retained_in_receipts": true
+  },
+  "receipts": {
+    "bytes": 450560,
+    "sha256": "db87d539830ebfa2f91a77c14e674129fa96cc4bfdede889cf457635012bc1ad",
+    "native": "out/production-readiness-20261112-01/guest-state-validation-records.tar",
+    "builder": "/var/lib/a733-guest-state-validation-20261112-02/receipts.tar",
+    "verified_fsynced_both": true
+  },
+  "hardware_acceptance": false,
+  "remaining": "Legacy operation admission, process supervision, managed checkpoint/provenance and crash reconciliation, coherent lifecycle backup/restore, reproducible inactive-root deployment and real unattended KVM/rollback/boot qualification."
+}
