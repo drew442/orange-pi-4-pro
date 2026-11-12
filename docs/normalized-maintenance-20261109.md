@@ -1,9 +1,17 @@
 # Normalized host maintenance candidates
 
+This records the November 9 candidates and the earlier physical update trial.
+The old-A selector instructions below belong to that trial. Use
+[current candidate identities](managed-root-candidate-20261112.md) and the
+[production plan](spi-production-readiness-plan.md) for the managed B migration;
+its rollback component is the retained normalized A listed in the table.
+
 Normalized B now passes [physical changed-root update and rollback](physical-host-update-rollback-20261110.md):
 interrupted p3 write, old-A recovery boot, complete retry/readback, selector
 interruptions before/after publication, pending cancellation, B boot/KVM and
-manual rollback to old A with KVM. Normalized A remains unbooted. The original
+manual rollback to old A with KVM. Normalized A was unbooted at that checkpoint;
+the later [full installation](evidence/normalized-host-install-20261110.json)
+booted normalized A successfully. The original
 [artifact pins and offline compatibility evidence](evidence/normalized-maintenance-20261109.json)
 remain distinct from those later physical results.
 
