@@ -33,6 +33,9 @@ SPI/NVMe operation is verified. Production qualification and unattended guest
 operation are planned in [the production-readiness plan](spi-production-readiness-plan.md).
 It covers metadata-aware SPI update/restore, a physical recovery demonstration,
 opt-in guest lifecycle automation, remaining boot counts and independent signoff.
+Its [remaining implementation sequence](spi-production-readiness-plan.md#remaining-implementation-sequence-2026-11-12)
+orders maintenance, coherent backup/restore, RAM recovery, bootstrap/services,
+reproducible packaging and physical deployment, with explicit completion gates.
 Existing endurance data remains accepted. Execution has begun: live identities,
 UART/relay, builder resources and original/calibrated SPI custody were rechecked.
 A fresh SPI backup matches the retained post-warm image. The stopped checkpoint-4

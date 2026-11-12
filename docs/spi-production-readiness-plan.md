@@ -241,9 +241,11 @@ management results and verified off-device custody.
 
 ## 6. Close production acceptance and publish the operating procedure
 
-Use the independent operator's phase-3 recovery report and an independent
-walkthrough of the updated autostart guide. Retain discrepancies and their
-resolutions. Reuse completed qualifying demonstrations during signoff.
+Use the independent operator's phase-3 recovery report. A second agent or
+operator must execute the released build/deployment and autostart procedures
+from a clean environment, recording artifact identity, commands, physical
+results and discrepancies. Retain discrepancies and their resolutions. Reuse
+completed qualifying demonstrations where they cover the released procedure.
 Reconcile the requirement matrix, artifacts, hashes, source versions, physical
 results, rollback and backup procedures. Update status, current images,
 architecture and AGENTS.md. Keep raw logs, images and private keys outside Git.
@@ -256,6 +258,53 @@ vendor source/license limitations alongside that signoff. Planning and passing
 host tests alone leave these hardware gates pending.
 
 ## Execution ownership and checkpoints
+
+### Remaining implementation sequence (2026-11-12)
+
+The [status](implementation-status.md) distinguishes reviewed software from
+installed hardware. The installed-maintenance core and managed archive codec
+are validated foundations; neither constitutes a deployed maintenance or backup
+workflow. Finish the following packages in dependency order while phase 3 waits
+for the operator. Each package includes focused regressions, independent review
+where it changes boot/storage/rollback, and a coherent validated commit.
+
+| Order | Work package | Deliverable and acceptance gate |
+| --- | --- | --- |
+| A | Finish installed maintenance integration | Integrate reviewed update/selector admission; adapt and run the actual loop-device harnesses. Show that guests stop before exclusive maintenance, failures preserve explicit closed admission, and no target mutation follows reopening. Define an explicit recovery procedure for a failed closed maintenance session. |
+| B | Complete managed backup and restore | Finish the root sender, then authenticated source/receiver and coherent restore. Validate the actual ready cohort before streaming; restore matching disk, manifest, history and lifecycle authority. Test stale metadata, partial publication and retries. Prevent old host STATE restoration from silently replacing newer guest authority. The six-member archive parser alone cannot authorize restoration. |
+| C | Cover activation and RAM recovery | Review every remaining storage writer. Activation must close admission before mounting guest storage, then validate it before reopening. RAM recovery needs its own namespace-aware offline consumer/target checks; do not impose installed-host assumptions on it. Keep the portable recovery tool's verified dependency contract. |
+| D | Wire bootstrap and guest services | In one authenticated bootstrap ownership lifetime, activate storage, prepare registry/accounts, render RAM units and publish manual-launch namespace pins before opening admission. Order per-guest supervision and host shutdown; quarantine invalid guests while retaining SSH/NTP. Validate repeated preparation and failure cleanup without granting QEMU extra authority. |
+| E | Package and build the candidate | Include every required controller/service in pinned reproducible inactive-root recipes, rebuild on the Ubuntu builder and verify artifact sizes/hashes. Retain the working root and recovery card. Pass the repository checks and an independent review before deployment. |
+| F | Validate the installed candidate | Deploy to the inactive root and use the separate disposable managed guest. Prove actual nonroot KVM autostart, CPU/disk/network, guest-owned clean shutdown, checkpoint/restart, coherent backup/restore, disable and host rollback. Preserve the manually managed firstkvm cohort. Software fixtures cannot satisfy this gate. |
+
+A and B may proceed concurrently with disjoint file ownership; C and D depend
+on the reviewed admission and lifecycle contracts. E follows integration of
+A–D, and F follows the reviewed candidate build. Phase 3 can proceed independently
+when physical access is available. Finish phases 3 and 4 before freezing the
+configuration and collecting the remaining phase-5 boots. Reassess earlier boot
+credit if firmware identity changes; record final automation checks separately.
+
+### Operator steps and evidence
+
+The immediate physical prerequisite is to boot the retained SU02G recovery card:
+with the board powered off, disconnect USB-C, insert that card without reflashing,
+restore power and leave the card installed. Keep the UART bridge running and
+report that power has been restored. The coordinator then collects fresh boot,
+storage and flash identities and obtains independent review of fresh concrete
+restore/reinstall plans before using the existing write authorization.
+
+After SPI reinstallation and clean poweroff, the coordinator explicitly reports
+that it is ready for SD removal. The operator removes SD and restores power.
+Subsequent cold qualification requires the per-cycle USB-C removal attestation
+described in phase 5. No heatsink removal or hardware benchmark is required.
+
+For every package, record source revision, checks, remaining limitations and raw
+receipt location in the status/evidence files. Hardware records include boot ID,
+UART, exact storage and firmware identity, guest outcome and verified off-device
+custody. Retain failures and uncertain outcomes. Refresh operator instructions
+against the actual released commands before asking an independent operator to
+reproduce them. Final signoff requires phases 1–6; the accepted endurance data is
+reused and no qualifying endurance rerun is planned.
 
 | Work package | Owner | Review/checkpoint |
 | --- | --- | --- |
