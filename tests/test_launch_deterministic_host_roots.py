@@ -25,6 +25,7 @@ def load(name):
 L = load('build/launch-deterministic-host-roots.py')
 ROOTS = load(L.TEMPLATE)
 MAINTENANCE = load('build/maintenance-tools.py')
+SHARED = load('build/launch-userspace-configuration.py')
 
 
 def pin(raw):
@@ -33,7 +34,7 @@ def pin(raw):
 
 def source_contents():
     names = subprocess.check_output(['git', '-C', str(REPO), 'ls-files', '-z']).decode().split('\0')
-    names += [L.SELF, L.HELPER, *MAINTENANCE.SOURCES]
+    names += [L.SELF, L.HELPER, L.OUTER_HOST_LOCK, *MAINTENANCE.SOURCES]
     return {name: (REPO / name).read_bytes() for name in names if name}
 
 
@@ -78,13 +79,22 @@ class DeterministicLauncherTests(unittest.TestCase):
                  mock.patch.object(Path, 'mkdir', side_effect=AssertionError('staging')):
                 plan = parent.plan('fixture', manifest, policy, Path('/absent/diagnostic'), Path('/absent/userspace'))
             original = ROOTS.plan('fixture', manifest, policy, Path('/absent/diagnostic'), Path('/absent/userspace'))
-            self.assertEqual({key: value for key, value in plan.items() if key != 'filesystem_normalization'}, original)
+            self.assertEqual({key: value for key, value in plan.items()
+                              if key not in ('filesystem_normalization', 'builder_package_inventory')}, original)
             self.assertEqual(plan['filesystem_normalization'], L.normalization_binding(pin(data[L.HELPER]), held.pin))
+            inventory = L.inventory_binding(parent, data)
+            self.assertEqual(plan['builder_package_inventory'], inventory)
+            self.assertEqual(inventory['outer_host'], {'path': L.OUTER_HOST_LOCK, **L.OUTER_HOST_PIN})
+            self.assertEqual(inventory['frozen_replay'], {'path': L.FROZEN_REPLAY_LOCK, **L.FROZEN_REPLAY_PIN})
+            self.assertEqual(len(inventory['version_changes']), 7)
             self.assertEqual(parent.SELF, L.SELF)
             self.assertEqual(parent.__file__, str(REPO / L.SELF))
-            for name in (L.TEMPLATE, L.HELPER):
+            for name in (L.TEMPLATE, L.HELPER, L.OUTER_HOST_LOCK, L.FROZEN_REPLAY_LOCK):
                 bad = copy.deepcopy(manifest)
                 bad['files'][name]['sha256'] = '0' * 64
+                with self.assertRaisesRegex(ValueError, 'source closure'):
+                    parent.plan('fixture', bad, policy, Path('/missing'), Path('/missing'))
+                del bad['files'][name]
                 with self.assertRaisesRegex(ValueError, 'source closure'):
                     parent.plan('fixture', bad, policy, Path('/missing'), Path('/missing'))
             bad = dict(data)
@@ -95,6 +105,84 @@ class DeterministicLauncherTests(unittest.TestCase):
                 parent.contract(REPO, dict(data, **{L.TEMPLATE: data[L.TEMPLATE] + b'\n'}))
         self.assertEqual(MAINTENANCE.entries(), before)
         self.assertEqual(pin((REPO / L.TEMPLATE).read_bytes())['sha256'], L.TEMPLATE_SHA)
+
+    def test_current_outer_inventory_required_and_historical_policy_unchanged(self):
+        data = source_contents()
+        with contextlib.ExitStack() as stack:
+            parent, _ = self.parent(stack)
+            self.assertEqual(parent.HOST_LOCK, L.OUTER_HOST_LOCK)
+            self.assertEqual(ROOTS.HOST_LOCK, L.FROZEN_REPLAY_LOCK)
+            # Execute the inherited preflight with all environment probes mocked;
+            # its actual inventory validator and package-count guard remain live.
+            shared = mock.Mock(ROOT=Path('/frozen'), UID_BASE=1000, HELPER=Path('/helper'),
+                               HELPER_SHA=hashlib.sha256(b'helper').hexdigest(), SEED=Path('/seed'))
+            shared.validate_host_inventory = SHARED.validate_host_inventory
+            shared.regular_bytes.side_effect = lambda path, **kw: b'helper' if path == shared.HELPER else b'probe'
+            parent.PROBE_SHA = hashlib.sha256(b'probe').hexdigest()
+            info = mock.Mock(st_uid=1000, st_gid=1000, st_mode=0o40755, st_size=0)
+            def read_text(path, *args, **kwargs):
+                if str(path) == '/proc/self/uid_map':
+                    return '0 0 4294967295'
+                if str(path) == '/etc/os-release':
+                    return 'ID=ubuntu\nVERSION_ID="22.04"'
+                raise AssertionError(path)
+            def installed(raw):
+                return b''.join(line + b'\tinstalled\n' for line in raw.splitlines())
+            shared.mapped_processes.return_value = []
+            shared.phase_mounts.return_value = []
+            with mock.patch.object(parent.os, 'getuid', return_value=0), \
+                 mock.patch.object(parent.os, 'geteuid', return_value=0), \
+                 mock.patch.object(parent.os, 'getgid', return_value=0), \
+                 mock.patch.object(parent.os, 'getegid', return_value=0), \
+                 mock.patch.object(parent.os, 'uname', return_value=mock.Mock(machine='x86_64')), \
+                 mock.patch.object(parent.os.path, 'lexists', return_value=False), \
+                 mock.patch.object(Path, 'read_text', read_text), \
+                 mock.patch.object(Path, 'lstat', return_value=info), \
+                 mock.patch.object(Path, 'iterdir', return_value=iter(())), \
+                 mock.patch.object(parent.stat, 'S_ISREG', return_value=True), \
+                 mock.patch.object(parent, 'check_admission'), \
+                 mock.patch.object(parent, 'module', return_value='builder'), \
+                 mock.patch.object(parent.subprocess, 'check_output') as inventory:
+                current = installed(data[L.OUTER_HOST_LOCK])
+                inventory.return_value = current
+                self.assertEqual(parent.preflight(shared, data, Path('/phase'), {}), ('builder', current))
+                inventory.return_value = installed(data[L.FROZEN_REPLAY_LOCK])
+                with self.assertRaisesRegex(ValueError, 'inventory differs from lock'):
+                    parent.preflight(shared, data, Path('/phase'), {})
+    def test_package_locks_are_pinned_strict_and_closed(self):
+        data = source_contents()
+        with contextlib.ExitStack() as stack:
+            parent, _ = self.parent(stack)
+            for name in (L.OUTER_HOST_LOCK, L.FROZEN_REPLAY_LOCK):
+                missing = dict(data)
+                del missing[name]
+                with self.assertRaisesRegex(ValueError, 'lock missing'):
+                    parent.contract(REPO, missing)
+                tampered = dict(data)
+                tampered[name] += b'\n'
+                with self.assertRaisesRegex(ValueError, 'lock pin differs'):
+                    parent.contract(REPO, tampered)
+            records = L.package_records(data[L.OUTER_HOST_LOCK])
+            self.assertEqual(len(records), 842)
+            rows = data[L.OUTER_HOST_LOCK].splitlines()
+            for bad in (b'\n'.join(rows[:-1]), b'\n'.join(rows + [rows[0]]),
+                        data[L.OUTER_HOST_LOCK].replace(b'\t', b'\t\t', 1),
+                        b'\n'.join([b'\t1\tamd64'] + rows[1:]),
+                        b'\n'.join([b'bad name\t1\tamd64'] + rows[1:]),
+                        b'\n'.join([b'pkg\t1 2\tamd64'] + rows[1:]),
+                        b'\n'.join([b'pkg\t1\tbad arch'] + rows[1:])):
+                with self.assertRaises(ValueError):
+                    L.package_records(bad)
+            # Even an internally repinned fixture cannot change package identities,
+            # architectures or expand the seven observed updates.
+            for old, new, message in ((b'acl\t', b'aclx\t', 'identities'),
+                                       (b'2.3.1-1\tamd64', b'2.3.1-1\tarm64', 'architectures'),
+                                       (b'2.3.1-1\t', b'2.3.1-2\t', 'version changes')):
+                changed = dict(data)
+                changed[L.OUTER_HOST_LOCK] = changed[L.OUTER_HOST_LOCK].replace(old, new, 1)
+                with mock.patch.object(L, 'OUTER_HOST_PIN', pin(changed[L.OUTER_HOST_LOCK])):
+                    with self.assertRaisesRegex(ValueError, message):
+                        L.inventory_binding(parent, changed)
 
     def test_same_cli_without_new_override_flags_and_plan_never_executes(self):
         with contextlib.ExitStack() as stack:

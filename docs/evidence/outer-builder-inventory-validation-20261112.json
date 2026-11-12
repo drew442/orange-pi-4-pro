@@ -1,0 +1,115 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "result": "pass for build-only outer-host inventory adapter",
+  "hardware_acceptance": false,
+  "builder": "drew@build.drewnet.online",
+  "full_Ubuntu_tests": 3579,
+  "failures_errors_skips": 0,
+  "shell_suites": 5,
+  "diagnostic_cases": 5,
+  "parsed_TOML": 5,
+  "source_lock": {
+    "bytes": 176936,
+    "sha256": "e951f15db5bf10684ff5cc646e4ae8ddd0e16f2f4bba3f9825108cea7b6cf260",
+    "index_tree": "afa792493ebc213deeb60bf1ad9281ab13cead6a",
+    "files": 1103
+  },
+  "source": {
+    "build/launch-deterministic-host-roots.py": {
+      "bytes": 12762,
+      "sha256": "6f45c1773b41def360595ffd84aa28e56ef1997d6056d0b96d83398ee69f83e9"
+    },
+    "tests/test_launch_deterministic_host_roots.py": {
+      "bytes": 17573,
+      "sha256": "bf52f3326fb22ebd8234e19b708d69e1dceeae457ba3bf6ddbce9b7040ef937c"
+    },
+    "configs/builder-host-packages-20261112.lock.tsv": {
+      "bytes": 32550,
+      "sha256": "f779568a3e4e82afc488c1b99ccad0a88f2d96e74efe3b00172927c7539f4ef3"
+    },
+    "build/launch-host-roots.py": {
+      "bytes": 28616,
+      "sha256": "eb55e7b0cd51f3deeede47777adda8255de9d48322eb568c502f9a52a797e4ff"
+    },
+    "configs/builder-replay-packages-20261106.lock.tsv": {
+      "bytes": 32546,
+      "sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425"
+    },
+    "configs/builder-package-archives-20261106.lock.json": {
+      "bytes": 479812,
+      "sha256": "d42bb151845d01dc3cb1bcde95adfb5e9add97a5d34e8ab9f5c4d27bae5bb141"
+    },
+    "build/deterministic-root-image.py": {
+      "bytes": 12059,
+      "sha256": "977f0658d4f8f045231142bf06e0f39cc90c8482225c5d8c39d9f80ac82cf4b4"
+    }
+  },
+  "independent_review": {
+    "bytes": 6366,
+    "sha256": "104c4b7868fe120df90cfe7c95d581dce3ff06bb06bc7965722162caf1a5614e",
+    "probes": 16
+  },
+  "terminal_unit": {
+    "RuntimeMaxUSec": "8h",
+    "MainPID": "0",
+    "Result": "success",
+    "ExecMainStatus": "0",
+    "CPUQuotaPerSecUSec": "2s",
+    "MemoryMax": "3221225472",
+    "UMask": "0022",
+    "SubState": "exited"
+  },
+  "initial_harness_failure": {
+    "terminal": {
+      "RuntimeMaxUSec": "8h",
+      "MainPID": "0",
+      "Result": "exit-code",
+      "ExecMainStatus": "1",
+      "CPUQuotaPerSecUSec": "2s",
+      "MemoryMax": "3221225472",
+      "UMask": "0077",
+      "SubState": "failed"
+    },
+    "tests": 3579,
+    "failures": 63,
+    "errors": 436,
+    "reason": "Validation unit UMask0077 masked fixture directory modes. Same source tree rerun with established0022, no runtime/source guards weakened."
+  },
+  "initial_build_failure": {
+    "unit": "a733-managed-root-build-20261112-01.service",
+    "terminal": {
+      "MainPID": "0",
+      "Result": "exit-code",
+      "ExecMainStartTimestamp": "Thu 2026-11-12 20:54:59 UTC",
+      "ExecMainExitTimestamp": "Thu 2026-11-12 20:55:03 UTC",
+      "ExecMainStatus": "1",
+      "SubState": "failed"
+    },
+    "phase_created": false,
+    "images_created": false,
+    "reason": "Exact outer-host package inventory differs from historical frozen-replay lock; seven recorded November11 unattended upgrades,842 package identities unchanged."
+  },
+  "initial_attempt_custody": {
+    "bytes": 1495040,
+    "sha256": "9786b54cbd3e840f8d6707fb0f260938f8f0c439e4b16dc208bc1dd99b241434",
+    "native": "out/managed-root-candidate-20261112-01/attempt-receipts.tar",
+    "builder": "/var/lib/a733-managed-root-candidate-20261112-01/attempt-receipts.tar"
+  },
+  "resource_sample_minima": {
+    "free_disk_bytes": 29730295808,
+    "MemAvailable_bytes": 6697074688
+  },
+  "custody": {
+    "bytes": 573440,
+    "sha256": "d95207d8d20c04bcdf966bd27a9f87d00e4f9e35c08a4fc3599bdf08fb8ea060",
+    "native": "out/outer-builder-inventory-validation-20261112-02/receipts.tar",
+    "builder": "/var/lib/a733-outer-builder-inventory-validation-20261112-02/receipts.tar"
+  },
+  "policy": "Separate exact842-package outer Ubuntu lock accepts only the seven recorded updates. Historical frozen replay/archive/userspace lock and SHA-pinned original root launcher remain unchanged. Both inventory bindings are authenticated in plan/receipt. CPU/memory/disk/time/source guards remain.",
+  "limitations": [
+    "Build-only source review/regressions; no new root image produced or installed.",
+    "Reviewed deployment compatibility gaps in management-file closure must be resolved before candidate construction/installation; this validation does not close them.",
+    "SPI recovery/reinstall, actual managed KVM/deployment/rollback, finalbootcounts and independentreproduction remain mandatory. Accepted endurance reused."
+  ]
+}

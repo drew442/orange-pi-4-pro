@@ -9,6 +9,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import stat
 import sys
 import types
@@ -19,6 +20,21 @@ TEMPLATE_SHA = 'eb55e7b0cd51f3deeede47777adda8255de9d48322eb568c502f9a52a797e4ff
 HELPER = 'build/deterministic-root-image.py'
 EPOCH = 1793750400
 PROFILE = 'deterministic-root-v1'
+OUTER_HOST_LOCK = 'configs/builder-host-packages-20261112.lock.tsv'
+OUTER_HOST_PIN = {'bytes': 32550, 'sha256': 'f779568a3e4e82afc488c1b99ccad0a88f2d96e74efe3b00172927c7539f4ef3'}
+FROZEN_REPLAY_LOCK = 'configs/builder-replay-packages-20261106.lock.tsv'
+FROZEN_REPLAY_PIN = {'bytes': 32546, 'sha256': '92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425'}
+# Observed November 11 updates on the outer host only. The frozen replay and
+# historical userspace archive closure continue to use FROZEN_REPLAY_LOCK.
+OUTER_VERSION_CHANGES = {
+    'libperl5.34:amd64': ('5.34.0-3ubuntu1.9', '5.34.0-3ubuntu1.10'),
+    'linux-libc-dev:amd64': ('5.15.0-202.212', '5.15.0-203.213'),
+    'linux-tools-common': ('5.15.0-202.212', '5.15.0-203.213'),
+    'perl': ('5.34.0-3ubuntu1.9', '5.34.0-3ubuntu1.10'),
+    'perl-base': ('5.34.0-3ubuntu1.9', '5.34.0-3ubuntu1.10'),
+    'perl-modules-5.34': ('5.34.0-3ubuntu1.9', '5.34.0-3ubuntu1.10'),
+    'python3-pyasn1': ('0.4.8-1ubuntu0.3', '0.4.8-1ubuntu0.4'),
+}
 
 
 def require(ok, message):
@@ -124,6 +140,41 @@ def normalization_binding(helper_pin, template_pin):
             'historical_template': dict(template_pin)}
 
 
+def package_records(raw):
+    require(type(raw) is bytes, 'package lock bytes required')
+    records = {}
+    for line in raw.decode('ascii', 'strict').splitlines():
+        fields = line.split('\t')
+        require(len(fields) == 3, 'malformed package lock tuple')
+        name, version, architecture = fields
+        require(re.fullmatch(r'[a-z0-9][a-z0-9+.-]*(?::[a-z0-9][a-z0-9-]*)?', name)
+                and re.fullmatch(r'[0-9][A-Za-z0-9.+:~\-]*', version)
+                and re.fullmatch(r'[a-z0-9][a-z0-9-]*', architecture)
+                and name not in records, 'invalid/duplicate package lock tuple')
+        records[name] = (version, architecture)
+    require(len(records) == 842, 'package lock count differs')
+    return records
+
+
+def inventory_binding(parent, contents):
+    records = {}
+    for path, expected in ((OUTER_HOST_LOCK, OUTER_HOST_PIN),
+                           (FROZEN_REPLAY_LOCK, FROZEN_REPLAY_PIN)):
+        require(type(contents.get(path)) is bytes, 'package lock missing from committed closure: ' + path)
+        require(parent.pin(contents[path]) == expected, 'package lock pin differs: ' + path)
+        records[path] = package_records(contents[path])
+    outer, frozen = records[OUTER_HOST_LOCK], records[FROZEN_REPLAY_LOCK]
+    require({name: value[1] for name, value in outer.items()} ==
+            {name: value[1] for name, value in frozen.items()}, 'package lock identities/architectures differ')
+    changes = {name: (frozen[name][0], outer[name][0]) for name in outer
+               if frozen[name][0] != outer[name][0]}
+    require(changes == OUTER_VERSION_CHANGES, 'outer host version changes differ')
+    return {'outer_host': {'path': OUTER_HOST_LOCK, **OUTER_HOST_PIN},
+            'frozen_replay': {'path': FROZEN_REPLAY_LOCK, **FROZEN_REPLAY_PIN},
+            'version_changes': {name: {'frozen_replay': old, 'outer_host': new}
+                                for name, (old, new) in sorted(changes.items())}}
+
+
 def normalized_program(original, tag, helper_pin):
     program = original(tag).decode('utf-8', 'strict')
     initialization = '''normalizer_path=p/HELPER
@@ -155,30 +206,39 @@ payload.write_json(manifest_path,manifest)
 
 
 def adapt(parent, held):
+    require(parent.HOST_LOCK == FROZEN_REPLAY_LOCK, 'historical host lock anchor differs')
+    parent.HOST_LOCK = OUTER_HOST_LOCK
     original_contract, original_plan = parent.contract, parent.plan
     original_payload, original_execute = parent.payload_program, parent.execute
     binding = {}
+    inventories = {}
 
     def contract(project, contents):
         require(contents.get(TEMPLATE) == held.raw, 'historical launcher outside committed closure')
         require(type(contents.get(HELPER)) is bytes and contents[HELPER],
                 'normalizer helper missing from committed closure')
         helper_pin = parent.pin(contents[HELPER])
+        inventory = inventory_binding(parent, contents)
         policy = original_contract(project, contents)
         binding.clear()
         binding.update(normalization_binding(helper_pin, held.pin))
+        inventories.clear()
+        inventories.update(inventory)
         held.unchanged()
         return policy
 
     def plan(tag, manifest, policy, diagnostic, userspace):
         require(binding, 'normalizer contract required before plan')
         files = manifest.get('files', {})
-        for name, expected in ((TEMPLATE, held.pin), (HELPER, binding['helper'])):
+        for name, expected in ((TEMPLATE, held.pin), (HELPER, binding['helper']),
+                               (OUTER_HOST_LOCK, OUTER_HOST_PIN),
+                               (FROZEN_REPLAY_LOCK, FROZEN_REPLAY_PIN)):
             require(type(files.get(name)) is dict and
                     {key: files[name].get(key) for key in ('bytes', 'sha256')} == expected,
                     'normalizer source closure differs: ' + name)
         result = original_plan(tag, manifest, policy, diagnostic, userspace)
         result['filesystem_normalization'] = normalization_binding(binding['helper'], held.pin)
+        result['builder_package_inventory'] = json.loads(json.dumps(inventories))
         held.unchanged()
         return result
 
