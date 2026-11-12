@@ -28,9 +28,10 @@ TARGET = '/dev/mtd0'
 COMPATIBLE = b'xunlong,orangepi-4-pro\0arm,sun60iw2p1\0'
 NVME = ('134807190FC700149277', 'SPCC M.2 PCIe SSD', 256060514304)
 ORIGINAL_PIN = 'dffab0dd410657cb30c7b2fd7f2586a4792e8472e58882b3532581f8111a646d'
+RESTORE_IDS = ('original', 'postboot-20261111', 'postwarm-20261111')
 CANDIDATE_PIN = '83edcd7f448e8353163666016a6bae3e9b70d041a5e4d8454f48931839205e90'
 HELPERS = {
-    'spi-unit-transaction.py': '6002270dfd2251c16ef8d9ad2fa0a6caa6e279ef346c11c52fa31fcce4c95d0d',
+    'spi-unit-transaction.py': '63fa380b92c2d3c379038cda1ea5c8df501950dcea01cb1ebfe786e13a03d336',
     'spi-mtd-adapter.py': 'f8b88a531827118812e6707de7b5b6e8940e2781e5505896e48d851a16cfbecd',
     'backup-spi.py': 'b160e3fe8e421e18e35aad34aff909e10b4dfca027178d80a4b202c711e2147d',
     'write-known-bootstrap-sd.py': '4769001ab4a4861ff8ffe26ad6aa427f9abe5430b48bb49918d6c1206b96c52a',
@@ -352,19 +353,21 @@ def read_flash(fd, reader=os.pread, progress=None):
     return b''.join(parts)
 
 
-def reviewed_plan(engine, raw, pin, original, candidate, current, direction):
+def reviewed_plan(engine, raw, pin, original, candidate, current, direction, *,
+                  restore_id='original', restore_image=None):
     plan = json.loads(raw)
     frozen = dict(plan)
     recorded = frozen.pop('plan_sha256')
     require(recorded == digest(pin) == sha(engine.canonical(frozen)), 'reviewed plan pin mismatch')
     require(plan['direction'] == direction, 'reviewed plan direction mismatch')
-    fresh = engine.build_plan(original, candidate, current, direction, plan['current_sha256'])
+    fresh = engine.build_plan(original, candidate, current, direction, plan['current_sha256'],
+                              restore_id=restore_id, restore_image=restore_image)
     require(engine.canonical(fresh) == engine.canonical(plan), 'reviewed plan/current changed')
     return plan
 
 
 def transact(engine, backend, plan, original, candidate, *, guard, identity,
-             emit, open_rw, close=os.close):
+             emit, open_rw, close=os.close, restore_id='original', restore_image=None):
     """Only called after RO plan revalidation; close exactly once, even on failure."""
     guard()
     emit(dict(event='capture_ready', hardware_acceptance=False,
@@ -387,7 +390,8 @@ def transact(engine, backend, plan, original, candidate, *, guard, identity,
             return data
         receipt = engine.execute(plan, original, candidate, read=read,
                                  erase=adapter.erase, write=adapter.write,
-                                 guard=adapter.guard, emit=adapter.emit)
+                                 guard=adapter.guard, emit=adapter.emit,
+                                 restore_id=restore_id, restore_image=restore_image)
     except BaseException as error:
         failure = error
         receipt = getattr(error, 'receipt', dict(success=False, hardware_acceptance=False,
@@ -446,6 +450,8 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('mode', nargs='?', choices=('plan', 'write'), default='plan')
     parser.add_argument('--direction', choices=('install', 'restore'), default='install')
+    parser.add_argument('--restore-id', choices=RESTORE_IDS)
+    parser.add_argument('--restore-image', help='registered exact backup in private /run')
     parser.add_argument('--expected-boot-id', required=True)
     parser.add_argument('--original', required=True)
     parser.add_argument('--candidate', required=True)
@@ -454,6 +460,12 @@ def main(argv=None):
     parser.add_argument('--plan-sha256', help='canonical engine plan digest (write only)')
     parser.add_argument('--recovery-proof', help='registered held physical proof (write only)')
     args = parser.parse_args(argv)
+    require(args.direction == 'restore' or
+            (args.restore_id is None and args.restore_image is None),
+            'restore options are invalid for install')
+    restore_id = args.restore_id or 'original'
+    require(restore_id == 'original' or args.restore_image is not None,
+            'calibrated restore requires held restore image')
     require(str(uuid.UUID(args.expected_boot_id)) == args.expected_boot_id, 'invalid boot pin')
     if args.mode == 'write':
         # Crucially, fail before ANY device open while proof is unregistered.
@@ -491,6 +503,9 @@ def main(argv=None):
             return value
         original = hold(args.original, pin=ORIGINAL_PIN, exact_size=SIZE).data
         candidate = hold(args.candidate, pin=CANDIDATE_PIN, exact_size=SIZE).data
+        restore_image = (hold(args.restore_image, exact_size=SIZE).data
+                         if args.restore_image is not None else None)
+        restore_options = dict(restore_id=restore_id, restore_image=restore_image)
         engine.authenticate(original, candidate)
         plan_file = hold(args.plan, limit=MAX_LINE) if args.mode == 'write' else None
         proof = hold(args.recovery_proof, pin=RECOVERY_PROOF_PIN, limit=MAX_LINE) if args.mode == 'write' else None
@@ -515,10 +530,11 @@ def main(argv=None):
             guard()
             require(target_identity(ro, backup) == snapshot, 'SPI identity changed')
             if args.mode == 'plan':
-                plan = engine.build_plan(original, candidate, current, args.direction, sha(current))
+                plan = engine.build_plan(original, candidate, current, args.direction, sha(current),
+                                         **restore_options)
             else:
                 plan = reviewed_plan(engine, plan_file.data, args.plan_sha256,
-                                     original, candidate, current, args.direction)
+                                     original, candidate, current, args.direction, **restore_options)
         finally:
             active[0] = None
             os.close(ro)
@@ -546,7 +562,7 @@ def main(argv=None):
         transact(engine, modules['spi-mtd-adapter.py'], plan, original, candidate,
                  guard=guard, identity=lambda fd: require(target_identity(fd, backup) == snapshot,
                                                          'bound target identity changed'),
-                 emit=emit, open_rw=open_rw, close=close)
+                 emit=emit, open_rw=open_rw, close=close, **restore_options)
 
 
 if __name__ == '__main__':

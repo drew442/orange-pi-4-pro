@@ -1,7 +1,7 @@
 # SPI erase-unit transaction engine preparation
 
 `scripts/spi-unit-transaction.py` is an API-only engine used by the independently
-reviewed [caller preparation](known-spi-programmer.md). It imports only Python hashing/JSON support. It has no CLI,
+reviewed [caller preparation](known-spi-programmer.md). It imports only Python hashing, JSON and structure support. It has no CLI,
 file opening, device opening, physical erase ioctl or hardware programming route.
 The endurance duration criterion is now **8 hours (28,800 seconds)**; retained
 legacy A733 data exceeding that duration qualifies without a rerun. The
@@ -26,27 +26,33 @@ file provenance, a bound physical descriptor, target identity or recovery.
 
 ## Review and callback contract
 
-`build_plan(original, candidate, current, direction, expected_current_sha256)`
-accepts exact immutable `bytes`, authenticates both pinned sources and checks the
-current image against its explicit caller-supplied whole-image hash. `direction`
-is `install` or `restore`. An interrupted current image is allowed only with an
-exact fresh hash pin and unchanged bytes outside `[0,237568)` and
-`[262144,1654784)`. It produces a JSON-compatible plan containing old/new unit
-hashes, differing byte counts and a SHA-256 of canonical JSON excluding the digest
-field itself. Unit records remain in index order 0–25. The reviewed plan also
-binds `execution_order`: install processes package units 4–25, then boot0 body
-units 1–3, then header unit 0 last; restore processes units 0–25 in ascending
-order. Execution follows that explicit order, including checks and skip events
-for unchanged units. This order limits initial blank-SPI exposure while the
-package is unfinished. It supplies no atomicity or ROM recovery guarantee.
-Planning performs no actions.
+`build_plan(original, candidate, current, direction, expected_current_sha256,
+*, restore_id='original', restore_image=None)` accepts immutable full `bytes`,
+authenticates both fixed source images and the exact current snapshot hash.
+The schema-2 plan separately records firmware components, fixed preservation
+regions and validated vendor calibration, plus every unit's old/new hashes.
+It binds the metadata policy, selected registered backup and execution order.
+See [format, source and restoration policy](spi-calibration-policy.md).
 
-Only complete 65,536-byte units 0–25 can be erased and reconstructed. The gap,
-partial-unit tail and all units 26–255 must remain byte-for-byte unchanged.
-`execute(plan, original, candidate, *, read, erase, write, guard, emit)` freezes
-the reviewed plan, authenticates immutable source bytes and obtains a fresh full
-current image. Rebuilding the plan must reproduce the reviewed plan exactly
-before any mutation. The caller cannot silently replace its current-image pin.
+Installation derives the desired bytes from the authenticated factory candidate
+and preserves the valid/erased live parameters. Restore reproduces the exact
+registered original, post-cold or post-warm backup, including metadata; calibrated
+sources require their registered full image. Free-form hash arguments cannot
+register another backup. Arbitrary interrupted code bytes are admitted only with
+an exact fresh snapshot hash and unchanged fixed preservation. Malformed metadata
+is refused and requires a separate reviewed recovery registration.
+
+Only complete 65,536-byte units 0–25 can be erased and reconstructed. Fixed gaps,
+partial-unit tail and units 26–255 remain unchanged. Install and calibrated restore
+use header-last order 4–25,1,2,3,0; original blank restore invalidates boot0 first
+using 0–25. Unchanged units still receive checks and skip events. These orders
+provide neither atomicity nor a ROM recovery guarantee. Planning has no callbacks.
+
+`execute(plan, original, candidate, *, read, erase, write, guard, emit,
+restore_id='original', restore_image=None)` rejects legacy plan schemas, freezes
+the supplied plan, authenticates sources and reads the complete live preimage.
+Rebuilding the entire canonical plan must reproduce it exactly before mutation.
+The desired bytes are derived again from that preimage and registered source.
 
 The caller/backend supplies five explicit callbacks:
 
@@ -89,9 +95,10 @@ write counters. A final event failure also prevents a success receipt.
 
 A [Linux MTD backend](spi-mtd-adapter.md) now implements bounded syscall callbacks
 on a caller-owned descriptor and passes independent host review. It has no CLI
-or device-opening path. The [trusted caller and native capture](known-spi-programmer.md) now pass
-independent source review and 2,218 privileged Ubuntu tests. They remain
-preparation: real recovery proof is unregistered and write admission is disabled.
+or device-opening path. The [trusted caller and native capture](known-spi-programmer.md)
+register the source-backed SD recovery policy. Physical programming and SD-free
+operation passed for the earlier revision; the metadata-aware revision requires
+its own review, software checks and physical restore/reinstall evidence.
 
 The trusted programmer must independently enforce pinned A733/XM25QU128C target
 identity and geometry, initial namespace and quiescence, authenticated staged
@@ -116,7 +123,8 @@ Run `python3 -m unittest discover -s tests -p 'test_spi_unit_transaction.py'` fo
 host NOR-model checks. They cover exact full-unit preservation, skip behavior,
 short writes, interruptions, fresh restore, stale plans/pins, preservation refusal,
 callback failure ordering and final full-image verification. They do not establish
-actual MTD acceptance. The programmer source is prepared; registered ROM recovery, actual MTD
-operation/restoration and SD-removed NVMe boot remain unperformed.
+actual MTD acceptance. Earlier physical programming and SD-removed NVMe boot
+are recorded in the [operational evidence](evidence/spi-operational-20261111.json).
+Metadata-aware restore/reinstall acceptance remains pending.
 Physical KVM and hardware release acceptance remain with the coordinator, retaining
 the A733, 2 GB SD and nominal 250 GB NVMe requirements.

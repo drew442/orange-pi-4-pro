@@ -288,7 +288,8 @@ class AdapterTests(unittest.TestCase):
         self.assertEqual(self.sys.calls, [])
 
     def test_engine_integration_short_writes_preserves_all_bytes(self):
-        original = b'\xa5' * mtd.SIZE
+        original = (b'\xa5' * engine.METADATA[0] + b'\xff' * 2048 +
+                    b'\xa5' * (mtd.SIZE - engine.METADATA[1]))
         changed = bytearray(original)
         changed[4 * mtd.ERASE + 17] = 0x30
         changed[237567] = 0x30  # Partial-unit preservation boundary.
@@ -310,8 +311,36 @@ class AdapterTests(unittest.TestCase):
         self.assertTrue(all(call.args[0]['hardware_acceptance'] is False
                             for call in self.emit.call_args_list))
 
+    def test_calibrated_restore_reconstructs_metadata_unit_with_short_writes(self):
+        from test_spi_metadata import metadata, with_metadata
+
+        original = with_metadata(b'\xa5' * mtd.SIZE, b'\xff' * 2048)
+        factory = bytearray(original)
+        factory[10] = 0x30
+        factory = bytes(factory)
+        cold = with_metadata(factory, metadata(1))
+        warm = with_metadata(factory, metadata(2))
+        self.sys.image = bytearray(warm)
+        self.sys.limit = 997
+        with patch.multiple(engine, ORIGINAL_SHA256=engine.sha(original),
+                            CANDIDATE_SHA256=engine.sha(factory),
+                            RESTORE_SHA256={'postboot-20261111': engine.sha(cold)}):
+            plan = engine.build_plan(original, factory, warm, 'restore', engine.sha(warm),
+                                     restore_id='postboot-20261111', restore_image=cold)
+            result = engine.execute(plan, original, factory, read=self.adapter.read,
+                                    erase=self.adapter.erase, write=self.adapter.write,
+                                    guard=self.adapter.guard, emit=self.adapter.emit,
+                                    restore_id='postboot-20261111', restore_image=cold)
+        self.assertEqual(bytes(self.sys.image), cold)
+        self.assertEqual(result['completed_units'], [3])
+        self.assertEqual([c[1] for c in self.mutations() if c[0] == 'erase'],
+                         [3 * mtd.ERASE])
+        self.assertTrue(result['final_verified'])
+        self.assertFalse(result['hardware_acceptance'])
+
     def test_engine_interruption_has_conservative_partial_receipt(self):
-        original = b'\xa5' * mtd.SIZE
+        original = (b'\xa5' * engine.METADATA[0] + b'\xff' * 2048 +
+                    b'\xa5' * (mtd.SIZE - engine.METADATA[1]))
         candidate = original[:4 * mtd.ERASE] + b'\x30' + original[4 * mtd.ERASE + 1:]
         self.sys.image = bytearray(original)
         self.sys.interrupt = True

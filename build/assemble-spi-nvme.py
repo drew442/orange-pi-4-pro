@@ -12,6 +12,7 @@ import re
 import stat
 import subprocess
 import sys
+import types
 
 REPO = Path(__file__).resolve().parents[1]
 SIZE = 16777216
@@ -21,6 +22,8 @@ REGISTRY = 'configs/uboot-nvme-candidate-targets.lock.json'
 REGISTRY_PIN = {'bytes': 4035, 'sha256': 'abb6f3136f6df22c3da0b7a205b7d2b968e3faad7a3589a3fb69c1c2689117c5'}
 LAYOUT = (('artifacts/boot0_spinor_a733.fex', 0, 237568),
           ('artifacts/boot_package.fex', 262144, 1392640))
+ENGINE = 'scripts/spi-unit-transaction.py'
+ENGINE_PIN = {'bytes': 14674, 'sha256': '63fa380b92c2d3c379038cda1ea5c8df501950dcea01cb1ebfe786e13a03d336'}
 FLAGS = os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK | os.O_CLOEXEC
 
 
@@ -146,6 +149,14 @@ def authenticate_sources(inputs):
     return target
 
 
+def authenticated_engine(inputs):
+    """Execute only pinned held source; retain it in all publication rechecks."""
+    raw = inputs.read(REPO / ENGINE, 1024 * 1024, ENGINE_PIN)
+    module = types.ModuleType('authenticated_spi_transaction')
+    exec(compile(raw, '<authenticated-spi-transaction>', 'exec'), module.__dict__)
+    return module
+
+
 def backup_identity(manifest):
     require(set(manifest) == {'status', 'bytes', 'sha256', 'source', 'source_reads', 'image',
                              'off_device_retention_verified', 'recovery_proven'}, 'unknown backup schema')
@@ -261,10 +272,12 @@ def assemble(backup, components, output, plan=False):
         parent = output_parent(inputs, output, backup, components)
         progress('Validating committed candidate sources and backup files')
         target = authenticate_sources(inputs)
+        engine = authenticated_engine(inputs)
         raw_manifest = inputs.read(backup / 'manifest.json', 1024 * 1024)
         manifest = decode(raw_manifest)
         source = backup_identity(manifest)
         baseline = inputs.read(backup / 'spi.bin', SIZE, {k: manifest[k] for k in ('bytes', 'sha256')})
+        baseline_description = engine.describe_image(baseline)
         raw_parent = inputs.read(components / 'candidate-manifest.json', 1024 * 1024, target['manifest'])
         component_manifest = decode(raw_parent)
         require(component_manifest['schema'] == 1 and component_manifest['hardware_acceptance'] is False,
@@ -280,14 +293,19 @@ def assemble(backup, components, output, plan=False):
             candidate[offset:offset + length] = data
             ranges.append(dict(component=name, offset=offset, end=offset + length, **pin(data)))
         candidate = bytes(candidate)
-        preserved = [dict(offset=start, end=end, **pin(baseline[start:end])) for start, end in
-                     ((237568, 262144), (1654784, SIZE))]
+        candidate_description = engine.describe_image(candidate)
+        require(candidate_description['metadata'] == baseline_description['metadata'] and
+                candidate_description['fixed_preserved'] == baseline_description['fixed_preserved'],
+                'composition changed metadata or fixed preserved bytes')
+        preserved = baseline_description['fixed_preserved']
         units = [dict(index=i, offset=i * ERASE, end=(i + 1) * ERASE,
                       original_sha256=pin(baseline[i * ERASE:(i + 1) * ERASE])['sha256'],
                       candidate_sha256=pin(candidate[i * ERASE:(i + 1) * ERASE])['sha256'],
                       changed=baseline[i * ERASE:(i + 1) * ERASE] != candidate[i * ERASE:(i + 1) * ERASE])
                  for i in range(SIZE // ERASE)]
-        result = dict(schema=1, stage='validated-file-only-plan' if plan else 'assembled-file-only',
+        result = dict(schema=2, metadata_policy='preserve-baseline',
+                      baseline_description=baseline_description, candidate_description=candidate_description,
+                      engine_source=ENGINE_PIN, stage='validated-file-only-plan' if plan else 'assembled-file-only',
                       success=True, target_id=TARGET, spi_identity=source, baseline=pin(baseline),
                       candidate=pin(candidate), replacement_ranges=ranges, preserved_ranges=preserved,
                       erase_size=ERASE, affected_erase_units=list(range(26)), affected_erase_end=1703936,

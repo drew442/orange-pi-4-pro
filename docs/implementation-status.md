@@ -1,6 +1,6 @@
 # Implementation status
 
-Updated 2026-11-12. Last physical validation was 2026-11-11.
+Updated 2026-11-12. Last boot/KVM validation was 2026-11-11.
 **The current system operates from SPI and NVMe with SD
 physically removed.** SPI cold boot, warm restart, original SSH identity,
 automatic NTP and actual nonroot KVM CPU/disk/HTTP tests pass. The guest persisted
@@ -34,7 +34,15 @@ UART/relay, builder resources and original/calibrated SPI custody were rechecked
 A fresh SPI backup matches the retained post-warm image. The stopped checkpoint-4
 guest cohort has verified manifest files and a synced second copy on the builder.
 [Baseline evidence](evidence/production-baseline-20261112.json). Metadata-aware
-implementation, recovery, unattended guests and final qualification remain pending.
+SPI engine/programmer/assembler changes now preserve validated live calibration
+and restore registered exact backups. Independent source and concrete live-plan
+review passes. The privileged Ubuntu suite passes **2346 tests**, five shell
+suites and five diagnostic cases, with no skips/errors/failures after correcting
+validation staging permissions. Read-only live install/calibrated-restore plans
+are no-ops; original blank restoration affects exactly units 0–25.
+[Software evidence](evidence/spi-metadata-validation-20261112.json) and
+[metadata policy](spi-calibration-policy.md). Physical SD recovery/restore/reinstall,
+unattended guest deployment and final qualification remain pending.
 
 ## Live board and constraints
 
@@ -139,9 +147,9 @@ binary redistribution clearance is claimed. [Source inventory](toolchain-sources
 
 ## Resources and next actions
 
-Latest privileged Ubuntu 22.04 suite: **2310 tests**, zero skips/errors/failures,
+Latest privileged Ubuntu 22.04 suite: **2346 tests**, zero skips/errors/failures,
 five shell suites and five diagnostic cases; all five TOMLs parse.
-[SPI policy suite evidence](evidence/spi-sd-policy-validation-20261111.json)
+[Metadata-aware SPI suite evidence](evidence/spi-metadata-validation-20261112.json)
 records the latest run. The final-A warm collector authenticates release/root/policy and stops on
 actual remote release refusal; [software evidence](evidence/final-warm-binding-validation-20261110.json)
 retains independent review and the initial corrected validation-environment failure. Host checks do not prove

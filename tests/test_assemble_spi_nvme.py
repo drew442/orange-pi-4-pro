@@ -4,6 +4,7 @@ import json
 import os
 from pathlib import Path
 import tempfile
+import struct
 import unittest
 from unittest.mock import patch
 
@@ -11,6 +12,19 @@ REPO = Path(__file__).resolve().parents[1]
 SPEC = importlib.util.spec_from_file_location('assemble_spi_nvme', REPO / 'build/assemble-spi-nvme.py')
 spi = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(spi)
+
+
+def metadata(ddr=37):
+    # Synthetic source-format fixture, independent of retained hardware backups.
+    data = bytearray(2048)
+    data[:8] = b'bootpara'
+    data[512:520] = b'NORPARAM'
+    struct.pack_into('<13I', data, 520, 0x6b, 4, 1, 16, 0, 65536,
+                     0, 0, 20000000, 0xaaaaffff, 0, 0x10104, 0x10101)
+    data[572] = 8
+    data[1024:1536] = bytes([ddr]) * 512
+    struct.pack_into('<I', data, 12, (sum(struct.unpack('<512I', data)) + 0x5f0a6c39) & 0xffffffff)
+    return bytes(data)
 
 
 class AssemblyTests(unittest.TestCase):
@@ -25,7 +39,9 @@ class AssemblyTests(unittest.TestCase):
         (self.components / 'artifacts').mkdir(parents=True)
         self.output = REPO / 'out' / ('spi-nvme-synthetic-' + self.root.name)
         self.addCleanup(lambda: __import__('shutil').rmtree(self.output, ignore_errors=True))
-        self.baseline = bytes(range(256)) * (spi.SIZE // 256)
+        baseline = bytearray(bytes(range(256)) * (spi.SIZE // 256))
+        baseline[260096:262144] = b'\xff' * 2048
+        self.baseline = bytes(baseline)
         (self.backup / 'spi.bin').write_bytes(self.baseline)
         self.manifest = dict(status='verified-local-ram-backup', **spi.pin(self.baseline),
                              source_reads=2, image='spi.bin', off_device_retention_verified=False,
@@ -84,6 +100,39 @@ class AssemblyTests(unittest.TestCase):
     def test_plan_creates_nothing(self):
         self.assertEqual(self.run_assembly(True)['stage'], 'validated-file-only-plan')
         self.assertFalse(self.output.exists())
+
+    def replace_baseline_metadata(self, data):
+        self.baseline = self.baseline[:260096] + data + self.baseline[262144:]
+        (self.backup / 'spi.bin').write_bytes(self.baseline)
+        self.manifest.update(spi.pin(self.baseline))
+        self.write_backup_manifest()
+
+    def test_valid_metadata_preserved_and_independently_reported(self):
+        self.replace_baseline_metadata(metadata())
+        result = self.run_assembly()
+        data = (self.output / 'a733-spi-nvme.bin').read_bytes()
+        self.assertEqual(data[260096:262144], metadata())
+        before, after = result['baseline_description'], result['candidate_description']
+        self.assertEqual(before['metadata'], after['metadata'])
+        self.assertEqual(after['metadata']['profile'], 'vendor-normal-a733-v1')
+        self.assertEqual(after['metadata']['sha256'], spi.pin(metadata())['sha256'])
+        self.assertEqual(before['fixed_preserved'], after['fixed_preserved'])
+        self.assertNotEqual(before['code'], after['code'])
+        self.assertEqual(result['metadata_policy'], 'preserve-baseline')
+
+    def test_unknown_checksum_and_reserved_metadata_refused_before_publish(self):
+        for offset in (0, 12, 100, 520):
+            data = bytearray(metadata())
+            data[offset] ^= 1
+            if offset in (100, 520):
+                # Repair checksum to test profile rather than checksum rejection.
+                struct.pack_into('<I', data, 12, 0)
+                struct.pack_into('<I', data, 12,
+                                 (sum(struct.unpack('<512I', data)) + 0x5f0a6c39) & 0xffffffff)
+            self.replace_baseline_metadata(bytes(data))
+            with self.subTest(offset=offset), self.assertRaises(ValueError):
+                self.run_assembly()
+            self.assertFalse(self.output.exists())
 
     def test_existing_output_never_clobbered(self):
         self.output.mkdir()
@@ -229,6 +278,37 @@ class SourceAuthenticationTests(unittest.TestCase):
             inputs.recheck()
         finally:
             inputs.close()
+
+    def test_engine_source_pin_and_held_recheck(self):
+        inputs = spi.Inputs()
+        try:
+            module = spi.authenticated_engine(inputs)
+            self.assertEqual(module.classify_metadata(b'\xff' * 2048)['state'], 'erased')
+            self.assertEqual(spi.ENGINE_PIN, spi.pin((REPO / spi.ENGINE).read_bytes()))
+            inputs.recheck()
+        finally:
+            inputs.close()
+        inputs = spi.Inputs()
+        try:
+            with patch.object(spi, 'ENGINE_PIN', dict(bytes=1, sha256='0' * 64)):
+                with self.assertRaisesRegex(ValueError, 'pin mismatch'):
+                    spi.authenticated_engine(inputs)
+        finally:
+            inputs.close()
+
+    def test_authenticated_engine_late_mutation_refused(self):
+        with tempfile.TemporaryDirectory() as root:
+            path = Path(root) / 'engine.py'
+            path.write_bytes((REPO / spi.ENGINE).read_bytes())
+            inputs = spi.Inputs()
+            try:
+                with patch.object(spi, 'ENGINE', str(path)):
+                    spi.authenticated_engine(inputs)
+                    path.write_bytes(path.read_bytes() + b'\n# changed\n')
+                    with self.assertRaises(ValueError):
+                        inputs.recheck()
+            finally:
+                inputs.close()
 
     def test_wrong_registry_pin_refused(self):
         inputs = spi.Inputs()

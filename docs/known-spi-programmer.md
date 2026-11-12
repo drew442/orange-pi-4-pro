@@ -5,8 +5,8 @@ recovery policy. The A733 ROM tables place SMHC0 before SPI, and the known SD
 recovery images have physically booted on this board. The exact registered proof
 is SHA-256 `ec9fe1e5ac371f2e984b3da6e053efdc44f2fa89aa624837731f2eabf56aba11`.
 The programmer binds that proof and the capture binds the programmer's exact
-26,051-byte source, SHA-256
-`596b0eb872c1ef993b16a3a288d5173823b937491ba5afca207025cf9658b4e5`.
+27,218-byte source, SHA-256
+`635581fd3290a5baf574b0f8e77d87e9a8ea28a67c38380591b05e67b947dbe1`.
 [Recovery policy and physical procedure](spi-sd-boot-20261111.md).
 
 The earlier `RECOVERY_PROOF_PIN=None` preparation required USB-FEL/RAM evidence.
@@ -26,7 +26,7 @@ advisory locking and a census cannot exclude hostile privileged races.
 
 ## Sources and execution
 
-`scripts/program-known-spi.py` uses the unchanged authenticated
+`scripts/program-known-spi.py` uses the authenticated
 [transaction engine](spi-unit-transaction.md), [MTD backend](spi-mtd-adapter.md),
 backup identity helpers and known SD writer's namespace helper. Original/candidate
 pins and target geometry cannot be overridden. Helpers, images, plan and proof
@@ -45,8 +45,8 @@ change, including eventual registration of real recovery evidence.
 
 SSH targets only `root@192.168.1.116` with the recorded Ed25519 fingerprint.
 A sealed, parent-held known-hosts snapshot remains available through OpenSSH's
-inherited-descriptor cleanup. Remote arguments are constructed and quoted. Private RAM staging and read-only
-planning have succeeded. Physical programming and boot results are recorded in
+inherited-descriptor cleanup. Remote arguments are constructed and quoted. Earlier private RAM staging and read-only planning succeeded. The metadata-aware
+revision requires its own software review and physical validation. Physical programming and boot results are recorded in
 the [current SPI procedure](spi-sd-boot-20261111.md).
 
 ## Plan, durable events and failure
@@ -55,8 +55,15 @@ Read-only plan mode authenticates the fixed images and reads current SPI with
 progress. Write mode requires that reviewed canonical plan digest and unchanged
 current flash, plus registered recovery proof and durable capture readiness.
 The existing engine controls complete erase-unit reconstruction and header-last
-installation. Restore is a separately planned operation; no automatic retry or
-rollback follows failure.
+installation and calibrated restoration. Installation preserves validated live
+calibration. Restore defaults to the original blank backup; selecting
+`--restore-id postboot-20261111` or `postwarm-20261111` also requires a held
+`--restore-image` matching that registered backup. Restore options are refused
+for installation. See the [metadata policy](spi-calibration-policy.md).
+Restore is a separately planned operation; no automatic retry or rollback follows
+failure. Malformed parameters stop normal admission, including after an
+interrupted metadata write. A separate reviewed recovery registration is required
+for such a preimage.
 
 Each bounded event binds a session nonce, sequence and canonical event hash.
 The native capture fsyncs the event log and containing directory before its exact

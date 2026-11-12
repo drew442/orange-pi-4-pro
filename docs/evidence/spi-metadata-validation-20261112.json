@@ -1,0 +1,113 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "result": "pass",
+  "scope": "Metadata-aware SPI software validation and non-destructive live planning; no physical restore/reinstall or new KVM acceptance",
+  "full_Ubuntu_tests": 2346,
+  "failures_errors_skips": 0,
+  "shell_suites": 5,
+  "diagnostic_cases": 5,
+  "source_lock": {
+    "bytes": 132282,
+    "sha256": "18a04063deb69f46986fbcc1e57e51cf92b7a831988988063f28146d0af3cb99"
+  },
+  "locked_files": 957,
+  "builder_base": "/var/lib/a733-spi-metadata-validation-20261112-01",
+  "unit": {
+    "RuntimeMaxUSec": "8h",
+    "MainPID": "0",
+    "Result": "success",
+    "ExecMainCode": "1",
+    "ExecMainStatus": "0",
+    "CPUQuotaPerSecUSec": "2s",
+    "MemoryMax": "3221225472",
+    "ActiveState": "active",
+    "SubState": "exited"
+  },
+  "initial_staging_failure": "Initial run stopped with two bootstrap import errors because archived source ownership/group-write permissions were not normalized. Root ownership and no group/other write were established; complete clean suite then passed with identical source byte locks. Initial logs retained.",
+  "resources": {
+    "sampled_min_free_disk_bytes": 40570486784,
+    "sampled_min_available_memory_bytes": 6989910016,
+    "compilation_jobs": 2
+  },
+  "source": {
+    "scripts/spi-unit-transaction.py": {
+      "bytes": 14674,
+      "sha256": "63fa380b92c2d3c379038cda1ea5c8df501950dcea01cb1ebfe786e13a03d336"
+    },
+    "scripts/program-known-spi.py": {
+      "bytes": 27218,
+      "sha256": "635581fd3290a5baf574b0f8e77d87e9a8ea28a67c38380591b05e67b947dbe1"
+    },
+    "scripts/capture-known-spi-events.py": {
+      "bytes": 21370,
+      "sha256": "d9cf31d0041cece1d5f4632c3ff1cfbc6919be2db0b348d13029a741bfedc95b"
+    },
+    "build/assemble-spi-nvme.py": {
+      "bytes": 16691,
+      "sha256": "0782bff53b69c2b06349d653610e263d713a22fb9db5abcacdda7acb667c2f2e"
+    },
+    "tests/test_spi_metadata.py": {
+      "bytes": 15505,
+      "sha256": "87e69cf02646e4e9b1f8809738e7b11f00ef5291f21c7de891bb0fc5c7f3a5e4"
+    },
+    "tests/test_spi_unit_transaction.py": {
+      "bytes": 12654,
+      "sha256": "20104dbc7c7295f1aaadd8429c706cf9eb925130dbb6fd420450a1e747de6d72"
+    },
+    "tests/test_spi_mtd_adapter.py": {
+      "bytes": 20192,
+      "sha256": "bbac0e4aefc09bbe31aa0d6fe3e21a329e4864a80b485d7813eafdb19ab81ce6"
+    },
+    "tests/test_known_spi_programmer.py": {
+      "bytes": 43669,
+      "sha256": "6998c317962a6822fb3f89dba2c1feb77857c9c8be2dca548b4a14a200d84763"
+    },
+    "tests/test_assemble_spi_nvme.py": {
+      "bytes": 16170,
+      "sha256": "ca8311022b1036d65afb8966963e3563797417c853f5c4a3ed63937a01f0d6a3"
+    }
+  },
+  "independent_review": {
+    "path": "tmp/spi-metadata-review-20261112.json",
+    "bytes": 15864,
+    "sha256": "fca48eb328349117565e0c9580da2bd7c04957846799f2708f5110800a9b60c3"
+  },
+  "receipt": {
+    "path": "out/production-readiness-20261112-01/validation-receipts.tar",
+    "bytes": 204800,
+    "sha256": "610d354ac06c997e0a1cad270371db67c2eb99a0d94076946d0220b086bdeb56",
+    "builder_path": "/var/lib/a733-spi-metadata-validation-20261112-01/receipts.tar",
+    "both_copies_fsynced": true
+  },
+  "live_plans": {
+    "live-install-plan.json": {
+      "bytes": 9359,
+      "sha256": "611e456385b0fed8a0c18cbc7a0a498187c79af6d05679de6395e8fc5ca28d25"
+    },
+    "live-blank-restore-plan.json": {
+      "bytes": 9464,
+      "sha256": "8a649395eca05923531869df02208ccd6a459bbd06fca1b375943d4929ae5b17"
+    },
+    "live-calibrated-restore-plan.json": {
+      "bytes": 9435,
+      "sha256": "3dab225f6d4b2eb434ef6b77dc8b8697339c58b9febca428d2c29cc0fdaa0209"
+    }
+  },
+  "live_plan_result": {
+    "boot_id": "5858af7a-977e-4a9b-971e-6d71ae7858d3",
+    "install": "no-op preserving current valid metadata",
+    "calibrated_restore": "exact post-warm no-op",
+    "original_restore": "changes exactly units 0..25; not executed",
+    "independently_rebuilt": true
+  },
+  "RAM_staging": "Initial /run capacity refusal left partial RAM inputs only. Existing tmpfs mount 26 remounted from 64 MiB to 256 MiB preserving contents/options; all nine staged files then verified. No flash write or reboot.",
+  "remaining": "Fresh SD-recovery boot, fresh live plans/review and physical restore/reinstall/KVM demonstration remain mandatory.",
+  "metadata_custody": {
+    "native_archive": "out/production-readiness-20261112-01/qualification-records.tar",
+    "builder_archive": "/var/lib/a733-production-baseline-20261112-01/qualification-records.tar",
+    "bytes": 296960,
+    "sha256": "01ce7444be5dff2170bd0bcec421f829c96cdd747cc5b9bd733bbf04c444733d",
+    "verified_and_fsynced_both": true
+  }
+}

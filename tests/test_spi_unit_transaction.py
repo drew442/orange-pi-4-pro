@@ -83,7 +83,9 @@ class TransactionTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         # Non-FF preservation bytes prove full partial units are reconstructed.
-        cls.original = bytes([0xA5]) * spi.SIZE
+        original = bytearray([0xA5]) * spi.SIZE
+        original[spi.METADATA[0]:spi.METADATA[1]] = b'\xff' * 2048
+        cls.original = bytes(original)
         candidate = bytearray(cls.original)
         for start, end in spi.RANGES:
             candidate[start:end] = bytes([0x3C]) * (end - start)

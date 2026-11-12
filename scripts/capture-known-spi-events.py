@@ -30,8 +30,8 @@ FREE_FLOOR = 256 * 1048576
 TIMEOUT = 45
 FINGERPRINT = 'SHA256:Epfegy9GsJ6ng4/0EH3dZmir7beQj5uYTnIbE4JPfEI'
 HOST = '192.168.1.116'
-PROGRAMMER_PIN = '596b0eb872c1ef993b16a3a288d5173823b937491ba5afca207025cf9658b4e5'
-PROGRAMMER_SIZE = 26051
+PROGRAMMER_PIN = '635581fd3290a5baf574b0f8e77d87e9a8ea28a67c38380591b05e67b947dbe1'
+PROGRAMMER_SIZE = 27218
 
 # The remote command executes this fixed bootstrap, never the supplied pathname.
 # Fixed pin/size arguments are embedded by ssh_argv, never read from CLI/env.
@@ -369,6 +369,18 @@ def ssh_argv(args, known_fd):
               '--helpers', remote_path(args.helpers), '--original', remote_path(args.original),
               '--candidate', remote_path(args.candidate), '--plan', remote_path(args.plan),
               '--plan-sha256', args.plan_sha256, '--recovery-proof', remote_path(args.recovery_proof)]
+    restore_id = getattr(args, 'restore_id', None)
+    restore_image = getattr(args, 'restore_image', None)
+    require(args.direction == 'restore' or (restore_id is None and restore_image is None),
+            'restore options are invalid for install')
+    require(restore_id in (None, 'original', 'postboot-20261111', 'postwarm-20261111'),
+            'unknown restore ID')
+    require(restore_id in (None, 'original') or restore_image is not None,
+            'calibrated restore requires held restore image')
+    if restore_id is not None:
+        values.extend(['--restore-id', restore_id])
+    if restore_image is not None:
+        values.extend(['--restore-image', remote_path(restore_image)])
     require(re.fullmatch('[0-9a-f]{64}', args.plan_sha256), 'invalid reviewed plan digest')
     return ['ssh', '-F', '/dev/null', '-T', '-i', '/home/drew/.ssh/id_ed25519',
             '-o', 'IdentitiesOnly=yes', '-o', 'BatchMode=yes', '-o', 'StrictHostKeyChecking=yes',
@@ -385,6 +397,8 @@ def main(argv=None):
                  'plan', 'plan-sha256', 'recovery-proof', 'expected-boot-id'):
         parser.add_argument('--' + name, required=True)
     parser.add_argument('--direction', choices=('install', 'restore'), default='install')
+    parser.add_argument('--restore-id', choices=('original', 'postboot-20261111', 'postwarm-20261111'))
+    parser.add_argument('--restore-image')
     args = parser.parse_args(argv)
     native_context()
     # Keep a sealed snapshot in this controller. SSH may close inherited FDs;

@@ -61,7 +61,9 @@ class Nor:
 class Integration(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.original = b'\xa5' * P.SIZE
+        original = bytearray(b'\xa5' * P.SIZE)
+        original[260096:262144] = b'\xff' * 2048
+        cls.original = bytes(original)
         candidate = bytearray(cls.original)
         candidate[10:20] = b'\x51' * 10
         candidate[262150:262160] = b'\x40' * 10
@@ -90,13 +92,13 @@ class Integration(unittest.TestCase):
         return self.engine.build_plan(self.original, self.candidate, current,
                                       direction, P.sha(current))
 
-    def run_plan(self, plan=None, emit=None, close=None):
+    def run_plan(self, plan=None, emit=None, close=None, **restore_options):
         with contextlib.redirect_stderr(io.StringIO()):
             return P.transact(self.engine, self.backend, plan or self.plan(),
                               self.original, self.candidate, guard=self.guard,
                               identity=lambda fd: None, emit=emit or self.events.append,
                               open_rw=lambda: self.opened.append(9) or 9,
-                              close=close or self.closed.append)
+                              close=close or self.closed.append, **restore_options)
 
     def test_install_header_last_short_writes_preserve_all_other_bytes(self):
         self.nor.short = True
@@ -204,6 +206,64 @@ class Integration(unittest.TestCase):
             P.reviewed_plan(*args[:5], bytes(self.nor.data), 'install')
         self.assertEqual(self.nor.erases, [])
 
+    def test_main_plan_uses_only_readonly_target_and_never_transacts(self):
+        source = lambda data=b'synthetic source': types.SimpleNamespace(data=data, close=Mock(), check=Mock())
+        backup = Mock()
+        engine = self.engine
+        def held(path, *args, **kwargs):
+            return source({'/run/private/original': self.original,
+                           '/run/private/candidate': self.candidate}.get(path, b'synthetic source'))
+        def module(data, name, pin):
+            return engine if name == 'spi_unit_transaction.py' else Mock()
+        output = io.StringIO()
+        with patch.object(P, 'authenticated_binding', return_value=None), \
+             patch.object(P, 'bootstrap_backup', return_value=(source(), backup)), \
+             patch.object(P, 'hold_programmer', return_value=source()), \
+             patch.object(P, 'HeldFile', side_effect=held), \
+             patch.object(P, 'module_from_bytes', side_effect=module), \
+             patch.object(P, 'board_guard'), patch.object(P, 'quiescence'), \
+             patch.object(P, 'target_identity', return_value='target'), \
+             patch.object(P, 'read_flash', return_value=self.original), \
+             patch.object(P.os, 'open', return_value=88) as opened, \
+             patch.object(P.os, 'close') as closed, \
+             patch.object(P, 'transact', side_effect=AssertionError('plan mutated')), \
+             contextlib.redirect_stdout(output):
+            P.main(['plan', '--expected-boot-id', 'dd8d6f67-d297-4f3b-bc9a-8a41c9742051',
+                    '--original', '/run/private/original', '--candidate', '/run/private/candidate',
+                    '--helpers', '/run/private/helpers'])
+        opened.assert_called_once_with(P.TARGET, P.READ_FLAGS | os.O_NONBLOCK)
+        closed.assert_called_once_with(88)
+        self.assertEqual(json.loads(output.getvalue())['plan_sha256'], self.plan()['plan_sha256'])
+
+    def test_explicit_restore_source_propagates_through_review_and_execute(self):
+        # Pin this synthetic fixture only in this isolated engine namespace.
+        import struct
+        data = bytearray(2048)
+        data[:8] = b'bootpara'
+        data[512:520] = b'NORPARAM'
+        struct.pack_into('<13I', data, 520, 0x6b, 4, 1, 16, 0, 65536,
+                         0, 0, 20000000, 0xaaaaffff, 0, 0x10104, 0x10101)
+        data[572] = 8
+        struct.pack_into('<I', data, 12, (sum(struct.unpack('<512I', data)) + 0x5f0a6c39) & 0xffffffff)
+        restore = self.candidate[:260096] + bytes(data) + self.candidate[262144:]
+        self.engine.RESTORE_SHA256 = dict(self.engine.RESTORE_SHA256,
+                                         **{'postwarm-20261111': P.sha(restore)})
+        options = dict(restore_id='postwarm-20261111', restore_image=restore)
+        current = bytes(self.nor.data)
+        plan = self.engine.build_plan(self.original, self.candidate, current,
+                                      'restore', P.sha(current), **options)
+        reviewed = P.reviewed_plan(self.engine, self.engine.canonical(plan), plan['plan_sha256'],
+                                   self.original, self.candidate, current, 'restore', **options)
+        self.assertEqual(reviewed, plan)
+        with self.assertRaises(ValueError):
+            P.reviewed_plan(self.engine, self.engine.canonical(plan), plan['plan_sha256'],
+                            self.original, self.candidate, current, 'restore')
+        self.assertEqual(self.opened, [])  # Review never opens a writable descriptor.
+        self.run_plan(plan, **options)
+        self.assertEqual(bytes(self.nor.data), restore)
+        self.assertEqual(self.nor.erases[-1], 0)
+
+
 
 class Safety(unittest.TestCase):
     def test_unregistered_gate_refuses_before_any_open(self):
@@ -215,6 +275,16 @@ class Safety(unittest.TestCase):
                         '--helpers', '/run/private/helpers'])
             with self.assertRaisesRegex(ValueError, 'unregistered'):
                 P.recovery_gate(types.SimpleNamespace(data=b'{"recovery":true}'))
+
+    def test_restore_options_refuse_before_any_open(self):
+        base = ['--expected-boot-id', 'dd8d6f67-d297-4f3b-bc9a-8a41c9742051',
+                '--original', '/run/private/original', '--candidate', '/run/private/candidate',
+                '--helpers', '/run/private/helpers']
+        for options in (['--restore-id', 'original'], ['--restore-image', '/run/private/restore'],
+                        ['--direction', 'restore', '--restore-id', 'postwarm-20261111']):
+            with self.subTest(options=options), patch.object(P.os, 'open', side_effect=AssertionError('open')):
+                with self.assertRaises(ValueError):
+                    P.main(base + options)
 
     def test_registered_sd_policy_passes_exact_held_proof(self):
         proof = recovery_proof()
@@ -745,6 +815,18 @@ class Protocol(unittest.TestCase):
         self.assertIn(repr(C.PROGRAMMER_PIN), remote[4])
         self.assertIn(repr(C.PROGRAMMER_SIZE), remote[4])
         self.assertEqual(remote[5], args.programmer)
+        args.restore_id = 'postwarm-20261111'
+        args.restore_image = '/run/private/postwarm.bin'
+        restored = C.shlex.split(C.ssh_argv(args, 42)[-1])
+        self.assertEqual(restored[-4:], ['--restore-id', args.restore_id, '--restore-image', args.restore_image])
+        args.restore_image = '/run/private/x;touch /tmp/bad'
+        with self.assertRaises(ValueError):
+            C.ssh_argv(args, 42)
+        args.restore_image = '/run/private/postwarm.bin'
+        args.direction = 'install'
+        with self.assertRaises(ValueError):
+            C.ssh_argv(args, 42)
+        args.direction = 'restore'
         args.programmer = '/run/private/x;touch /tmp/bad'
         with self.assertRaises(ValueError):
             C.ssh_argv(args, 42)
