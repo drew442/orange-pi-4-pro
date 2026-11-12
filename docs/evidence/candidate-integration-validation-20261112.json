@@ -1,0 +1,175 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "result": "pass for combined uninstalled candidate software",
+  "hardware_acceptance": false,
+  "builder": "drew@build.drewnet.online",
+  "source_commit": "2996365a11cb07deb20eb4325c90841de8ab820e",
+  "source_lock": {
+    "bytes": 177664,
+    "sha256": "699ad7d7cda79877729db8394c6ac0d4067f6646a76913d6dd2fd87c9ee3f2ac",
+    "index_tree": "9b1c9d866b10aea352a4c950c21042ae29a8121b",
+    "files": 1107,
+    "tracked_files": 1103,
+    "ignored_SPI_golden_fixtures": 4
+  },
+  "full_Ubuntu_tests": 3589,
+  "failures_errors_skips": 0,
+  "shell_suites": 5,
+  "diagnostic_cases": 5,
+  "parsed_TOML": 5,
+  "reviewed_source": {
+    "build/launch-deterministic-host-roots.py": {
+      "bytes": 12762,
+      "sha256": "6f45c1773b41def360595ffd84aa28e56ef1997d6056d0b96d83398ee69f83e9"
+    },
+    "tests/test_launch_deterministic_host_roots.py": {
+      "bytes": 17573,
+      "sha256": "bf52f3326fb22ebd8234e19b708d69e1dceeae457ba3bf6ddbce9b7040ef937c"
+    },
+    "configs/builder-host-packages-20261112.lock.tsv": {
+      "bytes": 32550,
+      "sha256": "f779568a3e4e82afc488c1b99ccad0a88f2d96e74efe3b00172927c7539f4ef3"
+    },
+    "build/launch-host-roots.py": {
+      "bytes": 28616,
+      "sha256": "eb55e7b0cd51f3deeede47777adda8255de9d48322eb568c502f9a52a797e4ff"
+    },
+    "configs/builder-replay-packages-20261106.lock.tsv": {
+      "bytes": 32546,
+      "sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425"
+    },
+    "configs/builder-package-archives-20261106.lock.json": {
+      "bytes": 479812,
+      "sha256": "d42bb151845d01dc3cb1bcde95adfb5e9add97a5d34e8ab9f5c4d27bae5bb141"
+    },
+    "build/deterministic-root-image.py": {
+      "bytes": 12059,
+      "sha256": "977f0658d4f8f045231142bf06e0f39cc90c8482225c5d8c39d9f80ac82cf4b4"
+    },
+    "build/host-payload.py": {
+      "bytes": 30153,
+      "sha256": "1638f371ce4c0c023dde7ae11712bace49d50c7a0694fac1ae960dc6e0e910c7"
+    },
+    "scripts/prepare-host-update.py": {
+      "bytes": 13652,
+      "sha256": "8e09e5f77a4d072d620b84e16c9b82e7fda667a11393d3923bfdf6c94c97e682"
+    },
+    "build/root-selection.py": {
+      "bytes": 10542,
+      "sha256": "d1096e4f26df92c3c4976fa2b63e98bf39811ba2c761438a1237c9c43eea7f9a"
+    },
+    "build/nvme-image.py": {
+      "bytes": 26041,
+      "sha256": "efb6504b855e2b7a95a5b3e7d93491e248182a599aa1fe830d075d32272a925f"
+    },
+    "tests/test_host_payload.py": {
+      "bytes": 29567,
+      "sha256": "4139dda8271a333a91f9c3c6ccc03c0c6f616588194913e0f3d4ec7e93870cbc"
+    },
+    "tests/test_prepare_host_update.py": {
+      "bytes": 28608,
+      "sha256": "2adddca2f32504e599104dcf0e66f1b5afdb12ee51e5eedb310cc5a1169ae64c"
+    },
+    "tests/test_root_selection.py": {
+      "bytes": 15264,
+      "sha256": "9b6b8abb74c6bee09da739807433b69c06090f0e4ce97f8a5df40d1860c4e5bc"
+    },
+    "tests/test_nvme_image.py": {
+      "bytes": 27564,
+      "sha256": "2e0155dd7a1fdd5a003b93e6cdcb7751ab8421866e91d24020147938d21846d2"
+    },
+    "tests/test_guest_service_packaging.py": {
+      "bytes": 5805,
+      "sha256": "2d06d03f200a20a1fbef008af34b6336657e02257830c3d79961c975b292f116"
+    },
+    "scripts/update-host.py": {
+      "bytes": 19131,
+      "sha256": "a5bb70ff2756d8ba6e61cd8b4c6f3620fa5c7887cdd45ff5ef2215e5587546c9"
+    },
+    "scripts/select-host-root.py": {
+      "bytes": 21711,
+      "sha256": "b496f5e9545246460d439aadf5ab6fd555afb496f5699d7abd575ccafde7d46c"
+    },
+    "tests/test_update_host.py": {
+      "bytes": 29162,
+      "sha256": "ba4297c0d7495c9ee4b39613308b5bf84ca7a808051d8c327f3ec09fc35a5d3c"
+    },
+    "tests/test_select_host_root.py": {
+      "bytes": 27255,
+      "sha256": "d0ab53b6de4c065ab3437ba9329a0098d8444d4b462974d54ed69542a520d673"
+    },
+    "tests/test_host_update_admission.py": {
+      "bytes": 17891,
+      "sha256": "423d666b7ea2d61cb0991e5c8d99bbbd92e0d9e1f6bfcae4b100f0d7080b70bb"
+    },
+    "tests/verify_host_update_loop.py": {
+      "bytes": 17583,
+      "sha256": "75e27a18a7f964e969a71a400def5c42475177d9e26f5f9afa76de6b03f44b80"
+    }
+  },
+  "focused_evidence": {
+    "outer-builder-inventory-validation-20261112.json": {
+      "bytes": 4595,
+      "sha256": "0c9c0d2490a710571bbb342b2561c087b2aa9eaf2d3e1658dd8fe8460cfd55cb"
+    },
+    "guest-boot-metadata-compatibility-20261112.json": {
+      "bytes": 4092,
+      "sha256": "a8c1ffe37fded36110cab5b30ed00ceb3677075c5b600195473966c0c223d51a"
+    },
+    "maintenance-confirmation-progress-20261112.json": {
+      "bytes": 3142,
+      "sha256": "27ef69c79ccbfe86c41c618f4309a6be8327ed483e7bcb5f28e9372b06464969"
+    }
+  },
+  "independent_reviews": {
+    "guest-boot-metadata-compatibility-review-20261112.json": {
+      "bytes": 9025,
+      "sha256": "05ac644d57a076a92a3bf24602a48c6293e22ec0e111f2310c83c1cf9675b5da"
+    },
+    "maintenance-confirmation-progress-review-20261112.json": {
+      "bytes": 9520,
+      "sha256": "58a0c8215f7b3513df9660545ad81fbb1c8984123f4b6a6a0905a11cdbdd8c04"
+    }
+  },
+  "terminal_unit": {
+    "RuntimeMaxUSec": "8h",
+    "MainPID": "0",
+    "Result": "success",
+    "ExecMainStatus": "0",
+    "CPUQuotaPerSecUSec": "2s",
+    "MemoryMax": "3221225472",
+    "UMask": "0022",
+    "SubState": "exited"
+  },
+  "packaging": {
+    "maintenance_sources": 84,
+    "maintenance_runtime_files": 85,
+    "entrypoints": 22,
+    "legacy_recovery_sources": 39,
+    "management_runtime_files": 4,
+    "guest_boot_units": 2
+  },
+  "resource_sample_minima": {
+    "free_disk_bytes": 29489291264,
+    "MemAvailable_bytes": 6537134080
+  },
+  "custody": {
+    "bytes": 593920,
+    "sha256": "362a7b057ba37d65791666ca827ee29529fe26105ce81c5f5eefe83e3b3e71bb",
+    "native": "out/candidate-integration-validation-20261112-01/receipts.tar",
+    "builder": "/var/lib/a733-candidate-integration-validation-20261112-01/receipts.tar"
+  },
+  "changes": [
+    "Preserved exact legacy four-file management descriptor; two guest boot units have strict optional versioned metadata bound in marker and manifest, with all current preparation/selection/composition checks.",
+    "Single exact-target interactive yes/no confirmation; reviewed strict Boolean optional writer readback defaults false with truthful zero verified bytes. Existing full authentication scans retained and show progress.",
+    "Separate exact outer842package lock preserves historical frozen replay/archive/userspace binding; guards unchanged."
+  ],
+  "limitations": [
+    "All candidate controllers/services remain uninstalled. No production candidate image built by this suite.",
+    "Historical AST/32MiB compatibility fixtures retain substituted dependencies/source guards; full pinned historical Source/Manifest against production artifacts and current reader against actual retainedA remain required.",
+    "Two fresh root builds/repeat and independent filesystem/package/gzip readback remain required before staging.",
+    "Actual SPI restore/reinstall, managed KVM/autostart/checkpoint/coherent restore/disable/rollback/return, targetsystemd ordering, finalcold/warmcounts and independentreproduction remain hardware gates.",
+    "Accepted endurance is reused; no qualifying rerun. Vendor source/license limits remain recorded."
+  ]
+}

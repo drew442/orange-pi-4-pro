@@ -70,7 +70,8 @@ architecture review. The following software components are reviewed and tested;
 | Pre-p5 maintenance and normal activation | [Evidence](evidence/guest-activation-admission-validation-20261112.json). **3120** privileged Ubuntu tests and shell/diagnostic suites pass. Independent helper/wrapper reviews and actual private-loop interruption/retry/idempotency, preservation and cleanup pass. Protected registry must match reviewed target; binding and reopening follow all target cleanup. Bootstrap borrowing remains separate. |
 
 Current packaging has **84 sources, 85 runtime files, 22 entrypoints**, six
-management runtime records in that frozen result and two conditional boot units. The historical exact
+management runtime files in the earlier freeze; current combined packaging
+separately binds four management files and two guest boot units. The historical exact
 39-source recovery boundary remains intact. **All new controllers remain
 uninstalled.** Native/surrogate results ran no A733 guest and do not establish
 deployment acceptance.
@@ -146,13 +147,20 @@ progress now pass independent review and **94 privileged focused checks** with
 no skips/errors/failures. Default staging flushes but reports zero verified bytes;
 selection retains full root authentication. The verified private-loop fixture
 explicitly requests readback. [Operator-flow evidence](evidence/maintenance-confirmation-progress-20261112.json).
-All changes remain uninstalled. Combined validation of committed source
-`2996365` is running on the Ubuntu builder as
-`a733-candidate-integration-validation-20261112-01.service` (frozen tree
-`9b1c9d866b10aea352a4c950c21042ae29a8121b`). Observe that same unit to its
-terminal result before constructing images; an observation timeout is not failure.
-Production artifact checks and hardware acceptance remain required. No candidate
-image is built.
+All changes remain uninstalled. The combined frozen source `2996365` now passes
+**3589 privileged Ubuntu tests**, five shell suites and five diagnostic cases
+without skips/errors/failures. All independent source reviews remain pinned;
+terminal unit and receipt copies are verified off-device.
+[Combined evidence](evidence/candidate-integration-validation-20261112.json).
+Two fresh root-owned clean source checkouts are staged for sequential production
+constructions; independent admission is pending. No new candidate image is built.
+
+The exact retained normalized A gzip, original producer manifest and selector
+are available on codex and the builder for reverse-compatibility checks. A bounded
+range recovery reproduced the historical gzip hash from the authenticated retained
+full image, without expanding the whole256GB carrier or touching physical storage.
+[Recovered input custody](evidence/normalized-a-compatibility-custody-20261112.json).
+Production artifact/actual-reader checks and hardware acceptance remain required.
 
 Two fresh managed power-key guest builds match byte for byte with verified
 off-device copies. [Build evidence](evidence/managed-fixture-build-20261112.json).
@@ -261,18 +269,17 @@ binary redistribution clearance is claimed. [Source inventory](toolchain-sources
 
 ## Resources and next actions
 
-Latest privileged Ubuntu 22.04 suite: **3579 tests**, zero skips/errors/failures,
+Latest privileged Ubuntu 22.04 suite: **3589 tests**, zero skips/errors/failures,
 five shell suites and five diagnostic cases; all five TOMLs parse natively.
-[Builder adapter evidence](evidence/outer-builder-inventory-validation-20261112.json)
-retains terminal units, source locks, independent reviews, the initial harness
-failure and verified receipts on codex and the builder. Sample minima are
-29,730,295,808 bytes free and 6,697,074,688 bytes MemAvailable. This frozen
-software result precedes the current compatibility/operator-flow changes; their
-combined validation remains required. These checks do not establish physical
-recovery or unattended KVM acceptance. Recovery-card boot awaits the operator;
-UART capture remains active with the unchanged clean-powerdown tail. Continue
-candidate construction and reproducibility while physical recovery is pending,
-then deploy the reviewed inactive root and complete the physical gates.
+[Combined candidate evidence](evidence/candidate-integration-validation-20261112.json)
+retains the exact source freeze, terminal unit, independent reviews and verified
+receipts on both hosts. Sample minima are 29,489,291,264 bytes free and
+6,537,134,080 bytes MemAvailable. Source `2996365` includes the compatibility and
+operator-flow changes. These are software checks, not physical acceptance.
+Continue the reviewed sequential root builds and artifact/reader verification.
+Recovery-card boot awaits the operator; UART remains active with unchanged
+clean-powerdown output. Physical SPI recovery, deployment, actual managed KVM,
+final boot counts and independent procedure reproduction remain required.
 
 Codex has more than 22 GB available at this validation. Keep bulk sources, images and backups on the builder. Its LV is 128819658752 bytes
 with 4265607168 bytes VG free. All free builder capacity is approved for use and

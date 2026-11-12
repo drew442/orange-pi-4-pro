@@ -67,10 +67,11 @@ SPI recovery can proceed alongside software work when the operator is available.
    the released build, deployment and recovery procedure, resolve discrepancies,
    reconcile acceptance evidence, and commit/push the final documentation.
 
-The complete builder-adapter freeze now passes 3579 privileged Ubuntu tests.
-The additional four-management/two-guest-unit metadata split and operator-flow
-changes pass focused tests and independent review; they require a new combined
-freeze before construction. Old/new reader compatibility must also be exercised
+The combined source `2996365`, including the four-management/two-guest-unit
+metadata split and operator-flow changes, now passes 3589 privileged Ubuntu tests,
+shell/diagnostic suites and independent review. Two fresh source checkouts are
+staged; construction follows independent admission. Old/new reader compatibility
+must also be exercised
 against the actual production artifacts using the full pinned historical checkout,
 without the fixture's substituted dependencies. Retain the working root and
 verified newest guest cohort through rollback and return. See

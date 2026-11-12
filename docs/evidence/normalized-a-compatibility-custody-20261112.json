@@ -1,0 +1,62 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "result": "pass for restored exact legacy encoded component custody",
+  "hardware_acceptance": false,
+  "operation": "Recover only normalized A range from authenticated retained full-image gzip; reproduce exact historical root gzip",
+  "source": {
+    "path": "/home/drew/orange-pi-4-pro/out/normalized-nvme-candidate-20261109/nvme.img.gz",
+    "bytes": 545581074,
+    "sha256": "3bc02f46d272dcac591d435fff2b1bc98d4fb048569fb2120746145929a8ad64",
+    "metadata_unchanged": true
+  },
+  "source_manifest": {
+    "bytes": 118399,
+    "sha256": "3cbe28d6154d1bdeb8d364bd0f8bf82b61fd40af7be27fbd49695771c4fad08f"
+  },
+  "raw_range": {
+    "offset": 537919488,
+    "bytes": 4294967296,
+    "sha256": "a9715b819348a8220ec8b3b1f41ef27db677baaa96014f5d1dfb7a22597decdd"
+  },
+  "encoded": {
+    "bytes": 143482835,
+    "sha256": "87b097024dd772d6752dfb6a605618cfb8a1ce208722d056fb1e91f8c0a6f2fa"
+  },
+  "original_producer_manifest": {
+    "bytes": 33481,
+    "sha256": "c1bcc7d23d22bd487534ba17ea447055881a044350829608360aa92ca24283f2"
+  },
+  "selector": {
+    "bytes": 179,
+    "sha256": "3c76b96c328b4508ff407c8594352e04389664e97ced6f0a09284cade5bd027b"
+  },
+  "byte_identical_to_historical_root_gzip": true,
+  "native_directory": "out/normalized-a-compatibility-20261112",
+  "builder_directory": "/var/lib/a733-managed-root-candidate-20261112-01/retained-normalized-A",
+  "builder_encoded_readback_verified": true,
+  "provenance": {
+    "receipt.json": {
+      "bytes": 1498,
+      "sha256": "086d2cfcfed516d71378981754306760c19fff6bd6122dd05a4901d6d907fee7"
+    },
+    "range-recipe.py": {
+      "bytes": 5759,
+      "sha256": "0615ffe5b04809993400770a5c70a52a416b35f87fe8932d387c177549c08af5"
+    },
+    "range-execution.log": {
+      "bytes": 1945,
+      "sha256": "3f83a7056f88bfc2c1d4fb54c6df852f83a1fb8fbc9efb6c0aa1f084dd93f308"
+    }
+  },
+  "implementation": {
+    "python": "3.12.3",
+    "zlib": "1.3"
+  },
+  "limits": [
+    "Only the authenticated4GiB rootA range was decoded; no new full256GB expansion/hash is claimed.",
+    "This restores retained regular-file test/recovery input, not a newly built candidate. No SD/NVMe/SPI/board mutation or boot/KVM test occurred.",
+    "Original raw root/producer paths remain retired. New private encoded carrier, exact original33481byte producer manifest and selector have verified copies on both hosts.",
+    "Full current reader against recovered legacyA, full historical reader against new production artifacts, and actual board rollback/return remain pending."
+  ]
+}
