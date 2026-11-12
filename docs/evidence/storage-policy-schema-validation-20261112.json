@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "result": "pass",
+  "scope": "Pure bounded storage-policy data schema only; not packaged or installed; no reader/publication/physical/device or launch authority",
+  "source": {
+    "configs/guest_storage_policy.py": {
+      "bytes": 4302,
+      "sha256": "2e807007b13cd2051fede3319b97d86e8fcfb6d502758e7e6c3083c42187a4d1"
+    },
+    "tests/test_guest_storage_policy.py": {
+      "bytes": 7103,
+      "sha256": "a761865a7a6e87a8e8c2f9d26a8d9808b0ef3aef90e98b004254feb35773d6b4"
+    }
+  },
+  "native_tests": 8,
+  "independent_adversarial_probes": 34,
+  "review_sha256": "74af4132b3c0637c7dc1e326f53924da4246ee2d18456f4064c134d0cf57a139",
+  "custody": {
+    "bytes": 20480,
+    "sha256": "59590d6ee03a6c005b48a38f701701e789c0a283785823f1b4c39fef14dab7ff",
+    "native": "out/storage-policy-schema-validation-20261112-01/receipts.tar",
+    "builder": "/var/lib/a733-storage-policy-schema-validation-20261112-01/receipts.tar"
+  },
+  "limits": [
+    "Separate from frozen portable-recovery full suite; new files excluded from that run.",
+    "Protected STATE placement/live identity validation and installer/boot hooks remain unimplemented."
+  ]
+}

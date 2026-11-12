@@ -36,6 +36,24 @@ cannot prove freshness after all trust anchors have been replaced.
 
 ## Coordination and boot preparation
 
+The installer must explicitly record the reviewed storage selection before the
+first registry can be created. Reserve
+`/run/a733-state/config/guest-storage.json`, root:root 0400 below the existing
+root:root 0700 config directory on selected STATE. The
+`a733-guest-storage-policy-v1` data binds the fixed NVMe target, expected model
+and byte size, and STATE UUID/guest UUID/NVMe serial. It contains no enabled
+guests or launch permission. Do not populate it from unreviewed device discovery
+or treat a missing registry as permission to choose whichever disk is present.
+
+The pure [policy schema](../configs/guest_storage_policy.py) is implemented;
+its protected reader, installer publication and bootstrap hook remain pending.
+The reader must retain nofollow descriptors, authenticate ownership/modes,
+selected-STATE placement and unchanged bytes, and revalidate live identities.
+Canonical parsing alone cannot establish provenance or authorize mounting.
+Missing or invalid policy leaves automation unavailable and management running.
+Publish policy through the reviewed installation/setup transaction, separately
+from the operator's later opt-in guest enrollment.
+
 Use the two-stage RAM admission protocol specified below, ordered before
 existing account, activation, enrollment, checkpoint and disk locks. Runtime
 launch/checkpoint admission participates in it; host update/selector/recovery

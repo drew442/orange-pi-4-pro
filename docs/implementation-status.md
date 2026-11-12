@@ -87,6 +87,13 @@ boot services, inactive-root deployment and physical acceptance remain pending.
 The outer service must finish/check supervisor/run/controller/lease cleanup;
 bootstrap must publish manual namespace pins before opening admission.
 
+A separate [explicit storage-policy schema](evidence/storage-policy-schema-validation-20261112.json)
+passes eight native tests and 34 independent parser probes. It records the
+caller-selected NVMe/model/size and STATE/p5/serial tuple as data only. Protected
+STATE reader/publication, installer and bootstrap hooks remain unimplemented;
+this schema is not packaged or installed and was excluded from the frozen 3210-test
+suite. It supplies no device or launch authority.
+
 Two fresh managed power-key guest builds match byte for byte with verified
 off-device copies. [Build evidence](evidence/managed-fixture-build-20261112.json).
 Its shutdown path remains hardware-unproven.
