@@ -1,7 +1,11 @@
 # Implementation status
 
 Updated 2026-11-12. Last boot/KVM validation was 2026-11-11.
-**The current system operates from SPI and NVMe with SD
+Current physical state: cleanly powered off for the operator to insert the known
+SD recovery card and restore power. UART confirms complete unmount/powerdown.
+[Preparation evidence](evidence/spi-recovery-preparation-20261112.json).
+
+**The validated system operates from SPI and NVMe with SD
 physically removed.** SPI cold boot, warm restart, original SSH identity,
 automatic NTP and actual nonroot KVM CPU/disk/HTTP tests pass. The guest persisted
 counter 7→8→9 across checkpointing and host restart. Independent review passes.
@@ -46,7 +50,7 @@ unattended guest deployment and final qualification remain pending.
 
 ## Live board and constraints
 
-- **Current:** normalized A at `root@192.168.1.116`, original pinned identity,
+- **Last running state (now powered off):** normalized A at `root@192.168.1.116`, original pinned identity,
   SPI boot `5858af7a-977e-4a9b-971e-6d71ae7858d3`. SD is absent. Final release,
   NVMe A/STATE, SSH/NTP, eight-CPU EL2/VHE and KVM readiness guards pass.
   The SPI-host guest tests ran QEMU PIDs 2066/2044 as locked UID/GID 60001 with

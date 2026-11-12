@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "scope": "Reviewed recovery preparation and initial clean poweroff only; no SPI write or recovery boot",
+  "last_boot_id": "5858af7a-977e-4a9b-971e-6d71ae7858d3",
+  "poweroff_requested_once": true,
+  "systemctl_returncode": 0,
+  "UART_all_filesystems_unmounted": true,
+  "UART_kernel_power_down": true,
+  "board_state": "Powered off awaiting operator USB-C removal, known SD insertion and power restoration",
+  "known_SD_CID": "035344535530324780716f216e00a8f5",
+  "guide": "docs/spi-recovery-qualification.md",
+  "independent_guide_review": "pass",
+  "records": {
+    "SD-recovery-poweroff-UART-cursor.json": {
+      "bytes": 132,
+      "sha256": "fb8616ea30b599c440f6e38356317af192850c6dd6e8bfd592c83c4749fb251c"
+    },
+    "SD-recovery-poweroff-source.py": {
+      "bytes": 986,
+      "sha256": "cfdbe87bc9fb3afae67cb893e7490e8bd12f28365660ea07c3aa78101f9823f1"
+    },
+    "SD-recovery-poweroff-request.json": {
+      "bytes": 370,
+      "sha256": "80479e2896b696a1be0d17108f82e1262ab0c6dbae3b7bfa0f85e03ed81690fe"
+    },
+    "SD-recovery-poweroff-UART.log": {
+      "bytes": 10997,
+      "sha256": "6ba89e3c8754f229877e7d214a10ca35ae735e414d4bb0e612d492ee68560efc"
+    },
+    "spi-recovery-guide-review.json": {
+      "bytes": 6210,
+      "sha256": "e9f57562b6542a8f3cff93df3350212e615e7731e9e43ed5546c5f7ad4a2db90"
+    }
+  },
+  "custody": {
+    "native": "out/production-readiness-20261112-01/recovery-preparation-records.tar",
+    "builder": "/var/lib/a733-production-baseline-20261112-01/recovery-preparation-records.tar",
+    "bytes": 30720,
+    "sha256": "d1f8f011eb9d7a446cd39063530f975e57edcae04f425e23ff16ffea54c64723",
+    "both_copies_verified_fsynced": true
+  },
+  "remaining": "Verify actual SD boot/card identity and prepare fresh reviewed plans before SPI mutation."
+}
