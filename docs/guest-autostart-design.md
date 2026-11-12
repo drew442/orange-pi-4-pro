@@ -81,6 +81,9 @@ Production stop requests issue only `system_powerdown`. Command acceptance does
 not establish clean shutdown. Require a correlated QMP `SHUTDOWN` event declaring
 guest-owned shutdown and the supported reason, plus normal raw QEMU exit zero,
 no remaining VM/disk consumers and subsequent flush/checkpoint inspection.
+This QMP predicate does not prove filesystem/application cleanliness by itself.
+The shutdown profile requires a supported guest OS shutdown path; the disposable
+fixture must retain its explicit sync and poweroff evidence.
 A missing event, SIGTERM, QMP `quit`, host crash, lost supervisor or ambiguous
 process/run identity quarantines the disk. Do not infer clean shutdown from exit
 zero, current hash or console text alone. Guests must support the selected
@@ -194,7 +197,12 @@ and account cores with a retained typed admission-owner capability; no CLI/env
 bypass or nested lease acquisition. Publish the open gate only after all required
 preparation is durable/verified. Bootstrap cannot take ownership of or reopen a
 failed-maintenance/shutdown closure with another nonce. Failure leaves it closed
-and management available.
+and management available. `rename(open)` is the admission commit boundary,
+after persistent readiness has already completed. A kill after that rename can
+leave admission open without an acknowledgement. No caller may mutate prepared
+state after calling open. Ordinary publication errors attempt to close and poison
+the owner; report uncertainty if rollback cannot be proven, rather than claiming
+the gate is closed or durable.
 A repeated preparation in the same initialized boot with active leases performs
 only a verified no-op; it cannot remount storage, recreate live identities or
 admit a duplicate run. New enrollment/start uses normal controller transactions.
@@ -212,7 +220,24 @@ Managed supervisors retain it through stop/checkpoint publication. For a managed
 launch, persist the p5 admitted state while holding per-guest EX before spawning.
 Manual launch also retains its lease through QEMU exec; the launcher explicitly
 retains only its own validated lease FD in addition to authenticated input FDs.
-No QMP FD is inherited with the chosen pathname transport. Boot preparation
+Per-guest locks are also root:KVM-group 0640 under a protected 0710
+`/run/a733-admission/guests/` directory. Root account/enrollment preparation
+creates them once and never removes/replaces them during that boot. Every manual
+launcher takes its guest lock EX nonblocking before checking managed-name markers
+and holds it through QEMU exit. Root enrollment/enable/restore takes the same
+lock, so publication of a head/marker cannot race a previously unmanaged launch.
+Unknown/unprepared lock names fail closed. Unrelated guests remain independent.
+
+The root supervisor passes its validated shared lease and per-guest lock FDs to
+its direct child. The managed permit is root:KVM-group 0440 in the protected
+admission tree and binds run/boot/manifest, child PID/start ticks, parent PID/start
+ticks and both lock inode identities. Use a pre-exec barrier so the parent can
+publish the exact child permit before releasing it to setpriv/launcher exec.
+The nonroot launcher validates that permit against itself, inherited FDs and
+current storage, retaining only those two lock FDs and its input descriptors into
+QEMU. PID/start-tick checks prevent another process reusing a permit. Root holds
+its copies through checkpoint completion. No QMP FD is inherited with the chosen
+pathname transport. Boot preparation
 publishes root:KVM-group 0440 managed-name markers in the admission directory
 from p5 authority before opening the gate. Manual launch refuses those names;
 the root supervisor supplies a narrowly bound per-run managed permit. The permit
@@ -246,7 +271,11 @@ managed wrapper additionally proves its direct child reaped and no VM/disk
 consumers. Spawn one child through pinned `setpriv`, dropping to the locked UID/GID,
 only KVM supplementary group, all bounding/inheritable/ambient capabilities off
 and no-new-privileges, then exec the existing launcher and QEMU without changing
-PID. Root retains raw wait ownership and protected metadata. Validate the final
+PID. Root retains raw wait ownership and protected metadata. The supervisor's
+own capability bound must include only demonstrated needs for dropping child
+credentials/capabilities, protected file/socket access, ownership, child signals
+and `/proc` inspection; the child still has zero capabilities. Do not use mount
+sandbox directives that move the child out of the required native mount namespace. Validate the final
 credentials and executable before `cont`; failure quarantines and kills the child.
 
 QMP greeting/command acknowledgement limits are 10 seconds each; messages 64 KiB,
@@ -258,7 +287,12 @@ quarantine when possible, sends SIGTERM to the child, waits five seconds, then
 SIGKILL and waits five seconds. Forced exit never authorizes checkpointing.
 Use `KillMode=mixed`, `KillSignal=SIGTERM`, `TimeoutStopSec=420`, `SendSIGKILL=yes`:
 initial systemd stop reaches the supervisor; the final timeout contains the whole
-cgroup. A supervisor crash leaves admitted/running authority that quarantines on
+cgroup. At admission reserve host memory: enabled aggregate MemoryMax must leave at least
+2 GiB of physical RAM for the host, and a new run needs MemAvailable at least its
+MemoryMax plus 1 GiB. Failure declines that guest while preserving management.
+Use identity-planner batches of at most 16 under the same bootstrap/maintenance
+transaction when preparing a larger registry; each batch preserves other accounts.
+A supervisor crash leaves admitted/running authority that quarantines on
 recovery. An unkillable consumer prevents a clean unmount/pass; forced power loss
 is explicitly outside clean shutdown acceptance.
 

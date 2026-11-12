@@ -1,0 +1,107 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "result": "pass",
+  "scope": "Uninstalled guest lifecycle foundation: pure QMP/state and protected RAM admission API; no controller, supervision, checkpoint authorization or hardware acceptance",
+  "full_Ubuntu_tests": 2402,
+  "failures_errors_skips": 0,
+  "shell_suites": 5,
+  "diagnostic_cases": 5,
+  "source_lock": {
+    "bytes": 133748,
+    "sha256": "12c5550767cf1aab55daeb326a351495ae3f2289773362e3cec485680593856e"
+  },
+  "locked_source_files": 968,
+  "builder_base": "/var/lib/a733-guest-foundation-validation-20261112-01",
+  "unit": {
+    "RuntimeMaxUSec": "8h",
+    "MainPID": "0",
+    "Result": "success",
+    "ExecMainCode": "1",
+    "ExecMainStatus": "0",
+    "CPUQuotaPerSecUSec": "2s",
+    "MemoryMax": "3221225472",
+    "ActiveState": "active",
+    "SubState": "exited"
+  },
+  "resources": {
+    "sampled_min_free_disk_bytes": 40484585472,
+    "sampled_min_available_memory_bytes": 7099760640,
+    "compilation_jobs": 2
+  },
+  "source": {
+    "configs/guest_qmp.py": {
+      "bytes": 13487,
+      "sha256": "84cc74d5509257d3c387180ddbe0375d61e3777ef14c2ee2ceb21acf498c99e5"
+    },
+    "scripts/guest-admission.py": {
+      "bytes": 17168,
+      "sha256": "181e682b4bb8d2a4bf9c36de37997bd0080c523588a8f6d821f16dd36912edff"
+    },
+    "configs/guest_lifecycle.py": {
+      "bytes": 10403,
+      "sha256": "c4df98cd955648ab67e2623f9bc98ecacf526a7c755596081337b7e172778473"
+    },
+    "tests/test_guest_qmp.py": {
+      "bytes": 11643,
+      "sha256": "725c52cc40cdff81a8fcc65bc539de34699932a15628a3aadb6356ba7d29b633"
+    },
+    "tests/test_guest_admission.py": {
+      "bytes": 16040,
+      "sha256": "0045f286c9beb9dfb5464eecb428c70daa4d9d856137a2037a994ae5dd60883c"
+    },
+    "tests/test_guest_lifecycle.py": {
+      "bytes": 14615,
+      "sha256": "2f6412ddad928ae5d868d361a71d67510540ecb482917a72f6a3bf5e417615c4"
+    }
+  },
+  "independent_reviews": {
+    "out/production-readiness-20261112-01/guest-qmp-review.json": {
+      "bytes": 6423,
+      "sha256": "7a4173958c2204728a1447868963a3512b7b80fd04412a65abe5f7bae1e89476"
+    },
+    "out/production-readiness-20261112-01/guest-admission-review.json": {
+      "bytes": 7428,
+      "sha256": "65e4122a3efa3b9df56d04e430a081fa20b5d2a1959bd9ef0eceaccb4853e787"
+    },
+    "out/production-readiness-20261112-01/guest-state-review.json": {
+      "bytes": 5003,
+      "sha256": "0931f81b0426c8eae11120abebc40393b1148188caa3b58599a6ee7a9723919c"
+    }
+  },
+  "resolved_findings": [
+    "QMP direct-input aggregate JSON allocation now bounded before serialization",
+    "Shutdown supersedes bootstrap closure; old owner cannot reopen",
+    "FIFO admission files open nonblocking and fail metadata checks",
+    "Noninitial ready heads require retained run/completion; intent requires a run"
+  ],
+  "native_permission_probe": {
+    "scope": "Ubuntu isolated mount namespace, actual tmpfs/ownership/modes and unprivileged flock only",
+    "source": {
+      "bytes": 3222,
+      "sha256": "ce9b4209608171042724b07ff47de1b98e9561236e286bd97f2fa082ebd78cfe"
+    },
+    "stdout": {
+      "bytes": 431,
+      "sha256": "fdec6f5e2fb21883074c07b9704ad4155e4546cf20e3a4f00686282a8f15f9be"
+    },
+    "result": "pass",
+    "uid": 65534,
+    "primary_gid": 65533,
+    "supplementary_gid": 65534,
+    "zero_capabilities": true,
+    "no_new_privileges": true,
+    "shared_lease_blocks_exclusive": true,
+    "initial_environment_refusal": "First fixture tmpfs used its default world-writable root and correctly refused; fixture corrected to mode=755. Source unchanged; both logs retained."
+  },
+  "receipts": {
+    "native": "out/production-readiness-20261112-01/guest-foundation-records.tar",
+    "builder": "/var/lib/a733-guest-foundation-validation-20261112-01/receipts.tar",
+    "bytes": 215040,
+    "sha256": "79950923a512259965457d668566e66dac2425fc42c2521c26868e4901ea6a90",
+    "both_copies_verified_fsynced": true
+  },
+  "architecture_followup": "Coordinator clarified admission-open linearization, shared per-guest locks/managed child permits and resource budgets. Runtime implementation review remains required.",
+  "hardware_acceptance": false,
+  "remaining": "Protected lifecycle store/controller, all legacy integration, managed supervisor, crash reconciliation, packaging/reproducible inactive-root deployment, actual unattended KVM/disable/rollback/shutdown and final SPI boot qualification."
+}

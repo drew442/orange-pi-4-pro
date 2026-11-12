@@ -46,7 +46,15 @@ validation staging permissions. Read-only live install/calibrated-restore plans
 are no-ops; original blank restoration affects exactly units 0–25.
 [Software evidence](evidence/spi-metadata-validation-20261112.json) and
 [metadata policy](spi-calibration-policy.md). Physical SD recovery/restore/reinstall,
-unattended guest deployment and final qualification remain pending.
+unattended guest deployment and final qualification remain pending. The
+[guest lifecycle design](guest-autostart-design.md) passes independent architecture
+review; pure registry validation is committed. QMP, RAM admission and head-state APIs
+pass independent review and **2402** privileged Ubuntu tests with no skips/errors/
+failures, five shell suites and five diagnostic cases. A native builder probe
+confirms actual unprivileged permissions/flock with zero capabilities.
+[Foundation evidence](evidence/guest-foundation-validation-20261112.json). These
+APIs remain uninstalled; store/controller, legacy integration, supervision,
+checkpoint reconciliation, packaging and physical acceptance remain pending.
 
 ## Live board and constraints
 
@@ -151,9 +159,9 @@ binary redistribution clearance is claimed. [Source inventory](toolchain-sources
 
 ## Resources and next actions
 
-Latest privileged Ubuntu 22.04 suite: **2346 tests**, zero skips/errors/failures,
+Latest privileged Ubuntu 22.04 suite: **2402 tests**, zero skips/errors/failures,
 five shell suites and five diagnostic cases; all five TOMLs parse.
-[Metadata-aware SPI suite evidence](evidence/spi-metadata-validation-20261112.json)
+[Guest foundation suite evidence](evidence/guest-foundation-validation-20261112.json)
 records the latest run. The final-A warm collector authenticates release/root/policy and stops on
 actual remote release refusal; [software evidence](evidence/final-warm-binding-validation-20261110.json)
 retains independent review and the initial corrected validation-environment failure. Host checks do not prove
