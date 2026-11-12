@@ -22,31 +22,36 @@ The next milestone is a reviewed candidate that can be installed in the inactive
 root while preserving the working host. Execute these steps in order; physical
 SPI recovery can proceed alongside software work when the operator is available.
 
-1. **Finish explicit guest control and policy packaging.** Package the already
-   reviewed initial storage-policy publisher. Finish root-only enrollment,
-   enable/disable, status, start and stop commands, with authenticated RAM unit
-   publication and the existing memory/task budget checks. Explicit restart must
-   use a one-use, current-boot request bound to the guest's current manifest,
-   ready lifecycle head and unit bytes; automatic starts remain limited to one
-   attempt per boot. Consume requests under the actual admission and guest locks
-   before run publication. Uncertain publication or start acknowledgement must
-   not trigger an automatic retry. Review this interface before integration.
-   The current request/helper changes are incomplete working-tree drafts, not
-   part of the reviewed or packaged runtime.
-2. **Design and implement coherent managed restoration.** Agree the destination
-   authority, durable transaction ordering and interruption/retry rules before
-   writing the publisher. Restore disk, manifest, history and lifecycle state as
-   one authenticated cohort; preserve unrelated guests and their enable flags.
-   Historical archive validation cannot authorize destination writes. Explicitly
-   resolve registry-generation handling and recovery of partial publication;
-   reject unsupported storage-identity changes rather than guessing a mapping.
-3. **Integrate, review and build.** Independently review changed boot, storage,
-   installation and rollback paths. Run focused failure/interruption checks and
-   the required repository checks on the Ubuntu 22.04 builder. Freeze source and
-   dependency pins, then produce reproducible inactive-root artifacts with sizes,
-   hashes and verified off-device copies. Start compilation with two jobs and
-   monitor disk and memory. Keep the compatible firmware/kernel/DTB and working
-   root; provide progress and optional installation readback.
+1. **Close the current software validation checkpoint.** Initial policy publication
+   and explicit guest controls are committed and reviewed; their frozen 3430-test
+   Ubuntu run passes. Coherent restore publication, explicit resume, early-boot
+   census, shutdown-only storage activation and their packaging are now staged
+   candidate changes. Record the terminal result of the existing integrated
+   Ubuntu validation and its exact source pins. Retain preliminary failures and
+   fixes, resolve any outstanding failures, reconcile independent reviews, and
+   commit/push the validated candidate. Neither staged source nor a running test
+   unit counts as a completed release checkpoint. Do not restart a validation
+   merely because an observation request times out.
+2. **Freeze a buildable candidate and its recovery contract.** Include the initial
+   policy publisher, explicit controls, coherent restore command and both boot
+   services. Record supported restore identities and explicit limitations;
+   destination authority must bind the registered guest, storage, UID and profiles.
+   Preserve unrelated guests and enable flags. Verify interruption/resume ordering,
+   historical completion reporting and the early-boot refusal of incomplete
+   transactions. The [restore contract](managed-restore-design.md) defines this interface.
+   Publish its operator guide with the validated command; hardware restoration
+   remains unproven.
+3. **Build twice and review the deployable artifacts.** Use two fresh source/work
+   trees of the committed candidate on the Ubuntu 22.04 builder with pinned
+   userspace, tools and inputs. Record exact package versions and distinguish
+   retained-input construction from clean-builder reproduction. Compare root
+   images and manifests, explain differences, and retain sizes, hashes and
+   verified off-device copies. Start compilation with two jobs; monitor disk and
+   memory without lowering resource guards. Independently review packaging,
+   installation and rollback changes before deployment. Preserve the working
+   root and external BOOT/kernel/DTB/EL2 firmware; a diagnostic build input is not
+   authority to replace the currently qualified BOOT components. Installation
+   shows progress; bulk NVMe readback remains optional troubleshooting work.
 4. **Demonstrate SPI recovery.** After the retained recovery SD is booted, collect
    fresh identities and independently review concrete live-flash plans. Restore
    the original SPI backup, prove SD recovery, reinstall SPI and prove SD-removed
@@ -76,7 +81,7 @@ cycle attestations. Software preparation continues while those steps are pending
 | 1. Recoverable baseline | Recorded; revalidate after each hardware transition | Verified original/calibrated SPI and stopped guest backups retained off-device |
 | 2. Metadata-aware SPI maintenance | Software checks and independent review pass | Reviewed fresh live plans and preserved calibration policy |
 | 3. Physical restore/reinstall | Pending recovery-card boot | Original SPI restore, SD recovery, reinstall, SD-removed boot and actual KVM pass |
-| 4. Unattended guests | Reviewed checkpoint/recovery and bootstrap cores; services/deployment pending | Reproducible packaged services, graceful shutdown/checkpoint/reconciliation, rollback and real KVM acceptance |
+| 4. Unattended guests | Controls/services reviewed as source; coherent restore integration checkpoint pending; all uninstalled | Reproducible packaged services, graceful shutdown/checkpoint/reconciliation, rollback and real KVM acceptance |
 | 5. Final SPI boot series | One cold and one warm operational boot evidenced | Ten accepted cold and ten warm boots with applicable identity and final automation checks |
 | 6. Independent reproduction and signoff | Earlier protected-SD reproduction retained | Updated SPI recovery and guest procedures reproduced, evidence reconciled and changes pushed |
 
@@ -324,6 +329,30 @@ operation and the completed SPI boot counts. Record historical reliability and
 vendor source/license limitations alongside that signoff. Planning and passing
 host tests alone leave these hardware gates pending.
 
+## Decision gates and release boundary
+
+Proceed from each milestone only after its evidence is durable and independently
+reviewed where boot, storage, installation or rollback changes. A hardware failure
+or uncertain mutation stops dependent operations: preserve receipts, inspect the
+actual state and prepare a fresh plan before another write. Continue independent
+software/documentation work while physical access is pending.
+
+The final acceptance matrix must explicitly reconcile every
+[original release criterion](hypervisor-plan.md#release-acceptance-and-documentation):
+actual 2 GB-card installation/recovery, final SPI boot counts and SD absence,
+real KVM and accepted endurance, interrupted update/rollback, missing-NVMe
+recovery, coherent backup restoration and host access restrictions. For each
+changed path, record a new physical result or justify the exact applicability of
+retained evidence. Preserve the limited scope of earlier fault injection; do not
+turn a simulated missing driver into a claimed physical NVMe disconnection.
+
+Completion means the released procedure has been independently followed, all
+applicable physical gates have passed, artifacts and backups are retained,
+limitations are documented and coherent validated changes are pushed to main.
+Unresolved exact-source/license issues must remain visible; local hardware
+qualification cannot be presented as public redistribution clearance. No new
+endurance run is required, and no planned test may exceed eight hours.
+
 ## Execution ownership and checkpoints
 
 ### Remaining implementation sequence (2026-11-12)
@@ -338,9 +367,9 @@ where it changes boot/storage/rollback, and a coherent validated commit.
 | Order | Work package | Deliverable and acceptance gate |
 | --- | --- | --- |
 | A | Retain installed maintenance integration | Update/selector admission, actual loop checks and explicit closed-maintenance recovery are evidenced in status. Preserve these guarantees through the remaining integration; rerun affected checks when behavior changes. Guests stop before exclusive maintenance and target mutation ends before reopening. |
-| B | Complete managed backup and restore | Sender, historical decoder, receiver and local archive reader are validated foundations. Implement destination-authorized coherent restore of matching disk, manifest, history and lifecycle authority. Test stale metadata, partial publication and retries. Prevent old host STATE restoration from silently replacing newer guest authority. Archive validation alone cannot authorize restoration. |
-| C | Finish portable RAM recovery integration | Normal activation admission and its actual loop checks are evidenced. Finish reviewed offline exclusion for BOOT writes, paired restoration and RAM selection; validate the protected p5 metadata probe and public recovery path with disposable kernel loops. Retain exclusion through cleanup, refuse raw STATE restoration over managed metadata, and preserve the portable verified-helper dependency contract. |
-| D | Finish bootstrap and guest services | Candidate preparation, dispatch, shutdown exclusion/teardown and service recipes now pass reviewed software checks. Package initial policy publication and provide explicit guest controls/unit refresh, then prove actual unit/mount dependencies and shutdown order. Retain SSH/NTP on guest failure and validate actual unattended KVM with bounded resources. |
+| B | Close managed backup/restore integration | Reviewed source and staged publication/explicit-resume/bootstrap-census changes need their terminal integrated validation, frozen evidence and commit. Then demonstrate coherent restoration on the disposable real KVM guest. Preserve unrelated guests; reject unsupported identity changes and stale authority. |
+| C | Preserve portable RAM recovery integration | Reviewed offline exclusion, protected p5 probing and disposable kernel-loop evidence are recorded in status. Retain exclusion through cleanup, refuse raw STATE restoration over managed metadata and rerun affected checks only when changes justify it. Confirm the released physical recovery route. |
+| D | Deploy bootstrap and guest services | Initial policy publication and explicit controls are already packaged in source. Integrate the final restore census, then prove actual unit/mount dependencies, bounded nonroot KVM and shutdown order on the target. Retain SSH/NTP when guest preparation or execution fails. |
 | E | Package and build the candidate | Include every required controller/service in pinned reproducible inactive-root recipes, rebuild on the Ubuntu builder and verify artifact sizes/hashes. Retain the working root and recovery card. Pass the repository checks and an independent review before deployment. |
 | F | Validate the installed candidate | Deploy to the inactive root and use the separate disposable managed guest. Prove actual nonroot KVM autostart, CPU/disk/network, guest-owned clean shutdown, checkpoint/restart, coherent backup/restore, disable and host rollback. Preserve the manually managed firstkvm cohort. Software fixtures cannot satisfy this gate. |
 
@@ -349,32 +378,25 @@ NVMe/RAM state placement, bounded runtime storage, limited nonroot QEMU authorit
 locked accounts, key-only SSH, expected listeners and recorded SD absence. Use
 the existing release checks where applicable and retain the actual results.
 
-A and B may proceed concurrently with disjoint file ownership; C and D depend
-on the reviewed admission and lifecycle contracts. E follows integration of
-A–D, and F follows the reviewed candidate build. Phase 3 can proceed independently
-when physical access is available. Finish phases 3 and 4 before freezing the
-configuration and collecting the remaining phase-5 boots. Reassess earlier boot
-credit if firmware identity changes; record final automation checks separately.
+A–D are largely implemented as software; their remaining integration gate is
+terminal validation of the frozen candidate, followed by reviewed construction E.
+F requires actual installation and physical evidence. Phase 3 can proceed
+independently when the retained recovery card is booted. Finish phases 3 and 4
+before freezing the configuration for phase 5. Reassess earlier boot credit if
+firmware identity changes; record final automation checks separately.
 
-For D, installer publication of the explicit trusted storage policy remains
-required before the first registry exists. The retained reader and single-process
-owner composition now pass [software and builder cgroup checks](evidence/boot-prepare-validation-20261112.json).
-Missing/inconsistent policy refuses guest preparation while management stays
-available. Rendered memory/task limits reserve host headroom; the child verifies
-actual kernel limits before exec. Dispatch, teardown and private PID1 graph checks
-now pass [review and the corrected full suite](evidence/guest-service-validation-20261112.json).
-Their actual target dependency and shutdown behavior remains a physical gate;
-no new root image or service has been installed on the board by these checks.
+For D, publish the explicit trusted storage policy before initial registry/runtime
+preparation. Missing or inconsistent policy must leave management available while
+refusing guest launch. Check actual target systemd 252 dependency and shutdown
+behavior, including p5 activation, admission closure and checkpoint cleanup; private
+PID1/native fixtures do not satisfy this gate.
 
-For B, the restore design must distinguish historical archive validation from
-fresh destination authority. Specify durable publication/retry ordering and
-preservation of unrelated guests and enable flags before implementation review.
-Use the disposable automation guest for physical restoration; preserve firstkvm.
-The [proposed restoration transaction](managed-restore-design.md) specifies
-shutdown-only exclusion, explicit retry, coherent directory publication and
-registry-generation handling. Independent architecture review resolved six
-contract gaps; implementation review and validation remain required. It is not
-an available restoration command.
+For B, the reviewed transaction distinguishes historical archive validity from
+fresh destination authority. Validate complete disk/manifest/history/lifecycle
+publication, registry-generation handling, preserved unrelated guests, explicit
+resume and incomplete-transaction boot refusal. The candidate guide is not yet
+an installed restoration service. Use the disposable automation guest for physical
+restoration and preserve the manual `firstkvm` cohort.
 [Architecture review](evidence/managed-restore-design-review-20261112.json).
 
 For E and phase 6, distinguish a fresh checkout using retained inputs from a
