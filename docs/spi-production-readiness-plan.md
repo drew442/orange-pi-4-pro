@@ -1,8 +1,11 @@
 # SPI/NVMe production-readiness plan
 
-Status is planned, dated 2026-11-12. The system currently operates with SD
+Execution started 2026-11-12. The recoverable baseline and metadata-aware SPI
+software review/checks pass; physical recovery and later phases remain pending.
+[Software evidence](evidence/spi-metadata-validation-20261112.json). The system currently operates with SD
 removed. This plan completes production qualification and adds opt-in unattended
-guest operation. Implementation, flashing and hardware tests are future work.
+guest operation. Physical restore/reinstall, unattended deployment and final qualification remain
+future work.
 
 ## Starting evidence and scope
 
@@ -84,6 +87,8 @@ The current strict-gap plan remains unusable after metadata initialization.
 regressions and required full repository checks passing on the Ubuntu builder.
 
 ## 3. Prove the revised SPI recovery procedure
+
+[Operator and coordinator procedure](spi-recovery-qualification.md).
 
 A fresh operator follows the reviewed guide for this demonstration and records
 discrepancies, supplying the reproduction evidence used in phase 6. Complete
