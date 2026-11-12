@@ -1,0 +1,128 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "result": "pass",
+  "scope": "Uninstalled initialization interlock and bootstrap registry/exclusion-marker preparation; no RAM exclusion integration, activation, accounts/units, guest startup, reconciliation or hardware acceptance",
+  "builder": "drew@build.drewnet.online",
+  "builder_base": "/var/lib/a733-bootstrap-admission-validation-20261112-01",
+  "full_Ubuntu_tests": 3060,
+  "failures_errors_skips": 0,
+  "shell_suites": 5,
+  "diagnostic_cases": 5,
+  "parsed_TOML": 5,
+  "locked_source_files": 1040,
+  "source_lock": {
+    "bytes": 166776,
+    "sha256": "3b70afce01bf2c8590f5a4576872c5df74363397fdb068cc6961bae1800c6e1d",
+    "index_tree": "1c2c0918dba329c98cae856ff4cfc0021ee14ec1"
+  },
+  "unit": {
+    "RuntimeMaxUSec": "8h",
+    "MainPID": "0",
+    "Result": "success",
+    "ExecMainStatus": "0",
+    "CPUQuotaPerSecUSec": "2s",
+    "MemoryMax": "3221225472",
+    "SubState": "exited"
+  },
+  "source": {
+    "build/maintenance-tools.py": {
+      "bytes": 15631,
+      "sha256": "7f188cf6405c5e78a0e979e4512103bcf103fcef623de0c3e9716e659fe20084"
+    },
+    "scripts/guest-admission.py": {
+      "bytes": 58300,
+      "sha256": "f918031413167d1021d3f043220e6cf5c7b0c02f20dfd2bee9ae5a8c2a410743"
+    },
+    "scripts/guest-boot-state.py": {
+      "bytes": 10452,
+      "sha256": "90249975a94509fb50b5b0dfeec53584d1b31bd6f6f9aeb210faac44d6048ebf"
+    },
+    "tests/test_guest_admission.py": {
+      "bytes": 67901,
+      "sha256": "27dd20a172e298f15bb26e3306ae3f0af857f241529c7bbaa21b87d09a97b633"
+    },
+    "tests/test_guest_boot_state.py": {
+      "bytes": 17885,
+      "sha256": "999afdccc1517bef3980e11d3019c1254f8a7b12c0267acc52da5adcae924576"
+    },
+    "tests/test_guest_initialization_interlock.py": {
+      "bytes": 13963,
+      "sha256": "2eb03112f4433c2b5224dffc48dccbbb14f4a2682a5c8474a0661c4bcf5f3192"
+    },
+    "tests/test_host_payload.py": {
+      "bytes": 28099,
+      "sha256": "80a4cb54171a79e19c8f11e042daa71bf5a52e9c74786e2b1b7e79e91d38760f"
+    },
+    "tests/test_launch_deterministic_host_roots.py": {
+      "bytes": 11602,
+      "sha256": "8545a8df45a14d54ac99d6aa19f779f844fc322e94567076aff2c1708635e147"
+    },
+    "tests/test_maintenance_tools.py": {
+      "bytes": 18108,
+      "sha256": "fa2d81e5a8668e077e6d4efa45ae08f8da30bd27d80d99ba5c70e316eb175bb1"
+    }
+  },
+  "resource_sample_minima": {
+    "free_disk_bytes": 31073595392,
+    "MemAvailable_bytes": 6930792448
+  },
+  "independent_reviews": {
+    "initialization": {
+      "path": "out/bootstrap-admission-validation-20261112-01/initialization-review.json",
+      "bytes": 7816,
+      "sha256": "8788dc30c35c6815e3a4c95a359257506dbd415e70a69caa5c5e92c46c1cb9af"
+    },
+    "boot_state": {
+      "path": "out/bootstrap-admission-validation-20261112-01/boot-state-review.json",
+      "bytes": 20778,
+      "sha256": "5d6df617a5f29668da4b9ea42076a213e7522f818c338dda0408779f4419c1e8"
+    }
+  },
+  "packaging": {
+    "current_sources": 66,
+    "runtime_files": 67,
+    "entrypoints": 19,
+    "historical_sources": 39,
+    "extracted_import_and_CLI_help": "pass"
+  },
+  "custody": {
+    "bytes": 481280,
+    "sha256": "6fda043cd2177b80c772b7768f6c300534cecaa9f3458c704c9f63fd632faf8f",
+    "native": "out/bootstrap-admission-validation-20261112-01/receipts.tar",
+    "builder": "/var/lib/a733-bootstrap-admission-validation-20261112-01/receipts.tar",
+    "unit": {
+      "RuntimeMaxUSec": "8h",
+      "MainPID": "0",
+      "Result": "success",
+      "ExecMainStatus": "0",
+      "CPUQuotaPerSecUSec": "2s",
+      "MemoryMax": "3221225472",
+      "SubState": "exited"
+    }
+  },
+  "initialization": {
+    "native_tests": 21,
+    "independent_existing_admission_tests": 69,
+    "independent_initial_interlock_tests": 19,
+    "independent_syscall_failure_probes": 336,
+    "behavior": "Protected root:root0600 empty regular nlink1 a733-admission-init.lock on validated RAM parent; retained readonly FD, native exclusive self-PID flock and creator PID/thread. initialize holds exclusion through fresh/existing protocol, then releases interlock while original bootstrap owner retains leases EX. Existing runtime/lock never reset.",
+    "resolved_medium": "Reject boolean, negative, gid_t -1 sentinel and oversized GID before acquiring interlock or creating runtime. initialize and Admission.__init__ require exact integer 0..2**32-2; targeted native/independent probes refuse without paths or FD leaks.",
+    "limits": "Only initializer side is wired. Portable RAM recovery must acquire same interlock and existing closed-runtime lease exclusion before target mutations; absent-runtime observation alone is insufficient."
+  },
+  "boot_state": {
+    "native_tests": 27,
+    "independent_initial_suite": 26,
+    "independent_probes": 12,
+    "behavior": "Original canonical bootstrap-owner pointer, exact closed nonce and actual EX self-PID lease plus physical STATE/p5 context; preserve exact canonical registry or durably initialize empty generation0. Prepare negative managed exclusions for registered/orphan lifecycle names. All head observations grant no run permission; no head repair/hash blessing/launch.",
+    "resolved_medium": "Reserved firstkvm was initially rejected only as orphan. Final policy rejects it anywhere in registry/lifecycle union before marker preparation, including disabled registered entry; registry/disk/borrowed lease preserved.",
+    "limits": "Own-operation PID/thread checked; existing ClosureOwner has no creation-thread record, so original-owner thread handoff is trusted caller responsibility. Caller retains owner/lease; helper closes only its own context/store FDs."
+  },
+  "limitations": [
+    "All controllers remain uninstalled. One-process bootstrap must integrate activation, accounts, completed-cohort authentication, unit rendering and manual namespace pins before gate opening.",
+    "RAM recovery/admission, coherent managed restoration, service wiring and physical SPI/KVM qualification remain required.",
+    "Actual physical STATE/board/PID1 placement and QEMU behavior are substituted in native tests; no actual guest, emulation-only acceptance or hardware write is claimed.",
+    "Five unchanged TOML files reuse native tomllib parse retained in receipts; Ubuntu Python 3.10 has no tomllib.",
+    "Independent reviews retain resolved findings and preliminary harness mistakes/failures, with raw evidence and off-device custody."
+  ]
+}

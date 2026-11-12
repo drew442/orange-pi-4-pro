@@ -34,6 +34,7 @@ class AdmissionTests(unittest.TestCase):
         for patch in (mock.patch.object(a, 'RUNTIME', str(self.path)),
                       mock.patch.object(a, 'RUNTIME_PARENT', self.tmp.name),
                       mock.patch.object(a, 'ROOT_UID', os.getuid()),
+                      mock.patch.object(a, 'ROOT_GID', os.getgid()),
                       mock.patch.object(a, '_tmpfs'),
                       mock.patch.object(a, '_ancestor'),
                       mock.patch.object(a.os, 'geteuid', return_value=0)):

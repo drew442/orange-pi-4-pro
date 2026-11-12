@@ -65,7 +65,7 @@ class DeterministicLauncherTests(unittest.TestCase):
 
     def test_contract_and_pure_plan_keep_old_policy_and_closure(self):
         before = MAINTENANCE.entries()
-        self.assertEqual(len(MAINTENANCE.SOURCES), 65)
+        self.assertEqual(len(MAINTENANCE.SOURCES), 66)
         self.assertNotIn(L.HELPER, MAINTENANCE.SOURCES)
         data = source_contents()
         with contextlib.ExitStack() as stack:

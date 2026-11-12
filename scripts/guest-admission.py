@@ -15,6 +15,7 @@ from pathlib import Path
 import re
 import stat
 import time
+import threading
 import uuid
 
 RUNTIME_PARENT = '/run'
@@ -23,6 +24,7 @@ PROFILE = 'a733-admission-v1'
 MAX_RECORD = 4096
 GATE_TIMEOUT = 5.0
 ROOT_UID = 0
+ROOT_GID = 0
 PROC_LIMIT = 65536
 INITIAL_NAMESPACES = {'pid': 0xEFFFFFFC, 'user': 0xEFFFFFFD}
 _SPEC = importlib.util.spec_from_file_location(
@@ -295,6 +297,127 @@ def _held_lock(fd, mode, owner):
     return info
 
 
+class InitializationLock:
+    """Root-only, nonblocking exclusion for runtime creation and offline recovery.
+
+    The portable ABI is RUNTIME_PARENT + '/a733-admission-init.lock': root:root,
+    regular, 0600, one link, empty, on the validated parent tmpfs. This grants
+    exclusion only, never admission or ownership of an existing closure. An
+    offline caller must additionally obtain leases.lock EX when runtime exists.
+    Call check() before protected work and close() explicitly in the creator
+    process/thread. The held open description is readonly and close-on-exec.
+    """
+    NAME = 'a733-admission-init.lock'
+
+    def __init__(self):
+        self.pid = os.getpid()
+        self.thread = threading.current_thread()
+        self.chain = []
+        self.parent = self.fd = None
+
+    def _creator(self):
+        require(os.getpid() == self.pid and threading.current_thread() is self.thread,
+                'initialization lock belongs to another process or thread')
+
+    def _parent(self):
+        require(self.parent is not None, 'initialization lock closed')
+        for parent, name, fd in self.chain:
+            info = os.fstat(fd)
+            _ancestor(info)
+            if parent is not None:
+                require(_same(info, os.stat(name, dir_fd=parent, follow_symlinks=False)),
+                        'initialization ancestor changed')
+        _tmpfs(self.parent)
+
+    def _named(self, fd):
+        self._parent()
+        info = _metadata(fd, 0o600, ROOT_GID)
+        require(info.st_size == 0, 'initialization lock must be empty')
+        require(_same(info, os.stat(self.NAME, dir_fd=self.parent,
+                                    follow_symlinks=False)),
+                'initialization lock named inode changed')
+        return info
+
+    @classmethod
+    def acquire(cls):
+        require(os.geteuid() == 0, 'root initialization controller required')
+        require(type(RUNTIME_PARENT) is str and RUNTIME_PARENT.startswith('/')
+                and RUNTIME_PARENT != '/' and
+                all(part not in ('', '.', '..') for part in RUNTIME_PARENT[1:].split('/')),
+                'invalid fixed runtime parent')
+        result = cls()
+        creation = None
+        try:
+            fd = os.open('/', os.O_RDONLY | os.O_DIRECTORY | os.O_CLOEXEC)
+            result.chain.append((None, '', fd))
+            for name in RUNTIME_PARENT[1:].split('/'):
+                parent = fd
+                fd = os.open(name, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
+                             | os.O_CLOEXEC, dir_fd=parent)
+                result.chain.append((parent, name, fd))
+            result.parent = fd
+            result._parent()
+            try:
+                creation = os.open(cls.NAME, os.O_WRONLY | os.O_CREAT | os.O_EXCL
+                                   | os.O_NOFOLLOW | os.O_CLOEXEC, 0o600, dir_fd=fd)
+            except FileExistsError:
+                pass  # Existing metadata and bytes are never repaired or reset.
+            else:
+                result._parent()
+                os.fchown(creation, ROOT_UID, ROOT_GID)
+                os.fchmod(creation, 0o600)
+                result._named(creation)
+                os.fsync(creation)
+                number, creation = creation, None
+                os.close(number)
+                os.fsync(fd)
+            result.fd = os.open(cls.NAME, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK
+                                | os.O_CLOEXEC, dir_fd=fd)
+            result._named(result.fd)
+            _lock(result.fd, fcntl.LOCK_EX, 0)
+            result.check()
+            return result
+        except BaseException:
+            try:
+                if creation is not None:
+                    number, creation = creation, None
+                    os.close(number)
+            finally:
+                result.close()
+            raise
+
+    def check(self):
+        self._creator()
+        require(os.geteuid() == 0, 'root initialization controller required')
+        require(self.fd is not None, 'initialization lock closed')
+        self._named(self.fd)
+        _held_lock(self.fd, 'WRITE', self.pid)
+        return self.fd
+
+    recheck = check
+
+    def close(self):
+        self._creator()  # Even a closed guard cannot be used by another creator.
+        fd, chain = self.fd, self.chain
+        self.fd = self.parent = None
+        self.chain = []
+        errors = []
+        for number in ([fd] if fd is not None else []) + [item[2] for item in reversed(chain)]:
+            try:
+                os.close(number)
+            except BaseException as error:
+                errors.append(error)
+        if errors:
+            raise errors[0]
+
+    def __enter__(self):
+        self.check()
+        return self
+
+    def __exit__(self, *unused):
+        self.close()
+
+
 class Permit:
     """Retained protected bytes, not launch or storage authority by themselves."""
     def __init__(self, admission, run_id, directory, fd, data):
@@ -491,7 +614,8 @@ class ClosureOwner:
 class Admission:
     def __init__(self, boot_id, kvm_gid, manager_state=_manager_state):
         self.boot_id = _uuid(boot_id)
-        require(type(kvm_gid) is int and kvm_gid >= 0, 'invalid KVM group')
+        require(type(kvm_gid) is int and 0 <= kvm_gid < 2**32 - 1,
+                'invalid KVM group')
         self.gid, self.manager_state = kvm_gid, manager_state
         self.chain = []
         self.directory = self.gate_fd = self.leases_fd = None
@@ -1201,33 +1325,66 @@ def initialize(boot_id, kvm_gid, manager_state=_manager_state):
     """
     require(os.geteuid() == 0, 'root controller required')
     _uuid(boot_id)
-    created = False
     # Only /run's direct child is supported; physical parent validation precedes mkdir.
     require(os.path.dirname(RUNTIME) == RUNTIME_PARENT
             and os.path.basename(RUNTIME) == 'a733-admission',
             'invalid fixed runtime path')
+    require(type(kvm_gid) is int and 0 <= kvm_gid < 2**32 - 1,
+            'invalid KVM group')
+    interlock = InitializationLock.acquire()
+    admission = None
+    try:
+        admission = _initialize_locked(boot_id, kvm_gid, manager_state, interlock)
+        interlock.check()
+    except BaseException:
+        try:
+            if admission is not None:
+                admission.close()
+        finally:
+            interlock.close()
+        raise
+    try:
+        interlock.close()
+    except BaseException:
+        admission.close()
+        raise
+    return admission
+
+
+def _initialize_locked(boot_id, kvm_gid, manager_state, interlock):
+    created = False
+    interlock.check()
     parent = os.open(RUNTIME_PARENT, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC)
     try:
         info = os.fstat(parent)
         _ancestor(info)
         _tmpfs(parent)
         try:
+            interlock.check()
             os.mkdir(RUNTIME.rsplit('/', 1)[1], 0o710, dir_fd=parent)
             created = True
+            interlock.check()
             directory = os.open(RUNTIME.rsplit('/', 1)[1], os.O_RDONLY | os.O_DIRECTORY
                                 | os.O_NOFOLLOW | os.O_CLOEXEC, dir_fd=parent)
             try:
+                interlock.check()
                 os.fchown(directory, ROOT_UID, kvm_gid)
+                interlock.check()
                 os.fchmod(directory, 0o710)
                 for name in ('gate.lock', 'leases.lock'):
+                    interlock.check()
                     fd = os.open(name, os.O_WRONLY | os.O_CREAT | os.O_EXCL
                                  | os.O_NOFOLLOW | os.O_CLOEXEC, 0o600, dir_fd=directory)
                     try:
+                        interlock.check()
                         os.fchown(fd, ROOT_UID, kvm_gid)
+                        interlock.check()
                         os.fchmod(fd, 0o640)
+                        interlock.check()
                         os.fsync(fd)
                     finally:
                         os.close(fd)
+                interlock.check()
                 os.fsync(directory)
             finally:
                 os.close(directory)
@@ -1235,6 +1392,7 @@ def initialize(boot_id, kvm_gid, manager_state=_manager_state):
             pass
     finally:
         os.close(parent)
+    interlock.check()
     if not created:
         return Admission.open_existing(boot_id, kvm_gid, manager_state)
     admission = Admission(boot_id, kvm_gid, manager_state)
@@ -1248,6 +1406,7 @@ def initialize(boot_id, kvm_gid, manager_state=_manager_state):
                 _lock(lease_fd, fcntl.LOCK_EX, 0)
                 record = dict(schema=1, profile=PROFILE, state='closed', generation=0,
                               boot_id=boot_id, owner_nonce=str(uuid.uuid4()), reason='bootstrap')
+                interlock.check()
                 admission._publish(record)
                 owner = ClosureOwner(admission, record)
                 owner.lease = Lease(admission, lease_fd, True)

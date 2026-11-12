@@ -6,6 +6,29 @@ bootstrap, RAM recovery and physical deployment validation remain pending under
 maintenance tree for the existing installation until a new matched root is
 validated. [Lifecycle design](guest-autostart-design.md) defines the protocol.
 
+## Bootstrap preparation boundary
+
+Initialization holds a protected root-owned RAM interlock while creating or
+opening the admission runtime. It releases that interlock before returning;
+the original fresh bootstrap owner keeps the separate exclusive admission lease.
+Existing runtime is validated and never reset. Portable RAM recovery must join
+the same initialization interlock before treating a missing runtime as safe;
+that recovery integration remains unfinished.
+
+The boot-state producer requires that original closed bootstrap owner and
+physical STATE/guest-storage context. It preserves an existing canonical registry
+or durably creates an empty generation-zero registry, then prepares managed
+exclusions for registered and orphan lifecycle names. It rejects reserved
+`firstkvm` before marker preparation, including a disabled registry entry.
+Invalid heads remain unavailable observations. Preparation grants no run
+permission and does not create/repair heads, open admission or start a guest.
+
+The boot coordinator still needs to compose storage activation, RAM accounts,
+completed-cohort authentication, unit rendering and manual namespace publication
+before opening admission. [Initialization/boot-state checks](evidence/bootstrap-admission-validation-20261112.json)
+cover native locks and protected files with physical/PID1 substitutions. Runtime
+files must not be deleted or recreated to bypass a failed preparation.
+
 ## Installed update and selection
 
 The candidate update and selector commands require an initialized protected RAM
