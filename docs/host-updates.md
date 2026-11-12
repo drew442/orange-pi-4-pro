@@ -6,8 +6,9 @@ November 4 paths below are historical examples; they bind a different payload.
 Consult the [retention map](build-cache-retention.md#replay-and-prototype-output-retention)
 before attempting to reuse any historical generated path.
 
-Routine updates replace the inactive 4 GiB NVMe root, verify its complete
-contents, and explicitly publish its selector on NVMe STATE. The earlier release
+Routine updates replace and flush the inactive 4 GiB NVMe root, then explicitly
+publish its selector on NVMe STATE. The writer offers optional full target
+readback; selection independently authenticates the installed root. The earlier release
 passes [physical staging, interrupted publication, cancellation and booted rollback](physical-host-update-rollback-20261110.md).
 Use the separate [selection controller](host-root-selection.md) to activate a
 verified slot; retain the recorded root/STATE pairing.
@@ -133,21 +134,34 @@ running slot; a pending selection change requires a reboot before staging.
 
 Save the resulting JSON plan on NVMe or RAM. Invoke `apply` with the same
 arguments and `--plan /absolute/path/to/reviewed-plan.json` from an interactive
-terminal. It displays the complete plan and requires `BACKUP VERIFIED`, then
-the exact displayed `STAGE` phrase containing slot, serial, partition path,
-byte count and plan hash. Verify an off-device backup of the existing roots and
-state before authorizing overwrite. There is no unattended/force switch.
+terminal. The source candidate displays the exact slot, partition, model,
+serial, byte count, root hash and plan hash, then asks one `[yes/no]` question.
+Only `yes` accepts; blank/no/EOF/non-TTY refuses. Verify the off-device backup
+beforehand; the answer is not backup evidence. There is no force switch.
+
+Full writer readback defaults off. For troubleshooting, include
+`--verify-readback` on both `prepare` and `apply`; the Boolean is bound into the
+plan, so changing it requires a fresh plan. Existing source authentication and
+selection checks show byte progress and remain required. No added scan or
+hardware benchmark is performed.
+
+These new controls remain uninstalled. The retained legacy controller used for
+initial migration keeps its version-specific prompts and mandatory readback;
+follow its pinned procedure rather than supplying unsupported candidate flags.
+The coordinator uses persisted known-target authorization for that transition.
 
 The controller compares the plan before and after authorization, locks
 `boot/update.lock` on NVMe state, and opens only the inactive partition with
 `O_EXCL`. It checks full primary/backup GPT bytes, all five kernel partition
 geometries, live root/state/selector identities, and inactive busy indicators.
 Active root, state and guest mounts remain permitted. All 4 GiB, including zero
-ranges, are written, flushed and read back. It never refreshes the partition
-table or publishes a selector. A successful receipt binds the source, target
-and reviewed plan; `activation_ready` means staging/readback succeeded and is
-neither activation authorization nor a health result. Activation must reverify
-the written root rather than trusting a saved receipt.
+ranges, are written and flushed. Optional readback runs only when the reviewed
+flag requests it. It never refreshes the partition table or publishes a selector.
+A successful receipt binds the source, target and reviewed plan. Without readback,
+`bytes_verified` stays zero and `verification_performed` is false;
+`activation_ready` reports successful staging/flush, not verified storage bytes,
+activation authorization or health. Selection still authenticates the full
+installed root with progress instead of trusting a saved staging receipt.
 
 On failure, assume the inactive slot may be incomplete whenever a write was
 attempted. The report preserves attempted, written and verified byte counts.

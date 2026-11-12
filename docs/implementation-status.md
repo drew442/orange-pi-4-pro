@@ -70,7 +70,7 @@ architecture review. The following software components are reviewed and tested;
 | Pre-p5 maintenance and normal activation | [Evidence](evidence/guest-activation-admission-validation-20261112.json). **3120** privileged Ubuntu tests and shell/diagnostic suites pass. Independent helper/wrapper reviews and actual private-loop interruption/retry/idempotency, preservation and cleanup pass. Protected registry must match reviewed target; binding and reopening follow all target cleanup. Bootstrap borrowing remains separate. |
 
 Current packaging has **84 sources, 85 runtime files, 22 entrypoints**, six
-management runtime files and two conditional boot units. The historical exact
+management runtime records in that frozen result and two conditional boot units. The historical exact
 39-source recovery boundary remains intact. **All new controllers remain
 uninstalled.** Native/surrogate results ran no A733 guest and do not establish
 deployment acceptance.
@@ -122,15 +122,32 @@ silently queue another run. Manual unit rendering remains explicit. Candidate
 construction/repeat, inactive-root deployment and physical qualification are next.
 No new endurance run is planned.
 
-Candidate construction refused before creating its phase or images: seven outer
-Ubuntu package versions had advanced through November 11 unattended upgrades.
-The frozen builder still matches its historical 842-package replay inventory.
-A separate exact outer-host lock and build-only adapter pass independent review,
-eight focused tests and sixteen independent probes. Their full regression run
-is pending. Its first harness run used an incorrect 0077 umask and failed fixture
-permission checks; the unchanged source is now running under the established
-0022 setting. Preserve both outcomes and observe the same corrected unit before
-another build. [Attempt and validation state](evidence/managed-root-candidate-progress-20261112.json).
+Candidate construction refused before image creation because seven outer Ubuntu
+package versions had advanced through November 11 unattended upgrades. A separate
+exact 842-package outer-host lock now passes independent review and the corrected
+**3579-test** full Ubuntu run, shell/diagnostic suites and sixteen independent
+inventory probes. The frozen replay/archive lock remains unchanged. The initial
+0077-umask harness failure and successful unchanged-source 0022 rerun are retained.
+[Builder adapter evidence](evidence/outer-builder-inventory-validation-20261112.json).
+
+Deployment review found that extending the management descriptor from four files
+to six broke old updater/new candidate and new selector/old rollback compatibility.
+The reviewed replacement retains four management files and records the two guest
+boot units in separate optional versioned metadata. Implementation passes 181
+focused/consumer tests and independent review, including real ext4 fixtures;
+full historical readers against production artifacts and physical rollback remain
+pending. [Compatibility evidence](evidence/guest-boot-metadata-compatibility-20261112.json)
+retains the strict four-plus-two contract and fixture limits. Current source has
+four management records and two guest boot records; the earlier six-record
+uninstalled representation is retired.
+
+Single yes/no target confirmation, plan-bound optional writer readback and hash
+progress now pass independent review and **94 privileged focused checks** with
+no skips/errors/failures. Default staging flushes but reports zero verified bytes;
+selection retains full root authentication. The verified private-loop fixture
+explicitly requests readback. [Operator-flow evidence](evidence/maintenance-confirmation-progress-20261112.json).
+All changes remain uninstalled and require the next combined full validation,
+production artifact checks and hardware acceptance. No candidate image is built.
 
 Two fresh managed power-key guest builds match byte for byte with verified
 off-device copies. [Build evidence](evidence/managed-fixture-build-20261112.json).
@@ -239,13 +256,14 @@ binary redistribution clearance is claimed. [Source inventory](toolchain-sources
 
 ## Resources and next actions
 
-Latest privileged Ubuntu 22.04 suite: **3577 tests**, zero skips/errors/failures,
+Latest privileged Ubuntu 22.04 suite: **3579 tests**, zero skips/errors/failures,
 five shell suites and five diagnostic cases; all five TOMLs parse natively.
-[Managed restore evidence](evidence/managed-restore-validation-20261112.json)
-retains terminal units, source locks, independent reviews, the initial failed run
-and verified receipts on codex and the builder. Sample minima are
-29,987,028,992 bytes free and 6,634,303,488
-bytes MemAvailable. These are software checks, not physical
+[Builder adapter evidence](evidence/outer-builder-inventory-validation-20261112.json)
+retains terminal units, source locks, independent reviews, the initial harness
+failure and verified receipts on codex and the builder. Sample minima are
+29,730,295,808 bytes free and 6,697,074,688 bytes MemAvailable. This frozen
+software result precedes the current compatibility/operator-flow changes; their
+combined validation remains required. These checks do not establish physical
 recovery or unattended KVM acceptance. Recovery-card boot awaits the operator;
 UART capture remains active with the unchanged clean-powerdown tail. Continue
 candidate construction and reproducibility while physical recovery is pending,

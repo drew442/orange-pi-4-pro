@@ -73,9 +73,14 @@ Create private package-wrapper, release and plan directories with root
 ownership and mode `0700`; the package tree uses read-only files and directories.
 Current roots include the authenticated `/usr/lib/a733-tools` tree; see the
 [current matched payload record](matched-host-updates-20261109.md). Older prototype
-hosts needed explicit wrapper staging. Review the complete plan before `apply`. It requires an interactive terminal,
-`BACKUP VERIFIED`, and the exact displayed `SELECT` phrase binding intent, slot,
-serial, partition, byte count and plan hash. There is no force/unattended switch.
+hosts needed explicit wrapper staging. Review the complete plan before `apply`.
+The source candidate requires an interactive terminal, displays the exact intent,
+slot, partition, model/serial, byte count, root hash and plan hash, then asks one
+`[yes/no]` question. Only `yes` accepts. Backups remain a precondition; the answer
+is not backup evidence. Full root authentication shows byte progress before
+publication. There is no force switch. This behavior remains uninstalled; the
+retained legacy controller keeps its pinned original prompt protocol during
+initial migration and rollback.
 For cancellation, use `--intent cancel-pending`, the currently running slot,
 and its retained trusted manifest/pin, then prepare a new plan. For rollback
 after a booted update, use `activate` with the old inactive root and old pin.

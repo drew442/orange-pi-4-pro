@@ -95,7 +95,7 @@ class StagingTests(unittest.TestCase):
         self.stack.callback(source.close)
         return source
 
-    def transaction(self):
+    def transaction(self, verify_readback=False):
         self.source = self.source_open()
         sequence = getattr(self, 'sequence', 0) + 1
         self.sequence = sequence
@@ -107,7 +107,7 @@ class StagingTests(unittest.TestCase):
         with fixture_parent(self.boot) as fd:
             device = self.real_fstat(fd)
         self.context = {'disk': {'serial': 'SERIAL'},
-                        'target': {'canonical_path': str(self.target_path),
+                        'target': {'model': 'MODEL', 'canonical_path': str(self.target_path),
                                    'serial': 'SERIAL', 'size_bytes': SIZE,
                                    'major_minor': '259:3'},
                         'active': {'slot': 'A', 'root_major_minor': '259:2'},
@@ -117,7 +117,7 @@ class StagingTests(unittest.TestCase):
                         'gpt': {'sha256': 'b' * 64}}
         self.args = SimpleNamespace(target='/dev/nvme0n1', expected_model='MODEL',
                                     expected_serial='SERIAL', expected_bytes=250000000000,
-                                    slot='B')
+                                    slot='B', verify_readback=verify_readback)
         self.snap = self.stack.enter_context(mock.patch.object(UPDATE, 'snapshot', side_effect=lambda args: copy.deepcopy(self.context)))
         self.stack.enter_context(mock.patch.object(UPDATE.os, 'geteuid', return_value=0))
         self.stack.enter_context(mock.patch.object(UPDATE.PREP, 'safe_parent', fixture_parent))
@@ -262,13 +262,16 @@ class StagingTests(unittest.TestCase):
         self.auth.assert_not_called()
 
     def test_success_full_write_zeroes_readback_no_activation_or_partition_refresh(self):
-        self.transaction()
+        self.transaction(verify_readback=True)
         result = self.run_apply()
         self.assertTrue(result['success'], result)
         self.assertTrue(result['activation_ready'])
         self.assertTrue(result['target_modified'])
         self.assertEqual(result['bytes_written'], SIZE)
         self.assertEqual(result['bytes_verified'], SIZE)
+        self.assertTrue(result['readback_requested'])
+        self.assertTrue(result['verification_performed'])
+        self.assertEqual(result['readback_sha256'], record(self.content)['sha256'])
         self.assertEqual(self.target_path.read_bytes(), self.content)
         self.assertEqual((self.boot / 'selected.conf').read_bytes(), b'active selector sentinel')
         self.assertFalse(result['selector_writes_performed'])
@@ -363,7 +366,7 @@ class StagingTests(unittest.TestCase):
     def test_flush_and_readback_failures_conservative(self):
         for operation in ('flush', 'fsync', 'readback'):
             with self.subTest(operation=operation):
-                self.transaction()
+                self.transaction(verify_readback=True)
                 if operation == 'flush':
                     patch = mock.patch.object(UPDATE.fcntl, 'ioctl', side_effect=OSError('flush failed'))
                 elif operation == 'fsync':
@@ -371,7 +374,7 @@ class StagingTests(unittest.TestCase):
                 else:
                     actual = os.pread
                     def read(fd, size, offset):
-                        return b'corrupted' if size == SIZE else actual(fd, size, offset)
+                        return b'c' * size if size == SIZE else actual(fd, size, offset)
                     patch = mock.patch.object(UPDATE.os, 'pread', side_effect=read)
                 with patch:
                     result = self.run_apply()
@@ -380,6 +383,9 @@ class StagingTests(unittest.TestCase):
                 self.assertFalse(result['success'])
                 self.assertFalse(result['activation_ready'])
                 self.assertFalse(result['selector_writes_performed'])
+                self.assertFalse(result['verification_performed'])
+                if operation == 'readback':
+                    self.assertIn('target readback SHA-256 mismatch', result['error'])
 
     def test_context_changed_after_write_cannot_claim_ready(self):
         self.transaction()
@@ -396,7 +402,7 @@ class StagingTests(unittest.TestCase):
         self.assertEqual(result['bytes_verified'], 0)
 
     def test_target_close_error_preserves_written_counts(self):
-        self.transaction()
+        self.transaction(verify_readback=True)
         actual = os.close
         target_inode = self.target_path.stat().st_ino
         def close(fd):
@@ -411,27 +417,81 @@ class StagingTests(unittest.TestCase):
         self.assertFalse(report['success'])
         self.assertFalse(report['activation_ready'])
 
-    def test_authorize_requires_tty_backup_and_exact_slot_target_phrase(self):
+    def test_authorize_single_yes_no_tty_and_exact_target_summary(self):
         plan = self.transaction()
-        target = plan['context']['target']
-        phrase = f"STAGE B SERIAL {target['canonical_path']} {SIZE} {plan['plan_sha256']}"
-        # Resolve the original function from the module file without patched imports.
         spec = importlib.util.spec_from_file_location('stage_host_auth', SPEC.origin)
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
-        for incoming, outgoing, ok in (
-                (TTY('BACKUP VERIFIED\n' + phrase + '\n'), TTY(), True),
-                (io.StringIO('BACKUP VERIFIED\n' + phrase + '\n'), TTY(), False),
-                (TTY('BACKUP VERIFIED\n' + phrase + '\n'), io.StringIO(), False),
-                (TTY('BACKUP VERIFIED\n' + phrase.replace('STAGE B', 'STAGE A') + '\n'), TTY(), False),
-                (TTY('BACKUP VERIFIED\n' + phrase.replace('SERIAL', 'OTHER') + '\n'), TTY(), False),
-                (TTY('YES\n' + phrase + '\n'), TTY(), False)):
-            if ok:
+        for answer in ('yes\n', ' YES \n', 'YeS\n'):
+            incoming, outgoing = TTY(answer + 'unconsumed\n'), TTY()
+            module.authorize(plan, incoming, outgoing)
+            self.assertEqual(incoming.readline(), 'unconsumed\n')
+            text = outgoing.getvalue()
+            for value in ('slot B', str(self.target_path), 'MODEL', 'SERIAL', str(SIZE),
+                          plan['source']['root']['sha256'], plan['plan_sha256'],
+                          'not backup evidence'):
+                self.assertIn(value, text)
+            self.assertEqual(text.count('[yes/no]'), 1)
+        for incoming, outgoing in (
+                (io.StringIO('yes\n'), TTY()), (TTY('yes\n'), io.StringIO()),
+                *((TTY(answer), TTY()) for answer in ('', '\n', 'no\n', 'y\n',
+                                                        'BACKUP VERIFIED\n'))):
+            with self.assertRaises(ValueError):
                 module.authorize(plan, incoming, outgoing)
-            else:
-                with self.assertRaises(ValueError):
-                    module.authorize(plan, incoming, outgoing)
 
+    def test_default_readback_optional_and_receipt_truthful(self):
+        self.transaction()
+        self.assertIs(self.plan['verify_readback'], False)
+        with mock.patch.object(UPDATE.os, 'pread', wraps=os.pread) as read:
+            result = self.run_apply()
+        self.assertTrue(result['success'], result)
+        self.assertTrue(result['activation_ready'])
+        self.assertEqual(result['bytes_written'], SIZE)
+        self.assertEqual(result['bytes_verified'], 0)
+        self.assertFalse(result['verification_performed'])
+        self.assertFalse(result['readback_requested'])
+        self.assertNotIn('readback_sha256', result)
+        self.assertTrue(all(call.args[1] == 64 for call in read.call_args_list))
+
+    def test_readback_choice_changed_refuses_before_authorization(self):
+        for initial in (False, True):
+            self.transaction(verify_readback=initial)
+            self.args.verify_readback = not initial
+            self.assert_untouched(self.run_apply())
+            self.auth.assert_not_called()
+
+    def test_nonboolean_readback_choice_refuses_before_authorization(self):
+        self.transaction()
+        self.args.verify_readback = 1
+        self.assert_untouched(self.run_apply())
+        self.auth.assert_not_called()
+
+    def test_nonboolean_reviewed_readback_choice_refuses_before_authorization(self):
+        self.transaction()
+        self.plan['verify_readback'] = 0
+        self.assert_untouched(self.run_apply())
+        self.auth.assert_not_called()
+
+    def test_declined_authorization_never_opens_write_target(self):
+        self.transaction()
+        self.auth.side_effect = ValueError('authorization declined')
+        self.assert_untouched(self.run_apply())
+        self.assertFalse((self.boot / 'update.lock').exists())
+
+    def test_hash_progress_reaches_real_source_and_prewrite_scans(self):
+        callbacks = []
+        def progress_factory(*, label='NVMe bytes written'):
+            callback = mock.Mock()
+            callbacks.append((label, callback))
+            return callback
+        with mock.patch.object(UPDATE.WRITER, 'ConsoleProgress', side_effect=progress_factory):
+            self.transaction()
+            result = self.run_apply()
+        self.assertTrue(result['success'], result)
+        hashes = [(label, cb) for label, cb in callbacks if 'authenticated' in label]
+        self.assertEqual(len(hashes), 2)
+        for label, callback in hashes:
+            callback.assert_called_with(SIZE, SIZE)
 
     def test_storage_guard_applies_to_every_held_candidate_file(self):
         guard = mock.Mock()

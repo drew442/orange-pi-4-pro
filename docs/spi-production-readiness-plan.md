@@ -67,6 +67,16 @@ SPI recovery can proceed alongside software work when the operator is available.
    the released build, deployment and recovery procedure, resolve discrepancies,
    reconcile acceptance evidence, and commit/push the final documentation.
 
+The complete builder-adapter freeze now passes 3579 privileged Ubuntu tests.
+The additional four-management/two-guest-unit metadata split and operator-flow
+changes pass focused tests and independent review; they require a new combined
+freeze before construction. Old/new reader compatibility must also be exercised
+against the actual production artifacts using the full pinned historical checkout,
+without the fixture's substituted dependencies. Retain the working root and
+verified newest guest cohort through rollback and return. See
+[compatibility evidence](evidence/guest-boot-metadata-compatibility-20261112.json)
+and [operator-flow evidence](evidence/maintenance-confirmation-progress-20261112.json).
+
 The operator's next physical action remains the recovery-card transition in
 [Operator steps and evidence](#operator-steps-and-evidence). After reinstalling
 SPI, the coordinator will explicitly announce when SD removal is safe. Further

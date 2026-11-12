@@ -206,7 +206,8 @@ def verify(candidate, manifest_pin):
                            'gpt':{'disk_guid':'fixture-only-no-GPT', 'partition_guids':[],
                                   'sha256':'b'*64}}
                 args = SimpleNamespace(target=loop, expected_model=disk['model'],
-                                       expected_serial=disk['serial'],expected_bytes=SIZE,slot='B')
+                                       expected_serial=disk['serial'],expected_bytes=SIZE,slot='B',
+                                       verify_readback=True)
                 def guard():
                     owned_loop(loop, backing)
 

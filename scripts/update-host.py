@@ -98,7 +98,8 @@ class Source:
             require(isinstance(value, dict), 'manifest object required')
             self.expected = PREP.validate_manifest(value, slot, slot_bytes)
             self.root = self.files['root.ext4']
-            WRITER.hash_stream(self.root, self.expected)
+            WRITER.hash_stream(self.root, self.expected, progress=WRITER.ConsoleProgress(
+                label='Candidate root bytes authenticated'))
             self.check()
             self.root.seek(0)
             selector, self.metadata = inspect(self.root, slot, value)
@@ -174,6 +175,8 @@ def inspect(args, source):
 
 
 def make_plan(args, source):
+    verify_readback = getattr(args, 'verify_readback', False)
+    require(type(verify_readback) is bool, 'readback choice must be boolean')
     context = inspect(args, source)
     target = context['target']
     fd = os.open(target['canonical_path'], os.O_RDONLY | os.O_NONBLOCK | os.O_NOFOLLOW)
@@ -186,6 +189,7 @@ def make_plan(args, source):
         os.close(fd)
     result = {'schema': 1, 'operation': 'inactive-slot-host-update',
               'source': source.review, 'context': context, 'old_metadata': old,
+              'verify_readback': verify_readback,
               'warning': 'This plan is neither authorization nor a lock. An independently verified off-device backup is required. Staging does not activate the slot.'}
     result['plan_sha256'] = WRITER.digest(WRITER.canonical_json(result))
     return result
@@ -196,14 +200,19 @@ def authorize(plan, input_stream=None, output_stream=None):
     outgoing = sys.stderr if output_stream is None else output_stream
     require(incoming.isatty() and outgoing.isatty(), 'apply requires an interactive TTY')
     target = plan['context']['target']
-    phrase = (f"STAGE {plan['source']['slot']} {target['serial']} "
-              f"{target['canonical_path']} {target['size_bytes']} {plan['plan_sha256']}")
-    for prompt, expected in (
-            ('Confirm an independently verified off-device backup: ', 'BACKUP VERIFIED'),
-            ('Confirm inactive-slot overwrite: ', phrase)):
-        outgoing.write(prompt + expected + '\n> ')
-        outgoing.flush()
-        require(incoming.readline().rstrip('\n') == expected, 'authorization phrase does not match')
+    outgoing.write(
+        f"Stage inactive root slot {plan['source']['slot']}\n"
+        f"Target: {target['canonical_path']}\n"
+        f"Model: {target.get('model', plan['context'].get('disk', {}).get('model', 'unavailable'))}\n"
+        f"Serial: {target['serial']}\nSize: {target['size_bytes']} bytes\n"
+        f"Root SHA-256: {plan['source']['root']['sha256']}\n"
+        f"Plan SHA-256: {plan['plan_sha256']}\n"
+        f"Full target readback: {plan['verify_readback']}\n"
+        "An independently verified off-device backup is a required precondition; "
+        "this confirmation is not backup evidence.\n"
+        "Proceed with inactive-slot overwrite? [yes/no] ")
+    outgoing.flush()
+    require(incoming.readline().strip().casefold() == 'yes', 'authorization declined')
 
 
 @contextlib.contextmanager
@@ -234,7 +243,7 @@ def update_lock(context):
 def new_report():
     return {'success': False, 'target_modified': False, 'bytes_attempted': 0,
             'bytes_written': 0, 'bytes_verified': 0, 'selector_writes_performed': False,
-            'activation_ready': False,
+            'activation_ready': False, 'readback_requested': False, 'verification_performed': False,
             'classification': 'staging receipt only; no activation or health/hardware proof'}
 
 
@@ -258,7 +267,11 @@ def apply(args, source, plan, report=None, *, plan_check=lambda target: None):
                 'apply requires a fresh report with zero write counters')
         report.update(operation='inactive-slot-host-update', plan_sha256=plan['plan_sha256'],
                       staged_slot=plan['source']['slot'], target=plan['context']['target'],
-                      source=plan['source'], selected_before=plan['context']['state']['selector'])
+                      source=plan['source'], selected_before=plan['context']['state']['selector'],
+                      readback_requested=getattr(args, 'verify_readback', False))
+        require(type(plan.get('verify_readback')) is bool
+                and plan['verify_readback'] is getattr(args, 'verify_readback', False),
+                'readback choice differs from reviewed plan')
         require(make_plan(args, source) == plan, 'current preflight differs from reviewed plan')
         plan_check(plan['context']['target'])
         authorize(plan)
@@ -286,7 +299,8 @@ def apply(args, source, plan, report=None, *, plan_check=lambda target: None):
                     check()
                     require(WRITER.metadata_hashes(fd, target['size_bytes']) == plan['old_metadata'],
                             'inactive slot metadata changed after open')
-                    WRITER.hash_stream(source.root, source.expected)
+                    WRITER.hash_stream(source.root, source.expected, progress=WRITER.ConsoleProgress(
+                        label='Prewrite candidate root bytes authenticated'))
                     check()
                     require(WRITER.metadata_hashes(fd, target['size_bytes']) == plan['old_metadata'],
                             'inactive slot metadata changed before write')
@@ -297,9 +311,11 @@ def apply(args, source, plan, report=None, *, plan_check=lambda target: None):
                         source.root, fd, source.expected,
                         flush_callback=lambda held: fcntl.ioctl(held, WRITER.BLKFLSBUF),
                         refresh_callback=lambda held: None, source_check=check,
-                        progress=progress, report=report, verify_readback=True,
+                        progress=progress, report=report, verify_readback=plan['verify_readback'],
                         readback_progress=WRITER.ConsoleProgress(label='Root slot bytes read back'),
                         status=lambda message: print(message, file=sys.stderr, flush=True))
+                    report['verification_performed'] = (
+                        report['success'] and plan['verify_readback'])
                     report['activation_ready'] = report['success']
                 finally:
                     os.close(fd)
@@ -327,6 +343,8 @@ def main(argv=None):
     parser.add_argument('--expected-serial', required=True)
     parser.add_argument('--expected-bytes', required=True, type=int)
     parser.add_argument('--plan', type=Path)
+    parser.add_argument('--verify-readback', action='store_true',
+                        help='verify the full staged target after flushing (binds the plan)')
     args = parser.parse_args(argv)
     report = new_report()
     stack = contextlib.ExitStack()
@@ -354,6 +372,9 @@ def main(argv=None):
             WRITER.source_off_target(saved.fileno(), target['major_minor'])
 
         plan_check(plan['context']['target'])
+        require(type(reviewed.get('verify_readback')) is bool
+                and reviewed['verify_readback'] is args.verify_readback,
+                'readback choice differs from reviewed plan')
         require(reviewed == plan, 'current preflight differs from reviewed plan')
         print(json.dumps(plan, indent=2, sort_keys=True), file=sys.stderr)
         apply(args, source, plan, report, plan_check=plan_check)

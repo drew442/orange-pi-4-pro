@@ -258,8 +258,8 @@ class SelectionTransactionTests(unittest.TestCase):
     def test_source_changes_during_hash_are_rejected_before_metadata(self):
         source = self.manifest()
         original = LIVE.WRITER.hash_stream
-        def changed(stream, expected):
-            original(stream, expected)
+        def changed(stream, expected, **kwargs):
+            original(stream, expected, **kwargs)
             self.write_manifest(json.dumps(self.value).encode())
         with mock.patch.object(LIVE.WRITER, 'hash_stream', side_effect=changed):
             with self.assertRaisesRegex(ValueError, 'manifest changed'):
@@ -421,17 +421,41 @@ class SelectionTransactionTests(unittest.TestCase):
         self.assertEqual(report['selected_after']['SLOT'], 'B')
         self.assertEqual((self.boot / 'selected.conf').read_bytes(), self.after)
 
-    def test_authorization_exact_phrase_and_tty_required(self):
+    def test_authorization_single_yes_no_and_exact_target_summary(self):
         plan = self.transaction()
-        phrase = f"SELECT activate B SERIAL {self.target} {SIZE} {plan['plan_sha256']}"
-        # Use the unpatched function from a fresh module to check its real prompts.
         spec = importlib.util.spec_from_file_location('select_auth_test', SPEC.origin)
         value = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(value)
-        value.authorize(plan, TTY('BACKUP VERIFIED\n' + phrase + '\n'), TTY())
-        for incoming in (io.StringIO(), TTY('BACKUP VERIFIED\nwrong\n')):
+        for answer in ('yes\n', ' YES \n', 'YeS\n'):
+            incoming, outgoing = TTY(answer + 'unconsumed\n'), TTY()
+            value.authorize(plan, incoming, outgoing)
+            self.assertEqual(incoming.readline(), 'unconsumed\n')
+            text = outgoing.getvalue()
+            for expected in ('slot B', 'activate', str(self.target), 'SERIAL', str(SIZE),
+                             plan['expected_root']['sha256'], plan['plan_sha256'],
+                             'not backup evidence'):
+                self.assertIn(expected, text)
+            self.assertEqual(text.count('[yes/no]'), 1)
+        for incoming, outgoing in (
+                (io.StringIO('yes\n'), TTY()), (TTY('yes\n'), io.StringIO()),
+                *((TTY(answer), TTY()) for answer in ('', '\n', 'no\n', 'y\n',
+                                                        'BACKUP VERIFIED\n'))):
             with self.assertRaises(ValueError):
-                value.authorize(plan, incoming, TTY())
+                value.authorize(plan, incoming, outgoing)
+
+    def test_hash_progress_reaches_real_root_and_prepublication_scans(self):
+        callbacks = []
+        def progress_factory(*, label):
+            callback = mock.Mock()
+            callbacks.append((label, callback))
+            return callback
+        with mock.patch.object(LIVE.WRITER, 'ConsoleProgress', side_effect=progress_factory):
+            self.transaction()
+            report = self.run_apply()
+        self.assertTrue(report['success'], report)
+        self.assertTrue(any('Prepublication' in label for label, cb in callbacks))
+        for label, callback in callbacks:
+            callback.assert_called_with(SIZE, SIZE)
 
     def test_journal_reuse_different_foreign_and_fsync_faults(self):
         with parent(self.boot) as directory:

@@ -4,8 +4,9 @@ Latest observation (2026-11-12): seven outer-host packages advanced through
 unattended upgrades; the package count remains 842. The frozen replay builder
 still matches its historical lock. Candidate construction correctly refused the
 outer inventory before image creation. A separate exact outer-host lock and
-build-only adapter pass focused checks and independent review; corrected full
-validation is running. See [the retained attempt](evidence/managed-root-candidate-progress-20261112.json)
+build-only adapter pass independent review and the corrected full 3579-test
+Ubuntu run, plus shell and diagnostic suites. See [the adapter result](evidence/outer-builder-inventory-validation-20261112.json)
+and [retained attempt](evidence/managed-root-candidate-progress-20261112.json)
 and [current status](implementation-status.md). Historical package inventories
 and capacity samples below are not fresh admission evidence.
 

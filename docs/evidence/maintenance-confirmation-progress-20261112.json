@@ -1,0 +1,54 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "result": "pass for focused source review; combined validation and deployment pending",
+  "hardware_acceptance": false,
+  "source": {
+    "scripts/update-host.py": {
+      "bytes": 19131,
+      "sha256": "a5bb70ff2756d8ba6e61cd8b4c6f3620fa5c7887cdd45ff5ef2215e5587546c9"
+    },
+    "scripts/select-host-root.py": {
+      "bytes": 21711,
+      "sha256": "b496f5e9545246460d439aadf5ab6fd555afb496f5699d7abd575ccafde7d46c"
+    },
+    "tests/test_update_host.py": {
+      "bytes": 29162,
+      "sha256": "ba4297c0d7495c9ee4b39613308b5bf84ca7a808051d8c327f3ec09fc35a5d3c"
+    },
+    "tests/test_select_host_root.py": {
+      "bytes": 27255,
+      "sha256": "d0ab53b6de4c065ab3437ba9329a0098d8444d4b462974d54ed69542a520d673"
+    },
+    "tests/test_host_update_admission.py": {
+      "bytes": 17891,
+      "sha256": "423d666b7ea2d61cb0991e5c8d99bbbd92e0d9e1f6bfcae4b100f0d7080b70bb"
+    },
+    "tests/verify_host_update_loop.py": {
+      "bytes": 17583,
+      "sha256": "75e27a18a7f964e969a71a400def5c42475177d9e26f5f9afa76de6b03f44b80"
+    }
+  },
+  "independent_review": {
+    "bytes": 9520,
+    "sha256": "58a0c8215f7b3513df9660545ad81fbb1c8984123f4b6a6a0905a11cdbdd8c04",
+    "tests": 94,
+    "failures_errors_skips": 0
+  },
+  "confirmation": "Exact target/slot/intent/model/serial/size/root hash/plan hash displayed before one interactive TTY yes/no; only trimmed case-insensitive yes accepts. Backups remain a precondition, not established by input. No unattended/force flag.",
+  "readback": "Writer readback defaults false; explicit --verify-readback must match strict Boolean in reviewed plan. 0/False and1/True equality cannot bypass it. Successful flush without readback reports bytes_verified0 andverification_performedFalse, with activation_ready referring to staging only. Explicit readback corruption refuses.",
+  "progress": "Existing full candidate/prewrite/selection/prepublication hash sites and inputs retained with ConsoleProgress callbacks; no added scan or benchmark. Selection retains full-root authentication.",
+  "loop_fixture": "One reviewed literal verify_readback=True preserves existing4GiB verified-loop success oracle. No loop launch yet; requires production candidate.",
+  "custody": {
+    "bytes": 71680,
+    "sha256": "aa9aaf3420c4bdfeeb74f4b8326237d4247dd1dcbaff04cff43bef28c7c1f242",
+    "native": "out/maintenance-confirmation-progress-20261112/receipts.tar",
+    "builder": "/var/lib/a733-maintenance-confirmation-progress-20261112/receipts.tar"
+  },
+  "limitations": [
+    "Focused tests use native tmpfs/flocks plus documented regular-file/platform/discovery/authorization substitutes; no physical NVMe/boot/KVM.",
+    "Combined frozen privileged Ubuntu regression, production artifact/reader/loop checks and installed physical stage/select/rollback remain required.",
+    "Legacy installed migration tools retain their original protocol/readback; do not supply new flags or copy current installed-only controller into the old root.",
+    "Original SPI recovery/managed KVM/finalbootcounts/independentreproduction gates remain open. Endurance evidence reused."
+  ]
+}

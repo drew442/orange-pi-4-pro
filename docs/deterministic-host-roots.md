@@ -51,6 +51,15 @@ and retains the original expected-tree/stability writers. Normalization records
 are added only to the outer manifest and receipt, not the root payload marker.
 The held-template check runs before receipt completion.
 
+The current adapter separately authenticates the outer host's exact 842-package
+inventory in `configs/builder-host-packages-20261112.lock.tsv`. Seven recorded
+November 11 updates distinguish it from the unchanged historical replay/archive
+lock. Both paths and pins, and only those seven version differences, appear in
+`builder_package_inventory` on plans/receipts. The frozen builder and userspace
+archive retain their original bindings. Missing/tampered locks or any additional
+inventory difference refuse. [Validation](evidence/outer-builder-inventory-validation-20261112.json).
+No historical artifact hash below is a hash for the new managed candidate.
+
 The creator and launcher are outside the installed 39-source maintenance tree.
 The unchanged installed generator remains available for historical builds; it
 is not silently relabeled as deterministic. Actual markers remain A `286494…`

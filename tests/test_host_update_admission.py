@@ -320,6 +320,8 @@ class AdmissionIntegration(unittest.TestCase):
 
     def test_close_after_open_failure_is_overall_failure_with_written_bits(self):
         case, command = self.engine('update')
+        case.args.verify_readback = True
+        case.plan = command.make_plan(case.args, case.source)
         native = self.M.LIFECYCLE.StateController.close
         def closed(controller):
             native(controller)

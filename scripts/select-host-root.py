@@ -132,7 +132,8 @@ def checked_root(args, manifest, context):
         WRITER.validate_fd(fd, target)
         fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
         check_context(args, manifest, context)
-        WRITER.hash_stream(stream, manifest.expected)
+        WRITER.hash_stream(stream, manifest.expected, progress=WRITER.ConsoleProgress(
+            label='Selected root bytes authenticated'))
         check_context(args, manifest, context)
         WRITER.validate_fd(fd, target)
         stream.seek(0)
@@ -169,13 +170,18 @@ def authorize(plan, input_stream=None, output_stream=None):
     outgoing = sys.stderr if output_stream is None else output_stream
     require(incoming.isatty() and outgoing.isatty(), 'apply requires an interactive TTY')
     target = plan['context']['target']
-    phrase = (f"SELECT {plan['intent']} {plan['manifest']['slot']} {target['serial']} "
-              f"{target['canonical_path']} {target['size_bytes']} {plan['plan_sha256']}")
-    for prompt, expected in (('Confirm independently verified off-device backup', 'BACKUP VERIFIED'),
-                             ('Confirm explicit selection', phrase)):
-        outgoing.write(prompt + ': ' + expected + '\n> ')
-        outgoing.flush()
-        require(incoming.readline().rstrip('\n') == expected, 'authorization phrase does not match')
+    outgoing.write(
+        f"Select root slot {plan['manifest']['slot']}; intent: {plan['intent']}\n"
+        f"Target: {target['canonical_path']}\n"
+        f"Model: {target.get('model', plan['context'].get('disk', {}).get('model', 'unavailable'))}\n"
+        f"Serial: {target['serial']}\nSize: {target['size_bytes']} bytes\n"
+        f"Root SHA-256: {plan['expected_root']['sha256']}\n"
+        f"Plan SHA-256: {plan['plan_sha256']}\n"
+        "An independently verified off-device backup is a required precondition; "
+        "this confirmation is not backup evidence.\n"
+        "Proceed with explicit root selection? [yes/no] ")
+    outgoing.flush()
+    require(incoming.readline().strip().casefold() == 'yes', 'authorization declined')
 
 
 def secure_read(directory, name, limit, *, sync=False):
@@ -337,7 +343,8 @@ def apply(args, manifest, plan, report=None, *, plan_check=lambda target: None):
                         journal_store(boot, WRITER.canonical_json(journal), name, report)
                         check()
                         # Reauthenticate after journal I/O while locks and FD remain held.
-                        WRITER.hash_stream(root, manifest.expected)
+                        WRITER.hash_stream(root, manifest.expected, progress=WRITER.ConsoleProgress(
+                            label='Prepublication root bytes authenticated'))
                         check()
                         require(secure_read(boot, 'selected.conf', 4096) == before,
                                 'selector changed before publication')
