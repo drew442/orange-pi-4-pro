@@ -1,0 +1,93 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "scope": "Non-destructive production baseline; no flashing, reboot or new KVM test",
+  "boot_id": "5858af7a-977e-4a9b-971e-6d71ae7858d3",
+  "sd_absent": true,
+  "nvme": {
+    "serial": "134807190FC700149277",
+    "bytes": 256060514304,
+    "root": "/dev/nvme0n1p2",
+    "root_read_only": true,
+    "state_uuid": "360dfb39-f49f-487e-b307-0bb887c854c5",
+    "guest_uuid": "298b281a-d10e-44eb-bdb9-285e27eaafad"
+  },
+  "spi": {
+    "sha256": "e829cf7b08fa9753866df7de727b2d1b92bb5c525f3bbf4cd94315d528dc275a",
+    "bytes": 16777216,
+    "matches_prior_postwarm": true,
+    "builder_path": "/var/lib/a733-production-baseline-20261112-01/spi.bin",
+    "builder_verified_sha256": "e829cf7b08fa9753866df7de727b2d1b92bb5c525f3bbf4cd94315d528dc275a",
+    "fsynced": true
+  },
+  "stopped_guest_preservation": {
+    "bytes": 140523520,
+    "sha256": "c637c9c713f15a5f01e9b882c9c6c0acc3908967c4b7129088bfd05821534330",
+    "manifest_sha256": "c47520b6d87cae6db6032827f58442d35ba389576712cb1be5e020a19e2bc60f",
+    "checkpoint": 4,
+    "all_manifest_files_verified": true,
+    "archive_members": 14,
+    "raw_preservation_only": true,
+    "builder_path": "/var/lib/a733-production-baseline-20261112-01/firstkvm-baseline.tar",
+    "builder_fsynced_and_verified": true
+  },
+  "serial": {
+    "bridge_service": "ttyS3-capture.service",
+    "bridge_pid": 604,
+    "relay_service": "a733-uart-relay-20261109-01.service",
+    "relay_pid": 3569662,
+    "both_observed_running": true
+  },
+  "existing_backups_verified": [
+    "original blank SPI",
+    "post-cold calibrated SPI",
+    "post-warm calibrated SPI",
+    "operational evidence archive"
+  ],
+  "builder": {
+    "os": "Ubuntu 22.04.5",
+    "available_disk_bytes": 40838217728,
+    "available_memory_bytes": 7475011584,
+    "sudo_noninteractive": true,
+    "compilation_jobs": 2
+  },
+  "records": {
+    "out/production-readiness-20261112-01/builder-baseline.json": {
+      "bytes": 1760,
+      "sha256": "434a4d76b650b3a8c58a0393abc09ef19e9e523508162ceb253a34621235a701"
+    },
+    "out/production-readiness-20261112-01/firstkvm-baseline.json": {
+      "bytes": 439,
+      "sha256": "1809d74dd0d5c958a5f32c6add7ffc11d25ad4f8c4b075a7bb5d1d4df3073bd7"
+    },
+    "out/production-readiness-20261112-01/host-baseline.json": {
+      "bytes": 2509,
+      "sha256": "fb0ca0f68aee89f0688590dd91482bffffe8cee1618681a493753de952e8ae8e"
+    },
+    "out/production-readiness-20261112-01/local-baseline.json": {
+      "bytes": 510,
+      "sha256": "f6262b7c15584175cad8f571549c656624453b052444128c12b5a076b1e8b21a"
+    },
+    "out/production-readiness-20261112-01/serial-baseline.json": {
+      "bytes": 728,
+      "sha256": "a745583f859454744300f8c00682bc7b634af32d8da5f69866833ad5d347c83f"
+    },
+    "out/production-readiness-20261112-01/spi-backup-progress.log": {
+      "bytes": 1070,
+      "sha256": "03fb04af78d2bf082c2b8c84bbe6e442eacc4de59e632236212e75b8374321c9"
+    },
+    "out/production-readiness-20261112-01/spi-backup-result.json": {
+      "bytes": 947,
+      "sha256": "550d16a9a79620450e6a933135512f34e19a77261b4c0c9201fbfcebcc3487c8"
+    },
+    "out/production-readiness-20261112-01/spi-custody.json": {
+      "bytes": 329,
+      "sha256": "c8a8991b665e3a6b236d45d6370fb50e78d51a861d5044d1f1354c6d3a9b2175"
+    },
+    "out/production-readiness-20261112-01/storage-pairing.json": {
+      "bytes": 1434,
+      "sha256": "126faff48044c335ee011d45a886edf6489bd3798bb23a1aee2f5ea496565620"
+    }
+  },
+  "remaining": "Metadata-aware implementation/review, recovery demonstration, unattended guests and final qualification remain pending."
+}
