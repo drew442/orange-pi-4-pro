@@ -1,5 +1,6 @@
 """Private file/stream sender checks; no board, boot or clean shutdown evidence."""
 import base64
+import contextlib
 import gzip
 import hashlib
 import importlib.util
@@ -42,6 +43,12 @@ class Writer:
 
 class Sender(unittest.TestCase):
     def setUp(self):
+        # Archive-only fixture: admission/real flock behavior has its own suite.
+        guard = patch.object(S.OPERATION, 'ManualGuestOperation',
+                             return_value=contextlib.nullcontext(
+                                 type('Guard', (), {'recheck': lambda self: None})()))
+        guard.start()
+        self.addCleanup(guard.stop)
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         self.guest = Path(self.tmp.name)
@@ -121,6 +128,54 @@ class Sender(unittest.TestCase):
         self.assertEqual(receipt['archive'], record(writer.data))
         self.assertTrue(writer.flushed)
         self.assertFalse(receipt['hardware_acceptance'])
+
+    def test_operation_final_recheck_failure_has_no_success(self):
+        checks = []
+        class Guard:
+            def __enter__(self):
+                return self
+            def __exit__(self, *unused):
+                checks.append('close')
+            def recheck(self):
+                checks.append('check')
+                if checks.count('check') == 3:
+                    raise S.OPERATION.ADMISSION.AdmissionError('operation lost at final check')
+        writer = Writer()
+        with patch.object(S.OPERATION, 'ManualGuestOperation', return_value=Guard()):
+            with self.assertRaisesRegex(S.OPERATION.ADMISSION.AdmissionError, 'final check'):
+                self.send(writer)
+        self.assertEqual(checks, ['check', 'check', 'check', 'close'])
+        self.assertTrue(writer.flushed)
+
+    def test_operation_acquired_before_inspection_and_closed_after_history(self):
+        events = []
+        inspection_type = S.POLICY.Inspection
+        history_type = S.History
+        class Guard:
+            def __enter__(self):
+                events.append('admit')
+                return self
+            def __exit__(self, *unused):
+                events.append('release')
+            def recheck(self):
+                pass
+        class Inspection(inspection_type):
+            def __init__(self, *args):
+                self_test.assertEqual(events, ['admit'])
+                super().__init__(*args)
+            def __exit__(self, *args):
+                events.append('inspection close')
+                super().__exit__(*args)
+        class History(history_type):
+            def close(self):
+                events.append('history close')
+                super().close()
+        self_test = self
+        with patch.object(S.OPERATION, 'ManualGuestOperation', return_value=Guard()), \
+                patch.object(S.POLICY, 'Inspection', Inspection), \
+                patch.object(S, 'History', History):
+            self.send()
+        self.assertEqual(events, ['admit', 'history close', 'inspection close', 'release'])
 
     def test_stale_disk_refused_before_output(self):
         (self.guest / 'disk.raw').write_bytes(b'B' * 512)

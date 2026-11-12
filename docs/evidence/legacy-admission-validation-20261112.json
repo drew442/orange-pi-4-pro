@@ -1,0 +1,107 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "result": "pass",
+  "scope": "Uninstalled root-only manual guest admission and legacy backup/checkpoint integration; no enrollment/restore/launcher/host-maintenance integration or boot services/hardware acceptance",
+  "builder": "drew@build.drewnet.online",
+  "builder_base": "/var/lib/a733-legacy-admission-validation-20261112-01",
+  "full_Ubuntu_tests": 2788,
+  "failures_errors_skips": 0,
+  "shell_suites": 5,
+  "diagnostic_cases": 5,
+  "locked_source_files": 1011,
+  "source_lock": {
+    "bytes": 162033,
+    "sha256": "5c6b6dde317143e56b5a4965896301e7fe757e72490d78a1ec5510169bdd287b",
+    "index_tree": "97f79ecd93e7c845c0f914b0ac01db9a3b56c36c"
+  },
+  "unit": {
+    "RuntimeMaxUSec": "8h",
+    "MainPID": "0",
+    "Result": "success",
+    "ExecMainCode": "1",
+    "ExecMainStatus": "0",
+    "CPUQuotaPerSecUSec": "2s",
+    "MemoryMax": "3221225472",
+    "ActiveState": "active",
+    "SubState": "exited"
+  },
+  "resources": {
+    "sampled_min_free_disk_bytes": 31970349056,
+    "sampled_min_available_memory_bytes": 7115624448,
+    "compilation_jobs": 2
+  },
+  "source": {
+    "build/maintenance-tools.py": {
+      "bytes": 15189,
+      "sha256": "652b20492c8f07fd9629996999f466a1712187c62e4c0bbdef6db40a4d30063a"
+    },
+    "scripts/backup-guest.py": {
+      "bytes": 9765,
+      "sha256": "5f17f728b96796792d744a27a89fc2eec0e1c26f70d3dd8051a47d0e5d9c8a15"
+    },
+    "scripts/checkpoint-guest.py": {
+      "bytes": 7793,
+      "sha256": "08249b52dbf974af8c22c8ea9e54e1a367052dd87c45f30e33593009dd6704c4"
+    },
+    "scripts/guest-operation-admission.py": {
+      "bytes": 6282,
+      "sha256": "3ed58e5d5fdfb5bd8a04e831ca5c63b11569de9f72b3a5bb50880644234303ec"
+    },
+    "tests/test_guest_backup_sender.py": {
+      "bytes": 14481,
+      "sha256": "302c6a9df03928d3ca06ff16af66839546947f909f76482ecb1db22a1c44e30b"
+    },
+    "tests/test_guest_checkpoint.py": {
+      "bytes": 26623,
+      "sha256": "2a5560fda52674b53ceac53219debce0ff76fe933fb9d0ac5645c25ce5d76de9"
+    },
+    "tests/test_guest_operation_admission.py": {
+      "bytes": 17090,
+      "sha256": "60448294b0f74b27364e9c2c4f8a4aa6dcf72f3dda4ad22b57854e4092f874ca"
+    },
+    "tests/test_host_payload.py": {
+      "bytes": 28099,
+      "sha256": "33bd9b81668eebd32219d9129a6be28699f80721ffef718246062da5811c6f3a"
+    },
+    "tests/test_launch_deterministic_host_roots.py": {
+      "bytes": 11602,
+      "sha256": "a634a0406d64bb446484cc76727f8f2e435e4f8651cfae00cae3189e4ba5c8db"
+    },
+    "tests/test_maintenance_tools.py": {
+      "bytes": 17354,
+      "sha256": "cdc78c500655b328e64aa737ba3ee3fc932aa66362eb58b8477e16feaec8c6cb"
+    }
+  },
+  "independent_review": {
+    "path": "out/legacy-admission-validation-20261112-01/final-review.json",
+    "bytes": 101261,
+    "sha256": "b265d0bccc90855e25a4b7f4057f6643c5f3bfeeff9e339aa2d378dc725a46d0"
+  },
+  "resolved_findings": [
+    "Fixed query cleanup after poll/kill failure: bounded wait and stdout close are always attempted. Native kill-before/after-effect regressions and independent original probe verify failure remains visible.",
+    "Share thread-local nesting boundary through canonical authenticated ADMISSION, so distinct helper imports cannot acquire nested shared leases for different guests. Independent original native probe now refuses without invalidating outer operation."
+  ],
+  "behavior": [
+    "Actual root/native host/boot/runtime and protected local KVM group checks; fixed bounded PID1 SystemState query; open existing admission only, then lease SH and stable guest EX before subsystem/disk locks.",
+    "Managed-name exclusion under guest EX before legacy export bytes or manual checkpoint mutation; creator PID/thread and actual readonly flock identity/mode/PID checked; existing admitted holders can finish after gate closure.",
+    "Legacy five-member export and manual two-phrase terminal clean-shutdown/checkpoint contract and schema-1 history/plan bytes preserved. Owned cleanup completes before success and failures remain visible.",
+    "Independent native flocks, maintenance exclusion, record tamper, partial cleanup, actual nonroot CLI refusal and real terminal authorization tested; board/runtime/account/storage policy explicitly substituted."
+  ],
+  "packaging": {
+    "current_sources": 57,
+    "runtime_files": 58,
+    "historical_sources": 39,
+    "entrypoints": 16,
+    "relocated_shared_admission_and_nesting_identity": "pass"
+  },
+  "receipts": {
+    "native": "out/legacy-admission-validation-20261112-01/receipts.tar",
+    "builder": "/var/lib/a733-legacy-admission-validation-20261112-01/receipts.tar",
+    "bytes": 348160,
+    "sha256": "085c4326a0f60ddbeb99ac7336bb332b53e72584ab8a739a1cae708295aec810",
+    "verified_fsynced_both": true
+  },
+  "hardware_acceptance": false,
+  "remaining": "Enrollment/restore/account and nonroot launcher admission; global host maintenance closure and installed boot/lifecycle services; coherent managed backup/restore; inactive-root build/deployment and physical SPI recovery/KVM/final boot qualification. Existing endurance evidence remains accepted."
+}

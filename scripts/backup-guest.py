@@ -28,6 +28,7 @@ def module(name, path):
 
 POLICY = module('backup_checkpoint_policy', 'scripts/guest-checkpoint-policy.py')
 BACKUP = module('sender_guest_backup', 'configs/guest_backup.py')
+OPERATION = module('sender_guest_operation', 'scripts/guest-operation-admission.py')
 ENROLL = POLICY.ENROLL
 require = POLICY.require
 CHUNK = 1024 * 1024
@@ -169,13 +170,15 @@ def stream_file(stream, inspection, key, name):
 
 def send(name, pin, writer):
     encoded = EncodedWriter(writer)
-    with POLICY.Inspection(name, pin) as inspection:
+    with OPERATION.ManualGuestOperation(name) as operation, \
+            POLICY.Inspection(name, pin) as inspection:
         require(inspection.disk_record == inspection.manifest['config']['disk'],
                 'disk changed: explicit checkpoint required before backup')
         history = History(inspection)
         try:
             inspection.recheck()
             history.recheck()
+            operation.recheck()  # gzip construction itself emits stream bytes.
             with gzip.GzipFile(filename='', mode='wb', compresslevel=9, mtime=0,
                                fileobj=encoded) as archive:
                 write_entry(archive, 'enrollment.json', inspection.manifest_data)
@@ -185,9 +188,11 @@ def send(name, pin, writer):
                 archive.write(b'\0' * 1024)
                 history.recheck()
                 inspection.recheck()
+                operation.recheck()
             encoded.flush()
             history.recheck()
             inspection.recheck()
+            operation.recheck()
             count = len(history.entries)
         finally:
             history.close()
@@ -226,7 +231,8 @@ def main(argv=None):
 if __name__ == '__main__':
     try:
         sys.exit(main())
-    except (OSError, ValueError, UnicodeError, KeyboardInterrupt) as error:
+    except (OSError, ValueError, UnicodeError, KeyboardInterrupt,
+            OPERATION.ADMISSION.AdmissionError) as error:
         print(json.dumps({'success': False, 'error': type(error).__name__,
                           'partial_stream_must_be_discarded': True}), file=sys.stderr)
         sys.exit(1)

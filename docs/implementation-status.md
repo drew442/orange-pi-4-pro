@@ -46,56 +46,43 @@ validation staging permissions. Read-only live install/calibrated-restore plans
 are no-ops; original blank restoration affects exactly units 0–25.
 [Software evidence](evidence/spi-metadata-validation-20261112.json) and
 [metadata policy](spi-calibration-policy.md). Physical SD recovery/restore/reinstall,
-unattended guest deployment and final qualification remain pending. The
-[guest lifecycle design](guest-autostart-design.md) passes independent architecture
-review. Admission/registry/head APIs and protected store/context/controller pass
-review, including actual unprivileged RAM permissions/flock checks.
-[Foundation](evidence/guest-foundation-validation-20261112.json) and
-[state/bootstrap evidence](evidence/guest-state-validation-20261112.json).
-Managed-run permits, Linux process/QMP checks, bounded transport, versioned shutdown
-provenance and the shared checkpoint engine pass independent review.
-The Linux surrogate integration passes credentials, executable/UNIX-peer binding,
-QMP and raw wait; it ran no QEMU or KVM. Current packaging has 56 sources;
-historical recovery archives retain their strict 39-source boundary and pins.
-Resolved group/deadline/disk-binding findings and all preliminary logs are retained.
-[Runtime foundation evidence](evidence/managed-runtime-validation-20261112.json).
-Protected permit publication/inherited-lock adoption, durable run admission and
-immutable head transitions, and the paused KVM-only child launcher now pass
-independent review. Native Linux proof confirms actual dropped credentials,
-root-attested self namespace checks, inherited locks surviving closure of parent
-copies, gate-closed adoption and ELF descriptor exec. Root namespace links remain
-inaccessible to the child; it gains no capabilities. The initial root-only test
-fixture errors and corrected retry are retained.
-[Managed launch evidence](evidence/managed-launch-validation-20261112.json).
-Root fork/barrier/credential-drop and bounded QMP supervision now pass independent
-review and **2679** privileged Ubuntu tests, five shell suites and five diagnostic
-cases. Eighteen native surrogate cases exercise actual fork, socket, QMP, raw wait,
-console and forced-cleanup syscalls with explicitly mocked platform/storage and
-executable/credential policy. Shutdown outcomes stay bound to the creating
-process/thread and do not authorize checkpointing on their own.
-[Supervisor software evidence](evidence/managed-supervisor-validation-20261112.json).
-The managed fixture validator, retained stopped-disk publication custody and bounded
-outcome/intent/completion record schemas now pass independent review and **2722**
-privileged Ubuntu tests, five shell suites and five diagnostic cases. The stopped
-disk keeps its exclusive lock across exact manifest replacement while the original
-inspection remains stale. Record parsing grants no checkpoint authority.
-[Checkpoint foundation evidence](evidence/managed-checkpoint-foundation-validation-20261112.json)
-records source pins and verified receipt copies. These helpers remain uninstalled.
-The root checkpoint publisher, strict interrupted-publication reconciliation,
-completed ready-cohort gates and typed bootstrap account core now pass independent
-review and **2755** privileged Ubuntu tests, five shell suites and five diagnostic
-cases. Actual native producer composition includes a zero-byte console; A733/KVM
-policy remains explicitly mocked. One earlier same-byte history-test failure is
-retained; its deterministic metadata stimulus changed, with production guards
-unchanged. [Checkpoint integration evidence](evidence/managed-checkpoint-runtime-validation-20261112.json).
-Owned publication cleanup is checked; the future outer service must also close
-and check borrowed Supervisor/Run/controller/lease resources. All helpers remain
-uninstalled. Legacy admission integration is underway; coherent managed backup/restore,
-boot services, inactive-root deployment and physical acceptance remain pending.
-Inactive-root deployment and physical acceptance remain pending. Two fresh managed power-key guest builds
-match all manifest files byte for byte with verified off-device artifact copies.
-[Fixture build evidence](evidence/managed-fixture-build-20261112.json). Its shutdown
-path remains hardware-unproven.
+unattended guest deployment and final qualification remain pending.
+
+The [guest lifecycle design](guest-autostart-design.md) and its uninstalled
+admission/registry/store, run-permit/launcher and supervisor foundations pass
+independent review. Native Linux tests cover protected permissions, inherited
+flocks, credential drops, descriptor exec, UNIX peers, QMP and raw wait with
+explicit platform/storage/executable substitutions. No QEMU/KVM ran in those
+surrogates. Evidence: [foundation](evidence/guest-foundation-validation-20261112.json),
+[state/bootstrap](evidence/guest-state-validation-20261112.json),
+[runtime](evidence/managed-runtime-validation-20261112.json),
+[launch](evidence/managed-launch-validation-20261112.json) and
+[supervision](evidence/managed-supervisor-validation-20261112.json).
+
+Reviewed managed fixture validation, stopped-disk custody, authenticated checkpoint
+publication/reconciliation, completed-cohort gates and typed bootstrap accounts
+also pass software checks. The retained disk flock spans exact manifest replacement;
+ordinary inspections remain stale. Actual native producer composition includes
+zero-byte console output. Record parsing grants no authority. Owned cleanup is
+checked; the future outer service must also close/check its borrowed supervisor,
+run, controller and lease. [Checkpoint foundation](evidence/managed-checkpoint-foundation-validation-20261112.json)
+and [integration evidence](evidence/managed-checkpoint-runtime-validation-20261112.json)
+retain source pins, reviews and preliminary failures.
+
+Root-only legacy backup/manual-checkpoint admission now passes independent review
+and **2788** privileged Ubuntu tests, five shell suites and five diagnostic cases.
+Managed names refuse before export/mutation; SH lease/guest EX survive through
+cleanup. Query cleanup and nesting across distinct helper imports were corrected
+and independently rechecked. [Legacy admission evidence](evidence/legacy-admission-validation-20261112.json).
+Current packaging has 57 sources; historical archives retain their exact 39-source
+boundary. These helpers remain uninstalled. Enrollment/restore integration is
+under review/development; account/activation/nonroot launch and host-maintenance
+admission, coherent managed backup/restore, boot services, inactive-root deployment
+and physical acceptance remain pending.
+
+Two fresh managed power-key guest builds match byte for byte with verified
+off-device copies. [Build evidence](evidence/managed-fixture-build-20261112.json).
+Its shutdown path remains hardware-unproven.
 
 ## Live board and constraints
 
@@ -200,17 +187,17 @@ binary redistribution clearance is claimed. [Source inventory](toolchain-sources
 
 ## Resources and next actions
 
-Latest privileged Ubuntu 22.04 suite: **2755 tests**, zero skips/errors/failures,
+Latest privileged Ubuntu 22.04 suite: **2788 tests**, zero skips/errors/failures,
 five shell suites and five diagnostic cases; all five TOMLs parse.
-[Checkpoint integration suite evidence](evidence/managed-checkpoint-runtime-validation-20261112.json)
+[Legacy admission suite evidence](evidence/legacy-admission-validation-20261112.json)
 records the latest run. The final-A warm collector authenticates release/root/policy and stops on
 actual remote release refusal; [software evidence](evidence/final-warm-binding-validation-20261110.json)
 retains independent review and the initial corrected validation-environment failure. Host checks do not prove
 hardware acceptance.
 
 At final qualification, codex has more than 24 GB available. The last full-suite
-builder suite sampled minima of 32066387968 bytes available and
-MemAvailable 7088046080 bytes.
+builder suite sampled minima of 31970349056 bytes available and
+MemAvailable 7115624448 bytes.
 Keep bulk sources, images and backups on the builder. Its LV is 128819658752 bytes
 with 4265607168 bytes VG free. All free builder capacity is approved for use and
 expansion after exact-target revalidation and independent review. Native codex

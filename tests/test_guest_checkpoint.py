@@ -10,6 +10,7 @@ import signal
 import stat
 import tempfile
 import unittest
+import uuid
 from unittest.mock import patch
 
 BASE = Path(__file__).resolve().parents[1]
@@ -58,6 +59,11 @@ class CheckpointFiles(unittest.TestCase):
         self.disk_data = self.disk.read_bytes()
         self.plan_path = self.base / 'plan.json'
         self.context = {'namespace': 'fixture-only'}
+        # General publication/custody fixtures isolate admission explicitly.
+        # NativeCheckpointAdmission below restores the actual root-only helper.
+        self.manual_admission_patch = patch.object(C.OPERATION, 'ManualGuestOperation')
+        self.manual_admission_patch.start()
+        self.addCleanup(self.manual_admission_patch.stop)
         mocks = [patch.object(C, 'LOCK', str(self.base / 'lock')),
                  patch.object(C.ENROLL, 'ROOT', str(self.root)),
                  patch.object(C.ENROLL.MANAGEMENT, 'STATE', self.state),
@@ -329,6 +335,223 @@ class CheckpointFiles(unittest.TestCase):
         self.assertFalse(receipt['published'])
         self.assertEqual(foreign[0].read_bytes(), b'foreign-sentinel')
         self.assertEqual(self.manifest_path.read_bytes(), self.old_data)
+
+
+class CheckpointAdmissionBoundary(unittest.TestCase):
+    def test_nonroot_prepare_and_apply_refuse_before_inputs(self):
+        with patch.object(C.OPERATION.os, 'getresuid', return_value=(1000, 1000, 1000)), \
+                patch.object(C.POLICY, 'Inspection') as inspection, \
+                patch.object(C.os, 'open') as opened:
+            with self.assertRaisesRegex(C.OPERATION.ADMISSION.AdmissionError, 'actual root'):
+                C.prepare('one', '0' * 64)
+            receipt = C.apply('one', '0' * 64, '/unused')
+        self.assertFalse(receipt['success'])
+        self.assertFalse(receipt['metadata_may_be_modified'])
+        inspection.assert_not_called()
+        opened.assert_not_called()
+
+
+@unittest.skipUnless(os.getresuid() == (0, 0, 0), 'native admission flock fixture requires root')
+class NativeCheckpointAdmission(unittest.TestCase):
+    save_plan = CheckpointFiles.save_plan
+    apply = CheckpointFiles.apply
+    assert_disk_unchanged = CheckpointFiles.assert_disk_unchanged
+
+    def setUp(self):
+        CheckpointFiles.setUp(self)
+        self.manual_admission_patch.stop()
+        self.operation = C.OPERATION
+        self.admission_module = self.operation.ADMISSION
+        self.boot = str(uuid.uuid4())
+        self.runtime = self.base / 'a733-admission'
+        for substitute in (
+                patch.object(self.admission_module, 'RUNTIME_PARENT', str(self.base)),
+                patch.object(self.admission_module, 'RUNTIME', str(self.runtime)),
+                patch.object(self.operation.CONTEXT, 'read_system',
+                             return_value=(self.boot + '\n').encode()),
+                patch.object(self.operation.CONTEXT, 'host_identity'),
+                patch.object(self.operation.CONTEXT.MANAGEMENT, 'runtime_guard'),
+                patch.object(self.operation.ACCOUNTS, 'snapshot',
+                             return_value={'group': b'root:x:0:\nkvm:x:108:\n'}),
+                patch.object(self.operation, 'manager_state', return_value='running')):
+            substitute.start()
+            self.addCleanup(substitute.stop)
+        self.admission = self.admission_module.initialize(self.boot, 108, lambda: 'running')
+        self.addCleanup(self.admission.close)
+        owner = self.admission.bootstrap_owner
+        self.admission.prepare_managed(owner.lease)
+        with self.admission.guest_lock('one', owner.lease, create=True):
+            pass
+        owner.open()
+        owner.lease.close()
+
+    def assert_flock(self, path, *, busy):
+        fd = os.open(path, os.O_RDONLY)
+        try:
+            if busy:
+                with self.assertRaises(BlockingIOError):
+                    fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            else:
+                fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        finally:
+            os.close(fd)
+
+    def assert_admitted(self):
+        self.assert_flock(self.runtime / 'leases.lock', busy=True)
+        self.assert_flock(self.runtime / 'guests/one.lock', busy=True)
+
+    def assert_released(self):
+        self.assert_flock(self.runtime / 'leases.lock', busy=False)
+        self.assert_flock(self.runtime / 'guests/one.lock', busy=False)
+
+    def test_managed_prepare_and_apply_refuse_before_lock_or_inspection(self):
+        with self.operation.ManualGuestOperation('one') as operation:
+            operation.admission.mark_managed('one', operation.lease, operation.guest_lock,
+                                            guard=lambda: None)
+        with patch.object(C.POLICY, 'Inspection') as inspection, \
+                patch.object(C, 'make_plan') as plan, patch.object(C, 'authorize') as authorize:
+            with self.assertRaisesRegex(self.admission_module.AdmissionError, 'managed guest'):
+                C.prepare('one', self.pin)
+            receipt = self.apply()
+        inspection.assert_not_called()
+        plan.assert_not_called()
+        authorize.assert_not_called()
+        self.assertFalse(Path(C.LOCK).exists())
+        self.assertFalse(receipt['metadata_may_be_modified'])
+        self.assertEqual(self.manifest_path.read_bytes(), self.old_data)
+        self.assertFalse((self.guest / '.checkpoints').exists())
+        self.assert_disk_unchanged()
+        self.assert_released()
+
+    def test_apply_lock_order_and_admission_outlives_all_cleanup(self):
+        events = []
+        real_init = C.POLICY.Inspection.__init__
+        real_close = C.POLICY.Inspection.close
+        real_operation_close = self.operation.ManualGuestOperation.close
+        real_review_close = C.ENROLL.HeldPath.close
+        def inspect(inspection, *args):
+            self.assert_admitted()
+            self.assert_flock(C.LOCK, busy=True)
+            self.assert_flock(self.disk, busy=False)
+            events.append('inspection')
+            real_init(inspection, *args)
+        def close_inspection(inspection):
+            self.assert_admitted()
+            self.assert_flock(C.LOCK, busy=True)
+            real_close(inspection)
+            events.append('inspection closed')
+        def close_review(review):
+            if review.path == str(self.plan_path):
+                self.assert_admitted()
+                self.assert_flock(C.LOCK, busy=True)
+                self.assert_flock(self.disk, busy=True)
+                events.append('review closed')
+            real_review_close(review)
+        def close_operation(operation):
+            self.assert_flock(C.LOCK, busy=False)
+            self.assert_flock(self.disk, busy=False)
+            self.assert_admitted()
+            events.append('operation closed')
+            real_operation_close(operation)
+        def authorized(_plan):
+            self.assert_admitted()
+            self.assert_flock(self.disk, busy=True)
+            events.append('authorized')
+        with patch.object(C.POLICY.Inspection, '__init__', inspect), \
+                patch.object(C.POLICY.Inspection, 'close', close_inspection), \
+                patch.object(C.ENROLL.HeldPath, 'close', close_review), \
+                patch.object(self.operation.ManualGuestOperation, 'close', close_operation), \
+                patch.object(C, 'authorize', side_effect=authorized):
+            receipt = self.apply()
+        self.assertTrue(receipt['success'], receipt)
+        self.assertEqual(events, ['inspection', 'authorized', 'review closed',
+                                  'inspection closed', 'operation closed'])
+        self.assert_released()
+
+    def test_busy_guest_refuses_before_subsystem_lock_or_inspection(self):
+        with self.admission.admit() as lease, \
+                self.admission.guest_lock('one', lease), \
+                patch.object(C.POLICY, 'Inspection') as inspection:
+            receipt = self.apply()
+        self.assertFalse(receipt['success'])
+        self.assertFalse(Path(C.LOCK).exists())
+        self.assertFalse(receipt['metadata_may_be_modified'])
+        inspection.assert_not_called()
+        self.assert_released()
+
+    def test_admission_rechecked_at_transaction_boundary_before_mutation(self):
+        def authorized(_plan):
+            operation = self.operation._ACTIVE.operation
+            operation.admission.mark_managed('one', operation.lease, operation.guest_lock,
+                                            guard=lambda: None)
+        with patch.object(C, 'authorize', side_effect=authorized):
+            receipt = self.apply()
+        self.assertFalse(receipt['success'])
+        self.assertFalse(receipt['disk_flush_attempted'])
+        self.assertFalse(receipt['metadata_may_be_modified'])
+        self.assertFalse((self.guest / '.checkpoints').exists())
+        self.assertEqual(self.manifest_path.read_bytes(), self.old_data)
+        self.assert_disk_unchanged()
+        self.assert_released()
+
+    def test_prepare_retains_admission_through_inspection_cleanup(self):
+        close = C.POLICY.Inspection.close
+        def closed(inspection):
+            self.assert_admitted()
+            self.assert_flock(self.disk, busy=True)
+            close(inspection)
+        with patch.object(C.POLICY.Inspection, 'close', closed):
+            self.assertEqual(C.prepare('one', self.pin), self.plan)
+        self.assert_released()
+
+    def test_existing_apply_finishes_after_gate_closure(self):
+        with patch.object(C, 'authorize', side_effect=lambda _plan:
+                          self.admission.close_gate('shutdown')):
+            receipt = self.apply()
+        self.assertTrue(receipt['success'], receipt)
+        self.assert_released()
+        with self.assertRaisesRegex(self.admission_module.AdmissionError, 'admission closed'):
+            C.prepare('one', self.pin)
+
+    def test_failed_inspection_releases_admission_and_subsystem_lock(self):
+        with patch.object(C.POLICY.Inspection, '_accounts', side_effect=ValueError('accounts')):
+            receipt = self.apply()
+        self.assertFalse(receipt['success'])
+        self.assertFalse(receipt['metadata_may_be_modified'])
+        self.assert_released()
+        self.assert_flock(C.LOCK, busy=False)
+        self.assert_flock(self.disk, busy=False)
+
+    def test_final_admission_failure_preserves_publication_receipt(self):
+        real = C.transaction
+        def published(*args):
+            real(*args)
+            operation = self.operation._ACTIVE.operation
+            operation.admission.mark_managed('one', operation.lease, operation.guest_lock,
+                                            guard=lambda: None)
+        with patch.object(C, 'transaction', side_effect=published):
+            receipt = self.apply()
+        self.assertFalse(receipt['success'], receipt)
+        self.assertTrue(receipt['published'])
+        self.assertTrue(receipt['durable'])
+        self.assertEqual(receipt['error'], 'AdmissionError')
+        self.assert_released()
+
+    def test_operation_cleanup_failure_preserves_publication_and_releases_once(self):
+        real = self.operation.ManualGuestOperation.close
+        calls = []
+        def closed(operation):
+            calls.append(operation)
+            real(operation)
+            raise OSError('closed then failed')
+        with patch.object(self.operation.ManualGuestOperation, 'close', closed):
+            receipt = self.apply()
+        self.assertEqual(len(calls), 1)
+        self.assertFalse(receipt['success'])
+        self.assertTrue(receipt['published'])
+        self.assertTrue(receipt['durable'])
+        self.assertEqual(receipt['cleanup_error'], 'OSError')
+        self.assert_released()
 
 
 if __name__ == '__main__':

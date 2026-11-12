@@ -41,7 +41,7 @@ class MaintenanceToolsTests(unittest.TestCase):
 
     def test_real_sources_are_exact_and_allowlist_is_closed(self):
         values = TOOLS.entries()
-        self.assertEqual(len(TOOLS.SOURCES), 56)
+        self.assertEqual(len(TOOLS.SOURCES), 57)
         self.assertEqual(len(TOOLS.LEGACY_SOURCES), 39)
         self.assertEqual(set(TOOLS.SOURCES) - set(TOOLS.LEGACY_SOURCES), {
             'configs/guest_registry.py', 'configs/guest_lifecycle.py', 'configs/guest_qmp.py',
@@ -51,7 +51,8 @@ class MaintenanceToolsTests(unittest.TestCase):
             'scripts/guest-qmp-channel.py', 'scripts/guest-checkpoint-transaction.py',
             'scripts/launch-managed-guest.py', 'scripts/managed-guest-supervisor.py',
             'scripts/managed-guest-fixture.py', 'configs/managed-guest-profile.lock.json',
-            'configs/guest_checkpoint_records.py', 'scripts/managed-guest-checkpoint.py'})
+            'configs/guest_checkpoint_records.py', 'scripts/managed-guest-checkpoint.py',
+            'scripts/guest-operation-admission.py'})
         self.assertIn('build/timesync-state.py', TOOLS.SOURCES)
         self.assertEqual(set(values), set(TOOLS.SOURCES) | {'package.json'})
         for name in TOOLS.SOURCES:
@@ -100,6 +101,8 @@ assert activation.ADMISSION is context.ADMISSION is controller.ADMISSION
 assert accounts._bootstrap_context().ADMISSION is context.ADMISSION
 assert checkpoint.LIFECYCLE.ADMISSION is context.ADMISSION
 assert checkpoint.LIFECYCLE._READY_VERIFIER is checkpoint.authenticate_ready_cohort
+operation = load('relocated_operation', 'scripts/guest-operation-admission.py')
+assert operation.ADMISSION is context.ADMISSION
 assert loaded <= set(package['source_records'])
 print(json.dumps(sorted(loaded)))
 """

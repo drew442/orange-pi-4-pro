@@ -27,6 +27,7 @@ def module(name, path):
 
 POLICY = module('checkpoint_policy', 'scripts/guest-checkpoint-policy.py')
 TRANSACTION = module('checkpoint_transaction', 'scripts/guest-checkpoint-transaction.py')
+OPERATION = module('checkpoint_operation', 'scripts/guest-operation-admission.py')
 BACKUP = module('checkpoint_backup', 'configs/guest_backup.py')
 ENROLL = POLICY.ENROLL
 MANIFEST = POLICY.MANIFEST
@@ -56,9 +57,11 @@ def make_plan(inspection):
 
 
 def prepare(name, manifest_sha256):
-    with POLICY.Inspection(name, manifest_sha256) as inspection:
+    with OPERATION.ManualGuestOperation(name) as operation, \
+            POLICY.Inspection(name, manifest_sha256) as inspection:
         result = make_plan(inspection)
         inspection.recheck()
+        operation.recheck()
         return result
 
 
@@ -95,14 +98,15 @@ def apply(name, manifest_sha256, plan_path):
                'published': False, 'durable': False, 'history_published': False,
                'history_durable': False, 'disk_flush_attempted': False,
                'metadata_may_be_modified': False, 'manifest_replace_attempted': False}
-    lock = inspection = review = None
+    operation = lock = inspection = review = None
     try:
-        ENROLL.MANAGEMENT.runtime_guard()
+        operation = OPERATION.ManualGuestOperation(name)
         lock = os.open(LOCK, os.O_RDWR | os.O_CREAT | os.O_NOFOLLOW | os.O_NONBLOCK, 0o600)
         info = os.fstat(lock)
         ENROLL.regular(info, 0o600)
         require(info.st_dev == os.stat('/run').st_dev, 'checkpoint lock must reside on RAM')
         def lock_check():
+            operation.recheck()
             require(ENROLL.identity(os.fstat(lock)) == ENROLL.identity(info) and
                     ENROLL.identity(os.lstat(LOCK)) == ENROLL.identity(info), 'checkpoint lock changed')
         lock_check()
@@ -121,11 +125,12 @@ def apply(name, manifest_sha256, plan_path):
                         'new_disk_sha256': plan['disk']['sha256']})
         authorize(plan)
         transaction(inspection, plan, lock_check, review, receipt)
+        operation.recheck()
     except BaseException as error:
         receipt['success'] = False
         receipt['error'] = type(error).__name__
     finally:
-        for resource in (review, inspection, lock):
+        for resource in (review, inspection, lock, operation):
             if resource is not None:
                 try:
                     os.close(resource) if isinstance(resource, int) else resource.close()
@@ -161,6 +166,7 @@ def main(argv=None):
 if __name__ == '__main__':
     try:
         sys.exit(main())
-    except (OSError, ValueError, UnicodeError, KeyboardInterrupt) as error:
+    except (OSError, ValueError, UnicodeError, KeyboardInterrupt,
+            OPERATION.ADMISSION.AdmissionError) as error:
         print(json.dumps({'success': False, 'error': type(error).__name__}), file=sys.stderr)
         sys.exit(1)
