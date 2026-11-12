@@ -122,6 +122,16 @@ silently queue another run. Manual unit rendering remains explicit. Candidate
 construction/repeat, inactive-root deployment and physical qualification are next.
 No new endurance run is planned.
 
+Candidate construction refused before creating its phase or images: seven outer
+Ubuntu package versions had advanced through November 11 unattended upgrades.
+The frozen builder still matches its historical 842-package replay inventory.
+A separate exact outer-host lock and build-only adapter pass independent review,
+eight focused tests and sixteen independent probes. Their full regression run
+is pending. Its first harness run used an incorrect 0077 umask and failed fixture
+permission checks; the unchanged source is now running under the established
+0022 setting. Preserve both outcomes and observe the same corrected unit before
+another build. [Attempt and validation state](evidence/managed-root-candidate-progress-20261112.json).
+
 Two fresh managed power-key guest builds match byte for byte with verified
 off-device copies. [Build evidence](evidence/managed-fixture-build-20261112.json).
 Its shutdown path remains hardware-unproven.

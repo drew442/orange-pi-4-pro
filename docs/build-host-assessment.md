@@ -1,5 +1,14 @@
 # Build host assessment
 
+Latest observation (2026-11-12): seven outer-host packages advanced through
+unattended upgrades; the package count remains 842. The frozen replay builder
+still matches its historical lock. Candidate construction correctly refused the
+outer inventory before image creation. A separate exact outer-host lock and
+build-only adapter pass focused checks and independent review; corrected full
+validation is running. See [the retained attempt](evidence/managed-root-candidate-progress-20261112.json)
+and [current status](implementation-status.md). Historical package inventories
+and capacity samples below are not fresh admission evidence.
+
 ## Active remote builder
 
 Prepared 2026-11-04: `drew@build.drewnet.online`, Ubuntu 22.04.5 LTS x86_64. SSH and passwordless sudo verified. Four CPUs, 7.8 GiB RAM, 4 GiB swap, approximately 49 GiB available after package installation. Workspace: `/home/drew/orange-pi-4-pro-build`. Use this host for vendor builds; the local Noble assessment below is retained only to explain why local builds are unsuitable.
