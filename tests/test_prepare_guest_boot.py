@@ -23,6 +23,7 @@ SPEC.loader.exec_module(M)
 A = M.ADMISSION
 REAL_CONFIGS = M._configs
 REAL_READY = M._ready
+REAL_RESTORE_CENSUS = M.restore_census
 STORAGE = dict(state_uuid='22222222-2222-4222-8222-222222222222',
                guest_uuid='33333333-3333-4333-8333-333333333333', nvme_serial='SSD-123')
 VALUE = dict(schema=1, profile=M.BOOT_POLICY.SCHEMA.PROFILE, target='/dev/nvme0n1',
@@ -154,6 +155,7 @@ class Native(unittest.TestCase):
             patch.object(M.MAINTENANCE, 'consumer_check', self.census),
             patch.object(M.ACTIVATE, 'make_plan', self.plan),
             patch.object(M.ACTIVATE, 'apply_bootstrap', self.activate),
+            patch.object(M, 'restore_census', self.restore_census),
             patch.object(M.STATE, 'prepare', self.state),
             patch.object(M.ACCOUNTS, 'prepare', self.accounts),
             patch.object(M.LIFECYCLE, 'StateController', PhysicalContextFixture),
@@ -205,6 +207,14 @@ class Native(unittest.TestCase):
         self.events.append('state')
         self.authority(owner)
         return dict(success=True, cleanup_errors=[])
+
+    def restore_census(self, storage, lease, boot_id, guard):
+        self.assertEqual((storage, boot_id), (STORAGE, self.boot))
+        self.assertIs(lease, lease.admission.bootstrap_owner.lease)
+        self.events.append('restore-census')
+        self.authority(lease.admission.bootstrap_owner)
+        guard()
+        return dict(success=True, hardware_acceptance=False, transactions=[], completed=0, private_stages=0)
 
     def accounts(self, owner, storage):
         self.accounts_calls += 1
@@ -262,6 +272,9 @@ class Native(unittest.TestCase):
         self.assertLess(self.events.index('context-close'), self.events.index('open'))
         self.assertLess(self.events.index('policy-close'), self.events.index('open'))
         self.assertLess(self.events.index('census'), self.events.index('open'))
+        self.assertLess(self.events.index('activate'), self.events.index('restore-census'))
+        self.assertLess(self.events.index('restore-census'), self.events.index('state'))
+        self.assertLess(self.events.index('restore-census'), self.events.index('accounts'))
         receipt = self.prepared_dir / M.RECORD
         self.assertEqual(receipt.stat().st_mode & 0o777, 0o400)
         record = M.prepared_record(receipt.read_bytes())
@@ -272,6 +285,40 @@ class Native(unittest.TestCase):
             self.assertEqual(path.stat().st_nlink, 1)
             self.assertEqual(M.digest(path.read_bytes()), pin)
         self.assertFalse(any(self.unit_dir.glob('*.wants')))
+
+    def test_incomplete_restore_refuses_before_state_markers_accounts_and_open(self):
+        self.fail_at = 'restore-census'
+        result = M.prepare()
+        self.assertFalse(result['success'])
+        self.assertEqual(result['stage'], 'restore-census')
+        self.assertNotIn('state', self.events)
+        self.assertNotIn('accounts', self.events)
+        self.assertEqual(self.accounts_calls, 0)
+        self.assertFalse((self.runtime / 'managed').exists())
+        self.assert_closed()
+
+    def test_restore_census_preserves_primary_and_controller_cleanup_failure(self):
+        fixture = self
+        class Controller:
+            def __init__(self, storage, lease, *, boot_id):
+                fixture.assertEqual((storage, boot_id), (STORAGE, fixture.boot))
+                fixture.assertTrue(lease.exclusive)
+                A._held_lock(lease.fd, 'WRITE', os.getpid())
+                self.context = SimpleNamespace(guard=lease.recheck)
+            def __enter__(self):
+                return self
+            def __exit__(self, *args):
+                raise OSError('restore census controller close failed')
+        with A.initialize(self.boot, 108, lambda: 'running') as admission:
+            owner = admission.bootstrap_owner
+            with patch.object(M.RESTORE.CUSTODY.LIFECYCLE, 'StateController', Controller), \
+                    patch.object(M.RESTORE, 'census', side_effect=ValueError('incomplete restore intent')):
+                with self.assertRaises(M.CleanupError) as caught:
+                    REAL_RESTORE_CENSUS(STORAGE, owner.lease, self.boot, owner._matching)
+            detail = caught.exception.receipt
+            self.assertIn('incomplete restore intent', detail['primary_error']['error'])
+            self.assertIn('controller close failed', detail['cleanup_error']['error'])
+            self.assertEqual(admission._read()['state'], 'closed')
 
     def test_repeat_with_active_lease_is_readonly_noop(self):
         self.entry('one')

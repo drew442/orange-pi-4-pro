@@ -21,6 +21,15 @@ archive, observe the existing admission runtime, monotonically close it for
 shutdown, stop managed supervisors, and acquire the actual readonly immediate
 shutdown EX lease. This is a new shutdown closure or an observation of that
 closure; it adopts no bootstrap/maintenance nonce and can never reopen admission.
+Failed preparation's normal teardown may have unmounted p5. Under that actual
+shutdown EX, restore first uses the existing exact-policy activation transaction
+to recover the mount, before constructing its guest HostContext or opening the
+archive. It rechecks the STATE/p5 UUIDs and NVMe model/serial/size throughout.
+Mount journal replay or traversal-permission changes may modify p5 at this
+activation boundary, separately from restore publication; retain that report in
+the public CLI result even if later archive authentication or restoration fails.
+Already-mounted storage is verified without a second mount. Do not weaken normal
+failed-service teardown or initialize/adopt/reopen admission to recover the mount.
 Require the actual retained physical HostContext and a bounded VM-consumer
 census. A failed bootstrap with an existing runtime can be recovered this way;
 a missing or unsafe runtime must refuse rather than construct replacement
@@ -103,6 +112,13 @@ UUID is generated for a new explicit request. Never select a transaction by
    directory replacement. Fsync each affected parent and record acknowledged
    transitions. Cross-filesystem atomicity is not assumed. Admission remains
    closed throughout gaps and partial publication; no launch is permitted.
+   If the entire shared `.a733-lifecycle` parent was originally absent, stage an
+   empty root-owned 0700 replacement privately and bind its inode/old absence in
+   the intent. Publish that exact parent with no replacement during phase 3,
+   before publishing the target lifecycle directory. Resume accepts only the
+   original absence or that pre-pinned directory at its staged/canonical name;
+   it cannot adopt an unrelated empty parent. Flush the moved directory and both
+   parents. A valid unrelated registered guest already requires the shared parent.
 6. Publish the exact new registry with old-hash CAS last. Verify every restored
    destination payload and record with the restore-only verifier described above,
    including actual metadata, hashes and completed-cohort semantics under retained
@@ -162,6 +178,9 @@ During intent/phase/completion record construction, publication may have happene
 without acknowledgement. Resume first verifies the exact named record and its
 parent durability; partial temporary records grant no phase authority. A state
 combining a later registry with an earlier payload/lifecycle phase always refuses.
+In particular, resumed publication must acknowledge fsync of the validated intent
+file and its STATE transaction directory before the first canonical mutation.
+Visibility after a successful rename does not establish that durability barrier.
 
 Any mutation/publication error leaves admission shutdown-closed and retains
 staging, originals and receipts. Do not automatically retry a write or delete
@@ -192,6 +211,11 @@ The preparer must perform that census before creating accounts or opening
 admission. Recovery can resume with its shutdown lease even when bootstrap has
 refused. A completed restore requires fresh boot preparation and actual KVM
 validation before hardware acceptance.
+A named completed repeat first observes immutable STATE provenance using the
+actual retained policy, before shutdown custody, activation or archive access.
+It must not stop/checkpoint a later legitimate guest or mount p5 merely to report
+historical completion. Cleanup uncertainty preserves a known historical data
+commit while making the command fail; it grants no current launch/readiness proof.
 
 ## Required review and evidence
 

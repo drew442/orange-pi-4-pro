@@ -1,0 +1,221 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "result": "pass for uninstalled software integration",
+  "hardware_acceptance": false,
+  "builder": "drew@build.drewnet.online",
+  "full_Ubuntu_tests": 3577,
+  "failures_errors_skips": 0,
+  "shell_suites": 5,
+  "diagnostic_cases": 5,
+  "parsed_TOML": 5,
+  "source_lock": {
+    "bytes": 176524,
+    "sha256": "f48ade95e602f346a4622227f1af4379b993fa11617f10259ec561969194b5f4",
+    "index_tree": "37468c326565d5287fd7ab2a970382b404b745fd",
+    "files": 1101
+  },
+  "source": {
+    "build/maintenance-tools.py": {
+      "bytes": 16383,
+      "sha256": "cd5ae41434e130aaf0181a76c826e467d603a7cc9a0b6abecb06c53e21a16c73"
+    },
+    "configs/guest_managed_restore.py": {
+      "bytes": 7549,
+      "sha256": "db455ebf055f1d1895477c6604d518ce261e7a39e691ab3f6162de5f6c8a4fbd"
+    },
+    "scripts/activate-guest-storage.py": {
+      "bytes": 24463,
+      "sha256": "9053c53388586cd00009d9f366230271a7a0a03c7057120c913b144e5c345101"
+    },
+    "scripts/managed-guest-restore-custody.py": {
+      "bytes": 39409,
+      "sha256": "2f5aed563f5d4130f9a83f07f096d65042ccf5d2d452bedca6687919c56d01ed"
+    },
+    "scripts/managed-guest-restore-source.py": {
+      "bytes": 11260,
+      "sha256": "370d8b53e3fc6b48282c9de46d62da84ab4fff60ad1d8ffc191e35484698acf1"
+    },
+    "scripts/managed-guest-restore-transaction.py": {
+      "bytes": 59944,
+      "sha256": "8e1659cbc55e637e3df78d0a9009a7d1b2befd75f5d0d1d2a94458f50a386164"
+    },
+    "scripts/prepare-guest-boot.py": {
+      "bytes": 37192,
+      "sha256": "1b60dd171feec631471187c007b23642ecc5bc224ba21cdf2e6067894fe27534"
+    },
+    "scripts/restore-managed-guest.py": {
+      "bytes": 9757,
+      "sha256": "4fadd7d0b7d2c5e9fef36b4caac1f716170f38f708896f277455d8c40c75c997"
+    },
+    "tests/test_dispatch_guest_boot.py": {
+      "bytes": 9913,
+      "sha256": "31b7c331ae05143fa928f1fad147763b6e3ff4654af77f01e79e915bda7cda35"
+    },
+    "tests/test_guest_shutdown_activation.py": {
+      "bytes": 11199,
+      "sha256": "5daeafb4357aabee747f9e204b4ed4598f9de4f03b38d6fc25d913fea1742403"
+    },
+    "tests/test_host_payload.py": {
+      "bytes": 28570,
+      "sha256": "25cff4161cb404a19f07930bef795d13a79b72495daa07ecb404a3fc2d2453ac"
+    },
+    "tests/test_launch_deterministic_host_roots.py": {
+      "bytes": 11624,
+      "sha256": "f38b85f476c77701766b31d110c6e59d3ce93e6d23d81daefdaa5be4d43926f5"
+    },
+    "tests/test_maintenance_tools.py": {
+      "bytes": 19087,
+      "sha256": "48e4ee586acec6b53656c718078fe3e21c24fd4d4fc136781d4f9de389bdfb01"
+    },
+    "tests/test_managed_guest_backup_receiver.py": {
+      "bytes": 30216,
+      "sha256": "af98ee8ea8a3a66df0fb0d620ee856b476597c0794879c074af074a3007377ed"
+    },
+    "tests/test_managed_guest_restore_custody.py": {
+      "bytes": 24413,
+      "sha256": "59b7eb7ef758b9882798993c42b189c6997d99e80fb2ac56bd515340f875e4ba"
+    },
+    "tests/test_managed_guest_restore_transaction.py": {
+      "bytes": 26821,
+      "sha256": "41c04b40d948af492aa860dd377239f0d2f31813c80d39d61e938e07ee9c0d87"
+    },
+    "tests/test_prepare_guest_boot.py": {
+      "bytes": 30004,
+      "sha256": "970544e2e40a445f8f7473e241244aaa93996b67a165257bb3f17c628fcaff75"
+    },
+    "tests/test_restore_managed_guest_cli.py": {
+      "bytes": 11316,
+      "sha256": "f13bd66311dd7aeeab3e7eba9141cd5c8397a5dfaa67daa8a7a28e5afba81837"
+    },
+    "tests/verify_guest_shutdown_activation_loop.py": {
+      "bytes": 6688,
+      "sha256": "5f37777e0ebdcf955b68438b96477ff2d8c4293817de97bf3be2f48270702c4c"
+    }
+  },
+  "independent_reviews": {
+    "managed-restore-publication-review-20261112.json": {
+      "bytes": 26034,
+      "sha256": "0d500a2b06a6e5a938195efd9950075419cdcd65672df4365726b3a519202cf1"
+    },
+    "managed-restore-source-progress-review-20261112.json": {
+      "bytes": 5629,
+      "sha256": "2a7d73b587af86474b8340ccc6c6280434ece59201ed42c2119fd84461e4d72a"
+    }
+  },
+  "terminal_unit": {
+    "RuntimeMaxUSec": "8h",
+    "MainPID": "0",
+    "Result": "success",
+    "ExecMainStatus": "0",
+    "CPUQuotaPerSecUSec": "2s",
+    "MemoryMax": "3221225472",
+    "SubState": "exited"
+  },
+  "initial_failed_unit": {
+    "MainPID": "0",
+    "Result": "exit-code",
+    "ExecMainStatus": "1",
+    "SubState": "failed"
+  },
+  "resource_sample_minima": {
+    "free_disk_bytes": 29987028992,
+    "MemAvailable_bytes": 6634303488
+  },
+  "packaging": {
+    "current_sources": 84,
+    "runtime_files": 85,
+    "entrypoints": 22,
+    "historical_sources": 39,
+    "management_runtime_files": 6,
+    "boot_units": 2
+  },
+  "custody": {
+    "bytes": 952320,
+    "sha256": "a03d3054a0fbd5b6550ec4103d21f85b112bd38ca82232db32c98e01f62dfe57",
+    "native": "out/managed-restore-validation-20261112-02/receipts.tar",
+    "builder": "/var/lib/a733-managed-restore-validation-20261112-02/receipts.tar"
+  },
+  "restore": "Canonical shutdown EX before source; retained exact policy/storage, unrelated ready cohorts, source whole-hash/legal six-member cohort; private stages, durable intent, ordered no-replace moves and registry CAS last. Explicit named resume checks exact reachable inode/byte phase and re-establishes intent/phase durability. Old data retained. Missing whole shared parent uses a pre-pinned empty stage. Generation exceeds archived/current registry while preserving other entries and enabled state.",
+  "recovery": "Original bootstrap EX census precedes state/account/marker preparation and guest launch. Historical completion observed readonly before custody/mount/archive access, preserving known commit on cleanup error. CLI reports transaction UUID before execution and census failures identify the inspected UUID. Shutdown activation recovers p5 after normal failed-service teardown; actual canonical readonly EX, policy/GPT/UUID/model/serial/size checks remain, with journal/traversal effects reported separately even after source refusal.",
+  "progress": "Encoded and per-file decode progress during existing scans, no added scans. Each actual tree file is hashed once per open/process; later checks bind cached hashes to unchanged retained/named file metadata under actual disk EX and census. Fresh resume rehashes actual objects. No hardware benchmarking or new endurance run.",
+  "native_kernel_loop": {
+    "actual_canonical_shutdown_readonly_ex": true,
+    "hardware_acceptance": false,
+    "logical_disk_bytes": 250000000000,
+    "counters": {
+      "chmod": 1,
+      "mount": 2
+    },
+    "scope": "Opt-in native shutdown activation on a newly generated owned GPT loop.\n\nRun as root without arguments. Reuses the pinned existing loop harness's fixed\n/var/lib workspace, 2 GiB guard, actual GPT/ext4, identity checks and conservative\ncleanup. Its NVMe/source/STATE metadata remain explicit substitutes. Admission\nhere is actual canonical /run tmpfs, readonly EX flock and shutdown closure.\nNo physical NVMe, A733 boot, VM queueing or KVM acceptance is exercised.",
+    "all_owned_resources_cleaned": true,
+    "receipt_pin": {
+      "bytes": 3163,
+      "sha256": "fcfd30370c6f15a7bbaefe122ab10eadc782e66916a8151a8027d262555fa795"
+    }
+  },
+  "resolved_findings": [
+    {
+      "id": "R1",
+      "severity": "medium",
+      "source": "scripts/restore-managed-guest.py:restore exception receipt propagation",
+      "finding": "Authenticated historical data-commit observation followed by observer-close failure was exposed only in nested failure receipt, while top-level CLI falsely said data_committed=false/historical=false.",
+      "original_evidence": "Static source inspection of original CLI a4a4b5716a714296a2875d465059b8a2b60fb7547d8de2510f0a4e73dc929ed0; parent fixed before native probe.",
+      "resolution": "Coordinator limited promotion to same engine exact TransactionError, observation stage, matching transaction UUID and historical/data_committed true, including wrapped cleanup primary.",
+      "status": "resolved independently: native observer close-ack fault preserves known historical commit and fails command on CLI ab970bae81746f32787ebe92f96618c39ae6c9259a6699918a242ac50726e869"
+    },
+    {
+      "id": "R2",
+      "severity": "high",
+      "source": "scripts/managed-guest-restore-transaction.py:_prepare/_resume_trees",
+      "finding": "After intent rename then failed parent fsync, explicit resume mutates canonical paths without first re-establishing intent-file and STATE transaction-parent durability.",
+      "original_evidence": "original-probes.log trace before first canonical rename: [] for intent-file/intent-parent fsync; guarded assertion triggers.",
+      "status": "resolved independently",
+      "resolution": "Explicit incomplete resume authenticates and fsyncs named intent and every acknowledged phase record plus STATE transaction directory before canonical mutation.",
+      "fixed_evidence": "final-probes.log before canonical rename trace has intent-file then intent-parent; 2 repair tests pass in56.822s"
+    },
+    {
+      "id": "R3",
+      "severity": "medium",
+      "source": "scripts/managed-guest-restore-transaction.py:_private_tree/census",
+      "finding": "Metadata-only preintent census accepts root:root 0710 new-lifecycle-parent despite required root:root 0700 stage/shared/lifecycle parents.",
+      "original_evidence": "original-probes.log accepts actual root:root0710 private parent as harmless private-preintent.",
+      "status": "resolved independently",
+      "resolution": "Private lifecycle/shared parents require exact root:root0700; payload root0710 only accepts reserved guest GID, partial raw disks accept root or reserved equalguest UID/GID.",
+      "fixed_evidence": "final-probes.log native root0710 new-lifecycle-parent refuses unsafe private restore directory"
+    },
+    {
+      "id": "R4",
+      "severity": "medium",
+      "source": "scripts/managed-guest-restore-transaction.py:_read and pending provenance checks",
+      "finding": "Provenance record reader accepts same-filesystem bind-mounted record even though its native mount ID differs from its parent.",
+      "original_evidence": "mount-probe.log: different_mount_id=true/read_accepted=true in actual private kernel mount namespace.",
+      "status": "resolved independently",
+      "resolution": "Record reads verify actual file mount ID against retained parent before decode and final named-file reopen; metadata-only pending checks retain actual FD and verify parent mount ID.",
+      "fixed_evidence": "final-mount-probe.log actual isolated same-filesystem kernel bind mounts refuse both provenance and pending aliases"
+    },
+    {
+      "id": "R6",
+      "severity": "medium",
+      "source": "scripts/restore-managed-guest.py:restore after successful ShutdownRestoreCustody construction",
+      "finding": "Public CLI loses retained activation side-effect receipt after custody succeeds. Subsequent actual archive authentication refusal returns data_committed=false without disclosing guest_may_be_modified/permissions_may_be_modified/mount_retained, despite p5 recovery activation potentially writing journal/permissions. Successful restore likewise omits activation report.",
+      "original_source_sha256": "5c53dfef8fef066f5134030978d52aa9861e318f572dbab2adcd0b5a0951d6a7",
+      "original_evidence": "shutdown-cli-original-probes.log actual Source hash refusal after canonical custody+apply_shutdown guard composition; first unmounted/observer-repeat test passes, public activation receipt test fails.",
+      "requested_resolution": "Deep-copy bounded custody activation report into CLI result immediately after successful custody construction and preserve it through subsequent source/transaction/cleanup failures.",
+      "status": "resolved independently",
+      "resolution": "CLI deep-copies authenticated actual custody activation report immediately after successful construction, before recheck/Source/transaction; preserves report and policy snapshot/admission closure label on later failures and success.",
+      "fixed_source_sha256": "67cb2f4125199de21c8b9fe1d7d5c1e7d3740f2121edd5f3e83e891666b6af18",
+      "fixed_evidence": "shutdown-cli-fixed-probes.log: actual Source full-hash refusal returns success=false/data_committed=false with activation guest_may_be_modified=true/permissions_may_be_modified=true/mount_retained=true; native restored success also includes report; historical completed repeat remains observation-only"
+    }
+  ],
+  "retained_failures": [
+    "Initial full 3577-test run has 11 dispatcher fixture setup errors: its closed preparation helper list omitted the new restore_census. Runtime guard/source unchanged; add helper to fixture, all13 root dispatcher tests pass, then rerun full frozen suite. Both source locks, terminal units and logs retained."
+  ],
+  "limitations": [
+    "All new controllers/services remain uninstalled. Actual A733 mount/shutdown ordering, SPI recovery, managed KVM autostart/restore/checkpoint/restart/rollback and final boot series remain mandatory.",
+    "Native files, kernel locks/mounts and private loop checks include explicit platform/PID1/account/STATE/NVMe placement and simulated shutdown substitutions; no software fixture qualifies hardware.",
+    "Archive source/manifest SHA must be independently trusted. Existing registered same-storage/name/UID/profiles only; no new-drive identity migration or automatic old-data pruning.",
+    "Candidate construction/repeat, inactive-root deployment and independent operating-procedure reproduction remain pending.",
+    "Accepted endurance data is retained. No qualifying endurance rerun; all planned tests capped at eight hours."
+  ]
+}

@@ -22,16 +22,13 @@ The next milestone is a reviewed candidate that can be installed in the inactive
 root while preserving the working host. Execute these steps in order; physical
 SPI recovery can proceed alongside software work when the operator is available.
 
-1. **Close the current software validation checkpoint.** Initial policy publication
-   and explicit guest controls are committed and reviewed; their frozen 3430-test
-   Ubuntu run passes. Coherent restore publication, explicit resume, early-boot
-   census, shutdown-only storage activation and their packaging are now staged
-   candidate changes. Record the terminal result of the existing integrated
-   Ubuntu validation and its exact source pins. Retain preliminary failures and
-   fixes, resolve any outstanding failures, reconcile independent reviews, and
-   commit/push the validated candidate. Neither staged source nor a running test
-   unit counts as a completed release checkpoint. Do not restart a validation
-   merely because an observation request times out.
+1. **Retain the completed software checkpoint.** Initial policy publication,
+   explicit guest controls and coherent restore publication/resume/census now pass
+   reviewed software integration. The terminal Ubuntu run passed 3577 tests,
+   five shell suites and five diagnostic cases; the preliminary dispatcher fixture
+   failure and correction remain retained. [Frozen evidence](evidence/managed-restore-validation-20261112.json).
+   Keep source pins and independent reviews with the candidate. These components
+   remain uninstalled; host checks do not close physical release gates.
 2. **Freeze a buildable candidate and its recovery contract.** Include the initial
    policy publisher, explicit controls, coherent restore command and both boot
    services. Record supported restore identities and explicit limitations;
@@ -81,7 +78,7 @@ cycle attestations. Software preparation continues while those steps are pending
 | 1. Recoverable baseline | Recorded; revalidate after each hardware transition | Verified original/calibrated SPI and stopped guest backups retained off-device |
 | 2. Metadata-aware SPI maintenance | Software checks and independent review pass | Reviewed fresh live plans and preserved calibration policy |
 | 3. Physical restore/reinstall | Pending recovery-card boot | Original SPI restore, SD recovery, reinstall, SD-removed boot and actual KVM pass |
-| 4. Unattended guests | Controls/services reviewed as source; coherent restore integration checkpoint pending; all uninstalled | Reproducible packaged services, graceful shutdown/checkpoint/reconciliation, rollback and real KVM acceptance |
+| 4. Unattended guests | Controls/services reviewed as source; coherent restore integration passes; all uninstalled | Reproducible packaged services, graceful shutdown/checkpoint/reconciliation, rollback and real KVM acceptance |
 | 5. Final SPI boot series | One cold and one warm operational boot evidenced | Ten accepted cold and ten warm boots with applicable identity and final automation checks |
 | 6. Independent reproduction and signoff | Earlier protected-SD reproduction retained | Updated SPI recovery and guest procedures reproduced, evidence reconciled and changes pushed |
 
@@ -367,7 +364,7 @@ where it changes boot/storage/rollback, and a coherent validated commit.
 | Order | Work package | Deliverable and acceptance gate |
 | --- | --- | --- |
 | A | Retain installed maintenance integration | Update/selector admission, actual loop checks and explicit closed-maintenance recovery are evidenced in status. Preserve these guarantees through the remaining integration; rerun affected checks when behavior changes. Guests stop before exclusive maintenance and target mutation ends before reopening. |
-| B | Close managed backup/restore integration | Reviewed source and staged publication/explicit-resume/bootstrap-census changes need their terminal integrated validation, frozen evidence and commit. Then demonstrate coherent restoration on the disposable real KVM guest. Preserve unrelated guests; reject unsupported identity changes and stale authority. |
+| B | Close managed backup/restore integration | Publication/explicit-resume/bootstrap-census integration passes the frozen 3577-test run and independent review. Retain its evidence and demonstrate coherent restoration on the disposable real KVM guest. Preserve unrelated guests; reject unsupported identity changes and stale authority. |
 | C | Preserve portable RAM recovery integration | Reviewed offline exclusion, protected p5 probing and disposable kernel-loop evidence are recorded in status. Retain exclusion through cleanup, refuse raw STATE restoration over managed metadata and rerun affected checks only when changes justify it. Confirm the released physical recovery route. |
 | D | Deploy bootstrap and guest services | Initial policy publication and explicit controls are already packaged in source. Integrate the final restore census, then prove actual unit/mount dependencies, bounded nonroot KVM and shutdown order on the target. Retain SSH/NTP when guest preparation or execution fails. |
 | E | Package and build the candidate | Include every required controller/service in pinned reproducible inactive-root recipes, rebuild on the Ubuntu builder and verify artifact sizes/hashes. Retain the working root and recovery card. Pass the repository checks and an independent review before deployment. |
@@ -378,8 +375,8 @@ NVMe/RAM state placement, bounded runtime storage, limited nonroot QEMU authorit
 locked accounts, key-only SSH, expected listeners and recorded SD absence. Use
 the existing release checks where applicable and retain the actual results.
 
-A–D are largely implemented as software; their remaining integration gate is
-terminal validation of the frozen candidate, followed by reviewed construction E.
+A–D now pass integrated software validation. The next gate is reviewed candidate
+construction E from the committed source and authenticated inputs.
 F requires actual installation and physical evidence. Phase 3 can proceed
 independently when the retained recovery card is booted. Finish phases 3 and 4
 before freezing the configuration for phase 5. Reassess earlier boot credit if

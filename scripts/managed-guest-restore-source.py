@@ -35,6 +35,30 @@ CHUNK = GENERIC.CHUNK
 MAX_ARCHIVE = GENERIC.MAX_ARCHIVE
 
 
+class SourceError(RuntimeError):
+    """Bounded failure receipt retaining the original operation and cleanup errors."""
+    def __init__(self, primary, cleanup):
+        prior = []
+        if isinstance(primary, SourceError):
+            prior, primary = list(primary.cleanup), primary.primary
+        self.primary = primary
+        errors = prior
+        for error in cleanup:
+            if isinstance(error, SourceError):
+                errors.extend((error.primary, *error.cleanup))
+            else:
+                errors.append(error)
+        self.cleanup = tuple(errors[:8])
+
+        def record(error):
+            return dict(error=type(error).__name__[:128], message=str(error)[:512])
+
+        self.receipt = dict(primary_error=record(primary),
+                            cleanup_errors=[record(error) for error in self.cleanup],
+                            cleanup_error_count=len(errors))
+        super().__init__('managed source operation and cleanup failed')
+
+
 def scan_backup(stream, manifest_sha256, emit=None, initial=None, metadata_ready=None):
     """Scan exact six-member profile from a fully authenticated encoded source.
 
@@ -87,14 +111,22 @@ def scan_fd(fd, manifest_sha256, emit=None, initial=None, metadata_ready=None):
 
 
 class Source:
-    """Retain root 0400 archive and shared flock, without borrowing admission."""
-    def __init__(self, path, archive_sha256, manifest_sha256, allowed_devices):
+    """Retain root 0400 archive and shared flock, without borrowing admission.
+
+    Optional progress receives phase/file/bytes/total dictionaries on the creator
+    thread. Encoded progress counts bytes read, not authentication success; only
+    the subsequent decode phase follows complete encoded authentication. Decode
+    counters reset per scan and count payload bytes before final archive checks.
+    """
+    def __init__(self, path, archive_sha256, manifest_sha256, allowed_devices, *, progress=None):
         self._creator = (os.getpid(), threading.get_ident())
         self.held = None
         self._locked = False
         self._initial = None
+        self._progress = progress
         try:
             require(os.geteuid() == 0, 'root managed source caller required')
+            require(progress is None or callable(progress), 'progress callback required')
             FORMAT.MANIFEST.digest(archive_sha256)
             FORMAT.MANIFEST.digest(manifest_sha256)
             devices = frozenset(allowed_devices)
@@ -110,12 +142,40 @@ class Source:
             self.archive_record = dict(bytes=self.held.info.st_size, sha256=archive_sha256)
             self.recheck()
             # Complete encoded authentication precedes gzip and every schema parser.
-            ENROLL.hash_source(self.held, self.archive_record)
+            self._hash_source()
             self.recheck()
             self.scan()
-        except BaseException:
-            self.close()
+        except BaseException as primary:
+            try:
+                self.close()
+            except BaseException as cleanup:
+                raise SourceError(primary, [cleanup]) from primary
             raise
+
+    def _notify(self, phase, name, count, total):
+        self._owner()
+        self._progress(dict(phase=phase, file=name, bytes=count, total=total))
+
+    def _hash_source(self):
+        if self._progress is None:
+            ENROLL.hash_source(self.held, self.archive_record)
+            return
+        expected = self.archive_record
+        require(self.held.info.st_size == expected['bytes'], 'source size differs')
+        os.lseek(self.held.fd, 0, os.SEEK_SET)
+        digest, count = hashlib.sha256(), 0
+        self._notify('encoded', self.held.path, count, expected['bytes'])
+        while True:
+            data = os.read(self.held.fd, min(ENROLL.CHUNK, expected['bytes'] - count + 1))
+            if not data:
+                break
+            count += len(data)
+            require(count <= expected['bytes'], 'source grew')
+            digest.update(data)
+            self._notify('encoded', self.held.path, count, expected['bytes'])
+        self.held.recheck()
+        require(count == expected['bytes'] and digest.hexdigest() == expected['sha256'],
+                'source size/SHA-256 differs')
 
     def _owner(self):
         require(self._creator == (os.getpid(), threading.get_ident()),
@@ -130,16 +190,41 @@ class Source:
     def scan(self, emit=None):
         """Emit bounded payload chunks; discard all unpublished bytes on failure."""
         self.recheck()
+        primary = None
         try:
+            metadata_ready = None
+            payload_emit = emit
+            if self._progress is not None:
+                counts, totals = {}, {}
+
+                def metadata_ready(_exact, manifest, _history, _cohort):
+                    for name in FORMAT.NAMES[3:]:
+                        counts[name], totals[name] = 0, manifest['files'][name]['bytes']
+                        self._notify('decode', name, 0, totals[name])
+
+                def payload_emit(name, chunk):
+                    counts[name] += len(chunk)
+                    self._notify('decode', name, counts[name], totals[name])
+                    if emit is not None:
+                        emit(name, chunk)
+
             exact, manifest, history, cohort = scan_fd(
-                self.held.fd, self.manifest_sha256, emit, self._initial)
+                self.held.fd, self.manifest_sha256, payload_emit, self._initial, metadata_ready)
             self.recheck()
             if self._initial is None:
                 self._initial = exact
                 self.manifest_data, self.history_data, self.lifecycle_data = exact
                 self.manifest, self.history, self.cohort = manifest, history, cohort
+        except BaseException as error:
+            primary = error
+            raise
         finally:
-            self.recheck()
+            try:
+                self.recheck()
+            except BaseException as cleanup:
+                if primary is not None:
+                    raise SourceError(primary, [cleanup]) from primary
+                raise
 
     @property
     def description(self):
@@ -152,11 +237,31 @@ class Source:
         held, self.held = self.held, None
         self._locked = False
         if held is not None:
-            held.close()
+            errors = []
+            try:
+                held.close()
+            except BaseException as error:
+                errors.append(error)
+            # A failed close hook must not strand any remaining owned descriptors.
+            while held.fds:
+                fd = held.fds.pop()
+                try:
+                    os.close(fd)
+                except BaseException as error:
+                    errors.append(error)
+            if len(errors) > 1:
+                raise SourceError(errors[0], errors[1:]) from errors[0]
+            if errors:
+                raise errors[0]
 
     def __enter__(self):
         self.recheck()
         return self
 
-    def __exit__(self, *_unused):
-        self.close()
+    def __exit__(self, _kind, primary, _traceback):
+        try:
+            self.close()
+        except BaseException as cleanup:
+            if primary is not None:
+                raise SourceError(primary, [cleanup]) from primary
+            raise

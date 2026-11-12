@@ -113,6 +113,65 @@ class Custody(unittest.TestCase):
             self.assertEqual(self.admission._read(), before)
         self.assert_shutdown()
 
+    def activation_fixture(self, callback):
+        plan = dict(context=dict(state=dict(uuid=self.policy_value['storage']['state_uuid'])))
+        self.patched(C.ACTIVATE, 'make_plan', return_value=plan)
+        self.patched(C.ACTIVATE, 'apply_shutdown', side_effect=callback)
+        self.patched(C.ACTIVATE.CONTEXT, 'host_identity')
+        original = C.CONTEXT.HostContext.__init__
+        fixture = self
+        def opened(context, *args, **kwargs):
+            fixture.events.append('physical-context')
+            original(context, *args, **kwargs)
+        self.patched(C.CONTEXT.HostContext, '__init__', new=opened)
+        return plan
+
+    def test_recovery_activation_holds_shutdown_ex_before_physical_context(self):
+        def activate(args, plan, lease, report, *, plan_check):
+            self.assertNotIn('physical-context', self.events)
+            self.assertEqual(args.expected_serial, self.policy_value['storage']['nvme_serial'])
+            self.assertEqual(args.expected_model, self.policy_value['expected_model'])
+            self.assertEqual(args.expected_bytes, self.policy_value['expected_bytes'])
+            self.assertEqual(args.guest_uuid, self.policy_value['storage']['guest_uuid'])
+            self.assertIs(type(lease), A.Lease)
+            C.ACTIVATE.shutdown_check(lease)
+            plan_check()
+            self.events.append('recovery-activation')
+            report.update(success=True, mount_attempted=True, guest_may_be_modified=True,
+                          mount_retained=True)
+            return report
+        self.activation_fixture(activate)
+        with C.ShutdownRestoreCustody(self.policy_value, 'one', activate_missing=True) as custody:
+            self.assertTrue(custody.receipt['activation']['success'])
+            self.assertLess(self.events.index('recovery-activation'), self.events.index('physical-context'))
+        self.assert_shutdown()
+
+    def test_recovery_activation_state_mismatch_never_mounts(self):
+        apply = self.patched(C.ACTIVATE, 'apply_shutdown')
+        self.patched(C.ACTIVATE, 'make_plan', return_value=dict(
+            context=dict(state=dict(uuid='99999999-9999-4999-8999-999999999999'))))
+        with self.assertRaisesRegex(C.CustodyError, 'activation STATE differs'):
+            C.ShutdownRestoreCustody(self.policy_value, 'one', activate_missing=True)
+        apply.assert_not_called()
+        self.assert_shutdown()
+
+    def test_failed_recovery_activation_retains_replay_and_cleanup_report(self):
+        def failed(args, plan, lease, report, *, plan_check):
+            C.ACTIVATE.shutdown_check(lease)
+            plan_check()
+            report.update(mount_attempted=True, guest_may_be_modified=True,
+                          mount_may_be_visible=True, mount_retained=True,
+                          cleanup_errors=['activation cleanup uncertain'])
+            return report
+        self.activation_fixture(failed)
+        with self.assertRaises(C.CustodyError) as caught:
+            C.ShutdownRestoreCustody(self.policy_value, 'one', activate_missing=True)
+        self.assertNotIn('physical-context', self.events)
+        activation = caught.exception.receipt['activation']
+        self.assertTrue(activation['guest_may_be_modified'] and activation['mount_may_be_visible'])
+        self.assertEqual(activation['cleanup_errors'], ['activation cleanup uncertain'])
+        self.assert_shutdown()
+
     def test_shared_holder_refuses_without_reset(self):
         with self.admission.admit():
             with self.assertRaises(C.CustodyError):

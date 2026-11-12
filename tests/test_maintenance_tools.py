@@ -41,7 +41,7 @@ class MaintenanceToolsTests(unittest.TestCase):
 
     def test_real_sources_are_exact_and_allowlist_is_closed(self):
         values = TOOLS.entries()
-        self.assertEqual(len(TOOLS.SOURCES), 80)
+        self.assertEqual(len(TOOLS.SOURCES), 84)
         self.assertEqual(len(TOOLS.LEGACY_SOURCES), 39)
         self.assertEqual(set(TOOLS.SOURCES) - set(TOOLS.LEGACY_SOURCES), {
             'configs/guest_registry.py', 'configs/guest_lifecycle.py', 'configs/guest_qmp.py',
@@ -64,7 +64,9 @@ class MaintenanceToolsTests(unittest.TestCase):
             'scripts/guest-cgroup-budget.py',
             'scripts/dispatch-guest-boot.py', 'scripts/stop-guest-storage.py',
             'scripts/configure-guest-storage.py', 'scripts/guest-explicit-request.py',
-            'scripts/manage-guests.py'})
+            'scripts/manage-guests.py', 'configs/guest_managed_restore.py',
+            'scripts/managed-guest-restore-custody.py', 'scripts/managed-guest-restore-transaction.py',
+            'scripts/restore-managed-guest.py'})
         for helper in ('scripts/write-known-nvme-boot.py', 'scripts/guest-boot-accounts.py'):
             self.assertNotIn(helper, TOOLS.LEGACY_SOURCES)
             self.assertNotIn(helper, TOOLS.ENTRYPOINTS.values())
@@ -78,7 +80,7 @@ class MaintenanceToolsTests(unittest.TestCase):
         self.assertEqual(set(metadata['source_records']), set(TOOLS.SOURCES))
         self.assertNotIn('package.json', metadata['files'])
         self.assertEqual(TOOLS.canonical(metadata), values['package.json'][1])
-        self.assertEqual(len(metadata['entrypoints']), 21)
+        self.assertEqual(len(metadata['entrypoints']), 22)
 
     def test_extracted_package_imports_and_cli_help_without_checkout(self):
         # Use only archive bytes in a private relocated tree. Import every helper,

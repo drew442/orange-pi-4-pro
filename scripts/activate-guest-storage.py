@@ -16,6 +16,7 @@ import signal
 import stat
 import subprocess
 import sys
+import threading
 import uuid
 
 
@@ -367,6 +368,40 @@ def apply_bootstrap(args, plan, owner, report=None, *, plan_check=lambda: None):
     def check():
         bootstrap_check(owner)
         plan_check()
+    return _apply(args, plan, report, plan_check=check,
+                  authorization=lambda current: check())
+
+
+def shutdown_check(lease):
+    """Borrow actual monotonic shutdown EX; grant no initialization/reopening."""
+    require(os.getresuid() == (0, 0, 0) and
+            threading.current_thread() is threading.main_thread(),
+            'shutdown activation requires actual root main thread')
+    require(type(lease) is ADMISSION.Lease and lease.exclusive and
+            type(lease.admission) is ADMISSION.Admission,
+            'canonical exclusive shutdown lease required')
+    lease.recheck()
+    ADMISSION._readonly(lease.fd)
+    ADMISSION._held_lock(lease.fd, 'WRITE', os.getpid())
+    require(ADMISSION._boot_id() == lease.admission.boot_id, 'shutdown activation boot differs')
+    CONTEXT.host_identity(lease.admission.boot_id)
+    record = lease.admission._read()
+    require(record['state'] == 'closed' and record['reason'] == 'shutdown' and
+            record['boot_id'] == lease.admission.boot_id,
+            'monotonic shutdown closure required for activation')
+
+
+def apply_shutdown(args, plan, lease, report=None, *, plan_check=lambda: None):
+    """Recover the exact p5 mount under borrowed shutdown EX, leaving it closed.
+
+    The caller authenticates its retained installed storage policy. Existing
+    target, filesystem, mount, activation-lock and cleanup checks still apply;
+    journal replay/traversal changes are reported separately from guest restore.
+    """
+    def check():
+        shutdown_check(lease)
+        plan_check()
+    check()
     return _apply(args, plan, report, plan_check=check,
                   authorization=lambda current: check())
 

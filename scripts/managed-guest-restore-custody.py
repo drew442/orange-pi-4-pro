@@ -17,6 +17,7 @@ import re
 import stat
 import threading
 import time
+from types import SimpleNamespace
 
 BASE = Path(__file__).resolve().parents[1]
 
@@ -33,6 +34,7 @@ MAINT, CP = SENDER.MAINT, SENDER.CP
 LIFECYCLE, POLICY = CP.LIFECYCLE, CP.POLICY
 CONTEXT, ADMISSION = LIFECYCLE.CONTEXT, LIFECYCLE.ADMISSION
 BOOT_POLICY = module('restore_custody_policy', 'scripts/guest-boot-policy.py')
+ACTIVATE = module('restore_custody_activation', 'scripts/activate-guest-storage.py')
 ARCHIVE = module('restore_custody_decoder', 'scripts/managed-guest-archive.py')
 FORMAT, HEAD, REGISTRY, ENROLL = SENDER.FORMAT, CP.HEAD, CP.REGISTRY, CP.ENROLL
 require = ADMISSION.require
@@ -252,13 +254,14 @@ class ShutdownRestoreCustody(Resources):
     expected_policy is exact decoded policy data, not authority. Only existing
     admission runtime is used. Closing never reopens, resets or initializes it.
     """
-    def __init__(self, expected_policy, name, *, progress=None):
+    def __init__(self, expected_policy, name, *, progress=None, activate_missing=False):
         super().__init__()
         self.name, self.progress = name, progress
         self.policy = self.admission = self.lease = self.controller = None
         self._children = set()
         try:
             self.creator()
+            require(type(activate_missing) is bool, 'activation option must be boolean')
             require(os.getresuid() == (0, 0, 0), 'actual root required for restore')
             ADMISSION._guest_name(name)
             require(name != 'firstkvm', 'firstkvm cannot be restored')
@@ -284,6 +287,25 @@ class ShutdownRestoreCustody(Resources):
             MAINT.stop_managed()
             self.receipt['phase'] = 'shutdown-exclusive'
             self.lease = self.retain(self.admission.shutdown_lease(), 'shutdown-lease')
+            if activate_missing:
+                self.receipt['phase'] = 'recover-guest-mount'
+                self.shutdown_guard()
+                require(ACTIVATE.ADMISSION is ADMISSION, 'canonical activation admission required')
+                MAINT.consumer_check()
+                args = SimpleNamespace(target=expected['target'],
+                    expected_model=expected['expected_model'], expected_bytes=expected['expected_bytes'],
+                    expected_serial=expected['storage']['nvme_serial'],
+                    guest_uuid=expected['storage']['guest_uuid'])
+                activation = ACTIVATE.new_report()
+                self.receipt['activation'] = activation
+                plan = ACTIVATE.make_plan(args)
+                require(plan['context']['state']['uuid'] == expected['storage']['state_uuid'],
+                        'restore activation STATE differs')
+                ACTIVATE.apply_shutdown(args, plan, self.lease, activation,
+                                        plan_check=self.shutdown_guard)
+                require(activation['success'] is True and not activation['cleanup_errors'],
+                        'restore storage activation or cleanup failed')
+                self.shutdown_guard()
             self.receipt['phase'] = 'physical-context'
             self.controller = self.retain(LIFECYCLE.StateController(
                 expected['storage'], self.lease, boot_id=self.boot_id), 'controller')
@@ -304,7 +326,8 @@ class ShutdownRestoreCustody(Resources):
         self.recheck()
         return self.controller.context
 
-    def recheck(self):
+    def shutdown_guard(self):
+        """Validate the original shutdown EX before a p5 context can exist."""
         self.creator()
         require(not self._closed and os.getresuid() == (0, 0, 0), 'restore custody unavailable')
         installed_guard(self.boot_id)
@@ -321,6 +344,9 @@ class ShutdownRestoreCustody(Resources):
         ADMISSION._held_lock(self.lease.fd, 'WRITE', self._pid)
         gate = self.admission._read()
         require(gate['state'] == 'closed' and gate['reason'] == 'shutdown', 'shutdown gate differs')
+
+    def recheck(self):
+        self.shutdown_guard()
         require(type(self.controller) is LIFECYCLE.StateController and
                 type(self.controller.context) is CONTEXT.HostContext and
                 self.controller.context.lease is self.lease and
@@ -388,7 +414,10 @@ class NamedPayload(Resources):
         self.custody, self.name = custody, name
         self._infos, self._opened, self.fds = {}, [], {}
         self.guest_fd = None
-        self.lock = self.retain(custody.admission.guest_lock(name, custody.lease, create=False), 'guest-lock')
+        # Only authenticated existing registry members may create missing RAM locks.
+        _, current_registry = custody.registry()
+        custody._entry(current_registry, name)
+        self.lock = self.retain(custody.admission.guest_lock(name, custody.lease, create=True), 'guest-lock')
         custody._children.add(self)
 
     def physical(self):

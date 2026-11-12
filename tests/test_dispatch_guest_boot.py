@@ -47,7 +47,7 @@ class Records(unittest.TestCase):
 class Native(unittest.TestCase):
     # Reuse only the existing preparation fixture's setup/helpers, not its tests.
     for _name in ('entry', 'plan', 'authority', 'activate', 'state', 'accounts', 'read_registry',
-                  'observe', 'ready', 'configs', 'reconcile', 'census', 'gate'):
+                  'observe', 'ready', 'configs', 'reconcile', 'census', 'restore_census', 'gate'):
         locals()[_name] = getattr(F.Native, _name)
 
     def setUp(self):

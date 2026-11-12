@@ -69,92 +69,58 @@ architecture review. The following software components are reviewed and tested;
 | Single managed run controller | [Evidence](evidence/managed-service-validation-20261112.json). **3077** privileged Ubuntu tests and shell/diagnostic suites pass. Independent native shutdown/cleanup probes pass; healthy polling no longer spawns PID1 queries. Actual retained locks, run, fork/QMP surrogate and checkpoint compose with explicit platform/credential substitutions. No installed unit or hardware qualification. |
 | Pre-p5 maintenance and normal activation | [Evidence](evidence/guest-activation-admission-validation-20261112.json). **3120** privileged Ubuntu tests and shell/diagnostic suites pass. Independent helper/wrapper reviews and actual private-loop interruption/retry/idempotency, preservation and cleanup pass. Protected registry must match reviewed target; binding and reopening follow all target cleanup. Bootstrap borrowing remains separate. |
 
-Current packaging has 80 sources, 81 runtime files, 21 entrypoints and the historical exact
-39-source boundary. Reviews retain resolved findings, preliminary failures and
-verified off-device receipts. Native surrogate/ARM user-mode results ran no
-QEMU guest or KVM and do not establish deployment acceptance.
-[Portable recovery and boot account preparation](evidence/portable-recovery-validation-20261112.json)
-now pass independent review and **3210** privileged Ubuntu tests, five shell
-suites and five diagnostic cases without skips/errors/failures. Actual disposable
-kernel loops prove public RAM selector publication/cleanup and protected p5
-clean-absence/dangling-marker refusal with unchanged bytes; explicit platform
-substitutions remain. BOOT/paired restore/RAM selection retain offline exclusion
-through cleanup; paired restoration refuses managed metadata before writable
-roots/STATE. The p5 fixture lazy-detach cleanup finding is resolved and retained.
-Boot accounts reserve all published identities before sorted batches and are
-composed by the candidate preparer. Coherent managed restoration,
-physical boot-service deployment and acceptance remain pending.
-The outer service must finish/check supervisor/run/controller/lease cleanup;
-bootstrap must publish manual namespace pins before opening admission.
+Current packaging has **84 sources, 85 runtime files, 22 entrypoints**, six
+management runtime files and two conditional boot units. The historical exact
+39-source recovery boundary remains intact. **All new controllers remain
+uninstalled.** Native/surrogate results ran no A733 guest and do not establish
+deployment acceptance.
 
-A separate [explicit storage-policy schema](evidence/storage-policy-schema-validation-20261112.json)
-passes eight native tests and 34 independent parser probes. It records the
-caller-selected NVMe/model/size and STATE/p5/serial tuple as data only. Protected
-STATE policy reader and one-process preparation are now packaged as source;
-policy publication and boot services are now packaged but uninstalled. Schema parsing
-itself supplies no device or launch authority.
+[Coherent managed restoration](evidence/managed-restore-validation-20261112.json)
+now passes independent implementation review and **3577 privileged Ubuntu
+22.04 tests**, five shell suites and five diagnostic cases without skips,
+errors or failures. Actual canonical shutdown EX, stopped disk custody and
+protected source/cohort checks precede private staging. Durable intent and
+ordered no-replace publication retain originals; registry CAS preserves current
+enable flags and unrelated guests. Explicit resume verifies the exact reachable
+phase, rehashes current objects once and re-establishes intent/phase durability.
+Missing whole shared lifecycle parents use pre-pinned private stages. Historical
+completion is readonly before admission/mount/archive access and survives cleanup
+uncertainty without claiming current readiness. [Candidate guide](managed-guest-restore.md).
 
-[Boot preparation and runtime budget evidence](evidence/boot-prepare-validation-20261112.json)
-now records **3292** privileged Ubuntu tests, shell/diagnostic suites and independent
-reviews passing without skips/errors/failures. One original bootstrap EX spans
-activation, state/accounts, same-family readiness, protected RAM units and manual
-namespace pins; all preparation cleanup precedes opening. Repeated preparation
-is a verified no-op, even with an active SH lease. Checkpoint cleanup and combined
-publication/close receipt findings are resolved. The actual disposable Ubuntu
-systemd/cgroup probe passes as UID/GID 60002 with zero capabilities: kernel
-memory/swap/task limits match, all 15 guard FDs close, and owned runtime fragments
-and cgroups are removed. This ran no VM. Physical policy setup, coherent
-managed restore, candidate build and physical acceptance remain pending. Manual unit rendering remains explicit; capability sufficiency
-and A733 mount/shutdown ordering are hardware gates.
+Original bootstrap EX performs the readonly restore census before state,
+markers, accounts or admission opening. Incomplete publication refuses; unsafe
+mounts/metadata never become absence. Failed preparation's ordinary teardown
+still unmounts p5. Restore can recover that exact mount under typed shutdown EX
+without initialization, nonce adoption or reopening. Journal/traversal effects
+are reported separately, including after later archive refusal. Actual disposable
+GPT/ext4 activation interruption/retry/idempotency, locks, permissions and cleanup
+pass; platform/STATE/NVMe identity substitutions remain explicit. Encoded/decode
+progress adds no scans, and retained inode/metadata checks avoid repeated full
+disk hashes. A733 service ordering and actual managed KVM remain physical gates.
 
-[Guest service integration](evidence/guest-service-validation-20261112.json) passes
-independent review and **3348** privileged Ubuntu tests plus shell/diagnostic
-suites. Root recipes include both conditional boot services and six management
-runtime files. Dispatch retains fresh metadata/SH custody and a durable one-shot
-intent before nonblocking queueing. Teardown uses monotonic shutdown closure,
-readonly immediate EX, exact target and visible-process census, then at most one
-normal native unmount. Gate-exit lease leakage, duplicate stop hooks and empty
-Exec-array display findings are resolved. The first full run's four historical
-NVMe fixture failures are retained; only fixture metadata changed, and current
-roots still require both new service records. Private systemd255 graph/display
-checks do not establish target systemd252 or physical mount behavior. All new
-services remain uninstalled. Policy publication and explicit guest controls are now packaged below. Coherent
-managed restore is next, followed by candidate construction/deployment and
-physical qualification.
+The initial 3577-test full run's eleven dispatcher fixture setup errors are
+retained. Its closed helper list omitted the new restore census; the corrected
+fixture passes all thirteen root dispatcher cases and the full rerun passes.
+Independent review retains six resolved findings: historical cleanup receipts,
+resumed intent durability, private metadata modes, mounted-record refusal,
+recovery activation after failed-service unmount and public activation reporting.
+Both terminal runs, source locks, raw reviews and verified second copies are
+linked in the evidence. The prior [architecture contract](managed-restore-design.md)
+and [59-test custody foundation](evidence/managed-restore-custody-validation-20261112.json)
+remain historical subsets of this integrated result.
 
-The [initial policy publisher source](evidence/initial-policy-validation-20261112.json)
-separately passes 30 privileged tests and nine independent probes, including
-resolved partial-construction and registry-read cleanup acknowledgement faults.
-It retains initialization EX through all cleanup, refuses existing runtime or
-different policy, and establishes small-file/parent durability without starting
-services. It remains uninstalled. Those initial focused results are separate from the frozen
-3348-test service run; publication packaging and its tests are now included in
-the 3430-test controls freeze below.
-
-[Explicit controls and one-use start requests](evidence/guest-controls-validation-20261112.json)
-pass independent review and **3430** privileged Ubuntu tests, five shell suites
-and five diagnostic cases without skips/errors/failures. Root-only status,
-enroll/enable/disable/start/stop preserve the manual fixture, exact RAM units,
-resource budgets and locked accounts. Explicit starts consume a current-head
-request under actual locks; pending/consumed uncertainty never silently requeues.
-Queueing follows preparation cleanup while SH remains held. Stop is bounded and
-shows progress. Five review findings are resolved, including retained validation/
-cleanup errors and the ordinary API's early ready/once-per-boot checks. The first
-3428-test full run's three failures and an unexecuted superseded freeze are
-retained; corrected full validation passes. All controls remain uninstalled.
-
-The [coherent restore contract](managed-restore-design.md) passes independent
-architecture review after six resolved findings. Its separate
-[read-only destination custody](evidence/managed-restore-custody-validation-20261112.json)
-passes **59 native privileged tests** and independent lifecycle-change and
-self/external FD/mapping probes. It retains actual shutdown EX and stopped disk
-custody, verifies current durable cohorts without requiring RAM accounts/markers,
-and observes corrupt/absent old targets without repair. Final protected-record
-checks and exact self-FD allowance findings are resolved. These focused results
-are **excluded from the frozen 3430-test package**; the component is uninstalled
-and unpackaged. Transaction publication, explicit retry, bootstrap census and
-physical restoration/KVM remain pending. Sources and receipts have verified
-second copies on the builder. No new endurance run is planned.
+Earlier software evidence remains linked for
+[explicit storage-policy schema](evidence/storage-policy-schema-validation-20261112.json),
+[portable recovery/accounts](evidence/portable-recovery-validation-20261112.json),
+[bootstrap/budgets](evidence/boot-prepare-validation-20261112.json),
+[dispatch/teardown](evidence/guest-service-validation-20261112.json),
+[policy publication](evidence/initial-policy-validation-20261112.json) and
+[explicit guest controls](evidence/guest-controls-validation-20261112.json).
+Root-only controls preserve firstkvm, exact RAM units, resource budgets and
+locked accounts; requests are consumed once and unknown acknowledgements never
+silently queue another run. Manual unit rendering remains explicit. Candidate
+construction/repeat, inactive-root deployment and physical qualification are next.
+No new endurance run is planned.
 
 Two fresh managed power-key guest builds match byte for byte with verified
 off-device copies. [Build evidence](evidence/managed-fixture-build-20261112.json).
@@ -263,16 +229,17 @@ binary redistribution clearance is claimed. [Source inventory](toolchain-sources
 
 ## Resources and next actions
 
-Latest privileged Ubuntu 22.04 suite: **3430 tests**, zero skips/errors/failures,
+Latest privileged Ubuntu 22.04 suite: **3577 tests**, zero skips/errors/failures,
 five shell suites and five diagnostic cases; all five TOMLs parse natively.
-[Guest control evidence](evidence/guest-controls-validation-20261112.json) retains
-terminal units, source locks, independent reviews, the initial failed run and
-verified receipts on codex and the builder. Sample minima are 30,190,592,000 bytes
-free and 6,925,484,032 bytes MemAvailable. These are software checks, not physical
+[Managed restore evidence](evidence/managed-restore-validation-20261112.json)
+retains terminal units, source locks, independent reviews, the initial failed run
+and verified receipts on codex and the builder. Sample minima are
+29,987,028,992 bytes free and 6,634,303,488
+bytes MemAvailable. These are software checks, not physical
 recovery or unattended KVM acceptance. Recovery-card boot awaits the operator;
 UART capture remains active with the unchanged clean-powerdown tail. Continue
-coherent restore publication and retry/census integration while physical
-recovery is pending, then construct/deploy the reviewed inactive root.
+candidate construction and reproducibility while physical recovery is pending,
+then deploy the reviewed inactive root and complete the physical gates.
 
 Codex has more than 22 GB available at this validation. Keep bulk sources, images and backups on the builder. Its LV is 128819658752 bytes
 with 4265607168 bytes VG free. All free builder capacity is approved for use and

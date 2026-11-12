@@ -431,6 +431,142 @@ class ReceiverTests(unittest.TestCase):
                 S.Source('/never/open', sha(self.encoded), sha(self.manifest), {1})
             held.assert_not_called()
 
+    @unittest.skipUnless(os.geteuid() == 0, 'real protected root source metadata required')
+    def test_source_progress_authenticated_encoded_then_two_bounded_scans(self):
+        """Native held root file; no platform substitution or hardware acceptance."""
+        self.archive.chmod(0o400)
+        events, threads, decoded = [], [], []
+        real_scan = S.scan_fd
+
+        def progress(event):
+            events.append(event.copy())
+            threads.append(threading.get_ident())
+
+        def scan(*args, **kwargs):
+            self.assertEqual(events[-1]['phase'], 'encoded')
+            self.assertEqual(events[-1]['bytes'], len(self.encoded))
+            decoded.append(True)
+            return real_scan(*args, **kwargs)
+
+        with patch.object(S.ENROLL, 'CHUNK', 127), patch.object(S, 'CHUNK', 31):
+            with patch.object(S, 'scan_fd', side_effect=scan) as decoder:
+                source = S.Source(str(self.archive), sha(self.encoded), sha(self.manifest),
+                                  {self.archive.stat().st_dev}, progress=progress)
+                self.assertEqual(decoder.call_count, 1)
+            first = list(events)
+            events.clear()
+            collected = {name: bytearray() for name in self.payload}
+            with source, patch.object(S, 'scan_fd', wraps=real_scan) as decoder:
+                source.scan(lambda name, data: collected[name].extend(data))
+                self.assertEqual(decoder.call_count, 1)
+            self.assertEqual(collected, self.payload)
+        encoded = [event for event in first if event['phase'] == 'encoded']
+        self.assertGreater(len(encoded), 2)
+        self.assertEqual([e['bytes'] for e in encoded], sorted(e['bytes'] for e in encoded))
+        self.assertEqual(encoded[0], dict(phase='encoded', file=str(self.archive),
+                                          bytes=0, total=len(self.encoded)))
+        self.assertEqual(threads, [threading.get_ident()] * len(threads))
+        self.assertEqual(decoded, [True])
+        for scan_events in (first[len(encoded):], events):
+            self.assertTrue(all(event['phase'] == 'decode' for event in scan_events))
+            for name, data in self.payload.items():
+                items = [event for event in scan_events if event['file'] == name]
+                self.assertEqual(items[0]['bytes'], 0)
+                self.assertEqual(items[-1]['bytes'], len(data))
+                self.assertEqual([item['bytes'] for item in items],
+                                 sorted(item['bytes'] for item in items))
+                self.assertTrue(all(item['total'] == len(data) for item in items))
+
+    @unittest.skipUnless(os.geteuid() == 0, 'real protected root source metadata required')
+    def test_source_progress_corrupt_encoded_never_decodes(self):
+        self.archive.chmod(0o400)
+        events = []
+        before = self.fd_snapshot()
+        with patch.object(S, 'scan_fd', side_effect=AssertionError) as decoder:
+            with self.assertRaisesRegex(ValueError, 'source size/SHA-256 differs'):
+                S.Source(str(self.archive), '0' * 64, sha(self.manifest),
+                         {self.archive.stat().st_dev}, progress=events.append)
+            decoder.assert_not_called()
+        self.assertEqual(events[-1]['bytes'], len(self.encoded))
+        self.assertTrue(all(event['phase'] == 'encoded' for event in events))
+        self.assertEqual(self.fd_snapshot(), before)
+
+    @unittest.skipUnless(os.geteuid() == 0, 'real protected root source metadata required')
+    def test_source_progress_callback_failure_closes_native_fds(self):
+        self.archive.chmod(0o400)
+        for phase in ('encoded', 'decode'):
+            with self.subTest(phase=phase):
+                before = self.fd_snapshot()
+                def fail(event):
+                    if event['phase'] == phase:
+                        raise RuntimeError('callback failure')
+                with self.assertRaisesRegex(RuntimeError, 'callback failure'):
+                    S.Source(str(self.archive), sha(self.encoded), sha(self.manifest),
+                             {self.archive.stat().st_dev}, progress=fail)
+                self.assertEqual(self.fd_snapshot(), before)
+        with patch.object(S.ENROLL, 'HeldPath', side_effect=AssertionError) as held:
+            with self.assertRaisesRegex(ValueError, 'progress callback required'):
+                S.Source(str(self.archive), sha(self.encoded), sha(self.manifest),
+                         {self.archive.stat().st_dev}, progress=42)
+            held.assert_not_called()
+        before = self.fd_snapshot()
+        enabled = False
+        def fail_later(_event):
+            if enabled:
+                raise RuntimeError('later callback failure')
+        source = S.Source(str(self.archive), sha(self.encoded), sha(self.manifest),
+                          {self.archive.stat().st_dev}, progress=fail_later)
+        enabled = True
+        with self.assertRaisesRegex(RuntimeError, 'later callback failure'):
+            with source:
+                source.scan()
+        self.assertEqual(self.fd_snapshot(), before)
+
+    @unittest.skipUnless(os.geteuid() == 0, 'real protected root source metadata required')
+    def test_source_constructor_preserves_primary_and_failed_close_without_leak(self):
+        self.archive.chmod(0o400)
+        before = self.fd_snapshot()
+        primary, cleanup = ValueError('decoder primary'), OSError('close cleanup')
+        with patch.object(S, 'scan_fd', side_effect=primary), \
+                patch.object(S.ENROLL.HeldPath, 'close', side_effect=cleanup):
+            with self.assertRaises(S.SourceError) as caught:
+                S.Source(str(self.archive), sha(self.encoded), sha(self.manifest),
+                         {self.archive.stat().st_dev})
+        self.assertIs(caught.exception.primary, primary)
+        self.assertEqual(caught.exception.cleanup, (cleanup,))
+        self.assertEqual(caught.exception.receipt['primary_error']['message'], 'decoder primary')
+        self.assertEqual(caught.exception.receipt['cleanup_errors'][0]['message'], 'close cleanup')
+        self.assertEqual(self.fd_snapshot(), before)
+
+    @unittest.skipUnless(os.geteuid() == 0, 'real protected root source metadata required')
+    def test_source_scan_preserves_decoder_and_final_recheck_errors(self):
+        self.archive.chmod(0o400)
+        with S.Source(str(self.archive), sha(self.encoded), sha(self.manifest),
+                      {self.archive.stat().st_dev}) as source:
+            primary, cleanup = ValueError('decode primary'), OSError('final recheck')
+            with patch.object(S, 'scan_fd', side_effect=primary), \
+                    patch.object(source, 'recheck', side_effect=[None, cleanup]):
+                with self.assertRaises(S.SourceError) as caught:
+                    source.scan()
+            self.assertIs(caught.exception.primary, primary)
+            self.assertEqual(caught.exception.cleanup, (cleanup,))
+            source.recheck()
+
+    @unittest.skipUnless(os.geteuid() == 0, 'real protected root source metadata required')
+    def test_source_body_preserves_primary_and_close_errors_without_leak(self):
+        self.archive.chmod(0o400)
+        before = self.fd_snapshot()
+        source = S.Source(str(self.archive), sha(self.encoded), sha(self.manifest),
+                          {self.archive.stat().st_dev})
+        primary, cleanup = RuntimeError('body primary'), OSError('close cleanup')
+        with patch.object(S.ENROLL.HeldPath, 'close', side_effect=cleanup):
+            with self.assertRaises(S.SourceError) as caught:
+                with source:
+                    raise primary
+        self.assertIs(caught.exception.primary, primary)
+        self.assertEqual(caught.exception.cleanup, (cleanup,))
+        self.assertEqual(self.fd_snapshot(), before)
+
     def test_exact_metadata_across_scans_and_callback_exception(self):
         with self.archive.open('rb') as stream:
             initial = S.scan_fd(stream.fileno(), sha(self.manifest))[0]

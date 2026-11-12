@@ -38,6 +38,7 @@ MANUAL = module('prepare_boot_manual', 'scripts/guest-launch-admission.py')
 NORMAL = MANUAL.NORMAL
 MAINTENANCE = module('prepare_boot_census', 'scripts/guest-host-maintenance.py')
 UNITS = module('prepare_boot_units', 'configs/guest_boot_units.py')
+RESTORE = module('prepare_boot_restore', 'scripts/managed-guest-restore-transaction.py')
 require, digest = ADMISSION.require, LIFECYCLE.digest
 PROFILE = 'a733-guest-boot-prepared-v1'
 RECORD = 'prepared.json'
@@ -408,6 +409,26 @@ def _registry(controller, guard):
         return value
 
 
+def restore_census(storage, lease, boot_id, guard):
+    """Observe restore provenance before any bootstrap state/account mutations."""
+    guard()
+    with Resources() as resources:
+        controller = resources.enter_context(RESTORE.CUSTODY.LIFECYCLE.StateController(
+            storage, lease, boot_id=boot_id))
+        def checked():
+            guard()
+            controller.context.guard()
+            guard()
+        checked()
+        result = RESTORE.census(controller, checked)
+        completed(result, 'restore census failed')
+        require(not result.get('close_errors') and not result.get('cleanup_uncertain'),
+                'restore census cleanup uncertain')
+        checked()
+    guard()
+    return result
+
+
 def _observe_head(controller, entry, guard):
     name = entry['name']
     with Resources() as stack:
@@ -568,6 +589,8 @@ def prepare():
                 all(component.ADMISSION is ADMISSION for component in
                     (ACCOUNTS, BOOT_POLICY.CONTEXT, ACTIVATE, MANUAL, MAINTENANCE)),
                 'canonical admission family required')
+        require(RESTORE.ADMISSION is ADMISSION and RESTORE.CUSTODY.ADMISSION is ADMISSION,
+                'canonical restore admission family required')
         result['stage'] = 'storage-policy'
         try:
             policy = BOOT_POLICY.Policy(boot_id)
@@ -606,6 +629,9 @@ def prepare():
             require(plan['context']['state']['uuid'] == value['storage']['state_uuid'], 'activation STATE differs')
             activation = ACTIVATE.apply_bootstrap(args, plan, owner, plan_check=authority)
             completed(activation, 'storage activation or cleanup failed')
+            authority()
+            result['stage'] = 'restore-census'
+            result['restore_census'] = restore_census(value['storage'], lease, boot_id, authority)
             authority()
             result['stage'] = 'state'
             prepared = STATE.prepare(owner, value['storage'])
