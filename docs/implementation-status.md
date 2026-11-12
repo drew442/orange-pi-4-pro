@@ -146,8 +146,13 @@ progress now pass independent review and **94 privileged focused checks** with
 no skips/errors/failures. Default staging flushes but reports zero verified bytes;
 selection retains full root authentication. The verified private-loop fixture
 explicitly requests readback. [Operator-flow evidence](evidence/maintenance-confirmation-progress-20261112.json).
-All changes remain uninstalled and require the next combined full validation,
-production artifact checks and hardware acceptance. No candidate image is built.
+All changes remain uninstalled. Combined validation of committed source
+`2996365` is running on the Ubuntu builder as
+`a733-candidate-integration-validation-20261112-01.service` (frozen tree
+`9b1c9d866b10aea352a4c950c21042ae29a8121b`). Observe that same unit to its
+terminal result before constructing images; an observation timeout is not failure.
+Production artifact checks and hardware acceptance remain required. No candidate
+image is built.
 
 Two fresh managed power-key guest builds match byte for byte with verified
 off-device copies. [Build evidence](evidence/managed-fixture-build-20261112.json).
