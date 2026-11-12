@@ -119,7 +119,8 @@ Earlier software evidence remains linked for
 Root-only controls preserve firstkvm, exact RAM units, resource budgets and
 locked accounts; requests are consumed once and unknown acknowledgements never
 silently queue another run. Manual unit rendering remains explicit. Candidate
-construction/repeat, inactive-root deployment and physical qualification are next.
+construction/repeat now pass; inactive-root deployment and physical qualification
+are next.
 No new endurance run is planned.
 
 Candidate construction refused before image creation because seven outer Ubuntu
@@ -135,8 +136,8 @@ to six broke old updater/new candidate and new selector/old rollback compatibili
 The reviewed replacement retains four management files and records the two guest
 boot units in separate optional versioned metadata. Implementation passes 181
 focused/consumer tests and independent review, including real ext4 fixtures;
-full historical readers against production artifacts and physical rollback remain
-pending. [Compatibility evidence](evidence/guest-boot-metadata-compatibility-20261112.json)
+full historical readers against production artifacts now pass; physical rollback
+remains pending. [Compatibility evidence](evidence/guest-boot-metadata-compatibility-20261112.json)
 retains the strict four-plus-two contract and fixture limits. Current source has
 four management records and two guest boot records; the earlier six-record
 uninstalled representation is retired.
@@ -163,7 +164,8 @@ are available on codex and the builder for reverse-compatibility checks. A bound
 range recovery reproduced the historical gzip hash from the authenticated retained
 full image, without expanding the whole256GB carrier or touching physical storage.
 [Recovered input custody](evidence/normalized-a-compatibility-custody-20261112.json).
-Production artifact/actual-reader checks and hardware acceptance remain required.
+Production artifact/actual-reader checks now pass; hardware acceptance remains
+required.
 
 Two fresh managed power-key guest builds match byte for byte with verified
 off-device copies. [Build evidence](evidence/managed-fixture-build-20261112.json).

@@ -8,75 +8,43 @@ recovery-card transition. This plan completes production qualification and adds 
 guest operation. Physical restore/reinstall, unattended deployment and final qualification remain
 future work.
 
-The next deliverable is a reviewed, reproducible inactive-root candidate, not a
-production-ready declaration. Software integration can continue while the board
-awaits its recovery card. Physical recovery, final guest deployment and the
-remaining cold cycles need operator access; their completion dates depend on
-those transitions rather than an estimated number of development hours.
+The next deliverable is a physically demonstrated SPI recovery procedure, followed
+by deployment of the reviewed inactive-root candidate. Software preparation can
+continue while the recovery-card transition awaits the operator. Completion is
+determined by the evidence gates below; no calendar estimate substitutes for
+physical results.
 
 ## Delivery order and current checkpoints
 
 ### Next execution steps
 
-The next milestone is a reviewed candidate that can be installed in the inactive
-root while preserving the working host. Execute these steps in order; physical
-SPI recovery can proceed alongside software work when the operator is available.
+The committed candidate is `2996365`. Its combined 3589-test Ubuntu run, two
+matching fresh root constructions and independent complete artifact/production
+reader checks pass. [Candidate artifacts](managed-root-candidate-20261112.md)
+remain uninstalled. Preserve these completed results and use the following order.
 
-1. **Retain the completed software checkpoint.** Initial policy publication,
-   explicit guest controls and coherent restore publication/resume/census now pass
-   reviewed software integration. The terminal Ubuntu run passed 3577 tests,
-   five shell suites and five diagnostic cases; the preliminary dispatcher fixture
-   failure and correction remain retained. [Frozen evidence](evidence/managed-restore-validation-20261112.json).
-   Keep source pins and independent reviews with the candidate. These components
-   remain uninstalled; host checks do not close physical release gates.
-2. **Freeze a buildable candidate and its recovery contract.** Include the initial
-   policy publisher, explicit controls, coherent restore command and both boot
-   services. Record supported restore identities and explicit limitations;
-   destination authority must bind the registered guest, storage, UID and profiles.
-   Preserve unrelated guests and enable flags. Verify interruption/resume ordering,
-   historical completion reporting and the early-boot refusal of incomplete
-   transactions. The [restore contract](managed-restore-design.md) defines this interface.
-   Publish its operator guide with the validated command; hardware restoration
-   remains unproven.
-3. **Build twice and review the deployable artifacts.** Use two fresh source/work
-   trees of the committed candidate on the Ubuntu 22.04 builder with pinned
-   userspace, tools and inputs. Record exact package versions and distinguish
-   retained-input construction from clean-builder reproduction. Compare root
-   images and manifests, explain differences, and retain sizes, hashes and
-   verified off-device copies. Start compilation with two jobs; monitor disk and
-   memory without lowering resource guards. Independently review packaging,
-   installation and rollback changes before deployment. Preserve the working
-   root and external BOOT/kernel/DTB/EL2 firmware; a diagnostic build input is not
-   authority to replace the currently qualified BOOT components. Installation
-   shows progress; bulk NVMe readback remains optional troubleshooting work.
-4. **Demonstrate SPI recovery.** After the retained recovery SD is booted, collect
-   fresh identities and independently review concrete live-flash plans. Restore
-   the original SPI backup, prove SD recovery, reinstall SPI and prove SD-removed
-   NVMe boot with actual KVM. Retain required flash readbacks and backups. Existing
-   authorization covers these known targets; changed targets require yes/no.
-5. **Deploy and exercise the candidate.** Use the disposable managed guest, leaving
-   `firstkvm` intact. Prove nonroot KVM autostart, CPU/disk/network, guest-owned
-   shutdown, durable checkpoint/restart, coherent backup/restoration, disable and
-   host rollback. Observe actual target mount and shutdown ordering and retained
-   management access. Software surrogates do not satisfy these checks.
-6. **Qualify and reproduce the final configuration.** Freeze the candidate, adapt
-   the SPI boot collectors and complete the shortfall to ten cold and ten warm
-   boots. Credit applicable existing and demonstration boots explicitly. Reuse
-   accepted endurance data; no qualifying endurance rerun is needed and no new
-   planned test exceeds eight hours. Have an independent agent/operator reproduce
-   the released build, deployment and recovery procedure, resolve discrepancies,
-   reconcile acceptance evidence, and commit/push the final documentation.
+| Order | Work and owner | Required result before proceeding |
+| --- | --- | --- |
+| 1 | Coordinator prepares deployment and SPI boot collectors; Sol implements bounded changes and a separate Sol reviews them | Artifact-bound inactive-B and rollback plans; collectors support SD absence, current firmware identity and authenticated managed-guest outcomes. Preserve uncertain-reboot safeguards; never issue another power request just because observation timed out. |
+| 2 | Operator boots the retained recovery SD; coordinator revalidates targets and obtains independent live-plan review | Fresh boot ID, SD CID, NVMe/STATE identity and live SPI backup; readable original/calibrated backups retained off-device. Existing known-target write authorization applies. |
+| 3 | Coordinator demonstrates SPI restoration and reinstallation, with operator card/power transitions | Restore original blank SPI with required readback, boot via SD, reinstall reviewed SPI, then prove SD-removed NVMe boot and actual KVM. Retain receipts before each transition. |
+| 4 | Coordinator stages the reviewed candidate into inactive B and boots it | Preserve working normalized A, BOOT/kernel/DTB/EL2, STATE, SSH identity and `firstkvm`. Confirm management, read-only root, expected listeners and SD absence before enabling automation. |
+| 5 | Coordinator deploys the separate disposable managed guest | Publish explicit storage policy before initialization; prepare locked account and enrolled payload, then register and enable. Prove nonroot KVM autostart, CPU/disk/network, guest-owned shutdown, durable checkpoint/restart, coherent backup/restore and disable. Confirm actual systemd mount/shutdown order and failure isolation. |
+| 6 | Coordinator exercises changed installed maintenance and rollback under independent review | Review a separate concrete plan before temporarily replacing inactive A. Demonstrate applicable interruption/retry and selector publication/cancellation with disposable data. Restore the authenticated normalized A rollback root before selecting it; prove management and preserved guest cohort on A, then return to B and prove managed operation. Default bulk writer readback is optional; full selector authentication remains required and reports progress. |
+| 7 | Coordinator freezes final configuration and completes SPI boot qualification | Reach ten accepted cold and ten warm boots. Credit applicable existing and demonstration boots explicitly; collect only the shortfall. Record final-build managed behavior and actual KVM outcomes. Retain continuous UART and investigate any new management failure. |
+| 8 | Independent agent/operator reproduces the released procedure; coordinator reconciles acceptance | Execute build/deployment, SPI recovery and guest operations from the declared clean environment, retain discrepancies and resolutions, and distinguish retained-input construction from independently provisioned-builder reproduction. Update runbooks, evidence/status and release matrix; commit and push validated changes. |
 
-The combined source `2996365`, including the four-management/two-guest-unit
-metadata split and operator-flow changes, now passes 3589 privileged Ubuntu tests,
-shell/diagnostic suites and independent review. Two fresh production constructions
-now match raw/gzip bytes and pass independent complete artifact checks.
-Whole historical/current production readers pass against new and retained roots,
-without fixture dependency substitutions. [Candidate artifacts](managed-root-candidate-20261112.md)
-remain uninstalled; hardware staging, rollback and return are still required. Retain the working root and
-verified newest guest cohort through rollback and return. See
-[compatibility evidence](evidence/guest-boot-metadata-compatibility-20261112.json)
-and [operator-flow evidence](evidence/maintenance-confirmation-progress-20261112.json).
+Steps 1 and other non-destructive preparation continue while step 2 awaits
+physical access. Independent review is required for boot, target selection,
+installation and rollback changes before mutation. Hardware records must bind
+boot ID, exact storage/firmware identities, UART and actual guest outcomes;
+software fixtures cannot close these gates. Keep verified evidence off-device.
+
+No endurance rerun is planned: the retained longer run satisfies the eight-hour
+criterion. Cap every future planned test at eight hours. Use progress-enabled
+installation writes, preserve the known 2 GB recovery SD without reflashing,
+and leave attached heatsinks in place. Preserve source/license limitations;
+local production qualification does not establish redistribution clearance.
 
 The operator's next physical action remains the recovery-card transition in
 [Operator steps and evidence](#operator-steps-and-evidence). After reinstalling
@@ -89,11 +57,11 @@ cycle attestations. Software preparation continues while those steps are pending
 | 1. Recoverable baseline | Recorded; revalidate after each hardware transition | Verified original/calibrated SPI and stopped guest backups retained off-device |
 | 2. Metadata-aware SPI maintenance | Software checks and independent review pass | Reviewed fresh live plans and preserved calibration policy |
 | 3. Physical restore/reinstall | Pending recovery-card boot | Original SPI restore, SD recovery, reinstall, SD-removed boot and actual KVM pass |
-| 4. Unattended guests | Controls/services reviewed as source; coherent restore integration passes; all uninstalled | Reproducible packaged services, graceful shutdown/checkpoint/reconciliation, rollback and real KVM acceptance |
+| 4. Unattended guests | Two matching packaged builds and independent artifact/reader review pass; all uninstalled | Reproducible packaged services, graceful shutdown/checkpoint/reconciliation, rollback and real KVM acceptance |
 | 5. Final SPI boot series | One cold and one warm operational boot evidenced | Ten accepted cold and ten warm boots with applicable identity and final automation checks |
 | 6. Independent reproduction and signoff | Earlier protected-SD reproduction retained | Updated SPI recovery and guest procedures reproduced, evidence reconciled and changes pushed |
 
-Continue phase-4 implementation and builder validation while phase 3 awaits
+Continue deployment and collector preparation while phase 3 awaits
 physical card/power steps. Complete both phases before the final configuration
 is frozen for phase 5. Credit qualifying demonstration boots and existing
 endurance evidence rather than repeating completed tests. Phase 6 closes only
@@ -273,8 +241,10 @@ series. Identify firmware through boot0/package hashes and the declared metadata
 policy, recording complete flash snapshots separately. Normal vendor parameter
 updates within the declared area retain the code identity. Credit the existing
 one cold and one warm SPI boot while their firmware and SSD identities remain
-applicable. Run **nine additional cold boots and nine
-additional warm reboots**. If firmware code changes, explicitly reassess the
+applicable. Maintain a per-boot evidence ledger and collect only the shortfall to
+**ten accepted cold boots and ten accepted warm reboots**. Each credited record
+binds firmware/SSD identity, host build and guest evidence; older route evidence
+does not establish final-build unattended behavior. If firmware code changes, explicitly reassess the
 applicable earlier records and affected checks before setting the remaining count.
 Automatic guest behavior must be exercised on the final host build. Credit
 qualifying recovery and automation demo boots toward those additional counts
@@ -377,8 +347,8 @@ where it changes boot/storage/rollback, and a coherent validated commit.
 | A | Retain installed maintenance integration | Update/selector admission, actual loop checks and explicit closed-maintenance recovery are evidenced in status. Preserve these guarantees through the remaining integration; rerun affected checks when behavior changes. Guests stop before exclusive maintenance and target mutation ends before reopening. |
 | B | Close managed backup/restore integration | Publication/explicit-resume/bootstrap-census integration passes the frozen 3577-test run and independent review. Retain its evidence and demonstrate coherent restoration on the disposable real KVM guest. Preserve unrelated guests; reject unsupported identity changes and stale authority. |
 | C | Preserve portable RAM recovery integration | Reviewed offline exclusion, protected p5 probing and disposable kernel-loop evidence are recorded in status. Retain exclusion through cleanup, refuse raw STATE restoration over managed metadata and rerun affected checks only when changes justify it. Confirm the released physical recovery route. |
-| D | Deploy bootstrap and guest services | Initial policy publication and explicit controls are already packaged in source. Integrate the final restore census, then prove actual unit/mount dependencies, bounded nonroot KVM and shutdown order on the target. Retain SSH/NTP when guest preparation or execution fails. |
-| E | Package and build the candidate | Include every required controller/service in pinned reproducible inactive-root recipes, rebuild on the Ubuntu builder and verify artifact sizes/hashes. Retain the working root and recovery card. Pass the repository checks and an independent review before deployment. |
+| D | Deploy bootstrap and guest services | Initial policy publication, explicit controls and the final restore census are packaged in the reviewed candidate. Prove actual unit/mount dependencies, bounded nonroot KVM and shutdown order on the target. Retain SSH/NTP when guest preparation or execution fails. |
+| E | Package and build the candidate | Completed: source 2996365 passes 3589 tests, two fresh constructions match and independent artifact/reader checks pass. Retain pinned artifacts and the working root/recovery card; rebuild only if candidate code changes. |
 | F | Validate the installed candidate | Deploy to the inactive root and use the separate disposable managed guest. Prove actual nonroot KVM autostart, CPU/disk/network, guest-owned clean shutdown, checkpoint/restart, coherent backup/restore, disable and host rollback. Preserve the manually managed firstkvm cohort. Software fixtures cannot satisfy this gate. |
 
 E/F also retain and verify the installed host restrictions: read-only root,
@@ -386,9 +356,8 @@ NVMe/RAM state placement, bounded runtime storage, limited nonroot QEMU authorit
 locked accounts, key-only SSH, expected listeners and recorded SD absence. Use
 the existing release checks where applicable and retain the actual results.
 
-A–D now pass integrated software validation. The next gate is reviewed candidate
-construction E from the committed source and authenticated inputs.
-F requires actual installation and physical evidence. Phase 3 can proceed
+A–E now pass integrated software and artifact validation. F is the remaining
+candidate deployment gate and requires actual installation and physical evidence. Phase 3 can proceed
 independently when the retained recovery card is booted. Finish phases 3 and 4
 before freezing the configuration for phase 5. Reassess earlier boot credit if
 firmware identity changes; record final automation checks separately.
@@ -415,7 +384,7 @@ remaining exact toolchain sources and 26 vendor boot-input licensing gaps in
 [the source inventory](toolchain-sources.md). Local hardware qualification does
 not establish public binary redistribution clearance.
 
-Before deploying E, record a change-to-evidence matrix for the frozen candidate:
+Before deploying the candidate in F, record a change-to-evidence matrix for the frozen candidate:
 
 | Changed area | Required evidence before carrying acceptance forward |
 | --- | --- |
@@ -464,6 +433,6 @@ handoffs. Children cannot delegate. Finish prerequisites before dependent work.
 The builder remains `drew@build.drewnet.online`, Ubuntu 22.04, starting compilation
 with two jobs and fresh resource checks. Existing target authorizations persist.
 Operator availability is needed for recovery-card transitions and the remaining
-cold power cycles, initially nine before crediting qualifying demonstrations.
+cold power cycles, with the remaining count computed from the reviewed ledger.
 The physical recovery demonstration may supply additional qualifying boot records
 when the final firmware/configuration matches.
