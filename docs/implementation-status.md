@@ -63,13 +63,14 @@ architecture review. The following software components are reviewed and tested;
 | Nonroot manual launch | [Evidence](evidence/manual-launch-admission-validation-20261112.json). Protected root namespace pins and exactly three input/two readonly lock FDs survive exec; no extra child capabilities. Bootstrap producer hook still needs wiring. |
 | Installed maintenance and managed backup artifact format | [Foundation evidence](evidence/maintenance-backup-foundation-validation-20261112.json). **2888** privileged Ubuntu tests, five shell suites and five diagnostic cases pass. Maintenance core is installed-only; the six-member codec is artifact validation, not backup/restore authority. |
 | Installed update/selection admission | [Integration evidence](evidence/installed-maintenance-admission-validation-20261112.json). **2905** privileged Ubuntu tests plus actual private-loop write/retry and ext4 selector interruption/cancellation pass. Independent source/fixture reviews pass; platform/admission substitutions and the corrected wrapper TOML failure are retained. |
+| Managed source export and explicit admission reopening | [Evidence](evidence/managed-sender-reopen-validation-20261112.json). **2956** privileged Ubuntu tests, shell/diagnostic suites and independent reviews pass. Successful fixture export and pre-output proof rejection are covered. Cleanup reporting correction preserves acknowledged reopening while reporting command failure. [Candidate procedure](guest-maintenance-admission.md). |
 
-Current packaging has 60 sources, 16 entrypoints and the historical exact
+Current packaging has 62 sources, 18 entrypoints and the historical exact
 39-source boundary. Reviews retain resolved findings, preliminary failures and
 verified off-device receipts. Native surrogate/ARM user-mode results ran no
 QEMU guest or KVM and do not establish deployment acceptance.
-Managed sender packaging and explicit failed-maintenance reopening remain in
-progress. RAM recovery/activation admission, coherent managed restoration,
+Managed archive decoding/receiver integration remains in progress.
+RAM recovery/activation admission, coherent managed restoration,
 boot services, inactive-root deployment and physical acceptance remain pending.
 The outer service must finish/check supervisor/run/controller/lease cleanup;
 bootstrap must publish manual namespace pins before opening admission.

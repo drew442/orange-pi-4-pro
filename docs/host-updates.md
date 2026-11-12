@@ -17,7 +17,7 @@ or selection. It requires bootstrap-prepared runtime, mounted guest storage and
 a protected managed registry, including an empty registry for a manual-only host.
 It stops managed guests, refuses active manual leases and reopens admission only
 after successful transaction cleanup and guest readiness checks. Failure leaves
-admission closed for explicit recovery. [Independent review, 2905 Ubuntu tests
+admission closed for [explicit recovery](guest-maintenance-admission.md#recover-a-failed-maintenance-closure). [Independent review, 2905 Ubuntu tests
 and private-loop transactions pass](evidence/installed-maintenance-admission-validation-20261112.json).
 This candidate remains uninstalled; its bootstrap integration and physical
 deployment acceptance are pending. Use the pinned released maintenance tree for

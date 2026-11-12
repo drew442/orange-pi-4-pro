@@ -45,13 +45,15 @@ SOURCES = tuple(sorted(LEGACY_SOURCES + (
     'configs/guest_checkpoint_records.py', 'scripts/managed-guest-checkpoint.py',
     'scripts/guest-operation-admission.py', 'scripts/guest-launch-admission.py',
     'scripts/guest-host-maintenance.py', 'configs/guest_managed_backup.py',
+    'scripts/backup-managed-guest.py',
+    'scripts/reopen-guest-admission.py',
 )))
 ENTRYPOINTS = {name: f'scripts/{name}.py' for name in (
     'install-nvme', 'acquire-nvme', 'plan-nvme', 'prepare-host-update',
     'update-host', 'select-host-root', 'recover-host-root',
     'activate-guest-storage', 'guest-accounts', 'enroll-guest', 'launch-kvm-guest',
     'checkpoint-guest', 'backup-guest', 'verify-guest-backup', 'index-guest-backup',
-    'restore-guest')}
+    'restore-guest', 'backup-managed-guest', 'reopen-guest-admission')}
 MAX_SOURCE = 2 * 1024**2
 MAX_PAYLOAD = 4 * 1024**2
 

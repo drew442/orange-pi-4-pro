@@ -1,0 +1,123 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "result": "pass",
+  "scope": "Uninstalled managed source exporter, explicit failed-maintenance reopen CLI and closed source packaging; no managed receiver/restore publisher, boot service or physical deployment acceptance",
+  "builder": "drew@build.drewnet.online",
+  "builder_base": "/var/lib/a733-managed-sender-reopen-validation-20261112-01",
+  "full_Ubuntu_tests": 2956,
+  "failures_errors_skips": 0,
+  "shell_suites": 5,
+  "diagnostic_cases": 5,
+  "parsed_TOML": 5,
+  "locked_source_files": 1029,
+  "source_lock": {
+    "bytes": 165002,
+    "sha256": "b5c4aecb816d074269734892f116b30b5155f242b37857cec40a6a158b5d96d9",
+    "index_tree": "5afc428cbeb858c71cf9b21456bdf7119af132a6"
+  },
+  "unit": {
+    "RuntimeMaxUSec": "8h",
+    "MainPID": "0",
+    "Result": "success",
+    "ExecMainStatus": "0",
+    "CPUQuotaPerSecUSec": "2s",
+    "MemoryMax": "3221225472",
+    "SubState": "exited"
+  },
+  "source": {
+    "build/maintenance-tools.py": {
+      "bytes": 15432,
+      "sha256": "92aa1509805b07ec187dd318c540c8ddabb493d4840b723863a63e5150e19296"
+    },
+    "scripts/backup-managed-guest.py": {
+      "bytes": 13733,
+      "sha256": "87658fb1f2815e260feaccc6d76d03a4e6be89175681e49efae8e8ca9af88372"
+    },
+    "scripts/reopen-guest-admission.py": {
+      "bytes": 4563,
+      "sha256": "f4d4d97845e754a22d1d401577aef9eee28620c4a379fb2b3f60631e98c29381"
+    },
+    "tests/test_host_payload.py": {
+      "bytes": 28099,
+      "sha256": "bc54f16c3005074db5b26d5f72a39b507622537e0d890975b224643c4d926718"
+    },
+    "tests/test_launch_deterministic_host_roots.py": {
+      "bytes": 11602,
+      "sha256": "113cc6dfdf77ed14c22df549a0f25c4090f5fa4cd9694f7bcd5c2ee4c7c946cc"
+    },
+    "tests/test_maintenance_tools.py": {
+      "bytes": 17932,
+      "sha256": "660588966e908117c0cbc436f03525a706442f7154ff81115a367a596eb62550"
+    },
+    "tests/test_managed_backup_sender.py": {
+      "bytes": 19157,
+      "sha256": "4096294a2eddf2fe692d29d9257633bffab9a6ee34a5d147d255fc3c086ceb0f"
+    },
+    "tests/test_reopen_guest_admission.py": {
+      "bytes": 15313,
+      "sha256": "c2165066b11fb916df3e292860e79645a3bac60d6c18d88acb97e2350de99b9e"
+    }
+  },
+  "resource_sample_minima": {
+    "free_disk_bytes": 31267504128,
+    "MemAvailable_bytes": 7151992832
+  },
+  "independent_reviews": {
+    "sender": {
+      "path": "out/managed-sender-reopen-validation-20261112-01/sender-review.json",
+      "bytes": 20532,
+      "sha256": "6a1c65df3c591129ad88606b8e930f09370a7f2d8a0ea7fe53a83a8a76cf2655"
+    },
+    "reopen": {
+      "path": "out/managed-sender-reopen-validation-20261112-01/reopen-review.json",
+      "bytes": 10064,
+      "sha256": "cd18068b9a6f9e38a3cb979c4d8ee0c2079fef10e2804b48c845a71770205376"
+    }
+  },
+  "packaging": {
+    "current_sources": 62,
+    "runtime_files": 63,
+    "entrypoints": 18,
+    "historical_sources": 39,
+    "extracted_import_and_CLI_help": "pass"
+  },
+  "custody": {
+    "bytes": 532480,
+    "sha256": "99398e614575119fe2104d6523c36477f8be6797333a9a85fc988ec059db77a1",
+    "native": "out/managed-sender-reopen-validation-20261112-01/receipts.tar",
+    "builder": "/var/lib/a733-managed-sender-reopen-validation-20261112-01/receipts.tar",
+    "unit": {
+      "RuntimeMaxUSec": "8h",
+      "MainPID": "0",
+      "Result": "success",
+      "ExecMainStatus": "0",
+      "CPUQuotaPerSecUSec": "2s",
+      "MemoryMax": "3221225472",
+      "SubState": "exited"
+    }
+  },
+  "sender": {
+    "native_tests": 31,
+    "independent_suite_before_fixture_regressions": 29,
+    "independent_probes": 5,
+    "fixture_regressions": "Two permanent successful 11-record fixture/tampered-proof-before-output cases added after independent probes; production source unchanged, both focused cases and full Ubuntu suite pass.",
+    "behavior": "Actual same-family SH admission, guest/disk EX and physical source context; authenticate complete ready cohort before gzip and after streaming; retain protected record inodes and historical registry while releasing registry EX before long streaming; accepted-byte archive hash/count; all cleanup must complete before success.",
+    "limits": "Pipe/socket source export only. No receiver acceptance, restoration or hardware truth from mocked producer tests."
+  },
+  "reopen": {
+    "native_tests": 20,
+    "independent_initial_suite": 17,
+    "independent_probes": 5,
+    "targeted_CLI_tests_after_correction": 5,
+    "resolved_P2": "After acknowledged open, later cleanup failure originally emitted success:true with exit 1. Final CLI emits success:false while preserving gate state/open acknowledgement and original maintenance receipt; focused and independent reproduction pass.",
+    "behavior": "Explicit root/native installed recovery of exact existing closed maintenance nonce; prove record before stop, nonblocking exclusive native lease, actual controller/readiness/reconciliation plus entry/final consumer checks; no missing-runtime initialization, bootstrap/shutdown takeover or host write retry.",
+    "limits": "Physical placement/PID1 mocked; helper uninstalled. Unknown/quarantined cohorts require separate recovery."
+  },
+  "limitations": [
+    "All production controllers remain uninstalled; bootstrap/activation/RAM recovery and services must be integrated and physically validated.",
+    "No actual QEMU guest/KVM or physical SPI/NVMe/SD write ran in this validation.",
+    "Managed receiver, coherent restore and HTTPS source integration are outside this receipt; original firstkvm remains manual.",
+    "Five unchanged TOML files reuse the native tomllib parse result retained in receipts; Ubuntu Python 3.10 does not provide tomllib."
+  ]
+}

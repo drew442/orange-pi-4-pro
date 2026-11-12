@@ -41,7 +41,7 @@ class MaintenanceToolsTests(unittest.TestCase):
 
     def test_real_sources_are_exact_and_allowlist_is_closed(self):
         values = TOOLS.entries()
-        self.assertEqual(len(TOOLS.SOURCES), 60)
+        self.assertEqual(len(TOOLS.SOURCES), 62)
         self.assertEqual(len(TOOLS.LEGACY_SOURCES), 39)
         self.assertEqual(set(TOOLS.SOURCES) - set(TOOLS.LEGACY_SOURCES), {
             'configs/guest_registry.py', 'configs/guest_lifecycle.py', 'configs/guest_qmp.py',
@@ -53,7 +53,8 @@ class MaintenanceToolsTests(unittest.TestCase):
             'scripts/managed-guest-fixture.py', 'configs/managed-guest-profile.lock.json',
             'configs/guest_checkpoint_records.py', 'scripts/managed-guest-checkpoint.py',
             'scripts/guest-operation-admission.py', 'scripts/guest-launch-admission.py',
-            'scripts/guest-host-maintenance.py', 'configs/guest_managed_backup.py'})
+            'scripts/guest-host-maintenance.py', 'configs/guest_managed_backup.py',
+            'scripts/backup-managed-guest.py', 'scripts/reopen-guest-admission.py'})
         self.assertIn('build/timesync-state.py', TOOLS.SOURCES)
         self.assertEqual(set(values), set(TOOLS.SOURCES) | {'package.json'})
         for name in TOOLS.SOURCES:
@@ -64,7 +65,7 @@ class MaintenanceToolsTests(unittest.TestCase):
         self.assertEqual(set(metadata['source_records']), set(TOOLS.SOURCES))
         self.assertNotIn('package.json', metadata['files'])
         self.assertEqual(TOOLS.canonical(metadata), values['package.json'][1])
-        self.assertEqual(len(metadata['entrypoints']), 16)
+        self.assertEqual(len(metadata['entrypoints']), 18)
 
     def test_extracted_package_imports_and_cli_help_without_checkout(self):
         # Use only archive bytes in a private relocated tree. Import every helper,
