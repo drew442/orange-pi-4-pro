@@ -7,6 +7,7 @@ Physical boot, real KVM and recovery acceptance remain separate requirements.
 """
 import argparse
 import contextlib
+import copy
 import fcntl
 import hashlib
 import json
@@ -29,6 +30,17 @@ def adjacent(name, filename):
 PREP = adjacent('stage_host_preparation', 'prepare-host-update.py')
 WRITER = PREP.WRITER
 require = PREP.require
+
+
+_MAINTENANCE = None
+
+
+def maintenance_helper():
+    # Lazy: lifecycle activation imports selector/update pure helpers in turn.
+    global _MAINTENANCE
+    if _MAINTENANCE is None:
+        _MAINTENANCE = adjacent('installed_host_maintenance', 'guest-host-maintenance.py')
+    return _MAINTENANCE
 
 
 def snapshot(args):
@@ -229,11 +241,15 @@ def new_report():
 def failure(report, error):
     report['success'] = report['activation_ready'] = False
     report['error'] = f'{type(error).__name__}: {error}'
+    if hasattr(error, 'receipt'):
+        report['maintenance'] = copy.deepcopy(error.receipt)
 
 
 def apply(args, source, plan, report=None, *, plan_check=lambda target: None):
     """Transaction core. Tests replace policy/FD guards, never the production CLI."""
     report = new_report() if report is None else report
+    maintenance = None
+    maintenance_failure = None
     try:
         require(os.geteuid() == 0, 'apply requires root')
         require(not report.get('success') and not report.get('target_modified')
@@ -246,42 +262,57 @@ def apply(args, source, plan, report=None, *, plan_check=lambda target: None):
         require(make_plan(args, source) == plan, 'current preflight differs from reviewed plan')
         plan_check(plan['context']['target'])
         authorize(plan)
-        with update_lock(plan['context']):
-            require(make_plan(args, source) == plan, 'host plan changed after authorization/lock')
-            target = plan['context']['target']
-            plan_check(target)
-            fd = os.open(target['canonical_path'], os.O_RDWR | os.O_EXCL | os.O_NONBLOCK | os.O_NOFOLLOW)
-            try:
-                WRITER.validate_fd(fd, target)
-                fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
-
-                def check():
-                    require(inspect(args, source) == plan['context'], 'live host context changed')
+        helper = maintenance_helper()
+        maintenance = helper.InstalledMaintenance(helper.registered_storage())
+        reviewed_plan_check = plan_check
+        def plan_check(target):
+            maintenance.recheck()
+            reviewed_plan_check(target)
+        with maintenance:
+            with update_lock(plan['context']):
+                require(make_plan(args, source) == plan, 'host plan changed after authorization/lock')
+                target = plan['context']['target']
+                plan_check(target)
+                fd = os.open(target['canonical_path'], os.O_RDWR | os.O_EXCL | os.O_NONBLOCK | os.O_NOFOLLOW)
+                try:
                     WRITER.validate_fd(fd, target)
-                    plan_check(target)
+                    fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
 
-                check()
-                require(WRITER.metadata_hashes(fd, target['size_bytes']) == plan['old_metadata'],
-                        'inactive slot metadata changed after open')
-                WRITER.hash_stream(source.root, source.expected)
-                check()
-                require(WRITER.metadata_hashes(fd, target['size_bytes']) == plan['old_metadata'],
-                        'inactive slot metadata changed before write')
-                progress = WRITER.ConsoleProgress()
-                print('Staging inactive root; interruption may leave this slot incomplete.',
-                      file=sys.stderr, flush=True)
-                WRITER.stream_copy_verify(
-                    source.root, fd, source.expected,
-                    flush_callback=lambda held: fcntl.ioctl(held, WRITER.BLKFLSBUF),
-                    refresh_callback=lambda held: None, source_check=check,
-                    progress=progress, report=report, verify_readback=True,
-                    readback_progress=WRITER.ConsoleProgress(label='Root slot bytes read back'),
-                    status=lambda message: print(message, file=sys.stderr, flush=True))
-                report['activation_ready'] = report['success']
-            finally:
-                os.close(fd)
+                    def check():
+                        require(inspect(args, source) == plan['context'], 'live host context changed')
+                        WRITER.validate_fd(fd, target)
+                        plan_check(target)
+
+                    check()
+                    require(WRITER.metadata_hashes(fd, target['size_bytes']) == plan['old_metadata'],
+                            'inactive slot metadata changed after open')
+                    WRITER.hash_stream(source.root, source.expected)
+                    check()
+                    require(WRITER.metadata_hashes(fd, target['size_bytes']) == plan['old_metadata'],
+                            'inactive slot metadata changed before write')
+                    progress = WRITER.ConsoleProgress()
+                    print('Staging inactive root; interruption may leave this slot incomplete.',
+                          file=sys.stderr, flush=True)
+                    WRITER.stream_copy_verify(
+                        source.root, fd, source.expected,
+                        flush_callback=lambda held: fcntl.ioctl(held, WRITER.BLKFLSBUF),
+                        refresh_callback=lambda held: None, source_check=check,
+                        progress=progress, report=report, verify_readback=True,
+                        readback_progress=WRITER.ConsoleProgress(label='Root slot bytes read back'),
+                        status=lambda message: print(message, file=sys.stderr, flush=True))
+                    report['activation_ready'] = report['success']
+                finally:
+                    os.close(fd)
+            if report['success']:
+                maintenance.finish_success()
     except (Exception, KeyboardInterrupt) as error:
         failure(report, error)
+        if hasattr(error, 'receipt'):
+            maintenance_failure = copy.deepcopy(error.receipt)
+    finally:
+        if maintenance is not None:
+            report['maintenance'] = (maintenance_failure if maintenance_failure is not None
+                                     else copy.deepcopy(maintenance.receipt))
     return report
 
 

@@ -6,15 +6,22 @@ November 4 paths below are historical examples; they bind a different payload.
 Consult the [retention map](build-cache-retention.md#replay-and-prototype-output-retention)
 before attempting to reuse any historical generated path.
 
-Routine updates must replace the inactive 4 GiB NVMe root, verify its complete
-contents, and then explicitly publish its selector on NVMe state. The current
-implementation prepares authenticated **files on the builder** and provides a
-guarded inactive-slot staging CLI for a running installed host. The staging CLI
-has not been used on physical hardware. The separate [selection controller](host-root-selection.md)
-supports explicit activation and pending-selection cancellation; booted rollback
-and failed-boot recovery remain unvalidated.
-Do not copy a prepared selector into live state by hand. Physical update and
-interruption testing remain release gates.
+Routine updates replace the inactive 4 GiB NVMe root, verify its complete
+contents, and explicitly publish its selector on NVMe STATE. The earlier release
+passes [physical staging, interrupted publication, cancellation and booted rollback](physical-host-update-rollback-20261110.md).
+Use the separate [selection controller](host-root-selection.md) to activate a
+verified slot; retain the recorded root/STATE pairing.
+
+The current source candidate adds installed maintenance admission before staging
+or selection. It requires bootstrap-prepared runtime, mounted guest storage and
+a protected managed registry, including an empty registry for a manual-only host.
+It stops managed guests, refuses active manual leases and reopens admission only
+after successful transaction cleanup and guest readiness checks. Failure leaves
+admission closed for explicit recovery. [Independent review, 2905 Ubuntu tests
+and private-loop transactions pass](evidence/installed-maintenance-admission-validation-20261112.json).
+This candidate remains uninstalled; its bootstrap integration and physical
+deployment acceptance are pending. Use the pinned released maintenance tree for
+the existing installation until the new matched root is validated.
 
 For the `timesync-20261106` source profile used by this release, root and state profile,
 package-state, clock-helper provenance and state UUID must agree. The time-aware

@@ -8,6 +8,12 @@ provides the controller for explicit host staging and includes it in the
 preparation SD. [Physical normalized-B activation, publication interruption/cancellation and old-A
 manual rollback now pass](physical-host-update-rollback-20261110.md).
 
+The current source candidate shares the installed maintenance admission described
+in [host updates](host-updates.md). Its initialized runtime, mounted guest storage
+and protected registry are prerequisites. Independent review and private-loop
+publication/cancellation checks pass; this wiring remains uninstalled pending
+bootstrap integration and physical candidate validation.
+
 `activate` selects the idle opposite slot while selection still matches the
 running root. After a successful boot, the same operation can select a retained
 old root using its old trusted release manifest. `cancel-pending` selects the

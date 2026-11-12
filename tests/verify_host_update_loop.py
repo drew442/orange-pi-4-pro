@@ -2,8 +2,9 @@
 """Opt-in staging transaction test on a newly created private file-backed loop.
 
 Only an authenticated candidate directory can be supplied, never a target.
-The live NVMe policy and TTY authorization are explicitly replaced by fixtures;
-actual block opens, locks, ioctls, copying and readback remain production code.
+Native A733 placement, installed maintenance/admission and TTY authorization
+are explicitly replaced by fixtures; actual block opens, locks, ioctls, copying
+and readback remain production code.
 """
 import argparse
 import contextlib
@@ -20,6 +21,7 @@ import stat
 import subprocess
 import sys
 import tempfile
+import threading
 import time
 from types import SimpleNamespace
 from unittest import mock
@@ -39,6 +41,86 @@ def require(condition, message):
 def record(path):
     data = Path(path).read_bytes()
     return {'bytes': len(data), 'sha256': hashlib.sha256(data).hexdigest()}
+
+
+def fixture_maintenance(storage, guard, unlocked):
+    """Explicit API custody substitute; no native admission or A733 authority.
+
+    Only the builder fixture uses this helper. The transaction still runs its
+    production block and state operations while this object checks ordering.
+    """
+    instances = []
+
+    class FixtureMaintenance:
+        def __init__(self, expected):
+            require(expected == storage, 'fixture storage tuple differs')
+            require(not instances or instances[-1].closed, 'fixture custody overlaps')
+            self.creator = (os.getpid(), threading.get_ident())
+            self.closed = self.finished = self.entered = False
+            self.checks = 0
+            self.events = ['create']
+            self.receipt = dict(fixture='platform and admission replaced; no authority',
+                                success=False, open_attempted=False, open_acknowledged=False)
+            instances.append(self)
+            self.recheck()
+
+        def creator_check(self):
+            require((os.getpid(), threading.get_ident()) == self.creator,
+                    'fixture custody changed process/thread')
+
+        def recheck(self):
+            self.creator_check()
+            require(not self.closed and not self.finished, 'fixture custody ended')
+            guard()
+            self.checks += 1
+
+        def __enter__(self):
+            self.recheck()
+            require(not self.entered, 'fixture custody entered twice')
+            self.entered = True
+            self.events.append('enter')
+            return self
+
+        def mutation(self):
+            self.creator_check()
+            require(self.entered and not self.closed and not self.finished,
+                    'mutation outside fixture custody')
+            require(self.checks > 2, 'mutation without transaction recheck')
+
+        def finish_success(self):
+            self.mutation()
+            self.recheck()
+            # Separate opens must acquire the actual subsystem/target locks.
+            unlocked()
+            self.finished = True
+            self.events.append('finish')
+            self.receipt.update(success=True, open_attempted=True, open_acknowledged=True)
+            return copy.deepcopy(self.receipt)
+
+        def close(self):
+            self.creator_check()
+            if self.closed:
+                return
+            require(self.entered, 'fixture custody closed before enter')
+            self.closed = True
+            self.events.append('close')
+            self.receipt.update(events=list(self.events), rechecks=self.checks)
+
+        def __exit__(self, *unused):
+            self.close()
+
+    helper = SimpleNamespace(InstalledMaintenance=FixtureMaintenance,
+                             registered_storage=lambda: copy.deepcopy(storage))
+    return helper, instances
+
+
+def assert_custody(instances, successful):
+    require(len(instances) == len(successful), 'fixture custody acquisition count differs')
+    for held, success in zip(instances, successful):
+        require(held.closed and held.finished == success, 'fixture lifetime outcome differs')
+        require(held.events == (['create', 'enter', 'finish', 'close'] if success else
+                                ['create', 'enter', 'close']), 'fixture custody ordering differs')
+        require(held.checks > 2, 'transaction did not recheck fixture custody')
 
 
 def owned_loop(loop, backing):
@@ -125,11 +207,25 @@ def verify(candidate, manifest_pin):
                                   'sha256':'b'*64}}
                 args = SimpleNamespace(target=loop, expected_model=disk['model'],
                                        expected_serial=disk['serial'],expected_bytes=SIZE,slot='B')
+                def guard():
+                    owned_loop(loop, backing)
+
+                def unlocked():
+                    with UPDATE.update_lock(context):
+                        held = os.open(loop, os.O_RDONLY | os.O_EXCL | os.O_NOFOLLOW)
+                        try:
+                            UPDATE.fcntl.flock(held, UPDATE.fcntl.LOCK_EX | UPDATE.fcntl.LOCK_NB)
+                        finally:
+                            os.close(held)
+
+                maintenance, custody = fixture_maintenance(
+                    {'fixture_state': str(boot)}, guard, unlocked)
                 real_pwrite = os.pwrite
                 real_ioctl = UPDATE.fcntl.ioctl
                 writes, ioctls, exclusive_refusals = [], [], []
                 interrupt = True
                 def write(held, data, offset):
+                    custody[-1].mutation()
                     info = os.fstat(held)
                     require(stat.S_ISBLK(info.st_mode) and info.st_rdev == dev,
                             'write escaped owned private loop')
@@ -163,6 +259,7 @@ def verify(candidate, manifest_pin):
                 # 4 GiB of write buffers for this otherwise bounded copy.
                 with mock.patch.object(UPDATE, 'snapshot', new=snapshot), \
                      mock.patch.object(UPDATE, 'authorize', new=lambda unused: None), \
+                     mock.patch.object(UPDATE, 'maintenance_helper', new=lambda: maintenance), \
                      mock.patch.object(UPDATE.WRITER.os, 'pwrite', new=write), \
                      mock.patch.object(UPDATE.fcntl, 'ioctl', new=ioctl):
                     plan = UPDATE.make_plan(args, source)
@@ -193,6 +290,7 @@ def verify(candidate, manifest_pin):
                     require(complete['readback_sha256'] == source.expected['sha256']
                             and not complete['selector_writes_performed']
                             and ioctls == ['BLKFLSBUF'], 'stage readback/flush contract differs')
+                assert_custody(custody, [False, True])
                 source.check()
                 require({path.name:record(path) for path in [selector,*sentinels]} == before,
                         'complete stage changed selection or unrelated sentinel')
@@ -207,7 +305,9 @@ def verify(candidate, manifest_pin):
                            'production_block_open_locks_ioctls_write_readback':True,
                            'second_exclusive_claim_refused_each_attempt':len(exclusive_refusals) == 2,
                            'partition_table_refresh_calls':0,
-                           'source_files_unchanged':True}
+                           'source_files_unchanged':True,
+                           'fixture_maintenance_ordering_checked':True,
+                           'native_platform_and_admission_replaced':True}
             finally:
                 if loop is not None:
                     owned_loop(loop, backing)
@@ -221,7 +321,7 @@ def verify(candidate, manifest_pin):
                         raise ValueError('owned loop detach did not complete')
                     loop = None
         results['cleanup'] = 'owned loop detached and private target/state/sentinel files deleted'
-        results['classification'] = 'native private-loop staging transaction only; no live NVMe policy, TTY authorization, activation, rollback or hardware proof'
+        results['classification'] = 'native private-loop staging transaction only; platform/admission and TTY authorization replaced; no activation, rollback, hardware or KVM acceptance'
         results['source_root'] = source.expected
         results['sources'] = {name:record(REPO / name) for name in
                              ('scripts/update-host.py','scripts/host-update-target.py',

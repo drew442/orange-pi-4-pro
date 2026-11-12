@@ -1,0 +1,150 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "result": "pass",
+  "scope": "Uninstalled installed-host update/selector admission wiring; native protected admission plus private loop/block/ext4 transactions; no physical host update, SPI recovery, service deployment or KVM acceptance",
+  "builder": "drew@build.drewnet.online",
+  "builder_base": "/var/lib/a733-installed-maintenance-validation-20261112-01",
+  "source": {
+    "scripts/guest-host-maintenance.py": {
+      "bytes": 16311,
+      "sha256": "74daf98f10f3ea316dfeebe6a7a3a7481cbb1e3490fdecbaf333513a60b7dfca"
+    },
+    "scripts/select-host-root.py": {
+      "bytes": 21301,
+      "sha256": "5b631f162e8b18f0b96767abe42f2216de5bdc5ffe237f1ee23947c431c50c24"
+    },
+    "scripts/update-host.py": {
+      "bytes": 17609,
+      "sha256": "03ece326ed3f0caddf4dde5109ceeed47bd780deb7ce314fc514a38ff1027e90"
+    },
+    "tests/test_host_update_admission.py": {
+      "bytes": 17788,
+      "sha256": "833c982e742e992c114d127e2da1459fbc4f0080a46a52f339a22ae8a287b425"
+    },
+    "tests/test_select_host_root.py": {
+      "bytes": 26023,
+      "sha256": "f89a36f05b7fc3b8a3ee0a8a3c524b8dba3f5d5de97902dcd39681c19d1e0ab2"
+    },
+    "tests/test_update_host.py": {
+      "bytes": 26150,
+      "sha256": "631a93d4e1e7889ee8ce5be73f0cc8d495749bb37919964cf493c1dc4edc28f4"
+    },
+    "tests/verify_host_selection_loop.py": {
+      "bytes": 21586,
+      "sha256": "1067160d703686458b3b985d3ee0f948d2f9dc8bbf0e530bcab3ec2760b0f15e"
+    },
+    "tests/verify_host_update_loop.py": {
+      "bytes": 17522,
+      "sha256": "36b8780e9ba0e6059f0a33658103dd11db1b64f7e46c3eefa16aa0ad87258446"
+    }
+  },
+  "source_lock": {
+    "bytes": 164189,
+    "sha256": "b20bd65249d1bb68bf6ed27490cacdddfa975442cd822bfa0ac665fbaba740a4",
+    "index_tree": "d035a864cc48fe43e5c5dcfa58daddee9118c145"
+  },
+  "locked_source_files": 1024,
+  "full_Ubuntu_tests": 2905,
+  "failures_errors_skips": 0,
+  "shell_suites": 5,
+  "diagnostic_cases": 5,
+  "parsed_TOML": 5,
+  "units": {
+    "a733-installed-maintenance-validation-20261112-01": {
+      "RuntimeMaxUSec": "8h",
+      "MainPID": "0",
+      "Result": "success",
+      "ExecMainStatus": "0",
+      "CPUQuotaPerSecUSec": "2s",
+      "MemoryMax": "3221225472",
+      "Id": "a733-installed-maintenance-validation-20261112-01.service",
+      "SubState": "exited"
+    },
+    "a733-installed-maintenance-loops-20261112-01": {
+      "RuntimeMaxUSec": "8h",
+      "MainPID": "0",
+      "Result": "exit-code",
+      "ExecMainStatus": "1",
+      "CPUQuotaPerSecUSec": "1s",
+      "MemoryMax": "1073741824",
+      "Id": "a733-installed-maintenance-loops-20261112-01.service",
+      "SubState": "failed"
+    }
+  },
+  "resource_sample_minima": {
+    "free_disk_bytes": 27099246592,
+    "MemAvailable_bytes": 6625660928
+  },
+  "independent_reviews": {
+    "admission": {
+      "path": "out/installed-maintenance-validation-20261112-01/admission-review.json",
+      "bytes": 30945,
+      "sha256": "898d4c97c60512551059cf7a192f38a2d85173dcb447c1bd67173e663a1b78bd"
+    },
+    "loop_harness": {
+      "path": "out/installed-maintenance-validation-20261112-01/loop-review.json",
+      "bytes": 8090,
+      "sha256": "5cd71cb7cce33e4dd5c2846ad24a21af7fd60b15065fc410375f34cd942d75a3"
+    }
+  },
+  "loop_checks": {
+    "update": {
+      "result": "pass",
+      "interrupted_after_bytes": 8388608,
+      "full_retry_written_and_verified_bytes": 4294967296,
+      "selector_and_unrelated_sentinels_unchanged": true,
+      "real_target_and_subsystem_locks_released_before_finish": true,
+      "cleanup": "owned loop detached and private workspace removed"
+    },
+    "selection": {
+      "result": "pass",
+      "prepublication_failure": "old selector retained",
+      "postrename_interruption": "new selector visible, durability uncertain",
+      "explicit_cancellation": "old selector restored durably",
+      "raw_root_images_unchanged": true,
+      "offline_ext4_selector_readback": true,
+      "real_target_and_subsystem_locks_released_before_finish": true,
+      "cleanup": "owned mounts unmounted, loops detached and private workspace removed"
+    },
+    "wrapper_failure": {
+      "result": "nonzero only after both loop harnesses completed",
+      "cause": "coordinator appended tomllib import on Ubuntu Python 3.10 where tomllib is absent",
+      "correction": "All five TOML files parsed using native Python tomllib; native-toml.log retained",
+      "loops_repeated": false
+    }
+  },
+  "custody": {
+    "bytes": 481280,
+    "sha256": "db3478ee0942fac53df94e4816270b87b0f2a7f0933479d363e49354c08684bf",
+    "native": "out/installed-maintenance-validation-20261112-01/receipts.tar",
+    "builder": "/var/lib/a733-installed-maintenance-validation-20261112-01/receipts.tar",
+    "units": {
+      "a733-installed-maintenance-validation-20261112-01": {
+        "RuntimeMaxUSec": "8h",
+        "MainPID": "0",
+        "Result": "success",
+        "ExecMainStatus": "0",
+        "CPUQuotaPerSecUSec": "2s",
+        "MemoryMax": "3221225472",
+        "Id": "a733-installed-maintenance-validation-20261112-01.service",
+        "SubState": "exited"
+      },
+      "a733-installed-maintenance-loops-20261112-01": {
+        "RuntimeMaxUSec": "8h",
+        "MainPID": "0",
+        "Result": "exit-code",
+        "ExecMainStatus": "1",
+        "CPUQuotaPerSecUSec": "1s",
+        "MemoryMax": "1073741824",
+        "Id": "a733-installed-maintenance-loops-20261112-01.service",
+        "SubState": "failed"
+      }
+    }
+  },
+  "limitations": [
+    "Installed runtime requires initialized protected registry and mounted guest filesystem; bootstrap/activation/RAM recovery integration remains pending.",
+    "Failed maintenance leaves the gate closed; explicit reopen helper is under independent review and excluded here.",
+    "All board/PID1/physical placement substitutions remain explicit; actual private loops exercise block exclusion, pwrite/readback and journaled ext4 publication, not the A733."
+  ]
+}

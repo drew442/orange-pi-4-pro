@@ -15,6 +15,8 @@ from types import SimpleNamespace
 import unittest
 from unittest import mock
 
+from test_host_update_admission import engine_maintenance
+
 SPEC = importlib.util.spec_from_file_location('select_live_test', Path(__file__).resolve().parents[1] / 'scripts/select-host-root.py')
 LIVE = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(LIVE)
@@ -43,6 +45,9 @@ class SelectionTransactionTests(unittest.TestCase):
     def setUp(self):
         self.stack = contextlib.ExitStack()
         self.addCleanup(self.stack.close)
+        # Engine-only regular-file fixtures carry no admission authority.
+        self.stack.enter_context(mock.patch.object(LIVE, 'maintenance_helper',
+                                                   return_value=engine_maintenance()))
         self.directory = Path(self.stack.enter_context(tempfile.TemporaryDirectory()))
         self.real_fstat = os.fstat
         def root_stat(fd):

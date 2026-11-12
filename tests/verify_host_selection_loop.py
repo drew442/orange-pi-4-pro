@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Selection publication on private root loops and journaled ext4 state only.
 
-No target argument is accepted. Live NVMe policy and TTY authorization are
-explicit fixtures. This does not boot or switch roots or establish recovery.
+No target argument is accepted. Native A733 placement, installed maintenance/
+admission and TTY authorization are explicit fixtures. This does not boot or
+switch roots or establish recovery.
 """
 import argparse
 import contextlib
@@ -20,6 +21,7 @@ import struct
 import subprocess
 import sys
 import tempfile
+import threading
 import time
 from types import SimpleNamespace
 from unittest import mock
@@ -53,6 +55,86 @@ def digest_file(path):
                 (after.st_dev,after.st_ino,after.st_size,after.st_mtime_ns,after.st_ctime_ns),
                 'file changed while hashed')
     return {'bytes':size,'sha256':value.hexdigest()}
+
+
+def fixture_maintenance(storage, guard, unlocked):
+    """Explicit API custody substitute; no native admission or A733 authority.
+
+    Only the builder fixture uses this helper. The transaction still runs its
+    production block and state operations while this object checks ordering.
+    """
+    instances = []
+
+    class FixtureMaintenance:
+        def __init__(self, expected):
+            require(expected == storage, 'fixture storage tuple differs')
+            require(not instances or instances[-1].closed, 'fixture custody overlaps')
+            self.creator = (os.getpid(), threading.get_ident())
+            self.closed = self.finished = self.entered = False
+            self.checks = 0
+            self.events = ['create']
+            self.receipt = dict(fixture='platform and admission replaced; no authority',
+                                success=False, open_attempted=False, open_acknowledged=False)
+            instances.append(self)
+            self.recheck()
+
+        def creator_check(self):
+            require((os.getpid(), threading.get_ident()) == self.creator,
+                    'fixture custody changed process/thread')
+
+        def recheck(self):
+            self.creator_check()
+            require(not self.closed and not self.finished, 'fixture custody ended')
+            guard()
+            self.checks += 1
+
+        def __enter__(self):
+            self.recheck()
+            require(not self.entered, 'fixture custody entered twice')
+            self.entered = True
+            self.events.append('enter')
+            return self
+
+        def mutation(self):
+            self.creator_check()
+            require(self.entered and not self.closed and not self.finished,
+                    'mutation outside fixture custody')
+            require(self.checks > 2, 'mutation without transaction recheck')
+
+        def finish_success(self):
+            self.mutation()
+            self.recheck()
+            # Separate opens must acquire the actual subsystem/target locks.
+            unlocked()
+            self.finished = True
+            self.events.append('finish')
+            self.receipt.update(success=True, open_attempted=True, open_acknowledged=True)
+            return copy.deepcopy(self.receipt)
+
+        def close(self):
+            self.creator_check()
+            if self.closed:
+                return
+            require(self.entered, 'fixture custody closed before enter')
+            self.closed = True
+            self.events.append('close')
+            self.receipt.update(events=list(self.events), rechecks=self.checks)
+
+        def __exit__(self, *unused):
+            self.close()
+
+    helper = SimpleNamespace(InstalledMaintenance=FixtureMaintenance,
+                             registered_storage=lambda: copy.deepcopy(storage))
+    return helper, instances
+
+
+def assert_custody(instances, successful):
+    require(len(instances) == len(successful), 'fixture custody acquisition count differs')
+    for held, success in zip(instances, successful):
+        require(held.closed and held.finished == success, 'fixture lifetime outcome differs')
+        require(held.events == (['create', 'enter', 'finish', 'close'] if success else
+                                ['create', 'enter', 'close']), 'fixture custody ordering differs')
+        require(held.checks > 2, 'transaction did not recheck fixture custody')
 
 
 def owned_loop(loop, backing, size):
@@ -178,6 +260,34 @@ def verify(candidate_base, pin):
                          'uuid':state_uuid,'boot_directory':str(boot),'selector':values,
                          'selector_sha256':hashlib.sha256(selected.read_bytes()).hexdigest()},
                 'gpt':{'disk_guid':'fixture-only-no-GPT','partition_guids':[],'sha256':'b'*64}}
+        def guard():
+            for loop, path, size in loops.values():
+                owned_loop(loop, path, size)
+
+        def unlocked():
+            context = snapshot(args, published=True)
+            with CONTROL.UPDATE.update_lock(context):
+                flags = os.O_RDONLY | os.O_NOFOLLOW
+                if args.intent == 'activate':
+                    flags |= os.O_EXCL
+                fd = os.open(context['target']['canonical_path'], flags)
+                try:
+                    CONTROL.fcntl.flock(fd, CONTROL.fcntl.LOCK_EX | CONTROL.fcntl.LOCK_NB)
+                finally:
+                    os.close(fd)
+
+        maintenance, custody = fixture_maintenance(
+            {'fixture_state': str(boot)}, guard, unlocked)
+        native_journal, native_publish = CONTROL.journal_store, CONTROL.publish_selector
+
+        def journal(*arguments):
+            custody[-1].mutation()
+            return native_journal(*arguments)
+
+        def publish(*arguments):
+            custody[-1].mutation()
+            return native_publish(*arguments)
+
         block_devs = {os.stat(loops[s][0]).st_rdev:s for s in ('A','B')}
         reads = []
         real_open,real_ioctl = os.open,CONTROL.fcntl.ioctl
@@ -201,6 +311,9 @@ def verify(candidate_base, pin):
             return real_ioctl(held,command,*arguments)
         with mock.patch.object(CONTROL,'snapshot',new=snapshot), \
              mock.patch.object(CONTROL,'authorize',new=lambda unused:None), \
+             mock.patch.object(CONTROL,'maintenance_helper',new=lambda:maintenance), \
+             mock.patch.object(CONTROL,'journal_store',new=journal), \
+             mock.patch.object(CONTROL,'publish_selector',new=publish), \
              mock.patch.object(CONTROL.os,'open',new=open_audit), \
              mock.patch.object(CONTROL.os,'pwrite',new=no_write), \
              mock.patch.object(CONTROL.fcntl,'ioctl',new=ioctl):
@@ -238,6 +351,7 @@ def verify(candidate_base, pin):
             require(cancelled['success'] and cancelled['selection_published']
                     and cancelled['publication_durable'] and selected.read_bytes()==selectors['A'],
                     'cancellation of pending selection failed: '+json.dumps(cancelled))
+        assert_custody(custody, [False, False, True])
         require(reads and all(row['exclusive']==(row['slot']=='B') for row in reads),
                 'root claim mode did not distinguish idle B from mounted A')
         for receipt in (pre,post,cancelled):
@@ -263,12 +377,14 @@ def verify(candidate_base, pin):
         command=['debugfs','-R','cat /boot/selected.conf',str(state)]
         offline = CONTROL.PREP.INIT.bounded_output(command,4096)
         require(offline==selectors['A'],'unmounted ext4 state selector readback differs')
-        result={'classification':'private-loop selection and real ext4 journal checks; live NVMe policy and TTY mocked; no boot, running-root switch, failed-boot recovery or hardware proof',
+        result={'classification':'private-loop selection and real ext4 journal checks; platform/admission and TTY replaced; no boot, running-root switch, failed-boot recovery, hardware or KVM acceptance',
             'prepublication_failure':pre,'postrename_interruption':post,'cancel_pending':cancelled,
             'root_block_opens':reads,'raw_root_images_unchanged':True,
             'mounted_readonly_A_refused_exclusive_claim':True,'journaled_state_bytes':STATE_SIZE,
             'journal_records':journals,'offline_state_selector_readback':'A',
             'unrelated_sentinels_unchanged':True,
+            'fixture_maintenance_ordering_checked':True,
+            'native_platform_and_admission_replaced':True,
             'sources':{name:digest_file(REPO/name) for name in ('scripts/select-host-root.py',
                 'scripts/host-update-target.py','build/root-selection.py','tests/verify_host_selection_loop.py')}}
     finally:

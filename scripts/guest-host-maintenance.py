@@ -109,6 +109,41 @@ def consumer_check():
                 gone(error)
 
 
+def registered_storage():
+    """Discover only the protected storage tuple; no lease or guest authority.
+
+    InstalledMaintenance authenticates this tuple against physical STATE/p5
+    after exclusion, and reads the latest registry itself. Never retain guest
+    entries from this read-only observation across maintenance acquisition.
+    """
+    require(os.getresuid() == (0, 0, 0), 'actual root required for storage discovery')
+    boot = CONTEXT.read_system('/proc/sys/kernel/random/boot_id', 64).decode('ascii')
+    require(boot.endswith('\n'), 'invalid host boot UUID')
+    boot_id = ADMISSION._uuid(boot[:-1])
+    CONTEXT.host_identity(boot_id)
+    CONTEXT.MANAGEMENT.runtime_guard()
+    held = CONTEXT.ENROLL.HeldPath('/run/a733-state/guests/autostart.json')
+    try:
+        info = held.info
+        CONTEXT.ENROLL.regular(info, 0o400)
+        require(info.st_dev == os.stat('/run/a733-state').st_dev,
+                'managed registry is not on selected STATE')
+        require(0 < info.st_size <= CONTEXT.REGISTRY.LIMIT, 'invalid registry size')
+        data = os.read(held.fd, CONTEXT.REGISTRY.LIMIT + 1)
+        held.recheck()
+        require(len(data) == info.st_size, 'managed registry size changed')
+        value = CONTEXT.REGISTRY.validate_registry(data)
+        require(CONTEXT.REGISTRY.canonical(value) == data, 'noncanonical managed registry')
+        CONTEXT.host_identity(boot_id)
+        CONTEXT.MANAGEMENT.runtime_guard()
+        held.recheck()
+        require(info.st_dev == os.stat('/run/a733-state').st_dev,
+                'managed registry STATE placement changed')
+        return copy.deepcopy(value['storage'])
+    finally:
+        held.close()
+
+
 class InstalledMaintenance:
     """Own admission, nonce, EX lease and physical STATE controller, in that order.
 

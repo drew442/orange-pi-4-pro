@@ -13,6 +13,8 @@ from types import SimpleNamespace
 import unittest
 from unittest import mock
 
+from test_host_update_admission import engine_maintenance
+
 SPEC = importlib.util.spec_from_file_location('stage_host_test', Path(__file__).resolve().parents[1] / 'scripts/update-host.py')
 UPDATE = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(UPDATE)
@@ -41,6 +43,9 @@ class StagingTests(unittest.TestCase):
     def setUp(self):
         self.stack = contextlib.ExitStack()
         self.addCleanup(self.stack.close)
+        # Engine-only regular-file fixtures carry no admission authority.
+        self.stack.enter_context(mock.patch.object(UPDATE, 'maintenance_helper',
+                                                   return_value=engine_maintenance()))
         self.directory = Path(self.stack.enter_context(tempfile.TemporaryDirectory()))
         self.candidate = self.directory / 'candidate'
         self.candidate.mkdir(mode=0o700)

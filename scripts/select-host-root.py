@@ -34,6 +34,17 @@ SELECT = PREP.SELECT
 require = PREP.require
 
 
+_MAINTENANCE = None
+
+
+def maintenance_helper():
+    # Lazy: lifecycle activation imports selector/update pure helpers in turn.
+    global _MAINTENANCE
+    if _MAINTENANCE is None:
+        _MAINTENANCE = adjacent('installed_host_maintenance', 'guest-host-maintenance.py')
+    return _MAINTENANCE
+
+
 def snapshot(args, published=False):
     policy = adjacent('selection_target', 'host-update-target.py')
     return policy.activation_snapshot(args.target, args.expected_model, args.expected_serial,
@@ -230,10 +241,9 @@ def journal_store(directory, data, name, report):
         raise
     finally:
         if owned is not None and not renamed:
-            with contextlib.suppress(OSError):
-                info = os.stat(temporary, dir_fd=directory, follow_symlinks=False)
-                if (info.st_dev, info.st_ino) == owned:
-                    os.unlink(temporary, dir_fd=directory)
+            info = os.stat(temporary, dir_fd=directory, follow_symlinks=False)
+            if (info.st_dev, info.st_ino) == owned:
+                os.unlink(temporary, dir_fd=directory)
 
 
 def new_report():
@@ -247,6 +257,8 @@ def new_report():
 def failure(report, error):
     report['success'] = False
     report['error'] = f'{type(error).__name__}: {error}'
+    if hasattr(error, 'receipt'):
+        report['maintenance'] = copy.deepcopy(error.receipt)
 
 
 def publish_selector(directory, data, report):
@@ -268,6 +280,8 @@ def publish_selector(directory, data, report):
 
 def apply(args, manifest, plan, report=None, *, plan_check=lambda target: None):
     report = new_report() if report is None else report
+    maintenance = None
+    maintenance_failure = None
     try:
         require(os.geteuid() == 0, 'apply requires root')
         require(report == new_report(), 'apply requires a fresh conservative report')
@@ -282,63 +296,77 @@ def apply(args, manifest, plan, report=None, *, plan_check=lambda target: None):
         require(make_plan(args, manifest) == plan, 'preflight differs from reviewed plan')
         plan_check(target)
         authorize(plan)
-        with UPDATE.update_lock(context):
-            require(make_plan(args, manifest) == plan, 'plan changed after authorization/lock')
-            plan_check(target)
-            with checked_root(args, manifest, context) as (root, selector):
-                require(selector == proposed, 'authenticated selector differs from plan')
-                with PREP.safe_parent(Path(context['state']['boot_directory'])) as boot:
-                    identity = os.fstat(boot)
-                    require(identity.st_uid == 0 and not identity.st_mode & 0o022 and
-                            f'{os.major(identity.st_dev)}:{os.minor(identity.st_dev)}' ==
-                            context['state']['major_minor'], 'boot directory differs from state')
-                    def check():
-                        check_context(args, manifest, context)
-                        WRITER.validate_fd(root.fileno(), target)
+        helper = maintenance_helper()
+        maintenance = helper.InstalledMaintenance(helper.registered_storage())
+        reviewed_plan_check = plan_check
+        def plan_check(target):
+            maintenance.recheck()
+            reviewed_plan_check(target)
+        with maintenance:
+            with UPDATE.update_lock(context):
+                require(make_plan(args, manifest) == plan, 'plan changed after authorization/lock')
+                plan_check(target)
+                with checked_root(args, manifest, context) as (root, selector):
+                    require(selector == proposed, 'authenticated selector differs from plan')
+                    with PREP.safe_parent(Path(context['state']['boot_directory'])) as boot:
+                        identity = os.fstat(boot)
+                        require(identity.st_uid == 0 and not identity.st_mode & 0o022 and
+                                f'{os.major(identity.st_dev)}:{os.minor(identity.st_dev)}' ==
+                                context['state']['major_minor'], 'boot directory differs from state')
+                        def check():
+                            check_context(args, manifest, context)
+                            WRITER.validate_fd(root.fileno(), target)
+                            plan_check(target)
+                            with PREP.safe_parent(Path(context['state']['boot_directory'])) as named:
+                                info = os.fstat(named)
+                                require((info.st_dev, info.st_ino) == (identity.st_dev, identity.st_ino),
+                                        'state boot directory pathname changed')
+                        check()
+                        before = secure_read(boot, 'selected.conf', 4096)
+                        require(WRITER.digest(before) == context['state']['selector_sha256'] and
+                                SELECT.parse(before) == context['state']['selector'],
+                                'installed selector differs from plan')
+                        journal = {'schema': 1, 'operation': 'explicit-root-selection',
+                                   'intent': args.intent, 'plan_sha256': plan['plan_sha256'],
+                                   'manifest_sha256': manifest.review['manifest_sha256'],
+                                   'root': manifest.expected, 'context': context,
+                                   'before_selector_hex': before.hex(),
+                                   'after_selector_hex': proposed.hex()}
+                        name = 'selection-' + plan['plan_sha256'] + '.json'
+                        report['journal_name'] = name
+                        journal_store(boot, WRITER.canonical_json(journal), name, report)
+                        check()
+                        # Reauthenticate after journal I/O while locks and FD remain held.
+                        WRITER.hash_stream(root, manifest.expected)
+                        check()
+                        require(secure_read(boot, 'selected.conf', 4096) == before,
+                                'selector changed before publication')
+                        publish_selector(boot, proposed, report)
+                        actual = secure_read(boot, 'selected.conf', 4096)
+                        report['selected_after'] = SELECT.parse(actual)
+                        require(actual == proposed, 'published selector readback differs')
+                        expected = copy.deepcopy(context)
+                        expected['state']['selector'] = plan['proposed_selector']
+                        expected['state']['selector_sha256'] = WRITER.digest(proposed)
+                        manifest.check()
                         plan_check(target)
+                        require(candidate_context(args, manifest, published=True) == expected,
+                                'postpublication context differs; inspect installed selection')
+                        WRITER.validate_fd(root.fileno(), target)
                         with PREP.safe_parent(Path(context['state']['boot_directory'])) as named:
                             info = os.fstat(named)
                             require((info.st_dev, info.st_ino) == (identity.st_dev, identity.st_ino),
-                                    'state boot directory pathname changed')
-                    check()
-                    before = secure_read(boot, 'selected.conf', 4096)
-                    require(WRITER.digest(before) == context['state']['selector_sha256'] and
-                            SELECT.parse(before) == context['state']['selector'],
-                            'installed selector differs from plan')
-                    journal = {'schema': 1, 'operation': 'explicit-root-selection',
-                               'intent': args.intent, 'plan_sha256': plan['plan_sha256'],
-                               'manifest_sha256': manifest.review['manifest_sha256'],
-                               'root': manifest.expected, 'context': context,
-                               'before_selector_hex': before.hex(),
-                               'after_selector_hex': proposed.hex()}
-                    name = 'selection-' + plan['plan_sha256'] + '.json'
-                    report['journal_name'] = name
-                    journal_store(boot, WRITER.canonical_json(journal), name, report)
-                    check()
-                    # Reauthenticate after journal I/O while locks and FD remain held.
-                    WRITER.hash_stream(root, manifest.expected)
-                    check()
-                    require(secure_read(boot, 'selected.conf', 4096) == before,
-                            'selector changed before publication')
-                    publish_selector(boot, proposed, report)
-                    actual = secure_read(boot, 'selected.conf', 4096)
-                    report['selected_after'] = SELECT.parse(actual)
-                    require(actual == proposed, 'published selector readback differs')
-                    expected = copy.deepcopy(context)
-                    expected['state']['selector'] = plan['proposed_selector']
-                    expected['state']['selector_sha256'] = WRITER.digest(proposed)
-                    manifest.check()
-                    plan_check(target)
-                    require(candidate_context(args, manifest, published=True) == expected,
-                            'postpublication context differs; inspect installed selection')
-                    WRITER.validate_fd(root.fileno(), target)
-                    with PREP.safe_parent(Path(context['state']['boot_directory'])) as named:
-                        info = os.fstat(named)
-                        require((info.st_dev, info.st_ino) == (identity.st_dev, identity.st_ino),
-                                'postpublication boot directory pathname changed')
+                                    'postpublication boot directory pathname changed')
+            maintenance.finish_success()
         report['success'] = True
     except (Exception, KeyboardInterrupt) as error:
         failure(report, error)
+        if hasattr(error, 'receipt'):
+            maintenance_failure = copy.deepcopy(error.receipt)
+    finally:
+        if maintenance is not None:
+            report['maintenance'] = (maintenance_failure if maintenance_failure is not None
+                                     else copy.deepcopy(maintenance.receipt))
     return report
 
 
