@@ -1,0 +1,156 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "result": "pass",
+  "scope": "Uninstalled root manual account batch admission; bootstrap EX-owner path preserved. No installed services or physical acceptance.",
+  "builder": "drew@build.drewnet.online",
+  "builder_base": "/var/lib/a733-account-admission-validation-20261112-01",
+  "full_Ubuntu_tests": 2829,
+  "failures_errors_skips": 0,
+  "shell_suites": 5,
+  "diagnostic_cases": 5,
+  "locked_source_files": 1014,
+  "source_lock": {
+    "bytes": 162548,
+    "sha256": "3707a0fd6cd0a67bb5700a369901da625e6e928f13a74ac49ba94ab2fc5d7ab9",
+    "index_tree": "0724ff73a7338115db78c8199736f8cfec66c99e"
+  },
+  "units": {
+    "native": {
+      "RuntimeMaxUSec": "8h",
+      "MainPID": "0",
+      "Result": "success",
+      "ExecMainCode": "1",
+      "ExecMainStatus": "0",
+      "CPUQuotaPerSecUSec": "2s",
+      "MemoryMax": "3221225472",
+      "ActiveState": "active",
+      "SubState": "exited"
+    },
+    "arm": {
+      "RuntimeMaxUSec": "8h",
+      "MainPID": "0",
+      "Result": "success",
+      "ExecMainCode": "1",
+      "ExecMainStatus": "0",
+      "CPUQuotaPerSecUSec": "2s",
+      "MemoryMax": "3221225472",
+      "ActiveState": "active",
+      "SubState": "exited"
+    }
+  },
+  "source": {
+    "scripts/guest-accounts.py": {
+      "bytes": 19983,
+      "sha256": "0d79f1187ba4ba65f7c5a67cb716074009e1a4780a587ea406b23e644a22bbe1"
+    },
+    "scripts/guest-operation-admission.py": {
+      "bytes": 7429,
+      "sha256": "15c050bf68e85d73c5e8aceb01d4d00a4bcf5f6307d6272051e3fee82f7eaec0"
+    },
+    "tests/test_guest_accounts.py": {
+      "bytes": 42922,
+      "sha256": "c234a7a6efcefdf9a8794ca59130f3a40c8bab291fc8dd8d13c80fcf0f7625dc"
+    },
+    "tests/test_guest_operation_admission.py": {
+      "bytes": 24175,
+      "sha256": "fae363c4bd7bb106a36afc2457291cb28ef8162769b43195d400f0c634066f5a"
+    },
+    "tests/verify_guest_accounts_arm.py": {
+      "bytes": 7010,
+      "sha256": "b12342919b5554fe60ab1c48b0493b63bef9c1baeb73fbfeb81d9f3170f6854f"
+    }
+  },
+  "independent_review": {
+    "path": "out/account-admission-validation-20261112-01/final-review.json",
+    "bytes": 66656,
+    "sha256": "5af01ac8dc13b3a9468a8cf80e33a26b178448f56592942f35187b7be83d9f05"
+  },
+  "native_focused_tests": {
+    "admission": 28,
+    "accounts": 47,
+    "additional_independent_probe_methods": 7
+  },
+  "behavior": [
+    "Root-only batch validates1..16 distinct canonical guest names, sorted guest EX locks under one SH lease; managed names refuse; canonical shared nesting sentinel covers single/batch/distinct imports. Single-operation API preserved.",
+    "Protected exact config discovery selects batch before account lock; repeated exact byte checks reject config/name races before sysusers or success. Actual readonly flock modes/creating PIDs and stable named inodes stay guarded.",
+    "Native separate-process overlap/disjoint locks, partial second-lock acquisition, closed gate completion, partial/owned close errors and16 config-race cases independently reviewed.",
+    "Actual closed-bootstrap EX-owner accounts bypass normal admission only through typed borrowed owner; original39 account/bootstrap cases still pass, including two fresh16-account batches. No borrowed lease close or gate reopening."
+  ],
+  "arm": {
+    "classification": "private ARM sysusers file checks; no board boot or account activation",
+    "rootfs": {
+      "bytes": 169852145,
+      "sha256": "1967e76c0c831c1c0bab432e7116457d4372c15b413090c054f8958b72dcb392"
+    },
+    "binfmt": {
+      "registration": "enabled\ninterpreter /usr/libexec/qemu-binfmt/aarch64-binfmt-P\nflags: PF\noffset 0\nmagic 7f454c460201010000000000000000000200b700\nmask ffffffffffffff00fffffffffffffffffeffffff\n",
+      "interpreter": "/usr/libexec/qemu-binfmt/aarch64-binfmt-P",
+      "resolved_interpreter": "/usr/bin/qemu-aarch64-static",
+      "bytes": 5628704,
+      "sha256": "92c4aeb8dd898de7152c184370ab22f09ae7c5b7279fd300081c76cee3f78a80",
+      "limit": "Hashes configured interpreter pathname; kernel-held binfmt interpreter FD is not independently inspectable."
+    },
+    "captured_sources": 57,
+    "checks": {
+      "architecture": "aarch64",
+      "sysusers_version": "systemd 252 (252.39-1~deb12u2)",
+      "real_CLI_refusal_before_writes": true,
+      "private_fixture_apply": {
+        "schema": 1,
+        "operation": "a733-guest-accounts",
+        "success": true,
+        "accounts_may_be_modified": true,
+        "plan_sha256": "bdcfb4ec32940bad658d18bf0236d45123745a31d6cb1371c8084eab2fc96603"
+      },
+      "idempotent_apply": {
+        "schema": 1,
+        "operation": "a733-guest-accounts",
+        "success": true,
+        "accounts_may_be_modified": false,
+        "plan_sha256": "17101c83f7c31c9bbb75695f99d71e2542d38cb95e553da1f82c38e9a5b4e51c"
+      },
+      "unrelated_account_rows": "byte-identical",
+      "UID_collision_refusal": true,
+      "guest_account": {
+        "name": "a733-vm-fixture",
+        "uid": 60001,
+        "gid": 60001,
+        "password": "locked; no hash",
+        "home": "/nonexistent",
+        "shell": "/usr/sbin/nologin",
+        "supplementary_groups": []
+      },
+      "runtime_provenance": "admission and production account-overlay placement mocked; actual disposable database bytes; no host activation"
+    },
+    "explicit_substitutions": "Admission and production account-overlay placement only in disposable chroot. Real disposable account bytes, protected input/lock/render checks, pinned ARM sysusers, preservation/idempotence/collision logic execute.",
+    "guest_VM_execution": false,
+    "hardware_acceptance": false
+  },
+  "resources": {
+    "native": {
+      "sampled_min_free_disk_bytes": 31674494976,
+      "sampled_min_available_memory_bytes": 7048163328
+    },
+    "arm": {
+      "sampled_min_free_disk_bytes": 31682965504,
+      "sampled_min_available_memory_bytes": 7347982336
+    },
+    "compilation_jobs": 2
+  },
+  "packaging": {
+    "current_sources": 57,
+    "runtime_files": 58,
+    "historical_sources": 39,
+    "entrypoints": 16
+  },
+  "receipts": {
+    "native": "out/account-admission-validation-20261112-01/receipts.tar",
+    "builder": "/var/lib/a733-account-admission-validation-20261112-01/receipts.tar",
+    "bytes": 317440,
+    "sha256": "c5835786442c7e8cf1ce2db2b02223a0a203358e4d4afd43bc78f0dd8470501c",
+    "verified_fsynced_both": true
+  },
+  "hardware_acceptance": false,
+  "remaining": "Nonroot manual launch bootstrap/packaging; storage activation and host maintenance admission; installed lifecycle services, coherent managed backup/restore and inactive-root deployment; physical SPI recovery/KVM/final boot acceptance. Existing endurance evidence remains accepted."
+}

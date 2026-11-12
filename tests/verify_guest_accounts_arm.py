@@ -35,9 +35,18 @@ config.write_text(json.dumps({'schema':1,'guests':[{'name':'fixture','uid':60001
 # Real CLI must refuse before account writes in this unsupported environment.
 refusal=subprocess.run(['/usr/bin/python3','-I','-B',str(base/'scripts/guest-accounts.py'),'prepare',str(config)],capture_output=True,text=True,timeout=30)
 assert refusal.returncode!=0 and snapshot()==initial
-# Runtime mount provenance alone is mocked inside this disposable fixture.
-# The real source/DB/lock/render/sysusers/postcondition operations run unchanged.
+# Admission and production account-overlay placement are fixture substitutes.
+# Actual disposable DB bytes, config/lock checks and pinned sysusers still run.
 A.MANAGEMENT.runtime_guard=lambda:None
+A.snapshot=snapshot
+class FixtureAccountBatch:
+    def __init__(self,names,*,create=False):self.names=tuple(sorted(names))
+    def recheck(self):pass
+    def close(self):pass
+    def __enter__(self):return self
+    def __exit__(self,*unused):self.close()
+from types import SimpleNamespace
+A.operation_module=lambda:SimpleNamespace(ManualGuestBatch=FixtureAccountBatch)
 plan=pathlib.Path('/run/accounts-plan.json')
 plan.write_bytes(A.canonical(A.prepare(config)));plan.chmod(0o400)
 receipt=A.apply(config,plan)
@@ -61,7 +70,7 @@ else:raise AssertionError('UID collision accepted')
 assert snapshot()==current
 version=subprocess.run(['/usr/bin/systemd-sysusers','--version'],check=True,capture_output=True,text=True,timeout=30).stdout.splitlines()[0]
 assert version.startswith('systemd 252 '),version
-print(json.dumps({'architecture':platform.machine(),'sysusers_version':version,'real_CLI_refusal_before_writes':True,'private_fixture_apply':receipt,'idempotent_apply':second,'unrelated_account_rows':'byte-identical','UID_collision_refusal':True,'guest_account':{'name':'a733-vm-fixture','uid':60001,'gid':60001,'password':'locked; no hash','home':'/nonexistent','shell':'/usr/sbin/nologin','supplementary_groups':[]},'mount_provenance':'mocked only in disposable fixture; no actual host activation'}))
+print(json.dumps({'architecture':platform.machine(),'sysusers_version':version,'real_CLI_refusal_before_writes':True,'private_fixture_apply':receipt,'idempotent_apply':second,'unrelated_account_rows':'byte-identical','UID_collision_refusal':True,'guest_account':{'name':'a733-vm-fixture','uid':60001,'gid':60001,'password':'locked; no hash','home':'/nonexistent','shell':'/usr/sbin/nologin','supplementary_groups':[]},'runtime_provenance':'admission and production account-overlay placement mocked; actual disposable database bytes; no host activation'}))
 '''
 
 
@@ -86,8 +95,8 @@ def verify(rootfs):
         root.chmod(0o700); fixture.sanitize(root)
         (root / 'run/a733-state').mkdir(mode=0o700, exist_ok=True)
         records = {}
-        for name in ('scripts/guest-accounts.py', 'configs/guest_identity.py',
-                     'configs/host-management.py', 'configs/host_config.py', 'configs/package_state.py'):
+        tools = module('accounts_arm_tools', 'build/maintenance-tools.py')
+        for name in tools.SOURCES:
             data = fixture.regular(REPO / name)
             target = root / 'account-src' / name
             target.parent.mkdir(parents=True, exist_ok=True)
@@ -107,7 +116,7 @@ def verify(rootfs):
             'rootfs': fixture.ROOTFS, 'binfmt': binfmt, 'storage': storage,
             'verifier_source': fixture.record(Path(__file__).read_bytes()),
             'trusted_sources': records, 'ARM_checks': checks,
-            'limits': ['Runtime mount provenance was mocked only inside the authenticated private chroot.',
+            'limits': ['Admission and production account-overlay placement were mocked only inside the authenticated private chroot; database bytes are real.',
                        'No host account DB, physical storage, guest VM, KVM or deployment was changed.',
                        'Configured interpreter pathname/hash checked; kernel-held binfmt F descriptor not independently inspected.']}
 

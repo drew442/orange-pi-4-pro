@@ -245,9 +245,35 @@ def make_plan(config_data, data):
             'sysusers_lines': IDENTITY.render(config)}
 
 
-def prepare(config_path):
+def discover_config(config_path):
+    """Authenticate exact bytes before choosing any account/guest lock."""
+    require(os.getresuid() == (0, 0, 0), 'actual root required for manual accounts')
     MANAGEMENT.runtime_guard()
-    return make_plan(read_input(config_path), snapshot())
+    data = read_input(config_path)
+    config = IDENTITY.validate_config(data)
+    return data, tuple(guest['name'] for guest in config['guests'])
+
+
+def operation_module():
+    # Lazy loading avoids context -> policy -> enrollment -> accounts recursion.
+    return _bootstrap_context().module(
+        'a733_accounts_operation', 'scripts/guest-operation-admission.py')
+
+
+def pinned_config(config_path, discovered, operation):
+    operation.recheck()
+    data = read_input(config_path)
+    require(type(data) is bytes and data == discovered,
+            'account config differs from admitted guests')
+    return data
+
+
+def prepare(config_path):
+    data, names = discover_config(config_path)
+    with operation_module().ManualGuestBatch(names, create=True) as operation:
+        plan = make_plan(pinned_config(config_path, data, operation), snapshot())
+        pinned_config(config_path, data, operation)
+        return plan
 
 
 def validate_lock(info, path_info, run_device):
@@ -294,7 +320,29 @@ def bootstrap_check(owner):
 
 def apply(config_path, plan_path):
     """Manual CLI account preparation retains authenticated input file checks."""
-    return _apply(lambda: (read_input(config_path), read_input(plan_path)), lambda: None)
+    receipt = {'schema': 1, 'operation': 'a733-guest-accounts',
+               'success': False, 'accounts_may_be_modified': False}
+    operation = None
+    try:
+        data, names = discover_config(config_path)
+        operation = operation_module().ManualGuestBatch(names, create=True)
+        def check():
+            pinned_config(config_path, data, operation)
+        def inputs():
+            return pinned_config(config_path, data, operation), read_input(plan_path)
+        receipt = _apply(inputs, check)
+    except (OSError, ValueError, RuntimeError, UnicodeError,
+            subprocess.SubprocessError, KeyboardInterrupt) as error:
+        receipt['success'] = False
+        receipt['error'] = type(error).__name__
+    finally:
+        if operation is not None:
+            try:
+                operation.close()
+            except (OSError, ValueError, RuntimeError, KeyboardInterrupt) as error:
+                receipt['success'] = False
+                receipt['cleanup_error'] = type(error).__name__
+    return receipt
 
 
 def apply_bootstrap(config_data, plan, owner):

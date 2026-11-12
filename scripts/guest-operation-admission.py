@@ -66,24 +66,30 @@ def local_kvm_gid():
     return int(groups['kvm'][2])
 
 
-class ManualGuestOperation:
+class _ManualGuests:
     """Retain root-only admission and guest EX; exclude every managed name.
 
     Borrowed lease/guest_lock objects belong to this operation and must not be
     closed, unlocked or converted by callers. No nested lease acquisition.
     """
-    def __init__(self, name, *, create=False):
+    def _initialize(self, names, *, create=False):
         self._stack = contextlib.ExitStack()
         self._closed = False
         self._pid, self._thread = os.getpid(), threading.get_ident()
-        self._lease = self._guest_lock = None
+        self._lease = None
+        self._guest_locks = ()
         self._active = False
         try:
             self._root()
-            ADMISSION._guest_name(name)
+            require(type(names) in (list, tuple), 'guest names must be a list or tuple')
+            names = tuple(names)
+            require(1 <= len(names) <= 16, 'one to sixteen guest names required')
+            for name in names:
+                ADMISSION._guest_name(name)
+            require(len(set(names)) == len(names), 'duplicate guest name')
+            self._names = tuple(sorted(names))
             require(type(create) is bool, 'create must be boolean')
             require(not getattr(_ACTIVE, 'operation', None), 'nested guest operation refused')
-            self.name = name
             _ACTIVE.operation = self
             self._active = True
             boot = CONTEXT.read_system('/proc/sys/kernel/random/boot_id', 64).decode('ascii')
@@ -96,8 +102,10 @@ class ManualGuestOperation:
             self._stack.callback(self.admission.close)
             self._lease = self.admission.admit()
             self._stack.callback(self._lease.close)
-            self._guest_lock = self.admission.guest_lock(name, self._lease, create=create)
-            self._stack.callback(self._guest_lock.close)
+            for name in self._names:
+                lock = self.admission.guest_lock(name, self._lease, create=create)
+                self._stack.callback(lock.close)
+                self._guest_locks += (lock,)
             self.recheck()
         except BaseException:
             self.close()
@@ -114,9 +122,13 @@ class ManualGuestOperation:
         return self._lease
 
     @property
-    def guest_lock(self):
+    def names(self):
+        return self._names
+
+    @property
+    def guest_locks(self):
         self.recheck()
-        return self._guest_lock
+        return self._guest_locks
 
     def recheck(self):
         require(not self._closed, 'guest operation closed')
@@ -126,11 +138,12 @@ class ManualGuestOperation:
         self._lease.recheck()
         require(type(self._lease) is ADMISSION.Lease and not self._lease.exclusive,
                 'normal shared lease required')
-        self._guest_lock.recheck()
         ADMISSION._held_lock(self._lease.fd, 'READ', self._pid)
-        ADMISSION._held_lock(self._guest_lock.fd, 'WRITE', self._pid)
-        require(not self.admission.is_managed(self.name, self._lease, self._guest_lock),
-                'managed guest requires lifecycle operation')
+        for name, lock in zip(self._names, self._guest_locks):
+            lock.recheck()
+            ADMISSION._held_lock(lock.fd, 'WRITE', self._pid)
+            require(not self.admission.is_managed(name, self._lease, lock),
+                    'managed guest requires lifecycle operation')
         # Deliberately do not reread gate state or query SystemState: callers
         # admitted before maintenance/shutdown closure must be able to finish.
 
@@ -156,3 +169,25 @@ class ManualGuestOperation:
 
     def __exit__(self, *unused):
         self.close()
+
+
+class ManualGuestOperation(_ManualGuests):
+    """Own one normal lease and guest lock; preserve the single-guest API."""
+    def __init__(self, name, *, create=False):
+        self.name = name
+        self._initialize((name,), create=create)
+
+    @property
+    def _guest_lock(self):
+        return self._guest_locks[0]
+
+    @property
+    def guest_lock(self):
+        self.recheck()
+        return self._guest_lock
+
+
+class ManualGuestBatch(_ManualGuests):
+    """Own one normal lease and distinct guest locks in canonical sorted order."""
+    def __init__(self, names, *, create=False):
+        self._initialize(names, create=create)

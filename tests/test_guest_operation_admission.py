@@ -184,6 +184,146 @@ class Operation(unittest.TestCase):
         with self.admission.admit() as other, self.admission.guest_lock('one', other):
             pass
 
+    def test_batch_sorted_distinct_names_one_lease_and_readonly_views(self):
+        acquired = []
+        native = A.Admission.guest_lock
+        def lock(admission, name, lease, **kwargs):
+            acquired.append(name)
+            return native(admission, name, lease, **kwargs)
+        with patch.object(A.Admission, 'admit', autospec=True,
+                          side_effect=A.Admission.admit) as admit, \
+                patch.object(A.Admission, 'guest_lock', new=lock):
+            batch = O.ManualGuestBatch(['two', 'one'], create=True)
+        self.addCleanup(batch.close)
+        self.assertEqual(acquired, ['one', 'two'])
+        self.assertEqual(admit.call_count, 1)
+        self.assertEqual(batch.names, ('one', 'two'))
+        self.assertIsInstance(batch.guest_locks, tuple)
+        self.assertFalse(hasattr(batch, 'guest_lock'))
+        for attribute in ('names', 'guest_locks'):
+            with self.assertRaises(AttributeError):
+                setattr(batch, attribute, ())
+        for descriptor in (batch.lease, *batch.guest_locks):
+            self.assertEqual(fcntl.fcntl(descriptor.fd, fcntl.F_GETFL) & os.O_ACCMODE,
+                             os.O_RDONLY)
+        with self.admission.admit() as lease:
+            for name in batch.names:
+                with self.assertRaises(A.AdmissionError):
+                    self.admission.guest_lock(name, lease)
+
+    def test_batch_invalid_names_refused_before_host_reads(self):
+        for names in ([], ['one', 'one'], ['one'] * 17, 'one', {'one'},
+                      ['one', 'bad/'], ['one', 1]):
+            with self.subTest(names=names), patch.object(O.CONTEXT, 'read_system') as read:
+                with self.assertRaises(A.AdmissionError):
+                    O.ManualGuestBatch(names, create=True)
+                read.assert_not_called()
+        with O.ManualGuestBatch(['vm' + str(i) for i in range(16)], create=True) as batch:
+            self.assertEqual(len(batch.guest_locks), 16)
+
+    def test_batch_second_lock_conflict_releases_first_and_lease(self):
+        with self.admission.admit() as held, \
+                self.admission.guest_lock('two', held, create=True):
+            with self.assertRaises(A.AdmissionError):
+                O.ManualGuestBatch(['two', 'one'])
+            with self.admission.admit() as lease, self.admission.guest_lock('one', lease):
+                pass
+        with O.ManualGuestBatch(['two', 'one']):
+            pass
+
+    def test_partial_batch_close_failure_still_releases_lease_and_sentinel(self):
+        acquired = []
+        native_lock, native_close = A.Admission.guest_lock, os.close
+        def lock(admission, name, lease, **kwargs):
+            item = native_lock(admission, name, lease, **kwargs)
+            acquired.append(item)
+            return item
+        def close(fd):
+            native_close(fd)
+            if acquired and fd == failed_fd[0]:
+                raise OSError('partial close acknowledgement lost')
+        failed_fd = [None]
+        def capture(admission, name, lease, **kwargs):
+            item = lock(admission, name, lease, **kwargs)
+            failed_fd[0] = item.fd
+            return item
+        with self.admission.admit() as held, \
+                self.admission.guest_lock('two', held, create=True):
+            with patch.object(A.Admission, 'guest_lock', new=capture), \
+                    patch.object(A.os, 'close', side_effect=close):
+                with self.assertRaisesRegex(OSError, 'partial close'):
+                    O.ManualGuestBatch(['one', 'two'])
+        self.assertIsNone(acquired[0].fd)
+        self.assertIsNone(O._ACTIVE.operation)
+        owner = self.admission.close_gate('maintenance')
+        with owner.exclusive():
+            pass
+
+    def test_batch_managed_and_each_lock_metadata_rechecked(self):
+        for target in ('managed', 'unlocked', 'replacement', 'mode'):
+            with self.subTest(target=target):
+                with O.ManualGuestBatch(['one', 'two'], create=True) as batch:
+                    last = batch.guest_locks[-1]
+                    path = self.path / 'guests/two.lock'
+                    if target == 'managed':
+                        batch.admission.mark_managed('two', batch.lease, last, guard=lambda: None)
+                    elif target == 'unlocked':
+                        fcntl.flock(last.fd, fcntl.LOCK_UN)
+                    elif target == 'replacement':
+                        path.rename(path.with_suffix('.old'))
+                        path.touch(mode=0o640)
+                        os.chown(path, 0, 108)
+                    else:
+                        path.chmod(0o600)
+                    with self.assertRaises(A.AdmissionError):
+                        batch.recheck()
+                # Restore the fixture without using a closed operation.
+                if target == 'managed':
+                    (self.path / 'managed/two.json').unlink()
+                elif target == 'replacement':
+                    path.unlink()
+                    path.with_suffix('.old').rename(path)
+                elif target == 'mode':
+                    path.chmod(0o640)
+
+    def test_batch_close_failure_runs_all_callbacks_once(self):
+        batch = O.ManualGuestBatch(['one', 'two'], create=True)
+        self.addCleanup(batch.close)
+        locks, lease = batch.guest_locks, batch.lease
+        descriptors = [lock.fd for lock in locks] + [lease.fd]
+        native, closed = os.close, []
+        def close(fd):
+            closed.append(fd)
+            native(fd)
+            if fd == descriptors[1]:
+                raise OSError('batch close acknowledgement lost')
+        with patch.object(A.os, 'close', side_effect=close):
+            with self.assertRaisesRegex(OSError, 'batch close'):
+                batch.close()
+            batch.close()
+        for fd in descriptors:
+            self.assertEqual(closed.count(fd), 1)
+        self.assertTrue(all(lock.fd is None for lock in (*locks, lease)))
+        self.assertIsNone(batch.admission.directory)
+        self.assertIsNone(O._ACTIVE.operation)
+
+    def test_batch_single_nesting_shared_across_helper_loads(self):
+        spec = importlib.util.spec_from_file_location(
+            'batch_distinct_helper', BASE / 'scripts/guest-operation-admission.py')
+        duplicate = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(duplicate)
+        self.assertIs(duplicate._ACTIVE, O._ACTIVE)
+        for outer in (lambda: O.ManualGuestOperation('one'),
+                      lambda: O.ManualGuestBatch(['one', 'two'], create=True)):
+            with outer() as operation:
+                with patch.object(A.Admission, 'admit') as admit:
+                    for constructor, argument in ((duplicate.ManualGuestOperation, 'three'),
+                                                  (duplicate.ManualGuestBatch, ['three'])):
+                        with self.assertRaisesRegex(A.AdmissionError, 'nested'):
+                            constructor(argument, create=True)
+                    admit.assert_not_called()
+                operation.recheck()
+
     def test_existing_operation_finishes_after_closure_new_call_refused(self):
         operation = self.operation()
         owner = self.admission.close_gate('shutdown')

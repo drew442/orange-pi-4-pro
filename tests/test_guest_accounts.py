@@ -13,7 +13,7 @@ import uuid
 import tempfile
 from types import SimpleNamespace
 import unittest
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 BASE = Path(__file__).resolve().parents[1]
 SPEC = importlib.util.spec_from_file_location('guest_accounts', BASE / 'scripts/guest-accounts.py')
@@ -139,7 +139,9 @@ class ApplyTests(unittest.TestCase):
                 return CONFIG_DATA if path == '/fixture/config' else ACCOUNTS.canonical(plan)
             # Every live dependency is replaced inside this fixture. Production
             # has no guard-bypass CLI or configurable database paths.
-            with patch.object(ACCOUNTS, 'LOCK', lock), \
+            with patch.object(ACCOUNTS.os, 'getresuid', return_value=(0, 0, 0)), \
+                 patch.object(ACCOUNTS, 'operation_module', return_value=MagicMock()), \
+                 patch.object(ACCOUNTS, 'LOCK', lock), \
                  patch.object(ACCOUNTS.MANAGEMENT, 'runtime_guard', side_effect=ValueError('fixture') if guard_error else None), \
                  patch.object(ACCOUNTS, 'read_input', side_effect=input_data), \
                  patch.object(ACCOUNTS, 'validate_lock'), \
@@ -471,6 +473,205 @@ class BootstrapTests(unittest.TestCase):
         result, calls = self.apply_fixture(before=before, after=after)
         self.assertFalse(result['success'])
         self.assertTrue(result['accounts_may_be_modified'])
+
+
+@unittest.skipUnless(os.getresuid() == (0, 0, 0), 'native protected /run fixture requires root')
+class ManualAdmissionTests(unittest.TestCase):
+    def setUp(self):
+        self.operation = ACCOUNTS.operation_module()
+        self.a = self.operation.ADMISSION
+        self.tmp = tempfile.TemporaryDirectory(prefix='a733-accounts-test-', dir='/run')
+        self.addCleanup(self.tmp.cleanup)
+        self.path = Path(self.tmp.name)
+        self.boot = str(uuid.uuid4())
+        for fixture in (
+                patch.object(self.a, 'RUNTIME_PARENT', self.tmp.name),
+                patch.object(self.a, 'RUNTIME', str(self.path / 'a733-admission')),
+                patch.object(self.operation.CONTEXT, 'read_system',
+                             return_value=(self.boot + '\n').encode()),
+                patch.object(self.operation.CONTEXT, 'host_identity'),
+                patch.object(self.operation.CONTEXT.MANAGEMENT, 'runtime_guard'),
+                patch.object(self.operation.ACCOUNTS, 'snapshot',
+                             return_value={'group': b'root:x:0:\nkvm:x:108:\n'}),
+                patch.object(self.operation, 'manager_state', return_value='running'),
+                patch.object(ACCOUNTS, 'operation_module', return_value=self.operation),
+                patch.object(ACCOUNTS.MANAGEMENT, 'runtime_guard'),
+                patch.object(ACCOUNTS, 'LOCK', str(self.path / 'accounts.lock')),
+                patch.object(ACCOUNTS.sys, 'stderr', new_callable=io.StringIO)):
+            fixture.start()
+            self.addCleanup(fixture.stop)
+        self.admission = self.a.initialize(self.boot, 108, lambda: 'running')
+        self.addCleanup(self.admission.close)
+        owner = self.admission.bootstrap_owner
+        self.admission.prepare_managed(owner.lease)
+        owner.open()
+        owner.lease.close()
+        self.plan = ACCOUNTS.make_plan(CONFIG_DATA, database())
+
+    def inputs(self, path):
+        return CONFIG_DATA if path == '/fixture/config' else ACCOUNTS.canonical(self.plan)
+
+    def assert_retained(self, names=('one',)):
+        active = self.operation._ACTIVE.operation
+        self.assertEqual(active.names, names)
+        self.a._held_lock(active.lease.fd, 'READ', os.getpid())
+        for lock in active.guest_locks:
+            self.a._held_lock(lock.fd, 'WRITE', os.getpid())
+        return active
+
+    def apply_fixture(self, reader=None, invoke=None, snapshots=None):
+        def tool(*args, **kwargs):
+            self.assert_retained()
+            if invoke:
+                invoke()
+        with patch.object(ACCOUNTS, 'read_input', side_effect=reader or self.inputs), \
+                patch.object(ACCOUNTS, 'snapshot', side_effect=(
+                    [database(), database(), database(), database(True)]
+                    if snapshots is None else snapshots)), \
+                patch.object(ACCOUNTS.subprocess, 'run', side_effect=tool) as run:
+            result = ACCOUNTS.apply('/fixture/config', '/fixture/plan')
+        self.assertIsNone(self.operation._ACTIVE.operation)
+        return result, run.call_count
+
+    def mark_managed(self):
+        with self.admission.admit() as lease, \
+                self.admission.guest_lock('one', lease, create=True) as lock:
+            self.admission.mark_managed('one', lease, lock, guard=lambda: None)
+
+    def test_manual_apply_retains_single_lease_before_account_lock_through_cleanup(self):
+        opened = []
+        native = os.open
+        def open_file(path, *args, **kwargs):
+            if path == ACCOUNTS.LOCK:
+                self.assert_retained()
+            fd = native(path, *args, **kwargs)
+            if path == ACCOUNTS.LOCK:
+                opened.append(fd)
+            return fd
+        close = self.operation.ManualGuestBatch.close
+        def close_batch(batch):
+            for fd in opened:
+                with self.assertRaises(OSError):
+                    os.fstat(fd)
+            close(batch)
+        with patch.object(ACCOUNTS.os, 'open', side_effect=open_file), \
+                patch.object(self.operation.ManualGuestBatch, 'close', new=close_batch), \
+                patch.object(self.a.Admission, 'admit', autospec=True,
+                             side_effect=self.a.Admission.admit) as admit:
+            result, calls = self.apply_fixture()
+        self.assertTrue(result['success'], result)
+        self.assertEqual(calls, 1)
+        self.assertEqual(admit.call_count, 1)
+        self.assertEqual(len(opened), 1)
+
+    def test_prepare_holds_entire_sorted_batch_through_plan_and_postcheck(self):
+        config = {'schema': 1, 'guests': [
+            {'name': 'two', 'uid': 60002, 'gid': 60002}, CONFIG['guests'][0]]}
+        data = ACCOUNTS.canonical(config)
+        def snapshot():
+            self.assert_retained(('one', 'two'))
+            return database()
+        with patch.object(ACCOUNTS, 'read_input', return_value=data), \
+                patch.object(ACCOUNTS, 'snapshot', side_effect=snapshot), \
+                patch.object(self.a.Admission, 'admit', autospec=True,
+                             side_effect=self.a.Admission.admit) as admit:
+            plan = ACCOUNTS.prepare('/fixture/config')
+        self.assertEqual(plan['config_sha256'], ACCOUNTS.digest(data))
+        self.assertEqual(admit.call_count, 1)
+        self.assertIsNone(self.operation._ACTIVE.operation)
+        self.assertFalse(Path(ACCOUNTS.LOCK).exists())
+
+    def test_managed_refused_before_account_lock_snapshot_or_sysusers(self):
+        self.mark_managed()
+        with patch.object(ACCOUNTS, 'snapshot') as snapshot:
+            result, calls = self.apply_fixture(snapshots=snapshot)
+            self.assertFalse(result['success'])
+            self.assertFalse(result['accounts_may_be_modified'])
+            self.assertEqual(calls, 0)
+            snapshot.assert_not_called()
+        self.assertFalse(Path(ACCOUNTS.LOCK).exists())
+        with patch.object(ACCOUNTS, 'read_input', side_effect=self.inputs), \
+                patch.object(ACCOUNTS, 'snapshot') as snapshot:
+            with self.assertRaisesRegex(self.a.AdmissionError, 'managed guest'):
+                ACCOUNTS.prepare('/fixture/config')
+            snapshot.assert_not_called()
+
+    def test_config_race_refused_before_mutation_including_equivalent_bytes(self):
+        other = ACCOUNTS.canonical({'schema': 1, 'guests': [
+            {'name': 'two', 'uid': 60002, 'gid': 60002}]})
+        for changed in (other, CONFIG_DATA + b' '):
+            for race_at in (2, 3, 5, 6):
+                reads = 0
+                def reader(path):
+                    nonlocal reads
+                    if path != '/fixture/config':
+                        return ACCOUNTS.canonical(self.plan)
+                    reads += 1
+                    return changed if reads >= race_at else CONFIG_DATA
+                with self.subTest(changed=changed, race_at=race_at):
+                    result, calls = self.apply_fixture(reader=reader)
+                    self.assertFalse(result['success'], result)
+                    self.assertFalse(result['accounts_may_be_modified'])
+                    self.assertEqual(calls, 0)
+
+    def test_prepare_config_race_and_postcheck_marker_refused(self):
+        with patch.object(ACCOUNTS, 'read_input', side_effect=[CONFIG_DATA, CONFIG_DATA,
+                                                            CONFIG_DATA + b' ']), \
+                patch.object(ACCOUNTS, 'snapshot', return_value=database()):
+            with self.assertRaisesRegex(ValueError, 'config differs'):
+                ACCOUNTS.prepare('/fixture/config')
+        def snapshot():
+            active = self.assert_retained()
+            active.admission.mark_managed('one', active.lease, active.guest_locks[0],
+                                          guard=lambda: None)
+            return database()
+        with patch.object(ACCOUNTS, 'read_input', return_value=CONFIG_DATA), \
+                patch.object(ACCOUNTS, 'snapshot', side_effect=snapshot):
+            with self.assertRaisesRegex(self.a.AdmissionError, 'managed guest'):
+                ACCOUNTS.prepare('/fixture/config')
+        self.assertIsNone(self.operation._ACTIVE.operation)
+
+    def test_actual_unlock_before_sysusers_refuses_mutation(self):
+        validations, validate = 0, ACCOUNTS.validate_accounts
+        def checked(*args, **kwargs):
+            nonlocal validations
+            result = validate(*args, **kwargs)
+            validations += 1
+            if validations == 4:
+                active = self.assert_retained()
+                fcntl.flock(active.guest_locks[0].fd, fcntl.LOCK_UN)
+            return result
+        with patch.object(ACCOUNTS, 'validate_accounts', side_effect=checked):
+            result, calls = self.apply_fixture()
+        self.assertFalse(result['success'])
+        self.assertTrue(result['accounts_may_be_modified'])
+        self.assertEqual(calls, 0)
+
+    def test_batch_close_failure_preserves_conservative_receipt(self):
+        native = self.operation.ManualGuestBatch.close
+        def close(batch):
+            native(batch)
+            raise OSError('close acknowledgement lost')
+        with patch.object(self.operation.ManualGuestBatch, 'close', new=close):
+            result, calls = self.apply_fixture()
+        self.assertFalse(result['success'])
+        self.assertTrue(result['accounts_may_be_modified'])
+        self.assertEqual(result['cleanup_error'], 'OSError')
+        self.assertEqual(calls, 1)
+
+    def test_nonroot_and_invalid_discovery_before_any_batch_or_snapshot(self):
+        with patch.object(ACCOUNTS.os, 'getresuid', return_value=(1000, 1000, 1000)), \
+                patch.object(ACCOUNTS, 'read_input') as read:
+            result = ACCOUNTS.apply('/fixture/config', '/fixture/plan')
+            self.assertFalse(result['success'])
+            read.assert_not_called()
+        with patch.object(ACCOUNTS, 'read_input', return_value=b'{}'), \
+                patch.object(ACCOUNTS, 'operation_module') as operation, \
+                patch.object(ACCOUNTS, 'snapshot') as snapshot:
+            result = ACCOUNTS.apply('/fixture/config', '/fixture/plan')
+            self.assertFalse(result['success'])
+            operation.assert_not_called()
+            snapshot.assert_not_called()
 
 
 class InputAndLockTests(unittest.TestCase):
