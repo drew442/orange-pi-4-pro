@@ -246,7 +246,15 @@ class PublicationCustody(unittest.TestCase):
                     else:
                         path = case.guest / '.checkpoints' / case.custody.archive_name
                         if kind == 'history':
+                            before = path.stat()
                             path.write_bytes(case.history_data)
+                            # Identical bytes can be rewritten within one kernel
+                            # timestamp tick. Make this metadata-change stimulus
+                            # deterministic without weakening the custody guard.
+                            os.utime(path, ns=(before.st_atime_ns,
+                                               before.st_mtime_ns + 1_000_000_000))
+                            self.assertNotEqual(P.ENROLL.identity(before),
+                                                P.ENROLL.identity(path.stat()))
                         else:
                             temporary = case.base / 'new-history'
                             temporary.write_bytes(case.history_data)

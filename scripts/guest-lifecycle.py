@@ -31,6 +31,18 @@ REGISTRY = CONTEXT.REGISTRY
 HEAD = module('lifecycle_controller_head', 'configs/guest_lifecycle.py')
 STORE = module('lifecycle_controller_store', 'scripts/guest-lifecycle-store.py')
 require = POLICY.require
+# Only the managed checkpoint module installs its verifier in its own family.
+_READY_VERIFIER = None
+
+
+def _verify_ready(controller, name, *, guest_lock, inspection, head_store, head_data, registry=None):
+    head = HEAD.validate_head(head_data)
+    require(head['status'] == 'ready', 'ready trusted head required')
+    if head['sequence'] == 0:
+        return  # Explicit initial enrollment is the sole cohort exemption.
+    require(callable(_READY_VERIFIER), 'completed ready cohort verifier unavailable')
+    return _READY_VERIFIER(controller, name, guest_lock=guest_lock, inspection=inspection,
+                           head_store=head_store, head_data=head_data, registry=registry)
 
 
 def digest(data):
@@ -204,7 +216,7 @@ class StateController:
                         guard()
                         registry_lock.recheck()
 
-                    _, _, registry = self._registry(registry_stack, registry_guard)
+                    registry_store, registry_data, registry = self._registry(registry_stack, registry_guard)
                     require(registry is not None, 'registry is unconfigured')
                     entries = [entry for entry in registry['guests'] if entry['name'] == name]
                     require(len(entries) == 1, 'guest is not registered')
@@ -213,13 +225,19 @@ class StateController:
                             entry['manifest_sha256'] == trusted_manifest_sha256,
                             'registry entry conflicts')
                     require(not automatic or entry['enabled'], 'automatic guest disabled')
+                    require(entry['shutdown_profile'] == REGISTRY.SHUTDOWN_PROFILE and
+                            entry['fixture_profile'] in ('none', 'managed-power-key-v1'),
+                            'unsupported managed shutdown/fixture profile')
+                    _verify_ready(self, name, guest_lock=lock, inspection=inspection,
+                                  head_store=store, head_data=previous_data, registry=(registry_store, registry_data, registry))
                     record = dict(schema=1, profile=RUN_PROFILE,
                                   storage=self.context.storage, **identity,
                                   run_id=run_id, boot_id=self.boot_id, automatic=automatic,
                                   manifest_sha256=trusted_manifest_sha256,
                                   previous_head_sha256=previous_pin, previous_head=previous,
                                   registry_generation=registry['generation'],
-                                  fixture_profile=entry['fixture_profile'])
+                                  fixture_profile=entry['fixture_profile'],
+                                  shutdown_profile=entry['shutdown_profile'])
                     data = canonical_run(record)
                     result['stage'] = 'run-directory'
                     runs = stack.enter_context(store.child('runs', create=True))
@@ -427,6 +445,8 @@ class StateController:
                 require(head['status'] == 'ready' and all(head[k] == v for k, v in identity.items())
                         and head['manifest_sha256'] == trusted_manifest_sha256,
                         'ready trusted head required')
+                _verify_ready(self, name, guest_lock=lock, inspection=inspection,
+                              head_store=store, head_data=data)
                 result['head_sha256'] = digest(data)
                 self._toggle(stack, name, True, guard, result, identity, trusted_manifest_sha256)
             result.update(stage='complete', success=True)
@@ -526,7 +546,7 @@ def publish_head_transition(store, previous_data, new_data, result):
 RUN_PROFILE = 'a733-guest-run-admission-v1'
 RUN_FIELDS = {'schema', 'profile', 'storage', 'name', 'uid', 'gid', 'run_id',
               'boot_id', 'automatic', 'manifest_sha256', 'previous_head_sha256',
-              'previous_head', 'registry_generation', 'fixture_profile'}
+              'previous_head', 'registry_generation', 'fixture_profile', 'shutdown_profile'}
 
 
 def _canonical_record(value):
@@ -554,6 +574,10 @@ def validate_run(data):
             'invalid registry generation')
     require(type(value['fixture_profile']) is str and
             value['fixture_profile'] in REGISTRY.FIXTURE_PROFILES, 'invalid fixture profile')
+    require(value['shutdown_profile'] == REGISTRY.SHUTDOWN_PROFILE and
+            type(value['shutdown_profile']) is str, 'unsupported shutdown profile')
+    require(value['fixture_profile'] in ('none', 'managed-power-key-v1'),
+            'unsupported managed fixture profile')
     previous = HEAD.validate_head(HEAD.canonical(value['previous_head']))
     require(previous['storage'] == value['storage'] and
             all(previous[key] == value[key] for key in

@@ -1,0 +1,139 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "result": "pass",
+  "scope": "Uninstalled root managed checkpoint publication, fresh strict reconciliation, completed ready-cohort verification, typed bootstrap account preparation and native producer composition; boot services and physical acceptance excluded",
+  "builder": "drew@build.drewnet.online",
+  "builder_base": "/var/lib/a733-managed-checkpoint-runtime-validation-20261112-02",
+  "full_Ubuntu_tests": 2755,
+  "failures_errors_skips": 0,
+  "shell_suites": 5,
+  "diagnostic_cases": 5,
+  "locked_source_files": 1008,
+  "source_lock": {
+    "bytes": 161529,
+    "sha256": "32c6b872524c8323e1e7509ba8efef8583e3d5d680aa4201125b4261e4e5a407",
+    "index_tree": "f078958dc2f27c13ac156114271ad132e775917c"
+  },
+  "unit": {
+    "RuntimeMaxUSec": "8h",
+    "MainPID": "0",
+    "Result": "success",
+    "ExecMainCode": "1",
+    "ExecMainStatus": "0",
+    "CPUQuotaPerSecUSec": "2s",
+    "MemoryMax": "3221225472",
+    "ActiveState": "active",
+    "SubState": "exited"
+  },
+  "resources": {
+    "sampled_min_free_disk_bytes": 32066387968,
+    "sampled_min_available_memory_bytes": 7088046080,
+    "compilation_jobs": 2
+  },
+  "source": {
+    "build/maintenance-tools.py": {
+      "bytes": 15145,
+      "sha256": "2ed8454c7bbc8688f4a93a117c1f27386d1d99c1d492d8256e013bcb631db41f"
+    },
+    "scripts/guest-accounts.py": {
+      "bytes": 18004,
+      "sha256": "c16e41aa91e2e655116cc8b9500b3797d95a304bbb7a9e105711ae3e54a12ee5"
+    },
+    "scripts/guest-lifecycle.py": {
+      "bytes": 36546,
+      "sha256": "254399f25a217cd9ed031d01a950208bf12111b713a78170b676ff25ba4e33f2"
+    },
+    "scripts/managed-guest-checkpoint.py": {
+      "bytes": 46218,
+      "sha256": "aa0a20b3c1862749333a4b95360f7e393d2dcf1a8e3d200a74faacdd01931627"
+    },
+    "tests/test_guest_accounts.py": {
+      "bytes": 32485,
+      "sha256": "5af4af3401b1a1a7dfead2768871a2185e6dee41bedbfd77ffe9942cc73dc0c9"
+    },
+    "tests/test_guest_managed_run.py": {
+      "bytes": 26980,
+      "sha256": "424297c58888ea65939143f07dd8341962d07f5acbeda1d40138b84dfa33ef49"
+    },
+    "tests/test_guest_publication_custody.py": {
+      "bytes": 14091,
+      "sha256": "d53618ed5b0aec7f35546e0f94fa3e683b29d5ba2d3723c92582f8f1f75789a1"
+    },
+    "tests/test_host_payload.py": {
+      "bytes": 28099,
+      "sha256": "a75abb09d3ab2a276df8ba9db9a456131e0938baf93d179a23914d0d81cede9f"
+    },
+    "tests/test_launch_deterministic_host_roots.py": {
+      "bytes": 11602,
+      "sha256": "0a7b23c643ee530626fac370e760003af713b0b56da0ac24edfa655133ad734d"
+    },
+    "tests/test_maintenance_tools.py": {
+      "bytes": 17174,
+      "sha256": "d955a09f12a234f4e7c7e89416f3c2692e3f40f6afcecb818fa030fec5252e99"
+    },
+    "tests/test_managed_checkpoint_producer_integration.py": {
+      "bytes": 15706,
+      "sha256": "eb0ce3a6de0348fe6040525baaf68cb774cc622e1e8e4d42a5c1d75aa1e60883"
+    },
+    "tests/test_managed_guest_checkpoint.py": {
+      "bytes": 28691,
+      "sha256": "a39e22fbfd805a7a1fa102136a7ec818f9033364b003115fc218a7c67258e07e"
+    }
+  },
+  "independent_reviews": {
+    "runtime": {
+      "path": "out/managed-checkpoint-runtime-20261112-02/runtime-review.json",
+      "bytes": 110295,
+      "sha256": "b8c8fb33aef3b5244a16f155e5b497e0b6ffea8edc49cea0a717e7f7eae3494b"
+    },
+    "accounts": {
+      "path": "out/managed-checkpoint-runtime-20261112-02/accounts-review.json",
+      "bytes": 28228,
+      "sha256": "03bbee0265b2e3004da2c4996d45b3d9dd6abbe5348d58601ec77ec67c747526"
+    }
+  },
+  "packaging": {
+    "current_sources": 56,
+    "runtime_files": 57,
+    "historical_sources": 39,
+    "entrypoints": 16,
+    "relocated_imports_and_shared_admission_identity": "pass"
+  },
+  "initial_run": {
+    "builder_base": "/var/lib/a733-managed-checkpoint-runtime-validation-20261112-01",
+    "tests": 2755,
+    "failures": 1,
+    "failing_case": "test_guest_publication_custody.PublicationCustody.test_postbind_disk_inode_metadata_hash_and_boot_inputs_refused (history)",
+    "observation": "Same-byte rewrite did not cause expected rejection; remote before/after metadata was not recorded. Timestamp coincidence is plausible, not directly proven.",
+    "correction": "Only test stimulus changed: explicitly advance mtime_ns by one second and assert retained metadata differs before expecting refusal. Production guards unchanged. Independent local original probes all rejected; twenty explicit timestamp probes also rejected. Initial logs and source lock retained."
+  },
+  "native_producer_composition": {
+    "tests": 3,
+    "actual_components": "Same-family StateController/ManagedRun/Supervisor/StoppedRun, Permit reader, protected metadata transaction and disk flock; real fork/barrier/inherited FDs, UNIX peer, QMP/SHUTDOWN/EOF, console pipes and raw wait. Normal and zero console checkpoint then fresh verification and next admission; nonzero raw exit refuses outcome; owned supervisor close failure remains observable.",
+    "explicit_substitutions": "A733 platform/storage placement, account/admission authority and root Python surrogate executable/KVM/credential policy. No QEMU or KVM execution.",
+    "hardware_acceptance": false
+  },
+  "bootstrap_accounts": {
+    "tests_root": 39,
+    "tests_uid_1000": 39,
+    "behavior": "Python-only exact batch plan under canonical typed closed-bootstrap owner and retained actual EX flock/PID. No nested lease/gate open/borrowed close; manual CLI retained; two fresh16-account batches preserve32 identities.",
+    "limits": "Runtime placement/account databases and sysusers are fixtures; no installed boot service acceptance."
+  },
+  "checkpoint_behavior": [
+    "Actual retained shutdown/fixture/inspection handoff consumes live authority before changing stopping head; record parsing grants no authority.",
+    "Immutable console/outcome/proof/intent/completion bind run, boot, storage, exact old/new bytes, legal head transitions and shutdown evidence; retained disk custody spans manifest replacement.",
+    "Fresh interrupted-state reconciliation admits only exact intended old/new cohorts; unexplained conflict quarantines without clearing quarantine; completed cohort required before subsequent admission/enable.",
+    "Latest registry merge preserves concurrent disable and unrelated guests; historical completion bytes are verified and synchronized rather than regenerated.",
+    "Owned publication/custody cleanup failures prevent publication success. Borrowed supervisor/run/controller/lease remain outer caller-owned; supervisor receipt.errors must be checked after close before lifecycle success."
+  ],
+  "receipts": {
+    "native": "out/managed-checkpoint-runtime-20261112-02/receipts.tar",
+    "builder": "/var/lib/a733-managed-checkpoint-runtime-validation-20261112-02/receipts.tar",
+    "bytes": 573440,
+    "sha256": "40adcdd611fc5bfe07630e8a25d466d2f6c0237739673e4bf3148dd452757263",
+    "verified_fsynced_both": true
+  },
+  "hardware_acceptance": false,
+  "remaining": "All legacy admission integration, installed lifecycle/storage/preparation services and checked outer cleanup; coherent managed backup/restore; reproducible inactive-root deployment; physical SPI recovery/reinstall, actual managed KVM and final SPI ten-cold/ten-warm series. Existing endurance evidence remains accepted."
+}

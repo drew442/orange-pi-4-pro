@@ -15,7 +15,7 @@ future work.
 | 1. Recoverable baseline | Recorded; revalidate after each hardware transition | Verified original/calibrated SPI and stopped guest backups retained off-device |
 | 2. Metadata-aware SPI maintenance | Software checks and independent review pass | Reviewed fresh live plans and preserved calibration policy |
 | 3. Physical restore/reinstall | Pending recovery-card boot | Original SPI restore, SD recovery, reinstall, SD-removed boot and actual KVM pass |
-| 4. Unattended guests | Reviewed design and foundational APIs; deployment pending | Reproducible packaged services, graceful shutdown/checkpoint/reconciliation, rollback and real KVM acceptance |
+| 4. Unattended guests | Reviewed checkpoint/recovery and bootstrap cores; services/deployment pending | Reproducible packaged services, graceful shutdown/checkpoint/reconciliation, rollback and real KVM acceptance |
 | 5. Final SPI boot series | One cold and one warm operational boot evidenced | Ten accepted cold and ten warm boots with applicable identity and final automation checks |
 | 6. Independent reproduction and signoff | Earlier protected-SD reproduction retained | Updated SPI recovery and guest procedures reproduced, evidence reconciled and changes pushed |
 

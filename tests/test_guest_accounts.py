@@ -1,11 +1,15 @@
 """Guest account policy tests; no live account databases or NSS are modified."""
 import copy
+import contextlib
+import fcntl
 import importlib.util
 import json
 import io
 import os
 from pathlib import Path
 import subprocess
+import sys
+import uuid
 import tempfile
 from types import SimpleNamespace
 import unittest
@@ -253,6 +257,220 @@ class ApplyTests(unittest.TestCase):
             self.assertFalse(result['success'])
             self.assertFalse(result['accounts_may_be_modified'])
             tool.assert_not_called()
+
+
+class BootstrapTests(unittest.TestCase):
+    def setUp(self):
+        self.context = ACCOUNTS._bootstrap_context()
+        self.admission_module = self.context.ADMISSION
+        a = self.admission_module
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.path = Path(self.tmp.name)
+        # Actual typed Admission/ClosureOwner/Lease and kernel flock semantics;
+        # only platform placement/ownership and host account I/O are fixtures.
+        for fixture in (patch.object(a, 'RUNTIME', str(self.path / 'a733-admission')),
+                        patch.object(a, 'RUNTIME_PARENT', str(self.path)),
+                        patch.object(a, 'ROOT_UID', os.getuid()),
+                        patch.object(a, '_tmpfs'), patch.object(a, '_ancestor'),
+                        patch.object(a.os, 'geteuid', return_value=0),
+                        patch.object(self.context, 'host_identity')):
+            fixture.start()
+            self.addCleanup(fixture.stop)
+        self.admission = a.initialize(str(uuid.uuid4()), os.getgid(), lambda: 'running')
+        self.addCleanup(self.admission.close)
+        self.owner = self.admission.bootstrap_owner
+
+    def apply_fixture(self, before=None, after=None, owner=None, invoke=None, plan=None,
+                      config_data=CONFIG_DATA):
+        before = database() if before is None else before
+        after = database(True) if after is None else after
+        plan = ACCOUNTS.make_plan(config_data, before) if plan is None else plan
+        with patch.object(ACCOUNTS, 'LOCK', str(self.path / 'accounts.lock')), \
+             patch.object(ACCOUNTS.MANAGEMENT, 'runtime_guard'), \
+             patch.object(ACCOUNTS, 'validate_lock'), \
+             patch.object(ACCOUNTS, 'snapshot', side_effect=[before, before, before, after]), \
+             patch.object(ACCOUNTS.sys, 'stderr', new_callable=io.StringIO), \
+             patch.object(ACCOUNTS.subprocess, 'run', side_effect=invoke) as tool:
+            result = ACCOUNTS.apply_bootstrap(config_data, plan, self.owner if owner is None else owner)
+            return result, tool.call_count
+
+    def test_real_owner_is_borrowed_and_gate_stays_closed(self):
+        fd = self.owner.lease.fd
+        with patch.object(self.admission_module.ClosureOwner, 'exclusive',
+                          side_effect=AssertionError('nested lease')), \
+             patch.object(self.admission_module.ClosureOwner, 'open',
+                          side_effect=AssertionError('opened gate')):
+            result, calls = self.apply_fixture()
+        self.assertTrue(result['success'])
+        self.assertEqual(calls, 1)
+        self.assertEqual(fd, self.owner.lease.recheck())
+        self.assertEqual(self.admission._read()['state'], 'closed')
+        self.context.host_identity.assert_called_with(self.admission.boot_id)
+
+    def test_exact_existing_account_is_verified_noop(self):
+        result, calls = self.apply_fixture(before=database(True))
+        self.assertTrue(result['success'])
+        self.assertFalse(result['accounts_may_be_modified'])
+        self.assertEqual(calls, 0)
+
+    def test_foreign_or_untyped_owner_refused(self):
+        spec = importlib.util.spec_from_file_location(
+            'foreign_accounts_admission', BASE / 'scripts/guest-admission.py')
+        foreign = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(foreign)
+        owner = foreign.ClosureOwner(self.admission, self.admission._read())
+        owner.lease = self.owner.lease
+        for value in (owner, SimpleNamespace(**vars(self.owner)), object()):
+            with self.subTest(owner=type(value)):
+                result, calls = self.apply_fixture(owner=value)
+                self.assertFalse(result['success'])
+                self.assertFalse(result['accounts_may_be_modified'])
+                self.assertEqual(calls, 0)
+
+    def test_invalid_capability_refuses_before_account_lock(self):
+        a = self.admission_module
+        for condition in ('reason', 'open', 'nonce', 'poison', 'closed', 'shared',
+                          'flag', 'unlocked', 'foreign-admission', 'boot', 'nonroot'):
+            with self.subTest(condition=condition), contextlib.ExitStack() as stack:
+                owner = a.ClosureOwner(self.admission, self.admission._read())
+                owner.lease = a.Lease(self.admission, os.dup(self.owner.lease.fd), True)
+                stack.callback(owner.lease.close)
+                if condition == 'reason':
+                    owner.reason = 'maintenance'
+                elif condition == 'open':
+                    stack.enter_context(patch.object(a.Admission, '_read', return_value=
+                        dict(self.admission._read(), state='open')))
+                elif condition == 'nonce':
+                    owner.nonce = str(uuid.uuid4())
+                elif condition == 'poison':
+                    owner.poisoned = True
+                elif condition == 'closed':
+                    owner.lease.close()
+                elif condition == 'shared':
+                    fcntl.flock(owner.lease.fd, fcntl.LOCK_SH)
+                    stack.callback(fcntl.flock, self.owner.lease.fd, fcntl.LOCK_EX)
+                elif condition == 'flag':
+                    owner.lease.exclusive = False
+                elif condition == 'unlocked':
+                    fcntl.flock(owner.lease.fd, fcntl.LOCK_UN)
+                    stack.callback(fcntl.flock, self.owner.lease.fd, fcntl.LOCK_EX)
+                elif condition == 'foreign-admission':
+                    owner.lease.admission = object()
+                elif condition == 'boot':
+                    stack.enter_context(patch.object(self.context, 'host_identity',
+                                                     side_effect=ValueError('wrong boot/native namespace')))
+                elif condition == 'nonroot':
+                    stack.enter_context(patch.object(ACCOUNTS.os, 'geteuid', return_value=1000))
+                result, calls = self.apply_fixture(owner=owner)
+                self.assertFalse(result['success'])
+                self.assertFalse(result['accounts_may_be_modified'])
+                self.assertEqual(calls, 0)
+                self.assertFalse((self.path / 'accounts.lock').exists())
+
+    def test_actual_lock_owned_by_another_process_refused(self):
+        fd = self.owner.lease.fd
+        fcntl.flock(fd, fcntl.LOCK_UN)
+        code = ('import fcntl,sys; fcntl.flock(int(sys.argv[1]), fcntl.LOCK_EX); '
+                'print("ready", flush=True); sys.stdin.read(1)')
+        child = subprocess.Popen([sys.executable, '-c', code, str(fd)], pass_fds=(fd,),
+                                 stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
+        try:
+            self.assertEqual(child.stdout.readline(), 'ready\n')
+            result, calls = self.apply_fixture()
+            self.assertFalse(result['success'])
+            self.assertFalse(result['accounts_may_be_modified'])
+            self.assertEqual(calls, 0)
+        finally:
+            child.communicate('x', timeout=5)
+            fcntl.flock(fd, fcntl.LOCK_UN)
+            fcntl.flock(fd, fcntl.LOCK_EX)
+
+    def test_capability_loss_during_tool_fails_postcheck_conservatively(self):
+        result, calls = self.apply_fixture(invoke=lambda *a, **k: self.owner.lease.close())
+        self.assertFalse(result['success'])
+        self.assertTrue(result['accounts_may_be_modified'])
+        self.assertEqual(calls, 1)
+
+    def test_closed_admission_refuses_before_mutation(self):
+        self.admission.close()
+        result, calls = self.apply_fixture()
+        self.assertFalse(result['success'])
+        self.assertFalse(result['accounts_may_be_modified'])
+        self.assertEqual(calls, 0)
+
+    def test_loss_after_snapshot_refuses_before_sysusers(self):
+        original = ACCOUNTS.validate_accounts
+        validations = 0
+        def invalidate(*args, **kwargs):
+            nonlocal validations
+            result = original(*args, **kwargs)
+            validations += 1
+            # make_plan validates three snapshots, then the mutation decision.
+            if validations == 4:
+                self.owner.poisoned = True
+            return result
+        with patch.object(ACCOUNTS, 'validate_accounts', side_effect=invalidate):
+            result, calls = self.apply_fixture()
+        self.assertFalse(result['success'])
+        self.assertEqual(calls, 0)
+
+    def test_stale_plan_refuses_mutation(self):
+        plan = ACCOUNTS.make_plan(CONFIG_DATA, database())
+        plan['database_sha256']['shadow'] = '0' * 64
+        result, calls = self.apply_fixture(plan=plan)
+        self.assertFalse(result['success'])
+        self.assertFalse(result['accounts_may_be_modified'])
+        self.assertEqual(calls, 0)
+
+    def test_two_fresh_batches_prepare_32_accounts(self):
+        before = database()
+        for offset in (0, 16):
+            guests = [{'name': 'vm' + str(index), 'uid': 60000 + index,
+                       'gid': 60000 + index} for index in range(offset, offset + 16)]
+            config_data = ACCOUNTS.canonical({'schema': 1, 'guests': guests})
+            after = dict(before)
+            for guest in guests:
+                name, number = 'a733-vm-' + guest['name'], guest['uid']
+                for key, row in {
+                    'passwd': f'{name}:x:{number}:{number}:A733 guest {guest["name"]}:/nonexistent:/usr/sbin/nologin\n',
+                    'shadow': f'{name}:!:20000::::::\n',
+                    'group': f'{name}:x:{number}:\n', 'gshadow': f'{name}:!::\n'
+                }.items():
+                    after[key] += row.encode()
+            result, calls = self.apply_fixture(before=before, after=after, config_data=config_data)
+            self.assertTrue(result['success'])
+            self.assertEqual(calls, 1)
+            before = after
+        self.assertEqual(len(ACCOUNTS.parse_database(before['passwd'], 7)), 33)
+
+    def test_capability_rechecked_at_final_postcheck(self):
+        original = ACCOUNTS.validate_preserved
+        def invalidate(*args):
+            original(*args)
+            self.owner.poisoned = True
+        with patch.object(ACCOUNTS, 'validate_preserved', side_effect=invalidate):
+            result, calls = self.apply_fixture()
+        self.assertFalse(result['success'])
+        self.assertTrue(result['accounts_may_be_modified'])
+        self.assertEqual(calls, 1)
+
+    def test_bootstrap_preserves_other_batch_rows(self):
+        before = database()
+        after = database(True)
+        other = database(True)
+        for key in ACCOUNTS.DATABASES:
+            row = other[key].splitlines(keepends=True)[-1]
+            row = row.replace(b'a733-vm-one', b'a733-vm-two').replace(b'60001', b'60002')
+            before[key] += row
+            after[key] += row
+        result, calls = self.apply_fixture(before=before, after=after)
+        self.assertTrue(result['success'])
+        self.assertEqual(calls, 1)
+        after['shadow'] = after['shadow'].replace(b'a733-vm-two:!', b'a733-vm-two:*')
+        result, calls = self.apply_fixture(before=before, after=after)
+        self.assertFalse(result['success'])
+        self.assertTrue(result['accounts_may_be_modified'])
 
 
 class InputAndLockTests(unittest.TestCase):

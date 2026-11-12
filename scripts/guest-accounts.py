@@ -257,42 +257,104 @@ def validate_lock(info, path_info, run_device):
     require(metadata(path_info) == metadata(info), 'account lock changed')
 
 
+_BOOTSTRAP_CONTEXT = None
+
+
+def _bootstrap_context():
+    # Load only after this module is complete: context -> policy -> enrollment
+    # imports accounts too. Context authenticates and caches canonical ADMISSION.
+    global _BOOTSTRAP_CONTEXT
+    if _BOOTSTRAP_CONTEXT is None:
+        spec = importlib.util.spec_from_file_location(
+            'a733_accounts_context', BASE / 'scripts/guest-lifecycle-context.py')
+        context = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(context)
+        _BOOTSTRAP_CONTEXT = context
+    return _BOOTSTRAP_CONTEXT
+
+
+def bootstrap_check(owner):
+    """Check a borrowed bootstrap capability without acquiring another lease."""
+    require(os.geteuid() == 0, 'bootstrap accounts require root')
+    context = _bootstrap_context()
+    admission = context.ADMISSION
+    require(type(owner) is admission.ClosureOwner, 'typed bootstrap closure owner required')
+    require(type(owner.admission) is admission.Admission, 'typed admission required')
+    require(owner.reason == 'bootstrap', 'bootstrap closure required')
+    lease = owner.lease
+    require(type(lease) is admission.Lease and lease.admission is owner.admission
+            and lease.exclusive is True, 'matching exclusive bootstrap lease required')
+    lease.recheck()
+    admission._held_lock(lease.fd, 'WRITE', os.getpid())
+    context.host_identity(owner.admission.boot_id)
+    with owner.admission._gate():
+        record = owner._matching()
+        require(record['boot_id'] == owner.admission.boot_id, 'bootstrap boot differs')
+
+
 def apply(config_path, plan_path):
+    """Manual CLI account preparation retains authenticated input file checks."""
+    return _apply(lambda: (read_input(config_path), read_input(plan_path)), lambda: None)
+
+
+def apply_bootstrap(config_data, plan, owner):
+    """Apply one exact <=16-identity batch under a borrowed bootstrap owner.
+
+    The Python caller supplies exact config bytes and a fresh make_plan result
+    against the current databases. Subsequent batches need fresh plans. All other
+    account rows remain protected. This never opens admission or closes its lease.
+    """
+    # Freeze the caller's plan before any mutation; never trust a mutable plan
+    # through sysusers. The core still validates it against current live state.
+    def inputs():
+        require(type(config_data) is bytes, 'exact bootstrap config bytes required')
+        return config_data, plan_data
+    plan_data = canonical(plan)
+    return _apply(inputs, lambda: bootstrap_check(owner))
+
+
+def _apply(inputs, check):
     receipt = {'schema': 1, 'operation': 'a733-guest-accounts',
                'success': False, 'accounts_may_be_modified': False}
     fd = None
     try:
+        check()
         MANAGEMENT.runtime_guard()
         # Lock metadata and placement are validated on the held descriptor.
         fd = os.open(LOCK, os.O_RDWR | os.O_CREAT | os.O_NOFOLLOW | os.O_NONBLOCK, 0o600)
         info = os.fstat(fd)
         validate_lock(info, os.lstat(LOCK), os.stat('/run').st_dev)
         fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        config_data, plan_data = read_input(config_path), read_input(plan_path)
+        check()
+        config_data, plan_data = inputs()
         supplied = json.loads(plan_data, object_pairs_hook=IDENTITY.unique_pairs)
         current = make_plan(config_data, snapshot())
         require(canonical(supplied) == canonical(current), 'stale or mismatched account plan')
         receipt['plan_sha256'] = digest(canonical(current))
         MANAGEMENT.runtime_guard()
-        require(make_plan(read_input(config_path), snapshot()) == current,
+        require(make_plan(inputs()[0], snapshot()) == current,
                 'account state changed before apply')
         config = IDENTITY.validate_config(config_data)
         before = snapshot()
         require(make_plan(config_data, before) == current, 'account state changed before sysusers')
+        check()
         if not validate_accounts(config, before, complete=False):
             receipt['accounts_may_be_modified'] = True
             sys.stderr.write(canonical(receipt).decode())
             sys.stderr.flush()  # Intent remains visible even if later killed.
+            check()
             subprocess.run(['/usr/bin/systemd-sysusers', '--inline', *current['sysusers_lines']],
                            check=True, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
                            stderr=subprocess.DEVNULL, timeout=30,
                            env={'PATH': '/usr/sbin:/usr/bin:/sbin:/bin', 'LC_ALL': 'C'})
+        check()
         MANAGEMENT.runtime_guard()
         after = snapshot()
         validate_accounts(config, after, complete=True)
         validate_preserved(config, before, after)
+        check()
         receipt['success'] = True
-    except (OSError, ValueError, UnicodeError, subprocess.SubprocessError, KeyboardInterrupt) as error:
+    except (OSError, ValueError, RuntimeError, UnicodeError, subprocess.SubprocessError, KeyboardInterrupt) as error:
         receipt['error'] = type(error).__name__
     finally:
         if fd is not None:

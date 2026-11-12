@@ -59,6 +59,7 @@ class ManagedRunTests(fixtures.ControllerTests):
         record = c.validate_run(record_path.read_bytes())
         self.assertEqual(record['previous_head']['status'], 'ready')
         self.assertEqual(record['fixture_profile'], 'managed-power-key-v1')
+        self.assertEqual(record['shutdown_profile'], 'qmp-guest-shutdown-v1')
         self.assertEqual(record_path.stat().st_mode & 0o777, 0o400)
         self.assertEqual(record_path.parent.stat().st_mode & 0o777, 0o700)
         self.assertEqual(session.admission_sha256, c.digest(record_path.read_bytes()))
@@ -103,7 +104,8 @@ class ManagedRunTests(fixtures.ControllerTests):
                         last_completed_intent_sha256='c' * 64)
         self.rewrite_head(previous)
         self.failure(lambda: self.admit(automatic=True), 'boot already admitted')
-        session = self.admit()
+        with mock.patch.object(c, '_READY_VERIFIER', return_value={'success': True}):
+            session = self.admit()
         session.close()
         # Simulate independently completed authority solely to exercise UUID exclusion.
         completed = self.head_value()
@@ -112,8 +114,24 @@ class ManagedRunTests(fixtures.ControllerTests):
                          run_id=NEXT_RUN, last_completed_intent_sha256='c' * 64)
         self.rewrite_head(completed)
         old = self.head.read_bytes()
-        self.failure(self.admit, 'destination already exists')
+        with mock.patch.object(c, '_READY_VERIFIER', return_value={'success': True}):
+            self.failure(self.admit, 'destination already exists')
         self.assertEqual(old, self.head.read_bytes())
+
+    def test_completed_head_requires_registered_cohort_verifier(self):
+        previous = self.head_value()
+        previous.update(sequence=5, previous_head_sha256='b' * 64,
+                        last_boot_id=fixtures.BOOT, run_id=NEXT_RUN,
+                        last_completed_intent_sha256='c' * 64)
+        self.rewrite_head(previous)
+        self.failure(self.admit, 'cohort verifier unavailable')
+        self.assertFalse((self.head.parent / 'runs').exists())
+
+    def test_legacy_fixture_refused_before_run_publication(self):
+        self.rewrite_registry(lambda registry: registry['guests'][0].update(
+            fixture_profile='first-kvm-http-v1'))
+        self.failure(self.admit, 'unsupported managed')
+        self.assertFalse((self.head.parent / 'runs').exists())
 
     def test_invalid_bindings_refuse_before_record_publication(self):
         original = self.head_value()
