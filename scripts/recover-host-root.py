@@ -17,6 +17,7 @@ import signal
 import stat
 import subprocess
 import sys
+import types
 import uuid
 
 
@@ -34,6 +35,33 @@ UPDATE, PREP, WRITER, SELECT = CONTROL.UPDATE, CONTROL.PREP, CONTROL.WRITER, CON
 require = PREP.require
 MOUNTPOINT = Path('/run/a733-recovery-state')
 LOCK = Path('/run/a733-recovery.lock')
+OFFLINE_HELPER_BYTES = 61456
+OFFLINE_HELPER_SHA256 = 'ff47fdba18998527a4becf5e29c1de795bec53a5251039edd6a7db8db954a45b'
+
+
+def offline_policy():
+    """Execute only the authenticated adjacent, stdlib-only admission policy."""
+    path = Path(__file__).absolute().with_name('write-known-nvme-boot.py')
+    def identity(info):
+        return (info.st_dev, info.st_ino, info.st_mode, info.st_uid, info.st_gid,
+                info.st_nlink, info.st_size, info.st_mtime_ns, info.st_ctime_ns)
+    fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC)
+    try:
+        before = os.fstat(fd)
+        require(stat.S_ISREG(before.st_mode) and before.st_size == OFFLINE_HELPER_BYTES,
+                'offline policy helper size/type differs')
+        data = os.read(fd, OFFLINE_HELPER_BYTES + 1)
+        require(len(data) == OFFLINE_HELPER_BYTES and
+                hashlib.sha256(data).hexdigest() == OFFLINE_HELPER_SHA256,
+                'offline policy helper SHA-256 differs')
+        require(identity(os.fstat(fd)) == identity(before) == identity(os.lstat(path)),
+                'offline policy helper changed')
+    finally:
+        os.close(fd)
+    module = types.ModuleType('authenticated_ram_recovery_policy')
+    module.__file__ = str(path)
+    exec(compile(data, str(path), 'exec'), module.__dict__)
+    return module
 
 
 def snapshot(args, mounted_state=False):
@@ -275,7 +303,9 @@ def failure(report, error):
         CONTROL.failure(report, error)
 
 
-def apply(args, manifest, plan, report=None, *, plan_check=lambda disk: None):
+def _apply_core(args, manifest, plan, report=None, *, plan_check=lambda disk: None,
+                authorized=False):
+    """Storage engine only; direct calls provide no offline admission authority."""
     report = new_report() if report is None else report
     mount_stack, mount_parent, mount_identity, created = None, None, None, False
     try:
@@ -288,7 +318,8 @@ def apply(args, manifest, plan, report=None, *, plan_check=lambda disk: None):
                       proposed_selector=plan['proposed_selector'], state_mountpoint=str(MOUNTPOINT))
         require(make_plan(args, manifest) == plan, 'preflight differs from reviewed plan')
         plan_check(disk)
-        authorize(plan)
+        if not authorized:
+            authorize(plan)
         with recovery_lock(), block_stream(disk, exclusive=False):
             require(make_plan(args, manifest) == plan, 'plan changed after authorization/lock')
             plan_check(disk)
@@ -385,6 +416,64 @@ def apply(args, manifest, plan, report=None, *, plan_check=lambda disk: None):
     return report
 
 
+def apply(args, manifest, plan, report=None, *, plan_check=lambda disk: None,
+          source_cleanup=lambda: None):
+    """Authorize first, then retain native offline exclusion through all cleanup.
+
+    The caller owns supplied source descriptors. source_cleanup transfers their
+    cleanup boundary here; the CLI passes its source-only ExitStack.close. Other
+    callers must close their sources in this callback if they require the same
+    exclusion lifetime. The callback grants no admission or storage authority.
+    """
+    report = new_report() if report is None else report
+    guard = None
+    admitted = {'acquired': False, 'final_consumers_checked': False, 'closed': False}
+    core_success = False
+    try:
+        require(os.geteuid() == 0, 'apply requires root')
+        require(report == new_report(), 'apply requires a fresh conservative report')
+        require(make_plan(args, manifest) == plan, 'preflight differs from reviewed plan')
+        plan_check(plan['context']['disk'])
+        authorize(plan)
+        # Fixed kernel path: this snapshots the current boot, not caller authority.
+        boot_id = Path('/proc/sys/kernel/random/boot_id').read_text(encoding='ascii').strip()
+        guard = offline_policy().OfflineAdmission.acquire(boot_id)
+        admitted['acquired'] = True
+        def checked_plan(disk):
+            guard.check()
+            plan_check(disk)
+        _apply_core(args, manifest, plan, report, plan_check=checked_plan, authorized=True)
+        core_success = report['success']
+    except (Exception, KeyboardInterrupt) as error:
+        failure(report, error)
+    finally:
+        # Never expose success until sources, mounts and all guards are closed.
+        report['success'] = False
+        try:
+            source_cleanup()
+        except (Exception, KeyboardInterrupt) as error:
+            failure(report, error)
+            core_success = False
+        if guard is not None:
+            try:
+                guard.check_consumers()
+                admitted['final_consumers_checked'] = True
+            except (Exception, KeyboardInterrupt) as error:
+                failure(report, error)
+                core_success = False
+            finally:
+                try:
+                    guard.close()
+                    admitted['closed'] = True
+                except (Exception, KeyboardInterrupt) as error:
+                    failure(report, error)
+                    core_success = False
+        report['offline_admission'] = admitted
+        report['success'] = (core_success and admitted['final_consumers_checked']
+                             and admitted['closed'])
+    return report
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('operation', choices=('prepare', 'apply'))
@@ -435,7 +524,7 @@ def main(argv=None):
         plan_check(plan['context']['disk'])
         require(reviewed == plan, 'current preflight differs from reviewed plan')
         print(json.dumps(plan, sort_keys=True, indent=2), file=sys.stderr)
-        apply(args, manifest, plan, report, plan_check=plan_check)
+        apply(args, manifest, plan, report, plan_check=plan_check, source_cleanup=stack.close)
     except (Exception, KeyboardInterrupt) as error:
         failure(report, error)
     finally:

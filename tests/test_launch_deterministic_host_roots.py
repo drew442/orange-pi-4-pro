@@ -33,7 +33,7 @@ def pin(raw):
 
 def source_contents():
     names = subprocess.check_output(['git', '-C', str(REPO), 'ls-files', '-z']).decode().split('\0')
-    names += [L.SELF, L.HELPER]
+    names += [L.SELF, L.HELPER, *MAINTENANCE.SOURCES]
     return {name: (REPO / name).read_bytes() for name in names if name}
 
 
@@ -65,7 +65,7 @@ class DeterministicLauncherTests(unittest.TestCase):
 
     def test_contract_and_pure_plan_keep_old_policy_and_closure(self):
         before = MAINTENANCE.entries()
-        self.assertEqual(len(MAINTENANCE.SOURCES), 68)
+        self.assertEqual(len(MAINTENANCE.SOURCES), 70)
         self.assertNotIn(L.HELPER, MAINTENANCE.SOURCES)
         data = source_contents()
         with contextlib.ExitStack() as stack:

@@ -41,7 +41,7 @@ class MaintenanceToolsTests(unittest.TestCase):
 
     def test_real_sources_are_exact_and_allowlist_is_closed(self):
         values = TOOLS.entries()
-        self.assertEqual(len(TOOLS.SOURCES), 68)
+        self.assertEqual(len(TOOLS.SOURCES), 70)
         self.assertEqual(len(TOOLS.LEGACY_SOURCES), 39)
         self.assertEqual(set(TOOLS.SOURCES) - set(TOOLS.LEGACY_SOURCES), {
             'configs/guest_registry.py', 'configs/guest_lifecycle.py', 'configs/guest_qmp.py',
@@ -57,7 +57,11 @@ class MaintenanceToolsTests(unittest.TestCase):
             'scripts/backup-managed-guest.py', 'scripts/reopen-guest-admission.py',
             'scripts/managed-guest-archive.py', 'scripts/managed-guest-restore-source.py',
             'scripts/verify-managed-guest-backup.py', 'scripts/guest-boot-state.py',
-            'scripts/run-managed-guest.py', 'scripts/guest-storage-maintenance.py'})
+            'scripts/run-managed-guest.py', 'scripts/guest-storage-maintenance.py',
+            'scripts/write-known-nvme-boot.py', 'scripts/guest-boot-accounts.py'})
+        for helper in ('scripts/write-known-nvme-boot.py', 'scripts/guest-boot-accounts.py'):
+            self.assertNotIn(helper, TOOLS.LEGACY_SOURCES)
+            self.assertNotIn(helper, TOOLS.ENTRYPOINTS.values())
         self.assertIn('build/timesync-state.py', TOOLS.SOURCES)
         self.assertEqual(set(values), set(TOOLS.SOURCES) | {'package.json'})
         for name in TOOLS.SOURCES:

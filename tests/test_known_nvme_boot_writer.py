@@ -16,7 +16,27 @@ W = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(W)
 
 
+class NonAuthorityAdmissionFixture:
+    """Core byte-copy fixtures substitute exclusion; no admission/physical proof."""
+    def check(self):
+        return self
+
+    check_consumers = check
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *unused):
+        pass
+
+
 class WriterTests(unittest.TestCase):
+    def setUp(self):
+        exclusion = patch.object(W.OfflineAdmission, 'acquire',
+                                 return_value=NonAuthorityAdmissionFixture())
+        exclusion.start()
+        self.addCleanup(exclusion.stop)
+
     def test_pins(self):
         manifest = json.loads((Path(__file__).resolve().parents[1] / 'docs/evidence/storage-write-authorization-20261108.json').read_text())
         self.assertIsInstance(manifest, dict)

@@ -12,9 +12,16 @@ onto the normalized root pair.
 `scripts/restore-known-host-state.py` restores only `/dev/nvme0n1p2`, `p3` and
 `p4`, in that order. The fixed namespace is the 256060514304-byte SPCC M.2 PCIe
 SSD, serial `134807190FC700149277`. ROOT-A/B are 4 GiB each; STATE is 8 GiB,
-UUID `360dfb39-f49f-487e-b307-0bb887c854c5`. The helper does not mount, replay a
-journal, select a root or reboot. BOOT, GPT, guest storage, SD and SPI are preserved.
+UUID `360dfb39-f49f-487e-b307-0bb887c854c5`. The current source candidate performs
+a protected read-only p5 probe in a private child namespace; it does not replay
+a journal, select a root or reboot. BOOT, GPT, guest storage, SD and SPI are preserved.
 Its existing storage authorization requires no new permission prompt.
+
+The physical result above covers the earlier released tool. The candidate's
+[offline admission and managed-storage exclusion](guest-maintenance-admission.md#bootstrap-preparation-boundary)
+require separate physical qualification. It refuses dirty/unknown p5 or any
+managed lifecycle marker before opening writable root/STATE targets. Use
+coherent managed guest recovery rather than restoring old raw STATE over p5.
 
 Restoration is nontransactional. Any failure or missing final success means
 remain in RAM recovery and retry the complete authenticated set. An unexpected
@@ -84,9 +91,10 @@ executes only that dependency's authenticated bytes. Use a root:root-owned mode-
 directory `/run/a733-restore`; all staged files are mode 0600, regular and
 single-link. Authenticate both source scripts against the reviewed source pins
 before invoking them. The restore helper SHA-256 is
-`2332cae64cafdc03cde0e7023df460235a89efcdd5b2d9ed376389421e9e0c9f`;
-its adjacent dependency is 28,670 bytes, SHA-256
-`39adee8bd81186bc1665701843d393c9ceb7f16466fca304b6a3cf43993999d9`.
+`149a1cde291fc547dceccbf143451667014a8772bd8a5512e5220f020a254688`;
+its adjacent dependency is 61,456 bytes, SHA-256
+`ff47fdba18998527a4becf5e29c1de795bec53a5251039edd6a7db8db954a45b`.
+These are candidate source pins, not the earlier physical test's tool identity.
 No private STATE archive belongs in Git or public delivery.
 
 The total encoded set must fit the fixed 2 GiB limit and available tmpfs; at

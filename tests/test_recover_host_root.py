@@ -1,4 +1,7 @@
-"""Small, mocked policy/mount fixtures; these do not establish board recovery."""
+"""Storage-core fixtures bypass admission explicitly and confer no authority.
+
+Small mocked policy/mount fixtures do not establish board recovery.
+"""
 import contextlib
 import copy
 import hashlib
@@ -147,7 +150,7 @@ class RecoveryTests(unittest.TestCase):
         return self.reviewed
 
     def apply(self):
-        report = REC.apply(self.args, self.manifest, self.reviewed)
+        report = REC._apply_core(self.args, self.manifest, self.reviewed)
         self.assertFalse(report['block_writes_performed'])
         self.assertFalse(report['root_switched'])
         self.assertEqual(self.root.read_bytes(), self.content)
@@ -338,7 +341,7 @@ class RecoveryTests(unittest.TestCase):
             self.events.append('journal')
             self.root.write_bytes(b'x' * SIZE)
         with mock.patch.object(REC.CONTROL, 'journal_store', side_effect=store):
-            report = REC.apply(self.args, self.manifest, self.reviewed)
+            report = REC._apply_core(self.args, self.manifest, self.reviewed)
         self.assertTrue(report['journal_durable'])
         self.assertFalse(report['selection_write_attempted'])
         self.assertTrue(report['state_unmounted'])
@@ -390,7 +393,7 @@ class RecoveryTests(unittest.TestCase):
     def test_sources_and_plan_checked_against_whole_disk(self):
         self.plan()
         checked = []
-        report = REC.apply(self.args, self.manifest, self.reviewed,
+        report = REC._apply_core(self.args, self.manifest, self.reviewed,
                            plan_check=lambda disk: checked.append(disk))
         self.assertTrue(report['success'], report)
         self.assertTrue(checked)

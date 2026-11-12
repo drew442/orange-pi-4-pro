@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """Offline selector recovery on one fresh sparse GPT loop disk, never hardware.
 
-Only an authenticated candidate directory is accepted. NVMe/RAM policy entry
-and interactive authorization are explicit fixtures; actual GPT/partitions,
-readonly claims, hashes, state mount, journal and publication execute natively.
+Only an authenticated candidate directory is accepted. Platform/native RAM,
+offline admission and TTY authorization are explicit fixtures with no authority.
+Actual GPT/partitions, readonly claims, hashes, state mount, journal and
+publication execute natively through PUBLIC apply. No A733/KVM acceptance.
 """
 import argparse
 import copy
+import contextlib
 import hashlib
 import importlib.util
 import json
@@ -17,6 +19,7 @@ import stat
 import subprocess
 import sys
 import tempfile
+import threading
 import time
 from types import SimpleNamespace
 from unittest import mock
@@ -30,6 +33,98 @@ POLICY=REC.adjacent('recovery_loop_policy','host-recovery-target.py')
 SIZE=250_000_000_000
 ROOT_BYTES=4*1024**3
 require=REC.require
+
+
+
+def descriptor_snapshot():
+    descriptors = {}
+    for entry in Path('/proc/self/fd').iterdir():
+        try:
+            info = os.fstat(int(entry.name))
+            descriptors[int(entry.name)] = (info.st_dev, info.st_ino, os.readlink(entry))
+        except FileNotFoundError:
+            pass
+        except OSError as error:
+            if error.errno != 9:
+                raise
+    return descriptors
+
+
+def fixture_offline_admission(owned_check, released, paths=('/', '/run', '/proc')):
+    """Test custody only: no native RAM, admission record or consumer authority.
+
+    The intentional private mount namespace is permitted, as in the public
+    contract. This fixture never substitutes for native OfflineAdmission tests.
+    """
+    instances = []
+
+    class FixtureOfflineAdmission:
+        @classmethod
+        def acquire(cls, boot_id):
+            require(boot_id == Path('/proc/sys/kernel/random/boot_id').read_text().strip(),
+                    'fixture boot UUID differs')
+            require(not instances or instances[-1].closed, 'overlapping fixture custody')
+            held = cls()
+            held.creator = os.getpid(), threading.current_thread()
+            held.boot_id, held.closed = boot_id, False
+            held.fds, held.identities = [], []
+            held.events, held.checks = ['acquire'], 0
+            instances.append(held)
+            try:
+                for path in paths:
+                    fd = os.open(path, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC)
+                    held.fds.append(fd)
+                    info = os.fstat(fd)
+                    held.identities.append((info.st_dev, info.st_ino, info.st_mode,
+                                            info.st_uid, info.st_gid))
+                held.check()
+                return held
+            except BaseException:
+                for fd in reversed(held.fds):
+                    os.close(fd)
+                held.fds = []
+                held.closed = True
+                raise
+
+        def creator_check(self):
+            require((os.getpid(), threading.current_thread()) == self.creator,
+                    'fixture custody changed process/thread')
+
+        def check(self):
+            self.creator_check()
+            require(not self.closed, 'fixture custody ended')
+            require(self.boot_id == Path('/proc/sys/kernel/random/boot_id').read_text().strip(),
+                    'fixture boot UUID changed')
+            for path, fd, expected in zip(paths, self.fds, self.identities):
+                for info in (os.fstat(fd), os.stat(path, follow_symlinks=False)):
+                    require((info.st_dev, info.st_ino, info.st_mode, info.st_uid, info.st_gid)
+                            == expected, 'fixture root/run/proc identity changed')
+            owned_check()
+            self.checks += 1
+            return self
+
+        def check_consumers(self):
+            self.check()
+            # A release census only, never the native consumer/admission census.
+            released(self.fds)
+            self.events.append('final-release-census')
+            return self
+
+        def close(self):
+            self.creator_check()
+            if self.closed:
+                return
+            try:
+                self.check()
+                released(self.fds)
+            finally:
+                for fd in reversed(self.fds):
+                    os.close(fd)
+                self.fds = []
+                self.closed = True
+                self.events.append('close')
+
+    return SimpleNamespace(OfflineAdmission=FixtureOfflineAdmission), instances
 
 
 def digest_file(path):
@@ -134,6 +229,8 @@ def verify(candidate,pin):
             image.flush()
             os.fsync(image.fileno())
         backing.chmod(0o600)
+        workspace_identity = (workspace.stat().st_dev, workspace.stat().st_ino)
+        backing_identity = (backing.stat().st_dev, backing.stat().st_ino)
         loop=subprocess.check_output(['losetup','--find','--show','--partscan',str(backing)],text=True).strip()
         subprocess.run(['udevadm','settle','--timeout=10'],check=True,capture_output=True,timeout=15)
         paths={part['number']:partition(loop,backing,part) for part in parts}
@@ -178,8 +275,20 @@ def verify(candidate,pin):
         state=dict(records[4],uuid=state_uuid,mountpoint=str(REC.MOUNTPOINT))
         context={'disk':disk,'target':records[2],'state':state,'gpt':None}
         real_open=os.open
+        def owned_check():
+            require((workspace.stat().st_dev, workspace.stat().st_ino) == workspace_identity
+                    and (backing.stat().st_dev, backing.stat().st_ino) == backing_identity,
+                    'owned workspace/backing inode changed')
+            info = workspace.lstat()
+            require(info.st_uid == info.st_gid == 0 and stat.S_IMODE(info.st_mode) == 0o700,
+                    'unsafe private workspace')
+            info = backing.lstat()
+            require(info.st_gid == 0 and stat.S_IMODE(info.st_mode) == 0o600,
+                    'unsafe private backing')
+            for part in parts:
+                partition(loop, backing, part)
         def snapshot(arguments,mounted_state=False):
-            owned(loop,backing)
+            owned_check()
             POLICY.LIVE.sysfs_geometry(nodes,geometry)
             table=POLICY.MANAGEMENT.mount_table(Path('/proc/self/mountinfo').read_text())
             POLICY.mounted_state_policy(table,nodes[4],mounted_state)
@@ -223,9 +332,67 @@ def verify(candidate,pin):
             require(command not in (REC.WRITER.BLKFLSBUF,REC.WRITER.BLKRRPART),
                     'controller attempted raw block maintenance')
             return real_ioctl(fd,command,*arguments)
+        baseline_descriptors = None
+        update_lock_identity = None
+        custody_events = []
+        def released(fixture_fds):
+            owned_check()
+            actual = descriptor_snapshot()
+            require({fd: value for fd, value in actual.items() if fd not in fixture_fds}
+                    == baseline_descriptors, 'recovery retained engine/source descriptors')
+            require(not REC.own_state_mounted(context) and not REC.MOUNTPOINT.exists(),
+                    'recovery retained state mount/directory')
+            # Independently probe real recovery/whole-disk flocks and root/state
+            # exclusive kernel claims after the actual kernel unmount.
+            for path in (REC.LOCK, Path(loop), paths[2], paths[4]):
+                flags = os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK
+                if path in (paths[2], paths[4]):
+                    flags |= os.O_EXCL
+                fd = os.open(path, flags)
+                try:
+                    REC.fcntl.flock(fd, REC.fcntl.LOCK_EX | REC.fcntl.LOCK_NB)
+                finally:
+                    os.close(fd)
+            require(update_lock_identity is not None, 'actual update lock was not observed')
+            require(all(update_lock_identity not in line.split()
+                        for line in Path('/proc/locks').read_text().splitlines()),
+                    'state update lock remains held')
+        admission, custody = fixture_offline_admission(owned_check, released)
+        def mutation(event):
+            require(len(custody) == 1, 'mutation outside fixture custody')
+            custody[-1].check()
+            custody_events.append(event)
+        real_run = subprocess.run
+        def observed_run(command, *positional, **keywords):
+            if Path(command[0]).name in ('mount', 'umount') and str(REC.MOUNTPOINT) in command:
+                mutation(Path(command[0]).name)
+            return real_run(command, *positional, **keywords)
+        real_journal, real_publish = REC.CONTROL.journal_store, REC.CONTROL.publish_selector
+        def observed_journal(*positional, **keywords):
+            mutation('journal')
+            require(REC.own_state_mounted(context), 'journal outside actual state mount')
+            return real_journal(*positional, **keywords)
+        def observed_publish(*positional, **keywords):
+            mutation('publish')
+            require(REC.own_state_mounted(context), 'publication outside actual state mount')
+            return real_publish(*positional, **keywords)
+        real_update_lock = REC.UPDATE.update_lock
+        @contextlib.contextmanager
+        def observed_update_lock(*positional, **keywords):
+            nonlocal update_lock_identity
+            with real_update_lock(*positional, **keywords) as fd:
+                mutation('update-lock')
+                info = os.fstat(fd)
+                update_lock_identity = f'{os.major(info.st_dev):02x}:{os.minor(info.st_dev):02x}:{info.st_ino}'
+                yield fd
         before_state=region(backing,parts[3]['start_bytes'],parts[3]['size_bytes'])
         with mock.patch.object(REC,'snapshot',new=snapshot), \
              mock.patch.object(REC,'authorize',new=lambda unused:None), \
+             mock.patch.object(REC,'offline_policy',new=lambda:admission), \
+             mock.patch.object(REC.subprocess,'run',new=observed_run), \
+             mock.patch.object(REC.UPDATE,'update_lock',new=observed_update_lock), \
+             mock.patch.object(REC.CONTROL,'journal_store',new=observed_journal), \
+             mock.patch.object(REC.CONTROL,'publish_selector',new=observed_publish), \
              mock.patch.object(REC.os,'open',new=open_audit), \
              mock.patch.object(REC.os,'pwrite',new=no_write), \
              mock.patch.object(REC.fcntl,'ioctl',new=ioctl):
@@ -233,7 +400,18 @@ def verify(candidate,pin):
             require(plan['state_image_before']==before_state,'read-only prepare changed state')
             require(region(backing,parts[3]['start_bytes'],parts[3]['size_bytes'])==before_state,
                     'state changed during read-only preparation')
+            baseline_descriptors = descriptor_snapshot()
+            # Public API borrows these externally held authenticated source FDs.
+            # Keep them for later readback: no source_cleanup ownership transfer.
             report=REC.apply(args,manifest,plan)
+            require(descriptor_snapshot() == baseline_descriptors, 'public apply leaked descriptors')
+            require(len(custody) == 1 and custody[0].closed and custody[0].checks > 2
+                    and custody[0].events == ['acquire', 'final-release-census', 'close'],
+                    'public apply fixture lifetime differs')
+            require(custody_events == ['mount', 'update-lock', 'journal', 'publish', 'umount'],
+                    'actual state mutations escaped ordered fixture custody')
+            require(report['offline_admission'] == dict(acquired=True, final_consumers_checked=True,
+                                                       closed=True), 'public admission lifecycle differs')
         require(report['success'] and report['selection_published'] and report['publication_durable']
                 and report['state_may_be_modified'] and report['state_unmounted'],
                 'offline recovery failed: '+json.dumps(report))
@@ -259,7 +437,10 @@ def verify(candidate,pin):
                 and bytes.fromhex(journal['after_selector_hex'])==selected,'offline journal differs')
         require(offline('/state-sentinel',4096)==state_sentinel,'unrelated state changed')
         manifest.check()
-        result={'classification':'fresh sparse-GPT loop recovery only; NVMe/RAM entry policy and TTY are fixtures; no boot or physical failed-host recovery proof',
+        result={'classification':'fresh sparse-GPT loop PUBLIC apply only; platform/native RAM/admission/TTY replaced by no-authority fixtures; no A733 boot, KVM or physical recovery acceptance',
+            'fixture_custody_events':custody_events, 'fixture_lifetime':custody[0].events,
+            'source_ownership':'public apply borrowed external authenticated manifest FDs; retained for readback, closed by harness finally; no authority',
+            'engine_descriptors_locks_and_kernel_claims_released_before_fixture_close':True,
             'report':report,'logical_disk_bytes':SIZE,'root_bytes':ROOT_BYTES,
             'state_bytes':parts[3]['size_bytes'],'full_state_prepare_unchanged':True,
             'retained_root_unchanged':True,'gpt_and_boot_guest_sentinels_unchanged':True,

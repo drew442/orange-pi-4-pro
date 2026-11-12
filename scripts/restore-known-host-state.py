@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Prepare/apply a pinned, offline, same-board p2/p3/p4 raw backup cohort.
 
-No mount, replay, selector edit, reboot or automatic rollback is performed.
+No writable mount, replay, selector edit, reboot or automatic rollback is performed.
+A protected private child may mount p5 read-only to refuse managed metadata loss.
 An interrupted apply is nontransactional: remain in RAM and retry the full set.
 """
 import argparse
@@ -21,9 +22,11 @@ import types
 import uuid
 import zlib
 
-HELPER_SHA256 = '39adee8bd81186bc1665701843d393c9ceb7f16466fca304b6a3cf43993999d9'
-HELPER_BYTES = 28670
+HELPER_SHA256 = 'ff47fdba18998527a4becf5e29c1de795bec53a5251039edd6a7db8db954a45b'
+HELPER_BYTES = 61456
 STATE_UUID = '360dfb39-f49f-487e-b307-0bb887c854c5'
+# Known installed full-image p5 identity: docs/evidence/production-baseline-20261112.json.
+GUEST_UUID = '298b281a-d10e-44eb-bdb9-285e27eaafad'
 SIZES = {2: 4294967296, 3: 4294967296, 4: 8589934592}
 UUIDS = {2: 'a7330000-0000-4000-8000-00000000000a',
          3: 'a7330000-0000-4000-8000-00000000000b', 4: STATE_UUID}
@@ -283,9 +286,11 @@ def store_report(fd, report):
     os.fsync(fd)
 
 
-def write_all(fd, data, accepted=None):
+def write_all(fd, data, accepted=None, check=None):
     offset = 0
     while offset < len(data):
+        if check is not None:
+            check()
         count = os.write(fd, memoryview(data)[offset:])
         require(0 < count <= len(data) - offset, 'invalid or zero write')
         offset += count
@@ -293,7 +298,7 @@ def write_all(fd, data, accepted=None):
             accepted(count)
 
 
-def restore_stream(source_fd, target_fd, entry, state):
+def restore_stream(source_fd, target_fd, entry, state, check=None):
     """One gzip member, exact encoded EOF, bounded expansion and raw pin."""
     decoder, digest, raw, encoded = zlib.decompressobj(31), hashlib.sha256(), 0, 0
     progress = Progress(f'p{entry["number"]} restore', entry['raw_bytes'])
@@ -311,7 +316,7 @@ def restore_stream(source_fd, target_fd, entry, state):
             raw += len(output)
             require(raw <= entry['raw_bytes'], 'gzip expansion exceeds partition bound')
             digest.update(output)
-            write_all(target_fd, output, accepted)
+            write_all(target_fd, output, accepted, check)
             require(not decoder.unused_data, 'trailing gzip data/member forbidden')
             if decoder.eof:
                 require(encoded == entry['encoded_bytes'] and not chunk, 'gzip ended before encoded EOF')
@@ -334,7 +339,8 @@ def plan_for(index, args):
 
 def run(args, boot, report, report_fd, mounts):
     require(len({args.backup_index, args.plan, args.report}) == 3, 'input/output paths overlap')
-    with contextlib.ExitStack() as stack:
+    # Admission closes last, after target, subsystem and authenticated source cleanup.
+    with contextlib.ExitStack() as admission_stack, contextlib.ExitStack() as stack:
         fd, before, size = stack.enter_context(source(boot, mounts, args.backup_index))
         index = validate_index(pinned_json(fd, size, args.index_sha256), boot)
         source_identity(boot, fd, args.backup_index, size, before)
@@ -366,54 +372,72 @@ def run(args, boot, report, report_fd, mounts):
         def check_sources():
             for sfd, path, length, identity in pinned_inputs:
                 source_identity(boot, sfd, path, length, identity)
-        with recovery_lock(), targets(boot, args.expected_boot_id, args.operation == 'apply') as (disk, parts, check):
-            # p1 is never opened writable, and GPT/BOOT remain byte-for-byte pinned.
-            require(hash_region(disk, 1048576, boot.SOURCE_BYTES) == boot.NEW_SHA256,
-                    'compatible current BOOT SHA-256 differs')
-            check()
-            check_sources()
-            if args.operation == 'prepare':
-                out = boot.fresh_output(args.plan, mounts)
+        guard = None
+        if args.operation == 'apply':
+            # Authenticate the complete archive cohort before any runtime/probe mutation.
+            guard = boot.OfflineAdmission.acquire(args.expected_boot_id)
+            # Register close before any further check can fail.
+            admission_stack.callback(guard.close)
+            guard.check()
+        with recovery_lock():
+            if guard is not None:
                 try:
-                    write_all(out, canonical(plan))
-                    os.fsync(out)
-                finally:
-                    os.close(out)
-                report['plan_sha256'] = hashlib.sha256(canonical(plan)).hexdigest()
-            else:
-                for entry, afd, path, identity in held:
-                    source_identity(boot, afd, path, entry['encoded_bytes'], identity)
-                report['status'] = 'writing-nontransactional'
-                print('Restoring fixed p2 -> p3 -> p4; interruption requires full retry in RAM.',
-                      file=sys.stderr, flush=True)
-                sys.stderr.flush()
-                store_report(report_fd, report)  # durable intent before first device write
-                for entry, afd, path, identity in held:
-                    number = entry['number']
-                    check()
-                    check_sources()
-                    source_identity(boot, afd, path, entry['encoded_bytes'], identity)
-                    state = report['partitions'][str(number)]
-                    # A failed write syscall may have modified media without returning a count.
-                    # Persist uncertainty before entering any partition write operation.
-                    report.update(attempted=True, may_have_modified=True)
-                    state.update(attempted=True, may_have_modified=True)
-                    store_report(report_fd, report)
-                    restore_stream(afd, parts[number], entry, state)
-                    source_identity(boot, afd, path, entry['encoded_bytes'], identity)
-                    print(f'Flushing p{number}...', file=sys.stderr, flush=True)
-                    os.fsync(parts[number])
-                    fcntl.ioctl(parts[number], boot.BLKFLSBUF)
-                    state['flush_complete'] = True
-                    if args.readback:
-                        require(hash_fd(parts[number], entry['raw_bytes'], f'p{number} readback') ==
-                                entry['raw_sha256'], 'partition readback SHA-256 differs')
-                        state['readback_complete'] = True
-                    source_identity(boot, afd, path, entry['encoded_bytes'], identity)
-                    check()
-                    check_sources()
-                    store_report(report_fd, report)
-                # ExitStack closes all claims and all held sources before success is assigned.
+                    report['p5_legacy_restore_probe'] = boot.refuse_managed_p5(GUEST_UUID, guard)
+                except BaseException as error:
+                    if hasattr(error, 'receipt'):
+                        report['p5_legacy_restore_probe'] = error.receipt
+                    raise
+            with targets(boot, args.expected_boot_id, args.operation == 'apply') as (disk, parts, check):
+                # p1 is never opened writable, and GPT/BOOT remain byte-for-byte pinned.
+                require(hash_region(disk, 1048576, boot.SOURCE_BYTES) == boot.NEW_SHA256,
+                        'compatible current BOOT SHA-256 differs')
+                check()
+                check_sources()
+                if args.operation == 'prepare':
+                    out = boot.fresh_output(args.plan, mounts)
+                    try:
+                        write_all(out, canonical(plan))
+                        os.fsync(out)
+                    finally:
+                        os.close(out)
+                    report['plan_sha256'] = hashlib.sha256(canonical(plan)).hexdigest()
+                else:
+                    for entry, afd, path, identity in held:
+                        source_identity(boot, afd, path, entry['encoded_bytes'], identity)
+                    report['status'] = 'writing-nontransactional'
+                    print('Restoring fixed p2 -> p3 -> p4; interruption requires full retry in RAM.',
+                          file=sys.stderr, flush=True)
+                    sys.stderr.flush()
+                    store_report(report_fd, report)  # durable intent before first device write
+                    for entry, afd, path, identity in held:
+                        number = entry['number']
+                        guard.check()
+                        check()
+                        check_sources()
+                        source_identity(boot, afd, path, entry['encoded_bytes'], identity)
+                        state = report['partitions'][str(number)]
+                        # A failed write syscall may have modified media without returning a count.
+                        # Persist uncertainty before entering any partition write operation.
+                        report.update(attempted=True, may_have_modified=True)
+                        state.update(attempted=True, may_have_modified=True)
+                        store_report(report_fd, report)
+                        restore_stream(afd, parts[number], entry, state, check=guard.check)
+                        source_identity(boot, afd, path, entry['encoded_bytes'], identity)
+                        print(f'Flushing p{number}...', file=sys.stderr, flush=True)
+                        os.fsync(parts[number])
+                        fcntl.ioctl(parts[number], boot.BLKFLSBUF)
+                        state['flush_complete'] = True
+                        if args.readback:
+                            require(hash_fd(parts[number], entry['raw_bytes'], f'p{number} readback') ==
+                                    entry['raw_sha256'], 'partition readback SHA-256 differs')
+                            state['readback_complete'] = True
+                        source_identity(boot, afd, path, entry['encoded_bytes'], identity)
+                        check()
+                        check_sources()
+                        store_report(report_fd, report)
+                    # ExitStack closes all claims and all held sources before success is assigned.
+        if guard is not None:
+            guard.check_consumers()  # Explicit final census, never a per-chunk scan.
     report['status'] = 'operations-complete-awaiting-terminal-receipt'
 
 

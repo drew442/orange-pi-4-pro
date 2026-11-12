@@ -22,6 +22,12 @@ hardware boot validation are separate requirements.
 
 ## Offline prerequisites
 
+The current source candidate also retains the protected initialization interlock
+and, if present, an existing closed admission runtime's exclusive lease through
+all writes and cleanup. Open admission or active consumers refuse the operation;
+the helper never initializes, resets or reopens admission. This integration
+awaits physical qualification. [Candidate protocol](guest-maintenance-admission.md#bootstrap-preparation-boundary).
+
 Boot the private maintenance RAM root, retain its observed boot ID as the
 caller pin, and leave all NVMe partitions unmounted. The helper requires root,
 the pinned `6.6.98-a733-diag` maintenance kernel, initial host PID/user

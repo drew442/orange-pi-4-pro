@@ -27,7 +27,11 @@ class RestoreTests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.base = Path(self.temp.name)
-        self.boot = M.policy()
+        # Fixture imports source directly; production still authenticates its exact pin.
+        spec = importlib.util.spec_from_file_location('restore_fixture_policy',
+            ROOT / 'scripts/write-known-nvme-boot.py')
+        self.boot = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(self.boot)
         # Model only root ownership; modes, links, sizes and inode changes stay real.
         def root_owned(probe):
             def inspect(*args, **kwargs):
@@ -95,8 +99,18 @@ class RestoreTests(unittest.TestCase):
     def claims(self, *_args):
         yield self.disk, self.parts, lambda: None
 
+    @contextlib.contextmanager
+    def admission_context(self):
+        # Core format/write tests deliberately substitute exclusion and p5 proof.
+        # This fake grants no production authority; native composition is tested separately.
+        guard = mock.MagicMock()
+        with mock.patch.object(self.boot.OfflineAdmission, 'acquire', return_value=guard), \
+             mock.patch.object(self.boot, 'refuse_managed_p5', return_value={
+                 'status': 'fixture-only-no-authority', 'hardware_acceptance': False}):
+            yield
+
     def run_restore(self):
-        with mock.patch.object(M, 'targets', self.claims), \
+        with self.admission_context(), mock.patch.object(M, 'targets', self.claims), \
              mock.patch.object(M, 'recovery_lock', contextlib.nullcontext), \
              mock.patch.object(M, 'hash_region', return_value=self.boot.NEW_SHA256), \
              mock.patch.object(M.fcntl, 'ioctl', return_value=0):
@@ -210,10 +224,10 @@ class RestoreTests(unittest.TestCase):
         for failed_n in self.sizes:
             self.report['status'] = 'failed-or-refused'
             actual = M.restore_stream
-            def stream(fd, target, entry, state):
+            def stream(fd, target, entry, state, check=None):
                 if entry['number'] == failed_n:
                     raise InterruptedError('injected signal')
-                return actual(fd, target, entry, state)
+                return actual(fd, target, entry, state, check=check)
             with mock.patch.object(M, 'restore_stream', side_effect=stream), self.assertRaises(InterruptedError):
                 self.run_restore()
             self.assertNotEqual(self.report['status'], 'restore-complete')
@@ -273,7 +287,7 @@ class RestoreTests(unittest.TestCase):
         if self.args.readback:
             argv.append('--readback')
         output = io.StringIO()
-        with mock.patch.object(M, 'policy', return_value=self.boot), \
+        with self.admission_context(), mock.patch.object(M, 'policy', return_value=self.boot), \
              mock.patch.object(M, 'context', return_value=[]), \
              mock.patch.object(M, 'targets', self.claims), \
              mock.patch.object(M, 'recovery_lock', contextlib.nullcontext), \
@@ -374,9 +388,12 @@ class RestoreTests(unittest.TestCase):
         directory = '/dev/shm' if os.access('/dev/shm', os.W_OK) else None
         with tempfile.TemporaryDirectory(dir=directory) as temp:
             target = Path(temp) / 'write-known-nvme-boot.py'
-            target.write_bytes((ROOT / 'scripts/write-known-nvme-boot.py').read_bytes())
+            helper_data = (ROOT / 'scripts/write-known-nvme-boot.py').read_bytes()
+            target.write_bytes(helper_data)
             os.utime(target, (1, 1))
-            with mock.patch.object(M, '__file__', str(Path(temp) / 'restore-known-host-state.py')):
+            with mock.patch.object(M, '__file__', str(Path(temp) / 'restore-known-host-state.py')), \
+                 mock.patch.object(M, 'HELPER_BYTES', target.stat().st_size), \
+                 mock.patch.object(M, 'HELPER_SHA256', hashlib.sha256(helper_data).hexdigest()):
                 loaded = M.policy()
             self.assertEqual(loaded.SERIAL, self.boot.SERIAL)
             self.assertGreater(os.stat(target).st_atime, 1)

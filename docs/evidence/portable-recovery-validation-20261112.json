@@ -1,0 +1,397 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "result": "pass",
+  "scope": "Uninstalled portable offline exclusion, protected p5 probe, BOOT/paired restore/RAM-selector integration, bootstrap account discovery and packaging; native privileged Ubuntu software and disposable kernel loops only",
+  "builder": "drew@build.drewnet.online",
+  "full_Ubuntu_tests": 3210,
+  "failures_errors_skips": 0,
+  "shell_suites": 5,
+  "diagnostic_cases": 5,
+  "parsed_TOML": 5,
+  "locked_source_files": 1056,
+  "source_lock": {
+    "bytes": 169355,
+    "sha256": "5f55f80c01ea0155c50eedf5826f0eebd87777daaf2c2cb3b5f30100f314776a",
+    "index_tree": "01b04194e2781832f8b5009dd3494f98e84b4aa4"
+  },
+  "source": {
+    "build/maintenance-tools.py": {
+      "bytes": 15806,
+      "sha256": "60d527ef31c2a81b59f0afb016251904e03612f44b20361a8146a17ba4dc6580"
+    },
+    "scripts/guest-boot-accounts.py": {
+      "bytes": 12059,
+      "sha256": "e87300426f16c870f0edce1e16093555380891b2b250e520fc0d2dbfb7f2d6b0"
+    },
+    "scripts/recover-host-root.py": {
+      "bytes": 25705,
+      "sha256": "6cd1f903e3a49ea4266e87a83690cddc6c4ed04fe28b04519f7aaf06389e973e"
+    },
+    "scripts/restore-known-host-state.py": {
+      "bytes": 24522,
+      "sha256": "149a1cde291fc547dceccbf143451667014a8772bd8a5512e5220f020a254688"
+    },
+    "scripts/write-known-nvme-boot.py": {
+      "bytes": 61456,
+      "sha256": "ff47fdba18998527a4becf5e29c1de795bec53a5251039edd6a7db8db954a45b"
+    },
+    "tests/test_guest_boot_accounts.py": {
+      "bytes": 19012,
+      "sha256": "4fcd17e453b42475515346b0c6e4b09c02110978333bb87b7fa91f53f5773ccc"
+    },
+    "tests/test_host_payload.py": {
+      "bytes": 28570,
+      "sha256": "98298ac92316c67474fcded56ec44842e444c945a6fbacacb850ad6bcdfcfdff"
+    },
+    "tests/test_known_host_state_restore.py": {
+      "bytes": 23275,
+      "sha256": "1945da4283568cc8b663b6c37c18ae01e37ff5460156483620b288f1764f9144"
+    },
+    "tests/test_known_nvme_boot_writer.py": {
+      "bytes": 33813,
+      "sha256": "cc902d7084a6e5404c7bbf6203bce3b268470c2bd758c47c63e83d8d3bb99243"
+    },
+    "tests/test_launch_deterministic_host_roots.py": {
+      "bytes": 11624,
+      "sha256": "8883d3ab3965a0bcce35c5c9f9af15cabc2b62583f12ad45adc4bb1f20c185c0"
+    },
+    "tests/test_maintenance_tools.py": {
+      "bytes": 18492,
+      "sha256": "cf4d8d94b4cd81a2fba4ccf16f4fb68b6d2a11287abc09eb948a97404aac9120"
+    },
+    "tests/test_offline_boot_admission.py": {
+      "bytes": 11064,
+      "sha256": "9d48b295442d46d1dca7532ad21666567f50aceadae814a6ac68a5769414e647"
+    },
+    "tests/test_offline_guest_admission.py": {
+      "bytes": 11644,
+      "sha256": "40d96c0b3624d2329832e13b3818a9c3860ae52b74fd2831445f5a9bf345bcda"
+    },
+    "tests/test_offline_p5_probe.py": {
+      "bytes": 19213,
+      "sha256": "8cc5f3e8865c71a1ae561f79d163bf54766fbaba681c74a7e96adc4994b7a86f"
+    },
+    "tests/test_paired_restore_admission.py": {
+      "bytes": 13224,
+      "sha256": "47094bcbfb335050dcce10ac667823596cf50fc079e43963e71a7748809df596"
+    },
+    "tests/test_ram_recovery_admission.py": {
+      "bytes": 13916,
+      "sha256": "469114081b834854c25246e9df9a8a1a7729f3b44aa5296f2f2c0984c8c42cf6"
+    },
+    "tests/test_recover_host_root.py": {
+      "bytes": 21665,
+      "sha256": "1d25e70d2d8090c847cc30e14931bb7d0a1f16d8ffa076a112ffd26cdd7ca729"
+    },
+    "tests/verify_host_recovery_loop.py": {
+      "bytes": 25783,
+      "sha256": "d06458c7fdced7c1390d42d03c446d9b7cb07744665638c6cb8bd8ca55e0f0ae"
+    },
+    "tests/verify_offline_p5_probe_loop.py": {
+      "bytes": 9543,
+      "sha256": "a1a8ebe47880e3bd3569c997f75e2edb65164a1d27843f6fe00e3334f6412d26"
+    }
+  },
+  "documentation_after_frozen_run": {
+    "docs/guest-maintenance-admission.md": {
+      "bytes": 11381,
+      "sha256": "71e5dfc754f1a124b0fc02c70760cb7d1ca32d0ba62ac6e5e25b6dd0822617a8"
+    },
+    "docs/known-host-state-restore.md": {
+      "bytes": 9239,
+      "sha256": "855cf186b20d981830af2861a45665081059bce6309c23fbcf7a1bac562a0731"
+    },
+    "docs/known-nvme-boot-writer.md": {
+      "bytes": 12034,
+      "sha256": "2975a21055469916ae6103150e2599844b2c0c4d181d40a2420e8ccbf21631cc"
+    }
+  },
+  "independent_reviews": {
+    "offline-storage-integration-review-20261112.json": {
+      "bytes": 6447,
+      "sha256": "1b249b0c23885bd4d7efa9aea0f85795a82c172fd74e6c0dd9a3b1f27f2f7723"
+    },
+    "portable-offline-admission-review-20261112.json": {
+      "bytes": 10521,
+      "sha256": "90c3d93b40ce3457acff380385608f45f768404e79ff952bc2c9195431e3fdeb"
+    },
+    "guest-boot-accounts-review-20261112.json": {
+      "bytes": 4703,
+      "sha256": "bc8b9f1ec598907821d37487415c23e43ebb536781a3bb13f9a5d8a91191ee3c"
+    },
+    "ram-selector-admission-review-20261112.json": {
+      "bytes": 5675,
+      "sha256": "0ca9be416a175de0b4876a8a649fa8c84b0c0763fb729be34c8dd884755eef75"
+    },
+    "recovery-loop-independent-review-20261112.json": {
+      "bytes": 10871,
+      "sha256": "74992e4b542ced949a425caa0a1b2d1ebab5a1fef12d1d423ed9be0f99da9887"
+    }
+  },
+  "resource_sample_minima": {
+    "free_disk_bytes": 30122524672,
+    "MemAvailable_bytes": 6718488576
+  },
+  "packaging": {
+    "current_sources": 70,
+    "runtime_files": 71,
+    "entrypoints": 20,
+    "historical_sources": 39
+  },
+  "units": {
+    "suite": {
+      "RuntimeMaxUSec": "8h",
+      "MainPID": "0",
+      "Result": "success",
+      "ExecMainStatus": "0",
+      "CPUQuotaPerSecUSec": "2s",
+      "MemoryMax": "3221225472",
+      "SubState": "exited"
+    },
+    "loops": {
+      "RuntimeMaxUSec": "8h",
+      "MainPID": "0",
+      "Result": "success",
+      "ExecMainStatus": "0",
+      "CPUQuotaPerSecUSec": "2s",
+      "MemoryMax": "3221225472",
+      "SubState": "exited"
+    }
+  },
+  "custody": {
+    "bytes": 563200,
+    "sha256": "60a828fe5a8617486e43e38c7ab89cf96415c159978dafb62f780179a8d00ecf",
+    "native": "out/portable-recovery-validation-20261112-01/receipts.tar",
+    "builder": "/var/lib/a733-portable-recovery-validation-20261112-01/receipts.tar",
+    "units": {
+      "suite": {
+        "RuntimeMaxUSec": "8h",
+        "MainPID": "0",
+        "Result": "success",
+        "ExecMainStatus": "0",
+        "CPUQuotaPerSecUSec": "2s",
+        "MemoryMax": "3221225472",
+        "SubState": "exited"
+      },
+      "loops": {
+        "RuntimeMaxUSec": "8h",
+        "MainPID": "0",
+        "Result": "success",
+        "ExecMainStatus": "0",
+        "CPUQuotaPerSecUSec": "2s",
+        "MemoryMax": "3221225472",
+        "SubState": "exited"
+      }
+    }
+  },
+  "offline_exclusion": "Actual readonly initialization interlock EX and, when present, retained closed runtime/lease EX; creator/native entry/record custody, cheap checks through target/source cleanup, final consumer census and guard close before success. Never adopts or reopens admission.",
+  "p5_probe": "Exact clean supported journaled ext4, no recovery/orphan work; block RO before private-child readonly noload mount. Any lifecycle marker refuses raw STATE restore before writable roots/STATE. Unknown cleanup retains RO; only positively owned complete cleanup restores original flag.",
+  "accounts": "Protected published manual/managed identities including disabled guests are discovered before account writes; global name/UID conflicts reject before sorted batches. Original bootstrap owner retained. No unit/launch/admission opening.",
+  "kernel_loops": {
+    "recovery": {
+      "classification": "fresh sparse-GPT loop PUBLIC apply only; platform/native RAM/admission/TTY replaced by no-authority fixtures; no A733 boot, KVM or physical recovery acceptance",
+      "fixture_custody_events": [
+        "mount",
+        "update-lock",
+        "journal",
+        "publish",
+        "umount"
+      ],
+      "fixture_lifetime": [
+        "acquire",
+        "final-release-census",
+        "close"
+      ],
+      "source_ownership": "public apply borrowed external authenticated manifest FDs; retained for readback, closed by harness finally; no authority",
+      "engine_descriptors_locks_and_kernel_claims_released_before_fixture_close": true,
+      "report": {
+        "success": true,
+        "selection_write_attempted": true,
+        "selection_published": true,
+        "publication_durable": true,
+        "journal_visible": true,
+        "journal_durable": true,
+        "root_switched": false,
+        "block_writes_performed": false,
+        "classification": "offline selection metadata recovery only; no boot, health, KVM or physical recovery proof",
+        "state_write_attempted": true,
+        "state_may_be_modified": true,
+        "state_unmounted": true,
+        "operation": "offline-root-selection-recovery",
+        "plan_sha256": "42e1212f5687e080373a679358c0614dae7fe413cab748f19f22acf543d72138",
+        "target": {
+          "requested_path": "/dev/loop5p2",
+          "canonical_path": "/dev/loop5p2",
+          "major_minor": "259:1",
+          "model": "PRIVATE GPT LOOP",
+          "serial": "NO-PHYSICAL-TARGET",
+          "size_bytes": 4294967296,
+          "logical_sector_bytes": 512,
+          "physical_sector_bytes": 512,
+          "partition_number": 2,
+          "partition_uuid": "317c4ad2-f10e-4c56-887c-80dae46c21fc"
+        },
+        "manifest": {
+          "path": "/var/lib/a733-matched-updates-20261109-01/candidate-A/manifest.json",
+          "slot": "A",
+          "root": {
+            "bytes": 4294967296,
+            "sha256": "d868571e89216762ce9d8d2b8209884b958c53b7be97a215d8c4ddbc96ab7940"
+          },
+          "manifest_sha256": "4f28d75a14323c52aa976b00f957b56913b75472a07a717672abd33d439b97b9",
+          "identity": {
+            "device": 64512,
+            "inode": 826893,
+            "bytes": 32613,
+            "mtime_ns": 1794215619539277889,
+            "ctime_ns": 1794215619539277889
+          }
+        },
+        "expected_root": {
+          "bytes": 4294967296,
+          "sha256": "d868571e89216762ce9d8d2b8209884b958c53b7be97a215d8c4ddbc96ab7940"
+        },
+        "proposed_selector": {
+          "SCHEMA": "1",
+          "SLOT": "A",
+          "ROOT_UUID": "a7330000-0000-4000-8000-00000000000a",
+          "ROOT_MARKER_SHA256": "e1cc0395cd97e222e7d8146c05fa703e3ae9373b34bf1e24fbfb91a7e63dfa61",
+          "KERNEL_RELEASE": "6.6.98-a733-diag"
+        },
+        "state_mountpoint": "/run/a733-recovery-state",
+        "before_selector_hex": "62726f6b656e2073656c6563746f7200ff0a",
+        "before_selector_valid": false,
+        "journal_name": "recovery-42e1212f5687e080373a679358c0614dae7fe413cab748f19f22acf543d72138.json",
+        "selected_after": {
+          "SCHEMA": "1",
+          "SLOT": "A",
+          "ROOT_UUID": "a7330000-0000-4000-8000-00000000000a",
+          "ROOT_MARKER_SHA256": "e1cc0395cd97e222e7d8146c05fa703e3ae9373b34bf1e24fbfb91a7e63dfa61",
+          "KERNEL_RELEASE": "6.6.98-a733-diag"
+        },
+        "offline_admission": {
+          "acquired": true,
+          "final_consumers_checked": true,
+          "closed": true
+        }
+      },
+      "logical_disk_bytes": 250000000000,
+      "root_bytes": 4294967296,
+      "state_bytes": 8589934592,
+      "full_state_prepare_unchanged": true,
+      "retained_root_unchanged": true,
+      "gpt_and_boot_guest_sentinels_unchanged": true,
+      "unrelated_state_sentinel_unchanged": true,
+      "offline_selected_slot": "A",
+      "broken_selector_preserved_in_durable_journal": true,
+      "raw_block_opens": [
+        {
+          "major_minor": "259:1",
+          "exclusive": true
+        },
+        {
+          "major_minor": "259:3",
+          "exclusive": true
+        },
+        {
+          "major_minor": "259:1",
+          "exclusive": true
+        },
+        {
+          "major_minor": "259:3",
+          "exclusive": true
+        },
+        {
+          "major_minor": "259:1",
+          "exclusive": true
+        },
+        {
+          "major_minor": "259:3",
+          "exclusive": true
+        },
+        {
+          "major_minor": "7:5",
+          "exclusive": false
+        },
+        {
+          "major_minor": "259:1",
+          "exclusive": true
+        },
+        {
+          "major_minor": "259:3",
+          "exclusive": true
+        },
+        {
+          "major_minor": "259:1",
+          "exclusive": true
+        },
+        {
+          "major_minor": "259:3",
+          "exclusive": true
+        },
+        {
+          "major_minor": "7:5",
+          "exclusive": false
+        },
+        {
+          "major_minor": "259:1",
+          "exclusive": true
+        },
+        {
+          "major_minor": "259:3",
+          "exclusive": true
+        },
+        {
+          "major_minor": "7:5",
+          "exclusive": false
+        },
+        {
+          "major_minor": "259:1",
+          "exclusive": true
+        },
+        {
+          "major_minor": "259:3",
+          "exclusive": true
+        }
+      ],
+      "sources": {
+        "scripts/recover-host-root.py": {
+          "bytes": 25705,
+          "sha256": "6cd1f903e3a49ea4266e87a83690cddc6c4ed04fe28b04519f7aaf06389e973e"
+        },
+        "scripts/host-recovery-target.py": {
+          "bytes": 9770,
+          "sha256": "9901e568384fd7d4e5722e22eac84e936640f05e8fee4900b06d2b2b987e960b"
+        },
+        "scripts/select-host-root.py": {
+          "bytes": 21301,
+          "sha256": "5b631f162e8b18f0b96767abe42f2216de5bdc5ffe237f1ee23947c431c50c24"
+        },
+        "tests/verify_host_recovery_loop.py": {
+          "bytes": 25783,
+          "sha256": "d06458c7fdced7c1390d42d03c446d9b7cb07744665638c6cb8bd8ca55e0f0ae"
+        }
+      },
+      "cleanup": "owned state/private-run mounts unmounted, loop detached and workspace deleted"
+    },
+    "p5": {
+      "tests": 2,
+      "result": "pass",
+      "clean_absence_unchanged_bytes": true,
+      "dangling_marker_refused_unchanged_bytes": true
+    },
+    "limits": "Physical board/RAM/admission/TTY are explicit recovery fixtures; p5 target/GPT/all-namespace census are explicit substitutions. Actual kernel block RO/private mount/probe/unmount/cleanup run. No A733 physical/NVMe/KVM acceptance."
+  },
+  "retained_findings": [
+    "Original p5 fixture detach lacked lazy-detach acknowledgement and backing retention; corrected and independently tested on eight mocked cleanup paths before fresh successful builder loops.",
+    "Earlier p5 loop attempt failed because a reused loop minor retained BLKRO1; original failure retained. Only the newly owned blank fixture resets its initial RO baseline; production target policy still requires original zero."
+  ],
+  "limitations": [
+    "All components remain uninstalled; physical boot/restore/reinstall and actual managed KVM gates remain pending.",
+    "Boot account producer has no coordinator hook yet; no unattended guest qualification.",
+    "Current pure storage-policy schema work was added after freezing and is excluded from this suite/commit.",
+    "Five unchanged TOMLs are parsed natively; builder Python3.10 lacks tomllib.",
+    "No new endurance run; retained eight-hour acceptance remains unchanged."
+  ]
+}

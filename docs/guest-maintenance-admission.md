@@ -12,8 +12,19 @@ Initialization holds a protected root-owned RAM interlock while creating or
 opening the admission runtime. It releases that interlock before returning;
 the original fresh bootstrap owner keeps the separate exclusive admission lease.
 Existing runtime is validated and never reset. Portable RAM recovery must join
-the same initialization interlock before treating a missing runtime as safe;
-that recovery integration remains unfinished.
+the same initialization interlock before treating a missing runtime as safe.
+The current portable candidate retains that actual interlock and, when present,
+the closed admission record and exclusive lease through writes and cleanup.
+It cannot adopt, reopen or reset the runtime. Final consumer census and owned
+descriptor cleanup precede success. Physical deployment remains pending.
+
+Paired raw host restoration additionally probes the exact p5 under block-level
+read-only protection in a private child mount namespace. It requires supported
+clean ext4 with no recovery/orphan work and refuses any `.a733-lifecycle` marker,
+including a dangling symlink. It never treats an unreadable or dirty filesystem
+as absence. Unknown cleanup retains block RO and reports failure. A managed
+guest requires coherent restore of its matching authority and disk; deleting
+the marker or replacing old STATE is not recovery.
 
 The boot-state producer requires that original closed bootstrap owner and
 physical STATE/guest-storage context. It preserves an existing canonical registry
@@ -28,6 +39,12 @@ completed-cohort authentication, unit rendering and manual namespace publication
 before opening admission. [Initialization/boot-state checks](evidence/bootstrap-admission-validation-20261112.json)
 cover native locks and protected files with physical/PID1 substitutions. Runtime
 files must not be deleted or recreated to bypass a failed preparation.
+
+The reviewed account producer reserves identities from all protected published
+manual and managed enrollments, including disabled guests, before applying
+sorted account batches. It detects cross-guest conflicts before any account
+write and preserves `firstkvm` as manual. Account preparation grants no launch
+permission. Its boot hook remains unwired.
 
 ## Installed update and selection
 

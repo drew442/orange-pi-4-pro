@@ -69,12 +69,20 @@ architecture review. The following software components are reviewed and tested;
 | Single managed run controller | [Evidence](evidence/managed-service-validation-20261112.json). **3077** privileged Ubuntu tests and shell/diagnostic suites pass. Independent native shutdown/cleanup probes pass; healthy polling no longer spawns PID1 queries. Actual retained locks, run, fork/QMP surrogate and checkpoint compose with explicit platform/credential substitutions. No installed unit or hardware qualification. |
 | Pre-p5 maintenance and normal activation | [Evidence](evidence/guest-activation-admission-validation-20261112.json). **3120** privileged Ubuntu tests and shell/diagnostic suites pass. Independent helper/wrapper reviews and actual private-loop interruption/retry/idempotency, preservation and cleanup pass. Protected registry must match reviewed target; binding and reopening follow all target cleanup. Bootstrap borrowing remains separate. |
 
-Current packaging has 68 sources, 20 entrypoints and the historical exact
+Current packaging has 70 sources, 71 runtime files, 20 entrypoints and the historical exact
 39-source boundary. Reviews retain resolved findings, preliminary failures and
 verified off-device receipts. Native surrogate/ARM user-mode results ran no
 QEMU guest or KVM and do not establish deployment acceptance.
-Portable RAM exclusion/protected p5 probing and boot account preparation are
-under review/integration. Coherent managed restoration,
+[Portable recovery and boot account preparation](evidence/portable-recovery-validation-20261112.json)
+now pass independent review and **3210** privileged Ubuntu tests, five shell
+suites and five diagnostic cases without skips/errors/failures. Actual disposable
+kernel loops prove public RAM selector publication/cleanup and protected p5
+clean-absence/dangling-marker refusal with unchanged bytes; explicit platform
+substitutions remain. BOOT/paired restore/RAM selection retain offline exclusion
+through cleanup; paired restoration refuses managed metadata before writable
+roots/STATE. The p5 fixture lazy-detach cleanup finding is resolved and retained.
+Boot accounts reserve all published identities before sorted batches; the hook
+remains unwired. Coherent managed restoration,
 boot services, inactive-root deployment and physical acceptance remain pending.
 The outer service must finish/check supervisor/run/controller/lease cleanup;
 bootstrap must publish manual namespace pins before opening admission.
@@ -186,19 +194,19 @@ binary redistribution clearance is claimed. [Source inventory](toolchain-sources
 
 ## Resources and next actions
 
-Latest privileged Ubuntu 22.04 suite: **2888 tests**, zero skips/errors/failures,
-five shell suites and five diagnostic cases; all five TOMLs parse.
-[Maintenance/backup foundation evidence](evidence/maintenance-backup-foundation-validation-20261112.json)
-records the latest run. The final-A warm collector authenticates release/root/policy and stops on
-actual remote release refusal; [software evidence](evidence/final-warm-binding-validation-20261110.json)
-retains independent review and the initial corrected validation-environment failure. Host checks do not prove
-hardware acceptance.
+Latest privileged Ubuntu 22.04 suite: **3210 tests**, zero skips/errors/failures,
+five shell suites and five diagnostic cases; all five TOMLs parse natively.
+[Portable recovery evidence](evidence/portable-recovery-validation-20261112.json)
+retains successful terminal units, source locks, independent reviews and verified
+receipts on codex and the builder. Resource sample minima across suite/loops are
+30,122,524,672 bytes free and 6,718,488,576 bytes MemAvailable. These are software
+checks, not physical recovery or unattended KVM acceptance. UART capture remains
+active and unchanged at the clean powerdown; recovery-card boot awaits the
+operator. Next: wire bootstrap/accounts/units, finish coherent managed restore,
+then build and deploy the reviewed inactive-root candidate. Continue software
+work while the physical recovery transition is pending.
 
-At final qualification, codex has more than 24 GB available. The last full-suite
-builder suite sampled minima of 31490297856 bytes available and
-MemAvailable 7043633152 bytes. The additional ARM account probe stayed above
-31682965504 bytes free and 7347982336 bytes MemAvailable.
-Keep bulk sources, images and backups on the builder. Its LV is 128819658752 bytes
+Codex has more than 22 GB available at this validation. Keep bulk sources, images and backups on the builder. Its LV is 128819658752 bytes
 with 4265607168 bytes VG free. All free builder capacity is approved for use and
 expansion after exact-target revalidation and independent review. Native codex
 LVM is outside that approval. Retain resource guards and begin compilation with
