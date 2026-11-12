@@ -285,7 +285,7 @@ where it changes boot/storage/rollback, and a coherent validated commit.
 | A | Retain installed maintenance integration | Update/selector admission, actual loop checks and explicit closed-maintenance recovery are evidenced in status. Preserve these guarantees through the remaining integration; rerun affected checks when behavior changes. Guests stop before exclusive maintenance and target mutation ends before reopening. |
 | B | Complete managed backup and restore | Sender, historical decoder, receiver and local archive reader are validated foundations. Implement destination-authorized coherent restore of matching disk, manifest, history and lifecycle authority. Test stale metadata, partial publication and retries. Prevent old host STATE restoration from silently replacing newer guest authority. Archive validation alone cannot authorize restoration. |
 | C | Finish portable RAM recovery integration | Normal activation admission and its actual loop checks are evidenced. Finish reviewed offline exclusion for BOOT writes, paired restoration and RAM selection; validate the protected p5 metadata probe and public recovery path with disposable kernel loops. Retain exclusion through cleanup, refuse raw STATE restoration over managed metadata, and preserve the portable verified-helper dependency contract. |
-| D | Wire bootstrap and guest services | In one authenticated bootstrap ownership lifetime, activate storage, prepare registry/accounts, render RAM units and publish manual-launch namespace pins before opening admission. Order per-guest supervision and host shutdown; quarantine invalid guests while retaining SSH/NTP. Validate repeated preparation and failure cleanup without granting QEMU extra authority. |
+| D | Finish bootstrap and guest services | The reviewed candidate preparer now holds one bootstrap owner through activation, state/accounts, ready checks, RAM units and namespace pins. Finish installer policy publication, service/dispatcher and storage teardown; prove actual unit/mount dependencies and shutdown order. Retain SSH/NTP on guest failure and validate actual unattended KVM with bounded resources. |
 | E | Package and build the candidate | Include every required controller/service in pinned reproducible inactive-root recipes, rebuild on the Ubuntu builder and verify artifact sizes/hashes. Retain the working root and recovery card. Pass the repository checks and an independent review before deployment. |
 | F | Validate the installed candidate | Deploy to the inactive root and use the separate disposable managed guest. Prove actual nonroot KVM autostart, CPU/disk/network, guest-owned clean shutdown, checkpoint/restart, coherent backup/restore, disable and host rollback. Preserve the manually managed firstkvm cohort. Software fixtures cannot satisfy this gate. |
 
@@ -301,12 +301,13 @@ when physical access is available. Finish phases 3 and 4 before freezing the
 configuration and collecting the remaining phase-5 boots. Reassess earlier boot
 credit if firmware identity changes; record final automation checks separately.
 
-Before implementing D, settle two explicit interfaces: how the installer records
-the trusted storage identity before the first registry exists, and how one
-bootstrap process retains admission ownership through storage, accounts, runtime
-units and final opening. Fail closed for guest launch on missing or inconsistent
-policy while keeping management available. Define aggregate guest memory/task
-limits with host headroom and bounded shutdown behavior before packaging units.
+For D, installer publication of the explicit trusted storage policy remains
+required before the first registry exists. The retained reader and single-process
+owner composition now pass [software and builder cgroup checks](evidence/boot-prepare-validation-20261112.json).
+Missing/inconsistent policy refuses guest preparation while management stays
+available. Rendered memory/task limits reserve host headroom; the child verifies
+actual kernel limits before exec. Install the services only after their dispatch,
+teardown and PID1 dependency checks are reviewed; these remain physical gates.
 
 For B, the restore design must distinguish historical archive validation from
 fresh destination authority. Specify durable publication/retry ordering and

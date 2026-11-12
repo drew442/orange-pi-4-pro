@@ -251,7 +251,14 @@ class CheckpointCustody:
         if self._closed:
             return
         self._closed = True
-        self._stack.close()
+        try:
+            self._stack.close()
+        except BaseException as error:
+            # A second idempotent close cannot reconstruct the first failure.
+            # Retain uncertainty at the resource owner before propagating it.
+            if hasattr(self, 'result'):
+                self.result.setdefault('close_error', repr(error))
+            raise
 
 
 def _profile_sha256():
@@ -694,8 +701,13 @@ def _fresh(controller, name, *, guest_lock=None, inspection=None, head_data=None
             require(type(inspection) is POLICY.Inspection, 'actual same-family Inspection required')
             custody.inspection = inspection  # Borrowed disk lock; never reopen it.
         return custody
-    except BaseException:
-        custody.close()
+    except BaseException as error:
+        try:
+            custody.close()
+        except BaseException:
+            # The caller never received custody; preserve its cleanup receipt
+            # together with the original construction/authentication failure.
+            raise LIFECYCLE.OperationError(custody.result, error) from error
         raise
 
 

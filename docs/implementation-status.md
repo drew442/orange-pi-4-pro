@@ -60,16 +60,16 @@ architecture review. The following software components are reviewed and tested;
 | Admission, registry, protected stores and bootstrap accounts | [Foundation](evidence/guest-foundation-validation-20261112.json), [state](evidence/guest-state-validation-20261112.json), [account batches](evidence/account-admission-validation-20261112.json). Actual native permissions/flocks; one lease for sorted guest locks. |
 | Managed launcher, supervisor, fixture and checkpoint | [Runtime](evidence/managed-runtime-validation-20261112.json), [launch](evidence/managed-launch-validation-20261112.json), [supervision](evidence/managed-supervisor-validation-20261112.json), [checkpoint foundation](evidence/managed-checkpoint-foundation-validation-20261112.json) and [integration](evidence/managed-checkpoint-runtime-validation-20261112.json). Native producer composition and strict recovery pass with explicit A733/KVM substitutions. Parsing alone grants no authority. |
 | Legacy backup, checkpoint, enrollment and restore guards | [Admission](evidence/legacy-admission-validation-20261112.json), [publication](evidence/legacy-publication-validation-20261112.json). Managed names refuse; explicit restore name precedes archive access. ARM file-engine local/HTTPS/TLS probes pass with runtime/account placement substituted. |
-| Nonroot manual launch | [Evidence](evidence/manual-launch-admission-validation-20261112.json). Protected root namespace pins and exactly three input/two readonly lock FDs survive exec; no extra child capabilities. Bootstrap producer hook still needs wiring. |
+| Nonroot manual launch | [Evidence](evidence/manual-launch-admission-validation-20261112.json). Protected root namespace pins and exactly three input/two readonly lock FDs survive exec; no extra child capabilities. Candidate bootstrap producer is composed; installed service hook remains pending. |
 | Installed maintenance and managed backup artifact format | [Foundation evidence](evidence/maintenance-backup-foundation-validation-20261112.json). **2888** privileged Ubuntu tests, five shell suites and five diagnostic cases pass. Maintenance core is installed-only; the six-member codec is artifact validation, not backup/restore authority. |
 | Installed update/selection admission | [Integration evidence](evidence/installed-maintenance-admission-validation-20261112.json). **2905** privileged Ubuntu tests plus actual private-loop write/retry and ext4 selector interruption/cancellation pass. Independent source/fixture reviews pass; platform/admission substitutions and the corrected wrapper TOML failure are retained. |
 | Managed source export and explicit admission reopening | [Evidence](evidence/managed-sender-reopen-validation-20261112.json). **2956** privileged Ubuntu tests, shell/diagnostic suites and independent reviews pass. Successful fixture export and pre-output proof rejection are covered. Cleanup reporting correction preserves acknowledged reopening while reporting command failure. [Candidate procedure](guest-maintenance-admission.md). |
 | Managed historical decoder, artifact receiver and local archive reader | [Evidence](evidence/managed-archive-validation-20261112.json). **3012** privileged Ubuntu tests and shell/diagnostic suites pass. Independent reviews resolve partial-construction and final-observation cleanup faults; native sender integration passes with explicit platform/shutdown substitutions. Artifact publication supplies no destination restore authority. |
-| Initialization exclusion and bootstrap registry/markers | [Evidence](evidence/bootstrap-admission-validation-20261112.json). **3060** privileged Ubuntu tests and shell/diagnostic suites pass. Actual readonly EX interlock, native failure probes and original-owner preparation pass review after GID-boundary and reserved-firstkvm corrections. Only the initializer side is wired; marker observations grant no launch permission. |
+| Initialization exclusion and bootstrap registry/markers | [Evidence](evidence/bootstrap-admission-validation-20261112.json). **3060** privileged Ubuntu tests and shell/diagnostic suites pass. Actual readonly EX interlock, native failure probes and original-owner preparation pass review after GID-boundary and reserved-firstkvm corrections. Candidate boot composition now uses both sides; marker observations grant no launch permission. |
 | Single managed run controller | [Evidence](evidence/managed-service-validation-20261112.json). **3077** privileged Ubuntu tests and shell/diagnostic suites pass. Independent native shutdown/cleanup probes pass; healthy polling no longer spawns PID1 queries. Actual retained locks, run, fork/QMP surrogate and checkpoint compose with explicit platform/credential substitutions. No installed unit or hardware qualification. |
 | Pre-p5 maintenance and normal activation | [Evidence](evidence/guest-activation-admission-validation-20261112.json). **3120** privileged Ubuntu tests and shell/diagnostic suites pass. Independent helper/wrapper reviews and actual private-loop interruption/retry/idempotency, preservation and cleanup pass. Protected registry must match reviewed target; binding and reopening follow all target cleanup. Bootstrap borrowing remains separate. |
 
-Current packaging has 70 sources, 71 runtime files, 20 entrypoints and the historical exact
+Current packaging has 75 sources, 76 runtime files, 20 entrypoints and the historical exact
 39-source boundary. Reviews retain resolved findings, preliminary failures and
 verified off-device receipts. Native surrogate/ARM user-mode results ran no
 QEMU guest or KVM and do not establish deployment acceptance.
@@ -81,8 +81,8 @@ clean-absence/dangling-marker refusal with unchanged bytes; explicit platform
 substitutions remain. BOOT/paired restore/RAM selection retain offline exclusion
 through cleanup; paired restoration refuses managed metadata before writable
 roots/STATE. The p5 fixture lazy-detach cleanup finding is resolved and retained.
-Boot accounts reserve all published identities before sorted batches; the hook
-remains unwired. Coherent managed restoration,
+Boot accounts reserve all published identities before sorted batches and are
+composed by the candidate preparer. Coherent managed restoration,
 boot services, inactive-root deployment and physical acceptance remain pending.
 The outer service must finish/check supervisor/run/controller/lease cleanup;
 bootstrap must publish manual namespace pins before opening admission.
@@ -90,9 +90,23 @@ bootstrap must publish manual namespace pins before opening admission.
 A separate [explicit storage-policy schema](evidence/storage-policy-schema-validation-20261112.json)
 passes eight native tests and 34 independent parser probes. It records the
 caller-selected NVMe/model/size and STATE/p5/serial tuple as data only. Protected
-STATE reader/publication, installer and bootstrap hooks remain unimplemented;
-this schema is not packaged or installed and was excluded from the frozen 3210-test
-suite. It supplies no device or launch authority.
+STATE policy reader and one-process preparation are now packaged as source;
+installer publication and installed boot services remain pending. Schema parsing
+itself supplies no device or launch authority.
+
+[Boot preparation and runtime budget evidence](evidence/boot-prepare-validation-20261112.json)
+now records **3292** privileged Ubuntu tests, shell/diagnostic suites and independent
+reviews passing without skips/errors/failures. One original bootstrap EX spans
+activation, state/accounts, same-family readiness, protected RAM units and manual
+namespace pins; all preparation cleanup precedes opening. Repeated preparation
+is a verified no-op, even with an active SH lease. Checkpoint cleanup and combined
+publication/close receipt findings are resolved. The actual disposable Ubuntu
+systemd/cgroup probe passes as UID/GID 60002 with zero capabilities: kernel
+memory/swap/task limits match, all 15 guard FDs close, and owned runtime fragments
+and cgroups are removed. This ran no VM. Dispatcher, teardown, installer policy
+publication, coherent managed restore, candidate build and physical acceptance
+remain pending. Manual unit rendering remains explicit; capability sufficiency
+and A733 mount/shutdown ordering are hardware gates.
 
 Two fresh managed power-key guest builds match byte for byte with verified
 off-device copies. [Build evidence](evidence/managed-fixture-build-20261112.json).
@@ -201,17 +215,16 @@ binary redistribution clearance is claimed. [Source inventory](toolchain-sources
 
 ## Resources and next actions
 
-Latest privileged Ubuntu 22.04 suite: **3210 tests**, zero skips/errors/failures,
+Latest privileged Ubuntu 22.04 suite: **3292 tests**, zero skips/errors/failures,
 five shell suites and five diagnostic cases; all five TOMLs parse natively.
-[Portable recovery evidence](evidence/portable-recovery-validation-20261112.json)
-retains successful terminal units, source locks, independent reviews and verified
-receipts on codex and the builder. Resource sample minima across suite/loops are
-30,122,524,672 bytes free and 6,718,488,576 bytes MemAvailable. These are software
-checks, not physical recovery or unattended KVM acceptance. UART capture remains
-active and unchanged at the clean powerdown; recovery-card boot awaits the
-operator. Next: wire bootstrap/accounts/units, finish coherent managed restore,
-then build and deploy the reviewed inactive-root candidate. Continue software
-work while the physical recovery transition is pending.
+[Boot preparation evidence](evidence/boot-prepare-validation-20261112.json)
+retains terminal units, source locks, independent reviews, actual builder cgroup
+results and verified receipts on codex and the builder. Sample minima are
+30,684,389,376 bytes free and 6,804,217,856 bytes MemAvailable. These are software
+checks, not physical recovery or unattended KVM acceptance. Recovery-card boot
+awaits the operator. Next: installer policy publication and boot dispatcher/stop
+services, coherent managed restore, then build/deploy the reviewed inactive root.
+Continue useful software work while physical recovery is pending.
 
 Codex has more than 22 GB available at this validation. Keep bulk sources, images and backups on the builder. Its LV is 128819658752 bytes
 with 4265607168 bytes VG free. All free builder capacity is approved for use and

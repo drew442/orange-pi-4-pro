@@ -34,11 +34,21 @@ exclusions for registered and orphan lifecycle names. It rejects reserved
 Invalid heads remain unavailable observations. Preparation grants no run
 permission and does not create/repair heads, open admission or start a guest.
 
-The boot coordinator still needs to compose storage activation, RAM accounts,
-completed-cohort authentication, unit rendering and manual namespace publication
-before opening admission. [Initialization/boot-state checks](evidence/bootstrap-admission-validation-20261112.json)
-cover native locks and protected files with physical/PID1 substitutions. Runtime
+The candidate `prepare-guest-boot.py` now composes protected policy observation,
+storage activation, registry/markers, RAM accounts, same-family ready-cohort
+authentication, RAM managed units and manual namespace publication under the
+original bootstrap EX owner. It closes preparation sources/contexts and checks
+consumers before opening admission. A repeated open runtime only verifies the
+prepared record and units; it performs no mutations or launches, including when
+a shared lease is active. Existing closed nonces cannot be adopted. Runtime
 files must not be deleted or recreated to bypass a failed preparation.
+
+The fixed policy is `/run/a733-state/config/guest-storage.json`, root:root 0400
+on selected STATE. The reader retains descriptors and checks native root/STATE,
+NVMe identity, mount placement and exact canonical bytes before initialization.
+The installer publisher, boot service/dispatcher and storage teardown are still
+unimplemented. No new controller is installed or enabled by these source checks.
+The current manual unit rendering procedure remains explicit.
 
 The reviewed account producer reserves identities from all protected published
 manual and managed enrollments, including disabled guests, before applying

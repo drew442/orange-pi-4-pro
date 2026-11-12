@@ -138,6 +138,7 @@ class ProtectedInputs(unittest.TestCase):
         self.qmp.chmod(0o730)
         os.chown(self.qmp, 0, 60002)
         self.events = []
+        self.cgroup = SimpleNamespace(check=mock.Mock(), close=mock.Mock())
         self.permit = SimpleNamespace(value=self.value, close=mock.Mock(), recheck=mock.Mock())
         self.locks = SimpleNamespace(fdtuple=(100, 101), recheck=mock.Mock())
         admission_fd = os.open(self.admission_root, os.O_PATH | os.O_DIRECTORY)
@@ -157,6 +158,7 @@ class ProtectedInputs(unittest.TestCase):
             raise AssertionError(path)
         patches = [mock.patch.object(M, 'child_platform', return_value=108),
                    mock.patch.object(M, 'memory_budget'),
+                   mock.patch.object(M.CGROUP, 'CgroupBudget', return_value=self.cgroup),
                    mock.patch.object(M, 'PAYLOAD', str(self.payload)),
                    mock.patch.object(M, 'QEMU_PATH', str(self.binary)),
                    mock.patch.object(M.CONFIG, 'paths', return_value=self.paths),
@@ -178,6 +180,25 @@ class ProtectedInputs(unittest.TestCase):
             self.assertGreaterEqual(len(self.events), 2)
         self.permit.close.assert_called_once()
         self.locks.recheck.assert_called()
+        self.cgroup.check.assert_called()
+        self.cgroup.close.assert_called_once()
+
+    def test_cgroup_refusal_precedes_input_access_and_releases_permit(self):
+        with mock.patch.object(M.CGROUP, 'CgroupBudget', side_effect=ValueError('bad cgroup')), \
+                mock.patch.object(M.ManagedLaunch, '_input_directories') as inputs:
+            with self.assertRaisesRegex(ValueError, 'bad cgroup'):
+                self.prepared.__enter__()
+            inputs.assert_not_called()
+        self.permit.close.assert_called_once()
+
+    def test_cgroup_rechecked_before_exec_and_failure_closes_guard(self):
+        with self.prepared as launch:
+            self.cgroup.check.side_effect = ValueError('cgroup moved')
+            with mock.patch.object(M.os, 'execve') as execute:
+                with self.assertRaisesRegex(ValueError, 'cgroup moved'):
+                    launch.execute()
+                execute.assert_not_called()
+        self.cgroup.close.assert_called_once()
 
     def test_disk_owner_mismatch_refuses_before_placement_or_payload_reads(self):
         os.chown(self.paths['disk'], 0, 0)

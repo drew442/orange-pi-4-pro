@@ -45,10 +45,14 @@ and byte size, and STATE UUID/guest UUID/NVMe serial. It contains no enabled
 guests or launch permission. Do not populate it from unreviewed device discovery
 or treat a missing registry as permission to choose whichever disk is present.
 
-The pure [policy schema](../configs/guest_storage_policy.py) is implemented;
-its protected reader, installer publication and bootstrap hook remain pending.
-The reader must retain nofollow descriptors, authenticate ownership/modes,
-selected-STATE placement and unchanged bytes, and revalidate live identities.
+The pure [policy schema](../configs/guest_storage_policy.py) and
+[retained reader](../scripts/guest-boot-policy.py) are implemented. The candidate
+[one-process preparer](../scripts/prepare-guest-boot.py) composes that reader with
+activation, state/accounts, ready checks, RAM units and namespace pins before
+opening admission. Installer publication and service/dispatcher installation
+remain pending. The reader retains nofollow descriptors, authenticates
+ownership/modes, selected-STATE placement and unchanged bytes, and revalidates
+live identities.
 Canonical parsing alone cannot establish provenance or authorize mounting.
 Missing or invalid policy leaves automation unavailable and management running.
 Publish policy through the reviewed installation/setup transaction, separately
@@ -123,7 +127,8 @@ command keeps its operator attestation; no synthetic prompt input or monkeypatch
 bypasses that contract.
 The [managed checkpoint contract](managed-checkpoint-design.md) specifies durable
 outcome/intent/completion records, custody transfer and interrupted publication
-reconciliation. Its runtime writer and ready-cohort verification remain pending.
+reconciliation. Its runtime writer and ready-cohort verifier are implemented and
+reviewed; installed automation and actual managed KVM acceptance remain pending.
 
 Keep manual manifests and checkpoint histories at their existing schema 1 and
 exact byte format. A changed managed disk instead produces schema 2,
@@ -341,6 +346,16 @@ transaction when preparing a larger registry; each batch preserves other account
 A supervisor crash leaves admitted/running authority that quarantines on
 recovery. An unkillable consumer prevents a clean unmount/pass; forced power loss
 is explicitly outside clean shutdown acceptance.
+
+The managed child now retains a read-only cgroup-v2 budget guard before input
+access and rechecks it immediately before exec. It verifies actual unit/slice
+`memory.max`, `memory.swap.max`, `pids.max`, domain type and native membership,
+matching the rendered budgets. These are
+[Linux 6.6 cgroup interfaces](https://www.kernel.org/doc/html/v6.6/admin-guide/cgroup-v2.html).
+The disposable Ubuntu probe exercises the real kernel limits after dropping to
+UID/GID 60002 with zero capabilities, with no VM or load generation. A733 unit
+ordering, controller availability and actual KVM operation still require their
+physical deployment checks.
 
 The initramfs already prepares management before PID1; do not add a guest failure
 to that prerequisite. Its RAM links enable `a733-guest-prepare.service`, ordered

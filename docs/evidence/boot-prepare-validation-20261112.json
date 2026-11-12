@@ -1,0 +1,204 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "result": "pass",
+  "scope": "Uninstalled one-process authenticated boot preparation, retained storage policy and managed cgroup guards; Ubuntu software and real disposable systemd/cgroup probe only. No deployed service, A733 boot or KVM acceptance.",
+  "builder": "drew@build.drewnet.online",
+  "full_Ubuntu_tests": 3292,
+  "failures_errors_skips": 0,
+  "shell_suites": 5,
+  "diagnostic_cases": 5,
+  "parsed_TOML": 5,
+  "locked_source_files": 1069,
+  "source_lock": {
+    "bytes": 171395,
+    "sha256": "7aa939b0faf6fc441c4829af12b8db9f30a15498e0d46975e2c2b38f335e1611",
+    "index_tree": "8a4f6a550721868c8112903ca398c171a5fdc479"
+  },
+  "source": {
+    "build/maintenance-tools.py": {
+      "bytes": 15983,
+      "sha256": "4e98e7aae812d54e7a6528885bdb15cb018c296c4f9ad0d050bb473e32ca4e20"
+    },
+    "configs/guest_boot_units.py": {
+      "bytes": 4766,
+      "sha256": "5bfac98efa06791e7dfba6123c5fd0f962892a73364c5be0f3895222ca2ee2bb"
+    },
+    "scripts/guest-boot-policy.py": {
+      "bytes": 11418,
+      "sha256": "2da8522a15a9a09fb2719e6bb5df446088cc1042986cf12188f4a77b024bc618"
+    },
+    "scripts/guest-cgroup-budget.py": {
+      "bytes": 8164,
+      "sha256": "04f1fe5c3cdc776fa90d3a3e9b43f7c968aee3a9ef5b08ae928a4df12197dfad"
+    },
+    "scripts/launch-managed-guest.py": {
+      "bytes": 12970,
+      "sha256": "3da139d1422f787734db813c5c8e8a4590d4f53920172b00468b066b0289fad3"
+    },
+    "scripts/managed-guest-checkpoint.py": {
+      "bytes": 46844,
+      "sha256": "a664198136888999c1f88ed2effabe1b9635bf479ec4cc591cd0091376f551f1"
+    },
+    "scripts/prepare-guest-boot.py": {
+      "bytes": 35581,
+      "sha256": "7f1928228e8f642880829ec1dec72909490fb13f890892d7fadf4bec3858c0c4"
+    },
+    "tests/test_guest_boot_policy.py": {
+      "bytes": 11374,
+      "sha256": "8b3c661cf845527fde9a10ae33f15e7ba611ce5ec4fa6eeca7b982879d1c84cf"
+    },
+    "tests/test_guest_boot_units.py": {
+      "bytes": 9032,
+      "sha256": "8accfde480f9ffb4297b7b5673e7965489447a7288ae14a94535ec08c7117097"
+    },
+    "tests/test_guest_cgroup_budget.py": {
+      "bytes": 10607,
+      "sha256": "3cf65d43b0d9713b37654ed8ada7a051077584880d517d1f2982d463130706e0"
+    },
+    "tests/test_host_payload.py": {
+      "bytes": 28570,
+      "sha256": "4a2330e3fdc686e6bd181ccc70ca0cb7fa14b09ea9b6d73135fa5493509ff888"
+    },
+    "tests/test_launch_deterministic_host_roots.py": {
+      "bytes": 11624,
+      "sha256": "b5611ae685945714d0051f4dcdaf589ea3b9cda0c52f5f6c57f3b2e20fdc8ff0"
+    },
+    "tests/test_launch_managed_guest.py": {
+      "bytes": 12084,
+      "sha256": "f6901fc859807e90da300685d0b725976797746248176e0799606afdb05a8b6d"
+    },
+    "tests/test_maintenance_tools.py": {
+      "bytes": 18693,
+      "sha256": "72944a74cbbcc9005a064ff602ebcd301404dd6cde7c7b543d2941e654a6d80b"
+    },
+    "tests/test_managed_checkpoint_cleanup.py": {
+      "bytes": 5684,
+      "sha256": "669943508d02407686d7c8d87c73efb23e81462dd99233b8194497f977068e0b"
+    },
+    "tests/test_prepare_guest_boot.py": {
+      "bytes": 26417,
+      "sha256": "b61c1f35b7ae941d763c14f8b654de81f8d5d44b11fecbf2deaf3aff2142d8ff"
+    }
+  },
+  "post_frozen_separately_reviewed_executed_fixture": {
+    "tests/verify_managed_cgroup_systemd.py": {
+      "bytes": 28134,
+      "sha256": "b869c1cff5b3abf49f10cb8bee6313c1e39b68ee9802ab359522659c880bec6c"
+    }
+  },
+  "independent_reviews": {
+    "boot-policy-unit-review-20261112.json": {
+      "bytes": 9393,
+      "sha256": "392a297b0341f6998aab7f833872efa665793064a762ee58cf6c719e2bceefb8"
+    },
+    "bootstrap-controller-review-20261112.json": {
+      "bytes": 22689,
+      "sha256": "5b056268aa939ede649b9f53d3dc00e2c8d08856f115441ff81c6a11615bb5b4"
+    },
+    "managed-cgroup-budget-review-20261112.json": {
+      "bytes": 19482,
+      "sha256": "d6e8773dbe6b10921771c001c1ebcdfe3380b84b33358520836d3a8b336f4245"
+    }
+  },
+  "resource_sample_minima": {
+    "free_disk_bytes": 30684389376,
+    "MemAvailable_bytes": 6804217856
+  },
+  "packaging": {
+    "current_sources": 75,
+    "runtime_files": 76,
+    "entrypoints": 20,
+    "historical_sources": 39
+  },
+  "units": {
+    "suite": {
+      "RuntimeMaxUSec": "8h",
+      "MainPID": "0",
+      "Result": "success",
+      "ExecMainStatus": "0",
+      "CPUQuotaPerSecUSec": "2s",
+      "MemoryMax": "3221225472",
+      "SubState": "exited"
+    },
+    "cgroup_probe": {
+      "RuntimeMaxUSec": "15min",
+      "MainPID": "0",
+      "Result": "success",
+      "ExecMainStatus": "0",
+      "CPUQuotaPerSecUSec": "2s",
+      "MemoryMax": "536870912",
+      "SubState": "exited"
+    }
+  },
+  "custody": {
+    "bytes": 563200,
+    "sha256": "24972b4c74775b6c6d24d6cfa5e82a27224d842b2541e7dca8c9f5bb420de2bc",
+    "native": "out/boot-prepare-validation-20261112-01/receipts.tar",
+    "builder": "/var/lib/a733-boot-prepare-validation-20261112-01/receipts.tar"
+  },
+  "boot_preparation": "Protected explicit policy precedes admission; original closed bootstrap EX spans activation, registry/markers, published account reservations, same-family ready-cohort checks, RAM unit publication, manual namespace pins and final census. All preparation contexts/sources close before opening. Repeated open runtime is verified no-op even with active SH; closed nonce is never adopted. No dispatch or teardown.",
+  "policy_and_units": "Retained nofollow selected STATE/config/policy mount/metadata/byte pins and exact NVMe serial/model/size/UUID; pure unit budget reserves 2 GiB physical host RAM and root supervisor native namespace, child still zero caps. Capability sufficiency remains hardware-unproven.",
+  "cgroup_probe": {
+    "result": "pass",
+    "cleanup": "verified",
+    "security": {
+      "CapAmb": "0000000000000000",
+      "CapBnd": "0000000000000000",
+      "CapEff": "0000000000000000",
+      "CapInh": "0000000000000000",
+      "CapPrm": "0000000000000000",
+      "Gid": "60002\t60002\t60002\t60002",
+      "Groups": "",
+      "NoNewPrivs": "1",
+      "Uid": "60002\t60002\t60002\t60002"
+    },
+    "controllers": {
+      "/sys/fs/cgroup/a733.slice/a733-guests.slice/a733-managed-budgetprobe.service/cgroup.type": "domain\n",
+      "/sys/fs/cgroup/a733.slice/a733-guests.slice/a733-managed-budgetprobe.service/memory.max": "268435456\n",
+      "/sys/fs/cgroup/a733.slice/a733-guests.slice/a733-managed-budgetprobe.service/memory.swap.max": "0\n",
+      "/sys/fs/cgroup/a733.slice/a733-guests.slice/a733-managed-budgetprobe.service/pids.max": "256\n",
+      "/sys/fs/cgroup/a733.slice/a733-guests.slice/cgroup.type": "domain\n",
+      "/sys/fs/cgroup/a733.slice/a733-guests.slice/memory.max": "6178209792\n",
+      "/sys/fs/cgroup/a733.slice/a733-guests.slice/memory.swap.max": "0\n",
+      "/sys/fs/cgroup/a733.slice/a733-guests.slice/pids.max": "4096\n"
+    },
+    "membership": "0::/a733.slice/a733-guests.slice/a733-managed-budgetprobe.service\n",
+    "retained_fds": 15,
+    "fd_set_restored": true,
+    "terminal_service": {
+      "ActiveState": "active",
+      "ControlGroup": "",
+      "Description": "Owned disposable cgroup probe e29c284018b54ec082c790ab88a48ed3",
+      "DropInPaths": "",
+      "ExecMainCode": "1",
+      "ExecMainStatus": "0",
+      "FragmentPath": "/run/systemd/transient/a733-managed-budgetprobe.service",
+      "Id": "a733-managed-budgetprobe.service",
+      "LoadState": "loaded",
+      "MainPID": "0",
+      "MemoryMax": "268435456",
+      "MemorySwapMax": "0",
+      "Names": "a733-managed-budgetprobe.service",
+      "Result": "success",
+      "Slice": "a733-guests.slice",
+      "SubState": "exited",
+      "TasksMax": "256"
+    },
+    "ancestor_cgroup_absent_after": true,
+    "hardware_acceptance": false
+  },
+  "resolved_findings": [
+    "Checkpoint custody retains first close_error before idempotent cleanup; unreturned factory custody preserves primary plus close receipt.",
+    "Simultaneous bootstrap publication/cleanup failure now retains both bounded receipts and closed admission.",
+    "Probe harness implicit-slice, shared drop-in, partial fragment and FD-handoff findings corrected before its only actual execution; 15 independent harness probes pass."
+  ],
+  "limitations": [
+    "No installed service/dispatcher/teardown or opt-in enrollment CLI yet; manual unit rendering remains explicit.",
+    "Installer policy publication and managed coherent restore remain pending.",
+    "Physical SPI restore/reinstall, actual managed KVM shutdown/backup/rollback and remaining SPI boot counts remain pending.",
+    "Probe fixture was excluded from the full-suite freeze, independently reviewed and executed with runtime source pins identical to that freeze.",
+    "Only tmpfs/protected-file/native-lock and actual Ubuntu cgroup behavior are exercised; physical placement/account/inspection observations in boot unit tests are explicit substitutions.",
+    "No new endurance run."
+  ]
+}

@@ -266,7 +266,7 @@ class UserspaceProfiles(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             runtime = payload.install_maintenance(root)
-            self.assertEqual(len(runtime['files']), 71)
+            self.assertEqual(len(runtime['files']), 76)
             self.assertEqual(len(runtime['entrypoints']), 20)
             for source in ('scripts/write-known-nvme-boot.py', 'scripts/guest-boot-accounts.py'):
                 relative = 'usr/lib/a733-tools/' + source

@@ -38,6 +38,7 @@ CONTEXT = module('managed_launch_context', 'scripts/guest-lifecycle-context.py')
 ADMISSION = CONTEXT.ADMISSION
 CONFIG = module('managed_launch_config', 'configs/guest_config.py')
 LAUNCH = module('managed_launch_inputs', 'scripts/launch-kvm-guest.py')
+CGROUP = module('managed_launch_cgroup', 'scripts/guest-cgroup-budget.py')
 require = CONFIG.require
 
 
@@ -158,6 +159,8 @@ class ManagedLaunch:
             require(self.value['run_id'] == self.run_id, 'managed run differs')
             self.locks = self.admission.validate_inherited(self.permit)
             self.config = self.value['config']
+            self.cgroup = CGROUP.CgroupBudget(self.config)
+            self.stack.callback(self.cgroup.close)
             self.paths = CONFIG.paths(self.config)
             self._input_directories()
             args = SimpleNamespace(memory_mib=self.config['memory_mib'], cpus=self.config['cpus'],
@@ -255,6 +258,7 @@ class ManagedLaunch:
             pass
         else:
             raise ValueError('managed QMP socket destination already exists')
+        self.cgroup.check()
 
     def argv(self):
         result = self.guest.argv(descriptor_paths=True)
