@@ -48,59 +48,27 @@ are no-ops; original blank restoration affects exactly units 0–25.
 [metadata policy](spi-calibration-policy.md). Physical SD recovery/restore/reinstall,
 unattended guest deployment and final qualification remain pending.
 
-The [guest lifecycle design](guest-autostart-design.md) and its uninstalled
-admission/registry/store, run-permit/launcher and supervisor foundations pass
-independent review. Native Linux tests cover protected permissions, inherited
-flocks, credential drops, descriptor exec, UNIX peers, QMP and raw wait with
-explicit platform/storage/executable substitutions. No QEMU/KVM ran in those
-surrogates. Evidence: [foundation](evidence/guest-foundation-validation-20261112.json),
-[state/bootstrap](evidence/guest-state-validation-20261112.json),
-[runtime](evidence/managed-runtime-validation-20261112.json),
-[launch](evidence/managed-launch-validation-20261112.json) and
-[supervision](evidence/managed-supervisor-validation-20261112.json).
+The [guest lifecycle design](guest-autostart-design.md) passes independent
+architecture review. The following software components are reviewed and tested;
+**all remain uninstalled**.
 
-Reviewed managed fixture validation, stopped-disk custody, authenticated checkpoint
-publication/reconciliation, completed-cohort gates and typed bootstrap accounts
-also pass software checks. The retained disk flock spans exact manifest replacement;
-ordinary inspections remain stale. Actual native producer composition includes
-zero-byte console output. Record parsing grants no authority. Owned cleanup is
-checked; the future outer service must also close/check its borrowed supervisor,
-run, controller and lease. [Checkpoint foundation](evidence/managed-checkpoint-foundation-validation-20261112.json)
-and [integration evidence](evidence/managed-checkpoint-runtime-validation-20261112.json)
-retain source pins, reviews and preliminary failures.
+| Component | Evidence and current boundary |
+| --- | --- |
+| Admission, registry, protected stores and bootstrap accounts | [Foundation](evidence/guest-foundation-validation-20261112.json), [state](evidence/guest-state-validation-20261112.json), [account batches](evidence/account-admission-validation-20261112.json). Actual native permissions/flocks; one lease for sorted guest locks. |
+| Managed launcher, supervisor, fixture and checkpoint | [Runtime](evidence/managed-runtime-validation-20261112.json), [launch](evidence/managed-launch-validation-20261112.json), [supervision](evidence/managed-supervisor-validation-20261112.json), [checkpoint foundation](evidence/managed-checkpoint-foundation-validation-20261112.json) and [integration](evidence/managed-checkpoint-runtime-validation-20261112.json). Native producer composition and strict recovery pass with explicit A733/KVM substitutions. Parsing alone grants no authority. |
+| Legacy backup, checkpoint, enrollment and restore guards | [Admission](evidence/legacy-admission-validation-20261112.json), [publication](evidence/legacy-publication-validation-20261112.json). Managed names refuse; explicit restore name precedes archive access. ARM file-engine local/HTTPS/TLS probes pass with runtime/account placement substituted. |
+| Nonroot manual launch | [Evidence](evidence/manual-launch-admission-validation-20261112.json). Protected root namespace pins and exactly three input/two readonly lock FDs survive exec; no extra child capabilities. Bootstrap producer hook still needs wiring. |
+| Installed maintenance and managed backup artifact format | [Foundation evidence](evidence/maintenance-backup-foundation-validation-20261112.json). **2888** privileged Ubuntu tests, five shell suites and five diagnostic cases pass. Maintenance core is installed-only; the six-member codec is artifact validation, not backup/restore authority. |
 
-Root-only legacy backup/manual-checkpoint admission now passes independent review
-and the required privileged Ubuntu/software checks.
-Managed names refuse before export/mutation; SH lease/guest EX survive through
-cleanup. Query cleanup and nesting across distinct helper imports were corrected
-and independently rechecked. [Legacy admission evidence](evidence/legacy-admission-validation-20261112.json).
-Enrollment/restore admission now passes independent review and **2814** native
-Ubuntu tests, five shell suites and five diagnostic cases. Restore requires the
-explicit guest name before archive access. The combined pinned ARM file-engine
-probe passes local and HTTPS restoration with matching files/history/manifest,
-real TLS/chunk checks and source pins. Its first chroot account-placement refusal
-is retained; only fixture placement was substituted while reading actual ARM
-account databases. No VM/KVM or physical acceptance follows.
-[Publication evidence](evidence/legacy-publication-validation-20261112.json).
-Current packaging has 58 sources; historical archives retain their exact 39-source
-boundary. Root manual account batches now pass independent review, **2829**
-privileged Ubuntu tests, five shell suites and five diagnostic cases. One SH
-lease covers up to 16 sorted guest locks; config races, managed names and cleanup
-failures refuse conservatively. Bootstrap EX-owner preparation remains intact.
-The pinned ARM sysusers fixture passes real account creation, preservation,
-idempotence and collision checks with admission/overlay placement substituted.
-[Account evidence](evidence/account-admission-validation-20261112.json).
-Nonroot manual launch now passes independent review and **2850** privileged
-Ubuntu tests, five shell suites and five diagnostic cases. The protected root
-namespace attestation lets the unprivileged child check its own accessible
-namespaces without extra capabilities. Exactly three input FDs and two readonly
-admission locks survive exec. Foreign close and lost-rename-ack findings are
-fixed and independently rechecked. [Manual launch evidence](evidence/manual-launch-admission-validation-20261112.json).
-Bootstrap must still call its namespace producer before opening admission.
-All helpers remain uninstalled. Installed-host maintenance and managed backup
-format work are under development; RAM recovery/activation admission, coherent
-managed backup/restore, boot services, inactive-root deployment and physical
-acceptance remain pending.
+Current packaging has 60 sources, 16 entrypoints and the historical exact
+39-source boundary. Reviews retain resolved findings, preliminary failures and
+verified off-device receipts. Native surrogate/ARM user-mode results ran no
+QEMU guest or KVM and do not establish deployment acceptance.
+Installed update/selector wiring and the actual managed sender are under review
+or implementation. RAM recovery/activation admission, coherent managed restoration,
+boot services, inactive-root deployment and physical acceptance remain pending.
+The outer service must finish/check supervisor/run/controller/lease cleanup;
+bootstrap must publish manual namespace pins before opening admission.
 
 Two fresh managed power-key guest builds match byte for byte with verified
 off-device copies. [Build evidence](evidence/managed-fixture-build-20261112.json).
@@ -209,17 +177,17 @@ binary redistribution clearance is claimed. [Source inventory](toolchain-sources
 
 ## Resources and next actions
 
-Latest privileged Ubuntu 22.04 suite: **2850 tests**, zero skips/errors/failures,
+Latest privileged Ubuntu 22.04 suite: **2888 tests**, zero skips/errors/failures,
 five shell suites and five diagnostic cases; all five TOMLs parse.
-[Manual launch suite evidence](evidence/manual-launch-admission-validation-20261112.json)
+[Maintenance/backup foundation evidence](evidence/maintenance-backup-foundation-validation-20261112.json)
 records the latest run. The final-A warm collector authenticates release/root/policy and stops on
 actual remote release refusal; [software evidence](evidence/final-warm-binding-validation-20261110.json)
 retains independent review and the initial corrected validation-environment failure. Host checks do not prove
 hardware acceptance.
 
 At final qualification, codex has more than 24 GB available. The last full-suite
-builder suite sampled minima of 31573680128 bytes available and
-MemAvailable 7087030272 bytes. The additional ARM account probe stayed above
+builder suite sampled minima of 31490297856 bytes available and
+MemAvailable 7043633152 bytes. The additional ARM account probe stayed above
 31682965504 bytes free and 7347982336 bytes MemAvailable.
 Keep bulk sources, images and backups on the builder. Its LV is 128819658752 bytes
 with 4265607168 bytes VG free. All free builder capacity is approved for use and

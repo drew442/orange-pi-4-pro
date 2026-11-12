@@ -1,0 +1,123 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "result": "pass",
+  "scope": "Uninstalled installed-host maintenance custody core and pure six-member managed-backup artifact format; callers/RAM recovery/actual backup or restore publishers/startup integration excluded",
+  "builder": "drew@build.drewnet.online",
+  "builder_base": "/var/lib/a733-maintenance-backup-validation-20261112-01",
+  "full_Ubuntu_tests": 2888,
+  "failures_errors_skips": 0,
+  "shell_suites": 5,
+  "diagnostic_cases": 5,
+  "locked_source_files": 1022,
+  "source_lock": {
+    "bytes": 163843,
+    "sha256": "1fa31b9ddf1901b7c0ba7375e2f0799e739674a56a82ef4d6be4b0bed18b729a",
+    "index_tree": "023b6337c87b631bbb989fdd116df09ed5b34f79"
+  },
+  "unit": {
+    "RuntimeMaxUSec": "8h",
+    "MainPID": "0",
+    "Result": "success",
+    "ExecMainCode": "1",
+    "ExecMainStatus": "0",
+    "CPUQuotaPerSecUSec": "2s",
+    "MemoryMax": "3221225472",
+    "ActiveState": "active",
+    "SubState": "exited"
+  },
+  "source": {
+    "build/maintenance-tools.py": {
+      "bytes": 15302,
+      "sha256": "9bac5a2b19ebcef9ec54536433dd0d17686942254a63cdc41b7af547316d797e"
+    },
+    "configs/guest_managed_backup.py": {
+      "bytes": 12196,
+      "sha256": "6eafbd23c2dafaae619fbc525ef11a115acb4d854bf346ba99d34ffe9e45926a"
+    },
+    "scripts/guest-host-maintenance.py": {
+      "bytes": 14632,
+      "sha256": "149eb080b44d5d5763f520ffd0104167dca3f6fd8c99f4cdd39fa68b12e9c5f7"
+    },
+    "tests/test_guest_host_maintenance.py": {
+      "bytes": 24315,
+      "sha256": "9d59894bec563c29925957cea3593a562943a86b1026bc2b8ea2f32972051756"
+    },
+    "tests/test_guest_managed_backup.py": {
+      "bytes": 16575,
+      "sha256": "ccb7206acaf4f0e1a6f1a7086a4d4c9a010a876e262b41b69505a1f633a8c63e"
+    },
+    "tests/test_host_payload.py": {
+      "bytes": 28099,
+      "sha256": "93aa3f563bba0b39aaab33c12548ddf39870c40ff4e03b7c21728edb3cf8c4e2"
+    },
+    "tests/test_launch_deterministic_host_roots.py": {
+      "bytes": 11602,
+      "sha256": "b5339d3cbd49a7776b9f0bb40de7c116264c0011eed6c210fc93fb0797641940"
+    },
+    "tests/test_maintenance_tools.py": {
+      "bytes": 17848,
+      "sha256": "1d499b72fd840151039fe539b10b444402e4a130675c32202df89c8437873cc1"
+    }
+  },
+  "independent_reviews": {
+    "maintenance": {
+      "path": "out/maintenance-backup-validation-20261112-01/maintenance-review.json",
+      "bytes": 77738,
+      "sha256": "54201ad9bb07ab37b28ec9a452a164cfd1b0e94bd17d2acb8f30bc778d37ba39"
+    },
+    "format": {
+      "path": "out/maintenance-backup-validation-20261112-01/format-review.json",
+      "bytes": 68105,
+      "sha256": "14eff948ada53cfcbe8182458daa14a281c46a5b1354f3583db4e98baee700c2"
+    }
+  },
+  "maintenance": {
+    "behavior": "Root installed context and configured registry required; fresh owned maintenance closure stops only managed units before nonblocking EX. Manual leases refuse; actual typed checkpoint controller verifies/reconciles known cohorts, unknown/quarantined states refuse. Bounded proc/device consumers census and final proof precede explicit same-owner reopen. Default cleanup leaves closure; errors and open ambiguity stay visible.",
+    "focused_tests": 28,
+    "independent_checks_initial": 84,
+    "resolved_P3": "Repeated finish rejects outside failure cleanup and preserves acknowledged original receipt/EX lease; no duplicate open or cleanup. Four targeted independent rechecks pass.",
+    "test_fixture_correction": "Initial single-read two-byte pipe flake corrected to read until EOF; prior log retained in raw receipts. Production core unaffected by that test-only correction.",
+    "limits": "Installed root only. RAM/private-mount recovery needs separate authority and wrappers. Final lifecycle/application success requires callers to finish owned cleanup; no service or physical acceptance."
+  },
+  "managed_format": {
+    "profile": "a733-managed-guest-backup-v1",
+    "ordered_members": [
+      "enrollment.json",
+      "checkpoint-history.json",
+      "lifecycle.json",
+      "Image",
+      "initramfs.cpio.gz",
+      "disk.raw"
+    ],
+    "lifecycle_limit_bytes": 41943040,
+    "max_current_cohort_records": 11,
+    "focused_tests": 10,
+    "independent_initial_probes": 88,
+    "independent_correction_probes": 14,
+    "resolved_P2": "Completion registry generation must lie between intent observed generation and archived source registry generation; repinning the original invalid generation now refuses at both codec entry points.",
+    "behavior": "Bounded canonical rawref envelope, exact source registry/head/enrollment pins, current cohort references, strict six-member framing and large-disk base256 headers. Legacy strict five-member profile untouched.",
+    "limits": "Parsing creates no authority. Actual source admission, legal head replay, process/storage/fixture/shutdown authentication and matching-disk proof belong to root sender/restore wrappers and remain unimplemented."
+  },
+  "packaging": {
+    "current_sources": 60,
+    "runtime_files": 61,
+    "historical_sources": 39,
+    "entrypoints": 16,
+    "relocated_imports_canonical_admission_and_ready_verifier": "pass"
+  },
+  "resources": {
+    "sampled_min_free_disk_bytes": 31490297856,
+    "sampled_min_available_memory_bytes": 7043633152,
+    "compilation_jobs": 2
+  },
+  "receipts": {
+    "native": "out/maintenance-backup-validation-20261112-01/receipts.tar",
+    "builder": "/var/lib/a733-maintenance-backup-validation-20261112-01/receipts.tar",
+    "bytes": 389120,
+    "sha256": "eb135956e8111f64470e5c7fa7e3a5a74cf5fffffc2c5162721d471c84cc815a",
+    "verified_fsynced_both": true
+  },
+  "hardware_acceptance": false,
+  "remaining": "Wire installed maintenance and separate RAM/activation protection into host tools; implement actual managed sender/restore publishers and coherent restoration; startup/service/controller integration and inactive-root deployment; physical SPI recovery/KVM/final boot qualification. Existing endurance data remains accepted."
+}
