@@ -2,10 +2,29 @@
 
 Execution started 2026-11-12. The recoverable baseline and metadata-aware SPI
 software review/checks pass; physical recovery and later phases remain pending.
-[Software evidence](evidence/spi-metadata-validation-20261112.json). The system currently operates with SD
-removed. This plan completes production qualification and adds opt-in unattended
+[Software evidence](evidence/spi-metadata-validation-20261112.json). SPI/NVMe operation with SD
+removed is evidenced; the board is currently cleanly powered off awaiting the
+recovery-card transition. This plan completes production qualification and adds opt-in unattended
 guest operation. Physical restore/reinstall, unattended deployment and final qualification remain
 future work.
+
+## Delivery order and current checkpoints
+
+| Phase | Current checkpoint | Completion condition |
+| --- | --- | --- |
+| 1. Recoverable baseline | Recorded; revalidate after each hardware transition | Verified original/calibrated SPI and stopped guest backups retained off-device |
+| 2. Metadata-aware SPI maintenance | Software checks and independent review pass | Reviewed fresh live plans and preserved calibration policy |
+| 3. Physical restore/reinstall | Pending recovery-card boot | Original SPI restore, SD recovery, reinstall, SD-removed boot and actual KVM pass |
+| 4. Unattended guests | Reviewed design and foundational APIs; deployment pending | Reproducible packaged services, graceful shutdown/checkpoint/reconciliation, rollback and real KVM acceptance |
+| 5. Final SPI boot series | One cold and one warm operational boot evidenced | Ten accepted cold and ten warm boots with applicable identity and final automation checks |
+| 6. Independent reproduction and signoff | Earlier protected-SD reproduction retained | Updated SPI recovery and guest procedures reproduced, evidence reconciled and changes pushed |
+
+Continue phase-4 implementation and builder validation while phase 3 awaits
+physical card/power steps. Complete both phases before the final configuration
+is frozen for phase 5. Credit qualifying demonstration boots and existing
+endurance evidence rather than repeating completed tests. Phase 6 closes only
+after the physical gates pass; an API implementation or software test suite
+does not close a deployment checkpoint.
 
 ## Starting evidence and scope
 
@@ -79,7 +98,7 @@ existing descriptor, identity, quiescence and durable-event mechanisms.
 Test captured preboot, initialized and subsequent-boot snapshots, whole-unit
 reconstruction, corrupted metadata, unknown outside-region changes, stale plans,
 short writes, erase failures, interruption and lost capture acknowledgements.
-The current strict-gap plan remains unusable after metadata initialization.
+The original strict-gap programming plan is stale after metadata initialization.
 [Current transaction engine](../scripts/spi-unit-transaction.py).
 [Measured calibration behavior](spi-sd-boot-20261111.md#first-sd-free-boot-and-spi-calibration).
 
@@ -161,6 +180,12 @@ clean boot/start/stop/checkpoint/restart, disabled guests, malformed registry,
 account collisions, missing storage/KVM, guest failure, unclean exit, publication
 interruption and host shutdown ordering. Physically validate unattended launch,
 clean shutdown and restart on KVM before final boot qualification.
+Back up the new registry, trusted lifecycle heads and checkpoint history together
+with their matching disposable guest disk. Restore that coherent cohort and prove
+actual KVM autostart, the expected persisted counter, clean shutdown and
+checkpoint/restart. Test rejection of stale or mismatched metadata in the focused
+host checks. Combine the successful physical restore with the planned automation
+demonstration; earlier manual-guest backup results do not qualify this new state.
 [Current lifecycle](guest-operations.md).
 [Checkpoint contract](guest-checkpoints.md).
 
