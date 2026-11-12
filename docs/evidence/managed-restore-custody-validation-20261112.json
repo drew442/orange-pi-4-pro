@@ -1,0 +1,113 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "result": "pass for focused read-only no-launch custody subset",
+  "hardware_acceptance": false,
+  "packaged": false,
+  "source_sha256": {
+    "scripts/managed-guest-restore-custody.py": "72754c42461c0c79577a4f77a820dc4bbe176cbd3c726f3cca87ac0afb0bee88",
+    "tests/test_managed_guest_restore_custody.py": "8c7b5879eb8710c314d83b61e130b33df4c369f613f37fd570d6dc65f3804afb"
+  },
+  "reviewer": {
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "role": "independent reviewer"
+  },
+  "native_validation": {
+    "environment": {
+      "architecture": "x86_64",
+      "kernel": "7.0.0-38-generic",
+      "pid1": "systemd",
+      "execution_uid": [
+        0,
+        0,
+        0
+      ],
+      "invocation": "sudo -n"
+    },
+    "initial_suite": {
+      "command": "sudo -n python3 -m unittest discover -s tests -p test_managed_guest_restore_custody.py -v > tmp/managed-restore-custody-review-20261112-tests.log 2>&1",
+      "tests": 49,
+      "seconds": 24.913,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "log": "tmp/managed-restore-custody-review-20261112-tests.log"
+    },
+    "independent_commands": [
+      "sudo -n python3 tmp/managed-restore-custody-review-20261112-probes.py > tmp/managed-restore-custody-review-20261112-probes.log 2>&1",
+      "sudo -n python3 tmp/managed-restore-custody-review-20261112-census.py > tmp/managed-restore-custody-review-20261112-census.log 2>&1"
+    ],
+    "real_observations": [
+      "Root-owned mode-checked disposable directories/records and guest UID 60001/60002 disk files",
+      "Canonical actual Admission/Lease/GuestLock classes and native readonly EX flock state",
+      "Current disk/input bytes and protected lifecycle reads",
+      "Native kernel /proc task/FD/mapping references in independent census probes",
+      "Root suite synthetic account conflicts checked with actual validator in selected cases"
+    ],
+    "substitutions": [
+      "Installed source guard and immutable root deployment are mocked in custody fixtures; separate negative installed-source test is real",
+      "A733 compatible, boot UUID, native initial namespaces and runtime host guards are mocked",
+      "HostContext is replaced by fixture class opening actual disposable root FDs; physical NVMe model/serial/bytes, STATE/p5 UUID/mount placement and UUID probes are substituted",
+      "Policy remains actual retained Policy class but its native/mount/storage checks are patched",
+      "PID1 manager state, local kvm group, service-state and stop-managed observations are substituted",
+      "Global KVM census and main custody consumer census are mocked; standalone census tests/probes separately exercise native kernel references",
+      "Most account database snapshots and validation are mocked; missing/conflicting-account tests restore actual validator over explicit synthetic databases",
+      "Completed-run/checkpoint producer is fixture simulation; no actual guest shutdown or KVM execution occurs"
+    ],
+    "final_suite": {
+      "command": "sudo -n python3 -m unittest discover -s tests -p test_managed_guest_restore_custody.py -v > tmp/managed-restore-custody-review-20261112-final-tests.log 2>&1",
+      "tests": 59,
+      "seconds": 29.964,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "log": "tmp/managed-restore-custody-review-20261112-final-tests.log",
+      "run_count": 1
+    },
+    "final_independent_commands": [
+      "sudo -n python3 tmp/managed-restore-custody-review-20261112-probes.py > tmp/managed-restore-custody-review-20261112-final-probes.log 2>&1",
+      "sudo -n python3 tmp/managed-restore-custody-review-20261112-census.py > tmp/managed-restore-custody-review-20261112-final-census.log 2>&1"
+    ],
+    "final_independent_outcomes": {
+      "original_R1_initial_completed": "both refuse retained restore lifecycle binding changed",
+      "original_R2_self_writable_FD_directory_FD_mapping": "all refuse task consumer",
+      "external_root_FD_directory_FD": "both refuse task consumer",
+      "external_root_mapping_all_matching_FDs_closed": "refuses mapped consumer"
+    }
+  },
+  "resolved_findings": [
+    {
+      "id": "R1",
+      "severity": "high",
+      "source": "scripts/managed-guest-restore-custody.py:RestoreInspection.recheck",
+      "finding": "Protected lifecycle records are rechecked before potentially long payload hashing. Final physical() checks only payload/history _opened FDs. A head changed during real payload hashing is not revalidated before returning cohort proof.",
+      "reproduction": "Independent native fixture probe changes actual head.json after first real _hash call. Both completed and initial cohorts return success with cached ready head while actual head contains corrupted bytes.",
+      "evidence": "tmp/managed-restore-custody-review-20261112-probes.log",
+      "requested_resolution": "Recheck every retained protected record and ancestor binding after bulk hashing and cohort replay before publishing proof, with regression coverage.",
+      "status": "resolved: final protected-record metadata/named ancestor bindings, history and physical checks follow all bulk hashes and decoder; original independent initial/completed probes now both refuse"
+    },
+    {
+      "id": "R2",
+      "severity": "medium",
+      "source": "scripts/managed-guest-restore-custody.py:consumer_check",
+      "finding": "Census skips the entire caller PID, although its documented exclusion is only known retained custody descriptors. Extra caller writable FDs, directory FDs and mappings are invisible, including possible other-thread references.",
+      "reproduction": "Native self-PID writable FD, directory FD and mmap probes all pass. Separate root subprocess FD/dirFD probes refuse; a separate root mmap with every matching FD explicitly closed refuses via mapped-consumer check.",
+      "evidence": "tmp/managed-restore-custody-review-20261112-census.log",
+      "requested_resolution": "Census own tasks too, allowing only exact enumerated retained custody descriptors; refuse extra matching FDs/maps/cwd/root/exe references. This catches accidental leaks within cooperating root rather than claiming hostile-root protection.",
+      "status": "resolved within cooperative-root scope: own tasks are scanned and only exact enumerated readonly non-O_PATH FD numbers with matching full file metadata and actual task fdinfo flags are excluded; extra self writable FD, directory FD and mmap probes now all refuse"
+    }
+  ],
+  "limitations": [
+    "Original findings, source pins and 49-test baseline are preserved separately from fixed final source pins and independent 59-test/probe results",
+    "No physical A733 target, SSH, hardware write, deployment, actual KVM restore, reboot or end-to-end publisher was exercised",
+    "No source files were modified by reviewer; only ignored evidence/probe/log files were written",
+    "This review accepts only read-only no-launch custody; restore publication, rename-aware handles, transaction state machine, packaged installation, bootstrap transaction census and hardware restoration remain separate gates"
+  ],
+  "custody": {
+    "native": "out/managed-restore-custody-validation-20261112-01/receipts.tar",
+    "builder": "/var/lib/a733-managed-restore-custody-validation-20261112-01/receipts.tar",
+    "bytes": 133120,
+    "sha256": "d69a2ca8a17157737fedc3be92d36d45ca25b5fc0cfa3b62d9c82daf9278351e"
+  }
+}

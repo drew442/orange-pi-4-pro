@@ -143,6 +143,19 @@ cleanup errors and the ordinary API's early ready/once-per-boot checks. The firs
 3428-test full run's three failures and an unexecuted superseded freeze are
 retained; corrected full validation passes. All controls remain uninstalled.
 
+The [coherent restore contract](managed-restore-design.md) passes independent
+architecture review after six resolved findings. Its separate
+[read-only destination custody](evidence/managed-restore-custody-validation-20261112.json)
+passes **59 native privileged tests** and independent lifecycle-change and
+self/external FD/mapping probes. It retains actual shutdown EX and stopped disk
+custody, verifies current durable cohorts without requiring RAM accounts/markers,
+and observes corrupt/absent old targets without repair. Final protected-record
+checks and exact self-FD allowance findings are resolved. These focused results
+are **excluded from the frozen 3430-test package**; the component is uninstalled
+and unpackaged. Transaction publication, explicit retry, bootstrap census and
+physical restoration/KVM remain pending. Sources and receipts have verified
+second copies on the builder. No new endurance run is planned.
+
 Two fresh managed power-key guest builds match byte for byte with verified
 off-device copies. [Build evidence](evidence/managed-fixture-build-20261112.json).
 Its shutdown path remains hardware-unproven.
