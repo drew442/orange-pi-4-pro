@@ -16,6 +16,8 @@ including ten warm and ten physical cold boots with unchanged complete SD hashes
 The subsequent SPI operational checks passed a cold boot, warm restart and real
 KVM guest persistence through counters 7→8→9.
 See the [release checklist](docs/release-acceptance.md).
+Production qualification and unattended guest operation follow the
+[production-readiness plan](docs/spi-production-readiness-plan.md).
 
 The [build/deployment plan](docs/hypervisor-plan.md),
 [selected architecture](docs/architecture.md),

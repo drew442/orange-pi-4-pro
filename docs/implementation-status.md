@@ -1,6 +1,7 @@
 # Implementation status
 
-Updated 2026-11-11. **The current system operates from SPI and NVMe with SD
+Updated 2026-11-12. Last physical validation was 2026-11-11.
+**The current system operates from SPI and NVMe with SD
 physically removed.** SPI cold boot, warm restart, original SSH identity,
 automatic NTP and actual nonroot KVM CPU/disk/HTTP tests pass. The guest persisted
 counter 7→8→9 across checkpointing and host restart. Independent review passes.
@@ -21,6 +22,15 @@ runs on each host boot. Vendor U-Boot updates its 2 KiB calibration metadata
 while preserving boot0 and the firmware package. Current calibrated flash and
 the original blank backup are retained off-device. Future SPI writes require
 a fresh metadata-aware reviewed plan. [Procedure](spi-sd-boot-20261111.md).
+
+## Production qualification plan
+
+SPI/NVMe operation is verified. Production qualification and unattended guest
+operation are planned in [the production-readiness plan](spi-production-readiness-plan.md).
+It covers metadata-aware SPI update/restore, a physical recovery demonstration,
+opt-in guest lifecycle automation, remaining boot counts and independent signoff.
+Existing endurance data remains accepted. Implementation and new hardware tests
+are pending execution of that plan.
 
 ## Live board and constraints
 
