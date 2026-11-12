@@ -16,6 +16,61 @@ those transitions rather than an estimated number of development hours.
 
 ## Delivery order and current checkpoints
 
+### Next execution steps
+
+The next milestone is a reviewed candidate that can be installed in the inactive
+root while preserving the working host. Execute these steps in order; physical
+SPI recovery can proceed alongside software work when the operator is available.
+
+1. **Finish explicit guest control and policy packaging.** Package the already
+   reviewed initial storage-policy publisher. Finish root-only enrollment,
+   enable/disable, status, start and stop commands, with authenticated RAM unit
+   publication and the existing memory/task budget checks. Explicit restart must
+   use a one-use, current-boot request bound to the guest's current manifest,
+   ready lifecycle head and unit bytes; automatic starts remain limited to one
+   attempt per boot. Consume requests under the actual admission and guest locks
+   before run publication. Uncertain publication or start acknowledgement must
+   not trigger an automatic retry. Review this interface before integration.
+   The current request/helper changes are incomplete working-tree drafts, not
+   part of the reviewed or packaged runtime.
+2. **Design and implement coherent managed restoration.** Agree the destination
+   authority, durable transaction ordering and interruption/retry rules before
+   writing the publisher. Restore disk, manifest, history and lifecycle state as
+   one authenticated cohort; preserve unrelated guests and their enable flags.
+   Historical archive validation cannot authorize destination writes. Explicitly
+   resolve registry-generation handling and recovery of partial publication;
+   reject unsupported storage-identity changes rather than guessing a mapping.
+3. **Integrate, review and build.** Independently review changed boot, storage,
+   installation and rollback paths. Run focused failure/interruption checks and
+   the required repository checks on the Ubuntu 22.04 builder. Freeze source and
+   dependency pins, then produce reproducible inactive-root artifacts with sizes,
+   hashes and verified off-device copies. Start compilation with two jobs and
+   monitor disk and memory. Keep the compatible firmware/kernel/DTB and working
+   root; provide progress and optional installation readback.
+4. **Demonstrate SPI recovery.** After the retained recovery SD is booted, collect
+   fresh identities and independently review concrete live-flash plans. Restore
+   the original SPI backup, prove SD recovery, reinstall SPI and prove SD-removed
+   NVMe boot with actual KVM. Retain required flash readbacks and backups. Existing
+   authorization covers these known targets; changed targets require yes/no.
+5. **Deploy and exercise the candidate.** Use the disposable managed guest, leaving
+   `firstkvm` intact. Prove nonroot KVM autostart, CPU/disk/network, guest-owned
+   shutdown, durable checkpoint/restart, coherent backup/restoration, disable and
+   host rollback. Observe actual target mount and shutdown ordering and retained
+   management access. Software surrogates do not satisfy these checks.
+6. **Qualify and reproduce the final configuration.** Freeze the candidate, adapt
+   the SPI boot collectors and complete the shortfall to ten cold and ten warm
+   boots. Credit applicable existing and demonstration boots explicitly. Reuse
+   accepted endurance data; no qualifying endurance rerun is needed and no new
+   planned test exceeds eight hours. Have an independent agent/operator reproduce
+   the released build, deployment and recovery procedure, resolve discrepancies,
+   reconcile acceptance evidence, and commit/push the final documentation.
+
+The operator's next physical action remains the recovery-card transition in
+[Operator steps and evidence](#operator-steps-and-evidence). After reinstalling
+SPI, the coordinator will explicitly announce when SD removal is safe. Further
+operator involvement is limited to the required card/power transitions and cold
+cycle attestations. Software preparation continues while those steps are pending.
+
 | Phase | Current checkpoint | Completion condition |
 | --- | --- | --- |
 | 1. Recoverable baseline | Recorded; revalidate after each hardware transition | Verified original/calibrated SPI and stopped guest backups retained off-device |
