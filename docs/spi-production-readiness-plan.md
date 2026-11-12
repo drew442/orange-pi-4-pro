@@ -285,7 +285,7 @@ where it changes boot/storage/rollback, and a coherent validated commit.
 | A | Retain installed maintenance integration | Update/selector admission, actual loop checks and explicit closed-maintenance recovery are evidenced in status. Preserve these guarantees through the remaining integration; rerun affected checks when behavior changes. Guests stop before exclusive maintenance and target mutation ends before reopening. |
 | B | Complete managed backup and restore | Sender, historical decoder, receiver and local archive reader are validated foundations. Implement destination-authorized coherent restore of matching disk, manifest, history and lifecycle authority. Test stale metadata, partial publication and retries. Prevent old host STATE restoration from silently replacing newer guest authority. Archive validation alone cannot authorize restoration. |
 | C | Finish portable RAM recovery integration | Normal activation admission and its actual loop checks are evidenced. Finish reviewed offline exclusion for BOOT writes, paired restoration and RAM selection; validate the protected p5 metadata probe and public recovery path with disposable kernel loops. Retain exclusion through cleanup, refuse raw STATE restoration over managed metadata, and preserve the portable verified-helper dependency contract. |
-| D | Finish bootstrap and guest services | The reviewed candidate preparer now holds one bootstrap owner through activation, state/accounts, ready checks, RAM units and namespace pins. Finish installer policy publication, service/dispatcher and storage teardown; prove actual unit/mount dependencies and shutdown order. Retain SSH/NTP on guest failure and validate actual unattended KVM with bounded resources. |
+| D | Finish bootstrap and guest services | Candidate preparation, dispatch, shutdown exclusion/teardown and service recipes now pass reviewed software checks. Package initial policy publication and provide explicit guest controls/unit refresh, then prove actual unit/mount dependencies and shutdown order. Retain SSH/NTP on guest failure and validate actual unattended KVM with bounded resources. |
 | E | Package and build the candidate | Include every required controller/service in pinned reproducible inactive-root recipes, rebuild on the Ubuntu builder and verify artifact sizes/hashes. Retain the working root and recovery card. Pass the repository checks and an independent review before deployment. |
 | F | Validate the installed candidate | Deploy to the inactive root and use the separate disposable managed guest. Prove actual nonroot KVM autostart, CPU/disk/network, guest-owned clean shutdown, checkpoint/restart, coherent backup/restore, disable and host rollback. Preserve the manually managed firstkvm cohort. Software fixtures cannot satisfy this gate. |
 
@@ -306,8 +306,10 @@ required before the first registry exists. The retained reader and single-proces
 owner composition now pass [software and builder cgroup checks](evidence/boot-prepare-validation-20261112.json).
 Missing/inconsistent policy refuses guest preparation while management stays
 available. Rendered memory/task limits reserve host headroom; the child verifies
-actual kernel limits before exec. Install the services only after their dispatch,
-teardown and PID1 dependency checks are reviewed; these remain physical gates.
+actual kernel limits before exec. Dispatch, teardown and private PID1 graph checks
+now pass [review and the corrected full suite](evidence/guest-service-validation-20261112.json).
+Their actual target dependency and shutdown behavior remains a physical gate;
+no new root image or service has been installed on the board by these checks.
 
 For B, the restore design must distinguish historical archive validation from
 fresh destination authority. Specify durable publication/retry ordering and

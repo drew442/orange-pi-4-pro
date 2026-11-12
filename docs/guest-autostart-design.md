@@ -49,8 +49,9 @@ The pure [policy schema](../configs/guest_storage_policy.py) and
 [retained reader](../scripts/guest-boot-policy.py) are implemented. The candidate
 [one-process preparer](../scripts/prepare-guest-boot.py) composes that reader with
 activation, state/accounts, ready checks, RAM units and namespace pins before
-opening admission. Installer publication and service/dispatcher installation
-remain pending. The reader retains nofollow descriptors, authenticates
+opening admission. Service/dispatcher and teardown are now packaged in the
+candidate recipes; installer policy publication and physical deployment remain
+pending. The reader retains nofollow descriptors, authenticates
 ownership/modes, selected-STATE placement and unchanged bytes, and revalidates
 live identities.
 Canonical parsing alone cannot establish provenance or authorize mounting.

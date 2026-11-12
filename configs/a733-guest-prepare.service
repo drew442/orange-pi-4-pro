@@ -1,0 +1,24 @@
+[Unit]
+Description=A733 opt-in managed guest dispatch
+ConditionPathExists=/run/a733-state/config/guest-storage.json
+After=a733-guest-storage.service
+Requires=a733-guest-storage.service
+RequiresMountsFor=/run/a733-state /run/a733-guests
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+User=root
+Group=root
+ExecStart=/usr/bin/python3 -I -B /usr/lib/a733-tools/scripts/dispatch-guest-boot.py
+TimeoutStartSec=300
+Restart=no
+UMask=0077
+NoNewPrivileges=yes
+MemoryMax=512M
+MemorySwapMax=0
+TasksMax=512
+LimitCORE=0
+StandardInput=null
+StandardOutput=journal
+StandardError=journal

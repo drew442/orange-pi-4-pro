@@ -133,7 +133,7 @@ class ArchiveTests(unittest.TestCase):
             root = Path(temporary)
             record = payload.install_management(root)
             self.assertEqual(record['profile'], 'a733-management-v1')
-            self.assertEqual(len(record['files']), 4)
+            self.assertEqual(len(record['files']), 6)
             for name, expected in record['files'].items():
                 self.assertEqual(payload.file_record(root / name), expected)
             self.assertEqual((root / 'usr/lib/orangepi-hypervisor/host-management.py').stat().st_mode & 0o777, 0o755)
@@ -266,7 +266,7 @@ class UserspaceProfiles(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             runtime = payload.install_maintenance(root)
-            self.assertEqual(len(runtime['files']), 76)
+            self.assertEqual(len(runtime['files']), 78)
             self.assertEqual(len(runtime['entrypoints']), 20)
             for source in ('scripts/write-known-nvme-boot.py', 'scripts/guest-boot-accounts.py'):
                 relative = 'usr/lib/a733-tools/' + source

@@ -1,0 +1,26 @@
+[Unit]
+Description=A733 guest storage and authenticated boot preparation
+ConditionPathExists=/run/a733-state/config/guest-storage.json
+After=local-fs.target run-a733\x2dstate.mount run-a733\x2dguests.mount
+Before=a733-guest-prepare.service umount.target
+RequiresMountsFor=/run/a733-state
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+User=root
+Group=root
+ExecStart=/usr/bin/python3 -I -B /usr/lib/a733-tools/scripts/prepare-guest-boot.py
+ExecStopPost=/usr/bin/python3 -I -B /usr/lib/a733-tools/scripts/stop-guest-storage.py
+TimeoutStartSec=300
+TimeoutStopSec=480
+Restart=no
+UMask=0077
+NoNewPrivileges=yes
+MemoryMax=512M
+MemorySwapMax=0
+TasksMax=512
+LimitCORE=0
+StandardInput=null
+StandardOutput=journal
+StandardError=journal

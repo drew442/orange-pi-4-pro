@@ -22,6 +22,11 @@ class NVMeImageTests(unittest.TestCase):
         self.sd = json.loads((REPO / 'docs/evidence/host-sd-20261104.json').read_text())
         self.roots['package_state'] = {'profile': 'a733-package-state-v1', 'manifest': {'bytes':1,'sha256':'a'*64}}
         self.roots['management_runtime']['files']['usr/lib/orangepi-hypervisor/package_state.py'] = {'bytes':1,'sha256':'a'*64}
+        # Adapt historical metadata to the current required service set. This
+        # fixture does not claim those files exist in the old recorded image.
+        for name in ('a733-guest-storage.service', 'a733-guest-prepare.service'):
+            self.roots['management_runtime']['files']['usr/lib/systemd/system/' + name] = \
+                IMAGE.HOST.record((REPO / 'configs' / name).read_bytes())
         self.sd['package_state_profile'] = 'a733-package-state-v1'
         self.diag = json.loads((REPO / 'docs/evidence/diagnostic-20261104.json').read_text())['files']
 
@@ -29,6 +34,14 @@ class NVMeImageTests(unittest.TestCase):
         command, policy = IMAGE.boot_command()
         self.assertEqual(command, (REPO / 'configs/host-boot.cmd').read_bytes())
         self.assertIsNone(policy)
+
+    def test_current_roots_require_both_guest_boot_service_records(self):
+        IMAGE.validate_roots(self.roots)
+        for name in ('a733-guest-storage.service', 'a733-guest-prepare.service'):
+            candidate = copy.deepcopy(self.roots)
+            del candidate['management_runtime']['files']['usr/lib/systemd/system/' + name]
+            with self.subTest(name=name), self.assertRaisesRegex(ValueError, 'incompatible managed root'):
+                IMAGE.validate_roots(candidate)
 
     def test_spi_boot_command_binds_reviewed_nvme_script_and_context(self):
         command, policy = IMAGE.boot_command('spi-nvme-v1', 'experimental-el2')

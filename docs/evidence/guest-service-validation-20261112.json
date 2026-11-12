@@ -1,0 +1,147 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "result": "pass",
+  "scope": "Uninstalled managed boot dispatcher, shutdown exclusion/storage teardown and candidate root service packaging; native tmpfs/locks, bounded PID1 display and private systemd graph verification. No physical A733 boot, actual p5 unmount or KVM acceptance.",
+  "builder": "drew@build.drewnet.online",
+  "full_Ubuntu_tests": 3348,
+  "failures_errors_skips": 0,
+  "shell_suites": 5,
+  "diagnostic_cases": 5,
+  "parsed_TOML": 5,
+  "locked_source_files": 1079,
+  "source_lock": {
+    "bytes": 172959,
+    "sha256": "936db7c65ed540d6b7542e67938b52d33d764351299fd7b7f6b904024c909ce7",
+    "index_tree": "a0ed807ac3a6d785b93c878af4ce68371083e32f"
+  },
+  "source": {
+    "build/host-payload.py": {
+      "bytes": 28254,
+      "sha256": "7953f8c97311dfc4c507d49e784d2da1bcb7e16eff2f1f2a400ff3d3a67747da"
+    },
+    "build/maintenance-tools.py": {
+      "bytes": 16054,
+      "sha256": "5a1369f003618b76fb5c7ebcc32562eeae594953534c6dbb83b20cbc3aabf4fe"
+    },
+    "configs/a733-guest-prepare.service": {
+      "bytes": 567,
+      "sha256": "6466eb40ddc6a33897f27c45247803ab6c4a03ae5b64aabbfe9a4812784be1e9"
+    },
+    "configs/a733-guest-storage.service": {
+      "bytes": 723,
+      "sha256": "7ce18585a4ade9e0d3ba7ef0bf4d8a74c79f2fb7722c0105a62f12a5a5fb2316"
+    },
+    "configs/host-management.py": {
+      "bytes": 26472,
+      "sha256": "ef6388d8116535aff8f015dba80a7bc4dbf9edd67f245162502c74fe65082e3c"
+    },
+    "scripts/dispatch-guest-boot.py": {
+      "bytes": 16553,
+      "sha256": "0ca6bd26fffff0b07841af41af202383d2af874c7eccd71323b92627caf8e3e9"
+    },
+    "scripts/guest-admission.py": {
+      "bytes": 60278,
+      "sha256": "3224125e75b5b462d1d85d6722e7391f6cdc07440e479219c4b7650379f9bc48"
+    },
+    "scripts/stop-guest-storage.py": {
+      "bytes": 11766,
+      "sha256": "b019428d8b08eed55ed97facb3c9fe53f5da7c7ab9a261594e72c53af4135060"
+    },
+    "tests/test_dispatch_guest_boot.py": {
+      "bytes": 9895,
+      "sha256": "966d3b1a8580dcb6da5e5c404323a296888f5cde58134890af16c751944d4b50"
+    },
+    "tests/test_guest_service_packaging.py": {
+      "bytes": 5689,
+      "sha256": "9fd3096a85fdd35028c38eb1c3479d4aa8809eafbd306077f8f4c4ffb051fc9a"
+    },
+    "tests/test_host_payload.py": {
+      "bytes": 28570,
+      "sha256": "8b13b9403ff35f6fedb94527d94a6aeb3c1c93ac6392f4aa1199777ee18f9877"
+    },
+    "tests/test_launch_deterministic_host_roots.py": {
+      "bytes": 11624,
+      "sha256": "a5a38b2346abce8509b583275f6e8e622af8bacf9e7b464c414c42fbcad0db18"
+    },
+    "tests/test_maintenance_tools.py": {
+      "bytes": 18772,
+      "sha256": "780e132cf50fd2d6b65b6f372fb8f23aa29b12a4343d8fc7950671918ee3db53"
+    },
+    "tests/test_nvme_image.py": {
+      "bytes": 26009,
+      "sha256": "a1fa611abfe34ba230ef2d1112166640f6587aabfab27f784dd5e3bb8e725fc1"
+    },
+    "tests/test_shutdown_guest_lease.py": {
+      "bytes": 6568,
+      "sha256": "9619f5ceacf4f8dbcbd810bf73baa29b0c87d804357e1e36084ae792e1aebb4b"
+    },
+    "tests/test_stop_guest_storage.py": {
+      "bytes": 15263,
+      "sha256": "e4f000fc7ccd1e0fc388b6aa1233219b8cd6e2f002f7a67c6fb8461568287522"
+    }
+  },
+  "independent_reviews": {
+    "dispatch-service-review-20261112.json": {
+      "bytes": 9744,
+      "sha256": "191c5f77a636c1dd8c74c48240d16ffa0a1dd1bb3e2625335df13e4575e957e9"
+    },
+    "storage-stop-review-20261112.json": {
+      "bytes": 6214,
+      "sha256": "28ae90db04f0037242bd3791c842df6bce3ce618d301f4c40cdd13138582d2a1"
+    }
+  },
+  "units": {
+    "passing": {
+      "RuntimeMaxUSec": "8h",
+      "MainPID": "0",
+      "Result": "success",
+      "ExecMainStatus": "0",
+      "CPUQuotaPerSecUSec": "2s",
+      "MemoryMax": "3221225472",
+      "SubState": "exited"
+    },
+    "initial_failed": {
+      "RuntimeMaxUSec": "8h",
+      "MainPID": "0",
+      "Result": "exit-code",
+      "ExecMainStatus": "1",
+      "CPUQuotaPerSecUSec": "2s",
+      "MemoryMax": "3221225472",
+      "SubState": "failed"
+    }
+  },
+  "resource_sample_minima": {
+    "free_disk_bytes": 30480363520,
+    "MemAvailable_bytes": 6628093952
+  },
+  "packaging": {
+    "current_sources": 77,
+    "runtime_files": 78,
+    "entrypoints": 20,
+    "historical_sources": 39,
+    "management_runtime_files": 6,
+    "boot_units": 2
+  },
+  "custody": {
+    "bytes": 819200,
+    "sha256": "25a4cfe78adc1e4dbce6a79bdbb36a096deca7eb1ffc59e7b713878c83585878",
+    "native": "out/guest-service-validation-20261112-02/receipts.tar",
+    "builder": "/var/lib/a733-guest-service-validation-20261112-02/receipts.tar"
+  },
+  "dispatch": "Protected current prepared/policy/unit/config metadata and fresh registry/budget under SH; exact loaded fragment/no drop-ins/native resource/dependency contract; durable create-once intent before at most one no-block queue. Missing optional human-display ExecStartPre/Post arrays normalize only under exact source proof; other missing properties reject. No initialization/reopening or mutation retry after uncertain acknowledgement.",
+  "shutdown": "Monotonic closed shutdown observation grants readonly nonblocking EX lease without owner adoption/reopen. New lease transfers only after gate cleanup; simultaneous gate/lease close failures retain uncertainty. Policy/GPT/p5 UUID/model/SN/size/STATE and native mount pins precede bounded actual VM/file/raw-block/cwd/root/exe/maps census. One normal unmount attempt, read-only reconciliation after lost acknowledgement, no force/lazy retry; cleanup precedes overall success.",
+  "units_behavior": "Whole one-process preparation lives in storage ExecStart; only ExecStopPost performs teardown for normal stop or failed startup. Storage After p5 mount is ordering-only; prepare requires storage and actual STATE/p5 mounts. RAM wants do not make SSH/NTP depend on guests; missing policy conditions skip automation. Unit files are included by root recipes, not deployed by this validation.",
+  "retained_failures": [
+    "First full run 3347: three errors/one failure in historical NVMe metadata fixture lacking the two new mandatory service records. Runtime validator remained strict; fixture corrected explicitly without claiming old images contain new units. Added missing-service rejection regression; all23 targeted composition tests and corrected3348 full suite pass.",
+    "Review fixes retain gate-exit EX leak probe, dual stop-hook retry finding and omitted Exec array display reproduction. All resolved before final freeze."
+  ],
+  "limitations": [
+    "All service/controller changes remain uninstalled; actual A733 dependency ordering, unmount and unattended KVM must be physically demonstrated.",
+    "Private graph/display observations use native systemd255, while full suite runs Ubuntu22.04; target systemd252 behavior remains part of deployment validation.",
+    "Native p5 removal alone is observed; foreign mount-namespace clone removal is not claimed.",
+    "New initial storage-policy publisher work is excluded from this freeze and remains under separate review/integration.",
+    "Coherent managed restoration, explicit guest-management commands, candidate build, physical SPI recovery and final boot qualification remain pending.",
+    "No new endurance run."
+  ]
+}

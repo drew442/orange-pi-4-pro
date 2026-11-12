@@ -367,7 +367,8 @@ def prepare():
                  'apt-daily-upgrade.timer', 'dpkg-db-backup.service', 'dpkg-db-backup.timer',
                  'systemd-journal-catalog-update.service'):
         ram_link('/etc/systemd/system/' + name, '/dev/null')
-    for name in ('systemd-networkd.service', 'systemd-resolved.service', 'a733-management-ssh.service'):
+    for name in ('systemd-networkd.service', 'systemd-resolved.service', 'a733-management-ssh.service',
+                 'a733-guest-storage.service', 'a733-guest-prepare.service'):
         ram_link('/etc/systemd/system/multi-user.target.wants/' + name, '/lib/systemd/system/' + name)
 
 

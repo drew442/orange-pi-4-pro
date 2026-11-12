@@ -46,15 +46,52 @@ files must not be deleted or recreated to bypass a failed preparation.
 The fixed policy is `/run/a733-state/config/guest-storage.json`, root:root 0400
 on selected STATE. The reader retains descriptors and checks native root/STATE,
 NVMe identity, mount placement and exact canonical bytes before initialization.
-The installer publisher, boot service/dispatcher and storage teardown are still
-unimplemented. No new controller is installed or enabled by these source checks.
+The candidate root recipes now package boot services, dispatch and teardown;
+initial policy publication still needs packaging/integration. No new controller
+is installed or enabled on the board by these source checks.
 The current manual unit rendering procedure remains explicit.
 
 The reviewed account producer reserves identities from all protected published
 manual and managed enrollments, including disabled guests, before applying
 sorted account batches. It detects cross-guest conflicts before any account
 write and preserves `firstkvm` as manual. Account preparation grants no launch
-permission. Its boot hook remains unwired.
+permission. The candidate preparer calls it before opening admission.
+
+## Boot service and shutdown boundary
+
+`a733-guest-storage.service` runs the entire preparation transaction in one
+process. `a733-guest-prepare.service` then validates the protected prepared record,
+fresh enabled configuration, unit bytes, PID1 properties and mount dependencies.
+It durably publishes a create-once dispatch intent before one nonblocking start
+request. Queueing never waits for units ordered after that same preparation
+service. A repeated request observes the intent and does not queue again,
+including after a lost acknowledgement. New or changed configuration without
+matching prepared units cannot silently start through stale unit settings.
+
+Both boot services are conditional on the explicit policy file. Missing policy
+skips automation. Their RAM wants do not make management services depend on guest
+success. The storage service orders after p5's mount unit without requiring it
+at startup, allowing the preparer to activate p5; reverse shutdown order places
+storage teardown before that mount's stop. Actual A733 PID1 ordering remains a
+deployment check.
+
+The storage service invokes only `ExecStopPost` for normal stop and failed
+startup cleanup, avoiding a second automatic unmount after an uncertain first
+attempt. See [systemd service semantics](https://www.freedesktop.org/software/systemd/man/252/systemd.service.html).
+Teardown closes shutdown admission monotonically, requests managed stops, then
+takes immediate readonly lease EX without acquiring nonce ownership or reopening.
+Manual/shared or other exclusive holders cause refusal. It validates the exact
+policy/GPT/UUID/mount and checks visible VM, file, raw block, mapping and process
+references before one normal unmount. It never uses force or lazy unmount.
+
+Failure observes the mount read-only and reports acknowledgement separately from
+observed presence/absence. Shutdown stays closed. Cleanup must complete before
+success; only native PID1 mount removal is claimed, not removal of foreign
+namespace clones. Inspect failed receipts and actual state before another
+explicit operation. [Software evidence](evidence/guest-service-validation-20261112.json)
+retains resolved findings, native probes, private systemd graph checks and the
+corrected full-suite result. No physical unmount or managed KVM result is supplied
+by those checks.
 
 ## Installed update and selection
 

@@ -1285,6 +1285,45 @@ class Admission:
             self._publish(record)
             return ClosureOwner(self, record)
 
+    def shutdown_lease(self):
+        """Observe a monotonic shutdown closure and take immediate lease EX.
+
+        This confers no nonce ownership, initialization or reopening authority.
+        Never wait for lease holders while retaining the gate.
+        """
+        require(os.getresuid() == (0, 0, 0), 'actual root shutdown controller required')
+        require(threading.current_thread() is threading.main_thread(),
+                'shutdown lease requires main thread')
+        require(self.boot_id == _boot_id(), 'different host boot')
+        require(os.path.dirname(RUNTIME) == RUNTIME_PARENT and
+                os.path.basename(RUNTIME) == 'a733-admission', 'invalid fixed runtime path')
+        fd = None
+        try:
+            with self._gate():
+                record = self._read()
+                require(record['state'] == 'closed' and record['reason'] == 'shutdown',
+                        'closed shutdown gate required')
+                fd = self._open('leases.lock', 0o640)
+                _lock(fd, fcntl.LOCK_EX, 0)
+                lease = Lease(self, fd, True)
+                lease.recheck()
+                require(self._read() == record, 'shutdown closure changed')
+                _held_lock(fd, 'WRITE', os.getpid())
+                require(not os.get_inheritable(fd), 'shutdown lease must be close-on-exec')
+            # Do not transfer ownership until gate cleanup has acknowledged.
+            return lease
+        except BaseException as error:
+            if fd is not None:
+                try:
+                    os.close(fd)
+                except BaseException as close_error:
+                    failure = AdmissionError('shutdown lease cleanup uncertain')
+                    failure.receipt = dict(stage='shutdown-lease-cleanup',
+                        primary_error=repr(error), close_error=repr(close_error),
+                        lease_cleanup_uncertain=True)
+                    raise failure from error
+            raise
+
     def close(self):
         errors = []
         owner, self.bootstrap_owner = self.bootstrap_owner, None

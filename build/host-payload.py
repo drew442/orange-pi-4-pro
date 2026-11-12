@@ -44,6 +44,8 @@ MANAGEMENT_FILES = {
     'configs/host-management.py': ('usr/lib/orangepi-hypervisor/host-management.py', 0o755),
     'configs/host_config.py': ('usr/lib/orangepi-hypervisor/host_config.py', 0o644),
     'configs/a733-management-ssh.service': ('usr/lib/systemd/system/a733-management-ssh.service', 0o644),
+    'configs/a733-guest-storage.service': ('usr/lib/systemd/system/a733-guest-storage.service', 0o644),
+    'configs/a733-guest-prepare.service': ('usr/lib/systemd/system/a733-guest-prepare.service', 0o644),
 }
 
 
