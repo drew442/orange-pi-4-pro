@@ -1,0 +1,104 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "result": "pass: 3605 privileged Ubuntu tests, shell/diagnostic suites and independent review",
+  "candidate_source": "2996365a11cb07deb20eb4325c90841de8ab820e",
+  "external_helper_requires_root_rebuild": false,
+  "source": {
+    "scripts/qualify-managed-boot.py": {
+      "bytes": 15424,
+      "sha256": "91cc5c5cde4c736cb2d777aa459bf8c535678c3815986331b510f4e61c7744c6"
+    },
+    "tests/test_qualify_managed_boot.py": {
+      "bytes": 15127,
+      "sha256": "c930398ffe6bbde2cef73cbc05bb1b8c7bd956698404a6c0b7ad8bb49b6b3555"
+    },
+    "docs/managed-boot-qualification.md": {
+      "bytes": 4669,
+      "sha256": "f8da47de750bc161033305a387151dbbf93d1cda64dfa5d8d8fd166b7645e27c"
+    }
+  },
+  "focused_tests": 16,
+  "local_additional_checks": [
+    "five Bash suites passed",
+    "five diagnostic assembly tests passed",
+    "all five TOML configurations parsed",
+    "git diff --check passed"
+  ],
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "verdict": "pass-no-open-findings",
+    "checks": {
+      "focused_tests": 16,
+      "actual_cohort": "pass; 13 protected records, authentication registry hash matches retained registry",
+      "source_closure": "pass; actual 85 runtime files from build/maintenance-tools.py",
+      "bytecode": "pass; independent exploit control executes timestamp-valid malicious dependency bytecode, final helper refuses it and legacy adjacent cache",
+      "entry_execution": "captured authenticated dispatcher plus actual complete dependency import family passed",
+      "readonly": "writable root refuses before source access/import",
+      "flags": "main requires python3 -I -B before qualification; covered by focused CLI subprocess tests"
+    },
+    "limitations": [
+      "Source-closure fixture substitutes readonly statvfs bit on disposable root-filesystem tree and substitutes pinned marker placement; no physical image boot.",
+      "Actual checkpoint fixture substitutes board/storage placement, accounts, admission/process evidence, terminal service and census; actual protected files, manifest/disk inspection, fsync, full cohort and legal transitions run.",
+      "Qualifier supplies no power authority and does not exclude future unrelated launches.",
+      "Two source-probe setup failures corrected fixture directory protection and /run different-device placement; final successful disposable source tree uses /var/lib and is removed.",
+      "Earlier native-probe setup path /one/ correction followed helper success; final current probe passes complete transformed autokvm fixture."
+    ]
+  },
+  "resolved_finding": "A valid existing Python bytecode cache could bypass hashed source. The helper now rejects unbound namespace entries/caches on the readonly runtime tree and compiles authenticated dispatcher bytes directly.",
+  "review_custody": {
+    "bytes": 25824,
+    "sha256": "185b8169a0db6b1ed333672e0e275e6881377012acfa05491ff16b03f52cea41",
+    "local": "out/managed-boot-qualification-validation-20261112-01/independent-review.tar.gz",
+    "builder": "/var/lib/a733-managed-boot-qualification-validation-20261112-01/independent-review.tar.gz",
+    "verified_both_hosts": true
+  },
+  "full_validation": {
+    "host": "build.drewnet.online",
+    "unit": "a733-managed-boot-qualification-validation-20261112-01.service",
+    "state": "complete",
+    "observed_main_pid": 1524049,
+    "source_tree": "e3e63a04f44c74df1f5fdd39d9f938f2e793cf7e",
+    "source_commit": "c59db9e0ed7fd6263b7657b9a6ae42ab93f30a42",
+    "source_lock_entries": 1116,
+    "raw_directory": "out/managed-boot-qualification-validation-20261112-01",
+    "remote_directory": "/var/lib/a733-managed-boot-qualification-validation-20261112-01",
+    "instruction": "Poll this exact unit; an observation timeout is not terminal and must not restart it.",
+    "unit_properties": {
+      "RuntimeMaxUSec": "8h",
+      "MainPID": "0",
+      "Result": "success",
+      "ExecMainStatus": "0",
+      "CPUQuotaPerSecUSec": "2s",
+      "MemoryMax": "3221225472",
+      "UMask": "0022",
+      "LoadState": "loaded",
+      "SubState": "exited"
+    },
+    "python_tests": 3605,
+    "diagnostic_tests": 5,
+    "shell_suites": 5,
+    "skips": 0,
+    "errors": 0,
+    "failures": 0,
+    "minimum_free_bytes": 23660539904,
+    "minimum_memavailable_bytes": 6928379904,
+    "receipt_archive": {
+      "path": "out/managed-boot-qualification-validation-20261112-01/receipts.tar",
+      "builder_path": "/var/lib/a733-managed-boot-qualification-validation-20261112-01/validation-receipts.tar",
+      "bytes": 583680,
+      "sha256": "a9942811e6bd4314b82bf843eb904c15cf96366cdce956a743e0a419e5b8610d",
+      "verified_both_hosts": true
+    }
+  },
+  "hardware_acceptance": false,
+  "power_authority": false,
+  "board_execution": false,
+  "remaining": [
+    "Integrate readonly observation and separate retained power admission into SPI collectors",
+    "Boot retained recovery SD, fresh live inventory and reviewed SPI recovery demonstration",
+    "Install candidate and prove managed KVM on actual hardware",
+    "Final SPI boot counts and independent procedure reproduction"
+  ]
+}

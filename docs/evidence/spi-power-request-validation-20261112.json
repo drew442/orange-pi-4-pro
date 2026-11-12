@@ -1,0 +1,94 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "result": "pass: focused and independent native software checks; combined collector qualification remains pending",
+  "candidate_source": "2996365a11cb07deb20eb4325c90841de8ab820e",
+  "installed_closure_changed": false,
+  "source": {
+    "scripts/request-spi-power.py": {
+      "bytes": 17795,
+      "sha256": "ac5f2e29e06b924180a5432cb9edffe7e2f8d70a2f46aeb836804377ee0ed895"
+    },
+    "tests/test_request_spi_power.py": {
+      "bytes": 16428,
+      "sha256": "72db284ff785acd4295d0f36fb0f50746ad1eecb36444e47d08528d32ad3c604"
+    },
+    "scripts/qualify-managed-boot.py": {
+      "bytes": 15424,
+      "sha256": "91cc5c5cde4c736cb2d777aa459bf8c535678c3815986331b510f4e61c7744c6"
+    }
+  },
+  "focused_tests": 15,
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "verdict": "PASS: no blocking findings within cooperating-runtime boundary",
+    "validation": [
+      {
+        "artifact": "focused-tests-final.log",
+        "result": "15 tests pass, including refusal/order/fault cases; fake installed authority and fake power call only."
+      },
+      {
+        "artifact": "native-api-probe-final.log",
+        "result": "PASS actual same-family HostContext, StateController, helper.authenticate, CP ready cohort, protected storage and canonical shutdown EX; 99 authority checks; successor EX succeeds and normal admission stays closed.",
+        "substitutions": [
+          "Private storage/admission runtime",
+          "Platform/mount/serial/UUID/account/service observations",
+          "Simulated clean automatic fixture producer"
+        ],
+        "note": "The retained fixture producer emits its existing intermediate checkpoint_intent diagnostic with success=false; the completed producer and reviewed native API authentication both return success=true."
+      },
+      {
+        "artifact": "intent-probe.log",
+        "result": "PASS real exclusive file/dir publication, metadata/fsync/readback, duplicate refusal, injected unknown fsync and short-write failure retain blocking partial directory. RAM placement guard explicitly substituted for development-host fixture."
+      }
+    ],
+    "resolved_design_details": [
+      {
+        "finding": "Expensive snapshot/PID1/unit/consumer/SD observations were previously nested under every authority guard.",
+        "resolution": "Final boundary() is called exactly four times: preclosure, post-EX, post-cohort, and final precommand. Nested authority retains native/policy/current-boot/WRITE-lock/closure checks.",
+        "references": [
+          "scripts/request-spi-power.py:237",
+          "scripts/request-spi-power.py:243",
+          "scripts/request-spi-power.py:253",
+          "scripts/request-spi-power.py:277",
+          "scripts/request-spi-power.py:281",
+          "scripts/request-spi-power.py:299"
+        ]
+      },
+      {
+        "finding": "Proposal wording listed four expected cohort references while CLI accepts head and registry pins.",
+        "resolution": "Coordinator accepts canonical ready-head binding run ID/boot/completed intent plus exact registry and native CP full cohort authentication; no extra CLI flags required."
+      }
+    ],
+    "limitations": [
+      "No A733/QEMU/KVM or native PID1 shutdown proof; no actual reboot/poweroff issued.",
+      "Runtime admission/intent are current-boot RAM state; collector owns durable cross-SSH request intent and physical UART/boot/removal acceptance.",
+      "Initial private probe adaptation used a stale one/head.json path and failed; corrected autokvm-only fixture passes final frozen source.",
+      "Full qualification validation job was neither observed nor changed by this review."
+    ]
+  },
+  "review_custody": {
+    "path": "out/spi-power-request-review-20261112-01/review.tar.gz",
+    "builder_path": "/var/lib/a733-spi-power-request-review-20261112-01/review.tar.gz",
+    "bytes": 12036,
+    "sha256": "52091415d810ba4c6a25b80eb31625042ec2a71d8cbec060c5a8827b9fbdf215",
+    "verified_both_hosts": true
+  },
+  "real_power_commands": 0,
+  "hardware_acceptance": false,
+  "safety_boundaries": [
+    "Exact pinned candidate B and SD block absence; physical removal still needs operator/UART evidence",
+    "Completed current-boot automatic KVM fixture authenticated by existing typed APIs",
+    "Monotonic shutdown gate; canonical EX released before systemctl so storage hook can acquire it",
+    "Exclusive per-boot RAM intent; unknown acknowledgement never permits automatic retry/reopen",
+    "Four expensive observation boundaries; nested authority guards do not repeat full scans",
+    "Conservative closure/intent/EX flags and native failure receipts retain mutation uncertainty"
+  ],
+  "remaining": [
+    "Integrate native durable request ledger, readonly polling, UART and operator attestations",
+    "Run combined collector checks from frozen source",
+    "Deploy candidate/managed fixture and validate actual shutdown order, power commands and SPI boot series",
+    "Independent reproduction and final acceptance"
+  ]
+}

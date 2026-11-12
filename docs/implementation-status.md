@@ -274,15 +274,28 @@ binary redistribution clearance is claimed. [Source inventory](toolchain-sources
 
 ## Resources and next actions
 
-Latest privileged Ubuntu 22.04 suite: **3589 tests**, zero skips/errors/failures,
-five shell suites and five diagnostic cases; all five TOMLs parse natively.
-[Combined candidate evidence](evidence/candidate-integration-validation-20261112.json)
-retains the exact source freeze, terminal unit, independent reviews and verified
-receipts on both hosts. Sample minima are 29,489,291,264 bytes free and
-6,537,134,080 bytes MemAvailable. Source `2996365` includes the compatibility and
-operator-flow changes. These are software checks, not physical acceptance.
-Production root construction/repetition and artifact/reader verification now pass.
-Continue artifact-bound deployment preparation and SPI boot collector integration.
+Latest privileged Ubuntu 22.04 suite: **3605 tests**, zero skips/errors/failures,
+five shell suites and five diagnostic cases. The terminal qualification-helper
+unit passes; source `c59db9e`, tree `e3e63a0`, 1116 locked inputs and verified
+receipt archives on both hosts are recorded in
+[validation evidence](evidence/managed-boot-qualification-validation-20261112.json).
+Minima were 23,660,539,904 bytes free and 6,928,379,904 bytes MemAvailable. All
+five TOMLs parse. Candidate roots remain frozen at `2996365`; these software
+checks establish no physical acceptance.
+
+Production root construction/repetition and artifact/reader verification pass.
+[Prepared B metadata](evidence/managed-candidate-deployment-preparation-20261112.json)
+has verified custody for direct sparse expansion, avoiding an extra onboard
+preparer copy/hash. The [external qualification helper](managed-boot-qualification.md)
+authenticates a completed current-boot automatic cohort and retains thirteen
+bound records. The separate [power helper](spi-power-request.md) passes fifteen
+focused checks and independent native EX/cohort/intent probes with explicit
+platform substitutions. [Review and custody](evidence/spi-power-request-validation-20261112.json).
+Its shutdown gate stays closed through uncertainty; EX cleanup precedes the
+single power command. No real power command has been issued by these helpers.
+Native durable-intent/UART/readonly-polling collector integration and its combined
+validation are next. The [boot ledger](evidence/spi-boot-credit-ledger-20261112.json)
+records conditional existing route credit; final managed-build credit remains zero.
 Recovery-card boot awaits the operator; UART remains active with unchanged
 clean-powerdown output. Physical SPI recovery, deployment, actual managed KVM,
 final boot counts and independent procedure reproduction remain required.
