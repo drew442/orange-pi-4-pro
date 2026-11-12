@@ -95,13 +95,13 @@ class RemoteRestore(unittest.TestCase):
         self.thread.join(timeout=5)
 
     def prepare(self):
-        plan = R.prepare(*self.args, **self.options)
+        plan = R.prepare(*self.args, name='one', **self.options)
         self.fixture.plan_path.write_bytes(R.canonical(plan))
         self.fixture.plan_path.chmod(0o400)
         return plan
 
     def apply(self):
-        return R.apply(*self.args, str(self.fixture.plan_path), **self.options)
+        return R.apply(*self.args, str(self.fixture.plan_path), name='one', **self.options)
 
     def test_full_tls_restore_without_local_archive(self):
         # Serving bytes is independent of the on-board local archive pathname.

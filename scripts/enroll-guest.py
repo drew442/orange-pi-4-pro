@@ -43,6 +43,7 @@ CHUNK = 1024 * 1024
 RESERVE = 256 * 1024 * 1024
 FILENAMES = {'kernel': 'Image', 'initrd': 'initramfs.cpio.gz', 'disk': 'disk.raw'}
 PROFILE = 'a733-guest-enrollment-v1'
+OPERATION = None
 
 
 def canonical(value):
@@ -287,12 +288,58 @@ class Review:
             raise error
 
 
-def prepare(config, kernel, initrd, disk, guest_uuid):
-    review = Review(config, kernel, initrd, disk, guest_uuid)
+def operation_module():
+    # The helper imports lifecycle context -> policy -> this module. Loading it
+    # only after enrollment initialization avoids an import cycle.
+    global OPERATION
+    if OPERATION is None:
+        OPERATION = module('enrollment_operation', 'scripts/guest-operation-admission.py')
+    return OPERATION
+
+
+def discover_config(path):
+    """Pin only the protected small config before selecting its guest lock."""
+    require(os.getresuid() == (0, 0, 0), 'actual root required for enrollment')
+    MANAGEMENT.runtime_guard()
+    held = HeldPath(path)
     try:
+        devices = {os.stat('/run').st_dev, os.stat(MANAGEMENT.STATE).st_dev}
+        data = read_small(held, devices)
+        config = CONFIG.validate_config(data)
+        return held, data, config
+    except BaseException:
+        held.close()
+        raise
+
+
+def bind_config(held, data, config, review, operation):
+    operation.recheck()
+    devices = {os.stat('/run').st_dev, os.stat(MANAGEMENT.STATE).st_dev}
+    require(read_small(held, devices) == data and review.config == config and
+            operation.name == config['name'] and
+            review.plan['config_source'] == {'path': held.path, 'identity': identity(held.info)},
+            'enrollment config differs from admitted guest')
+    review.config_file.recheck()
+
+
+def prepare(config, kernel, initrd, disk, guest_uuid):
+    discovered = operation = review = None
+    try:
+        discovered, data, selected = discover_config(config)
+        operation = operation_module().ManualGuestOperation(selected['name'], create=True)
+        review = Review(config, kernel, initrd, disk, guest_uuid)
+        bind_config(discovered, data, selected, review, operation)
         return review.plan
     finally:
-        review.close()
+        error = None
+        for resource in (review, discovered, operation):
+            if resource is not None:
+                try:
+                    resource.close()
+                except BaseException as caught:
+                    error = caught
+        if error:
+            raise error
 
 
 def rename_new(old_parent, old, new_parent, new):
@@ -472,9 +519,10 @@ def apply(config, kernel, initrd, disk, guest_uuid, plan):
     receipt = {'schema': 1, 'operation': PROFILE, 'success': False,
                'directory_may_be_published': False, 'published': False, 'durable': False,
                'bytes_attempted_staged': 0}
-    lock = review = None
+    discovered = operation = lock = review = None
     try:
-        MANAGEMENT.runtime_guard()
+        discovered, data, selected = discover_config(config)
+        operation = operation_module().ManualGuestOperation(selected['name'], create=True)
         lock = os.open(LOCK, os.O_RDWR | os.O_CREAT | os.O_NOFOLLOW | os.O_NONBLOCK, 0o600)
         info = os.fstat(lock)
         regular(info, 0o600)
@@ -483,21 +531,23 @@ def apply(config, kernel, initrd, disk, guest_uuid, plan):
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         review = Review(config, kernel, initrd, disk, guest_uuid, plan)
         def lock_check():
+            bind_config(discovered, data, selected, review, operation)
             require(identity(os.fstat(lock)) == identity(info) and
                     identity(os.lstat(LOCK)) == identity(info), 'enrollment lock changed')
         review.lock_check = lock_check
         lock_check()
         receipt['plan_sha256'] = review.plan['plan_sha256']
         stage_and_publish(review, receipt)
-    except (OSError, ValueError, UnicodeError, subprocess.SubprocessError, KeyboardInterrupt) as error:
+        operation.recheck()
+    except BaseException as error:
         receipt['success'] = False
         receipt['error'] = type(error).__name__
     finally:
-        for resource in (review, lock):
+        for resource in (review, lock, discovered, operation):
             if resource is not None:
                 try:
-                    resource.close() if isinstance(resource, Review) else os.close(resource)
-                except (OSError, KeyboardInterrupt) as error:
+                    os.close(resource) if isinstance(resource, int) else resource.close()
+                except BaseException as error:
                     receipt['success'] = False
                     receipt['cleanup_error'] = type(error).__name__
     return receipt
@@ -529,6 +579,7 @@ def main(argv=None):
 if __name__ == '__main__':
     try:
         sys.exit(main())
-    except (OSError, ValueError, UnicodeError, subprocess.SubprocessError, KeyboardInterrupt) as error:
+    except (OSError, ValueError, UnicodeError, subprocess.SubprocessError, KeyboardInterrupt,
+            RuntimeError) as error:
         print(json.dumps({'success': False, 'error': type(error).__name__}), file=sys.stderr)
         sys.exit(1)

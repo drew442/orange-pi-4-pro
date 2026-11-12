@@ -16,9 +16,6 @@ import sys
 import tempfile
 
 REPO = Path(__file__).resolve().parents[1]
-SOURCES = ('scripts/enroll-guest.py', 'scripts/guest-accounts.py', 'scripts/guest-storage.py',
-           'scripts/launch-kvm-guest.py', 'configs/guest_config.py', 'configs/guest_identity.py',
-           'configs/host-management.py', 'configs/host_config.py', 'configs/package_state.py')
 NAMES = {'kernel': 'Image', 'initrd': 'initramfs.cpio.gz', 'disk': 'guest-disk.raw'}
 FIXTURE_PROFILES = ('legacy', 'fixed-seed-http')
 
@@ -28,6 +25,10 @@ def module(name, path):
     value = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(value)
     return value
+
+
+# Keep the disposable chroot's trusted import closure aligned with packaging.
+SOURCES = module('enrollment_arm_tools', 'build/maintenance-tools.py').SOURCES
 
 
 def load_fixture_profile(fixture_profile='legacy'):
@@ -105,9 +106,23 @@ inputs=[str(config_path),'/seed/Image','/seed/initramfs.cpio.gz','/seed/guest-di
 # The production live guard must reject the unsupported chroot without creating a guest.
 refusal=subprocess.run(['/usr/bin/python3','-I','-B','/source/scripts/enroll-guest.py','prepare','--config',inputs[0],'--kernel',inputs[1],'--initrd',inputs[2],'--disk',inputs[3],'--guest-uuid',guest_uuid],capture_output=True,text=True,timeout=30)
 assert refusal.returncode!=0 and not list(root.iterdir())
+# This file-engine substitute grants no admission authority. Real runtime
+# admission is verified separately; the unsupported production CLI ran above.
+class FixtureAdmission:
+    def __init__(self,name,*,create=False):self.name=name
+    def recheck(self):pass
+    def close(self):pass
+    def __enter__(self):return self
+    def __exit__(self,*unused):self.close()
+E.operation_module().ManualGuestOperation=FixtureAdmission
 # Real pinned sysusers creates the fixture identity in this disposable chroot.
 subprocess.run(['/usr/bin/systemd-sysusers','--inline','g a733-vm-fixture 60001','u a733-vm-fixture 60001:60001 "A733 guest fixture" /nonexistent /usr/sbin/nologin'],check=True,capture_output=True,timeout=30)
 E.MANAGEMENT.runtime_guard=lambda:None
+# Real sysusers/database bytes remain exercised. This disposable chroot has no
+# production RAM-overlay mount; substitute only snapshot placement authority.
+def fixture_account_snapshot():
+    return {name:pathlib.Path('/etc',name).read_bytes() for name in E.ACCOUNTS.DATABASES}
+E.ACCOUNTS.snapshot=fixture_account_snapshot
 context={'namespace':'fixture-no-NVMe','guest_source':'fixture-no-block-device','root_source':'fixture','root_device':[0,1],'guest_device':[0,2],'guest_mount_id':1,'boot_inputs_checked':0}
 E.STORAGE.verify_guest_directory=lambda fd:dict(context)
 E.probe_uuid=lambda observed,expected:None
@@ -158,7 +173,7 @@ unit=E.CONFIG.render_unit(config,'/source/scripts/launch-kvm-guest.py',kvm_gid)
 unit_path=pathlib.Path('/etc/systemd/system/a733-guest-fixture.service');unit_path.write_text(unit)
 verified=subprocess.run(['/usr/bin/systemd-analyze','verify',str(unit_path)],capture_output=True,text=True,timeout=30)
 assert verified.returncode==0,verified.stderr
-print(json.dumps({'architecture':platform.machine(),'actual_fixture_inputs':records,'prepare_no_output':True,'enrollment':receipt,'published_ownership_and_full_hashes':'passed','guest_uid_disk_write':'passed','guest_uid_kernel_manifest_and_directory_refusals':'passed','different_uid_refused':'passed','existing_guest_refused':'passed','source_inputs_unchanged':'passed','systemd_unit_verify':{'returncode':verified.returncode,'diagnostics':verified.stderr.strip(),'unit':unit},'live_policy':'RAM/NVMe/mounted UUID boundaries mocked only inside disposable file fixture','guest_execution':'not performed'}))
+print(json.dumps({'architecture':platform.machine(),'actual_fixture_inputs':records,'prepare_no_output':True,'enrollment':receipt,'published_ownership_and_full_hashes':'passed','guest_uid_disk_write':'passed','guest_uid_kernel_manifest_and_directory_refusals':'passed','different_uid_refused':'passed','existing_guest_refused':'passed','source_inputs_unchanged':'passed','systemd_unit_verify':{'returncode':verified.returncode,'diagnostics':verified.stderr.strip(),'unit':unit},'live_policy':'admission/RAM/NVMe/mounted UUID boundaries mocked only inside disposable file fixture','guest_execution':'not performed'}))
 """
 
 
@@ -237,7 +252,8 @@ def verify(rootfs, guest_directory, *, probe=PROBE, sources=SOURCES, after_probe
             'rootfs':fixture.ROOTFS,'binfmt':binfmt,'builder_staging_storage':storage,
             'fixture_profile':profile,
             'verifier_source':fixture.record(Path(__file__).read_bytes()),'trusted_sources':source_records,
-            'ARM_checks':checks,'limits':['RAM/NVMe mount and UUID policy boundaries mocked only inside disposable file fixture.',
+            'ARM_checks':checks,'limits':['Admission, RAM/NVMe mount and UUID policy boundaries mocked only inside disposable file fixture.',
+            'Admission uses a no-authority file-engine substitute; actual runtime admission is verified separately.',
             'Memory sample and CPU count belong to native builder, not A733 hardware.',
             'Unit parsed but not started; stop sends SIGTERM and does not prove guest graceful shutdown.',
             'No guest VM, KVM, board boot, production enrollment or hardware acceptance.']}

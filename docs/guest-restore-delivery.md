@@ -5,7 +5,15 @@ NVMe. A pinned chunk index authenticates each 1 MiB of encoded data before the
 gzip decoder receives it. The full archive size/hash, canonical archive framing,
 manifest, history and payload hashes must also pass before the new guest is
 published. The [fresh-destination restore guards](guest-restoration.md) remain
-mandatory. No physical board network or restored KVM test has passed.
+mandatory. The candidate's physical HTTPS board-network and restored-KVM
+acceptance remain pending.
+
+These examples target the **uninstalled production-readiness candidate** and
+require its initialized admission runtime. This candidate is not physically
+qualified. The accepted 20261109 release helper omits the new `--name` flag; its
+commands and historical physical results remain in the
+[deployment guide](deploy-protected-20261109.md) and
+[restoration record](evidence/normalized-guest-restore-20261110.json).
 
 ## Create the index on the backup machine
 
@@ -75,13 +83,16 @@ and [HTTP opener behavior](https://docs.python.org/3.11/library/urllib.request.h
 
 Complete storage/account activation and source-backup verification as described
 in the restoration guide. Keep the guest identity stopped and choose an absent
-destination. In its root shell, set trusted values:
+destination. The explicit target name must match the authenticated backup. The
+candidate takes admission and the guest lock before network contact and refuses
+managed guest names. In its root shell, set trusted values:
 
 ```bash
 set -euo pipefail
 umask 077
 set -C
 : "${A733_GUEST_TOOLS:?Set absolute trusted complete installed or portable tool tree}"
+: "${A733_RESTORE_GUEST_NAME:?Set guest name matching the authenticated backup}"
 : "${A733_BACKUP_ARCHIVE_URL:?Set protected HTTPS archive URL}"
 : "${A733_BACKUP_CHUNK_INDEX_URL:?Set protected HTTPS index URL}"
 : "${A733_BACKUP_CHUNK_INDEX_SHA256:?Set trusted successful index receipt pin}"
@@ -89,6 +100,7 @@ set -C
 : "${A733_BACKUP_MANIFEST_SHA256:?Set trusted source manifest pin}"
 : "${A733_DESTINATION_GUEST_UUID:?Set verified destination p5 UUID}"
 /usr/bin/python3 -I -B "$A733_GUEST_TOOLS/scripts/restore-guest.py" prepare \
+  --name "$A733_RESTORE_GUEST_NAME" \
   --archive-url "$A733_BACKUP_ARCHIVE_URL" \
   --chunk-manifest-url "$A733_BACKUP_CHUNK_INDEX_URL" \
   --chunk-manifest-sha256 "$A733_BACKUP_CHUNK_INDEX_SHA256" \
@@ -111,6 +123,7 @@ Apply the same options and plan from an interactive TTY:
 
 ```bash
 /usr/bin/python3 -I -B "$A733_GUEST_TOOLS/scripts/restore-guest.py" apply \
+  --name "$A733_RESTORE_GUEST_NAME" \
   --archive-url "$A733_BACKUP_ARCHIVE_URL" \
   --chunk-manifest-url "$A733_BACKUP_CHUNK_INDEX_URL" \
   --chunk-manifest-sha256 "$A733_BACKUP_CHUNK_INDEX_SHA256" \
@@ -161,8 +174,8 @@ sudo /usr/bin/python3.10 -I -B tests/verify_guest_restore_https_arm.py \
 
 It compares HTTPS restoration against local restoration, including exact
 manifest/history and all payload bytes, and generates the same index natively
-with actual fixed-storage guards. Hardware policy boundaries are substituted
-only inside the disposable ARM fixture. Both ends run on the builder. Actual
+with actual fixed-storage guards. Admission and hardware policy boundaries are
+substituted only inside the disposable ARM fixture. Both ends run on the builder. Actual
 off-device retention, production endpoint deployment, board networking, full
 capacity/resource behavior, restored KVM execution and physical recovery remain
 required before release.

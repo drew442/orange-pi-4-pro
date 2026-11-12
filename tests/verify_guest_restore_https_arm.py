@@ -33,10 +33,10 @@ remote_root=pathlib.Path('/run/a733-https-guests');remote_root.mkdir(mode=0o711)
 T.ENROLL.ROOT=str(remote_root)
 remote_args=[None,backup['archive']['sha256'],new_pin,destination_uuid]
 options={'archive_url':url+'/archive.gz','chunk_manifest_url':url+'/chunks.json','chunk_manifest_sha256':index_pin,'ca_file':'/run/backup-ca.pem','network_timeout_seconds':30}
-remote_plan=T.prepare(*remote_args,**options)
+remote_plan=T.prepare(*remote_args,name='fixture',**options)
 assert not list(remote_root.iterdir()) and 'path' not in remote_plan['archive']
 remote_plan_path=pathlib.Path('/run/https-restore-plan.json');remote_plan_path.write_bytes(T.canonical(remote_plan));remote_plan_path.chmod(0o400)
-remote=T.apply(*remote_args,str(remote_plan_path),**options)
+remote=T.apply(*remote_args,str(remote_plan_path),name='fixture',**options)
 assert remote['success'] and remote['published'] and remote['durable'],remote
 remote_target=remote_root/'fixture'
 for name in ('Image','initramfs.cpio.gz','disk.raw','enrollment.json'):
@@ -46,10 +46,10 @@ assert remote['manifest_sha256']==restored_pin
 assert not list((remote_root/'.enrollment').iterdir())
 assert set(p.name for p in remote_target.iterdir())=={'Image','initramfs.cpio.gz','disk.raw','enrollment.json','.checkpoints'}
 bad_options=dict(options,chunk_manifest_sha256='0'*64)
-try:T.prepare(*remote_args,**bad_options)
+try:T.prepare(*remote_args,name='fixture',**bad_options)
 except ValueError:pass
 else:raise AssertionError('bad index pin accepted')
-print(json.dumps({'architecture':platform.machine(),'source_archive':backup['archive'],'chunk_index':{'bytes':len(index),'sha256':index_pin,'chunk_count':len(K.validate(index)['chunks'])},'local_restore':restored,'https_restore':remote,'prepare_no_destination_writes':True,'remote_payloads_history_and_manifest_match_local_restore':True,'wrong_index_pin_refused':True,'private_staging_empty':True,'local_archive_staging_by_remote_reader':False,'TLS':'real loopback TLS with verified certificate/hostname and custom protected CA; HTTP transport not mocked','live_boundaries':'NVMe/namespace/UUID/service/UID census/approval substituted only inside disposable fixture','guest_execution':'not performed','board_network':'not tested'}))
+print(json.dumps({'architecture':platform.machine(),'source_archive':backup['archive'],'chunk_index':{'bytes':len(index),'sha256':index_pin,'chunk_count':len(K.validate(index)['chunks'])},'local_restore':restored,'https_restore':remote,'prepare_no_destination_writes':True,'remote_payloads_history_and_manifest_match_local_restore':True,'wrong_index_pin_refused':True,'private_staging_empty':True,'local_archive_staging_by_remote_reader':False,'TLS':'real loopback TLS with verified certificate/hostname and custom protected CA; HTTP transport not mocked','live_boundaries':'admission/NVMe/namespace/UUID/service/UID census/approval substituted only inside disposable fixture','guest_execution':'not performed','board_network':'not tested'}))
 '''
 
 
@@ -141,8 +141,9 @@ def verify(rootfs, guest_directory):
     result['native_indexer_source'] = {'bytes': (REPO / 'scripts/index-guest-backup.py').stat().st_size,
         'sha256': hashlib.sha256((REPO / 'scripts/index-guest-backup.py').read_bytes()).hexdigest()}
     result['limits'] = [
+        'Admission uses a no-authority file-engine substitute; actual runtime admission is verified separately.',
         'Actual pinned ARM userspace, archive generation, HTTPS, TLS certificate/hostname checks, chunk verification and full copy/readback execute.',
-        'NVMe topology/UUID/namespace/service/UID census/TTY boundaries substituted only inside disposable fixture.',
+        'Admission/NVMe topology/UUID/namespace/service/UID census/TTY boundaries substituted only inside disposable fixture.',
         'Fixture server reads a backup generated on the same builder; remote reader does not stage an archive, but off-device retention and board networking are untested.',
         'No guest VM/KVM/board boot/physical restoration; configured binfmt interpreter hash checked, kernel-held F descriptor not independently inspected.']
     return result

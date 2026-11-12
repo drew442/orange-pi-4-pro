@@ -1,0 +1,220 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "result": "pass",
+  "scope": "Uninstalled legacy enrollment/restore admission and matching disposable ARM file-engine probes; installed services, managed coherent backup and physical acceptance excluded",
+  "builder": "drew@build.drewnet.online",
+  "full_Ubuntu_tests": 2814,
+  "failures_errors_skips": 0,
+  "shell_suites": 5,
+  "diagnostic_cases": 5,
+  "native_builder_base": "/var/lib/a733-legacy-publication-validation-20261112-01",
+  "arm_builder_base": "/var/lib/a733-legacy-publication-validation-20261112-02",
+  "units": {
+    "native": {
+      "RuntimeMaxUSec": "8h",
+      "MainPID": "0",
+      "Result": "success",
+      "ExecMainCode": "1",
+      "ExecMainStatus": "0",
+      "CPUQuotaPerSecUSec": "2s",
+      "MemoryMax": "3221225472",
+      "ActiveState": "active",
+      "SubState": "exited"
+    },
+    "initial_arm": {
+      "RuntimeMaxUSec": "8h",
+      "MainPID": "0",
+      "Result": "exit-code",
+      "ExecMainCode": "1",
+      "ExecMainStatus": "1",
+      "CPUQuotaPerSecUSec": "2s",
+      "MemoryMax": "3221225472",
+      "ActiveState": "failed",
+      "SubState": "failed"
+    },
+    "arm": {
+      "RuntimeMaxUSec": "8h",
+      "MainPID": "0",
+      "Result": "success",
+      "ExecMainCode": "1",
+      "ExecMainStatus": "0",
+      "CPUQuotaPerSecUSec": "2s",
+      "MemoryMax": "3221225472",
+      "ActiveState": "active",
+      "SubState": "exited"
+    }
+  },
+  "source_locks": {
+    "native": {
+      "bytes": 162370,
+      "sha256": "81fa55898a0a2a7e724c52cf45ae81b0ced81d1f2a38d6f032efa06bdefbedea",
+      "index_tree": "d5ddb7611b8e4ba12465c411a7c0ee03b179c8ef"
+    },
+    "final_arm": {
+      "bytes": 162370,
+      "sha256": "703a80ebea6743baf7cc45010e20f5233bec6dbca7d0d4eaf679fa9c68130851",
+      "index_tree": "d15746039a0a69c1bc28cd07c312566d2b7298c9"
+    },
+    "files_each": 1013
+  },
+  "source": {
+    "docs/guest-restoration.md": {
+      "bytes": 10138,
+      "sha256": "34f348367cf83695b14585ec41920ad0eca5418f8b48f4639edfadee09d2502e"
+    },
+    "docs/guest-restore-delivery.md": {
+      "bytes": 10133,
+      "sha256": "22ce0fe43d1138fa03a0d5e0b38c3b41b714aebf012326d84ad82c40598c429b"
+    },
+    "scripts/enroll-guest.py": {
+      "bytes": 25389,
+      "sha256": "65575294cb989b1351cdb264dd5e0a373b2251c4906479c356c6f6fe5bb7e687"
+    },
+    "scripts/restore-guest.py": {
+      "bytes": 23488,
+      "sha256": "7b42f3f50dd0664905b7b3a9abeafc443a442e777e3dbfe9af4e7f190ee9993e"
+    },
+    "tests/test_guest_enrollment.py": {
+      "bytes": 28085,
+      "sha256": "51c662deca008464a95dd187507dae972416136b551394d6570448d996585b02"
+    },
+    "tests/test_guest_restore.py": {
+      "bytes": 16346,
+      "sha256": "6b020fff06b9c5d38a325c27b265cc5b35c25657552bf1be8216c43224b1a012"
+    },
+    "tests/test_guest_restore_admission.py": {
+      "bytes": 12290,
+      "sha256": "0b3b406f00e2dcbe8f16e3a82ba2ef8969e5d7fae1cdad3e1e2b564d25d8baa2"
+    },
+    "tests/test_guest_restore_remote.py": {
+      "bytes": 6393,
+      "sha256": "4405df7ec4d5039749df542b6994310c1595af003a52c7a8b9d4471647da01da"
+    },
+    "tests/verify_guest_backup_arm.py": {
+      "bytes": 6992,
+      "sha256": "87a5f503823c3f4e4a6a7c503605f82778e3ec2241027d42e2f1a40e90a2e85a"
+    },
+    "tests/verify_guest_checkpoint_arm.py": {
+      "bytes": 9252,
+      "sha256": "5b0db83ecc74d00408d036e8488651c76ceb7ce0a9b26acafff5bdec52e81997"
+    },
+    "tests/verify_guest_enrollment_arm.py": {
+      "bytes": 16754,
+      "sha256": "da53813e09535d5f726633ccfd103b61c2abfc6522f05e240016203c21ea66d8"
+    },
+    "tests/verify_guest_restore_arm.py": {
+      "bytes": 8607,
+      "sha256": "730080ea212dd8c4499174a1e35bf6d375c827214291952d0148769e7062a88a"
+    },
+    "tests/verify_guest_restore_https_arm.py": {
+      "bytes": 9577,
+      "sha256": "2a90365d1740b60fc0ff478bb022b93343fc88b15cc765a9b9f3ee134f0b0980"
+    }
+  },
+  "independent_reviews": {
+    "enrollment": {
+      "path": "out/legacy-publication-validation-20261112-02/enrollment-review.json",
+      "bytes": 38397,
+      "sha256": "5fcfa35c68125e762b2c74f69c656e581e64465b7cbf1e5fdebbf9d3ae3715f2"
+    },
+    "restore": {
+      "path": "out/legacy-publication-validation-20261112-02/restore-review.json",
+      "bytes": 52106,
+      "sha256": "62d2844d0afe1a2cfe92daa259a4c025985fdb2b84a628458ffe8a1011ec02aa"
+    }
+  },
+  "behavior": [
+    "Protected small-config discovery selects enrollment guest before admission/global lock; retained bytes/metadata/name match full review and every publication guard.",
+    "Restore requires explicit target --name before admission, subsystem/archive locks or network source; all authenticated source/restored configurations must match. Wrong and managed names refuse before staging.",
+    "Existing manual authorization, plan/history/archive formats, account/storage/source and no-replace/durability checks remain enforced; admission retained through all owned cleanup.",
+    "Root native independent probes cover metadata/name races, managed markers, actual flocks/PTY authorization, closed gates and partial/close uncertainty."
+  ],
+  "arm": {
+    "classification": "ARM HTTPS guest file restore; same-builder loopback, no restored VM or KVM",
+    "rootfs": {
+      "bytes": 169852145,
+      "sha256": "1967e76c0c831c1c0bab432e7116457d4372c15b413090c054f8958b72dcb392"
+    },
+    "binfmt": {
+      "registration": "enabled\ninterpreter /usr/libexec/qemu-binfmt/aarch64-binfmt-P\nflags: PF\noffset 0\nmagic 7f454c460201010000000000000000000200b700\nmask ffffffffffffff00fffffffffffffffffeffffff\n",
+      "interpreter": "/usr/libexec/qemu-binfmt/aarch64-binfmt-P",
+      "resolved_interpreter": "/usr/bin/qemu-aarch64-static",
+      "bytes": 5628704,
+      "sha256": "92c4aeb8dd898de7152c184370ab22f09ae7c5b7279fd300081c76cee3f78a80",
+      "limit": "Hashes configured interpreter pathname; kernel-held binfmt interpreter FD is not independently inspectable."
+    },
+    "captured_sources": 57,
+    "combined_probe": {
+      "bytes": 20024,
+      "sha256": "24a402aa46c0c270d5c9672321651856730de9c3770ef803bd2729b7828335dc"
+    },
+    "local_restore": {
+      "schema": 1,
+      "operation": "a733-guest-restore-v1",
+      "success": true,
+      "published": true,
+      "durable": true,
+      "staging_retained": false,
+      "directory_may_be_published": true,
+      "bytes_attempted_staged": 140442449,
+      "archive_sha256": "e83ddd8bc5d71ca2507cae92ce4735add9243c36b5f991573c9f29ceef3c85de",
+      "source_manifest_sha256": "f441b905072a8c384b0c75a80832c9be647445019390cb5949be3a3380227a77",
+      "plan_sha256": "c7ffed366f765dc6bfa0f62f38dd4e851e30e0c20edaf74b6bd6d708fb11e6f2",
+      "manifest_sha256": "be343cde567c17185cf36449bc529019b5a98a6088a130a432dcdc68362780d9"
+    },
+    "https_restore": {
+      "schema": 1,
+      "operation": "a733-guest-restore-v1",
+      "success": true,
+      "published": true,
+      "durable": true,
+      "staging_retained": false,
+      "directory_may_be_published": true,
+      "bytes_attempted_staged": 140442449,
+      "archive_sha256": "e83ddd8bc5d71ca2507cae92ce4735add9243c36b5f991573c9f29ceef3c85de",
+      "source_manifest_sha256": "f441b905072a8c384b0c75a80832c9be647445019390cb5949be3a3380227a77",
+      "plan_sha256": "6c29edab1feefe6ad7a6454d88b169e0e4be8fa7ce5750e728c5b3bf7e954186",
+      "manifest_sha256": "be343cde567c17185cf36449bc529019b5a98a6088a130a432dcdc68362780d9"
+    },
+    "payloads_history_manifest_match": true,
+    "wrong_index_pin_refused": true,
+    "private_staging_empty": true,
+    "actual_work": "Pinned ARM sysusers/database bytes, archive authentication, copy/readback, ownership, file flocks, fsync/no-replace publication, actual loopback HTTPS/TLS/chunk checks and native index publication.",
+    "explicit_substitutions": "Admission, production account database overlay placement, NVMe/namespace/UUID/service/UID-process census and operator TTY approval. Account snapshot reads actual disposable /etc files after real ARM sysusers, not invented rows.",
+    "qemu_user_only": true,
+    "guest_VM_execution": false,
+    "hardware_acceptance": false
+  },
+  "validation_delta": {
+    "native_suite": "Full2814 tests and required shell/diagnostic checks pass on initial snapshot.",
+    "initial_arm_failure": "The disposable chroot lacks /proc/self/mountinfo; stricter account snapshot placement correctly refused. Initial unit/logs retained.",
+    "harness_only_correction": [
+      "tests/verify_guest_backup_arm.py",
+      "tests/verify_guest_checkpoint_arm.py",
+      "tests/verify_guest_enrollment_arm.py",
+      "tests/verify_guest_restore_arm.py"
+    ],
+    "final_validation": "Production code unchanged. Four harnesses explicitly substitute only account snapshot placement while reading actual disposable account databases. Actual combined ARM local/HTTPS pipeline, all1013 source pins before/after and 8 targeted profile/tool tests pass on corrected final snapshot."
+  },
+  "resources": {
+    "native": {
+      "sampled_min_free_disk_bytes": 31874260992,
+      "sampled_min_available_memory_bytes": 7102709760
+    },
+    "arm": {
+      "sampled_min_free_disk_bytes": 31018393600,
+      "sampled_min_available_memory_bytes": 7331127296
+    },
+    "compilation_jobs": 2
+  },
+  "receipts": {
+    "native": "out/legacy-publication-validation-20261112-02/receipts.tar",
+    "builder": "/var/lib/a733-legacy-publication-validation-20261112-02/receipts.tar",
+    "bytes": 532480,
+    "sha256": "92278b25c74a3876932088bd5334ac702a88d014cb623630e286428ab63124bc",
+    "verified_fsynced_both": true
+  },
+  "hardware_acceptance": false,
+  "remaining": "Account batch/activation/nonroot launcher and host maintenance admission, installed boot/lifecycle services and coherent managed backups, inactive-root build/deployment, physical SPI recovery and actual managed KVM/final SPI boot qualification. Existing endurance evidence remains accepted."
+}

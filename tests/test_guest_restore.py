@@ -61,9 +61,10 @@ class Authorization(unittest.TestCase):
             R.authorize({})
 
     def test_storage_before_source_hash(self):
-        with patch.object(E.MANAGEMENT, 'runtime_guard', side_effect=ValueError('unsupported')), \
+        with patch.object(R.operation_module(), 'ManualGuestOperation'), \
+                patch.object(E.MANAGEMENT, 'runtime_guard', side_effect=ValueError('unsupported')), \
                 patch.object(R.SOURCE, 'Source') as source, self.assertRaises(ValueError):
-            R.prepare('/absent', 'a' * 64, 'b' * 64, UUID)
+            R.prepare('/absent', 'a' * 64, 'b' * 64, UUID, name='one')
         source.assert_not_called()
 
 
@@ -99,7 +100,8 @@ class RestoreFiles(unittest.TestCase):
         self.history = {}
         self.write_archive()
         self.context = {'guest_source': '/dev/nvme0n1p5', 'guest_device': [259, 5], 'fixture': True}
-        for mock in (patch.object(E, 'ROOT', str(self.root)),
+        for mock in (patch.object(R.operation_module(), 'ManualGuestOperation'),
+                     patch.object(E, 'ROOT', str(self.root)),
                      patch.object(E, 'LOCK', str(self.base / 'lock')),
                      patch.object(E.MANAGEMENT, 'STATE', str(self.state)),
                      patch.object(E.MANAGEMENT, 'runtime_guard'),
@@ -121,13 +123,13 @@ class RestoreFiles(unittest.TestCase):
         return str(self.archive), T.sha(self.encoded), T.sha(self.manifest), UUID
 
     def plan(self):
-        value = R.prepare(*self.args())
+        value = R.prepare(*self.args(), name='one')
         self.plan_path.write_bytes(R.canonical(value))
         self.plan_path.chmod(0o400)
         return value
 
     def apply(self):
-        return R.apply(*self.args(), str(self.plan_path))
+        return R.apply(*self.args(), str(self.plan_path), name='one')
 
     def add_history(self):
         old = T.F.MANIFEST.validate_manifest(self.manifest)
@@ -146,9 +148,9 @@ class RestoreFiles(unittest.TestCase):
 
     def test_prepare_has_no_writes_and_repeats(self):
         before = list(self.base.rglob('*'))
-        plan = R.prepare(*self.args())
+        plan = R.prepare(*self.args(), name='one')
         self.assertEqual(before, list(self.base.rglob('*')))
-        self.assertEqual(plan, R.prepare(*self.args()))
+        self.assertEqual(plan, R.prepare(*self.args(), name='one'))
         self.assertFalse((self.root / '.enrollment').exists())
 
     def test_restores_current_payload_history_uuid_and_provenance(self):
@@ -344,7 +346,7 @@ class RestoreFiles(unittest.TestCase):
     def test_changed_destination_uuid_refuses_before_archive(self):
         with patch.object(E, 'probe_uuid', side_effect=ValueError('wrong destination')), \
                 patch.object(R.SOURCE, 'Source') as source, self.assertRaises(ValueError):
-            R.prepare(*self.args())
+            R.prepare(*self.args(), name='one')
         source.assert_not_called()
 
 

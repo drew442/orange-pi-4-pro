@@ -7,6 +7,13 @@ It does not erase a disk, replace a guest, create an account, mount storage,
 start a service or boot a VM. Physical restoration and a restored KVM workload
 remain required release tests.
 
+These examples target the **uninstalled production-readiness candidate** and
+require its initialized admission runtime. This candidate is not physically
+qualified. The accepted 20261109 release helper omits the new `--name` flag; its
+commands and historical physical results remain in the
+[deployment guide](deploy-protected-20261109.md) and
+[restoration record](evidence/normalized-guest-restore-20261110.json).
+
 ## Source and destination prerequisites
 
 First complete the [off-device backup workflow](guest-backups.md). Retain its
@@ -17,7 +24,9 @@ On the installed destination, complete [guest storage and account activation](gu
 Use the same guest name, UID and GID recorded in the backup. The destination
 guest filesystem UUID may differ. Verify the real destination namespace and
 UUID from the trusted installation record; do not infer them from an example.
-Account remapping and guest renaming are not implemented.
+The explicit target name must exactly match the authenticated backup; account
+remapping and guest renaming are not implemented. The candidate takes admission
+and the guest lock before reading the archive and refuses managed guest names.
 
 Keep all guests using that identity stopped. The controller requires the fixed
 guest service to be inactive/dead with zero process IDs, or genuinely absent
@@ -66,11 +75,13 @@ set -euo pipefail
 umask 077
 set -C
 : "${A733_GUEST_TOOLS:?Set absolute trusted complete installed or portable tool tree}"
+: "${A733_RESTORE_GUEST_NAME:?Set guest name matching the authenticated backup}"
 : "${A733_RESTORE_ARCHIVE:?Set absolute protected selected-NVMe archive path}"
 : "${A733_BACKUP_ARCHIVE_SHA256:?Set authenticated source receipt archive pin}"
 : "${A733_BACKUP_MANIFEST_SHA256:?Set trusted backed-up manifest pin}"
 : "${A733_DESTINATION_GUEST_UUID:?Set verified destination p5 UUID}"
 /usr/bin/python3 -I -B "$A733_GUEST_TOOLS/scripts/restore-guest.py" prepare \
+  --name "$A733_RESTORE_GUEST_NAME" \
   --archive "$A733_RESTORE_ARCHIVE" \
   --archive-sha256 "$A733_BACKUP_ARCHIVE_SHA256" \
   --manifest-sha256 "$A733_BACKUP_MANIFEST_SHA256" \
@@ -92,6 +103,7 @@ Apply the same inputs and protected plan from an interactive TTY:
 
 ```bash
 /usr/bin/python3 -I -B "$A733_GUEST_TOOLS/scripts/restore-guest.py" apply \
+  --name "$A733_RESTORE_GUEST_NAME" \
   --archive "$A733_RESTORE_ARCHIVE" \
   --archive-sha256 "$A733_BACKUP_ARCHIVE_SHA256" \
   --manifest-sha256 "$A733_BACKUP_MANIFEST_SHA256" \
@@ -152,7 +164,7 @@ sudo /usr/bin/python3.10 -I -B tests/verify_guest_restore_arm.py \
 
 It authenticates the rootfs, creates actual disposable ARM accounts, checkpoints
 and backs up the fixture, and restores all assets with actual copy/readback and
-ownership checks. Live storage/namespace/UUID/service/UID-census/TTY boundaries
+ownership checks. Admission/storage/namespace/UUID/service/UID-census/TTY boundaries
 are explicitly substituted inside that fixture. The source and destination are
 on the same builder. No guest is executed and no hardware acceptance follows.
 The [ARM evidence](evidence/guest-restore-arm-20261104.json) records the exact

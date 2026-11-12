@@ -27,7 +27,9 @@ C=importlib.util.module_from_spec(spec);spec.loader.exec_module(C)
 P=C.POLICY
 unsupported=subprocess.run(['/usr/bin/python3','-I','-B','/source/scripts/checkpoint-guest.py','prepare','--name','fixture','--manifest-sha256',old_pin],capture_output=True,text=True,timeout=30)
 assert unsupported.returncode!=0 and pathlib.Path(paths['enrollment']).read_bytes()==old_data and not (parent/'.checkpoints').exists()
+C.OPERATION.ManualGuestOperation=FixtureAdmission
 P.MANAGEMENT.runtime_guard=lambda:None
+P.ACCOUNTS.snapshot=fixture_account_snapshot
 P.host_namespace=lambda:None
 P.STORAGE.verify_guest_directory=lambda fd:dict(context)
 P.STORAGE.verify_guest_storage=lambda *a,**kw:dict(context,boot_inputs_checked=2)
@@ -102,7 +104,7 @@ unit=E.CONFIG.render_unit(new_manifest['config'],'/source/scripts/launch-kvm-gue
 unit_path.write_text(unit)
 unit_check=subprocess.run(['/usr/bin/systemd-analyze','verify',str(unit_path)],capture_output=True,text=True,timeout=30)
 assert unit_check.returncode==0,unit_check.stderr
-print(json.dumps({'architecture':platform.machine(),'initial_enrollment':initial_enrollment,'initial_unit':initial_unit,'real_checkpoint_CLI_refusal_before_writes':True,'old_launch_pin_refusal':True,'real_cross_process_disk_lock_refusal':True,'checkpoint_after_queued_SIGTERM':checkpoint,'history_exact_before_after_bytes':True,'disk_bytes_unchanged_by_checkpoint':True,'old_manifest_pin_refused':True,'idempotent_checkpoint':noop,'new_launch_file_checks':'passed; dry-run only','updated_unit_verify':{'returncode':unit_check.returncode,'diagnostics':unit_check.stderr.strip()},'manifest_record':{'old_sha256':old_pin,'new_sha256':new_pin,'new_disk_sha256':current_disk},'live_boundaries':'mount/UUID/namespace/service/consumer scan and operator approval mocked only inside authenticated disposable fixture','guest_execution':'not performed','clean_shutdown':'fixture attestation only, not verified'}))
+print(json.dumps({'architecture':platform.machine(),'initial_enrollment':initial_enrollment,'initial_unit':initial_unit,'real_checkpoint_CLI_refusal_before_writes':True,'old_launch_pin_refusal':True,'real_cross_process_disk_lock_refusal':True,'checkpoint_after_queued_SIGTERM':checkpoint,'history_exact_before_after_bytes':True,'disk_bytes_unchanged_by_checkpoint':True,'old_manifest_pin_refused':True,'idempotent_checkpoint':noop,'new_launch_file_checks':'passed; dry-run only','updated_unit_verify':{'returncode':unit_check.returncode,'diagnostics':unit_check.stderr.strip()},'manifest_record':{'old_sha256':old_pin,'new_sha256':new_pin,'new_disk_sha256':current_disk},'live_boundaries':'admission/account-placement/mount/UUID/namespace/service/consumer scan and operator approval mocked only inside authenticated disposable fixture','guest_execution':'not performed','clean_shutdown':'fixture attestation only, not verified'}))
 '''
 
 
@@ -121,7 +123,9 @@ def verify(rootfs, guest_directory):
     result['checkpoint_verifier_source'] = {'bytes': Path(__file__).stat().st_size,
         'sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}
     result['combined_probe'] = {'bytes': len(probe.encode()), 'sha256': hashlib.sha256(probe.encode()).hexdigest()}
-    result['limits'] = ['Live storage, namespace, stopped service, consumer census and TTY boundaries mocked only in disposable fixture.',
+    result['limits'] = [
+        'Admission uses a no-authority file-engine substitute; actual runtime admission is verified separately.',
+        'Admission, live storage, namespace, stopped service, consumer census and TTY boundaries mocked only in disposable fixture.',
                         'Separate subprocess flock, actual full file hashes, ownership, fsync, archive and atomic replacement execute under ARM userspace.',
                         'Dry-run and unit parsing are not guest execution; no filesystem cleanliness, backup, physical NVMe or KVM acceptance.',
                         'Configured binfmt interpreter pathname/hash checked; kernel-held F descriptor not independently inspected.']

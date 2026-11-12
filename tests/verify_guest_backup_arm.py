@@ -23,6 +23,7 @@ spec=importlib.util.spec_from_file_location('backup','/source/scripts/backup-gue
 B=importlib.util.module_from_spec(spec);spec.loader.exec_module(B)
 unsupported=subprocess.run(['/usr/bin/python3','-I','-B','/source/scripts/backup-guest.py','fixture','--manifest-sha256',new_pin],capture_output=True,timeout=30)
 assert unsupported.returncode!=0 and unsupported.stdout==b''
+B.OPERATION.ManualGuestOperation=FixtureAdmission
 # Reuse only the disposable fixture's explicit live-boundary substitutions.
 B.POLICY=P;B.ENROLL=P.ENROLL
 stream_path=pathlib.Path('/var/lib/guest-backup-stream.tar.gz')
@@ -36,7 +37,7 @@ assert backup['archive']['sha256']==hashlib.sha256(stream_path.read_bytes()).hex
 assert pathlib.Path(paths['enrollment']).read_bytes()==new_data
 assert hashlib.sha256(pathlib.Path(paths['disk']).read_bytes()).hexdigest()==current_disk
 assert len(list((parent/'.checkpoints').iterdir()))==1
-print(json.dumps({'architecture':platform.machine(),'backup':backup,'real_sender_CLI_refusal_before_stream':True,'source_manifest_disk_history_preserved':True,'checkpoint':checkpoint,'live_boundaries':'mount/UUID/namespace/service/consumer and checkpoint approval mocked only inside disposable fixture','guest_execution':'not performed','clean_shutdown':'fixture attestation only, not verified'}))
+print(json.dumps({'architecture':platform.machine(),'backup':backup,'real_sender_CLI_refusal_before_stream':True,'source_manifest_disk_history_preserved':True,'checkpoint':checkpoint,'live_boundaries':'admission/account-placement/mount/UUID/namespace/service/consumer and checkpoint approval mocked only inside disposable fixture','guest_execution':'not performed','clean_shutdown':'fixture attestation only, not verified'}))
 '''
 
 
@@ -93,7 +94,8 @@ def verify(rootfs, guest_directory):
         for name in ('scripts/verify-guest-backup.py', 'configs/guest_backup.py')}
     result['combined_probe'] = {'bytes': len(probe.encode()), 'sha256': hashlib.sha256(probe.encode()).hexdigest()}
     result['limits'] = [
-        'Source live mount/UUID/namespace/stopped-service/consumer/approval boundaries mocked in disposable fixture.',
+        'Admission uses a no-authority file-engine substitute; actual runtime admission is verified separately.',
+        'Admission and source live mount/UUID/namespace/stopped-service/consumer/approval boundaries mocked in disposable fixture.',
         'Actual ARM source hashes, checkpoint, compression, native capture, encoded authentication and full sparse-file readback execute.',
         'Both ends use the same builder; no off-device storage, clean guest shutdown, restoration, KVM or physical acceptance.',
         'Configured binfmt interpreter pathname/hash checked; kernel-held F descriptor not independently inspected.']

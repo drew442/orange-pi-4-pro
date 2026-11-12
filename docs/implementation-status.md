@@ -70,15 +70,23 @@ and [integration evidence](evidence/managed-checkpoint-runtime-validation-202611
 retain source pins, reviews and preliminary failures.
 
 Root-only legacy backup/manual-checkpoint admission now passes independent review
-and **2788** privileged Ubuntu tests, five shell suites and five diagnostic cases.
+and the required privileged Ubuntu/software checks.
 Managed names refuse before export/mutation; SH lease/guest EX survive through
 cleanup. Query cleanup and nesting across distinct helper imports were corrected
 and independently rechecked. [Legacy admission evidence](evidence/legacy-admission-validation-20261112.json).
+Enrollment/restore admission now passes independent review and **2814** native
+Ubuntu tests, five shell suites and five diagnostic cases. Restore requires the
+explicit guest name before archive access. The combined pinned ARM file-engine
+probe passes local and HTTPS restoration with matching files/history/manifest,
+real TLS/chunk checks and source pins. Its first chroot account-placement refusal
+is retained; only fixture placement was substituted while reading actual ARM
+account databases. No VM/KVM or physical acceptance follows.
+[Publication evidence](evidence/legacy-publication-validation-20261112.json).
 Current packaging has 57 sources; historical archives retain their exact 39-source
-boundary. These helpers remain uninstalled. Enrollment/restore integration is
-under review/development; account/activation/nonroot launch and host-maintenance
-admission, coherent managed backup/restore, boot services, inactive-root deployment
-and physical acceptance remain pending.
+boundary. These helpers remain uninstalled. Account batch changes pass independent
+review and await integration; nonroot launch is under implementation. Activation
+and host-maintenance admission, coherent managed backup/restore, boot services,
+inactive-root deployment and physical acceptance remain pending.
 
 Two fresh managed power-key guest builds match byte for byte with verified
 off-device copies. [Build evidence](evidence/managed-fixture-build-20261112.json).
@@ -187,17 +195,18 @@ binary redistribution clearance is claimed. [Source inventory](toolchain-sources
 
 ## Resources and next actions
 
-Latest privileged Ubuntu 22.04 suite: **2788 tests**, zero skips/errors/failures,
+Latest privileged Ubuntu 22.04 suite: **2814 tests**, zero skips/errors/failures,
 five shell suites and five diagnostic cases; all five TOMLs parse.
-[Legacy admission suite evidence](evidence/legacy-admission-validation-20261112.json)
+[Legacy publication suite evidence](evidence/legacy-publication-validation-20261112.json)
 records the latest run. The final-A warm collector authenticates release/root/policy and stops on
 actual remote release refusal; [software evidence](evidence/final-warm-binding-validation-20261110.json)
 retains independent review and the initial corrected validation-environment failure. Host checks do not prove
 hardware acceptance.
 
 At final qualification, codex has more than 24 GB available. The last full-suite
-builder suite sampled minima of 31970349056 bytes available and
-MemAvailable 7115624448 bytes.
+builder suite sampled minima of 31874260992 bytes available and
+MemAvailable 7102709760 bytes. The additional ARM file-engine probe stayed above
+31018393600 bytes free and 7331127296 bytes MemAvailable.
 Keep bulk sources, images and backups on the builder. Its LV is 128819658752 bytes
 with 4265607168 bytes VG free. All free builder capacity is approved for use and
 expansion after exact-target revalidation and independent review. Native codex

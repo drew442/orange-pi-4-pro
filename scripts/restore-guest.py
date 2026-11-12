@@ -36,6 +36,21 @@ ENROLL = SOURCE.ENROLL
 MANIFEST = POLICY.MANIFEST
 require, canonical = ENROLL.require, ENROLL.canonical
 PROFILE = 'a733-guest-restore-v1'
+OPERATION = None
+
+
+def operation_module():
+    # Lazy loading avoids context -> policy -> enrollment import cycles.
+    global OPERATION
+    if OPERATION is None:
+        OPERATION = module('restore_operation', 'scripts/guest-operation-admission.py')
+    return OPERATION
+
+
+def name_binding(review, name):
+    require(all(config['name'] == name for config in (
+        review.config, review.source.manifest['config'], review.manifest['config'],
+        review.plan['config'])), 'restore source name differs from admitted guest')
 
 
 def record(data):
@@ -83,7 +98,7 @@ def uid_consumers(uid, proc_root=Path('/proc')):
 class Review:
     """Guard the namespace before authenticating any archive bytes."""
     def __init__(self, archive, archive_sha256, manifest_sha256, guest_uuid, plan_path=None,
-                 *, archive_url=None, chunk_manifest_url=None, chunk_manifest_sha256=None,
+                 *, name, archive_url=None, chunk_manifest_url=None, chunk_manifest_sha256=None,
                  ca_file=None, network_timeout_seconds=86400):
         self.held = []
         self.source = None
@@ -111,6 +126,7 @@ class Review:
                         'network options require HTTPS source')
                 self.source = SOURCE.Source(archive, archive_sha256, manifest_sha256, devices)
             self.config = self.source.manifest['config']
+            require(self.config['name'] == name, 'restore source name differs from admitted guest')
             self.check_accounts_service_budget()
             ENROLL.absent(self.root.fd, self.config['name'])
             self.manifest = MANIFEST.restored_manifest(self.source.manifest, archive_sha256,
@@ -192,12 +208,23 @@ class Review:
             raise error
 
 
-def prepare(archive, archive_sha256, manifest_sha256, guest_uuid, **network_options):
-    review = Review(archive, archive_sha256, manifest_sha256, guest_uuid, **network_options)
+def prepare(archive, archive_sha256, manifest_sha256, guest_uuid, *, name=None, **network_options):
+    operation = operation_module()
+    operation.ADMISSION._guest_name(name)
+    owner = operation.ManualGuestOperation(name, create=True)
+    review = None
     try:
+        review = Review(archive, archive_sha256, manifest_sha256, guest_uuid,
+                        name=name, **network_options)
+        owner.recheck()
+        name_binding(review, name)
         return review.plan
     finally:
-        review.close()
+        try:
+            if review is not None:
+                review.close()
+        finally:
+            owner.close()
 
 
 def authorize(plan):
@@ -397,33 +424,42 @@ def stage_and_publish(review, lock_check, receipt):
                         receipt['cleanup_error'] = type(error).__name__
 
 
-def apply(archive, archive_sha256, manifest_sha256, guest_uuid, plan_path, **network_options):
+def apply(archive, archive_sha256, manifest_sha256, guest_uuid, plan_path, *, name=None, **network_options):
     receipt = {'schema': 1, 'operation': PROFILE, 'success': False, 'published': False,
                'durable': False, 'staging_retained': False, 'directory_may_be_published': False,
                'bytes_attempted_staged': 0, 'archive_sha256': archive_sha256,
                'source_manifest_sha256': manifest_sha256}
-    lock = review = None
+    lock = review = owner = None
     try:
+        operation = operation_module()
+        operation.ADMISSION._guest_name(name)
+        owner = operation.ManualGuestOperation(name, create=True)
         ENROLL.MANAGEMENT.runtime_guard()
         lock = os.open(ENROLL.LOCK, os.O_RDWR | os.O_CREAT | os.O_NOFOLLOW | os.O_NONBLOCK, 0o600)
         info = os.fstat(lock)
         ENROLL.regular(info, 0o600)
         require(info.st_dev == os.stat('/run').st_dev, 'enrollment lock must reside on RAM')
         def lock_check():
+            owner.recheck()
+            if review is not None:
+                name_binding(review, name)
             require(ENROLL.identity(os.fstat(lock)) == ENROLL.identity(info) and
                     ENROLL.identity(os.lstat(ENROLL.LOCK)) == ENROLL.identity(info), 'enrollment lock changed')
         lock_check()
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        review = Review(archive, archive_sha256, manifest_sha256, guest_uuid, plan_path, **network_options)
+        review = Review(archive, archive_sha256, manifest_sha256, guest_uuid, plan_path,
+                        name=name, **network_options)
+        lock_check()
         receipt['plan_sha256'] = review.plan['plan_sha256']
         receipt['manifest_sha256'] = review.plan['manifest']['sha256']
         authorize(review.plan)
         stage_and_publish(review, lock_check, receipt)
+        lock_check()
     except BaseException as error:
         receipt['success'] = False
         receipt['error'] = type(error).__name__
     finally:
-        for resource in (review, lock):
+        for resource in (review, lock, owner):
             if resource is not None:
                 try:
                     os.close(resource) if isinstance(resource, int) else resource.close()
@@ -441,7 +477,7 @@ def main(argv=None):
         source = command.add_mutually_exclusive_group(required=True)
         source.add_argument('--archive')
         source.add_argument('--archive-url')
-        for name in ('archive-sha256', 'manifest-sha256', 'guest-uuid'):
+        for name in ('name', 'archive-sha256', 'manifest-sha256', 'guest-uuid'):
             command.add_argument('--' + name, required=True)
         command.add_argument('--chunk-manifest-url')
         command.add_argument('--chunk-manifest-sha256')
@@ -456,7 +492,8 @@ def main(argv=None):
     previous = signal.signal(signal.SIGTERM, interrupted)
     try:
         arguments = (args.archive, args.archive_sha256, args.manifest_sha256, args.guest_uuid)
-        network = {'archive_url': args.archive_url, 'chunk_manifest_url': args.chunk_manifest_url,
+        network = {'name': args.name, 'archive_url': args.archive_url,
+                   'chunk_manifest_url': args.chunk_manifest_url,
                    'chunk_manifest_sha256': args.chunk_manifest_sha256, 'ca_file': args.ca_file,
                    'network_timeout_seconds': args.network_timeout_seconds}
         result = (apply(*arguments, args.plan, **network) if args.command == 'apply'
@@ -470,6 +507,6 @@ def main(argv=None):
 if __name__ == '__main__':
     try:
         sys.exit(main())
-    except (OSError, ValueError, UnicodeError, KeyboardInterrupt) as error:
+    except (OSError, ValueError, UnicodeError, KeyboardInterrupt, RuntimeError) as error:
         print(json.dumps({'success': False, 'error': type(error).__name__}), file=sys.stderr)
         sys.exit(1)

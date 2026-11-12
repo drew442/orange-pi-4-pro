@@ -7,6 +7,9 @@ import os
 from pathlib import Path
 import signal
 import stat
+import subprocess
+import sys
+import uuid
 import tempfile
 from types import SimpleNamespace
 import unittest
@@ -16,6 +19,8 @@ BASE = Path(__file__).resolve().parents[1]
 SPEC = importlib.util.spec_from_file_location('guest_enrollment', BASE / 'scripts/enroll-guest.py')
 E = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(E)
+O = E.operation_module()
+A = O.ADMISSION
 UUID = '7811c43d-01e4-4635-83b4-25d276172ac0'
 
 
@@ -53,6 +58,32 @@ class PolicyTests(unittest.TestCase):
             E.budget(config)
         with patch.object(E.os, 'cpu_count', return_value=None), self.assertRaises(ValueError):
             E.budget(config)
+
+    def test_actual_nonroot_refuses_before_config_or_runtime_reads(self):
+        code = """
+import importlib.util, os, sys
+spec = importlib.util.spec_from_file_location('enroll', sys.argv[1])
+e = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(e)
+if os.geteuid() == 0:
+    os.setgroups([])
+    os.setgid(65534)
+    os.setuid(65534)
+def forbidden(*args):
+    raise AssertionError('runtime read before root check')
+e.MANAGEMENT.runtime_guard = forbidden
+try:
+    e.prepare('/absent', '/absent', '/absent', '/absent', sys.argv[2])
+except ValueError as error:
+    assert 'actual root' in str(error), str(error)
+else:
+    raise AssertionError('nonroot prepare admitted')
+result = e.apply('/absent', '/absent', '/absent', '/absent', sys.argv[2], '/absent')
+assert result['success'] is False and result['bytes_attempted_staged'] == 0, result
+"""
+        result = subprocess.run([sys.executable, '-c', code, SPEC.origin, UUID],
+                                capture_output=True, timeout=10)
+        self.assertEqual(result.returncode, 0, result.stderr.decode())
 
     def test_actual_host_not_assumed_supported(self):
         with self.assertRaises((ValueError, OSError)):
@@ -94,6 +125,26 @@ class FileEngineTests(unittest.TestCase):
                        patch.object(E, 'budget')):
             mocker.start()
             self.addCleanup(mocker.stop)
+        self.boot = str(uuid.uuid4())
+        self.admission_path = self.base / 'a733-admission'
+        for mocker in (patch.object(A, 'RUNTIME_PARENT', str(self.base)),
+                       patch.object(A, 'RUNTIME', str(self.admission_path)),
+                       patch.object(O.CONTEXT, 'read_system', return_value=(self.boot + '\n').encode()),
+                       patch.object(O.CONTEXT, 'host_identity'),
+                       patch.object(O.CONTEXT.MANAGEMENT, 'runtime_guard'),
+                       patch.object(O.ACCOUNTS, 'snapshot',
+                                    return_value={'group': b'root:x:0:\nkvm:x:108:\n'}),
+                       patch.object(O, 'manager_state', return_value='running')):
+            mocker.start()
+            self.addCleanup(mocker.stop)
+        self.admission = A.initialize(self.boot, 108, lambda: 'running')
+        self.addCleanup(self.admission.close)
+        owner = self.admission.bootstrap_owner
+        self.admission.prepare_managed(owner.lease)
+        with self.admission.guest_lock('one', owner.lease, create=True):
+            pass
+        owner.open()
+        owner.lease.close()
         # Correct shadow row is exactly nine fields.
         E.ACCOUNTS.snapshot.return_value['shadow'] = b'a733-vm-one:!:::::::\n'
 
@@ -112,6 +163,217 @@ class FileEngineTests(unittest.TestCase):
 
     def apply(self):
         return E.apply(*self.args(), str(self.plan_path))
+
+    def assert_operation_held(self):
+        operation = O._ACTIVE.operation
+        self.assertEqual(operation.name, 'one')
+        operation.recheck()
+        with self.admission.admit() as lease:
+            with self.assertRaises(A.AdmissionError):
+                self.admission.guest_lock('one', lease)
+        return operation
+
+    def test_prepare_creates_stable_lock_and_hashes_payloads_once_under_admission(self):
+        (self.admission_path / 'guests' / 'one.lock').unlink()
+        original = E.hash_source
+        calls = []
+        def hashing(*args):
+            self.assert_operation_held()
+            self.assertFalse(Path(E.LOCK).exists())
+            calls.append(args[0].path)
+            return original(*args)
+        with patch.object(E, 'hash_source', side_effect=hashing):
+            E.prepare(*self.args())
+        self.assertCountEqual(calls, [str(path) for path in self.sources.values()])
+        self.assertTrue((self.admission_path / 'guests' / 'one.lock').exists())
+        self.assertIsNone(O._ACTIVE.operation)
+
+    def test_closed_gate_and_managed_name_refuse_before_review_or_subsystem_lock(self):
+        self.plan()
+        with self.admission.admit() as lease, self.admission.guest_lock('one', lease) as guest:
+            self.admission.mark_managed('one', lease, guest, guard=lambda: None)
+        for closed in (False, True):
+            if closed:
+                self.admission.close_gate('shutdown')
+            with self.subTest(closed=closed), patch.object(E, 'Review') as review:
+                with self.assertRaises(A.AdmissionError):
+                    E.prepare(*self.args())
+                result = self.apply()
+                self.assertFalse(result['success'])
+                self.assertEqual(result['bytes_attempted_staged'], 0)
+                review.assert_not_called()
+                self.assertFalse(Path(E.LOCK).exists())
+
+    def test_conflicting_guest_flock_precedes_global_lock_and_payload_reads(self):
+        self.plan()
+        with self.admission.admit() as lease, self.admission.guest_lock('one', lease), \
+                patch.object(E, 'Review') as review:
+            with self.assertRaises(A.AdmissionError):
+                E.prepare(*self.args())
+            result = self.apply()
+            self.assertFalse(result['success'])
+            self.assertEqual(result['bytes_attempted_staged'], 0)
+            self.assertFalse(Path(E.LOCK).exists())
+            review.assert_not_called()
+        # Stable exclusion is per guest; another guest's lock does not block one.
+        with self.admission.admit() as lease, self.admission.guest_lock('two', lease, create=True):
+            self.assertTrue(self.apply()['success'])
+
+    def test_apply_lock_order_and_admission_lifetime_through_cleanup(self):
+        self.plan()
+        native_open, native_copy = E.os.open, E.copy_source
+        native_close, native_operation_close = E.HeldPath.close, O.ManualGuestOperation.close
+        events = []
+        def opening(path, *args, **kwargs):
+            if str(path) == E.LOCK:
+                self.assert_operation_held()
+                events.append('subsystem')
+            return native_open(path, *args, **kwargs)
+        def copying(*args):
+            self.assert_operation_held()
+            events.append('copy')
+            return native_copy(*args)
+        def closing(held):
+            self.assert_operation_held()
+            events.append('input-close')
+            return native_close(held)
+        def operation_close(operation):
+            events.append('operation-close')
+            return native_operation_close(operation)
+        with patch.object(E.os, 'open', side_effect=opening), \
+                patch.object(E, 'copy_source', side_effect=copying), \
+                patch.object(E.HeldPath, 'close', closing), \
+                patch.object(O.ManualGuestOperation, 'close', operation_close):
+            result = self.apply()
+        self.assertTrue(result['success'], result)
+        self.assertEqual(events[0], 'subsystem')
+        self.assertEqual(events.count('copy'), 3)
+        self.assertEqual(events[-1], 'operation-close')
+        self.assertIsNone(O._ACTIVE.operation)
+
+    def test_existing_apply_finishes_after_shutdown_gate_closure(self):
+        self.plan()
+        native = E.copy_source
+        closed = []
+        def copying(*args):
+            if not closed:
+                closed.append(self.admission.close_gate('shutdown'))
+                with self.assertRaises(A.AdmissionError):
+                    closed[0].exclusive()
+            return native(*args)
+        with patch.object(E, 'copy_source', side_effect=copying):
+            result = self.apply()
+        self.assertTrue(result['success'], result)
+        with closed[0].exclusive():
+            pass
+        self.assertFalse(self.apply()['success'])
+
+    def test_config_replacement_between_discovery_and_review_never_stages(self):
+        self.plan()
+        native = E.Review.__init__
+        def raced(review, *args, **kwargs):
+            data = self.config_path.read_bytes()
+            self.config_path.unlink()
+            self.config_path.write_bytes(data)
+            self.config_path.chmod(0o400)
+            native(review, *args, **kwargs)
+        with patch.object(E.Review, '__init__', raced), \
+                patch.object(E, 'stage_and_publish') as stage:
+            result = self.apply()
+        self.assertFalse(result['success'])
+        self.assertEqual(result['bytes_attempted_staged'], 0)
+        stage.assert_not_called()
+        self.assertFalse((self.root / '.enrollment').exists())
+
+    def test_different_config_cannot_publish_under_discovered_name_lock(self):
+        native = E.Review.__init__
+        def raced(review, *args, **kwargs):
+            self.config['name'] = 'two'
+            self.save_config()
+            E.ACCOUNTS.snapshot.return_value = {
+                key: value.replace(b'one', b'two')
+                for key, value in E.ACCOUNTS.snapshot.return_value.items()}
+            native(review, *args, **kwargs)
+        with patch.object(E.Review, '__init__', raced):
+            with self.assertRaises(ValueError):
+                E.prepare(*self.args())
+        self.assertFalse((self.root / '.enrollment').exists())
+        self.assertIsNone(O._ACTIVE.operation)
+
+    def test_prepare_close_error_still_releases_discovery_and_operation(self):
+        native = E.HeldPath.close
+        closed = []
+        def closing(held):
+            self.assertTrue(getattr(O._ACTIVE, 'operation', None))
+            closed.append(held.path)
+            native(held)
+            if held.path == str(self.config_path):
+                raise OSError('input close failed')
+        with patch.object(E.HeldPath, 'close', closing):
+            with self.assertRaises(OSError):
+                E.prepare(*self.args())
+        self.assertEqual(closed.count(str(self.config_path)), 2)
+        self.assertIsNone(O._ACTIVE.operation)
+        with self.admission.admit() as lease, self.admission.guest_lock('one', lease):
+            pass
+
+    def test_prepare_preserves_factored_review_plan_bytes(self):
+        review = E.Review(*self.args())
+        try:
+            expected = E.canonical(review.plan)
+        finally:
+            review.close()
+        self.assertEqual(E.canonical(E.prepare(*self.args())), expected)
+
+    def test_guard_failure_before_staging_and_before_publication_reports_failure(self):
+        self.plan()
+        original = E.bind_config
+        calls = []
+        def binding(*args):
+            original(*args)
+            calls.append(True)
+            if len(calls) == 2:
+                raise ValueError('final admission binding failure')
+        with patch.object(E, 'bind_config', side_effect=ValueError('initial guard failure')):
+            result = self.apply()
+        self.assertFalse(result['success'])
+        self.assertEqual(result['bytes_attempted_staged'], 0)
+        self.assertFalse((self.root / '.enrollment').exists())
+        with patch.object(E, 'bind_config', side_effect=binding):
+            result = self.apply()
+        self.assertFalse(result['success'])
+        self.assertFalse(result['published'])
+        self.assertEqual(list((self.root / '.enrollment').iterdir()), [])
+        self.assertIsNone(O._ACTIVE.operation)
+
+    def test_input_close_failure_closes_each_owner_once_and_operation_last(self):
+        self.plan()
+        native_close = E.HeldPath.close
+        native_operation_close = O.ManualGuestOperation.close
+        closed = []
+        events = []
+        def closing(held):
+            self.assertTrue(getattr(O._ACTIVE, 'operation', None))
+            self.assertNotIn(id(held), closed)
+            closed.append(id(held))
+            native_close(held)
+            events.append('input')
+            if held.path == str(self.config_path):
+                raise OSError('close acknowledgement failed')
+        def operation_close(operation):
+            events.append('operation')
+            return native_operation_close(operation)
+        with patch.object(E.HeldPath, 'close', closing), \
+                patch.object(O.ManualGuestOperation, 'close', operation_close):
+            result = self.apply()
+        self.assertFalse(result['success'])
+        self.assertTrue(result['published'])
+        self.assertEqual(result['cleanup_error'], 'OSError')
+        self.assertEqual(len(closed), 7)  # Review root/config/plan/3 payloads + discovery.
+        self.assertEqual(events[-1], 'operation')
+        self.assertIsNone(O._ACTIVE.operation)
+        with self.admission.admit() as lease, self.admission.guest_lock('one', lease):
+            pass
 
     def test_prepare_creates_nothing_and_repeat_is_exact(self):
         before = sorted(self.base.rglob('*'))
@@ -150,13 +412,13 @@ class FileEngineTests(unittest.TestCase):
             E.prepare(*self.args())
         hashing.assert_not_called()
 
-    def test_storage_checked_before_any_input_read(self):
+    def test_storage_checked_before_payload_hash(self):
         with patch.object(E.STORAGE, 'verify_guest_directory', side_effect=ValueError('not p5')), \
-                patch.object(E, 'read_small') as reading, self.assertRaises(ValueError):
+                patch.object(E, 'hash_source') as reading, self.assertRaises(ValueError):
             E.prepare(*self.args())
         reading.assert_not_called()
         with patch.object(E, 'probe_uuid', side_effect=ValueError('UUID mismatch')), \
-                patch.object(E, 'read_small') as reading, self.assertRaises(ValueError):
+                patch.object(E, 'hash_source') as reading, self.assertRaises(ValueError):
             E.prepare(*self.args())
         reading.assert_not_called()
 
