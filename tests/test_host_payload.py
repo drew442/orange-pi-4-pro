@@ -266,7 +266,7 @@ class UserspaceProfiles(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             runtime = payload.install_maintenance(root)
-            self.assertEqual(len(runtime['files']), 63)
+            self.assertEqual(len(runtime['files']), 66)
             helper = root / 'usr/lib/a733-tools/build/timesync-state.py'
             payload.authenticate(helper, policy['helper'])
             helper.chmod(0o644)

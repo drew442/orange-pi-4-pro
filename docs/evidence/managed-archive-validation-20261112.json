@@ -1,0 +1,129 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "result": "pass",
+  "scope": "Uninstalled offline historical cohort decoder, managed artifact receiver and root local archive source; no coherent guest restore publisher, HTTPS source, services or physical deployment acceptance",
+  "builder": "drew@build.drewnet.online",
+  "builder_base": "/var/lib/a733-managed-archive-validation-20261112-01",
+  "full_Ubuntu_tests": 3012,
+  "failures_errors_skips": 0,
+  "shell_suites": 5,
+  "diagnostic_cases": 5,
+  "parsed_TOML": 5,
+  "locked_source_files": 1036,
+  "source_lock": {
+    "bytes": 166134,
+    "sha256": "da4c033901797c5746a0707fa65b9adf50d288ff0b824d454569085707634353",
+    "index_tree": "7ecf83d7f1bfaeb8bcc04b72e016d195db2cba82"
+  },
+  "unit": {
+    "RuntimeMaxUSec": "8h",
+    "MainPID": "0",
+    "Result": "success",
+    "ExecMainStatus": "0",
+    "CPUQuotaPerSecUSec": "2s",
+    "MemoryMax": "3221225472",
+    "SubState": "exited"
+  },
+  "source": {
+    "build/maintenance-tools.py": {
+      "bytes": 15596,
+      "sha256": "f6c7bea6f306c7e0032a88332054733c3ef0c3c5b061273c8dff98488a3cd00f"
+    },
+    "scripts/managed-guest-archive.py": {
+      "bytes": 6845,
+      "sha256": "eaf3a7b11ea82d7e460063d97a6c52e47a4d31b2feee2a9147b56cdfd229d740"
+    },
+    "scripts/managed-guest-restore-source.py": {
+      "bytes": 6797,
+      "sha256": "ef52706284046531c1594d2fc84e9e6a44419d7b55d868d49748b6c1a7fffc6c"
+    },
+    "scripts/verify-managed-guest-backup.py": {
+      "bytes": 11544,
+      "sha256": "d00effb748c2512054df3e1eacaa2bd25779c82ddb2aa0ad182bdf6d3d106d0b"
+    },
+    "tests/test_host_payload.py": {
+      "bytes": 28099,
+      "sha256": "29488fa3d5c7f0ec2f69909f723b6304c75ae06cd7d30fc2cdf79df64ccb887a"
+    },
+    "tests/test_launch_deterministic_host_roots.py": {
+      "bytes": 11602,
+      "sha256": "7bf9e6fb80382187c4efdf44a836a90c34a7e2b55f74f6436580d64a9c0616e8"
+    },
+    "tests/test_maintenance_tools.py": {
+      "bytes": 18077,
+      "sha256": "9e5d5ce21ffba76f959a10ca91dc534d1fb2f6dfd863547d80aee2e047e0051f"
+    },
+    "tests/test_managed_guest_archive.py": {
+      "bytes": 16324,
+      "sha256": "bde2391b35ed2d04938ba8d21fb2f6752010e69d684180a370aefe0620e3e4b6"
+    },
+    "tests/test_managed_guest_backup_receiver.py": {
+      "bytes": 22385,
+      "sha256": "08250818ab3c13e643c680ec4e6c4ca85565c1913a13dc1e0772431efbb4f6d2"
+    }
+  },
+  "resource_sample_minima": {
+    "free_disk_bytes": 31175409664,
+    "MemAvailable_bytes": 6934196224
+  },
+  "independent_reviews": {
+    "decoder": {
+      "path": "out/managed-archive-validation-20261112-01/decoder-review.json",
+      "bytes": 44213,
+      "sha256": "314a6e1f1e35e68fb03278222f360ffa1fa35cc84d3c67323339f3dfbce7a914"
+    },
+    "receiver": {
+      "path": "out/managed-archive-validation-20261112-01/receiver-review.json",
+      "bytes": 132063,
+      "sha256": "09c3ad47386541104aa3c90cf69360ac247cff733b89059f2993906cb009a6d0"
+    }
+  },
+  "packaging": {
+    "current_sources": 65,
+    "runtime_files": 66,
+    "entrypoints": 19,
+    "historical_sources": 39,
+    "extracted_import_and_CLI_help": "pass"
+  },
+  "custody": {
+    "bytes": 614400,
+    "sha256": "11c4cc73779b6b98c6459cef2ee0640ecf095081d05e6c14547e87c1955093c4",
+    "native": "out/managed-archive-validation-20261112-01/receipts.tar",
+    "builder": "/var/lib/a733-managed-archive-validation-20261112-01/receipts.tar",
+    "unit": {
+      "RuntimeMaxUSec": "8h",
+      "MainPID": "0",
+      "Result": "success",
+      "ExecMainStatus": "0",
+      "CPUQuotaPerSecUSec": "2s",
+      "MemoryMax": "3221225472",
+      "SubState": "exited"
+    }
+  },
+  "decoder": {
+    "native_tests": 31,
+    "independent_probes": 25,
+    "behavior": "Bounded offline canonical admission/permit/intent/outcome/completion crossbindings and five legal head edges, console/fixture evidence and exact once-read packaged catalogue hash. Detached historical data only; no fabricated root custody or runtime calls.",
+    "limits": "Whole archive source trust, matching disk/artifact bytes and actual fresh destination authority remain caller requirements."
+  },
+  "receiver": {
+    "native_tests": 25,
+    "independent_initial_suite": 15,
+    "independent_initial_probes": 37,
+    "independent_targeted_regressions": 10,
+    "independent_targeted_probes": 10,
+    "behavior": "Complete encoded SHA before gzip/JSON, exact six-member framing with strict footer/padding/bounds, legal cohort before payload callback; private capture/readback/immutable no-replace publication. Local root0400 source retains permitted-device descriptor/shared flock and PID/thread binding; repeated scans bind exact metadata.",
+    "resolved_R1": "Final publication stat failure previously escaped finally and bypassed cleanup. Final observation reports uncertainty, preserves prior acknowledgement/durability/primary error, retains artifacts conservatively and always closes owned FDs.",
+    "resolved_R2": "Generic staging constructor/history mkdir-open failures previously leaked directories or FDs. Managed staging captures owned inode before opens, cleans only that inode, closes known FDs and reports unknown retained paths. Generic legacy helper remains unchanged.",
+    "integration": "Actual native mocked-producer sender -> receiver -> local read-only Source passes; physical/PID1/storage/KVM observations explicitly substituted.",
+    "limits": "Artifact directory publication is not installation, destination guest authority or restored guest acceptance."
+  },
+  "limitations": [
+    "All new controllers remain uninstalled; coherent root restore, HTTPS source, activation/RAM recovery, startup services and physical qualification remain required.",
+    "Initial receipt failures/fault probes are retained along with corrected regressions; no partial stream or uncertain publication becomes success.",
+    "No actual QEMU guest/KVM or physical SPI/NVMe/SD write ran in this validation.",
+    "New initialization interlock work is unstaged and excluded: frozen source tree retains original guest-admission.py hash 9bb286e3dc1d99d041a60f518bfb1d2e9e99cdbafbb35496a871be2c3bc9914b.",
+    "Five unchanged TOML files reuse native tomllib parse retained in receipts; Ubuntu Python 3.10 has no tomllib."
+  ]
+}

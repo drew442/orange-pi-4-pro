@@ -83,8 +83,35 @@ guest into current destination authority. Retain the trusted full archive hash
 and source receipt off-device. Parsing an archive does not establish live
 shutdown, source authority or destination admission.
 
-The managed receiver and coherent restore publisher remain unfinished. The
-legacy five-member verifier/restore path continues to serve manual guests and
-cannot restore this six-member managed profile. The original `firstkvm` remains
-manual. Validate the complete managed backup/restore workflow with the separate
-disposable guest and actual KVM before production signoff.
+Capture the complete encoded stream in a private file and retain the successful
+sender receipt separately. On a backup destination with the candidate tool tree,
+use that receipt's archive hash and the independently trusted manifest pin:
+
+```sh
+python3 -I -B /usr/lib/a733-tools/scripts/verify-managed-guest-backup.py \
+  /ABSOLUTE/CAPTURE.tar.gz \
+  --archive-sha256 TRUSTED-ARCHIVE-SHA256 \
+  --manifest-sha256 TRUSTED-MANIFEST-SHA256 \
+  --new-output /ABSOLUTE/NEW-ARTIFACT-DIRECTORY
+```
+
+The parent must already exist on supported backup storage. The destination must
+be new. The receiver authenticates encoded bytes before decoding, checks the
+historical cohort and payloads, then publishes immutable artifacts without
+replacing an existing directory. Require exit zero and a successful durable
+receipt. A publication observation failure reports uncertainty and retains
+artifacts while closing descriptors; inspect the recorded paths before another
+action. Do not infer that a failed command left the destination absent.
+
+The local archive reader retains a root-owned 0400 archive and validates the
+entire encoded file before decoding. Its caller must already hold the appropriate
+admission before archive access. It supplies no destination guest authority.
+[Decoder/receiver/source validation](evidence/managed-archive-validation-20261112.json)
+includes actual native sender integration with physical/shutdown observations
+explicitly substituted. All three remain uninstalled.
+
+The coherent managed restore publisher and HTTPS source integration remain
+unfinished. The legacy five-member verifier/restore path continues to serve
+manual guests and cannot restore this six-member managed profile. The original
+`firstkvm` remains manual. Validate the complete managed backup/restore workflow
+with the separate disposable guest and actual KVM before production signoff.
