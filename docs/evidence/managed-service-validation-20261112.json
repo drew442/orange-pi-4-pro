@@ -1,0 +1,102 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "result": "pass",
+  "scope": "Uninstalled enabled managed guest single-run controller and source packaging; no startup units, boot composition, physical QEMU/KVM fixture execution or deployment acceptance",
+  "builder": "drew@build.drewnet.online",
+  "builder_base": "/var/lib/a733-managed-service-validation-20261112-01",
+  "full_Ubuntu_tests": 3077,
+  "failures_errors_skips": 0,
+  "shell_suites": 5,
+  "diagnostic_cases": 5,
+  "parsed_TOML": 5,
+  "locked_source_files": 1043,
+  "source_lock": {
+    "bytes": 167261,
+    "sha256": "f72d64f779a4b19380358496b98dfb0f92bfe636aa393af8bd9bdad61038cf95",
+    "index_tree": "f0cc5731bfc96e3e34f8144713d541de08bf1f58"
+  },
+  "unit": {
+    "RuntimeMaxUSec": "8h",
+    "MainPID": "0",
+    "Result": "success",
+    "ExecMainStatus": "0",
+    "CPUQuotaPerSecUSec": "2s",
+    "MemoryMax": "3221225472",
+    "SubState": "exited"
+  },
+  "source": {
+    "build/maintenance-tools.py": {
+      "bytes": 15688,
+      "sha256": "55a42ff0915423666bb08029ae413863c7d45e9ead34a6a040b7668a6b46818d"
+    },
+    "scripts/run-managed-guest.py": {
+      "bytes": 9639,
+      "sha256": "b075647cfe820b6cb2c6217eba0a916b5ce3c45ef51588e72bcb19d97d168aab"
+    },
+    "tests/test_host_payload.py": {
+      "bytes": 28099,
+      "sha256": "33f765638ccd953b6ee60ad300e86b1c218019a9d490615caffd15e7ad943395"
+    },
+    "tests/test_launch_deterministic_host_roots.py": {
+      "bytes": 11602,
+      "sha256": "098ed734ab838abb40cad9fa0755b8c0a01a3ef95d2471388fea24bee9c904bd"
+    },
+    "tests/test_maintenance_tools.py": {
+      "bytes": 18152,
+      "sha256": "f4f6b55f9ca723b6a81b0d6f8b39429d8b0c55a74fe24c22ddc3137c5972ae60"
+    },
+    "tests/test_managed_guest_service.py": {
+      "bytes": 16138,
+      "sha256": "a3d4c8604adc6cd749f4bef1bb69c1eae5c5e904b21426057e7e8c534a60b955"
+    }
+  },
+  "resource_sample_minima": {
+    "free_disk_bytes": 30982565888,
+    "MemAvailable_bytes": 7110823936
+  },
+  "independent_review": {
+    "path": "out/managed-service-validation-20261112-01/service-review.json",
+    "bytes": 7306,
+    "sha256": "2a8b9271b3291f5deccbd716f380ca7857151c466514bfba824c037f776b7107"
+  },
+  "packaging": {
+    "current_sources": 67,
+    "runtime_files": 68,
+    "entrypoints": 20,
+    "historical_sources": 39,
+    "extracted_import_and_CLI_help": "pass"
+  },
+  "custody": {
+    "bytes": 430080,
+    "sha256": "ac1411dd661c8dcd7ae0367104d653d421c7d46c067b8e4911e2b9b3b2476111",
+    "native": "out/managed-service-validation-20261112-01/receipts.tar",
+    "builder": "/var/lib/a733-managed-service-validation-20261112-01/receipts.tar",
+    "unit": {
+      "RuntimeMaxUSec": "8h",
+      "MainPID": "0",
+      "Result": "success",
+      "ExecMainStatus": "0",
+      "CPUQuotaPerSecUSec": "2s",
+      "MemoryMax": "3221225472",
+      "SubState": "exited"
+    }
+  },
+  "managed_run": {
+    "native_tests": 17,
+    "independent_initial_suite": 16,
+    "independent_probes": 20,
+    "independent_targeted_rechecks": 3,
+    "behavior": "One actual checkpoint/supervisor/lifecycle family; root/native context, existing SH admission, current enabled registry pin, actual ManagedRun guest EX, direct-child supervision, optional one-shot fixture verification, typed guest-owned shutdown and durable checkpoint. Overall success follows all outer cleanup and empty supervisor cleanup errors.",
+    "native_integration": "Actual canonical Admission SH, guest EX, ManagedRun, fork/QMP surrogate, raw wait ownership and checkpoint publication compose successfully, including after shutdown gate closure; new admission refuses. Host/boot/placement and QEMU executable/credential observations are explicitly substituted.",
+    "failure_cases": "Disabled/pin races, tampered or quarantined run, partial publication, fake StoppedRun/Fixture, raw zero without guest SHUTDOWN, process/thread changes, gate/manager failure and every outer cleanup failure refuse success.",
+    "resolved_efficiency": "Healthy 0.2-second loop originally spawned PID1 systemctl query each iteration. It now uses cheap stop flag/QMP/raw child observation; fresh prelaunch/post-fixture/final stop queries remain. Five-poll regression proves query count constant and final PID1 stopping closes gate before QMP stop.",
+    "limits": "Production run duration is unbounded normal service uptime; every planned test remains capped at eight hours. Bounded synchronous fixture verification interrupted by stop is conservative failure/quarantine, not clean acceptance."
+  },
+  "limitations": [
+    "All new controllers remain uninstalled. Systemd units/boot coordinator, aggregate resource admission, activation/RAM recovery and coherent restore remain required.",
+    "No actual QEMU guest/KVM or A733 fixture shutdown ran here; fork/QMP surrogate is software orchestration evidence only.",
+    "Readonly expected storage and lifecycle pins do not replace actual physical guest execution. Retain firstkvm as manual; use separate disposable managed guest for acceptance.",
+    "Five unchanged TOML files reuse native tomllib parse retained in receipts; Ubuntu Python 3.10 has no tomllib."
+  ]
+}

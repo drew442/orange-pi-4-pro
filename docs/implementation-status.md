@@ -66,13 +66,14 @@ architecture review. The following software components are reviewed and tested;
 | Managed source export and explicit admission reopening | [Evidence](evidence/managed-sender-reopen-validation-20261112.json). **2956** privileged Ubuntu tests, shell/diagnostic suites and independent reviews pass. Successful fixture export and pre-output proof rejection are covered. Cleanup reporting correction preserves acknowledged reopening while reporting command failure. [Candidate procedure](guest-maintenance-admission.md). |
 | Managed historical decoder, artifact receiver and local archive reader | [Evidence](evidence/managed-archive-validation-20261112.json). **3012** privileged Ubuntu tests and shell/diagnostic suites pass. Independent reviews resolve partial-construction and final-observation cleanup faults; native sender integration passes with explicit platform/shutdown substitutions. Artifact publication supplies no destination restore authority. |
 | Initialization exclusion and bootstrap registry/markers | [Evidence](evidence/bootstrap-admission-validation-20261112.json). **3060** privileged Ubuntu tests and shell/diagnostic suites pass. Actual readonly EX interlock, native failure probes and original-owner preparation pass review after GID-boundary and reserved-firstkvm corrections. Only the initializer side is wired; marker observations grant no launch permission. |
+| Single managed run controller | [Evidence](evidence/managed-service-validation-20261112.json). **3077** privileged Ubuntu tests and shell/diagnostic suites pass. Independent native shutdown/cleanup probes pass; healthy polling no longer spawns PID1 queries. Actual retained locks, run, fork/QMP surrogate and checkpoint compose with explicit platform/credential substitutions. No installed unit or hardware qualification. |
 
-Current packaging has 66 sources, 19 entrypoints and the historical exact
+Current packaging has 67 sources, 20 entrypoints and the historical exact
 39-source boundary. Reviews retain resolved findings, preliminary failures and
 verified off-device receipts. Native surrogate/ARM user-mode results ran no
 QEMU guest or KVM and do not establish deployment acceptance.
-Managed service-run composition is under review/integration.
-RAM recovery/activation admission, coherent managed restoration,
+Pre-p5 maintenance and normal activation admission are under review/integration.
+RAM recovery admission, coherent managed restoration,
 boot services, inactive-root deployment and physical acceptance remain pending.
 The outer service must finish/check supervisor/run/controller/lease cleanup;
 bootstrap must publish manual namespace pins before opening admission.

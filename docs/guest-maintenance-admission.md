@@ -89,6 +89,27 @@ Keep the JSON receipt and UART output with the failed maintenance record. This
 recovery command grants no authorization to rerun a host write, restore stale
 STATE or change physical targets.
 
+## Single managed run boundary
+
+The candidate `run-managed-guest.py` is the controller for the future managed
+unit. It accepts one enabled guest name, acquires retained admission/guest custody
+and uses the same checkpoint, supervisor and fixture family throughout. It starts
+one supervised child, accepts only supported guest-owned shutdown evidence and
+publishes a checkpoint before releasing custody. Overall success also requires
+completed supervisor/run/controller/lease cleanup.
+
+SIGTERM/SIGINT set a stop flag. Before requesting shutdown the controller reads
+PID1 state; when PID1 is stopping it closes the global shutdown gate, which cannot
+reopen. An explicit guest stop on a running host leaves global admission open.
+Healthy polling uses the flag, QMP and raw child status without repeatedly
+spawning PID1 queries. A stop during bounded synchronous fixture verification is
+ambiguous and fails conservatively; it does not qualify that fixture.
+
+[Native composition and independent probes](evidence/managed-service-validation-20261112.json)
+pass with physical/QEMU observations explicitly substituted. The controller
+provides no automatic restart or standalone deployment acceptance. Startup units,
+aggregate resource checks and actual KVM qualification remain unfinished.
+
 ## Managed backup boundary
 
 The candidate `backup-managed-guest.py` exports one stopped ready managed guest
