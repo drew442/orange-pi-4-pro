@@ -1,0 +1,89 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "result": "pass",
+  "scope": "Uninstalled root managed-child/QMP supervisor and typed shutdown outcome; no checkpoint publisher, fixture acceptance, installed boot services or physical A733 run",
+  "builder": "drew@build.drewnet.online",
+  "builder_base": "/var/lib/a733-managed-supervisor-validation-20261112-01",
+  "full_Ubuntu_tests": 2679,
+  "failures_errors_skips": 0,
+  "shell_suites": 5,
+  "diagnostic_cases": 5,
+  "locked_source_files": 996,
+  "source_lock": {
+    "bytes": 159496,
+    "sha256": "a2127e7d904b79f5b05e11bf0fb9eac2d9063e5219ce38f027882686846a5b59"
+  },
+  "unit": {
+    "RuntimeMaxUSec": "8h",
+    "MainPID": "0",
+    "Result": "success",
+    "ExecMainCode": "1",
+    "ExecMainStatus": "0",
+    "CPUQuotaPerSecUSec": "2s",
+    "MemoryMax": "3221225472",
+    "ActiveState": "active",
+    "SubState": "exited"
+  },
+  "resources": {
+    "sampled_min_free_disk_bytes": 32348270592,
+    "sampled_min_available_memory_bytes": 7048675328,
+    "compilation_jobs": 2
+  },
+  "source": {
+    "build/maintenance-tools.py": {
+      "bytes": 14980,
+      "sha256": "ffa0f9bb53800d41a0e8faf03e60ea5383f0d01ba354b852da1bea968b465002"
+    },
+    "scripts/managed-guest-supervisor.py": {
+      "bytes": 29099,
+      "sha256": "40c83a17fc76d3eae5da041e8ba8b407c7813239cb9828c6312d2d747015834d"
+    },
+    "tests/test_host_payload.py": {
+      "bytes": 28099,
+      "sha256": "403e02db364fb4b5b9fd4e8722fba2fe487ac95aea3f6d1d9bf5c81c0f70bc07"
+    },
+    "tests/test_launch_deterministic_host_roots.py": {
+      "bytes": 11602,
+      "sha256": "51bc9d7a84f8b8f604271ee08e312b08db95931efff1ecf778b142374f8390d5"
+    },
+    "tests/test_maintenance_tools.py": {
+      "bytes": 16634,
+      "sha256": "c5e0305d3fcb08272734c01e9541618be8456251c1514fdf8ece636e5d26df65"
+    },
+    "tests/test_managed_guest_supervisor.py": {
+      "bytes": 20576,
+      "sha256": "2dfc8fc6122de9122fe0efb17b2efaa40d34244f2703477f036e869c5e52efed"
+    }
+  },
+  "independent_review": {
+    "bytes": 7522,
+    "sha256": "de9be9df10944e14133b43e651d47336016b4b6e069b6104e03b3f82b873a2ff"
+  },
+  "independent_review_path": "out/managed-supervisor-20261112-01/final-review.json",
+  "resolved_finding": "StoppedRun.recheck now enforces the supervisor creating PID/thread, refusing inherited outcome use by a fork child or another thread before any future checkpoint wrapper. Native fork/thread rejection regression passes.",
+  "native_supervisor_tests": {
+    "cases": 18,
+    "real_syscalls": "fork barrier, stdio-plus-two-lock FD inheritance, UNIX socket peer PID, QMP handshake/cont/system_powerdown/SHUTDOWN/EOF, bounded console, raw waits, timeout and TERM/KILL cleanup",
+    "explicit_substitutions": "A733 platform, root/storage authority and executable/credential authentication are mocked for native surrogate; real inherited-permission/namespace proof is retained separately in managed-launch evidence",
+    "qemu_execution": false,
+    "kvm_execution": false,
+    "hardware_acceptance": false
+  },
+  "packaging": {
+    "current_sources": 52,
+    "runtime_files": 53,
+    "historical_sources": 39,
+    "entrypoints": 16,
+    "relocated_isolated_import_and_help": "pass"
+  },
+  "receipts": {
+    "native": "out/managed-supervisor-20261112-01/receipts.tar",
+    "builder": "/var/lib/a733-managed-supervisor-validation-20261112-01/receipts.tar",
+    "bytes": 378880,
+    "sha256": "1b51c1040453bdde541585c7b35b9c7496f7e380ffae5c49884675ee644b7ef2",
+    "verified_fsynced_both": true
+  },
+  "hardware_acceptance": false,
+  "remaining": "Authenticated managed fixture/outcome, actual stopped-disk inspection and durable checkpoint-intent publication/reconciliation; coherent backup/restore and all legacy admission; boot services/inactive-root deployment; physical SPI recovery, actual managed KVM and final ten cold/ten warm SPI qualification."
+}
