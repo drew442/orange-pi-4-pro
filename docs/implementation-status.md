@@ -122,6 +122,14 @@ services remain uninstalled. Policy publication packaging, coherent managed
 restore and explicit guest-management commands are next, followed by candidate
 construction/deployment and physical qualification.
 
+The [initial policy publisher source](evidence/initial-policy-validation-20261112.json)
+separately passes 30 privileged tests and nine independent probes, including
+resolved partial-construction and registry-read cleanup acknowledgement faults.
+It retains initialization EX through all cleanup, refuses existing runtime or
+different policy, and establishes small-file/parent durability without starting
+services. It is uninstalled and not yet packaged; these focused results are
+separate from the frozen 3348-test service run.
+
 Two fresh managed power-key guest builds match byte for byte with verified
 off-device copies. [Build evidence](evidence/managed-fixture-build-20261112.json).
 Its shutdown path remains hardware-unproven.

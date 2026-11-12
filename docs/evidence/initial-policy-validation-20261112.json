@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "result": "pass",
+  "scope": "Initial policy publisher source and focused native Linux software only; uninstalled/unpackaged, no A733 NVMe policy write, service start, mount or KVM acceptance",
+  "source": {
+    "scripts/configure-guest-storage.py": {
+      "bytes": 16455,
+      "sha256": "bf2e7d1883820fa10fa8db6012cb98eb258bfc386806e967c02be8afc4c827c0"
+    },
+    "tests/test_configure_guest_storage.py": {
+      "bytes": 28377,
+      "sha256": "4309d510c6eec914678de210aef91190f51272dadd6e7eaf994c8011eb52e086"
+    }
+  },
+  "privileged_tests": 30,
+  "failures_errors_skips": 0,
+  "independent_probes": 9,
+  "review_sha256": "ab85732e74a31882978c28aea15e3111152d1832baf2977957bf98cc1d57cfc1",
+  "custody": {
+    "bytes": 71680,
+    "sha256": "bfbb32534292384dea99583bb29edae7d45677cdddedbc6935eead79eed30380",
+    "native": "out/initial-policy-validation-20261112-01/receipts.tar",
+    "builder": "/var/lib/a733-initial-policy-validation-20261112-01/receipts.tar"
+  },
+  "behavior": "Explicit expected target identity, installed/native guards, retained readonly initialization EX, any existing runtime refuses. Canonical registry/selected STATE/p5 checks precede atomic no-replace publication. Identical policy uses guarded file/parent synchronization. All contexts close before releasing init exclusion/success; failure preserves committed bytes and uncertainty.",
+  "resolved_findings": [
+    "Partial source construction plus close acknowledgement loss retains primary and cleanup; no false absence or top-level durability.",
+    "Protected registry read now uses retained cleanup-safe source rather than untagged per-read close; local directory constructor preserves all protected STORE ancestry checks without creation or permission changes."
+  ],
+  "limits": [
+    "Excluded from the 3348-test frozen service run; these 30 tests are separate.",
+    "Still requires runtime packaging, release-wide validation and actual same-board installation reproduction.",
+    "Storage/native observations are explicitly substituted in private /run fixtures; no hardware validation supplied."
+  ]
+}

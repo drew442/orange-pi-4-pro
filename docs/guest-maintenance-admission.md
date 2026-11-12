@@ -51,6 +51,17 @@ initial policy publication still needs packaging/integration. No new controller
 is installed or enabled on the board by these source checks.
 The current manual unit rendering procedure remains explicit.
 
+The [initial policy publisher source](../scripts/configure-guest-storage.py) now
+passes [separate focused review/checks](evidence/initial-policy-validation-20261112.json).
+It is not yet in the runtime package. Its explicit expected identity must match
+the selected installed storage. Initialization EX protects the entire publication
+and cleanup; any existing runtime refuses initial setup. A different existing
+policy is never overwritten. An identical policy gets file/parent durability
+barriers, and cleanup uncertainty clears top-level durability while retaining
+the actual publication receipt. The tool does not initialize admission, mount
+storage, launch guests or start services. Use it only after runtime packaging and
+the installed procedure are validated; it is not a command for the current board.
+
 The reviewed account producer reserves identities from all protected published
 manual and managed enrollments, including disabled guests, before applying
 sorted account batches. It detects cross-guest conflicts before any account
