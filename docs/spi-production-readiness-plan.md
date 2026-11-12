@@ -370,6 +370,12 @@ For B, the restore design must distinguish historical archive validation from
 fresh destination authority. Specify durable publication/retry ordering and
 preservation of unrelated guests and enable flags before implementation review.
 Use the disposable automation guest for physical restoration; preserve firstkvm.
+The [proposed restoration transaction](managed-restore-design.md) specifies
+shutdown-only exclusion, explicit retry, coherent directory publication and
+registry-generation handling. Independent architecture review resolved six
+contract gaps; implementation review and validation remain required. It is not
+an available restoration command.
+[Architecture review](evidence/managed-restore-design-review-20261112.json).
 
 For E and phase 6, distinguish a fresh checkout using retained inputs from a
 fully independently provisioned builder. Reproduce the released procedure with

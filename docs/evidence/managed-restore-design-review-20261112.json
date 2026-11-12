@@ -1,0 +1,68 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "result": "architecture accepted for implementation",
+  "hardware_acceptance": false,
+  "document": {
+    "path": "docs/managed-restore-design.md",
+    "sha256": "7f7aed9409ff46120a6cd74e1e424ef2338e6df8a0f8842bb53736e2c75207df"
+  },
+  "reviewer": {
+    "model": "gpt-6.1-sol",
+    "effort": "high"
+  },
+  "resolved_findings": [
+    {
+      "id": "R1",
+      "finding": "Failed bootstrap may leave missing RAM accounts or managed marker. Actual final Inspection and ready authentication require both. Existing producers require original bootstrap owner; shutdown observation supplies no such authority.",
+      "resolution": "Dedicated shutdown-EX verifier checks actual durable cohort without RAM account/marker dependence; unchanged ordinary boot verification remains mandatory."
+    },
+    {
+      "id": "R2",
+      "finding": "Root-only retained parent removes pathname access but cannot revoke previously open disk/directory descriptors, cwd or mapped pages. VM census alone proves no KVM consumer, not no guest-UID process retaining mutable disk custody. Existing disk consumer helper scans only process main fd tables.",
+      "resolution": "Bounded all-task FD/mapping/cwd/root/executable and target UID process census, plus old disk custody through cleanup, prevents relying on private-parent rename to revoke old access."
+    },
+    {
+      "id": "R3",
+      "finding": "Final Inspection opens canonical payload and takes disk EX. Constructing it while registry EX is held reverses disk-before-registry order; independently held staging disk EX self-conflicts. Existing RootDirectory and Inspection pin named edges and cannot transparently survive directory rename.",
+      "resolution": "Registry sections are short and released before new disk acquisition; dedicated rename-aware handles pin and revalidate named identities, moved-directory and parent durability."
+    },
+    {
+      "id": "R4",
+      "finding": "Pre-intent construction failures create STATE/p5 artifacts but resume currently assumes immutable intent. Unqualified census rejection can make these artifacts permanently block boot. Census before accounts still allows STATE.prepare to publish markers first.",
+      "resolution": "Private pre-intent stages are harmless retained artifacts outside discovery; no canonical writes until durable intent. Census precedes state/account/marker preparation."
+    },
+    {
+      "id": "R5",
+      "finding": "Durable completion is published before source/context/descriptor cleanup, yet cleanup failure must not count as completed restore. Reboot loses in-memory failure and census can see only completion. No final record can certify its own successful close.",
+      "resolution": "Durable data commit is distinct from command success. Cleanup uncertainty preserves acknowledged data commit; boot census checks data commit and fresh boot authentication separately."
+    },
+    {
+      "id": "R6",
+      "finding": "Ordered reachable states need explicit cartesian constraints across payload, lifecycle, registry and receipt steps. Old/new registry equality alone misses later disk/head mutations without registry change. Completed historical transactions cannot be revalidated against current bytes as if still current after a legitimate guest run.",
+      "resolution": "Explicit cross-component phases, absence observations, exact inode/content resume and historical-only completed observation protect against stale replay and legitimate later guest mutation."
+    }
+  ],
+  "requirements": [
+    "Where incomplete resume still sees original damaged payload, bind observed original bytes in the intent/observation and compare them on resume; corruption recovery must not require those bytes to match the registry manifest. Hash observation is distinct from requiring old integrity.",
+    "Originally absent objects carry explicit absence and no nonexistent old-disk lock requirement.",
+    "Restore-only verifier must inspect actual destination content and authority; pure parsed source records are insufficient.",
+    "Unrelated guests remain exact/current completed cohorts. Missing accounts/markers is the only observation relaxed; account conflicts or foreign owners do not grant launch authority.",
+    "Reserved private stages must be explicitly safe and ignored by every relevant boot identity discovery path, with bounded census refusing unsafe or unbounded records.",
+    "Full required regressions, privileged filesystem interruption tests, independent implementation review and physical A733 restore/reboot/KVM validation remain mandatory. Replacement-drive migration remains a separate blocked scope."
+  ],
+  "raw_review": {
+    "path": "tmp/managed-restore-design-review-20261112.json",
+    "sha256": "f12781b5bb87d6a7c872057b10baf5592ee6fd4c7728ce60e6b1304f5ae6caeb"
+  },
+  "limitations": [
+    "No destination publisher is available yet. Custody implementation is separate work, excluded from the current controls validation freeze.",
+    "Host fixtures, real filesystem interruption/retry checks, independent implementation review, fresh A733 boot and actual nonroot KVM restoration are required before acceptance."
+  ],
+  "custody": {
+    "native": "out/managed-restore-design-review-20261112/receipts.tar",
+    "builder": "/var/lib/a733-managed-restore-design-review-20261112/receipts.tar",
+    "bytes": 51200,
+    "sha256": "97a73f4ed725684d25fc359e92bd5471a004796097e77e34fed7c201544b4f05"
+  }
+}
