@@ -22,11 +22,6 @@ class NVMeImageTests(unittest.TestCase):
         self.sd = json.loads((REPO / 'docs/evidence/host-sd-20261104.json').read_text())
         self.roots['package_state'] = {'profile': 'a733-package-state-v1', 'manifest': {'bytes':1,'sha256':'a'*64}}
         self.roots['management_runtime']['files']['usr/lib/orangepi-hypervisor/package_state.py'] = {'bytes':1,'sha256':'a'*64}
-        # Adapt historical metadata to the current required service set. This
-        # fixture does not claim those files exist in the old recorded image.
-        for name in ('a733-guest-storage.service', 'a733-guest-prepare.service'):
-            self.roots['management_runtime']['files']['usr/lib/systemd/system/' + name] = \
-                IMAGE.HOST.record((REPO / 'configs' / name).read_bytes())
         self.sd['package_state_profile'] = 'a733-package-state-v1'
         self.diag = json.loads((REPO / 'docs/evidence/diagnostic-20261104.json').read_text())['files']
 
@@ -35,13 +30,43 @@ class NVMeImageTests(unittest.TestCase):
         self.assertEqual(command, (REPO / 'configs/host-boot.cmd').read_bytes())
         self.assertIsNone(policy)
 
-    def test_current_roots_require_both_guest_boot_service_records(self):
+    def test_legacy_and_extended_roots_have_closed_guest_boot_contract(self):
         IMAGE.validate_roots(self.roots)
-        for name in ('a733-guest-storage.service', 'a733-guest-prepare.service'):
+        extension = {'profile': 'a733-guest-boot-v1', 'files': {
+            dest: {'bytes': 1, 'sha256': 'a' * 64}
+            for dest, _ in IMAGE.SELECT.INIT.PAYLOAD.GUEST_BOOT_FILES.values()}}
+        self.roots['guest_boot_runtime'] = extension
+        IMAGE.validate_roots(self.roots)
+        for bad in (None, {}, {**extension, 'profile': 'unknown'},
+                    {**extension, 'files': {}}, {**extension, 'extra': True}):
             candidate = copy.deepcopy(self.roots)
-            del candidate['management_runtime']['files']['usr/lib/systemd/system/' + name]
-            with self.subTest(name=name), self.assertRaisesRegex(ValueError, 'incompatible managed root'):
+            candidate['guest_boot_runtime'] = bad
+            with self.subTest(bad=bad), self.assertRaisesRegex(ValueError, 'guest_boot_runtime'):
                 IMAGE.validate_roots(candidate)
+        candidate = copy.deepcopy(self.roots)
+        candidate['management_runtime']['files'].update(extension['files'])
+        with self.assertRaisesRegex(ValueError, 'incompatible managed root'):
+            IMAGE.validate_roots(candidate)
+
+    def test_root_selection_requires_identical_valid_guest_boot_descriptors(self):
+        extension = {'profile': 'a733-guest-boot-v1', 'files': {
+            dest: {'bytes': 1, 'sha256': 'a' * 64}
+            for dest, _ in IMAGE.SELECT.INIT.PAYLOAD.GUEST_BOOT_FILES.values()}}
+        legacy = copy.deepcopy(self.roots)
+        extended = {**copy.deepcopy(legacy), 'guest_boot_runtime': extension}
+        with tempfile.TemporaryDirectory() as temporary:
+            image = Path(temporary) / 'root.ext4'
+            image.write_bytes(b'parser fixture')
+            for manifest, marker in ((legacy, legacy), (extended, extended)):
+                with patch.object(IMAGE.SELECT.INIT, 'root_marker', return_value=(b'marker', marker)):
+                    IMAGE.root_selection(image, 'A', manifest, self.diag)
+            changed = copy.deepcopy(extended)
+            next(iter(changed['guest_boot_runtime']['files'].values()))['sha256'] = 'b' * 64
+            for manifest, marker in ((legacy, extended), (extended, legacy), (extended, changed),
+                                     (extended, {**extended, 'guest_boot_runtime': None})):
+                with patch.object(IMAGE.SELECT.INIT, 'root_marker', return_value=(b'marker', marker)):
+                    with self.assertRaisesRegex(ValueError, 'guest_boot_runtime'):
+                        IMAGE.root_selection(image, 'A', manifest, self.diag)
 
     def test_spi_boot_command_binds_reviewed_nvme_script_and_context(self):
         command, policy = IMAGE.boot_command('spi-nvme-v1', 'experimental-el2')

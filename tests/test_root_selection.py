@@ -52,6 +52,29 @@ class SelectionTests(unittest.TestCase):
                     self.assertFalse(marker.called)
                 path.write_text(json.dumps(manifest))
                 self.assertEqual(SELECT.parse(SELECT.prepare(root / 'image', 'A', path))['SLOT'], 'A')
+                extension = {'profile': 'a733-guest-boot-v1', 'files': {
+                    dest: {'bytes': 1, 'sha256': 'a' * 64}
+                    for dest, _ in SELECT.INIT.PAYLOAD.GUEST_BOOT_FILES.values()}}
+                extended = {**manifest, 'guest_boot_runtime': extension}
+                extended_marker = {**metadata, 'guest_boot_runtime': extension}
+                for bad in (None, {}, {**extension, 'files': {}}, {**extension, 'extra': 1}):
+                    path.write_text(json.dumps({**manifest, 'guest_boot_runtime': bad}))
+                    with self.subTest(bad=bad), self.assertRaisesRegex(ValueError, 'guest_boot_runtime'):
+                        SELECT.prepare(root / 'image', 'A', path)
+                changed = json.loads(json.dumps(extended_marker))
+                next(iter(changed['guest_boot_runtime']['files'].values()))['bytes'] = True
+                for outer, inner, valid in ((extended, extended_marker, True),
+                        (manifest, extended_marker, False), (extended, metadata, False),
+                        (extended, changed, False),
+                        (extended, {**extended_marker, 'guest_boot_runtime': None}, False)):
+                    path.write_text(json.dumps(outer))
+                    marker.return_value = (b'marker', inner)
+                    if valid:
+                        self.assertEqual(SELECT.parse(SELECT.prepare(root / 'image', 'A', path))['SLOT'], 'A')
+                    else:
+                        with self.assertRaisesRegex(ValueError, 'guest_boot_runtime'):
+                            SELECT.prepare(root / 'image', 'A', path)
+                path.write_text(json.dumps(manifest))
                 marker.return_value = (b'marker', {**metadata, 'package_state': {'profile':'other'}})
                 with self.assertRaisesRegex(ValueError, 'package-state'):
                     SELECT.prepare(root / 'image', 'A', path)

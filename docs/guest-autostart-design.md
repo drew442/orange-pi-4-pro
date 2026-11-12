@@ -379,6 +379,53 @@ source closure to `build/maintenance-tools.py`; add boot units/link preparation 
 `build/host-payload.py` and `configs/host-management.py`. Include the new service,
 controller and helper hashes in root provenance and inactive-root reproduction.
 
+### Preserve legacy update and rollback compatibility
+
+Keep the established `management_runtime` descriptor's exact four files. The
+additional guest storage/preparation units have a separate optional
+`guest_boot_runtime` descriptor with profile `a733-guest-boot-v1` and exactly
+their two destination paths and byte/hash records. New roots emit it in both
+the root marker and outer manifest, and retain both units in build inputs and
+provenance. The installed management files and guest unit bytes remain protected
+by the complete root image hash.
+
+A missing descriptor on both legacy marker and manifest is supported. Present
+null/empty values, unknown profiles, additional/missing destinations, invalid
+pins, one-sided presence and unequal descriptors refuse. Current update,
+selection and image-composition readers share this validation. The earlier
+six-file management descriptor was never installed and is retired; it must not
+silently replace the established management profile.
+
+The retained legacy updater knows the four-file management closure and accepts
+additive marker/manifest fields. It authenticates the complete new root before
+metadata parsing and binds the complete marker into the selector. This allows
+initial staging with the retained installed updater. Current selection can
+return to the legacy root; that root leaves managed automation off and preserves
+the guest cohort. Do not run its old guest mutation tools against managed
+metadata. Return to the new root through its authenticated manifest and retained
+selector. Actual old reader/new artifact and current reader/retained artifact
+checks, physical rollback/return and cohort preservation are required before
+acceptance. Independent architecture and focused implementation review pass.
+[Evidence](evidence/guest-boot-metadata-compatibility-20261112.json) records the
+fixture limits; combined validation, production artifacts and hardware evidence
+must establish the resulting behavior.
+
+### Initial opt-in sequence
+
+On the matched candidate, publish the explicit storage policy while no admission
+runtime exists, then start guest preparation/dispatch. Its initially empty
+registry does not create an account for an unpublished guest. For the disposable
+`autokvm` fixture, use the supported `guest-accounts.py` prepare/apply workflow
+for locked UID/GID 60002, then `enroll-guest.py` prepare/apply for its pinned
+kernel, initramfs and disk. Register that enrollment with `manage-guests.py`
+using its trusted current manifest and `managed-power-key-v1`; registration
+starts disabled. Enable it explicitly, then exercise explicit start and a fresh
+boot's unattended start. Preserve manual `firstkvm` UID/GID 60001.
+
+Every transition requires its successful receipt; stale plans, identity
+collisions or uncertain publication stop dependent operations. This source
+sequence awaits artifact-bound instructions and physical target validation.
+
 ## Implementation and acceptance
 
 Implement protected I/O/admission first, then managed supervision, checkpoint

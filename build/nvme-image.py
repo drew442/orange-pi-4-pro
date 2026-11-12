@@ -92,6 +92,7 @@ def validate_roots(manifest):
             profile.get('profile') != payload.management_profile(manifest) or
             set(profile.get('files', {})) != {v[0] for v in payload.MANAGEMENT_FILES.values()}):
         raise ValueError('incompatible managed root manifest')
+    payload.validate_guest_boot_runtime(manifest)
     payload.PACKAGE.validate_profile(manifest.get('package_state'))
     for slot in ('A', 'B'):
         if manifest['files'][f'root-{slot}.ext4']['bytes'] != 4 * GIB:
@@ -304,6 +305,7 @@ def root_selection(snapshot, slot, roots, diagnostic):
         raise ValueError('captured root package-state differs from trusted manifest')
     if value['management_runtime'] != roots['management_runtime']:
         raise ValueError('captured root runtime differs from trusted manifest')
+    SELECT.INIT.PAYLOAD.validate_guest_boot_bindings(value, roots)
     SELECT.INIT.PAYLOAD.validate_source_bindings(value, roots)
     for name in ('Image', 'board.dtb', 'kernel.config', 'initramfs.cpio.gz'):
         if value['sources'][name] != diagnostic[name]:

@@ -1,0 +1,85 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "result": "pass for focused source compatibility; combined validation and production artifacts pending",
+  "hardware_acceptance": false,
+  "source": {
+    "build/host-payload.py": {
+      "bytes": 30153,
+      "sha256": "1638f371ce4c0c023dde7ae11712bace49d50c7a0694fac1ae960dc6e0e910c7"
+    },
+    "scripts/prepare-host-update.py": {
+      "bytes": 13652,
+      "sha256": "8e09e5f77a4d072d620b84e16c9b82e7fda667a11393d3923bfdf6c94c97e682"
+    },
+    "build/root-selection.py": {
+      "bytes": 10542,
+      "sha256": "d1096e4f26df92c3c4976fa2b63e98bf39811ba2c761438a1237c9c43eea7f9a"
+    },
+    "build/nvme-image.py": {
+      "bytes": 26041,
+      "sha256": "efb6504b855e2b7a95a5b3e7d93491e248182a599aa1fe830d075d32272a925f"
+    },
+    "tests/test_host_payload.py": {
+      "bytes": 29567,
+      "sha256": "4139dda8271a333a91f9c3c6ccc03c0c6f616588194913e0f3d4ec7e93870cbc"
+    },
+    "tests/test_prepare_host_update.py": {
+      "bytes": 28608,
+      "sha256": "2adddca2f32504e599104dcf0e66f1b5afdb12ee51e5eedb310cc5a1169ae64c"
+    },
+    "tests/test_root_selection.py": {
+      "bytes": 15264,
+      "sha256": "9b6b8abb74c6bee09da739807433b69c06090f0e4ce97f8a5df40d1860c4e5bc"
+    },
+    "tests/test_nvme_image.py": {
+      "bytes": 27564,
+      "sha256": "2e0155dd7a1fdd5a003b93e6cdcb7751ab8421866e91d24020147938d21846d2"
+    },
+    "tests/test_guest_service_packaging.py": {
+      "bytes": 5805,
+      "sha256": "2d06d03f200a20a1fbef008af34b6336657e02257830c3d79961c975b292f116"
+    }
+  },
+  "legacy_reader_commit": "50bc9e70698d4a09c3705594dcc61c64e1715cb9",
+  "focused_test_counts": {
+    "payload": 27,
+    "prepare_including_legacy_artifacts_root": 32,
+    "root_selection": 12,
+    "nvme": 24,
+    "guest_service_packaging": 5,
+    "update_consumer": 33,
+    "select_consumer": 28,
+    "recover_consumer": 20
+  },
+  "focused_tests": 181,
+  "independent_review": {
+    "bytes": 9025,
+    "sha256": "05ac644d57a076a92a3bf24602a48c6293e22ec0e111f2310c83c1cf9675b5da",
+    "tests": 68,
+    "malformed_extension_probes": 23,
+    "presence_or_pin_mismatches": 3,
+    "valid_pairs": 2
+  },
+  "packaging": {
+    "maintenance_sources": 84,
+    "maintenance_runtime_files": 85,
+    "legacy_recovery_sources": 39,
+    "management_runtime_files": 4,
+    "guest_boot_units": 2
+  },
+  "contract": "Preserve legacy exact four-file management_runtime. Install unchanged two guest units separately and always emit optional versioned guest_boot_runtime on new marker and manifest. Only absence on both sides is legacy. Present null/empty/unknown/profile/destination/pin or one-sided/mismatched descriptors refuse through shared validation in root preparation/selection/composition. Full root/source/package/boot checks remain.",
+  "method": "Historical AST-extracted exact Source/Manifest/validate_manifest/compatibility/root_marker bodies; real private 32 MiB ext4 fixtures with current shared dependencies, actual hashes/marker/package parsing, no physical board or production candidate build. Root fixture budget explicitly injected.",
+  "custody": {
+    "bytes": 61440,
+    "sha256": "5c297582ac94d76419b084e6dbcaeb0c54096cbfed804e0d829d44fad60e1c9b",
+    "native": "out/guest-boot-metadata-compatibility-20261112/receipts.tar",
+    "builder": "/var/lib/a733-guest-boot-metadata-compatibility-20261112/receipts.tar"
+  },
+  "limitations": [
+    "Exact historical AST bodies use current shared dependencies, source-guard substitutions and test-only32MiB budgets; no full pinned historical reader/production artifact acceptance is claimed.",
+    "Full latest combined Ubuntu source freeze, two fresh production root builds, independent full artifact/readback and actual historical reader checks against those artifacts remain required.",
+    "Actual retainedA/currentreader compatibility, first legacyA-to-newB stage, rollbackA/returnB with newest managed cohort and SSH/NTP, targetsystemd252 ordering and actual managed KVM remain physical gates.",
+    "No new hardware/SPI/NVMe/SD writes or boot/KVM tests performed. Accepted endurance data reused."
+  ]
+}

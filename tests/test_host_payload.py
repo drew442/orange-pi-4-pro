@@ -133,7 +133,14 @@ class ArchiveTests(unittest.TestCase):
             root = Path(temporary)
             record = payload.install_management(root)
             self.assertEqual(record['profile'], 'a733-management-v1')
-            self.assertEqual(len(record['files']), 6)
+            self.assertEqual(len(record['files']), 4)
+            guest = payload.install_guest_boot(root)
+            payload.validate_guest_boot_runtime({'guest_boot_runtime': guest})
+            self.assertEqual(len(guest['files']), 2)
+            for source, (name, mode) in payload.GUEST_BOOT_FILES.items():
+                self.assertEqual((root / name).read_bytes(), (payload.REPO / source).read_bytes())
+                self.assertEqual((root / name).stat().st_mode & 0o777, mode)
+                self.assertEqual(payload.file_record(root / name), guest['files'][name])
             for name, expected in record['files'].items():
                 self.assertEqual(payload.file_record(root / name), expected)
             self.assertEqual((root / 'usr/lib/orangepi-hypervisor/host-management.py').stat().st_mode & 0o777, 0o755)
@@ -419,6 +426,12 @@ class UserspaceProfiles(unittest.TestCase):
                 else:
                     self.assertEqual(manifest['sources']['userspace_profile'], binding)
                 self.assertEqual([marker['sources'] for marker in markers], [manifest['sources']] * 2)
+                payload.validate_guest_boot_runtime(manifest)
+                self.assertEqual([marker['guest_boot_runtime'] for marker in markers],
+                                 [manifest['guest_boot_runtime']] * 2)
+                for source in (*payload.MANAGEMENT_FILES, *payload.GUEST_BOOT_FILES):
+                    original = payload.REPO / source
+                    self.assertEqual((output / 'provenance' / original.name).read_bytes(), original.read_bytes())
                 self.assertEqual(manifest['systemd_masks'], {
                     'etc/systemd/system/systemd-machine-id-commit.service': {
                         'type': 'symlink', 'target': '/dev/null', 'mode': 0o777}})

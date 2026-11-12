@@ -1,4 +1,5 @@
 """Small authenticated fixtures test staging policy, never hardware acceptance."""
+import ast
 import contextlib
 import copy
 import hashlib
@@ -7,6 +8,9 @@ import json
 import os
 from pathlib import Path
 import stat
+import shutil
+import subprocess
+from types import SimpleNamespace
 import tempfile
 import unittest
 from unittest import mock
@@ -29,6 +33,131 @@ def test_parent(path):
         yield fd
     finally:
         os.close(fd)
+
+
+LEGACY_READER = '50bc9e70698d4a09c3705594dcc61c64e1715cb9'
+
+
+def legacy_definitions(path, names, namespace):
+    """Execute exact historical reader bodies with explicit local dependencies."""
+    source = subprocess.check_output(['git', 'show', f'{LEGACY_READER}:{path}'],
+                                     cwd=UPDATE.REPO)
+    parsed = ast.parse(source)
+    nodes = [node for node in parsed.body if getattr(node, 'name', None) in names]
+    if {node.name for node in nodes} != set(names):
+        raise AssertionError('historical reader definitions missing')
+    exec(compile(ast.Module(body=nodes, type_ignores=[]), path, 'exec'), namespace)
+    return namespace
+
+
+@unittest.skipUnless(os.geteuid() == 0 and all(shutil.which(tool) for tool in
+    ('git', 'mke2fs', 'tune2fs', 'e2fsck', 'debugfs')), 'root and filesystem tools required')
+class LegacyArtifactCompatibilityTests(unittest.TestCase):
+    def test_exact_old_source_and_manifest_read_authenticated_new_and_legacy_roots(self):
+        payload = UPDATE.INIT.PAYLOAD
+        historical_payload = ast.parse(subprocess.check_output(
+            ['git', 'show', f'{LEGACY_READER}:build/host-payload.py'], cwd=UPDATE.REPO))
+        original_four = next(ast.literal_eval(node.value) for node in historical_payload.body
+                            if isinstance(node, ast.Assign) and any(
+                                isinstance(target, ast.Name) and target.id == 'MANAGEMENT_FILES'
+                                for target in node.targets))
+        self.assertEqual(payload.MANAGEMENT_FILES, original_four)
+        init_globals = legacy_definitions('build/host-initramfs.py', ['root_marker'],
+                                         dict(vars(UPDATE.INIT)))
+        old_init = SimpleNamespace(**vars(UPDATE.INIT))
+        old_init.root_marker = init_globals['root_marker']
+        prep_globals = dict(vars(UPDATE), INIT=old_init)
+        legacy_definitions('scripts/prepare-host-update.py', ['validate_manifest', 'compatibility'],
+                           prep_globals)
+        old_prep = SimpleNamespace(**prep_globals)
+        reader_globals = dict(vars(UPDATE), PREP=old_prep, storage_guard=lambda fd: None)
+        legacy_definitions('scripts/update-host.py', ['Source'], reader_globals)
+        # Manifest's own globals must retain the historical PREP reader.
+        manifest_globals = dict(reader_globals, UPDATE=SimpleNamespace(storage_guard=lambda fd: None))
+        legacy_definitions('scripts/select-host-root.py', ['Manifest'], manifest_globals)
+        diagnostic = json.loads((UPDATE.REPO / 'docs/evidence/diagnostic-20261104.json').read_bytes())['files']
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            evidence = base / 'docs/evidence'
+            evidence.mkdir(parents=True)
+            (evidence / 'diagnostic-20261104.json').write_text(json.dumps({'files': diagnostic}))
+            root = base / 'seed'
+            root.mkdir()
+            management = payload.install_management(root)
+            guest_boot = payload.install_guest_boot(root)
+            for _name, (target, kind) in payload.PACKAGE.COMPONENTS.items():
+                path = root / target
+                path.parent.mkdir(parents=True, exist_ok=True)
+                if kind == 'directory':
+                    path.mkdir()
+                else:
+                    path.write_bytes(b'fixture')
+            package = payload.PACKAGE.snapshot(root)
+            for extended in (False, True):
+                candidate = base / ('extended' if extended else 'legacy')
+                candidate.mkdir(mode=0o700)
+                marker = {'slot': 'A', 'filesystem_uuid': payload.SLOT_UUIDS['A'],
+                          'kernel_release': payload.KERNEL_RELEASE, 'sources': diagnostic,
+                          'management_runtime': management, 'package_state': package}
+                if extended:
+                    marker['guest_boot_runtime'] = guest_boot
+                payload.write_json(root / 'usr/lib/orangepi-hypervisor/payload.json', marker)
+                image = candidate / 'root.ext4'
+                size = 32 * 1024**2
+                payload.make_image(root, image, 'A', size=size)
+                manifest = {'schema': 1, 'board': 'Orange Pi 4 Pro A733', 'slot_bytes': size,
+                            'slot_uuids': payload.SLOT_UUIDS, **{name: marker[name] for name in
+                                ('kernel_release', 'sources', 'management_runtime', 'package_state')},
+                            'files': {'root-A.ext4': payload.file_record(image)}}
+                if extended:
+                    manifest['guest_boot_runtime'] = guest_boot
+                # The retired six-file management shape is refused by both validators.
+                six = copy.deepcopy(manifest)
+                six['management_runtime']['files'].update(guest_boot['files'])
+                for validator in (old_prep.validate_manifest, UPDATE.validate_manifest):
+                    validator(manifest, 'A', size)
+                    with self.assertRaisesRegex(ValueError, 'management profile'):
+                        validator(six, 'A', size)
+                for name, _mode in payload.GUEST_BOOT_FILES.values():
+                    data = subprocess.check_output(['debugfs', '-R', 'cat /' + name, str(image)],
+                                                   stderr=subprocess.DEVNULL)
+                    self.assertEqual(UPDATE.record(data), guest_boot['files'][name])
+                    details = subprocess.check_output(['debugfs', '-R', 'stat /' + name, str(image)],
+                                                      stderr=subprocess.DEVNULL)
+                    self.assertRegex(details, rb'Mode:\s+0?644\b')
+                manifest_path = candidate / 'manifest.json'
+                payload.write_json(manifest_path, manifest)
+                with image.open('rb') as stream:
+                    selector, _ = old_prep.compatibility(stream, 'A', manifest)
+                with image.open('rb') as stream:
+                    current_selector, _ = UPDATE.compatibility(stream, 'A', manifest)
+                self.assertEqual(current_selector, selector)
+                with mock.patch.object(UPDATE.SELECT, 'REPO', base), \
+                        mock.patch.object(UPDATE.SELECT.INIT.PAYLOAD, 'SLOT_BYTES', size):
+                    self.assertEqual(UPDATE.SELECT.prepare(image, 'A', manifest_path), selector)
+                (candidate / 'selected.conf').write_bytes(selector)
+                for path in candidate.iterdir():
+                    path.chmod(0o400)
+                pin = payload.file_record(manifest_path)['sha256']
+                source = reader_globals['Source'](candidate, pin, 'A', parent_opener=test_parent,
+                    guard=lambda fd: None, slot_bytes=size)
+                source.close()
+                protected = manifest_globals['Manifest'](manifest_path, pin, 'A',
+                    parent_opener=test_parent, guard=lambda fd: None, slot_bytes=size)
+                protected.close()
+                # Source still authenticates complete roots and derived selectors.
+                for filename in ('root.ext4', 'selected.conf'):
+                    path = candidate / filename
+                    original = path.read_bytes()
+                    path.chmod(0o600)
+                    path.write_bytes(original[:-1] + bytes([original[-1] ^ 1]))
+                    path.chmod(0o400)
+                    with self.subTest(extended=extended, altered=filename), self.assertRaises(ValueError):
+                        reader_globals['Source'](candidate, pin, 'A', parent_opener=test_parent,
+                            guard=lambda fd: None, slot_bytes=size)
+                    path.chmod(0o600)
+                    path.write_bytes(original)
+                    path.chmod(0o400)
 
 
 class CandidateTests(unittest.TestCase):
@@ -79,6 +208,47 @@ class CandidateTests(unittest.TestCase):
     def assert_clean(self):
         self.assertFalse(self.output.exists())
         self.assertEqual(list(self.parent.glob('.host-update-*')), [])
+
+    def test_guest_boot_extension_validates_exact_presence_and_pins(self):
+        payload = UPDATE.INIT.PAYLOAD
+        extension = {'profile': 'a733-guest-boot-v1', 'files': {
+            dest: {'bytes': 1, 'sha256': 'a' * 64} for dest, _ in payload.GUEST_BOOT_FILES.values()}}
+        UPDATE.validate_manifest(self.value, 'A', SIZE)
+        extended = {**self.value, 'guest_boot_runtime': extension}
+        UPDATE.validate_manifest(extended, 'A', SIZE)
+        invalid = [None, {}, [], {**extension, 'extra': 1}, {**extension, 'profile': 'unknown'},
+                   {**extension, 'files': {}}, {**extension, 'files': {**extension['files'], 'extra': {}}}]
+        for bad_record in ({'bytes': True, 'sha256': 'a' * 64}, {'bytes': 0, 'sha256': 'a' * 64},
+                           {'bytes': 1, 'sha256': 'A' * 64}, {'bytes': 1},
+                           {'bytes': 1, 'sha256': 'a' * 64, 'mode': 420}):
+            bad = copy.deepcopy(extension)
+            bad['files'][next(iter(bad['files']))] = bad_record
+            invalid.append(bad)
+        for bad in invalid:
+            with self.subTest(bad=bad), self.assertRaisesRegex(ValueError, 'guest_boot_runtime'):
+                UPDATE.validate_manifest({**self.value, 'guest_boot_runtime': bad}, 'A', SIZE)
+            with mock.patch.object(UPDATE.INIT, 'root_marker', return_value=(b'marker', {
+                    **self.metadata, 'guest_boot_runtime': bad})):
+                with self.assertRaisesRegex(ValueError, 'guest_boot_runtime'):
+                    UPDATE.compatibility(None, 'A', extended, self.boot)
+        six = copy.deepcopy(self.value)
+        six['management_runtime']['files'].update(extension['files'])
+        with self.assertRaisesRegex(ValueError, 'management profile'):
+            UPDATE.validate_manifest(six, 'A', SIZE)
+        extended_marker = {**self.metadata, 'guest_boot_runtime': extension}
+        changed = copy.deepcopy(extended_marker)
+        next(iter(changed['guest_boot_runtime']['files'].values()))['sha256'] = 'b' * 64
+        for manifest, metadata, valid in ((self.value, self.metadata, True),
+                (extended, extended_marker, True), (self.value, extended_marker, False),
+                (extended, self.metadata, False), (extended, changed, False)):
+            with self.subTest(valid=valid), mock.patch.object(UPDATE.INIT, 'root_marker',
+                    return_value=(b'marker', metadata)):
+                if valid:
+                    _, compatible = UPDATE.compatibility(None, 'A', manifest, self.boot)
+                    self.assertEqual('guest_boot_runtime' in compatible, 'guest_boot_runtime' in metadata)
+                else:
+                    with self.assertRaisesRegex(ValueError, 'guest_boot_runtime'):
+                        UPDATE.compatibility(None, 'A', manifest, self.boot)
 
     def test_success_exact_manifest_complete_records_private_files(self):
         result = self.prepare()

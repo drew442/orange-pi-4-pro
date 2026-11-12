@@ -44,6 +44,8 @@ MANAGEMENT_FILES = {
     'configs/host-management.py': ('usr/lib/orangepi-hypervisor/host-management.py', 0o755),
     'configs/host_config.py': ('usr/lib/orangepi-hypervisor/host_config.py', 0o644),
     'configs/a733-management-ssh.service': ('usr/lib/systemd/system/a733-management-ssh.service', 0o644),
+}
+GUEST_BOOT_FILES = {
     'configs/a733-guest-storage.service': ('usr/lib/systemd/system/a733-guest-storage.service', 0o644),
     'configs/a733-guest-prepare.service': ('usr/lib/systemd/system/a733-guest-prepare.service', 0o644),
 }
@@ -85,6 +87,33 @@ def clock_state_policy(profile, repo=None):
 
 def management_profile(metadata):
     return 'a733-management-v2-timesync' if CONFIG.timesync_policy(metadata) is not None else 'a733-management-v1'
+
+
+def validate_guest_boot_runtime(metadata):
+    """Accept legacy absence or the closed, versioned guest boot descriptor."""
+    if 'guest_boot_runtime' not in metadata:
+        return
+    value = metadata['guest_boot_runtime']
+    if (not isinstance(value, dict) or set(value) != {'profile', 'files'} or
+            value['profile'] != 'a733-guest-boot-v1' or
+            not isinstance(value['files'], dict) or
+            set(value['files']) != {destination for destination, _ in GUEST_BOOT_FILES.values()}):
+        raise ValueError('incompatible guest_boot_runtime profile or files')
+    for record in value['files'].values():
+        if (not isinstance(record, dict) or set(record) != {'bytes', 'sha256'} or
+                type(record['bytes']) is not int or record['bytes'] <= 0 or
+                not isinstance(record['sha256'], str) or
+                re.fullmatch('[0-9a-f]{64}', record['sha256']) is None):
+            raise ValueError('invalid guest_boot_runtime file record')
+
+
+def validate_guest_boot_bindings(actual, expected):
+    """Require matching validated descriptors, including explicit presence."""
+    validate_guest_boot_runtime(actual)
+    validate_guest_boot_runtime(expected)
+    if (('guest_boot_runtime' in actual) != ('guest_boot_runtime' in expected) or
+            actual.get('guest_boot_runtime') != expected.get('guest_boot_runtime')):
+        raise ValueError('root guest_boot_runtime differs from trusted manifest')
 
 
 def validate_source_bindings(actual, expected):
@@ -301,9 +330,9 @@ def write_json(path, value):
     Path(path).write_text(json.dumps(value, indent=2, sort_keys=True) + '\n')
 
 
-def install_management(root):
+def install_runtime_files(root, files, profile):
     records = {}
-    for source, (destination, mode) in MANAGEMENT_FILES.items():
+    for source, (destination, mode) in files.items():
         target = within_root(root, destination)
         target.parent.mkdir(parents=True, exist_ok=True)
         if target.exists() or target.is_symlink():
@@ -311,7 +340,15 @@ def install_management(root):
         shutil.copyfile(REPO / source, target)
         target.chmod(mode)
         records[destination] = file_record(target)
-    return {'profile': 'a733-management-v1', 'files': records}
+    return {'profile': profile, 'files': records}
+
+
+def install_management(root):
+    return install_runtime_files(root, MANAGEMENT_FILES, 'a733-management-v1')
+
+
+def install_guest_boot(root):
+    return install_runtime_files(root, GUEST_BOOT_FILES, 'a733-guest-boot-v1')
 
 
 def install_machine_id_commit_mask(root):
@@ -484,6 +521,7 @@ def build(rootfs, diagnostic, output, metadata_profile='native', userspace_profi
                  REPO / 'configs/host-userspace-packages.lock.tsv',
                  REPO / 'configs/host-userspace-package-hashes.lock.tsv',
                  *(REPO / source for source in MANAGEMENT_FILES),
+                 *(REPO / source for source in GUEST_BOOT_FILES),
                  *((REPO / 'build/timesync-state.py',) if clock_policy is not None else ()),
                  *((REPO / 'build/rootfs-metadata.py', backend.LOCK) if backend is not None else ())))
     # Two full images, worst-case compressed copies, staging and safety reserve.
@@ -525,6 +563,7 @@ def build(rootfs, diagnostic, output, metadata_profile='native', userspace_profi
         module_bom = import_modules(root, modules)
         systemd_masks = install_machine_id_commit_mask(root)
         management = install_management(root)
+        guest_boot = install_guest_boot(root)
         if clock_policy is not None:
             # Legacy update tools require v1 and must reject time-enabled roots.
             management = {**management, 'profile': management_profile({'sources': sources})}
@@ -550,7 +589,8 @@ def build(rootfs, diagnostic, output, metadata_profile='native', userspace_profi
                 'schema': 1, 'classification': CLASSIFICATION, 'slot': slot,
                 'filesystem_uuid': SLOT_UUIDS[slot], 'kernel_release': KERNEL_RELEASE,
                 'sources': sources, 'modules_bom': file_record(output / 'modules.json'),
-                'management_runtime': management, 'maintenance_runtime': maintenance,
+                'management_runtime': management, 'guest_boot_runtime': guest_boot,
+                'maintenance_runtime': maintenance,
                 'systemd_masks': systemd_masks,
                 'package_state': package_state,
                 'cache_pruning': cache_pruning})
@@ -565,7 +605,8 @@ def build(rootfs, diagnostic, output, metadata_profile='native', userspace_profi
         'schema': 1, 'board': 'Orange Pi 4 Pro A733', 'classification': CLASSIFICATION,
         'kernel_release': KERNEL_RELEASE, 'slot_bytes': SLOT_BYTES,
         'slot_uuids': SLOT_UUIDS, 'sources': sources, 'files': files,
-        'management_runtime': management, 'maintenance_runtime': maintenance,
+        'management_runtime': management, 'guest_boot_runtime': guest_boot,
+        'maintenance_runtime': maintenance,
         'systemd_masks': systemd_masks,
         'package_state': package_state,
         'cache_pruning': cache_pruning,

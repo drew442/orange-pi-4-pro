@@ -79,6 +79,7 @@ def validate_manifest(value, slot, slot_bytes=None):
             'incompatible management profile')
     for item in profile['files'].values():
         WRITER.record_valid(item)
+    INIT.PAYLOAD.validate_guest_boot_runtime(value)
     INIT.PAYLOAD.PACKAGE.validate_profile(value.get('package_state'))
     expected = WRITER.record_valid(value['files'][f'root-{slot}.ext4'])
     require(expected['bytes'] == slot_bytes, 'root must fill fixed slot byte budget')
@@ -148,13 +149,14 @@ def compatibility(stream, slot, manifest, diagnostic=None):
                 'root/manifest immutable boot stack differs from pinned diagnostic')
     for name in ('management_runtime', 'package_state'):
         require(metadata.get(name) == manifest[name], f'root {name} differs from authenticated manifest')
+    INIT.PAYLOAD.validate_guest_boot_bindings(metadata, manifest)
     INIT.PAYLOAD.validate_source_bindings(metadata, manifest)
     selector = SELECT.serialize({'SCHEMA': '1', 'SLOT': slot,
                                  'ROOT_UUID': INIT.PAYLOAD.SLOT_UUIDS[slot],
                                  'ROOT_MARKER_SHA256': hashlib.sha256(marker).hexdigest(),
                                  'KERNEL_RELEASE': INIT.PAYLOAD.KERNEL_RELEASE})
     return selector, {name: metadata[name] for name in
-                      ('sources', 'management_runtime', 'package_state')}
+                      ('sources', 'management_runtime', 'package_state', 'guest_boot_runtime') if name in metadata}
 
 
 def rename_new(parent, old, new):

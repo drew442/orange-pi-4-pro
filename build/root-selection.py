@@ -171,6 +171,7 @@ def prepare(image, slot, payload_manifest):
             not isinstance(profile, dict) or profile.get('profile') != INIT.PAYLOAD.management_profile(roots) or
             set(profile.get('files', {})) != {destination for destination, _ in INIT.PAYLOAD.MANAGEMENT_FILES.values()}):
         raise ValueError('payload manifest lacks compatible managed-host profile')
+    INIT.PAYLOAD.validate_guest_boot_runtime(roots)
     INIT.PAYLOAD.PACKAGE.validate_profile(roots.get('package_state'))
     diag = json.loads((REPO / 'docs/evidence/diagnostic-20261104.json').read_text())['files']
     expected = roots['files'][f'root-{slot}.ext4']
@@ -194,6 +195,7 @@ def prepare(image, slot, payload_manifest):
         raise ValueError('root package-state differs from trusted manifest')
     if metadata.get('management_runtime') != roots['management_runtime']:
         raise ValueError('root marker management runtime differs from trusted manifest')
+    INIT.PAYLOAD.validate_guest_boot_bindings(metadata, roots)
     INIT.PAYLOAD.validate_source_bindings(metadata, roots)
     return serialize({'SCHEMA': '1', 'SLOT': slot, 'ROOT_UUID': INIT.PAYLOAD.SLOT_UUIDS[slot],
                       'ROOT_MARKER_SHA256': hashlib.sha256(marker).hexdigest(),

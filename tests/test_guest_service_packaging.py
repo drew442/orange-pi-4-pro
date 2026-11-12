@@ -33,7 +33,9 @@ class GuestServicePackagingTests(unittest.TestCase):
     def test_new_root_installs_exact_services_and_records_hashes(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            records = PAYLOAD.install_management(root)['files']
+            management = PAYLOAD.install_management(root)
+            records = PAYLOAD.install_guest_boot(root)['files']
+            self.assertEqual(len(management['files']), 4)
             for name in NAMES:
                 relative = 'usr/lib/systemd/system/' + name
                 expected = (BASE / 'configs' / name).read_bytes()
@@ -41,7 +43,7 @@ class GuestServicePackagingTests(unittest.TestCase):
                 self.assertEqual((root / relative).stat().st_mode & 0o777, 0o644)
                 self.assertEqual(records[relative]['sha256'], hashlib.sha256(expected).hexdigest())
             with self.assertRaisesRegex(ValueError, 'already exists'):
-                PAYLOAD.install_management(root)
+                PAYLOAD.install_guest_boot(root)
 
     def test_ram_wants_keep_management_independent_and_run_no_commands(self):
         with patch.object(MANAGEMENT, 'runtime_guard', return_value=CONFIG), \
