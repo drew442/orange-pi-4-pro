@@ -1,6 +1,9 @@
 # Implementation status
 
-Updated 2026-11-13. **SPI/NVMe boot works with SD removed; managed production
+Updated 2026-11-13. **Goal paused at the operator’s request.**
+[Pause handoff](evidence/goal-pause-and-restoration-20261113.json).
+
+**SPI/NVMe boot works with SD removed; managed production
 qualification is incomplete.** The shutdown-repaired B is running with SD absent. The preceding
 `6c0a7e9` B passed actual managed UID60002 KVM CPU/disk/HTTP, then hit a QMP
 shutdown deadline and was durably quarantined. Forced cleanup returned raw exit 0;
@@ -31,12 +34,13 @@ Final managed warm/cold counts are **0/0**; release remains pending.
   Running boot `14d3fd72-4cbe-4b70-96fe-6ade66b30ace`; corrected B p3 is
   read-only. Complete 85-tool/four-management/two-boot-unit authentication and NTP
   pass. Actual UID 60002 native launcher metadata authentication passes. The
-  disposable guest is now disabled at generation23, with quarantined head4.
-  Actual KVM CPU/disk0→1/HTTP and KVM_RUN pass. QMP guest-owned shutdown and
-  unforced raw exit0 pass observation; post-exit path validation rejects missing
-  `qmp.sock` before checkpoint. Independent native reproduction confirms the
-  cause; terminal-path repair and another validated root trial are in progress.
-  [Failure](evidence/managed-guest-shutdown-and-terminal-socket-failure-20261113.json).
+  disposable guest was restored through supported transaction `9d4fd8d5…9f30`:
+  generation24 disabled, head ready0, admission shutdown-closed; a fresh boot is
+  required before further guest work. Failed cohorts and manual CP5 remain.
+  Actual KVM CPU/disk0→1/HTTP and guest-owned shutdown/raw exit0 were observed;
+  terminal socket-path validation prevented checkpoint. The reviewed repair is
+  committed as `2675847`, but is not built or installed. Full Ubuntu validation
+  was still running when paused; leave it to finish and inspect on resume.
 - Preserve A, manual `firstkvm` and CP5, all failed cohorts, recovery SD and SPI
   backups. CP5 manifest `88c1ea17…9c946`, disk `2d06d539…5b66`; verified backup
   is on codex and builder. Normalized A custody details are in
@@ -111,9 +115,10 @@ clearance. [Source inventory](toolchain-sources.md),
 
 Follow the [production readiness plan](spi-production-readiness-plan.md):
 
-1. Finish the bounded terminal socket-path repair, independent review/full
-   validation/fresh artifact checks, then deploy and prove stopped outcome,
-   checkpoint and restart on hardware. Preserve A, CP5 and all failed cohorts.
+1. After the operator resumes, inspect the running validation’s actual result.
+   Complete reviewed capacity/custody preparation, fresh root construction and
+   artifact checks, then deploy and prove stopped outcome/checkpoint/restart.
+   Restore07 requires a reviewed fresh boot first; do not reopen RAM admission.
 2. On hardware, prove guest-owned power-key shutdown, durable checkpoint,
    explicit restart, and separately automatic startup using an actual KVM guest.
 3. Exercise coherent completed-cohort backup/export/restore,

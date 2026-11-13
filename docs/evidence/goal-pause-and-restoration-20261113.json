@@ -1,0 +1,56 @@
+{
+  "date": "2026-11-13",
+  "goal_status": "paused at operator request",
+  "repair_source_commit": "267584729f8bd19e4539d250af3595afa0ac7b38",
+  "installed_source_commit": "fb29af4a7ee3d21ff6254058a445cb5e3cc4b998",
+  "boot_id": "14d3fd72-4cbe-4b70-96fe-6ade66b30ace",
+  "supported_restore": {
+    "transaction_id": "9d4fd8d5-a792-4f91-8e28-6890e2059f30",
+    "unit_terminal": "MainPID0/exited/success0",
+    "success": true,
+    "data_committed": true,
+    "cleanup_uncertain": false,
+    "close_errors": [],
+    "fresh_boot_required": true,
+    "registry_generation": 24,
+    "enabled": false,
+    "head": "ready sequence0",
+    "admission": "closed: shutdown",
+    "manual_CP5_manifest_sha256": "88c1ea1744f1f044f6e17f985746d7743f3b9165f8028f2c8d143b95f349c946",
+    "completed_guest_checkpoint_claimed": false
+  },
+  "read_only_snapshot": {
+    "path": "out/managed-trace-run-20261113-01/restore-attempt-07/paused-goal-snapshot.json",
+    "bytes": 4777,
+    "sha256": "91f8e8ea96e9a89734646129dabeb04dfe462e7ec78891e47465be51a5aa39c1"
+  },
+  "in_flight_job": {
+    "host": "build.drewnet.online",
+    "unit": "a733-managed-terminal-qmp-validation-20261113-01.service",
+    "observed_state": "running; not a validation pass",
+    "source_commit": "267584729f8bd19e4539d250af3595afa0ac7b38",
+    "source_locked_files": 1188,
+    "expected_unit_tests": 3745,
+    "policy": "Leave existing bounded validation to finish; inspect actual terminal result after operator resumes."
+  },
+  "unexecuted_preparation": {
+    "custody_directory": "tmp/terminal-repair-builder-custody-20261113",
+    "copy_started": false,
+    "retirement_started": false,
+    "new_completion_and_root_release": "not created",
+    "trial_freeze": "tmp/terminal-qmp-root-trial-20261113-01/frozen",
+    "native_trial_construction_started": false
+  },
+  "resume_gates": [
+    "Inspect validation terminal result and collect fsynced evidence; do not assume pass.",
+    "Finish independently reviewed custody and exact old-file retention under fresh guards; preserve current images and all backups.",
+    "Review fresh boot after restore; do not reopen admission or start guests on this boot.",
+    "Build and independently verify a fresh terminal-path root before deployment.",
+    "Prove actual managed checkpoint/restart, automatic startup and remaining release/reproduction gates."
+  ],
+  "production_acceptance": false,
+  "managed_final_boot_counts": {
+    "warm": 0,
+    "cold": 0
+  }
+}
