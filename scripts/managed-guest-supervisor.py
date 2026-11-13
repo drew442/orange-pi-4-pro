@@ -41,7 +41,12 @@ SETPRIV = '/usr/bin/setpriv'
 PYTHON = '/usr/bin/python3'
 LAUNCHER = str(Path(__file__).resolve().with_name('launch-managed-guest.py'))
 CONSOLE_LIMIT = EVIDENCE_LIMIT = 8 * 1024 * 1024
-BARRIER_TIMEOUT = CONNECT_TIMEOUT = 10
+# Publication authenticates native storage repeatedly. Leave a bounded 60-second
+# child-side cushion beyond the parent's publication/release budget. These are
+# pre-exec deadlines, independent of QMP and the unlimited running guest lifetime.
+PERMIT_PUBLICATION_TIMEOUT = 120
+BARRIER_TIMEOUT = 180
+CONNECT_TIMEOUT = 10
 GRACEFUL_TIMEOUT = 60
 EXIT_TIMEOUT = 10
 TERM_TIMEOUT = KILL_TIMEOUT = 5
@@ -339,6 +344,7 @@ class Supervisor:
         self._own_fd(console_write)
         self._check_paths()
         self.run.recheck()
+        parent_ticks = PROCESS._identity(self._parent)['start_ticks']
         self.pid = os.fork()
         if self.pid == 0:
             try:
@@ -361,6 +367,10 @@ class Supervisor:
                     os._exit(125)
                 if os.read(barrier_read, 2) != b'G':
                     os._exit(125)
+                parent = PROCESS._identity(self._parent)
+                if (os.getppid() != self._parent or parent['start_ticks'] != parent_ticks or
+                        parent['state'] in (b'Z', b'X', b'x')):
+                    os._exit(125)
                 os.close(barrier_read)
                 for fd in (self.run.lease.fd, self.run.guest_lock.fd):
                     os.set_inheritable(fd, True)
@@ -368,6 +378,17 @@ class Supervisor:
             except BaseException:
                 os._exit(126)
             os._exit(127)
+        deadline = time.monotonic() + PERMIT_PUBLICATION_TIMEOUT
+        def check_deadline():
+            if time.monotonic() >= deadline:
+                raise TimeoutError('permit publication/release deadline exceeded')
+
+        def guard():
+            check_deadline()
+            result = self.run.recheck()
+            check_deadline()
+            return result
+
         # Retain the exact unreaped child identity before any further operation.
         self.start_ticks = PROCESS._identity(self.pid)['start_ticks']
         self.receipt['child'] = dict(pid=self.pid, start_ticks=self.start_ticks)
@@ -376,17 +397,24 @@ class Supervisor:
         self.console = Console(console_read)
         self.console.start()  # Only after fork, before any blocking protocol wait.
         self.receipt['stage'] = 'permit-publication'
+        check_deadline()
         value = self._permit_value()
+        check_deadline()
         self.receipt['permit'] = copy.deepcopy(value)
         self.permit = self.admission.publish_permit(value, self.run.lease,
-                                                   self.run.guest_lock, guard=self.run.recheck)
+                                                   self.run.guest_lock, guard=guard,
+                                                   deadline=deadline)
         self._stack.callback(self.permit.close)
+        check_deadline()
         self.receipt['permit_sha256'] = hashlib.sha256(self.permit.data).hexdigest()
         self.witness = PROCESS.ChildWitness(self.pid, self.start_ticks, value)
+        check_deadline()
         self._check_paths()
-        self.run.recheck()
+        check_deadline()
+        guard()
         require(PROCESS._identity(self.pid)['state'] not in (b'Z', b'X', b'x'),
                 'barrier child exited before release')
+        check_deadline()
         require(os.write(barrier_write, b'G') == 1, 'barrier release failed')
         self._close_fd(barrier_write)
 
@@ -618,6 +646,10 @@ class Supervisor:
             self.receipt['failure_receipt'] = copy.deepcopy(error.receipt)
         if isinstance(error, ADMISSION.PublicationError):
             self.receipt['permit_error'] = dict(stage=error.stage, uncertain=error.uncertain)
+            if error.__cause__ is not None:
+                self.receipt['permit_error']['cause'] = dict(
+                    type=type(error.__cause__).__name__[:128],
+                    message=str(error.__cause__)[:2048])
         try:
             self.run.recheck()
             self.receipt['quarantine'] = self.run.quarantine('supervision-failed')

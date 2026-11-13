@@ -200,7 +200,7 @@ class NativeProducerComposition(unittest.TestCase):
             named = os.stat(run_id + '.json', dir_fd=directory, follow_symlinks=False)
             fixture.assertEqual(S.ENROLL.identity(info), S.ENROLL.identity(named))
 
-        def publish_permit(value, lease, lock, *, guard):
+        def publish_permit(value, lease, lock, *, guard, deadline=None):
             guard()
             for key, capability in (('lease', lease), ('guest', lock)):
                 fd = capability.recheck()

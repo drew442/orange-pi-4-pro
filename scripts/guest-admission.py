@@ -723,21 +723,34 @@ class Admission:
                     'permit lock binding differs')
         require(self.is_managed(name, lease, guest_lock), 'managed name marker missing')
 
-    def publish_permit(self, value, lease, guest_lock, *, guard):
+    def publish_permit(self, value, lease, guest_lock, *, guard, deadline=None):
         """Publish a per-run pre-exec child binding with no overwrite or repair.
 
         guard authenticates HostContext and the durable admitted head externally.
         It runs around each mutation, as well as entry and final verification.
+        An optional finite monotonic deadline bounds publication authority: a
+        blocking check may finish late, but no subsequent mutation is permitted.
         Partial protected files are retained on failure and cannot be adopted.
         """
         require(os.geteuid() == 0, 'root permit controller required')
         require(callable(guard), 'trusted admitted-head guard required')
+        require(deadline is None or type(deadline) is int or
+                (type(deadline) is float and math.isfinite(deadline)),
+                'finite monotonic permit deadline required')
+        def check_deadline():
+            if deadline is not None and time.monotonic() >= deadline:
+                raise TimeoutError('permit publication deadline exceeded')
+        check_deadline()
         data = PERMIT.canonical(value)
         value = PERMIT.validate_permit(data)
         def check():
+            check_deadline()
             self._check_permit_publication(value, lease, guest_lock)
+            check_deadline()
             guard()
+            check_deadline()
             self._check_permit_publication(value, lease, guest_lock)
+            check_deadline()
         check()
         directory = fd = result = None
         stage, uncertain = 'directory', False
@@ -791,15 +804,18 @@ class Admission:
                     check()
                 # Keep partially written bytes root-only until complete.
                 stage = 'file-fsync'
+                check_deadline()
                 os.fsync(fd)
                 check()
                 os.fchmod(fd, 0o440)
                 check()
                 self._permit_named(fd, directory, value['run_id'])
+                check_deadline()
                 os.fsync(fd)
                 check()
             stage = 'directory-fsync'
             self._check_permits_directory(directory)
+            check_deadline()
             _sync_directory(directory, self.gid)
             check()
             _sync_directory(self.directory, self.gid)
@@ -810,6 +826,7 @@ class Admission:
                 require(result.data == data, 'published permit differs')
                 check()
                 result.recheck()
+                check_deadline()
             except BaseException:
                 result.close()
                 raise

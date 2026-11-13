@@ -65,7 +65,7 @@ class Admission:
     def recheck(self):
         pass
 
-    def publish_permit(self, value, lease, guest_lock, *, guard):
+    def publish_permit(self, value, lease, guest_lock, *, guard, deadline=None):
         guard()
         if self.fail_publication:
             raise ValueError('fixture publication failure')
@@ -314,6 +314,157 @@ class SupervisorTests(unittest.TestCase):
         self.assertEqual(self.run.status, 'quarantined')
         self.assertIsNotNone(caught.exception.receipt['raw_wait_status'])
         self.assert_borrowed_open()
+
+    def test_publication_guard_waits_beyond_old_ten_second_barrier(self):
+        original = self.admission.publish_permit
+        def delayed(value, lease, guest_lock, *, guard, deadline=None):
+            # One controlled native delay exercises the actual child select, not
+            # a mocked timeout or QMP surrogate's running lifetime.
+            time.sleep(11)
+            return original(value, lease, guest_lock, guard=guard, deadline=deadline)
+        with mock.patch.object(self.admission, 'publish_permit', delayed):
+            supervisor = self.start()
+        self.assertTrue(self.admission.published)
+        self.assertEqual(supervisor.stop().evidence['raw_wait_status'], 0)
+
+    def assert_no_launch_after_failure(self, receipt):
+        self.assertFalse(Path(self.folder.name, 'qmp.sock').exists())
+        self.assertEqual(self.run.status, 'quarantined')
+        self.assertIsNotNone(receipt['raw_wait_status'])
+        self.assertFalse(self.supervisor._owned_fds)
+        self.assertFalse(self.supervisor.console.thread.is_alive())
+        self.assert_borrowed_open()
+
+    def test_expired_budget_refuses_guard_before_publication_mutation(self):
+        original = self.admission.publish_permit
+        def delayed(value, lease, guest_lock, *, guard, deadline=None):
+            time.sleep(.15)
+            return original(value, lease, guest_lock, guard=guard, deadline=deadline)
+        with mock.patch.object(S, 'PERMIT_PUBLICATION_TIMEOUT', .1), \
+                mock.patch.object(self.admission, 'publish_permit', delayed):
+            with self.assertRaises(S.SupervisionError) as caught:
+                self.start()
+        self.assertFalse(self.admission.published)
+        self.assertIsNone(self.supervisor.permit)
+        self.assertIsInstance(caught.exception.cause, TimeoutError)
+        self.assert_no_launch_after_failure(caught.exception.receipt)
+
+    def test_guard_crossing_deadline_refuses_mutation(self):
+        original = self.run.recheck
+        def delayed_recheck():
+            time.sleep(.15)
+            return original()
+        original_publish = self.admission.publish_permit
+        def publish(value, lease, guest_lock, *, guard, deadline=None):
+            with mock.patch.object(self.run, 'recheck', delayed_recheck):
+                return original_publish(value, lease, guest_lock, guard=guard, deadline=deadline)
+        with mock.patch.object(S, 'PERMIT_PUBLICATION_TIMEOUT', .1), \
+                mock.patch.object(self.admission, 'publish_permit', publish):
+            with self.assertRaises(S.SupervisionError) as caught:
+                self.start()
+        self.assertFalse(self.admission.published)
+        self.assert_no_launch_after_failure(caught.exception.receipt)
+
+    def test_publication_return_after_deadline_retains_closed_permit_without_release(self):
+        original = self.admission.publish_permit
+        def delayed(value, lease, guest_lock, *, guard, deadline=None):
+            permit = original(value, lease, guest_lock, guard=guard, deadline=deadline)
+            time.sleep(.15)
+            return permit
+        with mock.patch.object(S, 'PERMIT_PUBLICATION_TIMEOUT', .1), \
+                mock.patch.object(self.admission, 'publish_permit', delayed):
+            with self.assertRaises(S.SupervisionError) as caught:
+                self.start()
+        self.assertTrue(self.admission.published)
+        self.assertTrue(self.supervisor.permit.closed)
+        self.assert_no_launch_after_failure(caught.exception.receipt)
+
+    def test_final_path_check_crossing_deadline_never_releases_child(self):
+        self.supervisor = NativeSupervisor(self.run, self.folder.name)
+        original = self.supervisor._check_paths
+        def delayed():
+            original()
+            if self.admission.published:
+                time.sleep(.15)
+        with mock.patch.object(S, 'PERMIT_PUBLICATION_TIMEOUT', .1), \
+                mock.patch.object(self.supervisor, '_check_paths', delayed):
+            with self.assertRaises(S.SupervisionError) as caught:
+                self.supervisor.start()
+        self.assertIsInstance(caught.exception.cause, TimeoutError)
+        self.assertTrue(self.supervisor.permit.closed)
+        self.assert_no_launch_after_failure(caught.exception.receipt)
+
+    def test_child_barrier_timeout_is_detected_and_never_released(self):
+        original = self.admission.publish_permit
+        def delayed(value, lease, guest_lock, *, guard, deadline=None):
+            time.sleep(.1)
+            return original(value, lease, guest_lock, guard=guard, deadline=deadline)
+        with mock.patch.object(S, 'BARRIER_TIMEOUT', .02), \
+                mock.patch.object(self.admission, 'publish_permit', delayed):
+            with self.assertRaises(S.SupervisionError) as caught:
+                self.start()
+        self.assertEqual(caught.exception.receipt['raw_wait_status'], 125 << 8)
+        self.assert_no_launch_after_failure(caught.exception.receipt)
+
+    def test_parent_barrier_eof_exits_child_without_launch(self):
+        def publish(*args, **kwargs):
+            # Closing the sole parent writer models a parent that dies before
+            # release; all other child copies were closed by the real fork.
+            for fd in list(self.supervisor._owned_fds):
+                if fcntl.fcntl(fd, fcntl.F_GETFL) & os.O_ACCMODE == os.O_WRONLY:
+                    self.supervisor._close_fd(fd)
+            deadline = time.monotonic() + 1
+            while S.PROCESS._identity(self.supervisor.pid)['state'] != b'Z':
+                self.assertLess(time.monotonic(), deadline)
+                time.sleep(.005)
+            raise ValueError('parent barrier writer closed')
+        with mock.patch.object(self.admission, 'publish_permit', publish):
+            with self.assertRaises(S.SupervisionError) as caught:
+                self.start()
+        self.assertEqual(caught.exception.receipt['raw_wait_status'], 125 << 8)
+        self.assertFalse(self.admission.published)
+        self.assert_no_launch_after_failure(caught.exception.receipt)
+
+    def test_invalid_barrier_token_exits_child_without_launch(self):
+        write = os.write
+        def invalid(fd, data):
+            return write(fd, b'X' if data == b'G' else data)
+        with mock.patch.object(S.os, 'write', invalid):
+            with self.assertRaises(S.SupervisionError) as caught:
+                self.start()
+        self.assertEqual(caught.exception.receipt['raw_wait_status'], 125 << 8)
+        self.assertTrue(self.supervisor.permit.closed)
+        self.assert_no_launch_after_failure(caught.exception.receipt)
+
+    def test_child_rejects_parent_identity_change_after_release_token(self):
+        identity = S.PROCESS._identity
+        def changed(pid):
+            value = identity(pid)
+            # Change only the fork child's view of its parent's pinned birth.
+            if os.getpid() != self.supervisor._parent and pid == self.supervisor._parent:
+                value = dict(value, start_ticks=value['start_ticks'] + 1)
+            return value
+        with mock.patch.object(S.PROCESS, '_identity', changed):
+            with self.assertRaises(S.SupervisionError) as caught:
+                self.start()
+        self.assertEqual(caught.exception.receipt['raw_wait_status'], 125 << 8)
+        self.assert_no_launch_after_failure(caught.exception.receipt)
+
+    def test_publication_error_retains_bounded_underlying_cause(self):
+        def publish(*args, **kwargs):
+            try:
+                raise ValueError('barrier child is a zombie ' + 'x' * 3000)
+            except ValueError as error:
+                raise S.ADMISSION.PublicationError('directory', False) from error
+        with mock.patch.object(self.admission, 'publish_permit', publish):
+            with self.assertRaises(S.SupervisionError) as caught:
+                self.start()
+        error = caught.exception.receipt['permit_error']
+        self.assertEqual((error['stage'], error['uncertain']), ('directory', False))
+        self.assertEqual(error['cause']['type'], 'ValueError')
+        self.assertTrue(error['cause']['message'].startswith('barrier child is a zombie'))
+        self.assertEqual(len(error['cause']['message']), 2048)
+        self.assert_no_launch_after_failure(caught.exception.receipt)
 
     def test_exit_before_socket_is_not_clean(self):
         with self.assertRaises(S.SupervisionError) as caught:

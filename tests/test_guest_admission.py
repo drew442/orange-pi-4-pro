@@ -1140,6 +1140,76 @@ with a.Admission.open_existing(sys.argv[3], os.getgid()) as client:
             self.assertEqual(handle.recheck(), value)
         self.assertGreater(guard.call_count, 10)
 
+    def test_permit_deadline_validation_and_expired_entry_prevent_authority_and_mutation(self):
+        value, lease, guest = self.permit_setup()
+        for deadline in (True, False, '120', float('inf'), float('-inf'), float('nan')):
+            with self.subTest(deadline=deadline), \
+                    mock.patch.object(self.admission, '_check_permit_publication') as authority:
+                with self.assertRaises(a.AdmissionError):
+                    self.admission.publish_permit(value, lease, guest, guard=lambda: None,
+                                                  deadline=deadline)
+                authority.assert_not_called()
+        with mock.patch.object(a.time, 'monotonic', return_value=100), \
+                mock.patch.object(self.admission, '_check_permit_publication') as authority:
+            with self.assertRaises(TimeoutError):
+                self.admission.publish_permit(value, lease, guest, guard=lambda: None, deadline=100)
+            authority.assert_not_called()
+        self.assertFalse((self.path / 'permits').exists())
+
+    def test_permit_deadline_crossed_by_guard_or_postauthority_prevents_mutation(self):
+        value, lease, guest = self.permit_setup()
+        original = self.admission._check_permit_publication
+        for late_stage in ('guard', 'post-authority'):
+            with self.subTest(stage=late_stage):
+                clock = [10]
+                checks = []
+                def authority(*args):
+                    original(*args)
+                    checks.append('authority')
+                    if late_stage == 'post-authority' and len(checks) == 2:
+                        clock[0] = 20
+                def guard():
+                    if late_stage == 'guard':
+                        clock[0] = 20
+                with mock.patch.object(a.time, 'monotonic', side_effect=lambda: clock[0]), \
+                        mock.patch.object(self.admission, '_check_permit_publication', authority), \
+                        mock.patch.object(a.os, 'mkdir') as mkdir:
+                    with self.assertRaises(TimeoutError):
+                        self.admission.publish_permit(value, lease, guest, guard=guard, deadline=20)
+                    mkdir.assert_not_called()
+                self.assertEqual(len(checks), 1 if late_stage == 'guard' else 2)
+        self.assertFalse((self.path / 'permits').exists())
+
+    def test_permit_deadline_crossed_during_later_check_retains_partial_directory(self):
+        value, lease, guest = self.permit_setup()
+        original = self.admission._check_permit_publication
+        clock = [10]
+        calls = []
+        def authority(*args):
+            original(*args)
+            calls.append(None)
+            if len(calls) == 4:  # Final authority check after permits mkdir.
+                clock[0] = 20
+        with mock.patch.object(a.time, 'monotonic', side_effect=lambda: clock[0]), \
+                mock.patch.object(self.admission, '_check_permit_publication', authority), \
+                mock.patch.object(a.os, 'fchown') as chown:
+            with self.assertRaises(a.PublicationError) as caught:
+                self.admission.publish_permit(value, lease, guest, guard=lambda: None, deadline=20)
+            chown.assert_not_called()
+        self.assertEqual(caught.exception.stage, 'directory')
+        self.assertFalse(caught.exception.uncertain)
+        self.assertIsInstance(caught.exception.__cause__, TimeoutError)
+        self.assertEqual(list((self.path / 'permits').iterdir()), [])
+
+    def test_permit_optional_deadline_preserves_legacy_and_future_publication(self):
+        value, lease, guest = self.permit_setup()
+        with self.admission.publish_permit(value, lease, guest, guard=lambda: None,
+                                          deadline=time.monotonic() + 30) as handle:
+            self.assertEqual(handle.value, value)
+        with self.admission.publish_permit(value, lease, guest, guard=lambda: None,
+                                          deadline=None) as handle:
+            self.assertEqual(handle.value, value)
+
     def test_permit_rejects_claims_and_actual_lock_mode(self):
         value, lease, guest = self.permit_setup()
         for field, replacement in (

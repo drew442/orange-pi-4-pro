@@ -11,7 +11,9 @@ The first managed start on the previous B refused before queueing. The guest
 was disabled during repair. Repaired roots from `4334a22` have three matching
 constructions and independent filesystem/reader checks; reviewed inactive-B
 deployment and authenticated physical boot now pass. Supported enable/start
-queue successfully; actual managed execution/checkpoint tests are in progress. **Production managed
+queue successfully, but permit publication failed before QEMU and quarantined
+the fixture. It is disabled again. A reviewed barrier fix needs a new root.
+[Failure record](evidence/managed-permit-barrier-failure-20261113.json). **Production managed
 operation is not yet qualified.** No SD rewrite or operator power cycle is
 needed for the current preparation. Follow [status](implementation-status.md).
 

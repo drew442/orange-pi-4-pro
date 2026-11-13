@@ -10,8 +10,10 @@ The unused cohort is retained intact in private p5 quarantine. Corrected
 enrollment and registration now pass. The first start was refused before
 queueing on systemd dependency checks in the previous `2996365` root. The repaired
 root passes reviewed deployment and full runtime authentication; supported enable
-and explicit start now queue successfully. Actual managed execution/checkpoint
-acceptance is in progress. **Do not re-enroll this existing board cohort.** The
+and explicit start now queue successfully. That first launch then failed at
+permit publication before QEMU; durable quarantine and supported disable pass.
+The reviewed barrier repair requires another root before managed KVM testing.
+[Failure record](evidence/managed-permit-barrier-failure-20261113.json). **Do not re-enroll this existing board cohort.** The
 preparation/enrollment commands below describe a fresh deployment.
 [Correction record](evidence/managed-fixture-port-correction-20261113.json).
 [Current physical evidence](evidence/post-reinstall-SPI-managed-B-20261113.json).

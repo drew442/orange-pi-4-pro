@@ -3,8 +3,9 @@
 Updated 2026-11-13. **SPI/NVMe boot works with SD removed; the new managed guest
 workflow is not production-qualified.** Repaired B now boots with SD absent and
 all installed runtime files authenticated. The first managed start on previous B
-refused before queueing; supported enable/start on the repair now succeed. Actual
-managed execution, shutdown/checkpoint and automatic startup remain under test.
+refused before queueing; supported enable/start on the repair now succeed. Its first launch failed before QEMU at permit publication and durably quarantined
+the guest. The guest is disabled again. A reviewed barrier fix passes 104 focused
+tests; combined validation, rebuilt roots and actual KVM remain required.
 No operator action is currently needed.
 
 ## Current board
@@ -38,7 +39,7 @@ No operator action is currently needed.
 | Post-reinstall boot/KVM | Confirmed SD-removed SPI boot `ae6ef902-51ce-45cf-88a9-62f7f390eded`. Actual UID/GID60001 QEMU PID2111 advanced `firstkvm` counter 9→10, passed CPU/disk/HTTP and guest-owned raw exit 0. Checkpoint5 is durable with nine history records and verified copies on codex and builder. A subsequent CP5 restart is not claimed. [Physical receipts](evidence/post-reinstall-SPI-managed-B-20261113.json). |
 | Managed B deployment | Complete B staging/readback, durable selection and first authenticated B boot pass. Initial policy/storage preparation produced an empty registry, open admission and no dispatch; all 13 retained `firstkvm` files stayed unchanged. Same physical receipt above. |
 | Repaired B deployment | Reviewed inactive p3 write/full legacy readback, durable selector and SD-free authenticated boot pass. A/BOOT/SPI preserved. A plan-mode refusal and its reviewed correction remain recorded. [Repair receipts](evidence/repaired-managed-B-deployment-20261113.json). |
-| Managed guest execution | **In progress.** Supported enable/start now queue successfully on repaired B; no completed managed KVM or automatic-boot credit is claimed yet. |
+| Managed guest execution | **Pending repair.** Start queues on repaired B but child exits125 before QEMU; permit publication refuses and durable quarantine succeeds. Supported disable succeeds. [Failure and repair scope](evidence/managed-permit-barrier-failure-20261113.json). |
 
 The first November 13 removal attempt still had SD installed and receives no SPI
 credit. The operator clarified, removed it and booted the confirmed SPI route.
@@ -146,7 +147,8 @@ warm/cold qualification counts remain **0/0**; retain the [conditional older SPI
 ledger](evidence/spi-boot-credit-ledger-20261112.json) without treating earlier
 protected-SD cycles as this configuration's credit.
 
-1. Prove the queued managed run and complete its supported stop/checkpoint.
+1. Integrate the independently reviewed permit-barrier repair and exact-run stop,
+   run combined validation, rebuild roots and review the next inactive-slot update.
    External repaired-root pins pass independent review and 70 focused tests.
    [Helper evidence](evidence/repaired-managed-external-pins-20261113.json).
 2. Preserve

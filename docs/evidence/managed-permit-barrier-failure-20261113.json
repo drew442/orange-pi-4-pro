@@ -1,0 +1,82 @@
+{
+  "date_utc": "2026-11-13",
+  "scope": "Actual first managed launch on repaired4334 B; no guest execution accepted",
+  "boot_id": "cbc504c7-e88c-4943-9a29-f49eecfa3923",
+  "run_id": "c1e1f52b-0563-4a53-9f0a-0795850cf0f2",
+  "root_revision": "4334a2229c9b816c4c5826cd612da1c851362146",
+  "terminal_unit": "MainPID=0\nResult=exit-code\nExecMainStatus=1\nActiveState=failed\nSubState=failed\n",
+  "stage": "permit-publication",
+  "errors": [
+    "SupervisionError('permit-publication: PublicationError: admission publication failed at directory')",
+    "supervisor close: AdmissionError('supervisor cleanup errors')"
+  ],
+  "child": {
+    "pid": 6617,
+    "start_ticks": 40040
+  },
+  "raw_wait_status": 32000,
+  "child_exit_code": 125,
+  "console": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "permit_error": {
+    "stage": "directory",
+    "uncertain": false
+  },
+  "permit_directory": {
+    "uid": 0,
+    "gid": 103,
+    "mode": "0o710",
+    "inode": 983,
+    "device": 24,
+    "mtime_ns": 1794582675494949580,
+    "ctime_ns": 1794582682863013766,
+    "entries": []
+  },
+  "head_status": "quarantined",
+  "quarantine_success": true,
+  "forced_flag_boundary": "Cleanup flagged forced; this alone does not prove a signal reached the already dead child.",
+  "diagnosis": {
+    "classification": "Strong source/evidence inference; original underlying PublicationError cause was not retained",
+    "path": "Child ten-second pre-exec barrier can expire during guarded permit publication. Zombie identity rejection then refuses publication before release. Child exit125 occurs before setpriv/launcher/QEMU."
+  },
+  "recovery_state": {
+    "supported_disable_success": true,
+    "registry_generation": 5,
+    "guest_disabled": true,
+    "quarantined_metadata_preserved": true,
+    "new_start_retried": false
+  },
+  "hardware_acceptance": false,
+  "managed_KVM_credit": false,
+  "records": [
+    {
+      "path": "out/managed-systemd-repair-20261113-01/first-managed-failure-complete.json",
+      "bytes": 29621,
+      "sha256": "4f51560e8ddb64cfb4aaaef07436f672a28bd3e941b0fbe286e7a064cdd48d4c"
+    },
+    {
+      "path": "out/managed-systemd-repair-20261113-01/live-managed-KVM-observer.stderr",
+      "bytes": 131,
+      "sha256": "947ff9d5b3a5d81fa1ab214b9ab94f26bcbd4aece4ad9d8fe06935fe94cf685f"
+    },
+    {
+      "path": "out/managed-systemd-repair-20261113-01/managed-disable-after-quarantine.json",
+      "bytes": 1372,
+      "sha256": "dee943ccc265c16243970f28d9e1f0e0381cc3e2760c5acaf35f51924deca2e0"
+    }
+  ],
+  "software_repair": {
+    "parent_budget_seconds": 120,
+    "child_barrier_seconds": 180,
+    "native_fork_regression_wait_seconds": 11,
+    "independent_focused_tests": 104,
+    "result": "pass; full combined validation/rebuild/deployment/hardware remain pending",
+    "review": {
+      "path": "tmp/managed-permit-barrier-review-20261113.json",
+      "bytes": 3867,
+      "sha256": "2c0b13b74d709f94e48ef57481b104caf6921ce1d42d6de7a6cf8474670d65b7"
+    }
+  }
+}
