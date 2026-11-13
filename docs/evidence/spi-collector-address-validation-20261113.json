@@ -1,0 +1,80 @@
+{
+  "date_utc": "2026-11-13",
+  "verdict": "PASS_SOFTWARE_VALIDATION_ONLY",
+  "scope": "Second bounded Ubuntu builder validation of the native SPI collector endpoint and atime changes; no hardware acceptance",
+  "source": {
+    "commit": "d7ae1e59876612095250d1cb56182737e38015bc",
+    "tree": "c2f03d4ba067868364399806759de8429f18ef10",
+    "locked_inputs": 1139,
+    "collector_sha256": "92ca29eecd448b6bfb16eb9e5aa35752be749cc3d5c98a137da49e75295041d7",
+    "lock_result": "all 1139 inputs verified before and after validation"
+  },
+  "builder_run": {
+    "unit_tests": {
+      "run": 3659,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    },
+    "shell_suites": 5,
+    "diagnostic_assembly_cases": {
+      "run": 5,
+      "failures": 0,
+      "errors": 0
+    },
+    "terminal_unit_result": "success",
+    "resource_samples": 41,
+    "minimum_available_root_filesystem_bytes": 21046808576,
+    "minimum_mem_available_bytes": 6749331456,
+    "builder_inventory_packages": 849,
+    "qualified_root_build_lock_packages": 842,
+    "root_build_performed": false,
+    "note": "Builder inventory is not the qualified 842-package root-build lock; this run exercised captured current inventory tests and did not create a new root build."
+  },
+  "previous_run": {
+    "run": 3656,
+    "failures": 1,
+    "errors": 0,
+    "skips": 0,
+    "failure": "test_uart_new_error_during_qualification_prevents_credit expected panic, received evidence changed",
+    "atime_attribution": "Inference only: original failure did not capture the differing stat field. Separate native reproduction demonstrated that a read can change st_atime_ns and trigger the former full-stat comparison."
+  },
+  "reviewed_behavior": {
+    "endpoint_override": "Only the remote endpoint operand is overridden; fixed SSH identity key, HostKeyAlias, strict host-key checking, identities-only and batch mode remain preserved.",
+    "review_outcomes": [
+      "PASS endpoint review; no findings",
+      "PASS atime review; no findings"
+    ],
+    "full_suite_log": "3659 tests, five shell suites and five diagnostic cases passed; see validation artifact hashes below."
+  },
+  "hardware_and_project_limits": {
+    "hardware_acceptance": false,
+    "board_software_changed": false,
+    "A733_boot_or_power_test": false,
+    "KVM_guest_acceptance": false,
+    "sd_write_acceptance": false,
+    "invariants": "A733 board; 2 GB SD recovery card; nominal 250 GB NVMe; no routine SD writes; actual KVM guest required for hardware acceptance."
+  },
+  "artifacts": {
+    "directory": "out/spi-collector-address-integration-validation-20261113-02/",
+    "sha256": {
+      "terminal-unit.json": "eb142ac16c8e95fe446bdab2d0f9a8f31e2aa968620b89976b50874eaffd1085",
+      "validation.log": "4b8994e508f1e0aee1ad4efff1de71b9b0b4605b17cce51523508f3f1038d432",
+      "validation.stderr": "8083a5026347eeed290b813e846edaa0db9265896a6b7d1ee9e2578e8e0267f6",
+      "project-source-lock.json": "f7b494ca27f32ec02da65cb0f30e2a6b043227a0d6ff052d9491e21408bfafba",
+      "resources.log": "85dfebea0cc3c29024d8c21474706390f3cb43aa0b0cbf325eb49f6e6394c85c",
+      "validate.sh": "eed1ad0e258a9133d97180ebc45f1285b5418c73dc8b8ff7405d6fccae660626"
+    },
+    "earlier_failure_diagnosis": "tmp/spi-collector-address-fullsuite-diagnosis-20261113.json",
+    "endpoint_review": "tmp/spi-collector-address-review-20261113.json",
+    "atime_review": "tmp/spi-collector-atime-review-20261113.json",
+    "raw_logs_retained_ignored": true
+  },
+  "receipt_custody": {
+    "path": "/var/lib/a733-spi-collector-address-integration-validation-20261113-02/validation-receipts.tar",
+    "bytes": 317440,
+    "sha256": "2dc5026f5cc47f9dcc27453bd4d08598c051a793f1c312ffabe32e38092c3ffd",
+    "fsynced": true,
+    "native_archive": "out/spi-collector-address-integration-validation-20261113-02/validation-receipts.tar"
+  }
+}

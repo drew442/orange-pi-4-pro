@@ -20,7 +20,8 @@ must be replaced with reviewed values before execution:
 
 ```sh
 python3 scripts/collect-spi-boots.py --execute --kind warm --count 1 \
-  --expected-start-boot-id CURRENT-BOOT-UUID --tag UNIQUE-REVIEWED-TAG
+  --expected-start-boot-id CURRENT-BOOT-UUID --tag UNIQUE-REVIEWED-TAG \
+  --host 192.168.1.118
 ```
 
 Cold collection uses `--kind cold` from a real local interactive terminal. Each
@@ -34,8 +35,14 @@ A series is capped at eight hours. A requested warm transition has 300 seconds
 for its new boot; cold powerdown has 60 seconds and its new-boot window is 300
 seconds after physical attestation. All windows remain within the series cap.
 Progress appears at least every thirty seconds during polling or operator waits.
-The collector uses the existing fixed key-only `.116` SSH transport and native
-UART relay archive. Transport output, UART and cumulative evidence storage are
+The optional `--host` chooses a canonical unicast IPv4 endpoint (default
+`192.168.1.116`); use `--host 192.168.1.118` for the reviewed current DHCP address.
+DNS names, noncanonical addresses, loopback, multicast and limited-broadcast endpoints
+refuse. The plan and all collector evidence retain the selected endpoint. Only
+the SSH remote address changes: the existing identity key, strict host-key
+checking and pinned `HostKeyAlias=192.168.1.116` remain fixed. A different address
+must authenticate the same board. The collector uses the native UART relay
+archive. Transport output, UART and cumulative evidence storage are
 bounded. It requires a 256 MiB free-space floor plus a 192 MiB capture reserve.
 This is boot qualification, without a new endurance workload.
 
@@ -97,17 +104,24 @@ SPI or root images; qualification has the helper's explicit NVMe sync behavior.
 Evidence is exclusively published under private `out/spi-boots-TAG/`, including
 captured collector, dependency and helper source pins, all bounded raw/partial transport output, stderr/exit state,
 request references, UART chunks, observations and incomplete or completed events.
-Copy this evidence and full boundary flash snapshots off-device before final
-review. Successful collection always retains `hardware_acceptance=false` and
+Helper and private evidence reads retain file identity, ownership, permissions,
+link count, size and nanosecond modification/change timestamps across capture;
+read-driven access-time updates are permitted. Source length and digest checks
+remain required. Copy this evidence and full boundary flash snapshots off-device
+before final review. Successful collection always retains `hardware_acceptance=false` and
 `coordinator-review-required`.
 
 For an interrupted run, preserve its context and gather one read-only observation
 into a new private `out/spi-observation-TAG-UUID/` directory:
 
 ```sh
-python3 scripts/collect-spi-boots.py --observe-only --tag EXISTING-TAG
+python3 scripts/collect-spi-boots.py --observe-only --tag EXISTING-TAG --host 192.168.1.118
 ```
 
+An explicit `--host` also permits read-only recovery after a DHCP address change,
+using the same pinned board identity. Changing the endpoint never clears global
+intents, bypasses the execution lock, resolves unknown acknowledgements or grants
+credit without the required distinct boot and UART evidence.
 This reads the existing request context without changing it and never stages
 RAM helpers, synchronizes qualification, requests power, creates a global intent
 or credits a transition. It reports old boot, distinct authenticated boot observed

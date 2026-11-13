@@ -1,6 +1,7 @@
 """Native collector policy/transport simulations; no physical acceptance evidence."""
 import base64
 import importlib.util
+import io
 import json
 import os
 from pathlib import Path
@@ -109,6 +110,107 @@ class CollectorTests(unittest.TestCase):
              patch.object(C, 'Native', side_effect=AssertionError):
             self.assertEqual(C.main([]), 0)
 
+    def test_host_validation_and_plan_are_read_free(self):
+        invalid = ['board.local', 'root@192.168.1.118', '-oProxyCommand=bad',
+                   '192.168.001.118', '192.168.1.118 ', '::1', '0.0.0.0', '0.1.2.3',
+                   '127.0.0.1', '224.0.0.1', '240.0.0.1', '255.255.255.255']
+        for host in invalid:
+            with self.subTest(host=host), self.assertRaises(SystemExit):
+                C.parse_args(['--host=' + host])
+        self.assertEqual(C.parse_args([]).host, '192.168.1.116')
+        # A final octet of 255 can be unicast, for example on a /23 subnet.
+        self.assertEqual(C.parse_args(['--host', '192.168.0.255']).host, '192.168.0.255')
+        with patch.object(C, 'source_bytes', side_effect=AssertionError), \
+             patch.object(C, 'Evidence', side_effect=AssertionError), \
+             patch.object(C, 'Native', side_effect=AssertionError), \
+             patch('sys.stdout', new_callable=io.StringIO) as output:
+            self.assertEqual(C.main(['--host', '192.168.1.118']), 0)
+        self.assertEqual(json.loads(output.getvalue())['host'], '192.168.1.118')
+
+    def test_endpoint_replaces_only_remote_operand_and_layout_changes_refuse(self):
+        transport = C.module(ROOT / 'scripts/preserve-known-endurance-outcome.py', 'test_spi_transport')
+        original = transport.ssh_argv()
+        chosen = C.ssh_argv(transport, '192.168.1.118')
+        self.assertEqual(chosen[:-2], original[:-2])
+        self.assertEqual(chosen[-1], original[-1])
+        self.assertEqual(chosen[-2], 'root@192.168.1.118')
+        for security in ('StrictHostKeyChecking=yes', 'HostKeyAlias=192.168.1.116',
+                         'IdentitiesOnly=yes', 'BatchMode=yes', '/home/drew/.ssh/id_ed25519'):
+            self.assertIn(security, chosen)
+        self.assertEqual(C.ssh_argv(transport), original)
+        for changed in (original[:-2] + ['root@192.168.1.118', original[-1]],
+                        original + ['extra'], original[:-1]):
+            with patch.object(transport, 'ssh_argv', return_value=changed), self.assertRaises(ValueError):
+                C.ssh_argv(transport, '192.168.1.118')
+
+    def test_native_refuses_transport_evidence_endpoint_mismatch(self):
+        evidence = C.Evidence(self.out, 'host-mismatch')
+        with self.assertRaisesRegex(ValueError, 'transport/evidence host differs'):
+            C.Native({}, evidence, 300, host='192.168.1.118')
+        self.assertEqual(list(evidence.path.iterdir()), [])
+
+    def test_explicit_endpoint_flows_from_main_to_execute_and_observe_rpc(self):
+        real_native, real_evidence = C.Native, C.Evidence
+        calls = []
+        def evidence(out, tag, **kwargs):
+            return real_evidence(self.out, tag, **kwargs)
+        def native(*args, **kwargs):
+            value = real_native(*args, **kwargs)
+            def rpc(argv, *unused, **options):
+                calls.append(argv)
+                return dict(returncode=0, timed_out=False, truncated=False,
+                            stdout_b64=base64.b64encode(json.dumps(ready(NEW)).encode()).decode())
+            value.transport.bounded_command = rpc
+            return value
+        def collector(native, evidence, intents):
+            def run(*args):
+                evidence.save('requested', old_boot_id=OLD)
+                return native.observe()
+            return NS(run=run)
+        with patch.object(C, 'Evidence', side_effect=evidence), \
+             patch.object(C, 'Native', side_effect=native), \
+             patch.object(C, 'Collector', side_effect=collector), \
+             patch.object(C, 'ExecutionLock') as execution_lock, \
+             patch('sys.stdout', new_callable=io.StringIO):
+            self.assertEqual(C.main(['--execute', '--kind', 'warm', '--count', '1',
+                '--expected-start-boot-id', OLD, '--tag', 'rpc-host', '--host', '192.168.1.118']), 0)
+            self.assertEqual(C.main(['--observe-only', '--tag', 'rpc-host', '--host', '192.168.1.118']), 0)
+            execution_lock.assert_called_once()
+        self.assertEqual(len(calls), 2)
+        self.assertTrue(all(argv[-2] == 'root@192.168.1.118' for argv in calls))
+        for directory in self.out.iterdir():
+            for path in directory.glob('*.json'):
+                self.assertEqual(json.loads(path.read_bytes())['host'], '192.168.1.118')
+        observed = next(self.out.glob('spi-observation-*/*-observe-only.json'))
+        self.assertEqual(json.loads(observed.read_bytes())['outcome'], 'distinct boot observed')
+
+    def test_endpoint_migration_preserves_unknown_intent_and_new_boot_guard(self):
+        native = Native([ready(OLD)], deadline=22)
+        collector, original, intents = self.setup_collector(native, 'original-host')
+        with self.assertRaisesRegex(ValueError, 'deadline'):
+            collector.run('warm', 1, OLD)
+        retained = {p: p.read_bytes() for p in intents.path.iterdir()}
+        observer = Native([ready(OLD)])
+        observation = C.Evidence(self.out, 'original-host', observe=True, host='192.168.1.118')
+        result = C.observe_only(observer, observation)
+        self.assertEqual(result['host'], '192.168.1.118')
+        self.assertEqual(result['outcome'], 'old boot')
+        self.assertFalse(result['credit'])
+        self.assertEqual(observer.actions, [('observe',)])
+        recovery = C.Evidence(self.out, 'original-host', observe=True, host='192.168.1.118')
+        distinct = C.observe_only(Native([ready(NEW)]), recovery)
+        self.assertEqual(distinct['outcome'], 'distinct boot observed')
+        self.assertFalse(distinct['credit'])
+        fresh = Native([ready(OLD)])
+        migrated = C.Evidence(self.out, 'new-host', host='192.168.1.118')
+        c2 = C.Collector(fresh, migrated, intents, clock=self.clock, sleep=self.clock.sleep)
+        with self.assertRaisesRegex(ValueError, 'existing global intent'):
+            c2.run('warm', 1, OLD)
+        self.assertEqual(fresh.actions, [('observe',)])
+        self.assertEqual(retained, {p: p.read_bytes() for p in intents.path.iterdir()})
+        self.assertEqual(json.loads(next(original.path.glob('*-request-result.json')).read_bytes())[
+            'acknowledgement'], 'unknown unless retained helper receipt proves it')
+
     def test_invalid_execution_rejected_before_io(self):
         cases = [[], ['--kind', 'warm', '--count', '0'], ['--kind', 'warm', '--count', '11'],
                  ['--kind', 'warm', '--count', '1', '--expected-start-boot-id', 'bad'],
@@ -133,6 +235,77 @@ class CollectorTests(unittest.TestCase):
             C.source_bytes()
         with self.assertRaises(ValueError):
             C.captured_modules({k: base64.b64encode(b'x').decode() for k in C.PINS})
+
+    def read_fixture(self, kind, label):
+        directory = self.out / label
+        directory.mkdir(mode=0o700)
+        if kind == 'private':
+            path = directory / 'evidence.json'
+            C.publish(path, b'{"fixture":true}\n')
+            return path, lambda: C.read_private(path, 262144), path.read_bytes()
+        scripts = directory / 'scripts'
+        scripts.mkdir(mode=0o700)
+        expected = C.source_bytes()
+        for name, raw in expected.items():
+            (scripts / name).write_bytes(raw)
+        path = scripts / next(iter(C.PINS))
+        return path, lambda: C.source_bytes(directory), expected
+
+    def test_own_read_atime_advance_preserves_private_evidence_and_pinned_sources(self):
+        for kind in ('private', 'source'):
+            with self.subTest(kind=kind):
+                path, read, expected = self.read_fixture(kind, 'atime-' + kind)
+                os.utime(path, ns=(1, path.stat().st_mtime_ns))
+                before = path.stat()
+                self.assertEqual(read(), expected)
+                after = path.stat()
+                self.assertGreater(after.st_atime_ns, before.st_atime_ns)
+                self.assertEqual(C.stable_file_stamp(before), C.stable_file_stamp(after))
+
+    def test_in_read_mutation_and_named_path_replacement_refuse(self):
+        original_read = os.read
+        for kind in ('private', 'source'):
+            for mutation in ('contents', 'replacement', 'mode', 'mtime', 'links'):
+                with self.subTest(kind=kind, mutation=mutation):
+                    path, read, _ = self.read_fixture(kind, kind + '-' + mutation)
+                    changed = False
+                    def reading(fd, count):
+                        nonlocal changed
+                        raw = original_read(fd, count)
+                        if not changed:
+                            changed = True
+                            before = path.stat()
+                            if mutation == 'contents':
+                                path.chmod(0o600)
+                                path.write_bytes(b'X' + raw[1:])
+                                path.chmod(before.st_mode & 0o777)
+                            elif mutation == 'replacement':
+                                replacement = path.with_name('replacement')
+                                replacement.write_bytes(raw)
+                                replacement.chmod(before.st_mode & 0o777)
+                                os.replace(replacement, path)
+                            elif mutation == 'mode':
+                                path.chmod(0o600 if kind == 'private' else 0o400)
+                            elif mutation == 'mtime':
+                                os.utime(path, ns=(before.st_atime_ns, before.st_mtime_ns - 1000000000))
+                            else:
+                                os.link(path, path.with_name('extra-link'))
+                        return raw
+                    with patch.object(C.os, 'read', side_effect=reading), self.assertRaisesRegex(
+                            ValueError, 'evidence changed|helper source pin differs'):
+                        read()
+
+    def test_stable_stamp_excludes_only_atime(self):
+        fields = ('st_dev', 'st_ino', 'st_mode', 'st_nlink', 'st_uid', 'st_gid',
+                  'st_size', 'st_mtime_ns', 'st_ctime_ns')
+        original = NS(**dict.fromkeys(fields, 1), st_atime_ns=1)
+        atime = NS(**dict.fromkeys(fields, 1), st_atime_ns=2)
+        self.assertEqual(C.stable_file_stamp(original), C.stable_file_stamp(atime))
+        for field in fields:
+            with self.subTest(field=field):
+                changed = NS(**vars(original))
+                setattr(changed, field, 2)
+                self.assertNotEqual(C.stable_file_stamp(original), C.stable_file_stamp(changed))
 
     def test_exclusive_publication_and_fsync_failure_remain_blocking(self):
         evidence = C.Evidence(self.out, 'publish')

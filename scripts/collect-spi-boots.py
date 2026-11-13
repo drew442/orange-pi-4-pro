@@ -6,6 +6,7 @@ import fcntl
 import hashlib
 import importlib.util
 import inspect
+import ipaddress
 import json
 import os
 from pathlib import Path
@@ -31,6 +32,7 @@ UART_LIMIT = 8 * MIB
 BUDGET = 192 * MIB
 SERIES_SECONDS = 8 * 3600
 BOOT_SECONDS = 300
+DEFAULT_HOST = '192.168.1.116'
 RAM = '/run/a733-spi-collector'
 MARKERS = (b'storage type = 3', b'Scanning nvme 0:1',
            b'A733 SPI/NVMe host candidate from nvme 0:1 /boot/')
@@ -51,10 +53,34 @@ def canonical_uuid(value):
     return value
 
 
+def host_value(value):
+    address = ipaddress.IPv4Address(value)
+    require(str(address) == value and not (address.is_unspecified or address.is_multicast or
+            address.is_loopback or address.is_reserved) and address.packed[0] != 0,
+            'canonical unicast IPv4 host required')
+    return value
+
+
+def ssh_argv(transport, host=DEFAULT_HOST):
+    # Preserve the reviewed identity key, strict host-key alias and all options.
+    # Refuse a changed dependency layout before replacing only its remote operand.
+    argv = list(transport.ssh_argv())
+    require(len(argv) >= 2 and argv[-2:] == ['root@' + DEFAULT_HOST, 'python3 -I -B -'] and
+            argv.count('root@' + DEFAULT_HOST) == 1, 'historical SSH remote operand differs')
+    argv[-2] = 'root@' + host_value(host)
+    return argv
+
+
 def tag_value(value):
     require(re.fullmatch('[A-Za-z0-9][A-Za-z0-9_-]{0,79}', value or '') is not None,
             'invalid tag')
     return value
+
+
+def stable_file_stamp(info):
+    # A content read may advance atime. Preserve every identity and mutation field.
+    return (info.st_dev, info.st_ino, info.st_mode, info.st_nlink, info.st_uid, info.st_gid,
+            info.st_size, info.st_mtime_ns, info.st_ctime_ns)
 
 
 def source_bytes(root=REPO):
@@ -68,7 +94,8 @@ def source_bytes(root=REPO):
             require(stat.S_ISREG(before.st_mode) and before.st_nlink == 1 and
                     before.st_size == size, 'helper size/type differs')
             raw = os.read(fd, size + 1)
-            require(os.fstat(fd) == before and path.lstat() == before and len(raw) == size and
+            require(stable_file_stamp(os.fstat(fd)) == stable_file_stamp(before) and
+                    stable_file_stamp(path.lstat()) == stable_file_stamp(before) and len(raw) == size and
                     digest(raw) == pin, 'helper source pin differs')
             captured[name] = raw
         finally:
@@ -140,7 +167,8 @@ def read_private(path, limit):
                 before.st_uid == os.geteuid() and stat.S_IMODE(before.st_mode) == 0o400 and
                 0 < before.st_size <= limit, 'unsafe evidence file')
         raw = os.read(fd, limit + 1)
-        require(os.fstat(fd) == before and path.lstat() == before and len(raw) == before.st_size,
+        require(stable_file_stamp(os.fstat(fd)) == stable_file_stamp(before) and
+                stable_file_stamp(path.lstat()) == stable_file_stamp(before) and len(raw) == before.st_size,
                 'evidence changed')
         return raw
     finally:
@@ -148,7 +176,8 @@ def read_private(path, limit):
 
 
 class Evidence:
-    def __init__(self, out, tag, observe=False):
+    def __init__(self, out, tag, observe=False, host=DEFAULT_HOST):
+        self.host = host_value(host)
         real_ancestry(out)
         info = out.lstat()
         require(info.st_uid == os.geteuid() and not info.st_mode & 0o022, 'unsafe out directory')
@@ -168,9 +197,11 @@ class Evidence:
         require(shutil.disk_usage(self.path).free >= 256 * MIB + amount, 'capture reserve unavailable')
 
     def save(self, event, **fields):
+        require(fields.get('host', self.host) == self.host, 'evidence host differs')
         self.serial += 1
         value = dict(event=event, hardware_acceptance=False,
                      review='coordinator-review-required', **fields)
+        value['host'] = self.host
         raw = encoded(value)
         require(self.used + len(raw) <= BUDGET, 'evidence budget exhausted')
         require(shutil.disk_usage(self.path).free >= 256 * MIB + len(raw), 'evidence free floor')
@@ -386,7 +417,9 @@ def remote_source(sources, operation, boot=None):
 
 
 class Native:
-    def __init__(self, captured, evidence, deadline, clock=time.monotonic):
+    def __init__(self, captured, evidence, deadline, clock=time.monotonic, host=DEFAULT_HOST):
+        self.host = host_value(host)
+        require(evidence.host == self.host, 'transport/evidence host differs')
         self.sources, self.evidence, self.deadline, self.clock = captured, evidence, deadline, clock
         self.phase_deadline = deadline
         self.rpc_templates = {operation: remote_source(captured, operation, '__EXPECTED_SPI_BOOT_UUID__')
@@ -411,7 +444,7 @@ class Native:
         def bounded_transaction():
             try:
                 outcome.append(self.transport.bounded_command(
-                    self.transport.ssh_argv(), TRANSPORT_LIMIT,
+                    ssh_argv(self.transport, self.host), TRANSPORT_LIMIT,
                     timeout=min(timeout, remaining), source=source))
             except BaseException as error:
                 outcome.append(error)
@@ -603,7 +636,7 @@ class Collector:
         raw, attested_offset = bytearray(), None
         try:
             intent = dict(schema=1, old_boot_id=boot, request_id=str(uuid.uuid4()),
-                          action='reboot' if kind == 'warm' else 'poweroff',
+                          action='reboot' if kind == 'warm' else 'poweroff', host=self.evidence.host,
                           source_pins=PINS, uart_start=uart.mark(), cycle=cycle, **qualified)
             # Reserve bounded partial transport, UART and qualification captures.
             self.evidence.reserve(40 * MIB)
@@ -692,12 +725,15 @@ def parse_args(argv=None):
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument('--execute', action='store_true')
     mode.add_argument('--observe-only', action='store_true')
+    parser.add_argument('--host', default=DEFAULT_HOST,
+                        help='canonical unicast IPv4 endpoint; pinned board identity is unchanged')
     parser.add_argument('--kind', choices=('warm', 'cold'))
     parser.add_argument('--count', type=int)
     parser.add_argument('--expected-start-boot-id')
     parser.add_argument('--tag')
     args = parser.parse_args(argv)
     try:
+        host_value(args.host)
         if args.execute:
             require(args.kind is not None and args.count is not None and 1 <= args.count <= 10,
                     '--execute requires --kind and --count 1..10')
@@ -708,7 +744,7 @@ def parse_args(argv=None):
         elif args.observe_only:
             tag_value(args.tag)
             require(args.kind is args.count is args.expected_start_boot_id is None,
-                    '--observe-only accepts only --tag')
+                    '--observe-only accepts only --tag and --host')
     except (ValueError, AttributeError, TypeError) as error:
         parser.error(str(error))
     return args
@@ -717,7 +753,7 @@ def parse_args(argv=None):
 def main(argv=None):
     args = parse_args(argv)
     if not args.execute and not args.observe_only:
-        print(json.dumps(dict(operation='plan', hardware_acceptance=False, power_requested=False,
+        print(json.dumps(dict(operation='plan', host=args.host, hardware_acceptance=False, power_requested=False,
                     max_seconds=SERIES_SECONDS, new_boot_seconds=BOOT_SECONDS,
                     requires='explicit remaining count, authoritative boot UUID, unique tag; coordinator review')))
         return 0
@@ -725,11 +761,11 @@ def main(argv=None):
     try:
         started = time.monotonic()
         captured = source_bytes()
-        evidence = Evidence(REPO / 'out', args.tag, observe=args.observe_only)
+        evidence = Evidence(REPO / 'out', args.tag, observe=args.observe_only, host=args.host)
         evidence.save('source-pins', source_pins=PINS)
         if args.execute:
             lock = ExecutionLock(REPO / 'out')
-        native = Native(captured, evidence, started + SERIES_SECONDS)
+        native = Native(captured, evidence, started + SERIES_SECONDS, host=args.host)
         if args.observe_only:
             result = observe_only(native, evidence)
         else:
