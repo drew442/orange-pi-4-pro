@@ -1,15 +1,28 @@
 # Implementation status
 
-Updated 2026-11-13. SD recovery boot validated November 13; last actual KVM
-validation remains November 11.
-Current physical state: cleanly powered off after independently reviewed SPI
-blank restoration, SD recovery and firmware reinstallation. Both transactions
-passed full readback and close; receipts/backups are synced on both hosts.
-UART confirms final unmounts and powerdown. The known recovery SD is still
-installed; the operator can disconnect USB-C, remove SD, wait ten seconds and
-restore power. [Recovery evidence](evidence/spi-blank-restoration-and-sd-recovery-20261113.json)
-and [reinstallation/poweroff](evidence/spi-reinstall-and-poweroff-20261113.json).
-The next SD-removed boot/KVM demonstration and managed deployment remain pending.
+Updated 2026-11-13. Current physical state: managed root B from SPI/NVMe,
+boot `1095a827-6f92-486d-9ad3-2463a95c2d5e`, SD physically removed. Management is
+`root@192.168.1.118`, authenticating the original host key with alias
+`192.168.1.116`. Candidate `2996365` authenticates all 85 tools, four management
+files and two guest boot units; root is read-only, NTP synchronized. Normalized
+root A and BOOT remain preserved. Initial policy/storage preparation passes:
+empty registry, admission open, no dispatched guest and unchanged retained
+`firstkvm` checkpoint. Managed account/payload deployment is in progress;
+automatic guest operation and production qualification remain pending.
+
+The post-reinstall SPI boot on normalized A (`ae6ef902-51ce-45cf-88a9-62f7f390eded`)
+passed actual nonroot KVM CPU/disk/HTTP, counter 9→10 and guest-owned exit zero.
+Checkpoint 5 is durable and independently verified on codex and builder;
+a subsequent restart of checkpoint 5 is not claimed. Fresh SPI backup
+`2d9e2a…92386` matches factory firmware outside valid calibration metadata and
+is synced off-device. [Physical evidence](evidence/post-reinstall-SPI-managed-B-20261113.json).
+
+The earlier attempt still had the SU02G card installed and booted through SD;
+it receives no SPI credit. The operator clarified the misunderstanding and
+removed it before this confirmed SPI boot. Reviewed original-blank restoration,
+SD recovery and reinstallation retain full readback/close evidence:
+[recovery](evidence/spi-blank-restoration-and-sd-recovery-20261113.json) and
+[reinstallation](evidence/spi-reinstall-and-poweroff-20261113.json).
 
 **The validated system operates from SPI and NVMe with SD
 physically removed.** SPI cold boot, warm restart, original SSH identity,
@@ -57,12 +70,13 @@ are no-ops; original blank restoration affects exactly units 0–25.
 [metadata policy](spi-calibration-policy.md). Original blank restoration and
 subsequent SD recovery now pass [physical checks](evidence/spi-blank-restoration-and-sd-recovery-20261113.json).
 Reinstallation also passes [full readback and close](evidence/spi-reinstall-and-poweroff-20261113.json).
-The post-reinstall SD-removed boot/KVM demonstration, unattended guest deployment
-and final qualification remain pending.
+The post-reinstall SD-removed boot/KVM demonstration passes. Unattended guest
+operation and final qualification remain pending.
 
 The [guest lifecycle design](guest-autostart-design.md) passes independent
 architecture review. The following software components are reviewed and tested;
-**all remain uninstalled**.
+**the pinned B runtime is installed and authenticated; managed guest hardware
+qualification remains pending**.
 
 | Component | Evidence and current boundary |
 | --- | --- |
@@ -75,14 +89,13 @@ architecture review. The following software components are reviewed and tested;
 | Managed source export and explicit admission reopening | [Evidence](evidence/managed-sender-reopen-validation-20261112.json). **2956** privileged Ubuntu tests, shell/diagnostic suites and independent reviews pass. Successful fixture export and pre-output proof rejection are covered. Cleanup reporting correction preserves acknowledged reopening while reporting command failure. [Candidate procedure](guest-maintenance-admission.md). |
 | Managed historical decoder, artifact receiver and local archive reader | [Evidence](evidence/managed-archive-validation-20261112.json). **3012** privileged Ubuntu tests and shell/diagnostic suites pass. Independent reviews resolve partial-construction and final-observation cleanup faults; native sender integration passes with explicit platform/shutdown substitutions. Artifact publication supplies no destination restore authority. |
 | Initialization exclusion and bootstrap registry/markers | [Evidence](evidence/bootstrap-admission-validation-20261112.json). **3060** privileged Ubuntu tests and shell/diagnostic suites pass. Actual readonly EX interlock, native failure probes and original-owner preparation pass review after GID-boundary and reserved-firstkvm corrections. Candidate boot composition now uses both sides; marker observations grant no launch permission. |
-| Single managed run controller | [Evidence](evidence/managed-service-validation-20261112.json). **3077** privileged Ubuntu tests and shell/diagnostic suites pass. Independent native shutdown/cleanup probes pass; healthy polling no longer spawns PID1 queries. Actual retained locks, run, fork/QMP surrogate and checkpoint compose with explicit platform/credential substitutions. No installed unit or hardware qualification. |
+| Single managed run controller | [Evidence](evidence/managed-service-validation-20261112.json). **3077** privileged Ubuntu tests and shell/diagnostic suites pass. Independent native shutdown/cleanup probes pass; healthy polling no longer spawns PID1 queries. Actual retained locks, run, fork/QMP surrogate and checkpoint compose with explicit platform/credential substitutions. Unit now installed; hardware qualification pending. |
 | Pre-p5 maintenance and normal activation | [Evidence](evidence/guest-activation-admission-validation-20261112.json). **3120** privileged Ubuntu tests and shell/diagnostic suites pass. Independent helper/wrapper reviews and actual private-loop interruption/retry/idempotency, preservation and cleanup pass. Protected registry must match reviewed target; binding and reopening follow all target cleanup. Bootstrap borrowing remains separate. |
 
 Current packaging has **84 sources, 85 runtime files, 22 entrypoints**, four
 management runtime files and two separately bound guest boot units. The historical
-exact 39-source recovery boundary remains intact. **All new controllers remain
-uninstalled.** Native/surrogate results ran no A733 guest and do not establish
-deployment acceptance.
+exact 39-source recovery boundary remains intact. **These controllers are now installed in B.** Their native/surrogate results
+remain software evidence; installation alone does not establish acceptance.
 
 [Coherent managed restoration](evidence/managed-restore-validation-20261112.json)
 now passes independent implementation review and **3577 privileged Ubuntu
@@ -156,7 +169,7 @@ progress now pass independent review and **94 privileged focused checks** with
 no skips/errors/failures. Default staging flushes but reports zero verified bytes;
 selection retains full root authentication. The verified private-loop fixture
 explicitly requests readback. [Operator-flow evidence](evidence/maintenance-confirmation-progress-20261112.json).
-All changes remain uninstalled. The combined frozen source `2996365` now passes
+These changes are installed in B; physical maintenance trials remain pending. The combined frozen source `2996365` now passes
 **3589 privileged Ubuntu tests**, five shell suites and five diagnostic cases
 without skips/errors/failures. All independent source reviews remain pinned;
 terminal unit and receipt copies are verified off-device.
@@ -166,7 +179,8 @@ pass independent full filesystem/package/timestamp checks and whole historical/
 current reader interoperability. Encoded artifacts and review receipts have
 verified copies on both hosts. [Candidate artifacts](managed-root-candidate-20261112.md)
 and [independent review](evidence/managed-root-artifact-review-20261112.json).
-Neither candidate root has booted; physical deployment remains pending.
+Candidate B now boots on hardware; candidate A remains an unbooted artifact.
+Physical rollback/return and maintenance trials remain pending.
 
 The exact retained normalized A gzip, original producer manifest and selector
 are available on codex and the builder for reverse-compatibility checks. A bounded
@@ -182,33 +196,25 @@ Its shutdown path remains hardware-unproven.
 
 ## Live board and constraints
 
-- **Last maintenance boot, now powered off:** normalized A at `root@192.168.1.116`, original
-  pinned identity, SD recovery boot `f78c61f6-5214-4ea9-88ce-d4ae4efd9715`.
-  The recovery SD remains installed; it was unmounted with both block nodes
-  explicitly read-only and zero Linux writes before poweroff.
-  Last accepted SPI boot was `5858af7a-977e-4a9b-971e-6d71ae7858d3`, SD absent;
-  its NVMe A/STATE, SSH/NTP, eight-CPU EL2/VHE and KVM readiness guards passed.
-  The SPI-host guest tests ran QEMU PIDs 2066/2044 as locked UID/GID 60001 with
-  actual VM/vCPU/VGIC descriptors. Both guests requested clean poweroff and
-  exited zero. Current checkpoint **4**, manifest `c47520b6…bc60f`, disk
-  `fb46ba77…e6efa`, has eight verified history records. Guest is stopped and its
-  current RAM unit is rendered for the next launch. Recreate accounts/units
-  explicitly after host reboot. [Guest operations](guest-operations.md).
+- **Current boot:** managed B, `1095a827-6f92-486d-9ad3-2463a95c2d5e`,
+  `root@192.168.1.118` with original strict host-key alias `192.168.1.116`.
+  SD is physically removed. Read-only p3 root and pinned runtime pass; p5 is
+  mounted `rw,nosuid,nodev,noexec`. Initial preparation dispatched no guest.
+  Manual `firstkvm` is stopped at checkpoint **5**, manifest `88c1ea17…9c946`,
+  disk `2d06d539…5b66`, nine history records. Its cohort remains unchanged
+  after B storage preparation; verified backups exist on both hosts.
 - **Target:** A733, observed 12 GiB/eight CPUs. SD is SU02G,
   **1977614336 bytes**, CID `035344535530324780716f216e00a8f5`.
   NVMe is SPCC M.2 PCIe SSD, **256060514304 bytes**, serial
   `134807190FC700149277`, firmware EDFM20.0, 512/512 sectors. Diagnostic inventory
   is sufficient; leave heatsinks attached. Reported supply is 67 W USB-PD with
   passive 10.4 mm six-layer whole-board copper cooling; negotiated power is unmeasured.
-- **Boot route:** current maintenance uses SD firmware and `/boot/` → selected
-  read-only NVMe root and writable STATE. The qualified normal route uses SPI
-  boot0/EL2 firmware/U-Boot → NVMe p1 `/boot/`. Retained NVMe BOOT is
-  `cc2ad9…26c313`; factory SPI is `83edcd…05e90`. The fresh pre-restore snapshot
-  matched retained post-warm `e829cf…275a`, with only bounded vendor metadata
-  differences. After blank restoration and SD recovery, SPI was still exactly
-  blank. Reviewed reinstallation then restored exact factory SPI `83edcd…05e90`
-  with full readback and close. Clean poweroff passed; the known 2 GB SD is now
-  ready for removal.
+- **Boot route:** SPI boot0/EL2 firmware/U-Boot → NVMe p1 `/boot/` →
+  selected read-only NVMe B and writable STATE. NVMe BOOT remains
+  `cc2ad9…26c313`. Original blank restoration, SD recovery and factory SPI
+  reinstallation passed; fresh post-cold flash `2d9e2a…92386` matches factory
+  outside validated 2 KiB vendor calibration metadata. Preserve original and
+  calibrated backups and the off-device 2 GB recovery card.
   [Current images](current-images.md).
 - **Serial:** bridge `orangepi@192.168.1.117`, `ttyS3-capture.service`, volatile
   `/var/log/ttyS3.log`; native relay `a733-uart-relay-20261109-01.service` retains
@@ -290,21 +296,21 @@ binary redistribution clearance is claimed. [Source inventory](toolchain-sources
 
 ## Resources and next actions
 
-Latest privileged Ubuntu 22.04 suite: **3651 tests**, zero skips/errors/failures,
-five shell suites and five diagnostic cases. The integrated collector unit is
-terminal/successful; source `6bef774`, tree `55e7414`, 1125 locked inputs and
-verified receipt archives on both hosts are recorded in
-[validation evidence](evidence/spi-collector-integration-validation-20261112.json).
-Minima were 23,560,409,088 bytes free and 6,717,169,664 bytes MemAvailable. All
-five TOMLs parse; all 842 outer-host packages match the pinned inventory.
-Candidate roots remain frozen at `2996365`; these software checks establish no
-physical acceptance.
+Latest privileged Ubuntu 22.04 suite: **3659 tests**, zero skips/errors/failures,
+five shell suites and five diagnostic cases. Collector endpoint/atime changes,
+source `d7ae1e5`, tree `c2f03d4`, 1139 locked inputs and retained first-run
+failure are recorded in [validation evidence](evidence/spi-collector-address-validation-20261113.json).
+Minima were 21,046,808,576 bytes free and 6,749,331,456 bytes MemAvailable.
+The outer builder now has 849 packages; it does not match the qualified
+842-package image-build lock. Candidate roots remain frozen at `2996365`;
+these software checks establish no physical acceptance.
 
 The [seven updated outer-builder package archives](outer-builder-package-supplement.md)
 and complete signed indexes now have verified copies on both hosts. Independent
 signature/hash/tuple [review passes](evidence/builder-outer-supplement-independent-review-20261113.json).
-The outer 842-package inventory and historical locks remain unchanged; old 835
-archive bytes were not rehashed. Fresh outer-host provisioning remains open.
+Those archives cover the historical 842-package inventory; the current outer
+host has since advanced to 849 packages. Historical locks remain unchanged;
+old 835 archive bytes were not rehashed. Fresh outer-host provisioning remains open.
 
 Production root construction/repetition and artifact/reader verification pass.
 An [independent operator reproduced the documented root build](evidence/independent-managed-root-reproduction-20261113.json)
@@ -322,8 +328,9 @@ with progress, exact length/hash and fsync. Prepared metadata is reused; the
 duplicate onboard preparer pass is omitted. Ten Bash snippets and two Python
 blocks parse, and historical CLI/runtime and artifact pins pass
 [independent review](evidence/managed-root-deployment-recipe-review-20261113.json).
-This remains unexecuted; fresh post-reinstall SPI/KVM evidence and
-independently reviewed live staging/selection plans are required first.
+The reviewed live staging, selection and first B boot now pass. BOOT hashes
+match before/after; staging read back the complete B root and selection/journal
+publication is durable. [Physical receipts](evidence/post-reinstall-SPI-managed-B-20261113.json).
 [Prepared B metadata](evidence/managed-candidate-deployment-preparation-20261112.json)
 has verified custody for direct sparse expansion, avoiding an extra onboard
 preparer copy/hash. The [external qualification helper](managed-boot-qualification.md)
@@ -339,13 +346,21 @@ readonly closed-gate observation, bounded transport/progress and ordered UART
 with complete-tail checks. No real power command or target collection has run.
 The [artifact-bound managed fixture setup](managed-fixture-deployment.md) has
 validated inputs, an independent initial-manifest reference and reviewed CLI
-ordering; guarded STATE copying and all board execution remain pending.
+ordering. Guarded STATE copying and initial policy/storage preparation now pass;
+the registry is empty and no managed guest has been dispatched.
 The [boot ledger](evidence/spi-boot-credit-ledger-20261112.json) records conditional
 existing route credit; final managed-build credit remains zero.
 Recovery-card boot, original blank restoration and subsequent SD recovery pass.
-SPI reinstallation and clean poweroff also pass. The next SD-removed boot/KVM
-demonstration, deployment, actual managed KVM, final boot counts and independent
-procedure reproduction remain required.
+SPI reinstallation, SD-removed boot/manual KVM and initial B deployment pass.
+Actual managed KVM, maintenance/recovery exercises, final boot counts and
+independent physical procedure reproduction remain required.
+
+The external collector now supports the changed DHCP endpoint while preserving
+strict historical SSH identity. Independent reviews and **3659 privileged Ubuntu
+tests**, five shell suites and five diagnostic cases pass. The first run’s
+atime-related failure and current 849-package builder inventory are retained
+explicitly; this is not a new root build or hardware boot credit.
+[Collector evidence](evidence/spi-collector-address-validation-20261113.json).
 
 Codex has more than 22 GB available at this validation. Keep bulk sources, images and backups on the builder. Its LV is 128819658752 bytes
 with 4265607168 bytes VG free. All free builder capacity is approved for use and

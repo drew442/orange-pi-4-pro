@@ -1,18 +1,18 @@
 # Install managed B while retaining normalized A
 
-This is a reviewable, **unexecuted** initial-install procedure for candidate
-`2996365a11cb07deb20eb4325c90841de8ab820e`. No deployment or new-root boot is
-claimed. SPI blank restoration, SD recovery and SPI reinstallation have passed;
-the board is powered off with the recovery SD installed. First complete the
-post-reinstall SD-removed boot and actual KVM check recorded in
-[status](implementation-status.md). Then stop the guest cleanly and preserve its
-fresh checkpoint. All live values below must come from that new boot.
+This initial-install procedure was executed for candidate
+`2996365a11cb07deb20eb4325c90841de8ab820e` on 2026-11-13. SPI recovery,
+post-reinstall SD-removed boot/manual KVM, checkpoint preservation, B staging,
+durable selection and the first authenticated B boot pass.
+[Physical receipts](evidence/post-reinstall-SPI-managed-B-20261113.json).
+The commands below describe that initial A→B migration and require fresh native
+identity/plan review for another installation; do not replay against running B.
 
 This procedure ends at initial B selection and the separately reviewed first
 boot handoff. It does not authorize a forced reboot, automatic retry, overwrite
 of A or a new endurance run. Keep UART capture running throughout execution.
 
-## Boundaries and unresolved live inputs
+## Boundaries and fresh live inputs
 
 Preserve working normalized A p2, NVMe BOOT p1, GPT, existing STATE p4 contents,
 the stopped manual `firstkvm` cohort and p5. Only candidate source/plan/journal
@@ -21,9 +21,9 @@ boot records. There is no SPI/SD/BOOT write in this migration. Keep the known
 2 GB recovery SD off-device during ordinary SPI boots, all original/calibrated
 SPI backups and the exact normalized A rollback component off-device.
 
-The board is powered off after recovery/reinstallation, last maintenance boot
-`f78c61f6-5214-4ea9-88ce-d4ae4efd9715`, `.116`. After the new SPI boot, obtain and independently
-review: current boot ID, pinned SSH identity, actual NVMe whole-device pathname,
+For the recorded execution the A SPI boot was
+`ae6ef902-51ce-45cf-88a9-62f7f390eded`, `.118` (strict host alias `.116`).
+For any future initial installation, obtain and independently review: current boot ID, pinned SSH identity, actual NVMe whole-device pathname,
 partition geometry/UUIDs, A root marker, current selector bytes/hash, stopped
 guest checkpoint/disk/history bindings, no guest/KVM consumers, current BOOT/GPT
 bindings, STATE free space and UART capture. Expected disk identity is SPCC M.2
@@ -32,7 +32,7 @@ is `360dfb39-f49f-487e-b307-0bb887c854c5`. Expected A filesystem UUID is
 `a7330000-0000-4000-8000-00000000000a`; B ends `000b`.
 
 Live paths, boot ID, old B bytes, fresh plan hashes, exact STAGE/SELECT phrases,
-free capacity and available deployment launcher are intentionally unresolved.
+free capacity and deployment launcher must be resolved for each execution.
 No precomputed device plan is valid. The known-target authorization persists;
 independent review of each concrete live plan remains required. A target mismatch
 is a stop, not permission to substitute a different disk.
@@ -154,7 +154,7 @@ for name, record in files.items():
     assert stat.S_IMODE(st.st_mode) == record['mode'] and st.st_size == record['bytes']
     content = f.read_bytes()
     assert len(content) == record['bytes'] and hashlib.sha256(content).hexdigest() == record['sha256']
-for proc in Path('/proc').glob('[0-9]*'):
+for proc in Path('/proc').glob('[0-9]*/task/[0-9]*'):
     try:
         assert b'qemu-system' not in (proc/'cmdline').read_bytes(), 'QEMU present'
         for fd in (proc/'fd').iterdir():
@@ -162,7 +162,7 @@ for proc in Path('/proc').glob('[0-9]*'):
                 link = os.readlink(fd)
             except FileNotFoundError:
                 continue
-            assert not any(x in link for x in ('kvm-vm', 'kvm-vcpu', 'kvm-vgic')), 'KVM consumer present'
+            assert not any(x in link for x in ('kvm-vm', 'kvm-vcpu', 'kvm-vgic', 'kvm-arm-vgic')), 'KVM consumer present'
     except FileNotFoundError:
         continue
 spec = importlib.util.spec_from_file_location('reviewed_old_target', base/'scripts/host-update-target.py')
@@ -363,7 +363,8 @@ After a separately reviewed explicit normal boot, authenticate p3's B marker
 `bdfde6c304edc9709bda5e4de8cb9adef9707118920a759630b01f6468362460`,
 all B installed runtime bytes, original identity, NTP, fixed BOOT/kernel/DTB/EL2,
 STATE/p5 and preserved manual `firstkvm` cohort. Root provenance's diagnostic DTB
-must never be copied to BOOT. Neither new root has booted yet.
+must never be copied to BOOT. The recorded B boot passes these checks;
+candidate A has not booted.
 
 Continue with [managed fixture deployment](managed-fixture-deployment.md), which
 covers explicit storage policy before runtime initialization and opt-in setup.

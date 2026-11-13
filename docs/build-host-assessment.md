@@ -1,14 +1,13 @@
 # Build host assessment
 
-Latest observation (2026-11-12): seven outer-host packages advanced through
-unattended upgrades; the package count remains 842. The frozen replay builder
-still matches its historical lock. Candidate construction correctly refused the
-outer inventory before image creation. A separate exact outer-host lock and
-build-only adapter pass independent review and the corrected full 3579-test
-Ubuntu run, plus shell and diagnostic suites. See [the adapter result](evidence/outer-builder-inventory-validation-20261112.json)
-and [retained attempt](evidence/managed-root-candidate-progress-20261112.json)
-and [current status](implementation-status.md). Historical package inventories
-and capacity samples below are not fresh admission evidence.
+Latest observation (2026-11-13): unattended upgrades have advanced the outer
+builder to 849 packages, including new kernel packages. This differs from the
+842-package inventory used for the reproduced managed roots. The latest
+[collector validation](evidence/spi-collector-address-validation-20261113.json)
+passes on the captured current inventory; it does not qualify that inventory for
+a new root build. Revalidate/review exact package locks before constructing a
+new image. Retain the frozen replay builder and historical build inventories.
+Earlier measurements below are historical, not fresh admission evidence.
 
 ## Active remote builder
 

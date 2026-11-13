@@ -1,0 +1,204 @@
+{
+  "date_utc": "2026-11-13",
+  "scope": "Physical SD-removed post-reinstall SPI boot, manual KVM checkpoint, managed B installation and initial storage preparation; managed guest not yet enrolled or tested",
+  "host": {
+    "address": "192.168.1.118",
+    "host_key_alias": "192.168.1.116",
+    "nvme_serial": "134807190FC700149277",
+    "nvme_bytes": 256060514304,
+    "SD_physically_absent": true
+  },
+  "physical_results": {
+    "post_reinstall_boot_id": "ae6ef902-51ce-45cf-88a9-62f7f390eded",
+    "manual_KVM": {
+      "guest": "firstkvm",
+      "uid": 60001,
+      "QEMU_PID": 2111,
+      "counter_before": 9,
+      "counter_after": 10,
+      "CPU_disk_HTTP_pass": true,
+      "guest_owned_shutdown": true,
+      "raw_exit_status": 0,
+      "checkpoint5_durable": true,
+      "checkpoint5_restart_tested": false,
+      "manifest_sha256": "88c1ea1744f1f044f6e17f985746d7743f3b9165f8028f2c8d143b95f349c946",
+      "disk_sha256": "2d06d539f1f7895dfdcf9220560f49e5874377a09cd48eda5a321fdfcfe05b66",
+      "backup_verified_on": [
+        "codex",
+        "build"
+      ],
+      "history_records": 9
+    },
+    "managed_B": {
+      "boot_id": "1095a827-6f92-486d-9ad3-2463a95c2d5e",
+      "candidate_commit": "2996365a11cb07deb20eb4325c90841de8ab820e",
+      "root_source": "/dev/nvme0n1p3",
+      "root_read_only": true,
+      "root_sha256": "fe842ff05584205b4fb9f930b3620bac04155c9f751488a8fb20a0d798dbd87c",
+      "runtime_files_authenticated": {
+        "tools": 85,
+        "management": 4,
+        "guest_boot_units": 2
+      },
+      "normalized_A_preserved": true,
+      "BOOT_full_sha256_unchanged": "cc2ad988fdc57579178766acaf09c71d688aaadec94b722593192cb24426c313"
+    },
+    "initial_preparation": {
+      "policy_published_durable": true,
+      "registry_empty": true,
+      "admission": "open",
+      "dispatch_selected": [],
+      "queue_attempted": false,
+      "retained_firstkvm_files_unchanged": 13
+    }
+  },
+  "qualifications": {
+    "managed_guest_hardware_pass": false,
+    "final_managed_warm_boot_count": 0,
+    "final_managed_cold_boot_count": 0,
+    "production_release_complete": false,
+    "earlier_SD_boot_receives_SPI_credit": false,
+    "first_B_reboot_transport": "SSH255 remote close; command return0 and distinct authenticated B boot resolve transition",
+    "journal_note": "Initial success:false activation/account intent messages precede mutation; final preparation and dispatcher success:true, both units exited status0.",
+    "endurance": "Previously accepted retained >20h workload satisfies eight-hour gate; no rerun required."
+  },
+  "retained_artifacts": {
+    "post_reinstall_SPI_and_KVM": {
+      "directory": "out/spi-reinstall-boot-20261113-02",
+      "files": {
+        "inventory.json": {
+          "bytes": 103542,
+          "sha256": "0049a02d7daae1a257a38ed3fc1c54e4e42af00099406563e51b2a9fc5e5d111"
+        },
+        "latest-SPI-boot-UART.log": {
+          "bytes": 101085,
+          "sha256": "63eb9a92b5c583c025877e23095820832207c887f1ce87db261ee9e56d9eb371"
+        },
+        "latest-UART-interval.json": {
+          "bytes": 189,
+          "sha256": "2c3ea47e4245d302e7d3bc13c5612b6a2498bc54e1f34bd1ff73a947ef990a6d"
+        },
+        "post-SPI-flash-inspection.json": {
+          "bytes": 1104,
+          "sha256": "6b41bc70b42d4d5d8f0cd734e17f77af90e5ad64a90a5a73b3e9442361c6581d"
+        },
+        "post-SPI-cold-boot.bin": {
+          "bytes": 16777216,
+          "sha256": "2d9e2a413be36c613c2b7f794855ed1d17bf72a9168f40f8578e54ef3cb92386"
+        },
+        "initial-builder-custody.json": {
+          "bytes": 217,
+          "sha256": "a08606fcb7f49bdc82e2419b3b6350dfe3e4cc42c83dc662d9e958a5ac6066c2"
+        },
+        "counter10-running-KVM-evidence.json": {
+          "bytes": 16616,
+          "sha256": "f48142688174465c8cc7170faa0c699bf033f4aa094945e7345ccf849e3b2dc7"
+        },
+        "counter10-terminal-evidence.json": {
+          "bytes": 15928,
+          "sha256": "92023ab0ef935541a37d20ba0420f0c1d4b9a96dd0ba70011048522637234110"
+        },
+        "counter10-HTTP-confirmation.json": {
+          "bytes": 134,
+          "sha256": "8f8c15bc0079ae18c9839e78f0aacf9ad9189f6fc43a87c094cf323db75f73b8"
+        },
+        "observer.jsonl": {
+          "bytes": 417,
+          "sha256": "0ca13902c661bd6d6bf1e5809463083e93495a775e9685675b9bf08d5c10b9a3"
+        },
+        "counter10-checkpoint-result.json": {
+          "bytes": 603,
+          "sha256": "8870b3628b9e709ba385ba9bcf7ffba84079c3d402ceabeeef00c50f2d3af781"
+        },
+        "checkpoint5-backup-native.json": {
+          "bytes": 4565,
+          "sha256": "57dd7bbf63dd45cff151cf13d4d6ae9e322cbf2cfb2b733307cd29f3a673f137"
+        },
+        "checkpoint5-backup-builder.json": {
+          "bytes": 3534,
+          "sha256": "5bc6a0fdd4a44fcbd31f171eb88e8a48c2428b719d714d9ce05d66bc6cdf3988"
+        }
+      }
+    },
+    "managed_B_deployment": {
+      "directory": "out/managed-B-deployment-20261113-01",
+      "files": {
+        "update-B-receipt.json": {
+          "bytes": 2342,
+          "sha256": "623e7ce422e188e0f287a47da935ee1637fe7914a6e151cfb8a0ae46f1ebff55"
+        },
+        "update-B-independent-stage-review.json": {
+          "bytes": 3992,
+          "sha256": "73d283cdb7b2ac94afba1efd4984cfcf75c46d136727b13119293d343b7b8c9d"
+        },
+        "select-B-receipt.json": {
+          "bytes": 2375,
+          "sha256": "b6512cf35fa51de12b22fb4f06cf6954a5b0dafe490147e6225ed61a75a46fc8"
+        },
+        "select-B-independent-review.json": {
+          "bytes": 3534,
+          "sha256": "4a584fb3488ada5d794f5295c12c695d4ff7f7c23486ae2887db5c13cb6bbdf4"
+        },
+        "selection-journal.json": {
+          "bytes": 2781,
+          "sha256": "c5e1a9966b135275a94ece91f85c9520724cc7f426b20fec4e8935a3deae4c2f"
+        },
+        "BOOT-pre-stage-hash.json": {
+          "bytes": 201,
+          "sha256": "3edec14c3794d00b096931423db134fe364370ef853cc2916782f9b26e0398de"
+        },
+        "BOOT-post-stage-hash.json": {
+          "bytes": 201,
+          "sha256": "3edec14c3794d00b096931423db134fe364370ef853cc2916782f9b26e0398de"
+        },
+        "first-B-reboot-request.json": {
+          "bytes": 515,
+          "sha256": "495f6805440bb5b4090fe9581410826e0cf411985c7c00b50387617b116368a1"
+        },
+        "first-B-reboot-independent-review.json": {
+          "bytes": 4057,
+          "sha256": "9964097a10e76a329979ae82c64cc0b9d3d6ef7a15423b16118e1080cf54509e"
+        },
+        "first-B-boot-UART.log": {
+          "bytes": 111929,
+          "sha256": "b288640c278f12f849cf8de17e5d54b7ed5805d2ad16142da603f1736c272b07"
+        },
+        "first-B-inventory.json": {
+          "bytes": 102610,
+          "sha256": "eca237c1353dd8027afd4fc79f37daf80d44e2ba1b591b0325856eb4a2f17b20"
+        },
+        "pre-first-B-boot-builder-custody.json": {
+          "bytes": 217,
+          "sha256": "4377ab68974596bff98ee7acf5109a0868bdcb612ec278de5b4ba781f0fd7dde"
+        }
+      }
+    },
+    "initial_preparation": {
+      "directory": "out/managed-fixture-hardware-20261113-01",
+      "files": {
+        "policy-receipt.json": {
+          "bytes": 937,
+          "sha256": "3c47e33587aae9e7b155398453195d856fc359331b1d30bc284cbe5d502e94f8"
+        },
+        "input-staging-receipt.json": {
+          "bytes": 990,
+          "sha256": "952b4292eeecf4e7adda2a3b367ca8dbd399a398a78247baa142a67aed46fea7"
+        },
+        "storage-preparation-start.json": {
+          "bytes": 72,
+          "sha256": "3de2ea24bbb8f9d64886fe64cab7adbd02a213ff31ce43bfc406eb649f931abb"
+        },
+        "post-preparation-verification.json": {
+          "bytes": 8302,
+          "sha256": "283d2fa1f61ea2fb572dc7ae5a1a26298de2c120eb49f5fd04b336adce9318fa"
+        }
+      }
+    }
+  },
+  "independent_review": {
+    "path": "tmp/post-reinstall-B-evidence-review-20261113.json",
+    "sha256": "ede5e785889404fafc1f1657d0b5944aa6c403e71fdb745666aefa48198e486c",
+    "verdict": "PASS",
+    "scope": "Frozen physical SPI/KVM checkpoint, initial B deployment and empty-registry preparation; excludes subsequent managed account work"
+  }
+}
