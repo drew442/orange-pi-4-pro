@@ -66,8 +66,8 @@ registry digests bind the next power request.
 
 | Captured helper | Bytes | SHA256 |
 | --- | ---: | --- |
-| `qualify-managed-boot.py` | 15424 | `e2254bd80778c250f979a3e74ebe120c845d865e57d5b7d1fb02711c176c02bc` |
-| `request-spi-power.py` | 17795 | `670a99065cba20b4ab10783698d80aa9217455be359a9dcc9ed480c709efb43a` |
+| `qualify-managed-boot.py` | 15424 | `c2d09a43fdbc6894270e473209cb586b32d13946b31caeda0806c5a0c0381c0b` |
+| `request-spi-power.py` | 17795 | `7bda699a92b1582a690d9fb0e88d23287cfdee8b2d80ed16c3dfb41199316064` |
 
 Before the sole power-helper SSH transaction for an old boot UUID, the collector
 exclusively publishes and fsyncs both the global

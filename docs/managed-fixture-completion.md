@@ -1,20 +1,22 @@
 # Complete an automatic qualification fixture
 
 This external test helper is pending deployment with the next repaired root.
-Its software review and focused tests pass; refreshed root/module/helper pins,
-combined validation and actual hardware checks remain required. Do not invoke
+Its software review and focused tests pass; root/module/helper pins now match independently verified F349 artifacts.
+Combined collector validation and actual hardware checks remain required. Do not invoke
 it against the installed `4334a22` root, whose native stop lacks the bound API.
 
 Normal managed guests run until explicitly stopped. `complete-managed-fixture.py`
 finishes only the disposable automatic `autokvm` qualification run. It does not
 set a production guest lifetime or replace completed-cohort qualification.
 
-Stage the reviewed helper beside its exact pinned `qualify-managed-boot.py` in a
+Keep the power packet in `/run/a733-spi-collector` limited to its qualifier and
+power helper. Stage completion code and its receipts separately under
+`/run/a733-spi-fixture-completion`, beside its exact pinned `qualify-managed-boot.py` in a
 protected RAM directory. Its default invocation prints a plan. After authenticating
 the installed cohort and observing the intended current boot, execution uses:
 
 ```sh
-python3 -I -B /run/a733-spi-collector/complete-managed-fixture.py \
+python3 -I -B /run/a733-spi-fixture-completion/complete-managed-fixture.py \
   --complete --expected-boot-id CURRENT-BOOT-UUID --expected-counter EXPECTED-COUNTER
 ```
 
@@ -40,7 +42,8 @@ python3 -I -B /usr/lib/a733-tools/scripts/manage-guests.py stop autokvm \
 ```
 
 The native command authenticates the loaded supervisor and signals its exact
-pidfd once. A replacement run cannot receive that signal. SIGTERM reaches the
+pidfd once, using Python 3.11's [process descriptor](https://docs.python.org/3.11/library/os.html#os.pidfd_open)
+and [descriptor-bound signal](https://docs.python.org/3.11/library/signal.html#signal.pidfd_send_signal) APIs. A replacement run cannot receive that signal. SIGTERM reaches the
 normal guest power-key shutdown and checkpoint path. It does not arm systemd's
 stop timeout or escalation; native observation remains bounded at 420 seconds,
 with no extra signal or name-based fallback. The helper allows 450 seconds for

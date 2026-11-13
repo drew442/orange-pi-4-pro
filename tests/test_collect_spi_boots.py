@@ -4,6 +4,7 @@ import importlib.util
 import io
 import json
 import os
+import shutil
 from pathlib import Path
 import tempfile
 import unittest
@@ -69,9 +70,16 @@ class Native:
     def stage(self, boot):
         self.actions.append(('stage', boot))
 
+    def stage_completion(self, boot):
+        self.actions.append(('stage-completion', boot))
+
     def qualify(self, boot):
         self.actions.append(('qualify', boot))
-        return dict(head='a' * 64, registry='b' * 64)
+        return dict(head='a' * 64, registry='b' * 64, run_id=boot, counter=1 if boot == OLD else 2)
+
+    def complete(self, intent):
+        self.actions.append(('complete', intent['boot_id'], intent['expected_counter']))
+        return self.response
 
     def request(self, intent):
         self.actions.append(('request', intent['old_boot_id']))
@@ -83,6 +91,10 @@ class Native:
     def attest(self, deadline):
         self.actions.append(('attest',))
         return True
+
+
+def running(boot, run=None):
+    return dict(state='running', boot_id=boot, run_id=run or boot)
 
 
 def ready(boot):
@@ -198,7 +210,7 @@ class CollectorTests(unittest.TestCase):
         self.assertFalse(result['credit'])
         self.assertEqual(observer.actions, [('observe',)])
         recovery = C.Evidence(self.out, 'original-host', observe=True, host='192.168.1.118')
-        distinct = C.observe_only(Native([ready(NEW)]), recovery)
+        distinct = C.observe_only(Native([running(NEW), ready(NEW)]), recovery)
         self.assertEqual(distinct['outcome'], 'distinct boot observed')
         self.assertFalse(distinct['credit'])
         fresh = Native([ready(OLD)])
@@ -320,7 +332,7 @@ class CollectorTests(unittest.TestCase):
             C.Evidence(self.out, 'publish')
 
     def test_global_intent_durable_before_one_request(self):
-        native = Native([ready(OLD), ready(OLD), ready(NEW)])
+        native = Native([ready(OLD), ready(OLD), running(NEW), ready(NEW)])
         collector, evidence, intents = self.setup_collector(native)
         original_request = native.request
         def request(value):
@@ -338,6 +350,108 @@ class CollectorTests(unittest.TestCase):
         self.assertTrue(saved['raw']['timed_out'])
         self.assertEqual(saved['raw']['stdout_b64'], 'cGFydGlhbA==')
         self.assertFalse(result['hardware_acceptance'])
+
+    def test_completion_intent_durable_and_unknown_ack_qualifies_once(self):
+        native = Native([ready(OLD), running(NEW), running(NEW), ready(NEW)])
+        collector, evidence, _ = self.setup_collector(native)
+        def lost(intent):
+            retained = json.loads(C.read_private(
+                collector.completion_intents.path / (NEW + '.json'), 262144))
+            self.assertEqual(retained['run_id'], NEW)
+            self.assertEqual(retained['expected_counter'], 2)
+            self.assertEqual(len(list(evidence.path.glob('*-completion-intent.json'))), 1)
+            native.actions.append(('complete', NEW, 2))
+            raise TimeoutError('lost acknowledgement')
+        native.complete = lost
+        result = collector.run('warm', 1, OLD)
+        self.assertEqual(result['completed_count'], 1)
+        self.assertEqual(native.actions.count(('complete', NEW, 2)), 1)
+        self.assertEqual(native.actions.count(('stage', NEW)), 1)
+        self.assertEqual(native.actions.count(('stage-completion', NEW)), 1)
+        unknown = json.loads(next(evidence.path.glob('*-completion-unknown.json')).read_bytes())
+        self.assertEqual(unknown['acknowledgement'], 'unknown')
+        # A new process/tag sees the durable native intent before staging/stopping.
+        fresh = Native([running(NEW)])
+        resumed, _, _ = self.setup_collector(fresh, 'restart')
+        with self.assertRaisesRegex(ValueError, 'existing global intent'):
+            resumed.transition('warm', THIRD, dict(head='a', registry='b', counter=1), 1)
+        self.assertFalse(any(x[0] in ('stage', 'stage-completion', 'complete') for x in fresh.actions))
+
+    def test_baseline_running_never_stops_or_stages(self):
+        native = Native([running(OLD)])
+        collector, _, _ = self.setup_collector(native)
+        with self.assertRaisesRegex(ValueError, 'deadline'):
+            collector.run('warm', 1, OLD)
+        self.assertFalse(any(x[0] != 'observe' for x in native.actions))
+
+    def test_new_terminal_without_completion_refuses(self):
+        native = Native([ready(OLD), ready(NEW)])
+        collector, _, _ = self.setup_collector(native)
+        with self.assertRaisesRegex(ValueError, 'without bound completion'):
+            collector.run('warm', 1, OLD)
+        self.assertNotIn(('qualify', NEW), native.actions)
+
+    def test_completion_identity_change_and_counter_mismatch_refuse_credit(self):
+        for mode in ('run', 'boot', 'counter'):
+            with self.subTest(mode=mode):
+                self.clock.now = 0
+                self.out = Path(self.temp.name) / mode
+                self.out.mkdir(mode=0o700)
+                changed = running(NEW, THIRD) if mode == 'run' else ready(THIRD) if mode == 'boot' else ready(NEW)
+                native = Native([ready(OLD), running(NEW), changed])
+                collector, _, _ = self.setup_collector(native, mode)
+                if mode == 'counter':
+                    original = native.qualify
+                    def qualify(boot):
+                        value = original(boot)
+                        if boot == NEW:
+                            value['counter'] = 3
+                        return value
+                    native.qualify = qualify
+                with self.assertRaisesRegex(ValueError, 'identity changed|boot changed twice|run/counter differs'):
+                    collector.run('warm', 1, OLD)
+                self.assertFalse(collector.completed)
+                self.assertEqual(native.actions.count(('complete', NEW, 2)), 1)
+
+    def test_old_running_boot_after_power_request_never_completes(self):
+        native = Native([ready(OLD), running(OLD)])
+        collector, _, _ = self.setup_collector(native)
+        with self.assertRaisesRegex(ValueError, 'deadline'):
+            collector.run('warm', 1, OLD)
+        self.assertFalse(any(x[0] == 'complete' for x in native.actions))
+        self.assertEqual(native.actions.count(('stage', OLD)), 1)
+        self.assertNotIn(('stage-completion', OLD), native.actions)
+
+    def test_completion_publication_failure_prevents_helper_and_blocks_restart(self):
+        native = Native([ready(OLD), running(NEW)])
+        collector, _, _ = self.setup_collector(native)
+        original = collector.completion_intents.create
+        def uncertain(value):
+            original(value)
+            raise OSError('fsync acknowledgement lost')
+        collector.completion_intents.create = uncertain
+        with self.assertRaises(OSError):
+            collector.run('warm', 1, OLD)
+        self.assertFalse(any(x[0] == 'complete' for x in native.actions))
+        with self.assertRaisesRegex(ValueError, 'existing global intent'):
+            C.Intents(self.out, 'spi-completion-intents', 'boot_id').check(NEW)
+
+    def test_completion_cannot_extend_overall_series_deadline(self):
+        native = Native([ready(OLD), running(NEW)], deadline=20)
+        collector, _, _ = self.setup_collector(native)
+        with self.assertRaisesRegex(ValueError, 'deadline'):
+            collector.run('warm', 1, OLD)
+        self.assertEqual(self.clock.now, 20)
+        self.assertEqual(native.actions.count(('complete', NEW, 2)), 1)
+
+    def test_completion_deadline_separate_and_bounded(self):
+        native = Native([ready(OLD), running(NEW)])
+        collector, _, _ = self.setup_collector(native)
+        with self.assertRaisesRegex(ValueError, 'deadline'):
+            collector.run('warm', 1, OLD)
+        self.assertEqual(self.clock.now, C.COMPLETION_SECONDS)
+        self.assertLessEqual(C.COMPLETION_SECONDS, 900)
+        self.assertEqual(native.actions.count(('complete', NEW, 2)), 1)
 
     def test_fresh_tag_cannot_sync_or_request_old_boot(self):
         native = Native([ready(OLD)])
@@ -381,7 +495,7 @@ class CollectorTests(unittest.TestCase):
             intents.check(NEW)
 
     def test_seen_boot_rejected_without_sync(self):
-        native = Native([ready(OLD), ready(NEW)])
+        native = Native([ready(OLD), running(NEW), ready(NEW)])
         collector, _, _ = self.setup_collector(native)
         collector.seen.add(NEW)
         with self.assertRaisesRegex(ValueError, 'reused boot'):
@@ -405,7 +519,7 @@ class CollectorTests(unittest.TestCase):
         self.assertEqual(self.clock.now, 300)
 
     def test_cold_attestation_follows_powerdown_then_new_uart(self):
-        native = Native([ready(OLD), ready(NEW)], chunks=(COLD, b'', GOOD))
+        native = Native([ready(OLD), running(NEW), running(NEW), ready(NEW)], chunks=(COLD, b'', GOOD))
         collector, evidence, _ = self.setup_collector(native)
         result = collector.run('cold', 1, OLD)
         self.assertEqual(result['completed_count'], 1)
@@ -414,7 +528,7 @@ class CollectorTests(unittest.TestCase):
         self.assertEqual(event['uart_offset'], len(COLD))
 
     def test_observe_only_no_staging_qualification_power_or_intent(self):
-        native = Native([ready(OLD), ready(NEW)])
+        native = Native([ready(OLD), running(NEW), ready(NEW)])
         collector, evidence, intents = self.setup_collector(native)
         collector.run('warm', 1, OLD)
         before = {p: p.read_bytes() for p in evidence.path.iterdir()}
@@ -481,7 +595,7 @@ class CollectorTests(unittest.TestCase):
     def test_uart_tail_panic_and_second_boot_prevent_credit(self):
         for tail in (b'Kernel panic', GOOD):
             tag = 'tail' + str(len(list(self.out.iterdir())))
-            native = Native([ready(OLD), ready(NEW)], chunks=(WARM, b'x' * 65536, tail))
+            native = Native([ready(OLD), running(NEW), ready(NEW)], chunks=(WARM, b'x' * 65536, tail))
             collector, _, _ = self.setup_collector(native, tag)
             with self.assertRaises(ValueError):
                 collector.run('warm', 1, OLD)
@@ -489,7 +603,7 @@ class CollectorTests(unittest.TestCase):
             self.assertNotIn(('qualify', NEW), native.actions)
 
     def test_uart_new_error_during_qualification_prevents_credit(self):
-        native = Native([ready(OLD), ready(NEW)])
+        native = Native([ready(OLD), running(NEW), ready(NEW)])
         collector, _, _ = self.setup_collector(native)
         qualify = native.qualify
         def changed(boot):
@@ -522,6 +636,32 @@ class CollectorTests(unittest.TestCase):
             self.assertEqual(native.observe(), refusal)
         native.call.return_value['stdout_b64'] = base64.b64encode(json.dumps(ready(OLD)).encode()).decode()
         self.assertEqual(native.observe()['state'], 'transport-unknown')
+
+    def test_native_qualifier_derives_counter_from_retained_records(self):
+        evidence = C.Evidence(self.out, 'counter')
+        native = C.Native(C.source_bytes(), evidence, 300, clock=self.clock)
+        def retained(value):
+            raw = C.encoded(value)
+            return dict(bytes=len(raw), sha256=C.digest(raw), data_base64=base64.b64encode(raw).decode())
+        records = {'head.json': retained(dict(status='ready', last_boot_id=OLD, run_id=NEW)),
+                   'autostart.json': retained({}),
+                   'runs/' + NEW + '.json': retained(dict(run_id=NEW, boot_id=OLD, automatic=True)),
+                   'runs/' + NEW + '.fixture.json': retained(dict(run_id=NEW, boot_id=OLD,
+                                                                  previous_counter=6, counter=7))}
+        records.update({str(i): retained({}) for i in range(9)})
+        def response():
+            value = dict(success=True, stage='complete', expected_boot_id=OLD, cleanup_errors=[], records=records)
+            return dict(returncode=0, timed_out=False, truncated=False,
+                        stdout_b64=base64.b64encode(C.encoded(value)).decode())
+        native.cli = lambda *args: response()
+        self.assertEqual(native.qualify(OLD)['counter'], 7)
+        records['runs/' + NEW + '.fixture.json'] = retained(dict(run_id=NEW, boot_id=OLD,
+                                                               previous_counter=6, counter=8))
+        with self.assertRaisesRegex(ValueError, 'fixture binding'):
+            native.qualify(OLD)
+        records['head.json']['sha256'] = '0' * 64
+        with self.assertRaisesRegex(ValueError, 'retained qualifier record'):
+            native.qualify(OLD)
 
     def test_native_transport_timeout_clamped_and_partial_capture_preserved(self):
         evidence = C.Evidence(self.out, 'transport')
@@ -557,6 +697,82 @@ class CollectorTests(unittest.TestCase):
             uart.close()
 
 
+@unittest.skipUnless(os.geteuid() == 0, 'native fixed /run packet composition requires root')
+class PacketCompositionTests(unittest.TestCase):
+    def setUp(self):
+        self.roots = [Path(C.RAM), Path(C.COMPLETION_RAM)]
+        if any(os.path.lexists(root) for root in self.roots):
+            raise RuntimeError('fixed packet test refuses an existing operational namespace')
+        self.addCleanup(self.cleanup_packets)
+        raw = C.source_bytes()
+        self.sources = {name: base64.b64encode(data).decode() for name, data in raw.items()}
+        self.R = C.module(self.roots[0] / 'request-spi-power.py', 'composition_power',
+                          raw['request-spi-power.py'])
+        self.Q = C.module(ROOT / 'scripts/qualify-managed-boot.py', 'composition_qualifier',
+                          raw['qualify-managed-boot.py'])
+        self.helper = C.module(self.roots[1] / 'complete-managed-fixture.py', 'composition_completion',
+                               raw['complete-managed-fixture.py'])
+        # Only board-installed authentication and native tmpfs inventory are seams.
+        self.M = NS(A=NS(_boot_id=lambda: NEW), P=NS(installed_guard=Mock()))
+        self.Q.load_installed = Mock(return_value=self.M)
+        reader = Path.read_text
+        device = os.stat('/run').st_dev
+        def read_text(path, *args, **kwargs):
+            if path == Path('/proc/self/mountinfo'):
+                return f'1 0 {os.major(device)}:{os.minor(device)} / /run rw - tmpfs tmpfs rw\n'
+            return reader(path, *args, **kwargs)
+        for seam in (patch.object(C, 'captured_modules', return_value=(self.Q, self.R)),
+                     patch.object(Path, 'read_text', autospec=True, side_effect=read_text)):
+            seam.start()
+            self.addCleanup(seam.stop)
+
+    def cleanup_packets(self):
+        for root in self.roots:
+            if root.exists():
+                shutil.rmtree(root)
+
+    def assert_power_packet_loads(self):
+        qualifier, power_sha = self.R.load_qualifier()
+        self.assertEqual(power_sha, C.PINS['request-spi-power.py'][1])
+        self.assertEqual(qualifier.MODULE_SHA256, self.Q.MODULE_SHA256)
+        self.assertEqual(set(os.listdir(C.RAM)),
+                         {'request-spi-power.py', 'qualify-managed-boot.py'})
+
+    def test_real_first_and_post_completion_power_packet_composition(self):
+        C.stage_sources(self.sources, NEW)
+        self.assert_power_packet_loads()  # Exact real R.load_qualifier, first power request.
+        C.stage_sources(self.sources, NEW, completion=True)
+        self.assertEqual(set(os.listdir(C.COMPLETION_RAM)),
+                         {'complete-managed-fixture.py', 'qualify-managed-boot.py'})
+        for suffix in ('intent', 'receipt'):
+            self.helper.publish(Path(C.COMPLETION_RAM), 'complete-' + NEW + '.' + suffix + '.json',
+                                dict(boot_id=NEW, retained=True))
+        # Real packet staging/readback and real R loader still work after helper data exists.
+        C.stage_sources(self.sources, NEW)
+        self.assert_power_packet_loads()
+        self.assertEqual((Path(C.RAM) / 'qualify-managed-boot.py').read_bytes(),
+                         (Path(C.COMPLETION_RAM) / 'qualify-managed-boot.py').read_bytes())
+        with self.assertRaisesRegex(ValueError, 'unexpected RAM staging entry'):
+            C.stage_sources(self.sources, NEW, completion=True)
+
+    def test_power_packet_extra_entry_still_refuses(self):
+        C.stage_sources(self.sources, NEW)
+        C.publish(Path(C.RAM) / 'extra.json', b'{}')
+        with self.assertRaisesRegex(ValueError, 'unexpected collector entry'):
+            self.R.load_qualifier()
+        with self.assertRaisesRegex(ValueError, 'unexpected RAM staging entry'):
+            C.stage_sources(self.sources, NEW)
+
+    def test_completion_cli_uses_isolated_packet_and_power_cli_uses_original(self):
+        native = C.Native.__new__(C.Native)
+        calls = []
+        native.call = lambda label, source, timeout: calls.append((label, source, timeout))
+        native.cli('complete-managed-fixture.py', ['--complete'], 900)
+        native.cli('request-spi-power.py', ['--execute'], 45)
+        self.assertIn((C.COMPLETION_RAM + '/complete-managed-fixture.py').encode(), calls[0][1])
+        self.assertIn((C.RAM + '/request-spi-power.py').encode(), calls[1][1])
+
+
 class NativeReadinessTests(unittest.TestCase):
     def setUp(self):
         expected = dict(LoadState='loaded', ActiveState='inactive', Result='success',
@@ -586,6 +802,20 @@ class NativeReadinessTests(unittest.TestCase):
         self.assertEqual(result['boot_id'], OLD)
         self.policy.close.assert_called_once()
 
+    def test_active_supervisor_needs_authenticated_snapshot_before_running(self):
+        self.M.D.properties.return_value.update(ActiveState='active', MainPID='22')
+        completion = NS(observe=Mock(return_value=dict(run_id=NEW)))
+        with patch.object(C, 'captured_completion', return_value=completion):
+            value = C.native_context({})
+            self.assertEqual(value['state'], 'running')
+            self.assertEqual(value['run_id'], NEW)
+            completion.observe.assert_called_once_with(self.M, OLD)
+            completion.observe.side_effect = ValueError('head not running yet')
+            value = C.native_context({})
+            self.assertEqual(value['state'], 'busy')
+            self.assertIsNone(value['run_id'])
+            self.assertEqual(value['running_error'], 'head not running yet')
+
     def test_pid1_starting_is_authenticated_busy(self):
         self.M.P.NORMAL.manager_state = lambda: 'starting'
         result = C.native_context({})
@@ -597,7 +827,7 @@ class NativeReadinessTests(unittest.TestCase):
         self.ntp = 'no'
         self.assertEqual(C.native_context({})['state'], 'busy')
         self.ntp = 'yes'
-        for changes in ({'LoadState': 'not-found'}, {'ActiveState': 'active'}, {'Job': '77'}):
+        for changes in ({'LoadState': 'not-found'}, {'ActiveState': 'activating'}, {'Job': '77'}):
             self.M.D.properties.return_value.update(changes)
             self.assertEqual(C.native_context({})['state'], 'busy')
 

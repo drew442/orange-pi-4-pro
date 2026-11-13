@@ -1,0 +1,91 @@
+{
+  "date_utc": "2026-11-13",
+  "scope": "External collector completion integration and artifact-derived pins; no physical invocation",
+  "root_source": "f3496f5ff1b3629d5333d26725b9f5494ace9d25",
+  "artifact_manifest_sha256": "333c0f69edb47c8b993feaeaf1640c248d1aed9111beb253b3d8f4533057be35",
+  "sources": [
+    {
+      "path": "scripts/qualify-managed-boot.py",
+      "bytes": 15424,
+      "sha256": "c2d09a43fdbc6894270e473209cb586b32d13946b31caeda0806c5a0c0381c0b"
+    },
+    {
+      "path": "scripts/complete-managed-fixture.py",
+      "bytes": 23339,
+      "sha256": "458abd7125cf8d25e4cfc60414be42e1a1fb9da9eadd83ed2d728617b6b587b5"
+    },
+    {
+      "path": "scripts/request-spi-power.py",
+      "bytes": 17795,
+      "sha256": "7bda699a92b1582a690d9fb0e88d23287cfdee8b2d80ed16c3dfb41199316064"
+    },
+    {
+      "path": "scripts/collect-spi-boots.py",
+      "bytes": 42156,
+      "sha256": "efb5918e05a9f5fc391158718c5af15a2d9db4cb1e3581bf6d033c3a87fc4b2c"
+    }
+  ],
+  "focused_validation": {
+    "results": [
+      {
+        "pattern": "test_qualify_managed_boot.py",
+        "tests": 16,
+        "returncode": 0,
+        "result": "OK"
+      },
+      {
+        "pattern": "test_request_spi_power.py",
+        "tests": 15,
+        "returncode": 0,
+        "result": "OK"
+      },
+      {
+        "pattern": "test_complete_managed_fixture.py",
+        "tests": 17,
+        "returncode": 0,
+        "result": "OK"
+      },
+      {
+        "pattern": "test_collect_spi_boots.py",
+        "tests": 52,
+        "returncode": 0,
+        "result": "OK"
+      }
+    ],
+    "total": 100,
+    "files": {
+      "qualify-managed-boot.py": {
+        "bytes": 15424,
+        "sha256": "c2d09a43fdbc6894270e473209cb586b32d13946b31caeda0806c5a0c0381c0b"
+      },
+      "request-spi-power.py": {
+        "bytes": 17795,
+        "sha256": "7bda699a92b1582a690d9fb0e88d23287cfdee8b2d80ed16c3dfb41199316064"
+      },
+      "complete-managed-fixture.py": {
+        "bytes": 23339,
+        "sha256": "458abd7125cf8d25e4cfc60414be42e1a1fb9da9eadd83ed2d728617b6b587b5"
+      },
+      "collect-spi-boots.py": {
+        "bytes": 42156,
+        "sha256": "efb5918e05a9f5fc391158718c5af15a2d9db4cb1e3581bf6d033c3a87fc4b2c"
+      }
+    },
+    "hardware_acceptance": false
+  },
+  "independent_review": {
+    "path": "tmp/collector-fixture-completion-review-20261113.json",
+    "bytes": 12769,
+    "sha256": "22c6e11fadb0e5b549a2eb432d47c7aec4b1252c696553bc4b977148b3ea44e2"
+  },
+  "retained_finding": "Initial three-file staging violated the power helper exact-two-file contract. Separate fixed completion packet plus real first/post-completion loader composition tests resolve it.",
+  "baseline": "Requires an already completed automatic cohort; never stops the baseline",
+  "counter_rule": "Expected next counter from authenticated preceding fixture, final same-run exact-counter qualification required",
+  "deadlines_seconds": {
+    "boot": 300,
+    "completion": 900,
+    "series": 28800
+  },
+  "combined_external_validation_passed": false,
+  "hardware_acceptance": false
+}

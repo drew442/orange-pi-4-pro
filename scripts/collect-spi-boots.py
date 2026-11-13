@@ -21,8 +21,9 @@ import uuid
 
 REPO = Path(__file__).resolve().parents[1]
 PINS = {
-    'qualify-managed-boot.py': (15424, 'e2254bd80778c250f979a3e74ebe120c845d865e57d5b7d1fb02711c176c02bc'),
-    'request-spi-power.py': (17795, '670a99065cba20b4ab10783698d80aa9217455be359a9dcc9ed480c709efb43a'),
+    'complete-managed-fixture.py': (23339, '458abd7125cf8d25e4cfc60414be42e1a1fb9da9eadd83ed2d728617b6b587b5'),
+    'qualify-managed-boot.py': (15424, 'c2d09a43fdbc6894270e473209cb586b32d13946b31caeda0806c5a0c0381c0b'),
+    'request-spi-power.py': (17795, '7bda699a92b1582a690d9fb0e88d23287cfdee8b2d80ed16c3dfb41199316064'),
 }
 BOOT0_SHA = '7f0babc242c1e4614c7243bd2c45a980e4385727ffbb544a7c8f2d324cf8dc07'
 PACKAGE_SHA = 'bdfe070a2c358de9dd0061b39609f604c0c12e9c25140903505f88799cc343be'
@@ -32,8 +33,10 @@ UART_LIMIT = 8 * MIB
 BUDGET = 192 * MIB
 SERIES_SECONDS = 8 * 3600
 BOOT_SECONDS = 300
+COMPLETION_SECONDS = 900
 DEFAULT_HOST = '192.168.1.116'
 RAM = '/run/a733-spi-collector'
+COMPLETION_RAM = '/run/a733-spi-fixture-completion'
 MARKERS = (b'storage type = 3', b'Scanning nvme 0:1',
            b'A733 SPI/NVMe host candidate from nvme 0:1 /boot/')
 
@@ -233,8 +236,9 @@ class ExecutionLock:
 
 
 class Intents:
-    def __init__(self, out):
-        self.path = out / 'spi-power-intents'
+    def __init__(self, out, namespace='spi-power-intents', field='old_boot_id'):
+        self.path = out / namespace
+        self.field = field
         # Do not create the namespace during observations or baseline checks.
 
     def check(self, boot):
@@ -249,12 +253,12 @@ class Intents:
                     'unknown global intent entry')
             canonical_uuid(entry.stem)
             record = json.loads(read_private(entry, 256 * 1024))
-            require(record['old_boot_id'] == entry.stem, 'global intent name/binding mismatch')
+            require(record[self.field] == entry.stem, 'global intent name/binding mismatch')
         require(not os.path.lexists(self.path / (boot + '.json')),
                 'existing global intent for current boot: read-only observation required')
 
     def create(self, value):
-        boot = canonical_uuid(value['old_boot_id'])
+        boot = canonical_uuid(value[self.field])
         self.check(boot)
         if not os.path.lexists(self.path):
             private_directory(self.path, create=True)
@@ -273,6 +277,16 @@ def captured_modules(sources):
         exec(compile(raw, namespace['__file__'], 'exec'), namespace)
         result.append(SimpleNamespace(**namespace))
     return result
+
+
+def captured_completion(sources):
+    name = 'complete-managed-fixture.py'
+    raw = base64.b64decode(sources[name], validate=True)
+    size, pin = PINS[name]
+    require(len(raw) == size and digest(raw) == pin, 'completion source pin differs')
+    namespace = dict(__name__='captured_completion', __file__='<captured-completion>')
+    exec(compile(raw, namespace['__file__'], 'exec'), namespace)
+    return SimpleNamespace(**namespace)
 
 
 def native_context(sources):
@@ -301,10 +315,22 @@ def native_context(sources):
         require(unit.get('ActiveState') != 'failed' and unit.get('LoadState') not in ('error', 'bad-setting')
                 and unit.get('Result') in ('success', ''), 'managed unit failed/refused')
         ready = unit == expected and ntp == 'yes' and manager in ('running', 'degraded')
+        running, running_error = None, None
+        if (unit.get('LoadState') == 'loaded' and unit.get('ActiveState') == 'active' and
+                not unit.get('Job') and ntp == 'yes' and manager in ('running', 'degraded')):
+            completion = captured_completion(sources)
+            try:
+                running = completion.observe(M, boot)
+            except ValueError as error:
+                # An active supervisor can precede its running head/QEMU child.
+                # A refused snapshot grants no run identity or mutation authority.
+                running_error = str(error)[:2048]
         require(A._boot_id() == boot, 'boot changed during observation')
         P.installed_guard(boot)
         policy.check()
-        return dict(state='ready' if ready else 'busy', boot_id=boot, storage=snapshot,
+        return dict(state='ready' if ready else 'running' if running else 'busy',
+                    run_id=running['run_id'] if running else None, running_error=running_error,
+                    boot_id=boot, storage=snapshot,
                     unit=unit, ntp=ntp, cpus='0-7', kernel=os.uname().release,
                     el2=True, hardware_acceptance=False)
     finally:
@@ -354,7 +380,7 @@ def mtd_components():
         os.close(fd)
 
 
-def stage_sources(sources, boot):
+def stage_sources(sources, boot, completion=False):
     """Boot/source guard precedes every RAM write; no admission or sync here."""
     Q, R = captured_modules(sources)
     M = Q.load_installed()
@@ -365,14 +391,16 @@ def stage_sources(sources, boot):
 
     guard()
     R.ram_directory(Path('/run'), private=False)
-    root = Path(RAM)
+    names = ({'complete-managed-fixture.py', 'qualify-managed-boot.py'} if completion else
+             {'request-spi-power.py', 'qualify-managed-boot.py'})
+    root = Path(COMPLETION_RAM if completion else RAM)
     if not os.path.lexists(root):
         guard()
         os.mkdir(root, 0o700)
         directory_sync(root.parent)
     R.ram_directory(root)
-    require(set(os.listdir(root)) <= set(PINS), 'unexpected RAM staging entry')
-    for name in PINS:
+    require(set(os.listdir(root)) <= names, 'unexpected RAM staging entry')
+    for name in sorted(names):
         path = root / name
         raw = base64.b64decode(sources[name], validate=True)
         guard()
@@ -383,7 +411,7 @@ def stage_sources(sources, boot):
             publish(path, raw)
         guard()
         require(R.read_private(path, len(raw)) == raw, 'RAM staging readback differs')
-    require(set(os.listdir(root)) == set(PINS), 'RAM closure differs')
+    require(set(os.listdir(root)) == names, 'RAM closure differs')
     directory_sync(root)
     guard()
     return dict(state='staged', boot_id=boot, source_pins=PINS)
@@ -391,11 +419,11 @@ def stage_sources(sources, boot):
 
 def remote_source(sources, operation, boot=None):
     functions = (require, digest, canonical_uuid, directory_sync, real_ancestry,
-                 private_directory, publish, captured_modules, native_context,
+                 private_directory, publish, captured_modules, captured_completion, native_context,
                  mtd_components, stage_sources)
     header = ('import base64, hashlib, json, os, stat, uuid\nfrom pathlib import Path\n'
               'from types import SimpleNamespace\n')
-    header += f'PINS={PINS!r}\nMIB={MIB!r}\nRAM={RAM!r}\nBOOT0_SHA={BOOT0_SHA!r}\nPACKAGE_SHA={PACKAGE_SHA!r}\n'
+    header += f'PINS={PINS!r}\nMIB={MIB!r}\nRAM={RAM!r}\nCOMPLETION_RAM={COMPLETION_RAM!r}\nBOOT0_SHA={BOOT0_SHA!r}\nPACKAGE_SHA={PACKAGE_SHA!r}\n'
     header += 'SOURCES=' + repr({name: base64.b64encode(raw).decode('ascii')
                                 for name, raw in sources.items()}) + '\n'
     header += '\n'.join(inspect.getsource(fn) for fn in functions)
@@ -408,8 +436,8 @@ def remote_source(sources, operation, boot=None):
         header += f' require(native_context(SOURCES)["boot_id"] == {boot!r}, "component boot differs")\n'
         header += " result.update(state='components', components=mtd_components())\n"
         header += f' require(native_context(SOURCES)["boot_id"] == {boot!r}, "component boot changed")\n'
-    elif operation == 'stage':
-        header += f' result.update(stage_sources(SOURCES, {boot!r}))\n'
+    elif operation in ('stage', 'stage-completion'):
+        header += f' result.update(stage_sources(SOURCES, {boot!r}, completion={operation == "stage-completion"!r}))\n'
     else:
         raise ValueError('unknown RPC operation')
     header += "except BaseException as error:\n result.update(state='refused', error=type(error).__name__+': '+str(error)[:2048])\nprint(json.dumps(result, sort_keys=True), flush=True)\n"
@@ -423,7 +451,7 @@ class Native:
         self.sources, self.evidence, self.deadline, self.clock = captured, evidence, deadline, clock
         self.phase_deadline = deadline
         self.rpc_templates = {operation: remote_source(captured, operation, '__EXPECTED_SPI_BOOT_UUID__')
-                              for operation in ('observe', 'components', 'stage')}
+                              for operation in ('observe', 'components', 'stage', 'stage-completion')}
         dependencies = {}
         for name in ('collect-spi-boots.py', 'preserve-known-endurance-outcome.py', 'collect-known-cold-boots.py'):
             path = REPO / 'scripts' / name
@@ -456,6 +484,9 @@ class Native:
                 print('SPI collector: bounded ' + label + ' transport remains pending.', flush=True)
         result = outcome[0]
         if isinstance(result, BaseException):
+            self.evidence.save('transport-error', operation=label,
+                               error=type(result).__name__ + ': ' + str(result)[:2048],
+                               acknowledgement='unknown')
             raise result
         self.evidence.save('transport', operation=label, raw=result)
         return result
@@ -489,10 +520,16 @@ class Native:
         result = self.rpc('stage', boot)
         require(result.get('state') == 'staged' and result.get('boot_id') == boot, 'RAM staging failed')
 
+    def stage_completion(self, boot):
+        result = self.rpc('stage-completion', boot)
+        require(result.get('state') == 'staged' and result.get('boot_id') == boot,
+                'completion RAM staging failed')
+
     def cli(self, name, args, timeout):
         # Authenticated staged bytes execute with real __file__, without shell interpolation.
+        directory = COMPLETION_RAM if name == 'complete-managed-fixture.py' else RAM
         source = ('import os\nos.execv("/usr/bin/python3", ' +
-                  repr(['/usr/bin/python3', '-I', '-B', RAM + '/' + name, *args]) + ')\n').encode()
+                  repr(['/usr/bin/python3', '-I', '-B', directory + '/' + name, *args]) + ')\n').encode()
         return self.call(name, source, timeout)
 
     def qualify(self, boot):
@@ -503,12 +540,30 @@ class Native:
         require(value.get('success') is True and value.get('stage') == 'complete' and
                 value.get('expected_boot_id') == boot and not value.get('cleanup_errors') and
                 len(value.get('records', {})) == 13, 'incomplete qualified cohort')
-        for record in value['records'].values():
+        records = {}
+        for name, record in value['records'].items():
             data = base64.b64decode(record['data_base64'], validate=True)
             require(len(data) == record['bytes'] and digest(data) == record['sha256'],
                     'retained qualifier record differs')
-        return dict(head=value['records']['head.json']['sha256'],
+            records[name] = data
+        head = json.loads(records['head.json'])
+        run_id = canonical_uuid(head['run_id'])
+        run = json.loads(records['runs/' + run_id + '.json'])
+        proof = json.loads(records['runs/' + run_id + '.fixture.json'])
+        require(head['status'] == 'ready' and head['last_boot_id'] == boot and
+                run['run_id'] == run_id and run['boot_id'] == boot and run['automatic'] is True and
+                proof['run_id'] == run_id and proof['boot_id'] == boot and
+                type(proof.get('counter')) is int and type(proof.get('previous_counter')) is int and
+                0 <= proof['previous_counter'] < 99999999 and
+                proof['counter'] == proof['previous_counter'] + 1, 'qualified fixture binding differs')
+        return dict(run_id=run_id, counter=proof['counter'], head=value['records']['head.json']['sha256'],
                     registry=value['records']['autostart.json']['sha256'])
+
+    def complete(self, intent):
+        return self.cli('complete-managed-fixture.py',
+                        ['--complete', '--expected-boot-id', intent['boot_id'],
+                         '--expected-run-id', intent['run_id'],
+                         '--expected-counter', str(intent['expected_counter'])], COMPLETION_SECONDS)
 
     def request(self, intent):
         args = ['--execute', '--action', intent['action'], '--expected-boot-id', intent['old_boot_id'],
@@ -560,6 +615,7 @@ def uart_evidence(raw, kind, attested_offset=None):
 class Collector:
     def __init__(self, native, evidence, intents, *, clock=time.monotonic, sleep=time.sleep):
         self.native, self.evidence, self.intents = native, evidence, intents
+        self.completion_intents = Intents(intents.path.parent, 'spi-completion-intents', 'boot_id')
         self.clock, self.sleep = clock, sleep
         self.deadline = native.deadline
         self.seen = set()
@@ -586,7 +642,7 @@ class Collector:
         require(value.get('state') != 'refused', 'native authenticated guard refused: ' + str(value.get('error')))
         return value
 
-    def qualify(self, boot):
+    def qualify(self, boot, staged=False):
         # Crucially precedes BOTH baseline RAM staging and NVMe synchronization.
         self.intents.check(boot)
         self.remaining(self.native.phase_deadline)
@@ -594,7 +650,8 @@ class Collector:
         self.evidence.save('components', observed=component)
         self.remaining(self.native.phase_deadline)
         self.intents.check(boot)
-        self.native.stage(boot)
+        if not staged:
+            self.native.stage(boot)
         self.remaining(self.native.phase_deadline)
         self.intents.check(boot)
         qualified = self.native.qualify(boot)
@@ -632,6 +689,8 @@ class Collector:
     def transition(self, kind, boot, qualified, cycle):
         self.remaining()
         self.intents.check(boot)
+        expected_counter = qualified['counter'] + 1
+        require(expected_counter <= 99999999, 'fixture counter exhausted')
         uart = self.native.uart()
         raw, attested_offset = bytearray(), None
         try:
@@ -649,7 +708,7 @@ class Collector:
             response = self.native.request(intent)
             self.evidence.save('request-result', old_boot_id=boot, raw=response,
                                acknowledgement='unknown unless retained helper receipt proves it')
-            new_boot = None
+            new_boot = completion = None
             while True:
                 self.remaining(deadline)
                 self.drain_uart(uart, raw, boot)
@@ -673,14 +732,43 @@ class Collector:
                     require(current not in self.seen, 'reused boot UUID')
                     require(new_boot in (None, current), 'boot changed twice before qualification')
                     new_boot = current
-                if observed.get('state') == 'ready' and current != boot and uart_evidence(
-                        raw, kind, attested_offset):
+                correlated = current is not None and current != boot and uart_evidence(raw, kind, attested_offset)
+                if completion is not None:
+                    require(current in (None, completion['boot_id']), 'completion boot identity changed')
+                    if observed.get('run_id') is not None:
+                        require(observed['run_id'] == completion['run_id'], 'completion run identity changed')
+                if correlated and observed.get('state') == 'running' and completion is None:
+                    self.remaining(deadline)
+                    self.completion_intents.check(current)
+                    run_id = canonical_uuid(observed['run_id'])
+                    self.native.stage(current)
+                    self.remaining(deadline)
+                    self.native.stage_completion(current)
+                    self.remaining(deadline)
+                    deadline = min(self.deadline, self.clock() + COMPLETION_SECONDS)
+                    self.native.phase_deadline = deadline
+                    completion = dict(boot_id=current, run_id=run_id, expected_counter=expected_counter,
+                                      source_pins=PINS, power_request_id=intent['request_id'])
+                    self.evidence.reserve(40 * MIB)
+                    self.completion_intents.create(completion)
+                    self.evidence.save('completion-intent', **completion)
+                    try:
+                        response = self.native.complete(completion)
+                        self.evidence.save('completion-result', **completion, raw=response,
+                                           acknowledgement='unknown unless retained helper receipt proves it')
+                    except Exception as error:
+                        self.evidence.save('completion-unknown', **completion,
+                                           error=type(error).__name__ + ': ' + str(error)[:2048],
+                                           acknowledgement='unknown')
+                    self.remaining(deadline)
+                elif correlated and observed.get('state') == 'ready':
+                    require(completion is not None, 'new fixture terminal without bound completion intent')
                     self.remaining(deadline)
                     self.drain_uart(uart, raw, boot)
                     require(uart_evidence(raw, kind, attested_offset), 'UART interval changed before qualification')
-                    # A distinct authenticated boot and ordered UART resolve outcome,
-                    # never alter the unknown acknowledgement of the old request.
-                    qualified = self.qualify(current)
+                    qualified = self.qualify(current, staged=True)
+                    require(qualified['run_id'] == completion['run_id'] and
+                            qualified['counter'] == expected_counter, 'qualified fixture run/counter differs')
                     self.drain_uart(uart, raw, boot)
                     require(uart_evidence(raw, kind, attested_offset), 'UART interval changed during qualification')
                     self.remaining(deadline)
@@ -711,7 +799,7 @@ def observe_only(native, evidence):
     records = [json.loads(read_private(path, 256 * 1024)) for path in contexts]
     old = canonical_uuid(records[-1]['old_boot_id'])
     observed = native.observe()
-    current = observed.get('boot_id') if observed.get('state') in ('ready', 'busy') else None
+    current = observed.get('boot_id') if observed.get('state') in ('ready', 'busy', 'running') else None
     if current is not None:
         canonical_uuid(current)
     return evidence.save('observe-only', old_boot_id=old, observed=observed,
@@ -754,7 +842,7 @@ def main(argv=None):
     args = parse_args(argv)
     if not args.execute and not args.observe_only:
         print(json.dumps(dict(operation='plan', host=args.host, hardware_acceptance=False, power_requested=False,
-                    max_seconds=SERIES_SECONDS, new_boot_seconds=BOOT_SECONDS,
+                    max_seconds=SERIES_SECONDS, new_boot_seconds=BOOT_SECONDS, completion_seconds=COMPLETION_SECONDS,
                     requires='explicit remaining count, authoritative boot UUID, unique tag; coordinator review')))
         return 0
     evidence = lock = None
