@@ -1,19 +1,20 @@
 # Current images for this board
 
-The board is running **corrected `6c0a7e9` B at 192.168.1.118 from SPI/NVMe
-with SD removed**, boot `f63f6a43-693a-4345-9352-b9815773f08c`, strict SSH
-host-key alias `192.168.1.116`. No operator flashing is needed. Keep the known
-recovery SD unchanged and off-device.
+The board is running **preserved normalized A at 192.168.1.118 from SPI/NVMe
+with SD removed**, boot `a4c67491-a884-463f-b83d-853dba52b95e`, strict SSH
+host-key alias `192.168.1.116`. The disposable guest is disabled at generation21;
+p5 is unmounted. No operator flashing is needed. Keep the known recovery SD off-device.
 
-The corrected trial passes full Ubuntu validation, construction, complete
-independent artifact/filesystem/reader checks, inactive-B installation and boot.
-Actual UID60002 managed KVM CPU/disk/HTTP now passes. Shutdown failed with a QMP
-deadline; durable quarantine succeeded and the guest was disabled at generation20.
-A reviewed timer repair and fresh root trial are next. **Managed production
-operation, checkpoint/restart and final boot series remain unqualified.**
-Normalized A, BOOT, manual CP5 and failed cohorts remain preserved.
-[Current trial](evidence/permission-B-managed-KVM-and-shutdown-failure-20261113.json),
-[artifact proof](evidence/permission-root-trial-and-artifact-review-20261113.json),
+The preceding corrected `6c0a7e9` B passes full validation, construction,
+independent artifact/filesystem/readers, installation and boot. Actual UID60002
+managed KVM CPU/disk/HTTP passes. Shutdown failed and durable quarantine succeeded.
+Supported recovery preserves that failure and manual CP5. The independently
+reviewed timer repair is frozen at `fb29af4`; 32 focused tests pass and full Ubuntu
+validation is running. Fresh B construction, artifact checks and a new hardware
+trial remain required. **Managed shutdown/checkpoint/restart, final boot series
+and production operation remain unqualified.**
+[Hardware trial](evidence/permission-B-managed-KVM-and-shutdown-failure-20261113.json),
+[current recovery](evidence/managed-shutdown-failure-recovery-20261113.json),
 [status](implementation-status.md).
 
 The earlier full installation and independent deployment reproduction pass.

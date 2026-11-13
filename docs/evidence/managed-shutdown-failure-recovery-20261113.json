@@ -1,0 +1,101 @@
+{
+  "date": "2026-11-13",
+  "operation": "supported disposable managed cohort recovery and preserved A boot before shutdown repair",
+  "restore": {
+    "transaction_id": "4671cb11-8f72-4a3c-8deb-c6dbcb8969bc",
+    "data_committed": true,
+    "cleanup_uncertain": false,
+    "close_errors": [],
+    "fresh_boot_required": true,
+    "registry_generation": 21,
+    "enabled": false,
+    "head_status": "ready",
+    "head_sequence": 0,
+    "baseline_is_successful_managed_backup_export": false
+  },
+  "fresh_B_boot": {
+    "boot_id": "3c5859b6-697a-47d1-a953-058074839fac",
+    "authenticated_runtime": [
+      85,
+      4,
+      2
+    ],
+    "open_admission": true,
+    "guest_queued": false
+  },
+  "preserved_A_boot": {
+    "boot_id": "a4c67491-a884-463f-b83d-853dba52b95e",
+    "SD_absent": true,
+    "root": "/dev/nvme0n1p2 read-only",
+    "authenticated_runtime": [
+      40,
+      4
+    ],
+    "NTP_synchronized": true,
+    "guest_p5_mounted": false,
+    "RAM_admission_present": false,
+    "registry_generation": 21,
+    "enabled": false
+  },
+  "preserved": [
+    "failed KVM/shutdown cohort and all older cohorts",
+    "manual firstkvm checkpoint5",
+    "normalized A root and protected BOOT",
+    "recovery SD and SPI backups"
+  ],
+  "acceptance": {
+    "actual_managed_KVM_CPU_disk_HTTP": "passed in preceding run",
+    "managed_clean_shutdown_checkpoint_restart": "pending repaired root trial",
+    "final_managed_warm_cold_counts": [
+      0,
+      0
+    ]
+  },
+  "evidence": [
+    {
+      "path": "out/managed-trace-run-20261113-01/restore-attempt-06/restore-complete-records.json",
+      "bytes": 57562,
+      "sha256": "3a3f444586087a0915f77e7c6be5871629aac793c92106d1c7303bdac9b7de53"
+    },
+    {
+      "path": "out/managed-trace-run-20261113-01/restore-attempt-06/fresh-B-inventory.json",
+      "bytes": 103017,
+      "sha256": "33bffd3eeeb60876d18e95bd7565ec2654c708f5e624a0777befe8c44cd8f769"
+    },
+    {
+      "path": "out/managed-trace-run-20261113-01/restore-attempt-06/fresh-B-state.json",
+      "bytes": 20529,
+      "sha256": "3c7448a950dc328e02859ddd3f4b7204cc41269a9e9fc76e2ba58fba29de24ba"
+    },
+    {
+      "path": "out/managed-trace-run-20261113-01/restore-attempt-06/fresh-B-no-guest.json",
+      "bytes": 239,
+      "sha256": "87fffec4539d342af4d76b56c46c1465d7dd44f1969339e40bdd209faa090937"
+    },
+    {
+      "path": "out/managed-trace-run-20261113-01/restore-attempt-06/reviewed-preboot-records.tar.builder-custody.json",
+      "bytes": 223,
+      "sha256": "68ab594b31f4d7892c9ed37eff552c623ad3f423bf4bb4d6e0011886296765ba"
+    },
+    {
+      "path": "out/managed-shutdown-budget-deployment-20261113-01/select-normalized-A-result.json",
+      "bytes": 2644,
+      "sha256": "7d0b251aedb55fba406af8fd87579649edbf479395161375ae982e0b25eb2372"
+    },
+    {
+      "path": "out/managed-shutdown-budget-deployment-20261113-01/preserved-A-reboot-request.json",
+      "bytes": 944,
+      "sha256": "2a6fc22ee5285fee2ed2f1d948bdb8fa75b45a6d92124119039282e4b570da3d"
+    },
+    {
+      "path": "out/managed-shutdown-budget-deployment-20261113-01/preserved-A-inventory.json",
+      "bytes": 1394,
+      "sha256": "d83bfc1c1e2e85379eb57d5899395a8d94ca7eab26c3bcf507f6136f4dc8ae48"
+    },
+    {
+      "path": "out/managed-shutdown-budget-deployment-20261113-01/preserved-A-preboot-records.tar.builder-custody.json",
+      "bytes": 254,
+      "sha256": "b89524181ddb760a1372370f85a7d5ca3efe1e3ab08d40a6a9d03230ca3b79e6"
+    }
+  ]
+}

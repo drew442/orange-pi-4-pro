@@ -1,23 +1,26 @@
 # Implementation status
 
 Updated 2026-11-13. **SPI/NVMe boot works with SD removed; managed production
-qualification remains incomplete.** The board runs corrected `6c0a7e9` B with SD absent. **Actual managed nonroot
-KVM CPU/disk/HTTP passes. Shutdown failed and the guest was quarantined**, then
-successfully disabled at registry generation20. No managed checkpoint/restart or
-final boot-series credit is claimed. Independent review identifies a shutdown
-grace timer started before safety checks and durable stopping publication. The narrow repair passes independent review and 32 focused tests; fresh full
-validation/construction and a new hardware trial are next. No operator
-action is currently needed.
-[Current hardware evidence](evidence/permission-B-managed-KVM-and-shutdown-failure-20261113.json).
+qualification remains incomplete.** The board runs preserved normalized A while corrected inactive B is prepared.
+**Actual managed nonroot KVM CPU/disk/HTTP passes on the preceding `6c0a7e9` B.**
+Its shutdown failed and quarantined the guest. Supported recovery retained the
+failure, restored the disposable seed disabled at generation21 and preserved
+manual CP5. The independently reviewed grace-timer repair is frozen at `fb29af4`;
+32 focused tests pass and full combined Ubuntu validation is running. Fresh
+construction/artifact verification and real shutdown/checkpoint/restart follow.
+No final managed boot-series credit or production qualification is claimed.
+No operator action is currently needed.
+[Hardware trial](evidence/permission-B-managed-KVM-and-shutdown-failure-20261113.json),
+[recovery](evidence/managed-shutdown-failure-recovery-20261113.json).
 
 ## Current board and retained recovery
 
 - SSH: `root@192.168.1.118`, strict original host-key alias `192.168.1.116`.
-  Boot `f63f6a43-693a-4345-9352-b9815773f08c`; corrected B p3 is read-only.
-  Its complete 85-tool/four-management-file/two-boot-unit cohort authenticates.
-  NTP passes; registry20 is disabled and managed head sequence4 is quarantined.
-  Preserve all failure records; do not retry the old bound stop.
-  [B trial](evidence/permission-B-managed-KVM-and-shutdown-failure-20261113.json).
+  Boot `a4c67491-a884-463f-b83d-853dba52b95e`; preserved normalized A p2 is
+  read-only. Complete 40-tool/four-management-file authentication and NTP pass.
+  Registry21 is disabled, p5 is unmounted and RAM admission is absent.
+  B awaits the reviewed shutdown repair. Preserve all failed-run evidence.
+  [Current A](evidence/managed-shutdown-failure-recovery-20261113.json).
 - NVMe: SPCC M.2 PCIe SSD, serial `134807190FC700149277`, 256060514304 bytes,
   firmware EDFM20.0. STATE p4 UUID `360dfb39-f49f-487e-b307-0bb887c854c5`;
   guest p5 UUID `298b281a-d10e-44eb-bdb9-285e27eaafad`.
