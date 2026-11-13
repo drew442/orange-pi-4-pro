@@ -100,8 +100,15 @@
     "bytes": 19410,
     "sha256": "8364f096b33e2888ddc222dd080b198a6cc74764df682c048f38884ba5fecbe4"
   },
-  "artifact_pins_refreshed": false,
-  "combined_validation_passed": false,
+  "artifact_pins_refreshed": true,
+  "combined_validation_passed": true,
   "hardware_acceptance": false,
-  "production_guest_lifetime_changed": false
+  "production_guest_lifetime_changed": false,
+  "combined_validation_reference": "managed-native-lifecycle-validation-20261113.json",
+  "artifact_reference": "managed-permit-root-trial-20261113.json",
+  "current_external_source": {
+    "path": "scripts/complete-managed-fixture.py",
+    "bytes": 23339,
+    "sha256": "458abd7125cf8d25e4cfc60414be42e1a1fb9da9eadd83ed2d728617b6b587b5"
+  }
 }

@@ -1,21 +1,16 @@
 # Current images for this board
 
-The board is running **repaired B at 192.168.1.118 from SPI/NVMe with SD removed**,
-boot `cbc504c7-e88c-4943-9a29-f49eecfa3923`, using original strict SSH host-key
-alias `192.168.1.116`. Normalized A remains the preserved rollback root.
-Post-reinstall manual nonroot KVM CPU/disk/HTTP, guest-owned shutdown and
-checkpoint 5 pass; verified guest backups exist on both hosts.
-[Physical evidence](evidence/post-reinstall-SPI-managed-B-20261113.json).
+The board is running **preserved normalized A at 192.168.1.118 from SPI/NVMe with
+SD removed**, boot `03cfd8ac-1efd-4eed-a758-3ec874aa4154`, strict SSH host-key
+alias `192.168.1.116`. It is preparing inactive B for the next trial. Keep the
+known recovery SD unchanged and off-device; no operator flashing is needed now.
 
-The first managed start on the previous B refused before queueing. The guest
-was disabled during repair. Repaired roots from `4334a22` have three matching
-constructions and independent filesystem/reader checks; reviewed inactive-B
-deployment and authenticated physical boot now pass. Supported enable/start
-queue successfully, but permit publication failed before QEMU and quarantined
-the fixture. It is disabled again. A reviewed barrier fix needs a new root.
-[Failure record](evidence/managed-permit-barrier-failure-20261113.json). **Production managed
-operation is not yet qualified.** No SD rewrite or operator power cycle is
-needed for the current preparation. Follow [status](implementation-status.md).
+F349 passes 3717 privileged tests, one construction and independent complete
+filesystem/reader checks. It has not booted or executed a managed guest yet.
+The previous root's managed launch failed before QEMU; supported restoration
+retained the failed cohort, restored the initial seed, and fresh-boot preparation
+passed with the guest disabled. **Managed production operation remains unqualified.**
+[Status](implementation-status.md), [recovery](evidence/managed-initial-cohort-recovery-20261113.json).
 
 The earlier full installation and independent deployment reproduction pass.
 The earlier protected-SD route also passed ten warm/ten cold boots and complete
@@ -37,20 +32,22 @@ Keep both original and calibrated backups. [SPI procedure](spi-sd-boot-20261111.
 
 Paths below are relative to `/home/drew/orange-pi-4-pro` on codex.
 
-## Repaired managed candidate
+## F349 managed trial
 
-[Repaired root construction](managed-systemd-root-build-20261113.md) reproduces
-all 133 manifest-listed artifacts across three builds. Encoded artifacts are in
-`out/managed-systemd-root-candidate-20261113-01/artifacts/`; manifest SHA-256 is
-`94e969c6b0039ac5505493dae5fe1d2370173231b363f81c72de2f54506ab9a9`.
-Slot B compressed root is 143661310 bytes, SHA-256
-`0651e9f6a9a4e5b52fd88abb8d6f80c2b1007b2f9cfec45b7ad69d9f418dd0de`;
-its expanded 4294967296-byte SHA-256 is
-`6ab0444ec7e3e70018c71f5f3e91cc63212fb487f3f25e8e1bf6e6723693d3c2`.
-These are **NVMe root components**, not SD images. Keep the 2 GB recovery card.
-Preserve the [previous candidate](managed-root-candidate-20261112.md) and
-normalized A. Repaired B deployment passes; managed KVM and final qualification remain
-pending.
+[Trial construction and independent artifact evidence](evidence/managed-permit-root-trial-20261113.json)
+binds frozen source `f3496f5`. Prepared B metadata is under
+`out/managed-permit-root-trial-20261113-01/prepared-B-metadata/`; manifest SHA-256:
+`333c0f69edb47c8b993feaeaf1640c248d1aed9111beb253b3d8f4533057be35`.
+The transferred component
+`out/managed-permit-root-trial-20261113-01/artifacts/root-B.ext4.gz` is 143659792
+bytes, SHA-256 `5dbf65c9e54d1356eed52184d57a2e52c9d6e57ae5f7b783d98c324b7b8a9c25`.
+It expands to 4294967296 bytes, SHA-256
+`fdecc21669f82c7bb5173369d62da8b5f588a537662c4026d4c69415dd8d5806`.
+
+These are **NVMe root components**, not SD images. Inactive-B installation,
+actual managed KVM and independent matching construction remain pending.
+Preserve normalized A and the separately retained
+[4334a22 constructions](managed-systemd-root-build-20261113.md).
 
 ## Existing installed release and recovery inputs
 

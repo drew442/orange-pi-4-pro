@@ -50,9 +50,10 @@
     "admission_open_acknowledged": true,
     "initially_disabled_registry_generation": 3,
     "SD_writes": false,
-    "SPI_writes": false,
     "BOOT_replaced": false,
-    "A_overwritten": false
+    "A_overwritten": false,
+    "SPI_programming_performed_by_repair": false,
+    "vendor_boot_calibration_may_change": true
   },
   "managed_guest": {
     "supported_enable_success": true,

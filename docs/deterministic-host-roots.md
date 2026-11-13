@@ -1,5 +1,7 @@
 # Deterministic host root components
 
+Current F349 trial and pending independent reproduction: [F349 procedure](managed-permit-root-trial-20261113.md).
+
 Two fresh complete A/B root constructions now match **all raw and gzip bytes**
 and pass independent artifact review and full filesystem readback. The build-only
 creator preserves installed maintenance sources, payload markers and the existing

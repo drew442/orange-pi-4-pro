@@ -20,6 +20,12 @@ unchanged filesystem identity; VG/PV free is now zero. Metadata was fsynced
 off-device first. Available space immediately afterward was 24,447,950,848
 bytes; remeasure for each build. [Capacity receipt](evidence/build-host-capacity-20261113.json).
 
+Twelve redundant verifier scratch raw copies have since been retired under an
+independently reviewed exact plan. Original raw/compressed producers, third
+reproductions, source/package caches, metadata and backups remain. The operation
+reclaimed 5,456,838,656 allocated bytes; observed free space afterward was
+22,408,658,944 bytes. [Retirement evidence](evidence/redundant-verifier-scratch-retirement-20261113.json).
+
 ## Active remote builder
 
 Prepared 2026-11-04: `drew@build.drewnet.online`, Ubuntu 22.04.5 LTS x86_64. SSH and passwordless sudo verified. Four CPUs, 7.8 GiB RAM, 4 GiB swap, approximately 49 GiB available after package installation. Workspace: `/home/drew/orange-pi-4-pro-build`. Use this host for vendor builds; the local Noble assessment below is retained only to explain why local builds are unsuitable.

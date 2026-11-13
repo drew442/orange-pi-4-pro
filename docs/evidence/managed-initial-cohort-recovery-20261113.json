@@ -1,0 +1,68 @@
+{
+  "date_utc": "2026-11-13",
+  "scope": "Actual supported restoration and fresh-boot admission recovery of disposable autokvm; no managed guest execution credit",
+  "source_classification": "Reconstructed initial baseline from independently trusted pre-run native metadata and original pinned seeds; not a successful managed-backup sender",
+  "source_receipt": {
+    "path": "out/initial-managed-cohort-reconstruction-20261113-01/receipt.json",
+    "bytes": 1938,
+    "sha256": "d2ed02122f730ac51315afe675859c571928f530daca694a327510e9e1f634df"
+  },
+  "input_review": {
+    "path": "tmp/initial-managed-cohort-reconstruction-20261113/independent-review.json",
+    "bytes": 23855,
+    "sha256": "69e62e25677ba53b0c060062d67fea02e07ae0f277e3710520833bbfb1d4f17d"
+  },
+  "archive_sha256": "fdb5b5386cd3a56634307c3d3ab45396e7eb82e0a0e5be9c805a4ff6d803a491",
+  "manifest_sha256": "a46ae94c58289808f3b8f9848a9762ce68cd0fa6b1d28383821b6199135d8701",
+  "old_boot_id": "cbc504c7-e88c-4943-9a29-f49eecfa3923",
+  "transaction_id": "ec5e63b0-5d53-426f-833b-53a538b8da99",
+  "success": true,
+  "data_committed": true,
+  "cleanup_uncertain": false,
+  "close_errors": [],
+  "old_payload_preserved": "/run/a733-guests/.a733-restores/ec5e63b0-5d53-426f-833b-53a538b8da99/old-payload",
+  "old_lifecycle_preserved": "/run/a733-guests/.a733-restores/ec5e63b0-5d53-426f-833b-53a538b8da99/old-lifecycle",
+  "fresh_boot_id": "fad6b1f4-482b-4284-9fdc-4bb9801afd85",
+  "fresh_registry_generation": 6,
+  "guest_disabled": true,
+  "fresh_admission": "open",
+  "restored_head_sha256": "2c19ec35640bdcbae05e93c8288d23501288ef2f48b071d1008a9d5e56391e2a",
+  "firstkvm_CP5_preserved": true,
+  "bulk_readback_repeated": false,
+  "records": [
+    {
+      "path": "out/initial-managed-cohort-reconstruction-20261113-01/restore-complete-records.json",
+      "bytes": 49991,
+      "sha256": "4095b50be70351b30a50ff2ae1428e1d95a77c380f0b84a29479827f717d7f17"
+    },
+    {
+      "path": "out/initial-managed-cohort-reconstruction-20261113-01/fresh-B-inventory.json",
+      "bytes": 102971,
+      "sha256": "eac3c2367ef6ec2a5b8414ad01c32982d0565da4509c2b2dc748e6041e89c50a"
+    },
+    {
+      "path": "out/initial-managed-cohort-reconstruction-20261113-01/fresh-B-state.json",
+      "bytes": 19864,
+      "sha256": "06ca67c8651b88e7ea3e2adb225151f6f2097273281c4c3ea079aecc9a49a035"
+    },
+    {
+      "path": "out/initial-managed-cohort-reconstruction-20261113-01/restored-B-reboot-request.json",
+      "bytes": 943,
+      "sha256": "3ca7ec8f00505c27b50240f22350ae58b90d0e2b6d3839420b9804157d45a396"
+    },
+    {
+      "path": "out/initial-managed-cohort-reconstruction-20261113-01/post-restore-before-B-boot-records.tar",
+      "bytes": 4474880,
+      "sha256": "65f0586c97b23db9ade510793df4be1d807ed4162b5146bb0ce195e53f94d334"
+    }
+  ],
+  "builder_custody": {
+    "path": "/home/drew/orange-pi-4-pro-build/managed-systemd-repair-20261113-01/post-restore-before-B-boot-records.tar",
+    "bytes": 4474880,
+    "sha256": "65f0586c97b23db9ade510793df4be1d807ed4162b5146bb0ce195e53f94d334",
+    "fsynced": true,
+    "readback": true
+  },
+  "hardware_KVM_credit": false,
+  "limitations": "Interrupted/resumed restore, export of a completed managed cohort and actual managed KVM remain separate acceptance gates."
+}

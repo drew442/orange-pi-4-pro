@@ -1,36 +1,35 @@
 # SPI/NVMe production-readiness plan
 
-Execution started 2026-11-12. SPI/NVMe operation with SD physically removed,
-metadata-aware original blank restoration, SD recovery, firmware reinstallation
-and subsequent actual nonroot manual KVM/checkpoint pass. The first managed start
-on candidate `2996365` safely refused before queueing on systemd dependencies.
-The repaired `4334a22` roots pass full 3664-test validation, three matching
-constructions and independent filesystem/reader checks. Reviewed inactive-B
-repair and authenticated physical boot pass; managed hardware execution and
-final qualification remain.
-[Current status](implementation-status.md),
-[repaired builds](managed-systemd-root-build-20261113.md).
+Execution started 2026-11-12. SPI/NVMe boot with SD removed, metadata-aware SPI
+restore/reinstall and actual manual nonroot KVM/checkpoint pass. The managed
+workflow remains unqualified. Its prior launch failed before QEMU; supported
+quarantine restoration and fresh-boot admission recovery now pass.
 
-Completion is determined by the evidence gates below. Retain the accepted
-eight-hour endurance result from existing >20-hour data; no rerun is required.
+Frozen F349 passes 3717 privileged tests, one trial construction and independent
+complete artifact/filesystem/readers. Preserved A is running for the next inactive-B
+installation. After a working hardware trial, an independent fresh-checkout build
+will compare all artifacts and reproduce the recipe, giving two constructions.
+[Current status](implementation-status.md),
+[trial evidence](evidence/managed-permit-root-trial-20261113.json).
+
+Retain the accepted eight-hour workload result from existing >20-hour data.
+No qualifying endurance rerun is required.
 
 ## Delivery order and current checkpoints
 
 ### Next execution steps
 
-Use repaired source `4334a22` and its exact artifact pins for current deployment.
-Preserve previous `2996365` artifacts and normalized A as separate historical
-and rollback cohorts. Source fixes and the new outer849 builder pass independent
-review and combined privileged validation. All 133 artifacts and manifest match
-across two coordinator constructions and an independent fresh-checkout build;
-separate complete filesystem and production-reader checks pass.
-[Build procedure](managed-systemd-root-build-20261113.md).
+Use frozen F349 and its exact artifact pins for the next deployment. Preserve
+older `2996365`/`4334a22` artifacts and normalized A as separate cohorts. The
+bound supervisor stop and permit budget preserve normal guest shutdown; the
+collector isolates completion data from the power helper's fixed two-file packet.
+Artifact-derived helper pins pass independent review and 100 focused checks;
+combined external validation and actual execution remain pending.
+[Completion procedure](managed-fixture-completion.md).
 
-The external qualifier/power/collector pins now target repaired B. They still
-need actual managed outcomes and final physical boot-series acceptance. The
-[fixture procedure](managed-fixture-deployment.md) records the corrected 8080
-configuration, disabled registry generation 3 and preserved seed/quarantine.
-Do not re-enroll or overwrite those existing cohorts.
+The restored disposable guest is disabled at generation 6, ready sequence 0.
+Do not re-enroll it or overwrite retained failed cohorts. Its first successful
+managed KVM execution, checkpoint/restart and automatic boot still need proof.
 
 | Order | Work and owner | Required result before proceeding |
 | --- | --- | --- |
@@ -64,7 +63,7 @@ cycle attestations. Software preparation continues while those steps are pending
 | 1. Recoverable baseline | Recorded; revalidate after each hardware transition | Verified original/calibrated SPI and stopped guest backups retained off-device |
 | 2. Metadata-aware SPI maintenance | Software checks and independent review pass | Reviewed fresh live plans and preserved calibration policy |
 | 3. Physical restore/reinstall | Blank restoration, SD recovery, reinstall and SD-removed manual KVM pass | Original SPI restore, SD recovery, reinstall, SD-removed boot and actual KVM pass |
-| 4. Unattended guests | Three matching repaired builds and independent artifact/reader review and physical B boot pass | Reproducible packaged services, graceful shutdown/checkpoint/reconciliation, rollback and real KVM acceptance |
+| 4. Unattended guests | One F349 trial and independent artifact/readers pass; deployment pending | Reproducible packaged services, graceful shutdown/checkpoint/reconciliation, rollback and real KVM acceptance |
 | 5. Final SPI boot series | One cold and one warm operational boot evidenced | Ten accepted cold and ten warm boots with applicable identity and final automation checks |
 | 6. Independent reproduction and signoff | Earlier protected-SD reproduction retained | Updated SPI recovery and guest procedures reproduced, evidence reconciled and changes pushed |
 

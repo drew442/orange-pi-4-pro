@@ -1,0 +1,100 @@
+{
+  "date_utc": "2026-11-13",
+  "scope": "Retire twelve independently reviewed redundant verifier scratch raw copies on Ubuntu builder; no physical storage erase or source/backup deletion",
+  "result": "complete",
+  "source": {
+    "path": "tmp/redundant-artifact-capacity-20261113/capacity.py",
+    "bytes": 14294,
+    "sha256": "de4dbbe2dbad14a32e5dca70cca0d22df16213f1b3ca7d3224a66b7e2add5e14"
+  },
+  "plan": {
+    "path": "tmp/redundant-artifact-capacity-20261113/plan.json",
+    "bytes": 56066,
+    "sha256": "ae39d091ecfdafa0b2114e28cb39d322aead3eb138c945ead83f06832f7e9a01"
+  },
+  "review": {
+    "path": "tmp/redundant-artifact-capacity-20261113/independent-review.json",
+    "bytes": 3468,
+    "sha256": "43c1174177dd546aeb2c2742236ddf468349e42313d5614a3ce0673fc7bec9c0"
+  },
+  "targets": [
+    {
+      "path": "/var/lib/a733-managed-systemd-artifact-review-20261113-01/prepared-0-A/root.ext4",
+      "bytes": 4294967296,
+      "sha256": "02a0277ebe94e3cbde933e2a4a79158970891d196cfc587b269e1a4cfeb26f25"
+    },
+    {
+      "path": "/var/lib/a733-managed-systemd-artifact-review-20261113-01/prepared-0-B/root.ext4",
+      "bytes": 4294967296,
+      "sha256": "6ab0444ec7e3e70018c71f5f3e91cc63212fb487f3f25e8e1bf6e6723693d3c2"
+    },
+    {
+      "path": "/var/lib/a733-managed-systemd-artifact-review-20261113-01/prepared-1-A/root.ext4",
+      "bytes": 4294967296,
+      "sha256": "02a0277ebe94e3cbde933e2a4a79158970891d196cfc587b269e1a4cfeb26f25"
+    },
+    {
+      "path": "/var/lib/a733-managed-systemd-artifact-review-20261113-01/prepared-1-B/root.ext4",
+      "bytes": 4294967296,
+      "sha256": "6ab0444ec7e3e70018c71f5f3e91cc63212fb487f3f25e8e1bf6e6723693d3c2"
+    },
+    {
+      "path": "/var/lib/a733-managed-systemd-artifact-review-20261113-01/prepared-legacy-A/root.ext4",
+      "bytes": 4294967296,
+      "sha256": "a9715b819348a8220ec8b3b1f41ef27db677baaa96014f5d1dfb7a22597decdd"
+    },
+    {
+      "path": "/var/lib/a733-managed-systemd-artifact-review-20261113-01/legacy-A.ext4",
+      "bytes": 4294967296,
+      "sha256": "a9715b819348a8220ec8b3b1f41ef27db677baaa96014f5d1dfb7a22597decdd"
+    },
+    {
+      "path": "/var/lib/a733-candidate-artifact-review-20261112-01/attempt-02/prepared-0-A/root.ext4",
+      "bytes": 4294967296,
+      "sha256": "a75cf5945c3572d4741841e9a411719bf422e6b3f533b52d7e122029156eb230"
+    },
+    {
+      "path": "/var/lib/a733-candidate-artifact-review-20261112-01/attempt-02/prepared-0-B/root.ext4",
+      "bytes": 4294967296,
+      "sha256": "fe842ff05584205b4fb9f930b3620bac04155c9f751488a8fb20a0d798dbd87c"
+    },
+    {
+      "path": "/var/lib/a733-candidate-artifact-review-20261112-01/attempt-02/prepared-1-A/root.ext4",
+      "bytes": 4294967296,
+      "sha256": "a75cf5945c3572d4741841e9a411719bf422e6b3f533b52d7e122029156eb230"
+    },
+    {
+      "path": "/var/lib/a733-candidate-artifact-review-20261112-01/attempt-02/prepared-1-B/root.ext4",
+      "bytes": 4294967296,
+      "sha256": "fe842ff05584205b4fb9f930b3620bac04155c9f751488a8fb20a0d798dbd87c"
+    },
+    {
+      "path": "/var/lib/a733-candidate-artifact-review-20261112-01/attempt-02/prepared-legacy-A/root.ext4",
+      "bytes": 4294967296,
+      "sha256": "a9715b819348a8220ec8b3b1f41ef27db677baaa96014f5d1dfb7a22597decdd"
+    },
+    {
+      "path": "/var/lib/a733-candidate-artifact-review-20261112-01/attempt-02/legacy-A.ext4",
+      "bytes": 4294967296,
+      "sha256": "a9715b819348a8220ec8b3b1f41ef27db677baaa96014f5d1dfb7a22597decdd"
+    }
+  ],
+  "expected_allocated_bytes_reclaimed": 5456838656,
+  "terminal": {
+    "terminal": "MainPID=0\nResult=success\nExecMainStatus=0\nSubState=exited\n",
+    "available_bytes": 22408658944,
+    "targets_absent": 12,
+    "retained_records_present": 31
+  },
+  "execution_archive": {
+    "path": "tmp/redundant-artifact-capacity-20261113/execution-custody.tar",
+    "bytes": 102400,
+    "sha256": "cc7fa460dad30356fb87b33737cf011fa1f29732abb8c052d2b99b943403f518"
+  },
+  "retained_records": 31,
+  "retention_boundary": "Six producer/reproduction manifests and twelve compressed roots authenticated; twelve original raw cores retained with checked identities/sizes; legacy recovery gzip authenticated. No original producer, third reproduction, metadata, package/source cache, guest or recovery backup was removed.",
+  "retained_owner_policy": "Exact frozen inner-builder phase/work paths use UID/GID1048576 and protected modes; mapped processes/mounts excluded. Targets remain root-owned.",
+  "consumed_journal": "/var/lib/a733-redundant-artifact-retirement-20261113.json",
+  "automatic_retry_allowed": false,
+  "physical_boot_or_KVM_acceptance": false
+}

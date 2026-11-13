@@ -1,0 +1,94 @@
+{
+  "date_utc": "2026-11-13",
+  "scope": "One F349 trial construction plus independent complete artifact checks; no reproducibility/hardware credit",
+  "source_commit": "f3496f5ff1b3629d5333d26725b9f5494ace9d25",
+  "source_tree": "aec007a4cff593e6e1feaa5d0acf459df6445c8c",
+  "tracked_files": 1156,
+  "manifest": {
+    "path": "out/managed-permit-root-trial-20261113-01/manifest.json",
+    "bytes": 51618,
+    "sha256": "333c0f69edb47c8b993feaeaf1640c248d1aed9111beb253b3d8f4533057be35"
+  },
+  "roots": {
+    "root-A.ext4": {
+      "bytes": 4294967296,
+      "sha256": "c516ade4fc4b64d25a5cefa743478891a961e93e50ff9d359141fcdcf4be2b83"
+    },
+    "root-A.ext4.gz": {
+      "bytes": 143659839,
+      "sha256": "925acc3760b05b00675b58bed8e7eaef949287be89fe8df51cd4c9d7a816f007"
+    },
+    "root-B.ext4": {
+      "bytes": 4294967296,
+      "sha256": "fdecc21669f82c7bb5173369d62da8b5f588a537662c4026d4c69415dd8d5806"
+    },
+    "root-B.ext4.gz": {
+      "bytes": 143659792,
+      "sha256": "5dbf65c9e54d1356eed52184d57a2e52c9d6e57ae5f7b783d98c324b7b8a9c25"
+    }
+  },
+  "markers": {
+    "A": {
+      "bytes": 26273,
+      "sha256": "38def19364496d314c73a7bb689fcd5faae3f84259211f4923e2719fc907c071"
+    },
+    "B": {
+      "bytes": 26273,
+      "sha256": "396be626a7919b9c800dd6a00cc5f8c025fa26c2d5c124bdde469e3b8c347ab8"
+    }
+  },
+  "B_selector": {
+    "bytes": 179,
+    "sha256": "e907e3d056e28e54f51743f95ce98ab1ed933b40e97d4e2c0bc3f7f74f69da93"
+  },
+  "producer": {
+    "success": true,
+    "state": "complete",
+    "full_filesystem_readback": false,
+    "reproducibility": "not established",
+    "host_inventory_unchanged": true,
+    "mapped_processes_final": [],
+    "phase_mounts_final": [],
+    "receipt": {
+      "path": "out/managed-permit-root-trial-20261113-01/producer-receipt.json",
+      "bytes": 273630,
+      "sha256": "d0ce810ac14476039fe4e8198e582455a260c2febc9293c1e6e055686b5d78d8"
+    }
+  },
+  "independent_artifact_review": {
+    "result": "pass",
+    "commands": 9,
+    "manifest_listed_artifacts": 133,
+    "gzip_expansions": 2,
+    "filesystem_slots": 2,
+    "historical_slot_readers": 2,
+    "current_normalized_A_reader": 1,
+    "temporary_legacy_expansion_removed": true,
+    "prepared_roots_retained": 3,
+    "review": {
+      "path": "tmp/permit-trial-artifact-review-20261113/execution-review.json",
+      "bytes": 102907,
+      "sha256": "846b41368344f347b0f2cc5f4af500cbb41bb4d2fa94695922091e6d6dac1cf0"
+    },
+    "custody_archive": {
+      "path": "tmp/permit-trial-artifact-review-20261113/execution-custody.tar",
+      "bytes": 1530950,
+      "sha256": "53e07b3d40f616785bdb3e595718fe38676d83e1a921682991ab1b65371086a4"
+    }
+  },
+  "B_gzip_custody": {
+    "builder": {
+      "source_path": "/var/lib/a733-clean-replay-20261106/host-roots-managed-permit-20261113-01/work/project/out/host-payload-managed-permit-20261113-01/root-B.ext4.gz",
+      "bytes": 143659792,
+      "sha256": "5dbf65c9e54d1356eed52184d57a2e52c9d6e57ae5f7b783d98c324b7b8a9c25",
+      "source_identity_stable": true
+    },
+    "native_path": "out/managed-permit-root-trial-20261113-01/artifacts/root-B.ext4.gz",
+    "native_bytes": 143659792,
+    "native_sha256": "5dbf65c9e54d1356eed52184d57a2e52c9d6e57ae5f7b783d98c324b7b8a9c25",
+    "fsynced": true,
+    "builder_archive_created": false
+  },
+  "plan": "After working hardware, independently reproduce the frozen source from a fresh checkout and compare every artifact; two builds total. Discrepancies require investigation.",
+  "hardware_acceptance": false
+}

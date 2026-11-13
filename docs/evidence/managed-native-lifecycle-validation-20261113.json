@@ -1,0 +1,55 @@
+{
+  "date_utc": "2026-11-13",
+  "scope": "Frozen F349 privileged Ubuntu22.04 source validation; separate hardware acceptance",
+  "source_commit": "f3496f5ff1b3629d5333d26725b9f5494ace9d25",
+  "source_tree": "aec007a4cff593e6e1feaa5d0acf459df6445c8c",
+  "source_locked_files": 1160,
+  "terminal": {
+    "RuntimeMaxUSec": "8h",
+    "MainPID": "0",
+    "Result": "success",
+    "ExecMainStatus": "0",
+    "CPUQuotaPerSecUSec": "2s",
+    "MemoryMax": "3221225472",
+    "UMask": "0022",
+    "SubState": "exited"
+  },
+  "footers": [
+    [
+      "3717",
+      "1261.819s",
+      "OK"
+    ],
+    [
+      "5",
+      "6.228s",
+      "OK"
+    ]
+  ],
+  "shell_suites": [
+    "test-diagnostic-initramfs.sh",
+    "test-guest-fixture.sh",
+    "test-host-init.sh",
+    "test-host-storage-resolver.sh",
+    "test-host-userspace.sh"
+  ],
+  "source_checks": 2,
+  "outer_package_count": 849,
+  "outer_three_field_sha256": "b34b70a879cbbf75f818708275c57ef0aef3ae635b9ae71a8005e2b29a8490b8",
+  "outer_four_field_sha256": "c87cbf467e11deab2c27fd350b1eb667b85f9a06b5c77477db562a5b7c257949",
+  "min_free_bytes": 22273024000,
+  "min_MemAvailable_bytes": 6685016064,
+  "hardware_acceptance": false,
+  "native_evidence": {
+    "path": "out/managed-native-lifecycle-integration-validation-20261113-01/evidence.tar",
+    "bytes": 348160,
+    "sha256": "3436ff5bd71bc775dbec11c3017d532b03526a05a81dfc25d737e2a7d54bb54a"
+  },
+  "builder_custody": {
+    "path": "/var/lib/a733-managed-native-lifecycle-integration-validation-20261113-01/evidence.tar",
+    "bytes": 348160,
+    "sha256": "3436ff5bd71bc775dbec11c3017d532b03526a05a81dfc25d737e2a7d54bb54a",
+    "fsynced": true,
+    "readback": true
+  }
+}

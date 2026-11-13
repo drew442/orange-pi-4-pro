@@ -1,9 +1,10 @@
 # Restore a managed guest
 
-This describes the source candidate. It is not installed or physically qualified
-yet. Use it only after deploying the matched candidate root and following the
-released deployment guide. The [status](implementation-status.md) distinguishes
-software evidence from actual A733 results.
+This command is installed on the `4334a22` host. The first supported restoration
+of the disposable quarantined fixture committed successfully and retained the old
+payload/lifecycle; fresh-boot recovery and later managed execution remain separate
+gates. Use the matched root and deployment guide. [Status](implementation-status.md)
+distinguishes source checks, actual restoration and guest hardware acceptance.
 
 ## Select the cohort
 
