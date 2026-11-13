@@ -1,0 +1,99 @@
+{
+  "record": "permission-corrected SPI B deployment and managed KVM trial",
+  "date": "2026-11-13",
+  "source_commit": "6c0a7e90ec279d36c90371d270b3acc2abebf731",
+  "boot_id": "f63f6a43-693a-4345-9352-b9815773f08c",
+  "sd_absent": true,
+  "root": "/dev/nvme0n1p3 read-only",
+  "root_raw_sha256": "0cfef33e3708ef9aef971107ffdfd646b01fb1dde896e59840451b3a47d7d11b",
+  "marker_sha256": "2ecff261ce165b202476456466914b422b6dac0f8dd1e7d8120eec1c3bbf9501",
+  "selector_sha256": "64eb90f2d73da8882490e0c1e43a325064d444c25302bbeb174772eaa1235dd0",
+  "runtime_authenticated": {
+    "maintenance": 85,
+    "management": 4,
+    "boot_units": 2
+  },
+  "managed_run": {
+    "run_id": "5de0b945-1901-4bb6-a184-c5374f1ddb6b",
+    "uid": 60002,
+    "gid": 60002,
+    "kvm_group": 103,
+    "actual_kvm": true,
+    "cpu_disk_http": true,
+    "disk_counter_previous": 0,
+    "disk_counter_current": 1,
+    "http_status": 200,
+    "body_sha256": "2c805ef601e04719dfe3f33be152c5d31c2f4b43de9b88197329b4ea3920c81c",
+    "body_bytes": 106
+  },
+  "shutdown": {
+    "success": false,
+    "stage": "system-powerdown",
+    "error": "ChannelError: QMP deadline exceeded",
+    "forced": true,
+    "raw_wait_status": 0,
+    "guest_owned_clean_shutdown_proved": false,
+    "quarantined": true,
+    "head_sequence": 4,
+    "head_sha256": "fe1f682c44d64f595c382a30745514ef6c335dbfc47314d7b2c35a4ec2d79756",
+    "checkpoint_or_restart_acceptance": false
+  },
+  "disable_after_failure": {
+    "success": true,
+    "registry_generation": 20,
+    "enabled": false,
+    "registry_sha256": "5b39f1edf2d0de28d41ba0b52d22a5070d8d1b401c2f90abb0ebf603df488586"
+  },
+  "diagnosis": {
+    "independent_review": "tmp/managed-paused-launch-diagnosis-20261113/stop-failure-review.md",
+    "finding": "Grace deadline starts before safety checks and durable stopping publication; start it after successful publication.",
+    "source_defect_confidence": "high",
+    "actual_failure_cause_confidence": "moderate/high; exact preparation durations unavailable",
+    "qmp_send_log_proves_delivery": false
+  },
+  "preserved": [
+    "normalized A",
+    "protected BOOT",
+    "manual firstkvm checkpoint5",
+    "recovery SD",
+    "SPI backups",
+    "all failed cohorts"
+  ],
+  "final_managed_boot_counts": {
+    "warm": 0,
+    "cold": 0
+  },
+  "production_qualified": false,
+  "evidence": [
+    {
+      "path": "out/managed-permission-deployment-20261113-01/permission-B-inventory.json",
+      "bytes": 103018,
+      "sha256": "fb7f68ac6e867ec2c9baff9517ecb6ab38d3aeb6f01075ac3ab19e5e5a2df596"
+    },
+    {
+      "path": "out/managed-permission-deployment-20261113-01/permission-B-state.json",
+      "bytes": 20397,
+      "sha256": "22d349fe2f04b76ed1e9d49ab2e80c76ccf03e045bf82beef7b8ade250ce5b0f"
+    },
+    {
+      "path": "out/managed-permission-deployment-20261113-01/live-managed-KVM-extended.json",
+      "bytes": 4011,
+      "sha256": "1a2093f658733e73bf4f5374af3d9d7812bd586a3f0834347cd27d737c4cacb1"
+    },
+    {
+      "path": "out/managed-permission-deployment-20261113-01/managed-stop-failure-complete.json",
+      "bytes": 46979,
+      "sha256": "f93c860273c8d68b24bd4091173367a6374c95d68df49db1a698c5fdff6eb73f"
+    },
+    {
+      "path": "out/managed-permission-deployment-20261113-01/managed-bound-stop.stdout",
+      "bytes": 1532,
+      "sha256": "5b352a72782401d50aaf1894399e0f7db7bf0580bb51efd1c75329fc03d9f84d"
+    },
+    {
+      "path": "out/managed-permission-deployment-20261113-01/managed-disable.stdout",
+      "bytes": 1372,
+      "sha256": "d0039fd9eeda85c06d1c4d9eaf60e99454a43171fdf64ce63007e6eda29994b5"
+    }
+  ]
+}

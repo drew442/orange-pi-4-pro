@@ -1,22 +1,23 @@
 # Implementation status
 
 Updated 2026-11-13. **SPI/NVMe boot works with SD removed; managed production
-qualification remains incomplete.** The board runs preserved normalized A while
-an inactive-B repair is prepared. RAM tracing identified the nonroot metadata
-permission failure. The reviewed packaging correction and deterministic collector
-fixture are pushed as `6c0a7e9`; fresh combined Ubuntu validation02 passes. One corrected construction and
-independent full artifact/filesystem/reader verification pass; inactive-B writing
-and real managed KVM remain pending.
-The failed validation01 and all failed guests remain retained. No operator action
-is currently needed. No managed KVM or final managed boot-series credit is claimed.
+qualification remains incomplete.** The board runs corrected `6c0a7e9` B with SD absent. **Actual managed nonroot
+KVM CPU/disk/HTTP passes. Shutdown failed and the guest was quarantined**, then
+successfully disabled at registry generation20. No managed checkpoint/restart or
+final boot-series credit is claimed. Independent review identifies a shutdown
+grace timer started before safety checks and durable stopping publication. Repair,
+fresh validation/construction and a new hardware trial are next. No operator
+action is currently needed.
+[Current hardware evidence](evidence/permission-B-managed-KVM-and-shutdown-failure-20261113.json).
 
 ## Current board and retained recovery
 
 - SSH: `root@192.168.1.118`, strict original host-key alias `192.168.1.116`.
-  Boot `aa743db3-abae-4991-a467-5357c0a6c780`; normalized A p2 is read-only.
-  Its complete 40-tool/four-management-file cohort authenticates. NTP passes,
-  registry18 remains disabled and p5 is unmounted. Inactive B awaits the corrected
-  artifact. [A boot](evidence/permission-repair-preserved-A-boot-20261113.json).
+  Boot `f63f6a43-693a-4345-9352-b9815773f08c`; corrected B p3 is read-only.
+  Its complete 85-tool/four-management-file/two-boot-unit cohort authenticates.
+  NTP passes; registry20 is disabled and managed head sequence4 is quarantined.
+  Preserve all failure records; do not retry the old bound stop.
+  [B trial](evidence/permission-B-managed-KVM-and-shutdown-failure-20261113.json).
 - NVMe: SPCC M.2 PCIe SSD, serial `134807190FC700149277`, 256060514304 bytes,
   firmware EDFM20.0. STATE p4 UUID `360dfb39-f49f-487e-b307-0bb887c854c5`;
   guest p5 UUID `298b281a-d10e-44eb-bdb9-285e27eaafad`.
@@ -49,7 +50,7 @@ predates subsequent warm boots and is not a fresh programming input.
 | Managed root deployments | Original B and repaired `4334a22` B staged, selected and booted with authenticated runtimes. Normalized A remains the rollback root. [Repaired B](evidence/repaired-managed-B-deployment-20261113.json). |
 | Managed launch failures | Original B refused before queueing on systemd dependency display/mount edges. Repaired B queued but child exited125 before QEMU during permit publication; durable quarantine succeeded. No managed execution credit. [Dependency diagnosis](evidence/managed-systemd-dependencies-20261113.json), [permit failure](evidence/managed-permit-barrier-failure-20261113.json). |
 | Quarantine/admission recovery | Supported initial-baseline restoration committed, retained old payload/lifecycle and CP5, and kept `autokvm` disabled at generation 6. Fresh B boot `fad6b1f4…afd85` validated ready sequence 0/open admission and completed restore census. This reconstructed baseline is not a successful managed-backup export. [Recovery](evidence/managed-initial-cohort-recovery-20261113.json). |
-| Final managed qualification | **Pending:** actual managed KVM, shutdown/checkpoint/restart, automation and remaining maintenance/backup/reproduction gates. Final warm/cold counts remain **0/0**. |
+| Final managed qualification | **Managed KVM passes; pending:** clean shutdown/checkpoint/restart, automation and remaining maintenance/backup/reproduction gates. Final warm/cold counts remain **0/0**. |
 
 The first November 13 removal attempt still contained SD and receives no SPI
 credit. The operator subsequently removed it. The unexplained November 8 SSH
@@ -69,8 +70,8 @@ successful setpriv/Python exec, retained attachment and clean detachment with no
 signals, dropped bytes or capture errors. The reviewed packaging fix sets the public metadata directory/marker to
 0755/0644 before both image snapshots. Thirty privileged payload checks and
 24 metadata checks pass, including actual UID60002 authentication and six denied
-mutations. Full Ubuntu validation and a new build remain pending; no live root
-permission bypass is applied.
+mutations. Fresh Ubuntu validation and one corrected construction pass. The new physical
+run proves this permission repair; no live root permission bypass was applied.
 
 Supported restore `2d3a95df…2b7c` committed cleanly after the fourth failure,
 retained its old payload/lifecycle and kept manual CP5 unchanged. Fresh SD-removed
@@ -100,8 +101,11 @@ complete gzip expansions, both filesystems and five current/historical reader
 results. Both metadata directories/markers are root-owned 0755/0644. B raw
 `0cfef33e…d7d11b`, gzip143660160 bytes `6e203430…654f1`, marker
 `2ecff261…bf9501`, selector `64eb90f2…35dd0`. External helper pins match this
-artifact and pass independent review plus 84 privileged focused tests; their new
-combined validation remains pending. No new B hardware/KVM credit yet.
+artifact and pass independent review plus 84 privileged focused tests. Their fresh
+combined validation passes 3733 unit tests, five shell suites and five diagnostic
+cases, zero skips/failures, all1176 source locks and exact849 packages unchanged.
+Evidence is fsynced on both hosts. New B physical managed KVM passes; shutdown fails.
+[External helper validation](evidence/permission-collector-combined-validation-20261113.json).
 [Corrected trial](evidence/permission-root-trial-and-artifact-review-20261113.json).
 
 Frozen **F349** (`f3496f5ff1b3629d5333d26725b9f5494ace9d25`, 1156 tracked files)
@@ -155,17 +159,17 @@ Follow [the production plan](spi-production-readiness-plan.md):
 
 1. F349 B staging, inactive-p3 write/readback, durable selection and SD-removed
    boot pass. Retain [the deployment record](evidence/managed-permit-B-deployment-20261113.json).
-2. Complete full Ubuntu validation and new root construction for reviewed
-   the public-metadata correction and deterministic collector fixture; verify
-   artifacts and deploy inactive B
-   under review. Restore the disabled fixture without losing failed cohorts.
-   Prove real nonroot managed KVM CPU/disk/HTTP, guest-owned power-key shutdown,
+2. Repair the independently diagnosed shutdown budget defect. Validate and build
+   a fresh reviewed root; preserve the failed KVM run and restore the disabled
+   fixture through supported recovery. Prove guest-owned power-key shutdown,
    durable checkpoint and explicit restart; separately prove automatic startup.
+   Corrected metadata construction, complete artifact/readers, deployment and
+   actual managed KVM CPU/disk/HTTP already pass.
 3. Exercise coherent completed-cohort backup/export/restore, interrupted/resumed
    restoration, disable, installed maintenance interruption/retry, restored old-A
    rollback and managed-B return. Preserve `firstkvm` and all recovery evidence.
 4. Independently reproduce the frozen construction and compare all artifacts;
-   complete later external collector combined validation and freeze final setup.
+   freeze final external collectors and setup after the new trial.
 5. Reach ten qualifying warm/ten cold SPI boots with automatic guest outcomes,
    retaining ordered UART and current firmware/storage identity. Cold transitions
    require real operator USB-C removal attestations. Credit only applicable boots.

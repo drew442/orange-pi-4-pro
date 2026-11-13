@@ -1,0 +1,48 @@
+{
+  "source_commit": "72d2065b3b691a28d3b2db42cdc8961ec46cb4f7",
+  "source_tree": "149c284228e9a3cee6325804088e9d69ae02e824",
+  "source_locked_files": 1176,
+  "terminal": {
+    "RuntimeMaxUSec": "8h",
+    "MainPID": "0",
+    "Result": "success",
+    "ExecMainStatus": "0",
+    "CPUQuotaPerSecUSec": "2s",
+    "MemoryMax": "3221225472",
+    "UMask": "0022",
+    "SubState": "exited"
+  },
+  "footers": [
+    [
+      "3733",
+      "1270.136s",
+      "OK"
+    ],
+    [
+      "5",
+      "5.851s",
+      "OK"
+    ]
+  ],
+  "shell_suites": [
+    "test-diagnostic-initramfs.sh",
+    "test-guest-fixture.sh",
+    "test-host-init.sh",
+    "test-host-storage-resolver.sh",
+    "test-host-userspace.sh"
+  ],
+  "source_checks": 2,
+  "outer_package_count": 849,
+  "outer_three_field_sha256": "b34b70a879cbbf75f818708275c57ef0aef3ae635b9ae71a8005e2b29a8490b8",
+  "outer_four_field_sha256": "c87cbf467e11deab2c27fd350b1eb667b85f9a06b5c77477db562a5b7c257949",
+  "min_free_bytes": 16155262976,
+  "min_MemAvailable_bytes": 6842109952,
+  "hardware_acceptance": false,
+  "evidence_tar": {
+    "path": "out/managed-permission-collector-validation-20261113-01/evidence.tar",
+    "bytes": 358400,
+    "sha256": "320061d8f6f5e3417b01ed3ddcb79d80a0280bc2586aa275f4cc75afe821b062"
+  },
+  "custody": "fsynced, fully read back and verified on codex and Ubuntu builder",
+  "physical_acceptance": false
+}

@@ -1,25 +1,19 @@
 # Current images for this board
 
-The board is running **preserved normalized A at 192.168.1.118 from SPI/NVMe
-with SD removed**, boot `aa743db3-abae-4991-a467-5357c0a6c780`, strict SSH
-host-key alias `192.168.1.116`. Guest p5 is unmounted and registry18 remains
-disabled while the corrected inactive-B image is built and verified. Keep the
-known recovery SD unchanged and off-device; no operator flashing is needed.
-[A boot](evidence/permission-repair-preserved-A-boot-20261113.json).
+The board is running **corrected `6c0a7e9` B at 192.168.1.118 from SPI/NVMe
+with SD removed**, boot `f63f6a43-693a-4345-9352-b9815773f08c`, strict SSH
+host-key alias `192.168.1.116`. No operator flashing is needed. Keep the known
+recovery SD unchanged and off-device.
 
-F349 passes 3717 privileged tests, one construction and independent complete
-filesystem/reader checks. Its inactive-B write, selection and authenticated boot
-pass. Four managed launches completed permit publication but the child exited1 before
-QMP binding. A RAM-only trace identified a nonroot permission failure reading the
-host metadata directory/marker, packaged as 0700/0600. Supported restoration and a fresh boot leave the fixture ready sequence0
-and disabled at generation18. The packaging correction plus collector fixture correction are frozen at
-`6c0a7e9`; fresh combined validation passes 3733 unit tests plus shell/diagnostic
-suites. A new
-root build and untraced hardware trial remain required. Normalized A, BOOT and
-manual CP5 remain preserved.
-**Managed production operation remains unqualified.**
-[Deployment](evidence/managed-permit-B-deployment-20261113.json),
-[exact launch diagnosis](evidence/managed-launch-permission-diagnosis-20261113.json),
+The corrected trial passes full Ubuntu validation, construction, complete
+independent artifact/filesystem/reader checks, inactive-B installation and boot.
+Actual UID60002 managed KVM CPU/disk/HTTP now passes. Shutdown failed with a QMP
+deadline; durable quarantine succeeded and the guest was disabled at generation20.
+A reviewed timer repair and fresh root trial are next. **Managed production
+operation, checkpoint/restart and final boot series remain unqualified.**
+Normalized A, BOOT, manual CP5 and failed cohorts remain preserved.
+[Current trial](evidence/permission-B-managed-KVM-and-shutdown-failure-20261113.json),
+[artifact proof](evidence/permission-root-trial-and-artifact-review-20261113.json),
 [status](implementation-status.md).
 
 The earlier full installation and independent deployment reproduction pass.
@@ -55,7 +49,7 @@ It expands to 4294967296 bytes, SHA-256
 `fdecc21669f82c7bb5173369d62da8b5f588a537662c4026d4c69415dd8d5806`.
 
 These are **NVMe root components**, not SD images. Inactive-B installation,
-actual managed KVM and independent matching construction remain pending.
+managed shutdown/checkpoint/restart and independent matching construction remain pending.
 Preserve normalized A and the separately retained
 [4334a22 constructions](managed-systemd-root-build-20261113.md).
 
