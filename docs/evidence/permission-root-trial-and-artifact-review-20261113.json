@@ -1,0 +1,477 @@
+{
+  "schema": 1,
+  "date_utc": "2026-11-13",
+  "scope": "One immutable permission-corrected root construction with independent complete artifact verification; external collector pin closure",
+  "source_commit": "6c0a7e90ec279d36c90371d270b3acc2abebf731",
+  "source_tree": "0b785fdb188b8fe86952ed58c2a83bcf4232a41f",
+  "tracked_files": 1170,
+  "trial_count": 1,
+  "full_validation": "permission-root-combined-validation-20261113.json",
+  "producer": {
+    "success": true,
+    "full_filesystem_readback": false,
+    "reproducibility": "not established",
+    "receipt": {
+      "path": "out/managed-permission-root-trial-20261113-02/producer-receipt.json",
+      "bytes": 276821,
+      "sha256": "b6006d771fe4c8380eba6e17143128e6e34953da1eb673135761cb34954537ea"
+    }
+  },
+  "manifest": {
+    "path": "out/managed-permission-root-trial-20261113-02/manifest.json",
+    "bytes": 51618,
+    "sha256": "6a717d91c08d52bdf55fa14306a518e78640121b1093b1e526f1bd5d5882d17f"
+  },
+  "root_components": {
+    "root-A.ext4": {
+      "bytes": 4294967296,
+      "sha256": "4295be50294aec7a4dfe53d05e5d170702140a2a97de1c0103a8c24cff379144"
+    },
+    "root-B.ext4": {
+      "bytes": 4294967296,
+      "sha256": "0cfef33e3708ef9aef971107ffdfd646b01fb1dde896e59840451b3a47d7d11b"
+    },
+    "root-A.ext4.gz": {
+      "bytes": 143660327,
+      "sha256": "a21e49b80ed2acf0c8d36ca60c92f4c099a10653696b2f3feddd1c32f69758ab"
+    },
+    "root-B.ext4.gz": {
+      "bytes": 143660160,
+      "sha256": "6e2034300b98bb5b830aed2098cb29442283b0a19bf4d2053348086c01a654f1"
+    }
+  },
+  "independent_verification": {
+    "success": true,
+    "state": "complete",
+    "artifact_count": 133,
+    "gzip_comparisons": 2,
+    "full_filesystems": 2,
+    "semantic_slots": {
+      "0-A": {
+        "all_extra_timestamp_fields_zero": true,
+        "all_four_times_epoch": 1793750400,
+        "entrypoints": 22,
+        "guest_boot_files": 2,
+        "maintenance_files": 85,
+        "maintenance_sources": 84,
+        "management_files": 4,
+        "marker": {
+          "bytes": 26273,
+          "sha256": "e4eb4fe784113abd30bda8d715a7e782efe8388e2e1685bcf8a8555d12076a12"
+        },
+        "namespace_members": 16416,
+        "package_json": {
+          "bytes": 23862,
+          "sha256": "d8b7a00740d4a41c5430c4e26417c6a40dbac9075f8403664301c8064c1dda46"
+        },
+        "superblock": {
+          "block_size": 4096,
+          "bytes": 4294967296,
+          "check_time": 1793750400,
+          "compat_flags": 56,
+          "creation_time": 1793750400,
+          "hash_seed": "a7330000-0000-4000-8000-00000000000a",
+          "label": "a733-root-A",
+          "mount_time": 0,
+          "ro_compat_flags": 5227,
+          "uuid": "a7330000-0000-4000-8000-00000000000a",
+          "write_time": 1793750400
+        },
+        "unique_inodes": 16413
+      },
+      "0-B": {
+        "all_extra_timestamp_fields_zero": true,
+        "all_four_times_epoch": 1793750400,
+        "entrypoints": 22,
+        "guest_boot_files": 2,
+        "maintenance_files": 85,
+        "maintenance_sources": 84,
+        "management_files": 4,
+        "marker": {
+          "bytes": 26273,
+          "sha256": "2ecff261ce165b202476456466914b422b6dac0f8dd1e7d8120eec1c3bbf9501"
+        },
+        "namespace_members": 16416,
+        "package_json": {
+          "bytes": 23862,
+          "sha256": "d8b7a00740d4a41c5430c4e26417c6a40dbac9075f8403664301c8064c1dda46"
+        },
+        "superblock": {
+          "block_size": 4096,
+          "bytes": 4294967296,
+          "check_time": 1793750400,
+          "compat_flags": 56,
+          "creation_time": 1793750400,
+          "hash_seed": "a7330000-0000-4000-8000-00000000000b",
+          "label": "a733-root-B",
+          "mount_time": 0,
+          "ro_compat_flags": 5227,
+          "uuid": "a7330000-0000-4000-8000-00000000000b",
+          "write_time": 1793750400
+        },
+        "unique_inodes": 16413
+      }
+    },
+    "reader_results": {
+      "current-0-A": {
+        "classification": "regular-file compatibility; no hardware acceptance",
+        "manifest": {
+          "identity": {
+            "bytes": 51618,
+            "ctime_ns": 1794604357872204720,
+            "device": 64512,
+            "inode": 833885,
+            "mtime_ns": 1794604357872204720
+          },
+          "manifest_sha256": "6a717d91c08d52bdf55fa14306a518e78640121b1093b1e526f1bd5d5882d17f",
+          "path": "/var/lib/a733-managed-permission-artifact-review-20261113-02/prepared-0-A/manifest.json",
+          "root": {
+            "bytes": 4294967296,
+            "sha256": "4295be50294aec7a4dfe53d05e5d170702140a2a97de1c0103a8c24cff379144"
+          },
+          "slot": "A"
+        },
+        "source": {
+          "candidate": "/var/lib/a733-managed-permission-artifact-review-20261113-02/prepared-0-A",
+          "files": {
+            "manifest.json": {
+              "bytes": 51618,
+              "ctime_ns": 1794604357872204720,
+              "device": 64512,
+              "inode": 833885,
+              "mtime_ns": 1794604357872204720
+            },
+            "root.ext4": {
+              "bytes": 4294967296,
+              "ctime_ns": 1794604353878250917,
+              "device": 64512,
+              "inode": 833884,
+              "mtime_ns": 1794604353878250917
+            },
+            "selected.conf": {
+              "bytes": 179,
+              "ctime_ns": 1794604357874204697,
+              "device": 64512,
+              "inode": 833886,
+              "mtime_ns": 1794604357874204697
+            }
+          },
+          "manifest_sha256": "6a717d91c08d52bdf55fa14306a518e78640121b1093b1e526f1bd5d5882d17f",
+          "root": {
+            "bytes": 4294967296,
+            "sha256": "4295be50294aec7a4dfe53d05e5d170702140a2a97de1c0103a8c24cff379144"
+          },
+          "selector": {
+            "bytes": 179,
+            "sha256": "b47b40fa93259cceb372a6831d9c744ad800f9b004b12ae3572fcb32c7d25b2a"
+          },
+          "slot": "A"
+        }
+      },
+      "current-0-B": {
+        "classification": "regular-file compatibility; no hardware acceptance",
+        "manifest": {
+          "identity": {
+            "bytes": 51618,
+            "ctime_ns": 1794604391663823148,
+            "device": 64512,
+            "inode": 833890,
+            "mtime_ns": 1794604391663823148
+          },
+          "manifest_sha256": "6a717d91c08d52bdf55fa14306a518e78640121b1093b1e526f1bd5d5882d17f",
+          "path": "/var/lib/a733-managed-permission-artifact-review-20261113-02/prepared-0-B/manifest.json",
+          "root": {
+            "bytes": 4294967296,
+            "sha256": "0cfef33e3708ef9aef971107ffdfd646b01fb1dde896e59840451b3a47d7d11b"
+          },
+          "slot": "B"
+        },
+        "source": {
+          "candidate": "/var/lib/a733-managed-permission-artifact-review-20261113-02/prepared-0-B",
+          "files": {
+            "manifest.json": {
+              "bytes": 51618,
+              "ctime_ns": 1794604391663823148,
+              "device": 64512,
+              "inode": 833890,
+              "mtime_ns": 1794604391663823148
+            },
+            "root.ext4": {
+              "bytes": 4294967296,
+              "ctime_ns": 1794604387584868345,
+              "device": 64512,
+              "inode": 833889,
+              "mtime_ns": 1794604387584868345
+            },
+            "selected.conf": {
+              "bytes": 179,
+              "ctime_ns": 1794604391665823126,
+              "device": 64512,
+              "inode": 833891,
+              "mtime_ns": 1794604391665823126
+            }
+          },
+          "manifest_sha256": "6a717d91c08d52bdf55fa14306a518e78640121b1093b1e526f1bd5d5882d17f",
+          "root": {
+            "bytes": 4294967296,
+            "sha256": "0cfef33e3708ef9aef971107ffdfd646b01fb1dde896e59840451b3a47d7d11b"
+          },
+          "selector": {
+            "bytes": 179,
+            "sha256": "64eb90f2d73da8882490e0c1e43a325064d444c25302bbeb174772eaa1235dd0"
+          },
+          "slot": "B"
+        }
+      },
+      "current-legacy-A": {
+        "classification": "regular-file compatibility; no hardware acceptance",
+        "manifest": {
+          "identity": {
+            "bytes": 33481,
+            "ctime_ns": 1794604451198188830,
+            "device": 64512,
+            "inode": 833895,
+            "mtime_ns": 1794604451198188830
+          },
+          "manifest_sha256": "c1bcc7d23d22bd487534ba17ea447055881a044350829608360aa92ca24283f2",
+          "path": "/var/lib/a733-managed-permission-artifact-review-20261113-02/prepared-legacy-A/manifest.json",
+          "root": {
+            "bytes": 4294967296,
+            "sha256": "a9715b819348a8220ec8b3b1f41ef27db677baaa96014f5d1dfb7a22597decdd"
+          },
+          "slot": "A"
+        },
+        "source": {
+          "candidate": "/var/lib/a733-managed-permission-artifact-review-20261113-02/prepared-legacy-A",
+          "files": {
+            "manifest.json": {
+              "bytes": 33481,
+              "ctime_ns": 1794604451198188830,
+              "device": 64512,
+              "inode": 833895,
+              "mtime_ns": 1794604451198188830
+            },
+            "root.ext4": {
+              "bytes": 4294967296,
+              "ctime_ns": 1794604447170230307,
+              "device": 64512,
+              "inode": 833894,
+              "mtime_ns": 1794604447170230307
+            },
+            "selected.conf": {
+              "bytes": 179,
+              "ctime_ns": 1794604451200188810,
+              "device": 64512,
+              "inode": 833896,
+              "mtime_ns": 1794604451200188810
+            }
+          },
+          "manifest_sha256": "c1bcc7d23d22bd487534ba17ea447055881a044350829608360aa92ca24283f2",
+          "root": {
+            "bytes": 4294967296,
+            "sha256": "a9715b819348a8220ec8b3b1f41ef27db677baaa96014f5d1dfb7a22597decdd"
+          },
+          "selector": {
+            "bytes": 179,
+            "sha256": "3c76b96c328b4508ff407c8594352e04389664e97ced6f0a09284cade5bd027b"
+          },
+          "slot": "A"
+        }
+      },
+      "historical-0-A": {
+        "classification": "regular-file compatibility; no hardware acceptance",
+        "manifest": {
+          "identity": {
+            "bytes": 51618,
+            "ctime_ns": 1794604357872204720,
+            "device": 64512,
+            "inode": 833885,
+            "mtime_ns": 1794604357872204720
+          },
+          "manifest_sha256": "6a717d91c08d52bdf55fa14306a518e78640121b1093b1e526f1bd5d5882d17f",
+          "path": "/var/lib/a733-managed-permission-artifact-review-20261113-02/prepared-0-A/manifest.json",
+          "root": {
+            "bytes": 4294967296,
+            "sha256": "4295be50294aec7a4dfe53d05e5d170702140a2a97de1c0103a8c24cff379144"
+          },
+          "slot": "A"
+        },
+        "source": {
+          "candidate": "/var/lib/a733-managed-permission-artifact-review-20261113-02/prepared-0-A",
+          "files": {
+            "manifest.json": {
+              "bytes": 51618,
+              "ctime_ns": 1794604357872204720,
+              "device": 64512,
+              "inode": 833885,
+              "mtime_ns": 1794604357872204720
+            },
+            "root.ext4": {
+              "bytes": 4294967296,
+              "ctime_ns": 1794604353878250917,
+              "device": 64512,
+              "inode": 833884,
+              "mtime_ns": 1794604353878250917
+            },
+            "selected.conf": {
+              "bytes": 179,
+              "ctime_ns": 1794604357874204697,
+              "device": 64512,
+              "inode": 833886,
+              "mtime_ns": 1794604357874204697
+            }
+          },
+          "manifest_sha256": "6a717d91c08d52bdf55fa14306a518e78640121b1093b1e526f1bd5d5882d17f",
+          "root": {
+            "bytes": 4294967296,
+            "sha256": "4295be50294aec7a4dfe53d05e5d170702140a2a97de1c0103a8c24cff379144"
+          },
+          "selector": {
+            "bytes": 179,
+            "sha256": "b47b40fa93259cceb372a6831d9c744ad800f9b004b12ae3572fcb32c7d25b2a"
+          },
+          "slot": "A"
+        }
+      },
+      "historical-0-B": {
+        "classification": "regular-file compatibility; no hardware acceptance",
+        "manifest": {
+          "identity": {
+            "bytes": 51618,
+            "ctime_ns": 1794604391663823148,
+            "device": 64512,
+            "inode": 833890,
+            "mtime_ns": 1794604391663823148
+          },
+          "manifest_sha256": "6a717d91c08d52bdf55fa14306a518e78640121b1093b1e526f1bd5d5882d17f",
+          "path": "/var/lib/a733-managed-permission-artifact-review-20261113-02/prepared-0-B/manifest.json",
+          "root": {
+            "bytes": 4294967296,
+            "sha256": "0cfef33e3708ef9aef971107ffdfd646b01fb1dde896e59840451b3a47d7d11b"
+          },
+          "slot": "B"
+        },
+        "source": {
+          "candidate": "/var/lib/a733-managed-permission-artifact-review-20261113-02/prepared-0-B",
+          "files": {
+            "manifest.json": {
+              "bytes": 51618,
+              "ctime_ns": 1794604391663823148,
+              "device": 64512,
+              "inode": 833890,
+              "mtime_ns": 1794604391663823148
+            },
+            "root.ext4": {
+              "bytes": 4294967296,
+              "ctime_ns": 1794604387584868345,
+              "device": 64512,
+              "inode": 833889,
+              "mtime_ns": 1794604387584868345
+            },
+            "selected.conf": {
+              "bytes": 179,
+              "ctime_ns": 1794604391665823126,
+              "device": 64512,
+              "inode": 833891,
+              "mtime_ns": 1794604391665823126
+            }
+          },
+          "manifest_sha256": "6a717d91c08d52bdf55fa14306a518e78640121b1093b1e526f1bd5d5882d17f",
+          "root": {
+            "bytes": 4294967296,
+            "sha256": "0cfef33e3708ef9aef971107ffdfd646b01fb1dde896e59840451b3a47d7d11b"
+          },
+          "selector": {
+            "bytes": 179,
+            "sha256": "64eb90f2d73da8882490e0c1e43a325064d444c25302bbeb174772eaa1235dd0"
+          },
+          "slot": "B"
+        }
+      }
+    },
+    "permission_contract": "Both slots root:root metadata directory0755/regular marker0644 asserted against actual filesystem",
+    "prepared_roots_retained": 3,
+    "temporary_cleanup": "Only newly created TEMPORARY-legacy-A.ext4 after complete validation; original backups/producer outputs preserved",
+    "custody_tar": {
+      "path": "tmp/permission-trial-artifact-review-02-20261113/execution-custody.tar",
+      "bytes": 358400,
+      "sha256": "a60face2e8cbc84f9a4057e1cb27563b15cdd1db94f5e0b04089a7b7986c8f69"
+    },
+    "review": {
+      "path": "tmp/permission-artifact-review-20261113.json",
+      "bytes": 25357,
+      "sha256": "f6cd515e1e47155decea5646f8b1f9f8f333e09bbb74ce552dfc7884ca84920f"
+    }
+  },
+  "B_metadata": {
+    "manifest.json": {
+      "path": "out/managed-permission-root-trial-20261113-02/prepared-B-metadata/manifest.json",
+      "bytes": 51618,
+      "sha256": "6a717d91c08d52bdf55fa14306a518e78640121b1093b1e526f1bd5d5882d17f"
+    },
+    "selected.conf": {
+      "path": "out/managed-permission-root-trial-20261113-02/prepared-B-metadata/selected.conf",
+      "bytes": 179,
+      "sha256": "64eb90f2d73da8882490e0c1e43a325064d444c25302bbeb174772eaa1235dd0"
+    },
+    "candidate.json": {
+      "path": "out/managed-permission-root-trial-20261113-02/prepared-B-metadata/candidate.json",
+      "bytes": 9368,
+      "sha256": "00ddb0009bbbac0cadacefde090d5d15d403976e4a08a0b495104c4165039d10"
+    }
+  },
+  "external_collector_binding": {
+    "marker": "2ecff261ce165b202476456466914b422b6dac0f8dd1e7d8120eec1c3bbf9501",
+    "selector": "64eb90f2d73da8882490e0c1e43a325064d444c25302bbeb174772eaa1235dd0",
+    "module_sha256": "8a6211b45d6d4b0231b100c71c2bb72a6f4eb475e04de5652104111a7d43520e",
+    "artifact_manifest_sha256": "6a717d91c08d52bdf55fa14306a518e78640121b1093b1e526f1bd5d5882d17f",
+    "none_packaged_in_root": true,
+    "files": {
+      "qualify-managed-boot.py": {
+        "bytes": 15424,
+        "old_sha256": "c2d09a43fdbc6894270e473209cb586b32d13946b31caeda0806c5a0c0381c0b",
+        "new_sha256": "631a0ad0cb714db0c002430a19aec28ada85837ebdd5cabf34056bd3e3ff21c4",
+        "AST_only_reviewed_artifact_pins_changed": true
+      },
+      "request-spi-power.py": {
+        "bytes": 17795,
+        "old_sha256": "7bda699a92b1582a690d9fb0e88d23287cfdee8b2d80ed16c3dfb41199316064",
+        "new_sha256": "c60f97f9ee70604dbd39cec2c99ff995b4f41fc7d18536e0d6726c3a4f985800",
+        "AST_only_reviewed_artifact_pins_changed": true
+      },
+      "complete-managed-fixture.py": {
+        "bytes": 23339,
+        "old_sha256": "458abd7125cf8d25e4cfc60414be42e1a1fb9da9eadd83ed2d728617b6b587b5",
+        "new_sha256": "144cdf8f515ad7956b4b8a4e6084c451dfbdafc88359f63f1f55b1d6cd70a6f5",
+        "AST_only_reviewed_artifact_pins_changed": true
+      },
+      "collect-spi-boots.py": {
+        "bytes": 42156,
+        "old_sha256": "efb5918e05a9f5fc391158718c5af15a2d9db4cb1e3581bf6d033c3a87fc4b2c",
+        "new_sha256": "f600776ab7a5579d5d835b77e35000d6aea564d8e18acda935be4dba517a940a",
+        "AST_only_reviewed_artifact_pins_changed": true
+      }
+    }
+  },
+  "external_focused_tests": {
+    "collector": 52,
+    "power": 15,
+    "completion": 17,
+    "total": 84,
+    "failures": 0,
+    "skips": 0,
+    "review": {
+      "path": "tmp/permission-collector-pin-review-20261113.json",
+      "bytes": 17728,
+      "sha256": "c6edadb27f9b2a5e3cb83dc226fceb37dcbd9280770d2d80db6a59f7cee0fe7b"
+    },
+    "full_combined_validation": "pending new frozen external-helper source"
+  },
+  "acceptance": {
+    "reproducibility": false,
+    "installed_new_B": false,
+    "physical_new_B_boot": false,
+    "managed_KVM": false
+  },
+  "next": "Review fresh exact inactive-B plan, write/select/boot newB then prove untraced managed KVM; separately reproduce construction."
+}

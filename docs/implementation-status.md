@@ -4,8 +4,9 @@ Updated 2026-11-13. **SPI/NVMe boot works with SD removed; managed production
 qualification remains incomplete.** The board runs preserved normalized A while
 an inactive-B repair is prepared. RAM tracing identified the nonroot metadata
 permission failure. The reviewed packaging correction and deterministic collector
-fixture are pushed as `6c0a7e9`; fresh combined Ubuntu validation02 passes and the reviewed trial construction
-is running.
+fixture are pushed as `6c0a7e9`; fresh combined Ubuntu validation02 passes. One corrected construction and
+independent full artifact/filesystem/reader verification pass; inactive-B writing
+and real managed KVM remain pending.
 The failed validation01 and all failed guests remain retained. No operator action
 is currently needed. No managed KVM or final managed boot-series credit is claimed.
 
@@ -93,6 +94,15 @@ free disk 19,111,034,880 bytes; MemAvailable 6,590,410,752 bytes. Evidence is fs
 on both hosts; retain failed01 separately.
 [Fresh validation](evidence/permission-root-combined-validation-20261113.json).
 [Failure and correction](evidence/collector-mutation-fixture-correction-20261113.json).
+
+One `6c0a7e9` construction passes independent verification of 133 artifacts, both
+complete gzip expansions, both filesystems and five current/historical reader
+results. Both metadata directories/markers are root-owned 0755/0644. B raw
+`0cfef33e…d7d11b`, gzip143660160 bytes `6e203430…654f1`, marker
+`2ecff261…bf9501`, selector `64eb90f2…35dd0`. External helper pins match this
+artifact and pass independent review plus 84 privileged focused tests; their new
+combined validation remains pending. No new B hardware/KVM credit yet.
+[Corrected trial](evidence/permission-root-trial-and-artifact-review-20261113.json).
 
 Frozen **F349** (`f3496f5ff1b3629d5333d26725b9f5494ace9d25`, 1156 tracked files)
 adds a 120-second permit-publication budget with a 180-second pre-exec child

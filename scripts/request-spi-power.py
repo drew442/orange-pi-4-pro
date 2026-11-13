@@ -15,11 +15,11 @@ import uuid
 
 SOURCE = Path('/run/a733-spi-collector/request-spi-power.py')
 QUALIFIER = SOURCE.with_name('qualify-managed-boot.py')
-QUALIFIER_SHA256 = 'c2d09a43fdbc6894270e473209cb586b32d13946b31caeda0806c5a0c0381c0b'
+QUALIFIER_SHA256 = '631a0ad0cb714db0c002430a19aec28ada85837ebdd5cabf34056bd3e3ff21c4'
 QUALIFIER_BYTES = 15424
 INTENT = Path('/run/a733-spi-power/request.json')
-SELECTOR_SHA256 = 'e907e3d056e28e54f51743f95ce98ab1ed933b40e97d4e2c0bc3f7f74f69da93'
-MARKER_SHA256 = '396be626a7919b9c800dd6a00cc5f8c025fa26c2d5c124bdde469e3b8c347ab8'
+SELECTOR_SHA256 = '64eb90f2d73da8882490e0c1e43a325064d444c25302bbeb174772eaa1235dd0'
+MARKER_SHA256 = '2ecff261ce165b202476456466914b422b6dac0f8dd1e7d8120eec1c3bbf9501'
 STORAGE = dict(nvme_serial='134807190FC700149277',
                state_uuid='360dfb39-f49f-487e-b307-0bb887c854c5',
                guest_uuid='298b281a-d10e-44eb-bdb9-285e27eaafad')
