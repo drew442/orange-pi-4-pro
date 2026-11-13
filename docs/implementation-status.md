@@ -1,7 +1,7 @@
 # Implementation status
 
 Updated 2026-11-13. **SPI/NVMe boot works with SD removed; managed production
-qualification is incomplete.** Preserved normalized A is running. The preceding
+qualification is incomplete.** The shutdown-repaired B is running with SD absent. The preceding
 `6c0a7e9` B passed actual managed UID60002 KVM CPU/disk/HTTP, then hit a QMP
 shutdown deadline and was durably quarantined. Forced cleanup returned raw exit 0;
 this does not prove guest-owned clean shutdown. Supported recovery retained the failed cohort,
@@ -10,12 +10,13 @@ The independently reviewed timer move after `mark_stopping` is frozen at
 `fb29af4`. Focused 32 tests and combined Ubuntu validation pass (3737 unit, five
 shell, five diagnostic; 1179 source locks and exact849 package inventory
 unchanged). One new shutdown-budget construction and independent artifact verification pass:
-133 hashes, two gzip/raw comparisons, both filesystems and five readers. Actual
-inactive-B deployment and hardware shutdown/checkpoint/restart remain pending.
+133 hashes, two gzip/raw comparisons, both filesystems and five readers. Inactive-B installation/readback and authenticated physical boot pass; actual
+managed shutdown/checkpoint/restart remain pending.
+[Deployment](evidence/shutdown-budget-B-deployment-20261113.json).
 [New artifacts](evidence/shutdown-budget-root-trial-and-artifact-review-20261113.json).
-External helper pins pass independent data-only review and84 privileged focused
+External helper pins pass independent data-only review and 84 privileged focused
 checks; fresh combined validation is pending. These four helpers are outside the
-packaged85-file runtime. [Binding](evidence/shutdown-artifact-helper-pin-binding-20261113.json).
+packaged 85-file runtime. [Binding](evidence/shutdown-artifact-helper-pin-binding-20261113.json).
 Final managed warm/cold counts are **0/0**; release remains pending.
 [Combined validation](evidence/shutdown-budget-combined-validation-20261113.json),
 [managed KVM trial](evidence/permission-B-managed-KVM-and-shutdown-failure-20261113.json),
@@ -24,9 +25,11 @@ Final managed warm/cold counts are **0/0**; release remains pending.
 ## Current board and custody
 
 - SSH `root@192.168.1.118`; strict original host-key alias `192.168.1.116`.
-  Running boot `a4c67491-a884-463f-b83d-853dba52b95e`; normalized A p2 is
-  read-only. Forty tool and four management-file authentication checks and NTP
-  pass. Registry21 is disabled, p5 unmounted, and RAM admission absent.
+  Running boot `14d3fd72-4cbe-4b70-96fe-6ade66b30ace`; corrected B p3 is
+  read-only. Complete 85-tool/four-management/two-boot-unit authentication and NTP
+  pass. Actual UID 60002 native launcher metadata authentication passes. The
+  disposable guest is enabled at generation 22 and its explicit start is queued;
+  actual execution and shutdown acceptance are still being collected.
 - Preserve A, manual `firstkvm` and CP5, all failed cohorts, recovery SD and SPI
   backups. CP5 manifest `88c1ea17…9c946`, disk `2d06d539…5b66`; verified backup
   is on codex and builder. Normalized A custody details are in
@@ -101,9 +104,8 @@ clearance. [Source inventory](toolchain-sources.md),
 
 Follow the [production readiness plan](spi-production-readiness-plan.md):
 
-1. Deploy the independently verified shutdown-budget B artifact through the
-   reviewed inactive-root procedure. Preserve A, the failed run and recovered
-   disabled fixture; do not start the old shutdown code.
+1. Collect actual managed KVM and native shutdown/checkpoint/restart evidence
+   on the installed shutdown-budget B. Preserve A, CP5 and all failed cohorts.
 2. On hardware, prove guest-owned power-key shutdown, durable checkpoint,
    explicit restart, and separately automatic startup using an actual KVM guest.
 3. Exercise coherent completed-cohort backup/export/restore,

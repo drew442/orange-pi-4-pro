@@ -1,20 +1,15 @@
 # Current images for this board
 
-The board is running **preserved normalized A at 192.168.1.118 from SPI/NVMe
-with SD removed**, boot `a4c67491-a884-463f-b83d-853dba52b95e`, strict SSH
-host-key alias `192.168.1.116`. The disposable guest is disabled at generation21;
-p5 is unmounted. No operator flashing is needed. Keep the known recovery SD off-device.
-
-The preceding corrected `6c0a7e9` B passes full validation, construction,
-independent artifact/filesystem/readers, installation and boot. Actual UID60002
-managed KVM CPU/disk/HTTP passes. Shutdown failed and durable quarantine succeeded.
-Supported recovery preserves that failure and manual CP5. The independently
-reviewed timer repair is frozen at `fb29af4`; 32 focused tests and full Ubuntu
-validation pass (3737 unit tests plus shell/diagnostic suites). One new construction and independent full artifact checks pass; inactive-B
-deployment and a new hardware trial remain required. **Managed shutdown/checkpoint/restart, final boot series
-and production operation remain unqualified.**
-[Hardware trial](evidence/permission-B-managed-KVM-and-shutdown-failure-20261113.json),
-[current recovery](evidence/managed-shutdown-failure-recovery-20261113.json),
+The board is running **shutdown-repaired `fb29af4` B at 192.168.1.118 from
+SPI/NVMe with SD removed**, boot `14d3fd72-4cbe-4b70-96fe-6ade66b30ace`, strict
+SSH alias `192.168.1.116`. Installation/readback and complete 85+4+2 runtime
+checks pass; NTP and actual UID 60002 metadata authentication pass. The disposable
+guest is enabled at generation 22 and start is queued. Actual managed shutdown,
+checkpoint/restart, automatic startup and final boot series remain unqualified.
+No operator flashing is needed. Keep normalized A, the recovery SD and all
+failure/CP5/SPI backups.
+[Deployment](evidence/shutdown-budget-B-deployment-20261113.json),
+[artifacts](evidence/shutdown-budget-root-trial-and-artifact-review-20261113.json),
 [status](implementation-status.md).
 
 The earlier full installation and independent deployment reproduction pass.
@@ -40,8 +35,8 @@ Paths below are relative to `/home/drew/orange-pi-4-pro` on codex.
 ## Shutdown-budget B trial
 
 Frozen source `fb29af4` has one construction and independent artifact/readers
-verification. These are **NVMe root components**, not SD images; deployment and
-actual managed shutdown/checkpoint/restart remain pending.
+verification. These are **NVMe root components**, not SD images; deployment now passes;
+actual managed shutdown/checkpoint/restart remains pending.
 [Evidence](evidence/shutdown-budget-root-trial-and-artifact-review-20261113.json).
 
 B component: `out/managed-shutdown-budget-root-trial-20261113-01/artifacts/root-B.ext4.gz`,

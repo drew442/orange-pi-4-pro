@@ -1,0 +1,105 @@
+{
+  "date": "2026-11-13",
+  "source_commit": "fb29af4a7ee3d21ff6254058a445cb5e3cc4b998",
+  "nvme": {
+    "serial": "134807190FC700149277",
+    "bytes": 256060514304,
+    "written_partition": "/dev/nvme0n1p3"
+  },
+  "write": {
+    "success": true,
+    "bytes_written": 4294967296,
+    "bytes_verified": 4294967296,
+    "readback_sha256": "dbe3385295d12e5ee48e91acfc46633a204d36fe6843f89df5f4af8b728548d8",
+    "source_and_readback_match": true,
+    "selector_after_write": "A"
+  },
+  "selection": {
+    "success": true,
+    "durable": true,
+    "selector_sha256": "8755d4566ef2037b61251ededb242f3a41871c059ee97b990e0f396bd024f24b",
+    "root_writes": false
+  },
+  "boot": {
+    "boot_id": "14d3fd72-4cbe-4b70-96fe-6ade66b30ace",
+    "SD_absent": true,
+    "root": "/dev/nvme0n1p3 read-only",
+    "marker_sha256": "ce1e1841cea22852f122f2c3de0c15fc146ded7a1f090c05d8e3ebe8be430b65",
+    "authenticated_runtime": {
+      "maintenance": 85,
+      "management": 4,
+      "boot_units": 2
+    },
+    "admission": "open",
+    "registry_at_boot": "generation21disabled",
+    "head_at_boot": "ready sequence0",
+    "NTP_synchronized": true,
+    "nonroot_UID60002_actual_launcher_metadata_authentication": true
+  },
+  "guest_control": {
+    "enabled_generation": 22,
+    "start_request_id": "e5d0e5e8-291e-4147-88cb-10df25afad95",
+    "queue_acknowledged": true,
+    "actual_KVM_shutdown_checkpoint_restart": "pending"
+  },
+  "preserved": [
+    "normalized A",
+    "BOOT",
+    "SD recovery card",
+    "SPI backups",
+    "manual checkpoint5",
+    "retained failed cohorts"
+  ],
+  "managed_qualifying_boot_counts": {
+    "warm": 0,
+    "cold": 0
+  },
+  "production_acceptance": false,
+  "evidence": [
+    {
+      "path": "out/managed-shutdown-budget-deployment-20261113-01/update-B-receipt.json",
+      "bytes": 2359,
+      "sha256": "59da11beccace0e2ebac867cd4244794e11eb1b53d2ee6457c0a7837064d5822"
+    },
+    {
+      "path": "out/managed-shutdown-budget-deployment-20261113-01/select-B-receipt.json",
+      "bytes": 2392,
+      "sha256": "7b3ffdc28ecdd2532b2756a39a4300b780db074f40f83fe6f6c80e77c2229191"
+    },
+    {
+      "path": "out/managed-shutdown-budget-deployment-20261113-01/permission-B-inventory.json",
+      "bytes": 102785,
+      "sha256": "cd8c41587352e3be6c17aa7e89865602cfc2e43d7766d8f72f5d5abfc6b9e775"
+    },
+    {
+      "path": "out/managed-shutdown-budget-deployment-20261113-01/permission-B-state.json",
+      "bytes": 20529,
+      "sha256": "95fc7289ce97be25f744f9b401a548a18c11d3501266a0cbc1511f01ef006c88"
+    },
+    {
+      "path": "out/managed-shutdown-budget-deployment-20261113-01/permission-B-no-guest.json",
+      "bytes": 239,
+      "sha256": "65ac60ed8726dc0851148b6e6954dace2d7d6569e29f6d6a3cd8ccc5637a180a"
+    },
+    {
+      "path": "out/managed-shutdown-budget-deployment-20261113-01/nonroot-marker-probe.json",
+      "bytes": 154,
+      "sha256": "82cfbb63ab714cf73ef43aa860d17ddc566c884fe7b0b32ff0d4400d17242cdc"
+    },
+    {
+      "path": "out/managed-shutdown-budget-deployment-20261113-01/managed-enable.stdout",
+      "bytes": 1493,
+      "sha256": "310ec19615ae1495840236bc74b396c0e597558b88eba18195af1cc174a270b4"
+    },
+    {
+      "path": "out/managed-shutdown-budget-deployment-20261113-01/managed-start.stdout",
+      "bytes": 1154,
+      "sha256": "cf9d2a7931e7de574b6b98ba717cad1afcb8e25ae1ed4f4887c38a8b60558450"
+    },
+    {
+      "path": "out/managed-shutdown-budget-deployment-20261113-01/shutdown-B-preboot-records.tar.builder-custody.json",
+      "bytes": 253,
+      "sha256": "39d182e700ee85dad6cec511d31a603486808439e537fa8cf64018363632ebd6"
+    }
+  ]
+}
