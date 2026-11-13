@@ -1,0 +1,152 @@
+{
+  "unit": {
+    "MainPID": "0",
+    "Result": "success",
+    "ExecMainStatus": "0",
+    "SubState": "exited"
+  },
+  "retired": 8,
+  "gzips_present": true,
+  "excluded_prepared_copies_present": true,
+  "source_hashes": [
+    {
+      "path": "/var/lib/a733-clean-replay-20261106/host-roots-managed-permit-20261113-01/work/project/out/host-payload-managed-permit-20261113-01/root-A.ext4",
+      "bytes": 4294967296,
+      "sha256": "c516ade4fc4b64d25a5cefa743478891a961e93e50ff9d359141fcdcf4be2b83",
+      "identity": {
+        "dev": 64512,
+        "ino": 2919919,
+        "uid": 1048576,
+        "gid": 1048576,
+        "mode": 33152,
+        "nlink": 1,
+        "size": 4294967296,
+        "mtime_ns": 1794586461703673772,
+        "ctime_ns": 1794586461703673772
+      }
+    },
+    {
+      "path": "/var/lib/a733-clean-replay-20261106/host-roots-managed-permit-20261113-01/work/project/out/host-payload-managed-permit-20261113-01/root-B.ext4",
+      "bytes": 4294967296,
+      "sha256": "fdecc21669f82c7bb5173369d62da8b5f588a537662c4026d4c69415dd8d5806",
+      "identity": {
+        "dev": 64512,
+        "ino": 2919923,
+        "uid": 1048576,
+        "gid": 1048576,
+        "mode": 33152,
+        "nlink": 1,
+        "size": 4294967296,
+        "mtime_ns": 1794586530868370223,
+        "ctime_ns": 1794586530868370223
+      }
+    },
+    {
+      "path": "/var/lib/a733-clean-replay-20261106/host-roots-managed-systemd-20261113-01/work/project/out/host-payload-managed-systemd-20261113-01/root-A.ext4",
+      "bytes": 4294967296,
+      "sha256": "02a0277ebe94e3cbde933e2a4a79158970891d196cfc587b269e1a4cfeb26f25",
+      "identity": {
+        "dev": 64512,
+        "ino": 2911253,
+        "uid": 1048576,
+        "gid": 1048576,
+        "mode": 33152,
+        "nlink": 1,
+        "size": 4294967296,
+        "mtime_ns": 1794576924561535518,
+        "ctime_ns": 1794576924561535518
+      }
+    },
+    {
+      "path": "/var/lib/a733-clean-replay-20261106/host-roots-managed-systemd-20261113-01/work/project/out/host-payload-managed-systemd-20261113-01/root-B.ext4",
+      "bytes": 4294967296,
+      "sha256": "6ab0444ec7e3e70018c71f5f3e91cc63212fb487f3f25e8e1bf6e6723693d3c2",
+      "identity": {
+        "dev": 64512,
+        "ino": 2911257,
+        "uid": 1048576,
+        "gid": 1048576,
+        "mode": 33152,
+        "nlink": 1,
+        "size": 4294967296,
+        "mtime_ns": 1794576993917119417,
+        "ctime_ns": 1794576993917119417
+      }
+    },
+    {
+      "path": "/var/lib/a733-clean-replay-20261106/host-roots-managed-systemd-20261113-02/work/project/out/host-payload-managed-systemd-20261113-02/root-A.ext4",
+      "bytes": 4294967296,
+      "sha256": "02a0277ebe94e3cbde933e2a4a79158970891d196cfc587b269e1a4cfeb26f25",
+      "identity": {
+        "dev": 64512,
+        "ino": 2912608,
+        "uid": 1048576,
+        "gid": 1048576,
+        "mode": 33152,
+        "nlink": 1,
+        "size": 4294967296,
+        "mtime_ns": 1794577292555380976,
+        "ctime_ns": 1794577292555380976
+      }
+    },
+    {
+      "path": "/var/lib/a733-clean-replay-20261106/host-roots-managed-systemd-20261113-02/work/project/out/host-payload-managed-systemd-20261113-02/root-B.ext4",
+      "bytes": 4294967296,
+      "sha256": "6ab0444ec7e3e70018c71f5f3e91cc63212fb487f3f25e8e1bf6e6723693d3c2",
+      "identity": {
+        "dev": 64512,
+        "ino": 2912612,
+        "uid": 1048576,
+        "gid": 1048576,
+        "mode": 33152,
+        "nlink": 1,
+        "size": 4294967296,
+        "mtime_ns": 1794577362013270027,
+        "ctime_ns": 1794577362013270027
+      }
+    },
+    {
+      "path": "/var/lib/a733-clean-replay-20261106/host-roots-managed-systemd-20261113-repro-01/work/project/out/host-payload-managed-systemd-20261113-repro-01/root-A.ext4",
+      "bytes": 4294967296,
+      "sha256": "02a0277ebe94e3cbde933e2a4a79158970891d196cfc587b269e1a4cfeb26f25",
+      "identity": {
+        "dev": 64512,
+        "ino": 2915155,
+        "uid": 1048576,
+        "gid": 1048576,
+        "mode": 33152,
+        "nlink": 1,
+        "size": 4294967296,
+        "mtime_ns": 1794577616282624051,
+        "ctime_ns": 1794577616282624051
+      }
+    },
+    {
+      "path": "/var/lib/a733-clean-replay-20261106/host-roots-managed-systemd-20261113-repro-01/work/project/out/host-payload-managed-systemd-20261113-repro-01/root-B.ext4",
+      "bytes": 4294967296,
+      "sha256": "6ab0444ec7e3e70018c71f5f3e91cc63212fb487f3f25e8e1bf6e6723693d3c2",
+      "identity": {
+        "dev": 64512,
+        "ino": 2915159,
+        "uid": 1048576,
+        "gid": 1048576,
+        "mode": 33152,
+        "nlink": 1,
+        "size": 4294967296,
+        "mtime_ns": 1794577684666739633,
+        "ctime_ns": 1794577684666739633
+      }
+    }
+  ],
+  "free_bytes": 19614433280,
+  "hardware_acceptance": false,
+  "operation": "retire exactly eight old ordinary producer raw files after full source hashes and verified off-host custody",
+  "release_purpose": "repair_trial_construction",
+  "acceptance_pending": true,
+  "custody_complete_sha256": "a41d944d0e715a03b2252159f1fad12f0cbfafb4c233c8ad26234d1323884a1a",
+  "evidence_tar": {
+    "bytes": 143360,
+    "sha256": "8a2c113d00596e9ace454ae1d9a71f30e54e9e6f0ef751e6e5a61f956c51946c"
+  },
+  "scope": "ordinary builder files only; no live board storage, SPI or SD writes; all gzips, native copies and excluded prepared roots retained"
+}

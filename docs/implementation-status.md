@@ -6,8 +6,14 @@ qualification remains incomplete.** The board runs preserved normalized A while 
 Its shutdown failed and quarantined the guest. Supported recovery retained the
 failure, restored the disposable seed disabled at generation21 and preserved
 manual CP5. The independently reviewed grace-timer repair is frozen at `fb29af4`;
-32 focused tests pass and full combined Ubuntu validation is running. Fresh
-construction/artifact verification and real shutdown/checkpoint/restart follow.
+32 focused tests and full combined Ubuntu validation pass: 3737 unit tests, five
+shell suites and five diagnostic cases, zero skips/failures, all1179 source locks
+and exact849 packages unchanged. Reviewed retirement of eight old producer raws
+retains verified native raw/gzip copies and all builder gzips; preparation now
+passes fresh disk/memory admission. Construction, independent artifact verification
+and real shutdown/checkpoint/restart follow.
+[Validation](evidence/shutdown-budget-combined-validation-20261113.json),
+[retention](evidence/old-producer-raw-retirement-20261113.json).
 No final managed boot-series credit or production qualification is claimed.
 No operator action is currently needed.
 [Hardware trial](evidence/permission-B-managed-KVM-and-shutdown-failure-20261113.json),

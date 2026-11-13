@@ -9,8 +9,8 @@ The preceding corrected `6c0a7e9` B passes full validation, construction,
 independent artifact/filesystem/readers, installation and boot. Actual UID60002
 managed KVM CPU/disk/HTTP passes. Shutdown failed and durable quarantine succeeded.
 Supported recovery preserves that failure and manual CP5. The independently
-reviewed timer repair is frozen at `fb29af4`; 32 focused tests pass and full Ubuntu
-validation is running. Fresh B construction, artifact checks and a new hardware
+reviewed timer repair is frozen at `fb29af4`; 32 focused tests and full Ubuntu
+validation pass (3737 unit tests plus shell/diagnostic suites). Fresh B construction, artifact checks and a new hardware
 trial remain required. **Managed shutdown/checkpoint/restart, final boot series
 and production operation remain unqualified.**
 [Hardware trial](evidence/permission-B-managed-KVM-and-shutdown-failure-20261113.json),
