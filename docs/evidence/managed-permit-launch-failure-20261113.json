@@ -1,0 +1,92 @@
+{
+  "schema": 1,
+  "date_utc": "2026-11-13",
+  "source_commit": "f3496f5ff1b3629d5333d26725b9f5494ace9d25",
+  "boot_id": "395508c7-8ec6-4a90-add6-5b46a93b646c",
+  "run_id": "b91f451c-7bd7-429d-80ba-afd61bcd2751",
+  "classification": "physical failed managed launch; no actual KVM execution observed",
+  "supervisor": {
+    "pid": 4708,
+    "start_ticks": 18170
+  },
+  "child": {
+    "pid": 6508,
+    "start_ticks": 26520,
+    "raw_wait_status": 256,
+    "exit_status": 1
+  },
+  "permit_publication_completed": true,
+  "failure_stage": "qmp-connect",
+  "recorded_error": "child exited before QMP binding",
+  "console": {
+    "bytes": 74,
+    "sha256": "52b3e773196892a18611931f64a2ec24284c2efc4b4f3dce9811f64331e1e45c",
+    "raw_bytes_unavailable_in_serialized_receipt": true
+  },
+  "quarantined_head_sha256": "5fd8c4b2937240aab79eb95e560516cdfa6c7d67f728e21ca176a60850064d63",
+  "quarantine_durable": true,
+  "supported_disable_completed": true,
+  "registry_generation_after_disable": 8,
+  "admission_after_failure": "open",
+  "manual_CP5_preserved": true,
+  "automatic_retry_performed": false,
+  "managed_KVM_credit": false,
+  "records": {
+    "first-managed-failure-complete.json": {
+      "bytes": 29633,
+      "sha256": "d21e79a9a14302c82b6acae58a4a539029fd013826b80e32568ed6c165ca807e"
+    },
+    "managed-enable.stdout": {
+      "bytes": 1493,
+      "sha256": "f05a03cec8c68ef4413f8efa79bd06ec4fa74ee79bbed0faca5a85c41402e2f7"
+    },
+    "managed-start.stdout": {
+      "bytes": 1154,
+      "sha256": "20453f499a56139061bc333884d1c7c1c18bcb7b2f9786ca4a3503193433af73"
+    },
+    "live-managed-KVM-process.json": {
+      "bytes": 33,
+      "sha256": "bfa166c6c773c278bbaf01281809549c1ede8b3010de0f1ff4a1c6730ea0b342"
+    },
+    "live-managed-KVM.stderr": {
+      "bytes": 131,
+      "sha256": "947ff9d5b3a5d81fa1ab214b9ab94f26bcbd4aece4ad9d8fe06935fe94cf685f"
+    },
+    "disable-after-launch-failure.stdout": {
+      "bytes": 1372,
+      "sha256": "0c7a4e23bee7d82d3447e36224075ecf7fb25d7f6b5245160ae2aa463807d4b7"
+    },
+    "after-failed-launch-state.json": {
+      "bytes": 20131,
+      "sha256": "2f3b1d42579e540ed72b57d5658915b088b9559a411ce79fcde0a6fc095dcf4b"
+    },
+    "child-platform-probe.json": {
+      "bytes": 324,
+      "sha256": "924d3a6c97111560ab1f380bcef98839ed1f2d734385581e78147b81014edd7c"
+    },
+    "child-platform-probe-02.json": {
+      "bytes": 316,
+      "sha256": "8f2f4946f1292e314c431f265e66c67e9b4eaa1f4f7579a9bfac0b794af1c2f2"
+    }
+  },
+  "read_only_probe": {
+    "credentials": "UID/GID60002, supplementary kvm103, no capabilities, no-new-privileges",
+    "passed": [
+      "exact setpriv flags",
+      "child_platform",
+      "Admission.open_runtime/recheck/close"
+    ],
+    "no_inherited_lease_or_guest_FDs": true,
+    "no_permit_access": true,
+    "no_QEMU_or_KVM_open": true,
+    "initial_probe_syntax_error_retained_separately": true
+  },
+  "cause_boundary": "Exit1 is established; precise child error remains unresolved. QMP timeout is not the recorded failure. No static or bounded dynamic error candidate matched the console hash.",
+  "off_device_failure_custody": {
+    "bytes": 829440,
+    "sha256": "3cd99312ccd268bbc0e25ab6a222b1a1d3ff01794bedcaccb6abd54fe8db1808",
+    "native": "out/managed-permit-deployment-20261113-01/after-F349-launch-failure-records.tar",
+    "builder": "/home/drew/orange-pi-4-pro-build/managed-permit-deployment-20261113-01/after-F349-launch-failure-records.tar",
+    "both_fsynced": true
+  }
+}

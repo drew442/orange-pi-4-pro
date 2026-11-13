@@ -1,0 +1,83 @@
+{
+  "schema": 1,
+  "date_utc": "2026-11-13",
+  "source_commit": "f3496f5ff1b3629d5333d26725b9f5494ace9d25",
+  "classification": "physical inactive-B installation and authenticated SD-removed boot; managed guest qualification pending",
+  "boot_id": "395508c7-8ec6-4a90-add6-5b46a93b646c",
+  "running_root": "/dev/nvme0n1p3",
+  "root_read_only": true,
+  "SD_absent": true,
+  "nvme_serial": "134807190FC700149277",
+  "manifest_sha256": "333c0f69edb47c8b993feaeaf1640c248d1aed9111beb253b3d8f4533057be35",
+  "root_sha256": "fdecc21669f82c7bb5173369d62da8b5f588a537662c4026d4c69415dd8d5806",
+  "marker_sha256": "396be626a7919b9c800dd6a00cc5f8c025fa26c2d5c124bdde469e3b8c347ab8",
+  "selector_sha256": "e907e3d056e28e54f51743f95ce98ab1ed933b40e97d4e2c0bc3f7f74f69da93",
+  "records": {
+    "update-B-plan.json": {
+      "bytes": 3743,
+      "sha256": "2d0795c759daff8e1ce91b5c05f085d57eb48dcb714308ab371538bfafbef247"
+    },
+    "update-B-receipt.json": {
+      "bytes": 2350,
+      "sha256": "1db2bed256c1578be53cb6c6e4d8249ebd5294af8b04d7c3de49d077837d0c9f"
+    },
+    "select-B-plan.json": {
+      "bytes": 3543,
+      "sha256": "bff2e9133db50076999ba1402bfd9fa09a23781192ed19bf80ba75e382ac9005"
+    },
+    "select-B-receipt.json": {
+      "bytes": 2383,
+      "sha256": "8f95fa652d91da0f3c2b783c9c27d1f3695e4aec7734812c0227f8e789f7db81"
+    },
+    "F349-B-reboot-native-intent.json": {
+      "bytes": 255,
+      "sha256": "73e4f85948afb6e1072783caaff262a8c3980125df2c323987adfb0e4a2f1348"
+    },
+    "F349-B-reboot-request.json": {
+      "bytes": 2335,
+      "sha256": "cf839040e0463fdb7e8391e6a9e3fe499bed73d72d323aa56564954c130719a5"
+    },
+    "F349-B-inventory.json": {
+      "bytes": 102894,
+      "sha256": "9f058fd6e8efa4ca0309242ef6724b638a4cd5a9a6e11198846949fcc6c06829"
+    },
+    "F349-B-state.json": {
+      "bytes": 19864,
+      "sha256": "aac212ba1deb95b873fae6b0b647f3461d2e856e61ce307f75198571167134e8"
+    },
+    "before-F349-B-reboot-records.tar": {
+      "bytes": 440320,
+      "sha256": "dad1d012826a39759d4e2ebb86e604d448666204a6d72eacad97bc5a2b7b99fe"
+    },
+    "before-F349-B-reboot-builder-custody.json": {
+      "bytes": 246,
+      "sha256": "d5ed2dd6401f2d66f10d115610385aa1ca147575f6d895c37df2fb40fb1fe80c"
+    }
+  },
+  "runtime_authenticated": {
+    "maintenance_files": 85,
+    "management_files": 4,
+    "guest_boot_files": 2
+  },
+  "initial_guest_state": {
+    "registry_generation": 6,
+    "enabled": false,
+    "head_sequence": 0,
+    "admission": "open"
+  },
+  "rollback_A_preserved": true,
+  "manual_firstkvm_CP5_preserved": true,
+  "programmed_SPI": false,
+  "vendor_boot_calibration_may_change": true,
+  "managed_KVM_credit": false,
+  "early_observation": {
+    "file": "F349-B-state-early.stderr",
+    "reason": "admission still closed during normal storage initialization",
+    "subsequent_observation": "both preparation services active/exited; admission open"
+  },
+  "review_record": "tmp/managed-permit-deployment-review-20261113.json",
+  "limits": [
+    "One trial construction; independent matching construction pending.",
+    "No managed KVM or final warm/cold boot-series credit from this deployment receipt."
+  ]
+}

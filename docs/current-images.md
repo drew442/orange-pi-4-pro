@@ -1,16 +1,19 @@
 # Current images for this board
 
-The board is running **preserved normalized A at 192.168.1.118 from SPI/NVMe with
-SD removed**, boot `03cfd8ac-1efd-4eed-a758-3ec874aa4154`, strict SSH host-key
-alias `192.168.1.116`. It is preparing inactive B for the next trial. Keep the
-known recovery SD unchanged and off-device; no operator flashing is needed now.
+The board is running **F349 B at 192.168.1.118 from SPI/NVMe with SD removed**,
+boot `395508c7-8ec6-4a90-add6-5b46a93b646c`, strict SSH host-key alias
+`192.168.1.116`. Keep the known recovery SD unchanged and off-device;
+no operator flashing is needed now.
 
 F349 passes 3717 privileged tests, one construction and independent complete
-filesystem/reader checks. It has not booted or executed a managed guest yet.
-The previous root's managed launch failed before QEMU; supported restoration
-retained the failed cohort, restored the initial seed, and fresh-boot preparation
-passed with the guest disabled. **Managed production operation remains unqualified.**
-[Status](implementation-status.md), [recovery](evidence/managed-initial-cohort-recovery-20261113.json).
+filesystem/reader checks. Its inactive-B write, selection and authenticated boot
+pass. The first managed launch completed permit publication but the child exited1
+before QMP binding. Quarantine is durable and the fixture is disabled at registry
+generation8. Normalized A, BOOT and manual CP5 remain preserved.
+**Managed production operation remains unqualified.**
+[Deployment](evidence/managed-permit-B-deployment-20261113.json),
+[launch failure](evidence/managed-permit-launch-failure-20261113.json),
+[status](implementation-status.md).
 
 The earlier full installation and independent deployment reproduction pass.
 The earlier protected-SD route also passed ten warm/ten cold boots and complete

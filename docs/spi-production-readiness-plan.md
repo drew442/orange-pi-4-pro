@@ -6,8 +6,8 @@ workflow remains unqualified. Its prior launch failed before QEMU; supported
 quarantine restoration and fresh-boot admission recovery now pass.
 
 Frozen F349 passes 3717 privileged tests, one trial construction and independent
-complete artifact/filesystem/readers. Preserved A is running for the next inactive-B
-installation. After a working hardware trial, an independent fresh-checkout build
+complete artifact/filesystem/readers. Inactive-B installation and authenticated
+SD-removed boot now pass; normalized A remains preserved. After a working hardware trial, an independent fresh-checkout build
 will compare all artifacts and reproduce the recipe, giving two constructions.
 [Current status](implementation-status.md),
 [trial evidence](evidence/managed-permit-root-trial-20261113.json).
@@ -27,7 +27,9 @@ Artifact-derived helper pins pass independent review and 100 focused checks;
 combined external validation and actual execution remain pending.
 [Completion procedure](managed-fixture-completion.md).
 
-The restored disposable guest is disabled at generation 6, ready sequence 0.
+The disposable guest is disabled at generation 8 after durable quarantine.
+F349 completed permit publication, then its child exited1 before QMP binding.
+Retain [the failure evidence](evidence/managed-permit-launch-failure-20261113.json).
 Do not re-enroll it or overwrite retained failed cohorts. Its first successful
 managed KVM execution, checkpoint/restart and automatic boot still need proof.
 
@@ -63,7 +65,7 @@ cycle attestations. Software preparation continues while those steps are pending
 | 1. Recoverable baseline | Recorded; revalidate after each hardware transition | Verified original/calibrated SPI and stopped guest backups retained off-device |
 | 2. Metadata-aware SPI maintenance | Software checks and independent review pass | Reviewed fresh live plans and preserved calibration policy |
 | 3. Physical restore/reinstall | Blank restoration, SD recovery, reinstall and SD-removed manual KVM pass | Original SPI restore, SD recovery, reinstall, SD-removed boot and actual KVM pass |
-| 4. Unattended guests | One F349 trial and independent artifact/readers pass; deployment pending | Reproducible packaged services, graceful shutdown/checkpoint/reconciliation, rollback and real KVM acceptance |
+| 4. Unattended guests | F349 build/artifact/readers and physical B boot pass; managed child exit unresolved | Reproducible packaged services, graceful shutdown/checkpoint/reconciliation, rollback and real KVM acceptance |
 | 5. Final SPI boot series | One cold and one warm operational boot evidenced | Ten accepted cold and ten warm boots with applicable identity and final automation checks |
 | 6. Independent reproduction and signoff | Earlier protected-SD reproduction retained | Updated SPI recovery and guest procedures reproduced, evidence reconciled and changes pushed |
 

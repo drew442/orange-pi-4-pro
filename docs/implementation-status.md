@@ -1,17 +1,19 @@
 # Implementation status
 
 Updated 2026-11-13. **SPI/NVMe boot works with SD removed; managed production
-qualification remains incomplete.** Preserved normalized A is running while the
-verified F349 trial is prepared for inactive B. Its permit-barrier and bound-stop
-changes pass combined validation. No managed KVM execution or final boot-series
+qualification remains incomplete.** Verified F349 B now boots with the SD removed; normalized A remains preserved
+as the rollback root. Its permit-barrier and bound-stop
+changes pass combined validation. The first managed trial passed permit publication
+but its child exited with status 1 before QMP binding; quarantine and disable succeeded. No managed KVM execution or final boot-series
 credit is claimed. No operator action is currently needed.
 
 ## Current board and retained recovery
 
 - SSH: `root@192.168.1.118`, strict original host-key alias `192.168.1.116`.
-  Boot `03cfd8ac-1efd-4eed-a758-3ec874aa4154`; normalized A p2 is read-only.
-  Its complete 40-tool/four-management-file cohort authenticates. NTP passes;
-  p5 is unmounted and admission absent, as expected for this older root.
+  Boot `395508c7-8ec6-4a90-add6-5b46a93b646c`; F349 B p3 is read-only.
+  Its complete 85-tool/four-management-file/two-boot-unit cohort authenticates.
+  NTP passes; p5 is mounted and admission opened after both preparation services
+  completed. Normalized A p2 remains preserved.
 - NVMe: SPCC M.2 PCIe SSD, serial `134807190FC700149277`, 256060514304 bytes,
   firmware EDFM20.0. STATE p4 UUID `360dfb39-f49f-487e-b307-0bb887c854c5`;
   guest p5 UUID `298b281a-d10e-44eb-bdb9-285e27eaafad`.
@@ -56,8 +58,10 @@ failure remains unresolved; retain continuous UART during qualification.
 `/var/lib/a733-checkpoint5-backup-20261113-01` on the builder. Preserve these and
 [normalized A](evidence/normalized-a-compatibility-custody-20261112.json).
 The unused original port80 cohort and the later failed port8080 cohort are both
-retained. The active restored `autokvm` is disabled, initial manifest
-`a46ae94c…5d8701`, ready sequence 0 and seed counter 0.
+retained. The active `autokvm` is disabled at generation 8, initial manifest
+`a46ae94c…5d8701`, quarantined after admitted sequence 1. The new failure
+record and prior failed cohorts remain retained; no managed KVM credit.
+[Current launch failure](evidence/managed-permit-launch-failure-20261113.json).
 
 ## Current source and build evidence
 
@@ -107,9 +111,10 @@ Remeasure dynamic disk/memory guards for each construction; begin with two jobs.
 
 Follow [the production plan](spi-production-readiness-plan.md):
 
-1. Decode the verified F349 B component once into private STATE, review the exact
-   inactive-p3 write and selection, and boot it while preserving normalized A.
-2. Prove real nonroot managed KVM CPU/disk/HTTP, guest-owned power-key shutdown,
+1. F349 B staging, inactive-p3 write/readback, durable selection and SD-removed
+   boot pass. Retain [the deployment record](evidence/managed-permit-B-deployment-20261113.json).
+2. Resolve the recorded pre-QMP child exit, preserving its failed cohort and
+   retained initial-baseline recovery inputs. Prove real nonroot managed KVM CPU/disk/HTTP, guest-owned power-key shutdown,
    durable checkpoint and explicit restart; separately prove automatic startup.
 3. Exercise coherent completed-cohort backup/export/restore, interrupted/resumed
    restoration, disable, installed maintenance interruption/retry, restored old-A
