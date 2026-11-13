@@ -23,6 +23,13 @@ matching fresh root constructions and independent complete artifact/production
 reader checks pass. [Candidate artifacts](managed-root-candidate-20261112.md)
 remain uninstalled. Preserve these completed results and use the following order.
 
+The external qualifier, single-attempt power helper and native SPI collector now
+pass independent software review and the integrated **3651-test** privileged
+Ubuntu run, shell suites and diagnostic cases. [Evidence](evidence/spi-collector-integration-validation-20261112.json).
+Their target execution remains unperformed. [Fixture deployment preparation](managed-fixture-deployment.md)
+binds exact seed/configuration inputs and CLI order; it still requires fresh live
+guards before copying anything to STATE.
+
 | Order | Work and owner | Required result before proceeding |
 | --- | --- | --- |
 | 1 | Coordinator prepares deployment and SPI boot collectors; Sol implements bounded changes and a separate Sol reviews them | Artifact-bound inactive-B and rollback plans; collectors support SD absence, current firmware identity and authenticated managed-guest outcomes. Preserve uncertain-reboot safeguards; never issue another power request just because observation timed out. |

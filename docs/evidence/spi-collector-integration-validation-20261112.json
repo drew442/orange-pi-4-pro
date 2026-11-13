@@ -1,0 +1,148 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "result": "pass: 3651 privileged Ubuntu tests, shell/diagnostic suites and independent review",
+  "candidate_source": "2996365a11cb07deb20eb4325c90841de8ab820e",
+  "installed_closure_changed": false,
+  "source": {
+    "docs/spi-boot-qualification.md": {
+      "bytes": 7261,
+      "sha256": "2e9d24b50085815e9c41caef510d59aabd7d9ca37551a0c5a6ecd2ee699cbe65"
+    },
+    "scripts/collect-spi-boots.py": {
+      "bytes": 34294,
+      "sha256": "08541af2d920200ca6149b9ac1f9e45bfea7aeb280b3c0c0d7f305503f8ab009"
+    },
+    "scripts/qualify-managed-boot.py": {
+      "bytes": 15424,
+      "sha256": "91cc5c5cde4c736cb2d777aa459bf8c535678c3815986331b510f4e61c7744c6"
+    },
+    "scripts/request-spi-power.py": {
+      "bytes": 17795,
+      "sha256": "ac5f2e29e06b924180a5432cb9edffe7e2f8d70a2f46aeb836804377ee0ed895"
+    },
+    "tests/test_collect_spi_boots.py": {
+      "bytes": 22246,
+      "sha256": "f5fb96bad31664e07cc61e8ccf90637ac3799f26b28dffd51a4ad10457427350"
+    }
+  },
+  "focused_tests": {
+    "count": 31,
+    "errors": 0,
+    "failures": 0,
+    "skips": 0,
+    "stderr_log": "tmp/native-spi-collector-review-20261112/final-unit-stderr.log",
+    "stdout_log": "tmp/native-spi-collector-review-20261112/final-unit-stdout.log"
+  },
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "status": "approve for software integration; coordinator retains hardware acceptance",
+    "unresolved_material_findings": [],
+    "independent_probes": {
+      "final-fixed-results.json": {
+        "actual_native_flock": "pass; second execution refused and lock reusable after close",
+        "refused_observer": "pass; foreign boot is uncertain, old evidence unchanged, no intent",
+        "single_transport_phase_cap_and_progress": "pass; real local bounded child and partial bytes, join waits accelerated only"
+      },
+      "final-primitive-results.json": {
+        "held_mtd_geometry_rdev_short_reads": "pass; all I/O substituted, hash constants replaced only with fixture-zero component hashes",
+        "real_local_tty_confirm": "pass with virtual elapsed time; no physical action performed or claimed"
+      },
+      "final-probe-results.json": {
+        "captured_actual_installed_family_api": "pass with explicit root/source/path substitutions; no admission or power calls",
+        "concurrent_intent_insertion_actions": [],
+        "cross_tag_oldboot_block": "pass",
+        "default_plan": "pass",
+        "nonzero_complete_refusal_classification": {
+          "boot_id": "11111111-1111-4111-8111-111111111111",
+          "error": "identity differs",
+          "state": "refused"
+        },
+        "readonly_context_actual_api": "pass with explicit native-platform/storage substitutions; actual captured storage binding checks execute",
+        "real_bounded_transport_timeout_and_eof": "pass",
+        "real_uart_rotation": "pass",
+        "uart_ordered_interval": "pass"
+      }
+    },
+    "limits": [
+      "Actual installed B/runtime/root verification substituted on this x86 host for API-composition checks",
+      "MTD inventory/read calls and fixture hashes substituted; no physical SPI read or write",
+      "Real POSIX TTY test uses virtual elapsed time and performs no physical disconnect",
+      "Transport progress wait accelerated; actual local child/timeout/partial bytes retained",
+      "No installed managed guest, physical cold/warm collection, flash boundary custody or hardware acceptance established"
+    ],
+    "resolved_findings": [
+      "stale global intent check between component observation and stage/qualifier now rechecked; retained EX execution lock serializes execute paths across tags",
+      "complete RPC refusal remains fatal on nonzero transport status",
+      "single bounded transport now reports progress while pending and respects phase deadline",
+      "observe-only refused root boot UUID no longer labeled distinct authenticated boot"
+    ],
+    "reviewed_coordinator_corrections": [
+      "starting PID1 retains authenticated busy behavior",
+      "warm deadline begins before sole request; all RPCs and qualifier capped",
+      "UART drains and ordered interval revalidation before and after new-boot qualification",
+      "RPC function source frozen at Native admission; native and reused dependencies captured/pinned"
+    ]
+  },
+  "review_custody": {
+    "path": "out/spi-collector-integration-validation-20261112-01/independent-review.tar.gz",
+    "builder_path": "/var/lib/a733-spi-collector-integration-validation-20261112-01/independent-review.tar.gz",
+    "bytes": 13736,
+    "sha256": "e89934c9c89225dab7daf63238997ec004e305374b150d0275e3a81207961488",
+    "verified_both_hosts": true
+  },
+  "full_validation": {
+    "host": "build.drewnet.online",
+    "unit": "a733-spi-collector-integration-validation-20261112-01.service",
+    "state": "complete",
+    "observed_main_pid": 1570584,
+    "source_tree": "55e741413b07786b97175064a394157678ad17d1",
+    "source_commit": "6bef7749a1eae74304402919a721513a848dc58f",
+    "source_lock_entries": 1125,
+    "raw_directory": "out/spi-collector-integration-validation-20261112-01",
+    "remote_directory": "/var/lib/a733-spi-collector-integration-validation-20261112-01",
+    "instruction": "Poll this exact unit; observation timeout does not justify restarting it.",
+    "unit_properties": {
+      "RuntimeMaxUSec": "8h",
+      "MainPID": "0",
+      "Result": "success",
+      "ExecMainStatus": "0",
+      "CPUQuotaPerSecUSec": "2s",
+      "MemoryMax": "3221225472",
+      "UMask": "0022",
+      "LoadState": "loaded",
+      "SubState": "exited"
+    },
+    "python_tests": 3651,
+    "diagnostic_tests": 5,
+    "shell_suites": 5,
+    "skips": 0,
+    "errors": 0,
+    "failures": 0,
+    "minimum_free_bytes": 23560409088,
+    "minimum_memavailable_bytes": 6717169664,
+    "receipt_archive": {
+      "path": "out/spi-collector-integration-validation-20261112-01/receipts.tar",
+      "builder_path": "/var/lib/a733-spi-collector-integration-validation-20261112-01/validation-receipts.tar",
+      "bytes": 573440,
+      "sha256": "d427cfc0180b97041bfd209cd88f794690e7fb3977668440cfbc31ba74d4034a",
+      "verified_both_hosts": true
+    }
+  },
+  "hardware_acceptance": false,
+  "hardware_access": false,
+  "power_requests_executed": 0,
+  "final_managed_build_boot_credit": 0,
+  "remaining": [
+    "Live SPI recovery and matched B deployment",
+    "Native target collector and real automatic KVM qualification",
+    "Final SPI boot counts, full-flash boundary custody and independent procedure reproduction"
+  ],
+  "builder_inventory_observed": {
+    "packages": 842,
+    "matches_pinned_outer_host": true,
+    "raw_query_sha256": "f779568a3e4e82afc488c1b99ccad0a88f2d96e74efe3b00172927c7539f4ef3",
+    "observed_utc": "2026-11-12T23:56:48.933188+00:00"
+  }
+}
