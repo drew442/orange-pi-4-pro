@@ -1,0 +1,76 @@
+{
+  "source_commit": "6c0a7e90ec279d36c90371d270b3acc2abebf731",
+  "source_tree": "0b785fdb188b8fe86952ed58c2a83bcf4232a41f",
+  "source_locked_files": 1174,
+  "terminal": {
+    "RuntimeMaxUSec": "8h",
+    "MainPID": "0",
+    "Result": "success",
+    "ExecMainStatus": "0",
+    "CPUQuotaPerSecUSec": "2s",
+    "MemoryMax": "3221225472",
+    "UMask": "0022",
+    "SubState": "exited"
+  },
+  "footers": [
+    [
+      "3733",
+      "1252.239s",
+      "OK"
+    ],
+    [
+      "5",
+      "6.070s",
+      "OK"
+    ]
+  ],
+  "shell_suites": [
+    "test-diagnostic-initramfs.sh",
+    "test-guest-fixture.sh",
+    "test-host-init.sh",
+    "test-host-storage-resolver.sh",
+    "test-host-userspace.sh"
+  ],
+  "source_checks": 2,
+  "outer_package_count": 849,
+  "outer_three_field_sha256": "b34b70a879cbbf75f818708275c57ef0aef3ae635b9ae71a8005e2b29a8490b8",
+  "outer_four_field_sha256": "c87cbf467e11deab2c27fd350b1eb667b85f9a06b5c77477db562a5b7c257949",
+  "min_free_bytes": 19111034880,
+  "min_MemAvailable_bytes": 6590410752,
+  "hardware_acceptance": false,
+  "schema": 1,
+  "date_utc": "2026-11-13",
+  "scope": "Fresh combined privileged Ubuntu validation after public metadata permission correction and deterministic collector fixture",
+  "unit_tests": 3733,
+  "unit_failures": 0,
+  "unit_errors": 0,
+  "unit_skips": 0,
+  "diagnostic_tests": 5,
+  "full_combined_validation_passed": true,
+  "raw_logs": "inside evidence.tar; original failed01 retained separately",
+  "evidence": {
+    "path": "out/managed-permission-validation-20261113-02/evidence.tar",
+    "bytes": 358400,
+    "sha256": "64c36728b17091a193cfb767152dceb6890c4a42a303a23e3be552bbace2cc47"
+  },
+  "builder_custody": {
+    "/var/lib/a733-managed-permission-validation-20261113-02/coordinator-validation-receipt.json": {
+      "bytes": 1048,
+      "sha256": "884ffe1de61442e188b5323419b185b52951a6d8a16f3a33533957a648c3ce04",
+      "fsynced": true,
+      "readback": true
+    },
+    "/var/lib/a733-managed-permission-validation-20261113-02/evidence.tar": {
+      "bytes": 358400,
+      "sha256": "64c36728b17091a193cfb767152dceb6890c4a42a303a23e3be552bbace2cc47",
+      "fsynced": true,
+      "readback": true
+    },
+    "/var/lib/a733-managed-permission-root-trial-20261113-02/coordinator-construction-release.json": {
+      "bytes": 1075,
+      "sha256": "6c19ffabaa84163a15d48073f6bba980fe923a4349df23717ff851fa0fee95b4",
+      "fsynced": true,
+      "readback": true
+    }
+  }
+}

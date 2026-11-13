@@ -1,13 +1,13 @@
 # Implementation status
 
 Updated 2026-11-13. **SPI/NVMe boot works with SD removed; managed production
-qualification remains incomplete.** Verified F349 B boots with the SD removed; the board is now on preserved
-normalized A while a corrected inactive-B image is prepared. Its permit-barrier and bound-stop
-changes pass combined validation. The first managed trial passed permit publication
-but its child exited with status 1 before QMP binding; quarantine and disable succeeded. No managed KVM execution or final boot-series
-credit is claimed. No operator action is currently needed. A pinned, separately reviewed RAM-only
-trace is being prepared to capture the unresolved child error; traced execution
-will receive no production acceptance credit.
+qualification remains incomplete.** The board runs preserved normalized A while
+an inactive-B repair is prepared. RAM tracing identified the nonroot metadata
+permission failure. The reviewed packaging correction and deterministic collector
+fixture are pushed as `6c0a7e9`; fresh combined Ubuntu validation02 passes and the reviewed trial construction
+is running.
+The failed validation01 and all failed guests remain retained. No operator action
+is currently needed. No managed KVM or final managed boot-series credit is claimed.
 
 ## Current board and retained recovery
 
@@ -86,7 +86,12 @@ collector's source-mutation fixture; shell/diagnostic stages did not run and no
 construction was released. Native reproduction proves a same-timestamp fixture
 assumption while captured bytes remained correctly pinned. The reviewed test-only
 mtime baseline fix passes 52 privileged collector tests and 2,000 diagnostic
-mutation cases. Fresh combined validation is required; retain the failed run.
+mutation cases. Fresh `6c0a7e9` combined validation02 now passes **3733 unit
+tests, five shell suites and five diagnostic cases**, with zero skips/failures, all
+1174 source locks matching before/after and exact849 inventory retained. Minimum
+free disk 19,111,034,880 bytes; MemAvailable 6,590,410,752 bytes. Evidence is fsynced
+on both hosts; retain failed01 separately.
+[Fresh validation](evidence/permission-root-combined-validation-20261113.json).
 [Failure and correction](evidence/collector-mutation-fixture-correction-20261113.json).
 
 Frozen **F349** (`f3496f5ff1b3629d5333d26725b9f5494ace9d25`, 1156 tracked files)

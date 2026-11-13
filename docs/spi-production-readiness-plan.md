@@ -24,8 +24,10 @@ Its four managed launches exited before QEMU. A bounded RAM trace identified the
 same 74-byte nonroot metadata permission error as the earlier untraced attempts.
 The reviewed `e296ae0` packaging correction sets the public metadata directory to
 0755 and marker to 0644 before both slot images. Its first full Ubuntu run hit one collector fixture timestamp failure; the
-reviewed deterministic test-only correction passes 52 focused checks. Fresh full
-validation, construction, artifact checks and physical deployment remain pending.
+reviewed deterministic test-only correction passes 52 focused checks. Frozen
+`6c0a7e9` now passes fresh combined validation: 3733 unit tests plus all five shell
+suites and five diagnostic cases. Trial construction is running; artifact checks
+and physical deployment remain pending.
 Retain older artifacts and every failed cohort as separate evidence.
 [Diagnosis and source checks](evidence/managed-launch-permission-diagnosis-20261113.json).
 

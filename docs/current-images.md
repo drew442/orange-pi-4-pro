@@ -12,8 +12,9 @@ filesystem/reader checks. Its inactive-B write, selection and authenticated boot
 pass. Four managed launches completed permit publication but the child exited1 before
 QMP binding. A RAM-only trace identified a nonroot permission failure reading the
 host metadata directory/marker, packaged as 0700/0600. Supported restoration and a fresh boot leave the fixture ready sequence0
-and disabled at generation18. Reviewed packaging correction `e296ae0` is under
-full Ubuntu validation; a new
+and disabled at generation18. The packaging correction plus collector fixture correction are frozen at
+`6c0a7e9`; fresh combined validation passes 3733 unit tests plus shell/diagnostic
+suites. A new
 root build and untraced hardware trial remain required. Normalized A, BOOT and
 manual CP5 remain preserved.
 **Managed production operation remains unqualified.**
