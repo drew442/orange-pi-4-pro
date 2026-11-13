@@ -1,0 +1,120 @@
+{
+  "date_utc": "2026-11-13",
+  "scope": "Current849-package outer builder pin/admission and seventeen binary archive supplement; no freshOS provisioning or rootbuild claim",
+  "outer_inventory": {
+    "path": "configs/builder-host-packages-20261113.lock.tsv",
+    "bytes": 32968,
+    "rows": 849,
+    "sha256": "b34b70a879cbbf75f818708275c57ef0aef3ae635b9ae71a8005e2b29a8490b8"
+  },
+  "frozen_replay_inventory_unchanged": {
+    "path": "configs/builder-replay-packages-20261106.lock.tsv",
+    "rows": 842,
+    "sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425"
+  },
+  "changes_vs_frozen": {
+    "added_packages": 7,
+    "version_changes": 17,
+    "removals": 0,
+    "architecture_changes": 0
+  },
+  "archive_supplement": {
+    "new_or_changed_vs_previous_outer842": 17,
+    "bytes": 158191362,
+    "signature_and_index_verification": true,
+    "tuple_size_SHA256_verification": true,
+    "inventory_before_after_unchanged": true,
+    "reused_authenticated_archives": 14,
+    "HTTPS_downloads": 3,
+    "first_attempt": "Security server timed out on archive 15 after 1287896/79713656 bytes, then SSL timeouts. Retained failed receipt and partial; no packages installed. Second attempt excludes partial and uses configured Ubuntu AU mirror with same signed SHA256.",
+    "builder_directory": "/home/drew/orange-pi-4-pro-build/outer849-package-supplement-20261113-02",
+    "native_directory": "out/outer-builder-849-supplement-20261113-01/verified",
+    "builder_custody": {
+      "path": "/home/drew/orange-pi-4-pro-build/outer849-package-supplement-20261113-02.tar",
+      "bytes": 202618880,
+      "sha256": "f7362fad8edf4ba4979933c671fecbcb8718630879784e9710bc57ad333a476e",
+      "file_count": 65,
+      "fsynced": true
+    },
+    "native_custody": {
+      "archive": "out/outer-builder-849-supplement-20261113-01/custody.tar",
+      "bytes": 202618880,
+      "sha256": "f7362fad8edf4ba4979933c671fecbcb8718630879784e9710bc57ad333a476e",
+      "files_verified": 65,
+      "extracted": "out/outer-builder-849-supplement-20261113-01/verified",
+      "fsynced": true
+    }
+  },
+  "independent_reviews": {
+    "outer-builder-849-review-20261113.json": {
+      "path": "tmp/outer-builder-849-review-20261113.json",
+      "bytes": 3486,
+      "sha256": "3b0bdab0deb54ea81e9698c330bf5abe47de467c71e400c2df1903f666f3c94e",
+      "verdict": "PASS"
+    },
+    "outer-builder-849-package-provenance-review-20261113.json": {
+      "path": "tmp/outer-builder-849-package-provenance-review-20261113.json",
+      "bytes": 4743,
+      "sha256": "90f9d6b4600dd14ccd8eb4db8a6cb134f0ef44c42d7c435f0d2af419f8680a84",
+      "verdict": "PASS"
+    }
+  },
+  "focused_builder_adapter_tests": 10,
+  "combined_validation": {
+    "result": "PASS",
+    "unit_tests": 3664,
+    "shell_suites": 5,
+    "diagnostic_cases": 5,
+    "skips": 0,
+    "failures": 0,
+    "errors": 0,
+    "evidence": "docs/evidence/managed-systemd-outer849-validation-20261113.json"
+  },
+  "limits": [
+    "No new package installation or maintainer scripts ran.",
+    "Original 835 archives and earlier seven-package supplement were not rehashed.",
+    "No independent fresh outer OS provisioning or new root/hardware acceptance."
+  ],
+  "artifacts": {
+    "audit.json": {
+      "path": "out/outer-builder-849-supplement-20261113-01/audit.json",
+      "bytes": 12969,
+      "sha256": "f4ce7ad69bc132e15e8680689906e79dbc6c5e0e6fabcb1ab161545f59ebf7fb"
+    },
+    "acquisition-plan.json": {
+      "path": "out/outer-builder-849-supplement-20261113-01/acquisition-plan.json",
+      "bytes": 290,
+      "sha256": "799adb37954a9aa029d2cd215e7548b47721c0d6c55c2bbd067762456a00298b"
+    },
+    "failed-acquisition-receipt.json": {
+      "path": "out/outer-builder-849-supplement-20261113-01/failed-acquisition-receipt.json",
+      "bytes": 20793,
+      "sha256": "15bff90e2868036474f982a1c500004eff7c76a9793eab9a3a3116f737f31692"
+    },
+    "acquisition-02.stdout": {
+      "path": "out/outer-builder-849-supplement-20261113-01/acquisition-02.stdout",
+      "bytes": 23047,
+      "sha256": "5716381f5d1957f44c34788017b2337b033012f25bdc735b5bddb8203a428ca6"
+    },
+    "builder-custody.json": {
+      "path": "out/outer-builder-849-supplement-20261113-01/builder-custody.json",
+      "bytes": 222,
+      "sha256": "8bb34c5b1951268e9d6700978e7304117e1d02364fb0857a1413fe020512465d"
+    },
+    "native-custody.json": {
+      "path": "out/outer-builder-849-supplement-20261113-01/native-custody.json",
+      "bytes": 293,
+      "sha256": "9fe6461c94e918fa30062f21b72a7ed1054e5a813680630490c5840453454ba3"
+    },
+    "acquire.py": {
+      "path": "out/outer-builder-849-supplement-20261113-01/acquire.py",
+      "bytes": 19019,
+      "sha256": "6fbd13b3eac0566a6a5fa11809a7913f3afe48ce55e0b5d58d6a41212252d28c"
+    },
+    "acquire-reuse-verified.py": {
+      "path": "out/outer-builder-849-supplement-20261113-01/acquire-reuse-verified.py",
+      "bytes": 19551,
+      "sha256": "3e94cb991aff67144a3a762fa06fa8e25bd2fdb2198631c37b37f272678d2e08"
+    }
+  }
+}

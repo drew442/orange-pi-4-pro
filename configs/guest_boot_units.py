@@ -2,8 +2,9 @@
 
 Callers supply already selected enabled configurations. This module discovers
 nothing, authenticates no storage or enrollment, publishes no files and grants
-no launch or enable authority. RequiresMountsFor describes intended dependencies;
-actual generated mount dependencies and shutdown ordering need hardware proof.
+no launch or enable authority. Fixed mount units and RequiresMountsFor describe
+intended dependencies; actual mount dependencies and shutdown ordering need
+hardware proof.
 The caller must authenticate the enabled set and refresh units after changes.
 Rendered text proves neither current runtime cgroup limits nor native namespace;
 the caller must validate actual units/cgroups before launch.
@@ -51,8 +52,8 @@ def render_managed(config):
     value = _config(config)
     return '\n'.join([
         '[Unit]', 'Description=A733 managed guest ' + value['name'],
-        'After=a733-guest-prepare.service a733-guest-storage.service',
-        'Requires=a733-guest-prepare.service a733-guest-storage.service',
+        r'After=a733-guest-prepare.service a733-guest-storage.service run-a733\x2dstate.mount run-a733\x2dguests.mount',
+        r'Requires=a733-guest-prepare.service a733-guest-storage.service run-a733\x2dstate.mount run-a733\x2dguests.mount',
         'RequiresMountsFor=/run/a733-state /run/a733-guests', '',
         '[Service]', 'Type=exec', 'User=root', 'Group=root',
         'ExecStart=/usr/bin/python3 -I -B ' + SUPERVISOR + ' ' + value['name'],

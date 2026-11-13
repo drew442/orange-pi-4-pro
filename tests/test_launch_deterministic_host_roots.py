@@ -45,7 +45,7 @@ class DeterministicLauncherTests(unittest.TestCase):
         L.adapt(parent, held)
         return parent, held
 
-    def test_ast_changes_only_one_self_literal_and_rejects_drift(self):
+    def test_ast_changes_only_self_and_outer_counts_and_rejects_drift(self):
         raw = (REPO / L.TEMPLATE).read_bytes()
         expected = ast.parse(raw)
         count = 0
@@ -54,6 +54,12 @@ class DeterministicLauncherTests(unittest.TestCase):
                 node.value = L.SELF
                 count += 1
         self.assertEqual(count, 1)
+        for node in ast.walk(expected):
+            if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id == 'require':
+                if len(node.args) == 2 and isinstance(node.args[1], ast.Constant) and node.args[1].value in (
+                        'host inventory package count differs', 'final inventory count differs'):
+                    self.assertEqual(node.args[0].comparators[0].value, 842)
+                    node.args[0].comparators[0].value = 849
         self.assertEqual(ast.dump(L.adapted_ast(raw), include_attributes=True),
                          ast.dump(expected, include_attributes=True))
         with self.assertRaisesRegex(ValueError, 'SHA256'):
@@ -86,7 +92,8 @@ class DeterministicLauncherTests(unittest.TestCase):
             self.assertEqual(plan['builder_package_inventory'], inventory)
             self.assertEqual(inventory['outer_host'], {'path': L.OUTER_HOST_LOCK, **L.OUTER_HOST_PIN})
             self.assertEqual(inventory['frozen_replay'], {'path': L.FROZEN_REPLAY_LOCK, **L.FROZEN_REPLAY_PIN})
-            self.assertEqual(len(inventory['version_changes']), 7)
+            self.assertEqual(len(inventory['version_changes']), 17)
+            self.assertEqual(len(inventory['added_packages']), 7)
             self.assertEqual(parent.SELF, L.SELF)
             self.assertEqual(parent.__file__, str(REPO / L.SELF))
             for name in (L.TEMPLATE, L.HELPER, L.OUTER_HOST_LOCK, L.FROZEN_REPLAY_LOCK):
@@ -162,8 +169,8 @@ class DeterministicLauncherTests(unittest.TestCase):
                 tampered[name] += b'\n'
                 with self.assertRaisesRegex(ValueError, 'lock pin differs'):
                     parent.contract(REPO, tampered)
-            records = L.package_records(data[L.OUTER_HOST_LOCK])
-            self.assertEqual(len(records), 842)
+            records = L.package_records(data[L.OUTER_HOST_LOCK], 849)
+            self.assertEqual(len(records), 849)
             rows = data[L.OUTER_HOST_LOCK].splitlines()
             for bad in (b'\n'.join(rows[:-1]), b'\n'.join(rows + [rows[0]]),
                         data[L.OUTER_HOST_LOCK].replace(b'\t', b'\t\t', 1),
@@ -172,10 +179,10 @@ class DeterministicLauncherTests(unittest.TestCase):
                         b'\n'.join([b'pkg\t1 2\tamd64'] + rows[1:]),
                         b'\n'.join([b'pkg\t1\tbad arch'] + rows[1:])):
                 with self.assertRaises(ValueError):
-                    L.package_records(bad)
+                    L.package_records(bad, 849)
             # Even an internally repinned fixture cannot change package identities,
-            # architectures or expand the seven observed updates.
-            for old, new, message in ((b'acl\t', b'aclx\t', 'identities'),
+            # architectures or expand the seventeen observed updates.
+            for old, new, message in ((b'acl\t', b'aclx\t', 'removals'),
                                        (b'2.3.1-1\tamd64', b'2.3.1-1\tarm64', 'architectures'),
                                        (b'2.3.1-1\t', b'2.3.1-2\t', 'version changes')):
                 changed = dict(data)
@@ -183,6 +190,40 @@ class DeterministicLauncherTests(unittest.TestCase):
                 with mock.patch.object(L, 'OUTER_HOST_PIN', pin(changed[L.OUTER_HOST_LOCK])):
                     with self.assertRaisesRegex(ValueError, message):
                         L.inventory_binding(parent, changed)
+
+    def test_inventory_count_ast_anchors_fail_closed(self):
+        raw = (REPO / L.TEMPLATE).read_bytes()
+        for inventory, message in (('before', 'host inventory package count differs'),
+                                   ('after', 'final inventory count differs')):
+            anchor = f"require(len({inventory}.splitlines()) == 842, {message!r})".encode()
+            self.assertEqual(raw.count(anchor), 1)
+            for replacement in (anchor.replace(b'842', b'843'), b'pass', anchor + b'; ' + anchor):
+                changed = raw.replace(anchor, replacement)
+                with self.subTest(inventory=inventory, replacement=replacement), \
+                     mock.patch.object(L, 'TEMPLATE_SHA', hashlib.sha256(changed).hexdigest()):
+                    with self.assertRaisesRegex(ValueError, 'inventory count anchors'):
+                        L.adapted_ast(changed)
+
+    def test_added_inventory_tuples_and_historical_locks_remain_exact(self):
+        data = source_contents()
+        self.assertEqual(pin((REPO / 'configs/builder-host-packages-20261112.lock.tsv').read_bytes()),
+                         {'bytes': 32550, 'sha256': 'f779568a3e4e82afc488c1b99ccad0a88f2d96e74efe3b00172927c7539f4ef3'})
+        self.assertEqual(pin(data[L.FROZEN_REPLAY_LOCK]), L.FROZEN_REPLAY_PIN)
+        with contextlib.ExitStack() as stack:
+            parent, _ = self.parent(stack)
+            for name, (version, architecture) in L.OUTER_ADDED_PACKAGES.items():
+                row = f'{name}\t{version}\t{architecture}\n'.encode()
+                for replacement, message in (
+                        (row.replace(name.encode(), (name + '-extra').encode()), 'added packages'),
+                        (row.replace(version.encode(), b'1.0'), 'added packages'),
+                        (row.replace(architecture.encode(), b'arm64'), 'added packages'),
+                        (b'', 'count')):
+                    changed = dict(data)
+                    changed[L.OUTER_HOST_LOCK] = changed[L.OUTER_HOST_LOCK].replace(row, replacement)
+                    with self.subTest(name=name, replacement=replacement), \
+                         mock.patch.object(L, 'OUTER_HOST_PIN', pin(changed[L.OUTER_HOST_LOCK])):
+                        with self.assertRaisesRegex(ValueError, message):
+                            L.inventory_binding(parent, changed)
 
     def test_same_cli_without_new_override_flags_and_plan_never_executes(self):
         with contextlib.ExitStack() as stack:

@@ -20,20 +20,39 @@ TEMPLATE_SHA = 'eb55e7b0cd51f3deeede47777adda8255de9d48322eb568c502f9a52a797e4ff
 HELPER = 'build/deterministic-root-image.py'
 EPOCH = 1793750400
 PROFILE = 'deterministic-root-v1'
-OUTER_HOST_LOCK = 'configs/builder-host-packages-20261112.lock.tsv'
-OUTER_HOST_PIN = {'bytes': 32550, 'sha256': 'f779568a3e4e82afc488c1b99ccad0a88f2d96e74efe3b00172927c7539f4ef3'}
+OUTER_HOST_LOCK = 'configs/builder-host-packages-20261113.lock.tsv'
+OUTER_HOST_PIN = {'bytes': 32968, 'sha256': 'b34b70a879cbbf75f818708275c57ef0aef3ae635b9ae71a8005e2b29a8490b8'}
 FROZEN_REPLAY_LOCK = 'configs/builder-replay-packages-20261106.lock.tsv'
 FROZEN_REPLAY_PIN = {'bytes': 32546, 'sha256': '92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425'}
-# Observed November 11 updates on the outer host only. The frozen replay and
+# Observed November 13 inventory on the outer host only. The frozen replay and
 # historical userspace archive closure continue to use FROZEN_REPLAY_LOCK.
 OUTER_VERSION_CHANGES = {
+    'libc-bin': ('2.35-0ubuntu3.15', '2.35-0ubuntu3.18'),
+    'libc-dev-bin': ('2.35-0ubuntu3.15', '2.35-0ubuntu3.18'),
+    'libc6-dev-i386': ('2.35-0ubuntu3.15', '2.35-0ubuntu3.18'),
+    'libc6-dev:amd64': ('2.35-0ubuntu3.15', '2.35-0ubuntu3.18'),
+    'libc6-i386': ('2.35-0ubuntu3.15', '2.35-0ubuntu3.18'),
+    'libc6:amd64': ('2.35-0ubuntu3.15', '2.35-0ubuntu3.18'),
     'libperl5.34:amd64': ('5.34.0-3ubuntu1.9', '5.34.0-3ubuntu1.10'),
+    'linux-generic-hwe-22.04': ('6.8.0-138.138~22.04.1', '6.8.0-149.149~22.04.1'),
+    'linux-headers-generic-hwe-22.04': ('6.8.0-138.138~22.04.1', '6.8.0-149.149~22.04.1'),
+    'linux-image-generic-hwe-22.04': ('6.8.0-138.138~22.04.1', '6.8.0-149.149~22.04.1'),
     'linux-libc-dev:amd64': ('5.15.0-202.212', '5.15.0-203.213'),
     'linux-tools-common': ('5.15.0-202.212', '5.15.0-203.213'),
+    'locales': ('2.35-0ubuntu3.15', '2.35-0ubuntu3.18'),
     'perl': ('5.34.0-3ubuntu1.9', '5.34.0-3ubuntu1.10'),
     'perl-base': ('5.34.0-3ubuntu1.9', '5.34.0-3ubuntu1.10'),
     'perl-modules-5.34': ('5.34.0-3ubuntu1.9', '5.34.0-3ubuntu1.10'),
     'python3-pyasn1': ('0.4.8-1ubuntu0.3', '0.4.8-1ubuntu0.4'),
+}
+OUTER_ADDED_PACKAGES = {
+    'linux-headers-6.8.0-149-generic': ('6.8.0-149.149~22.04.1', 'amd64'),
+    'linux-hwe-6.8-headers-6.8.0-149': ('6.8.0-149.149~22.04.1', 'all'),
+    'linux-hwe-6.8-tools-6.8.0-149': ('6.8.0-149.149~22.04.1', 'amd64'),
+    'linux-image-6.8.0-149-generic': ('6.8.0-149.149~22.04.1', 'amd64'),
+    'linux-modules-6.8.0-149-generic': ('6.8.0-149.149~22.04.1', 'amd64'),
+    'linux-modules-extra-6.8.0-149-generic': ('6.8.0-149.149~22.04.1', 'amd64'),
+    'linux-tools-6.8.0-149-generic': ('6.8.0-149.149~22.04.1', 'amd64'),
 }
 
 
@@ -120,6 +139,19 @@ def adapted_ast(raw):
                if isinstance(node, ast.Constant) and type(node.value) is str and node.value == TEMPLATE]
     require(len(matches) == 1, 'historical AST SELF anchors differ')
     matches[0].value = SELF
+    # Adapt only the outer-host count checks, retaining the frozen inner root
+    # and every historical template byte. Exact structural anchors fail closed.
+    for function, inventory, message in (
+            ('preflight', 'before', 'host inventory package count differs'),
+            ('execute', 'after', 'final inventory count differs')):
+        anchor = ast.parse(f"require(len({inventory}.splitlines()) == 842, {message!r})").body[0]
+        functions = [node for node in tree.body
+                     if isinstance(node, ast.FunctionDef) and node.name == function]
+        require(len(functions) == 1, 'historical AST inventory function anchors differ')
+        counts = [node for node in ast.walk(functions[0]) if isinstance(node, ast.Expr)
+                  and ast.dump(node) == ast.dump(anchor)]
+        require(len(counts) == 1, 'historical AST inventory count anchors differ')
+        counts[0].value.args[0].comparators[0].value = 849
     return tree
 
 
@@ -140,7 +172,7 @@ def normalization_binding(helper_pin, template_pin):
             'historical_template': dict(template_pin)}
 
 
-def package_records(raw):
+def package_records(raw, expected_count):
     require(type(raw) is bytes, 'package lock bytes required')
     records = {}
     for line in raw.decode('ascii', 'strict').splitlines():
@@ -152,7 +184,7 @@ def package_records(raw):
                 and re.fullmatch(r'[a-z0-9][a-z0-9-]*', architecture)
                 and name not in records, 'invalid/duplicate package lock tuple')
         records[name] = (version, architecture)
-    require(len(records) == 842, 'package lock count differs')
+    require(len(records) == expected_count, 'package lock count differs')
     return records
 
 
@@ -162,15 +194,20 @@ def inventory_binding(parent, contents):
                            (FROZEN_REPLAY_LOCK, FROZEN_REPLAY_PIN)):
         require(type(contents.get(path)) is bytes, 'package lock missing from committed closure: ' + path)
         require(parent.pin(contents[path]) == expected, 'package lock pin differs: ' + path)
-        records[path] = package_records(contents[path])
+        records[path] = package_records(contents[path], 849 if path == OUTER_HOST_LOCK else 842)
     outer, frozen = records[OUTER_HOST_LOCK], records[FROZEN_REPLAY_LOCK]
-    require({name: value[1] for name, value in outer.items()} ==
-            {name: value[1] for name, value in frozen.items()}, 'package lock identities/architectures differ')
-    changes = {name: (frozen[name][0], outer[name][0]) for name in outer
+    require(set(frozen) <= set(outer), 'outer host package removals differ')
+    require({name: outer[name] for name in outer.keys() - frozen.keys()} == OUTER_ADDED_PACKAGES,
+            'outer host added packages differ')
+    require(all(outer[name][1] == frozen[name][1] for name in frozen),
+            'package lock architectures differ')
+    changes = {name: (frozen[name][0], outer[name][0]) for name in frozen
                if frozen[name][0] != outer[name][0]}
     require(changes == OUTER_VERSION_CHANGES, 'outer host version changes differ')
     return {'outer_host': {'path': OUTER_HOST_LOCK, **OUTER_HOST_PIN},
             'frozen_replay': {'path': FROZEN_REPLAY_LOCK, **FROZEN_REPLAY_PIN},
+            'added_packages': {name: {'version': version, 'architecture': architecture}
+                               for name, (version, architecture) in sorted(OUTER_ADDED_PACKAGES.items())},
             'version_changes': {name: {'frozen_replay': old, 'outer_host': new}
                                 for name, (old, new) in sorted(changes.items())}}
 

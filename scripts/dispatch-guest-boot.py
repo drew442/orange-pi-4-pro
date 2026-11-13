@@ -10,6 +10,7 @@ import importlib.util
 import json
 import os
 from pathlib import Path
+import re
 import select
 import subprocess
 import sys
@@ -125,6 +126,51 @@ def properties(unit, keys):
     return values
 
 
+def unit_dependencies(text):
+    """Decode systemctl's bounded ASCII unit-name list, never shell syntax.
+
+    systemd 252 quotes names containing backslashes and doubles those
+    backslashes. Only that C escape can occur in a legal serialized unit name.
+    Retain literal unit-name \\xHH escapes, including in unquoted fixtures.
+    """
+    require(type(text) is str and len(text) <= 65536 and text.isascii(),
+            'invalid dependency display size/encoding')
+    names, offset = set(), 0
+    while offset < len(text):
+        if text[offset] == ' ':
+            offset += 1
+            continue
+        quoted = text[offset] == '"'
+        if quoted:
+            offset += 1
+        token = []
+        while offset < len(text):
+            char = text[offset]
+            if quoted and char == '"':
+                offset += 1
+                break
+            if not quoted and char == ' ':
+                break
+            if quoted and char == '\\':
+                require(text[offset:offset + 2] == '\\\\',
+                        'invalid dependency display escape')
+                offset += 1
+            token.append(char)
+            require(len(token) <= 255, 'dependency unit name exceeds bound')
+            offset += 1
+        else:
+            require(not quoted, 'unterminated dependency display quote')
+        require(offset == len(text) or text[offset] == ' ',
+                'invalid dependency display separator')
+        name = ''.join(token)
+        require(re.fullmatch(r'(?:[A-Za-z0-9:_.@-]|\\x[0-9A-Fa-f]{2})+\.'
+                             r'(?:service|mount|slice|target|socket|device|swap|path|timer|scope|automount)',
+                             name) is not None, 'invalid dependency unit name')
+        require(name not in names and len(names) < 4096, 'duplicate/excess dependency units')
+        names.add(name)
+    return names
+
+
 def verify_loaded(texts, configs, memory):
     """Exact protected fragment + reload + no drop-ins authenticates ExecStart.
 
@@ -156,7 +202,9 @@ def verify_loaded(texts, configs, memory):
             require(len(caps) == len(set(caps)) and set(caps) == set(U.CAPABILITIES),
                     'loaded capability bound differs')
             deps = {'a733-guest-prepare.service', 'a733-guest-storage.service'} | set(mounts)
-            require(deps <= set(value['After'].split()) and deps <= set(value['Requires'].split()),
+            after = unit_dependencies(value['After'])
+            required = unit_dependencies(value['Requires'])
+            require(deps <= after and deps <= required,
                     'loaded storage dependencies differ')
             require(set(value['RequiresMountsFor'].split()) == {'/run/a733-state', '/run/a733-guests'},
                     'loaded required mount paths differ')

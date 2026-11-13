@@ -1,12 +1,18 @@
 # Current images for this board
 
-The board last ran **normalized A at 192.168.1.116 from SPI/NVMe with SD removed**,
-with its original pinned SSH identity. Its last observed state is cleanly powered
-off, awaiting the retained recovery card and power restoration. Last boot ID is
-`5858af7a-977e-4a9b-971e-6d71ae7858d3`. SPI cold/warm boot, SSH/NTP and real
-nonroot KVM CPU/disk/HTTP, clean shutdown, checkpoints and restart pass.
-The retained test guest is stopped at checkpoint 4 with eight history records;
-RAM accounts/units must be prepared again after boot. [Operational evidence](evidence/spi-operational-20261111.json).
+The board is running **managed B at 192.168.1.118 from SPI/NVMe with SD removed**,
+boot `1095a827-6f92-486d-9ad3-2463a95c2d5e`, using original strict SSH host-key
+alias `192.168.1.116`. Normalized A remains installed for rollback. Post-reinstall
+manual nonroot KVM CPU/disk/HTTP, guest-owned shutdown and checkpoint 5 pass;
+verified guest backups exist on both hosts.
+[Physical evidence](evidence/post-reinstall-SPI-managed-B-20261113.json).
+
+Managed guest registration succeeded, but its first start was refused before
+queueing by the installed systemd dependency guard. The guest is now disabled
+and has never run. The reviewed source fix passes full validation and needs
+a rebuilt root before another start. **Production managed operation is not yet
+qualified.** Follow [status](implementation-status.md); no SD rewrite or operator
+power cycle is needed for the current preparation.
 
 The earlier full installation and independent deployment reproduction pass.
 The earlier protected-SD route also passed ten warm/ten cold boots and complete
@@ -17,23 +23,26 @@ preserved off-device. [Release record](release-acceptance.md).
 The factory SPI candidate is
 `out/spi-nvme-original-20261108/a733-spi-nvme.bin`, 16777216 bytes, SHA-256
 `83edcd7f448e8353163666016a6bae3e9b70d041a5e4d8454f48931839205e90`.
-Vendor calibration changes its 2 KiB parameter area during boot. The latest
-private running-flash snapshot is
-`out/spi-nvme-hardware-20261111-01/postwarm-spi.bin`, SHA-256
-`e829cf7b08fa9753866df7de727b2d1b92bb5c525f3bbf4cd94315d528dc275a`.
+Vendor calibration changes its 2 KiB parameter area during boot. The latest retained full
+post-reinstall SPI snapshot is
+`out/spi-reinstall-boot-20261113-02/post-SPI-cold-boot.bin`, SHA-256
+`2d9e2a413be36c613c2b7f794855ed1d17bf72a9168f40f8578e54ef3cb92386`.
+It was captured before the subsequent B warm boot; do not treat it as a fresh
+live-flash plan input.
 Future SPI writes require a fresh reviewed plan accounting for that metadata.
 Keep both original and calibrated backups. [SPI procedure](spi-sd-boot-20261111.md).
 
 Paths below are relative to `/home/drew/orange-pi-4-pro` on codex.
 
-## New uninstalled managed candidate
+## Managed candidate and pending fix
 
 The [managed root candidate](managed-root-candidate-20261112.md) has matching
 production constructions, independent complete filesystem/package checks and
-whole historical/current reader compatibility. It remains unbooted and
-unqualified on hardware. Its 4 GiB root components are for NVMe; keep the retained
-2 GB recovery card unchanged. Fresh inactive-B deployment and actual managed KVM,
-SPI recovery and final qualification remain pending.
+whole historical/current reader compatibility. Candidate B is installed and
+boots; managed KVM remains blocked by the safely refused dependency check. Its
+4 GiB root components are for NVMe; keep the retained 2 GB recovery card unchanged.
+SPI recovery passes. Rebuilt-root deployment, actual managed KVM and final
+qualification remain pending.
 
 ## Existing installed release and recovery inputs
 

@@ -33,8 +33,8 @@ class ManagedUnitTests(unittest.TestCase):
             '/usr/lib/a733-tools/scripts/run-managed-guest.py', 'one'])
         expected = {
             'Description': 'A733 managed guest one',
-            'After': 'a733-guest-prepare.service a733-guest-storage.service',
-            'Requires': 'a733-guest-prepare.service a733-guest-storage.service',
+            'After': r'a733-guest-prepare.service a733-guest-storage.service run-a733\x2dstate.mount run-a733\x2dguests.mount',
+            'Requires': r'a733-guest-prepare.service a733-guest-storage.service run-a733\x2dstate.mount run-a733\x2dguests.mount',
             'RequiresMountsFor': '/run/a733-state /run/a733-guests',
             'Type': 'exec', 'User': 'root', 'Group': 'root',
             'Slice': 'a733-guests.slice', 'NoNewPrivileges': 'yes', 'UMask': '0077',

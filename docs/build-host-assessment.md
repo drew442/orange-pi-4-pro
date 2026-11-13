@@ -5,9 +5,18 @@ builder to 849 packages, including new kernel packages. This differs from the
 842-package inventory used for the reproduced managed roots. The latest
 [collector validation](evidence/spi-collector-address-validation-20261113.json)
 passes on the captured current inventory; it does not qualify that inventory for
-a new root build. Revalidate/review exact package locks before constructing a
-new image. Retain the frozen replay builder and historical build inventories.
+a new root build. The new exact849 lock, narrow build-only adapter and seventeen-package signed
+archive supplement pass independent review and **3664-test combined validation**,
+plus shell/diagnostic suites. New root construction remains separate.
+[Inventory/provenance](evidence/outer-builder-849-20261113.json). Retain the
+frozen replay builder and historical build inventories.
 Earlier measurements below are historical, not fresh admission evidence.
+
+The reviewed allocation of the remaining 1017 free VG extents completed using
+the existing root LV: 128819658752→133085265920 bytes. Ext4 grew online with
+unchanged filesystem identity; VG/PV free is now zero. Metadata was fsynced
+off-device first. Available space immediately afterward was 24,447,950,848
+bytes; remeasure for each build. [Capacity receipt](evidence/build-host-capacity-20261113.json).
 
 ## Active remote builder
 

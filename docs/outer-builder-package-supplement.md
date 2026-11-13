@@ -9,8 +9,10 @@ The [machine lock](../configs/builder-outer-package-supplement-20261113.lock.jso
 records all seven package/version/architecture tuples, filenames, sizes and
 SHA256 values; complete acquisition and copy checks are in the
 [evidence](evidence/builder-outer-package-supplement-20261113.json).
-The exact current outer inventory remains 842 packages, SHA256 `f779568a3e4e82afc488c1b99ccad0a88f2d96e74efe3b00172927c7539f4ef3`.
-The historical frozen replay and binary archive locks are unchanged.
+This historical supplement covers the formerly qualified 842-package inventory, SHA256 `f779568a3e4e82afc488c1b99ccad0a88f2d96e74efe3b00172927c7539f4ef3`.
+The outer host has since advanced to 849; its [new supplement](evidence/outer-builder-849-20261113.json)
+records the exact additional inputs. Historical frozen replay and binary archive
+locks remain unchanged.
 
 ## Retained contents and authentication
 

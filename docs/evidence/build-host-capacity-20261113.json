@@ -1,0 +1,136 @@
+{
+  "date_utc": "2026-11-13",
+  "scope": "Previously authorized free Ubuntu builder VG capacity; no OrangePi or native codex target changes",
+  "authorization": "User explicitly permits all free builder capacity for use/expansion; AGENTS.md records persisted authorization.",
+  "host": "drew@build.drewnet.online",
+  "target": {
+    "lv_name": "ubuntu-lv",
+    "vg_name": "ubuntu-vg",
+    "lv_path": "/dev/ubuntu-vg/ubuntu-lv",
+    "lv_uuid": "Wacdne-hf6p-osvg-5IiF-iVD0-Dlgt-6iflHh",
+    "lv_size": "128819658752",
+    "lv_attr": "-wi-ao----"
+  },
+  "before": {
+    "lv": {
+      "lv_name": "ubuntu-lv",
+      "vg_name": "ubuntu-vg",
+      "lv_path": "/dev/ubuntu-vg/ubuntu-lv",
+      "lv_uuid": "Wacdne-hf6p-osvg-5IiF-iVD0-Dlgt-6iflHh",
+      "lv_size": "128819658752",
+      "lv_attr": "-wi-ao----"
+    },
+    "vg": {
+      "vg_name": "ubuntu-vg",
+      "vg_uuid": "cSa2Pd-Xpsw-3sf0-ZuPr-ZG5i-ODrj-c3SHlL",
+      "vg_size": "133085265920",
+      "vg_free": "4265607168",
+      "vg_extent_size": "4194304",
+      "vg_free_count": "1017"
+    },
+    "pv": {
+      "pv_name": "/dev/sda3",
+      "pv_uuid": "ENVmlG-QqW4-I9ea-5jqX-1isS-T5mV-i7Me3o",
+      "pv_size": "133085265920",
+      "pv_free": "4265607168",
+      "vg_name": "ubuntu-vg"
+    },
+    "root_rdev": 64512,
+    "filesystem_uuid": "bb90e190-be63-4324-a020-c80583437401",
+    "filesystem_bytes": 128819658752,
+    "filesystem_block_size": 4096,
+    "statvfs_blocks": 30875641,
+    "available_bytes": 20419166208
+  },
+  "after": {
+    "lv": {
+      "lv_name": "ubuntu-lv",
+      "vg_name": "ubuntu-vg",
+      "lv_path": "/dev/ubuntu-vg/ubuntu-lv",
+      "lv_uuid": "Wacdne-hf6p-osvg-5IiF-iVD0-Dlgt-6iflHh",
+      "lv_size": "133085265920",
+      "lv_attr": "-wi-ao----"
+    },
+    "vg": {
+      "vg_name": "ubuntu-vg",
+      "vg_uuid": "cSa2Pd-Xpsw-3sf0-ZuPr-ZG5i-ODrj-c3SHlL",
+      "vg_size": "133085265920",
+      "vg_free": "0",
+      "vg_extent_size": "4194304",
+      "vg_free_count": "0"
+    },
+    "pv": {
+      "pv_name": "/dev/sda3",
+      "pv_uuid": "ENVmlG-QqW4-I9ea-5jqX-1isS-T5mV-i7Me3o",
+      "pv_size": "133085265920",
+      "pv_free": "0",
+      "vg_name": "ubuntu-vg"
+    },
+    "root_rdev": 64512,
+    "filesystem_uuid": "bb90e190-be63-4324-a020-c80583437401",
+    "filesystem_bytes": 133085265920,
+    "filesystem_block_size": 4096,
+    "statvfs_blocks": 31900601,
+    "available_bytes": 24447950848
+  },
+  "delta_bytes": 4265607168,
+  "command": [
+    "lvextend",
+    "--extents",
+    "+1017",
+    "--resizefs",
+    "/dev/ubuntu-vg/ubuntu-lv"
+  ],
+  "success": true,
+  "metadata_backup_fsynced_off_device_before_mutation": true,
+  "metadata_backup_sha256": "b241fbb387c9305a515572b85fc38be11890087330f360a526a54361f75a9088",
+  "metadata_backup_is_not_automatic_filesystem_rollback": true,
+  "independent_review": {
+    "path": "tmp/build-capacity-extension-review-20261113.json",
+    "sha256": "74ff2b0ceff72956c30947642871827da89c088b5ba3d2636ea41021c5c75d34",
+    "scope": "Exact target, arithmetic and literal helper reviewed before single invocation"
+  },
+  "hardware_acceptance": false,
+  "artifacts": {
+    "inventory.json": {
+      "path": "out/managed-systemd-build-capacity-20261113-01/inventory.json",
+      "bytes": 5620,
+      "sha256": "c85ef9610f3804234f9d3210907933911fe4444cd88b23d696c349d0253d2c52"
+    },
+    "metadata-backup.json": {
+      "path": "out/managed-systemd-build-capacity-20261113-01/metadata-backup.json",
+      "bytes": 2082,
+      "sha256": "54eb24107918d5665947442ac0181cad07b4a934519cff92f4ffd5f0dbd771e0"
+    },
+    "before.vg": {
+      "path": "out/managed-systemd-build-capacity-20261113-01/before.vg",
+      "bytes": 1355,
+      "sha256": "b241fbb387c9305a515572b85fc38be11890087330f360a526a54361f75a9088"
+    },
+    "extend-source.py": {
+      "path": "out/managed-systemd-build-capacity-20261113-01/extend-source.py",
+      "bytes": 4188,
+      "sha256": "38d2a038770473a4bf24a9670e0d52d7a433c32630271bf0670c6eb8ce39855c"
+    },
+    "extension-native-intent.json": {
+      "path": "out/managed-systemd-build-capacity-20261113-01/extension-native-intent.json",
+      "bytes": 337,
+      "sha256": "75d335ed4c1934afe5c4265514584214ade18a96a27ec66505649a7abb2ad115"
+    },
+    "extension-result.jsonl": {
+      "path": "out/managed-systemd-build-capacity-20261113-01/extension-result.jsonl",
+      "bytes": 14924,
+      "sha256": "dff7c5dc3f186412f99418f0fe4a9c0efed0c0fd482f4dc1c2159e7281d24a84"
+    },
+    "extension.stderr": {
+      "path": "out/managed-systemd-build-capacity-20261113-01/extension.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "extension-process.json": {
+      "path": "out/managed-systemd-build-capacity-20261113-01/extension-process.json",
+      "bytes": 18,
+      "sha256": "df4d721d233a2334088d2d2e0110346ae9e509ff46bf0b379fbcfa85c715af4d"
+    }
+  }
+}

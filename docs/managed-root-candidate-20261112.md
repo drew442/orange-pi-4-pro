@@ -2,8 +2,11 @@
 
 Source `2996365a11cb07deb20eb4325c90841de8ab820e` now has two matching A/B
 constructions, independent complete artifact/filesystem checks and production
-reader interoperability. **Neither new root has booted on the board.** These are
-4 GiB NVMe root components. Keep the retained 2 GB recovery SD unchanged.
+reader interoperability. **B now boots on the board**, with normalized A and
+BOOT preserved; candidate A remains unbooted. Managed start refused before
+queueing on systemd dependencies and is disabled pending a rebuilt root.
+[Live status](implementation-status.md) supersedes the original deployment
+preconditions below. These are 4 GiB NVMe components; keep the 2 GB recovery SD.
 
 [Build records](evidence/managed-root-builds-20261112.json),
 [independent artifact review](evidence/managed-root-artifact-review-20261112.json)
@@ -14,7 +17,8 @@ An [independent third construction](evidence/independent-managed-root-reproducti
 now reproduces the documented command from a fresh source/worktree, using the
 declared retained inputs. All 133 artifacts and the manifest match the table
 below; full gzip expansion and filesystem readback pass. This is independent
-operator execution on the qualified builder, with physical deployment still pending.
+operator execution on the qualified builder; final physical procedure
+reproduction remains pending.
 
 ## Artifact identity and custody
 
@@ -96,9 +100,10 @@ The diagnostic DTB recorded in root provenance is not a replacement BOOT payload
 
 ## Next physical steps
 
-SPI restoration, SD recovery and reinstallation pass. Complete the next
-SD-removed boot/KVM check, then follow the [initial managed-B procedure](managed-root-deployment.md)
-to prepare fresh concrete staging and selection plans. Preserve working
+SPI restoration/reinstallation, SD-removed manual KVM and initial B deployment
+pass. The [initial managed-B procedure](managed-root-deployment.md) records that
+migration. Do not replay it against running B. The dependency fix requires a
+new frozen construction and fresh repair/deployment plans. Preserve working
 normalized A, BOOT, STATE and the manual `firstkvm` cohort. Existing known-target
 authorization persists; fresh live identity and independent plan review remain
 required.

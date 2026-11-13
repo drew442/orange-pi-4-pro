@@ -7,7 +7,10 @@ serves **8080**, while the original external template requested 80. The correcte
 configuration/reference below supersede those original preparation pins. Preserve
 the unused original cohort and receipts; never overwrite its manifest in place.
 The unused cohort is retained intact in private p5 quarantine. Corrected
-enrollment now passes; managed registration and KVM operation remain pending.
+enrollment and registration now pass. The first start was refused before
+queueing on systemd dependency checks, and the guest is disabled at sequence 0.
+**Do not retry these launch commands on candidate 2996365.** A reviewed fix
+needs a rebuilt root, fresh marker/source pins and deployment review first.
 [Correction record](evidence/managed-fixture-port-correction-20261113.json).
 [Current physical evidence](evidence/post-reinstall-SPI-managed-B-20261113.json).
 

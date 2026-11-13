@@ -1,0 +1,106 @@
+{
+  "date_utc": "2026-11-13",
+  "result": "PASS software integration; no rebuilt-root or managed-KVM acceptance",
+  "source_commit": "11012f682c4b0a934a2b04a307a8ef9bd373aafc",
+  "source_index_tree": "2b8a4e7199039ab3e1cdafce581f14fb0654f690",
+  "source_files_locked": 1143,
+  "tests": {
+    "unit": 3664,
+    "shell_suites": 5,
+    "diagnostic_assembly": 5,
+    "skips": 0,
+    "failures": 0,
+    "errors": 0
+  },
+  "terminal_unit": {
+    "RuntimeMaxUSec": "8h",
+    "MainPID": "0",
+    "Result": "success",
+    "ExecMainExitTimestamp": "Fri 2026-11-13 13:18:58 UTC",
+    "ExecMainStatus": "0",
+    "CPUQuotaPerSecUSec": "2s",
+    "MemoryMax": "3221225472",
+    "UMask": "0022",
+    "ActiveState": "active",
+    "SubState": "exited",
+    "ActiveEnterTimestamp": "Fri 2026-11-13 12:57:25 UTC"
+  },
+  "resource_samples": 44,
+  "minimum_free_bytes": 20414304256,
+  "minimum_MemAvailable_bytes": 6885322752,
+  "source_locks_verified_before_and_after": 1143,
+  "changed_code_matches_validated_bytes": {
+    "configs/guest_boot_units.py": {
+      "bytes": 4877,
+      "sha256": "1c2064edbf2cf1f5deee867cc0dc67dad320057bd5ef55d30c75acaf907b3658"
+    },
+    "scripts/dispatch-guest-boot.py": {
+      "bytes": 18510,
+      "sha256": "6acc3cf04a9e5c1ee80cc7e1e420a492cb9580db1395cb22ec515cec75a9c208"
+    },
+    "tests/test_guest_boot_units.py": {
+      "bytes": 9132,
+      "sha256": "94cbd3db7b22586b0f04ac4b4117b3576a2bf424d190f2e3b0ac6de596a45d50"
+    },
+    "tests/test_dispatch_guest_boot.py": {
+      "bytes": 12433,
+      "sha256": "3b44b74114684bf98d5bc3144291cb4dc071883bb8a0b1b7198bda66957b8258"
+    },
+    "build/launch-deterministic-host-roots.py": {
+      "bytes": 15387,
+      "sha256": "e4f46b2465feaef2f389514cdf1c4653dba9cf8d3341e132fa0f0cf57d19f97f"
+    },
+    "configs/builder-host-packages-20261113.lock.tsv": {
+      "bytes": 32968,
+      "sha256": "b34b70a879cbbf75f818708275c57ef0aef3ae635b9ae71a8005e2b29a8490b8"
+    },
+    "tests/test_launch_deterministic_host_roots.py": {
+      "bytes": 20512,
+      "sha256": "eefd95a85b3d3cdd693cc48dd8ad5a5d342be9b29b3c9b66943b83046d12c529"
+    }
+  },
+  "hardware_acceptance": false,
+  "installed_root_modified": false,
+  "new_root_built": false,
+  "builder_outer_inventory": "configs/builder-host-packages-20261113.lock.tsv",
+  "builder_outer_provenance": "docs/evidence/outer-builder-849-20261113.json",
+  "artifacts": {
+    "terminal-unit.json": {
+      "path": "out/managed-systemd-outer849-integration-validation-20261113-01/terminal-unit.json",
+      "bytes": 339,
+      "sha256": "9ad92c844bc703fdd24df22dcf46a00e4d7ffbbec3d95f7d73787c576ec59aee"
+    },
+    "validation.log": {
+      "path": "out/managed-systemd-outer849-integration-validation-20261113-01/validation.log",
+      "bytes": 3759,
+      "sha256": "c1771ca738abaf61b7601e944bcf81823b3b465b37981c72af4f85bee3de29bd"
+    },
+    "validation.stderr": {
+      "path": "out/managed-systemd-outer849-integration-validation-20261113-01/validation.stderr",
+      "bytes": 80253,
+      "sha256": "958a31bb2705a461112a63d58efb488986a50ab0d96d64014a1eae38592a7627"
+    },
+    "resources.log": {
+      "path": "out/managed-systemd-outer849-integration-validation-20261113-01/resources.log",
+      "bytes": 17842,
+      "sha256": "4361f4760c582501512a2db5a481f71223fdb7d51be12737d75099d50f621c5f"
+    },
+    "validate.sh": {
+      "path": "out/managed-systemd-outer849-integration-validation-20261113-01/validate.sh",
+      "bytes": 945,
+      "sha256": "328869e0affae3e2092f46ddca975c5cc5683b972069b3e2d40f4052a8ac20e2"
+    },
+    "project-source-lock.json": {
+      "path": "out/managed-systemd-outer849-integration-validation-20261113-01/project-source-lock.json",
+      "bytes": 183775,
+      "sha256": "392b7fddab1f45b3a5ecb0b61d6425d6b60d0750f8830577efd30332d2013024"
+    }
+  },
+  "receipt_custody": {
+    "path": "/var/lib/a733-managed-systemd-outer849-integration-validation-20261113-01/validation-receipts.tar",
+    "bytes": 348160,
+    "sha256": "4eb0b251470a696305fa74a9b593c2fcf483b4bb100d5629c3117b59b15c1901",
+    "fsynced": true,
+    "native_path": "out/managed-systemd-outer849-integration-validation-20261113-01/validation-receipts.tar"
+  }
+}

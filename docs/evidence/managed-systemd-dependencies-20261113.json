@@ -1,0 +1,201 @@
+{
+  "date_utc": "2026-11-13",
+  "scope": "Installed candidate299 managed start refusal, source repair and actual native systemd252 dependency graph probe",
+  "installed_candidate": "2996365a11cb07deb20eb4325c90841de8ab820e",
+  "boot_id": "1095a827-6f92-486d-9ad3-2463a95c2d5e",
+  "first_start": {
+    "managed_registration_succeeded": true,
+    "enablement_succeeded": true,
+    "start_success": false,
+    "error": "AdmissionError: loaded storage dependencies differ",
+    "queue_attempted": false,
+    "queue_acknowledged": false,
+    "queue_uncertain": false,
+    "run_id": null,
+    "head_sequence": 0,
+    "head_status": "ready",
+    "explicit_request_exists": false,
+    "actual_KVM_run": false,
+    "subsequently_disabled": true,
+    "registry_generation_after_disable": 3
+  },
+  "diagnosis": [
+    "systemd252 string-array display quotes and doubles backslashes in mount unit IDs; plain split does not recover those IDs.",
+    "RequiresMountsFor adds ordering but omits automatic Requires for these manually mounted fragmentless units."
+  ],
+  "fix": {
+    "explicit_mount_After_and_Requires": true,
+    "required_mount_paths_unchanged": true,
+    "strict_dependency_decoder_limits": {
+      "raw_ASCII_characters": 65536,
+      "tokens": 4096,
+      "decoded_unit_characters": 255
+    },
+    "guard_relaxed": false,
+    "installed_root_patched": false,
+    "new_root_required": true,
+    "source_pins": {
+      "configs/guest_boot_units.py": "1c2064edbf2cf1f5deee867cc0dc67dad320057bd5ef55d30c75acaf907b3658",
+      "scripts/dispatch-guest-boot.py": "6acc3cf04a9e5c1ee80cc7e1e420a492cb9580db1395cb22ec515cec75a9c208"
+    }
+  },
+  "independent_review": {
+    "verdict": "PASS_SOURCE_FIX_AND_NATIVE_SYSTEMD252_NO_START_GRAPH_PROBE",
+    "path": "tmp/managed-systemd-dependencies-review-20261113.json",
+    "sha256": "9397f0fddc9112298bf47d4f3fcc59659a8a85f744e06860832abed668c8b89b"
+  },
+  "upstream_references": [
+    {
+      "url": "https://raw.githubusercontent.com/systemd/systemd/v252/src/core/unit.c",
+      "relevant": "unit_add_mount_dependencies lines1391-1436"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/systemd/systemd/v252/src/shared/bus-print-properties.c",
+      "relevant": "SD_BUS_TYPE_ARRAY string branch lines214-247"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/systemd/systemd/v252/src/basic/escape.c",
+      "relevant": "strcpy_backslash_escaped and shell_maybe_quote lines441-505"
+    },
+    {
+      "url": "https://www.freedesktop.org/software/systemd/man/252/systemd.unit.html",
+      "relevant": "RequiresMountsFor overview; source provides fragmentless-mount implementation detail"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/systemd/systemd-stable/v252.39/src/core/unit.c",
+      "relevant": "Patch-version-matched unit_add_mount_dependencies: After at1409, Requires conditional on fragment_path1413-1417."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/systemd/systemd-stable/v252.39/src/shared/bus-print-properties.c",
+      "relevant": "Patch-version-matched string-array serializer222-234 still calls shell_maybe_quote(str,0)."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/systemd/systemd-stable/v252.39/src/basic/escape.c",
+      "relevant": "Patch-version-matched shell_maybe_quote474-518/strcpy_backslash_escaped440-459 confirm ASCII backslash quoting/doubling; Unicode handling changes do not affect unit-name subset."
+    }
+  ],
+  "native_no_start_probe": {
+    "passed": true,
+    "never_started": true,
+    "load_state": "loaded",
+    "active_state": "inactive",
+    "main_pid": 0,
+    "fragment_path": "/run/systemd/system/a733-dependency-probe-20261113.service",
+    "drop_in_paths": "",
+    "required_mount_paths": [
+      "/run/a733-state",
+      "/run/a733-guests"
+    ],
+    "decoded_after": [
+      "-.mount",
+      "a733-guest-prepare.service",
+      "a733-guest-storage.service",
+      "a733-guests.slice",
+      "basic.target",
+      "run-a733\\x2dguests.mount",
+      "run-a733\\x2dstate.mount",
+      "sysinit.target",
+      "systemd-journald.socket"
+    ],
+    "decoded_requires": [
+      "a733-guest-prepare.service",
+      "a733-guest-storage.service",
+      "a733-guests.slice",
+      "run-a733\\x2dguests.mount",
+      "run-a733\\x2dstate.mount",
+      "sysinit.target"
+    ],
+    "all_four_required_edges_present_in_both": true,
+    "removed_owned_probe": true,
+    "cleanup_errors": [],
+    "classification": "Actual native PID1 dependency loading/serialization proof only; no guest execution or deployment acceptance."
+  },
+  "validation": {
+    "focused_privileged_guest_boot_tests": 121,
+    "focused_pass": true,
+    "combined_builder_unit": "a733-managed-systemd-outer849-integration-validation-20261113-01.service",
+    "combined_source_commit": "11012f682c4b0a934a2b04a307a8ef9bd373aafc",
+    "combined_tree": "2b8a4e7199039ab3e1cdafce581f14fb0654f690",
+    "locked_inputs": 1143,
+    "combined_status": "PASS: 3664 unit tests, five shell suites and five diagnostic cases; zero skips/errors/failures",
+    "combined_evidence": "docs/evidence/managed-systemd-outer849-validation-20261113.json"
+  },
+  "hardware_acceptance": false,
+  "remaining": [
+    "Full suite terminal success and exact provenance",
+    "New reproducible root construction and independent artifact/deployment review",
+    "Fresh actual managed KVM CPU/disk/network/power-key/checkpoint/restart",
+    "Automatic startup, maintenance/restore/rollback and final boot qualification"
+  ],
+  "artifacts": {
+    "register-enable-start-source.py": {
+      "path": "out/managed-fixture-hardware-20261113-01/register-enable-start-source.py",
+      "bytes": 2883,
+      "sha256": "7ca70d1849c556a5f0352c93ee5c2bb3235dc4d7d09c3ec9512fef9148ef7bbc"
+    },
+    "register-enable-start.jsonl": {
+      "path": "out/managed-fixture-hardware-20261113-01/register-enable-start.jsonl",
+      "bytes": 5208,
+      "sha256": "32478bb930d3248639d2f9bf344546b7f4101f6ea1f2bc3d9bd3aa2b0f95f0b2"
+    },
+    "register-enable-start.stderr": {
+      "path": "out/managed-fixture-hardware-20261113-01/register-enable-start.stderr",
+      "bytes": 126,
+      "sha256": "321705452c199f23b7f0380947370821317da1d1ccf67130e66f3ec19ed8f5be"
+    },
+    "register-enable-start-process.json": {
+      "path": "out/managed-fixture-hardware-20261113-01/register-enable-start-process.json",
+      "bytes": 18,
+      "sha256": "8869ca5e7f3ae989b151917c32f706ea8b83fd8d2ab5fd425117c4860c4e595f"
+    },
+    "first-live-KVM.json": {
+      "path": "out/managed-fixture-hardware-20261113-01/first-live-KVM.json",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "first-live-KVM.stderr": {
+      "path": "out/managed-fixture-hardware-20261113-01/first-live-KVM.stderr",
+      "bytes": 131,
+      "sha256": "0f011c397ed56c05f98fb5cb979c3c29eee504a6c28c16fd99cc6f0b597a3d9f"
+    },
+    "systemd-start-refusal-diagnostic.json": {
+      "path": "out/managed-fixture-hardware-20261113-01/systemd-start-refusal-diagnostic.json",
+      "bytes": 4521,
+      "sha256": "ec1b85dfc3d358b895286c08de9e444ad571c32a0d89376f281886fcfde5ae78"
+    },
+    "disable-after-refusal.jsonl": {
+      "path": "out/managed-fixture-hardware-20261113-01/disable-after-refusal.jsonl",
+      "bytes": 2599,
+      "sha256": "2c3f10043f7e725fb107ba1d9e0a3f47455747a443dbdd0403c23aecbad0de59"
+    },
+    "systemd-dependency-probe-source.py": {
+      "path": "out/managed-fixture-hardware-20261113-01/systemd-dependency-probe-source.py",
+      "bytes": 2756,
+      "sha256": "d363d50cd0e84b048d9c1779eb380b45dac5afda158419c3551b1b9e2dbb8973"
+    },
+    "systemd-dependency-probe.json": {
+      "path": "out/managed-fixture-hardware-20261113-01/systemd-dependency-probe.json",
+      "bytes": 1811,
+      "sha256": "53ab4db527ebbb4ef57799bd0cacccb98c7dcc595a0b04966b00b9519dd55ac0"
+    },
+    "systemd-dependency-probe.stderr": {
+      "path": "out/managed-fixture-hardware-20261113-01/systemd-dependency-probe.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "additional_readonly_native_contract_review": {
+    "path": "tmp/managed-systemd-full-contract-readonly-review-20261113.json",
+    "sha256": "19c910229d2cbb4cd9d92531a4473a9fbd9f017ba21db144746c2490af54bb12",
+    "unchanged_field_checks": 32,
+    "passed": true,
+    "scope": "Two systemctl show calls only; known original dependency failure retained; bootID supplied as context, not re-read by this review."
+  },
+  "off_device_hardware_record_custody": {
+    "path": "/home/drew/orange-pi-4-pro-build/managed-fixture-hardware-20261113-01/initial-guest-deployment-and-refusal-records.tar",
+    "bytes": 3809280,
+    "sha256": "c0031b9d0cd101016b2b492c83f6ab87a9a60c1b71a2d0549b6820f6bf110301",
+    "fsynced": true,
+    "native_path": "out/managed-fixture-hardware-20261113-01/initial-guest-deployment-and-refusal-records.tar"
+  }
+}

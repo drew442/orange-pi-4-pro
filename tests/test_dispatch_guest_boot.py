@@ -30,6 +30,35 @@ class Records(unittest.TestCase):
         with patch.object(M, 'command', return_value='LoadState=loaded\nExecStartPre=command\n'):
             self.assertEqual(M.properties('one.service', keys)['ExecStartPre'], 'command')
 
+    def test_native_252_dependency_display_preserves_unit_name_escapes(self):
+        # Debian 252.39 show output: quoted C-escaped names, other units bare.
+        display = (r'systemd-journald.socket "run-a733\\x2dstate.mount" '
+                   r'sysinit.target -.mount "run-a733\\x2dguests.mount"')
+        expected = {'systemd-journald.socket', r'run-a733\x2dstate.mount',
+                    'sysinit.target', '-.mount', r'run-a733\x2dguests.mount'}
+        self.assertEqual(M.unit_dependencies(display), expected)
+        self.assertEqual(M.unit_dependencies('  ' + ' '.join(sorted(expected)) + ' '), expected)
+        self.assertEqual(M.unit_dependencies(''), set())
+        self.assertEqual(M.unit_dependencies('x' * 247 + '.service'),
+                         {'x' * 247 + '.service'})
+        self.assertEqual(len(M.unit_dependencies(
+            ' '.join(str(i) + '.service' for i in range(4096)))), 4096)
+        self.assertEqual(M.unit_dependencies(r'"literal\\x5c.mount"'),
+                         {r'literal\x5c.mount'})
+
+    def test_dependency_display_rejects_malformed_or_unbounded_names(self):
+        invalid = [None, b'one.service', 'é.service', 'one.service\n',
+                   'one.service\ttwo.service', '"one.service', '""',
+                   '"one.service"two.service', r'"run-a733\x2dstate.mount"',
+                   r'"one\n.service"', r'"one\".service"', r'one\q.service',
+                   r'one\x2.mount', r'one\xZZ.mount', "'one.service'",
+                   '/one.service', 'one.unknown', 'one.service one.service',
+                   'x' * 248 + '.service', ' ' * 65537,
+                   ' '.join(str(i) + '.service' for i in range(4097))]
+        for value in invalid:
+            with self.subTest(value=repr(value)[:120]), self.assertRaises(M.A.AdmissionError):
+                M.unit_dependencies(value)
+
     def test_closed_and_canonical_intent(self):
         value = dict(schema=1, profile=M.PROFILE, boot_id='11111111-1111-4111-8111-111111111111',
             policy_sha256='a'*64, registry_sha256='b'*64, selected=['one'],
@@ -94,12 +123,19 @@ class Native(unittest.TestCase):
                 TimeoutStopUSec='7min', SendSIGKILL='yes', NoNewPrivileges='yes',
                 CapabilityBoundingSet=' '.join(M.U.CAPABILITIES).lower(), PrivateMounts='no',
                 PrivateTmp='no', PrivateDevices='no', ProtectSystem='no', PrivateUsers='no',
-                After='a733-guest-prepare.service a733-guest-storage.service run-a733\\x2dstate.mount run-a733\\x2dguests.mount',
-                Requires='a733-guest-prepare.service a733-guest-storage.service run-a733\\x2dstate.mount run-a733\\x2dguests.mount',
+                After=r'a733-guest-prepare.service a733-guest-storage.service "run-a733\\x2dstate.mount" "run-a733\\x2dguests.mount" -.mount systemd-journald.socket',
+                Requires=r'a733-guest-prepare.service a733-guest-storage.service "run-a733\\x2dstate.mount" "run-a733\\x2dguests.mount" sysinit.target a733-guests.slice',
                 RequiresMountsFor='/run/a733-state /run/a733-guests')
             if self.bad == 'dropin': value['DropInPaths'] = '/run/evil.conf'
             if self.bad == 'namespace': value['PrivateMounts'] = 'yes'
-            if self.bad == 'dependency': value['Requires'] = ''
+            if self.bad == 'dependency':
+                # Fragmentless manually mounted units gain After from
+                # RequiresMountsFor on v252, but no generated Requires.
+                value['Requires'] = 'a733-guest-prepare.service a733-guest-storage.service'
+            if self.bad == 'wrong-mount':
+                value['Requires'] = value['Requires'].replace('x2dstate', 'x2dother')
+            if self.bad == 'malformed-after': value['After'] += ' "bad\\q.service"'
+            if self.bad == 'malformed-requires': value['Requires'] += ' "bad\\q.service"'
         return value
 
     def queues(self): return [argv for argv in self.commands if 'start' in argv]
@@ -138,7 +174,8 @@ class Native(unittest.TestCase):
         self.assertEqual(self.queues(), [])
 
     def test_pid1_contract_refuses_before_intent(self):
-        for bad in ('dropin', 'namespace', 'dependency'):
+        for bad in ('dropin', 'namespace', 'dependency', 'wrong-mount',
+                    'malformed-after', 'malformed-requires'):
             self.bad = bad
             result = M.dispatch()
             self.assertFalse(result['success'], result)

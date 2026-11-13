@@ -1,0 +1,169 @@
+{
+  "schema": 1,
+  "purpose": "Exact added/changed outer Ubuntu22.04 builder packages; frozen replay and historical archives unchanged",
+  "inventory": {
+    "path": "configs/builder-host-packages-20261113.lock.tsv",
+    "bytes": 32968,
+    "rows": 849,
+    "sha256": "b34b70a879cbbf75f818708275c57ef0aef3ae635b9ae71a8005e2b29a8490b8"
+  },
+  "packages": [
+    {
+      "Package": "libc-bin",
+      "Version": "2.35-0ubuntu3.18",
+      "Architecture": "amd64",
+      "Filename": "pool/main/g/glibc/libc-bin_2.35-0ubuntu3.18_amd64.deb",
+      "Size": "705856",
+      "SHA256": "85373cd2c5a73ff603b115cf35b4f48bcffe61077dae062934bc846b4663959b"
+    },
+    {
+      "Package": "libc-dev-bin",
+      "Version": "2.35-0ubuntu3.18",
+      "Architecture": "amd64",
+      "Filename": "pool/main/g/glibc/libc-dev-bin_2.35-0ubuntu3.18_amd64.deb",
+      "Size": "20300",
+      "SHA256": "855720b1ecc0030382b27019e561d574540aaa7575629dfb2c55aeaa9cacec0d"
+    },
+    {
+      "Package": "libc6",
+      "Version": "2.35-0ubuntu3.18",
+      "Architecture": "amd64",
+      "Filename": "pool/main/g/glibc/libc6_2.35-0ubuntu3.18_amd64.deb",
+      "Size": "3235596",
+      "SHA256": "cbed4dfa159019c759edae73ece1af67817e163686ad8925a26c90849ba1660a"
+    },
+    {
+      "Package": "libc6-dev",
+      "Version": "2.35-0ubuntu3.18",
+      "Architecture": "amd64",
+      "Filename": "pool/main/g/glibc/libc6-dev_2.35-0ubuntu3.18_amd64.deb",
+      "Size": "2100056",
+      "SHA256": "4f1ca098ff488496629324ffcd8a5ad2b4dc5763078f3a511a2918fca0119d74"
+    },
+    {
+      "Package": "libc6-dev-i386",
+      "Version": "2.35-0ubuntu3.18",
+      "Architecture": "amd64",
+      "Filename": "pool/main/g/glibc/libc6-dev-i386_2.35-0ubuntu3.18_amd64.deb",
+      "Size": "1444842",
+      "SHA256": "6b5be5cdce425c49c410ab95056db29bef3304112b92ddc5f3404a51f73c3b77"
+    },
+    {
+      "Package": "libc6-i386",
+      "Version": "2.35-0ubuntu3.18",
+      "Architecture": "amd64",
+      "Filename": "pool/main/g/glibc/libc6-i386_2.35-0ubuntu3.18_amd64.deb",
+      "Size": "2837482",
+      "SHA256": "1601c77edd3d1012e9b4db09f1e2e498773b9caf2b4234a0981035633ca2a906"
+    },
+    {
+      "Package": "linux-generic-hwe-22.04",
+      "Version": "6.8.0-149.149~22.04.1",
+      "Architecture": "amd64",
+      "Filename": "pool/main/l/linux-meta-hwe-6.8/linux-generic-hwe-22.04_6.8.0-149.149~22.04.1_amd64.deb",
+      "Size": "1724",
+      "SHA256": "1deadb3860d7e879c5b6484ab694ffbe95910b561c149886ffbed9b4e237d207"
+    },
+    {
+      "Package": "linux-headers-6.8.0-149-generic",
+      "Version": "6.8.0-149.149~22.04.1",
+      "Architecture": "amd64",
+      "Filename": "pool/main/l/linux-hwe-6.8/linux-headers-6.8.0-149-generic_6.8.0-149.149~22.04.1_amd64.deb",
+      "Size": "3856484",
+      "SHA256": "96b30ace75b52db5ccf52ef864f13fe99a55a7c790ac4932e9fc1567dc6d1e47"
+    },
+    {
+      "Package": "linux-headers-generic-hwe-22.04",
+      "Version": "6.8.0-149.149~22.04.1",
+      "Architecture": "amd64",
+      "Filename": "pool/main/l/linux-meta-hwe-6.8/linux-headers-generic-hwe-22.04_6.8.0-149.149~22.04.1_amd64.deb",
+      "Size": "2438",
+      "SHA256": "d99b99f02c175bb2bba242431c8cdf2905a8a231b447a29b57de81da8e569d3c"
+    },
+    {
+      "Package": "linux-hwe-6.8-headers-6.8.0-149",
+      "Version": "6.8.0-149.149~22.04.1",
+      "Architecture": "all",
+      "Filename": "pool/main/l/linux-hwe-6.8/linux-hwe-6.8-headers-6.8.0-149_6.8.0-149.149~22.04.1_all.deb",
+      "Size": "13768480",
+      "SHA256": "67c9a922588be68bc9dfe66b5b825e764f3fa7c79f91419bd1beb5d5a21ff240"
+    },
+    {
+      "Package": "linux-hwe-6.8-tools-6.8.0-149",
+      "Version": "6.8.0-149.149~22.04.1",
+      "Architecture": "amd64",
+      "Filename": "pool/main/l/linux-hwe-6.8/linux-hwe-6.8-tools-6.8.0-149_6.8.0-149.149~22.04.1_amd64.deb",
+      "Size": "4797932",
+      "SHA256": "b9bc24554d2aa206d282f66854409ce8382d16360ac2470f6726ba460223ce14"
+    },
+    {
+      "Package": "linux-image-6.8.0-149-generic",
+      "Version": "6.8.0-149.149~22.04.1",
+      "Architecture": "amd64",
+      "Filename": "pool/main/l/linux-signed-hwe-6.8/linux-image-6.8.0-149-generic_6.8.0-149.149~22.04.1_amd64.deb",
+      "Size": "14835632",
+      "SHA256": "c559e4c4eec21fd74c6ca8e7e025bfc870e6c9d917e50e66d0709558d6473a36"
+    },
+    {
+      "Package": "linux-image-generic-hwe-22.04",
+      "Version": "6.8.0-149.149~22.04.1",
+      "Architecture": "amd64",
+      "Filename": "pool/main/l/linux-meta-hwe-6.8/linux-image-generic-hwe-22.04_6.8.0-149.149~22.04.1_amd64.deb",
+      "Size": "2604",
+      "SHA256": "07ea299747cae496e078ea7dbf59d9e9cbb31f516b9c9fd99eac7e2fe34f0395"
+    },
+    {
+      "Package": "linux-modules-6.8.0-149-generic",
+      "Version": "6.8.0-149.149~22.04.1",
+      "Architecture": "amd64",
+      "Filename": "pool/main/l/linux-hwe-6.8/linux-modules-6.8.0-149-generic_6.8.0-149.149~22.04.1_amd64.deb",
+      "Size": "26621338",
+      "SHA256": "0227eed9e3908fb33815944adca143b4659a68bf88a8ad79de0979966e5856ac"
+    },
+    {
+      "Package": "linux-modules-extra-6.8.0-149-generic",
+      "Version": "6.8.0-149.149~22.04.1",
+      "Architecture": "amd64",
+      "Filename": "pool/main/l/linux-hwe-6.8/linux-modules-extra-6.8.0-149-generic_6.8.0-149.149~22.04.1_amd64.deb",
+      "Size": "79713656",
+      "SHA256": "750b45b09a458b2b1b597bc39c05c3d7c46d50ce68b08a28cd06d6ce3dd9bfb2"
+    },
+    {
+      "Package": "linux-tools-6.8.0-149-generic",
+      "Version": "6.8.0-149.149~22.04.1",
+      "Architecture": "amd64",
+      "Filename": "pool/main/l/linux-hwe-6.8/linux-tools-6.8.0-149-generic_6.8.0-149.149~22.04.1_amd64.deb",
+      "Size": "1822",
+      "SHA256": "291559b98c9c21d30984a8fdb0d7cb7191a52566fbbb6666b68e176ed880a622"
+    },
+    {
+      "Package": "locales",
+      "Version": "2.35-0ubuntu3.18",
+      "Architecture": "all",
+      "Filename": "pool/main/g/glibc/locales_2.35-0ubuntu3.18_all.deb",
+      "Size": "4245120",
+      "SHA256": "de4463cace76e8e34e4580416f40219980b8614d6779ad7a72c3959709a24970"
+    }
+  ],
+  "signed_metadata": [
+    {
+      "InRelease": "/var/lib/apt/lists/au.archive.ubuntu.com_ubuntu_dists_jammy-updates_InRelease",
+      "bytes": 128049,
+      "sha256": "4f6ceb617c0c434cd541740e332bb234b855abd4dece941be2696fc2489ce861",
+      "index": "/var/lib/apt/lists/au.archive.ubuntu.com_ubuntu_dists_jammy-updates_main_binary-amd64_Packages",
+      "index_bytes": 22526032,
+      "index_sha256": "cd7b8a95ca5bb7dbb40e396f4d1621899932d8445b32a8ae805b72b322969f26"
+    },
+    {
+      "InRelease": "/var/lib/apt/lists/security.ubuntu.com_ubuntu_dists_jammy-security_InRelease",
+      "bytes": 128927,
+      "sha256": "894ebc03ee9e4343d016e8a80f17b0f276ba5781d098cef3bd0b5acb6d8bfc16",
+      "index": "/var/lib/apt/lists/security.ubuntu.com_ubuntu_dists_jammy-security_main_binary-amd64_Packages",
+      "index_bytes": 21131634,
+      "index_sha256": "7ef4e4d78b4388f8dc4e5388e19404255d3d769983f0e47fd88ef24ec6eb0a89"
+    }
+  ],
+  "signer_fingerprint": "F6ECB3762474EDA9D21B7022871920D1991BC93C",
+  "archive_bytes": 158191362,
+  "archive_count": 17
+}

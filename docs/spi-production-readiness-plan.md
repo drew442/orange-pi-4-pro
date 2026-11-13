@@ -420,13 +420,17 @@ remaining boot series to avoid redundant cycles.
 
 ### Operator steps and evidence
 
-The retained SU02G recovery card is installed. Original blank SPI restoration,
-the subsequent SD recovery boot, reviewed reinstallation and clean poweroff
-passed on November 13. UART confirms all filesystems unmounted and kernel
-powerdown. [Physical records](evidence/spi-reinstall-and-poweroff-20261113.json).
+The retained SU02G recovery card is now removed. Original blank SPI restoration,
+SD recovery, reviewed reinstallation and the subsequent SD-removed SPI boot/manual
+KVM check passed on November 13. Managed B is installed and booted; normalized A
+and BOOT remain preserved. [Recovery/reinstallation](evidence/spi-reinstall-and-poweroff-20261113.json)
+and [post-reinstall/B records](evidence/post-reinstall-SPI-managed-B-20261113.json).
+The external managed-fixture template required a port correction before launch;
+retain [the correction and unused cohort](evidence/managed-fixture-port-correction-20261113.json).
 
-After SPI reinstallation and clean poweroff, the coordinator explicitly reports
-that it is ready for SD removal. The operator removes SD and restores power.
+For future recovery transitions, the coordinator explicitly reports readiness
+for SD removal after reinstallation and clean poweroff. The operator then removes
+SD and restores power. The recorded November 13 transition is complete.
 Subsequent cold qualification requires the per-cycle USB-C removal attestation
 described in phase 5. No heatsink removal or hardware benchmark is required.
 
