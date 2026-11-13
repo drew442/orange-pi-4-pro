@@ -7,8 +7,12 @@ boot `1095a827-6f92-486d-9ad3-2463a95c2d5e`, SD physically removed. Management i
 files and two guest boot units; root is read-only, NTP synchronized. Normalized
 root A and BOOT remain preserved. Initial policy/storage preparation passes:
 empty registry, admission open, no dispatched guest and unchanged retained
-`firstkvm` checkpoint. Managed account/payload deployment is in progress;
-automatic guest operation and production qualification remain pending.
+`firstkvm` checkpoint. Independent pre-launch review caught guest port 80 where the fixture requires
+8080, before managed registration or start. The unused cohort is preserved intact
+in private p5 quarantine; corrected enrollment publishes the reviewed 1024-byte
+manifest durably. Registration/explicit KVM testing is next; automatic operation
+and production qualification remain pending.
+[Correction and receipts](evidence/managed-fixture-port-correction-20261113.json).
 
 The post-reinstall SPI boot on normalized A (`ae6ef902-51ce-45cf-88a9-62f7f390eded`)
 passed actual nonroot KVM CPU/disk/HTTP, counter 9→10 and guest-owned exit zero.

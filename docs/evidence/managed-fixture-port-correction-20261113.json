@@ -1,0 +1,138 @@
+{
+  "date_utc": "2026-11-13",
+  "scope": "Pre-launch detection and correction of external managed-fixture network template",
+  "old_configuration": {
+    "guest_tcp_port": 80,
+    "config_bytes": 481,
+    "config_sha256": "184aba539cd74ce504f901c0ae61ebb529cf67f300e0424f6948e93325860585",
+    "initial_manifest_bytes": 1022,
+    "initial_manifest_sha256": "921a5ad120829ea58bfcf9e3bd79342f996469d6609ed874c51c47a8dfcf7eba",
+    "account_created": true,
+    "payload_enrolled_durable": true,
+    "managed_registered": false,
+    "guest_started": false
+  },
+  "cause": "External deployment template and preparation review missed the installed managed fixture requirement guest_tcp_port==8080. Caught by independent concrete pre-launch review before registration/admission/launch.",
+  "correction": {
+    "guest_tcp_port": 8080,
+    "config_bytes": 483,
+    "config_sha256": "fda05f86d9e8aa5bd73b6fcb2e7a9ee815878c8cd2a6ea3f3082d9407d722527",
+    "initial_manifest_bytes": 1024,
+    "initial_manifest_sha256": "a46ae94c58289808f3b8f9848a9762ce68cd0fa6b1d28383821b6199135d8701",
+    "installed_root_rebuild_required": false,
+    "quarantine_executed": true,
+    "corrected_enrollment_executed": true,
+    "hardware_acceptance": false
+  },
+  "regression": {
+    "file": "tests/test_managed_guest_fixture_acceptance.py",
+    "tests": 21,
+    "passed": true,
+    "scope": "Actual Fixture constructor evaluates the repository template through its network guard; obsolete port80 fails. Root authority and subsequent profile opening explicitly substituted, no hardware acceptance."
+  },
+  "artifacts": {
+    "accounts-plan.json": {
+      "path": "out/managed-fixture-hardware-20261113-01/accounts-plan.json",
+      "bytes": 803,
+      "sha256": "164331fdfecbbc59bcd9d92d01aadc918d40d3f745e47c28800c2a7bf17b61fc"
+    },
+    "accounts-apply.json": {
+      "path": "out/managed-fixture-hardware-20261113-01/accounts-apply.json",
+      "bytes": 427,
+      "sha256": "4b7ac176106c15242aeef1974de9e975c3dc48512176f6a2c4255645d05f2f36"
+    },
+    "enrollment-plan.json": {
+      "path": "out/managed-fixture-hardware-20261113-01/enrollment-plan.json",
+      "bytes": 2536,
+      "sha256": "030907074bbe65816ed2673ef9769f8803e956a3d09b3901fa3428a7972135c9"
+    },
+    "enrollment-apply.json": {
+      "path": "out/managed-fixture-hardware-20261113-01/enrollment-apply.json",
+      "bytes": 568,
+      "sha256": "f337d3364fea3e72eb46f45fb3b2f479ac7ddad73268f6267664bc91bfc0a69a"
+    },
+    "corrected-config.json": {
+      "path": "out/managed-fixture-hardware-20261113-01/corrected-config.json",
+      "bytes": 483,
+      "sha256": "fda05f86d9e8aa5bd73b6fcb2e7a9ee815878c8cd2a6ea3f3082d9407d722527"
+    },
+    "corrected-initial-manifest-reference.json": {
+      "path": "out/managed-fixture-hardware-20261113-01/corrected-initial-manifest-reference.json",
+      "bytes": 1024,
+      "sha256": "a46ae94c58289808f3b8f9848a9762ce68cd0fa6b1d28383821b6199135d8701"
+    },
+    "port8080-regression.log": {
+      "path": "out/managed-fixture-hardware-20261113-01/port8080-regression.log",
+      "bytes": 120,
+      "sha256": "5fe4c07a76de26e73e19495aaa326c49ea969b088d027c2a693a060218282749"
+    },
+    "quarantine-unused-port80-source.py": {
+      "path": "out/managed-fixture-hardware-20261113-01/quarantine-unused-port80-source.py",
+      "bytes": 4296,
+      "sha256": "446c059e6d1eadf06a1b3c35a8443ea1b079828369bb60409c51e9d9b316e5e6"
+    },
+    "quarantine-result.jsonl": {
+      "path": "out/managed-fixture-hardware-20261113-01/quarantine-result.jsonl",
+      "bytes": 774,
+      "sha256": "f1654a0a65ec1f02e64c8d6eacdc2e680cea6f0464149cc4778e03157a368ee5"
+    },
+    "quarantine-process.json": {
+      "path": "out/managed-fixture-hardware-20261113-01/quarantine-process.json",
+      "bytes": 18,
+      "sha256": "df4d721d233a2334088d2d2e0110346ae9e509ff46bf0b379fbcfa85c715af4d"
+    },
+    "corrected-config-staging.json": {
+      "path": "out/managed-fixture-hardware-20261113-01/corrected-config-staging.json",
+      "bytes": 207,
+      "sha256": "666e30c8179498c4ac8efc50c5136bf7532ec069d7159da8a43d5ed8b383c5d2"
+    },
+    "enrollment-port8080-plan.json": {
+      "path": "out/managed-fixture-hardware-20261113-01/enrollment-port8080-plan.json",
+      "bytes": 2547,
+      "sha256": "8cdd4cde253f8f3a8cc43a769dc127853c11984a514bc4e869f8d0b77bd174cc"
+    },
+    "enrollment-port8080-apply.json": {
+      "path": "out/managed-fixture-hardware-20261113-01/enrollment-port8080-apply.json",
+      "bytes": 568,
+      "sha256": "c93e9a938fe3e6fb783561370ecf30c4935b84ba9196b781dd4aee8db4f15f8a"
+    },
+    "managed-fixture-quarantine-review-20261113.json": {
+      "path": "tmp/managed-fixture-quarantine-review-20261113.json",
+      "bytes": 4280,
+      "sha256": "f97909b26ee9f74f52954a481e5848589bdd75ee1644f5873a82f3f58cbc9f5d"
+    },
+    "managed-fixture-account-enrollment-review-20261113.json": {
+      "path": "tmp/managed-fixture-account-enrollment-review-20261113.json",
+      "bytes": 10120,
+      "sha256": "6ea16a3f25129649810a5e88ec096ea56f3e8bbb92eb41ea47ded6529012facb"
+    }
+  },
+  "quarantine_result": {
+    "operation": "quarantine-unused-port80-autokvm",
+    "success": true,
+    "hardware_acceptance": false,
+    "renamed": true,
+    "maintenance_nonce": "1c11c020-a6d4-4e7c-8a18-a86e36bc91fa",
+    "destination": "/run/a733-guests/.enrollment/quarantine-autokvm-port80-20261113",
+    "original_manifest_sha256": "921a5ad120829ea58bfcf9e3bd79342f996469d6609ed874c51c47a8dfcf7eba",
+    "durable": true,
+    "maintenance": {
+      "phase": "finished",
+      "success": true,
+      "hardware_acceptance": false,
+      "nonce": "1c11c020-a6d4-4e7c-8a18-a86e36bc91fa",
+      "open_attempted": true,
+      "open_acknowledged": true,
+      "gate_state": "open",
+      "close_errors": []
+    }
+  },
+  "corrected_enrollment_result": {
+    "success": true,
+    "published": true,
+    "durable": true,
+    "registry_empty": true,
+    "staging_retained": false,
+    "plan_sha256": "8c79381f9ed714ef756feb5b88303c9c24913dfa738ac301d92ab48d018a4f1e"
+  }
+}

@@ -1,11 +1,15 @@
 # Deploy the opt-in managed qualification guest
 
-This is artifact-bound preparation for candidate `2996365`, **not an executed
-hardware procedure**. Complete SPI recovery and install/boot the reviewed B root
-first. The coordinator must record fresh native boot/storage/selection checks
-and independently review the live deployment before any STATE copy or command
-below. Preserve BOOT, normalized A and the manual `firstkvm` cohort. Use B's
-installed tools; the running legacy A does not supply this workflow.
+Candidate `2996365` now boots on SPI/NVMe with SD removed. Initial storage
+preparation and the first account/payload enrollment were executed on 2026-11-13.
+Review caught a port mismatch before managed registration or launch: the fixture
+serves **8080**, while the original external template requested 80. The corrected
+configuration/reference below supersede those original preparation pins. Preserve
+the unused original cohort and receipts; never overwrite its manifest in place.
+The unused cohort is retained intact in private p5 quarantine. Corrected
+enrollment now passes; managed registration and KVM operation remain pending.
+[Correction record](evidence/managed-fixture-port-correction-20261113.json).
+[Current physical evidence](evidence/post-reinstall-SPI-managed-B-20261113.json).
 
 The matched B marker is `bdfde6c304edc9709bda5e4de8cb9adef9707118920a759630b01f6468362460`.
 The expected NVMe is SPCC M.2 PCIe SSD, serial `134807190FC700149277`,
@@ -18,14 +22,14 @@ incomplete transaction requires inspection, not replacement or another enrollmen
 ## Prepared inputs
 
 The two [fixture builds](evidence/managed-fixture-build-20261112.json) match.
-One seed set is retained on codex under
+The original three payload seeds and account input are retained on codex under
 `out/managed-fixture-deployment-20261112-01/`. It was extracted from the pinned
 8453817-byte archive SHA `ad271ab152a2307f763a2f9e565625111416fc29892a9227dfa10813a588a082`;
 the original archive is also retained on the builder. Source templates are
 [guest configuration](../configs/autokvm-qualification.json) and
 [account configuration](../configs/autokvm-qualification-accounts.json).
 They request locked UID/GID 60002, 256 MiB guest RAM, a 512 MiB service limit,
-one vCPU and isolated networking with host TCP 18081 to guest 80. Account and
+one vCPU and isolated networking with host TCP 18081 to guest 8080. Account and
 resource planners must verify availability; no free-UID claim is made here.
 `firstkvm` remains UID/GID 60001 and is not enrolled for automation.
 
@@ -34,14 +38,16 @@ resource planners must verify availability; no free-UID claim is made here.
 | `Image` | 5253128 | `29ba9385454cfbde890cabd24ced727838658d939368ab52dfbf6d770433e959` |
 | `initramfs.cpio.gz` | 975144 | `315f6ff4398e477bf1e040cca3c60483dca88c68e99a9a3cda0ecd545b5d0da3` |
 | `guest-disk.raw` | 134217728 | `ff595fac0b9a7d990f099edc0dd0f9d4859fb9942e185d2f2377088ce32bd577` |
-| `autokvm-qualification.json` | 481 | `184aba539cd74ce504f901c0ae61ebb529cf67f300e0424f6948e93325860585` |
+| `autokvm-qualification-port8080.json` | 483 | `fda05f86d9e8aa5bd73b6fcb2e7a9ee815878c8cd2a6ea3f3082d9407d722527` |
 | `autokvm-qualification-accounts.json` | 67 | `dc507e2bdb1cb61adbbb38da72fc863d49addc92d77b4ff1cf9faddcd6d024a0` |
 
-After the fresh live guard, copy these five inputs into a new root-owned 0700
+For a fresh deployment, copy these five inputs after the live guard. Use the
+corrected repository template for the renamed port8080 config; the original
+archive contains the obsolete port80 config. Use a new root-owned 0700
 NVMe STATE directory `/run/a733-state/qualification/autokvm-20261112-01`, as
 single-link root:root 0400 files. Keep the seed unchanged; enrollment creates its
-separate mutable p5 disk. Input copying and the live guard still need execution
-receipts; this guide does not provide an unguarded copy command. The commands
+separate mutable p5 disk. Retain live-guard and copying receipts for every
+installation; this guide does not provide an unguarded copy command. The commands
 below assume that guarded preparation has completed. Existing output paths
 refuse reuse. Preserve partial outputs on failure and inspect actual state before
 another operation; never delete lifecycle metadata to force a retry.
@@ -87,7 +93,7 @@ chmod 0400 "$A733_PREP/accounts-plan.json"
 python3 -I -B "$A733_TOOLS/guest-accounts.py" apply \
   "$A733_PREP/autokvm-qualification-accounts.json" \
   --plan "$A733_PREP/accounts-plan.json" > "$A733_PREP/accounts-result.json"
-enrollment=(--config "$A733_PREP/autokvm-qualification.json" \
+enrollment=(--config "$A733_PREP/autokvm-qualification-port8080.json" \
   --kernel "$A733_PREP/Image" --initrd "$A733_PREP/initramfs.cpio.gz" \
   --disk "$A733_PREP/guest-disk.raw" \
   --guest-uuid 298b281a-d10e-44eb-bdb9-285e27eaafad)
@@ -98,8 +104,8 @@ python3 -I -B "$A733_TOOLS/enroll-guest.py" apply "${enrollment[@]}" \
   --plan "$A733_PREP/enrollment-plan.json" > "$A733_PREP/enrollment-result.json"
 ```
 
-The expected **initial** 1022-byte enrollment manifest SHA is
-`921a5ad120829ea58bfcf9e3bd79342f996469d6609ed874c51c47a8dfcf7eba`.
+The expected **initial** 1024-byte enrollment manifest SHA is
+`a46ae94c58289808f3b8f9848a9762ce68cd0fa6b1d28383821b6199135d8701`.
 It was constructed offline from the validated configuration, exact seed records,
 fixed p5 UUID and the installed manifest schema. Compare the successful enrollment
 receipt and actual published manifest with this independent reference before
@@ -114,7 +120,7 @@ profile, then enable. These are separate operations; registration does not
 create the guest payload or start it.
 
 ```bash
-A733_INITIAL_MANIFEST=921a5ad120829ea58bfcf9e3bd79342f996469d6609ed874c51c47a8dfcf7eba
+A733_INITIAL_MANIFEST=a46ae94c58289808f3b8f9848a9762ce68cd0fa6b1d28383821b6199135d8701
 python3 -I -B "$A733_TOOLS/manage-guests.py" enroll autokvm \
   --manifest-sha256 "$A733_INITIAL_MANIFEST" --fixture-profile managed-power-key-v1
 python3 -I -B "$A733_TOOLS/manage-guests.py" enable autokvm \

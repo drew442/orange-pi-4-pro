@@ -21,6 +21,26 @@ SPEC.loader.exec_module(F)
 
 
 class FixtureAcceptance(unittest.TestCase):
+    def test_deployment_template_satisfies_actual_fixture_network_guard(self):
+        config = json.loads((Path(__file__).resolve().parents[1] /
+                             'configs/autokvm-qualification.json').read_bytes())
+        for port, expected in ((config['network']['guest_tcp_port'], 'profile-open'),
+                               (80, 'fixture network differs')):
+            with self.subTest(port=port):
+                owner = object.__new__(F.SUPERVISOR.Supervisor)
+                owner._owner = lambda: None
+                owner._started = False
+                candidate = copy.deepcopy(config)
+                candidate['network']['guest_tcp_port'] = port
+                owner.run = SimpleNamespace(config=candidate,
+                    _record={'fixture_profile': F.PROFILE, 'manifest_sha256': '0'*64},
+                    recheck=lambda: {'status': 'admitted'})
+                with mock.patch.object(F.os, 'getuid', return_value=0), \
+                     mock.patch.object(F.os, 'geteuid', return_value=0), \
+                     mock.patch.object(F.ENROLL, 'HeldPath', side_effect=RuntimeError('profile-open')):
+                    with self.assertRaisesRegex((RuntimeError, ValueError), expected):
+                        F.Fixture(owner)
+
     def test_debugfs_cleanup_attempts_both_pipe_closes_after_wait_or_kill_error(self):
         for failing in ('kill', 'wait', 'stdout'):
             process = mock.Mock()
