@@ -24,7 +24,8 @@ older `2996365`/`4334a22` artifacts and normalized A as separate cohorts. The
 bound supervisor stop and permit budget preserve normal guest shutdown; the
 collector isolates completion data from the power helper's fixed two-file packet.
 Artifact-derived helper pins pass independent review and 100 focused checks;
-combined external validation and actual execution remain pending.
+combined external validation now passes 3730 unit tests plus all shell/diagnostic
+suites. Actual completion/collector execution remains pending.
 [Completion procedure](managed-fixture-completion.md).
 
 The disposable guest is disabled at generation 8 after durable quarantine.

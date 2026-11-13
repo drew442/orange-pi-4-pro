@@ -1,0 +1,49 @@
+{
+  "source_commit": "d648d4204d9f644cccf6b51f632fa591ddd6b6df",
+  "source_tree": "cb820f485a430f913201f3d20647122992e841d3",
+  "source_locked_files": 1166,
+  "terminal": {
+    "RuntimeMaxUSec": "8h",
+    "MainPID": "0",
+    "Result": "success",
+    "ExecMainStatus": "0",
+    "CPUQuotaPerSecUSec": "2s",
+    "MemoryMax": "3221225472",
+    "UMask": "0022",
+    "SubState": "exited"
+  },
+  "footers": [
+    [
+      "3730",
+      "1269.903s",
+      "OK"
+    ],
+    [
+      "5",
+      "6.038s",
+      "OK"
+    ]
+  ],
+  "shell_suites": [
+    "test-diagnostic-initramfs.sh",
+    "test-guest-fixture.sh",
+    "test-host-init.sh",
+    "test-host-storage-resolver.sh",
+    "test-host-userspace.sh"
+  ],
+  "source_checks": 2,
+  "outer_package_count": 849,
+  "outer_three_field_sha256": "b34b70a879cbbf75f818708275c57ef0aef3ae635b9ae71a8005e2b29a8490b8",
+  "outer_four_field_sha256": "c87cbf467e11deab2c27fd350b1eb667b85f9a06b5c77477db562a5b7c257949",
+  "min_free_bytes": 19334561792,
+  "min_MemAvailable_bytes": 6856683520,
+  "hardware_acceptance": false,
+  "evidence_archive": {
+    "bytes": 358400,
+    "sha256": "36dbad998a04c8cf3e15cb4e3520031eda930357f35e1a1316005e2ad2221b02",
+    "native": "out/managed-permit-collector-validation-20261113-01/evidence.tar",
+    "builder": "/var/lib/a733-managed-permit-collector-validation-20261113-01/evidence.tar",
+    "both_fsynced": true
+  },
+  "classification": "software validation only; managed physical guest qualification remains incomplete"
+}

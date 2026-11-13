@@ -87,5 +87,13 @@
     "series": 28800
   },
   "combined_external_validation_passed": false,
-  "hardware_acceptance": false
+  "hardware_acceptance": false,
+  "combined_validation": {
+    "passed": true,
+    "evidence": "managed-permit-collector-validation-20261113.json",
+    "unit_tests": 3730,
+    "shell_suites": 5,
+    "diagnostic_cases": 5,
+    "hardware_acceptance": false
+  }
 }

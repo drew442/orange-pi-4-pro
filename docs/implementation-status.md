@@ -93,10 +93,13 @@ F349 B: manifest `333c0f69…57be35`; compressed 143659792 bytes
 not SD images. Independent fresh-checkout construction/comparison follows a
 working hardware trial, giving two constructions and documented reproduction.
 
-The collector now isolates its completion packet from the power helper's exact
+The collector isolates its completion packet from the power helper's exact
 two-file namespace. Artifact-derived qualifier/module/marker/selector pins pass
-independent review and **100 focused privileged checks**. Combined validation of
-that later external change and physical invocation remain pending.
+independent review and **100 focused privileged checks**. Later combined Ubuntu
+validation passes **3730 unit tests**, five shell suites and five diagnostic cases,
+zero skips/errors/failures, with all 1166 source inputs and 849-package inventory
+unchanged. Evidence is fsynced on both hosts; physical invocation remains pending.
+[Combined validation](evidence/managed-permit-collector-validation-20261113.json).
 [Fixture completion](managed-fixture-completion.md).
 
 The builder remains Ubuntu 22.04 `drew@build.drewnet.online`, exact849 package
