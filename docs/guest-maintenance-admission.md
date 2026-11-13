@@ -155,6 +155,11 @@ that is intended. Status requires available storage and open shared admission;
 an unavailable status reports that boundary and does not prove a guest failed.
 All commands emit structured receipts and report cleanup failures.
 
+The next source candidate adds an optional [exact-run stop](managed-fixture-completion.md)
+using all four boot/run/PID/start-ticks arguments. It signals one authenticated
+supervisor through pidfd, preserving clean shutdown without targeting a replacement
+run. This API requires the next matching root; it is absent from installed `4334a22`.
+
 ## Installed update and selection
 
 The candidate update and selector commands require an initialized protected RAM

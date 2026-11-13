@@ -1,0 +1,107 @@
+{
+  "date_utc": "2026-11-13",
+  "scope": "Reviewed source candidate only; next matching root and physical validation required",
+  "native_source": {
+    "path": "scripts/manage-guests.py",
+    "bytes": 32315,
+    "sha256": "8a6211b45d6d4b0231b100c71c2bb72a6f4eb475e04de5652104111a7d43520e"
+  },
+  "external_source": {
+    "path": "scripts/complete-managed-fixture.py",
+    "bytes": 23339,
+    "sha256": "53e1982ae4b121fffbca97aa77f5f01bac50c9c1cc410f38d3ec4e4278aea7f9"
+  },
+  "tests": {
+    "bound_stop": 22,
+    "existing_management": 27,
+    "external_completion": 17,
+    "result": "pass; independently rerun"
+  },
+  "native_review": {
+    "verdict": "GO",
+    "blocking_findings": [],
+    "reviewed_sha256": {
+      "scripts/manage-guests.py": "8a6211b45d6d4b0231b100c71c2bb72a6f4eb475e04de5652104111a7d43520e",
+      "tests/test_managed_run_bound_stop.py": "f3d24d25c4b0035db605b6ca04186872a4d65322a5091ebd07a263da7af8cbb4",
+      "scripts/complete-managed-fixture.py": "53e1982ae4b121fffbca97aa77f5f01bac50c9c1cc410f38d3ec4e4278aea7f9"
+    },
+    "architecture_conformance": [
+      "Original canonical run bytes/admission digest and original manifest pin are retained in an invocation-local witness. Every subsequent run read must match. Registry stable fields, identity, storage, boot and expected run remain bound. Before signal the original exact running head and registry entry are required.",
+      "After signal canonical protected intent must match original run common identity/admission digest/old manifest/generation. CP._heads replays exact running/stopping/checkpoint/ready bytes; only intent old/new registry pins are allowed. Unrelated or arbitrary pin/head changes refuse.",
+      "Actual changed-manifest ready head is accepted against replayed new pin while immutable run remains original. Ready-before-registry and registry-before-completion windows remain pending. Completion references and same-generation registry digest must agree before ready=True can succeed.",
+      "Legal head transitions across snapshots, including late intent publication, produce BoundObservationPending and bounded polling. Replacement and immutable run/intent mutation refuse without resignal.",
+      "Existing pidfd-only single-SIGTERM targeting, protected no-replace durable stop intent, all-four CLI validation and independent descriptor cleanup remain intact. A readable pidfd permits PID1 exit-status lag without reading a vanished/reused numeric PID or sending additional signals.",
+      "Final success still requires exact successful terminal unit status plus coherent same-run ready/registry/completion observation. Metadata remains observational; no disk/cohort trust, extra guest lock, power authority or acceptance is added."
+    ],
+    "checks": [
+      {
+        "command": "python3 -m unittest discover -s tests -p 'test_managed_run_bound_stop.py' -v",
+        "result": "22 tests pass, including real closed-schema changed-manifest intent, actual CP._heads replay, publication windows, one-signal end-to-end bound-stop observer and conflicts"
+      },
+      {
+        "command": "python3 -m unittest discover -s tests -p 'test_manage_guests.py'",
+        "result": "27 tests pass"
+      },
+      {
+        "command": "git diff --check",
+        "result": "pass"
+      }
+    ],
+    "helper_compatibility": "Existing reviewed helper bound command and strict receipt matrix remain compatible. No receipt fields required by helper were removed or changed; terminal unit contract is unchanged. Update artifact/module/qualifier pins for the new installed cohort before invocation.",
+    "limitations": [
+      "No native/guest execution on board; physical KVM, clean checkpoint and final qualifier remain required. Tests use real pure schema/head constructors with mocked installed/proc/systemd signaling and storage readers.",
+      "A concurrent replacement detected within lower-level STORE.read itself can still fail closed as uncertain instead of being retried; explicit legal snapshots handled by bound_metadata are polled. Never retry a consumed signal intent automatically.",
+      "Full combined validation, new-root construction and deployed closure/module/qualifier pin refresh remain coordinator gates. Current deployed old code does not support bound CLI flags."
+    ]
+  },
+  "external_review": {
+    "verdict": "REVOKED_PENDING_NATIVE_CHECKPOINT_TRANSITION_REPAIR",
+    "blocking_software_findings": [],
+    "reviewed_sha256": {
+      "scripts/complete-managed-fixture.py": "53e1982ae4b121fffbca97aa77f5f01bac50c9c1cc410f38d3ec4e4278aea7f9",
+      "tests/test_complete_managed_fixture.py": "1040940082db8afe6fc7fd264f47b9c856647d170dae79abb1900baaa4d39bd7",
+      "scripts/manage-guests.py": "6a9c2c60783b91ffe4fa2529e9c431315a34aa723fb956b500de7301b73c9e18",
+      "scripts/qualify-managed-boot.py": "e2254bd80778c250f979a3e74ebe120c845d865e57d5b7d1fb02711c176c02bc"
+    },
+    "findings_resolution": {
+      "R1": "Helper derives boot/run/main PID/start ticks from the stable baseline, durably records the complete bound command, and passes all four native flags on its sole subprocess invocation. Native pidfd signaling prevents replacement retargeting. Replacement/refusal consumes the intent and is not resent.",
+      "R2": "Manager kill/wait errors no longer bypass pipe cleanup. Each pipe drain has independent finally-close; EAGAIN marks incomplete output and uncertainty while both descriptors close. Real inherited-writer timeout regression passes."
+    },
+    "contract_checks": [
+      "Helper accepts success only for rc0 and exact bound identity, stop operation/name/stage, durable native intent, acknowledged single signal, exact successful terminal status, no queue/name-stop attempt, no uncertainty, empty cleanup errors and separate qualification requirement. These fields match reviewed native manage completion receipts.",
+      "Observed live status remains metadata/process/HTTP evidence only. No guest lock, running disk authentication, QMP or console observation is added. Hardware, power, disk/run trust and completed-cohort authentication remain false.",
+      "Single nonconfirming HTTP probe precedes monotonic 135-second stable interval. Exclusive external intent and native no-replace intent both precede the stop signal.",
+      "Native bound-stop API remains reviewed at the same source hash; no name-only fallback exists in the helper invocation."
+    ],
+    "checks": [
+      {
+        "command": "python3 -m unittest discover -s tests -p 'test_complete_managed_fixture.py' -v",
+        "result": "17 tests pass including real local inherited-pipe writer timeout and bound receipt/refusal matrix"
+      },
+      {
+        "command": "git diff --check",
+        "result": "pass"
+      }
+    ],
+    "conditions_and_limits": [
+      "Do not invoke until a new root containing the reviewed native API is built/deployed/authenticated and qualifier MODULE_SHA256/MARKER_SHA256/marker size plus helper QUALIFIER_SHA256/QUALIFIER_BYTES are refreshed for that exact cohort. Current qualifier pins authenticate old installed 4334 code; its native CLI rejects bound flags and the helper fails closed.",
+      "Repeat source-pin/closure and command-contract checks after artifact pin edits. Full combined validation remains coordinator responsibility.",
+      "No helper execution on board, native hardware stop test or physical acceptance has been performed. Final stopped-cohort qualifier and hardware gates remain separate.",
+      "Full successful observe path uses real protected/systemd/proc interfaces on hardware; these tests retain mocked coverage for that path."
+    ]
+  },
+  "retained_review_findings": [
+    "Name-only stop could target a replacement run; replaced by exact pidfd signal.",
+    "Inherited-pipe EAGAIN left readers open; independent finally cleanup added.",
+    "Initial native observer rejected real checkpoint manifest changes; typed same-run intent/head transitions and publication-window tests added."
+  ],
+  "review_custody": {
+    "path": "tmp/fixture-completion-helper-review-20261113.json",
+    "bytes": 19410,
+    "sha256": "8364f096b33e2888ddc222dd080b198a6cc74764df682c048f38884ba5fecbe4"
+  },
+  "artifact_pins_refreshed": false,
+  "combined_validation_passed": false,
+  "hardware_acceptance": false,
+  "production_guest_lifetime_changed": false
+}
