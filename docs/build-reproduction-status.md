@@ -1,6 +1,6 @@
 # Build reproduction status
 
-Updated 2026-11-11. This index describes construction evidence.
+Updated 2026-11-13. This index describes construction evidence.
 [Independent physical deployment reproduction](independent-deployment-20261110.md)
 and [release acceptance on the protected-SD route](release-acceptance.md) pass. See
 [implementation status](implementation-status.md).
@@ -11,11 +11,12 @@ and [release acceptance on the protected-SD route](release-acceptance.md) pass. 
 | --- | --- | --- |
 | Pinned userspace | [Account-date/time-profile replay](account-date-replay-driver.md) preserves the 221-package archive and full 15,909-member readback; archive SHA `0ead62…` | Complete independently provisioned builder reproduction remains open |
 | Normalized A/B roots | [Two fresh 4 GiB pairs](deterministic-host-roots.md) match all raw/gzip bytes, all four full filesystem readbacks and maintenance markers | Same qualified builder; corrected policy passes on both normalized B and fresh A ([physical evidence](implementation-status.md#acceptance-evidence)) |
+| Managed A/B roots | [Two fresh matching 4 GiB A/B constructions](managed-root-candidate-20261112.md) from frozen source `2996365` pass complete artifact/filesystem review and historical/current production-reader checks | Uninstalled and unbooted. SPI recovery/reinstall, B deployment, managed KVM, rollback, final SPI counts and revised SPI procedure reproduction remain pending; see [production plan](spi-production-readiness-plan.md) |
 | Matched STATE | [Full 8 GiB construction/readback](public-config-state.md), SHA `2e9d3d…`, selects normalized A marker `286494…` and preserves UUID `360dfb39-f49f-487e-b307-0bb887c854c5` | This is an unpersonalized component, not a backup of the running board |
-| Protected boot pair | [Protected SD/NVMe BOOT evidence](evidence/protected-state-maintenance-20261109.json); 256 MiB SD SHA `ab5e…`, NVMe BOOT SHA `cc2a…`; actual protected host boot passes | Firmware loading Linux files from NVMe and SPI/SD-removed boot remain unperformed |
+| Protected boot pair | [Protected SD/NVMe BOOT evidence](evidence/protected-state-maintenance-20261109.json); 256 MiB SD SHA `ab5e…`, NVMe BOOT SHA `cc2a…`; actual protected host boot passes | SPI-to-NVMe boot with SD removed is physically verified ([operational evidence](evidence/spi-operational-20261111.json)); final SPI counts and revised recovery/reinstall remain pending |
 | Normalized full NVMe | [Two fresh-checkout streams](evidence/normalized-full-nvme-image-20261109.json) match all raw/gzip bytes; complete independent hashes, framing/EOF, GPT and replacement inclusion pass | [Isolated serialization also passes](evidence/isolated-nvme-composition-20261109.json); [fresh installation and independent deployment reproduction pass](independent-deployment-20261110.md) |
 | Matched maintenance | [Normalized candidates](normalized-maintenance-20261109.md) pass full source/copy comparison and offline old/new API checks; old A rollback pair is retained separately | [Live guards, interruption, activation and manual rollback pass physically](physical-host-update-rollback-20261110.md) |
-| SPI preparation | [Caller/capture](known-spi-programmer.md) and underlying engine/backend pass independent source review and the privileged Ubuntu suite | Recovery proof is unregistered; write admission is disabled before device opening |
+| SPI preparation | [Caller/capture](known-spi-programmer.md), underlying engine/backend and metadata-aware plans pass independent review and software validation | SPI/NVMe SD-removed cold and warm boots plus actual manual KVM are physically verified ([operational evidence](evidence/spi-operational-20261111.json)). Revised physical restore/recovery/reinstall demonstration and fresh reviewed live plans remain pending ([metadata validation](evidence/spi-metadata-validation-20261112.json)) |
 
 The selected full gzip is **545,581,074 bytes**, SHA-256
 `3bc02f46d272dcac591d435fff2b1bc98d4fb048569fb2120746145929a8ad64`.
@@ -38,18 +39,22 @@ unchanged-region hashes match the authenticated earlier direct old/new proof;
 the old 256 GB stream was not decoded again in this review.
 
 This establishes repeatability on one qualified Ubuntu 22.04 builder with those
-fixed component inputs. It does not establish an independently provisioned
-builder or a fresh rebuild of every toolchain component. The separate
+fixed component inputs. The newer managed A/B pair likewise establishes fresh
+construction and repeated artifact/reader checks on that same qualified builder;
+neither result establishes independently provisioned-builder reproduction or a
+fresh rebuild of every toolchain component. The separate
 [physical reproduction record](independent-deployment-20261110.md) establishes
 that later installation. Fresh machine identity is intentionally installation
 specific; the same-board personalization step preserves this board's private
 identity without changing the selected root pairing.
 
-Latest complete privileged validation is **2,304 Python tests**, zero skips,
+Latest complete privileged validation is **3,651 Python tests**, zero skips,
 errors or failures, plus five shell suites and five diagnostic assembly cases.
 Five TOML files parse separately on codex. The
+[SPI collector integration validation](evidence/spi-collector-integration-validation-20261112.json)
+records the latest 3,651-test run and actual terminal results. The older
 [cold-collector validation](evidence/cold-boot-collector-validation-20261110.json)
-records source pins and actual terminal results. Earlier
+is historical evidence. Earlier
 [isolated-composer preparation](evidence/isolated-nvme-composition-preparation-20261109.json)
 retains its corrected validation-environment failures. These are software checks.
 
@@ -61,9 +66,10 @@ capacity is approved for use/expansion after exact target revalidation and revie
 Native evidence storage has a separate unchanged 256 MiB floor and reserved
 outcome budget; keep bulk source/guest data on the builder when needed.
 
-The [exact compiler-source inventory](toolchain-sources.md) still lacks GCC and
-DejaGNU copies. [Twenty-six vendor boot-input grants](evidence/vendor-boot-license-inventory-20261106.json)
-remain unresolved; public binary redistribution clearance is not claimed.
+The [exact compiler-source inventory](toolchain-sources.md) still lacks the exact
+GCC and DejaGNU source inputs. [Twenty-six vendor boot-input
+grants](evidence/vendor-boot-license-inventory-20261106.json) remain unresolved;
+public binary redistribution clearance is not claimed.
 
 Historical construction failures and superseded artifacts remain in their linked
 evidence and Git history: [cross-day account dates](userspace-account-date-replay.md),
