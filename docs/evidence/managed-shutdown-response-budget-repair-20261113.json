@@ -1,0 +1,29 @@
+{
+  "change": "Start guest shutdown grace after successful durable stopping publication",
+  "date": "2026-11-13",
+  "source": "scripts/managed-guest-supervisor.py",
+  "source_sha256": "13e80078e6b2c11b995eab79071e2208ce9777accaba2d739fc56cf585475894",
+  "tests": "tests/test_managed_guest_supervisor.py",
+  "tests_sha256": "d28fda7cd12059da89bfb30683433527470871743aee9fb1f109489df467a856",
+  "focused_tests": 32,
+  "focused_result": "PASS; four new regressions; restoring old deadline placement fails slow-preparation regression",
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "result": "GO for integration/fresh validation/construction",
+    "tests": 32,
+    "seconds": 23.167,
+    "report_sha256": "823ebe179fbcb6dd7d990cd6de9f2fc403d2d37e14ff66ef3eb5b94fb81180cf"
+  },
+  "preserved": [
+    "authority checks and durable mark_stopping before command",
+    "shared 60-second command/event response budget",
+    "10-second command cap",
+    "strict exit/EOF and guest-owned clean shutdown",
+    "quarantine and no retry"
+  ],
+  "full_validation": "pending",
+  "fresh_root_construction": "pending",
+  "hardware_shutdown_checkpoint_restart": "pending",
+  "production_acceptance": false
+}

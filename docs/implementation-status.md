@@ -5,8 +5,8 @@ qualification remains incomplete.** The board runs corrected `6c0a7e9` B with SD
 KVM CPU/disk/HTTP passes. Shutdown failed and the guest was quarantined**, then
 successfully disabled at registry generation20. No managed checkpoint/restart or
 final boot-series credit is claimed. Independent review identifies a shutdown
-grace timer started before safety checks and durable stopping publication. Repair,
-fresh validation/construction and a new hardware trial are next. No operator
+grace timer started before safety checks and durable stopping publication. The narrow repair passes independent review and 32 focused tests; fresh full
+validation/construction and a new hardware trial are next. No operator
 action is currently needed.
 [Current hardware evidence](evidence/permission-B-managed-KVM-and-shutdown-failure-20261113.json).
 

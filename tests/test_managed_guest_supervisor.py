@@ -306,6 +306,91 @@ class SupervisorTests(unittest.TestCase):
         self.assertNotIn(b'system_powerdown', supervisor.console_snapshot())
         self.assertTrue(outcome.channel.clean_shutdown)
 
+    def test_slow_stop_authority_and_publication_leave_full_response_budget(self):
+        supervisor = self.start()
+        clock = mock.Mock(wraps=time)
+        offset = [0]
+        clock.monotonic.side_effect = lambda: time.monotonic() + offset[0]
+        original_paths = supervisor._check_paths
+        original_stopping = self.run.mark_stopping
+
+        def paths():
+            original_paths()
+            offset[0] += 61
+
+        def stopping():
+            result = original_stopping()
+            offset[0] += 61
+            return result
+
+        with mock.patch.object(S, 'time', clock), \
+                mock.patch.object(S, 'GRACEFUL_TIMEOUT', 60), \
+                mock.patch.object(supervisor, '_check_paths', side_effect=paths), \
+                mock.patch.object(self.run, 'mark_stopping', side_effect=stopping), \
+                mock.patch.object(supervisor.channel, 'command', wraps=supervisor.channel.command) as command, \
+                mock.patch.object(supervisor.channel, 'pump', wraps=supervisor.channel.pump) as pump:
+            outcome = supervisor.stop()
+        self.assertEqual(command.call_args, mock.call('system_powerdown', timeout=10))
+        self.assertGreater(pump.call_args.kwargs['timeout'], 59)
+        self.assertEqual(outcome.evidence['raw_wait_status'], 0)
+        self.assertFalse(supervisor.receipt['forced'])
+
+    def test_stop_command_and_event_share_response_budget(self):
+        supervisor = self.start()
+        clock = mock.Mock(wraps=time)
+        offset = [0]
+        clock.monotonic.side_effect = lambda: time.monotonic() + offset[0]
+        original_command = supervisor.channel.command
+
+        def command(*args, **kwargs):
+            result = original_command(*args, **kwargs)
+            offset[0] += 4
+            return result
+
+        with mock.patch.object(S, 'time', clock), \
+                mock.patch.object(S, 'GRACEFUL_TIMEOUT', 60), \
+                mock.patch.object(supervisor.channel, 'command', side_effect=command) as sent, \
+                mock.patch.object(supervisor.channel, 'pump', wraps=supervisor.channel.pump) as pump:
+            supervisor.stop()
+        self.assertEqual(sent.call_args, mock.call('system_powerdown', timeout=10))
+        self.assertGreater(pump.call_args.kwargs['timeout'], 55)
+        self.assertLessEqual(pump.call_args.kwargs['timeout'], 56)
+
+    def test_exhausted_stop_response_budget_quarantines_without_retry(self):
+        supervisor = self.start()
+        clock = mock.Mock(wraps=time)
+        offset = [0]
+        clock.monotonic.side_effect = lambda: time.monotonic() + offset[0]
+        original_command = supervisor.channel.command
+
+        def command(*args, **kwargs):
+            result = original_command(*args, **kwargs)
+            offset[0] += 61
+            return result
+
+        with mock.patch.object(S, 'time', clock), \
+                mock.patch.object(S, 'GRACEFUL_TIMEOUT', 60), \
+                mock.patch.object(supervisor.channel, 'command', side_effect=command) as sent, \
+                mock.patch.object(supervisor.channel, 'pump') as pump:
+            with self.assertRaisesRegex(S.SupervisionError, 'graceful shutdown deadline exceeded'):
+                supervisor.stop()
+            with self.assertRaisesRegex(ValueError, 'supervisor closed'):
+                supervisor.stop()
+        sent.assert_called_once_with('system_powerdown', timeout=10)
+        pump.assert_not_called()
+        self.assertEqual(self.run.status, 'quarantined')
+        self.assertIsNone(supervisor._outcome)
+
+    def test_failed_stop_publication_sends_no_powerdown(self):
+        supervisor = self.start()
+        with mock.patch.object(self.run, 'mark_stopping', side_effect=ValueError('stop publication failed')), \
+                mock.patch.object(supervisor.channel, 'command', wraps=supervisor.channel.command) as command:
+            with self.assertRaisesRegex(S.SupervisionError, 'stop publication failed'):
+                supervisor.stop()
+        command.assert_not_called()
+        self.assertEqual(self.run.status, 'quarantined')
+        self.assertIsNone(supervisor._outcome)
+
     def test_publication_failure_does_not_release_barrier_and_reaps_child(self):
         self.admission.fail_publication = True
         with self.assertRaises(S.SupervisionError) as caught:

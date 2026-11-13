@@ -548,7 +548,6 @@ class Supervisor:
             return self._outcome
         require(self.channel is not None and not self._failed, 'running supervisor required')
         try:
-            deadline = time.monotonic() + GRACEFUL_TIMEOUT
             self.receipt['stage'] = 'stop-observation'
             self.poll()  # Consume already readable self-shutdown before stop issuance.
             self.permit.recheck()
@@ -556,6 +555,9 @@ class Supervisor:
             require(self.run.recheck()['status'] == 'running', 'running authority required')
             self.receipt['stage'] = 'mark-stopping'
             self.receipt['stopping'] = self.run.mark_stopping()
+            # Authority checks and durable publication precede the guest's
+            # shared command/event response budget.
+            deadline = time.monotonic() + GRACEFUL_TIMEOUT
             if self.channel.shutdown_message is None:
                 self.receipt['stage'] = 'system-powerdown'
                 self.channel.command('system_powerdown', timeout=min(10, max(0.001, deadline - time.monotonic())))
