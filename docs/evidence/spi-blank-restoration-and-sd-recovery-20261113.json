@@ -1,0 +1,266 @@
+{
+  "schema": 1,
+  "date": "2026-11-13",
+  "scope": "Physical original-blank SPI restoration and subsequent SD recovery; reinstallation/SD-removed acceptance tracked separately",
+  "target": {
+    "device": "/dev/mtd0",
+    "major_minor": "90:0",
+    "name": "spi0.0",
+    "part": "XM25QU128C",
+    "jedec": "204118",
+    "bytes": 16777216,
+    "erase_bytes": 65536
+  },
+  "observations": {
+    "pre_restore_boot_id": "1fcf6543-3a20-443b-9f0a-82bc8ceed28d",
+    "recovery_sd": {
+      "cid": "035344535530324780716f216e00a8f5",
+      "name": "SU02G",
+      "bytes": 1977614336,
+      "partition_uuid": "a7330000-0000-4000-8000-000000000001",
+      "initial_protection": {
+        "whole_device_ro": true,
+        "partition_ro": true,
+        "tasks_checked": 141,
+        "mount_namespaces": 7,
+        "sd_bytes_written": 0,
+        "block_stats_unchanged": true
+      },
+      "post_boot_protection": {
+        "whole_device_ro": true,
+        "partition_ro": true,
+        "zero_writes": true,
+        "tasks_checked": 176,
+        "mount_namespaces": 7
+      }
+    },
+    "nvme": {
+      "model": "SPCC M.2 PCIe SSD",
+      "serial": "134807190FC700149277",
+      "bytes": 256060514304,
+      "root_source": "/dev/nvme0n1p2",
+      "root_mount_options": "ro,nodev,relatime,norecovery"
+    },
+    "state_selector_before_and_after": "SCHEMA=1\nSLOT=A\nROOT_UUID=a7330000-0000-4000-8000-00000000000a\nROOT_MARKER_SHA256=286494073ce3a0b69443f96389dbbce11ab015705f7e9f05c7a7cf06503da866\nKERNEL_RELEASE=6.6.98-a733-diag\n",
+    "spi_restore": {
+      "event_count": 56,
+      "attempted_units": 26,
+      "completed_units": 26,
+      "final_verified": true,
+      "close_success": true,
+      "success": true,
+      "final_sha256": "dffab0dd410657cb30c7b2fd7f2586a4792e8472e58882b3532581f8111a646d",
+      "automatic_retry": false
+    },
+    "reboot_request": {
+      "returncode": 0,
+      "retry": false,
+      "request_count": 1
+    },
+    "recovery_boot": {
+      "boot_id": "f78c61f6-5214-4ea9-88ce-d4ae4efd9715",
+      "sd_cid_same": true,
+      "whole_device_ro": true,
+      "partition_ro": true,
+      "zero_writes": true,
+      "root_source": "/dev/nvme0n1p2",
+      "root_mount_options": "ro,nodev,relatime,norecovery",
+      "state_selector_unchanged": true
+    },
+    "uart_excerpt": [
+      {
+        "line": 282,
+        "text": "[07.007]workmode = 0,storage type = 1"
+      },
+      {
+        "line": 308,
+        "text": "Scanning mmc 0:1..."
+      },
+      {
+        "line": 312,
+        "text": "A733 NVMe host bootstrap from mmc 0 /boot/"
+      },
+      {
+        "line": 1279,
+        "text": "[    8.187183] EXT4-fs (nvme0n1p2): mounted filesystem a7330000-0000-4000-8000-00000000000a ro without journal. Quota mode: disabled."
+      },
+      {
+        "line": 1614,
+        "text": "[   24.292593] python3[1649]: A733 SSH host key for 192.168.1.116: ED25519 SHA256:Epfegy9GsJ6ng4/0EH3dZmir7beQj5uYTnIbE4JPfEI"
+      }
+    ],
+    "ssh_host_fingerprint_unchanged": "ED25519 SHA256:Epfegy9GsJ6ng4/0EH3dZmir7beQj5uYTnIbE4JPfEI",
+    "not_observed_in_this_run": [
+      "new KVM guest test",
+      "final SPI reinstall"
+    ],
+    "uart_line_numbering_method": "1-based physical lines from UTF-8 replacement-decoded UART log using splitlines()"
+  },
+  "fresh_pre_restore": {
+    "path": "out/spi-recovery-qualification-20261113-01/pre-restore-spi.bin",
+    "bytes": 16777216,
+    "sha256": "e829cf7b08fa9753866df7de727b2d1b92bb5c525f3bbf4cd94315d528dc275a"
+  },
+  "fresh_post_recovery": {
+    "path": "out/spi-recovery-qualification-20261113-01/pre-install-spi.bin",
+    "bytes": 16777216,
+    "sha256": "dffab0dd410657cb30c7b2fd7f2586a4792e8472e58882b3532581f8111a646d"
+  },
+  "restore_plan_sha256": "a8068fefd41df10dd7ab1b234ca7865a00c88f9c59004704f8b2b60500fbbdf4",
+  "records": {
+    "inventory.json": {
+      "path": "out/spi-recovery-qualification-20261113-01/inventory.json",
+      "bytes": 105521,
+      "sha256": "6958f14824f4a9d07413f23f050181e5ebe6fec2e25b24ddc3c6f2d70acc3448"
+    },
+    "sd-protection.json": {
+      "path": "out/spi-recovery-qualification-20261113-01/sd-protection.json",
+      "bytes": 474,
+      "sha256": "874ccee344648a7a787620a9403623806ed01aebe4a6c138e72bbe6eccbbde96"
+    },
+    "blank-restore-plan.json": {
+      "path": "out/spi-recovery-qualification-20261113-01/blank-restore-plan.json",
+      "bytes": 9464,
+      "sha256": "8a649395eca05923531869df02208ccd6a459bbd06fca1b375943d4929ae5b17"
+    },
+    "blank-restore-privileged-independent-review.json": {
+      "path": "out/spi-recovery-qualification-20261113-01/blank-restore-privileged-independent-review.json",
+      "bytes": 19522,
+      "sha256": "9f51f93e6e4f45067b86991339513a21ac009d17f632e488ff8d77513ff33dfc"
+    },
+    "blank-restore-events.jsonl": {
+      "path": "out/spi-recovery-qualification-20261113-01/blank-restore-events.jsonl",
+      "bytes": 20448,
+      "sha256": "27dab6424705ca993e020ab17ba84f38f02868051cf0f3fac95164c8ff4e2943"
+    },
+    "blank-restore-privileged-process.json": {
+      "path": "out/spi-recovery-qualification-20261113-01/blank-restore-privileged-process.json",
+      "bytes": 44,
+      "sha256": "ceb6ef78f74ced35d24cbad7e20b818b3862749858510c4f5bd5fb430cb0504e"
+    },
+    "recovery-reboot-intent.json": {
+      "path": "out/spi-recovery-qualification-20261113-01/recovery-reboot-intent.json",
+      "bytes": 267,
+      "sha256": "790c60280fd1d73c231e091ccfceb4b9d23c4896ffab6b47a64990614a325d0f"
+    },
+    "recovery-reboot-source.py": {
+      "path": "out/spi-recovery-qualification-20261113-01/recovery-reboot-source.py",
+      "bytes": 1299,
+      "sha256": "ca799991a1484810c428c8de71e9ba4841527a56f61051952436ce46fc3ef0ab"
+    },
+    "recovery-reboot-independent-review.json": {
+      "path": "out/spi-recovery-qualification-20261113-01/recovery-reboot-independent-review.json",
+      "bytes": 1897,
+      "sha256": "e78fcf5916ed8ebd516caeab80c12a26b149417bf3e8e0c441bdcdd1f1caae0b"
+    },
+    "recovery-reboot-request.json": {
+      "path": "out/spi-recovery-qualification-20261113-01/recovery-reboot-request.json",
+      "bytes": 329,
+      "sha256": "9b3f8d55cee5defd388f1d45c271a2c2f54372045facdc9d3fe28952a9788719"
+    },
+    "blank-SPI-recovery-inventory.json": {
+      "path": "out/spi-recovery-qualification-20261113-01/blank-SPI-recovery-inventory.json",
+      "bytes": 17923,
+      "sha256": "e16733772c17f8c094e162e67ccbb70d1096cbcc2518ee6f20f2d23c0da730ac"
+    },
+    "blank-SPI-recovery-UART.log": {
+      "path": "out/spi-recovery-qualification-20261113-01/blank-SPI-recovery-UART.log",
+      "bytes": 110141,
+      "sha256": "993da943996f190d9b3b797ae135ea129cd20f4181901aef6959f80be1b3534c"
+    }
+  },
+  "custody": {
+    "initial": {
+      "directory": "/home/drew/orange-pi-4-pro-build/spi-recovery-qualification-20261113-01",
+      "files": 12,
+      "pins": {
+        "blank-restore-plan.stderr": {
+          "bytes": 439,
+          "sha256": "bc2049d1be8255a6f214b810e88f82e57205e80dd46d25986635cf79d8d4d745"
+        },
+        "sd-protection.stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "inventory.stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "inventory-transport.json": {
+          "bytes": 260,
+          "sha256": "0b29dc81d699c340d3b9600c4d9a78e461562bf1b370865f7858cd6b7de5aa35"
+        },
+        "inventory.json": {
+          "bytes": 105521,
+          "sha256": "6958f14824f4a9d07413f23f050181e5ebe6fec2e25b24ddc3c6f2d70acc3448"
+        },
+        "recovery-SD-boot-UART.log": {
+          "bytes": 98149,
+          "sha256": "6aac4471386733a697014449bb5959f482b739b9d1304c096f1c3ea6b7f7aaee"
+        },
+        "staging-pins.json": {
+          "bytes": 1224,
+          "sha256": "1ea801909c09b5c52712f0d8fa56156a0580ccbfa3342003e79692c1c74d585e"
+        },
+        "blank-restore-plan.json": {
+          "bytes": 9464,
+          "sha256": "8a649395eca05923531869df02208ccd6a459bbd06fca1b375943d4929ae5b17"
+        },
+        "pre-restore-spi.bin": {
+          "bytes": 16777216,
+          "sha256": "e829cf7b08fa9753866df7de727b2d1b92bb5c525f3bbf4cd94315d528dc275a"
+        },
+        "sd-protection.json": {
+          "bytes": 474,
+          "sha256": "874ccee344648a7a787620a9403623806ed01aebe4a6c138e72bbe6eccbbde96"
+        },
+        "original-blank-spi.bin": {
+          "bytes": 16777216,
+          "sha256": "dffab0dd410657cb30c7b2fd7f2586a4792e8472e58882b3532581f8111a646d"
+        },
+        "factory-spi.bin": {
+          "bytes": 16777216,
+          "sha256": "83edcd7f448e8353163666016a6bae3e9b70d041a5e4d8454f48931839205e90"
+        }
+      },
+      "fsync": true
+    },
+    "restore_terminal": {
+      "path": "/home/drew/orange-pi-4-pro-build/spi-recovery-qualification-20261113-01/blank-restore-terminal-records.tar",
+      "sha256": "e47784687669002689bc4e24ba22a5e8b3e7f3033ff76e81ac6b67fd6eb9d8cc",
+      "bytes": 307200,
+      "fsync": true
+    },
+    "post_recovery": {
+      "path": "/home/drew/orange-pi-4-pro-build/spi-recovery-qualification-20261113-01/pre-reinstall-records.tar",
+      "sha256": "e381eaed11dce4725fcf78876864a28f9b571cdf7275b831aa2d9977666068e0",
+      "bytes": 16947200,
+      "fsync": true
+    }
+  },
+  "limits": [
+    "No new KVM guest execution in these SD recovery boots.",
+    "SD recovery boot is not credited toward final SPI/NVMe boot counts.",
+    "Linux block read-only flags require explicit reapplication after reboot; unchanged zero-write counters retain the physical observation.",
+    "Earlier unexplained SSH failure and vendor source/license limits remain."
+  ],
+  "local_pre_access_refusal": {
+    "description": "Initial unprivileged native capture refused /proc/1/ns/pid before SSH or SPI access; retained and corrected with independently reviewed native root launch.",
+    "spi_bytes_changed": 0
+  },
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "fresh_context": true,
+    "plan_complete_canonical_reconstruction": true,
+    "all_26_units": true,
+    "reboot_script": true,
+    "capture_native_root_and_output_ancestry": true,
+    "reviewer_did_not_flash": true
+  },
+  "extraction": {
+    "model": "gpt-6-luna",
+    "reasoning_effort": "low",
+    "coordinator_corrected_initial_event_count": true
+  }
+}

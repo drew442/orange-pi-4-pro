@@ -1,0 +1,207 @@
+{
+  "schema": 1,
+  "date": "2026-11-13",
+  "scope": "Physical metadata-aware SPI reinstall from recovered blank state and clean poweroff; awaiting SD removal",
+  "boot_id": "f78c61f6-5214-4ea9-88ce-d4ae4efd9715",
+  "prior_recovery": "spi-blank-restoration-and-sd-recovery-20261113.json",
+  "target": {
+    "device": "/dev/mtd0",
+    "major_minor": "90:0",
+    "part": "XM25QU128C",
+    "jedec": "204118",
+    "bytes": 16777216,
+    "erase_bytes": 65536
+  },
+  "plan_sha256": "29e1e1c8073a17823aff7df0b43bfb2b03b309ade3b885cd15497b3e933de0ea",
+  "current_sha256": "dffab0dd410657cb30c7b2fd7f2586a4792e8472e58882b3532581f8111a646d",
+  "desired_sha256": "83edcd7f448e8353163666016a6bae3e9b70d041a5e4d8454f48931839205e90",
+  "execution_order": [
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    1,
+    2,
+    3,
+    0
+  ],
+  "captured_events": 56,
+  "outcome": {
+    "close_success": true,
+    "event": "programmer_outcome",
+    "hardware_acceptance": false,
+    "receipt": {
+      "active_unit": null,
+      "attempted_units": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        1,
+        2,
+        3,
+        0
+      ],
+      "completed_units": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        1,
+        2,
+        3,
+        0
+      ],
+      "erase_attempted_bytes": 1703936,
+      "final_sha256": "83edcd7f448e8353163666016a6bae3e9b70d041a5e4d8454f48931839205e90",
+      "final_verified": true,
+      "hardware_acceptance": false,
+      "mutation_possible": true,
+      "plan_sha256": "29e1e1c8073a17823aff7df0b43bfb2b03b309ade3b885cd15497b3e933de0ea",
+      "schema": 2,
+      "skipped_units": [],
+      "stage": "complete",
+      "success": true,
+      "write_attempted_bytes": 1703936,
+      "write_confirmed_bytes": 1703936
+    },
+    "success": true
+  },
+  "poweroff": {
+    "requested_once": true,
+    "returncode": 0,
+    "UART_final_all_filesystems_unmounted": true,
+    "UART_kernel_power_down": true,
+    "retry": false,
+    "initial_var_unmount_failed": true,
+    "final_var_unmount_and_STATE_ext4_unmount_succeeded": true
+  },
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "fresh_context": true,
+    "complete_canonical_plan_and_units": true,
+    "header_last": true,
+    "captured_write_argv": true,
+    "single_attempt_poweroff_source": true
+  },
+  "records": {
+    "reinstall-plan.json": {
+      "path": "out/spi-recovery-qualification-20261113-01/reinstall-plan.json",
+      "bytes": 9357,
+      "sha256": "191643e65c88738cd8bb7986fd660795a8bc1db0f0597ed2abda0e6b1af063e8"
+    },
+    "reinstall-independent-review.json": {
+      "path": "out/spi-recovery-qualification-20261113-01/reinstall-independent-review.json",
+      "bytes": 17627,
+      "sha256": "b7aebd91db6375409634c7dc873bfc8e03988192c6ff266e98683c1421f03db0"
+    },
+    "reinstall-events.jsonl": {
+      "path": "out/spi-recovery-qualification-20261113-01/reinstall-events.jsonl",
+      "bytes": 20448,
+      "sha256": "b4daf0c8abb2be9a705c8e67dd8aafcd5facdd80f08fad4a842e9501893ee2cd"
+    },
+    "reinstall-process.json": {
+      "path": "out/spi-recovery-qualification-20261113-01/reinstall-process.json",
+      "bytes": 44,
+      "sha256": "ceb6ef78f74ced35d24cbad7e20b818b3862749858510c4f5bd5fb430cb0504e"
+    },
+    "reinstall-poweroff-source.py": {
+      "path": "out/spi-recovery-qualification-20261113-01/reinstall-poweroff-source.py",
+      "bytes": 1302,
+      "sha256": "83245b36a2710db83e7e3469c08b2e56a534c7512fe3c6bacb6fdd5a20615618"
+    },
+    "reinstall-poweroff-intent.json": {
+      "path": "out/spi-recovery-qualification-20261113-01/reinstall-poweroff-intent.json",
+      "bytes": 266,
+      "sha256": "4bbdebfef8dca7732a3e1c192026b26496827d84a09b314a6369dc35c2fc0a90"
+    },
+    "reinstall-poweroff-request.json": {
+      "path": "out/spi-recovery-qualification-20261113-01/reinstall-poweroff-request.json",
+      "bytes": 330,
+      "sha256": "67c2caddbfdaf977961aa168be01904655fdbe508fb54d0c25dc790c745be152"
+    },
+    "reinstall-poweroff-UART.log": {
+      "path": "out/spi-recovery-qualification-20261113-01/reinstall-poweroff-UART.log",
+      "bytes": 10842,
+      "sha256": "1739e9f94b98d025f6db1a6d7ab02039b2a4f606e7423dfe6cbfacc8f0dc6a1a"
+    }
+  },
+  "custody": {
+    "terminal": {
+      "path": "/home/drew/orange-pi-4-pro-build/spi-recovery-qualification-20261113-01/reinstall-terminal-records.tar",
+      "sha256": "dfabeacd2f69bd4e7a0f9aeae3a12cf6b847fdcbc1dccd84f6987193096f9610",
+      "bytes": 512000,
+      "fsync": true
+    },
+    "poweroff": {
+      "path": "/home/drew/orange-pi-4-pro-build/spi-recovery-qualification-20261113-01/reinstall-poweroff-records.tar",
+      "sha256": "41c1b459868e55335bd4e8fed22581112a51d00f0ab462deeff937921cb92bf1",
+      "bytes": 61440,
+      "fsync": true
+    }
+  },
+  "next_action": "Operator disconnects USB-C, removes retained recovery SD, waits at least ten seconds, restores power; coordinator then verifies actual SPI/NVMe boot and KVM.",
+  "pending": [
+    "Post-reinstall SD-removed SPI/NVMe boot",
+    "Actual KVM after this reinstall",
+    "Managed root B deployment and unattended guest acceptance",
+    "Final applicable boot counts",
+    "Independent physical procedure reproduction"
+  ],
+  "no_endurance_rerun": true
+}

@@ -1,17 +1,20 @@
 # SPI/NVMe production-readiness plan
 
 Execution started 2026-11-12. The recoverable baseline and metadata-aware SPI
-software review/checks pass; physical recovery and later phases remain pending.
+software review/checks pass; original blank restoration and subsequent SD recovery
+now pass physical checks. Reinstallation also passes full readback and close;
+the next SD-removed boot/KVM demonstration and later phases remain pending.
 [Software evidence](evidence/spi-metadata-validation-20261112.json). SPI/NVMe operation with SD
-removed is evidenced; the board is currently cleanly powered off awaiting the
-recovery-card transition. This plan completes production qualification and adds opt-in unattended
-guest operation. Physical restore/reinstall, unattended deployment and final qualification remain
+removed is evidenced. The operator's recovery-card transition is complete;
+restoration of blank SPI and the subsequent SD recovery boot passed on November
+13. Reviewed firmware reinstallation and clean poweroff also pass. This plan
+completes production qualification and adds opt-in unattended guest operation.
+Post-reinstall SPI boot/KVM, unattended deployment and final qualification remain
 future work.
 
-The next deliverable is a physically demonstrated SPI recovery procedure, followed
-by deployment of the reviewed inactive-root candidate. Software preparation can
-continue while the recovery-card transition awaits the operator. Completion is
-determined by the evidence gates below; no calendar estimate substitutes for
+The next deliverable is the post-reinstall SD-removed boot/KVM
+demonstration, followed by deployment of the reviewed inactive-root candidate.
+Completion is determined by the evidence gates below; no calendar estimate substitutes for
 physical results.
 
 ## Delivery order and current checkpoints
@@ -57,8 +60,7 @@ installation writes, preserve the known 2 GB recovery SD without reflashing,
 and leave attached heatsinks in place. Preserve source/license limitations;
 local production qualification does not establish redistribution clearance.
 
-The operator's next physical action remains the recovery-card transition in
-[Operator steps and evidence](#operator-steps-and-evidence). After reinstalling
+The operator's recovery-card insertion is complete. After reinstalling
 SPI, the coordinator will explicitly announce when SD removal is safe. Further
 operator involvement is limited to the required card/power transitions and cold
 cycle attestations. Software preparation continues while those steps are pending.
@@ -67,7 +69,7 @@ cycle attestations. Software preparation continues while those steps are pending
 | --- | --- | --- |
 | 1. Recoverable baseline | Recorded; revalidate after each hardware transition | Verified original/calibrated SPI and stopped guest backups retained off-device |
 | 2. Metadata-aware SPI maintenance | Software checks and independent review pass | Reviewed fresh live plans and preserved calibration policy |
-| 3. Physical restore/reinstall | Pending recovery-card boot | Original SPI restore, SD recovery, reinstall, SD-removed boot and actual KVM pass |
+| 3. Physical restore/reinstall | Blank restoration, SD recovery and reinstall pass; powered off for SD removal | Original SPI restore, SD recovery, reinstall, SD-removed boot and actual KVM pass |
 | 4. Unattended guests | Two matching packaged builds and independent artifact/reader review pass; all uninstalled | Reproducible packaged services, graceful shutdown/checkpoint/reconciliation, rollback and real KVM acceptance |
 | 5. Final SPI boot series | One cold and one warm operational boot evidenced | Ten accepted cold and ten warm boots with applicable identity and final automation checks |
 | 6. Independent reproduction and signoff | Earlier protected-SD reproduction retained | Updated SPI recovery and guest procedures reproduced, evidence reconciled and changes pushed |
@@ -418,12 +420,10 @@ remaining boot series to avoid redundant cycles.
 
 ### Operator steps and evidence
 
-The immediate physical prerequisite is to boot the retained SU02G recovery card:
-with the board powered off, disconnect USB-C, insert that card without reflashing,
-restore power and leave the card installed. Keep the UART bridge running and
-report that power has been restored. The coordinator then collects fresh boot,
-storage and flash identities and obtains independent review of fresh concrete
-restore/reinstall plans before using the existing write authorization.
+The retained SU02G recovery card is installed. Original blank SPI restoration,
+the subsequent SD recovery boot, reviewed reinstallation and clean poweroff
+passed on November 13. UART confirms all filesystems unmounted and kernel
+powerdown. [Physical records](evidence/spi-reinstall-and-poweroff-20261113.json).
 
 After SPI reinstallation and clean poweroff, the coordinator explicitly reports
 that it is ready for SD removal. The operator removes SD and restores power.

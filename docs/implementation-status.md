@@ -1,9 +1,15 @@
 # Implementation status
 
-Updated 2026-11-13. Last boot/KVM validation was 2026-11-11.
-Current physical state: cleanly powered off for the operator to insert the known
-SD recovery card and restore power. UART confirms complete unmount/powerdown.
-[Preparation evidence](evidence/spi-recovery-preparation-20261112.json).
+Updated 2026-11-13. SD recovery boot validated November 13; last actual KVM
+validation remains November 11.
+Current physical state: cleanly powered off after independently reviewed SPI
+blank restoration, SD recovery and firmware reinstallation. Both transactions
+passed full readback and close; receipts/backups are synced on both hosts.
+UART confirms final unmounts and powerdown. The known recovery SD is still
+installed; the operator can disconnect USB-C, remove SD, wait ten seconds and
+restore power. [Recovery evidence](evidence/spi-blank-restoration-and-sd-recovery-20261113.json)
+and [reinstallation/poweroff](evidence/spi-reinstall-and-poweroff-20261113.json).
+The next SD-removed boot/KVM demonstration and managed deployment remain pending.
 
 **The validated system operates from SPI and NVMe with SD
 physically removed.** SPI cold boot, warm restart, original SSH identity,
@@ -48,8 +54,11 @@ suites and five diagnostic cases, with no skips/errors/failures after correcting
 validation staging permissions. Read-only live install/calibrated-restore plans
 are no-ops; original blank restoration affects exactly units 0–25.
 [Software evidence](evidence/spi-metadata-validation-20261112.json) and
-[metadata policy](spi-calibration-policy.md). Physical SD recovery/restore/reinstall,
-unattended guest deployment and final qualification remain pending.
+[metadata policy](spi-calibration-policy.md). Original blank restoration and
+subsequent SD recovery now pass [physical checks](evidence/spi-blank-restoration-and-sd-recovery-20261113.json).
+Reinstallation also passes [full readback and close](evidence/spi-reinstall-and-poweroff-20261113.json).
+The post-reinstall SD-removed boot/KVM demonstration, unattended guest deployment
+and final qualification remain pending.
 
 The [guest lifecycle design](guest-autostart-design.md) passes independent
 architecture review. The following software components are reviewed and tested;
@@ -173,9 +182,12 @@ Its shutdown path remains hardware-unproven.
 
 ## Live board and constraints
 
-- **Last running state (now powered off):** normalized A at `root@192.168.1.116`, original pinned identity,
-  SPI boot `5858af7a-977e-4a9b-971e-6d71ae7858d3`. SD is absent. Final release,
-  NVMe A/STATE, SSH/NTP, eight-CPU EL2/VHE and KVM readiness guards pass.
+- **Last maintenance boot, now powered off:** normalized A at `root@192.168.1.116`, original
+  pinned identity, SD recovery boot `f78c61f6-5214-4ea9-88ce-d4ae4efd9715`.
+  The recovery SD remains installed; it was unmounted with both block nodes
+  explicitly read-only and zero Linux writes before poweroff.
+  Last accepted SPI boot was `5858af7a-977e-4a9b-971e-6d71ae7858d3`, SD absent;
+  its NVMe A/STATE, SSH/NTP, eight-CPU EL2/VHE and KVM readiness guards passed.
   The SPI-host guest tests ran QEMU PIDs 2066/2044 as locked UID/GID 60001 with
   actual VM/vCPU/VGIC descriptors. Both guests requested clean poweroff and
   exited zero. Current checkpoint **4**, manifest `c47520b6…bc60f`, disk
@@ -188,11 +200,15 @@ Its shutdown path remains hardware-unproven.
   `134807190FC700149277`, firmware EDFM20.0, 512/512 sectors. Diagnostic inventory
   is sufficient; leave heatsinks attached. Reported supply is 67 W USB-PD with
   passive 10.4 mm six-layer whole-board copper cooling; negotiated power is unmeasured.
-- **Boot route:** SPI boot0/EL2 firmware/U-Boot → NVMe p1 `/boot/` → selected
-  read-only NVMe root and writable STATE. NVMe BOOT remains `cc2ad9…26c313`.
-  Programmed factory SPI hash is `83edcd…05e90`. The current post-warm snapshot
-  is `e829cf…275a`; all differences are vendor metadata at `[260096,262144)`.
-  The known 2 GB SD stays available off-device for recovery.
+- **Boot route:** current maintenance uses SD firmware and `/boot/` → selected
+  read-only NVMe root and writable STATE. The qualified normal route uses SPI
+  boot0/EL2 firmware/U-Boot → NVMe p1 `/boot/`. Retained NVMe BOOT is
+  `cc2ad9…26c313`; factory SPI is `83edcd…05e90`. The fresh pre-restore snapshot
+  matched retained post-warm `e829cf…275a`, with only bounded vendor metadata
+  differences. After blank restoration and SD recovery, SPI was still exactly
+  blank. Reviewed reinstallation then restored exact factory SPI `83edcd…05e90`
+  with full readback and close. Clean poweroff passed; the known 2 GB SD is now
+  ready for removal.
   [Current images](current-images.md).
 - **Serial:** bridge `orangepi@192.168.1.117`, `ttyS3-capture.service`, volatile
   `/var/log/ttyS3.log`; native relay `a733-uart-relay-20261109-01.service` retains
@@ -315,9 +331,10 @@ validated inputs, an independent initial-manifest reference and reviewed CLI
 ordering; guarded STATE copying and all board execution remain pending.
 The [boot ledger](evidence/spi-boot-credit-ledger-20261112.json) records conditional
 existing route credit; final managed-build credit remains zero.
-Recovery-card boot awaits the operator; UART remains active with unchanged
-clean-powerdown output. Physical SPI recovery, deployment, actual managed KVM,
-final boot counts and independent procedure reproduction remain required.
+Recovery-card boot, original blank restoration and subsequent SD recovery pass.
+SPI reinstallation and clean poweroff also pass. The next SD-removed boot/KVM
+demonstration, deployment, actual managed KVM, final boot counts and independent
+procedure reproduction remain required.
 
 Codex has more than 22 GB available at this validation. Keep bulk sources, images and backups on the builder. Its LV is 128819658752 bytes
 with 4265607168 bytes VG free. All free builder capacity is approved for use and

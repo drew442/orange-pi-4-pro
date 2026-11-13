@@ -36,6 +36,12 @@ with no swap. Helpers and input files use mode 0600; the programmer itself uses
 unrelated ancestor-directory timestamp changes do not invalidate an attempt.
 
 `scripts/capture-known-spi-events.py` runs on the separate x86-64 capture host.
+Run it with native root privileges when namespace descriptor access requires
+them. Its output argument names a new directory, not a log file; every ancestor
+must be owned by root or the executing user and must not be group/world writable.
+For a root capture, use a private root-owned directory under `/var/lib` and a
+root-owned copy of the exact public known-hosts pin. A repository under a
+user-owned home directory does not meet that root-capture ancestry requirement.
 Its fixed bootstrap authenticates the programmer's exact size and SHA-256,
 holds physical source/ancestor descriptors and compiles those authenticated bytes.
 The caller requires this binding for write admission and checks its own source

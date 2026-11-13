@@ -1,6 +1,9 @@
 # Qualify metadata-aware SPI recovery
 
-Status: software review/checks pass; physical demonstration pending.
+Status: reviewed blank restoration, SD recovery and SPI reinstallation pass
+physical checks. The board is cleanly powered off for SD removal; the next
+SD-removed SPI/NVMe boot and actual KVM demonstration remain pending.
+[Physical evidence](evidence/spi-reinstall-and-poweroff-20261113.json).
 [Software evidence](evidence/spi-metadata-validation-20261112.json).
 This is phase 3 of the [production plan](spi-production-readiness-plan.md).
 Known-board storage authorization persists; no additional erase confirmation is
@@ -38,6 +41,13 @@ only read-only observation; never replay a reboot/poweroff automatically.
 On the SD recovery boot verify UART storage selection, the SU02G CID, expected
 NVMe serial `134807190FC700149277`, root/STATE pairing, key-only management and
 block-level SD protection. Read the complete current SPI and retain it off-device.
+The legacy recovery bootstrap does not set SD block read-only flags. After
+checking the exact card identity, zero write counters and absence of mounts,
+holders, swap or open block consumers, explicitly set both the whole card and
+its existing partition read-only. Verify both with BLKROGET and sysfs; do not
+assume the whole-card flag protects an existing partition. Repeat this step
+after each reboot, because these flags do not persist across boots. Setting
+these flags does not write card contents.
 The SPI remains XM25QU128C, JEDEC `204118`, `/dev/mtd0` character 90:0,
 16,777,216 bytes, Linux erase size 65,536 bytes.
 
