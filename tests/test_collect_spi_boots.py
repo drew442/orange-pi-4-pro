@@ -251,9 +251,12 @@ class CollectorTests(unittest.TestCase):
     def read_fixture(self, kind, label):
         directory = self.out / label
         directory.mkdir(mode=0o700)
+        # Make content rewrites observable even when rapid writes share a
+        # filesystem timestamp tick; preserve atime for its separate test.
         if kind == 'private':
             path = directory / 'evidence.json'
             C.publish(path, b'{"fixture":true}\n')
+            os.utime(path, ns=(path.stat().st_atime_ns, 1))
             return path, lambda: C.read_private(path, 262144), path.read_bytes()
         scripts = directory / 'scripts'
         scripts.mkdir(mode=0o700)
@@ -261,6 +264,7 @@ class CollectorTests(unittest.TestCase):
         for name, raw in expected.items():
             (scripts / name).write_bytes(raw)
         path = scripts / next(iter(C.PINS))
+        os.utime(path, ns=(path.stat().st_atime_ns, 1))
         return path, lambda: C.source_bytes(directory), expected
 
     def test_own_read_atime_advance_preserves_private_evidence_and_pinned_sources(self):

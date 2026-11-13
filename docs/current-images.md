@@ -1,16 +1,19 @@
 # Current images for this board
 
-The board is running **F349 B at 192.168.1.118 from SPI/NVMe with SD removed**,
-boot `d997b269-426c-4628-948c-e28554fbe50f`, strict SSH host-key alias
-`192.168.1.116`. Keep the known recovery SD unchanged and off-device;
-no operator flashing is needed now.
+The board is running **preserved normalized A at 192.168.1.118 from SPI/NVMe
+with SD removed**, boot `aa743db3-abae-4991-a467-5357c0a6c780`, strict SSH
+host-key alias `192.168.1.116`. Guest p5 is unmounted and registry18 remains
+disabled while the corrected inactive-B image is built and verified. Keep the
+known recovery SD unchanged and off-device; no operator flashing is needed.
+[A boot](evidence/permission-repair-preserved-A-boot-20261113.json).
 
 F349 passes 3717 privileged tests, one construction and independent complete
 filesystem/reader checks. Its inactive-B write, selection and authenticated boot
 pass. Four managed launches completed permit publication but the child exited1 before
 QMP binding. A RAM-only trace identified a nonroot permission failure reading the
-host metadata directory/marker, packaged as 0700/0600. The fixture is quarantined
-and disabled at generation17. A packaging correction is being validated; a new
+host metadata directory/marker, packaged as 0700/0600. Supported restoration and a fresh boot leave the fixture ready sequence0
+and disabled at generation18. Reviewed packaging correction `e296ae0` is under
+full Ubuntu validation; a new
 root build and untraced hardware trial remain required. Normalized A, BOOT and
 manual CP5 remain preserved.
 **Managed production operation remains unqualified.**

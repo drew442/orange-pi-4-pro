@@ -1,0 +1,183 @@
+{
+  "schema": 1,
+  "date_utc": "2026-11-13",
+  "scope": "Supported diagnostic baseline restoration after fourth pre-QMP failure; fresh SPI/NVMe admission recovery",
+  "previous_boot_id": "d997b269-426c-4628-948c-e28554fbe50f",
+  "boot_id": "26acaf3d-8b0a-4acd-9bb0-2425457af62d",
+  "root_revision": "f3496f5ff1b3629d5333d26725b9f5494ace9d25",
+  "payload_marker_sha256": "396be626a7919b9c800dd6a00cc5f8c025fa26c2d5c124bdde469e3b8c347ab8",
+  "SD_absent": true,
+  "authenticated": {
+    "maintenance_runtime": 85,
+    "management_runtime": 4,
+    "guest_boot_runtime": 2
+  },
+  "restore": {
+    "activation": {
+      "classification": "explicit p5 activation only; no physical boot or KVM proof",
+      "cleanup_errors": [],
+      "guest_may_be_modified": false,
+      "mount_attempted": false,
+      "mount_may_be_visible": true,
+      "mount_retained": true,
+      "mounted_before": true,
+      "permissions_may_be_modified": false,
+      "plan_sha256": "38c33123d5217cb0000b64fc8d6d8f858ecd22a875530bea8a433729f571548d",
+      "success": true
+    },
+    "admission": "shutdown-closed",
+    "data_committed": true,
+    "hardware_acceptance": false,
+    "historical": false,
+    "name": "autokvm",
+    "operation": "restore-managed-guest",
+    "stage": "complete",
+    "storage": {
+      "expected_bytes": 256060514304,
+      "expected_model": "SPCC M.2 PCIe SSD",
+      "profile": "a733-guest-storage-policy-v1",
+      "schema": 1,
+      "storage": {
+        "guest_uuid": "298b281a-d10e-44eb-bdb9-285e27eaafad",
+        "nvme_serial": "134807190FC700149277",
+        "state_uuid": "360dfb39-f49f-487e-b307-0bb887c854c5"
+      },
+      "target": "/dev/nvme0n1"
+    },
+    "success": true,
+    "transaction": {
+      "cleanup_uncertain": false,
+      "close_errors": [],
+      "data_committed": true,
+      "fresh_boot_required": true,
+      "hardware_acceptance": false,
+      "phase": "data-commit",
+      "success": true,
+      "transaction_id": "2d3a95df-ca2a-487f-8734-592d81d92b7c"
+    },
+    "transaction_id": "2d3a95df-ca2a-487f-8734-592d81d92b7c"
+  },
+  "baseline": {
+    "archive_bytes": 3395714,
+    "archive_sha256": "fdb5b5386cd3a56634307c3d3ab45396e7eb82e0a0e5be9c805a4ff6d803a491",
+    "reconstructed_initial_cohort": true,
+    "successful_managed_backup_export": false
+  },
+  "preserved": {
+    "old_payload": "/run/a733-guests/.a733-restores/2d3a95df-ca2a-487f-8734-592d81d92b7c/old-payload",
+    "old_lifecycle": "/run/a733-guests/.a733-restores/2d3a95df-ca2a-487f-8734-592d81d92b7c/old-lifecycle",
+    "provenance": "/run/a733-state/guest-restores/2d3a95df-ca2a-487f-8734-592d81d92b7c",
+    "manual_CP5_unchanged": true,
+    "normalized_A_and_BOOT_preserved": true
+  },
+  "postboot": {
+    "registry": {
+      "generation": 18,
+      "guests": [
+        {
+          "enabled": false,
+          "fixture_profile": "managed-power-key-v1",
+          "gid": 60002,
+          "manifest_sha256": "a46ae94c58289808f3b8f9848a9762ce68cd0fa6b1d28383821b6199135d8701",
+          "name": "autokvm",
+          "shutdown_profile": "qmp-guest-shutdown-v1",
+          "uid": 60002
+        }
+      ],
+      "profile": "a733-guest-autostart-v1",
+      "schema": 1,
+      "storage": {
+        "guest_uuid": "298b281a-d10e-44eb-bdb9-285e27eaafad",
+        "nvme_serial": "134807190FC700149277",
+        "state_uuid": "360dfb39-f49f-487e-b307-0bb887c854c5"
+      }
+    },
+    "gate": {
+      "boot_id": "26acaf3d-8b0a-4acd-9bb0-2425457af62d",
+      "generation": 1,
+      "owner_nonce": "a812c754-6c13-400a-974e-265837e90898",
+      "profile": "a733-admission-v1",
+      "reason": "bootstrap",
+      "schema": 1,
+      "state": "open"
+    },
+    "head_sha256": "2c19ec35640bdcbae05e93c8288d23501288ef2f48b071d1008a9d5e56391e2a",
+    "enrollment_sha256": "a46ae94c58289808f3b8f9848a9762ce68cd0fa6b1d28383821b6199135d8701",
+    "no_guest": {
+      "boot_id": "26acaf3d-8b0a-4acd-9bb0-2425457af62d",
+      "stale_permits_cleared": true,
+      "permit_directory_absent": true,
+      "managed_unit": {
+        "MainPID": "0",
+        "LoadState": "not-found",
+        "ActiveState": "inactive",
+        "Job": ""
+      },
+      "no_guest_queued": true
+    }
+  },
+  "transport": {
+    "reboot_request_returncode": 255,
+    "systemctl_reboot_returned_zero": true,
+    "SSH_disconnect_preserved": true,
+    "blind_retry": false,
+    "boot_resolved_by_new_UUID_UART_and_authenticated_state": true
+  },
+  "records": [
+    {
+      "path": "out/managed-trace-run-20261113-01/restore-attempt-05/guarded-initial-restore-source.py",
+      "bytes": 20182,
+      "sha256": "db1c1c5b5617ef098692009157af6fb5dd18d96272975090da5aec962711bda7"
+    },
+    {
+      "path": "out/managed-trace-run-20261113-01/restore-attempt-05/restore-complete-records.json",
+      "bytes": 50108,
+      "sha256": "76b0ec8a36968a44d6f8ee651b4c01f1c2fdde172be1efdd24ccee347c8910dc"
+    },
+    {
+      "path": "out/managed-trace-run-20261113-01/restore-attempt-05/restored-B-reboot-source.py",
+      "bytes": 22371,
+      "sha256": "0e41e4cebfbc926fb5cef317c5c5e8df0fbd822068e127b5605077a5c1f1b4e5"
+    },
+    {
+      "path": "out/managed-trace-run-20261113-01/restore-attempt-05/restored-B-reboot-request.json",
+      "bytes": 929,
+      "sha256": "ddf2adf9536312c26304f68c1880cf431e142e55cbf38012fbce873d0718c88a"
+    },
+    {
+      "path": "out/managed-trace-run-20261113-01/restore-attempt-05/fresh-B-inventory.json",
+      "bytes": 102785,
+      "sha256": "f1ca44fa42e4b5987d1d53dffec6500493aa6536001c4c5d79d918f45ba444a9"
+    },
+    {
+      "path": "out/managed-trace-run-20261113-01/restore-attempt-05/fresh-B-state.json",
+      "bytes": 20397,
+      "sha256": "f79bf1783e83ed89a3a5fa40a40b260b366404853580e5e806c4cb8ffb4f9a5c"
+    },
+    {
+      "path": "out/managed-trace-run-20261113-01/restore-attempt-05/fresh-B-no-guest.json",
+      "bytes": 239,
+      "sha256": "f463bef1a410ae2a7d31471a41cda88ee6d37b4cd4a0984ad36da4f577699f7e"
+    },
+    {
+      "path": "out/managed-trace-run-20261113-01/restore-attempt-05/fresh-B-UART.log",
+      "bytes": 119056,
+      "sha256": "9d54ecdeaec2f3951c6843184487c59b94388f4170e4568c8dabe835856435da"
+    },
+    {
+      "path": "out/managed-trace-run-20261113-01/restore-attempt-05/fresh-B-recovery-records.tar",
+      "bytes": 522240,
+      "sha256": "51e1d677b6105c01a9f4aa6ca141eb72e322c4357e131b501c45afbae624fb13"
+    }
+  ],
+  "off_device_custody": {
+    "path": "/home/drew/orange-pi-4-pro-build/restore-attempt-05/fresh-B-recovery-records.tar",
+    "bytes": 522240,
+    "sha256": "51e1d677b6105c01a9f4aa6ca141eb72e322c4357e131b501c45afbae624fb13",
+    "fsynced": true,
+    "readback": true
+  },
+  "managed_KVM_credit": false,
+  "final_managed_boot_series_credit": false,
+  "hardware_guest_acceptance": false
+}

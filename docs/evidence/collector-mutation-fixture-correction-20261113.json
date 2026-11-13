@@ -1,0 +1,136 @@
+{
+  "schema": 1,
+  "date_utc": "2026-11-13",
+  "scope": "Failed full Ubuntu validation retained; deterministic test-fixture correction only",
+  "failed_validation": {
+    "source_commit": "e296ae0d137479b8f15682e3cc7df6b912f04bb7",
+    "source_tree": "6b071d59e3dcd995db175e156b3f5c35449c68e7",
+    "source_locked_files": 1171,
+    "terminal": {
+      "MainPID": "0",
+      "Result": "exit-code",
+      "ExecMainStatus": "1",
+      "SubState": "failed"
+    },
+    "unit_tests": 3733,
+    "unit_seconds": 1299.408,
+    "failures": 1,
+    "errors": 0,
+    "skips": 0,
+    "failure": "test_in_read_mutation_and_named_path_replacement_refuse source/contents: ValueError not raised",
+    "shell_and_diagnostic_suites": "not executed: shell set-e stopped after failed unit suite",
+    "source_lock_after_failure_independently_matches": true,
+    "post_run_outer_inventory_count": 849,
+    "post_run_outer_inventory_three_field_sha256": "b34b70a879cbbf75f818708275c57ef0aef3ae635b9ae71a8005e2b29a8490b8",
+    "full_combined_validation_passed": false,
+    "construction_released": false,
+    "hardware_acceptance": false
+  },
+  "failed_evidence": {
+    "path": "out/managed-permission-validation-20261113-01/failed-evidence.tar",
+    "bytes": 358400,
+    "sha256": "602b80e51da99cef116c0446dfe319fd1061e68fb6e6eba5553e7393aebb6d11"
+  },
+  "failed_evidence_builder_custody": {
+    "path": "/var/lib/a733-managed-permission-validation-20261113-01/failed-evidence.tar",
+    "bytes": 358400,
+    "sha256": "602b80e51da99cef116c0446dfe319fd1061e68fb6e6eba5553e7393aebb6d11",
+    "fsynced": true,
+    "readback": true
+  },
+  "reproduction": {
+    "actual_focused_invocations": 1,
+    "failures": 1,
+    "before": {
+      "st_dev": 64512,
+      "st_ino": 1355830,
+      "st_mode": 33188,
+      "st_nlink": 1,
+      "st_uid": 0,
+      "st_gid": 0,
+      "st_size": 23339,
+      "st_atime_ns": 1794602063996496501,
+      "st_mtime_ns": 1794602063996496501,
+      "st_ctime_ns": 1794602063996496501
+    },
+    "after": {
+      "st_dev": 64512,
+      "st_ino": 1355830,
+      "st_mode": 33188,
+      "st_nlink": 1,
+      "st_uid": 0,
+      "st_gid": 0,
+      "st_size": 23339,
+      "st_atime_ns": 1794602063996496501,
+      "st_mtime_ns": 1794602063996496501,
+      "st_ctime_ns": 1794602063996496501
+    },
+    "counts": {
+      "private-contents:refused": 1,
+      "private-replacement:refused": 1,
+      "private-mode:refused": 1,
+      "private-mtime:refused": 1,
+      "private-links:refused": 1,
+      "source-contents:accepted": 1,
+      "source-replacement:refused": 1,
+      "source-mode:refused": 1,
+      "source-mtime:refused": 1,
+      "source-links:refused": 1
+    },
+    "classification": "A rapid source fixture content rewrite shared every observed metadata field; captured original bytes still matched the trusted source pin. No altered source was executed."
+  },
+  "production_unchanged": {
+    "path": "scripts/collect-spi-boots.py",
+    "sha256": "efb5918e05a9f5fc391158718c5af15a2d9db4cb1e3581bf6d033c3a87fc4b2c"
+  },
+  "test_only_fix": {
+    "path": "tests/test_collect_spi_boots.py",
+    "sha256": "1ea0e20fa1c7bf29c56d687541d6d3791805bc1ea17449de438fdc5301ba8de8",
+    "change": "Set initial fixture mtime to 1 ns before the reader initial fstat, preserving atime in both private and source branches. No sleeps, changed assertions or production changes.",
+    "diagnostic_subclass_invocations": 200,
+    "diagnostic_mutation_cases": 2000,
+    "diagnostic_failures": 0,
+    "corrected_privileged_collector_suite": {
+      "tests": 52,
+      "seconds": 1.242,
+      "result": "OK"
+    },
+    "independent_review": {
+      "path": "tmp/collector-mutation-failure-20261113/corrected-review.json",
+      "bytes": 1625,
+      "sha256": "e27bbb92e7ec3f4b13f8b1a9b0190fce2b23e32cb68c9837c518b7fd2fc1c3d7"
+    }
+  },
+  "diagnosis_and_fix_records": [
+    {
+      "path": "tmp/collector-mutation-failure-20261113/builder-diagnosis.json",
+      "bytes": 6053,
+      "sha256": "46fa066de434a0a90877c22530670ddd09823fb39349fbefd9b80df50345ea55"
+    },
+    {
+      "path": "tmp/collector-mutation-failure-20261113/builder-old-mtime-diagnosis.json",
+      "bytes": 837,
+      "sha256": "e1536a013f81f85c6d83347ff17c6bc45931e70e11a3e10a0f823d348823bc87"
+    },
+    {
+      "path": "tmp/collector-mutation-failure-20261113/corrected-focused.stderr",
+      "bytes": 6316,
+      "sha256": "63a81af1c42620dae1f67d3125c719d9ff64c57048c242d8625793febf29ae4e"
+    },
+    {
+      "path": "tmp/collector-mutation-failure-20261113/diagnosis-and-fixture-review.tar",
+      "bytes": 61440,
+      "sha256": "e1bdd4580fcb095824f120141475eb62afd3a3df625af065d9cea4a4326ff43b"
+    }
+  ],
+  "diagnosis_off_device_custody": {
+    "path": "/home/drew/orange-pi-4-pro-build/collector-mutation-failure-20261113/diagnosis-and-fixture-review.tar",
+    "bytes": 61440,
+    "sha256": "e1bdd4580fcb095824f120141475eb62afd3a3df625af065d9cea4a4326ff43b",
+    "fsynced": true,
+    "readback": true
+  },
+  "new_full_combined_validation": "pending new frozen source and dedicated 02 unit; failed01 retained",
+  "trial01": "staged source only; construction not released",
+  "hardware_acceptance": false
+}

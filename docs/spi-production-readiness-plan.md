@@ -19,21 +19,28 @@ No qualifying endurance rerun is required.
 
 ### Next execution steps
 
-Use frozen F349 and its exact artifact pins for the next deployment. Preserve
-older `2996365`/`4334a22` artifacts and normalized A as separate cohorts. The
-bound supervisor stop and permit budget preserve normal guest shutdown; the
-collector isolates completion data from the power helper's fixed two-file packet.
-Artifact-derived helper pins pass independent review and 100 focused checks;
-combined external validation now passes 3730 unit tests plus all shell/diagnostic
-suites. Actual completion/collector execution remains pending.
-[Completion procedure](managed-fixture-completion.md).
+Frozen F349 B boots from SPI/NVMe with SD absent and normalized A preserved.
+Its four managed launches exited before QEMU. A bounded RAM trace identified the
+same 74-byte nonroot metadata permission error as the earlier untraced attempts.
+The reviewed `e296ae0` packaging correction sets the public metadata directory to
+0755 and marker to 0644 before both slot images. Its first full Ubuntu run hit one collector fixture timestamp failure; the
+reviewed deterministic test-only correction passes 52 focused checks. Fresh full
+validation, construction, artifact checks and physical deployment remain pending.
+Retain older artifacts and every failed cohort as separate evidence.
+[Diagnosis and source checks](evidence/managed-launch-permission-diagnosis-20261113.json).
 
-The disposable guest is restored ready0 and disabled at generation 9 after
-supported recovery and a fresh boot. The failed cohort remains retained.
-F349 completed permit publication, then its child exited1 before QMP binding.
-Retain [the failure evidence](evidence/managed-permit-launch-failure-20261113.json).
-Do not re-enroll it or overwrite retained failed cohorts. Its first successful
-managed KVM execution, checkpoint/restart and automatic boot still need proof.
+Supported restoration and fresh-boot recovery leave the disposable guest ready0
+and disabled at generation18. [Recovery](evidence/managed-permission-cohort-recovery-20261113.json). Preserve
+manual `firstkvm` CP5 and the trusted initial-baseline recovery inputs; do not
+re-enroll over retained failures. No managed KVM, checkpoint/restart or automatic
+boot acceptance is claimed.
+
+The bound supervisor stop and permit budget preserve normal guest shutdown;
+the collector isolates completion data from the power helper's fixed two-file
+packet. Artifact-derived helper pins pass independent review, 100 focused checks
+and 3730-test combined validation, but actual completion/collector invocation
+remains pending. Bind helpers to the newly constructed artifact before physical
+use. [Completion procedure](managed-fixture-completion.md).
 
 | Order | Work and owner | Required result before proceeding |
 | --- | --- | --- |
@@ -67,7 +74,7 @@ cycle attestations. Software preparation continues while those steps are pending
 | 1. Recoverable baseline | Recorded; revalidate after each hardware transition | Verified original/calibrated SPI and stopped guest backups retained off-device |
 | 2. Metadata-aware SPI maintenance | Software checks and independent review pass | Reviewed fresh live plans and preserved calibration policy |
 | 3. Physical restore/reinstall | Blank restoration, SD recovery, reinstall and SD-removed manual KVM pass | Original SPI restore, SD recovery, reinstall, SD-removed boot and actual KVM pass |
-| 4. Unattended guests | F349 build/artifact/readers and physical B boot pass; managed child exit unresolved | Reproducible packaged services, graceful shutdown/checkpoint/reconciliation, rollback and real KVM acceptance |
+| 4. Unattended guests | F349 physical B boot passes; nonroot metadata failure diagnosed, reviewed packaging rebuild pending | Reproducible packaged services, graceful shutdown/checkpoint/reconciliation, rollback and real KVM acceptance |
 | 5. Final SPI boot series | Earlier manual SPI operational evidence retained; final managed series 0 cold/0 warm | Ten accepted cold and ten warm boots with applicable identity and final automation checks |
 | 6. Independent reproduction and signoff | Earlier protected-SD reproduction retained | Updated SPI recovery and guest procedures reproduced, evidence reconciled and changes pushed |
 

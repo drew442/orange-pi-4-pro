@@ -1,8 +1,8 @@
 # Implementation status
 
 Updated 2026-11-13. **SPI/NVMe boot works with SD removed; managed production
-qualification remains incomplete.** Verified F349 B now boots with the SD removed; normalized A remains preserved
-as the rollback root. Its permit-barrier and bound-stop
+qualification remains incomplete.** Verified F349 B boots with the SD removed; the board is now on preserved
+normalized A while a corrected inactive-B image is prepared. Its permit-barrier and bound-stop
 changes pass combined validation. The first managed trial passed permit publication
 but its child exited with status 1 before QMP binding; quarantine and disable succeeded. No managed KVM execution or final boot-series
 credit is claimed. No operator action is currently needed. A pinned, separately reviewed RAM-only
@@ -12,10 +12,10 @@ will receive no production acceptance credit.
 ## Current board and retained recovery
 
 - SSH: `root@192.168.1.118`, strict original host-key alias `192.168.1.116`.
-  Boot `d997b269-426c-4628-948c-e28554fbe50f`; F349 B p3 is read-only.
-  Its complete 85-tool/four-management-file/two-boot-unit cohort authenticates.
-  NTP passes; p5 is mounted and admission opened after both preparation services
-  completed. Normalized A p2 remains preserved.
+  Boot `aa743db3-abae-4991-a467-5357c0a6c780`; normalized A p2 is read-only.
+  Its complete 40-tool/four-management-file cohort authenticates. NTP passes,
+  registry18 remains disabled and p5 is unmounted. Inactive B awaits the corrected
+  artifact. [A boot](evidence/permission-repair-preserved-A-boot-20261113.json).
 - NVMe: SPCC M.2 PCIe SSD, serial `134807190FC700149277`, 256060514304 bytes,
   firmware EDFM20.0. STATE p4 UUID `360dfb39-f49f-487e-b307-0bb887c854c5`;
   guest p5 UUID `298b281a-d10e-44eb-bdb9-285e27eaafad`.
@@ -71,15 +71,23 @@ signals, dropped bytes or capture errors. The reviewed packaging fix sets the pu
 mutations. Full Ubuntu validation and a new build remain pending; no live root
 permission bypass is applied.
 
-The fixture remains quarantined and disabled at generation 17; admission is open,
-manual CP5 is unchanged, and every failed cohort remains retained. A supervisor
-cleanup error is also retained; supported restoration/fresh boot is required
-before another run. The earlier restoration `eaf1f4bc…a9a5` committed cleanly
-and its SD-removed boot `d997b269…be50f` passed admission recovery.
-[Exact diagnosis](evidence/managed-launch-permission-diagnosis-20261113.json),
-[earlier recovery](evidence/managed-diagnostic-cohort-recovery-20261113.json).
+Supported restore `2d3a95df…2b7c` committed cleanly after the fourth failure,
+retained its old payload/lifecycle and kept manual CP5 unchanged. Fresh SD-removed
+B boot `26acaf3d…f62d` passed the complete runtime, generation18 disabled/ready0,
+open admission and no-queued-guest checks. The earlier supervisor cleanup error
+remains retained in its failed-run record; fresh boot cleared stale RAM permits.
+[Diagnosis](evidence/managed-launch-permission-diagnosis-20261113.json),
+[latest recovery](evidence/managed-permission-cohort-recovery-20261113.json).
 
 ## Current source and build evidence
+
+The first full `e296ae0` validation ran 3733 tests with one failure in the external
+collector's source-mutation fixture; shell/diagnostic stages did not run and no
+construction was released. Native reproduction proves a same-timestamp fixture
+assumption while captured bytes remained correctly pinned. The reviewed test-only
+mtime baseline fix passes 52 privileged collector tests and 2,000 diagnostic
+mutation cases. Fresh combined validation is required; retain the failed run.
+[Failure and correction](evidence/collector-mutation-fixture-correction-20261113.json).
 
 Frozen **F349** (`f3496f5ff1b3629d5333d26725b9f5494ace9d25`, 1156 tracked files)
 adds a 120-second permit-publication budget with a 180-second pre-exec child
@@ -132,8 +140,11 @@ Follow [the production plan](spi-production-readiness-plan.md):
 
 1. F349 B staging, inactive-p3 write/readback, durable selection and SD-removed
    boot pass. Retain [the deployment record](evidence/managed-permit-B-deployment-20261113.json).
-2. Resolve the recorded pre-QMP child exit, preserving its failed cohort and
-   retained initial-baseline recovery inputs. Prove real nonroot managed KVM CPU/disk/HTTP, guest-owned power-key shutdown,
+2. Complete full Ubuntu validation and new root construction for reviewed
+   the public-metadata correction and deterministic collector fixture; verify
+   artifacts and deploy inactive B
+   under review. Restore the disabled fixture without losing failed cohorts.
+   Prove real nonroot managed KVM CPU/disk/HTTP, guest-owned power-key shutdown,
    durable checkpoint and explicit restart; separately prove automatic startup.
 3. Exercise coherent completed-cohort backup/export/restore, interrupted/resumed
    restoration, disable, installed maintenance interruption/retry, restored old-A

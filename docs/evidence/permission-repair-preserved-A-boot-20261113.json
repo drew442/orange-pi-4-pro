@@ -1,0 +1,182 @@
+{
+  "schema": 1,
+  "date_utc": "2026-11-13",
+  "scope": "Preserved normalized-A boot for inactive-B metadata-permission repair; no root rewrite yet",
+  "boot_id": "aa743db3-abae-4991-a467-5357c0a6c780",
+  "previous_boot_id": "26acaf3d-8b0a-4acd-9bb0-2425457af62d",
+  "active_slot": "A",
+  "root_source": "/dev/nvme0n1p2",
+  "root_marker_sha256": "286494073ce3a0b69443f96389dbbce11ab015705f7e9f05c7a7cf06503da866",
+  "read_only": true,
+  "SD_absent": true,
+  "authenticated": {
+    "maintenance_runtime": 40,
+    "management_runtime": 4
+  },
+  "NTP_synchronized": true,
+  "guest_partition_unmounted": true,
+  "registry_preserved": {
+    "generation": 18,
+    "guests": [
+      {
+        "enabled": false,
+        "fixture_profile": "managed-power-key-v1",
+        "gid": 60002,
+        "manifest_sha256": "a46ae94c58289808f3b8f9848a9762ce68cd0fa6b1d28383821b6199135d8701",
+        "name": "autokvm",
+        "shutdown_profile": "qmp-guest-shutdown-v1",
+        "uid": 60002
+      }
+    ],
+    "profile": "a733-guest-autostart-v1",
+    "schema": 1,
+    "storage": {
+      "guest_uuid": "298b281a-d10e-44eb-bdb9-285e27eaafad",
+      "nvme_serial": "134807190FC700149277",
+      "state_uuid": "360dfb39-f49f-487e-b307-0bb887c854c5"
+    }
+  },
+  "selection_receipt": {
+    "block_writes_performed": false,
+    "classification": "selection receipt only; no health, boot, KVM or recovery proof",
+    "expected_root": {
+      "bytes": 4294967296,
+      "sha256": "a9715b819348a8220ec8b3b1f41ef27db677baaa96014f5d1dfb7a22597decdd"
+    },
+    "intent": "activate",
+    "journal_durable": true,
+    "journal_name": "selection-69f5a5c6548ea5891834b6f3ed76b35111ee4f17f6af7500b0a2e6c8717317fa.json",
+    "journal_visible": true,
+    "maintenance": {
+      "close_errors": [],
+      "gate_state": "open",
+      "hardware_acceptance": false,
+      "nonce": "f450eab9-e54b-4e5c-b2dc-4d63de03535a",
+      "open_acknowledged": true,
+      "open_attempted": true,
+      "phase": "finished",
+      "success": true
+    },
+    "manifest": {
+      "identity": {
+        "bytes": 33481,
+        "ctime_ns": 1794578496136426966,
+        "device": 66308,
+        "inode": 131078,
+        "mtime_ns": 1794578496136426966
+      },
+      "manifest_sha256": "c1bcc7d23d22bd487534ba17ea447055881a044350829608360aa92ca24283f2",
+      "path": "/run/a733-state/managed-systemd-repair-20261113-01/rollback-A-manifest.json",
+      "root": {
+        "bytes": 4294967296,
+        "sha256": "a9715b819348a8220ec8b3b1f41ef27db677baaa96014f5d1dfb7a22597decdd"
+      },
+      "slot": "A"
+    },
+    "operation": "explicit-root-selection",
+    "plan_sha256": "69f5a5c6548ea5891834b6f3ed76b35111ee4f17f6af7500b0a2e6c8717317fa",
+    "proposed_selector": {
+      "KERNEL_RELEASE": "6.6.98-a733-diag",
+      "ROOT_MARKER_SHA256": "286494073ce3a0b69443f96389dbbce11ab015705f7e9f05c7a7cf06503da866",
+      "ROOT_UUID": "a7330000-0000-4000-8000-00000000000a",
+      "SCHEMA": "1",
+      "SLOT": "A"
+    },
+    "publication_durable": true,
+    "root_switched": false,
+    "selected_after": {
+      "KERNEL_RELEASE": "6.6.98-a733-diag",
+      "ROOT_MARKER_SHA256": "286494073ce3a0b69443f96389dbbce11ab015705f7e9f05c7a7cf06503da866",
+      "ROOT_UUID": "a7330000-0000-4000-8000-00000000000a",
+      "SCHEMA": "1",
+      "SLOT": "A"
+    },
+    "selected_before": {
+      "KERNEL_RELEASE": "6.6.98-a733-diag",
+      "ROOT_MARKER_SHA256": "396be626a7919b9c800dd6a00cc5f8c025fa26c2d5c124bdde469e3b8c347ab8",
+      "ROOT_UUID": "a7330000-0000-4000-8000-00000000000b",
+      "SCHEMA": "1",
+      "SLOT": "B"
+    },
+    "selection_published": true,
+    "selection_write_attempted": true,
+    "success": true,
+    "target": {
+      "canonical_path": "/dev/nvme0n1p2",
+      "logical_sector_bytes": 512,
+      "major_minor": "259:2",
+      "model": "SPCC M.2 PCIe SSD",
+      "partition_number": 2,
+      "partition_uuid": "a3656add-643e-4534-9267-f7e4ed3857e2",
+      "physical_sector_bytes": 512,
+      "requested_path": "/dev/nvme0n1p2",
+      "serial": "134807190FC700149277",
+      "size_bytes": 4294967296
+    }
+  },
+  "authorization": "docs/evidence/storage-write-authorization-20261108.json",
+  "rootB_write_performed": false,
+  "rootB_trial_revision": "e296ae0d137479b8f15682e3cc7df6b912f04bb7",
+  "rootB_build_and_artifact_acceptance": "pending",
+  "records": [
+    {
+      "path": "out/managed-permission-deployment-20261113-01/prepare-select-normalized-A-source.py",
+      "bytes": 19123,
+      "sha256": "a195a986afa0a0d86e8bc3463bcdeeaabce0bcf571d59ed6fc3fbcc271ffdeb6"
+    },
+    {
+      "path": "out/managed-permission-deployment-20261113-01/select-normalized-A-plan.json",
+      "bytes": 3539,
+      "sha256": "9434aba096f9c7996df3c26ed82d523a1c8b7adc9ef48c1454d9a189c7fcaa8b"
+    },
+    {
+      "path": "out/managed-permission-deployment-20261113-01/select-normalized-A-result.json",
+      "bytes": 2644,
+      "sha256": "6013658167753e231d3ca2fbd1d01f16f4b540ddcf61a0c8042277a423a0e213"
+    },
+    {
+      "path": "out/managed-permission-deployment-20261113-01/preserved-A-reboot-source.py",
+      "bytes": 22388,
+      "sha256": "14d92d20cc2662f84ca9c794392092131796f997169e42f718fc5acbafab23b2"
+    },
+    {
+      "path": "out/managed-permission-deployment-20261113-01/preserved-A-reboot-request.json",
+      "bytes": 944,
+      "sha256": "179015126b91906afe5c01aafb2822c21f2c9627fd20983a2bc03db7b9758473"
+    },
+    {
+      "path": "out/managed-permission-deployment-20261113-01/preserved-A-inventory.json",
+      "bytes": 1394,
+      "sha256": "c5143765b2bdf023b1f1dcbd135ff91d1a3ca7c4c33b7ce1d96097e4d9638ad8"
+    },
+    {
+      "path": "out/managed-permission-deployment-20261113-01/preserved-A-boot-UART.log",
+      "bytes": 115691,
+      "sha256": "67b8b5767350444343b844dbc0c0526541847e895c15da45fb6d82aa23f057c5"
+    },
+    {
+      "path": "out/managed-permission-deployment-20261113-01/legacy-A-update-guard-source.py",
+      "bytes": 3099,
+      "sha256": "ac3c9c456cf59b9b8ddf2b4a1d2f88f87d342ae4167a730af330e6a400783e1c"
+    },
+    {
+      "path": "out/managed-permission-deployment-20261113-01/legacy-A-update-guard.json",
+      "bytes": 1652,
+      "sha256": "18faaca23f9dca1367445065371c11bf950e65bbbcedfa2e29267f1b9c940146"
+    },
+    {
+      "path": "out/managed-permission-deployment-20261113-01/preserved-A-boot-records.tar",
+      "bytes": 532480,
+      "sha256": "a4999244781870ff902c82708e5d9e7878d41b8bb1a80cda4df640e7013e5c2b"
+    }
+  ],
+  "off_device_custody": {
+    "path": "/home/drew/orange-pi-4-pro-build/managed-permission-deployment-20261113-01/preserved-A-boot-records.tar",
+    "bytes": 532480,
+    "sha256": "a4999244781870ff902c82708e5d9e7878d41b8bb1a80cda4df640e7013e5c2b",
+    "fsynced": true,
+    "readback": true
+  },
+  "managed_KVM_credit": false,
+  "final_managed_boot_series_credit": false
+}
