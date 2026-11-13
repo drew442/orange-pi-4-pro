@@ -21,9 +21,9 @@ import uuid
 
 REPO = Path(__file__).resolve().parents[1]
 PINS = {
-    'complete-managed-fixture.py': (23339, '144cdf8f515ad7956b4b8a4e6084c451dfbdafc88359f63f1f55b1d6cd70a6f5'),
-    'qualify-managed-boot.py': (15424, '631a0ad0cb714db0c002430a19aec28ada85837ebdd5cabf34056bd3e3ff21c4'),
-    'request-spi-power.py': (17795, 'c60f97f9ee70604dbd39cec2c99ff995b4f41fc7d18536e0d6726c3a4f985800'),
+    'complete-managed-fixture.py': (23339, 'cb9a49582abeadbf559caaa89a40b48dab6ec1e918748772ccd40eac2a54bf90'),
+    'qualify-managed-boot.py': (15424, '938ef0355df0a764160c63e5d1c0532818888ec8135fba962830472f41025ae0'),
+    'request-spi-power.py': (17795, '82135a6b14fd22aa53a62619d99dc934b89d6031004cbffaea3551eccdabd033'),
 }
 BOOT0_SHA = '7f0babc242c1e4614c7243bd2c45a980e4385727ffbb544a7c8f2d324cf8dc07'
 PACKAGE_SHA = 'bdfe070a2c358de9dd0061b39609f604c0c12e9c25140903505f88799cc343be'

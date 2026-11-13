@@ -1,0 +1,70 @@
+{
+  "date": "2026-11-13",
+  "source_commit": "fb29af4a7ee3d21ff6254058a445cb5e3cc4b998",
+  "source_tree": "fcbf26458bf0141a6244efbb2032938692833e54",
+  "tracked_files": 1175,
+  "constructions": 1,
+  "producer_receipt": {
+    "bytes": 277400,
+    "sha256": "143160c03dc514b5867a2cfa7df728d3d60e9d1774e6f38a2a90d1f1bd05fb7a"
+  },
+  "producer_source_manifest": {
+    "bytes": 250536,
+    "sha256": "3908d326b9cba3db917df9f7aa5d8077775384b6db3daf08efad0072587e4527"
+  },
+  "manifest": {
+    "bytes": 51618,
+    "sha256": "f562731c51cc1703865b038ed1744f76b59089f758a99a9a51320a24899da696"
+  },
+  "root_artifacts": {
+    "root-A.ext4": {
+      "bytes": 4294967296,
+      "sha256": "254cec52e1e1dd1c8c353447d113ae9f3a18408ef61b50cef28da13ac0afbfdb"
+    },
+    "root-A.ext4.gz": {
+      "bytes": 143660379,
+      "sha256": "370be202a0179277a808bc2a4b9dda099f73e7e7866c89dee0eb74f438cd4755"
+    },
+    "root-B.ext4": {
+      "bytes": 4294967296,
+      "sha256": "dbe3385295d12e5ee48e91acfc46633a204d36fe6843f89df5f4af8b728548d8"
+    },
+    "root-B.ext4.gz": {
+      "bytes": 143660318,
+      "sha256": "e57d47c906c3e0d4dee76547989530d4287221242153610411580a610d713ada"
+    }
+  },
+  "B_marker_sha256": "ce1e1841cea22852f122f2c3de0c15fc146ded7a1f090c05d8e3ebe8be430b65",
+  "B_selector": {
+    "bytes": 179,
+    "sha256": "8755d4566ef2037b61251ededb242f3a41871c059ee97b990e0f396bd024f24b"
+  },
+  "B_candidate": {
+    "bytes": 9388,
+    "sha256": "246d4f3f298130ea9c33fdac496015a705ede49a9b3e80f00dc1c7799de2341d"
+  },
+  "producer_full_filesystem_readback": false,
+  "separate_verifier": {
+    "result": "PASS",
+    "artifact_hashes": 133,
+    "complete_gzip_raw_comparisons": 2,
+    "complete_filesystem_checks": 2,
+    "compatibility_readers": 5,
+    "source_pins": 17,
+    "public_metadata": "both slots root:root directory0755 marker0644",
+    "prepared_roots_retained": 3,
+    "cleanup": "only fresh temporary legacy expansion retired",
+    "custody_tar": {
+      "bytes": 358400,
+      "sha256": "2df80211741b992d2ef9ac9af451f39f6d737a13beaacfc2971847d1836dfd3a"
+    },
+    "custody_members": 41,
+    "independent_audit": "gpt-6.1-sol/high: GO for artifact use; retained execution audit, no rerun"
+  },
+  "minimum_observed_producer_free_bytes": 17680502784,
+  "minimum_observed_producer_available_memory_bytes": 7308607488,
+  "reproducibility": "not established; one construction",
+  "deployment": "pending",
+  "hardware_shutdown_checkpoint_restart": "pending",
+  "production_acceptance": false
+}

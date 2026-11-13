@@ -15,7 +15,7 @@ import uuid
 MODULE = Path('/usr/lib/a733-tools/scripts/manage-guests.py')
 MARKER = Path('/usr/lib/orangepi-hypervisor/payload.json')
 MODULE_SHA256 = '8a6211b45d6d4b0231b100c71c2bb72a6f4eb475e04de5652104111a7d43520e'
-MARKER_SHA256 = '2ecff261ce165b202476456466914b422b6dac0f8dd1e7d8120eec1c3bbf9501'
+MARKER_SHA256 = 'ce1e1841cea22852f122f2c3de0c15fc146ded7a1f090c05d8e3ebe8be430b65'
 GUEST = 'autokvm'
 
 

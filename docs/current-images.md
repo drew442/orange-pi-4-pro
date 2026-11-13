@@ -10,8 +10,8 @@ independent artifact/filesystem/readers, installation and boot. Actual UID60002
 managed KVM CPU/disk/HTTP passes. Shutdown failed and durable quarantine succeeded.
 Supported recovery preserves that failure and manual CP5. The independently
 reviewed timer repair is frozen at `fb29af4`; 32 focused tests and full Ubuntu
-validation pass (3737 unit tests plus shell/diagnostic suites). Fresh B construction, artifact checks and a new hardware
-trial remain required. **Managed shutdown/checkpoint/restart, final boot series
+validation pass (3737 unit tests plus shell/diagnostic suites). One new construction and independent full artifact checks pass; inactive-B
+deployment and a new hardware trial remain required. **Managed shutdown/checkpoint/restart, final boot series
 and production operation remain unqualified.**
 [Hardware trial](evidence/permission-B-managed-KVM-and-shutdown-failure-20261113.json),
 [current recovery](evidence/managed-shutdown-failure-recovery-20261113.json),
@@ -36,6 +36,20 @@ Future SPI writes require a fresh reviewed plan accounting for that metadata.
 Keep both original and calibrated backups. [SPI procedure](spi-sd-boot-20261111.md).
 
 Paths below are relative to `/home/drew/orange-pi-4-pro` on codex.
+
+## Shutdown-budget B trial
+
+Frozen source `fb29af4` has one construction and independent artifact/readers
+verification. These are **NVMe root components**, not SD images; deployment and
+actual managed shutdown/checkpoint/restart remain pending.
+[Evidence](evidence/shutdown-budget-root-trial-and-artifact-review-20261113.json).
+
+B component: `out/managed-shutdown-budget-root-trial-20261113-01/artifacts/root-B.ext4.gz`,
+143660318 bytes, SHA-256 `e57d47c906c3e0d4dee76547989530d4287221242153610411580a610d713ada`.
+It expands to4294967296 bytes, SHA-256
+`dbe3385295d12e5ee48e91acfc46633a204d36fe6843f89df5f4af8b728548d8`.
+Payload manifest SHA-256 `f562731c51cc1703865b038ed1744f76b59089f758a99a9a51320a24899da696`.
+Keep preserved normalized A and the known recovery SD.
 
 ## F349 managed trial
 

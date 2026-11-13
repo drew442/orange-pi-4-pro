@@ -20,7 +20,7 @@ import sys
 import time
 import uuid
 
-QUALIFIER_SHA256 = '631a0ad0cb714db0c002430a19aec28ada85837ebdd5cabf34056bd3e3ff21c4'
+QUALIFIER_SHA256 = '938ef0355df0a764160c63e5d1c0532818888ec8135fba962830472f41025ae0'
 QUALIFIER_BYTES = 15424
 COMMAND = ['/usr/bin/python3', '-I', '-B', '/usr/lib/a733-tools/scripts/manage-guests.py', 'stop', 'autokvm']
 OBSERVE_SECONDS = 135

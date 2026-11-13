@@ -1,201 +1,129 @@
 # Implementation status
 
 Updated 2026-11-13. **SPI/NVMe boot works with SD removed; managed production
-qualification remains incomplete.** The board runs preserved normalized A while corrected inactive B is prepared.
-**Actual managed nonroot KVM CPU/disk/HTTP passes on the preceding `6c0a7e9` B.**
-Its shutdown failed and quarantined the guest. Supported recovery retained the
-failure, restored the disposable seed disabled at generation21 and preserved
-manual CP5. The independently reviewed grace-timer repair is frozen at `fb29af4`;
-32 focused tests and full combined Ubuntu validation pass: 3737 unit tests, five
-shell suites and five diagnostic cases, zero skips/failures, all1179 source locks
-and exact849 packages unchanged. Reviewed retirement of eight old producer raws
-retains verified native raw/gzip copies and all builder gzips; preparation now
-passes fresh disk/memory admission. Construction, independent artifact verification
-and real shutdown/checkpoint/restart follow.
-[Validation](evidence/shutdown-budget-combined-validation-20261113.json),
-[retention](evidence/old-producer-raw-retirement-20261113.json).
-No final managed boot-series credit or production qualification is claimed.
-No operator action is currently needed.
-[Hardware trial](evidence/permission-B-managed-KVM-and-shutdown-failure-20261113.json),
-[recovery](evidence/managed-shutdown-failure-recovery-20261113.json).
+qualification is incomplete.** Preserved normalized A is running. The preceding
+`6c0a7e9` B passed actual managed UID60002 KVM CPU/disk/HTTP, then hit a QMP
+shutdown deadline and was durably quarantined. Forced cleanup returned raw exit 0;
+this does not prove guest-owned clean shutdown. Supported recovery retained the failed cohort,
+committed transaction 4671, left generation21 ready0, and preserved manual CP5.
+The independently reviewed timer move after `mark_stopping` is frozen at
+`fb29af4`. Focused 32 tests and combined Ubuntu validation pass (3737 unit, five
+shell, five diagnostic; 1179 source locks and exact849 package inventory
+unchanged). One new shutdown-budget construction and independent artifact verification pass:
+133 hashes, two gzip/raw comparisons, both filesystems and five readers. Actual
+inactive-B deployment and hardware shutdown/checkpoint/restart remain pending.
+[New artifacts](evidence/shutdown-budget-root-trial-and-artifact-review-20261113.json).
+External helper pins pass independent data-only review and84 privileged focused
+checks; fresh combined validation is pending. These four helpers are outside the
+packaged85-file runtime. [Binding](evidence/shutdown-artifact-helper-pin-binding-20261113.json).
+Final managed warm/cold counts are **0/0**; release remains pending.
+[Combined validation](evidence/shutdown-budget-combined-validation-20261113.json),
+[managed KVM trial](evidence/permission-B-managed-KVM-and-shutdown-failure-20261113.json),
+[shutdown failure/recovery](evidence/managed-shutdown-failure-recovery-20261113.json).
 
-## Current board and retained recovery
+## Current board and custody
 
-- SSH: `root@192.168.1.118`, strict original host-key alias `192.168.1.116`.
-  Boot `a4c67491-a884-463f-b83d-853dba52b95e`; preserved normalized A p2 is
-  read-only. Complete 40-tool/four-management-file authentication and NTP pass.
-  Registry21 is disabled, p5 is unmounted and RAM admission is absent.
-  B awaits the reviewed shutdown repair. Preserve all failed-run evidence.
-  [Current A](evidence/managed-shutdown-failure-recovery-20261113.json).
-- NVMe: SPCC M.2 PCIe SSD, serial `134807190FC700149277`, 256060514304 bytes,
-  firmware EDFM20.0. STATE p4 UUID `360dfb39-f49f-487e-b307-0bb887c854c5`;
+- SSH `root@192.168.1.118`; strict original host-key alias `192.168.1.116`.
+  Running boot `a4c67491-a884-463f-b83d-853dba52b95e`; normalized A p2 is
+  read-only. Forty tool and four management-file authentication checks and NTP
+  pass. Registry21 is disabled, p5 unmounted, and RAM admission absent.
+- Preserve A, manual `firstkvm` and CP5, all failed cohorts, recovery SD and SPI
+  backups. CP5 manifest `88c1ea17…9c946`, disk `2d06d539…5b66`; verified backup
+  is on codex and builder. Normalized A custody details are in
+  [the recovery record](evidence/managed-shutdown-failure-recovery-20261113.json).
+- Hardware: Orange Pi 4 Pro A733; nominal 250 GB NVMe, 2 GB recovery SD
+  (SU02G, 1977614336 bytes) physically removed. Leave attached heatsinks in
+  place. NVMe identity and UUIDs, UART capture, power, and SPI geometry/calibration
+  are recorded in the linked physical evidence. Preserve original, factory,
+  calibrated and current SPI backups; the latest full snapshot predates later
+  warm boots and is not a fresh programming input. Any programming needs a fresh
+  independently reviewed metadata-aware live-flash plan. See
+  [SPI policy](spi-calibration-policy.md) and
+  [procedure](spi-sd-boot-20261111.md).
+- NVMe: SPCC M.2 PCIe SSD, serial `134807190FC700149277`, 256060514304 bytes.
+  STATE p4 UUID `360dfb39-f49f-487e-b307-0bb887c854c5`;
   guest p5 UUID `298b281a-d10e-44eb-bdb9-285e27eaafad`.
-- A raw root `a9715b…97decdd` and protected BOOT remain preserved. Compatible
-  bootloader, kernel, device tree and EL2 configuration are not replaced.
-- SD is physically removed. Preserve SU02G recovery card, 1977614336 bytes,
-  CID `035344535530324780716f216e00a8f5`. Leave attached heatsinks in place.
-- UART bridge: `orangepi@192.168.1.117`, `ttyS3-capture.service`,
-  `/var/log/ttyS3.log`; capped native relay under `out/serial-recovery-20261109/`.
-- Supply: reported 67 W USB-PD adapter; passive 10.4 mm six-layer whole-board
-  copper cooling. Negotiated voltage/current remains unmeasured.
+- SPI: XM25QU128C, JEDEC `204118`, `/dev/mtd0` char90:0, 16777216 bytes,
+  erase65536; vendor calibration changes only `[260096,262144)`.
+- UART: `orangepi@192.168.1.117`, `ttyS3-capture.service`, `/var/log/ttyS3.log`;
+  capped native relay is under `out/serial-recovery-20261109/`.
+- Supply: reported67W USB-PD, passive10.4mm six-layer copper cooling;
+  negotiated voltage/current is unmeasured. The November8 SSH failure remains
+  unexplained; retain continuous UART during qualification.
 
-SPI is XM25QU128C, JEDEC `204118`, `/dev/mtd0`, char90:0, 16777216 bytes,
-65536-byte erase units. Vendor boot changes the validated 2 KiB calibration area
-`[260096,262144)`. Future programming requires a fresh independently reviewed
-metadata-aware live-flash plan. Original blank, factory and calibrated backups
-remain off-device. Latest retained post-reinstall full snapshot `2d9e2a…92386`
-predates subsequent warm boots and is not a fresh programming input.
-[SPI policy](spi-calibration-policy.md), [procedure](spi-sd-boot-20261111.md).
+## Acceptance evidence and boundaries
 
-## Physical evidence
-
-| Gate | Result and boundary |
+| Area | Verified result and boundary |
 | --- | --- |
-| Earlier protected-SD release | Installation, update/rollback/recovery, independent deployment reproduction, ten cold/ten warm boots and unchanged SD pass for that configuration. [Audit](evidence/release-acceptance-20261111.json). |
-| Endurance | Retained >20-hour workload satisfies the eight-hour criterion. No qualifying rerun; future planned tests are capped at eight hours. Production guest lifetime remains unlimited. |
-| SPI operation | SD-removed cold/warm boot and actual nonroot manual KVM CPU/disk/HTTP, shutdown and checkpoint/restart pass. [Operational record](evidence/spi-operational-20261111.json). |
-| Revised SPI recovery | Original blank restoration, SD recovery and metadata-aware reinstallation pass full readback/close. [Restoration](evidence/spi-blank-restoration-and-sd-recovery-20261113.json), [reinstallation](evidence/spi-reinstall-and-poweroff-20261113.json). |
-| Post-reinstall manual KVM | Boot `ae6ef902…0eded`; UID/GID60001 QEMU advanced `firstkvm` 9→10, passed CPU/disk/HTTP and guest-owned raw exit 0. CP5 is durable with nine history records and verified copies on codex and builder. CP5 subsequent restart is not claimed. [Receipts](evidence/post-reinstall-SPI-managed-B-20261113.json). |
-| Managed root deployments | Original B and repaired `4334a22` B staged, selected and booted with authenticated runtimes. Normalized A remains the rollback root. [Repaired B](evidence/repaired-managed-B-deployment-20261113.json). |
-| Managed launch failures | Original B refused before queueing on systemd dependency display/mount edges. Repaired B queued but child exited125 before QEMU during permit publication; durable quarantine succeeded. No managed execution credit. [Dependency diagnosis](evidence/managed-systemd-dependencies-20261113.json), [permit failure](evidence/managed-permit-barrier-failure-20261113.json). |
-| Quarantine/admission recovery | Supported initial-baseline restoration committed, retained old payload/lifecycle and CP5, and kept `autokvm` disabled at generation 6. Fresh B boot `fad6b1f4…afd85` validated ready sequence 0/open admission and completed restore census. This reconstructed baseline is not a successful managed-backup export. [Recovery](evidence/managed-initial-cohort-recovery-20261113.json). |
-| Final managed qualification | **Managed KVM passes; pending:** clean shutdown/checkpoint/restart, automation and remaining maintenance/backup/reproduction gates. Final warm/cold counts remain **0/0**. |
+| Earlier protected-SD release | Installation, update/rollback/recovery, independent deployment reproduction, ten cold/ten warm boots and unchanged SD passed for that configuration. This is not managed SPI release. [Audit](evidence/release-acceptance-20261111.json). |
+| Endurance | Retained >20-hour workload satisfies the eight-hour criterion. Do not rerun; cap future planned tests at eight hours. Production guest lifetime remains unlimited. |
+| SPI and recovery | SD-removed cold/warm boot; manual nonroot KVM CPU/disk/HTTP, shutdown and checkpoint/restart; blank restoration, SD recovery and metadata-aware reinstall/readback/close passed. [Operations](evidence/spi-operational-20261111.json), [restoration](evidence/spi-blank-restoration-and-sd-recovery-20261113.json), [reinstall](evidence/spi-reinstall-and-poweroff-20261113.json). |
+| Manual CP5 | Post-reinstall boot `ae6ef902…0eded`; UID/GID60001 `firstkvm` 9→10 passed CPU/disk/HTTP and guest-owned raw exit0. CP5 is durable with nine history records and verified codex/builder copies. Subsequent CP5 restart is not claimed. [Receipts](evidence/post-reinstall-SPI-managed-B-20261113.json). |
+| Managed deployments and failures | Original B and repaired `4334a22` staged, selected and booted; A remains rollback root. Earlier launch failures and permission repair are documented. The preceding corrected `6c0a7e9` managed execution passed KVM CPU/disk/HTTP, but shutdown failed and quarantine followed; no clean managed shutdown credit. [Deployment](evidence/repaired-managed-B-deployment-20261113.json), [failure/recovery](evidence/managed-shutdown-failure-recovery-20261113.json). |
+| Current managed shutdown repair | `fb29af4` timer fix independently reviewed and frozen. Host validation is green, but the new root construction/artifact review and actual hardware shutdown, durable checkpoint, explicit restart and automatic startup remain pending. No final managed boot-series credit. |
 
-The first November 13 removal attempt still contained SD and receives no SPI
-credit. The operator subsequently removed it. The unexplained November 8 SSH
-failure remains unresolved; retain continuous UART during qualification.
+## Retained evidence and implementation state
 
-`firstkvm` remains manual and stopped: CP5 manifest `88c1ea17…9c946`, disk
-`2d06d539…5b66`. Backup archive `5736eafe…c6d926` is verified at
-`/home/drew/a733-checkpoint5-backup-20261113-01` on codex and
-`/var/lib/a733-checkpoint5-backup-20261113-01` on the builder. Preserve these and
-[normalized A](evidence/normalized-a-compatibility-custody-20261112.json).
-The unused original port80 cohort and the later failed port8080 cohort are both
-retained. Four F349 launches produced the same exit1/74-byte console fingerprint before
-QMP binding; none receives KVM credit. The fourth, diagnostic run captured the
-exact error: `Permission denied: 'orangepi-hypervisor'` from the nonroot launcher.
-The root-owned metadata directory is 0700 and its marker 0600. The trace proves
-successful setpriv/Python exec, retained attachment and clean detachment with no
-signals, dropped bytes or capture errors. The reviewed packaging fix sets the public metadata directory/marker to
-0755/0644 before both image snapshots. Thirty privileged payload checks and
-24 metadata checks pass, including actual UID60002 authentication and six denied
-mutations. Fresh Ubuntu validation and one corrected construction pass. The new physical
-run proves this permission repair; no live root permission bypass was applied.
+The corrected managed trial exposed the QMP deadline, retained its failed
+cohort, then used supported recovery without changing manual CP5. Keep the
+unused original port80 cohort and failed port8080 cohort. Earlier failures
+include pre-queue systemd dependency edges; child exit125 before QEMU during
+permit publication; four F349 exit1/74-byte console failures before QMP bind
+(`Permission denied: 'orangepi-hypervisor'`); and an earlier supervisor cleanup
+error. Their retained records remain authoritative; none earns execution credit.
 
-Supported restore `2d3a95df…2b7c` committed cleanly after the fourth failure,
-retained its old payload/lifecycle and kept manual CP5 unchanged. Fresh SD-removed
-B boot `26acaf3d…f62d` passed the complete runtime, generation18 disabled/ready0,
-open admission and no-queued-guest checks. The earlier supervisor cleanup error
-remains retained in its failed-run record; fresh boot cleared stale RAM permits.
-[Diagnosis](evidence/managed-launch-permission-diagnosis-20261113.json),
-[latest recovery](evidence/managed-permission-cohort-recovery-20261113.json).
+The permission fix publishes public metadata directory/marker as 0755/0644
+before both snapshots. Earlier collector mtime fixture correction and F349
+permit-publication/child-barrier and native bounded-stop work are frozen history,
+not current hardware acceptance. F349 and test-fixture chronology, per-trial
+hashes, artifact counts, disk measurements and earlier validation totals are
+preserved in the linked records.
+[F349 source review](evidence/managed-bound-stop-and-fixture-completion-20261113.json),
+[collector correction](evidence/collector-mutation-fixture-correction-20261113.json),
+[older combined validation](evidence/permission-root-combined-validation-20261113.json).
 
-## Current source and build evidence
+Eight old producer raws were retired only after review; verified native raw and
+gzip copies and all builder gzips remain. Last fresh preparation admission had
+19,588,169,728 bytes free versus 19,084,036,631 required, and
+7,493,877,760 bytes MemAvailable. Recheck guards for every construction. Preserve
+all new roots, A and backups. [Retirement and retention](evidence/old-producer-raw-retirement-20261113.json).
 
-The first full `e296ae0` validation ran 3733 tests with one failure in the external
-collector's source-mutation fixture; shell/diagnostic stages did not run and no
-construction was released. Native reproduction proves a same-timestamp fixture
-assumption while captured bytes remained correctly pinned. The reviewed test-only
-mtime baseline fix passes 52 privileged collector tests and 2,000 diagnostic
-mutation cases. Fresh `6c0a7e9` combined validation02 now passes **3733 unit
-tests, five shell suites and five diagnostic cases**, with zero skips/failures, all
-1174 source locks matching before/after and exact849 inventory retained. Minimum
-free disk 19,111,034,880 bytes; MemAvailable 6,590,410,752 bytes. Evidence is fsynced
-on both hosts; retain failed01 separately.
-[Fresh validation](evidence/permission-root-combined-validation-20261113.json).
-[Failure and correction](evidence/collector-mutation-fixture-correction-20261113.json).
-
-One `6c0a7e9` construction passes independent verification of 133 artifacts, both
-complete gzip expansions, both filesystems and five current/historical reader
-results. Both metadata directories/markers are root-owned 0755/0644. B raw
-`0cfef33e…d7d11b`, gzip143660160 bytes `6e203430…654f1`, marker
-`2ecff261…bf9501`, selector `64eb90f2…35dd0`. External helper pins match this
-artifact and pass independent review plus 84 privileged focused tests. Their fresh
-combined validation passes 3733 unit tests, five shell suites and five diagnostic
-cases, zero skips/failures, all1176 source locks and exact849 packages unchanged.
-Evidence is fsynced on both hosts. New B physical managed KVM passes; shutdown fails.
-[External helper validation](evidence/permission-collector-combined-validation-20261113.json).
-[Corrected trial](evidence/permission-root-trial-and-artifact-review-20261113.json).
-
-Frozen **F349** (`f3496f5ff1b3629d5333d26725b9f5494ace9d25`, 1156 tracked files)
-adds a 120-second permit-publication budget with a 180-second pre-exec child
-barrier, preserving authority checks. Native bound stop signals an authenticated
-supervisor pidfd once and observes legal checkpoint manifest transitions. The
-external fixture helper waits for real KVM/network observation before one bound
-stop; production guests remain unlimited.
-[Source review](evidence/managed-bound-stop-and-fixture-completion-20261113.json).
-
-Combined privileged Ubuntu validation passes **3717 unit tests**, five shell
-suites and five diagnostic cases, zero skips/errors/failures. All 1160 locked
-inputs match before/after; outer 849-package inventory is unchanged. Minimum free disk
-22,273,024,000 bytes; MemAvailable 6,685,016,064 bytes. Verified evidence copies
-exist on both hosts. [Validation](evidence/managed-native-lifecycle-validation-20261113.json).
-
-One F349 trial construction completes; producer receipts correctly say full
-filesystem readback false and reproducibility not established. Separate
-independent verification passes all 133 artifacts, both complete root gzip
-expansions, both filesystem/semantic checks, historical A/B readers and current
-reader on normalized A. Its sole temporary legacy expansion was removed; all
-producer originals, three prepared roots and metadata remain.
-[Trial artifacts](evidence/managed-permit-root-trial-20261113.json).
-
-F349 B: manifest `333c0f69…57be35`; compressed 143659792 bytes
-`5dbf65c9…b8a9c25`; raw 4294967296 bytes `fdecc216…d8d5806`; marker
-`396be626…8c347ab8`; selector `e907e3d0…f69da93`. These are NVMe components,
-not SD images. Independent fresh-checkout construction/comparison follows a
-working hardware trial, giving two constructions and documented reproduction.
-
-The collector isolates its completion packet from the power helper's exact
-two-file namespace. Artifact-derived qualifier/module/marker/selector pins pass
-independent review and **100 focused privileged checks**. Later combined Ubuntu
-validation passes **3730 unit tests**, five shell suites and five diagnostic cases,
-zero skips/errors/failures, with all 1166 source inputs and 849-package inventory
-unchanged. Evidence is fsynced on both hosts; physical invocation remains pending.
-[Combined validation](evidence/managed-permit-collector-validation-20261113.json).
-[Fixture completion](managed-fixture-completion.md).
-
-The builder remains Ubuntu 22.04 `drew@build.drewnet.online`, exact849 package
-lock plus signed seventeen-package supplement; historical 842-package frozen replay
-inputs remain unchanged. LV/ext4 is 133085265920 bytes and VG free space zero. Reviewed
-retirement removed only twelve redundant verifier scratch copies, retaining all
-producer originals/backups; free space afterward was 22,408,658,944 bytes.
-Remeasure dynamic disk/memory guards for each construction; begin with two jobs.
-[Builder](build-host-assessment.md), [retirement](evidence/redundant-verifier-scratch-retirement-20261113.json).
-
-## Next actions and acceptance
-
-Follow [the production plan](spi-production-readiness-plan.md):
-
-1. F349 B staging, inactive-p3 write/readback, durable selection and SD-removed
-   boot pass. Retain [the deployment record](evidence/managed-permit-B-deployment-20261113.json).
-2. Repair the independently diagnosed shutdown budget defect. Validate and build
-   a fresh reviewed root; preserve the failed KVM run and restore the disabled
-   fixture through supported recovery. Prove guest-owned power-key shutdown,
-   durable checkpoint and explicit restart; separately prove automatic startup.
-   Corrected metadata construction, complete artifact/readers, deployment and
-   actual managed KVM CPU/disk/HTTP already pass.
-3. Exercise coherent completed-cohort backup/export/restore, interrupted/resumed
-   restoration, disable, installed maintenance interruption/retry, restored old-A
-   rollback and managed-B return. Preserve `firstkvm` and all recovery evidence.
-4. Independently reproduce the frozen construction and compare all artifacts;
-   freeze final external collectors and setup after the new trial.
-5. Reach ten qualifying warm/ten cold SPI boots with automatic guest outcomes,
-   retaining ordered UART and current firmware/storage identity. Cold transitions
-   require real operator USB-C removal attestations. Credit only applicable boots.
-6. Independently reproduce the final physical procedure, reconcile
-   [release acceptance](release-acceptance.md), commit and push validated changes.
-
-Known-board SD/NVMe/SPI writes remain authorized by
-[the persisted record](evidence/storage-write-authorization-20261108.json).
-Only changed targets/scope need a new yes/no request. All free builder capacity
-is approved for use/expansion after exact-target revalidation and independent
-review; native codex LVM is outside that expansion approval. Keep resource guards.
-Installation shows progress and keeps bulk readback optional; the older installed
-A updater still requires legacy readback, and selector authentication is mandatory.
-Do not benchmark installation bottlenecks, remove heatsinks or rerun accepted
-endurance testing.
-
-Exact source/license inventory remains incomplete for 26 vendor boot inputs and
-two Linaro revisions. Local qualification does not establish public binary
-redistribution clearance. [Source inventory](toolchain-sources.md),
+Builder is Ubuntu 22.04 with exact849 package lock and signed 17-package
+supplement; historical 842-package replay inputs remain unchanged. Reviewed
+scratch retirement and current capacity are documented in
+[builder assessment](build-host-assessment.md). Preserve source/license limits:
+exact inventory remains incomplete for 26 vendor boot inputs and two Linaro
+revisions; local qualification does not establish public redistribution
+clearance. [Source inventory](toolchain-sources.md),
 [current images](current-images.md).
+
+## Next actions and managed SPI release gates
+
+Follow the [production readiness plan](spi-production-readiness-plan.md):
+
+1. Deploy the independently verified shutdown-budget B artifact through the
+   reviewed inactive-root procedure. Preserve A, the failed run and recovered
+   disabled fixture; do not start the old shutdown code.
+2. On hardware, prove guest-owned power-key shutdown, durable checkpoint,
+   explicit restart, and separately automatic startup using an actual KVM guest.
+3. Exercise coherent completed-cohort backup/export/restore,
+   interrupted/resumed restoration, disable, installed maintenance
+   interruption/retry, restored old-A rollback and managed-B return. Preserve
+   `firstkvm`, CP5 and all failure evidence.
+4. Independently reproduce frozen construction and compare all artifacts; freeze
+   final collectors and setup after the new trial.
+5. Pass ten qualifying warm and ten cold SPI boots with automatic guest
+   outcomes, ordered UART and current firmware/storage identity. Cold transitions
+   need real operator USB-C removal attestations; credit only applicable boots.
+6. Independently reproduce the final physical procedure, reconcile
+   [release acceptance](release-acceptance.md), then commit and push validated
+   changes. Managed warm/cold credit remains 0/0 until earned.
+
+Known-board SD/NVMe/SPI writes are authorized by
+[the persisted record](evidence/storage-write-authorization-20261108.json).
+Revalidate exact targets and use independent review. Free builder capacity may
+be used/expanded after exact-target revalidation; native codex LVM is outside
+that approval. Keep resource guards. Installation shows progress and bulk
+readback stays optional; older installed A updater still requires legacy
+readback, and selector authentication is mandatory. Do not benchmark
+installation, remove heatsinks or rerun accepted endurance testing.

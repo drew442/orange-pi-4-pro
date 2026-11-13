@@ -1,0 +1,101 @@
+{
+  "changed_literals": [
+    {
+      "file": "scripts/qualify-managed-boot.py",
+      "old": "2ecff261ce165b202476456466914b422b6dac0f8dd1e7d8120eec1c3bbf9501",
+      "new": "ce1e1841cea22852f122f2c3de0c15fc146ded7a1f090c05d8e3ebe8be430b65"
+    },
+    {
+      "file": "scripts/request-spi-power.py",
+      "old": "2ecff261ce165b202476456466914b422b6dac0f8dd1e7d8120eec1c3bbf9501",
+      "new": "ce1e1841cea22852f122f2c3de0c15fc146ded7a1f090c05d8e3ebe8be430b65"
+    },
+    {
+      "file": "scripts/request-spi-power.py",
+      "old": "64eb90f2d73da8882490e0c1e43a325064d444c25302bbeb174772eaa1235dd0",
+      "new": "8755d4566ef2037b61251ededb242f3a41871c059ee97b990e0f396bd024f24b"
+    },
+    {
+      "file": "scripts/request-spi-power.py",
+      "old": "631a0ad0cb714db0c002430a19aec28ada85837ebdd5cabf34056bd3e3ff21c4",
+      "new": "938ef0355df0a764160c63e5d1c0532818888ec8135fba962830472f41025ae0"
+    },
+    {
+      "file": "scripts/complete-managed-fixture.py",
+      "old": "631a0ad0cb714db0c002430a19aec28ada85837ebdd5cabf34056bd3e3ff21c4",
+      "new": "938ef0355df0a764160c63e5d1c0532818888ec8135fba962830472f41025ae0"
+    },
+    {
+      "file": "scripts/collect-spi-boots.py",
+      "old": "631a0ad0cb714db0c002430a19aec28ada85837ebdd5cabf34056bd3e3ff21c4",
+      "new": "938ef0355df0a764160c63e5d1c0532818888ec8135fba962830472f41025ae0"
+    },
+    {
+      "file": "scripts/collect-spi-boots.py",
+      "old": "c60f97f9ee70604dbd39cec2c99ff995b4f41fc7d18536e0d6726c3a4f985800",
+      "new": "82135a6b14fd22aa53a62619d99dc934b89d6031004cbffaea3551eccdabd033"
+    },
+    {
+      "file": "scripts/collect-spi-boots.py",
+      "old": "144cdf8f515ad7956b4b8a4e6084c451dfbdafc88359f63f1f55b1d6cd70a6f5",
+      "new": "cb9a49582abeadbf559caaa89a40b48dab6ec1e918748772ccd40eac2a54bf90"
+    }
+  ],
+  "files": {
+    "qualify-managed-boot.py": {
+      "bytes": 15424,
+      "sha256": "938ef0355df0a764160c63e5d1c0532818888ec8135fba962830472f41025ae0",
+      "before_sha256": "631a0ad0cb714db0c002430a19aec28ada85837ebdd5cabf34056bd3e3ff21c4",
+      "replacement_count": 1,
+      "normalized_ast_sha256": "447d1c3663a23d0ceeb92e8ea8bfffbc9c61f432e96a53bdd9447ae86864b7b9",
+      "exact_ast_after_reverse_literal_normalization": true
+    },
+    "request-spi-power.py": {
+      "bytes": 17795,
+      "sha256": "82135a6b14fd22aa53a62619d99dc934b89d6031004cbffaea3551eccdabd033",
+      "before_sha256": "c60f97f9ee70604dbd39cec2c99ff995b4f41fc7d18536e0d6726c3a4f985800",
+      "replacement_count": 3,
+      "normalized_ast_sha256": "9157cef1591bfa03a3300596b4f96d1103b2c030c55a79f76cb34dd3597677a1",
+      "exact_ast_after_reverse_literal_normalization": true
+    },
+    "complete-managed-fixture.py": {
+      "bytes": 23339,
+      "sha256": "cb9a49582abeadbf559caaa89a40b48dab6ec1e918748772ccd40eac2a54bf90",
+      "before_sha256": "144cdf8f515ad7956b4b8a4e6084c451dfbdafc88359f63f1f55b1d6cd70a6f5",
+      "replacement_count": 1,
+      "normalized_ast_sha256": "723df5b05ef6019583e8a97ed4728553017c7ee8c8b952ae5ddf656fdd842ce3",
+      "exact_ast_after_reverse_literal_normalization": true
+    },
+    "collect-spi-boots.py": {
+      "bytes": 42156,
+      "sha256": "c4ecd64231329c63d30a8119c88287bd575689084844c96243ccc9b7595ba91d",
+      "before_sha256": "f600776ab7a5579d5d835b77e35000d6aea564d8e18acda935be4dba517a940a",
+      "replacement_count": 3,
+      "normalized_ast_sha256": "03d1fca8799ed1a851543e32c6abbe49d7d34743dd4243e20412999a77932004",
+      "exact_ast_after_reverse_literal_normalization": true
+    }
+  },
+  "maintenance_files": 85,
+  "four_helpers_absent_from_maintenance_runtime": true,
+  "runtime_manage_guests": {
+    "bytes": 32315,
+    "sha256": "8a6211b45d6d4b0231b100c71c2bb72a6f4eb475e04de5652104111a7d43520e"
+  },
+  "focused_privileged_tests": {
+    "collector": 52,
+    "power": 15,
+    "completion": 17,
+    "total": 84,
+    "skips": 0,
+    "result": "PASS"
+  },
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "result": "GO; exact8replacements/hashchain/AST/length/realpacket+boundstoptests verified",
+    "reviewer": "permission_collector_pin_review; readonly text review"
+  },
+  "full_combined_validation": "pending",
+  "packaged_root_rebuild_required": false,
+  "hardware_acceptance": false
+}
