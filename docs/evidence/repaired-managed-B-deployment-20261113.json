@@ -1,0 +1,144 @@
+{
+  "date_utc": "2026-11-13",
+  "scope": "Physical repaired inactive-B deployment and authenticated SPI/NVMe boot; managed KVM completion and final qualification are separate gates",
+  "source_revision": "4334a2229c9b816c4c5826cd612da1c851362146",
+  "target": {
+    "canonical_path": "/dev/nvme0n1p3",
+    "logical_sector_bytes": 512,
+    "major_minor": "259:3",
+    "model": "SPCC M.2 PCIe SSD",
+    "partition_number": 3,
+    "partition_uuid": "cc3ea17b-6442-45f9-8207-03f7f21a9229",
+    "physical_sector_bytes": 512,
+    "requested_path": "/dev/nvme0n1p3",
+    "serial": "134807190FC700149277",
+    "size_bytes": 4294967296
+  },
+  "preserved_active_A_boot_id": "c564ac82-e19e-4218-9e36-b1eeec015eb2",
+  "new_B_boot_id": "cbc504c7-e88c-4943-9a29-f49eecfa3923",
+  "SD_absent": true,
+  "runtime_authenticated": {
+    "maintenance_runtime": 85,
+    "management_runtime": 4,
+    "guest_boot_runtime": 2
+  },
+  "root_marker_sha256": "e623b575f0d10b47ed8716b0fbe365b2bc764ecb18bd4cc083382432429936fe",
+  "manifest_sha256": "94e969c6b0039ac5505493dae5fe1d2370173231b363f81c72de2f54506ab9a9",
+  "root_bytes": 4294967296,
+  "source_and_readback_sha256": "6ab0444ec7e3e70018c71f5f3e91cc63212fb487f3f25e8e1bf6e6723693d3c2",
+  "legacy_readback_required": true,
+  "selection": {
+    "plan_sha256": "b02919376b1a4fa47a2bc72be04ea2ae42b025bd34047885700d7e51ee24db39",
+    "publication_durable": true,
+    "journal_durable": true,
+    "block_writes_performed": false,
+    "selector_sha256": "0f8fff59ccdb4bfbf2f3bfc40077bdf569aa938ce554d6987fdb77dc72677733"
+  },
+  "retained_refusal": {
+    "cause": "Legacy selector review plan was mode0600; refused before prompts or mutation. Exact plan protected0400, failed receipt retained, distinct independently reviewed attempt02 succeeded.",
+    "selection_write_attempted": false,
+    "review_gap_recorded": true
+  },
+  "reboot_transport": {
+    "ssh_returncode": 255,
+    "remote_systemctl_returncode": 0,
+    "retry": false,
+    "acceptance_basis": "Distinct newly booted UUID, full runtime authentication and UART; SSH disconnect alone is not success."
+  },
+  "preparation": {
+    "storage_unit_success": true,
+    "admission_open_acknowledged": true,
+    "initially_disabled_registry_generation": 3,
+    "SD_writes": false,
+    "SPI_writes": false,
+    "BOOT_replaced": false,
+    "A_overwritten": false
+  },
+  "managed_guest": {
+    "supported_enable_success": true,
+    "supported_explicit_start_success": true,
+    "queue_acknowledged": true,
+    "hardware_completion_claimed": false,
+    "final_warm_credit": 0,
+    "final_cold_credit": 0
+  },
+  "preboot_builder_custody": {
+    "path": "/home/drew/orange-pi-4-pro-build/managed-systemd-repair-20261113-01/before-repaired-B-reboot-records.tar",
+    "bytes": 573440,
+    "sha256": "86d9a4bf4a717b47f1f2c54fb31b53a24a0b9a7664560df9917ea304f9562c1e",
+    "fsynced": true,
+    "readback": true
+  },
+  "independent_review": {
+    "path": "tmp/managed-systemd-repair-handoff-review-20261113.json",
+    "bytes": 33967,
+    "sha256": "c2835f31e71f3b9d541b52ca419efc9c6f043db8adacf62c5299bce63c9517c5"
+  },
+  "records": [
+    {
+      "path": "out/managed-systemd-repair-20261113-01/legacy-A-update-guard.json",
+      "bytes": 1652,
+      "sha256": "640b6666015dc3982a6e38e64163f6ae2190ea7084bd41f45472991bb3957d32"
+    },
+    {
+      "path": "out/managed-systemd-repair-20261113-01/update-B-plan.json",
+      "bytes": 3740,
+      "sha256": "6b0b16d144d0a4311e501e66d324132bccce2c2be888f5b068250251393f9dc0"
+    },
+    {
+      "path": "out/managed-systemd-repair-20261113-01/update-B-receipt.json",
+      "bytes": 2347,
+      "sha256": "173864ec8a6825037ac0bfe1662a91607636ae0a20bb45e1c171d1bfa9f39195"
+    },
+    {
+      "path": "out/managed-systemd-repair-20261113-01/select-B-first-refusal-receipt.json",
+      "bytes": 426,
+      "sha256": "65d909b2c23b3864a988be406f4fa5645dbd920b89c4e9e48b3af407662fcdc7"
+    },
+    {
+      "path": "out/managed-systemd-repair-20261113-01/protect-selector-plan-result.json",
+      "bytes": 160,
+      "sha256": "cd7d81f57fe09f57ff4c66eef63cf637975bdc64809b3c8703022516e857ab39"
+    },
+    {
+      "path": "out/managed-systemd-repair-20261113-01/select-B-plan.json",
+      "bytes": 3540,
+      "sha256": "5f40adb79de600579634b2024925ab0f345012e7f525ef26bacaa4dd44fdf45c"
+    },
+    {
+      "path": "out/managed-systemd-repair-20261113-01/select-B-receipt-attempt02.json",
+      "bytes": 2380,
+      "sha256": "3ee8c26113f30db6df98621870d845bf91e0d7b9fd74b67f0027aa1af0f5f617"
+    },
+    {
+      "path": "out/managed-systemd-repair-20261113-01/repaired-B-reboot-request.json",
+      "bytes": 2335,
+      "sha256": "ee98c955e14994deeef0baac7baf95a2098b66effb5f3a3c6b78225ed4966050"
+    },
+    {
+      "path": "out/managed-systemd-repair-20261113-01/repaired-B-inventory.json",
+      "bytes": 103022,
+      "sha256": "d9f964690de30e299b282aab5fb6c3e71ccc79ae9b6cd0ffa3672d5211371aee"
+    },
+    {
+      "path": "out/managed-systemd-repair-20261113-01/repaired-B-preparation.json",
+      "bytes": 13839,
+      "sha256": "c2864de3eac1717740c2ee46031123676f47e1651c6c0136b0ddbe96664fab39"
+    },
+    {
+      "path": "out/managed-systemd-repair-20261113-01/repaired-B-boot-UART.log",
+      "bytes": 115414,
+      "sha256": "34bf2fdaf03eebbdf510db2a694f5765094dff797b6097bbaedf4efdf2e87507"
+    },
+    {
+      "path": "out/managed-systemd-repair-20261113-01/managed-enable-attempt02-result.json",
+      "bytes": 1493,
+      "sha256": "a2938a8746fb1c3a6cc9c2e779b677a688f0a412adf7f67aaa17307d77a84976"
+    },
+    {
+      "path": "out/managed-systemd-repair-20261113-01/managed-start-result.json",
+      "bytes": 1154,
+      "sha256": "000848ae88b22d1fd435002f696445d0bb838706ed319fbfb60105b92f56e3a3"
+    }
+  ]
+}

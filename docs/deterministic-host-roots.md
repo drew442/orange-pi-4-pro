@@ -43,15 +43,17 @@ and timestamp editing address the observed creator differences. Existing
 ## Registered launcher
 
 `build/launch-deterministic-host-roots.py` holds and authenticates the unchanged
-`build/launch-host-roots.py` template. Its AST changes exactly one `SELF` literal;
-the original command interface, policy and isolation/resource checks remain.
+`build/launch-host-roots.py` template. Its AST changes one `SELF` literal and
+two explicitly authenticated outer inventory-count literals for the exact
+849-package snapshot. The historical template, frozen replay inventory, command
+interface and isolation/resource guards remain unchanged.
 The generated payload program authenticates the committed helper, prepares the
 tree immediately before the original snapshot, calls the normalized creator,
 and retains the original expected-tree/stability writers. Normalization records
 are added only to the outer manifest and receipt, not the root payload marker.
 The held-template check runs before receipt completion.
 
-The current adapter separately authenticates the outer host's exact 842-package
+The November 12 adapter authenticated the outer host's exact 842-package
 inventory in `configs/builder-host-packages-20261112.lock.tsv`. Seven recorded
 November 11 updates distinguish it from the unchanged historical replay/archive
 lock. Both paths and pins, and only those seven version differences, appear in
@@ -117,3 +119,7 @@ source review and 2,180 privileged Ubuntu tests; integrated construction and
 actual full-image verification remain required before installation. Physical boot,
 resolver policy, KVM/endurance and deployment reproduction remain separate gates.
 The actual 2 GB SD and nominal 250 GB NVMe requirements are unchanged.
+
+Use [the repaired-root construction procedure](managed-systemd-root-build-20261113.md)
+for source 4334a22 and the current exact outer 849 inventory. Earlier construction
+records retain their historical source and inventory scope.

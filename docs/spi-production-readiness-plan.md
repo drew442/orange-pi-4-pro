@@ -1,41 +1,36 @@
 # SPI/NVMe production-readiness plan
 
-Execution started 2026-11-12. The recoverable baseline and metadata-aware SPI
-software review/checks pass; original blank restoration and subsequent SD recovery
-now pass physical checks. Reinstallation also passes full readback and close;
-the next SD-removed boot/KVM demonstration and later phases remain pending.
-[Software evidence](evidence/spi-metadata-validation-20261112.json). SPI/NVMe operation with SD
-removed is evidenced. The operator's recovery-card transition is complete;
-restoration of blank SPI and the subsequent SD recovery boot passed on November
-13. Reviewed firmware reinstallation and clean poweroff also pass. This plan
-completes production qualification and adds opt-in unattended guest operation.
-Post-reinstall SPI boot/KVM, unattended deployment and final qualification remain
-future work.
+Execution started 2026-11-12. SPI/NVMe operation with SD physically removed,
+metadata-aware original blank restoration, SD recovery, firmware reinstallation
+and subsequent actual nonroot manual KVM/checkpoint pass. The first managed start
+on candidate `2996365` safely refused before queueing on systemd dependencies.
+The repaired `4334a22` roots pass full 3664-test validation, three matching
+constructions and independent filesystem/reader checks. Reviewed inactive-B
+repair and authenticated physical boot pass; managed hardware execution and
+final qualification remain.
+[Current status](implementation-status.md),
+[repaired builds](managed-systemd-root-build-20261113.md).
 
-The next deliverable is the post-reinstall SD-removed boot/KVM
-demonstration, followed by deployment of the reviewed inactive-root candidate.
-Completion is determined by the evidence gates below; no calendar estimate substitutes for
-physical results.
+Completion is determined by the evidence gates below. Retain the accepted
+eight-hour endurance result from existing >20-hour data; no rerun is required.
 
 ## Delivery order and current checkpoints
 
 ### Next execution steps
 
-The committed candidate is `2996365`. Its combined 3589-test Ubuntu run, two
-matching fresh root constructions and independent complete artifact/production
-reader checks pass. [Candidate artifacts](managed-root-candidate-20261112.md)
-remain uninstalled. Preserve these completed results and use the following order.
+Use repaired source `4334a22` and its exact artifact pins for current deployment.
+Preserve previous `2996365` artifacts and normalized A as separate historical
+and rollback cohorts. Source fixes and the new outer849 builder pass independent
+review and combined privileged validation. All 133 artifacts and manifest match
+across two coordinator constructions and an independent fresh-checkout build;
+separate complete filesystem and production-reader checks pass.
+[Build procedure](managed-systemd-root-build-20261113.md).
 
-The external qualifier, single-attempt power helper and native SPI collector now
-pass independent software review and the integrated **3651-test** privileged
-Ubuntu run, shell suites and diagnostic cases. [Evidence](evidence/spi-collector-integration-validation-20261112.json).
-An [independent operator reproduced the documented root construction](evidence/independent-managed-root-reproduction-20261113.json)
-with fresh source/worktrees and the declared retained inputs. All 133 artifacts,
-manifest, gzip expansions and full filesystem readback match. The physical
-build/deployment/recovery/guest procedure still needs its remaining target steps.
-Their target execution remains unperformed. [Fixture deployment preparation](managed-fixture-deployment.md)
-binds exact seed/configuration inputs and CLI order; it still requires fresh live
-guards before copying anything to STATE.
+The external qualifier/power/collector pins now target repaired B. They still
+need actual managed outcomes and final physical boot-series acceptance. The
+[fixture procedure](managed-fixture-deployment.md) records the corrected 8080
+configuration, disabled registry generation 3 and preserved seed/quarantine.
+Do not re-enroll or overwrite those existing cohorts.
 
 | Order | Work and owner | Required result before proceeding |
 | --- | --- | --- |
@@ -60,22 +55,20 @@ installation writes, preserve the known 2 GB recovery SD without reflashing,
 and leave attached heatsinks in place. Preserve source/license limitations;
 local production qualification does not establish redistribution clearance.
 
-The operator's recovery-card insertion is complete. After reinstalling
-SPI, the coordinator will explicitly announce when SD removal is safe. Further
-operator involvement is limited to the required card/power transitions and cold
+The recovery-card insertion/removal transitions and SPI reinstall are complete.
+Keep the SD removed. Further operator involvement is limited to the required card/power transitions and cold
 cycle attestations. Software preparation continues while those steps are pending.
 
 | Phase | Current checkpoint | Completion condition |
 | --- | --- | --- |
 | 1. Recoverable baseline | Recorded; revalidate after each hardware transition | Verified original/calibrated SPI and stopped guest backups retained off-device |
 | 2. Metadata-aware SPI maintenance | Software checks and independent review pass | Reviewed fresh live plans and preserved calibration policy |
-| 3. Physical restore/reinstall | Blank restoration, SD recovery and reinstall pass; powered off for SD removal | Original SPI restore, SD recovery, reinstall, SD-removed boot and actual KVM pass |
-| 4. Unattended guests | Two matching packaged builds and independent artifact/reader review pass; all uninstalled | Reproducible packaged services, graceful shutdown/checkpoint/reconciliation, rollback and real KVM acceptance |
+| 3. Physical restore/reinstall | Blank restoration, SD recovery, reinstall and SD-removed manual KVM pass | Original SPI restore, SD recovery, reinstall, SD-removed boot and actual KVM pass |
+| 4. Unattended guests | Three matching repaired builds and independent artifact/reader review and physical B boot pass | Reproducible packaged services, graceful shutdown/checkpoint/reconciliation, rollback and real KVM acceptance |
 | 5. Final SPI boot series | One cold and one warm operational boot evidenced | Ten accepted cold and ten warm boots with applicable identity and final automation checks |
 | 6. Independent reproduction and signoff | Earlier protected-SD reproduction retained | Updated SPI recovery and guest procedures reproduced, evidence reconciled and changes pushed |
 
-Continue deployment and collector preparation while phase 3 awaits
-physical card/power steps. Complete both phases before the final configuration
+Continue managed deployment and collector preparation. Complete both before the final configuration
 is frozen for phase 5. Credit qualifying demonstration boots and existing
 endurance evidence rather than repeating completed tests. Phase 6 closes only
 after the physical gates pass; an API implementation or software test suite

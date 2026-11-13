@@ -1,18 +1,19 @@
 # Current images for this board
 
-The board is running **managed B at 192.168.1.118 from SPI/NVMe with SD removed**,
-boot `1095a827-6f92-486d-9ad3-2463a95c2d5e`, using original strict SSH host-key
-alias `192.168.1.116`. Normalized A remains installed for rollback. Post-reinstall
-manual nonroot KVM CPU/disk/HTTP, guest-owned shutdown and checkpoint 5 pass;
-verified guest backups exist on both hosts.
+The board is running **repaired B at 192.168.1.118 from SPI/NVMe with SD removed**,
+boot `cbc504c7-e88c-4943-9a29-f49eecfa3923`, using original strict SSH host-key
+alias `192.168.1.116`. Normalized A remains the preserved rollback root.
+Post-reinstall manual nonroot KVM CPU/disk/HTTP, guest-owned shutdown and
+checkpoint 5 pass; verified guest backups exist on both hosts.
 [Physical evidence](evidence/post-reinstall-SPI-managed-B-20261113.json).
 
-Managed guest registration succeeded, but its first start was refused before
-queueing by the installed systemd dependency guard. The guest is now disabled
-and has never run. The reviewed source fix passes full validation and needs
-a rebuilt root before another start. **Production managed operation is not yet
-qualified.** Follow [status](implementation-status.md); no SD rewrite or operator
-power cycle is needed for the current preparation.
+The first managed start on the previous B refused before queueing. The guest
+was disabled during repair. Repaired roots from `4334a22` have three matching
+constructions and independent filesystem/reader checks; reviewed inactive-B
+deployment and authenticated physical boot now pass. Supported enable/start
+queue successfully; actual managed execution/checkpoint tests are in progress. **Production managed
+operation is not yet qualified.** No SD rewrite or operator power cycle is
+needed for the current preparation. Follow [status](implementation-status.md).
 
 The earlier full installation and independent deployment reproduction pass.
 The earlier protected-SD route also passed ten warm/ten cold boots and complete
@@ -34,15 +35,20 @@ Keep both original and calibrated backups. [SPI procedure](spi-sd-boot-20261111.
 
 Paths below are relative to `/home/drew/orange-pi-4-pro` on codex.
 
-## Managed candidate and pending fix
+## Repaired managed candidate
 
-The [managed root candidate](managed-root-candidate-20261112.md) has matching
-production constructions, independent complete filesystem/package checks and
-whole historical/current reader compatibility. Candidate B is installed and
-boots; managed KVM remains blocked by the safely refused dependency check. Its
-4 GiB root components are for NVMe; keep the retained 2 GB recovery card unchanged.
-SPI recovery passes. Rebuilt-root deployment, actual managed KVM and final
-qualification remain pending.
+[Repaired root construction](managed-systemd-root-build-20261113.md) reproduces
+all 133 manifest-listed artifacts across three builds. Encoded artifacts are in
+`out/managed-systemd-root-candidate-20261113-01/artifacts/`; manifest SHA-256 is
+`94e969c6b0039ac5505493dae5fe1d2370173231b363f81c72de2f54506ab9a9`.
+Slot B compressed root is 143661310 bytes, SHA-256
+`0651e9f6a9a4e5b52fd88abb8d6f80c2b1007b2f9cfec45b7ad69d9f418dd0de`;
+its expanded 4294967296-byte SHA-256 is
+`6ab0444ec7e3e70018c71f5f3e91cc63212fb487f3f25e8e1bf6e6723693d3c2`.
+These are **NVMe root components**, not SD images. Keep the 2 GB recovery card.
+Preserve the [previous candidate](managed-root-candidate-20261112.md) and
+normalized A. Repaired B deployment passes; managed KVM and final qualification remain
+pending.
 
 ## Existing installed release and recovery inputs
 

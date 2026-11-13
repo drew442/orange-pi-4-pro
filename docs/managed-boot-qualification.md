@@ -1,7 +1,7 @@
 # External managed boot qualification
 
 `scripts/qualify-managed-boot.py` is an external evidence helper for candidate B,
-source revision `2996365`. Supply it through the separately reviewed RAM/SSH
+source revision `4334a22`. Supply it through the separately reviewed RAM/SSH
 workflow. It is not installed in the candidate's maintenance closure and does
 not require rebuilding the candidate. Running it without options prints a plan;
 it imports no installed code, opens no transport and requests no synchronization.
@@ -20,20 +20,20 @@ guest override. `firstkvm` remains manual.
 
 Before importing installed code, the helper authenticates candidate B's exact
 26,273-byte `/usr/lib/orangepi-hypervisor/payload.json`, SHA-256
-`bdfde6c304edc9709bda5e4de8cb9adef9707118920a759630b01f6468362460`.
+`e623b575f0d10b47ed8716b0fbe365b2bc764ecb18bd4cc083382432429936fe`.
 This pin was extracted read-only from the builder's independently verified
 candidate B image. The outer build manifest is
-`out/managed-root-candidate-20261112-02/artifacts/manifest.json`; the payload
+`out/managed-systemd-root-candidate-20261113-01/artifacts/manifest.json`; the payload
 marker is generated separately inside each slot image. The helper verifies the
 marker's complete maintenance and management runtime file descriptors before
 import, including ownership, protected directory placement, sizes, hashes and
-recorded modes. The dispatcher additionally has the source pin
+recorded modes. The management module `manage-guests.py` additionally has the source pin
 `1a3e77f7084c8573e4124dc5aa2893ac8cd619301654c41bb6df3c075276da9b`.
 Qualification requires the isolated interpreter and bytecode-disabled flags
 `-I -B`. Before imports, the helper requires a read-only root and checks the
 exact 85-file maintenance namespace: all parent directories must be protected,
 on the root device and read-only; extra files or directories, symlinks,
-`__pycache__` and legacy adjacent bytecode refuse. It compiles the dispatcher
+`__pycache__` and legacy adjacent bytecode refuse. It compiles the management module
 from captured authenticated source bytes. This excludes existing timestamp-valid
 bytecode from dependency loading. Existing installed guards then enforce the
 native root and runtime identity.

@@ -7,7 +7,9 @@ builder to 849 packages, including new kernel packages. This differs from the
 passes on the captured current inventory; it does not qualify that inventory for
 a new root build. The new exact849 lock, narrow build-only adapter and seventeen-package signed
 archive supplement pass independent review and **3664-test combined validation**,
-plus shell/diagnostic suites. New root construction remains separate.
+plus shell/diagnostic suites. Three matching repaired-root constructions and independent filesystem/readers
+now pass using that inventory.
+[Build and reproduction](managed-systemd-root-build-20261113.md).
 [Inventory/provenance](evidence/outer-builder-849-20261113.json). Retain the
 frozen replay builder and historical build inventories.
 Earlier measurements below are historical, not fresh admission evidence.

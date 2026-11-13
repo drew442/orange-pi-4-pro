@@ -1,0 +1,84 @@
+{
+  "date_utc": "2026-11-13",
+  "result": "PASS independent build-procedure reproduction using retained inputs",
+  "source": {
+    "revision": "4334a2229c9b816c4c5826cd612da1c851362146",
+    "tree": "9777b7057acfe88d3c42e915ad3e0be071becb42",
+    "tracked_files": 1144
+  },
+  "summary": {
+    "bundle": {
+      "bytes": 4760790,
+      "sha256": "6c84e5ecc98c5f375c3f3a5b82cfa7cf0938625177837e12efbad26acef93d7d"
+    },
+    "comparison": {
+      "artifacts": 133,
+      "gzip_expansions": 3,
+      "manifest": {
+        "bytes": 51618,
+        "sha256": "94e969c6b0039ac5505493dae5fe1d2370173231b363f81c72de2f54506ab9a9"
+      }
+    },
+    "discrepancies": [
+      "Guide originally required full filesystem readback for completion; producer actual receipt explicitly false; reported to coordinator for guide scope correction",
+      "Initial comparator incorrectly required raw initramfs.cpio member for initramfs.cpio.gz; failed attempt retained separately; corrected comparator passed without construction rerun"
+    ],
+    "independent_monitor_interval_seconds": 30,
+    "independent_monitor_minimum_available_memory_bytes": 7395106816,
+    "independent_monitor_minimum_free_bytes": 19645968384,
+    "limitations": [
+      "No fresh outer OS provisioning",
+      "Producer full_filesystem_readback=false and both independent_image_readback=false; independent filesystem verification remains separate",
+      "No board/SD/NVMe/SPI writes or physical deployment/KVM acceptance"
+    ],
+    "phase": "/var/lib/a733-clean-replay-20261106/host-roots-managed-systemd-20261113-repro-01",
+    "producer_guard_samples": 161,
+    "producer_minimum_available_memory_bytes": 7326179328,
+    "producer_minimum_free_bytes": 19642499072,
+    "scope": "independent build-procedure reproduction from fresh source checkout/phase on declared existing Ubuntu22.04 builder using retained userspace/capsule inputs",
+    "source_files": 1144,
+    "source_revision": "4334a2229c9b816c4c5826cd612da1c851362146",
+    "source_tree": "9777b7057acfe88d3c42e915ad3e0be071becb42",
+    "start_utc": "2026-11-13T13:46:25Z",
+    "stop_utc": "2026-11-13T13:49:19Z",
+    "success": true,
+    "terminal": {
+      "ExecMainStatus": 0,
+      "MainPID": 0,
+      "Result": "success",
+      "SubState": "exited"
+    },
+    "unit": "a733-managed-systemd-root-reproduction-20261113-01.service"
+  },
+  "evidence": {
+    "summary.json": {
+      "path": "tmp/managed-systemd-independent-reproduction-20261113/summary.json",
+      "bytes": 1984,
+      "sha256": "a5b8c719fdce614e90555da1aef715fd92ac92f9b778d1f04684e6d22d05137d"
+    },
+    "receipt.json": {
+      "path": "tmp/managed-systemd-independent-reproduction-20261113/receipt.json",
+      "bytes": 270579,
+      "sha256": "4ea79768458441b9bfd43f01beca0547b16e47a29a3799c73d194d79410f6f0d"
+    },
+    "three-way-comparison.json": {
+      "path": "tmp/managed-systemd-independent-reproduction-20261113/three-way-comparison.json",
+      "bytes": 28034,
+      "sha256": "04b88a879639b92bf45f8d33d968e17ded7eda30cd40a61271c8701a320149b1"
+    },
+    "closure-check.json": {
+      "path": "tmp/managed-systemd-independent-reproduction-20261113/closure-check.json",
+      "bytes": 6588,
+      "sha256": "6b344b87602d56666cbfe95862210dc90cd4e7c48317217c812856d42efe3ad9"
+    },
+    "evidence-hashes.json": {
+      "path": "tmp/managed-systemd-independent-reproduction-20261113/evidence-hashes.json",
+      "bytes": 2189,
+      "sha256": "f18804a74ea04bb40be289b86f57c2d2236a807e5d9bf8d4677304bf81456818"
+    }
+  },
+  "independent_filesystem_review": "docs/evidence/managed-systemd-root-artifact-review-20261113.json",
+  "hardware_acceptance": false,
+  "fresh_outer_OS_provisioning": false,
+  "physical_deployment_reproduced": false
+}

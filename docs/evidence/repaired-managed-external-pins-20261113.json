@@ -1,0 +1,59 @@
+{
+  "date_utc": "2026-11-13",
+  "scope": "External helper pin-only changes; no installed root change or hardware credit",
+  "root_revision": "4334a2229c9b816c4c5826cd612da1c851362146",
+  "B_marker_sha256": "e623b575f0d10b47ed8716b0fbe365b2bc764ecb18bd4cc083382432429936fe",
+  "B_selector_sha256": "0f8fff59ccdb4bfbf2f3bfc40077bdf569aa938ce554d6987fdb77dc72677733",
+  "unchanged_manage_guests_sha256": "1a3e77f7084c8573e4124dc5aa2893ac8cd619301654c41bb6df3c075276da9b",
+  "source_files": [
+    {
+      "path": "scripts/qualify-managed-boot.py",
+      "bytes": 15424,
+      "sha256": "e2254bd80778c250f979a3e74ebe120c845d865e57d5b7d1fb02711c176c02bc"
+    },
+    {
+      "path": "scripts/request-spi-power.py",
+      "bytes": 17795,
+      "sha256": "670a99065cba20b4ab10783698d80aa9217455be359a9dcc9ed480c709efb43a"
+    },
+    {
+      "path": "scripts/collect-spi-boots.py",
+      "bytes": 36196,
+      "sha256": "327b1ff1074076cea52768240da995bdb7636fa747cf9b6897337276d73b3411"
+    }
+  ],
+  "focused_tests": {
+    "total": 70,
+    "qualifier": 16,
+    "power": 15,
+    "collector": 39,
+    "result": "pass",
+    "reviewer": "gpt-6.1-sol / high"
+  },
+  "independent_review": {
+    "result": "PASS exact pin-only three-script update; no behavior or acceptance criteria relaxation",
+    "files": {
+      "scripts/qualify-managed-boot.py": {
+        "bytes": 15424,
+        "sha256": "e2254bd80778c250f979a3e74ebe120c845d865e57d5b7d1fb02711c176c02bc"
+      },
+      "scripts/request-spi-power.py": {
+        "bytes": 17795,
+        "sha256": "670a99065cba20b4ab10783698d80aa9217455be359a9dcc9ed480c709efb43a"
+      },
+      "scripts/collect-spi-boots.py": {
+        "bytes": 36196,
+        "sha256": "327b1ff1074076cea52768240da995bdb7636fa747cf9b6897337276d73b3411"
+      }
+    },
+    "checks": [
+      "Each modified source byte-identical to HEAD after only explicit old\u2192new SHA substitutions; compile pass. No other source differences.",
+      "Qualifier marker pins newB e623b575\u2026936fe; unchanged dispatcher actualSHA1a3e77f7\u2026da9b verified against scripts/manage-guests.py.",
+      "Power qualifier pin and bytecount match actual qualifier15424B/e2254bd8\u2026c02bc; selector pin matches reviewed candidate0f8fff59\u202677733 and marker e623b575\u2026936fe.",
+      "Collector PINS exactly match actual qualifier and power17795B/670a9906\u2026fb43a; firmwareBOOT0 and package/storage/key/identity pins untouched.",
+      "Parent/worker report focused70tests pass; reviewer independently performed syntax and exact substitution/pin-graph checks only, without duplicating suite or any board command. Old embedded qualifier in completed repair helpers deliberately remains pinned to oldB for historical source authentication."
+    ],
+    "findings": []
+  },
+  "remaining": "Collector completion orchestration and actual managed hardware/final boot series remain pending."
+}

@@ -1,0 +1,118 @@
+{
+  "date_utc": "2026-11-13",
+  "scope": "Two coordinator constructions and independent third using retained inputs; no physical deployment acceptance",
+  "source": {
+    "revision": "4334a2229c9b816c4c5826cd612da1c851362146",
+    "tree": "9777b7057acfe88d3c42e915ad3e0be071becb42",
+    "tracked_files": 1144
+  },
+  "manifest": {
+    "bytes": 51618,
+    "sha256": "94e969c6b0039ac5505493dae5fe1d2370173231b363f81c72de2f54506ab9a9"
+  },
+  "root_artifacts": {
+    "root-A.ext4": {
+      "bytes": 4294967296,
+      "sha256": "02a0277ebe94e3cbde933e2a4a79158970891d196cfc587b269e1a4cfeb26f25"
+    },
+    "root-A.ext4.gz": {
+      "bytes": 143661416,
+      "sha256": "0ca862460f6927747b817fc4852000b67a046939b019bff33cf166faa308b3e7"
+    },
+    "root-B.ext4": {
+      "bytes": 4294967296,
+      "sha256": "6ab0444ec7e3e70018c71f5f3e91cc63212fb487f3f25e8e1bf6e6723693d3c2"
+    },
+    "root-B.ext4.gz": {
+      "bytes": 143661310,
+      "sha256": "0651e9f6a9a4e5b52fd88abb8d6f80c2b1007b2f9cfec45b7ad69d9f418dd0de"
+    }
+  },
+  "payload_markers": {
+    "A": {
+      "bytes": 26273,
+      "sha256": "87c1895e66aefc3f9e561ea4cf9749d0af64f8ed49867a8e1b7e4cf49422e3d1"
+    },
+    "B": {
+      "bytes": 26273,
+      "sha256": "e623b575f0d10b47ed8716b0fbe365b2bc764ecb18bd4cc083382432429936fe"
+    }
+  },
+  "coordinator_producers": [
+    {
+      "tag": "managed-systemd-20261113-01",
+      "receipt": {
+        "path": "out/managed-systemd-root-candidate-20261113-01/receipt-build-01.json",
+        "bytes": 270838,
+        "sha256": "4a42342a8ba230083ba37f8dc84c5f6a3a3c9f4ce2c7c03f64e7825f6031114c"
+      },
+      "terminal": {
+        "utc_epoch": 1794577095.380033,
+        "unit": {
+          "RuntimeMaxUSec": "2h",
+          "MainPID": "0",
+          "Result": "success",
+          "ExecMainStatus": "0",
+          "CPUQuotaPerSecUSec": "2s",
+          "MemoryMax": "3221225472",
+          "UMask": "0077",
+          "ActiveState": "active",
+          "SubState": "exited"
+        },
+        "free_bytes": 22985826304,
+        "MemAvailable_bytes": 7492059136
+      },
+      "producer_full_filesystem_readback": false,
+      "producer_verification_full_filesystem_readback": false
+    },
+    {
+      "tag": "managed-systemd-20261113-02",
+      "receipt": {
+        "path": "out/managed-systemd-root-candidate-20261113-01/receipt-build-02.json",
+        "bytes": 270825,
+        "sha256": "b72c49b57856aab7841741b33d294d588708ca880952ee32c917da38cc7101e1"
+      },
+      "terminal": {
+        "utc_epoch": 1794577444.3126593,
+        "unit": {
+          "RuntimeMaxUSec": "2h",
+          "MainPID": "0",
+          "Result": "success",
+          "ExecMainStatus": "0",
+          "CPUQuotaPerSecUSec": "2s",
+          "MemoryMax": "3221225472",
+          "UMask": "0077",
+          "ActiveState": "active",
+          "SubState": "exited"
+        },
+        "free_bytes": 21570027520,
+        "MemAvailable_bytes": 7513137152
+      },
+      "producer_full_filesystem_readback": false,
+      "producer_verification_full_filesystem_readback": false
+    }
+  ],
+  "independent_third": "docs/evidence/independent-managed-systemd-root-reproduction-20261113.json",
+  "artifact_review": "docs/evidence/managed-systemd-root-artifact-review-20261113.json",
+  "source_validation": "docs/evidence/managed-systemd-outer849-validation-20261113.json",
+  "builder_provenance": "docs/evidence/outer-builder-849-20261113.json",
+  "encoded_builder_custody": {
+    "path": "/var/lib/a733-managed-systemd-root-candidate-20261113-01/encoded-artifacts.tar",
+    "bytes": 321064960,
+    "sha256": "5f02f9f169a62518ba2eb8c8c477e9afda39cd230ff288eac36a1e68cf5cba2f",
+    "files": 132,
+    "raw_roots_excluded": true,
+    "fsynced": true
+  },
+  "encoded_native_custody": {
+    "archive": "out/managed-systemd-root-candidate-20261113-01/encoded-artifacts.tar",
+    "bytes": 321064960,
+    "sha256": "5f02f9f169a62518ba2eb8c8c477e9afda39cd230ff288eac36a1e68cf5cba2f",
+    "files_verified": 132,
+    "directory": "out/managed-systemd-root-candidate-20261113-01/artifacts",
+    "raw_roots_excluded": true,
+    "fsynced": true
+  },
+  "hardware_acceptance": false,
+  "raw_images_are_NVMe_components_not_SD_images": true
+}

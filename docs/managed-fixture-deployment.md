@@ -1,6 +1,6 @@
 # Deploy the opt-in managed qualification guest
 
-Candidate `2996365` now boots on SPI/NVMe with SD removed. Initial storage
+Repaired candidate `4334a22` now boots on SPI/NVMe with SD removed. Initial storage
 preparation and the first account/payload enrollment were executed on 2026-11-13.
 Review caught a port mismatch before managed registration or launch: the fixture
 serves **8080**, while the original external template requested 80. The corrected
@@ -8,13 +8,15 @@ configuration/reference below supersede those original preparation pins. Preserv
 the unused original cohort and receipts; never overwrite its manifest in place.
 The unused cohort is retained intact in private p5 quarantine. Corrected
 enrollment and registration now pass. The first start was refused before
-queueing on systemd dependency checks, and the guest is disabled at sequence 0.
-**Do not retry these launch commands on candidate 2996365.** A reviewed fix
-needs a rebuilt root, fresh marker/source pins and deployment review first.
+queueing on systemd dependency checks in the previous `2996365` root. The repaired
+root passes reviewed deployment and full runtime authentication; supported enable
+and explicit start now queue successfully. Actual managed execution/checkpoint
+acceptance is in progress. **Do not re-enroll this existing board cohort.** The
+preparation/enrollment commands below describe a fresh deployment.
 [Correction record](evidence/managed-fixture-port-correction-20261113.json).
 [Current physical evidence](evidence/post-reinstall-SPI-managed-B-20261113.json).
 
-The matched B marker is `bdfde6c304edc9709bda5e4de8cb9adef9707118920a759630b01f6468362460`.
+The matched B marker is `e623b575f0d10b47ed8716b0fbe365b2bc764ecb18bd4cc083382432429936fe`.
 The expected NVMe is SPCC M.2 PCIe SSD, serial `134807190FC700149277`,
 256060514304 bytes; STATE UUID is `360dfb39-f49f-487e-b307-0bb887c854c5`,
 guest p5 UUID `298b281a-d10e-44eb-bdb9-285e27eaafad`. Revalidate live identity;

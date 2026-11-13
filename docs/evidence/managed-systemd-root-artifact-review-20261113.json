@@ -1,0 +1,226 @@
+{
+  "date_utc": "2026-11-13",
+  "result": "PASS independent regular-file artifact/filesystem/reader verification",
+  "source": {
+    "revision": "4334a2229c9b816c4c5826cd612da1c851362146",
+    "tree": "9777b7057acfe88d3c42e915ad3e0be071becb42",
+    "tracked_files": 1144
+  },
+  "summary": {
+    "all_four_slots": {
+      "character_devices": 8,
+      "extra_timestamp_fields_zero": true,
+      "four_timestamp_epoch_seconds": 1793750400,
+      "image_namespace_members_including_lost_found": 16416,
+      "raw_xattrs": 1,
+      "reachable_unique_inodes": 16413,
+      "regular_bytes_read": 452081785,
+      "regular_inodes": 12746,
+      "source_namespace_members": 16415,
+      "symlinks": 1855
+    },
+    "classification": "Independent regular-file artifact integrity and whole-checkout reader compatibility only",
+    "cleanup_final": {
+      "mapped_processes": [],
+      "phase_mounts": []
+    },
+    "counts": {
+      "actual_current_reader_legacy_checks": 1,
+      "actual_historical_reader_checks": 4,
+      "artifact_files_per_build": 133,
+      "entrypoints": 22,
+      "full_filesystem_slots": 4,
+      "guest_boot_units": 2,
+      "maintenance_runtime_files": 85,
+      "maintenance_sources": 84,
+      "management_files": 4,
+      "semantic_slots": 4,
+      "successful_commands": 20
+    },
+    "custody_archive": {
+      "bytes": 7675960,
+      "sha256": "a5fbe9cfa7ba90d8dbb77314d5fdfe360f8401d7d976071964e2f1bb644c2d7f"
+    },
+    "custody_archive_members": 3390,
+    "custody_archive_verified_locally": true,
+    "hardware_acceptance": false,
+    "historical_source": {
+      "revision": "50bc9e70698d4a09c3705594dcc61c64e1715cb9",
+      "tracked_closure_sha256": "aa848ab33c98093851aa89febeb1974ec8d9f30f63f11e1ae8299dff504322cc",
+      "tracked_files": 869,
+      "tree": "869799d28af896ec32650731e69f4d3c8b7235e9"
+    },
+    "inventories": {
+      "frozen": {
+        "inventory": {
+          "bytes": 40966,
+          "sha256": "446b7eb3364a6f196390c698c1c133086fee5eb3b080ec4483cc1d8584b39b15"
+        },
+        "lock": {
+          "bytes": 32546,
+          "sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425"
+        },
+        "packages": 842
+      },
+      "outer": {
+        "inventory": {
+          "bytes": 41458,
+          "sha256": "c87cbf467e11deab2c27fd350b1eb667b85f9a06b5c77477db562a5b7c257949"
+        },
+        "lock": {
+          "bytes": 32968,
+          "sha256": "b34b70a879cbbf75f818708275c57ef0aef3ae635b9ae71a8005e2b29a8490b8"
+        },
+        "packages": 849
+      }
+    },
+    "legacy": {
+      "encoded": {
+        "bytes": 143482835,
+        "sha256": "87b097024dd772d6752dfb6a605618cfb8a1ce208722d056fb1e91f8c0a6f2fa"
+      },
+      "manifest": {
+        "bytes": 33481,
+        "sha256": "c1bcc7d23d22bd487534ba17ea447055881a044350829608360aa92ca24283f2"
+      },
+      "raw": {
+        "bytes": 4294967296,
+        "sha256": "a9715b819348a8220ec8b3b1f41ef27db677baaa96014f5d1dfb7a22597decdd"
+      },
+      "selector": {
+        "bytes": 179,
+        "sha256": "3c76b96c328b4508ff407c8594352e04389664e97ced6f0a09284cade5bd027b"
+      }
+    },
+    "legacy_selector_preserved": true,
+    "limits": [
+      "Producer receipts retain full_filesystem_readback=false; separate independent full readback receipts provide the four-slot proof.",
+      "No board access, installation, SD/NVMe/SPI writes or physical boot/KVM acceptance.",
+      "Source/license and earlier unexplained SSH limitations are unchanged."
+    ],
+    "manifest": {
+      "bytes": 51618,
+      "sha256": "94e969c6b0039ac5505493dae5fe1d2370173231b363f81c72de2f54506ab9a9"
+    },
+    "package_json": {
+      "bytes": 23862,
+      "sha256": "158e865ef54336e7602f3bff5d1460d415bc68ccf2c8de3f699a9c7bc790117d"
+    },
+    "payload_markers": {
+      "A": {
+        "bytes": 26273,
+        "sha256": "87c1895e66aefc3f9e561ea4cf9749d0af64f8ed49867a8e1b7e4cf49422e3d1"
+      },
+      "B": {
+        "bytes": 26273,
+        "sha256": "e623b575f0d10b47ed8716b0fbe365b2bc764ecb18bd4cc083382432429936fe"
+      }
+    },
+    "producer_receipts": {
+      "managed-systemd-20261113-01": {
+        "bytes": 270838,
+        "sha256": "4a42342a8ba230083ba37f8dc84c5f6a3a3c9f4ce2c7c03f64e7825f6031114c"
+      },
+      "managed-systemd-20261113-02": {
+        "bytes": 270825,
+        "sha256": "b72c49b57856aab7841741b33d294d588708ca880952ee32c917da38cc7101e1"
+      }
+    },
+    "remote_scratch": "/var/lib/a733-managed-systemd-artifact-review-20261113-01",
+    "resource_guard": {
+      "driver_samples": 21,
+      "elapsed_seconds": 394.44342717702966,
+      "independent_monitor_samples": 11,
+      "minimum_MemAvailable_bytes": 7103025152,
+      "minimum_free_bytes": 17289809920
+    },
+    "review": {
+      "bytes": 104807,
+      "sha256": "49b5c5c5da869e0779d86f52ba1c92bf1daaf2ad95a9e9879b8a234bb1a143a3"
+    },
+    "root_artifacts": {
+      "root-A.ext4": {
+        "bytes": 4294967296,
+        "sha256": "02a0277ebe94e3cbde933e2a4a79158970891d196cfc587b269e1a4cfeb26f25"
+      },
+      "root-A.ext4.gz": {
+        "bytes": 143661416,
+        "sha256": "0ca862460f6927747b817fc4852000b67a046939b019bff33cf166faa308b3e7"
+      },
+      "root-B.ext4": {
+        "bytes": 4294967296,
+        "sha256": "6ab0444ec7e3e70018c71f5f3e91cc63212fb487f3f25e8e1bf6e6723693d3c2"
+      },
+      "root-B.ext4.gz": {
+        "bytes": 143661310,
+        "sha256": "0651e9f6a9a4e5b52fd88abb8d6f80c2b1007b2f9cfec45b7ad69d9f418dd0de"
+      }
+    },
+    "schema": 1,
+    "source": {
+      "revision": "4334a2229c9b816c4c5826cd612da1c851362146",
+      "tracked_closure_sha256": "67a0ed3fe7d2f014acae8f150d45d78d8a9898e09ecbe8cb58ec74bbbd2e60e5",
+      "tracked_files": 1144,
+      "tree": "9777b7057acfe88d3c42e915ad3e0be071becb42"
+    },
+    "sources_and_artifacts_reauthenticated_finally": true,
+    "state": "complete",
+    "success": true,
+    "unit": {
+      "ActiveState": "active",
+      "CPUQuotaPerSecUSec": "2s",
+      "ExecMainCode": "1",
+      "ExecMainStatus": "0",
+      "MainPID": "0",
+      "MemoryMax": "3221225472",
+      "Result": "success",
+      "RuntimeMaxUSec": "8h",
+      "SubState": "exited",
+      "UMask": "0077"
+    }
+  },
+  "evidence": {
+    "summary.json": {
+      "path": "tmp/managed-systemd-artifact-review-execution-20261113/summary.json",
+      "bytes": 5529,
+      "sha256": "e7b80b83a68d13a5b509b67b6853f0c0ee5ec667d9c24abfbaf0f9796b4ac031"
+    },
+    "review.json": {
+      "path": "tmp/managed-systemd-artifact-review-execution-20261113/review.json",
+      "bytes": 104807,
+      "sha256": "49b5c5c5da869e0779d86f52ba1c92bf1daaf2ad95a9e9879b8a234bb1a143a3"
+    },
+    "custody-pin.json": {
+      "path": "tmp/managed-systemd-artifact-review-execution-20261113/custody-pin.json",
+      "bytes": 1095,
+      "sha256": "07aab294da678df1f16bee23be359cc37b6d91b54c74fdba0e22d03586562e15"
+    },
+    "collection-receipt.json": {
+      "path": "tmp/managed-systemd-artifact-review-execution-20261113/collection-receipt.json",
+      "bytes": 892,
+      "sha256": "7fe2df649eb2b4602507f45acaeab4755cc7267cce11036164046af166479608"
+    },
+    "preflight.json": {
+      "path": "tmp/managed-systemd-artifact-review-execution-20261113/preflight.json",
+      "bytes": 4262,
+      "sha256": "a7d43fd3e3bf4fa343f565fea3c8fd77aed4e0c4146f2a682e7663d4de932b6d"
+    },
+    "staged-files.json": {
+      "path": "tmp/managed-systemd-artifact-review-execution-20261113/staged-files.json",
+      "bytes": 406,
+      "sha256": "1844a7868f66626c65613204787a093f9f586c9d3cb0b9462b976383fb9557aa"
+    },
+    "launch.json": {
+      "path": "tmp/managed-systemd-artifact-review-execution-20261113/launch.json",
+      "bytes": 813,
+      "sha256": "2264a05c8d3e069e0091bd8e0d39a8f0a06aaac7054e33db433f115835436ecf"
+    }
+  },
+  "review_archive": {
+    "path": "tmp/managed-systemd-artifact-review-execution-20261113/custody-final.tar.gz",
+    "bytes": 7675960,
+    "sha256": "a5fbe9cfa7ba90d8dbb77314d5fdfe360f8401d7d976071964e2f1bb644c2d7f"
+  },
+  "hardware_acceptance": false,
+  "qualification_boundary": "Producer readback flags remain false; separate independent verifier now supplies four actual filesystem/semantic readbacks. Third complete raw-image identity carries identical filesystem content, not a third mounting claim."
+}

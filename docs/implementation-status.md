@@ -1,17 +1,19 @@
 # Implementation status
 
 Updated 2026-11-13. **SPI/NVMe boot works with SD removed; the new managed guest
-workflow is not production-qualified.** Managed B is running, but its first
-managed start refused before queueing on systemd dependencies. The guest is
-disabled and has never run. The reviewed fix passes full validation; new root
-construction and deployment remain next. No operator action is needed during this preparation.
+workflow is not production-qualified.** Repaired B now boots with SD absent and
+all installed runtime files authenticated. The first managed start on previous B
+refused before queueing; supported enable/start on the repair now succeed. Actual
+managed execution, shutdown/checkpoint and automatic startup remain under test.
+No operator action is currently needed.
 
 ## Current board
 
 - SSH: `root@192.168.1.118`, original strict host-key alias `192.168.1.116`.
-  Boot `1095a827-6f92-486d-9ad3-2463a95c2d5e`; read-only NVMe root B p3.
-  Candidate `2996365` authenticates 85 tool files, four management files and two
-  guest boot units. SSH, NTP, eight CPUs and EL2/VHE pass.
+  Boot `cbc504c7-e88c-4943-9a29-f49eecfa3923`; read-only repaired B p3.
+  All 85 tools, four management files and two guest boot units authenticate against
+  repaired `4334a22` artifacts. SSH/NTP pass. Storage preparation completes with
+  open admission and preserved registry/cohorts; normalized A remains installed.
 - SD is physically removed. Preserve the SU02G recovery card, 1977614336 bytes,
   CID `035344535530324780716f216e00a8f5`; attached heatsinks stay in place.
 - NVMe: SPCC M.2 PCIe SSD, serial `134807190FC700149277`, 256060514304 bytes,
@@ -35,7 +37,8 @@ construction and deployment remain next. No operator action is needed during thi
 | Revised SPI recovery | Metadata-aware original blank restoration, SD recovery and firmware reinstallation pass full readback/close. [Restoration](evidence/spi-blank-restoration-and-sd-recovery-20261113.json), [reinstallation](evidence/spi-reinstall-and-poweroff-20261113.json). |
 | Post-reinstall boot/KVM | Confirmed SD-removed SPI boot `ae6ef902-51ce-45cf-88a9-62f7f390eded`. Actual UID/GID60001 QEMU PID2111 advanced `firstkvm` counter 9→10, passed CPU/disk/HTTP and guest-owned raw exit 0. Checkpoint5 is durable with nine history records and verified copies on codex and builder. A subsequent CP5 restart is not claimed. [Physical receipts](evidence/post-reinstall-SPI-managed-B-20261113.json). |
 | Managed B deployment | Complete B staging/readback, durable selection and first authenticated B boot pass. Initial policy/storage preparation produced an empty registry, open admission and no dispatch; all 13 retained `firstkvm` files stayed unchanged. Same physical receipt above. |
-| Managed guest execution | **Pending.** The first start was rejected before queueing; no KVM run or automatic-boot credit exists for this managed cohort. |
+| Repaired B deployment | Reviewed inactive p3 write/full legacy readback, durable selector and SD-free authenticated boot pass. A/BOOT/SPI preserved. A plan-mode refusal and its reviewed correction remain recorded. [Repair receipts](evidence/repaired-managed-B-deployment-20261113.json). |
+| Managed guest execution | **In progress.** Supported enable/start now queue successfully on repaired B; no completed managed KVM or automatic-boot credit is claimed yet. |
 
 The first November 13 removal attempt still had SD installed and receives no SPI
 credit. The operator clarified, removed it and booted the confirmed SPI route.
@@ -70,8 +73,9 @@ Registration disabled, then enablement succeeded. The single explicit start
 returned `AdmissionError: loaded storage dependencies differ` with
 `queue_attempted=false`, `queue_acknowledged=false`, `queue_uncertain=false`.
 No explicit request or run exists. Supported disable succeeded; registry is now
-generation 3, sole `autokvm` entry disabled, head ready at sequence 0. Its disk is
-the unchanged seed; no guest execution is claimed.
+generation 3, sole `autokvm` entry disabled, head ready at sequence 0 at the repair
+transition. After repaired B boot, supported enable advances generation 4 and
+the explicit start queues successfully; completed guest execution is still pending.
 
 Two actual systemd 252 behaviors caused the refusal: displayed dependency unit
 names containing backslashes are quoted/escaped, and `RequiresMountsFor` omits
@@ -114,7 +118,14 @@ zero skips/errors/failures. Source `11012f6`, tree `2b8a4e7`, 1143 locked inputs
 terminal exited/status0 and verified receipt copies on both hosts are retained.
 Minimum free disk was 20,414,304,256 bytes and MemAvailable 6,885,322,752 bytes.
 [Integrated evidence](evidence/managed-systemd-outer849-validation-20261113.json).
-No new root image is claimed yet.
+Frozen source `4334a22` now has two matching coordinator constructions and an
+independent fresh-checkout reproduction: all 133 manifest-listed artifacts, raw
+and compressed bytes, and complete gzip expansion match. Independent full
+filesystem/semantic checks and historical/current readers pass. Producer receipts
+correctly exclude independent filesystem readback; that gate has separate evidence.
+[Construction](evidence/managed-systemd-root-builds-20261113.json),
+[reproduction](evidence/independent-managed-systemd-root-reproduction-20261113.json),
+[artifact review](evidence/managed-systemd-root-artifact-review-20261113.json).
 
 The Ubuntu 22.04 builder is `drew@build.drewnet.online`. Unattended upgrades
 advanced its outer inventory to 849; the exact new lock and seventeen-package
@@ -135,11 +146,14 @@ warm/cold qualification counts remain **0/0**; retain the [conditional older SPI
 ledger](evidence/spi-boot-credit-ledger-20261112.json) without treating earlier
 protected-SD cycles as this configuration's credit.
 
-1. Freeze the validated source, construct matching repaired roots
-   and independently verify artifacts/procedure and updated helper pins.
-2. Prepare and independently review the exact repair deployment. Preserve
+1. Prove the queued managed run and complete its supported stop/checkpoint.
+   External repaired-root pins pass independent review and 70 focused tests.
+   [Helper evidence](evidence/repaired-managed-external-pins-20261113.json).
+2. Preserve
    normalized A, BOOT, STATE, both guest cohorts and all backups. Use supported
-   inactive-slot updates; never patch or overwrite the running root.
+   inactive-slot updates; never patch or overwrite the running root. The older
+   installed A updater requires its legacy full readback; new release tools keep
+   bulk installation readback optional.
 3. Prove real nonroot managed KVM CPU/disk/network, power-key shutdown,
    checkpoint/restart and separate unattended startup on the repaired root.
 4. Exercise coherent backup/restore including interrupted/resumed restoration,

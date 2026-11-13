@@ -1,7 +1,7 @@
 # External SPI power request helper
 
 `scripts/request-spi-power.py` is an external RAM helper for the unchanged
-candidate2996365 B runtime. It is outside the installed runtime closure and needs
+repaired candidate4334a22 B runtime. It is outside the installed runtime closure and needs
 no root rebuild. Its default invocation emits a plan without reading installed
 sources or starting a transport. Execution is a separate, explicit operation.
 
@@ -10,7 +10,7 @@ in the root:root 0700 `/run/a733-spi-collector` directory on native `/run` tmpfs
 That directory must contain exactly `request-spi-power.py` and
 `qualify-managed-boot.py`, including no bytecode cache. The qualifier must be
 15424 bytes with SHA-256
-`91cc5c5cde4c736cb2d777aa459bf8c535678c3815986331b510f4e61c7744c6`.
+`e2254bd80778c250f979a3e74ebe120c845d865e57d5b7d1fb02711c176c02bc`.
 The helper compiles those captured, authenticated qualifier bytes and reuses its
 installed-source authenticator; it never loads a qualifier bytecode cache.
 

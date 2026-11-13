@@ -1,5 +1,10 @@
 # Install managed B while retaining normalized A
 
+This records the previous `2996365` deployment and its original artifact pins.
+For the repaired `4334a22` roots use [the new build and artifact record](managed-systemd-root-build-20261113.md)
+and [current status](implementation-status.md). Do not mix the two cohorts' pins.
+
+
 This initial-install procedure was executed for candidate
 `2996365a11cb07deb20eb4325c90841de8ab820e` on 2026-11-13. SPI recovery,
 post-reinstall SD-removed boot/manual KVM, checkpoint preservation, B staging,
