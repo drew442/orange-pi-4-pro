@@ -1,6 +1,6 @@
 # Implementation status
 
-Updated 2026-11-12. Last boot/KVM validation was 2026-11-11.
+Updated 2026-11-13. Last boot/KVM validation was 2026-11-11.
 Current physical state: cleanly powered off for the operator to insert the known
 SD recovery card and restore power. UART confirms complete unmount/powerdown.
 [Preparation evidence](evidence/spi-recovery-preparation-20261112.json).
@@ -283,6 +283,12 @@ Minima were 23,560,409,088 bytes free and 6,717,169,664 bytes MemAvailable. All
 five TOMLs parse; all 842 outer-host packages match the pinned inventory.
 Candidate roots remain frozen at `2996365`; these software checks establish no
 physical acceptance.
+
+The [seven updated outer-builder package archives](outer-builder-package-supplement.md)
+and complete signed indexes now have verified copies on both hosts. Independent
+signature/hash/tuple [review passes](evidence/builder-outer-supplement-independent-review-20261113.json).
+The outer 842-package inventory and historical locks remain unchanged; old 835
+archive bytes were not rehashed. Fresh outer-host provisioning remains open.
 
 Production root construction/repetition and artifact/reader verification pass.
 [Prepared B metadata](evidence/managed-candidate-deployment-preparation-20261112.json)

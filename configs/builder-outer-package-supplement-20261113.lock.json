@@ -1,0 +1,145 @@
+{
+  "schema": 1,
+  "classification": "Separate seven-package outer-host supplement; historical frozen builder locks remain unchanged",
+  "inventory_bindings": {
+    "configs/builder-host-packages-20261112.lock.tsv": {
+      "bytes": 32550,
+      "sha256": "f779568a3e4e82afc488c1b99ccad0a88f2d96e74efe3b00172927c7539f4ef3"
+    },
+    "configs/builder-replay-packages-20261106.lock.tsv": {
+      "bytes": 32546,
+      "sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425"
+    },
+    "configs/builder-package-archives-20261106.lock.json": {
+      "bytes": 479812,
+      "sha256": "d42bb151845d01dc3cb1bcde95adfb5e9add97a5d34e8ab9f5c4d27bae5bb141"
+    }
+  },
+  "packages": [
+    {
+      "package": "libperl5.34",
+      "version": "5.34.0-3ubuntu1.10",
+      "architecture": "amd64",
+      "repository_filename": "pool/main/p/perl/libperl5.34_5.34.0-3ubuntu1.10_amd64.deb",
+      "retained_path": "archives/libperl5.34_5.34.0-3ubuntu1.10_amd64.deb",
+      "bytes": 4795744,
+      "sha256": "f2b9f60733dc27cd4760f4f79a212b220f87b034ff579883a0c79d51bc1f3bdf",
+      "url": "https://security.ubuntu.com/ubuntu/pool/main/p/perl/libperl5.34_5.34.0-3ubuntu1.10_amd64.deb"
+    },
+    {
+      "package": "linux-libc-dev",
+      "version": "5.15.0-203.213",
+      "architecture": "amd64",
+      "repository_filename": "pool/main/l/linux/linux-libc-dev_5.15.0-203.213_amd64.deb",
+      "retained_path": "archives/linux-libc-dev_5.15.0-203.213_amd64.deb",
+      "bytes": 1408346,
+      "sha256": "52d7d16b56a2c415afe35a91fa64b7db37cd7e3c825a5976531e0c9561be2e4d",
+      "url": "https://security.ubuntu.com/ubuntu/pool/main/l/linux/linux-libc-dev_5.15.0-203.213_amd64.deb"
+    },
+    {
+      "package": "linux-tools-common",
+      "version": "5.15.0-203.213",
+      "architecture": "all",
+      "repository_filename": "pool/main/l/linux/linux-tools-common_5.15.0-203.213_all.deb",
+      "retained_path": "archives/linux-tools-common_5.15.0-203.213_all.deb",
+      "bytes": 378250,
+      "sha256": "fc734f288cb40b032142e934210c594980ac3fac3f5c7e89d42be73cda069ff3",
+      "url": "https://security.ubuntu.com/ubuntu/pool/main/l/linux/linux-tools-common_5.15.0-203.213_all.deb"
+    },
+    {
+      "package": "perl",
+      "version": "5.34.0-3ubuntu1.10",
+      "architecture": "amd64",
+      "repository_filename": "pool/main/p/perl/perl_5.34.0-3ubuntu1.10_amd64.deb",
+      "retained_path": "archives/perl_5.34.0-3ubuntu1.10_amd64.deb",
+      "bytes": 231658,
+      "sha256": "4bc96cfd34641abe262b9a5f4342c65ab68b05e04d2c164ca465b28651553339",
+      "url": "https://security.ubuntu.com/ubuntu/pool/main/p/perl/perl_5.34.0-3ubuntu1.10_amd64.deb"
+    },
+    {
+      "package": "perl-base",
+      "version": "5.34.0-3ubuntu1.10",
+      "architecture": "amd64",
+      "repository_filename": "pool/main/p/perl/perl-base_5.34.0-3ubuntu1.10_amd64.deb",
+      "retained_path": "archives/perl-base_5.34.0-3ubuntu1.10_amd64.deb",
+      "bytes": 1762892,
+      "sha256": "a6465f2f76c78b088a5f328fd423a7dd5d83e36f2e34e3bfcf7994ee9bbe34d6",
+      "url": "https://security.ubuntu.com/ubuntu/pool/main/p/perl/perl-base_5.34.0-3ubuntu1.10_amd64.deb"
+    },
+    {
+      "package": "perl-modules-5.34",
+      "version": "5.34.0-3ubuntu1.10",
+      "architecture": "all",
+      "repository_filename": "pool/main/p/perl/perl-modules-5.34_5.34.0-3ubuntu1.10_all.deb",
+      "retained_path": "archives/perl-modules-5.34_5.34.0-3ubuntu1.10_all.deb",
+      "bytes": 2976796,
+      "sha256": "162f35b3c7ab07f286c52b13816332a6e8e1467de02c4099d6fd76a0543d6ccc",
+      "url": "https://security.ubuntu.com/ubuntu/pool/main/p/perl/perl-modules-5.34_5.34.0-3ubuntu1.10_all.deb"
+    },
+    {
+      "package": "python3-pyasn1",
+      "version": "0.4.8-1ubuntu0.4",
+      "architecture": "all",
+      "repository_filename": "pool/main/p/pyasn1/python3-pyasn1_0.4.8-1ubuntu0.4_all.deb",
+      "retained_path": "archives/python3-pyasn1_0.4.8-1ubuntu0.4_all.deb",
+      "bytes": 52980,
+      "sha256": "1da00a53b24f75b0707182785c722739f53c08520c74f95d0bee2216158887b2",
+      "url": "https://security.ubuntu.com/ubuntu/pool/main/p/pyasn1/python3-pyasn1_0.4.8-1ubuntu0.4_all.deb"
+    }
+  ],
+  "archive_count": 7,
+  "archive_bytes": 11606666,
+  "metadata": {
+    "security.InRelease": {
+      "bytes": 128927,
+      "sha256": "4d3cd2b8ace0fd6d4c2a5fa35daaf75d21ec1d42b84d0480d7cf87df3978607f"
+    },
+    "security.Packages": {
+      "bytes": 21131634,
+      "sha256": "964f60dcc41ba87db691729997659fa73f2626c58feb857a1650aef2831f4436"
+    },
+    "security.Release": {
+      "bytes": 128045,
+      "sha256": "f83bd2be97958da3947c3eed105c057f087158cbff896e8a53605995aa8c7954"
+    },
+    "security.gpgv.log": {
+      "bytes": 673,
+      "sha256": "d1f4d8f4c7f09899d645c60acd4e539b7b1e6ec886141baf270b1606b38bd734"
+    },
+    "ubuntu-archive-keyring.gpg": {
+      "bytes": 7399,
+      "sha256": "1a4dd63e5c76728960a2edddae22e2e0fc53df8e8b87806deb971030ac704eb0"
+    },
+    "updates.InRelease": {
+      "bytes": 128049,
+      "sha256": "07ed38e947d9ad78d0cf2530c148dac102548aae6240ab750a7981560f99d087"
+    },
+    "updates.Packages": {
+      "bytes": 22526061,
+      "sha256": "81d0000f28472de9bb78edf14d22e3d8ec1905be0591886a2888ec4ddb2ed153"
+    },
+    "updates.Release": {
+      "bytes": 127167,
+      "sha256": "1ed71d1138d61f8f6028338a239a460430bfb489fb2d0fe9d356bd6a01f4ae59"
+    },
+    "updates.gpgv.log": {
+      "bytes": 673,
+      "sha256": "67cd5686ed2edafa56eeaba7914097b0b05a80cf7a64041df8815a12a937b9b9"
+    }
+  },
+  "signer_fingerprint": "F6ECB3762474EDA9D21B7022871920D1991BC93C",
+  "acquisition_script": {
+    "path": "acquire.py",
+    "bytes": 13064,
+    "sha256": "4604d0a84d0d609e7ec351e054d470a0020a2024c5dc8b0d6892abee3abbffac"
+  },
+  "retention": {
+    "builder_directory": "/home/drew/orange-pi-4-pro-build/outer-package-supplement-20261113-02",
+    "native_directory": "/home/drew/orange-pi-4-pro/out/builder-outer-package-supplement-20261113-02",
+    "receipt": {
+      "bytes": 13505,
+      "sha256": "c654963176b6ec4e95fb38f9050e5dca15ba450bff3d3b02c4d1bf5b306d4e17"
+    }
+  },
+  "scope": "Seven changed outer-host tuples only. The other 835 tuples share historical archive pins; their bytes were not rehashed here. This supplement supplies no outer-host provisioning API."
+}

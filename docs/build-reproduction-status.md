@@ -66,6 +66,12 @@ capacity is approved for use/expansion after exact target revalidation and revie
 Native evidence storage has a separate unchanged 256 MiB floor and reserved
 outcome budget; keep bulk source/guest data on the builder when needed.
 
+The [outer-host supplement](outer-builder-package-supplement.md) retains the exact
+seven updated binaries and full signed metadata with independently verified
+second copies. [Independent review](evidence/builder-outer-supplement-independent-review-20261113.json)
+passes. This closes that acquisition gap; it does not rehash the other 835 old
+archives or demonstrate a freshly provisioned native outer builder.
+
 The [exact compiler-source inventory](toolchain-sources.md) still lacks the exact
 GCC and DejaGNU source inputs. [Twenty-six vendor boot-input
 grants](evidence/vendor-boot-license-inventory-20261106.json) remain unresolved;

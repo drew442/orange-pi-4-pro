@@ -1,0 +1,116 @@
+{
+  "schema": 1,
+  "date": "2026-11-13",
+  "classification": "Completed seven exact outer-host binary acquisition and signed-metadata retention; no installation or hardware acceptance",
+  "lock": {
+    "path": "configs/builder-outer-package-supplement-20261113.lock.json",
+    "bytes": 6265,
+    "sha256": "09f996b6c03e28f2382e8c33c2ce217794218365b89a0754de9d99c02154c7d6"
+  },
+  "source_inventory_bindings": {
+    "configs/builder-host-packages-20261112.lock.tsv": {
+      "bytes": 32550,
+      "sha256": "f779568a3e4e82afc488c1b99ccad0a88f2d96e74efe3b00172927c7539f4ef3"
+    },
+    "configs/builder-replay-packages-20261106.lock.tsv": {
+      "bytes": 32546,
+      "sha256": "92662b76002eef6d90d58505b724eedbc474ded367b0011a8b71afbe50317425"
+    },
+    "configs/builder-package-archives-20261106.lock.json": {
+      "bytes": 479812,
+      "sha256": "d42bb151845d01dc3cb1bcde95adfb5e9add97a5d34e8ab9f5c4d27bae5bb141"
+    }
+  },
+  "builder": {
+    "directory": "/home/drew/orange-pi-4-pro-build/outer-package-supplement-20261113-02",
+    "receipt": {
+      "bytes": 13505,
+      "sha256": "c654963176b6ec4e95fb38f9050e5dca15ba450bff3d3b02c4d1bf5b306d4e17"
+    },
+    "resources_before": {
+      "free_bytes": 23559995392,
+      "available_memory_bytes": 7535607808,
+      "required_bytes": 323956793
+    },
+    "host_inventory_before_after": "identical842 tuples / f779568a3e4e82afc488c1b99ccad0a88f2d96e74efe3b00172927c7539f4ef3",
+    "independent_after_acquisition_full_file_rehash": "passed",
+    "fsync": "all retained files and payload directories before receipt completion",
+    "signature_proofs": [
+      {
+        "prefix": "updates",
+        "signer": "F6ECB3762474EDA9D21B7022871920D1991BC93C",
+        "signature_exit": 0,
+        "index_signed_sha256_verified": true
+      },
+      {
+        "prefix": "security",
+        "signer": "F6ECB3762474EDA9D21B7022871920D1991BC93C",
+        "signature_exit": 0,
+        "index_signed_sha256_verified": true
+      }
+    ]
+  },
+  "native_copy": {
+    "directory": "/home/drew/orange-pi-4-pro/out/builder-outer-package-supplement-20261113-02",
+    "files": 35,
+    "bytes": 55885427,
+    "receipt": {
+      "bytes": 13505,
+      "sha256": "c654963176b6ec4e95fb38f9050e5dca15ba450bff3d3b02c4d1bf5b306d4e17"
+    },
+    "full_file_rehash": "passed",
+    "file_and_directory_fsync": "passed",
+    "file_modes": "0400",
+    "directory_modes": "0700"
+  },
+  "native_independent_signature_verification": {
+    "keyring": {
+      "path": "/usr/share/keyrings/ubuntu-archive-keyring.gpg",
+      "bytes": 3607,
+      "sha256": "80a36b0a6de2f69f49d2df75ef473ccde121e9e190b9ea01d20a4f63778d5c31"
+    },
+    "signature_checks": [
+      {
+        "prefix": "updates",
+        "exit": 0,
+        "status": "[GNUPG:] PLAINTEXT 74 0 \n[GNUPG:] NEWSIG\ngpgv: Signature made Thu Nov 12 04:26:55 2026 UTC\ngpgv:                using RSA key F6ECB3762474EDA9D21B7022871920D1991BC93C\n[GNUPG:] KEY_CONSIDERED F6ECB3762474EDA9D21B7022871920D1991BC93C 0\n[GNUPG:] SIG_ID laMmvRIL60S7kc+Hwlb/9Ya8/Tg 2026-11-12 1794457615\n[GNUPG:] GOODSIG 871920D1991BC93C Ubuntu Archive Automatic Signing Key (2018) <ftpmaster@ubuntu.com>\ngpgv: Good signature from \"Ubuntu Archive Automatic Signing Key (2018) <ftpmaster@ubuntu.com>\"\n[GNUPG:] VALIDSIG F6ECB3762474EDA9D21B7022871920D1991BC93C 2026-11-12 1794457615 0 4 0 1 10 01 F6ECB3762474EDA9D21B7022871920D1991BC93C\n",
+        "signed_index_sha256": "81d0000f28472de9bb78edf14d22e3d8ec1905be0591886a2888ec4ddb2ed153",
+        "signed_index_bytes": 22526061,
+        "verified": true
+      },
+      {
+        "prefix": "security",
+        "exit": 0,
+        "status": "[GNUPG:] PLAINTEXT 74 0 \n[GNUPG:] NEWSIG\ngpgv: Signature made Thu Nov 12 02:22:29 2026 UTC\ngpgv:                using RSA key F6ECB3762474EDA9D21B7022871920D1991BC93C\n[GNUPG:] KEY_CONSIDERED F6ECB3762474EDA9D21B7022871920D1991BC93C 0\n[GNUPG:] SIG_ID xfzZPG5nayUhB4vuw6yCQHqXpv8 2026-11-12 1794450149\n[GNUPG:] GOODSIG 871920D1991BC93C Ubuntu Archive Automatic Signing Key (2018) <ftpmaster@ubuntu.com>\ngpgv: Good signature from \"Ubuntu Archive Automatic Signing Key (2018) <ftpmaster@ubuntu.com>\"\n[GNUPG:] VALIDSIG F6ECB3762474EDA9D21B7022871920D1991BC93C 2026-11-12 1794450149 0 4 0 1 10 01 F6ECB3762474EDA9D21B7022871920D1991BC93C\n",
+        "signed_index_sha256": "964f60dcc41ba87db691729997659fa73f2626c58feb857a1650aef2831f4436",
+        "signed_index_bytes": 21131634,
+        "verified": true
+      }
+    ]
+  },
+  "binary_verification": {
+    "files": 7,
+    "bytes": 11606666,
+    "all_full_sha256_and_sizes": "passed",
+    "all_dpkg_deb_Package_Version_Architecture": "passed; metadata reads only",
+    "signed_updates_security_record_agreement": "all seven exact records agree",
+    "concurrency": 1,
+    "downloader": "curl fixed HTTPS security.ubuntu.com origin; redirects refused; max20s connect/90s per transfer; two retries; exact maximum file size",
+    "raw_commands": "receipt.json commands; retained acquire.py; *.curl.log; *.tuple.txt"
+  },
+  "initial_refusal": {
+    "builder_directory": "/home/drew/orange-pi-4-pro-build/outer-package-supplement-20261113-01",
+    "native_directory": "/home/drew/orange-pi-4-pro/out/builder-outer-package-supplement-20261113-failed-01",
+    "receipt": {
+      "bytes": 939,
+      "sha256": "42832c6cd1ab289dc3bfe24ecdc69500cda1dc3a05ed1c34887cda35884e06d9"
+    },
+    "reason": "Wrong-host keyring pin: local codex keyring is 3607 bytes/80a36b0a..., Jammy builder keyring is 7399 bytes/1a4dd63e.... No package/keyring drift is inferred. Refused before metadata copy/download; inventory unchanged. Fresh02 pins exact builder keyring and requires the same audited signer; native verification independently passes using local historical keyring."
+  },
+  "limits": [
+    "No host package installed/upgraded; no apt update, source/configuration change, binary extraction, maintainer script, image build or hardware write.",
+    "Current candidate/root, current outer f779, frozen replay926 and historical archive d42 locks remain unchanged.",
+    "The other835 binary bytes were not rehashed. A full historical reconstruction must restore separately retained linux-firmware to its absent exact cache path and reauthenticate all needed inputs.",
+    "Fresh native outer-host provisioning and physical deployment acceptance remain separate work. Existing historical acquisition/seed/install APIs require frozen replay inventory; native initial namespace guard remains required."
+  ]
+}

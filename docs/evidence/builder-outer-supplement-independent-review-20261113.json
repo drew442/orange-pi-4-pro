@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "date": "2026-11-13",
+  "result": "pass",
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "high",
+  "source": {
+    "configs/builder-outer-package-supplement-20261113.lock.json": {
+      "bytes": 6265,
+      "sha256": "09f996b6c03e28f2382e8c33c2ce217794218365b89a0754de9d99c02154c7d6"
+    },
+    "docs/outer-builder-package-supplement.md": {
+      "bytes": 4799,
+      "sha256": "43d9f8cf88433c6f6252f568c61184941503ed59cd6e8901840c1c38257cace4"
+    },
+    "docs/evidence/builder-outer-package-supplement-20261113.json": {
+      "bytes": 6483,
+      "sha256": "906a39e11e03a1c795d2b03a6d2e1f4c1f42fd1ac4713d26ed02d8221cff982e"
+    }
+  },
+  "acquisition_file_count": 35,
+  "acquisition_total_bytes": 55885427,
+  "deb_archives": 7,
+  "deb_total_bytes": 11606666,
+  "old_archives_rehashed": false,
+  "unchanged_old_archive_tuple_matches": 835,
+  "signature_continuity": "Both copied signed releases verify against both captured builder and historical codex keyrings with exact F6ECB3762474EDA9D21B7022871920D1991BC93C VALIDSIG; complete Packages SHA256 and sizes match signed Release entries",
+  "findings": [],
+  "limits": [
+    "Offline seven-package supplement verification only; no APT installation, fresh 842-package environment, image generation or hardware acceptance performed."
+  ],
+  "review_custody": {
+    "local": "out/outer-supplement-independent-review-20261113-01/review.tar.gz",
+    "builder": "/var/lib/a733-outer-supplement-independent-review-20261113-01/review.tar.gz",
+    "bytes": 152963,
+    "sha256": "68df491324e955e880ab3428edfab04a5b473a7c65da871d3d068b411c009d75",
+    "verified_fsynced_both_hosts": true
+  },
+  "hardware_acceptance": false
+}
