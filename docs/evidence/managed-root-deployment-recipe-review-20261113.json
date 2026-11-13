@@ -1,0 +1,82 @@
+{
+  "schema": 1,
+  "date": "2026-11-13",
+  "result": "PASS for bounded independent documentation execution and safety review",
+  "hardware_acceptance": false,
+  "reviewer": {
+    "role": "reviewer",
+    "model": "gpt-6.1-sol",
+    "effort": "high"
+  },
+  "document": {
+    "path": "docs/managed-root-deployment.md",
+    "bytes": 21563,
+    "lines": 380,
+    "sha256": "2a96347e6850cb83b957e225469371b11c67be549311e79735fa172f8bd68c52"
+  },
+  "scope": "Initial legacy-A to managed-B bridge only; no document edits, SSH, device access, commit or push. Receipt is the sole output.",
+  "findings": [],
+  "syntax": {
+    "bash_blocks": 10,
+    "python_heredocs": 2,
+    "result": "pass; parsed/compiled only, no commands executed"
+  },
+  "pins": {
+    "out/managed-root-candidate-20261112-02/artifacts/root-B.ext4.gz": {
+      "bytes": 143661932,
+      "sha256": "380ec5c9c20e35f8480e5ff6d40ddc1ab258924f1074252668f84010b08dfbe0",
+      "result": "pass"
+    },
+    "out/managed-root-candidate-20261112-02/prepared-B-metadata/manifest.json": {
+      "bytes": 51618,
+      "sha256": "65f69d6a2f0b6346c0ca2f0257daa26836dd791918a4af795e70de730f8f424a",
+      "result": "pass"
+    },
+    "out/managed-root-candidate-20261112-02/prepared-B-metadata/selected.conf": {
+      "bytes": 179,
+      "sha256": "39958be7dffc35100dc9b036bed20bcf091cb5fb4d9c8e8adcc6f04546bcf763",
+      "result": "pass"
+    },
+    "out/managed-root-candidate-20261112-02/prepared-B-metadata/candidate.json": {
+      "bytes": 9332,
+      "sha256": "a088e6dc6ca66963e6647c330b8a425c8f6ab478d1ed834024f4ccf80aea1569",
+      "result": "pass"
+    },
+    "out/normalized-a-compatibility-20261112/manifest.json": {
+      "bytes": 33481,
+      "sha256": "c1bcc7d23d22bd487534ba17ea447055881a044350829608360aa92ca24283f2",
+      "result": "pass"
+    },
+    "out/normalized-a-compatibility-20261112/selected.conf": {
+      "bytes": 179,
+      "sha256": "3c76b96c328b4508ff407c8594352e04389664e97ced6f0a09284cade5bd027b",
+      "result": "pass"
+    }
+  },
+  "historical_source": {
+    "revision": "50bc9e70698d4a09c3705594dcc61c64e1715cb9",
+    "retained_manifest_runtime_files": 40,
+    "file_backed_sources_matching_bytes_and_hash": 39,
+    "generated_runtime_file": "package.json; authenticated against pinned retained manifest by live guard",
+    "api_review": [
+      "host-update-target.snapshot positional signature and return fields match the recipe",
+      "snapshot performs readonly runtime/root/STATE/target/sysfs/GPT validation; no initialization or mount",
+      "old update/select CLIs match arguments, TTY phrases and mandatory writer readback",
+      "historical import helpers use adjacent absolute sources; authenticated closure precedes import, -I -B prevents ambient path/cache writes"
+    ]
+  },
+  "safety_review": [
+    "Preliminary manifest transfer and receipts are in RAM; live guards and independent review precede STATE mkdir/copies",
+    "Recheck must match original live context before candidate creation",
+    "Fresh explicit NVMe model/serial/capacity and inactive p3 derive from real historical policy; no implicit disk or slot substitution",
+    "No VM consumers and SD absence checked explicitly; UART/SPI route/BOOT hashes/manual guest custody remain independent live evidence requirements",
+    "Exactly one gzip decode into sparse candidate-B/root.ext4 with progress, exact raw length/hash and file/directory fsync; prepared metadata is reused",
+    "Legacy apply revalidates reviewed plans, safe source/plan locations, and target context; stage and selection are separate guarded operations",
+    "Cancellation uses retained exact old manifest and cancel-pending API; healthy booted rollback remains distinct reviewed transaction",
+    "Working A, fixed BOOT/kernel/DTB/EL2, GPT/p5/manual firstkvm custody retained; no SPI/SD writes or new hardware claims"
+  ],
+  "limits": [
+    "No board command, hardware staging, candidate boot, rollback or KVM result is established by this review",
+    "Post-reinstall SD-removed boot and actual KVM remain prerequisites; separately reviewed fresh live plans remain mandatory"
+  ]
+}

@@ -313,6 +313,17 @@ manifest and complete gzip expansions match; full filesystem readback passes.
 This completes the build-procedure portion of independent reproduction on the
 qualified outer/frozen-inner environment. Physical procedure reproduction and
 fresh outer-OS provisioning are separate scopes.
+
+The [initial managed-B deployment procedure](managed-root-deployment.md) now
+replaces the research transfer draft. It authenticates all 40 installed legacy
+runtime files before importing the historical target guard, checks live identity
+before STATE writes, and expands B once directly into its final sparse candidate
+with progress, exact length/hash and fsync. Prepared metadata is reused; the
+duplicate onboard preparer pass is omitted. Ten Bash snippets and two Python
+blocks parse, and historical CLI/runtime and artifact pins pass
+[independent review](evidence/managed-root-deployment-recipe-review-20261113.json).
+This remains unexecuted; fresh post-reinstall SPI/KVM evidence and
+independently reviewed live staging/selection plans are required first.
 [Prepared B metadata](evidence/managed-candidate-deployment-preparation-20261112.json)
 has verified custody for direct sparse expansion, avoiding an extra onboard
 preparer copy/hash. The [external qualification helper](managed-boot-qualification.md)

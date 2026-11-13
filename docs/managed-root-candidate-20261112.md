@@ -96,11 +96,12 @@ The diagnostic DTB recorded in root provenance is not a replacement BOOT payload
 
 ## Next physical steps
 
-First complete the reviewed SPI restore/SD recovery/reinstall demonstration from
-the retained recovery card. Then prepare a fresh concrete inactive-B deployment
-plan, preserving working normalized A, BOOT, STATE and the manual `firstkvm`
-cohort. Existing known-target authorization persists; fresh live identity and
-independent plan review remain required.
+SPI restoration, SD recovery and reinstallation pass. Complete the next
+SD-removed boot/KVM check, then follow the [initial managed-B procedure](managed-root-deployment.md)
+to prepare fresh concrete staging and selection plans. Preserve working
+normalized A, BOOT, STATE and the manual `firstkvm` cohort. Existing known-target
+authorization persists; fresh live identity and independent plan review remain
+required.
 
 [Deployment preparation](evidence/managed-candidate-deployment-preparation-20261112.json)
 retains the already reviewed B selector and producer manifest on codex. After
@@ -109,8 +110,9 @@ fresh live guards, expand the pinned gzip directly into the private candidate's
 the prepared metadata; omit an extra onboard preparer copy/hash. The historical
 updater still authenticates the candidate completely. Its initial migration
 requires legacy confirmation/readback behavior; the new optional-readback UI
-becomes available only after booting the new root. The research transfer draft
-is not executable until its live guard precedes every STATE write.
+becomes available only after booting the new root. The deployment procedure
+authenticates the installed runtime and runs its actual historical target guard
+before any STATE copy or directory creation; it supersedes the research draft.
 
 Use the [artifact-bound fixture setup](managed-fixture-deployment.md) after matched B boots.
 After deploying matched B, publish its explicit storage policy before runtime
