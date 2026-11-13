@@ -330,6 +330,29 @@ def write_json(path, value):
     Path(path).write_text(json.dumps(value, indent=2, sort_keys=True) + '\n')
 
 
+def write_payload_marker(root, value):
+    """Publish public provenance for the nonroot authenticated launcher.
+
+    The root-only builder owns these inodes; their modes must not depend on its
+    umask. Only this metadata directory is normalized, never its ancestors.
+    """
+    directory = root / 'usr/lib/orangepi-hypervisor'
+    parent = root
+    for part in ('usr', 'lib', 'orangepi-hypervisor'):
+        parent = parent / part
+        if parent.is_symlink() or (parent.exists() and not parent.is_dir()):
+            raise ValueError('unsafe payload metadata ancestor')
+    directory.mkdir(parents=True, exist_ok=True)
+    target = directory / 'payload.json'
+    if target.is_symlink() or (target.exists() and
+            (not stat.S_ISREG(target.lstat().st_mode) or target.lstat().st_nlink != 1)):
+        raise ValueError('unsafe payload metadata destination')
+    # This contains hashes, package inventory and public policy, never secrets.
+    write_json(target, value)
+    target.chmod(0o644)
+    directory.chmod(0o755)
+
+
 def install_runtime_files(root, files, profile):
     records = {}
     for source, (destination, mode) in files.items():
@@ -582,10 +605,8 @@ def build(rootfs, diagnostic, output, metadata_profile='native', userspace_profi
             target.write_bytes(data)
         package_state = PACKAGE.snapshot(root)
         write_json(output / 'modules.json', module_bom)
-        metadata_dir = within_root(root, 'usr/lib/orangepi-hypervisor')
-        metadata_dir.mkdir(parents=True, exist_ok=True)
         for slot in SLOT_UUIDS:
-            write_json(metadata_dir / 'payload.json', {
+            write_payload_marker(root, {
                 'schema': 1, 'classification': CLASSIFICATION, 'slot': slot,
                 'filesystem_uuid': SLOT_UUIDS[slot], 'kernel_release': KERNEL_RELEASE,
                 'sources': sources, 'modules_bom': file_record(output / 'modules.json'),

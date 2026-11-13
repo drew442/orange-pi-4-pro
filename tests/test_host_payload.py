@@ -48,6 +48,122 @@ def modules(extra=None):
 
 
 class ArchiveTests(unittest.TestCase):
+    def test_payload_marker_modes_ignore_umask_and_preserve_other_permissions(self):
+        for mask in (0o022, 0o077):
+            with self.subTest(umask=mask), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                directory = root / 'usr/lib/orangepi-hypervisor'
+                directory.mkdir(parents=True, mode=0o700)
+                (root / 'usr').chmod(0o711)
+                private = directory / 'private'
+                private.write_bytes(b'private')
+                private.chmod(0o600)
+                original = {path: path.stat() for path in (root, root / 'usr', root / 'usr/lib', private)}
+                previous = os.umask(mask)
+                try:
+                    for slot in ('A', 'B'):
+                        payload.write_payload_marker(root, {'slot': slot})
+                        marker = directory / 'payload.json'
+                        self.assertEqual(json.loads(marker.read_text()), {'slot': slot})
+                        self.assertEqual(stat.S_IMODE(marker.stat().st_mode), 0o644)
+                        self.assertEqual(stat.S_IMODE(directory.stat().st_mode), 0o755)
+                finally:
+                    os.umask(previous)
+                for path, info in original.items():
+                    self.assertEqual(path.stat().st_mode, info.st_mode)
+                    self.assertEqual((path.stat().st_uid, path.stat().st_gid), (info.st_uid, info.st_gid))
+                self.assertEqual(private.read_bytes(), b'private')
+
+    def test_payload_marker_rejects_unsafe_paths_without_touching_targets(self):
+        for kind in ('usr', 'lib', 'directory', 'ancestor-file', 'marker-directory', 'file', 'hardlink', 'fifo'):
+            with self.subTest(kind=kind), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary) / 'root'
+                directory = root / 'usr/lib/orangepi-hypervisor'
+                directory.mkdir(parents=True)
+                outside = Path(temporary) / 'outside'
+                outside.mkdir()
+                sentinel = outside / 'payload.json'
+                sentinel.write_bytes(b'keep')
+                sentinel.chmod(0o600)
+                if kind in ('usr', 'lib', 'directory'):
+                    path = {'usr': root / 'usr', 'lib': root / 'usr/lib', 'directory': directory}[kind]
+                    shutil.rmtree(path)
+                    path.symlink_to(outside, target_is_directory=True)
+                elif kind == 'ancestor-file':
+                    directory.rmdir()
+                    directory.write_bytes(b'keep')
+                elif kind == 'marker-directory':
+                    (directory / 'payload.json').mkdir()
+                elif kind == 'file':
+                    (directory / 'payload.json').symlink_to(sentinel)
+                elif kind == 'hardlink':
+                    os.link(sentinel, directory / 'payload.json')
+                else:
+                    os.mkfifo(directory / 'payload.json')
+                with self.assertRaisesRegex(ValueError, 'unsafe payload metadata'):
+                    payload.write_payload_marker(root, {'slot': 'B'})
+                self.assertEqual(sentinel.read_bytes(), b'keep')
+                self.assertEqual(stat.S_IMODE(sentinel.stat().st_mode), 0o600)
+
+    @unittest.skipUnless(os.getuid() == os.geteuid() == 0, 'real root required for chroot and credential drop')
+    def test_nonroot_launcher_authenticates_packaged_marker_but_cannot_mutate_it(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            root.chmod(0o755)
+            (root / 'usr/lib').mkdir(parents=True)
+            previous = os.umask(0o077)
+            try:
+                payload.install_management(root)
+                payload.write_payload_marker(root, {'schema': 1, 'slot': 'A', 'sources': {}})
+                payload.write_payload_marker(root, {'schema': 1, 'slot': 'B', 'sources': {}})
+            finally:
+                os.umask(previous)
+            marker = root / 'usr/lib/orangepi-hypervisor/payload.json'
+            for path in (marker.parent, marker):
+                self.assertEqual((path.stat().st_uid, path.stat().st_gid), (0, 0))
+            expected = payload.file_record(marker)['sha256']
+            result = subprocess.run([sys.executable, '-c', '''
+import importlib.util, json, os, sys
+spec = importlib.util.spec_from_file_location('actual_managed_launch', sys.argv[1])
+launch = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(launch)
+os.chroot(sys.argv[2])
+os.chdir('/')
+os.setgroups([])
+os.setgid(103)
+os.setuid(60002)
+assert os.getuid() == os.geteuid() == 60002 and os.getgid() == 103
+held = launch.CONTEXT.ENROLL.HeldPath(launch.PAYLOAD)
+try:
+    launch.hash_root_file(held, sys.argv[3], launch.PAYLOAD_LIMIT)
+    assert json.loads(os.pread(held.fd, held.info.st_size, 0))['slot'] == 'B'
+    held.recheck()
+finally:
+    held.close()
+directory = '/usr/lib/orangepi-hypervisor'
+def write_marker():
+    with open(launch.PAYLOAD, 'wb'):
+        pass
+def create_file():
+    with open(directory + '/replacement', 'xb'):
+        pass
+for mutation in (write_marker, create_file, lambda: os.unlink(launch.PAYLOAD),
+                 lambda: os.rename(launch.PAYLOAD, directory + '/replacement'),
+                 lambda: os.chmod(launch.PAYLOAD, 0o666),
+                 lambda: os.chmod(directory, 0o777)):
+    try:
+        mutation()
+    except PermissionError:
+        pass
+    else:
+        raise AssertionError('nonroot mutation succeeded')
+print('authenticated marker read; six mutations denied')
+''', str(payload.REPO / 'scripts/launch-managed-guest.py'), str(root), expected],
+                capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(result.stdout.strip(), 'authenticated marker read; six mutations denied')
+            self.assertEqual(payload.file_record(marker)['sha256'], expected)
+
     def test_machine_id_commit_mask_preserves_vendor_unit_and_identity(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
@@ -388,6 +504,8 @@ class UserspaceProfiles(unittest.TestCase):
                 markers = []
                 def image(root, destination, slot):
                     markers.append(json.loads((root / 'usr/lib/orangepi-hypervisor/payload.json').read_text()))
+                    self.assertEqual(stat.S_IMODE((root / 'usr/lib/orangepi-hypervisor').stat().st_mode), 0o755)
+                    self.assertEqual(stat.S_IMODE((root / 'usr/lib/orangepi-hypervisor/payload.json').stat().st_mode), 0o644)
                     mask = root / 'etc/systemd/system/systemd-machine-id-commit.service'
                     self.assertTrue(mask.is_symlink())
                     self.assertEqual(os.readlink(mask), '/dev/null')
@@ -419,7 +537,11 @@ class UserspaceProfiles(unittest.TestCase):
                     if no_space:
                         self.assertFalse(output.exists())
                     continue
-                payload.build(archive, diagnostic, output, metadata, userspace_profile)
+                previous = os.umask(0o077)
+                try:
+                    payload.build(archive, diagnostic, output, metadata, userspace_profile)
+                finally:
+                    os.umask(previous)
                 manifest = json.loads((output / 'manifest.json').read_text())
                 if userspace_profile == payload.DEFAULT_USERSPACE_PROFILE:
                     self.assertNotIn('userspace_profile', manifest['sources'])

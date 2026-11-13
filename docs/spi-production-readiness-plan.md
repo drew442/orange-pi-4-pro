@@ -68,7 +68,7 @@ cycle attestations. Software preparation continues while those steps are pending
 | 2. Metadata-aware SPI maintenance | Software checks and independent review pass | Reviewed fresh live plans and preserved calibration policy |
 | 3. Physical restore/reinstall | Blank restoration, SD recovery, reinstall and SD-removed manual KVM pass | Original SPI restore, SD recovery, reinstall, SD-removed boot and actual KVM pass |
 | 4. Unattended guests | F349 build/artifact/readers and physical B boot pass; managed child exit unresolved | Reproducible packaged services, graceful shutdown/checkpoint/reconciliation, rollback and real KVM acceptance |
-| 5. Final SPI boot series | One cold and one warm operational boot evidenced | Ten accepted cold and ten warm boots with applicable identity and final automation checks |
+| 5. Final SPI boot series | Earlier manual SPI operational evidence retained; final managed series 0 cold/0 warm | Ten accepted cold and ten warm boots with applicable identity and final automation checks |
 | 6. Independent reproduction and signoff | Earlier protected-SD reproduction retained | Updated SPI recovery and guest procedures reproduced, evidence reconciled and changes pushed |
 
 Continue managed deployment and collector preparation. Complete both before the final configuration

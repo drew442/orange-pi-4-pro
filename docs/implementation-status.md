@@ -12,7 +12,7 @@ will receive no production acceptance credit.
 ## Current board and retained recovery
 
 - SSH: `root@192.168.1.118`, strict original host-key alias `192.168.1.116`.
-  Boot `36875488-cddf-42e3-b038-7dae72cfd75e`; F349 B p3 is read-only.
+  Boot `d997b269-426c-4628-948c-e28554fbe50f`; F349 B p3 is read-only.
   Its complete 85-tool/four-management-file/two-boot-unit cohort authenticates.
   NTP passes; p5 is mounted and admission opened after both preparation services
   completed. Normalized A p2 remains preserved.
@@ -60,14 +60,24 @@ failure remains unresolved; retain continuous UART during qualification.
 `/var/lib/a733-checkpoint5-backup-20261113-01` on the builder. Preserve these and
 [normalized A](evidence/normalized-a-compatibility-custody-20261112.json).
 The unused original port80 cohort and the later failed port8080 cohort are both
-retained. The active `autokvm` is restored to initial ready sequence 0, disabled at
-generation 9, manifest `a46ae94c…5d8701`. Fresh boot
-`36875488…fd75e` passes open admission and queues no guest. Both failed cohorts
-remain retained. A helper-name collision interrupted the first recovery attempt
-before any restore transaction; the corrected helper committed transaction
-`f45cc1a4…fa87b` with clean cleanup.
-[Recovery and correction](evidence/managed-diagnostic-cohort-recovery-20261113.json).
-[Current launch failure](evidence/managed-permit-launch-failure-20261113.json).
+retained. Four F349 launches produced the same exit1/74-byte console fingerprint before
+QMP binding; none receives KVM credit. The fourth, diagnostic run captured the
+exact error: `Permission denied: 'orangepi-hypervisor'` from the nonroot launcher.
+The root-owned metadata directory is 0700 and its marker 0600. The trace proves
+successful setpriv/Python exec, retained attachment and clean detachment with no
+signals, dropped bytes or capture errors. The reviewed packaging fix sets the public metadata directory/marker to
+0755/0644 before both image snapshots. Thirty privileged payload checks and
+24 metadata checks pass, including actual UID60002 authentication and six denied
+mutations. Full Ubuntu validation and a new build remain pending; no live root
+permission bypass is applied.
+
+The fixture remains quarantined and disabled at generation 17; admission is open,
+manual CP5 is unchanged, and every failed cohort remains retained. A supervisor
+cleanup error is also retained; supported restoration/fresh boot is required
+before another run. The earlier restoration `eaf1f4bc…a9a5` committed cleanly
+and its SD-removed boot `d997b269…be50f` passed admission recovery.
+[Exact diagnosis](evidence/managed-launch-permission-diagnosis-20261113.json),
+[earlier recovery](evidence/managed-diagnostic-cohort-recovery-20261113.json).
 
 ## Current source and build evidence
 

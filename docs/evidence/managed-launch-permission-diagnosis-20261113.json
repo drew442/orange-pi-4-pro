@@ -1,0 +1,280 @@
+{
+  "schema": 1,
+  "date_utc": "2026-11-13",
+  "scope": "RAM-only diagnostic of managed launch; no production guest acceptance",
+  "root_revision": "f3496f5ff1b3629d5333d26725b9f5494ace9d25",
+  "boot_id": "d997b269-426c-4628-948c-e28554fbe50f",
+  "run_id": "6cb6bdab-8a30-4905-92e4-4a14011bd5b1",
+  "SD_absent": true,
+  "native_compatibility": {
+    "attachment_ack_retained": true,
+    "attachment_observed": true,
+    "boot_id": "d997b269-426c-4628-948c-e28554fbe50f",
+    "capture_acceptance": false,
+    "cleanup_errors": [],
+    "cleanup_signalled": false,
+    "dummy": {
+      "caps_zero": true,
+      "gid": 60002,
+      "groups": [
+        103
+      ],
+      "nnp": true,
+      "pid": 3587,
+      "uid": 60002
+    },
+    "dummy_detach_verified": true,
+    "dummy_exited_reaped": true,
+    "dummy_returncode": 0,
+    "dummy_start_ticks": 42709,
+    "hardware_acceptance": false,
+    "native_proc_discovery": {
+      "interface": "numeric-proc-stat-ppid",
+      "nonroot_dummy_ineligible": true,
+      "owned_dummy_seen": true
+    },
+    "packet_sha256": "d3a6cfe605156d1be10ad4423610279a0b6b391e4bc31d6e27af09d35bd3fd8a",
+    "phase": "compat",
+    "retry": false,
+    "stdin_source_sha256": "051886cde6f8d0b859bf1ef5856912335c35312e196bad7414794a026e49e4c3",
+    "success": true,
+    "tracer_exited_reaped": true,
+    "tracer_pid": 3588,
+    "tracer_returncode": 0,
+    "version_stdout": "strace -- version 6.1\nCopyright (c) 1991-2022 The strace developers <https://strace.io>.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\nOptional features enabled: no-m32-mpers\n"
+  },
+  "capture": {
+    "state": "complete-detachment-proven",
+    "attachment_proven": true,
+    "attachment_proof": {
+      "attachment_ack": {
+        "offset": 0,
+        "pid": 6839,
+        "retained": true,
+        "text": "strace: Process 6839 attached"
+      },
+      "barrier_after_attach": {
+        "fd_links": {
+          "0": "/dev/null",
+          "1": "pipe:[33346]",
+          "2": "pipe:[33346]"
+        },
+        "syscall": [
+          "72",
+          "0x3d",
+          "0x7ff87c6cc0",
+          "0x0",
+          "0x0",
+          "0x7ff87c6bd8",
+          "0x0",
+          "0x7ff87c6bb0",
+          "0x7f86964980"
+        ],
+        "wchan": "do_select"
+      },
+      "child_identity_after": {
+        "argv": [
+          "/usr/bin/python3",
+          "-I",
+          "-B",
+          "/usr/lib/a733-tools/scripts/run-managed-guest.py",
+          "autokvm"
+        ],
+        "cgroup": "0::/a733.slice/a733-guests.slice/a733-managed-autokvm.service\n",
+        "exe": "/usr/bin/python3.11",
+        "gid": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "namespaces": {
+          "mnt": "mnt:[4026531841]",
+          "pid": "pid:[4026531836]",
+          "user": "user:[4026531837]"
+        },
+        "pid": 6839,
+        "ppid": 4998,
+        "ticks": 61252,
+        "tracer": 6842,
+        "uid": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "parent_identity_after": {
+        "argv": [
+          "/usr/bin/python3",
+          "-I",
+          "-B",
+          "/usr/lib/a733-tools/scripts/run-managed-guest.py",
+          "autokvm"
+        ],
+        "cgroup": "0::/a733.slice/a733-guests.slice/a733-managed-autokvm.service\n",
+        "exe": "/usr/bin/python3.11",
+        "gid": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "namespaces": {
+          "mnt": "mnt:[4026531841]",
+          "pid": "pid:[4026531836]",
+          "user": "user:[4026531837]"
+        },
+        "pid": 4998,
+        "ppid": 1,
+        "ticks": 52382,
+        "tracer": 0,
+        "uid": [
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    "bytes": 2767,
+    "dropped_bytes": 0,
+    "errors": [],
+    "sigint_attempted": false,
+    "tracer_returncode": 0,
+    "descendant_detachment_verified": true,
+    "observed_tracees": [
+      [
+        6839,
+        61252,
+        "detached",
+        0,
+        "Z"
+      ]
+    ],
+    "cleanup_custody_retained": false
+  },
+  "observed_error": {
+    "text": "launch-managed-guest: [Errno 13] Permission denied: 'orangepi-hypervisor'\n",
+    "bytes": 74,
+    "sha256": "52b3e773196892a18611931f64a2ec24284c2efc4b4f3dce9811f64331e1e45c",
+    "origin": "nonroot launch-managed-guest.py, after successful setpriv and Python exec; before QEMU exec",
+    "prior_three_untraced_console_fingerprints_match": true
+  },
+  "confirmed_packaging": {
+    "/usr/lib/orangepi-hypervisor": {
+      "uid": 0,
+      "gid": 0,
+      "mode": "0700"
+    },
+    "/usr/lib/orangepi-hypervisor/payload.json": {
+      "uid": 0,
+      "gid": 0,
+      "mode": "0600"
+    }
+  },
+  "terminal_unit": "MainPID=0\nResult=exit-code\nExecMainStatus=1\nActiveState=failed\nSubState=failed\n",
+  "quarantine": {
+    "failure_sha256": "ae94142681e0cd55bbcc6498a5f4da1c756820b2dae20f0fd59c79c225f29eaa",
+    "gid": 60002,
+    "intent_sha256": null,
+    "last_boot_id": "d997b269-426c-4628-948c-e28554fbe50f",
+    "last_completed_intent_sha256": null,
+    "manifest_sha256": "a46ae94c58289808f3b8f9848a9762ce68cd0fa6b1d28383821b6199135d8701",
+    "name": "autokvm",
+    "previous_head_sha256": "361c1f5e74cd682705c4715f2ffddac10074ce7ccd0f284803f95d3922046649",
+    "profile": "a733-guest-head-v1",
+    "run_id": "6cb6bdab-8a30-4905-92e4-4a14011bd5b1",
+    "schema": 1,
+    "sequence": 2,
+    "status": "quarantined",
+    "storage": {
+      "guest_uuid": "298b281a-d10e-44eb-bdb9-285e27eaafad",
+      "nvme_serial": "134807190FC700149277",
+      "state_uuid": "360dfb39-f49f-487e-b307-0bb887c854c5"
+    },
+    "uid": 60002
+  },
+  "recovery_state": {
+    "supported_disable_success": true,
+    "registry_generation": 17,
+    "enabled": false,
+    "admission_state": "open",
+    "manual_checkpoint5_manifest_unchanged": true
+  },
+  "retained_supervisor_cleanup_error": "AdmissionError(supervisor cleanup errors); not normalized away; fresh supported restore/boot required before another run",
+  "records": [
+    {
+      "path": "out/managed-ack-trace-execution-20261113-01/captured-custody.json",
+      "bytes": 65536,
+      "sha256": "15b863e8bffc9990210544c2ac516a26ab265045ac93dab7b04b3c79c71841b3"
+    },
+    {
+      "path": "out/managed-ack-trace-execution-20261113-01/captured-trace.log",
+      "bytes": 2767,
+      "sha256": "b59e6abf88133598ee33f229fdcbb0101d0df678ba5788530f79714d40a9c595"
+    },
+    {
+      "path": "out/managed-ack-trace-execution-20261113-01/managed-terminal-failure.json",
+      "bytes": 29640,
+      "sha256": "47c82f714be2a77f54c7c6927114b3ade2a93debe69506ba67063b0c48655889"
+    },
+    {
+      "path": "out/managed-ack-trace-execution-20261113-01/after-failure-state.json",
+      "bytes": 20532,
+      "sha256": "0af18f00d7cf508d2b132b089841c8df02a090cc15bc1c0a9bf8bf99d65c57ba"
+    },
+    {
+      "path": "out/managed-ack-trace-execution-20261113-01/capture-records.tar",
+      "bytes": 92160,
+      "sha256": "8ca4cb2dfa57f5a5146507a2d9c98d756bfb41df64d8fe297c838f617ff7d6a5"
+    },
+    {
+      "path": "out/managed-ack-trace-execution-20261113-01/terminal-launch-and-disable.tar",
+      "bytes": 378880,
+      "sha256": "df361216d9c0fc909eb162850fcf43375f5a01fd3c34d3e3f60bd735e20d0fe4"
+    }
+  ],
+  "off_device_custody": {
+    "path": "/home/drew/orange-pi-4-pro-build/managed-ack-trace-execution-20261113-01/terminal-launch-and-disable.tar",
+    "bytes": 378880,
+    "sha256": "df361216d9c0fc909eb162850fcf43375f5a01fd3c34d3e3f60bd735e20d0fe4",
+    "fsynced": true,
+    "readback": true
+  },
+  "managed_KVM_credit": false,
+  "hardware_acceptance": false,
+  "next_action": "Independently review deterministic public-marker permissions, validate/build new roots, preserve rollback A and restore disabled fixture before untraced hardware trial.",
+  "source_repair": {
+    "directory_mode": "0755",
+    "marker_mode": "0644",
+    "root_ownership_preserved": true,
+    "no_live_root_bypass": true,
+    "permission_policy": "public authenticated provenance readable, root-only writes",
+    "files": [
+      {
+        "path": "build/host-payload.py",
+        "bytes": 31042,
+        "sha256": "d21b8ad214c490c0fd346c016ac1799df0ff99959d1d8f5bc8e36dafc470dd59"
+      },
+      {
+        "path": "tests/test_host_payload.py",
+        "bytes": 35915,
+        "sha256": "5cd94184e2d61694f332d58da3cb3442a3ff96f5a2d71589280182189d8c57f3"
+      }
+    ],
+    "focused_validation": {
+      "payload_tests_privileged": 30,
+      "metadata_tests": 24,
+      "real_UID60002_authentication": true,
+      "denied_mutations": 6,
+      "old_writer_umask077_reproduces_failure": true
+    },
+    "independent_review": {
+      "path": "tmp/payload-permission-review-20261113.json",
+      "bytes": 9188,
+      "sha256": "fa21d3aa322c07186d23a8721c40b2fda875799a1028c87591368d7ff278729b"
+    },
+    "status": "source reviewed; new full Ubuntu validation, construction and untraced hardware acceptance pending"
+  }
+}
