@@ -10,6 +10,12 @@ reader interoperability. **Neither new root has booted on the board.** These are
 and [3589-test combined validation](evidence/candidate-integration-validation-20261112.json)
 record the exact scope, retained verifier corrections and remaining hardware gates.
 
+An [independent third construction](evidence/independent-managed-root-reproduction-20261113.json)
+now reproduces the documented command from a fresh source/worktree, using the
+declared retained inputs. All 133 artifacts and the manifest match the table
+below; full gzip expansion and filesystem readback pass. This is independent
+operator execution on the qualified builder, with physical deployment still pending.
+
 ## Artifact identity and custody
 
 On codex, relative to `/home/drew/orange-pi-4-pro`:

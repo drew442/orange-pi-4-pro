@@ -48,6 +48,13 @@ that later installation. Fresh machine identity is intentionally installation
 specific; the same-board personalization step preserves this board's private
 identity without changing the selected root pairing.
 
+An [independent operator has also executed the managed-root construction guide](evidence/independent-managed-root-reproduction-20261113.json)
+from a fresh root-owned source checkout/worktree. All 133 artifacts, manifest and
+complete gzip expansions match; full filesystem readback and cleanup pass. This
+closes that build-procedure reproduction step with the declared retained inputs.
+Fresh outer-OS provisioning and revised physical deployment/recovery/guest
+procedure reproduction remain separate unfinished scopes.
+
 Latest complete privileged validation is **3,651 Python tests**, zero skips,
 errors or failures, plus five shell suites and five diagnostic assembly cases.
 Five TOML files parse separately on codex. The

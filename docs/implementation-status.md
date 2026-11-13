@@ -291,6 +291,12 @@ The outer 842-package inventory and historical locks remain unchanged; old 835
 archive bytes were not rehashed. Fresh outer-host provisioning remains open.
 
 Production root construction/repetition and artifact/reader verification pass.
+An [independent operator reproduced the documented root build](evidence/independent-managed-root-reproduction-20261113.json)
+from a fresh checkout/worktree using the declared retained inputs. All 133 files,
+manifest and complete gzip expansions match; full filesystem readback passes.
+This completes the build-procedure portion of independent reproduction on the
+qualified outer/frozen-inner environment. Physical procedure reproduction and
+fresh outer-OS provisioning are separate scopes.
 [Prepared B metadata](evidence/managed-candidate-deployment-preparation-20261112.json)
 has verified custody for direct sparse expansion, avoiding an extra onboard
 preparer copy/hash. The [external qualification helper](managed-boot-qualification.md)

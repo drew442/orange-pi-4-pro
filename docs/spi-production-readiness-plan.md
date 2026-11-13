@@ -26,6 +26,10 @@ remain uninstalled. Preserve these completed results and use the following order
 The external qualifier, single-attempt power helper and native SPI collector now
 pass independent software review and the integrated **3651-test** privileged
 Ubuntu run, shell suites and diagnostic cases. [Evidence](evidence/spi-collector-integration-validation-20261112.json).
+An [independent operator reproduced the documented root construction](evidence/independent-managed-root-reproduction-20261113.json)
+with fresh source/worktrees and the declared retained inputs. All 133 artifacts,
+manifest, gzip expansions and full filesystem readback match. The physical
+build/deployment/recovery/guest procedure still needs its remaining target steps.
 Their target execution remains unperformed. [Fixture deployment preparation](managed-fixture-deployment.md)
 binds exact seed/configuration inputs and CLI order; it still requires fresh live
 guards before copying anything to STATE.

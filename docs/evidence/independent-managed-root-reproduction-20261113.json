@@ -1,0 +1,96 @@
+{
+  "schema": 1,
+  "date": "2026-11-13",
+  "result": "pass: independent execution of documented root construction and readback with declared retained inputs",
+  "operator": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "medium",
+    "task": "/root/independent_root_build_reproduction"
+  },
+  "source": {
+    "commit": "2996365a11cb07deb20eb4325c90841de8ab820e",
+    "tree": "9b1c9d866b10aea352a4c950c21042ae29a8121b",
+    "tracked_files": 1103,
+    "source_freeze_sha256": "3db6ad65286f91fc271fd3632e7c1bd6691b0068cb9994788b483f6b2db9425e",
+    "verified_clean_root_owned_readonly_and_unchanged": true
+  },
+  "scope": "Independent operator; fresh root-owned source and fresh inner worktree on unchanged qualified native Ubuntu22.04 outer842 and retained frozen inner. No fresh outer OS provisioning, no ARM hardware, no physical storage writes.",
+  "tag": "independent-managed-20261113-01",
+  "tag_consumed": true,
+  "builder_base": "/var/lib/a733-independent-managed-root-reproduction-20261113-01",
+  "source_project": "/var/lib/a733-independent-managed-root-reproduction-20261113-01/project",
+  "output": "/var/lib/a733-clean-replay-20261106/host-roots-independent-managed-20261113-01/work/project/out/host-payload-independent-managed-20261113-01",
+  "terminal_units": {
+    "a733-independent-managed-root-readback-20261113-01.service": {
+      "ExecMainStatus": "0",
+      "MainPID": "0",
+      "Result": "success",
+      "SubState": "exited"
+    },
+    "a733-independent-managed-root-reproduction-20261113-01.service": {
+      "ExecMainStatus": "0",
+      "MainPID": "0",
+      "Result": "success",
+      "SubState": "exited"
+    }
+  },
+  "all_133_files_and_manifest_match": true,
+  "manifest": {
+    "bytes": 51618,
+    "sha256": "65f69d6a2f0b6346c0ca2f0257daa26836dd791918a4af795e70de730f8f424a"
+  },
+  "gzip_expansion": {
+    "A": {
+      "bytes": 4294967296,
+      "sha256": "a75cf5945c3572d4741841e9a411719bf422e6b3f533b52d7e122029156eb230"
+    },
+    "B": {
+      "bytes": 4294967296,
+      "sha256": "fe842ff05584205b4fb9f930b3620bac04155c9f751488a8fb20a0d798dbd87c"
+    }
+  },
+  "full_readback": {
+    "verifier_sha256": "80e843d499bcc2f6d299d6022dc7edf83d73842405e95b38b0f32eee72dcda30",
+    "authenticated_artifacts": 133,
+    "namespace_members_per_slot": 16415,
+    "regular_bytes_read_per_slot": 452079717,
+    "character_devices_per_slot": 8,
+    "out_of_scope_timestamp_fields": [
+      "atime",
+      "ctime",
+      "crtime"
+    ],
+    "note": "Earlier complete artifact review established all normalized timestamp fields; new complete raw bytes match that canonical artifact."
+  },
+  "producer_receipt": {
+    "bytes": 259587,
+    "sha256": "4b5a8945d305a8492e75f53f8690edc6a14e96d54140734c2182960c24d4665c"
+  },
+  "readback_receipt": {
+    "bytes": 4023,
+    "sha256": "c06f6c57c2553ba7823d4fb10113095224cf94395461eaa5a192ff9a2b933b1d"
+  },
+  "resource_minima": {
+    "available_memory_bytes": 7230328832,
+    "free_bytes": 21573091328
+  },
+  "host_inventory_unchanged": true,
+  "mapped_processes_final": [],
+  "phase_mounts_final": [],
+  "custody": {
+    "native_archive": "out/independent-root-build-reproduction-20261113-01/receipts.tar.gz",
+    "builder_archive": "/var/lib/a733-independent-managed-root-reproduction-20261113-01/receipts.tar.gz",
+    "bytes": 5061247,
+    "sha256": "a36fb0f57327ee59daf2ac7e6c04b73ee96cad8a4886d42db5665244ac8af469",
+    "verified_both_hosts": true,
+    "report_sha256": "8b6dd889446158d49c9ac1f877814dfaa9f7b9c20c7940e1dd636eb9b49050b9"
+  },
+  "retained_operator_preflight_refusal": "An initial operator assertion compared four-column inventory with a three-column lock. Corrected to the unchanged production tuple validator before the first launcher invocation; no producer guard altered and no producer failure.",
+  "hardware_acceptance": false,
+  "fresh_outer_OS_provisioning": false,
+  "remaining": [
+    "Revised physical SPI recovery/reinstall",
+    "Matched B deployment and actual managed KVM/backup/restore/rollback/return",
+    "Final SPI boot counts and independent reproduction of the physical deployment/recovery/guest procedure"
+  ]
+}
