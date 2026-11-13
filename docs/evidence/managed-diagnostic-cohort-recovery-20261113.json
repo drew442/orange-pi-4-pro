@@ -1,0 +1,95 @@
+{
+  "schema": 1,
+  "date_utc": "2026-11-13",
+  "classification": "actual interrupted-helper recovery, corrected supported restoration and fresh-boot admission proof; no managed KVM credit",
+  "root_source_commit": "f3496f5ff1b3629d5333d26725b9f5494ace9d25",
+  "first_attempt": {
+    "unit": "a733-managed-trace-initial-restore-20261113-01.service",
+    "result": "helper stopped itself through reserved a733-managed-*.service maintenance wildcard",
+    "coordinator_and_initial_review_missed_namespace_collision": true,
+    "data_commit": false,
+    "new_restore_transaction_created": false,
+    "registry_generation_unchanged": 8,
+    "quarantined_head_unchanged": "5fd8c4b2937240aab79eb95e560516cdfa6c7d67f728e21ca176a60850064d63",
+    "gate": "closed/shutdown",
+    "normal_recovery_boot": "9cc13257-5774-489b-8c3f-fcb78fa1d942",
+    "runtime_permits_cleared": true,
+    "manually_reopened_gate": false,
+    "private_census": {
+      "bytes": 53965,
+      "sha256": "9a67dd4172de42f472907f6844a3de25f7c85070c3ed29acf44876945a28ee70"
+    }
+  },
+  "corrected_attempt": {
+    "unit": "a733-trace-fixture-restore-20261113-02.service",
+    "transaction_id": "f45cc1a4-ff22-4064-8b89-fc6dc31fa87b",
+    "data_committed": true,
+    "success": true,
+    "cleanup_uncertain": false,
+    "close_errors": [],
+    "fresh_boot_required": true,
+    "registry_generation": 9,
+    "enabled": false,
+    "retained_old_payload": "/run/a733-guests/.a733-restores/f45cc1a4-ff22-4064-8b89-fc6dc31fa87b/old-payload",
+    "retained_old_lifecycle": "/run/a733-guests/.a733-restores/f45cc1a4-ff22-4064-8b89-fc6dc31fa87b/old-lifecycle",
+    "source_archive": "reconstructed initial baseline, independently reviewed earlier; not a successful managed-backup export",
+    "source_archive_sha256": "fdb5b5386cd3a56634307c3d3ab45396e7eb82e0a0e5be9c805a4ff6d803a491",
+    "complete_receipt": {
+      "bytes": 50087,
+      "sha256": "3c37303ecbbec017bb81b1d9184147b386c18212ff444182747bb5e60850a9e2"
+    }
+  },
+  "post_restore_boot": {
+    "boot_id": "36875488-cddf-42e3-b038-7dae72cfd75e",
+    "registry_generation": 9,
+    "enabled": false,
+    "admission": "open",
+    "head": "ready sequence0 initial manifest a46ae94c58289808f3b8f9848a9762ce68cd0fa6b1d28383821b6199135d8701",
+    "runtime_authenticated": {
+      "maintenance_files": 85,
+      "management_files": 4,
+      "guest_boot_files": 2
+    },
+    "no_guest_queued": true,
+    "SD_absent": true,
+    "root_read_only": true,
+    "inventory": {
+      "bytes": 103018,
+      "sha256": "aeac73966ba366f1be8b6a7b2d609f33c1aead83ae1cc09f379fae39ecd44d3f"
+    },
+    "state": {
+      "bytes": 19996,
+      "sha256": "32ce6db220dd02f391607a361da511e2f99d1e91435a763e7da3b2c7f47a3dfd"
+    },
+    "no_guest": {
+      "bytes": 239,
+      "sha256": "4b70ae0481100fe886c1fadd6a37ca1dd2f18c0fe948e07625c1d7f76a22f0f6"
+    },
+    "UART": {
+      "bytes": 116167,
+      "sha256": "a4a6fb8a7cd91a9ad25394682c3574f9f6845d6b351d6a816a1134fde5968faf"
+    }
+  },
+  "manual_CP5_preserved": true,
+  "preserved_normalized_A": true,
+  "SPI_programming": false,
+  "off_device_preboot_custody": [
+    {
+      "path": "/home/drew/orange-pi-4-pro-build/managed-trace-run-20261113-01/pre-interrupted-B-reboot-records.tar",
+      "bytes": 235520,
+      "sha256": "84ea0901796fa152a8cf770320cbeb78a0be5ba11379798d6a30cd43d5e79748",
+      "fsynced": true,
+      "readback": true
+    },
+    {
+      "path": "/home/drew/orange-pi-4-pro-build/managed-trace-run-20261113-01/restore-attempt-02/pre-restored-B-reboot-records.tar",
+      "bytes": 235520,
+      "sha256": "554d41573c854e8789c7e235bb49032fb91b0024dc8f3e3d12f64b7fe5211c34",
+      "fsynced": true,
+      "readback": true
+    }
+  ],
+  "review": "tmp/managed-trace-restore-review-20261113.json",
+  "managed_KVM_credit": false,
+  "final_boot_series_credit": false
+}

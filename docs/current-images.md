@@ -1,15 +1,15 @@
 # Current images for this board
 
 The board is running **F349 B at 192.168.1.118 from SPI/NVMe with SD removed**,
-boot `395508c7-8ec6-4a90-add6-5b46a93b646c`, strict SSH host-key alias
+boot `36875488-cddf-42e3-b038-7dae72cfd75e`, strict SSH host-key alias
 `192.168.1.116`. Keep the known recovery SD unchanged and off-device;
 no operator flashing is needed now.
 
 F349 passes 3717 privileged tests, one construction and independent complete
 filesystem/reader checks. Its inactive-B write, selection and authenticated boot
 pass. The first managed launch completed permit publication but the child exited1
-before QMP binding. Quarantine is durable and the fixture is disabled at registry
-generation8. Normalized A, BOOT and manual CP5 remain preserved.
+before QMP binding. The failed cohort is retained and the fixture was restored to ready sequence0,
+disabled at registry generation9, with fresh-boot admission recovery passing. Normalized A, BOOT and manual CP5 remain preserved.
 **Managed production operation remains unqualified.**
 [Deployment](evidence/managed-permit-B-deployment-20261113.json),
 [launch failure](evidence/managed-permit-launch-failure-20261113.json),

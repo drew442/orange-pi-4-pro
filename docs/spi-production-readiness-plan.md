@@ -28,7 +28,8 @@ combined external validation now passes 3730 unit tests plus all shell/diagnosti
 suites. Actual completion/collector execution remains pending.
 [Completion procedure](managed-fixture-completion.md).
 
-The disposable guest is disabled at generation 8 after durable quarantine.
+The disposable guest is restored ready0 and disabled at generation 9 after
+supported recovery and a fresh boot. The failed cohort remains retained.
 F349 completed permit publication, then its child exited1 before QMP binding.
 Retain [the failure evidence](evidence/managed-permit-launch-failure-20261113.json).
 Do not re-enroll it or overwrite retained failed cohorts. Its first successful

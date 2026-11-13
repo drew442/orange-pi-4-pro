@@ -5,12 +5,14 @@ qualification remains incomplete.** Verified F349 B now boots with the SD remove
 as the rollback root. Its permit-barrier and bound-stop
 changes pass combined validation. The first managed trial passed permit publication
 but its child exited with status 1 before QMP binding; quarantine and disable succeeded. No managed KVM execution or final boot-series
-credit is claimed. No operator action is currently needed.
+credit is claimed. No operator action is currently needed. A pinned, separately reviewed RAM-only
+trace is being prepared to capture the unresolved child error; traced execution
+will receive no production acceptance credit.
 
 ## Current board and retained recovery
 
 - SSH: `root@192.168.1.118`, strict original host-key alias `192.168.1.116`.
-  Boot `395508c7-8ec6-4a90-add6-5b46a93b646c`; F349 B p3 is read-only.
+  Boot `36875488-cddf-42e3-b038-7dae72cfd75e`; F349 B p3 is read-only.
   Its complete 85-tool/four-management-file/two-boot-unit cohort authenticates.
   NTP passes; p5 is mounted and admission opened after both preparation services
   completed. Normalized A p2 remains preserved.
@@ -58,9 +60,13 @@ failure remains unresolved; retain continuous UART during qualification.
 `/var/lib/a733-checkpoint5-backup-20261113-01` on the builder. Preserve these and
 [normalized A](evidence/normalized-a-compatibility-custody-20261112.json).
 The unused original port80 cohort and the later failed port8080 cohort are both
-retained. The active `autokvm` is disabled at generation 8, initial manifest
-`a46ae94c…5d8701`, quarantined after admitted sequence 1. The new failure
-record and prior failed cohorts remain retained; no managed KVM credit.
+retained. The active `autokvm` is restored to initial ready sequence 0, disabled at
+generation 9, manifest `a46ae94c…5d8701`. Fresh boot
+`36875488…fd75e` passes open admission and queues no guest. Both failed cohorts
+remain retained. A helper-name collision interrupted the first recovery attempt
+before any restore transaction; the corrected helper committed transaction
+`f45cc1a4…fa87b` with clean cleanup.
+[Recovery and correction](evidence/managed-diagnostic-cohort-recovery-20261113.json).
 [Current launch failure](evidence/managed-permit-launch-failure-20261113.json).
 
 ## Current source and build evidence

@@ -1,6 +1,6 @@
 # Restore a managed guest
 
-This command is installed on the `4334a22` host. The first supported restoration
+This command is installed on F349 and the earlier `4334a22` host. The first supported restoration
 of the disposable quarantined fixture committed successfully and retained the old
 payload/lifecycle; fresh-boot recovery and later managed execution remain separate
 gates. Use the matched root and deployment guide. [Status](implementation-status.md)
@@ -38,6 +38,13 @@ Stop and checkpoint any manually managed VM using its existing procedure.
 Restore itself stops managed supervisors and obtains shutdown exclusion; an
 active manual/shared holder causes refusal. Managed stopping can checkpoint
 legitimate guest changes before the requested older archive is restored.
+
+Run in the foreground or use a helper unit outside `a733-managed-*.service`.
+That namespace is reserved for guest supervisors: maintenance stops every matching
+unit, including a mistakenly named restore helper. For example, use
+`a733-trace-fixture-restore-20261113-02.service` for a diagnostic helper.
+A disappeared unit or default `Result=success` with `LoadState=not-found` does
+not prove a restore; require its final data-commit receipt.
 
 Run as root, replacing the path and both trusted hashes:
 
