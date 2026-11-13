@@ -152,7 +152,7 @@ class StoppedRun:
         require(head['status'] == 'stopping' and self.run.head_sha256 == self._head_pin,
                 'stopping authority differs')
         self.permit.recheck()
-        owner._check_paths()
+        owner._check_paths(terminal=True)
         require(self.permit.data == self._permit_data and self.witness.normal_zero and
                 self.witness.raw_status == self._raw_status == owner._raw_status and
                 self.channel.clean_shutdown and self.channel.transcript == self._transcript and
@@ -199,6 +199,8 @@ class Supervisor:
         self.pid = self.start_ticks = None
         self.witness = self.channel = self.permit = self.console = self.connection = None
         self._socket_pin = None
+        self._connection_pin = self._channel_binding = self._qmp_directory_pin = None
+        self._terminal_ready = self._terminal_leaf_absent = False
         self._outcome = None
         self._outcome_token = object()
         self.receipt = dict(stage='new', run_id=run.run_id, errors=[], publications=[],
@@ -235,7 +237,41 @@ class Supervisor:
         self._paths.append((path, held))
         return dict(path=path, bytes=held.info.st_size, sha256=digest.hexdigest())
 
-    def _check_paths(self):
+    def _check_terminal_binding(self):
+        """Authenticate retained EOF evidence without consulting a reaped PID."""
+        self._owner()
+        require(self._terminal_ready and not self._failed and not self._wait_lost and
+                not self.receipt['forced'] and self._raw_status == 0 and
+                isinstance(self.witness, PROCESS.ChildWitness) and
+                self.witness.normal_zero and self.witness.raw_status == self._raw_status,
+                'owned normal-zero terminal child required')
+        require(self._socket_pin is not None and self._channel_binding is not None and
+                all(actual is pinned for actual, pinned in zip(
+                    (self.channel, self.witness, self.connection), self._channel_binding)) and
+                isinstance(self.channel, TRANSPORT.Channel) and
+                self.channel._socket is self.connection and self.channel._witness is self.witness and
+                self.channel.clean_shutdown and self.console.eof and
+                not self.console.thread.is_alive(), 'retained terminal channel required')
+        self.console.check()
+        directory_fd, directory_inode = self._qmp_directory_pin
+        require(self.qmp_directory == directory_fd and
+                ENROLL.inode(os.fstat(directory_fd)) == directory_inode,
+                'retained QMP directory replaced')
+        connection, fd, info, peer = self._connection_pin
+        require(self.connection is connection and connection.fileno() == fd and
+                self._connection_identity(connection) == (info, peer),
+                'retained QMP connection replaced')
+
+    @staticmethod
+    def _connection_identity(connection):
+        info = os.fstat(connection.fileno())
+        require(stat.S_ISSOCK(info.st_mode), 'connected QMP descriptor is not a socket')
+        return ((info.st_dev, info.st_ino, info.st_uid, info.st_gid, info.st_mode),
+                connection.getsockopt(socket.SOL_SOCKET, socket.SO_PEERCRED, 12))
+
+    def _check_paths(self, *, terminal=False):
+        if terminal:
+            self._check_terminal_binding()
         self.admission.recheck()
         for path, held in self._paths:
             held.recheck()
@@ -246,7 +282,14 @@ class Supervisor:
                     'QMP directory replaced')
 
         if self._socket_pin is not None:
-            info = os.stat('qmp.sock', dir_fd=self.qmp_directory, follow_symlinks=False)
+            try:
+                info = os.stat('qmp.sock', dir_fd=self.qmp_directory, follow_symlinks=False)
+            except FileNotFoundError:
+                if not terminal:
+                    raise
+                self._terminal_leaf_absent = True
+                return
+            require(not self._terminal_leaf_absent, 'terminal QMP socket reappeared')
             require((info.st_dev, info.st_ino, info.st_uid, info.st_gid, info.st_mode) ==
                     self._socket_pin, 'bound QMP socket replaced')
 
@@ -446,6 +489,9 @@ class Supervisor:
                 self._check_paths()
                 self.witness.verify_qmp_peer(connection)
                 self.connection = connection
+                self._qmp_directory_pin = (self.qmp_directory, ENROLL.inode(os.fstat(self.qmp_directory)))
+                self._connection_pin = (connection, connection.fileno(),
+                                        *self._connection_identity(connection))
                 self._stack.callback(connection.close)
                 return
             except OSError as error:
@@ -470,6 +516,7 @@ class Supervisor:
             self.receipt['stage'] = 'qmp-connect'
             self._connect()
             self.channel = TRANSPORT.Channel(self.connection, self.witness, self.run.run_id)
+            self._channel_binding = (self.channel, self.witness, self.connection)
             self.receipt['stage'] = 'qmp-paused-handshake'
             self.channel.greeting()
             self.channel.command('qmp_capabilities')
@@ -541,6 +588,17 @@ class Supervisor:
             time.sleep(min(0.02, max(0, deadline - time.monotonic())))
         return self._raw_status
 
+    def _finish_shutdown(self):
+        self.receipt['stage'] = 'raw-exit'
+        self._wait_exit(EXIT_TIMEOUT)
+        self.receipt['stage'] = 'qmp-eof'
+        self.channel.finish()
+        self.console.join(eof=True)
+        require(self.channel.clean_shutdown and self.witness.normal_zero,
+                'guest-owned QMP shutdown and normal zero raw exit required')
+        self._terminal_ready = True
+        self._check_terminal_binding()
+
     def stop(self):
         self._owner()
         if self._outcome is not None:
@@ -550,29 +608,30 @@ class Supervisor:
         try:
             self.receipt['stage'] = 'stop-observation'
             self.poll()  # Consume already readable self-shutdown before stop issuance.
+            observed_shutdown = self.channel.shutdown_message is not None
+            if observed_shutdown:
+                # QEMU may unlink its listening pathname before we observe exit.
+                # Collect every terminal proof before relaxing that leaf alone.
+                self._finish_shutdown()
             self.permit.recheck()
-            self._check_paths()
+            if observed_shutdown:
+                self._check_paths(terminal=True)
+            else:
+                self._check_paths()
             require(self.run.recheck()['status'] == 'running', 'running authority required')
             self.receipt['stage'] = 'mark-stopping'
             self.receipt['stopping'] = self.run.mark_stopping()
-            # Authority checks and durable publication precede the guest's
-            # shared command/event response budget.
-            deadline = time.monotonic() + GRACEFUL_TIMEOUT
-            if self.channel.shutdown_message is None:
+            if not observed_shutdown:
+                # Durable stopping publication precedes the fresh shared budget.
+                deadline = time.monotonic() + GRACEFUL_TIMEOUT
                 self.receipt['stage'] = 'system-powerdown'
                 self.channel.command('system_powerdown', timeout=min(10, max(0.001, deadline - time.monotonic())))
-            self.receipt['stage'] = 'shutdown-observation'
-            remaining = deadline - time.monotonic()
-            require(remaining > 0, 'graceful shutdown deadline exceeded')
-            self.channel.pump(timeout=min(60, remaining))
-            self.console.check()
-            self.receipt['stage'] = 'raw-exit'
-            self._wait_exit(EXIT_TIMEOUT)
-            self.receipt['stage'] = 'qmp-eof'
-            self.channel.finish()
-            self.console.join(eof=True)
-            require(self.channel.clean_shutdown and self.witness.normal_zero,
-                    'guest-owned QMP shutdown and normal zero raw exit required')
+                self.receipt['stage'] = 'shutdown-observation'
+                remaining = deadline - time.monotonic()
+                require(remaining > 0, 'graceful shutdown deadline exceeded')
+                self.channel.pump(timeout=min(60, remaining))
+                self.console.check()
+                self._finish_shutdown()
             self._stopped = True
             self._outcome = StoppedRun(self, self._outcome_token)
             self.receipt['stage'] = 'stopped'

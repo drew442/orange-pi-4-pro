@@ -1,0 +1,47 @@
+{
+  "source_commit": "5966bdda797e333d01222f44f32bfaa6b5710052",
+  "source_tree": "af5604e49281f9a228a9b05e5f7b401612aad6fe",
+  "source_locked_files": 1184,
+  "terminal": {
+    "RuntimeMaxUSec": "8h",
+    "MainPID": "0",
+    "Result": "success",
+    "ExecMainStatus": "0",
+    "CPUQuotaPerSecUSec": "2s",
+    "MemoryMax": "3221225472",
+    "UMask": "0022",
+    "SubState": "exited"
+  },
+  "footers": [
+    [
+      "3737",
+      "1214.521s",
+      "OK"
+    ],
+    [
+      "5",
+      "6.030s",
+      "OK"
+    ]
+  ],
+  "shell_suites": [
+    "test-diagnostic-initramfs.sh",
+    "test-guest-fixture.sh",
+    "test-host-init.sh",
+    "test-host-storage-resolver.sh",
+    "test-host-userspace.sh"
+  ],
+  "source_checks": 2,
+  "outer_package_count": 849,
+  "outer_three_field_sha256": "b34b70a879cbbf75f818708275c57ef0aef3ae635b9ae71a8005e2b29a8490b8",
+  "outer_four_field_sha256": "c87cbf467e11deab2c27fd350b1eb667b85f9a06b5c77477db562a5b7c257949",
+  "min_free_bytes": 16651247616,
+  "min_MemAvailable_bytes": 6750199808,
+  "hardware_acceptance": false,
+  "evidence_tar": {
+    "bytes": 358400,
+    "sha256": "bc09cbd4e1f7a3ea905b2a346b741569970e70beb82da4b3345313a229f8f6f7",
+    "fsynced_readback_both_hosts": true
+  },
+  "physical_acceptance": false
+}

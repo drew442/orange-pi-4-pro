@@ -11,11 +11,14 @@ The independently reviewed timer move after `mark_stopping` is frozen at
 shell, five diagnostic; 1179 source locks and exact849 package inventory
 unchanged). One new shutdown-budget construction and independent artifact verification pass:
 133 hashes, two gzip/raw comparisons, both filesystems and five readers. Inactive-B installation/readback and authenticated physical boot pass; actual
-managed shutdown/checkpoint/restart remain pending.
+guest-owned shutdown and raw exit0 are observed; terminal socket-path validation
+then fails and quarantines before checkpoint. Managed checkpoint/restart remain pending.
 [Deployment](evidence/shutdown-budget-B-deployment-20261113.json).
 [New artifacts](evidence/shutdown-budget-root-trial-and-artifact-review-20261113.json).
-External helper pins pass independent data-only review and 84 privileged focused
-checks; fresh combined validation is pending. These four helpers are outside the
+External helper pins pass independent data-only review,84 privileged focused
+checks and fresh combined validation (3737 unit/five shell/five diagnostic,
+zero skips/failures,1184 source locks and exact849 inventory unchanged).
+[Helper validation](evidence/shutdown-collector-combined-validation-20261113.json). These four helpers are outside the
 packaged 85-file runtime. [Binding](evidence/shutdown-artifact-helper-pin-binding-20261113.json).
 Final managed warm/cold counts are **0/0**; release remains pending.
 [Combined validation](evidence/shutdown-budget-combined-validation-20261113.json),
@@ -28,8 +31,12 @@ Final managed warm/cold counts are **0/0**; release remains pending.
   Running boot `14d3fd72-4cbe-4b70-96fe-6ade66b30ace`; corrected B p3 is
   read-only. Complete 85-tool/four-management/two-boot-unit authentication and NTP
   pass. Actual UID 60002 native launcher metadata authentication passes. The
-  disposable guest is enabled at generation 22 and its explicit start is queued;
-  actual execution and shutdown acceptance are still being collected.
+  disposable guest is now disabled at generation23, with quarantined head4.
+  Actual KVM CPU/disk0→1/HTTP and KVM_RUN pass. QMP guest-owned shutdown and
+  unforced raw exit0 pass observation; post-exit path validation rejects missing
+  `qmp.sock` before checkpoint. Independent native reproduction confirms the
+  cause; terminal-path repair and another validated root trial are in progress.
+  [Failure](evidence/managed-guest-shutdown-and-terminal-socket-failure-20261113.json).
 - Preserve A, manual `firstkvm` and CP5, all failed cohorts, recovery SD and SPI
   backups. CP5 manifest `88c1ea17…9c946`, disk `2d06d539…5b66`; verified backup
   is on codex and builder. Normalized A custody details are in
@@ -104,8 +111,9 @@ clearance. [Source inventory](toolchain-sources.md),
 
 Follow the [production readiness plan](spi-production-readiness-plan.md):
 
-1. Collect actual managed KVM and native shutdown/checkpoint/restart evidence
-   on the installed shutdown-budget B. Preserve A, CP5 and all failed cohorts.
+1. Finish the bounded terminal socket-path repair, independent review/full
+   validation/fresh artifact checks, then deploy and prove stopped outcome,
+   checkpoint and restart on hardware. Preserve A, CP5 and all failed cohorts.
 2. On hardware, prove guest-owned power-key shutdown, durable checkpoint,
    explicit restart, and separately automatic startup using an actual KVM guest.
 3. Exercise coherent completed-cohort backup/export/restore,

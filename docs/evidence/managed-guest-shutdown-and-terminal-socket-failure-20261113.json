@@ -1,0 +1,94 @@
+{
+  "date": "2026-11-13",
+  "source_commit": "fb29af4a7ee3d21ff6254058a445cb5e3cc4b998",
+  "boot_id": "14d3fd72-4cbe-4b70-96fe-6ade66b30ace",
+  "run_id": "e8d846b2-8540-4294-acb4-1446f18e921d",
+  "managed_execution": {
+    "UID": 60002,
+    "cpu_disk_HTTP": "PASS",
+    "counter_previous": 0,
+    "counter_current": 1,
+    "KVM_RUN_observed": true,
+    "vcpu_tid": 7547,
+    "ioctl": "0xae80"
+  },
+  "shutdown_observation": {
+    "powerdown_ack": true,
+    "guest_owned_SHUTDOWN": {
+      "data": {
+        "guest": true,
+        "reason": "guest-shutdown"
+      },
+      "event": "SHUTDOWN",
+      "timestamp": {
+        "microseconds": 417554,
+        "seconds": 1794611963
+      }
+    },
+    "raw_wait_status": 0,
+    "forced": false,
+    "console_EOF": true,
+    "supervised_stopped_outcome_accepted": false
+  },
+  "failure": {
+    "stage": "qmp-eof label retained through StoppedRun construction",
+    "error": "FileNotFoundError: qmp.sock",
+    "diagnosis": "StoppedRun.recheck applies live named-socket requirement after successful guest shutdown and EOF; native real-fork unlink-on-exit surrogate reproduces exact failure. Transport finish itself does not stat paths.",
+    "independent_review": "tmp/qmp-unlink-eof-review-20261113/review.md",
+    "head": "quarantined sequence4",
+    "head_sha256": "3e41c34104d9243bf0ab636b3edc50d38706d2082dfa0f0ec4272540e1e79ccf",
+    "failure_sha256": "8490e599c72b33c331671cd658919eb29a08e966b0b8ed8fac455dde5f92c123",
+    "checkpoint_or_restart_accepted": false
+  },
+  "disabled_after_failure": {
+    "generation": 23,
+    "enabled": false,
+    "registry_sha256": "31a8016280aa5eab090f0c951465df023fafd943a0c17430747b27cb1142d443"
+  },
+  "preserved": [
+    "failed cohort",
+    "manual checkpoint5",
+    "normalized A",
+    "protected BOOT",
+    "recovery SD",
+    "SPI backups"
+  ],
+  "new_repair": "pending independent review, full validation, fresh root and actual trial",
+  "production_acceptance": false,
+  "managed_final_boot_counts": {
+    "warm": 0,
+    "cold": 0
+  },
+  "evidence": [
+    {
+      "path": "out/managed-shutdown-budget-deployment-20261113-01/live-managed-KVM.json",
+      "bytes": 4336,
+      "sha256": "4a764db2fdd843008715d651618bdb17511a14750860b3e17ed264334d72a26f"
+    },
+    {
+      "path": "out/managed-shutdown-budget-deployment-20261113-01/live-KVM-task-syscalls.json",
+      "bytes": 499,
+      "sha256": "e1b5772081b2a559d570a2bcc2257f9f90a4dea25338bed3f28a28c0c7f8ea3b"
+    },
+    {
+      "path": "out/managed-shutdown-budget-deployment-20261113-01/managed-bound-stop.stdout",
+      "bytes": 1532,
+      "sha256": "008a9e7bc462d07b5e606aee47b074d6121e38afd49ecaae1e79ddc0a2c8e0e7"
+    },
+    {
+      "path": "out/managed-shutdown-budget-deployment-20261113-01/native-stop-result.json",
+      "bytes": 35087,
+      "sha256": "81dcd9efcf66bce8bc6ef2c3f92adceff0c7af1ad5fffae6ae1b478da471a7e3"
+    },
+    {
+      "path": "out/managed-shutdown-budget-deployment-20261113-01/managed-stop-failure-complete.json",
+      "bytes": 47943,
+      "sha256": "c27504a7e0c497e97401002bce34e33cd0e670a02f5cc1e87efeef9333b328fe"
+    },
+    {
+      "path": "out/managed-shutdown-budget-deployment-20261113-01/managed-disable.stdout",
+      "bytes": 1372,
+      "sha256": "06503c75f97c209f58738e7327eaec8b55bb6c74e62f38afebd9d6b135599c54"
+    }
+  ]
+}

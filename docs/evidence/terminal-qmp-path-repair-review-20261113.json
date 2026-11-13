@@ -1,0 +1,37 @@
+{
+  "date": "2026-11-13",
+  "change": "Permit absent terminal QMP leaf only after complete retained shutdown proof",
+  "source": {
+    "path": "scripts/managed-guest-supervisor.py",
+    "sha256": "38eade801f578d750c16fb22b2d5519b22f70104c1e8f9af6fe0263bb61fb7f1"
+  },
+  "tests": {
+    "path": "tests/test_managed_guest_supervisor.py",
+    "sha256": "0fd71ff9272953495ac4c26940d86f7a35634c8467d5914ea49b8a6e39569090",
+    "root_supervisor_pass": 40,
+    "QMP_pass": 35,
+    "process_pass": 17,
+    "root_skips": 0
+  },
+  "independent_review": {
+    "model": "gpt-6.1-sol",
+    "effort": "high",
+    "verdict": "GO for integration, no blocking findings",
+    "bounded_tests_pass": 3,
+    "old_path_checker_mutation": "normal and self-shutdown unlink regressions reproduce ENOENT",
+    "report_sha256": "f7ce477d8a8f2d1618c56cd5e03968e241a48dc8e63602d0a1d94c35395e4852"
+  },
+  "invariants": [
+    "strict default live checks",
+    "owned normal-zero, no forced/lost wait",
+    "validated guest-owned QMP EOF plus joined console EOF",
+    "same channel/witness/connection FD/inode/SO_PEERCRED and directory identity",
+    "unchanged admission, root inputs and ancestor bindings",
+    "only terminal qmp.sock leaf may be absent; replacements and reappearance rejected",
+    "self-shutdown preserves permit/running authority before stopping publication",
+    "normal command grace starts after durable stopping publication"
+  ],
+  "full_validation": "pending",
+  "fresh_root_and_hardware_checkpoint_restart": "pending",
+  "production_acceptance": false
+}

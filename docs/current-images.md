@@ -4,8 +4,11 @@ The board is running **shutdown-repaired `fb29af4` B at 192.168.1.118 from
 SPI/NVMe with SD removed**, boot `14d3fd72-4cbe-4b70-96fe-6ade66b30ace`, strict
 SSH alias `192.168.1.116`. Installation/readback and complete 85+4+2 runtime
 checks pass; NTP and actual UID 60002 metadata authentication pass. The disposable
-guest is enabled at generation 22 and start is queued. Actual managed shutdown,
-checkpoint/restart, automatic startup and final boot series remain unqualified.
+guest ran on real KVM with CPU/disk/HTTP, then guest-owned SHUTDOWN/raw exit0 was
+observed. Missing post-exit `qmp.sock` triggers quarantine before checkpoint; the
+guest is now disabled at generation23. Terminal-path repair/new root trial,
+checkpoint/restart, automatic startup and final boot series remain pending.
+[New failure](evidence/managed-guest-shutdown-and-terminal-socket-failure-20261113.json).
 No operator flashing is needed. Keep normalized A, the recovery SD and all
 failure/CP5/SPI backups.
 [Deployment](evidence/shutdown-budget-B-deployment-20261113.json),

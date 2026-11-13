@@ -1,6 +1,8 @@
 """Native fork/UNIX/QMP plumbing with mocked host authority, never QEMU/KVM.
 
-Fixtures deliberately replace A733 storage/root/credentials and executable checks.
+Fixtures replace A733 storage, root inputs, credentials and executable checks.
+The production pathname checker runs; privileged cases also pin real tmpfs
+directory ownership/mode and ancestor identity.
 The real fork barrier, FD inheritance, UNIX peer PID, QMP parser/commands, console
 collector, raw wait, timeouts and forced-child cleanup execute on the host.
 """
@@ -165,15 +167,19 @@ class NativeSupervisor(S.Supervisor):
             super().__init__(run)
 
     def _prepare(self):
+        parent = self._own_fd(os.open(str(Path(self.folder).parent), os.O_RDONLY | os.O_DIRECTORY))
         self.qmp_directory = self._own_fd(os.open(self.folder, os.O_RDONLY | os.O_DIRECTORY))
+        if os.geteuid() == 0:
+            pin = self._directory(self.qmp_directory, os.getgid(), 0o700)
+            self._edges.append((parent, Path(self.folder).name, self.qmp_directory,
+                                pin, os.getgid(), 0o700))
         self.payload_pin = 'f' * 64
         self.qemu_pin = dict(path=S.QEMU, bytes=123, sha256='0' * 64)
 
-    def _check_paths(self):
-        self.run.recheck()
-
     def _child_exec(self):
         # Every non-stdio descriptor other than the two inherited locks is closed.
+        unlink = self.mode.endswith('-unlink')
+        mode = self.mode.removesuffix('-unlink')
         locks = {self.run.lease.fd, self.run.guest_lock.fd}
         for fd in locks:
             assert os.get_inheritable(fd)
@@ -185,9 +191,9 @@ class NativeSupervisor(S.Supervisor):
             except OSError:
                 pass
         assert existing == {0, 1, 2} | locks, existing
-        if self.mode == 'before-qmp':
+        if mode == 'before-qmp':
             os._exit(7)
-        if self.mode == 'ignore-term':
+        if mode == 'ignore-term':
             signal.signal(signal.SIGTERM, signal.SIG_IGN)
         listener = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
         listener.bind(self.folder + '/qmp.sock')
@@ -201,29 +207,35 @@ class NativeSupervisor(S.Supervisor):
             # A parent-only status transition is verified independently in tests;
             # wire order records exact command issuance into console bytes.
             os.write(1, (name + '\n').encode())
-            if name == 'cont' and self.mode == 'overflow':
+            if name == 'cont' and mode == 'overflow':
                 for _ in range(100):
                     os.write(1, b'x' * 65536)
-            if name == 'system_powerdown' and self.mode == 'hang':
+            if name == 'system_powerdown' and mode == 'hang':
                 time.sleep(30)
-            if name == 'system_powerdown' and self.mode == 'malformed':
+            if name == 'system_powerdown' and mode == 'malformed':
                 connection.sendall(b'{bad}\n')
                 time.sleep(30)
             reply = {'return': {}, 'id': message['id']}
             connection.sendall(json.dumps(reply).encode() + b'\n')
-            if name == 'system_powerdown' or name == 'cont' and self.mode == 'self-shutdown':
+            if name == 'system_powerdown' or name == 'cont' and mode == 'self-shutdown':
                 event = copy.deepcopy(SHUTDOWN)
-                if self.mode == 'host-shutdown':
+                if mode == 'host-shutdown':
                     event['data']['guest'] = False
+                if unlink:
+                    os.unlink(self.folder + '/qmp.sock')
                 connection.sendall(json.dumps(event).encode() + b'\n')
+                if mode == 'trailing':
+                    connection.sendall(b'{"event":')
+                if mode == 'signal':
+                    os.kill(os.getpid(), signal.SIGTERM)
                 connection.close()
-                os._exit(9 if self.mode == 'nonzero' else 0)
+                os._exit(9 if mode == 'nonzero' else 0)
 
 
 @unittest.skipUnless(hasattr(os, 'fork'), 'Linux fork required')
 class SupervisorTests(unittest.TestCase):
     def setUp(self):
-        self.folder = tempfile.TemporaryDirectory(prefix='a733-supervisor-')
+        self.folder = tempfile.TemporaryDirectory(prefix='a733-supervisor-', dir='/dev/shm')
         self.addCleanup(self.folder.cleanup)
         self.admission = Admission()
         self.fds = []
@@ -285,6 +297,150 @@ class SupervisorTests(unittest.TestCase):
             outcome.recheck()
         self.assert_borrowed_open()
 
+    def test_unlinked_terminal_socket_preserves_repeated_outcome_checks(self):
+        for mode in ('normal-unlink', 'self-shutdown-unlink'):
+            with self.subTest(mode=mode):
+                self.run.status = 'admitted'
+                supervisor = self.start(mode)
+                if mode.startswith('self-'):
+                    # Ensure stop's initial poll sees shutdown after unlink/exit.
+                    deadline = time.monotonic() + .3
+                    while supervisor.channel.shutdown_message is None and time.monotonic() < deadline:
+                        supervisor.poll()
+                        time.sleep(.005)
+                outcome = supervisor.stop()
+                self.assertFalse(Path(self.folder.name, 'qmp.sock').exists())
+                self.assertEqual(outcome.recheck()['raw_wait_status'], 0)
+                self.assertIs(supervisor.stop(), outcome)
+                self.assertEqual(outcome.recheck(), outcome.evidence)
+                self.assertFalse(supervisor.receipt['forced'])
+                if mode.startswith('self-'):
+                    self.assertNotIn(b'system_powerdown', supervisor.console_snapshot())
+                supervisor.close()
+                supervisor.close()
+                with self.assertRaises(ValueError):
+                    outcome.recheck()
+
+    def test_self_shutdown_terminal_proof_still_requires_publication_authority(self):
+        supervisor = self.start('self-shutdown-unlink')
+        deadline = time.monotonic() + .3
+        while supervisor.channel.shutdown_message is None and time.monotonic() < deadline:
+            supervisor.poll()
+            time.sleep(.005)
+        with mock.patch.object(supervisor.permit, 'recheck', side_effect=ValueError('permit lost')), \
+                mock.patch.object(self.run, 'mark_stopping', wraps=self.run.mark_stopping) as stopping:
+            with self.assertRaisesRegex(S.SupervisionError, 'permit lost'):
+                supervisor.stop()
+        self.assertTrue(supervisor._terminal_ready)
+        stopping.assert_not_called()
+        self.assertIsNone(supervisor._outcome)
+        self.assertNotIn(b'system_powerdown', supervisor.console.snapshot())
+
+    def test_live_socket_unlink_is_rejected_before_stopping_publication(self):
+        supervisor = self.start()
+        Path(self.folder.name, 'qmp.sock').unlink()
+        with self.assertRaises(S.SupervisionError):
+            supervisor.stop()
+        self.assertNotIn('stopping', self.run.events)
+        self.assertIsNone(supervisor._outcome)
+
+    def test_terminal_path_replacements_and_reappearance_are_rejected(self):
+        supervisor = self.start('normal-unlink')
+        outcome = supervisor.stop()
+        path = Path(self.folder.name, 'qmp.sock')
+        for kind in ('socket', 'regular', 'symlink'):
+            with self.subTest(kind=kind):
+                replacement = None
+                try:
+                    if kind == 'socket':
+                        replacement = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+                        replacement.bind(str(path))
+                    elif kind == 'regular':
+                        path.write_bytes(b'foreign')
+                    else:
+                        path.symlink_to('lease')
+                    with self.assertRaisesRegex(ValueError, 'reappeared'):
+                        outcome.recheck()
+                finally:
+                    if replacement is not None:
+                        replacement.close()
+                    path.unlink()
+        self.assertEqual(outcome.recheck()['raw_wait_status'], 0)
+
+    def test_terminal_original_leaf_cannot_reappear_after_observed_absence(self):
+        supervisor = self.start()
+        outcome = supervisor.stop()
+        path = Path(self.folder.name, 'qmp.sock')
+        retained = path.with_name('retained.sock')
+        path.rename(retained)
+        outcome.recheck()
+        retained.rename(path)
+        with self.assertRaisesRegex(ValueError, 'reappeared'):
+            outcome.recheck()
+
+    def test_terminal_existing_leaf_must_keep_original_pin(self):
+        supervisor = self.start()
+        outcome = supervisor.stop()
+        path = Path(self.folder.name, 'qmp.sock')
+        path.unlink()
+        path.write_bytes(b'foreign')
+        with self.assertRaisesRegex(ValueError, 'replaced'):
+            outcome.recheck()
+
+    @unittest.skipUnless(os.geteuid() == 0, 'production root directory policy requires root')
+    def test_terminal_ancestor_and_foreign_directory_are_rejected(self):
+        supervisor = self.start('normal-unlink')
+        outcome = supervisor.stop()
+        folder = Path(self.folder.name)
+        moved = folder.with_name(folder.name + '-moved')
+        folder.rename(moved)
+        folder.mkdir(mode=0o700)
+        try:
+            with self.assertRaisesRegex(ValueError, 'directory replaced'):
+                outcome.recheck()
+        finally:
+            folder.rmdir()
+            moved.rename(folder)
+        original = supervisor.qmp_directory
+        supervisor.qmp_directory = os.open('/dev/shm', os.O_RDONLY | os.O_DIRECTORY)
+        try:
+            with self.assertRaises(ValueError):
+                outcome.recheck()
+        finally:
+            os.close(supervisor.qmp_directory)
+            supervisor.qmp_directory = original
+
+    def test_terminal_retained_connection_object_and_reused_fd_are_rejected(self):
+        supervisor = self.start('normal-unlink')
+        outcome = supervisor.stop()
+        original = supervisor.connection
+        duplicate = socket.socket(fileno=os.dup(original.fileno()))
+        supervisor.connection = duplicate
+        try:
+            with self.assertRaisesRegex(ValueError, 'retained terminal channel'):
+                outcome.recheck()
+        finally:
+            supervisor.connection = original
+        supervisor.channel._socket = duplicate
+        try:
+            with self.assertRaisesRegex(ValueError, 'retained terminal channel'):
+                outcome.recheck()
+        finally:
+            supervisor.channel._socket = original
+            duplicate.close()
+        other, peer = socket.socketpair()
+        saved = os.dup(original.fileno())
+        try:
+            os.dup2(other.fileno(), original.fileno())
+            with self.assertRaisesRegex(ValueError, 'connection replaced'):
+                outcome.recheck()
+        finally:
+            os.dup2(saved, original.fileno())
+            os.close(saved)
+            other.close()
+            peer.close()
+        self.assertEqual(outcome.recheck()['raw_wait_status'], 0)
+
     def test_durable_running_precedes_cont_and_stopping_precedes_stop(self):
         original = S.TRANSPORT.Channel.command
         seen = []
@@ -314,8 +470,8 @@ class SupervisorTests(unittest.TestCase):
         original_paths = supervisor._check_paths
         original_stopping = self.run.mark_stopping
 
-        def paths():
-            original_paths()
+        def paths(**kwargs):
+            original_paths(**kwargs)
             offset[0] += 61
 
         def stopping():
@@ -559,7 +715,8 @@ class SupervisorTests(unittest.TestCase):
 
     def test_nonzero_host_event_protocol_error_and_timeout_quarantine(self):
         # Each subtest needs a fresh socket destination and run authority.
-        for mode in ('nonzero', 'host-shutdown', 'malformed', 'hang'):
+        for mode in ('nonzero-unlink', 'host-shutdown-unlink', 'signal-unlink',
+                     'trailing-unlink', 'malformed', 'hang'):
             with self.subTest(mode=mode):
                 self.run.status = 'admitted'
                 path = Path(self.folder.name, 'qmp.sock')
@@ -569,6 +726,9 @@ class SupervisorTests(unittest.TestCase):
                     supervisor.stop()
                 self.assertEqual(self.run.status, 'quarantined')
                 self.assertIsNotNone(caught.exception.receipt['raw_wait_status'])
+                if mode.endswith('-unlink'):
+                    self.assertFalse(path.exists())
+                self.assertIsNone(supervisor._outcome)
                 self.assert_borrowed_open()
 
     def test_console_overflow_quarantines_and_joins_before_fd_close(self):
@@ -601,6 +761,7 @@ class SupervisorTests(unittest.TestCase):
 
     def test_echild_forbids_signals_and_cannot_approve_shutdown(self):
         supervisor = self.start()
+        Path(self.folder.name, 'qmp.sock').unlink()
         with mock.patch.object(supervisor.witness, 'reap', side_effect=ChildProcessError()), \
                 mock.patch.object(S.os, 'kill') as kill:
             with self.assertRaises(S.SupervisionError):
