@@ -1,0 +1,174 @@
+{
+  "schema": 1,
+  "result": "PASS for finite manual-beta hardware integration and applicable reuse",
+  "board_model": "Orange Pi 4 Pro",
+  "boot_profile": "SPI/NVMe; SD absent",
+  "built_source": "8f311c484d33aab2882472766bc6263d064004c8",
+  "root_manifest_sha256": "3b2ba8f27ca2e9a3d2be33b40f39e4e2984a8ddad428156afccee6defa9599af",
+  "NVMe_image_sha256": "3ac417ca772c0a2a11d4b67f3357faf783437198e8f66ec560f1df7cd0f71bc6",
+  "deployment": "Guarded inactive-B update on existing STATE/GUESTS, full target readback and physical cold boot; new whole-drive installer image not destructively installed in this run",
+  "cold_boot": {
+    "operator_confirmation": "User confirmed USB-C disconnected for at least10seconds, SD removed, power reconnected",
+    "boot_id": "a97b2d62-52d1-4dbd-8d34-fc6f1d629058",
+    "UART_storage_type": 3,
+    "NVMe_boot": true,
+    "SD_absent": true,
+    "runtime_files_authenticated": [
+      85,
+      4,
+      2
+    ],
+    "dispatch_masked": true,
+    "automatic_manual_guest_lock": true,
+    "admission_open_via_supported_boot": true
+  },
+  "SPI_totals": {
+    "cold": 3,
+    "warm": 3,
+    "prior_and_current_observations": [
+      "461104ad-de37-4fbe-8ecc-c81c10203b9a",
+      "ae6ef902-51ce-45cf-88a9-62f7f390eded",
+      "a97b2d62-52d1-4dbd-8d34-fc6f1d629058",
+      "5858af7a-977e-4a9b-971e-6d71ae7858d3",
+      "b2fdadb2-1b02-46c5-80b2-92f126db833c",
+      "73c57537-bc17-4230-85f0-87561ae0499a"
+    ],
+    "protected_SD_boots_credited": 0
+  },
+  "manual_lifecycle": {
+    "UID_GID": 60001,
+    "real_KVM_VM_vCPU_FDs": true,
+    "CPU_disk_HTTP": true,
+    "guest_owned_shutdown_raw_exit0": true,
+    "CP5_restart_and_full_lifecycle_reused": "CP5 counter10 -> run11 -> durableCP6 -> restart12/persistence -> durableCP7",
+    "final_repaired_root_normal_restart": "CP7 -> counter13, previous12, no account preparation workaround; clean shutdown -> durableCP8",
+    "checkpoint8_manifest_sha256": "17f21eeefef9eea79cad1410ff657803ebe55943074a28c216b6f14dade5b123",
+    "guest_stopped_and_unit_regenerated": true,
+    "changed_runtime_files_since_complete_lifecycle": {
+      "maintenance_runtime": [
+        "usr/lib/a733-tools/package.json",
+        "usr/lib/a733-tools/scripts/guest-boot-accounts.py"
+      ],
+      "management_runtime": [],
+      "guest_boot_runtime": []
+    },
+    "applicability": "Only bootstrap manual-lock creation and its package manifest changed. Launch, checkpoint, guest configuration, QEMU/kernel and storage bytes are unchanged; final cold boot plus normal CP7 restart covers the bootstrap delta. No additional full lifecycle campaign required."
+  },
+  "recovery_applicability": {
+    "SPI": "Existing original-blank restoration, independent SD recovery and metadata-aware reinstall retained. Same board/XM25QU128C geometry, SPI code83ed..., calibration policy and writer; no host SPI programming occurred this run; vendor boot calibration changes are expected.",
+    "host_rollback": "Preserved normalizedA selected and booted read-only during this cutover; current STATE/layout and BOOT unchanged; guarded B staging/return passed. Paired restore evidence retained.",
+    "guest_backup_restore": "Retained actual normalized guest restoration/checkpoint/restart and CP5 off-device backup. Same GUESTS UUID, fixture, enrollment/checkpoint schema and backup/restore storage contract; shared safety guards covered by native3828 and current protected restart. Bootstrap-lock fix does not change archive/disk format.",
+    "limits": "Handled interruption and known-board recovery only; no arbitrary power-loss/hung-kernel or automatic managed lifecycle claim."
+  },
+  "boot_dependency_proof": {
+    "retained_and_current_protected_BOOT": {
+      "bytes": 536870912,
+      "sha256": "cc2ad988fdc57579178766acaf09c71d688aaadec94b722593192cb24426c313"
+    },
+    "SPI_candidate_sha256": "83edcd7f448e8353163666016a6bae3e9b70d041a5e4d8454f48931839205e90",
+    "same_board_NVMe": "SPCC M.2 PCIe SSD serial134807190FC700149277",
+    "kernel": "6.6.98-a733-diag",
+    "unchanged_upstream_components": "Reuse existing Linux/KVM/QEMU validation; no new conformance/endurance campaign"
+  },
+  "preservation": [
+    "normalized A",
+    "original/calibrated SPI snapshots",
+    "2GB recovery SD",
+    "firstkvm CP5 off-device archive",
+    "failed cohorts"
+  ],
+  "records": {
+    "out/beta-release-20261114/repaired-cold-readiness.jsonl": {
+      "bytes": 1084,
+      "sha256": "86f57d263e0b50f3504c0be6428ec4b66f312122d61447b566e590887e01bd65"
+    },
+    "out/beta-release-20261114/repaired-live-profile.json": {
+      "bytes": 323,
+      "sha256": "302e2ad2d0d183474834ce7fc8754c8756e230610589da8f070bea2e985cc1c4"
+    },
+    "out/beta-release-20261114/repaired-cold-UART.log": {
+      "bytes": 112780,
+      "sha256": "04a34b59d736e737c8fec41b3bff0a0309fc5821974ea5cd9523cf19c153844d"
+    },
+    "out/beta-release-20261114/repaired-poweroff-UART-tail.log": {
+      "bytes": 6500,
+      "sha256": "1f17e1e6aff54b73976cfa77480fce1b667bd2980863506a725e368164a41f09"
+    },
+    "out/beta-release-20261114/repaired-KVM-running.json": {
+      "bytes": 9625,
+      "sha256": "4a745c200dcb8e33c30bc24f48ef8dabec903a9702f2e0be60c0def40a979ab3"
+    },
+    "out/beta-release-20261114/repaired-KVM-exit-observer.jsonl": {
+      "bytes": 417,
+      "sha256": "b50b6821756601101f4fe1aa6fc83c186cb771781a33aa965dd0264b7d138366"
+    },
+    "out/beta-release-20261114/repaired-confirm13.json": {
+      "bytes": 97,
+      "sha256": "266179fabc7a2e943972bc2e98c226ef22acd7b223076ca92bdb1a0964f5324d"
+    },
+    "out/beta-release-20261114/counter13-console.log": {
+      "bytes": 8617,
+      "sha256": "fc12c484a286fbf8e6c32fb6b316b36308fa8cc5ece6da0ffc81e82377978ee4"
+    },
+    "out/beta-release-20261114/checkpoint8-PTY.log": {
+      "bytes": 1676,
+      "sha256": "011f827f00fa842b9df2b0166ace57eed67dca2f92330a990133caaa0c35cbe9"
+    },
+    "out/beta-release-20261114/checkpoint8-history.json": {
+      "bytes": 7324,
+      "sha256": "f6fdc2e2f11d94b936f5f54ea5c351ed0cf4aa1f596598f898005c39e41677f5"
+    },
+    "out/beta-release-20261114/repaired-final-board-state.txt": {
+      "bytes": 168,
+      "sha256": "671128fb802d523ad7810b94b069acf52c1b3b7664e7207091ee5ae88a4109ea"
+    },
+    "out/beta-release-20261114/CP6-running.json": {
+      "bytes": 18737,
+      "sha256": "48ccc845b8df358af615db928f6f17ff41f11085cdd0dae5775f7001829729c8"
+    },
+    "out/beta-release-20261114/CP6-exit-observer.jsonl": {
+      "bytes": 417,
+      "sha256": "8bd679ecc0d95f3a7f214d5ce8a924df0c59c726fa8de08d1f43dda4468fd05b"
+    },
+    "out/beta-release-20261114/checkpoint7-history.json": {
+      "bytes": 7324,
+      "sha256": "d11670865e5dd9bb3498a961eb4794d1b3592b1e11621c3672acc95229882d24"
+    },
+    "out/beta-release-20261114/composition-02-receipt.json": {
+      "bytes": 625288,
+      "sha256": "fa4aaa2e88f8f092235d0d97a8e323ad53fe2b30f12ea35386dc94baa743d035"
+    },
+    "out/beta-release-20261114/native-02-summary.json": {
+      "bytes": 1114821,
+      "sha256": "f6303994bab374b27e53c96c98f9f9b06d629a6282ec716369a605c8ce65c1fb"
+    },
+    "out/beta-release-20261114/reused-evidence/spi-operational-20261111.json": {
+      "bytes": 20843,
+      "sha256": "a62bca45661d6562b350a72818e754b39c2f97e79077491c369d193eb85f5bed"
+    },
+    "out/beta-release-20261114/reused-evidence/post-reinstall-SPI-managed-B-20261113.json": {
+      "bytes": 8081,
+      "sha256": "9f454af485c113f831ecf5da845ef2d1c160c529559b46f434b9953bdb717635"
+    },
+    "out/beta-release-20261114/reused-evidence/spi-blank-restoration-and-sd-recovery-20261113.json": {
+      "bytes": 10395,
+      "sha256": "0ff38abe6215a4bb5a0d422a3563b56e9ad99017713896d5514d4a1994f5d1b2"
+    },
+    "out/beta-release-20261114/reused-evidence/physical-host-update-rollback-20261110.json": {
+      "bytes": 28497,
+      "sha256": "d45542d8756925de64f77a44960eb05819ad752bd1baa2ac707d6de1b462b663"
+    },
+    "out/beta-release-20261114/reused-evidence/normalized-guest-restore-20261110.json": {
+      "bytes": 20815,
+      "sha256": "c656c6bb6fee7cb495a27c5667f90b0dca4e65ff0edf6060a7ec3b06d221d984"
+    },
+    "out/beta-release-20261114/reused-evidence/paired-host-restore-20261110.json": {
+      "bytes": 17157,
+      "sha256": "e2f0ffb421f3814387c63246f485c407767176258b7ac5530676020cf0775e28"
+    },
+    "out/beta-release-20261114/reused-evidence/guest-backup-arm-20261104.json": {
+      "bytes": 9570,
+      "sha256": "0bce318b22a7c3519980f5ec1d4097457d893e16d57de8e53e7984a4edd633ca"
+    }
+  }
+}

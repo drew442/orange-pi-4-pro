@@ -1,6 +1,6 @@
 # Current images
 
-**Constructed repaired manual-beta candidate; staged and selected; awaiting cold boot; no accepted release or release tag.**
+**Accepted repaired manual-beta runtime and image; versioned delivery pending.**
 Built source: main `8f311c484d33aab2882472766bc6263d064004c8`, including
 merged PR #1 and the reviewed manual boot-lock repair.
 Tag used by the builder: `manual-beta-20261114-02` (not a Git release tag).
@@ -25,13 +25,21 @@ Keep candidate assets private pending eligibility.
 | `root-A.ext4` | 4,294,967,296 | `373e1b62343b8477a0fe1f6c78d4fa25c81775a8f739b9b3d0a8f53ba2e4cf6e` |
 | `root-B.ext4` | 4,294,967,296 | `116da2be7bd31b1e65a6c702bf4dc57bee98cb76155c79998cfbd13759e82789` |
 
-Repaired B has passed guarded physical staging and full target readback. Preserved
-normalized A remains intact for rollback. The board is powered off, repaired B
-selected durably, awaiting the operator cold power cycle.
-The boot-lock fix still requires fresh-boot/normal-launch observation; no physical
-fix acceptance is claimed yet. Matching fresh STATE/NVMe composition is running as
-`a733-manual-beta-composition-20261114-02.service` on the qualified builder.
-No private package or public prerelease has been published.
+Repaired B passed guarded physical staging/full target readback and the final
+SD-absent SPI/NVMe cold boot. Preserved normalized A remains intact for rollback.
+Automatic manual-lock preparation and normal nonroot KVM launch, persistence,
+guest-owned shutdown and CP8 passed. [Acceptance](evidence/manual-beta-hardware-acceptance-20261114.json).
+
+Matching whole-NVMe output:
+`out/beta-release-20261114/nvme-assets/nvme.img.gz`, **546,020,115 bytes**, SHA-256
+`3ac417ca772c0a2a11d4b67f3357faf783437198e8f66ec560f1df7cd0f71bc6`.
+Producer manifest: 139,964 bytes, SHA-256
+`4f379ef74e13db8bb4a022da138f1cc39fc4b2ef5055f7d68c75e995d5aaf9da`.
+Expanded image: 256,060,514,304 bytes, SHA-256
+`1c8d06b8ab3720da9c94ab41322dd9fe0a18f7dcdd238975a988e7f7b76fe667`.
+It contains matching A/B roots and newly generated, per-unit STATE. Existing-unit
+physical acceptance used the component update; no destructive whole-image
+reinstallation is claimed for this run. Versioned packaging/publication is pending.
 
 ## Preserved recovery inputs
 
@@ -44,6 +52,6 @@ No private package or public prerelease has been published.
 
 The original recovery SD contains this unit's private SSH host key. Keep it
 private and per unit. Original/calibrated SPI snapshots remain retained; future
-writes require fresh live identity and metadata-aware planning. No SD or SPI
-write was performed during this resumption. Follow [build and release](build-and-release.md)
+writes require fresh live identity and metadata-aware planning. No SD write or host SPI programming
+was performed during this resumption; vendor calibration metadata may change at boot. Follow [build and release](build-and-release.md)
 for eventual packaging and [installation/recovery](install-and-recovery.md).

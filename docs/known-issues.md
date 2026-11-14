@@ -2,10 +2,8 @@
 
 | Item | Effect and disposition |
 | --- | --- |
-| Final manual-beta image not yet constructed/deployed | Software PR completion is not physical beta acceptance; close the finite gates in current status |
-| Hardware goal paused after supported restore | Admission is shutdown-closed; use a fresh supported boot when resumed, never manually reopen RAM admission |
 | Automatic management unfinished | Disabled/deferred; manual guests remain usable through the documented workflow |
-| QMP terminal-socket validation | Source fix2675847 exists; old installed B rejected a valid shutdown after socket removal. Managed physical checkpoint/restart acceptance is not claimed |
+| Managed terminal-socket qualification | The source repair is included; full automatic managed lifecycle qualification remains deferred with that feature |
 | Manual disk hashes | After guest writes, clean shutdown, checkpoint and unit regeneration are required before a new start; a checkpoint is not a backup |
 | Historical unexplained SSH interruption | Retain the observation. A recurrence or concrete normal-path cause deserves focused diagnosis; indefinite investigation without a symptom is not a gate |
 | Hardware scope | Orange Pi 4 Pro only; original-unit evidence does not duplicate unique identities or prove materially changed hardware |

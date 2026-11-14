@@ -39,10 +39,14 @@ check; no other-board qualification campaign is required.
    data on the recovery card. Run prepare, inspect exact target identity, then
    apply with existing target authorization. Installation readback is optional;
    no repeated readback campaign is implied.
-4. Preserve/restore identity for this existing unit through the supported
-   [same-unit personalization](known-host-state-personalization.md), or use the
-   new unit's own provisioning inputs. Keep ROOT/STATE/BOOT compatibility and
-   original guest backups intact.
+4. A root-component update preserves the existing STATE identity and guests.
+   The complete NVMe image contains freshly generated machine/SSH identity and
+   the specified unit's management configuration. Verify its SSH fingerprint on
+   the trusted UART console before updating a known-host entry. The historical
+   [same-unit personalizer](known-host-state-personalization.md) accepts only its
+   fixed legacy factory-identity pins; do not bypass its refusal on newly
+   generated STATE. Keep ROOT/STATE/BOOT compatibility and original guest backups
+   intact. Another unit needs its own provisioning inputs.
 5. For SPI, retain original and calibrated snapshots, establish the existing
    [recovery route](spi-recovery-qualification.md), and follow the guarded
    [programmer](known-spi-programmer.md) and [calibration policy](spi-calibration-policy.md).

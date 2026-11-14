@@ -121,8 +121,9 @@ consistency checks; it cannot independently witness a physical event.
 
 Copy [the package example](../configs/beta-package.example.json) to ignored
 `out/package-spec.json`, replacing every placeholder with actual authenticated
-records. Paths resolve relative to the spec directory; absolute paths avoid
-ambiguity. Assets are supplied by their existing producer manifests and JSON
+records. Every pin path must be a canonical relative child of the spec directory; absolute
+paths and `..` are refused. Use ignored `out/` as the common input parent and
+adjust paths accordingly. Assets are supplied by their existing producer manifests and JSON
 pointers to size/hash records. NVMe composition must bind the exact current root
 manifest and A/B payloads; the packager refuses an old managed image accompanied
 by unrelated manual-profile metadata.

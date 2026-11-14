@@ -11,27 +11,26 @@ valid; no permission renewal is needed for those targets.
 
 ## Current hardware and custody
 
-- The board is cleanly **powered off**, with repaired manual-beta B selected
-  durably for the next boot. UART confirmed STATE unmount, all filesystems
-  unmounted and kernel power down. The operator has been asked to disconnect
-  USB-C for at least 10 seconds and reconnect with SD absent for the remaining
-  cold observation. Do not issue another poweroff or infer that boot passed.
+- The board runs repaired **manual-beta B** from SPI/NVMe, SD absent, cold boot
+  `a97b2d62-52d1-4dbd-8d34-fc6f1d629058`. Its 85+4+2 runtime files authenticate,
+  dispatch is masked, admission opened through boot preparation, and the manual
+  `firstkvm` lock was created automatically. No RAM admission edits or account
+  preparation workaround was used on this boot.
 - Normalized A remains intact and was booted read-only during cutover.
   Recovery SD, original/calibrated SPI backups, failed cohorts and the off-device
   firstkvm CP5 backup remain preserved.
-- `firstkvm` is stopped, MainPID0/result success, at durable **CP7**; manifest
-  `e8cef8118bc3e192c3d03ef60c2a04d6f38ca67e39b81b2a65b75215b2faaf8e`.
-  Its RAM unit is regenerated for CP7 and not enabled for boot.
+- `firstkvm` is stopped, MainPID0/result success, at durable **CP8**; manifest
+  `17f21eeefef9eea79cad1410ff657803ebe55943074a28c216b6f14dade5b123`.
+  Its RAM unit is regenerated for CP8 and not enabled for boot. Normal UID60001
+  KVM CPU/disk/HTTP, persistence12→13, guest-owned shutdown and checkpoint passed.
 - The old `2675847` validation was retained. Final-byte CI and native validation
   of source `7325069` both passed: 221 stages, 3,828 native tests, no native
   exclusions. [Software receipt](evidence/manual-beta-software-validation-20261114.json).
-  Validation jobs are terminal and retained. The repaired root construction and
-  full readback passed. STATE/NVMe composition is running as
-  `a733-manual-beta-composition-20261114-02.service`, source `8f311c4`, fresh
-  checkout `/var/lib/a733-manual-beta-compose-project-20261114`, phase
-  `/var/lib/a733-clean-replay-20261106/isolated-nvme-manual-beta-20261114-02`.
-  The first composition attempt refused cached Python bytecode during preflight,
-  before construction; its failure is retained. Do not restart the current job.
+  All construction and validation jobs are terminal and successful. Matching
+  STATE/NVMe composition `a733-manual-beta-composition-20261114-02.service`
+  passed full stream/component verification from the same built source `8f311c4`.
+  Its initial preflight refusal of cached test bytecode is retained; no actual
+  construction ran in that refused attempt.
 - The operator enlarged the backing disk. Reviewed guest-only partition/PV/LV/
   ext4 growth used all 33 GiB added capacity; Hyper-V was untouched. Root LV is
   168,518,746,112 bytes, VG free zero, filesystem available about 51.77 GB.
@@ -50,21 +49,18 @@ historical restore/custody input; its managed resume list is superseded.
 | Source | PR #1 merged; reviewed boot-lock fix included in constructed source `8f311c4` |
 | Software | PASS: final-byte CI 221 stages/3,011 executed/817 declared exclusions; native 221 stages/3,828 executed/no exclusions. Original timeout and missing-fixture results retained; bounded allowance and authenticated fixtures resolve them. Boot-lock fix independently reviewed |
 | Construction | Repaired `manual-beta-20261114-02` A/B construction and full filesystem readback passed. This replaces the first candidate only for its observed boot-lock defect; no further root rebuild is planned |
-| Deployment | Repaired B written/read back and selected durably through the installed tools; A, BOOT, SPI and guests preserved. Board powered off awaiting the operator's cold power cycle |
-| Manual lifecycle | Real UID60001 KVM CPU/disk/HTTP, guest-owned shutdown, CP6, restart/persistence counter11→12 and clean shutdown/CP7 passed using the existing guarded account-preparation workaround. Final repaired startup must create the manual lock automatically; assess lifecycle reuse by dependencies |
-| SPI boots | Prior SPI observations retained; this run added three warm SPI/NVMe boots, including the manual profile. A provisional pinned ledger supports two cold and three warm observations; one cold boot and observation of the repaired final profile remain. Final applicability awaits repaired runtime/composed BOOT; protected-SD boots remain excluded |
+| Deployment | PASS: repaired B written/read back, selected durably and physically cold-booted; normalized A, BOOT, SPI and guests preserved |
+| Manual lifecycle | PASS with applicability reuse: complete CP5→CP6→restart/CP7 lifecycle retained; final repaired cold boot automatically created the lock and normally restarted CP7 to counter13, then cleanly checkpointed CP8. Only bootstrap lock creation/package metadata changed; launch/checkpoint/configuration/QEMU/storage dependencies match |
+| SPI boots | PASS: three cold and three warm in total, with compatible prior credit and repaired manual profile. BOOT matches the retained physical proof; protected-SD observations excluded |
 | Recovery | Applicable SPI recovery, host rollback and guest backup/restore evidence retained; no new fault campaign or soak |
-| Whole-NVMe/STATE and delivery | Matching STATE/NVMe composition running; not yet packaged, tagged, privately delivered or publicly published |
+| Whole-NVMe/STATE and delivery | Whole image constructed/verified; acceptance records ready. Versioned packaging, private delivery and eligible public prerelease are pending |
 
-## Bounded next action
+## Delivery next action
 
-Capacity is resolved with operator-authorized guest growth; no further deletion
-or Hyper-V modification is selected. Reuse the successful final-byte software
-checks and unchanged frozen builder/kernel/toolchain inputs.
-
-Construct the reviewed boot-lock repair once, then perform the supported inactive-B
-update through preserved A and a fresh boot proving automatic manual-lock creation
-and normal launch. Compose matching STATE/NVMe data once. Finalize dependency
-reuse and the boot ledger (one cold observation remains), then package/deliver the
-versioned private beta and publish eligible public artifacts. No new soak,
-automatic managed lifecycle or archived ten-cycle campaign.
+Finite runtime/construction gates are accepted; see
+[hardware acceptance/reuse](evidence/manual-beta-hardware-acceptance-20261114.json)
+and [v0.1.0-beta.1 notes](releases/v0.1.0-beta.1.md). Assemble the accepted private
+package through the implemented packager, deliver through the existing authorized
+SSH channel, and publish eligible public notes/checksums as a GitHub prerelease.
+Images remain private because of personalization and unresolved vendor grants.
+Do not rebuild, rerun the successful gates, restart jobs or grow release scope.
