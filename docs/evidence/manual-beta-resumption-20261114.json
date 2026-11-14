@@ -1,0 +1,232 @@
+{
+  "schema": 1,
+  "date": "2026-11-14",
+  "operator_resumed": true,
+  "source_commit": "e4d39439623393c470f4d2ca354a9a6afd54f902",
+  "prior_coordinator": "inactive/notLoaded; last turn completed paused",
+  "routing": "coordinator process argv gpt-6.1-sol low observed; requested child routes Luna low extraction and Sol6.1 medium independent review; effective child metadata unavailable",
+  "standing_authorization": "docs/evidence/storage-write-authorization-20261108.json",
+  "known_nvme_serial_verified": "134807190FC700149277",
+  "fresh_boot": "b2fdadb2-1b02-46c5-80b2-92f126db833c",
+  "CP5_manifest_sha256": "88c1ea1744f1f044f6e17f985746d7743f3b9165f8028f2c8d143b95f349c946",
+  "manual_beta_built": true,
+  "hardware_accepted": false,
+  "published": false,
+  "records": {
+    "out/beta-release-20261114/retained-validation.log": {
+      "bytes": 88839,
+      "sha256": "efe73a7af1b1bfb0c79dc4e441c34bd73c7a50284703808a9d7e193140b2d114"
+    },
+    "out/beta-release-20261114/custody-verified.json": {
+      "bytes": 3553,
+      "sha256": "08fb69470101ae02f25c09fe00e43524e8b6d799129616001339c105a398e533"
+    },
+    "out/beta-release-20261114/retirement-review.json": {
+      "bytes": 483,
+      "sha256": "030a13f56299839927a4088d73b60a62bd250d567393831470907dddfee49f3d"
+    },
+    "out/beta-release-20261114/retirement-complete.txt": {
+      "bytes": 4293,
+      "sha256": "58643b72f522d31c975208a82d2fbaf6d9b6d6ba21b4237b1fb9e1f75a91e80f"
+    },
+    "out/beta-release-20261114/fresh-boot-final.txt": {
+      "bytes": 401,
+      "sha256": "460145353c98e6e7a45896d9494ccbf843547a65a0bb104bc4b21474aaf0703d"
+    },
+    "out/beta-release-20261114/preboot-gate.txt": {
+      "bytes": 305,
+      "sha256": "87c74f933e9ba8c26798eb540889d61753f848b60a6f11196e7329b798040480"
+    },
+    "out/beta-release-20261114/select-A-plan.json": {
+      "bytes": 3539,
+      "sha256": "8e260480cb5da75beddef38117064d1069d3fba3f52e54ac455e0d5c548bb325"
+    },
+    "out/beta-release-20261114/budget.json": {
+      "bytes": 166,
+      "sha256": "2a8e47a7c7919c5b1d3f0628cd648fbdf630b0442b362062c43a1670a9d8e0cf"
+    },
+    "out/beta-release-20261114/composition-capacity.json": {
+      "bytes": 478,
+      "sha256": "3377d3b07877eac3ebe5b33d71831686307a180977614d2ed3281288061124ea"
+    },
+    "out/beta-release-20261114/root-receipt.json": {
+      "bytes": 303745,
+      "sha256": "b3c71867c8432686b189698f8df7d3d0bc8e845fa981f253afd65326539272a8"
+    },
+    "out/beta-release-20261114/root-manifest.json": {
+      "bytes": 51663,
+      "sha256": "35247592dbd53060a54063253ef710b3c7e2bf7786299074305a1aca2f0a908f"
+    },
+    "out/beta-release-20261114/root-readback-summary.json": {
+      "bytes": 3991,
+      "sha256": "4a37c81ebbae2d308677a393375c9f257203de0536350a80846e3f4db324a821"
+    },
+    "out/beta-release-20261114/update-B-plan.json": {
+      "bytes": 3726,
+      "sha256": "c16279fcf21e534e951cb222e6670c80bb1cd891d348542550c9d0306b10b22d"
+    },
+    "out/beta-release-20261114/update-B-observed.json": {
+      "bytes": 721,
+      "sha256": "73aaed74b5cb1f459d81020b5496fd4b0f3c035d7ca134ff80d26176996c3a69"
+    },
+    "out/beta-release-20261114/boot-A.txt": {
+      "bytes": 1365,
+      "sha256": "f78e052f44e2273aaec939b01b9b5867da4f045c9e8e92dd2ad68c3fd4c05aa7"
+    },
+    "out/beta-release-20261114/select-B-plan.json": {
+      "bytes": 3526,
+      "sha256": "5337ea9303450829be5537c3b706381c10926025d5662ecd7a3f53b14712a8c1"
+    },
+    "out/beta-release-20261114/final-B-selection-and-reboot.txt": {
+      "bytes": 2781,
+      "sha256": "fcbbdca068936f83771ca419a3e9370845e49d284213298d44651755c1c65815"
+    },
+    "out/beta-release-20261114/source-manifest.json": {
+      "bytes": 276845,
+      "sha256": "89594fe32d1c11b29ed92ac95cd306c6b0a3ea6e583672590d723f918d07d35e"
+    },
+    "out/beta-release-20261114/live-profile.json": {
+      "bytes": 292,
+      "sha256": "6ec1cfbfc3cd6ebc66423c736a12cf19f29440f11201e63d13f48c68af0c304a"
+    },
+    "out/beta-release-20261114/final-B-UART.log": {
+      "bytes": 116450,
+      "sha256": "a936c01ff765b50073cbc460440463dfe126051f445458955f17f003efa3e0fb"
+    },
+    "out/beta-release-20261114/CP5-failure.txt": {
+      "bytes": 427,
+      "sha256": "2f9bef404033de520ede03456cc8dc6892467b58dacf453654b8804983afd7be"
+    },
+    "out/beta-release-20261114/CP5-account-plan.json": {
+      "bytes": 588,
+      "sha256": "e186b34032ce6cd15ee34fe238cb625440effd43f09796a5176e2ccba4d6bb9a"
+    },
+    "out/beta-release-20261114/CP5-account-apply.json": {
+      "bytes": 176,
+      "sha256": "a807c1f0d909b1cbf235bf5b2c8d485f5e2488ab968dd9ed3e34cfef93946d74"
+    },
+    "out/beta-release-20261114/CP5-running-accepted.json": {
+      "bytes": 9965,
+      "sha256": "221a3a27a55dcd1f975447c29ae02c527e4fa7e7ecdd5aaf8a63f4bd8721daf5"
+    },
+    "out/beta-release-20261114/CP5-exit-observer-prepared.jsonl": {
+      "bytes": 417,
+      "sha256": "3ea388e4de8a63e06522b0139862b4789b6279cf02d6943a14e584e667c439b5"
+    },
+    "out/beta-release-20261114/checkpoint6-plan.json": {
+      "bytes": 3703,
+      "sha256": "8431aa6ed5368196b40b5e0f80a6ae5a7df1370e25c17237a737869be6050249"
+    },
+    "out/beta-release-20261114/checkpoint6-history.json": {
+      "bytes": 7324,
+      "sha256": "4231eed935528ca4a2e487c2558335884880e685f725f50d1e485d69da2212b8"
+    },
+    "out/beta-release-20261114/CP6-running.json": {
+      "bytes": 18737,
+      "sha256": "48ccc845b8df358af615db928f6f17ff41f11085cdd0dae5775f7001829729c8"
+    },
+    "out/beta-release-20261114/CP6-exit-observer.jsonl": {
+      "bytes": 417,
+      "sha256": "8bd679ecc0d95f3a7f214d5ce8a924df0c59c726fa8de08d1f43dda4468fd05b"
+    },
+    "out/beta-release-20261114/checkpoint7-plan.json": {
+      "bytes": 3703,
+      "sha256": "7c2e548be391a45bfdb79300ce0a5fcfdb2405893cb0cc2f9ce0902d2271cceb"
+    },
+    "out/beta-release-20261114/checkpoint7-history.json": {
+      "bytes": 7324,
+      "sha256": "d11670865e5dd9bb3498a961eb4794d1b3592b1e11621c3672acc95229882d24"
+    },
+    "out/beta-release-20261114/final-board-state.txt": {
+      "bytes": 1849,
+      "sha256": "37c8e2fb2dc0660491733e4446f7c17de5740dda1a7e132b8db967b76ad3abef"
+    },
+    "out/beta-release-20261114/native-summary.json": {
+      "bytes": 1129860,
+      "sha256": "f22e9d0ad818dcc69d97f368ed334911a535058b2983763b95fab0d1a45f9844"
+    },
+    "out/beta-release-20261114/native-timeout-investigation.log": {
+      "bytes": 3772,
+      "sha256": "d4309fad50c5f5138d58f205d60fa7009c820f79be0bc73bb842048db46915e8"
+    },
+    "out/beta-release-20261114/retained-roots-custody.json": {
+      "bytes": 693,
+      "sha256": "73e55b4c11fde298673f71c3096a7eca1bd64d67525b5c75e7104adf89199736"
+    },
+    "out/beta-release-20261114/final-builder-state.txt": {
+      "bytes": 444,
+      "sha256": "b17be65795885260b5f0451d680df9f86d5bae0ca4ccba1c0e53ff5f7091a423"
+    },
+    "out/beta-release-20261114/counter11-console.log": {
+      "bytes": 8950,
+      "sha256": "bb85de275d28930fab2facf42fbef5fe058e71cc7fdb5a57e02927ded48a6522"
+    },
+    "out/beta-release-20261114/counter12-console.log": {
+      "bytes": 17567,
+      "sha256": "06604d0bc9a9eb61dd8e7ced0d6cf1c7351bf2262f1dff078d9bea0a1266649c"
+    }
+  },
+  "root_manifest_sha256": "35247592dbd53060a54063253ef710b3c7e2bf7786299074305a1aca2f0a908f",
+  "root_build_tag": "manual-beta-20261114-01",
+  "root_receipt_sha256": "b3c71867c8432686b189698f8df7d3d0bc8e845fa981f253afd65326539272a8",
+  "B_staging": {
+    "success": true,
+    "full_readback_sha256": "2ea70ca197acdbb2f10851185a7bce4d5ca59d966744268267815bca6bf8ca7d",
+    "normalized_A_preserved": true,
+    "final_B_boot": "73c57537-bc17-4230-85f0-87561ae0499a"
+  },
+  "final_state": {
+    "root_source": "e4d39439623393c470f4d2ca354a9a6afd54f902",
+    "root_profile": "manual-beta",
+    "source_fix": "990fd09",
+    "fix_built": false,
+    "guest": "firstkvm",
+    "guest_stopped": true,
+    "checkpoint": 7,
+    "manifest_sha256": "e8cef8118bc3e192c3d03ef60c2a04d6f38ca67e39b81b2a65b75215b2faaf8e",
+    "admission": "open via supported boot; manual guest lock established via guarded guest-accounts prepare/apply",
+    "no_RAM_admission_edits": true,
+    "normalized_A_preserved": true,
+    "SD_SPI_writes": false,
+    "background_jobs_running": false,
+    "release_accepted": false
+  },
+  "manual_lifecycle": {
+    "actual_nonroot_KVM": true,
+    "uid": 60001,
+    "CPU_disk_HTTP": true,
+    "guest_owned_shutdown_both_runs": true,
+    "raw_exit_status_both_runs": 0,
+    "CP5_restarted": true,
+    "checkpoint6_durable": true,
+    "restart_persistence_counter": [
+      10,
+      11,
+      12
+    ],
+    "checkpoint7_durable": true,
+    "scope_limitation": "e4d3943 profile required guarded account-preparation workaround; permanent boot-lock fix still needs constructed fresh-boot acceptance"
+  },
+  "software": {
+    "CI": "PASS 221/221 stages;3007 executed;815 excluded",
+    "native": "FAIL: restore-transaction240s timeout and one unavailable retained-SPI fixture case",
+    "timeout_investigation": "individual interrupted case PASS in19.361s; full suite still unresolved; no native pass claimed",
+    "fix": "25 native fixture tests and independent review PASS; full CI pass with recorded early fingerprint limitation"
+  },
+  "CP5_backup": {
+    "native_root": "/home/drew/a733-checkpoint5-backup-20261113-01",
+    "archive_bytes": 3399860,
+    "archive_sha256": "5736eafe8d09e93e19e8b0f8f8d674faf30e1c366e66f867bef7321ff1c6d926",
+    "manifest_sha256": "88c1ea1744f1f044f6e17f985746d7743f3b9165f8028f2c8d143b95f349c946",
+    "preserved": true,
+    "original_receipt": "out/spi-reinstall-boot-20261113-02/checkpoint5-backup-native.json"
+  },
+  "blocker": {
+    "kind": "qualified builder capacity",
+    "available_bytes": 18219798528,
+    "minimum_composition_free_bytes_exclusive": 44845873778,
+    "unallocated_LVM_bytes": 0,
+    "smallest_operator_action": "expand known builder disk/partition/LV/filesystem by40GB or supply existing authorized expansion method",
+    "no_further_retirement_selected": true
+  }
+}

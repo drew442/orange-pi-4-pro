@@ -4,8 +4,8 @@ This workflow is implemented in the overhaul PR, including packaging. It is also
 the continuing release workflow: change authenticated inputs and reuse applicable
 evidence instead of editing historical recipe pins for every new image.
 
-A package is not a physical acceptance result. The original hardware goal remains
-paused; [current status](implementation-status.md) identifies what actually ran.
+A package is not a physical acceptance result.
+[Current status](implementation-status.md) identifies actual hardware work and acceptance.
 No existing image is relabeled as the new manual profile.
 
 ## 1. Freeze the source and reuse the qualified builder
