@@ -9,10 +9,17 @@ from pathlib import Path
 import subprocess
 import sys
 import tempfile
+import types
 import unittest
 from unittest import mock
 
 REPO = Path(__file__).resolve().parents[1]
+
+
+def simulated_flags(**overrides):
+    # Preserve every actual interpreter flag used by argparse/subprocess.
+    values = {name: getattr(sys.flags, name) for name in dir(sys.flags) if not name.startswith("_")}
+    return types.SimpleNamespace(**(values | overrides))
 
 
 def load(name):
@@ -265,7 +272,7 @@ class DeterministicLauncherTests(unittest.TestCase):
             parent, _ = self.parent(stack)
             data = source_contents()
             manifest = {'revision': 'a' * 40, 'files': {name: pin(raw) for name, raw in data.items()}}
-            flags = type('Flags', (), {'isolated': 1, 'dont_write_bytecode': 1})()
+            flags = simulated_flags(isolated=1, dont_write_bytecode=1)
             with mock.patch.object(parent, 'committed_sources', return_value=(manifest, data)), \
                  mock.patch.object(parent, 'read_source', return_value=data[L.SELF]), \
                  mock.patch.object(sys, 'flags', flags), \

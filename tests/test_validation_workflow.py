@@ -175,6 +175,16 @@ class WorkflowTests(unittest.TestCase):
         self.assertEqual("FAIL", failed["status"])
         self.assertEqual(0, failed["counts"]["executed"])
 
+    def test_worker_imports_project_package_and_neighbor_fixture(self):
+        (self.root / "scripts/project_fixture.py").write_text("VALUE = 7\n")
+        (self.root / "tests/shared_fixture.py").write_text("VALUE = 3\n")
+        result = self.run_stage("from scripts.project_fixture import VALUE\n"
+                                "import shared_fixture\nimport unittest\n"
+                                "class T(unittest.TestCase):\n"
+                                " def test_imports(self): self.assertEqual(VALUE + shared_fixture.VALUE, 10)\n")
+        self.assertEqual("PASS", result["status"])
+        self.assertEqual(1, result["counts"]["executed"])
+
     def test_unexpected_and_native_expected_skips_block(self):
         for scope, reason in (("ci", "surprise"), ("native", "requires root")):
             with self.subTest(scope=scope):

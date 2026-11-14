@@ -274,6 +274,7 @@ class BootstrapTests(unittest.TestCase):
         for fixture in (patch.object(a, 'RUNTIME', str(self.path / 'a733-admission')),
                         patch.object(a, 'RUNTIME_PARENT', str(self.path)),
                         patch.object(a, 'ROOT_UID', os.getuid()),
+                        patch.object(a, 'ROOT_GID', os.getgid()),
                         patch.object(a, '_tmpfs'), patch.object(a, '_ancestor'),
                         patch.object(a.os, 'geteuid', return_value=0),
                         patch.object(self.context, 'host_identity')):

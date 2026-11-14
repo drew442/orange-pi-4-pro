@@ -171,6 +171,9 @@ def classify_counts(data, scope, allowed):
 def worker(root, test, result_path):
     spec = importlib.util.spec_from_file_location(Path(test).stem.replace("-", "_"), root / test)
     module = importlib.util.module_from_spec(spec)
+    # Match project-root `python -m unittest discover -s tests`: test modules
+    # may import both neighboring fixtures and project packages such as scripts.
+    sys.path.insert(0, str(root))
     sys.path.insert(0, str(root / "tests"))
     spec.loader.exec_module(module)
     suite = unittest.defaultTestLoader.loadTestsFromModule(module)

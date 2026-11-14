@@ -181,6 +181,10 @@
       "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
     },
     {
+      "reason": "native pinned aria2 1.36.0 unavailable",
+      "prerequisite": "qualified builder's pinned aria2 1.36.0; other host versions are not this fixture"
+    },
+    {
       "reason": "native dpkg-deb required",
       "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
     },

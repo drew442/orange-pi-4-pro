@@ -4,6 +4,7 @@ import hashlib
 import importlib.util
 import json
 import os
+import pwd
 from pathlib import Path
 import tempfile
 import unittest
@@ -12,7 +13,11 @@ from unittest import mock
 ROOT = Path(__file__).absolute().parents[1]
 SPEC = importlib.util.spec_from_file_location('matched_trial', ROOT / 'build/matched-nvme-trial-sd.py')
 P = importlib.util.module_from_spec(SPEC)
-SPEC.loader.exec_module(P)
+# The historical recipe trusts root and its named build operator. Synthetic
+# fixtures use the current test principal without requiring a host account.
+with mock.patch('pwd.getpwnam', return_value=pwd.getpwuid(os.getuid())) as operator_lookup:
+    SPEC.loader.exec_module(P)
+operator_lookup.assert_called_once_with('drew')
 
 
 def pin(data):

@@ -123,6 +123,31 @@ class PackageStateTests(unittest.TestCase):
                 if mutation != 'destination':
                     self.assertFalse(os.path.lexists(root / PACKAGE.ROOT))
 
+    def test_cycle_refused_when_nonstrict_resolve_suppresses_loop(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            fixture(root)
+            link = root / 'var/lib/dpkg/loop'
+            link.symlink_to('loop')
+            original = Path.resolve
+            def resolve(path, strict=False):
+                if path == link and not strict:
+                    return path  # Python 3.13+ non-strict ELOOP behavior.
+                return original(path, strict=strict)
+            with mock.patch.object(Path, 'resolve', resolve), self.assertRaises(ValueError):
+                PACKAGE.snapshot(root)
+            self.assertFalse(os.path.lexists(root / PACKAGE.ROOT))
+            self.assertTrue((root / 'var/lib/dpkg/record').is_file())
+
+    def test_component_local_dangling_link_is_preserved(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            fixture(root)
+            (root / 'var/lib/dpkg/link').symlink_to('missing-local-file')
+            PACKAGE.snapshot(root)
+            link = root / PACKAGE.ROOT / 'dpkg/link'
+            self.assertEqual(os.readlink(link), 'missing-local-file')
+
     def test_source_changed_after_preflight_is_not_moved(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

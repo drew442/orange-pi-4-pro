@@ -45,6 +45,10 @@ skips, command failures, timeouts, missing worker results and empty test stages
 cannot pass. `beta` requires native scope and blocks unavailable required cases.
 CI does not run untrusted PR code as root on the board or a privileged builder.
 Physical gates always remain `NOT_EVALUATED` by this software runner.
+The CI job names Ubuntu 24.04 explicitly; distro upgrades are deliberate changes,
+not an implicit `ubuntu-latest` transition. A check requiring the qualified
+builder's pinned native tool version is explicitly excluded on other versions,
+and remains required in native beta scope.
 
 Python counts distinguish collected, run, executed and skipped/excluded cases.
 A shell suite counts as one assertion program, not an invented number of internal

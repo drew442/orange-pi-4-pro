@@ -8,12 +8,19 @@ import io
 import json
 import os
 from pathlib import Path
+import sys
 import tempfile
 import types
 import unittest
 from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def simulated_flags(**overrides):
+    # Preserve every actual interpreter flag used by argparse/subprocess.
+    values = {name: getattr(sys.flags, name) for name in dir(sys.flags) if not name.startswith("_")}
+    return types.SimpleNamespace(**(values | overrides))
 
 
 def load(name, path):
@@ -222,7 +229,7 @@ class AdapterTests(unittest.TestCase):
                     return {'success': True}
                 parent.verify = mutate
                 A.adapt(parent, held)
-                flags = types.SimpleNamespace(isolated=True, dont_write_bytecode=True)
+                flags = simulated_flags(isolated=True, dont_write_bytecode=True)
                 output = io.StringIO()
                 with mock.patch.object(parent.sys, 'flags', flags), contextlib.redirect_stdout(output):
                     with self.assertRaises(ValueError):
