@@ -175,13 +175,17 @@ class WorkflowTests(unittest.TestCase):
         self.assertEqual("FAIL", failed["status"])
         self.assertEqual(0, failed["counts"]["executed"])
 
-    def test_worker_imports_project_package_and_neighbor_fixture(self):
+    def test_worker_imports_project_neighbor_and_same_module(self):
         (self.root / "scripts/project_fixture.py").write_text("VALUE = 7\n")
         (self.root / "tests/shared_fixture.py").write_text("VALUE = 3\n")
         result = self.run_stage("from scripts.project_fixture import VALUE\n"
-                                "import shared_fixture\nimport unittest\n"
+                                "import shared_fixture\nimport unittest\nfrom unittest import mock\n"
+                                "SENTINEL = 0\n"
                                 "class T(unittest.TestCase):\n"
-                                " def test_imports(self): self.assertEqual(VALUE + shared_fixture.VALUE, 10)\n")
+                                " def test_imports(self):\n"
+                                "  self.assertEqual(VALUE + shared_fixture.VALUE, 10)\n"
+                                "  with mock.patch(__name__ + '.SENTINEL', 1):\n"
+                                "   self.assertEqual(SENTINEL, 1)\n")
         self.assertEqual("PASS", result["status"])
         self.assertEqual(1, result["counts"]["executed"])
 

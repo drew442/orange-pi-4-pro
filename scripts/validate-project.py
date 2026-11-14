@@ -175,6 +175,7 @@ def worker(root, test, result_path):
     # may import both neighboring fixtures and project packages such as scripts.
     sys.path.insert(0, str(root))
     sys.path.insert(0, str(root / "tests"))
+    sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     suite = unittest.defaultTestLoader.loadTestsFromModule(module)
     collected = suite.countTestCases()
