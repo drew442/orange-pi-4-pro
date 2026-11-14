@@ -33,7 +33,18 @@ def load_policy(root):
     policy = json.loads((root / POLICY).read_text())
     if policy.get("schema") != VERSION or not policy.get("suites"):
         raise ValueError("missing validation suite registry")
+    stage_timeouts(policy)
     return policy
+
+
+def stage_timeouts(policy):
+    overrides = policy.get("stage_timeouts_seconds", {})
+    if not isinstance(overrides, dict) or any(not isinstance(key, str) for key in overrides):
+        raise ValueError("stage_timeouts_seconds must map exact test paths to timeout seconds")
+    for value in [policy.get("timeout_seconds"), *overrides.values()]:
+        if type(value) is not int or not 1 <= value <= 3600:
+            raise ValueError("validation timeouts must be integers from 1 to 3600 seconds")
+    return overrides
 
 
 def matches(path, patterns):
@@ -99,6 +110,10 @@ def stages(root, policy, paths):
     python_tests = sorted(p for p in paths if p.startswith("tests/") and
                           (fnmatch.fnmatchcase(p, "tests/test_*.py") or p == "tests/test-assemble-diagnostic.py"))
     shell_tests = sorted(p for p in paths if fnmatch.fnmatchcase(p, "tests/test-*.sh"))
+    timeouts = stage_timeouts(policy)
+    unknown_timeouts = sorted(set(timeouts) - set(python_tests + shell_tests))
+    if unknown_timeouts:
+        raise ValueError("timeout overrides name undiscovered tests: " + ", ".join(unknown_timeouts))
     for test in python_tests + shell_tests:
         owners = [suite for suite in policy["suites"] if matches(test, suite["tests"])]
         # A new/unclassified test is never silently omitted or experimental.
@@ -119,7 +134,7 @@ def stages(root, policy, paths):
                        # those shared bytes select and invalidate every consumer.
                        "inputs": inputs + fixture_inputs + unknown_inputs + [test, "tests/**", POLICY,
                                             "scripts/validate-project.py"],
-                       "timeout": policy["timeout_seconds"], "required": True})
+                       "timeout": timeouts.get(test, policy["timeout_seconds"]), "required": True})
     if not result:
         raise ValueError("no registered/discovered test stages")
     return result

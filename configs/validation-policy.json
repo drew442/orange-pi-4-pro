@@ -1,6 +1,9 @@
 {
   "schema": 1,
   "timeout_seconds": 240,
+  "stage_timeouts_seconds": {
+    "tests/test_managed_guest_restore_transaction.py": 1200
+  },
   "documentation": [
     "docs/**",
     "AGENTS.md",

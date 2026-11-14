@@ -52,7 +52,11 @@ and remains required in native beta scope.
 
 Python counts distinguish collected, run, executed and skipped/excluded cases.
 A shell suite counts as one assertion program, not an invented number of internal
-assertions. The per-stage timeout is finite. Existing experimental tests remain
+assertions. The default per-stage timeout is 240 seconds. The native restore-transaction
+suite has an explicit 1200-second allowance after its complete suite exceeded
+240 seconds while a separately observed case passed in 19.361 seconds. Exact
+test-path overrides are bounded to 3600 seconds and enter stage fingerprints;
+other stage limits remain unchanged. Existing experimental tests remain
 available; shared failures are never discarded based on a `managed` filename.
 Until isolation is established, full/beta conservatively includes them. Do not
 add new experimental qualification requirements to the release.

@@ -92,6 +92,44 @@ class WorkflowTests(unittest.TestCase):
         self.assertEqual(3, len(stages))
         self.assertTrue(next(s for s in stages if s["test"] == "tests/test_new_module.py")["required"])
 
+    def test_stage_timeout_override_preserves_default_and_changes_fingerprint(self):
+        before = self.digest()
+        self.policy["stage_timeouts_seconds"] = {"tests/test_boot.py": 1200}
+        stages = VALIDATE.stages(self.root, self.policy, self.paths)
+        self.assertEqual({"tests/test_boot.py": 1200, "tests/test_guest.py": 10},
+                         {stage["test"]: stage["timeout"] for stage in stages})
+        self.assertNotEqual(before, self.digest(stages[0]))
+
+    def test_invalid_stage_timeouts_are_rejected(self):
+        for overrides in (None, [], 1, "bad",
+                          *({"tests/test_boot.py": value} for value in
+                            (True, False, 0, -1, 1.5, "1200", None, 3601, float("inf")))):
+            with self.subTest(overrides=overrides):
+                self.policy["stage_timeouts_seconds"] = overrides
+                (self.root / "configs/validation-policy.json").write_text(json.dumps(self.policy))
+                with self.assertRaises(ValueError):
+                    VALIDATE.load_policy(self.root)
+                with self.assertRaises(ValueError):
+                    VALIDATE.stages(self.root, self.policy, self.paths)
+        self.policy["stage_timeouts_seconds"] = {1: 10}
+        with self.assertRaises(ValueError):
+            VALIDATE.stages(self.root, self.policy, self.paths)
+
+    def test_timeout_override_requires_exact_discovered_test_path(self):
+        for path in ("tests/test_boot_typo.py", "tests/test_*.py", "test_boot.py"):
+            with self.subTest(path=path):
+                self.policy["stage_timeouts_seconds"] = {path: 1200}
+                with self.assertRaisesRegex(ValueError, "undiscovered tests"):
+                    VALIDATE.stages(self.root, self.policy, self.paths)
+
+    def test_repository_timeout_override_is_limited_to_restore_transaction(self):
+        policy = VALIDATE.load_policy(REPO)
+        stages = VALIDATE.stages(REPO, policy, VALIDATE.inventory(REPO))
+        for stage in stages:
+            self.assertEqual(1200 if stage["test"] ==
+                             "tests/test_managed_guest_restore_transaction.py" else 240,
+                             stage["timeout"])
+
     def test_unknown_runtime_invalidates_every_stage_including_full_plans(self):
         unknown = self.root / "scripts/unknown.py"
         unknown.write_text("VALUE = 1\n")
