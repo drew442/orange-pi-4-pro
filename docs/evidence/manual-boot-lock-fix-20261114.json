@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "observation": "manual-beta boot failed unregistered firstkvm launch with missing firstkvm.lock before QEMU",
+  "smallest_change": "create and validate discovered manual guest locks under the retained bootstrap EX lease before account preparation/admission opening",
+  "stop_condition": "affected fixture checks and independent review pass; fresh built root must create lock automatically and support normal manual launch",
+  "review": {
+    "result": "PASS",
+    "model_requested": "gpt-6.1-sol",
+    "effort_requested": "medium",
+    "effective_child_metadata": "unavailable",
+    "diff_sha256": "29f0d473d4c56c4e3a7753ad76158095963f74f4dee1775a5eb23068ad923d0f"
+  },
+  "source_files": {
+    "scripts/guest-boot-accounts.py": {
+      "bytes": 12410,
+      "sha256": "4ab2cdfaad7a11693317579f2d0f2504c5203798337335e727e90875c70ad451"
+    },
+    "tests/test_guest_boot_accounts.py": {
+      "bytes": 20630,
+      "sha256": "b1694f12c7ed839729bdca62544483745885888dc0da1f27b00d70a94e889311"
+    }
+  },
+  "checks": {
+    "native_fixture_tests": 25,
+    "native_fixture_result": "PASS",
+    "ci_result": "PASS 221/221; 3007 executed;817 excluded",
+    "ci_limitation": "early unrelated stages fingerprinted test assertion regex before its correction; final boot-account stage used final bytes"
+  },
+  "deployed": false,
+  "physical_fix_acceptance": false,
+  "records": {
+    "out/beta-release-20261114/manual-lock-native.log": {
+      "bytes": 1180,
+      "sha256": "199bd8ca1393fde5f0baba264513488f74fae726d5457e3eb9d935a61eda0c7e"
+    },
+    "out/beta-release-20261114/CP5-failure.txt": {
+      "bytes": 427,
+      "sha256": "2f9bef404033de520ede03456cc8dc6892467b58dacf453654b8804983afd7be"
+    },
+    "out/beta-release-20261114/manual-failure-live-state.txt": {
+      "bytes": 3547,
+      "sha256": "800751d91698e6c5abfba9444264a1cfc957c411c740b39875d74d57efe310b9"
+    }
+  }
+}

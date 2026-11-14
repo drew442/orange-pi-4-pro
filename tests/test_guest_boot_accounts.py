@@ -8,6 +8,7 @@ import importlib.util
 import os
 from pathlib import Path
 import shlex
+import stat
 import tempfile
 import threading
 import unittest
@@ -166,6 +167,39 @@ class Native(unittest.TestCase):
             self.assertTrue(self.databases[name].startswith(original[name]))
         self.assertIn(b'a733-vm-guest00:', self.databases['passwd'])
         self.assertIn(b'a733-vm-guest31:', self.databases['passwd'])
+
+    def test_manual_lock_prepared_once_without_registration(self):
+        self.enrollment()
+        registry_raw = self.registry_path.read_bytes()
+        lock_path = self.base / 'a733-admission/guests/firstkvm.lock'
+        self.assertFalse(lock_path.exists())
+        self.prepare()
+        before = lock_path.stat()
+        self.assertTrue(stat.S_ISREG(before.st_mode))
+        self.assertEqual((before.st_uid, before.st_gid, stat.S_IMODE(before.st_mode)),
+                         (0, self.admission.gid, 0o640))
+        with self.admission.guest_lock('firstkvm', self.owner.lease) as lock:
+            lock.recheck()
+        self.prepare()
+        after = lock_path.stat()
+        self.assertEqual((before.st_dev, before.st_ino), (after.st_dev, after.st_ino))
+        self.assertEqual(self.registry_path.read_bytes(), registry_raw)
+        self.assertEqual(self.executions, 1)
+
+    def test_unsafe_manual_lock_refused_without_repair(self):
+        self.enrollment()
+        with self.admission.guest_lock('firstkvm', self.owner.lease, create=True):
+            pass
+        lock_path = self.base / 'a733-admission/guests/firstkvm.lock'
+        lock_path.chmod(0o666)
+        before = lock_path.stat()
+        descriptors = len(os.listdir('/proc/self/fd'))
+        self.failure('unsafe admission metadata')
+        after = lock_path.stat()
+        self.assertEqual((before.st_dev, before.st_ino, before.st_mode),
+                         (after.st_dev, after.st_ino, after.st_mode))
+        self.assertEqual(len(os.listdir('/proc/self/fd')), descriptors)
+        self.assertEqual(self.executions, 0)
 
     def test_cross_batch_duplicate_refused_before_any_writes(self):
         for i in range(17):

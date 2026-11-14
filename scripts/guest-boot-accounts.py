@@ -206,6 +206,14 @@ def prepare(owner, expected_storage):
                 guard()
 
             recheck()
+            result['stage'] = 'guest-locks'
+            for identity in identities:
+                recheck()
+                with Resources() as locks:
+                    lock = admission.guest_lock(identity['name'], lease, create=True)
+                    locks.callback(lock.close)
+                    lock.recheck()
+                    recheck()
             for offset in range(0, len(identities), BATCH_LIMIT):
                 result['stage'] = 'account-plan'
                 recheck()
