@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "authorization": "Operator enlarged Hyper-V backing disk and explicitly authorized using all free space to extend the builder LV; Hyper-V modifications prohibited.",
+  "target": "build.drewnet.online:/dev/sda3 -> ubuntu-vg/ubuntu-lv -> ext4 root",
+  "success": true,
+  "HyperV_modified": false,
+  "added_LV_bytes": 35433480192,
+  "LV_bytes": 168518746112,
+  "VG_free_bytes": 0,
+  "available_bytes": 51768569856,
+  "independent_review": {
+    "result": "PASS",
+    "model_requested": "gpt-6.1-sol",
+    "effort_requested": "medium",
+    "effective_runtime_metadata": "unavailable",
+    "script_sha256": "a5152aed65d10139d14483aa0aa6b6715edcc0f8c029219ad3f2d34927657d8f"
+  },
+  "board_storage_modified": false,
+  "records": {
+    "out/beta-release-20261114/grow-builder.py": {
+      "bytes": 4914,
+      "sha256": "a5152aed65d10139d14483aa0aa6b6715edcc0f8c029219ad3f2d34927657d8f"
+    },
+    "out/beta-release-20261114/builder-growth-live.txt": {
+      "bytes": 2354,
+      "sha256": "864be90de5e8a032ab0b9304799807dbb78803bb04306f84523df3b469dbc543"
+    },
+    "out/beta-release-20261114/builder-growth-plan.txt": {
+      "bytes": 1208,
+      "sha256": "8f997cf4c8401420bc88ceb2674c8ca09edb947a5bc0eab81dd428b453645bf6"
+    },
+    "out/beta-release-20261114/builder-growth-complete.json": {
+      "bytes": 3480,
+      "sha256": "3d48b38be904b6134460a03d8c0e38d427e7b7ac285e0d5495e07f64a4fb5712"
+    },
+    "out/beta-release-20261114/builder-growth-records.tar.gz": {
+      "bytes": 3586,
+      "sha256": "a80e5c17000c1f8d6557f899830d14c617096b0d136a7b6d6e29293db8a97a11"
+    },
+    "out/beta-release-20261114/builder-growth-postcheck.txt": {
+      "bytes": 336,
+      "sha256": "d472712c309249d55467a0c69606af96543cff7890ae7c836bd8a0d4bf2145e3"
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "source_commit": "7325069",
+  "CI": {
+    "status": "PASS",
+    "stages": 221,
+    "executed": 3011,
+    "excluded": 817
+  },
+  "native": {
+    "status": "PASS",
+    "stages": 221,
+    "collected": 3828,
+    "executed": 3828,
+    "excluded": 0,
+    "unit": "a733-manual-beta-native-20261114-02.service",
+    "result": "success",
+    "ExecMainStatus": 0
+  },
+  "correction": "Only restore-transaction suite1200s; other stages240s; authenticated retained SPI fixtures provided. Previous timeout/unavailable results preserved.",
+  "physical_gates": "NOT_EVALUATED",
+  "records": {
+    "out/beta-release-20261114/native-02-summary.json": {
+      "bytes": 1114821,
+      "sha256": "f6303994bab374b27e53c96c98f9f9b06d629a6282ec716369a605c8ce65c1fb"
+    },
+    "out/beta-release-20261114/native-02-records.tar.gz": {
+      "bytes": 232567,
+      "sha256": "a4f3b83f4827841d5464e3ece80cc44e402f6aa2cb852db01c18f509f9316c10"
+    },
+    "out/beta-release-20261114/native-spi-fixture-pins.json": {
+      "bytes": 653,
+      "sha256": "e3372ddbd3ae8a3deb05881eb9f35675d869211e30067715b5380135b6e0abdf"
+    },
+    "out/beta-release-20261114/final-ci/summary.json": {
+      "bytes": 1414501,
+      "sha256": "2819dbdafdea784321fee9c034bbd3c96a059d99e4db4db59ad43d869719a614"
+    }
+  }
+}
