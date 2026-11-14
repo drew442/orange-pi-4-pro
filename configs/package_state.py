@@ -191,13 +191,19 @@ def _entries(source):
         else:
             raise ValueError(f'unsupported package-state object: {path}')
     visit(source, '.')
-    # resolve() also detects chained links that escape or form loops. It is
-    # used for validation only; never for choosing a write destination.
+    # Strict resolution detects loops even on Python >=3.13, where non-strict
+    # resolve() suppresses ELOOP. Preserve the existing allowance for dangling
+    # component-local links. Resolution never chooses a write destination.
     for item in records:
         if item['type'] == 'symlink':
             try:
-                (source / item['path']).resolve().relative_to(source.resolve())
-            except (ValueError, RuntimeError) as error:
+                link = source / item['path']
+                try:
+                    resolved = link.resolve(strict=True)
+                except FileNotFoundError:
+                    resolved = link.resolve()
+                resolved.relative_to(source.resolve())
+            except (OSError, ValueError, RuntimeError) as error:
                 raise ValueError('escaping or cyclic package-state symlink') from error
     return records
 

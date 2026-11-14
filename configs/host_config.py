@@ -146,3 +146,21 @@ def timesync_policy(metadata):
             type(helper['sha256']) is str and re.fullmatch('[0-9a-f]{64}', helper['sha256']) is not None,
             'invalid timesync helper pin')
     return policy
+
+
+GUEST_MANAGEMENT_PROFILES = ('manual-beta', 'managed-experimental')
+DEFAULT_GUEST_MANAGEMENT_PROFILE = GUEST_MANAGEMENT_PROFILES[0]
+
+
+def guest_management_profile(metadata):
+    """Closed immutable-root feature switch; older descriptors default to manual.
+
+    This affects newly packaged runtime code only, never already installed code.
+    Management network state and environment variables confer no opt-in authority.
+    """
+    if type(metadata) is not dict:
+        raise ValueError('invalid payload metadata')
+    profile = metadata.get('guest_management_profile', DEFAULT_GUEST_MANAGEMENT_PROFILE)
+    if type(profile) is not str or profile not in GUEST_MANAGEMENT_PROFILES:
+        raise ValueError('unknown guest management profile')
+    return profile

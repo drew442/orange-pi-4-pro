@@ -585,6 +585,7 @@ def prepare():
         creator_guard()
         boot_id = ADMISSION._boot_id()
         guard()
+        managed = CONTEXT.MANAGEMENT.guest_management_profile() == 'managed-experimental'
         require(CONTEXT.module('prepare_admission', 'scripts/guest-admission.py') is ADMISSION and
                 all(component.ADMISSION is ADMISSION for component in
                     (ACCOUNTS, BOOT_POLICY.CONTEXT, ACTIVATE, MANUAL, MAINTENANCE)),
@@ -646,7 +647,10 @@ def prepare():
                 controller.context.guard()
                 authority()
             registry = _registry(controller, context_guard)
-            initial_names = [entry['name'] for entry in registry['guests']]
+            # Manual beta still authenticates shared storage, restore census,
+            # accounts, admission and attestation. It never reconciles managed
+            # cohorts or publishes their launch units during boot.
+            initial_names = [entry['name'] for entry in registry['guests']] if managed else []
             eligible = []
             for name in initial_names:
                 context_guard()
@@ -677,7 +681,7 @@ def prepare():
                 registry = _registry(controller, context_guard)
                 require([e['name'] for e in registry['guests']] == initial_names, 'registry names changed')
             result['stage'] = 'unit-format'
-            configs = _configs(controller, registry['guests'], context_guard)
+            configs = _configs(controller, registry['guests'], context_guard) if managed else []
             memory = physical_memory()
             budget = dict(UNITS.check_budget(configs, memory))
             texts = {UNITS.SLICE_NAME: UNITS.render_slice(memory).encode('ascii')}

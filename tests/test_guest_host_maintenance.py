@@ -58,6 +58,9 @@ class Boundaries(unittest.TestCase):
 @unittest.skipUnless(os.getresuid() == (0, 0, 0), 'protected native tmpfs fixture requires root')
 class Installed(unittest.TestCase):
     def setUp(self):
+        profile = patch.object(M.CONTEXT.MANAGEMENT, 'guest_management_profile', return_value='managed-experimental')
+        profile.start()
+        self.addCleanup(profile.stop)
         self.tmp = tempfile.TemporaryDirectory(dir='/run', prefix='a733-maintenance-tests-')
         self.addCleanup(self.tmp.cleanup)
         self.base = Path(self.tmp.name)

@@ -1,0 +1,4 @@
+# Avoid loading historical narratives/evidence during routine code discovery.
+# Explicit paths or rg --no-ignore can retrieve a needed record.
+/docs/archive/
+/docs/evidence/

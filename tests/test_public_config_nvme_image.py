@@ -378,6 +378,146 @@ class PinnedMetadataTests(unittest.TestCase):
             with self.subTest(label=label), self.assertRaisesRegex(ValueError, error):
                 M.validate_metadata(*metadata)
 
+class CurrentComposition(unittest.TestCase):
+    def config(self, state_build=True):
+        def item(name, size=123):
+            return dict(path='/missing/' + name, bytes=size, sha256='a' * 64)
+        inputs = {name: item(name) for name in M.CURRENT_INPUTS}
+        for name, pin in (('base-gzip', M.WIRE), ('base-manifest', M.MANIFEST)):
+            inputs[name].update(pin)
+        for name in ('root-a', 'root-b'):
+            inputs[name]['bytes'] = 4 * 1024**3
+        result = dict(schema=1, root_profile=M.CURRENT_PROFILE, inputs=inputs)
+        if state_build:
+            result['state_build'] = {name: item(name) for name in M.STATE_BUILD_INPUTS}
+        else:
+            inputs['state'] = item('state', 8 * 1024**3)
+            inputs['state-manifest'] = item('state-manifest')
+        return result
+
+    def test_closed_input_contract_and_invalid_placeholder_example(self):
+        for building in (False, True):
+            value = self.config(building)
+            self.assertEqual(M.validate_input_config(value), value)
+            for label, mutate in (
+                    ('profile', lambda x: x.update(root_profile='managed-experimental')),
+                    ('schema bool', lambda x: x.update(schema=True)),
+                    ('base authority', lambda x: x['inputs']['base-gzip'].update(sha256='0'*64)),
+                    ('image size', lambda x: x['inputs']['root-a'].update(bytes=512)),
+                    ('path traversal', lambda x: x['inputs']['root-a'].update(path='/tmp/../root')),
+                    ('device input', lambda x: x['inputs']['root-a'].update(path='/dev/nvme0n1')),
+                    ('alias', lambda x: x['inputs']['root-a'].update(path=x['inputs']['root-b']['path'])),
+                    ('unknown', lambda x: x.update(extra=True))):
+                bad = copy.deepcopy(value)
+                mutate(bad)
+                with self.subTest(building=building, label=label), self.assertRaises(ValueError):
+                    M.validate_input_config(bad)
+        example = json.loads((REPO / 'configs/beta-composition.example.json').read_bytes())
+        with self.assertRaisesRegex(ValueError, 'pin'):
+            M.validate_input_config(example)
+        with self.assertRaisesRegex(ValueError, 'duplicate'):
+            json.loads('{"schema":1,"schema":1}', object_pairs_hook=M.unique_pairs)
+
+    def metadata(self, directory):
+        identity = M.RUNTIME.STATE_UUID
+        paths = {name: directory / name for name in M.NEW}
+        import uuid
+        sb = bytearray(2048)
+        sb[1024+56:1024+58] = b'\x53\xef'
+        sb[1024+104:1024+120] = uuid.UUID(identity).bytes
+        sb[1024+92:1024+96] = (4).to_bytes(4, 'little')
+        paths['state'].write_bytes(sb)
+        components = copy.deepcopy(M.NEW)
+        selection = dict(M.SELECTION, ROOT_MARKER_SHA256='c'*64)
+        base = dict(files={'nvme.img.gz': M.WIRE, 'nvme.img': M.RAW}, protected_boot=M.BASE.NEW_BOOT,
+                    state_uuid=identity, kernel_release='6.6.98-a733-diag',
+                    filesystem_uuids={'root-a': selection['ROOT_UUID'],
+                                      'root-b': 'a7330000-0000-4000-8000-00000000000b'})
+        roots = dict(kernel_release=base['kernel_release'], guest_management_profile='manual-beta',
+                     slot_uuids={'A': base['filesystem_uuids']['root-a'], 'B': base['filesystem_uuids']['root-b']},
+                     files={'root-A.ext4': components['root-a'], 'root-B.ext4': components['root-b']})
+        serialized = json.dumps(selection, sort_keys=True).encode()
+        state = dict(state_uuid=identity, boot_selection=selection, files={'state.ext4': components['state']},
+                     sources={'boot_selection_input': record(serialized)})
+        config = SimpleNamespace(guest_management_profile=lambda x: x['guest_management_profile'])
+        payload = SimpleNamespace(CONFIG=config, validate_source_bindings=lambda *a: None)
+        select = SimpleNamespace(INIT=SimpleNamespace(PAYLOAD=payload), serialize=lambda x: json.dumps(x, sort_keys=True).encode())
+        nvme = SimpleNamespace(SELECT=select, validate_roots=lambda x: None,
+            HOST=SimpleNamespace(KERNEL_RELEASE=base['kernel_release'], record=record,
+                                 load_boot_profile=lambda x: ({}, {}, {})),
+            root_selection=lambda p, slot, *a: dict(selection, SLOT=slot,
+                ROOT_UUID=roots['slot_uuids'][slot]),
+            validate_state_identity=lambda *a: None, installation_intent=lambda *a: {'for_installation': False},
+            debugfs=lambda p, cmd: serialized if cmd.endswith('selected.conf') else
+                ('a733-state-v1\n'+identity+'\n').encode())
+        return base, roots, state, components, paths, nvme
+
+    def test_current_metadata_binds_actual_selector_current_root_and_retained_boot(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            base, roots, state, components, paths, nvme = self.metadata(Path(temporary))
+            with patch.object(M, 'current_module', return_value=nvme):
+                self.assertEqual(M.validate_current_metadata(base, roots, state, components, paths),
+                                 {'for_installation': False})
+                for label, mutate in (
+                    ('old selector', lambda b,r,s: s['boot_selection'].update(ROOT_MARKER_SHA256='d'*64)),
+                    ('BOOT UUID', lambda b,r,s: s.update(state_uuid='11111111-1111-4111-8111-111111111111')),
+                    ('profile', lambda b,r,s: r.update(guest_management_profile='managed-experimental')),
+                    ('BOOT', lambda b,r,s: b.update(protected_boot=record(b'wrong'))),
+                    ('component', lambda b,r,s: r['files'].update({'root-A.ext4': record(b'wrong')}))):
+                    values = copy.deepcopy((base, roots, state))
+                    mutate(*values)
+                    with self.subTest(label=label), self.assertRaises(ValueError):
+                        M.validate_current_metadata(*values, components, paths)
+                with patch.object(nvme, 'debugfs', return_value=b'old selector'):
+                    with self.assertRaisesRegex(ValueError, 'actual STATE'):
+                        M.validate_current_metadata(base, roots, state, components, paths)
+                with patch.object(nvme, 'validate_state_identity', side_effect=ValueError('identity differs')):
+                    with self.assertRaisesRegex(ValueError, 'identity differs'):
+                        M.validate_current_metadata(base, roots, state, components, paths)
+
+    def test_state_build_uses_current_selector_and_existing_builder_with_boot_uuid(self):
+        value = self.config()
+        events = []
+        class Held:
+            def __init__(self, path, maximum, expected=None):
+                self.path = Path(path)
+                self.record = record(json.dumps(value).encode()) if expected is None else expected
+                self.initial_identity = (1, str(path))
+            def __enter__(self): return self
+            def __exit__(self, *args): pass
+            def read(self):
+                return json.dumps({'guest_management_profile': 'manual-beta'} if
+                                  self.path.name == 'roots-manifest' else value).encode()
+            def verify(self): events.append('verify:'+str(self.path))
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = Path(temporary)
+            (repo/'out').mkdir()
+            selector = SimpleNamespace(prepare=lambda root, slot, manifest: b'CURRENT_SELECTOR\n')
+            def state_build(rootfs, config, key, output, selection, **kwargs):
+                self.assertEqual(kwargs, dict(state_uuid=M.RUNTIME.STATE_UUID,
+                    metadata_profile='fakeroot-raw-xattrs-v1', userspace_profile='timesync-20261106'))
+                self.assertEqual(selection.read_bytes(), b'CURRENT_SELECTOR\n')
+                events.append('state-build')
+                output.mkdir()
+                (output/'manifest.json').write_bytes(b'{}')
+                (output/'state.ext4').write_bytes(b'fixture-state')
+            def compose(*args, **kwargs):
+                self.assertEqual(kwargs['root_profile'], M.CURRENT_PROFILE)
+                self.assertEqual(kwargs['current_inputs']['state'], record(b'fixture-state'))
+                self.assertEqual(args[-1], repo/'out/public-config-nvme-image-fixture')
+                kwargs['final_check']()
+                events.append('publish')
+                return {'success': True}
+            with patch.object(M, 'REPO', repo), patch.object(M.RUNTIME, 'HeldInput', Held), \
+                    patch.object(M, 'current_module', return_value=SimpleNamespace(SELECTION=selector, build=state_build)), \
+                    patch.object(M.BASE.BOOT.VGIC, 'file_record', side_effect=lambda p: record(p.read_bytes())), \
+                    patch.object(M, 'build', side_effect=compose):
+                self.assertEqual(M.build_current(repo/'config.json', repo/'out/public-config-nvme-image-fixture'),
+                                 {'success': True})
+            self.assertEqual(events[0], 'state-build')
+            self.assertEqual(events[-1], 'publish')
+            self.assertGreater(len([x for x in events if x.startswith('verify:')]), 5)
+
 
 if __name__ == '__main__':
     unittest.main()

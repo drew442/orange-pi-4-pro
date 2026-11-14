@@ -1,0 +1,48 @@
+name: Host regressions
+on:
+  pull_request:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Host scope (CI exclusions remain explicit; physical gates are separate)
+        type: choice
+        options: [focused, full]
+        default: focused
+permissions:
+  contents: read
+jobs:
+  validate:
+    # Change the CI distro deliberately; it is not the frozen native builder.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check changed whitespace
+        env:
+          BASE: ${{ github.event.pull_request.base.sha || github.event.before || 'HEAD' }}
+        run: |
+          if ! git rev-parse --verify "$BASE^{commit}" >/dev/null 2>&1; then BASE=HEAD; fi
+          git diff --check "$BASE"
+      - name: Check documentation targets and agent configuration
+        run: python3 scripts/check-project-docs.py
+      - name: Plan and run unprivileged host checks
+        env:
+          BASE: ${{ github.event.pull_request.base.sha || github.event.before || 'HEAD' }}
+          MODE: ${{ inputs.mode || 'focused' }}
+        run: |
+          if ! git rev-parse --verify "$BASE^{commit}" >/dev/null 2>&1; then BASE=HEAD; fi
+          test "$(id -u)" != 0
+          mkdir -p out/validation/ci
+          python3 scripts/validate-project.py --scope ci --mode "$MODE" --base "$BASE" --plan > out/validation/ci/plan.json
+          python3 scripts/validate-project.py --scope ci --mode "$MODE" --base "$BASE" --output out/validation/ci
+      - name: Retain plan, receipts and raw output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: host-validation-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            out/validation/ci/

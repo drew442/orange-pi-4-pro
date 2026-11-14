@@ -38,6 +38,9 @@ STORAGE = dict(state_uuid='22222222-2222-4222-8222-222222222222',
 @unittest.skipUnless(os.geteuid() == 0, 'protected ownership tests require root')
 class ManagedCheckpoint(unittest.TestCase):
     def setUp(self):
+        profile = patch.object(L.CONTEXT.MANAGEMENT, 'guest_management_profile', return_value='managed-experimental')
+        profile.start()
+        self.addCleanup(profile.stop)
         temporary = tempfile.TemporaryDirectory(dir='/run', prefix='managed-checkpoint-tests-')
         self.addCleanup(temporary.cleanup)
         self.base = Path(temporary.name)

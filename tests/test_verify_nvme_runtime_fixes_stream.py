@@ -8,6 +8,7 @@ import io
 import json
 import os
 from pathlib import Path
+import sys
 import tempfile
 import subprocess
 import types
@@ -15,6 +16,12 @@ import unittest
 from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def simulated_flags(**overrides):
+    # Preserve every actual interpreter flag used by argparse/subprocess.
+    values = {name: getattr(sys.flags, name) for name in dir(sys.flags) if not name.startswith("_")}
+    return types.SimpleNamespace(**(values | overrides))
 
 
 def load(name, path):
@@ -119,7 +126,7 @@ class AdapterTests(unittest.TestCase):
         self.assertEqual(V.PHASE, '/var/lib/a733-clean-replay-20261106/nvme-timesync-runtime-fixes-01')
         self.assertEqual(V.STATE_UUID, '360dfb39-f49f-487e-b307-0bb887c854c5')
         wire = io.BytesIO(b'binary stdin forwarding fixture')
-        flags = types.SimpleNamespace(isolated=True, dont_write_bytecode=True)
+        flags = simulated_flags(isolated=True, dont_write_bytecode=True)
         # In-process argument forwarding only; no CLI subprocess or real stream
         # success is represented by the stubbed verifier.
         with mock.patch.object(V.sys, 'flags', flags), \
@@ -241,7 +248,7 @@ class AdapterTests(unittest.TestCase):
                     return {'success': True}
                 parent.verify = mutate
                 A.adapt(parent, held)
-                flags = types.SimpleNamespace(isolated=True, dont_write_bytecode=True)
+                flags = simulated_flags(isolated=True, dont_write_bytecode=True)
                 output = io.StringIO()
                 with mock.patch.object(parent.sys, 'flags', flags), contextlib.redirect_stdout(output):
                     with self.assertRaises(ValueError):

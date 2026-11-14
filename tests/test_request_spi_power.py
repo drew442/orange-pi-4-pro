@@ -17,6 +17,12 @@ SPEC.loader.exec_module(H)
 BOOT = 'a0140bd2-8acd-4f97-8175-34136a5bb3a5'
 
 
+def simulated_flags(**overrides):
+    # Preserve every actual interpreter flag used by argparse/subprocess.
+    values = {name: getattr(sys.flags, name) for name in dir(sys.flags) if not name.startswith("_")}
+    return NS(**(values | overrides))
+
+
 def arguments():
     return NS(expected_boot_id=BOOT, request_id=BOOT, action='reboot',
               expected_head_sha256='a' * 64, expected_registry_sha256='b' * 64)
@@ -136,7 +142,7 @@ class PowerRequestTests(unittest.TestCase):
                     patch.object(H, 'execute', side_effect=AssertionError('execute')):
                 with self.assertRaises(SystemExit): H.main(argv)
         with contextlib.redirect_stderr(io.StringIO()), \
-                patch.object(H.sys, 'flags', NS(isolated=0, dont_write_bytecode=1)):
+                patch.object(H.sys, 'flags', simulated_flags(isolated=0, dont_write_bytecode=1)):
             with self.assertRaises(SystemExit): H.main(good)
 
     def test_exact_once_and_ex_release_before_command(self):

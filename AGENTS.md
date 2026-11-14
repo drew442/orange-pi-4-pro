@@ -1,33 +1,67 @@
-# Repository Guidelines
+# Repository guidelines
 
-## Purpose and Current State
+## Scope and starting context
 
-Build a minimal KVM/QEMU host for the **Orange Pi 4 Pro A733**, nominal 250 GB NVMe and 2 GB SD recovery card. Read `docs/implementation-status.md` first, then relevant plan sections. SPI/NVMe with SD removed, metadata-aware SPI recovery and actual manual nonroot KVM/checkpoint pass. The goal is paused by the operator. The board runs `fb29af4` B at `.118` (strict alias `.116`), boot `14d3fd72…0ace`, SD absent. Actual managed KVM CPU/disk/HTTP and guest-owned SHUTDOWN/unforced raw exit0 were observed, but terminal socket-path validation quarantined before checkpoint. Supported restore07 now leaves generation24 disabled/ready0 and admission shutdown-closed; fresh boot is required. The terminal-path repair is reviewed and committed at `2675847`, not installed; full Ubuntu validation was running when paused. No new custody/retirement or construction was started. Read the pause handoff before resuming. Final managed boot counts remain0/0. Preserve A, CP5/manual guest, retained failed cohorts, recovery SD and original/calibrated SPI backups. Follow `docs/spi-production-readiness-plan.md`; APIs are not hardware acceptance. Reuse retained >20-hour data for the eight-hour gate; cap future planned tests at eight hours. Retain the unexplained SSH failure and source/license limitations in status.
+Build a minimal KVM/QEMU host for **Orange Pi 4 Pro only**, with mandatory
+SPI/NVMe boot and a 2 GB recovery SD. Another identical unit needs its own
+identity and storage plan; no other Orange Pi model or generic A733 board is
+supported. Keep the minimal host and zero routine SD writes.
 
-Vendor images exceed the available SD capacity. Use diagnostic outputs for inventory; leave attached heatsinks in place. Prefer SPI-to-NVMe boot; otherwise keep SD boot files read-only with zero routine writes. Require an actual KVM guest for hardware acceptance.
+Read `docs/implementation-status.md` first and `docs/beta-scope.md` for release
+promises. Read only the operator/reference pages needed for the task. Historical
+documents and `docs/evidence/` are reference material, not an active work queue.
+The recorded hardware goal remains paused; a repository PR does not resume it.
 
-## Structure and Commands
+## Finite work and validation
 
-- `.codex/config.toml` and `.codex/agents/`: coordinator defaults and worker roles.
-- `docs/`: implementation plan, current status, host assessment and routing policy.
-- `configs/build-host-packages.txt`: vendor-derived Ubuntu 22.04 builder dependencies.
-- `build/`: pinned diagnostic and host bootstrap/root/state recipes; see `docs/`.
-- `scripts/`: guarded NVMe maintenance, SPI preparation, guest activation and KVM-only launch.
-- `tests/`: host packaging and planner regressions; no hardware acceptance claims.
-- `tmp/` and `out/`: ignored research downloads and generated artifacts.
+- Admit new pre-release work only for a promised feature or concrete serious
+  defect. State the observation, smallest useful change/check, and stop condition.
+  Put optional improvements in `docs/roadmap.md`; do not grow release gates.
+- Use `scripts/validate-project.py` and `docs/validation-policy.md`. Run affected
+  checks; consume its compact result once. Keep raw logs under ignored `out/`.
+  Reuse successful checks/reviews when relevant bytes and assumptions match.
+  A new commit or documentation change does not invalidate hardware evidence.
+- Scripts do deterministic inventories, hashing, testing, and summaries. Do not
+  poll or re-interpret successful logs with agents. On failure preserve the error,
+  make one justified correction/investigation, then rerun the affected check.
+- Beta uses upstream Linux/KVM/QEMU validation plus actual board integration
+  evidence. No new endurance gate, upstream conformance campaign, mandatory
+  second construction, or managed ten-cold/ten-warm boot campaign.
+- Never claim an unbuilt image, unperformed physical check, skipped required
+  stage, or unresolved background job passed. Keep full source provenance while
+  using relevant dependency fingerprints for test reuse.
 
-Run all `tests/test-*.sh` with Bash, `python3 tests/test-assemble-diagnostic.py`, and `python3 -m unittest discover -s tests -p 'test_*.py'`. Run `git diff --check`, parse modified TOML with Python `tomllib`, and use `bash -n` for Bash syntax checks. Record end-to-end build evidence separately; host checks do not establish physical boot.
+## Agent routing
 
-## Agent Routing
+Follow `docs/agent-routing.md`: Sol 6.1 low for routine coordination and bounded
+implementation; medium for ambiguous integration and normal independent review;
+high for difficult diagnosis/review. Luna handles narrow extraction; Astra is a
+deliberate escalation. Use explicit models/efforts and focused fresh handoffs.
+Zero or one child is normal, at most two active; no nested delegation or duplicate
+coordinator work. One writer per file. Inspect effective runtime metadata when
+available; role names and model self-reports are not proof of routing.
 
-Delegate bounded work according to `docs/agent-routing.md`: Luna for extraction, Sol for implementation/review, Astra only for justified escalation. Use explicit model and effort with focused fresh-context handoffs. Limit active children to two, prohibit nested delegation, and assign one writer per file. Keep architecture, integration and acceptance with the coordinator.
+## Runtime and device invariants
 
-## Changes and Validation
+The default is the `manual-beta` profile. Keep working manual guest operations,
+shared admission/ownership/locking, storage preparation and teardown. Park
+automatic managed dispatch; retain its source dependencies and recovery tools.
+Never bypass guest manifest/checkpoint admission with an undocumented raw launch.
 
-Use descriptive names, consistent language-native formatting, and focused patches. Reserve `a733-managed-*.service` for guest supervisors; maintenance stops this wildcard. Pin vendor revisions and cite source paths for hardware claims. Add meaningful regression tests with behavior changes. Independently review boot, disk selection and rollback logic; record hardware evidence separately from host checks. Identify exact erase/SPI targets and honor persisted operator authorization; request yes/no only for unapproved targets or scope. The known board SD, NVMe and SPI writes are authorized; see `docs/evidence/storage-write-authorization-20261108.json`. Make installation readback optional and show progress; do not benchmark hardware to diagnose installation duration. All free capacity on the Ubuntu build host is approved for use/expansion without another permission request; revalidate exact targets and retain independent review.
+Independently review consequential boot, disk-selection, firmware-writing, and
+rollback changes. Model strength cannot replace real KVM/boot evidence. Honor
+persisted authorization for the known board's SD/NVMe/SPI and free Ubuntu-builder
+capacity (`docs/evidence/storage-write-authorization-20261108.json`); revalidate
+live targets and idle state. Ask again only for genuinely new targets or scope.
+Respect an operator pause. Do not reopen shutdown-closed RAM admission to avoid
+the required fresh boot. Preserve recovery roots, guest checkpoints, failed
+cohorts and original/calibrated SPI backups. Leave heatsinks in place.
 
-Use imperative commit subjects. Commit coherent changes with validation results; pull requests should explain purpose, risks and linked issues where applicable. Keep generated images, downloaded sources and secrets out of Git.
+## Delivery
 
-## Documentation Hygiene
-
-Keep this guide concise and current. Replace obsolete instructions instead of appending history. Store evolving decisions and blockers in the status file, detailed evidence in linked documents, and raw logs outside routine agent context. Never describe an untested image or unavailable hardware check as successful.
+Use focused patches and imperative commits. PRs explain the problem, behavior,
+checks, reused evidence and remaining physical gates. Follow
+`docs/build-and-release.md` for packaging in this repository. Keep images,
+downloads, raw logs, identities and secrets out of Git. Preserve byte-pinned
+evidence paths during documentation cleanup. Keep evolving state only in the
+status page; update current instructions instead of appending another saga.

@@ -47,15 +47,18 @@ class GuestServicePackagingTests(unittest.TestCase):
 
     def test_ram_wants_keep_management_independent_and_run_no_commands(self):
         with patch.object(MANAGEMENT, 'runtime_guard', return_value=CONFIG), \
+             patch.object(MANAGEMENT, 'guest_management_profile', return_value='manual-beta'), \
              patch.object(MANAGEMENT, 'prepare_clock_state'), \
              patch.object(MANAGEMENT, 'ram_directory'), patch.object(MANAGEMENT, 'atomic_write'), \
              patch.object(MANAGEMENT.os, 'chmod'), patch.object(MANAGEMENT, 'ram_link') as link, \
              patch.object(MANAGEMENT.subprocess, 'run') as command:
             MANAGEMENT.prepare()
         links = dict(call.args for call in link.call_args_list)
-        for name in (*NAMES, 'a733-management-ssh.service', 'systemd-networkd.service'):
+        for name in ('a733-guest-storage.service', 'a733-management-ssh.service', 'systemd-networkd.service'):
             self.assertEqual(links['/etc/systemd/system/multi-user.target.wants/' + name],
                              '/lib/systemd/system/' + name)
+        self.assertEqual(links['/etc/systemd/system/a733-guest-prepare.service'], '/dev/null')
+        self.assertEqual(links['/etc/systemd/system/multi-user.target.wants/a733-guest-prepare.service'], '/dev/null')
         self.assertFalse(any('a733-managed-' in target for target in links))
         command.assert_not_called()
         for name in NAMES:

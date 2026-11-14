@@ -91,6 +91,7 @@ def management_profile(metadata):
 
 def validate_guest_boot_runtime(metadata):
     """Accept legacy absence or the closed, versioned guest boot descriptor."""
+    CONFIG.guest_management_profile(metadata)
     if 'guest_boot_runtime' not in metadata:
         return
     value = metadata['guest_boot_runtime']
@@ -109,6 +110,8 @@ def validate_guest_boot_runtime(metadata):
 
 def validate_guest_boot_bindings(actual, expected):
     """Require matching validated descriptors, including explicit presence."""
+    if CONFIG.guest_management_profile(actual) != CONFIG.guest_management_profile(expected):
+        raise ValueError('root guest management profile differs from trusted manifest')
     validate_guest_boot_runtime(actual)
     validate_guest_boot_runtime(expected)
     if (('guest_boot_runtime' in actual) != ('guest_boot_runtime' in expected) or
@@ -505,7 +508,9 @@ def validate_builder_packages(lock_path):
             for name, (version, architecture) in sorted(actual.items())}
 
 
-def build(rootfs, diagnostic, output, metadata_profile='native', userspace_profile=DEFAULT_USERSPACE_PROFILE):
+def build(rootfs, diagnostic, output, metadata_profile='native', userspace_profile=DEFAULT_USERSPACE_PROFILE,
+          guest_management_profile=CONFIG.DEFAULT_GUEST_MANAGEMENT_PROFILE):
+    CONFIG.guest_management_profile({'guest_management_profile': guest_management_profile})
     backend = validate_metadata_profile(metadata_profile)
     userspace = userspace_binding(userspace_profile)
     clock_policy = clock_state_policy(userspace_profile)
@@ -612,6 +617,7 @@ def build(rootfs, diagnostic, output, metadata_profile='native', userspace_profi
                 'sources': sources, 'modules_bom': file_record(output / 'modules.json'),
                 'management_runtime': management, 'guest_boot_runtime': guest_boot,
                 'maintenance_runtime': maintenance,
+                'guest_management_profile': guest_management_profile,
                 'systemd_masks': systemd_masks,
                 'package_state': package_state,
                 'cache_pruning': cache_pruning})
@@ -628,6 +634,7 @@ def build(rootfs, diagnostic, output, metadata_profile='native', userspace_profi
         'slot_uuids': SLOT_UUIDS, 'sources': sources, 'files': files,
         'management_runtime': management, 'guest_boot_runtime': guest_boot,
         'maintenance_runtime': maintenance,
+        'guest_management_profile': guest_management_profile,
         'systemd_masks': systemd_masks,
         'package_state': package_state,
         'cache_pruning': cache_pruning,
@@ -644,9 +651,12 @@ def main():
     parser.add_argument('output', type=Path)
     parser.add_argument('--metadata-profile', choices=METADATA_PROFILES, default='native')
     parser.add_argument('--userspace-profile', choices=USERSPACE_PROFILES, default=DEFAULT_USERSPACE_PROFILE)
+    parser.add_argument('--guest-management-profile', choices=CONFIG.GUEST_MANAGEMENT_PROFILES,
+                        default=CONFIG.DEFAULT_GUEST_MANAGEMENT_PROFILE)
     args = parser.parse_args()
     try:
-        build(args.rootfs_tar, args.diagnostic_artifact_dir, args.output, args.metadata_profile, args.userspace_profile)
+        build(args.rootfs_tar, args.diagnostic_artifact_dir, args.output, args.metadata_profile, args.userspace_profile,
+              args.guest_management_profile)
     except (ValueError, OSError, tarfile.TarError, subprocess.CalledProcessError) as error:
         parser.exit(1, f'host payload: {error}\n')
 

@@ -208,6 +208,7 @@ class StateController:
         stack = ExitStack()
         inspection = None
         try:
+            CONTEXT.MANAGEMENT.require_managed_runtime()
             REGISTRY._digest(trusted_manifest_sha256)
             REGISTRY._uuid(run_id)
             require(type(automatic) is bool, 'automatic must be boolean')
@@ -324,6 +325,7 @@ class StateController:
         result = receipt('enroll', name)
         result.update(manifest_sha256=trusted_manifest_sha256, enabled_requested=enabled)
         try:
+            CONTEXT.MANAGEMENT.require_managed_runtime()
             REGISTRY._digest(trusted_manifest_sha256)
             require(type(enabled) is bool, 'enabled must be boolean')
             require(name != 'firstkvm', 'firstkvm must remain manual')
@@ -474,6 +476,7 @@ class StateController:
         result = receipt('enable', name)
         result['manifest_sha256'] = trusted_manifest_sha256
         try:
+            CONTEXT.MANAGEMENT.require_managed_runtime()
             REGISTRY._digest(trusted_manifest_sha256)
             require(name != 'firstkvm', 'firstkvm must remain manual')
             result['stage'] = 'guest-lock'

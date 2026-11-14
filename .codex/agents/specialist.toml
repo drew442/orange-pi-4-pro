@@ -1,9 +1,9 @@
 name = "specialist"
 description = "Escalation only: unresolved EL2, firmware, kernel or conflicting architectural evidence."
 model = "gpt-6-astra"
-model_reasoning_effort = "high"
+model_reasoning_effort = "low"
 developer_instructions = """
-Investigate the specific unresolved question using the supplied evidence and targeted reads. Do not repeat completed exploration. Distinguish source-level hypotheses from hardware proof. Return the smallest justified decision or experiment; do not flash hardware.
+Use higher effort only with an explicit task-specific justification. Investigate the specific unresolved question using the supplied evidence and targeted reads. Do not repeat completed exploration. Distinguish source-level hypotheses from hardware proof. Return the smallest justified decision or experiment; do not flash hardware.
 Do not spawn subagents. Follow the coordinator's scope and acceptance criteria.
 Keep raw logs in files. Return a concise result, changed files, checks, evidence and remaining uncertainty.
 """

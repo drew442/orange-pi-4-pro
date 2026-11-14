@@ -1,35 +1,9 @@
-# Host updates and manual rollback
+# Host updates
 
-Use the [current matched A/B payloads](matched-host-updates-20261109.md) for the
-protected installation's roots, manifest pin and maintenance tree. Generated
-November 4 paths below are historical examples; they bind a different payload.
-Consult the [retention map](build-cache-retention.md#replay-and-prototype-output-retention)
-before attempting to reuse any historical generated path.
-
-Routine updates replace and flush the inactive 4 GiB NVMe root, then explicitly
-publish its selector on NVMe STATE. The writer offers optional full target
-readback; selection independently authenticates the installed root. The earlier release
-passes [physical staging, interrupted publication, cancellation and booted rollback](physical-host-update-rollback-20261110.md).
-Use the separate [selection controller](host-root-selection.md) to activate a
-verified slot; retain the recorded root/STATE pairing.
-
-The current source candidate adds installed maintenance admission before staging
-or selection. It requires bootstrap-prepared runtime, mounted guest storage and
-a protected managed registry, including an empty registry for a manual-only host.
-It stops managed guests, refuses active manual leases and reopens admission only
-after successful transaction cleanup and guest readiness checks. Failure leaves
-admission closed for [explicit recovery](guest-maintenance-admission.md#recover-a-failed-maintenance-closure). [Independent review, 2905 Ubuntu tests
-and private-loop transactions pass](evidence/installed-maintenance-admission-validation-20261112.json).
-This candidate remains uninstalled; its bootstrap integration and physical
-deployment acceptance are pending. Use the pinned released maintenance tree for
-the existing installation until the new matched root is validated.
-
-For the `timesync-20261106` source profile used by this release, root and state profile,
-package-state, clock-helper provenance and state UUID must agree. The time-aware
-management tools reject mismatched provenance and old management tools reject
-the `a733-management-v2-timesync` profile. New tools accept v1 roots for
-rollback. Current production root/state/NVMe artifacts now pass construction and artifact
-inspection. Actual installed update and recovery trials remain unperformed.
+Use the matching installed tree, preserved compatible A/B inputs and
+[maintenance guide](maintenance-guide.md). The current status identifies actual
+artifacts; archived trial payloads are not automatically beta assets. Shared
+admission and stopped-guest protections remain required in manual-beta.
 
 ## Prepare a compatible root candidate
 
@@ -232,7 +206,7 @@ manifest, and can cancel a pending selection before reboot. These paths do not
 provide offline failed-boot recovery. Use the separate [RAM recovery
 controller](host-recovery.md) when the installed host cannot run. Its native
 software checks are distinct from physical recovery acceptance. There is no
-automatic fallback policy; do not advertise unattended updates. Required disposable-data tests include
+automatic fallback policy; do not advertise unattended updates. Historical disposable-data checks covered
 interruption during inactive-slot writes, before and after selector publication,
 manual A→B→A rollback, failed health checks, missing NVMe, and state-backup
 restoration. File fixtures and builder loop tests cannot establish power-loss

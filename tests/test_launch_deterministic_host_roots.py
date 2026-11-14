@@ -9,10 +9,17 @@ from pathlib import Path
 import subprocess
 import sys
 import tempfile
+import types
 import unittest
 from unittest import mock
 
 REPO = Path(__file__).resolve().parents[1]
+
+
+def simulated_flags(**overrides):
+    # Preserve every actual interpreter flag used by argparse/subprocess.
+    values = {name: getattr(sys.flags, name) for name in dir(sys.flags) if not name.startswith("_")}
+    return types.SimpleNamespace(**(values | overrides))
 
 
 def load(name):
@@ -39,6 +46,39 @@ def source_contents():
 
 
 class DeterministicLauncherTests(unittest.TestCase):
+    def test_current_launcher_propagates_closed_profile_into_current_payload_builder(self):
+        data = source_contents()
+        for profile in L.GUEST_MANAGEMENT_PROFILES:
+            with self.subTest(profile=profile), contextlib.ExitStack() as stack:
+                held = stack.enter_context(L.Template(REPO / L.TEMPLATE, L.TEMPLATE_SHA))
+                parent = L.load_template(held)
+                L.adapt(parent, held, profile)
+                parent.contract(REPO, data)
+                program = parent.payload_program('beta-fixture').decode()
+                compile(program, '<beta-payload>', 'exec')
+                self.assertIn('guest_management_profile='+repr(profile), program)
+                self.assertIn('assert manifest.get("guest_management_profile")=='+repr(profile), program)
+                self.assertIn("p/'build/host-payload.py'", program)
+                manifest = {'revision': 'a'*40, 'files': {name: pin(raw) for name, raw in data.items()}}
+                report = parent.plan('beta-fixture', manifest, parent.contract(REPO, data),
+                                     Path('/absent/diagnostic'), Path('/absent/rootfs'))
+                self.assertEqual(report['guest_management_profile'], profile)
+
+    def test_current_launcher_rejects_an_output_manifest_with_a_different_profile(self):
+        with L.Template(REPO / L.TEMPLATE, L.TEMPLATE_SHA) as held:
+            parent = L.load_template(held)
+            parent.verify_output = mock.Mock(return_value={'verified': True})
+            L.adapt(parent, held, 'manual-beta')
+            for observed in ('managed-experimental', None):
+                raw = json.dumps({'guest_management_profile': observed}).encode()
+                with mock.patch.object(parent, 'authenticated', return_value=({}, raw)):
+                    with self.assertRaisesRegex(ValueError, 'guest management profile differs'):
+                        parent.verify_output(object(), Path('/fixture'), {})
+            with mock.patch.object(parent, 'authenticated', return_value=(
+                    {}, b'{"guest_management_profile":"manual-beta"}')):
+                self.assertEqual(parent.verify_output(object(), Path('/fixture'), {}),
+                                 {'verified': True})
+
     def parent(self, stack):
         held = stack.enter_context(L.Template(REPO / L.TEMPLATE, L.TEMPLATE_SHA))
         parent = L.load_template(held)
@@ -86,7 +126,9 @@ class DeterministicLauncherTests(unittest.TestCase):
                 plan = parent.plan('fixture', manifest, policy, Path('/absent/diagnostic'), Path('/absent/userspace'))
             original = ROOTS.plan('fixture', manifest, policy, Path('/absent/diagnostic'), Path('/absent/userspace'))
             self.assertEqual({key: value for key, value in plan.items()
-                              if key not in ('filesystem_normalization', 'builder_package_inventory')}, original)
+                              if key not in ('filesystem_normalization', 'builder_package_inventory',
+                                             'guest_management_profile')}, original)
+            self.assertEqual(plan['guest_management_profile'], 'manual-beta')
             self.assertEqual(plan['filesystem_normalization'], L.normalization_binding(pin(data[L.HELPER]), held.pin))
             inventory = L.inventory_binding(parent, data)
             self.assertEqual(plan['builder_package_inventory'], inventory)
@@ -230,7 +272,7 @@ class DeterministicLauncherTests(unittest.TestCase):
             parent, _ = self.parent(stack)
             data = source_contents()
             manifest = {'revision': 'a' * 40, 'files': {name: pin(raw) for name, raw in data.items()}}
-            flags = type('Flags', (), {'isolated': 1, 'dont_write_bytecode': 1})()
+            flags = simulated_flags(isolated=1, dont_write_bytecode=1)
             with mock.patch.object(parent, 'committed_sources', return_value=(manifest, data)), \
                  mock.patch.object(parent, 'read_source', return_value=data[L.SELF]), \
                  mock.patch.object(sys, 'flags', flags), \

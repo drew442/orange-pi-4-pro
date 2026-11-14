@@ -1,27 +1,9 @@
-# Stopped guest backup artifacts
+# Stopped guest backups
 
-The sender streams an enrolled guest's manifest, checkpoint history, kernel,
-initramfs and disk to another machine. The receiver authenticates the compressed
-archive before decoding it, verifies every member and independently reads back
-the new files. The [counter-3 guest backup](evidence/vgic-counter3-backup-20261108.json)
-passes off-device transfer and receiver readback on builder and codex, including
-both checkpoint records. Its [physical corrected-host restoration](evidence/corrected-host-guest-restore-20261108.json)
-passes authenticated restore, actual nonroot KVM runs advancing 3 → 4 → 5,
-clean shutdown and checkpoints. This establishes that specific restore; the
-[fresh counter-5 backup](evidence/current-counter5-backup-20261109.json) now
-passes authenticated source transfer and independent receiver readback on the
-builder. It includes all four checkpoint records. Restoration of that new
-archive on the normalized installation remains unperformed. The three other
-stopped guest directories also have [verified forensic retention](guest-preservation-20261109.md);
-those copies preserve original enrollment and disk bytes without clean checkpoints.
-
-Use the complete installed tree at `/usr/lib/a733-tools` on the new immutable
-A/B root or a trusted complete portable tool tree on RAM or NVMe; do not copy a
-single script without its imported modules. The older published recovery SD
-image has not been refreshed. See [guest tools availability](guest-tools-package.md).
-The [diagnostic host KVM guest](kvm-vgic-results-20261108.md) passes core tests;
-the corrected installed host also passes the recorded restore. Full release
-acceptance and independent normalized-image deployment remain open.
+Use the complete matching installed tool tree. The sender streams a stopped,
+checkpointed guest to another machine; the receiver verifies the archive and
+contents. [Current status](implementation-status.md) records accepted results.
+No live backup, automatic snapshot or new restore campaign is implied.
 
 ## Prepare a consistent source
 
@@ -148,35 +130,5 @@ it. `backup-verification.json` records artifact checks, while the final receipt
 records publication/durability. Neither establishes power-loss survival or a
 successful restored guest.
 
-## Restoration scope and remaining acceptance
-
-Do not copy a backup directory over an enrolled guest. The
-[fresh-destination restore controller](guest-restoration.md) validates the
-destination NVMe/account, rebinds installation identity, preserves source
-provenance and refuses existing files. [Pinned HTTPS delivery](guest-restore-delivery.md)
-avoids board-local archive staging. The counter-3 physical restore above passed;
-new archives and destinations require their own restoration checks.
-[Host STATE and root preservation](host-state-backup.md), boot firmware and
-pre-installation physical-media backups are separate requirements; this guest
-archive does not replace them.
-
-Acceptance must restore disposable data from the separate machine, verify its
-contents and boot the restored guest using actual KVM. Record the shutdown,
-transfer, readback, restoration and workload evidence together. The following
-fixture tests exercise file preservation on the builder; the linked November 8
-evidence separately records physical transfer and restore.
-
-The actual pinned fixture probe runs from a protected complete checkout on the
-prepared Jammy builder, using its existing authenticated input paths:
-
-```bash
-sudo /usr/bin/python3.10 -I -B tests/verify_guest_backup_arm.py \
-  /home/drew/orange-pi-4-pro-build/recipe/out/host-userspace-bookworm-20261001-01/rootfs.tar.gz \
-  /home/drew/orange-pi-4-pro-build/recipe/out/guest-fixture-20261104-03
-```
-
-It requires 3 GiB free fixed storage and leaves no guest or mount behind. Its
-source mount/UUID/service/consumer boundaries are explicitly substituted inside
-the disposable ARM fixture; the native receiver runs the actual builder storage
-check. [Recorded evidence](evidence/guest-backup-arm-20261104.json) includes the
-source hashes, compressed archive pin, full readback and precise limits.
+Use [restoration](guest-restoration.md) for a fresh destination.
+[Historical results](archive/pre-beta-20261114/guest-backups.md).

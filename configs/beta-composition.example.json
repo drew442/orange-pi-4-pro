@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "root_profile": "manual-beta-current",
+  "inputs": {
+    "base-gzip": {
+      "path": "/REPLACE_WITH_PROVEN_BASE_DIRECTORY/nvme.img.gz",
+      "bytes": 545636009,
+      "sha256": "584a958c63fb01f62c2162c733aeb004082088952c6e428d6406087492e315e2"
+    },
+    "base-manifest": {
+      "path": "/REPLACE_WITH_PROVEN_BASE_DIRECTORY/manifest.json",
+      "bytes": 50191,
+      "sha256": "f19b5b58c12030422b36c203471026209731fa413ea1ce8d9196121861cf8eb5"
+    },
+    "roots-manifest": {
+      "path": "/REPLACE_WITH_CURRENT_MANUAL_ROOT_DIRECTORY/manifest.json",
+      "bytes": 0,
+      "sha256": "REPLACE_WITH_OBSERVED_SHA256"
+    },
+    "root-a": {
+      "path": "/REPLACE_WITH_CURRENT_MANUAL_ROOT_DIRECTORY/root-A.ext4",
+      "bytes": 4294967296,
+      "sha256": "REPLACE_WITH_OBSERVED_SHA256"
+    },
+    "root-b": {
+      "path": "/REPLACE_WITH_CURRENT_MANUAL_ROOT_DIRECTORY/root-B.ext4",
+      "bytes": 4294967296,
+      "sha256": "REPLACE_WITH_OBSERVED_SHA256"
+    }
+  },
+  "state_build": {
+    "userspace": {
+      "path": "/REPLACE_WITH_AUTHENTICATED_TIMESYNC_USERSPACE/rootfs.tar.gz",
+      "bytes": 0,
+      "sha256": "REPLACE_WITH_OBSERVED_SHA256"
+    },
+    "management-config": {
+      "path": "/REPLACE_WITH_UNIT_INPUT_DIRECTORY/management.json",
+      "bytes": 0,
+      "sha256": "REPLACE_WITH_OBSERVED_SHA256"
+    },
+    "admin-public-key": {
+      "path": "/REPLACE_WITH_UNIT_INPUT_DIRECTORY/admin.pub",
+      "bytes": 0,
+      "sha256": "REPLACE_WITH_OBSERVED_SHA256"
+    }
+  }
+}

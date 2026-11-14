@@ -1,0 +1,420 @@
+{
+  "schema": 1,
+  "timeout_seconds": 240,
+  "documentation": [
+    "docs/**",
+    "AGENTS.md",
+    "README*",
+    "LICENSE*",
+    "NOTICE*",
+    ".codex/**"
+  ],
+  "known_inputs": [
+    "scripts/**",
+    "build/**",
+    "configs/**",
+    ".github/workflows/**"
+  ],
+  "fallback_inputs": [
+    "scripts/**",
+    "build/**",
+    "configs/**",
+    "tests/**",
+    ".github/workflows/**"
+  ],
+  "suites": [
+    {
+      "name": "guest-and-shared-host",
+      "tests": [
+        "tests/test_*guest*.py",
+        "tests/test_*managed*.py",
+        "tests/test_*kvm*.py",
+        "tests/test_*checkpoint*.py",
+        "tests/test_*admission*.py",
+        "tests/test_*endurance*.py",
+        "tests/test_*accounts*.py",
+        "tests/test_*timesync*.py",
+        "tests/test-guest-fixture.sh"
+      ],
+      "inputs": [
+        "scripts/*guest*",
+        "scripts/*managed*",
+        "scripts/*kvm*",
+        "scripts/*endurance*",
+        "scripts/*admission*",
+        "scripts/*checkpoint*",
+        "configs/*guest*",
+        "configs/*managed*",
+        "configs/*host*",
+        "configs/package_state.py",
+        "build/*host*",
+        "build/*guest*",
+        "build/*managed*",
+        "build/*timesync*",
+        "build/*account*",
+        "scripts/nvme_layout.py",
+        "scripts/acquire-nvme.py",
+        "scripts/install-nvme.py",
+        "scripts/prepare-host-update.py",
+        "scripts/stop-guest-storage.py"
+      ]
+    },
+    {
+      "name": "spi-storage-and-shared-host",
+      "tests": [
+        "tests/test_*spi*.py",
+        "tests/test_*nvme*.py",
+        "tests/test_*uboot*.py",
+        "tests/test_*installer*.py",
+        "tests/test_*host_root*.py",
+        "tests/test_*host_state*.py",
+        "tests/test_*recovery*.py",
+        "tests/test-host-storage-resolver.sh"
+      ],
+      "inputs": [
+        "scripts/*spi*",
+        "scripts/*nvme*",
+        "scripts/*host*",
+        "scripts/*root*",
+        "scripts/backup-spi.py",
+        "configs/*spi*",
+        "configs/*nvme*",
+        "configs/*host*",
+        "configs/*installer*",
+        "configs/host_config.py",
+        "build/*spi*",
+        "build/*nvme*",
+        "build/*uboot*",
+        "build/*installer*",
+        "build/*host*",
+        "build/*root*",
+        "build/*state*"
+      ]
+    },
+    {
+      "name": "validation-workflow",
+      "tests": [
+        "tests/test_validation_workflow.py"
+      ],
+      "inputs": [
+        "scripts/validate-project.py",
+        "configs/validation-policy.json",
+        ".github/workflows/validate.yml"
+      ]
+    }
+  ],
+  "ci_exclusions": [
+    {
+      "reason": "Linux fork required",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "Linux procfs required",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "actual protected producer fixture needs root",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "actual root RAM metadata required",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "actual root RAM/protected-file fixture",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "actual root native protected custody fixture",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "actual root-owned private descriptor fixture",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "complete native process census requires root",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "e2fsprogs required",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "ext4 fixture tools unavailable",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "ext4 tools required",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "ext4 tools unavailable",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "filesystem tools required",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "guarded destination ownership requires root",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "image assembly tools required",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "image tools required",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "loopback TLS tests require openssl",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "native admission flock fixture requires root",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "native aria2 binary unavailable",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "native pinned aria2 1.36.0 unavailable",
+      "prerequisite": "qualified builder's pinned aria2 1.36.0; other host versions are not this fixture"
+    },
+    {
+      "reason": "native dpkg-deb required",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "native fixed /run packet composition requires root",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "native mount namespace requires root",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "native protected /run fixture requires root",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "native protected RAM fixture requires root",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "native protected RAM fixtures require root",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "native protected RAM requires root",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "native protected fixture requires root",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "native protected root fixture",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "native protected runtime requires root",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "native protected tmpfs fixture requires root",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "native root metadata checks require root",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "native root proc reference check",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "native tmpfs/flock fixture requires root",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "private real ownership engine requires root",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "process credential fixture requires root",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "production root directory policy requires root",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "protected /run source fixtures require root",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "protected CA and actual loopback TLS tests require root and openssl",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "protected discovery fixture requires root",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "protected native RAM fixtures require root",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "protected native fixture requires root",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "protected native tmpfs fixture requires root",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "protected ownership tests require root",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "protected producer requires root",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "real mapped-root file ownership requires root",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "real ownership checks require root",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "real ownership/file engine needs root; run privately with sudo",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "real protected RAM locks require root",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "real protected root source metadata required",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "real root required for chroot and credential drop",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "requires U-Boot tools, util-linux and e2fsprogs",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "requires actual root and /run tmpfs",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "requires e2fsprogs",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "requires filesystem file tools",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "requires namespace root for real 0:42 metadata",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "requires openssl for disposable localhost certificate",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "requires root for actual tmpfs/credential fixture",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "requires util-linux sfdisk and blkid",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "root Linux native fixture required",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "root RAM fixture required",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "root and filesystem tools required",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "root history metadata fixture required",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "root metadata fixture required",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "root ownership checks require private sudo fixture",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "root required for ownership-preserving state fixture",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "root-owned fixture requires privileged suite",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "root-owned private cgroup surrogate",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "root-owned private path checks require root",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "root-owned publication fixture",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "root-owned retained-file fixture",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "reason": "snapshot ownership requires initial-root",
+      "prerequisite": "declared native/root fixture; outside unprivileged CI scope"
+    },
+    {
+      "prefix": "native e2fsprogs unavailable: ",
+      "prerequisite": "e2fsprogs"
+    },
+    {
+      "prefix": "RETAINED HARDWARE FIXTURE VALIDATION UNAVAILABLE: ",
+      "prerequisite": "retained board fixture; physical acceptance remains external"
+    },
+    {
+      "prefix": "test requires trusted home ancestors: ",
+      "prerequisite": "trusted native home fixture"
+    },
+    {
+      "reason": "CAP_SYS_ADMIN unavailable for isolated native mount namespace",
+      "prerequisite": "native mount namespace capability"
+    },
+    {
+      "reason": "real tmpfs unavailable",
+      "prerequisite": "native tmpfs fixture"
+    },
+    {
+      "reason": "root-owned source fixture requires root",
+      "prerequisite": "root ownership fixture"
+    }
+  ]
+}

@@ -93,6 +93,9 @@ class Boundary(unittest.TestCase):
 @unittest.skipUnless(os.getresuid() == (0, 0, 0), 'protected native RAM fixtures require root')
 class Native(unittest.TestCase):
     def setUp(self):
+        profile = patch.object(M.CONTEXT.MANAGEMENT, 'guest_management_profile', return_value='managed-experimental')
+        profile.start()
+        self.addCleanup(profile.stop)
         self.stack = ExitStack()
         self.addCleanup(self.stack.close)
         tmp = self.stack.enter_context(tempfile.TemporaryDirectory(dir='/run', prefix='a733-prepare-test-'))
@@ -285,6 +288,27 @@ class Native(unittest.TestCase):
             self.assertEqual(path.stat().st_nlink, 1)
             self.assertEqual(M.digest(path.read_bytes()), pin)
         self.assertFalse(any(self.unit_dir.glob('*.wants')))
+
+    def test_manual_profile_preserves_admission_and_attestation_without_managed_cohorts(self):
+        self.entry('one')
+        with patch.object(M.CONTEXT.MANAGEMENT, 'guest_management_profile', return_value='manual-beta'), \
+                patch.object(M, '_observe_head', side_effect=AssertionError('managed reconciliation')), \
+                patch.object(M, '_configs', side_effect=AssertionError('managed budgeting')):
+            result = M.prepare()
+        self.assertTrue(result['success'], result)
+        self.assertEqual(self.gate(), 'open')
+        self.assertEqual(self.accounts_calls, 1)
+        self.assertIn('activate', self.events)
+        self.assertIn('census', self.events)
+        self.assertEqual(result['eligible'], [])
+        self.assertEqual(set(result['units']), {M.UNITS.SLICE_NAME})
+        self.assertFalse(list(self.unit_dir.glob('a733-managed-*.service')))
+        with A.Admission.open_existing(self.boot, 108, lambda: 'running') as admission:
+            attestation = M.MANUAL.Attestation(admission)
+            try:
+                attestation.recheck()
+            finally:
+                attestation.close()
 
     def test_incomplete_restore_refuses_before_state_markers_accounts_and_open(self):
         self.fail_at = 'restore-census'

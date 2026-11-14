@@ -1,0 +1,122 @@
+{
+  "schema": 1,
+  "source_commit": "0000000000000000000000000000000000000000",
+  "board_model": "Orange Pi 4 Pro",
+  "boot_profile": "spi-nvme-sd-absent",
+  "guest_management_profile": "manual-beta",
+  "visibility": "private",
+  "runtime_manifest": {
+    "path": "out/manual-roots/manifest.json",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "runtime_source": {
+    "path": "out/manual-roots-phase/source-manifest.json",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "source_distribution": {
+    "source_commit": "0000000000000000000000000000000000000000",
+    "assessed_by": "OPERATOR",
+    "basis": "Repository has no blanket public redistribution grant.",
+    "personalized": false,
+    "private_identity": false,
+    "redistribution": "unresolved"
+  },
+  "assets": [
+    {
+      "role": "spi-firmware",
+      "producer": {
+        "path": "out/spi/manifest.json",
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "record": "/candidate",
+      "file": "a733-spi-nvme.bin",
+      "distribution": {
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "assessed_by": "OPERATOR",
+        "basis": "Describe identity review and unresolved vendor/source licensing; no automatic clearance.",
+        "personalized": true,
+        "private_identity": true,
+        "redistribution": "unresolved"
+      }
+    },
+    {
+      "role": "recovery-sd",
+      "producer": {
+        "path": "out/recovery/manifest.json",
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "record": "/files/recovery.img.gz",
+      "file": "recovery.img.gz",
+      "distribution": {
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "assessed_by": "OPERATOR",
+        "basis": "Describe identity review and unresolved vendor/source licensing; no automatic clearance.",
+        "personalized": true,
+        "private_identity": true,
+        "redistribution": "unresolved"
+      }
+    },
+    {
+      "role": "nvme-install-image",
+      "producer": {
+        "path": "out/nvme-bundle/manifest.json",
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "record": "/files/nvme.img.gz",
+      "file": "nvme.img.gz",
+      "distribution": {
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "assessed_by": "OPERATOR",
+        "basis": "Describe identity review and unresolved vendor/source licensing; no automatic clearance.",
+        "personalized": true,
+        "private_identity": true,
+        "redistribution": "unresolved"
+      }
+    }
+  ],
+  "gates": {
+    "software": {
+      "status": "MISSING",
+      "dependency_fingerprint": "COPY_FROM_PLAN",
+      "receipts": []
+    },
+    "construction": {
+      "status": "MISSING",
+      "dependency_fingerprint": "COPY_FROM_PLAN",
+      "receipts": []
+    },
+    "spi_boots": {
+      "status": "MISSING",
+      "dependency_fingerprint": "COPY_FROM_PLAN",
+      "receipts": []
+    },
+    "manual_kvm": {
+      "status": "MISSING",
+      "dependency_fingerprint": "COPY_FROM_PLAN",
+      "receipts": []
+    },
+    "recovery": {
+      "status": "MISSING",
+      "dependency_fingerprint": "COPY_FROM_PLAN",
+      "receipts": []
+    }
+  },
+  "_instructions": [
+    "Copy to ignored out/package-spec.json in a CLEAN committed project; paths resolve from the spec directory (adjust paths accordingly). Pins are lowercase SHA256 of exact bytes. file resolves relative to producer manifest; record is JSON pointer to its existing bytes/sha256 object.",
+    "runtime_source pins the complete launcher source-manifest.json {revision,files:{path:{bytes,sha256,...}}}. Build revision may precede release source_commit for docs-only changes; every packaged runtime source and closed membership must still match committed release source. Root manifest provenance and runtime descriptors are checked against that snapshot.",
+    "NVMe producer inputs.roots_manifest must equal runtime manifest byte/hash pin; partition_payloads root-a/root-b must match runtime files root-A.ext4/root-B.ext4. Optional root-update[-a/-b] producer must be that runtime manifest itself.",
+    "Run --plan --candidate to obtain each expected_dependency_fingerprint, then create pinned gate receipt JSON: {gate,status:PASS,scope,dependency_fingerprint,observations:[{id,kind,path,sha256}]}. Raw observation paths resolve relative to the receipt. Scope strings and required kinds are fixed in configs/beta-release.json. SPI gate counts >=3 unique cold plus >=3 unique warm observations, including retained applicable records.",
+    "REUSED requires applicability:{assessed_by,basis,dependency_fingerprint} matching the planned relevant inputs. SPI totals bind SPI firmware, NVMe boot_files and hardware_compatibility, not whole root/NVMe bytes. Include >=3 cold and >=3 warm applicable observations plus a manual-profile observation carrying runtime_fingerprint equal to the plan. Retained observations may be referenced in newly scoped applicability receipts; never invent physical observations.",
+    "Candidate packaging tolerates BLOCKED/MISSING physical/software gates and always stays candidate. Normal packaging requires every gate PASS/REUSED. No new soak or upstream KVM/QEMU qualification is required.",
+    "Every asset distribution assessment binds sha256; source_distribution binds source_commit. Public packaging requires personalized=false, private_identity=false, redistribution=granted, assessed_by/basis and a pinned grant:{path,sha256} for each assessment. These are operator assertions, not legal clearance or secret scanning. Current personalized recovery and unresolved vendor firmware remain private.",
+    "Assets are copied and checked once without decompressing/rebuilding. --plan checks producer pins and sizes but does not hash large asset content. Output must be a new directory whose parent exists. No device writes or upload occurs.",
+    "Public distribution additionally needs metadata_distribution for all pinned runtime/producer/evidence/source/grant metadata: same assessment schema with sha256 bound to metadata_content_fingerprint from a private --plan. Include its grant pin before planning to bind that grant too. Source assessment covers committed source archive, operator guides and notices; no private identity may be asserted absent without review. Pinned input paths map to content-addressed receipt paths in release-manifest.json.",
+    "Manual lifecycle receipt kinds: boot,cpu,disk,http,shutdown,checkpoint,restart,persistence; manual_lifecycle_context binds the actual guest fixture and storage plan. Recovery kinds: recovery,host-rollback,guest-backup,guest-restore. Software fingerprints bind code/tests/policies/runtime, excluding documentation and .codex prose.",
+    "operator/docs includes committed references to preserve guide links; full committed source remains in source/. Physical evidence is asserted by the operator and is not independently tested by packaging."
+  ],
+  "hardware_compatibility": "OPERATOR: identify assessed PCB/flash/NVMe/firmware compatibility",
+  "manual_lifecycle_context": {
+    "guest_fixture_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "storage_plan_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+  }
+}

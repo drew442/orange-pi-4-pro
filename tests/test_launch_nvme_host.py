@@ -24,6 +24,12 @@ from unittest import mock
 REPO = Path(__file__).resolve().parents[1]
 
 
+def simulated_flags(**overrides):
+    # Preserve every actual interpreter flag used by argparse/subprocess.
+    values = {name: getattr(sys.flags, name) for name in dir(sys.flags) if not name.startswith("_")}
+    return types.SimpleNamespace(**(values | overrides))
+
+
 def load(path):
     spec = importlib.util.spec_from_file_location(path.replace('/', '_'), REPO / path)
     value = importlib.util.module_from_spec(spec)
@@ -114,7 +120,7 @@ class NVMeLauncherTests(unittest.TestCase):
             fake.read_source = lambda path: b'controller'
             with mock.patch.object(n.types, 'ModuleType', return_value=fake), \
                     mock.patch.object(n.subprocess, 'check_output', return_value=b''), \
-                    mock.patch.object(n.sys, 'flags', types.SimpleNamespace(isolated=True, dont_write_bytecode=True)), \
+                    mock.patch.object(n.sys, 'flags', simulated_flags(isolated=True, dont_write_bytecode=True)), \
                     mock.patch.object(n, 'contract', return_value=POLICY), \
                     mock.patch.object(n, 'admit_descriptor_limit', return_value={}), \
                     mock.patch.object(n, 'INPUTS', inputs):
@@ -145,7 +151,7 @@ class NVMeLauncherTests(unittest.TestCase):
         output=io.StringIO()
         with mock.patch.object(n.types,'ModuleType',return_value=fake), \
              mock.patch.object(n.subprocess,'check_output',return_value=b''), \
-             mock.patch.object(n.sys,'flags',types.SimpleNamespace(isolated=True,dont_write_bytecode=True)), \
+             mock.patch.object(n.sys,'flags',simulated_flags(isolated=True,dont_write_bytecode=True)), \
              mock.patch.object(n,'contract',return_value=POLICY), \
              mock.patch.object(n.resource,'getrlimit',side_effect=AssertionError('limit query')), \
              mock.patch.object(n.resource,'setrlimit',side_effect=AssertionError('limit mutation')), \

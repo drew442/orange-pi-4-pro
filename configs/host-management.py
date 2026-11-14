@@ -104,6 +104,19 @@ def timesync_guard(metadata, expected_uuid, *, boot=False):
     return result
 
 
+def guest_management_profile():
+    """Read the immutable root descriptor through the existing secure reader."""
+    payload = json.loads(read_secure('/usr/lib/orangepi-hypervisor/payload.json', 1024 * 1024),
+                         object_pairs_hook=CONFIG.unique_pairs)
+    return CONFIG.guest_management_profile(payload)
+
+
+def require_managed_runtime():
+    require(guest_management_profile() == 'managed-experimental',
+            'managed guest mutation is parked in manual-beta; rebuild with '
+            '--guest-management-profile managed-experimental for experimental use')
+
+
 def prepare_clock_state():
     payload = json.loads(read_secure('/usr/lib/orangepi-hypervisor/payload.json', 1024 * 1024),
                          object_pairs_hook=CONFIG.unique_pairs)
@@ -249,6 +262,7 @@ def runtime_guard():
             'machine identity bind differs')
     payload = json.loads(read_secure('/usr/lib/orangepi-hypervisor/payload.json', 1024 * 1024),
                          object_pairs_hook=CONFIG.unique_pairs)
+    CONFIG.guest_management_profile(payload)
     require(payload.get('schema') == 1 and payload.get('kernel_release') == os.uname().release == '6.6.98-a733-diag',
             'incompatible kernel ABI')
     slot = 'A' if root['source'].endswith('p2') else 'B'
@@ -343,6 +357,7 @@ def ram_link(path, target):
 
 def prepare():
     config = runtime_guard()  # No write is permitted before all checks succeed.
+    profile = guest_management_profile()
     prepare_clock_state()
     # Upgrade older state images whose private machine-id prevents networkd's
     # unprivileged DHCP client from deriving its default DUID. The guard verifies
@@ -368,8 +383,17 @@ def prepare():
                  'systemd-journal-catalog-update.service'):
         ram_link('/etc/systemd/system/' + name, '/dev/null')
     for name in ('systemd-networkd.service', 'systemd-resolved.service', 'a733-management-ssh.service',
-                 'a733-guest-storage.service', 'a733-guest-prepare.service'):
+                 'a733-guest-storage.service'):
         ram_link('/etc/systemd/system/multi-user.target.wants/' + name, '/lib/systemd/system/' + name)
+    # This historical unit name means dispatch, not preparation. Keep the
+    # storage unit above: it owns admission, manual attestation and teardown.
+    dispatch = 'a733-guest-prepare.service'
+    if profile == 'managed-experimental':
+        ram_link('/etc/systemd/system/multi-user.target.wants/' + dispatch,
+                 '/lib/systemd/system/' + dispatch)
+    else:
+        ram_link('/etc/systemd/system/' + dispatch, '/dev/null')
+        ram_link('/etc/systemd/system/multi-user.target.wants/' + dispatch, '/dev/null')
 
 
 def publish_private_key(source, destination):

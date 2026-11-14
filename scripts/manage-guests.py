@@ -516,6 +516,8 @@ def manage(operation, name=None, pin=None, fixture='none', expected=None):
 
     try:
         validate(operation, name, pin, fixture, expected)
+        if operation in ('enroll', 'enable', 'start'):
+            P.CONTEXT.MANAGEMENT.require_managed_runtime()
         boot = A._boot_id()
         guard()
         result['stage'] = 'storage-policy'

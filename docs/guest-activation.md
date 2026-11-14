@@ -1,19 +1,9 @@
 # Guest storage and account activation
 
-Explicit controllers prepare and apply guest-storage mounting and locked
-service identities. The current installed host includes the authenticated
-40-file maintenance tree (including `package.json`) at `/usr/lib/a733-tools`.
-[Physical guest results](kvm-vgic-results-20261108.md) establish storage/account
-activation and actual nonroot KVM execution; the
-[corrected-host guest restoration](evidence/corrected-host-guest-restore-20261108.json)
-advanced the disk counter through 4 and 5. These observations do not establish
-acceptance of the unbooted normalized distribution. See
-[implementation status](implementation-status.md) for the current maintenance
-session and remaining gates.
-
-Activation and guest startup remain explicit. Enrollment publishes private
-per-guest directories and protected assets; recreate locked RAM service accounts
-and review the unit before starting a guest after a host reboot.
+The manual beta retains the existing guarded storage/account tools. Start with
+[manual guest operations](manual-guest-guide.md), including initial storage-policy
+publication and authenticated boot preparation. The interfaces below require
+the installed matching tool tree and current admission state.
 
 ## Mount the installation's guest filesystem
 
@@ -87,8 +77,8 @@ formatting or filesystem repair fallback.
 `scripts/guest-accounts.py` uses the guarded RAM-backed `/etc` overlay and the
 pinned `systemd-sysusers` 252 tool. It does not change the immutable root or
 create persistent passwd/shadow databases on state. Keep its identity config
-on the installation's NVMe state and recreate the RAM accounts each boot;
-automatic invocation is not installed yet.
+on the installation's NVMe state and recreate the RAM accounts as needed. Boot preparation covers existing
+protected enrollments; a new enrollment may need explicit account preparation.
 
 The exact schema is:
 
@@ -135,36 +125,4 @@ Upstream: [systemd 252 sysusers invocation](https://www.freedesktop.org/software
 [252 database/backup implementation](https://github.com/systemd/systemd/blob/v252/src/sysusers/sysusers.c),
 and the [pinned ext4 journal loader](https://github.com/orangepi-xunlong/linux-orangepi/blob/2ac08e8c7cdc28abbdc5c9a9dd812f887ae9c79f/fs/ext4/super.c).
 
-## Verified software evidence
-
-At source `927a5a2`, the [native private-loop run](evidence/guest-mount-loop-20261104.json)
-created its own sparse 250,000,000,000-byte GPT disk and journaled p5. It exercised
-real prepare, mount, SIGINT immediately after mounting, owned cleanup, retry,
-root permission readback and idempotence. Guest data and four other partition
-sentinels stayed unchanged. Running-host/NVMe classification and TTY approval
-were fixtures. This did not test dirty-journal crash recovery or physical NVMe.
-Elapsed 0.63 seconds, maximum RSS 27,416 KiB.
-
-The [ARM account run](evidence/guest-accounts-arm-20261104.json) used authenticated
-userspace and actual systemd 252.39. It proved account creation, locked identity,
-unrelated-row preservation, idempotence and UID-collision refusal inside a
-private chroot. Runtime mount provenance was mocked only in that fixture; the
-real CLI refused the unsupported environment before account writes. Elapsed
-8.17 seconds, maximum RSS 53,908 KiB. No builder host accounts changed.
-
-Exact verified commands on the prepared builder, from its private checkout:
-
-```sh
-sudo -i
-cd /var/lib/a733-guest-activation-final-20261104
-/usr/bin/python3.10 -I -B tests/verify_guest_mount_loop.py
-/usr/bin/python3.10 -I -B tests/verify_guest_accounts_arm.py \
-  /home/drew/orange-pi-4-pro-build/recipe/out/host-userspace-bookworm-20261001-01/rootfs.tar.gz
-```
-
-The loop harness accepts no target argument and refuses foreign ownership. Both
-harnesses require at least 2 GiB free fixed builder storage. Separate post-process
-checks found no fixture paths, owned loop attachments or host-visible guest
-mount. ARM binfmt checks hash the configured interpreter pathname; the
-kernel-held F interpreter descriptor is not independently inspected. All
-[physical acceptance gates](hardware-validation.md) remain open.
+[Historical implementation and validation record](archive/pre-beta-20261114/guest-activation.md).

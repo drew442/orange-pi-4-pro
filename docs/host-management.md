@@ -1,22 +1,9 @@
-# Management runtime prototype
+# Host management reference
 
-Historical generated paths below may have been archived. Consult the
-[retention map](build-cache-retention.md#replay-and-prototype-output-retention)
-before reusing them; use the [personalized deployment](deploy-personalized-20261106.md)
-for the current installation.
-
-Baseline managed roots contain `a733-management-v1`. The opt-in time profile
-uses `a733-management-v2-timesync`; its source-integrated boot guard performs a
-quiescent clock-state audit before PID 1. Live update and selector checks use
-the read-only `directory_ready()` binding check, which ignores clock-file
-contents and timestamps while checking directory identity, device, mode,
-ownership and state UUID. Old tools reject v2, and new tools accept v1 for
-rollback. This interim Debian prototype has
-passed file and ARM userspace checks. Its first installed A733 boot reached
-systemd, but DHCP/SSH failed. The [permission repair](installed-host-repair-20261107.md)
-addresses machine-id readability; successful physical SSH remains pending. The installer-preparation image has physically booted; use
-the personalized deployment above for installation. Buildroot and the release-base
-decision follow baseline hardware validation in the [plan](hypervisor-plan.md).
+Use [current status](implementation-status.md) for deployed artifacts and acceptance.
+The manual beta uses wired DHCP, key-only SSH, NTP, persistent per-unit identity
+and standard Linux administration. Its profile keeps storage preparation and
+masks automatic guest dispatch. The following is the configuration interface.
 
 ## Persistent inputs and activation
 
@@ -103,7 +90,7 @@ both complete raw roots, compressed hashes/expansions, runtime contents, empty
 machine identity and absence of host keys in `/etc/ssh`. No physical target was used.
 
 On-board systemd boot, DHCP renewal/rebinding, trusted host-key verification,
-actual operator login, persistence across reboot and recovery remain required.
+Actual login, boot persistence and recovery evidence are tracked in the finite beta gates; reuse matching results.
 No listener or KVM guest execution is established by these software checks.
 
 ## Resolver directory correction

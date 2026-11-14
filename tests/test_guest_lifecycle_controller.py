@@ -57,6 +57,9 @@ class ControllerTests(unittest.TestCase):
                              'managed-power-key-v1')
 
     def setUp(self):
+        profile = mock.patch.object(c.CONTEXT.MANAGEMENT, 'guest_management_profile', return_value='managed-experimental')
+        profile.start()
+        self.addCleanup(profile.stop)
         tmp = tempfile.TemporaryDirectory()
         self.addCleanup(tmp.cleanup)
         self.base = Path(tmp.name)

@@ -186,7 +186,8 @@ class BootstrapTransaction(Transaction):
         a = M.ADMISSION
         for change in (patch.object(a, 'RUNTIME', str(Path(self.tmp.name) / 'a733-admission')),
                        patch.object(a, 'RUNTIME_PARENT', self.tmp.name),
-                       patch.object(a, 'ROOT_UID', os.getuid()), patch.object(a, '_tmpfs'),
+                       patch.object(a, 'ROOT_UID', os.getuid()),
+                       patch.object(a, 'ROOT_GID', os.getgid()), patch.object(a, '_tmpfs'),
                        patch.object(a, '_ancestor'), patch.object(a.os, 'geteuid', return_value=0)):
             self.patches.enter_context(change)
         self.admission = a.initialize(str(uuid.uuid4()), os.getgid(), lambda: 'running')

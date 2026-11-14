@@ -5,6 +5,7 @@ import json
 import os
 from pathlib import Path
 import py_compile
+import re
 import subprocess
 import tempfile
 import types
@@ -293,6 +294,90 @@ class CompositionBoundary(unittest.TestCase):
         self.assertTrue((self.root / 'isolated-nvme-failed/inputs/component').exists())
         self.assertEqual(source.read_bytes(), b'component')
         shared_api.stop_process.assert_called_with(None)
+
+class CurrentInputBoundary(unittest.TestCase):
+    setUp = CompositionBoundary.setUp
+    fixture = CompositionBoundary.fixture
+    make_repository = CompositionBoundary.make_repository
+
+    def config(self):
+        value = json.loads((REPO/'configs/beta-composition.example.json').read_bytes())
+        for group in (value['inputs'], value['state_build']):
+            for name, item in group.items():
+                item['path'] = '/missing/' + name
+                if item['bytes'] == 0:
+                    item['bytes'] = 123
+                if not re.fullmatch('[0-9a-f]{64}', item['sha256']):
+                    item['sha256'] = 'a'*64
+        path = self.root/'composition.json'
+        path.write_text(json.dumps(value))
+        return path, value
+
+    def test_current_plan_validates_config_without_inspecting_artifacts_or_launching(self):
+        path, value = self.config()
+        with mock.patch.object(launch, 'execute', side_effect=AssertionError('execution forbidden')), \
+                mock.patch.object(launch.subprocess, 'check_output', side_effect=AssertionError('process forbidden')), \
+                mock.patch('builtins.print') as printed:
+            launch.main(['--project', str(self.root), '--tag', 'current-beta', '--input-config', str(path), '--plan'])
+        report = json.loads(printed.call_args.args[0])
+        self.assertEqual(report['root_profile'], 'manual-beta-current')
+        self.assertTrue(report['state_build'])
+        self.assertIsNone(report['target'])
+        self.assertEqual(report['inputs']['root-a'], value['inputs']['root-a'])
+        self.assertFalse(report['physical_storage_written'])
+        self.assertGreater(report['initial_required_free_bytes_exclusive'], launch.ADMISSION + 10*1024**3)
+
+    def test_config_matches_composer_contract_and_rejects_unknown_or_mutated_authority(self):
+        composer = load('current_composition_contract', 'build/public-config-nvme-image.py')
+        path, value = self.config()
+        self.assertEqual(composer.validate_input_config(launch.read_current_config(path)['value']), value)
+        for label, mutate in (
+                ('profile', lambda v: v.update(root_profile='managed-experimental')),
+                ('unknown', lambda v: v.update(extra=True)),
+                ('bad base', lambda v: v['inputs']['base-manifest'].update(sha256='f'*64)),
+                ('device', lambda v: v['inputs']['root-a'].update(path='/dev/nvme0n1')),
+                ('alias', lambda v: v['inputs']['root-a'].update(path=v['inputs']['root-b']['path']))):
+            bad = json.loads(json.dumps(value))
+            mutate(bad)
+            path.write_text(json.dumps(bad))
+            with self.subTest(label=label), self.assertRaises(ValueError):
+                launch.read_current_config(path)
+        path.write_text('{"schema":1,"schema":1}')
+        with self.assertRaisesRegex(ValueError, 'duplicate'):
+            launch.read_current_config(path)
+        with self.assertRaises(ValueError):
+            launch.read_current_config(REPO/'configs/beta-composition.example.json')
+
+    def test_current_command_has_fakeroot_state_build_and_readonly_inputs(self):
+        path, _ = self.config()
+        config = launch.read_current_config(path)
+        args = launch.command(builder, launch.phase_path('current-beta'), 'current-beta', config)
+        self.assertIn('exec fakeroot -- /usr/bin/python3 -I -B', args[-1])
+        self.assertIn('--input-config /a733-sources/out/.inputs/composition-inputs.json', args[-1])
+        self.assertNotIn('--root-profile deterministic-20261109', args[-1])
+        self.assertEqual(len([arg for arg in args if arg.startswith('--bind=')]), 1)
+        staged = launch.staged_config(config)
+        composer = load('staged_current_contract', 'build/public-config-nvme-image.py')
+        composer.validate_input_config(staged)
+        self.assertEqual(staged['state_build']['userspace']['path'],
+                         '/a733-sources/out/.inputs/state-build/rootfs.tar.gz')
+        self.assertEqual(staged['inputs']['root-a']['sha256'], config['value']['inputs']['root-a']['sha256'])
+
+    def test_current_stage_uses_current_commit_not_historical_and_retains_config(self):
+        path, _ = self.config()
+        config = launch.read_current_config(path)
+        project, revision = self.make_repository()
+        source, pin = self.fixture()
+        phase = self.root/'phase'
+        phase.mkdir()
+        with mock.patch.object(launch, 'UID', os.getuid()):
+            with launch.Held(source, pin) as held:
+                producer = launch.stage(phase, project, {'root-a': held}, Path.read_bytes, config, revision)
+        self.assertEqual(producer['revision'], revision)
+        self.assertEqual((phase/'inputs/roots/root-A.ext4').read_bytes(), source.read_bytes())
+        self.assertEqual(json.loads((phase/'inputs/composition-inputs.json').read_bytes()),
+                         launch.staged_config(config))
+        self.assertEqual(launch.sources(phase/'project', Path.read_bytes)['revision'], revision)
 
 
 if __name__ == '__main__':
