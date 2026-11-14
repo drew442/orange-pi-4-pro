@@ -4,6 +4,7 @@
 
 | Need | Start here |
 | --- | --- |
+| Release notes and exact artifacts | [v0.1.0-beta.1](releases/v0.1.0-beta.1.md), [current images](current-images.md) |
 | What is supported and what remains? | [Beta scope](beta-scope.md), [current status](implementation-status.md) |
 | Install a unit or recover SPI/NVMe | [Installation and recovery](install-and-recovery.md) |
 | Start and manage a guest | [Manual guest guide](manual-guest-guide.md) |

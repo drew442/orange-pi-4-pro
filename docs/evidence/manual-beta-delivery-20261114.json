@@ -1,0 +1,119 @@
+{
+  "schema": 1,
+  "result": "DELIVERED accepted manual-beta",
+  "version": "v0.1.0-beta.1",
+  "release_source_commit": "60e7ec6c8535a64cbda93a8919c9b4a0a1c9a67d",
+  "runtime_build_commit": "8f311c484d33aab2882472766bc6263d064004c8",
+  "tag_commit": "60e7ec6c8535a64cbda93a8919c9b4a0a1c9a67d",
+  "private_delivery": {
+    "host": "build.drewnet.online",
+    "account": "drew",
+    "success": true,
+    "version": "v0.1.0-beta.1",
+    "path": "/home/drew/orange-pi-4-pro-build/releases/v0.1.0-beta.1/orange-pi-4-pro-v0.1.0-beta.1-private.tar",
+    "bytes": 917145600,
+    "sha256": "534ee8332b70c35ed59ed1f0c7c5948776d18bdeb7ea3f6f0653937a6513e91a",
+    "receiver_full_readback": true,
+    "directory_mode": "0700",
+    "file_mode": "0600"
+  },
+  "public_publication": {
+    "url": "https://github.com/drew442/orange-pi-4-pro/releases/tag/v0.1.0-beta.1",
+    "prerelease": true,
+    "draft": false,
+    "assets": [
+      {
+        "name": "public-release-notes.md",
+        "bytes": 2174
+      },
+      {
+        "name": "PUBLIC-SHA256SUMS",
+        "bytes": 524
+      }
+    ],
+    "exact_download_readback_verified": true,
+    "images_published": false
+  },
+  "gates": {
+    "software": "PASS",
+    "construction": "PASS",
+    "spi_boots": "REUSED",
+    "manual_kvm": "REUSED",
+    "recovery": "REUSED"
+  },
+  "asset_hashes": [
+    {
+      "role": "spi-firmware",
+      "bytes": 16777216,
+      "sha256": "83edcd7f448e8353163666016a6bae3e9b70d041a5e4d8454f48931839205e90"
+    },
+    {
+      "role": "recovery-sd",
+      "bytes": 41229263,
+      "sha256": "2f9cdd006e6d5c2c59e5ed1aba68f3ed7dd267a7f61b3672e590d926468c4eec"
+    },
+    {
+      "role": "nvme-install-image",
+      "bytes": 546020115,
+      "sha256": "3ac417ca772c0a2a11d4b67f3357faf783437198e8f66ec560f1df7cd0f71bc6"
+    },
+    {
+      "role": "root-update-a",
+      "bytes": 143665284,
+      "sha256": "0a500bcb9ad6cd11ae632fee031e2cacbdbc301963b7dbb98a5d0b295306e62d"
+    },
+    {
+      "role": "root-update-b",
+      "bytes": 143665245,
+      "sha256": "b1e10a24ce7aa98e87d36b07f07e9dbe4553dd443ed2a10c17ec1084a2631669"
+    }
+  ],
+  "limitations": [
+    "Orange Pi 4 Pro original-unit package only; another identical unit needs its own identity/storage plan",
+    "Automatic managed lifecycle and automatic rollback deferred",
+    "Payloads private: per-unit identity/private recovery SSH key and unresolved vendor grants",
+    "Final physical deployment was supported inactive-B component update; whole image constructed/verified, not destructively reinstalled in this run",
+    "Modest three-cold/three-warm integration observations; no statistical reliability or general guest OS matrix claim"
+  ],
+  "final_board": {
+    "boot_id": "a97b2d62-52d1-4dbd-8d34-fc6f1d629058",
+    "root": "B manual-beta; SPI/NVMe; SD absent",
+    "firstkvm": "stopped, durable CP8, unit regenerated",
+    "manifest_sha256": "17f21eeefef9eea79cad1410ff657803ebe55943074a28c216b6f14dade5b123",
+    "normalized_A_CP5_recovery_SPI_backups": "preserved"
+  },
+  "records": {
+    "out/beta-release-20261114/private-delivery-receipt.json": {
+      "bytes": 332,
+      "sha256": "9823389beef8d1a060ac95852222ef3f393507f4b239dd153a4b66cd74e918a6"
+    },
+    "out/beta-release-20261114/github-release.json": {
+      "bytes": 1029,
+      "sha256": "065d77abcd3d6ca73acefb17a2846f13090663fc52562ec0a4712685731d0d45"
+    },
+    "out/beta-release-20261114/public-publication-verification.json": {
+      "bytes": 342,
+      "sha256": "1b66daaf806340ddcfff28e7649881c081cd5d61114156a01cf30e873577d229"
+    },
+    "out/beta-release-20261114/public-metadata-eligibility.json": {
+      "bytes": 798,
+      "sha256": "0e63572ba6105e25775bce7b1297fd7db25f0c3333226a7f883bd02e1826fc38"
+    },
+    "out/beta-release-20261114/package-plan-accepted.json": {
+      "bytes": 188437,
+      "sha256": "aa472b25febb0ac32237b62544699ac58917ce7f946c87672c1c2ba4b22737e8"
+    },
+    "out/beta-release-20261114/package-assembly-result.json": {
+      "bytes": 124,
+      "sha256": "7e26c308e440335e1c254c5abc91d02570bc75b317265fd88c54891785392090"
+    },
+    "out/releases/v0.1.0-beta.1-private/release-manifest.json": {
+      "bytes": 567580,
+      "sha256": "4df590b758d876df6287a0bf01b2e76555dd4993491437a92f3e1f4cbfa9fa3f"
+    },
+    "out/releases/v0.1.0-beta.1-private/SHA256SUMS": {
+      "bytes": 101037,
+      "sha256": "1bb65d4a95933a8c871003cc362917e97560a10d707613218cee0f196a6be93c"
+    }
+  }
+}

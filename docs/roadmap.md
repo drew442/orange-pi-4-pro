@@ -28,6 +28,8 @@ path. Review total cost per accepted result, not test count or model tier alone.
 - Full managed shutdown/checkpoint/reconciliation and managed-specific custody
   and restoration qualification.
 - Additional recovery automation and advanced guest lifecycle features.
+- Asset-specific public binary redistribution clearance if a future public-image
+  release is proposed; the delivered private beta does not depend on this work.
 - Optional deeper endurance/fault testing when real use provides a reason.
 
 These are parked source/designs, not an automatic post-beta work queue. Admit a

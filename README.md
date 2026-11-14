@@ -9,10 +9,9 @@ KVM guest, leave it running, and use the working guest, backup/restore and host
 maintenance tools. Automatic guest startup and the unfinished managed lifecycle
 are experimental, disabled by the beta profile, and deferred.
 
-**Status:** SPI boot and manual KVM operation have existing hardware evidence.
-The final manual beta image and its remaining applicable checks are not yet
-claimed complete. The hardware development goal is paused.
-[Current state and remaining gates](docs/implementation-status.md).
+See [current status and delivery](docs/implementation-status.md) for actual
+release/acceptance state and [v0.1.0-beta.1 notes](docs/releases/v0.1.0-beta.1.md)
+for the accepted manual beta, artifacts, instructions and distribution limits.
 
 ## Use and build
 

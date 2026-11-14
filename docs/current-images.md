@@ -1,11 +1,11 @@
 # Current images
 
-**Accepted repaired manual-beta runtime and image; versioned delivery pending.**
+**v0.1.0-beta.1 accepted and delivered; image payloads private.**
 Built source: main `8f311c484d33aab2882472766bc6263d064004c8`, including
 merged PR #1 and the reviewed manual boot-lock repair.
 Tag used by the builder: `manual-beta-20261114-02` (not a Git release tag).
 The reviewed fix `990fd09` is included. See
-[current status](implementation-status.md) for deployment and remaining gates.
+[current status](implementation-status.md) for actual delivery and board state.
 
 ## Exact candidate artifacts
 
@@ -15,7 +15,7 @@ Repaired compressed roots and their producer manifest are retained locally under
 `out/beta-release-20261114/root-02-assets/`; full source, construction and readback
 records are alongside that directory. Original candidate01 raw/gzip copies remain
 preserved under `retained-roots/`. Root payloads are not whole-NVMe or SD images.
-Keep candidate assets private pending eligibility.
+Payloads remain private under the recorded personalization/redistribution limits.
 
 | Artifact | Bytes | SHA-256 |
 | --- | ---: | --- |
@@ -39,7 +39,12 @@ Expanded image: 256,060,514,304 bytes, SHA-256
 `1c8d06b8ab3720da9c94ab41322dd9fe0a18f7dcdd238975a988e7f7b76fe667`.
 It contains matching A/B roots and newly generated, per-unit STATE. Existing-unit
 physical acceptance used the component update; no destructive whole-image
-reinstallation is claimed for this run. Versioned packaging/publication is pending.
+reinstallation is claimed for this run. Accepted private package: `drew@build.drewnet.online:/home/drew/orange-pi-4-pro-build/releases/v0.1.0-beta.1/orange-pi-4-pro-v0.1.0-beta.1-private.tar`,
+917,145,600 bytes, SHA-256
+`534ee8332b70c35ed59ed1f0c7c5948776d18bdeb7ea3f6f0653937a6513e91a`.
+Release source/tag: `60e7ec6c8535a64cbda93a8919c9b4a0a1c9a67d` / `v0.1.0-beta.1`.
+The [GitHub prerelease](https://github.com/drew442/orange-pi-4-pro/releases/tag/v0.1.0-beta.1)
+publishes notes/checksums only; private images were not uploaded.
 
 ## Preserved recovery inputs
 
