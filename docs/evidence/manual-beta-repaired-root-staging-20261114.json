@@ -1,0 +1,80 @@
+{
+  "schema": 1,
+  "source_commit": "8f311c484d33aab2882472766bc6263d064004c8",
+  "root_tag": "manual-beta-20261114-02",
+  "reason_for_construction": "Replace candidate01 solely for observed missing manual boot-lock defect; reviewed source fix990fd09",
+  "construction": "PASS",
+  "full_filesystem_readback": "PASS",
+  "B_physical_staging": {
+    "success": true,
+    "bytes_written_and_read_back": 4294967296,
+    "sha256": "116da2be7bd31b1e65a6c702bf4dc57bee98cb76155c79998cfbd13759e82789",
+    "tool": "installed guarded update-host.py on preserved A"
+  },
+  "B_selection": {
+    "published": true,
+    "durable": true,
+    "manifest_sha256": "3b2ba8f27ca2e9a3d2be33b40f39e4e2984a8ddad428156afccee6defa9599af",
+    "marker_sha256": "e53671605a74114161e2f1028e93b8daca4d7813f03aca7cdded26b95312c737"
+  },
+  "final_repaired_boot_or_KVM_accepted": false,
+  "normalized_A_and_CP7_preserved": true,
+  "SPI_SD_BOOT_GUESTS_writes": false,
+  "composition": {
+    "unit": "a733-manual-beta-composition-20261114-02.service",
+    "status": "running; no pass claimed",
+    "checkout": "/var/lib/a733-manual-beta-compose-project-20261114",
+    "phase": "/var/lib/a733-clean-replay-20261106/isolated-nvme-manual-beta-20261114-02",
+    "first_attempt": "preflight refused native-test bytecode before construction; failure retained; fresh bytecode-free checkout of same commit used"
+  },
+  "records": {
+    "out/beta-release-20261114/root-02-manifest.json": {
+      "bytes": 51663,
+      "sha256": "3b2ba8f27ca2e9a3d2be33b40f39e4e2984a8ddad428156afccee6defa9599af"
+    },
+    "out/beta-release-20261114/root-02-receipt.json": {
+      "bytes": 304160,
+      "sha256": "8b6b5d7d4120f0a7f0ea0567579f5fd624a87189cd552d2c15fe1f15a854958d"
+    },
+    "out/beta-release-20261114/root-02-source-manifest.json": {
+      "bytes": 277741,
+      "sha256": "e5ce73b297026c0e44115d1c4fbe0f5031f000a14ede9700715a23f784d4f00b"
+    },
+    "out/beta-release-20261114/root-02-readback-summary.json": {
+      "bytes": 3991,
+      "sha256": "544b126acdabc51dae61cafa015fcc2496758698f99f3d222b1bd49bfd7f3883"
+    },
+    "out/beta-release-20261114/root-02-prepared-and-readback.json": {
+      "bytes": 746,
+      "sha256": "b6f0217264f3a42c0766b197ecbde9cc899373034b38289079761f4ba7919155"
+    },
+    "out/beta-release-20261114/update-B-repaired-plan.json": {
+      "bytes": 3735,
+      "sha256": "50d472293215ce09825e1008c22e43ad44ba31edd9ce844e4104ddb1c9e8e5a5"
+    },
+    "out/beta-release-20261114/update-B-repaired-PTY.log": {
+      "bytes": 7184,
+      "sha256": "cd98c0599b96cfdd17edc5c808d362aa587a131d86d8de275b12b91105e131e7"
+    },
+    "out/beta-release-20261114/select-B-repaired-plan.json": {
+      "bytes": 3535,
+      "sha256": "078de1a4cdbee215cc88c980d0cb1946b382b4f3384404a1d79687f2cb5e17af"
+    },
+    "out/beta-release-20261114/select-B-repaired-PTY.log": {
+      "bytes": 6457,
+      "sha256": "769086ae2cf9f115c9514b060b95be4ac8a897b926ef9bf07d469f9727792d2a"
+    },
+    "out/beta-release-20261114/composition-plan.json": {
+      "bytes": 3964,
+      "sha256": "85ca0deca2e484b389a7fa181e2b21512826e29d482eaa16f713a37eb3d45c91"
+    },
+    "out/beta-release-20261114/composition-01-failure.log": {
+      "bytes": 1266,
+      "sha256": "7c3c06506d858a336f87c8302d7ab3904d40ff8d86b1b7e14b0142e32701e792"
+    },
+    "out/beta-release-20261114/composition-02-start.log": {
+      "bytes": 176,
+      "sha256": "b71a4104ce5c31f151ca0f86f2e24888244fd82ee573bb5b11c2ebf24645ab99"
+    }
+  }
+}

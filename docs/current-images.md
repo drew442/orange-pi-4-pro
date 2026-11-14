@@ -1,34 +1,37 @@
 # Current images
 
-**Constructed/deployed manual-beta candidate; no accepted release or release tag.**
-Built source: merged PR #1 `e4d39439623393c470f4d2ca354a9a6afd54f902`.
-Tag used by the builder: `manual-beta-20261114-01` (not a Git release tag).
-The subsequent reviewed fix `990fd09` has not been built. See
-[current status](implementation-status.md) for the capacity blocker and gates.
+**Constructed repaired manual-beta candidate; staged and selected; awaiting cold boot; no accepted release or release tag.**
+Built source: main `8f311c484d33aab2882472766bc6263d064004c8`, including
+merged PR #1 and the reviewed manual boot-lock repair.
+Tag used by the builder: `manual-beta-20261114-02` (not a Git release tag).
+The reviewed fix `990fd09` is included. See
+[current status](implementation-status.md) for deployment and remaining gates.
 
 ## Exact candidate artifacts
 
 Qualified-builder directory:
-`/var/lib/a733-clean-replay-20261106/host-roots-manual-beta-20261114-01/work/project/out/host-payload-manual-beta-20261114-01/`.
-Protected, independently expanded/hashed raw and gzip copies are retained locally
-under `out/beta-release-20261114/retained-roots/`; manifest and full provenance/
-readback records are alongside that directory. These are root partition payloads,
-not whole-NVMe or SD images. Keep candidate assets private pending eligibility.
+`/var/lib/a733-clean-replay-20261106/host-roots-manual-beta-20261114-02/work/project/out/host-payload-manual-beta-20261114-02/`.
+Repaired compressed roots and their producer manifest are retained locally under
+`out/beta-release-20261114/root-02-assets/`; full source, construction and readback
+records are alongside that directory. Original candidate01 raw/gzip copies remain
+preserved under `retained-roots/`. Root payloads are not whole-NVMe or SD images.
+Keep candidate assets private pending eligibility.
 
 | Artifact | Bytes | SHA-256 |
 | --- | ---: | --- |
-| `manifest.json` | 51,663 | `35247592dbd53060a54063253ef710b3c7e2bf7786299074305a1aca2f0a908f` |
-| `root-A.ext4.gz` | 143,664,060 | `01bb217112a455038512da5fbf249aa9e6d36594b325efa09583a481e5c2696f` |
-| `root-B.ext4.gz` | 143,664,214 | `dc9774be176e41dd81238a317fda67b2bd40f3c12b73071c3e6750bd97981c0a` |
-| `root-A.ext4` | 4,294,967,296 | `97d01e2d5e173ce4c751b49d0bd413f8852ed843493ba3d637fc0de2fa470b1e` |
-| `root-B.ext4` | 4,294,967,296 | `2ea70ca197acdbb2f10851185a7bce4d5ca59d966744268267815bca6bf8ca7d` |
+| `manifest.json` | 51,663 | `3b2ba8f27ca2e9a3d2be33b40f39e4e2984a8ddad428156afccee6defa9599af` |
+| `root-A.ext4.gz` | 143,665,284 | `0a500bcb9ad6cd11ae632fee031e2cacbdbc301963b7dbb98a5d0b295306e62d` |
+| `root-B.ext4.gz` | 143,665,245 | `b1e10a24ce7aa98e87d36b07f07e9dbe4553dd443ed2a10c17ec1084a2631669` |
+| `root-A.ext4` | 4,294,967,296 | `373e1b62343b8477a0fe1f6c78d4fa25c81775a8f739b9b3d0a8f53ba2e4cf6e` |
+| `root-B.ext4` | 4,294,967,296 | `116da2be7bd31b1e65a6c702bf4dc57bee98cb76155c79998cfbd13759e82789` |
 
-B is installed and booted via SPI/NVMe with SD absent. Normalized A remains
-installed for rollback. The boot-lock defect and supported diagnostic workaround
-are recorded in [the fix receipt](evidence/manual-boot-lock-fix-20261114.json);
-this candidate is not relabeled as containing the fix. No matching fresh STATE
-or whole-NVMe image has been constructed. No private package or public prerelease
-has been published.
+Repaired B has passed guarded physical staging and full target readback. Preserved
+normalized A remains intact for rollback. The board is powered off, repaired B
+selected durably, awaiting the operator cold power cycle.
+The boot-lock fix still requires fresh-boot/normal-launch observation; no physical
+fix acceptance is claimed yet. Matching fresh STATE/NVMe composition is running as
+`a733-manual-beta-composition-20261114-02.service` on the qualified builder.
+No private package or public prerelease has been published.
 
 ## Preserved recovery inputs
 

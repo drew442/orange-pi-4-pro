@@ -75,7 +75,10 @@ sudo -n python3 -I -B "$A733_REPO/build/launch-isolated-nvme-composition.py" \
 
 Execute the same command with `--execute` in place of `--plan`. Preserve the
 actual output manifest, compressed NVMe image, retained STATE outputs and receipt.
-The phase directory is
+Use a fresh bytecode-free checkout for this launcher after running tests; it
+refuses ignored `build/` or `configs/` Python caches before construction. Retain
+validation receipts and use the same committed source; no builder reprovisioning
+or software retest is implied. The phase directory is
 `/var/lib/a733-clean-replay-20261106/isolated-nvme-$A733_COMPOSITION_TAG/`.
 Its `receipt.json` records construction; `output/public-config-nvme-image-isolated-$A733_COMPOSITION_TAG/`
 contains `manifest.json` and `nvme.img.gz`. Generated STATE and selector outputs

@@ -2,7 +2,8 @@
 
 Updated 14 November 2026 (UTC). **Manual-beta is not released.**
 The operator resumed the hardware goal from merged PR #1 `e4d3943`.
-Source fix `990fd09` is pushed to main; it is not built or deployed.
+The reviewed boot-lock fix is built in `manual-beta-20261114-02` from main
+`8f311c4`; deployment is underway.
 Validation timeout correction `7325069` is pushed to main. Final-byte CI passed
 221 stages (3,011 executed; 817 declared exclusions); native checks passed all 3,828 tests without exclusions.
 The previous coordinator is inactive. Standing known-target authorization remains
@@ -10,11 +11,11 @@ valid; no permission renewal is needed for those targets.
 
 ## Current hardware and custody
 
-- The board runs the constructed `e4d3943` **manual-beta B**, SPI/NVMe with SD
-  absent, boot `73c57537-bc17-4230-85f0-87561ae0499a`. All 85 maintenance,
-  four management and two boot-unit files match the root manifest. Dispatch is
-  masked; storage preparation opened admission normally after the supported
-  fresh boot. No RAM admission metadata was manually edited.
+- The board is cleanly **powered off**, with repaired manual-beta B selected
+  durably for the next boot. UART confirmed STATE unmount, all filesystems
+  unmounted and kernel power down. The operator has been asked to disconnect
+  USB-C for at least 10 seconds and reconnect with SD absent for the remaining
+  cold observation. Do not issue another poweroff or infer that boot passed.
 - Normalized A remains intact and was booted read-only during cutover.
   Recovery SD, original/calibrated SPI backups, failed cohorts and the off-device
   firstkvm CP5 backup remain preserved.
@@ -24,7 +25,13 @@ valid; no permission renewal is needed for those targets.
 - The old `2675847` validation was retained. Final-byte CI and native validation
   of source `7325069` both passed: 221 stages, 3,828 native tests, no native
   exclusions. [Software receipt](evidence/manual-beta-software-validation-20261114.json).
-  All retained build/validation jobs are terminal; none was restarted on session change.
+  Validation jobs are terminal and retained. The repaired root construction and
+  full readback passed. STATE/NVMe composition is running as
+  `a733-manual-beta-composition-20261114-02.service`, source `8f311c4`, fresh
+  checkout `/var/lib/a733-manual-beta-compose-project-20261114`, phase
+  `/var/lib/a733-clean-replay-20261106/isolated-nvme-manual-beta-20261114-02`.
+  The first composition attempt refused cached Python bytecode during preflight,
+  before construction; its failure is retained. Do not restart the current job.
 - The operator enlarged the backing disk. Reviewed guest-only partition/PV/LV/
   ext4 growth used all 33 GiB added capacity; Hyper-V was untouched. Root LV is
   168,518,746,112 bytes, VG free zero, filesystem available about 51.77 GB.
@@ -40,14 +47,14 @@ historical restore/custody input; its managed resume list is superseded.
 
 | Gate | Actual result and remaining action |
 | --- | --- |
-| Source | PR #1 merged; reviewed boot-lock fix `990fd09` pushed, pending construction |
+| Source | PR #1 merged; reviewed boot-lock fix included in constructed source `8f311c4` |
 | Software | PASS: final-byte CI 221 stages/3,011 executed/817 declared exclusions; native 221 stages/3,828 executed/no exclusions. Original timeout and missing-fixture results retained; bounded allowance and authenticated fixtures resolve them. Boot-lock fix independently reviewed |
-| Construction | One `manual-beta-20261114-01` A/B construction passed, plus separate full filesystem readback. A second construction is justified solely by the observed boot-lock defect; it has not started |
-| Deployment | B was written/read back through the installed updater and selected/booted through the supported selector; A, BOOT, SPI and guest partitions were preserved |
+| Construction | Repaired `manual-beta-20261114-02` A/B construction and full filesystem readback passed. This replaces the first candidate only for its observed boot-lock defect; no further root rebuild is planned |
+| Deployment | Repaired B written/read back and selected durably through the installed tools; A, BOOT, SPI and guests preserved. Board powered off awaiting the operator's cold power cycle |
 | Manual lifecycle | Real UID60001 KVM CPU/disk/HTTP, guest-owned shutdown, CP6, restart/persistence counter11→12 and clean shutdown/CP7 passed using the existing guarded account-preparation workaround. Final repaired startup must create the manual lock automatically; assess lifecycle reuse by dependencies |
 | SPI boots | Prior SPI observations retained; this run added three warm SPI/NVMe boots, including the manual profile. A provisional pinned ledger supports two cold and three warm observations; one cold boot and observation of the repaired final profile remain. Final applicability awaits repaired runtime/composed BOOT; protected-SD boots remain excluded |
 | Recovery | Applicable SPI recovery, host rollback and guest backup/restore evidence retained; no new fault campaign or soak |
-| Whole-NVMe/STATE and delivery | Capacity resolved; not yet constructed, packaged, tagged, privately delivered or publicly published |
+| Whole-NVMe/STATE and delivery | Matching STATE/NVMe composition running; not yet packaged, tagged, privately delivered or publicly published |
 
 ## Bounded next action
 
