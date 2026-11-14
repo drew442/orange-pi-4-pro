@@ -237,6 +237,7 @@ def dispatch():
                 'canonical shared lease required')
         A._held_lock(lease.fd, 'READ', creator[0])
     try:
+        PREP.CONTEXT.MANAGEMENT.require_managed_runtime()
         boot = A._boot_id()
         guard()
         receipt['stage'] = 'storage-policy'

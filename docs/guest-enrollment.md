@@ -4,7 +4,7 @@
 activated NVMe guest filesystem. It authenticates protected seed files, copies
 and reads them back, and publishes without replacing any existing object. It
 never starts QEMU, installs a unit, formats storage or changes boot selection.
-No physical enrollment or KVM execution has been demonstrated.
+Current physical acceptance is tracked in [status](implementation-status.md).
 
 ## Preconditions and configuration
 
@@ -16,8 +16,7 @@ RAM. Prepared personalized root artifacts include the enrollment and account
 controllers at `/usr/lib/a733-tools/scripts/`; see
 [current managed host roots](current-host-roots.md). The older published
 recovery SD image has not been refreshed. See
-[guest tools availability](guest-tools-package.md). No managed-host installation,
-boot or KVM guest pass has been demonstrated.
+[guest tools availability](guest-tools-package.md). Use the current manual-beta guide for the installed profile.
 
 Supply a root:root, single-link `0400` configuration file on RAM or selected
 NVMe state. The exact schema below uses the existing [pinned guest fixture](guest-fixture.md).
@@ -57,7 +56,7 @@ command is not a live backup tool.
 ## Prepare and apply a new directory
 
 Prospective usage after actual hardware inventory and activation follows.
-These commands have not been reproduced on the board. Use a root shell and
+Use these commands with the matched installed tree and trusted current inputs. Use a root shell and
 set all paths from reviewed artifacts and the actual installation:
 
 ```sh
@@ -118,7 +117,7 @@ publication, cleanup removes only owned inode entries. Uncertain or foreign
 objects are retained and reported. Inspect the receipt and namespace before
 retrying; an existing guest is never silently reused or replaced.
 
-## Supervision preparation and remaining lifecycle work
+## Manual supervision
 
 `configs/guest_config.py` renders a manually started systemd unit from the
 validated config, a trusted readable launcher path and the actual KVM group
@@ -139,11 +138,10 @@ fallback. No unit was started by the software checks.
 `Restart=no` is deliberate: the initial disk hash is embedded in the unit. A
 successful guest write changes that checkpoint, so another start must refuse
 until the [stopped-guest checkpoint controller](guest-checkpoints.md) updates
-the trusted record and the unit is regenerated. Automatic boot integration
-remains open.
+the trusted record and the unit is regenerated. Automatic boot dispatch is deferred from the beta.
 Stopping this preparation unit sends SIGTERM; this is **not** a guest graceful
-shutdown protocol. Controlled shutdown, timeout/force policy, consistent
-backup/restore and production lifecycle management remain required. The test
+shutdown protocol. Use explicit guest-owned shutdown and the working manual backup/restore
+procedures. Automatic production lifecycle management is deferred. The test
 guest's own clean power-off does not establish those operations for other guests.
 
 Upstream: [systemd 252 service execution](https://www.freedesktop.org/software/systemd/man/252/systemd.exec.html),
@@ -151,34 +149,4 @@ Upstream: [systemd 252 service execution](https://www.freedesktop.org/software/s
 [resource limits](https://www.freedesktop.org/software/systemd/man/252/systemd.resource-control.html),
 and [QEMU 7.2 invocation](https://gitlab.com/qemu-project/qemu/-/blob/v7.2.0/qemu-options.hx).
 
-## Verified software evidence
-
-At source `54346ac`, the [ARM enrollment probe](evidence/guest-enrollment-arm-20261104.json)
-used the actual pinned 5,251,080-byte kernel, 973,641-byte initramfs and
-134,217,728-byte raw disk. It authenticated all inputs, published and read back
-140,442,449 bytes, verified ownership, and used real UID/GID changes to prove
-allowed disk writes and forbidden asset/manifest/directory access. Another UID
-and a repeated enrollment were refused. Source seed hashes stayed unchanged.
-The actual pinned systemd 252 unit verifier accepted the rendered unit without
-diagnostics. No unit was started.
-
-The trusted disposable fixture mocked live mount/UUID provenance; these results
-cannot prove p5 placement, real admission budgets or physical KVM. The probe
-used a captured builder memory sample and native CPU count. ARM binfmt checked
-the configured interpreter pathname/hash; its kernel-held F descriptor was not
-independently inspected. Elapsed 29.95 seconds, maximum RSS 190,928 KiB.
-
-Exact executed builder command from the private source checkout:
-
-```sh
-sudo -i
-cd /var/lib/a733-guest-enrollment-work-20261104
-/usr/bin/python3.10 -I -B tests/verify_guest_enrollment_arm.py \
-  /home/drew/orange-pi-4-pro-build/recipe/out/host-userspace-bookworm-20261001-01/rootfs.tar.gz \
-  /home/drew/orange-pi-4-pro-build/recipe/out/guest-fixture-20261104-03
-```
-
-This root-only fixture requires 3 GiB free fixed storage. It creates no block
-nodes or mounts and changes no builder host account. Its files are removed at
-exit. Actual guest execution and the full [release acceptance](hardware-validation.md)
-remain mandatory.
+[Historical implementation and validation record](archive/pre-beta-20261114/guest-enrollment.md).

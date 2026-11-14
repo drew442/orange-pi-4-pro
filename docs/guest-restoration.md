@@ -1,18 +1,10 @@
-# Restore a guest into a fresh destination
+# Restore a stopped guest
 
-`scripts/restore-guest.py` authenticates a compressed guest backup, copies its
-assets into a new selected-NVMe guest directory and verifies the new files.
-It refuses every existing destination, including symlinks and empty directories.
-It does not erase a disk, replace a guest, create an account, mount storage,
-start a service or boot a VM. Physical restoration and a restored KVM workload
-remain required release tests.
-
-These examples target the **uninstalled production-readiness candidate** and
-require its initialized admission runtime. This candidate is not physically
-qualified. The accepted 20261109 release helper omits the new `--name` flag; its
-commands and historical physical results remain in the
-[deployment guide](deploy-protected-20261109.md) and
-[restoration record](evidence/normalized-guest-restore-20261110.json).
+The manual beta retains `restore-guest.py` with initialized shared admission.
+It authenticates a backup and publishes a fresh destination; it never overwrites
+an existing guest, starts QEMU, formats a device or creates the account. Use the
+current matching tree; older release helpers may have different CLI flags.
+[Current status](implementation-status.md) is the acceptance authority.
 
 ## Source and destination prerequisites
 
@@ -25,7 +17,7 @@ Use the same guest name, UID and GID recorded in the backup. The destination
 guest filesystem UUID may differ. Verify the real destination namespace and
 UUID from the trusted installation record; do not infer them from an example.
 The explicit target name must exactly match the authenticated backup; account
-remapping and guest renaming are not implemented. The candidate takes admission
+remapping and guest renaming are not implemented. The installed helper takes admission
 and the guest lock before reading the archive and refuses managed guest names.
 
 Keep all guests using that identity stopped. The controller requires the fixed
@@ -149,7 +141,7 @@ physical power-loss recovery; see Linux [fsync](https://man7.org/linux/man-pages
 and [renameat2](https://man7.org/linux/man-pages/man2/rename.2.html) semantics.
 
 Regenerate and review the [guest unit](guest-enrollment.md) from the restored
-configuration and use the new manifest pin. Before release acceptance, actually
+configuration and use the new manifest pin. When the affected acceptance gate needs new evidence, actually
 boot the restored guest with KVM, verify its expected data and networking, shut
 it down cleanly, restart it and record the result. Dry-run hashes and unit
 parsing cannot establish these outcomes.
@@ -170,3 +162,5 @@ on the same builder. No guest is executed and no hardware acceptance follows.
 The [ARM evidence](evidence/guest-restore-arm-20261104.json) records the exact
 source hashes and results; a separate [native process census](evidence/guest-restore-consumers-20261104.json)
 confirms refusal while a real UID-60001 child exists and acceptance after it exits.
+
+[Historical implementation record](archive/pre-beta-20261114/guest-restoration.md).

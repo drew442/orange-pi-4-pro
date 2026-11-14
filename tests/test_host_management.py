@@ -115,7 +115,7 @@ class ValidationTests(unittest.TestCase):
         self.assertIn('\nStandardOutput=journal+console\n', unit)
 
     def test_prepare_ram_config_bound_machine_identity_and_fixed_masks(self):
-        with patch.object(M, 'runtime_guard', return_value=CONFIG), patch.object(M, 'prepare_clock_state'), patch.object(M, 'ram_directory'), patch.object(M, 'atomic_write') as write, patch.object(M, 'ram_link') as link, patch.object(M.subprocess, 'run') as command, patch.object(M.os, 'chmod') as chmod:
+        with patch.object(M, 'runtime_guard', return_value=CONFIG), patch.object(M, 'guest_management_profile', return_value='manual-beta'), patch.object(M, 'prepare_clock_state'), patch.object(M, 'ram_directory'), patch.object(M, 'atomic_write') as write, patch.object(M, 'ram_link') as link, patch.object(M.subprocess, 'run') as command, patch.object(M.os, 'chmod') as chmod:
             M.prepare()
             chmod.assert_called_once_with('/etc/machine-id', 0o644)
             for call in write.call_args_list:
@@ -297,7 +297,7 @@ def audit(root):
 
     def test_prepare_clock_check_precedes_ram_writes(self):
         with patch.object(M, 'runtime_guard', return_value=CONFIG), \
-                patch.object(M, 'prepare_clock_state', side_effect=ValueError('clock')), \
+                patch.object(M, 'guest_management_profile', return_value='manual-beta'), patch.object(M, 'prepare_clock_state', side_effect=ValueError('clock')), \
                 patch.object(M, 'ram_directory') as directory, patch.object(M, 'atomic_write') as write, \
                 patch.object(M, 'ram_link') as link, patch.object(M.os, 'chmod') as chmod:
             with self.assertRaisesRegex(ValueError, 'clock'):

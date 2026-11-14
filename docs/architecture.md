@@ -1,22 +1,11 @@
-# Selected A733 host architecture
+# Architecture
 
-The selected distribution combines pinned minimal Debian arm64 userspace with
-the compatible vendor A733 kernel, device tree and firmware. It uses KVM/QEMU
-and supervised unprivileged guests. There is no desktop or libvirt dependency.
-[Current images](current-images.md) identify exact artifacts;
-[implementation status](implementation-status.md) separates physical evidence
-from remaining release gates. The final normalized host has booted and passed restored-guest KVM/checkpoint/
-restart. Ten final warm and ten physical cold boots and their complete SD
-comparisons pass through the [release checklist](release-acceptance.md).
-
-The plan's minimal Debian option is retained for this deployment: its first
-normalized-A observation reports **437968896 bytes used** on the 4 GiB root
-filesystem, with MemTotal 12161560 KiB and MemAvailable 11798000 KiB before any
-guest launch. These are point observations, not a memory benchmark. The pinned
-221-package userspace is maintained by building/reviewing an inactive root;
-on-board APT mutation is not the update mechanism. Final boot reliability is
-documented by the accepted route-specific boot records. The [installation record](evidence/normalized-host-install-20261110.json)
-pins the measurements and preserves the compatible board stack.
+The target is **Orange Pi 4 Pro only**, using mandatory SPI/NVMe boot and
+recovery SD. The `manual-beta` profile retains standard Linux/KVM/QEMU and working
+manual management, shared admission and recovery, with automatic guest dispatch
+disabled. [Scope](beta-scope.md) defines current promises and [status](implementation-status.md)
+records actual acceptance. The concrete layout below describes the recorded unit;
+other identical units need unique identity and a fresh target plan.
 
 ## Boot chain and recovery
 
@@ -43,8 +32,8 @@ Its initial STATE probe enforces block read-only protection before `ro,noload`
 mounting. Normal host handoff subsequently mounts STATE writable, where journal
 replay is allowed. These compatibility checks are not a cryptographic secure-boot
 chain. The [firmware write audit](sd-firmware-write-policy.md) records opaque and
-conditional firmware limits; full-card comparisons and serial observations at
-defined boot-series boundaries remain required.
+conditional firmware limits; retain applicable existing comparisons and serial observations; do not start a
+new SD-write campaign for a documentation change.
 
 [SPI programming and SD-removed operation](spi-sd-boot-20261111.md) now have
 physical evidence. Vendor U-Boot writes its 2 KiB calibration area on startup;

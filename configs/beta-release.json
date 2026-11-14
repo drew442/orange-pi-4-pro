@@ -1,0 +1,97 @@
+{
+  "schema": 1,
+  "board_model": "Orange Pi 4 Pro",
+  "boot_profile": "spi-nvme-sd-absent",
+  "guest_management_profile": "manual-beta",
+  "required_roles": [
+    "spi-firmware",
+    "recovery-sd",
+    "nvme-install-image"
+  ],
+  "optional_roles": [
+    "root-update",
+    "root-update-a",
+    "root-update-b"
+  ],
+  "operator_guides": [
+    "README.md",
+    "docs/beta-scope.md",
+    "docs/install-and-recovery.md",
+    "docs/manual-guest-guide.md",
+    "docs/maintenance-guide.md",
+    "docs/build-and-release.md",
+    "docs/validation-policy.md",
+    "docs/known-issues.md",
+    "docs/userspace-notices.md",
+    "docs/toolchain-sources.md"
+  ],
+  "notice_prefixes": [
+    "licenses/"
+  ],
+  "gates": {
+    "software": {
+      "scope": "host-beta",
+      "dependencies": [
+        "software_inputs",
+        "runtime"
+      ],
+      "observations": [
+        "host-checks"
+      ]
+    },
+    "construction": {
+      "scope": "image-assembly",
+      "dependencies": [
+        "all_assets",
+        "runtime_manifest"
+      ],
+      "observations": [
+        "assembly"
+      ]
+    },
+    "spi_boots": {
+      "scope": "spi-nvme-sd-absent",
+      "dependencies": [
+        "spi-firmware",
+        "boot_components",
+        "hardware_compatibility"
+      ],
+      "cold": 3,
+      "warm": 3,
+      "current_manual_profile": true
+    },
+    "manual_kvm": {
+      "scope": "manual-kvm-lifecycle",
+      "dependencies": [
+        "runtime",
+        "manual_lifecycle_context",
+        "hardware_compatibility"
+      ],
+      "observations": [
+        "boot",
+        "cpu",
+        "disk",
+        "http",
+        "shutdown",
+        "checkpoint",
+        "restart",
+        "persistence"
+      ]
+    },
+    "recovery": {
+      "scope": "spi-sd-recovery",
+      "dependencies": [
+        "spi-firmware",
+        "recovery-sd",
+        "runtime",
+        "hardware_compatibility"
+      ],
+      "observations": [
+        "recovery",
+        "host-rollback",
+        "guest-backup",
+        "guest-restore"
+      ]
+    }
+  }
+}

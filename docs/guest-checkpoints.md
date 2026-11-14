@@ -5,9 +5,8 @@ guest disk in its protected manifest. It never resizes or copies the disk,
 starts/stops a service, or claims filesystem cleanliness. A checkpoint is not a
 backup, snapshot or successful guest boot. Use the separate
 [backup artifact workflow](guest-backups.md) to preserve disk contents off-device.
-Actual [guest poweroff, two durable checkpoints and restart](kvm-vgic-results-20261108.md)
-now pass on the diagnostic VGIC host; off-device restore and final corrected-host
-validation remain open.
+Current accepted observations and remaining gates are in
+[status](implementation-status.md); no new endurance gate is required.
 
 ## Establish a trusted starting record
 
@@ -59,7 +58,7 @@ pin and observed shutdown evidence. In a root shell, set
 values from the trusted records and use the complete installed tree at
 `/usr/lib/a733-tools` on the new immutable A/B root or a trusted complete
 portable tool tree on NVMe or RAM. The older recovery SD image has not been
-refreshed; see [guest tools availability](guest-tools-package.md). The diagnostic hardware result does not establish final corrected-host release acceptance:
+refreshed; see [guest tools availability](guest-tools-package.md). Use the actual installed profile and trusted records:
 
 ```sh
 : "${A733_GUEST_TOOLS:?Set absolute trusted complete installed or portable tool tree}"
@@ -119,8 +118,7 @@ verified backup. Conflicting or foreign history files are refused, not replaced.
 After successful durable publication, save `new_manifest_sha256` as the next
 trusted pin. Regenerate the manually prepared unit from the new protected
 manifest's `config`; the unit still embeds the old disk hash until regenerated.
-Review and reload the unit before a separate start. Packaging and a guarded
-unit installation/start controller are still required. A successful dry-run or
+Review and reload the unit before a separate start. Follow [manual operations](manual-guest-guide.md) to render/install the unit. A successful dry-run or
 unit parser check does not prove guest restart, KVM acceleration or clean stop.
 
 Upstream: [Linux flock semantics](https://man7.org/linux/man-pages/man2/flock.2.html),
@@ -128,45 +126,4 @@ Upstream: [Linux flock semantics](https://man7.org/linux/man-pages/man2/flock.2.
 [systemd 252 service state](https://www.freedesktop.org/software/systemd/man/252/systemctl.html),
 and [systemd 252 lifecycle](https://www.freedesktop.org/software/systemd/man/252/systemd.service.html).
 
-## Verified software evidence
-
-Source `6c62d03` passed 559 discovery cases on Jammy without skips, four separate
-diagnostic cases and shell regressions. Independent Sol high review accepted
-the policy and transaction. Native tests include real disk locks and readers,
-stale pins, history collisions, exact noncanonical history, fsync/close failures
-and queued SIGINT/SIGTERM around actual file replacement.
-
-The [ARM checkpoint probe](evidence/guest-checkpoint-arm-20261104.json) enrolled
-the actual pinned fixture, changed its working disk, refused the old launch
-pin and a separately locked disk, then published a checkpoint with queued
-SIGTERM. Its receipt correctly reported interruption while retaining publication
-and durability. Exact history bytes, unchanged disk content, obsolete-pin
-refusal, no-op behavior, new-pin file checks and updated unit parsing passed.
-Elapsed 50.99 seconds; maximum RSS 193,384 KiB.
-
-Those positive file checks mocked mounted-NVMe, namespace, service/consumer and
-TTY boundaries only inside an authenticated disposable fixture. Real CLI entry
-refused the unsupported environment before writes. No VM, systemd service or
-KVM guest was started; clean shutdown was not performed. Configured binfmt
-interpreter pathname/hash was checked; the kernel-held F descriptor was not
-independently inspected.
-
-A separate [actual builder proc scan](evidence/guest-checkpoint-consumers-20261104.json)
-detected a real UID-60001 read-only consumer and returned empty after its exit.
-It used only a private owned regular file, not guest or physical storage. This
-characterizes the builder's visibility, not the board's.
-
-Exact executed ARM integration command from the private builder checkout:
-
-```sh
-sudo -i
-cd /var/lib/a733-guest-checkpoint-work-20261104
-/usr/bin/python3.10 -I -B tests/verify_guest_checkpoint_arm.py \
-  /home/drew/orange-pi-4-pro-build/recipe/out/host-userspace-bookworm-20261001-01/rootfs.tar.gz \
-  /home/drew/orange-pi-4-pro-build/recipe/out/guest-fixture-20261104-03
-```
-
-The harness requires 3 GiB free fixed storage and removes its private files at
-exit. Separate inspection found no leftover fixture or host-visible guest mount.
-Raw logs remain under the builder's `guest-checkpoint-artifacts-20261104/logs/`.
-Every [physical release gate](hardware-validation.md) remains open.
+[Historical implementation and validation record](archive/pre-beta-20261114/guest-checkpoints.md).

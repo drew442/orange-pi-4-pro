@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Create normalized regular-file A/B roots through the SHA-pinned root launcher.
 
-Same CLI and isolation/admission policy as launch-host-roots.py; invoke -I -B.
-This build-only adapter never changes installed maintenance sources or markers.
+Reuse the frozen launcher's isolation/admission policy; invoke -I -B.
+The current payload builder records the selected guest management profile.
 """
 import ast
+import argparse
 import hashlib
 import json
 import os
@@ -54,6 +55,8 @@ OUTER_ADDED_PACKAGES = {
     'linux-modules-extra-6.8.0-149-generic': ('6.8.0-149.149~22.04.1', 'amd64'),
     'linux-tools-6.8.0-149-generic': ('6.8.0-149.149~22.04.1', 'amd64'),
 }
+
+GUEST_MANAGEMENT_PROFILES = ('manual-beta', 'managed-experimental')
 
 
 def require(ok, message):
@@ -242,11 +245,14 @@ payload.write_json(manifest_path,manifest)
     return program.encode('utf-8')
 
 
-def adapt(parent, held):
+def adapt(parent, held, guest_management_profile='manual-beta'):
+    require(guest_management_profile in GUEST_MANAGEMENT_PROFILES,
+            'unknown guest management profile')
     require(parent.HOST_LOCK == FROZEN_REPLAY_LOCK, 'historical host lock anchor differs')
     parent.HOST_LOCK = OUTER_HOST_LOCK
     original_contract, original_plan = parent.contract, parent.plan
     original_payload, original_execute = parent.payload_program, parent.execute
+    original_verify = parent.verify_output
     binding = {}
     inventories = {}
 
@@ -276,12 +282,27 @@ def adapt(parent, held):
         result = original_plan(tag, manifest, policy, diagnostic, userspace)
         result['filesystem_normalization'] = normalization_binding(binding['helper'], held.pin)
         result['builder_package_inventory'] = json.loads(json.dumps(inventories))
+        result['guest_management_profile'] = guest_management_profile
         held.unchanged()
         return result
 
     def payload_program(tag):
         require(binding, 'normalizer contract required before payload generation')
-        return normalized_program(original_payload, tag, binding['helper'])
+        program = normalized_program(original_payload, tag, binding['helper']).decode()
+        program = replace_once(program,
+            "metadata_profile='fakeroot-raw-xattrs-v1',userspace_profile='timesync-20261106')",
+            "metadata_profile='fakeroot-raw-xattrs-v1',userspace_profile='timesync-20261106',"
+            + 'guest_management_profile=' + repr(guest_management_profile) + ')')
+        program += ('assert manifest.get("guest_management_profile")=='+
+                    repr(guest_management_profile)+',"guest management profile differs"\n')
+        return program.encode()
+
+    def verify_output(candidate, output, policy):
+        result = original_verify(candidate, output, policy)
+        _, raw = parent.authenticated(candidate, output / 'manifest.json', retain=True)
+        require(json.loads(raw).get('guest_management_profile') == guest_management_profile,
+                'root guest management profile differs')
+        return result
 
     def execute(*args, **kwargs):
         final = kwargs.get('final_check')
@@ -294,14 +315,22 @@ def adapt(parent, held):
 
     parent.contract, parent.plan = contract, plan
     parent.payload_program, parent.execute = payload_program, execute
+    parent.verify_output = verify_output
+    parent.__doc__ = (__doc__ + '\nGuest management: --guest-management-profile '
+                      '{manual-beta,managed-experimental}; default manual-beta. '
+                      'Managed lifecycle remains experimental.')
 
 
 def main(argv=None):
     require(sys.flags.isolated and sys.flags.dont_write_bytecode, 'invoke Python with -I -B')
+    parser = argparse.ArgumentParser(add_help=False, allow_abbrev=False)
+    parser.add_argument('--guest-management-profile', choices=GUEST_MANAGEMENT_PROFILES,
+                        default='manual-beta')
+    options, remaining = parser.parse_known_args(argv)
     with Template(Path(os.path.abspath(__file__)).parent / Path(TEMPLATE).name, TEMPLATE_SHA) as held:
         parent = load_template(held)
-        adapt(parent, held)
-        parent.main(argv)
+        adapt(parent, held, options.guest_management_profile)
+        parent.main(remaining)
 
 
 if __name__ == '__main__':

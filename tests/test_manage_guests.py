@@ -38,6 +38,9 @@ class Resource:
 
 class Controls(unittest.TestCase):
     def setUp(self):
+        profile = patch.object(M.P.CONTEXT.MANAGEMENT, 'guest_management_profile', return_value='managed-experimental')
+        profile.start()
+        self.addCleanup(profile.stop)
         self.stack = ExitStack()
         self.addCleanup(self.stack.close)
         self.policy = Resource()
@@ -197,6 +200,9 @@ class Controls(unittest.TestCase):
 
 class StartCustody(unittest.TestCase):
     def setUp(self):
+        profile = patch.object(M.P.CONTEXT.MANAGEMENT, 'guest_management_profile', return_value='managed-experimental')
+        profile.start()
+        self.addCleanup(profile.stop)
         self.stack = ExitStack()
         self.addCleanup(self.stack.close)
         self.guest, self.registry_lock, self.inspection, self.store = [Resource() for _ in range(4)]
@@ -339,6 +345,9 @@ class ConstructorGuidance(unittest.TestCase):
 
 class StopControls(unittest.TestCase):
     def setUp(self):
+        profile = patch.object(M.P.CONTEXT.MANAGEMENT, 'guest_management_profile', return_value='managed-experimental')
+        profile.start()
+        self.addCleanup(profile.stop)
         self.stack = ExitStack()
         self.addCleanup(self.stack.close)
         self.entry = dict(name='autotest', enabled=False)

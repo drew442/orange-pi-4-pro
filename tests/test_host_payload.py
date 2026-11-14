@@ -437,7 +437,14 @@ class UserspaceProfiles(unittest.TestCase):
                  'normalized-20261106', 'fakeroot-raw-xattrs-v1')):
             with mock.patch.object(sys, 'argv', ['host-payload.py', 'rootfs', 'diag', 'output', *options]), mock.patch.object(payload, 'build') as build:
                 payload.main()
-                self.assertEqual(build.call_args.args, (Path('rootfs'), Path('diag'), Path('output'), metadata, profile))
+                self.assertEqual(build.call_args.args, (Path('rootfs'), Path('diag'), Path('output'), metadata, profile, 'manual-beta'))
+
+    def test_cli_explicit_managed_experimental_profile(self):
+        with mock.patch.object(sys, 'argv', ['host-payload.py', 'rootfs', 'diag', 'output',
+                '--guest-management-profile', 'managed-experimental']), \
+                mock.patch.object(payload, 'build') as build:
+            payload.main()
+            self.assertEqual(build.call_args.args[-1], 'managed-experimental')
 
     def test_profiles_rejected_before_output_validation(self):
         with mock.patch.object(payload, 'userspace_binding', side_effect=ValueError('profile rejected')), mock.patch.object(payload, 'validate_output') as output:

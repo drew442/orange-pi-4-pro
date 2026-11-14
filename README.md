@@ -1,32 +1,37 @@
 # Orange Pi 4 Pro hypervisor
 
-A minimal Linux KVM/QEMU host for the **Orange Pi 4 Pro A733**, using the actual
-nominal 250 GB NVMe. **It now boots from SPI and operates with SD removed.**
-The 2 GB SD card is retained for recovery. [SPI/NVMe results](docs/spi-sd-boot-20261111.md).
+A minimal Linux KVM/QEMU host for **Orange Pi 4 Pro**, booting from **SPI to NVMe
+with the SD removed**. The 2 GB SD is a recovery medium. This project supports
+this model only; it is not a general A733 distribution.
 
-Start with [implementation status](docs/implementation-status.md) and the
-[current images](docs/current-images.md). The fresh normalized installation and independent deployment reproduction pass,
-including original guest restoration, actual nonroot KVM, clean shutdown,
-checkpoint and restart. The eight-hour workload gate passes using retained
-longer-run data, without another endurance run. Physical host restoration,
-changed-root update, selection interruption/cancellation and healthy manual
-rollback also pass with independent UART capture/control. The earlier SSH failure
-remains unexplained. **The earlier protected-SD release qualification passed**,
-including ten warm and ten physical cold boots with unchanged complete SD hashes.
-The subsequent SPI operational checks passed a cold boot, warm restart and real
-KVM guest persistence through counters 7→8→9.
-See the [release checklist](docs/release-acceptance.md).
-Production qualification and unattended guest operation follow the
-[production-readiness plan](docs/spi-production-readiness-plan.md).
+The first release targets a **manual-management beta**: start an unprivileged
+KVM guest, leave it running, and use the working guest, backup/restore and host
+maintenance tools. Automatic guest startup and the unfinished managed lifecycle
+are experimental, disabled by the beta profile, and deferred.
 
-The [build/deployment plan](docs/hypervisor-plan.md),
-[selected architecture](docs/architecture.md),
-[Ubuntu build-host assessment](docs/build-host-assessment.md),
-[serial guide](docs/diagnostic-image.md) and
-[hardware acceptance record](docs/hardware-validation.md) define the work and
-recorded hardware scope. Build recipes and guarded installation, guest,
-update/rollback and recovery tools live under `build/`, `scripts/` and `docs/`.
-Generated images, downloaded sources, private keys and raw logs stay outside Git.
+**Status:** SPI boot and manual KVM operation have existing hardware evidence.
+The final manual beta image and its remaining applicable checks are not yet
+claimed complete. The hardware development goal is paused.
+[Current state and remaining gates](docs/implementation-status.md).
 
-The [agent routing policy](docs/agent-routing.md) and `.codex/` configuration define
-model tiers, focused handoffs and independent review requirements.
+## Use and build
+
+- [Beta scope and acceptance](docs/beta-scope.md)
+- [Install, personalize and recover SPI boot](docs/install-and-recovery.md)
+- [Operate guests manually](docs/manual-guest-guide.md)
+- [Back up, restore, update and roll back](docs/maintenance-guide.md)
+- [Build and package a release](docs/build-and-release.md)
+- [Known issues](docs/known-issues.md) and [future work policy](docs/roadmap.md)
+- [Documentation index](docs/README.md)
+
+## Development
+
+Run affected checks through [the validation runner](docs/validation-policy.md).
+Reuse accepted evidence for unchanged dependencies; scripted successes need one
+compact result. The [agent policy](docs/agent-routing.md) defaults to Sol 6.1 low
+and escalates when the work requires it. [AGENTS.md](AGENTS.md) contains stable
+project rules. Historical investigations are outside routine working context.
+
+Generated images, downloaded sources, private identity and raw logs stay outside
+Git. A repository checkout or passing software checks do not constitute a
+physical beta release; packaging records the exact artifact and evidence scope.

@@ -83,6 +83,7 @@ def run_service(name, *, stop_requested=None):
         owner()
         ADMISSION._guest_name(name)
         require(name != 'firstkvm', 'firstkvm must remain manual')
+        CONTEXT.MANAGEMENT.require_managed_runtime()
         storage = MAINTENANCE.registered_storage()
         boot = CONTEXT.read_system('/proc/sys/kernel/random/boot_id', 64).decode('ascii')
         require(boot.endswith('\n'), 'invalid host boot UUID')

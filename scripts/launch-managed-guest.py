@@ -13,6 +13,7 @@ import argparse
 import grp
 import hashlib
 import importlib.util
+import json
 import os
 from pathlib import Path
 import re
@@ -188,6 +189,10 @@ class ManagedLaunch:
             self.payload = CONTEXT.ENROLL.HeldPath(PAYLOAD)
             self.stack.callback(self.payload.close)
             hash_root_file(self.payload, self.value['host_payload_sha256'], PAYLOAD_LIMIT)
+            payload = json.loads(os.pread(self.payload.fd, PAYLOAD_LIMIT + 1, 0),
+                                 object_pairs_hook=CONTEXT.MANAGEMENT.CONFIG.unique_pairs)
+            require(CONTEXT.MANAGEMENT.CONFIG.guest_management_profile(payload) ==
+                    'managed-experimental', 'managed launch is parked in manual-beta')
             self.qemu = CONTEXT.ENROLL.HeldPath(str(Path(QEMU_PATH).resolve(strict=True)))
             self.stack.callback(self.qemu.close)
             require(self.qemu.info.st_size == self.value['qemu']['bytes'] and

@@ -119,7 +119,7 @@ class ProtectedInputs(unittest.TestCase):
             self.paths[key] = str(p)
             self.value['config'][key] = {'bytes': len(data), 'sha256': hashlib.sha256(data).hexdigest()}
         self.payload = self.root / 'payload.json'
-        self.payload.write_bytes(b'{"fixture":true}\n')
+        self.payload.write_bytes(b'{"fixture":true,"guest_management_profile":"managed-experimental"}\n')
         self.payload.chmod(0o444)
         self.value['host_payload_sha256'] = hashlib.sha256(self.payload.read_bytes()).hexdigest()
         self.binary = self.root / 'qemu-fixture'
